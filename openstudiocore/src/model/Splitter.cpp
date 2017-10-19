@@ -49,19 +49,19 @@ Splitter_Impl::Splitter_Impl(IddObjectType type, Model_Impl* model)
 
 Splitter_Impl::Splitter_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : HVACComponent_Impl(idfObject, model, keepHandle)
-{ 
+{
 }
 
 Splitter_Impl::Splitter_Impl(
-  const openstudio::detail::WorkspaceObject_Impl& other, 
-  Model_Impl* model, 
+  const openstudio::detail::WorkspaceObject_Impl& other,
+  Model_Impl* model,
   bool keepHandle)
   : HVACComponent_Impl(other,model,keepHandle)
 {
 }
 
-Splitter_Impl::Splitter_Impl(const Splitter_Impl& other, 
-  Model_Impl* model, 
+Splitter_Impl::Splitter_Impl(const Splitter_Impl& other,
+  Model_Impl* model,
   bool keepHandles)
   : HVACComponent_Impl(other,model,keepHandles)
 {
@@ -202,14 +202,14 @@ void Splitter_Impl::disconnect()
 } // detail
 
 Splitter::Splitter(std::shared_ptr<detail::Splitter_Impl> p)
-  : HVACComponent(p)
+  : HVACComponent(std::move(p))
 {}
 
 Splitter::Splitter(IddObjectType type,const Model& model)
   : HVACComponent(type,model)
 {
   OS_ASSERT(getImpl<detail::Splitter_Impl>());
-}     
+}
 
 unsigned Splitter::inletPort()
 {

@@ -60,7 +60,7 @@ namespace detail {
                                                  bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {}
-  
+
   const std::vector<std::string>& ConvergenceLimits_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
@@ -68,10 +68,10 @@ namespace detail {
     }
     return result;
   }
-  
+
   IddObjectType ConvergenceLimits_Impl::iddObjectType() const {
     return ConvergenceLimits::iddObjectType();
-  }  
+  }
 
   boost::optional<ParentObject> ConvergenceLimits_Impl::parent() const
   {
@@ -235,7 +235,7 @@ void ConvergenceLimits::resetMaximumPlantIterations() {
 
 /// @cond
 ConvergenceLimits::ConvergenceLimits(std::shared_ptr<detail::ConvergenceLimits_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 
 ConvergenceLimits::ConvergenceLimits(Model& model)

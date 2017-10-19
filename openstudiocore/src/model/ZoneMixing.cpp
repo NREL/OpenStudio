@@ -295,7 +295,7 @@ namespace detail {
 
   bool ZoneMixing_Impl::setSourceZone(const ThermalZone& zone) {
     bool result(false);
-    
+
     // source zone cannot be the same as this zone
     if (zone.handle() != this->zone().handle()){
       result = setPointer(OS_ZoneMixingFields::SourceZoneName, zone.handle());
@@ -592,7 +592,7 @@ void ZoneMixing::resetMaximumOutdoorTemperatureSchedule() {
 
 /// @cond
 ZoneMixing::ZoneMixing(std::shared_ptr<detail::ZoneMixing_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

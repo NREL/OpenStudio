@@ -936,7 +936,7 @@ void Screen::resetAngleofResolutionforScreenTransmittanceOutputMap() {
 
 /// @cond
 Screen::Screen(std::shared_ptr<detail::Screen_Impl> impl)
-  : ShadingMaterial(impl)
+  : ShadingMaterial(std::move(impl))
 {}
 /// @endcond
 

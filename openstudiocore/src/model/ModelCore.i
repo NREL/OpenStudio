@@ -49,8 +49,6 @@
 
 
 %{
-  #include <model/ThreeJS.hpp>
-
   #include <utilities/data/TimeSeries.hpp>
   #include <utilities/sql/SqlFile.hpp>
   #include <utilities/geometry/ThreeJS.hpp>
@@ -105,7 +103,7 @@
 %include <model/Component.hpp>
 // %include <model/Relationship.hpp>
 %include <model/FileOperations.hpp>
-%include <model/ThreeJS.hpp>
+
 
 namespace openstudio {
 namespace model {

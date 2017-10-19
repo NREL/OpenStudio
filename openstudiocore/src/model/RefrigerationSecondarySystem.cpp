@@ -321,14 +321,14 @@ namespace detail {
             modelObjectList->removeModelObject(elem);
           }
       }
-    }  
+    }
   }
 
   template <class T>
   void RefrigerationSecondarySystem_Impl::removeTemplate( const T & modelObject, boost::optional<ModelObjectList>& modelObjectList ) {
     if( modelObjectList ) {
       modelObjectList->removeModelObject(modelObject);
-    }  
+    }
   }
 
   template <class T>
@@ -1045,7 +1045,7 @@ void RefrigerationSecondarySystem::resetEndUseSubcategory() {
 
 /// @cond
 RefrigerationSecondarySystem::RefrigerationSecondarySystem(std::shared_ptr<detail::RefrigerationSecondarySystem_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

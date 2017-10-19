@@ -157,9 +157,9 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
     SITE,
     SCHEDULES,
     CONSTRUCTIONS,
-    GEOMETRY,
     LOADS,
     SPACE_TYPES,
+    GEOMETRY,
     FACILITY,
     SPACES,
     THERMAL_ZONES,
@@ -210,6 +210,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void aboutClicked();
 
+  // called before actual save (copy from temp to user location) occurs
   void modelSaving(const openstudio::path &t_path);
 
   void downloadComponentsClicked();

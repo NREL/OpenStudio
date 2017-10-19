@@ -165,14 +165,14 @@ namespace detail {
       c->removeWaterUseEquipment(e);
     }
 
-    return ModelObject_Impl::remove();    
+    return ModelObject_Impl::remove();
   }
 
   WaterUseEquipmentDefinition WaterUseEquipment_Impl::waterUseEquipmentDefinition() const
   {
     return definition().cast<WaterUseEquipmentDefinition>();
   }
-  
+
   bool WaterUseEquipment_Impl::setWaterUseEquipmentDefinition(const WaterUseEquipmentDefinition & definition)
   {
     return setPointer(OS_WaterUse_EquipmentFields::WaterUseEquipmentDefinitionName, definition.handle());
@@ -262,7 +262,7 @@ bool WaterUseEquipment::setWaterUseEquipmentDefinition(const WaterUseEquipmentDe
 
 /// @cond
 WaterUseEquipment::WaterUseEquipment(std::shared_ptr<detail::WaterUseEquipment_Impl> impl)
-  : SpaceLoadInstance(impl)
+  : SpaceLoadInstance(std::move(impl))
 {}
 /// @endcond
 

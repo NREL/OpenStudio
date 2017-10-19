@@ -579,7 +579,7 @@ void CurveBicubic::resetOutputUnitType() {
 
 /// @cond
 CurveBicubic::CurveBicubic(std::shared_ptr<detail::CurveBicubic_Impl> impl)
-  : Curve(impl)
+  : Curve(std::move(impl))
 {}
 /// @endcond
 

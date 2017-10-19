@@ -1,0 +1,36 @@
+The <a href="https://github.com/NREL/openstudio-geometry-editor">OpenStudio Geometry Editor</a> is a new, open source software module that developers can leverage to produce building energy modeling UIs that include geometry creation.  The OpenStudio Geometry Editor is meant to cover simple building geometry use cases only.  More complex building geometry is best developed in a full featured CAD tool and exported to gbXML for building energy modeling.  The OpenStudio Geometry Editor is implemented in JavaScript with minimal dependencies, allowing it to be integrated into a wide range of applications, including the OpenStudio Application.<br><br>
+
+The OpenStudio Geometry Editor and its integration within the OpenStudio Application are experimental and are not recommended for production workflows.  However, we invite users to try these software components out and provide feedback at <a href="mailto:openstudio@nrel.gov?Subject=Geometry%20Editor%20Feedback" target="_top">openstudio@nrel.gov</a> to help us make them better for use by third party developers.  Instructions for using the Geometry Editor are available at <a href="https://nrel.github.io/OpenStudio-user-documentation/reference/geometry_editor/">openstudio.net</a>.<br><br>
+
+Currently, the OpenStudio Geometry Editor cannot be used on OpenStudio Models with existing geometry developed outside of the Geometry Editor.<br><br>
+
+The suggested workflow is:<br>
+<ol>
+  <li>Create a new OpenStudio Model.</li>
+  <li>Import Space Types, Default Construction Sets, Thermal Zones, and other resources in the OpenStudio Application.</li>
+  <li>Create a new floorplan in the Geometry Editor.</li>
+  <li>Work through the model creating Spaces on each Story.  Define the geometry for each Space by selecting the Space and using either the Rectangle or Polygon tool to draw.  Note that each Space must have a single floor surface and Spaces on the same story cannot overlap.</li>
+  <li>Assign Space Type, Default Construction Set, Thermal Zone and other properties to each Space and Story.  You can create new Space Types, Default Construction Sets, Thermal Zones, and other resources using the library in the bottom pane.</li>
+  <li>Use the preview buttom to preview your geometry in 3D.</li>
+  <li>When you are satisfied with your geometry, use the merge button to apply your floorplan geometry to the current OpenStudio Model.  Changes made to the floorplan in the Geometry Editor will not affect your current OpenStudio Model until you perform the merge step.</li>
+  <li>Continue editing your OpenStudio Model in the OpenStudio Application; switching back to edit the floorplan using the Geometry Editor as needed.  Each time you make a change to the floorplan you will need to re-merge with the current OpenStudio Model.</li>
+</ol>
+
+Current known issues are:<br>
+<ul>
+  <li>There is no back button to navigate to this page after clicking on links.  Navigate to another tab in the OpenStudio Application and then back to this tab to reload.</li>  
+  <li>Placement of windows, daylighting controls, and other components is not yet available.  These objects can be added via measures available on the BCL.</li>
+  <li>File dialogs to open existing floorplans or load background images for stories currently freezes the application, <a href="https://github.com/NREL/OpenStudio/issues/2730">#2730</a></li>    
+  <li><a href="https://github.com/NREL/openstudio-geometry-editor/issues">Other known issues with OpenStudio Geometry Editor module</a>.</li>   
+  <li><a href="https://github.com/NREL/OpenStudio/issues?q=is%3Aopen+is%3Aissue+label%3A%22component+-+Geometry+Editor%22">Other known issues with OpenStudio Application integration</a>.</li> 
+</ul>
+
+Thanks for giving the OpenStudio Geometry Editor a try, please let us know what you think!<br><br>
+
+<b>Press the create new floorplan button to begin.</b><br><br>
+
+If the editor does not appear to load correctly, please <a href="http://webglreport.com/">test your WebGL settings</a> and send us the result.<br><br>
+
+If the editor becomes unresponsive, please press the Debug button and select "geometry_editor".  Message content in the console is useful to submit along with any bug report.<br><br>
+
+

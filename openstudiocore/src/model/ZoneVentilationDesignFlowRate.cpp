@@ -426,7 +426,7 @@ namespace detail {
   {
     return 0; // this object has no inlet or outlet node
   }
-  
+
   boost::optional<ThermalZone> ZoneVentilationDesignFlowRate_Impl::thermalZone()
   {
     ModelObject thisObject = this->getObject<ModelObject>();
@@ -442,7 +442,7 @@ namespace detail {
     }
     return boost::none;
   }
-  
+
   bool ZoneVentilationDesignFlowRate_Impl::addToThermalZone(ThermalZone & thermalZone)
   {
     Model m = this->model();
@@ -463,7 +463,7 @@ namespace detail {
 
     return true;
   }
-  
+
   void ZoneVentilationDesignFlowRate_Impl::removeFromThermalZone()
   {
     if ( boost::optional<ThermalZone> thermalZone = this->thermalZone() ) {
@@ -731,7 +731,7 @@ bool ZoneVentilationDesignFlowRate::setMaximumWindSpeed(double maximumWindSpeed)
 
 /// @cond
 ZoneVentilationDesignFlowRate::ZoneVentilationDesignFlowRate(std::shared_ptr<detail::ZoneVentilationDesignFlowRate_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

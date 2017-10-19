@@ -187,7 +187,7 @@ ShadowCalculation::ShadowCalculation(const Model& model)
 
 // constructor
 ShadowCalculation::ShadowCalculation(std::shared_ptr<detail::ShadowCalculation_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 
 IddObjectType ShadowCalculation::iddObjectType() {

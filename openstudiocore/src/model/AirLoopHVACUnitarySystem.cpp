@@ -42,6 +42,8 @@
 #include "PlantLoop.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+#include "UnitarySystemPerformanceMultispeed.hpp"
+#include "UnitarySystemPerformanceMultispeed_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -124,6 +126,9 @@ namespace detail {
     if( boost::optional<HVACComponent> supplementalHeatingCoil = this->supplementalHeatingCoil()) {
       modelObjectClone.setSupplementalHeatingCoil(supplementalHeatingCoil->clone(model).cast<HVACComponent>());
     }
+    if( auto designSpec = designSpecificationMultispeedObject() ) {
+      modelObjectClone.setDesignSpecificationMultispeedObject(designSpec->clone(model).cast<UnitarySystemPerformanceMultispeed>());
+    }
 
     return modelObjectClone;
   }
@@ -143,6 +148,9 @@ namespace detail {
     }
     if( boost::optional<HVACComponent> supplementalHeatingCoil = this->supplementalHeatingCoil()) {
       result.push_back( *supplementalHeatingCoil );
+    }
+    if( auto designSpec = designSpecificationMultispeedObject() ) {
+      result.push_back( *designSpec );
     }
 
     return result;
@@ -182,6 +190,11 @@ namespace detail {
       }
       std::vector<IdfObject> removedSuppHeatingCoils = _supplementalHeatingCoil->remove();
       result.insert(result.end(), removedSuppHeatingCoils.begin(), removedSuppHeatingCoils.end());
+    }
+
+    if( auto designSpec = designSpecificationMultispeedObject() ) {
+      auto removed = designSpec->remove();
+      result.insert(result.end(), removed.begin(), removed.end());
     }
 
     std::vector<IdfObject> removedUnitarySystem = WaterToAirComponent_Impl::remove();
@@ -517,9 +530,9 @@ namespace detail {
   //   return isEmpty(OS_AirLoopHVAC_UnitarySystemFields::MaximumTemperatureforHeatRecovery);
   // }
 
-  // boost::optional<UnitarySystemPerformace> AirLoopHVACUnitarySystem_Impl::designSpecificationMultispeedHeatPumpObject() const {
-  //   return getObject<ModelObject>().getModelObjectTarget<UnitarySystemPerformace>(OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedHeatPumpObjectName);
-  // }
+  boost::optional<UnitarySystemPerformanceMultispeed> AirLoopHVACUnitarySystem_Impl::designSpecificationMultispeedObject() const {
+    return getObject<ModelObject>().getModelObjectTarget<UnitarySystemPerformanceMultispeed>(OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName);
+  }
 
   bool AirLoopHVACUnitarySystem_Impl::setControlType(std::string controlType) {
     bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::ControlType, controlType);
@@ -1141,22 +1154,22 @@ namespace detail {
   //   OS_ASSERT(result);
   // }
 
-  // bool AirLoopHVACUnitarySystem_Impl::setDesignSpecificationMultispeedHeatPumpObject(const boost::optional<UnitarySystemPerformace>& unitarySystemPerformace) {
-  //   bool result(false);
-  //   if (unitarySystemPerformace) {
-  //     result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedHeatPumpObjectName, unitarySystemPerformace.get().handle());
-  //   }
-  //   else {
-  //     resetDesignSpecificationMultispeedHeatPumpObject();
-  //     result = true;
-  //   }
-  //   return result;
-  // }
+  bool AirLoopHVACUnitarySystem_Impl::setDesignSpecificationMultispeedObject(const boost::optional<UnitarySystemPerformanceMultispeed>& unitarySystemPerformace) {
+    bool result(false);
+    if (unitarySystemPerformace) {
+      result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName, unitarySystemPerformace.get().handle());
+    }
+    else {
+      resetDesignSpecificationMultispeedObject();
+      result = true;
+    }
+    return result;
+  }
 
-  // void AirLoopHVACUnitarySystem_Impl::resetDesignSpecificationMultispeedHeatPumpObject() {
-  //   bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedHeatPumpObjectName, "");
-  //   OS_ASSERT(result);
-  // }
+  void AirLoopHVACUnitarySystem_Impl::resetDesignSpecificationMultispeedObject() {
+    bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName, "");
+    OS_ASSERT(result);
+  }
 
 } // detail
 
@@ -1485,9 +1498,9 @@ bool AirLoopHVACUnitarySystem::isAncilliaryOffCycleElectricPowerDefaulted() cons
 //   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->isMaximumTemperatureforHeatRecoveryDefaulted();
 // }
 
-// boost::optional<UnitarySystemPerformace> AirLoopHVACUnitarySystem::designSpecificationMultispeedHeatPumpObject() const {
-//   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->designSpecificationMultispeedHeatPumpObject();
-// }
+boost::optional<UnitarySystemPerformanceMultispeed> AirLoopHVACUnitarySystem::designSpecificationMultispeedObject() const {
+  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->designSpecificationMultispeedObject();
+}
 
 //bool AirLoopHVACUnitarySystem::setControlType(std::string controlType) {
 //  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setControlType(controlType);
@@ -1841,17 +1854,17 @@ void AirLoopHVACUnitarySystem::resetAncilliaryOffCycleElectricPower() {
 //   getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetMaximumTemperatureforHeatRecovery();
 // }
 
-// bool AirLoopHVACUnitarySystem::setDesignSpecificationMultispeedHeatPumpObject(const UnitarySystemPerformace& unitarySystemPerformace) {
-//   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setDesignSpecificationMultispeedHeatPumpObject(unitarySystemPerformace);
-// }
+bool AirLoopHVACUnitarySystem::setDesignSpecificationMultispeedObject(const UnitarySystemPerformanceMultispeed& unitarySystemPerformace) {
+  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setDesignSpecificationMultispeedObject(unitarySystemPerformace);
+}
 
-// void AirLoopHVACUnitarySystem::resetDesignSpecificationMultispeedHeatPumpObject() {
-//   getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetDesignSpecificationMultispeedHeatPumpObject();
-// }
+void AirLoopHVACUnitarySystem::resetDesignSpecificationMultispeedObject() {
+  getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetDesignSpecificationMultispeedObject();
+}
 
 /// @cond
 AirLoopHVACUnitarySystem::AirLoopHVACUnitarySystem(std::shared_ptr<detail::AirLoopHVACUnitarySystem_Impl> impl)
-  : WaterToAirComponent(impl)
+  : WaterToAirComponent(std::move(impl))
 {}
 /// @endcond
 

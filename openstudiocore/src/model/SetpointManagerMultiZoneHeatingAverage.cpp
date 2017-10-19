@@ -173,7 +173,7 @@ bool SetpointManagerMultiZoneHeatingAverage::setMaximumSetpointTemperature(doubl
 
 /// @cond
 SetpointManagerMultiZoneHeatingAverage::SetpointManagerMultiZoneHeatingAverage(std::shared_ptr<detail::SetpointManagerMultiZoneHeatingAverage_Impl> impl)
-  : SetpointManager(impl)
+  : SetpointManager(std::move(impl))
 {}
 /// @endcond
 

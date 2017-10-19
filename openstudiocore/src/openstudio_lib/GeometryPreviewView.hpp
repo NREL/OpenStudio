@@ -43,6 +43,8 @@ class QPushButton;
 
 namespace openstudio {
 
+class OSDocument;
+
 class GeometryPreviewView : public QWidget
 {
   Q_OBJECT
@@ -66,7 +68,7 @@ class PreviewWebView : public QWidget
   Q_OBJECT;
 
   public:
-    PreviewWebView(const openstudio::model::Model& model, QWidget *t_parent = nullptr);
+    PreviewWebView(bool isIP, const openstudio::model::Model& model, QWidget *t_parent = nullptr);
     virtual ~PreviewWebView();
 
   public slots:
@@ -77,8 +79,10 @@ class PreviewWebView : public QWidget
 
     // DLM: for debugging
     void 	onLoadFinished(bool ok);
-    void 	onLoadProgress(int progress);
-    void 	onLoadStarted();
+    //void 	onLoadProgress(int progress);
+    //void 	onLoadStarted();
+    void 	onTranslateProgress(double percentage);
+    void 	onJavaScriptFinished(const QVariant &v);
     void 	onRenderProcessTerminated(QWebEnginePage::RenderProcessTerminationStatus terminationStatus, int exitCode);
   private:
     REGISTER_LOGGER("openstudio::PreviewWebView");
@@ -90,6 +94,9 @@ class PreviewWebView : public QWidget
     QPushButton * m_refreshBtn;
 
     QWebEngineView * m_view;
+    std::shared_ptr<OSDocument> m_document;
+
+    QString m_json;
 };
 
 } // openstudio

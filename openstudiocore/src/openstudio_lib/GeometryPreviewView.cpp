@@ -27,11 +27,14 @@
  **********************************************************************************************************************/
 
 #include "GeometryPreviewView.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
 
 #include "../model/Model_Impl.hpp"
-#include "../model/ThreeJS.hpp"
+#include "../model/ThreeJSForwardTranslator.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Application.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -43,6 +46,9 @@
 #include <QWebEnginePage>
 #include <QWebEngineSettings>
 #include <QWebEngineScriptCollection>
+#include <QtConcurrent>
+
+using namespace std::placeholders; 
 
 namespace openstudio {
 
@@ -56,7 +62,7 @@ GeometryPreviewView::GeometryPreviewView(bool isIP,
 
   QVBoxLayout *layout = new QVBoxLayout;
 
-  PreviewWebView* webView = new PreviewWebView(model, this);
+  PreviewWebView* webView = new PreviewWebView(isIP, model, this);
   layout->addWidget(webView);
 
   setLayout(layout);
@@ -67,17 +73,25 @@ GeometryPreviewView::~GeometryPreviewView()
 
 }
 
-PreviewWebView::PreviewWebView(const model::Model& model, QWidget *t_parent)
+PreviewWebView::PreviewWebView(bool isIP, const model::Model& model, QWidget *t_parent)
   : QWidget(t_parent),
     m_model(model),
-    m_isIP(true),
+    m_isIP(isIP),
     m_progressBar(new QProgressBar()),
     m_refreshBtn(new QPushButton("Refresh"))
 {
 
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  OS_ASSERT(app);
+  m_document = app->currentDocument();
+  OS_ASSERT(m_document);
+
+  std::shared_ptr<OSDocument> m_document;
+
   auto mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
 
+  connect(m_document.get(), &OSDocument::toggleUnitsClicked, this, &PreviewWebView::onUnitSystemChange);
   connect(m_refreshBtn, &QPushButton::clicked, this, &PreviewWebView::refreshClicked);
 
   auto hLayout = new QHBoxLayout(this);
@@ -86,10 +100,15 @@ PreviewWebView::PreviewWebView(const model::Model& model, QWidget *t_parent)
   hLayout->addStretch();
 
   hLayout->addWidget(m_progressBar, 0, Qt::AlignVCenter);
+
+  // set progress bar
   m_progressBar->setMinimum(0);
   m_progressBar->setMaximum(100);
   m_progressBar->setValue(0);
-  m_progressBar->setVisible(false); // make visible when load first page
+  m_progressBar->setVisible(true); 
+  m_progressBar->setStyleSheet("");
+  m_progressBar->setFormat("");
+  m_progressBar->setTextVisible(false);
 
   hLayout->addWidget(m_refreshBtn, 0, Qt::AlignVCenter);
   m_refreshBtn->setVisible(true);
@@ -99,8 +118,8 @@ PreviewWebView::PreviewWebView(const model::Model& model, QWidget *t_parent)
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::SpatialNavigationEnabled, true);
 
   connect(m_view, &QWebEngineView::loadFinished, this, &PreviewWebView::onLoadFinished);
-  connect(m_view, &QWebEngineView::loadProgress, this, &PreviewWebView::onLoadProgress);
-  connect(m_view, &QWebEngineView::loadStarted, this, &PreviewWebView::onLoadStarted);
+  //connect(m_view, &QWebEngineView::loadProgress, this, &PreviewWebView::onLoadProgress);
+  //connect(m_view, &QWebEngineView::loadStarted, this, &PreviewWebView::onLoadStarted);
   connect(m_view, &QWebEngineView::renderProcessTerminated, this, &PreviewWebView::onRenderProcessTerminated);
   
   // Qt 5.8 and higher
@@ -122,6 +141,10 @@ PreviewWebView::~PreviewWebView()
 
 void PreviewWebView::refreshClicked()
 {
+  m_progressBar->setStyleSheet("");
+  m_progressBar->setFormat("");
+  m_progressBar->setTextVisible(false);
+
   m_view->triggerPageAction(QWebEnginePage::ReloadAndBypassCache);
 }
 
@@ -140,49 +163,63 @@ void PreviewWebView::onLoadFinished(bool ok)
 {
   QString title = m_view->title();
   if (ok){
-    m_progressBar->setStyleSheet("");
-    m_progressBar->setFormat("");
-    m_progressBar->setTextVisible(false);
+    m_progressBar->setValue(10);
   } else{
+    m_progressBar->setValue(100);
     m_progressBar->setStyleSheet("QProgressBar::chunk {background-color: #FF0000;}");
     m_progressBar->setFormat("Error");
     m_progressBar->setTextVisible(true);
+    return;
   }
-  
-  ThreeScene scene = modelToThreeJS(m_model, true); // triangulated
-  //ThreeScene scene = modelToThreeJS(m_model, false); // non-triangulated
-  std::string json = scene.toJSON(false); // no pretty print
 
-  std::stringstream ss;
-  ss << m_model;
-  std::string s = ss.str();
+  if (m_json.isEmpty()){
+    std::function<void(double)> updatePercentage = std::bind(&PreviewWebView::onTranslateProgress, this, _1);
+    //ThreeScene scene = modelToThreeJS(m_model.clone(true).cast<model::Model>(), true, updatePercentage); // triangulated
+
+    model::ThreeJSForwardTranslator ft;
+    ThreeScene scene = ft.modelToThreeJS(m_model, true, updatePercentage); // triangulated
+    std::string json = scene.toJSON(false); // no pretty print
+    m_json = QString::fromStdString(json);
+  } else {
+    m_progressBar->setValue(90);
+  }
+
+  // disable doc
+  m_document->disable();
 
   // call init and animate
-  QString javascript = QString("init(") + QString::fromStdString(json) + QString(");\n animate();\n initDatGui();");
-  m_view->page()->runJavaScript(javascript);
+  QString javascript = QString("init(") + m_json + QString(");\n animate();\n initDatGui();");
+  m_view->page()->runJavaScript(javascript, [this](const QVariant &v) { onJavaScriptFinished(v); });
 
   //javascript = QString("os_data.metadata.version");
   //m_view->page()->runJavaScript(javascript, [](const QVariant &v) { callWithResult(v.toString()); });
 
 }
 
-void PreviewWebView::onLoadProgress(int progress)
+//void PreviewWebView::onLoadProgress(int progress)
+//{
+//}
+
+//void PreviewWebView::onLoadStarted()
+//{
+//}
+
+void PreviewWebView::onTranslateProgress(double percentage)
 {
-  m_progressBar->setStyleSheet("");
-  m_progressBar->setFormat("");
-  m_progressBar->setTextVisible(false);
-  m_progressBar->setValue(progress);
+  m_progressBar->setValue(10 + 0.8*percentage);
+  OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
 }
 
-void PreviewWebView::onLoadStarted()
+void PreviewWebView::onJavaScriptFinished(const QVariant &v)
 {
-  m_progressBar->setStyleSheet("");
-  m_progressBar->setFormat("");
-  m_progressBar->setTextVisible(false);
+  m_document->enable();
+  m_progressBar->setValue(100);
+  m_progressBar->setVisible(false);
 }
 
 void PreviewWebView::onRenderProcessTerminated(QWebEnginePage::RenderProcessTerminationStatus terminationStatus, int exitCode)
 {
+  m_progressBar->setValue(100);
   m_progressBar->setStyleSheet("QProgressBar::chunk {background-color: #FF0000;}");
   m_progressBar->setFormat("Error");
   m_progressBar->setTextVisible(true);

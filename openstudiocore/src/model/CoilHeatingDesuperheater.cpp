@@ -308,7 +308,7 @@ void CoilHeatingDesuperheater::resetParasiticElectricLoad() {
 
 /// @cond
 CoilHeatingDesuperheater::CoilHeatingDesuperheater(std::shared_ptr<detail::CoilHeatingDesuperheater_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

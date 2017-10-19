@@ -422,7 +422,7 @@ void ZoneHVACEnergyRecoveryVentilatorController::setControlHighIndoorHumidityBas
 
 /// @cond
 ZoneHVACEnergyRecoveryVentilatorController::ZoneHVACEnergyRecoveryVentilatorController(std::shared_ptr<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

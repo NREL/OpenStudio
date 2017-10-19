@@ -1,4 +1,4 @@
- 
+
 /***********************************************************************************************************************
  *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
@@ -93,7 +93,7 @@ IddObjectType AirWallMaterial::iddObjectType() {
 
 /// @cond
 AirWallMaterial::AirWallMaterial(std::shared_ptr<detail::AirWallMaterial_Impl> impl)
-  : ModelPartitionMaterial(impl)
+  : ModelPartitionMaterial(std::move(impl))
 {}
 /// @endcond
 

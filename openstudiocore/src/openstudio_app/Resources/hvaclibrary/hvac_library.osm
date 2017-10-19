@@ -1,7 +1,7 @@
 
 OS:Version,
-  {5bf6a875-8324-404f-bb13-fe1c7a962f6f}, !- Handle
-  2.1.1;                                  !- Version Identifier
+  {de09e553-501b-482c-8f3a-f24d04bcbf5e}, !- Handle
+  2.3.0;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -5455,7 +5455,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {2e28adfb-474c-4f0c-84c5-88884963b30e}, !- Handle
@@ -5710,7 +5710,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {9be5fc48-23e1-43f4-9f73-8b838bf3ab13}, !- Handle
@@ -5995,7 +5995,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {92d46b63-bee9-4a68-9b87-0cf64c3c6db6}, !- Handle
@@ -6220,7 +6220,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {d89faefb-347b-43f3-a961-af51209d1bda}, !- Handle
@@ -6441,7 +6441,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {e803e540-d848-409c-9bad-0c0dc9c7b50a}, !- Handle
@@ -6632,7 +6632,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {705d20c8-7569-40b3-b69d-0ea966344238}, !- Handle
@@ -6827,7 +6827,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:VariableVolume,
   {057b7168-bdc2-418a-9961-3bfe683a200e}, !- Handle
@@ -6953,7 +6953,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:ConstantVolume,
   {0c016d27-85cb-4254-8b85-9a16c4586de5}, !- Handle
@@ -7071,7 +7071,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {499db098-1af5-4236-8115-51a38ac8163e}, !- Handle
@@ -7218,7 +7218,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {1fb3620b-be0e-4bf3-bdab-3320a2807269}, !- Handle
@@ -7430,7 +7430,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {69bcd821-df0e-4a8c-bced-33315e849e64}, !- Handle
@@ -7612,7 +7612,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {37e35cd8-c016-4d24-80db-b070cc5a1999}, !- Handle
@@ -7706,7 +7706,7 @@ OS:AirLoopHVAC:UnitarySystem,
   80,                                     !- Maximum Temperature for Heat Recovery {C}
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
-  ;                                       !- Design Specification Multispeed Heat Pump Object Name
+  ;                                       !- Design Specification Multispeed Object Name
 
 OS:Fan:OnOff,
   {9be0b11b-c585-4514-aa5a-9cb276e583c5}, !- Handle
@@ -8237,7 +8237,10 @@ OS:ZoneHVAC:FourPipeFanCoil,
   {9b16c087-b0de-427f-b746-d411b7e8f182}, !- Heating Coil Name
   autosize,                               !- Maximum Hot Water Flow Rate {m3/s}
   ,                                       !- Minimum Hot Water Flow Rate {m3/s}
-  ;                                       !- Heating Convergence Tolerance
+  ,                                       !- Heating Convergence Tolerance
+  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  Autosize,                               !- Minimum Supply Air Temperature in Cooling Mode {C}
+  Autosize;                               !- Maximum Supply Air Temperature in Heating Mode {C}
 
 OS:Fan:OnOff,
   {d5c825bb-4747-40b1-a6cc-c85df16d7718}, !- Handle
@@ -8335,7 +8338,10 @@ OS:ZoneHVAC:FourPipeFanCoil,
   {6ebfa242-93b1-4d90-9ca4-eb5362303729}, !- Heating Coil Name
   autosize,                               !- Maximum Hot Water Flow Rate {m3/s}
   ,                                       !- Minimum Hot Water Flow Rate {m3/s}
-  ;                                       !- Heating Convergence Tolerance
+  ,                                       !- Heating Convergence Tolerance
+  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  Autosize,                               !- Minimum Supply Air Temperature in Cooling Mode {C}
+  Autosize;                               !- Maximum Supply Air Temperature in Heating Mode {C}
 
 OS:Fan:VariableVolume,
   {e0cfb885-12c5-4d01-b86f-6514d92205f9}, !- Handle
@@ -8416,7 +8422,10 @@ OS:ZoneHVAC:FourPipeFanCoil,
   {36deaf41-e00c-4a4e-a38d-d443cbea27dd}, !- Heating Coil Name
   autosize,                               !- Maximum Hot Water Flow Rate {m3/s}
   ,                                       !- Minimum Hot Water Flow Rate {m3/s}
-  ;                                       !- Heating Convergence Tolerance
+  ,                                       !- Heating Convergence Tolerance
+  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  Autosize,                               !- Minimum Supply Air Temperature in Cooling Mode {C}
+  Autosize;                               !- Maximum Supply Air Temperature in Heating Mode {C}
 
 OS:Fan:VariableVolume,
   {b5c75ce0-7c70-4dac-bacb-0c1a5a1a5dab}, !- Handle
@@ -8497,7 +8506,10 @@ OS:ZoneHVAC:FourPipeFanCoil,
   {9d8c2a17-eef1-44d6-a8dd-0e9b74726abe}, !- Heating Coil Name
   autosize,                               !- Maximum Hot Water Flow Rate {m3/s}
   ,                                       !- Minimum Hot Water Flow Rate {m3/s}
-  ;                                       !- Heating Convergence Tolerance
+  ,                                       !- Heating Convergence Tolerance
+  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  Autosize,                               !- Minimum Supply Air Temperature in Cooling Mode {C}
+  Autosize;                               !- Maximum Supply Air Temperature in Heating Mode {C}
 
 OS:Schedule:Ruleset,
   {655b4e90-c058-40c7-aa39-646c84ed55a9}, !- Handle
@@ -10778,10 +10790,10 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
   ,                                       !- Source Side Outlet Node Name
   ,                                       !- Load Side Inlet Node Name
   ,                                       !- Load Side Outlet Node Name
-  0.00189,                                !- Rated Load Side Flow Rate {m3/s}
-  0.00189,                                !- Rated Source Side Flow Rate {m3/s}
-  39890.91,                               !- Rated Cooling Capacity {W}
-  4790,                                   !- Rated Cooling Power Consumption {W}
+  0.00189,                                !- Reference Load Side Flow Rate {m3/s}
+  0.00189,                                !- Reference Source Side Flow Rate {m3/s}
+  39890.91,                               !- Reference Cooling Capacity {W}
+  4790,                                   !- Reference Cooling Power Consumption {W}
   -1.52030596,                            !- Cooling Capacity Coefficient 1
   3.46625667,                             !- Cooling Capacity Coefficient 2
   -1.32267797,                            !- Cooling Capacity Coefficient 3
@@ -10800,10 +10812,10 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
   ,                                       !- Source Side Outlet Node Name
   ,                                       !- Load Side Inlet Node Name
   ,                                       !- Load Side Outlet Node Name
-  0.00189,                                !- Rated Load Side Flow Rate {m3/s}
-  0.00189,                                !- Rated Source Side Flow Rate {m3/s}
-  39040.92,                               !- Rated Heating Capacity {W}
-  5130,                                   !- Rated Heating Power Consumption {W}
+  0.00189,                                !- Reference Load Side Flow Rate {m3/s}
+  0.00189,                                !- Reference Source Side Flow Rate {m3/s}
+  39040.92,                               !- Reference Heating Capacity {W}
+  5130,                                   !- Reference Heating Power Consumption {W}
   -3.33491153,                            !- Heating Capacity Coefficient 1
   -0.51451946,                            !- Heating Capacity Coefficient 2
   4.51592706,                             !- Heating Capacity Coefficient 3
@@ -10813,7 +10825,9 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
   8.57035762,                             !- Heating Compressor Power Coefficient 2
   1.29660976,                             !- Heating Compressor Power Coefficient 3
   -0.21629222,                            !- Heating Compressor Power Coefficient 4
-  0.033862378;                            !- Heating Compressor Power Coefficient 5
+  0.033862378,                            !- Heating Compressor Power Coefficient 5
+  ,                                       !- Reference Coefficient of Performance
+  ;                                       !- Sizing Factor
 
 OS:Generator:MicroTurbine,
   {5f037e71-1ba0-4b22-9d0d-0ab372356d49}, !- Handle
@@ -11174,7 +11188,6 @@ OS:Curve:Cubic,
   -10000000000,                           !- Minimum Value of x
   10000000000;                            !- Maximum Value of x
 
-  
 OS:Curve:Quadratic,
   {2236bcc7-bb73-4ad6-93b3-425eb06ac90a}, !- Handle
   Air Rate Function of Electric Power Curve, !- Name
@@ -11192,7 +11205,7 @@ OS:Curve:Quadratic,
   0,                                      !- Coefficient3 x**2
   -10000000000,                           !- Minimum Value of x
   10000000000;                            !- Maximum Value of x
-  
+
 OS:Generator:FuelSupply,
   {a9cb7b8d-a10a-4cab-909b-3ec4ce27017b}, !- Handle
   Generator Fuel Supply 1,                !- Name
@@ -11210,13 +11223,13 @@ OS:Generator:FuelSupply,
 
 OS:Schedule:Constant,
   {0fb785ba-88c0-438a-9d31-1a88979dab95}, !- Handle
-  Fuel Temperature,                    !- Name
+  Fuel Temperature,                       !- Name
   {dfe136f8-1a1a-4263-a38c-0055df8cb82e}, !- Schedule Type Limits Name
   20;                                     !- Value
 
 OS:ScheduleTypeLimits,
   {dfe136f8-1a1a-4263-a38c-0055df8cb82e}, !- Handle
-  Temperature,                            !- Name
+  Temperature 5,                          !- Name
   0,                                      !- Lower Limit Value
   100,                                    !- Upper Limit Value
   Continuous,                             !- Numeric Type
@@ -11333,4 +11346,4 @@ OS:Curve:Quadratic,
   -2.01648e-008,                          !- Coefficient3 x**2
   -10000000000,                           !- Minimum Value of x
   10000000000;                            !- Maximum Value of x
-  
+

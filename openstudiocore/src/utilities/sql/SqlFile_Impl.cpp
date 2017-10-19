@@ -445,7 +445,7 @@ namespace openstudio{
         if (!isValidConnection()) {
           sqlite3_close(m_db);
           m_connectionOpen = false;
-          throw openstudio::Exception("ResultsViewer is not compatible with this file.");
+          throw openstudio::Exception("OpenStudio is not compatible with this file.");
         }
         // set a 1 second timeout
         code = sqlite3_busy_timeout(m_db, 1000);

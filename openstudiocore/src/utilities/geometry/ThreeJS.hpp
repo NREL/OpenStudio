@@ -163,16 +163,25 @@ namespace openstudio{
     std::string surfaceType() const;
     std::string surfaceTypeMaterialName() const;
     std::string constructionName() const;
+    std::string constructionHandle() const;
     std::string constructionMaterialName() const;
     std::string spaceName() const;
+    std::string spaceHandle() const;
     std::string thermalZoneName() const;
+    std::string thermalZoneHandle() const;
     std::string thermalZoneMaterialName() const;
     std::string spaceTypeName() const;
+    std::string spaceTypeHandle() const;
     std::string spaceTypeMaterialName() const;
     std::string buildingStoryName() const;
+    std::string buildingStoryHandle() const;
     std::string buildingStoryMaterialName() const;
     std::string buildingUnitName() const;
+    std::string buildingUnitHandle() const;
     std::string buildingUnitMaterialName() const;
+    std::string constructionSetName() const;
+    std::string constructionSetHandle() const;
+    std::string constructionSetMaterialName() const;
     std::string outsideBoundaryCondition() const;
     std::string outsideBoundaryConditionObjectName() const;
     std::string outsideBoundaryConditionObjectHandle() const;
@@ -180,22 +189,34 @@ namespace openstudio{
     bool coincidentWithOutsideObject() const;
     std::string sunExposure() const;
     std::string windExposure() const;
+    //bool plenum() const;
+    //bool belowFloorPlenum() const;
+    //bool aboveCeilingPlenum() const;
 
     void setHandle(const std::string& s);
     void setName(const std::string& s);
     void setSurfaceType(const std::string& s);
     void setSurfaceTypeMaterialName(const std::string& s);
     void setConstructionName(const std::string& s);
+    void setConstructionHandle(const std::string& s);
     void setConstructionMaterialName(const std::string& s);
     void setSpaceName(const std::string& s);
+    void setSpaceHandle(const std::string& s);
     void setThermalZoneName(const std::string& s);
+    void setThermalZoneHandle(const std::string& s);
     void setThermalZoneMaterialName(const std::string& s);
     void setSpaceTypeName(const std::string& s);
+    void setSpaceTypeHandle(const std::string& s);
     void setSpaceTypeMaterialName(const std::string& s);
     void setBuildingStoryName(const std::string& s);
+    void setBuildingStoryHandle(const std::string& s);
     void setBuildingStoryMaterialName(const std::string& s);
     void setBuildingUnitName(const std::string& s);
+    void setBuildingUnitHandle(const std::string& s);
     void setBuildingUnitMaterialName(const std::string& s);
+    void setConstructionSetName(const std::string& s);
+    void setConstructionSetHandle(const std::string& s);
+    void setConstructionSetMaterialName(const std::string& s);
     void setOutsideBoundaryCondition(const std::string& s);
     void setOutsideBoundaryConditionObjectName(const std::string& s);
     void setOutsideBoundaryConditionObjectHandle(const std::string& s);
@@ -203,6 +224,8 @@ namespace openstudio{
     void setCoincidentWithOutsideObject(bool b);
     void setSunExposure(const std::string& s);
     void setWindExposure(const std::string& s);
+    //void setBelowFloorPlenum(bool v);
+    //void setAboveCeilingPlenum(bool v);
 
   private:
     friend class ThreeSceneChild;
@@ -214,16 +237,25 @@ namespace openstudio{
     std::string m_surfaceType;
     std::string m_surfaceTypeMaterialName;
     std::string m_constructionName;
+    std::string m_constructionHandle;
     std::string m_constructionMaterialName;
     std::string m_spaceName;
+    std::string m_spaceHandle;
     std::string m_thermalZoneName;
+    std::string m_thermalZoneHandle;
     std::string m_thermalZoneMaterialName;
     std::string m_spaceTypeName;
+    std::string m_spaceTypeHandle;
     std::string m_spaceTypeMaterialName;
     std::string m_buildingStoryName;
+    std::string m_buildingStoryHandle;
     std::string m_buildingStoryMaterialName;
     std::string m_buildingUnitName;
+    std::string m_buildingUnitHandle;
     std::string m_buildingUnitMaterialName;
+    std::string m_constructionSetName;
+    std::string m_constructionSetHandle;
+    std::string m_constructionSetMaterialName;
     std::string m_outsideBoundaryCondition;
     std::string m_outsideBoundaryConditionObjectName;
     std::string m_outsideBoundaryConditionObjectHandle;
@@ -231,6 +263,8 @@ namespace openstudio{
     bool m_coincidentWithOutsideObject;
     std::string m_sunExposure;
     std::string m_windExposure;
+    //bool m_belowFloorPlenum;
+    //bool m_aboveCeilingPlenum;
   };
 
   
@@ -314,15 +348,40 @@ namespace openstudio{
     double m_lookAtR;
   };
 
-  /// ThreeSceneMetadata includes metadata about the scene
+  /// ThreeModelObjectMetadata includes metadata about an OpenStudio ModelObject
+  class UTILITIES_API ThreeModelObjectMetadata{
+  public: 
+
+    // DLM: public default ctor seems to be only to make SWIG happy, normal tricks of ignoring vector resize did not work 
+    // additionally private default ctor with template<class _Ty> friend class std::allocator; also did not work
+    ThreeModelObjectMetadata();
+
+    ThreeModelObjectMetadata(const std::string& iddObjectType, const std::string& handle, const std::string& name);
+    std::string iddObjectType() const;
+    std::string handle() const;
+    std::string name() const;
+
+  private:
+    friend class ThreeSceneMetadata;
+
+    ThreeModelObjectMetadata(const Json::Value& json);
+    Json::Value toJsonValue() const;
+
+    std::string m_iddObjectType;
+    std::string m_handle;
+    std::string m_name;
+  };
+
+  /// ThreeSceneMetadata includes metadata about an OpenStudio Model Object
   class UTILITIES_API ThreeSceneMetadata{
   public: 
-    ThreeSceneMetadata(const std::vector<std::string>& buildingStoryNames, const ThreeBoundingBox& boundingBox);
+    ThreeSceneMetadata(const std::vector<std::string>& buildingStoryNames, const ThreeBoundingBox& boundingBox, const std::vector<ThreeModelObjectMetadata>& modelObjectMetadata);
     std::string version() const;
     std::string type() const;
     std::string generator() const;
     std::vector<std::string> buildingStoryNames() const;
     ThreeBoundingBox boundingBox() const;
+    std::vector<ThreeModelObjectMetadata> modelObjectMetadata() const;
 
   private:
     friend class ThreeScene;
@@ -334,6 +393,7 @@ namespace openstudio{
     std::string m_generator;
     std::vector<std::string> m_buildingStoryNames;
     ThreeBoundingBox m_boundingBox;
+    std::vector<ThreeModelObjectMetadata> m_modelObjectMetadata;
   };
 
   /** ThreeScene is an adapter for a scene in the three.js geometry format, defined at:

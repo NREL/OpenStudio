@@ -60,10 +60,13 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "AvailabilityManager.hpp"
+#include "AvailabilityManager_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_PlantLoop_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
 
 namespace openstudio {
 
@@ -98,6 +101,10 @@ std::vector<openstudio::IdfObject> PlantLoop_Impl::remove()
 
   ModelObjectVector modelObjects;
   ModelObjectVector::iterator it;
+
+  if( auto t_availabilityManager = availabilityManager() ) {
+    t_availabilityManager->remove();
+  }
 
   modelObjects = supplyComponents();
   for(it = modelObjects.begin();
@@ -161,7 +168,15 @@ IddObjectType PlantLoop_Impl::iddObjectType() const {
 
 ModelObject PlantLoop_Impl::clone(Model model) const
 {
-  return Loop_Impl::clone(model);
+  PlantLoop plantLoopClone = Loop_Impl::clone(model).cast<PlantLoop>();
+  if( auto mo = availabilityManager() ) {
+    auto clone = mo->clone(model).cast<AvailabilityManager>();
+    plantLoopClone.setAvailabilityManager(clone);
+  } else {
+    plantLoopClone.setString(OS_PlantLoopFields::AvailabilityManagerName,"");
+  }
+
+  return plantLoopClone;
 }
 
 unsigned PlantLoop_Impl::supplyInletPort() const
@@ -232,8 +247,8 @@ bool PlantLoop_Impl::addSupplyBranchForComponent( HVACComponent component )
     {
       if( boost::optional<Node> node = mo->optionalCast<Node>() )
       {
-        if ( (node->outletModelObject().get() == mixer) &&       
-              (node->inletModelObject().get() == splitter) )       
+        if ( (node->outletModelObject().get() == mixer) &&
+              (node->inletModelObject().get() == splitter) )
         {
           if( component.addToNode(node.get()) )
           {
@@ -262,7 +277,7 @@ bool PlantLoop_Impl::addSupplyBranchForComponent( HVACComponent component )
   else
   {
     removeSupplyBranchWithComponent(node);
-  
+
     return false;
   }
 
@@ -275,7 +290,7 @@ bool PlantLoop_Impl::removeSupplyBranchWithComponent( HVACComponent component )
   {
     return false;
   }
-  
+
   return removeBranchWithComponent(component,supplySplitter(),supplyMixer(),true);
 }
 
@@ -297,8 +312,8 @@ bool PlantLoop_Impl::addDemandBranchForComponent( HVACComponent component, bool 
     {
       if( boost::optional<Node> node = mo->optionalCast<Node>() )
       {
-        if ( (node->outletModelObject().get() == mixer) &&       
-              (node->inletModelObject().get() == splitter) )       
+        if ( (node->outletModelObject().get() == mixer) &&
+              (node->inletModelObject().get() == splitter) )
         {
           if( auto waterToWater = component.optionalCast<WaterToWaterComponent>() ) {
             if( tertiary ) {
@@ -348,7 +363,7 @@ bool PlantLoop_Impl::addDemandBranchForComponent( HVACComponent component, bool 
     _model.disconnect(node,node.outletPort());
     _model.disconnect(node,node.inletPort());
     node.remove();
-  
+
     return false;
   }
 
@@ -439,7 +454,7 @@ bool PlantLoop_Impl::removeDemandBranchWithComponent( HVACComponent component )
   {
     return false;
   }
-  
+
   return removeBranchWithComponent(component,demandSplitter(),demandMixer(),false);
 }
 
@@ -457,24 +472,56 @@ bool PlantLoop_Impl::isDemandBranchEmpty()
   }
 }
 
-Mixer PlantLoop_Impl::supplyMixer()
+Mixer PlantLoop_Impl::supplyMixer() const
 {
+  auto result = getObject<ModelObject>().getModelObjectTarget<Mixer>(OS_PlantLoopFields::SupplyMixerName);
+  if (result) return result.get();
   return supplyComponents( IddObjectType::OS_Connector_Mixer ).front().cast<Mixer>();
 }
 
-Splitter PlantLoop_Impl::supplySplitter()
+void PlantLoop_Impl::setSupplyMixer(Mixer const & mixer)
 {
+  auto result = setPointer(OS_PlantLoopFields::SupplyMixerName,mixer.handle());
+  OS_ASSERT(result);
+}
+
+Splitter PlantLoop_Impl::supplySplitter() const
+{
+  auto result = getObject<ModelObject>().getModelObjectTarget<Splitter>(OS_PlantLoopFields::SupplySplitterName);
+  if (result) return result.get();
   return supplyComponents( IddObjectType::OS_Connector_Splitter ).front().cast<Splitter>();
+}
+
+void PlantLoop_Impl::setSupplySplitter(Splitter const & splitter)
+{
+  auto result = setPointer(OS_PlantLoopFields::SupplySplitterName,splitter.handle());
+  OS_ASSERT(result);
 }
 
 Mixer PlantLoop_Impl::demandMixer()
 {
-  return demandComponents( IddObjectType::OS_Connector_Mixer ).front().cast<ConnectorMixer>();
+  auto result = getObject<ModelObject>().getModelObjectTarget<Mixer>(OS_PlantLoopFields::DemandMixerName);
+  if (result) return result.get();
+  return demandComponents( IddObjectType::OS_Connector_Mixer ).front().cast<Mixer>();
+}
+
+void PlantLoop_Impl::setDemandMixer(Mixer const & mixer)
+{
+  auto result = setPointer(OS_PlantLoopFields::DemandMixerName,mixer.handle());
+  OS_ASSERT(result);
 }
 
 Splitter PlantLoop_Impl::demandSplitter()
 {
-  return demandComponents( IddObjectType::OS_Connector_Splitter ).front().cast<ConnectorSplitter>();
+  auto result = getObject<ModelObject>().getModelObjectTarget<Splitter>(OS_PlantLoopFields::DemandSplitterName);
+  if (result) return result.get();
+  return demandComponents( IddObjectType::OS_Connector_Splitter ).front().cast<Splitter>();
+}
+
+void PlantLoop_Impl::setDemandSplitter(Splitter const & splitter)
+{
+  auto result = setPointer(OS_PlantLoopFields::DemandSplitterName,splitter.handle());
+  OS_ASSERT(result);
 }
 
 std::string PlantLoop_Impl::loadDistributionScheme()
@@ -492,6 +539,27 @@ bool PlantLoop_Impl::setLoadDistributionScheme(std::string scheme)
     scheme = "UniformLoad";
   }
   return setString(OS_PlantLoopFields::LoadDistributionScheme,scheme);
+}
+
+boost::optional<AvailabilityManager> PlantLoop_Impl::availabilityManager() const {
+  return getObject<ModelObject>().getModelObjectTarget<AvailabilityManager>(OS_PlantLoopFields::AvailabilityManagerName);
+}
+
+bool PlantLoop_Impl::setAvailabilityManager(const AvailabilityManager & availabilityManager) {
+  auto type = availabilityManager.iddObjectType();
+  if( type == IddObjectType::OS_AvailabilityManager_NightCycle ||
+      type == IddObjectType::OS_AvailabilityManager_HybridVentilation ||
+      type == IddObjectType::OS_AvailabilityManager_NightVentilation ||
+      type == IddObjectType::OS_AvailabilityManager_OptimumStart ||
+      type == IddObjectType::OS_AvailabilityManager_DifferentialThermostat) {
+    return setPointer(OS_PlantLoopFields::AvailabilityManagerName, availabilityManager.handle());
+  }
+  return false;
+}
+
+void PlantLoop_Impl::resetAvailabilityManager() {
+  bool result = setString(OS_PlantLoopFields::AvailabilityManagerName, "");
+  OS_ASSERT(result);
 }
 
 double PlantLoop_Impl::maximumLoopTemperature()
@@ -594,9 +662,17 @@ std::string PlantLoop_Impl::fluidType()
   return getString(OS_PlantLoopFields::FluidType,true).get();
 }
 
-void PlantLoop_Impl::setFluidType( const std::string & value )
+bool PlantLoop_Impl::setFluidType( const std::string & value )
 {
-  setString(OS_PlantLoopFields::FluidType,value);
+  return setString(OS_PlantLoopFields::FluidType,value);
+}
+
+int PlantLoop_Impl::glycolConcentration() const {
+  return getInt(OS_PlantLoopFields::GlycolConcentration,true).get();
+}
+
+void PlantLoop_Impl::setGlycolConcentration(int glycolConcentration) {
+  setInt(OS_PlantLoopFields::GlycolConcentration, glycolConcentration);
 }
 
 Node PlantLoop_Impl::loopTemperatureSetpointNode()
@@ -632,7 +708,7 @@ SizingPlant PlantLoop_Impl::sizingPlant() const
   boost::optional<SizingPlant> sizingPlant;
 
   std::vector<SizingPlant> sizingObjects;
-  
+
   sizingObjects = model().getConcreteModelObjects<SizingPlant>();
 
   for( const auto & sizingObject : sizingObjects )
@@ -649,7 +725,7 @@ SizingPlant PlantLoop_Impl::sizingPlant() const
   }
   else
   {
-    LOG_AND_THROW("PlantLoop missing SizingPlant object"); 
+    LOG_AND_THROW("PlantLoop missing SizingPlant object");
   }
 }
 
@@ -738,15 +814,15 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
                               schedule);
     return result;
   }
-  
+
   void PlantLoop_Impl::resetPlantEquipmentOperationHeatingLoadSchedule() {
     setString(OS_PlantLoopFields::PlantEquipmentOperationHeatingLoadSchedule, "");
   }
-  
+
   boost::optional<Schedule> PlantLoop_Impl::plantEquipmentOperationHeatingLoadSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PlantLoopFields::PlantEquipmentOperationHeatingLoadSchedule);
   }
-  
+
   bool PlantLoop_Impl::setPlantEquipmentOperationCoolingLoadSchedule(Schedule & schedule) {
     bool result = setSchedule(OS_PlantLoopFields::PlantEquipmentOperationCoolingLoadSchedule,
                               "PlantLoop",
@@ -754,15 +830,15 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
                               schedule);
     return result;
   }
-  
+
   boost::optional<Schedule> PlantLoop_Impl::plantEquipmentOperationCoolingLoadSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PlantLoopFields::PlantEquipmentOperationCoolingLoadSchedule);
   }
-  
+
   void PlantLoop_Impl::resetPlantEquipmentOperationCoolingLoadSchedule() {
     setString(OS_PlantLoopFields::PlantEquipmentOperationCoolingLoadSchedule, "");
   }
-  
+
   bool PlantLoop_Impl::setPrimaryPlantEquipmentOperationSchemeSchedule(Schedule & schedule) {
     bool result = setSchedule(OS_PlantLoopFields::PrimaryPlantEquipmentOperationSchemeSchedule,
                               "PlantLoop",
@@ -770,15 +846,15 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
                               schedule);
     return result;
   }
-  
+
   void PlantLoop_Impl::resetPrimaryPlantEquipmentOperationSchemeSchedule() {
     setString(OS_PlantLoopFields::PlantEquipmentOperationCoolingLoadSchedule, "");
   }
-  
+
   boost::optional<Schedule> PlantLoop_Impl::primaryPlantEquipmentOperationSchemeSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PlantLoopFields::PrimaryPlantEquipmentOperationSchemeSchedule);
   }
-  
+
   bool PlantLoop_Impl::setComponentSetpointOperationSchemeSchedule(Schedule & schedule) {
     bool result = setSchedule(OS_PlantLoopFields::ComponentSetpointOperationSchemeSchedule,
                               "PlantLoop",
@@ -786,11 +862,11 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
                               schedule);
     return result;
   }
-  
+
   boost::optional<Schedule> PlantLoop_Impl::componentSetpointOperationSchemeSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PlantLoopFields::ComponentSetpointOperationSchemeSchedule);
   }
-  
+
   void PlantLoop_Impl::resetComponentSetpointOperationSchemeSchedule() {
     setString(OS_PlantLoopFields::ComponentSetpointOperationSchemeSchedule, "");
   }
@@ -814,7 +890,9 @@ PlantLoop::PlantLoop(Model& model)
   Node connectorNode(model);
 
   ConnectorMixer supplyMixer(model);
+  getImpl<detail::PlantLoop_Impl>()->setSupplyMixer(supplyMixer);
   ConnectorSplitter supplySplitter(model);
+  getImpl<detail::PlantLoop_Impl>()->setSupplySplitter(supplySplitter);
 
   model.connect( *this, this->supplyInletPort(),
                  supplyInletNode, supplyInletNode.inletPort() );
@@ -830,7 +908,7 @@ PlantLoop::PlantLoop(Model& model)
 
   model.connect( supplyMixer,supplyMixer.outletPort(),
                  supplyOutletNode,supplyOutletNode.inletPort() );
-  
+
   model.connect( supplyOutletNode, supplyOutletNode.outletPort(),
                  *this, this->supplyOutletPort() );
 
@@ -840,7 +918,9 @@ PlantLoop::PlantLoop(Model& model)
   Node demandOutletNode(model);
   Node branchNode(model);
   ConnectorMixer mixer(model);
+  getImpl<detail::PlantLoop_Impl>()->setDemandMixer(mixer);
   ConnectorSplitter splitter(model);
+  getImpl<detail::PlantLoop_Impl>()->setDemandSplitter(splitter);
 
   model.connect( *this, demandInletPort(),
                  demandInletNode, demandInletNode.inletPort() );
@@ -862,16 +942,31 @@ PlantLoop::PlantLoop(Model& model)
 
   setLoopTemperatureSetpointNode(supplyOutletNode);
 
+  setGlycolConcentration(0);
   setString(OS_PlantLoopFields::DemandSideConnectorListName,"");
-  setString(OS_PlantLoopFields::AvailabilityManagerListName,"");
   setString(OS_PlantLoopFields::PlantLoopDemandCalculationScheme,"");
   setString(OS_PlantLoopFields::CommonPipeSimulation,"");
   setString(OS_PlantLoopFields::PressureSimulationType,"");
 }
 
 PlantLoop::PlantLoop(std::shared_ptr<detail::PlantLoop_Impl> impl)
-  : Loop(impl)
+  : Loop(std::move(impl))
 {}
+
+boost::optional<AvailabilityManager> PlantLoop::availabilityManager() const
+{
+  return getImpl<detail::PlantLoop_Impl>()->availabilityManager();
+}
+
+bool PlantLoop::setAvailabilityManager(const AvailabilityManager& availabilityManager)
+{
+  return getImpl<detail::PlantLoop_Impl>()->setAvailabilityManager(availabilityManager);
+}
+
+void PlantLoop::resetAvailabilityManager()
+{
+  return getImpl<detail::PlantLoop_Impl>()->resetAvailabilityManager();
+}
 
 std::vector<IdfObject> PlantLoop::remove()
 {
@@ -953,12 +1048,12 @@ bool PlantLoop::removeDemandBranchWithComponent( HVACComponent component )
   return getImpl<detail::PlantLoop_Impl>()->removeDemandBranchWithComponent( component );
 }
 
-Mixer PlantLoop::supplyMixer()
+Mixer PlantLoop::supplyMixer() const
 {
   return getImpl<detail::PlantLoop_Impl>()->supplyMixer();
 }
 
-Splitter PlantLoop::supplySplitter()
+Splitter PlantLoop::supplySplitter() const
 {
   return getImpl<detail::PlantLoop_Impl>()->supplySplitter();
 }
@@ -1063,9 +1158,23 @@ std::string PlantLoop::fluidType()
   return getImpl<detail::PlantLoop_Impl>()->fluidType();
 }
 
-void PlantLoop::setFluidType( const std::string & value )
+bool PlantLoop::setFluidType( const std::string & value )
 {
-  getImpl<detail::PlantLoop_Impl>()->setFluidType( value );
+  return getImpl<detail::PlantLoop_Impl>()->setFluidType( value );
+}
+
+std::vector<std::string> PlantLoop::fluidTypeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_PlantLoopFields::FluidType);
+
+}
+
+int PlantLoop::glycolConcentration() const {
+  return getImpl<detail::PlantLoop_Impl>()->glycolConcentration();
+}
+
+void PlantLoop::setGlycolConcentration(int glycolConcentration) {
+  getImpl<detail::PlantLoop_Impl>()->setGlycolConcentration(glycolConcentration);
 }
 
 Node PlantLoop::loopTemperatureSetpointNode()

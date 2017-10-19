@@ -20,8 +20,16 @@
 
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelHVAC
-  
+
 #endif
+
+%ignore std::vector<openstudio::model::SupplyAirflowRatioField>::vector(size_type);
+%ignore std::vector<openstudio::model::SupplyAirflowRatioField>::resize(size_type);
+%template(SupplyAirflowRatioFieldVector) std::vector<openstudio::model::SupplyAirflowRatioField>;
+
+%ignore std::vector<openstudio::model::GFunction>::vector(size_type);
+%ignore std::vector<openstudio::model::GFunction>::resize(size_type);
+%template(GFunctionVector) std::vector<openstudio::model::GFunction>;
 
 MODELOBJECT_TEMPLATES(PortList);
 MODELOBJECT_TEMPLATES(Loop);
@@ -115,9 +123,9 @@ MODELOBJECT_TEMPLATES(AirTerminalSingleDuctVAVHeatAndCoolNoReheat);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctVAVHeatAndCoolReheat);
 MODELOBJECT_TEMPLATES(BoilerHotWater);
 MODELOBJECT_TEMPLATES(BoilerSteam);
-//MODELOBJECT_TEMPLATES(CentralHeatPumpSystem);
-//MODELOBJECT_TEMPLATES(CentralHeatPumpSystemModule);
-//MODELOBJECT_TEMPLATES(ChillerHeaterPerformanceElectricEIR);
+MODELOBJECT_TEMPLATES(CentralHeatPumpSystem);
+MODELOBJECT_TEMPLATES(CentralHeatPumpSystemModule);
+MODELOBJECT_TEMPLATES(ChillerHeaterPerformanceElectricEIR);
 MODELOBJECT_TEMPLATES(ChillerElectricEIR);
 MODELOBJECT_TEMPLATES(CoilCoolingCooledBeam);
 MODELOBJECT_TEMPLATES(CoilCoolingDXMultiSpeed);
@@ -180,6 +188,7 @@ MODELOBJECT_TEMPLATES(AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass);
 MODELOBJECT_TEMPLATES(AirLoopHVACUnitaryHeatPumpAirToAir);
 MODELOBJECT_TEMPLATES(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed);
 MODELOBJECT_TEMPLATES(AirLoopHVACUnitarySystem);
+MODELOBJECT_TEMPLATES(UnitarySystemPerformanceMultispeed);
 MODELOBJECT_TEMPLATES(ZoneHVACBaseboardConvectiveElectric);
 MODELOBJECT_TEMPLATES(ZoneHVACBaseboardConvectiveWater);
 MODELOBJECT_TEMPLATES(ZoneHVACBaseboardRadiantConvectiveElectric);
@@ -327,9 +336,9 @@ SWIG_MODELOBJECT(AirTerminalSingleDuctVAVHeatAndCoolNoReheat, 1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctVAVHeatAndCoolReheat, 1);
 SWIG_MODELOBJECT(BoilerHotWater, 1);
 SWIG_MODELOBJECT(BoilerSteam, 1);
-//SWIG_MODELOBJECT(CentralHeatPumpSystem, 1);
-//SWIG_MODELOBJECT(CentralHeatPumpSystemModule, 1);
-//SWIG_MODELOBJECT(ChillerHeaterPerformanceElectricEIR, 1);
+SWIG_MODELOBJECT(CentralHeatPumpSystem, 1);
+SWIG_MODELOBJECT(CentralHeatPumpSystemModule, 1);
+SWIG_MODELOBJECT(ChillerHeaterPerformanceElectricEIR, 1);
 SWIG_MODELOBJECT(ChillerElectricEIR, 1);
 SWIG_MODELOBJECT(CoilCoolingCooledBeam, 1);
 SWIG_MODELOBJECT(CoilCoolingDXMultiSpeed, 1);
@@ -392,6 +401,7 @@ SWIG_MODELOBJECT(AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass, 1);
 SWIG_MODELOBJECT(AirLoopHVACUnitaryHeatPumpAirToAir, 1);
 SWIG_MODELOBJECT(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed, 1);
 SWIG_MODELOBJECT(AirLoopHVACUnitarySystem, 1);
+SWIG_MODELOBJECT(UnitarySystemPerformanceMultispeed, 1);
 SWIG_MODELOBJECT(ZoneHVACBaseboardConvectiveElectric, 1);
 SWIG_MODELOBJECT(ZoneHVACBaseboardConvectiveWater, 1);
 SWIG_MODELOBJECT(ZoneHVACBaseboardRadiantConvectiveElectric, 1);

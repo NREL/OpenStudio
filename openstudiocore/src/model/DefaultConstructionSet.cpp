@@ -240,7 +240,7 @@ namespace detail {
       std::string outsideBoundaryCondition = planarSurface.cast<Surface>().outsideBoundaryCondition();
       if (istringEqual("Outdoors", outsideBoundaryCondition)){
         defaultSurfaceConstructions = this->defaultExteriorSurfaceConstructions();
-      }else if (istringEqual("Ground", outsideBoundaryCondition) || 
+      }else if (istringEqual("Ground", outsideBoundaryCondition) ||
                 istringEqual("GroundSlabPreprocessorAverage", outsideBoundaryCondition) ||
                 istringEqual("GroundSlabPreprocessorCore", outsideBoundaryCondition) ||
                 istringEqual("GroundSlabPreprocessorPerimeter", outsideBoundaryCondition) ||
@@ -257,7 +257,7 @@ namespace detail {
        //OtherSideCoefficients
        //OtherSideConditionsModel
       }
-      
+
       if (defaultSurfaceConstructions){
         std::string surfaceType = planarSurface.cast<Surface>().surfaceType();
         if (istringEqual("Floor", surfaceType)){
@@ -268,7 +268,7 @@ namespace detail {
           result = defaultSurfaceConstructions->roofCeilingConstruction();
         }
       }
-      
+
     }else if (planarSurface.optionalCast<SubSurface>()){
 
       boost::optional<DefaultSubSurfaceConstructions> defaultSubSurfaceConstructions;
@@ -322,7 +322,7 @@ namespace detail {
       result = this->interiorPartitionConstruction();
 
     }else if (planarSurface.optionalCast<ShadingSurface>()){
-      
+
       boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup = planarSurface.cast<ShadingSurface>().shadingSurfaceGroup();
       if (shadingSurfaceGroup){
         std::string shadingSurfaceType = shadingSurfaceGroup->shadingSurfaceType();
@@ -342,7 +342,7 @@ namespace detail {
     return result;
   }
 
-  
+
   void DefaultConstructionSet_Impl::merge(const DefaultConstructionSet& other)
   {
     boost::optional<DefaultSurfaceConstructions> thisSurfaceConstructions;
@@ -441,7 +441,7 @@ namespace detail {
     }
 
     boost::optional<ConstructionBase> construction;
-    
+
     if (!(this->interiorPartitionConstruction())){
       construction = other.interiorPartitionConstruction();
       if (construction){
@@ -821,14 +821,14 @@ void DefaultConstructionSet::resetSiteShadingConstruction(){
 boost::optional<ConstructionBase> DefaultConstructionSet::getDefaultConstruction(const PlanarSurface& planarSurface) const{
   return getImpl<detail::DefaultConstructionSet_Impl>()->getDefaultConstruction(planarSurface);
 }
-  
+
 void DefaultConstructionSet::merge(const DefaultConstructionSet& other){
   getImpl<detail::DefaultConstructionSet_Impl>()->merge(other);
 }
 
 /// @cond
 DefaultConstructionSet::DefaultConstructionSet(std::shared_ptr<detail::DefaultConstructionSet_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 /// @endcond
 

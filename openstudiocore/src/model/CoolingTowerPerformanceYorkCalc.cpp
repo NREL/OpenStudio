@@ -807,7 +807,7 @@ void CoolingTowerPerformanceYorkCalc::setCoefficient27(double coefficient27) {
 
 /// @cond
 CoolingTowerPerformanceYorkCalc::CoolingTowerPerformanceYorkCalc(std::shared_ptr<detail::CoolingTowerPerformanceYorkCalc_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

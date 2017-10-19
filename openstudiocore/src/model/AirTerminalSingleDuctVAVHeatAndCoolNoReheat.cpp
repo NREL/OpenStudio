@@ -154,12 +154,12 @@ namespace detail {
     return result;
   }
 
-  unsigned AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl::inletPort() 
+  unsigned AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl::inletPort()
   {
     return OS_AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields::AirInlet;
   }
 
-  unsigned AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl::outletPort() 
+  unsigned AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl::outletPort()
   {
     return OS_AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields::AirOutlet;
   }
@@ -194,7 +194,7 @@ namespace detail {
                               sourcePort.get(),
                               inletNode,
                               inletNode.inletPort() );
-              
+
               _model.connect( inletNode,
                               inletNode.outletPort(),
                               this->getObject<ModelObject>(),
@@ -212,7 +212,7 @@ namespace detail {
                 thermalZone->addEquipment(mo);
               }
 
-              return true; 
+              return true;
             }
           }
         }
@@ -229,7 +229,7 @@ namespace detail {
 
     boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
     boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
-    
+
     boost::optional<ModelObject> targetModelObject = this->outletModelObject();
     boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
 
@@ -333,7 +333,7 @@ bool AirTerminalSingleDuctVAVHeatAndCoolNoReheat::setZoneMinimumAirFlowFraction(
 
 /// @cond
 AirTerminalSingleDuctVAVHeatAndCoolNoReheat::AirTerminalSingleDuctVAVHeatAndCoolNoReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

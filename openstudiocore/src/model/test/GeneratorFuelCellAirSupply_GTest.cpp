@@ -65,9 +65,9 @@ TEST_F(ModelFixture, FuelCellAirSupply) {
   boost::optional<Node> airInletNode = airSupply.airInletNode();
   ASSERT_FALSE(airInletNode);
   boost::optional<CurveQuadratic> electricCurve = airSupply.airRateFunctionofElectricPowerCurve();
-  ASSERT_FALSE(electricCurve);
+  ASSERT_TRUE(electricCurve);
   boost::optional<CurveQuadratic> fuelCurve = airSupply.airRateFunctionofFuelRateCurve();
-  ASSERT_FALSE(fuelCurve);
+  ASSERT_TRUE(fuelCurve);
   EXPECT_EQ(0, airSupply.numberofUserDefinedConstituents().get());
   //should fail since name is wrong
   ASSERT_FALSE(airSupply.addConstituent("MadeUp", 0.0092));

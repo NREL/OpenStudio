@@ -348,7 +348,7 @@ void CurveQuadratic::resetOutputUnitType() {
 
 /// @cond
 CurveQuadratic::CurveQuadratic(std::shared_ptr<detail::CurveQuadratic_Impl> impl)
-  : Curve(impl)
+  : Curve(std::move(impl))
 {}
 /// @endcond
 

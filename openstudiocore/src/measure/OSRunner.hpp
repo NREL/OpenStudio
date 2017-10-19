@@ -85,6 +85,9 @@ class MEASURE_API OSRunner {
    *  run method.) */
   WorkflowStepResult result() const;
 
+  /** Returns true if the simulation has been halted. */
+  bool halted() const;
+
   /** Returns a copy of the last Model generated in the workflow if available. */
   boost::optional<openstudio::model::Model> lastOpenStudioModel() const;
 
@@ -119,8 +122,8 @@ class MEASURE_API OSRunner {
    *  classes' run methods. */
   virtual void prepareForMeasureRun(const OSMeasure& measure);
 
-  /** Registers error message with result, and sets result value to Fail. OSMeasures
-   *  should return false after calling this method. */
+  /** Registers error message with result, and sets result value to "Fail". OSMeasures
+   *  should return false after calling this method. Workflow completed status will be set to "Fail".*/
   virtual void registerError(const std::string& message);
 
   /** Registers warning message with result. Base class returns true. Derived classes
@@ -133,8 +136,8 @@ class MEASURE_API OSRunner {
    *  false is returned. */
   virtual bool registerInfo(const std::string& message);
 
-  /** Sets result value to NA, and registers a corresponding info message. In most circumstances,
-   *  OSMeasures should return true after calling this method. */
+  /** Sets result value to "NA", and registers a corresponding info message. In most circumstances,
+   *  OSMeasures should return true after calling this method. Does not affect workflow completed status.*/
   virtual void registerAsNotApplicable(const std::string& message);
 
   /** Sets the result initial condition to message. */
@@ -184,6 +187,14 @@ class MEASURE_API OSRunner {
   virtual void registerValue(const std::string& name,
                              const std::string& displayName,
                              const std::string& value);
+
+  /** Halts the simulation with the provided completed status, does not set the current measure's step result. 
+   *  Measure writers can call this with "Success" if all required results have been generated.
+   *  Measure writers should not call this with "Fail", runner.registerError should be used instead.  
+   *  Measure writers can call this with "Invalid" if the workflow requests parameter combinations that are not valid.
+   *  Measure writers should not call this with "Cancel", this is reserved for external cancel operations.   
+   */
+  virtual void haltWorkflow(const std::string& completedStatus = "Invalid");
 
   /** Creates a progress bar with the text label. Base class implementation does nothing. */
   virtual void createProgressBar(const std::string& text) const;
@@ -321,6 +332,8 @@ class MEASURE_API OSRunner {
   bool m_streamsCaptured;
   std::string m_unitsPreference;
   std::string m_languagePreference;
+
+  bool m_halted;
 
   // current data
   WorkflowStepResult m_result;

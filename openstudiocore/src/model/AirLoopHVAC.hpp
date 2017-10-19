@@ -159,7 +159,7 @@ class MODEL_API AirLoopHVAC : public Loop
     */
   bool isDualDuct() const;
 
-  /** Returns the supply side splitter.  
+  /** Returns the supply side splitter.
     * If the system is a dual duct then it will have a supply side splitter.
     */
   boost::optional<Splitter> supplySplitter() const;
@@ -167,7 +167,7 @@ class MODEL_API AirLoopHVAC : public Loop
   /** If this is a dual duct system, remove the supply side splitter.
     * If this is not a dual duct system, there is no supply side splitter and the method will return false.
     *
-    * The system will become a single duct. Dual duct terminals may remain on the demand side, and those must be 
+    * The system will become a single duct. Dual duct terminals may remain on the demand side, and those must be
     * resolved separately by removing the zones served by dual ducts or changing to single duct terminals.
     *
     * The components downstream of the splitter will also be removed.
@@ -177,11 +177,11 @@ class MODEL_API AirLoopHVAC : public Loop
   /** If this is a dual duct system, remove the supply side splitter.
     * If this is not a dual duct system, there is no supply side splitter and the method will return false.
     *
-    * The system will become a single duct. Dual duct terminals may remain on the demand side, and those must be 
+    * The system will become a single duct. Dual duct terminals may remain on the demand side, and those must be
     * resolved separately by removing the zones served by dual ducts or changing to single duct terminals.
     *
     * The dual duct branch containing hvacComponent will be removed.
-    * The remaining branch will be integrated into the loop. 
+    * The remaining branch will be integrated into the loop.
     * If hvacComponent is not found on either dual duct branch
     * the method will return false. This will be the case if hvacComponent is not found on the system's supplyComponents(),
     * or upstream of the splitter.
@@ -208,7 +208,7 @@ class MODEL_API AirLoopHVAC : public Loop
   std::vector<AirLoopHVACZoneSplitter> zoneSplitters() const;
 
   /** Returns the zone mixer, if it doesn't exist then it makes one. */
-  AirLoopHVACZoneMixer zoneMixer();
+  AirLoopHVACZoneMixer zoneMixer() const;
 
   /** Returns all of the components on the outdoor air system including the mixer itself.
    *  If type is given then the results will be limited to the given IddObjectType.
@@ -222,7 +222,7 @@ class MODEL_API AirLoopHVAC : public Loop
   boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
   /** Returns the fan in the mixed air stream (after outdoor air system) of the air system.
-   *  If there is no outdoor air system or there are multiple fans in the mixed air stream, 
+   *  If there is no outdoor air system or there are multiple fans in the mixed air stream,
    *  then the fan closest to the supply outlet node will be returned.
    */
   boost::optional<HVACComponent> supplyFan() const;
@@ -276,9 +276,9 @@ class MODEL_API AirLoopHVAC : public Loop
   /** Configure the system to night cycle
     * This is a convenience for creating and attaching a new AvailabilityManagerNightCycle.
     * Valid options are StayOff, CycleOnAny, and CycleOnAnyZoneFansOnly **/
-  bool setNightCycleControlType(std::string controlType);
+  bool setNightCycleControlType(std::string const & controlType);
 
-  /** Returns a string indicating if the system is configured to night cycle 
+  /** Returns a string indicating if the system is configured to night cycle
     * If there is no AvailabilityManagerNightCycle this method will return StayOff **/
   std::string nightCycleControlType() const;
 

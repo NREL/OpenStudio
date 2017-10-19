@@ -275,7 +275,7 @@ void AvailabilityManagerNightVentilation::resetControlZone() {
 
 /// @cond
 AvailabilityManagerNightVentilation::AvailabilityManagerNightVentilation(std::shared_ptr<detail::AvailabilityManagerNightVentilation_Impl> impl)
-  : AvailabilityManager(impl)
+  : AvailabilityManager(std::move(impl))
 {}
 /// @endcond
 

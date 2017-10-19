@@ -665,7 +665,7 @@ namespace detail {
   {
     static std::vector<std::string> result;
 
-    return result; 
+    return result;
   }
 
   unsigned ChillerElectricEIR_Impl::supplyInletPort()
@@ -712,13 +712,13 @@ namespace detail {
                               schedule);
     return result;
   }
-  
+
   void ChillerElectricEIR_Impl::resetBasinHeaterSchedule()
   {
     bool result = setString(OS_Chiller_Electric_EIRFields::BasinHeaterOperatingScheduleName, "");
     OS_ASSERT(result);
   }
-  
+
   boost::optional<Schedule> ChillerElectricEIR_Impl::basinHeaterSchedule() const
   {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Chiller_Electric_EIRFields::BasinHeaterOperatingScheduleName);
@@ -1306,7 +1306,7 @@ boost::optional<Schedule> ChillerElectricEIR::basinHeaterSchedule() const
 
 /// @cond
 ChillerElectricEIR::ChillerElectricEIR(std::shared_ptr<detail::ChillerElectricEIR_Impl> impl)
-  : WaterToWaterComponent(impl)
+  : WaterToWaterComponent(std::move(impl))
 {}
 
 /// @endcond

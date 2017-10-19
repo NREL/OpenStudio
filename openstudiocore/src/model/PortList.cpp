@@ -125,7 +125,7 @@ ThermalZone PortList_Impl::thermalZone() const
 
 std::vector<openstudio::IdfObject> PortList_Impl::remove()
 {
-  //std::vector<Node> nodes = this->nodes(); 
+  //std::vector<Node> nodes = this->nodes();
 
   //for( std::vector<Node>::iterator it = nodes.begin();
   //     it < nodes.end();
@@ -271,7 +271,7 @@ unsigned PortList_Impl::airLoopHVACPort()
       if( hvacComponent->airLoopHVAC() )
       {
         return portIndexForModelObject(hvacComponent.get());
-      } 
+      }
     }
   }
 
@@ -291,7 +291,7 @@ boost::optional<ModelObject> PortList_Impl::airLoopHVACModelObject()
       if( hvacComponent->airLoopHVAC() )
       {
         result = hvacComponent;
-      } 
+      }
     }
   }
 
@@ -317,7 +317,7 @@ bool PortList_Impl::setHVACComponent(const HVACComponent & hvacComponent)
 } // detail
 
 PortList::PortList(const HVACComponent& comp)
-  : ModelObject(PortList::iddObjectType(),comp.model())
+  : ModelObject(PortList::iddObjectType(),comp.model(),true)
 {
   OS_ASSERT(getImpl<detail::PortList_Impl>());
 
@@ -385,7 +385,7 @@ boost::optional<ModelObject> PortList::airLoopHVACModelObject()
 
 /// @cond
 PortList::PortList(std::shared_ptr<detail::PortList_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

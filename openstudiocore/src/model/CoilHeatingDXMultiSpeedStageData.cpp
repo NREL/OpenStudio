@@ -518,7 +518,7 @@ bool CoilHeatingDXMultiSpeedStageData::setWasteHeatFunctionofTemperatureCurve(co
 
 /// @cond
 CoilHeatingDXMultiSpeedStageData::CoilHeatingDXMultiSpeedStageData(std::shared_ptr<detail::CoilHeatingDXMultiSpeedStageData_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

@@ -140,7 +140,7 @@ void WindowMaterialGasInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_viscosityCoefficientA = new OSQuantityEdit2("g/m*s","g/m*s","g/m*s", m_isIP);
+  m_viscosityCoefficientA = new OSQuantityEdit2("mkg/m*s","mkg/m*s","m(min^2*ton/ft^3)", m_isIP);
   connect(this, &WindowMaterialGasInspectorView::toggleUnitsClicked, m_viscosityCoefficientA, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_viscosityCoefficientA,row++,0,1,3);
 
@@ -150,7 +150,7 @@ void WindowMaterialGasInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_viscosityCoefficientB = new OSQuantityEdit2("g/m*s*K","g/m*s*K","g/m*s*K", m_isIP);
+  m_viscosityCoefficientB = new OSQuantityEdit2("mkg/m*s*K","mkg/m*s*K","m(min^2*ton/ft^3*R)", m_isIP);
   connect(this, &WindowMaterialGasInspectorView::toggleUnitsClicked, m_viscosityCoefficientB, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_viscosityCoefficientB,row++,0,1,3);
 
@@ -169,7 +169,6 @@ void WindowMaterialGasInspectorView::createLayout()
   label = new QLabel("Specific Heat Coefficient B: ");
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
-
   m_specificHeatCoefficientB = new OSQuantityEdit2("J/kg*K^2","J/kg*K^2","Btu/lb*R^2", m_isIP);
   connect(this, &WindowMaterialGasInspectorView::toggleUnitsClicked, m_specificHeatCoefficientB, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_specificHeatCoefficientB,row++,0,1,3);

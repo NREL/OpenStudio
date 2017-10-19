@@ -98,6 +98,7 @@ namespace detail {
     return result;
   }
 
+  // CoolingLoop
   unsigned CentralHeatPumpSystem_Impl::supplyInletPort()
   {
     return OS_CentralHeatPumpSystemFields::CoolingLoopInletNodeName;
@@ -108,6 +109,7 @@ namespace detail {
     return OS_CentralHeatPumpSystemFields::CoolingLoopOutletNodeName;
   }
 
+  // SourceLoop
   unsigned CentralHeatPumpSystem_Impl::demandInletPort()
   {
     return OS_CentralHeatPumpSystemFields::SourceLoopInletNodeName;
@@ -118,12 +120,15 @@ namespace detail {
     return OS_CentralHeatPumpSystemFields::SourceLoopOutletNodeName;
   }
 
-// OS_CentralHeatPumpSystemFields::CoolingLoopInletNodeName
-// OS_CentralHeatPumpSystemFields::CoolingLoopOutletNodeName
-// OS_CentralHeatPumpSystemFields::SourceLoopInletNodeName
-// OS_CentralHeatPumpSystemFields::SourceLoopOutletNodeName
-// OS_CentralHeatPumpSystemFields::HeatingLoopInletNodeName
-// OS_CentralHeatPumpSystemFields::HeatingLoopOutletNodeName
+  // HeatingLoop
+  unsigned CentralHeatPumpSystem_Impl::tertiaryInletPort() const {
+    return OS_CentralHeatPumpSystemFields::HeatingLoopInletNodeName;
+  }
+
+  unsigned CentralHeatPumpSystem_Impl::tertiaryOutletPort() const {
+    return OS_CentralHeatPumpSystemFields::HeatingLoopOutletNodeName;
+  }
+
 
   boost::optional<ModelObjectList> CentralHeatPumpSystem_Impl::chillerHeaterModuleList() const {
     return getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_CentralHeatPumpSystemFields::ChillerHeaterModuleListName);
@@ -305,7 +310,7 @@ std::vector<CentralHeatPumpSystemModule> CentralHeatPumpSystem::modules() const 
 
 /// @cond
 CentralHeatPumpSystem::CentralHeatPumpSystem(std::shared_ptr<detail::CentralHeatPumpSystem_Impl> impl)
-  : WaterToWaterComponent(impl)
+  : WaterToWaterComponent(std::move(impl))
 {}
 /// @endcond
 

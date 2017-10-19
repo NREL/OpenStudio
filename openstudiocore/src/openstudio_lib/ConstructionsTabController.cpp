@@ -50,6 +50,8 @@ ConstructionsTabController::ConstructionsTabController(bool isIP, const model::M
   this->mainContentWidget()->addSubTab("Materials", MATERIALS);
 
   connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &ConstructionsTabController::setSubTab);
+  connect(this, &ConstructionsTabController::toggleUnitsClicked, this, &ConstructionsTabController::toggleUnits);
+
 }
 
 ConstructionsTabController::~ConstructionsTabController()
@@ -66,20 +68,9 @@ void ConstructionsTabController::setSubTab(int index)
     m_currentIndex = index;
   }
 
-  if (qobject_cast<DefaultConstructionSetsController *>(m_currentController)) {
-    disconnect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>((qobject_cast<DefaultConstructionSetsController *>(m_currentController))->subTabView()), &ModelSubTabView::toggleUnitsClicked);
-    disconnect(qobject_cast<DefaultConstructionSetsController *>(m_currentController), &DefaultConstructionSetsController::downloadComponentsClicked, this, &ConstructionsTabController::downloadComponentsClicked);
-    disconnect(qobject_cast<DefaultConstructionSetsController *>(m_currentController), &DefaultConstructionSetsController::openLibDlgClicked, this, &ConstructionsTabController::openLibDlgClicked);
-  }
-  else if (qobject_cast<ConstructionsController *>(m_currentController)) {
-    disconnect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>((qobject_cast<ConstructionsController *>(m_currentController))->subTabView()), &ModelSubTabView::toggleUnitsClicked);
-  }
-  else if (qobject_cast<MaterialsController *>(m_currentController)) {
-    disconnect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>((qobject_cast<MaterialsController *>(m_currentController))->subTabView()), &ModelSubTabView::toggleUnitsClicked);
-  }
-  else if (m_currentController) {
-    // Oops! Should never get here
-    OS_ASSERT(false);
+  if (m_currentController) {
+    m_currentController->disconnect();
+    delete m_currentController;
   }
 
   switch (index){
@@ -115,6 +106,12 @@ void ConstructionsTabController::setSubTab(int index)
     OS_ASSERT(false);
     break;
   }
+}
+
+/****************** SLOTS ******************/
+
+void ConstructionsTabController::toggleUnits(bool displayIP) {
+  m_isIP = displayIP;
 }
 
 } // openstudio

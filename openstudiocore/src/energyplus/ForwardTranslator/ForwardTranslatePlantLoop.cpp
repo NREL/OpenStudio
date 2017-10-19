@@ -31,6 +31,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/PlantLoop.hpp"
 #include "../../model/PlantLoop_Impl.hpp"
+#include "../../model/AvailabilityManager.hpp"
+#include "../../model/AvailabilityManager_Impl.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../../model/SizingPlant.hpp"
@@ -119,6 +121,8 @@
 #include <utilities/idd/Sizing_Plant_FieldEnums.hxx>
 #include <utilities/idd/AirTerminal_SingleDuct_ConstantVolume_CooledBeam_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
+#include <utilities/idd/FluidProperties_Name_FieldEnums.hxx>
+#include <utilities/idd/AvailabilityManagerAssignmentList_FieldEnums.hxx>
 #include "../../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
@@ -395,7 +399,22 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
   if( (s = plantLoop.fluidType()) )
   {
-    idfObject.setString(PlantLoopFields::FluidType,s.get());
+    if (istringEqual(s.get(),"PropyleneGlycol") || istringEqual(s.get(),"EthyleneGlycol")) {
+      idfObject.setString(PlantLoopFields::FluidType,"UserDefinedFluidType");
+      boost::optional<int> gc = plantLoop.glycolConcentration();
+      if ( gc ) {
+        boost::optional<IdfObject> fluidProperties = createFluidProperties(s.get(), gc.get());
+        if (fluidProperties) {
+          boost::optional<std::string> fluidPropertiesName = fluidProperties->getString(FluidProperties_NameFields::FluidName,true);
+          if (fluidPropertiesName) {
+            idfObject.setString(PlantLoopFields::UserDefinedFluidType,fluidPropertiesName.get());
+          }
+        }
+      }
+
+    } else {
+      idfObject.setString(PlantLoopFields::FluidType,s.get());
+    }
   }
 
   // Loop Temperature Setpoint Node Name
@@ -445,6 +464,23 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     auto scheme = plantLoop.loadDistributionScheme();
     idfObject.setString(PlantLoopFields::LoadDistributionScheme,scheme);
+  }
+
+  // AvailabilityManager
+  if (OptionalAvailabilityManager availMgr = plantLoop.availabilityManager()) {
+
+    // Availability Manager List
+    IdfObject availabilityManagerAssignmentListIdf(openstudio::IddObjectType::AvailabilityManagerAssignmentList);
+    availabilityManagerAssignmentListIdf.setName(plantLoop.name().get() + " Availability Manager List");
+    m_idfObjects.push_back(availabilityManagerAssignmentListIdf);
+    idfObject.setString(PlantLoopFields::AvailabilityManagerListName, availabilityManagerAssignmentListIdf.name().get());
+
+    // Availability Manager
+    OptionalIdfObject availMgrIdf = translateAndMapModelObject(availMgr.get());
+    OS_ASSERT(availMgrIdf);
+    IdfExtensibleGroup eg = availabilityManagerAssignmentListIdf.pushExtensibleGroup();
+    eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,availMgrIdf->iddObject().name());
+    eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,availMgrIdf->name().get());
   }
 
   //  PlantLoopDemandCalculationScheme

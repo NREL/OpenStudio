@@ -270,7 +270,7 @@ void AirGap::resetThermalResistance() {
 
 /// @cond
 AirGap::AirGap(std::shared_ptr<detail::AirGap_Impl> impl)
-  : OpaqueMaterial(impl)
+  : OpaqueMaterial(std::move(impl))
 {}
 /// @endcond
 

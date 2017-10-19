@@ -103,12 +103,12 @@ namespace detail {
     return result;
   }
 
-    unsigned EvaporativeFluidCoolerSingleSpeed_Impl::inletPort() 
+    unsigned EvaporativeFluidCoolerSingleSpeed_Impl::inletPort()
   {
     return OS_EvaporativeFluidCooler_SingleSpeedFields::WaterInletNodeName;
   }
 
-  unsigned EvaporativeFluidCoolerSingleSpeed_Impl::outletPort() 
+  unsigned EvaporativeFluidCoolerSingleSpeed_Impl::outletPort()
   {
     return OS_EvaporativeFluidCooler_SingleSpeedFields::WaterOutletNodeName;
   }
@@ -591,7 +591,7 @@ EvaporativeFluidCoolerSingleSpeed::EvaporativeFluidCoolerSingleSpeed(const Model
   : StraightComponent(EvaporativeFluidCoolerSingleSpeed::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>());
- 
+
   autosizeDesignAirFlowRate();
   autosizeFanPoweratDesignAirFlowRate();
   setDesignSprayWaterFlowRate(0.03);
@@ -911,7 +911,7 @@ void EvaporativeFluidCoolerSingleSpeed::resetBlowdownMakeupWaterUsageSchedule() 
 
 /// @cond
 EvaporativeFluidCoolerSingleSpeed::EvaporativeFluidCoolerSingleSpeed(std::shared_ptr<detail::EvaporativeFluidCoolerSingleSpeed_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

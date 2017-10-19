@@ -290,7 +290,7 @@ bool MeterCustom::setOutputVariableorMeterName(unsigned index, const std::string
 
 /// @cond
 MeterCustom::MeterCustom(std::shared_ptr<detail::MeterCustom_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

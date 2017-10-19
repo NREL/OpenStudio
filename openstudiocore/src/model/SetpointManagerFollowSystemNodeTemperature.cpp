@@ -265,7 +265,7 @@ void SetpointManagerFollowSystemNodeTemperature::setMinimumLimitSetpointTemperat
 
 /// @cond
 SetpointManagerFollowSystemNodeTemperature::SetpointManagerFollowSystemNodeTemperature(std::shared_ptr<detail::SetpointManagerFollowSystemNodeTemperature_Impl> impl)
-  : SetpointManager(impl)
+  : SetpointManager(std::move(impl))
 {}
 /// @endcond
 

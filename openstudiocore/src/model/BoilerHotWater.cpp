@@ -467,7 +467,7 @@ std::vector<std::string> BoilerHotWater::validFuelTypeValues() {
                         OS_Boiler_HotWaterFields::FuelType);
 }
 
-std::vector<std::string> BoilerHotWater::validEfficiencyCurveTemperatureEvaluationVariableValues() 
+std::vector<std::string> BoilerHotWater::validEfficiencyCurveTemperatureEvaluationVariableValues()
 {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_Boiler_HotWaterFields::EfficiencyCurveTemperatureEvaluationVariable);
@@ -680,7 +680,7 @@ void BoilerHotWater::resetSizingFactor() {
 
 /// @cond
 BoilerHotWater::BoilerHotWater(std::shared_ptr<detail::BoilerHotWater_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

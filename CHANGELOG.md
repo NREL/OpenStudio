@@ -1,3 +1,209 @@
+## OpenStudio v2.2.2
+###### 2017-09-13 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.2.1...v2.2.2 )
+
+- ![Fixed:][fixed] [#2562]( https://github.com/NREL/OpenStudio/issues/2562 ), Apply Measure Now Clears Measures Tab
+- ![Fixed:][fixed] [#2602]( https://github.com/NREL/OpenStudio/issues/2602 ), Can't save PAT 2.1.1 project on exit
+- ![Fixed:][fixed] [#2730]( https://github.com/NREL/OpenStudio/issues/2730 ), Opening existing floorplan in editor freezes app
+- ![Fixed:][fixed] [#2763]( https://github.com/NREL/OpenStudio/issues/2763 ), PAT Doesn't Show Analysis Complete for Modest Cloud Runs
+
+## OpenStudio v2.2.1
+###### 2017-09-06 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.2.0...v2.2.1 )
+
+- ![Fixed:][fixed] [#162]( https://github.com/NREL/OpenStudio/issues/162 ), Typo in People Definition tab (Bugzilla #840)
+- ![Fixed:][fixed] [#1632]( https://github.com/NREL/OpenStudio/issues/1632 ), Incorrect results in OpenStudio App.
+- ![Fixed:][fixed] [#2317]( https://github.com/NREL/OpenStudio/issues/2317 ), incorrct areas in EnergyPlus Results
+- ![Fixed:][fixed] [#2397]( https://github.com/NREL/OpenStudio/issues/2397 ),  OpenStudio SketchUp 2016 crashed when opens
+- ![Fixed:][fixed] [#2457]( https://github.com/NREL/OpenStudio/issues/2457 ), OS App Units missing on Materials and Internal Loads (except for people) in 2.0.1
+- ![Improved:][improved] [#2500]( https://github.com/NREL/OpenStudio/issues/2500 ), Make PAT "Additional Analysis Files" path relative
+- ![Fixed:][fixed] [#2619]( https://github.com/NREL/OpenStudio/issues/2619 ), Successive add/delete of Measures in App's Measures Tab Creates Cruft
+- ![Fixed:][fixed] [#2629]( https://github.com/NREL/OpenStudio/issues/2629 ), Duplicated measure results are overwritten
+- ![Improved:][improved] [#2632]( https://github.com/NREL/OpenStudio/issues/2632 ), Server takes to long to start
+- ![Fixed:][fixed] [#2669]( https://github.com/NREL/OpenStudio/issues/2669 ), Prevent user from naming PAT project 'PAT'
+- ![Fixed:][fixed] [#2676]( https://github.com/NREL/OpenStudio/issues/2676 ), PAT 2.1.2 deletes measure from library
+- ![Fixed:][fixed] [#2677]( https://github.com/NREL/OpenStudio/issues/2677 ), PAT Results Summary Table Report has wrong sign for capital cost increase
+- ![Fixed:][fixed] [#2681]( https://github.com/NREL/OpenStudio/issues/2681 ), Surface disappears after saving in SketchUp - after using Intersect and Divide Inter-Zone Surface for the entire model
+- ![Fixed:][fixed] [#2688]( https://github.com/NREL/OpenStudio/issues/2688 ), Supply air fan operating mode
+- ![Fixed:][fixed] [#2690]( https://github.com/NREL/OpenStudio/issues/2690 ), Duplicate Measure, breaks if you then update the measure
+- ![Fixed:][fixed] [#2691]( https://github.com/NREL/OpenStudio/issues/2691 ), About PAT window hasn't been updated in agest
+- ![Fixed:][fixed] [#2694]( https://github.com/NREL/OpenStudio/issues/2694 ), Segfault in Materials Tab
+- ![Fixed:][fixed] [#2695]( https://github.com/NREL/OpenStudio/issues/2695 ), User Reports PAT Local Server Not Starting Reliably on Mac
+- ![Improved:][improved] [#2716]( https://github.com/NREL/OpenStudio/issues/2716 ), AWS deployed server needs to run 350k data-points
+- ![Fixed:][fixed] [#2719]( https://github.com/NREL/OpenStudio/issues/2719 ), PAT hangs when running simulation on the cloud
+- ![Fixed:][fixed] [#2721]( https://github.com/NREL/OpenStudio/issues/2721 ), PAT thinks cluster is running (but it's not)
+- ![Fixed:][fixed] [#2723]( https://github.com/NREL/OpenStudio/issues/2723 ), Third PAT algorithm argument in Morris should be Grid Jump
+- ![Fixed:][fixed] [#2724]( https://github.com/NREL/OpenStudio/issues/2724 ), Morris Method Box Plots are Empty in 2.2.0
+- ![Fixed:][fixed] [#2728]( https://github.com/NREL/OpenStudio/issues/2728 ), PAT Analysis Error when updating measure w/ duplicates
+- ![Fixed:][fixed] [#2729]( https://github.com/NREL/OpenStudio/issues/2729 ), Place Map dialog no longer pops up on new editor
+- ![Fixed:][fixed] [#2732]( https://github.com/NREL/OpenStudio/issues/2732 ), No way to dismiss preview window
+- ![Fixed:][fixed] [#2733]( https://github.com/NREL/OpenStudio/issues/2733 ), Geometry boundary conditions in editor preview are wrong
+- ![Improved:][improved] [#2734]( https://github.com/NREL/OpenStudio/issues/2734 ), No option to continue editing geometry after merge operation
+- ![Fixed:][fixed] [#2736]( https://github.com/NREL/OpenStudio/issues/2736 ), Returning to geometry editor pane after merge produces inconsistent results
+- ![Improved:][improved] [#2737]( https://github.com/NREL/OpenStudio/issues/2737 ), No feedback from App post-merge
+- ![Fixed:][fixed] [#2738]( https://github.com/NREL/OpenStudio/issues/2738 ), Boundary condition between floors doesn't appear correct
+- ![Fixed:][fixed] [#2740]( https://github.com/NREL/OpenStudio/issues/2740 ), Floor height isn't translated
+- ![Fixed:][fixed] [#2745]( https://github.com/NREL/OpenStudio/issues/2745 ), Going to Preview Tab throws away unmerged changes
+- ![Fixed:][fixed] [#2746]( https://github.com/NREL/OpenStudio/issues/2746 ), Prevent PAT from running projects with zero variables
+- ![Fixed:][fixed] [#2748]( https://github.com/NREL/OpenStudio/issues/2748 ), Levels in Morris Method Must be >1
+- ![Fixed:][fixed] [#2754]( https://github.com/NREL/OpenStudio/issues/2754 ), App locks up on image import
+- ![Fixed:][fixed] [#2760]( https://github.com/NREL/OpenStudio/issues/2760 ), PAT Not removing Measures from Projects
+
+## OpenStudio v2.2.0
+###### 2017-06-30 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.1.2...v2.2.0 )
+
+- ![Fixed:][fixed] [#2496]( https://github.com/NREL/OpenStudio/issues/2496 ), Chinese characters in Design Alternatives grid
+- ![Fixed:][fixed] [#2503]( https://github.com/NREL/OpenStudio/issues/2503 ), Skipping measures in datapoint throws measure messages out of sync
+- ![Fixed:][fixed] [#2512]( https://github.com/NREL/OpenStudio/issues/2512 ), Dropdown menu for "Select Cluster or Make New One" is not functioning correctly. PAT v2.0.4 (windows 7)
+- ![Fixed:][fixed] [#2541]( https://github.com/NREL/OpenStudio/issues/2541 ), Variable distribution plots appear on server as broken links
+- ![Fixed:][fixed] [#2630]( https://github.com/NREL/OpenStudio/issues/2630 ), OS Cloud Management Console pagination bugs
+- ![Fixed:][fixed] [#2634]( https://github.com/NREL/OpenStudio/issues/2634 ), Crash on Utility Bill page
+- ![Fixed:][fixed] [#2637]( https://github.com/NREL/OpenStudio/issues/2637 ), Rerunning old PAT project in 2.1.2 creates new data points instead of overwriting old ones
+- ![Fixed:][fixed] [#2640]( https://github.com/NREL/OpenStudio/issues/2640 ), PAT's Results Tab Goes Completely Blank w/ Large Algorithm Projects
+- ![Fixed:][fixed] [#2650]( https://github.com/NREL/OpenStudio/issues/2650 ), Solution exception:index out of range: 0 _ energyPlus
+- ![Fixed:][fixed] [#2665]( https://github.com/NREL/OpenStudio/issues/2665 ), App not shutting down correctly
+- ![Fixed:][fixed] [#2667]( https://github.com/NREL/OpenStudio/issues/2667 ), Closing App Window on Mac Destroys Menu Options
+- ![Fixed:][fixed] [#2674]( https://github.com/NREL/OpenStudio/issues/2674 ), PlantLoop GlycolConcentration is not initialized
+- ![Improved:][improved] [#2601]( https://github.com/NREL/OpenStudio/issues/2601 ), Ability to skip NA simulations
+
+## OpenStudio v2.1.2
+###### 2017-06-20 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.1.1...v2.1.2 )
+
+- ![Fixed:][fixed] [#59]( https://github.com/NREL/OpenStudio/issues/59 ), Installer does not install OpenStudio.idd (Bugzilla #459)
+- ![Fixed:][fixed] [#76]( https://github.com/NREL/OpenStudio/issues/76 ), RunManager fails to search for tools (Bugzilla #519)
+- ![Fixed:][fixed] [#181]( https://github.com/NREL/OpenStudio/issues/181 ), EnergyPlus ForwardTranslator errors do not appear in the RunManager GUI elements (Bugzilla #897)
+- ![Fixed:][fixed] [#183]( https://github.com/NREL/OpenStudio/issues/183 ), Web Documentation points to files that are not in installer (Bugzilla #900)
+- ![Fixed:][fixed] [#288]( https://github.com/NREL/OpenStudio/issues/288 ), PAT and OpenStudio store tools separately (Bugzilla #1100)
+- ![Fixed:][fixed] [#290]( https://github.com/NREL/OpenStudio/issues/290 ), Misc. GUI things I noticed (Bugzilla #1127)
+- ![Fixed:][fixed] [#292]( https://github.com/NREL/OpenStudio/issues/292 ), Weird spacing when you expand a data point job with content (Bugzilla #1137)
+- ![Fixed:][fixed] [#300]( https://github.com/NREL/OpenStudio/issues/300 ), Application name is Pat.exe instead of ParametricAnalysisTool.exe (Bugzilla #1167)
+- ![Fixed:][fixed] [#303]( https://github.com/NREL/OpenStudio/issues/303 ), Weather files are incorrect for models opened in openstudio from results tab (Bugzilla #1179)
+- ![Fixed:][fixed] [#306]( https://github.com/NREL/OpenStudio/issues/306 ), Tab 3 - ruby errors for measure not as described as in command line run (Bugzilla #1188)
+- ![Fixed:][fixed] [#309]( https://github.com/NREL/OpenStudio/issues/309 ), Tab 3 - would be nice to test measures before clicking off runs in to improve workflow (Bugzilla #1199)
+- ![Fixed:][fixed] [#310]( https://github.com/NREL/OpenStudio/issues/310 ), Tab 3 - After running a job and adding new alternatives the warnings disappear from original run (Bugzilla #1200)
+- ![Fixed:][fixed] [#329]( https://github.com/NREL/OpenStudio/issues/329 ), crash if forget "return args" in measure.rb then click "update my measures" (Bugzilla #1239)
+- ![Fixed:][fixed] [#331]( https://github.com/NREL/OpenStudio/issues/331 ), I opened a project Andrew made in 0.11.3 in current trunk, crashes when I try to select a measure instance in tab one (Bugzilla #1242)
+- ![Fixed:][fixed] [#332]( https://github.com/NREL/OpenStudio/issues/332 ), Measure Tab - You can paste multiline text into name field (Bugzilla #1248)
+- ![Fixed:][fixed] [#339]( https://github.com/NREL/OpenStudio/issues/339 ), PAT memory leak crash - this one came from Alex (Bugzilla #1263)
+- ![Fixed:][fixed] [#342]( https://github.com/NREL/OpenStudio/issues/342 ), The dialog saying that measures were brought in from baseline seems to come up even when there are no measures (Bugzilla #1267)
+- ![Fixed:][fixed] [#343]( https://github.com/NREL/OpenStudio/issues/343 ), Measure Tab - if you change seed model, you don't always see red triangle for measure where you should (Bugzilla #1268)
+- ![Fixed:][fixed] [#346]( https://github.com/NREL/OpenStudio/issues/346 ), updates to XML don't show up in PAT for projects that already have that measure (Bugzilla #1273)
+- ![Fixed:][fixed] [#351]( https://github.com/NREL/OpenStudio/issues/351 ), Tab 4 - the line at the right side of the design alternative box isn't visible. (Bugzilla #1279)
+- ![Fixed:][fixed] [#353]( https://github.com/NREL/OpenStudio/issues/353 ), Tab 1 - The measures in MyMeasures are not sorted by display name (Bugzilla #1286)
+- ![Fixed:][fixed] [#362]( https://github.com/NREL/OpenStudio/issues/362 ), Clear results doesn't always clear all results (Bugzilla #1299)
+- ![Fixed:][fixed] [#385]( https://github.com/NREL/OpenStudio/issues/385 ), Measure writing guide example for "makeChoiceArguemntOfWorkspaceOjbects" doesn't work.
+- ![Fixed:][fixed] [#480]( https://github.com/NREL/OpenStudio/issues/480 ), PAT no longer shows warning icon if baseline osm is not set
+- ![Fixed:][fixed] [#507]( https://github.com/NREL/OpenStudio/issues/507 ), Problem when importing measure with same name as measure already in project
+- ![Fixed:][fixed] [#541]( https://github.com/NREL/OpenStudio/issues/541 ), Possible file size reductions in PAT
+- ![Fixed:][fixed] [#542]( https://github.com/NREL/OpenStudio/issues/542 ), On large job you still see "0% Failed after a job fails in the workflow
+- ![Fixed:][fixed] [#546]( https://github.com/NREL/OpenStudio/issues/546 ), Issues in Onlnie BCL window when viewing sections with more than 10 measures
+- ![Fixed:][fixed] [#569]( https://github.com/NREL/OpenStudio/issues/569 ), In some situations design alternates made using "Create One For Each Selected Measure" are out of order
+- ![Fixed:][fixed] [#600]( https://github.com/NREL/OpenStudio/issues/600 ), EnergyPlus failing on one run, then not when I re-run
+- ![Fixed:][fixed] [#613]( https://github.com/NREL/OpenStudio/issues/613 ), There is no way for a user to manually shut down the cloud whenever they want.
+- ![Fixed:][fixed] [#614]( https://github.com/NREL/OpenStudio/issues/614 ), Should be able to download details from run tab even if DataPoint is complete
+- ![Fixed:][fixed] [#621]( https://github.com/NREL/OpenStudio/issues/621 ), On mac, opening PAT projects produces a strange RunManager error
+- ![Fixed:][fixed] [#626]( https://github.com/NREL/OpenStudio/issues/626 ), Alert user if file fails to save. Ran across this in Plugin but may need to check App and PAT as well
+- ![Fixed:][fixed] [#650]( https://github.com/NREL/OpenStudio/issues/650 ), Conflict between OpenStudio SketchUp plugin and Vray
+- ![Fixed:][fixed] [#658]( https://github.com/NREL/OpenStudio/issues/658 ), PAT - unexpected jump to Tab 1
+- ![Fixed:][fixed] [#692]( https://github.com/NREL/OpenStudio/issues/692 ), Invalid "tag" in built-in Replace Opentudio Model measure.rb file
+- ![Fixed:][fixed] [#702]( https://github.com/NREL/OpenStudio/issues/702 ), Cloud run sometimes can't find the weather file
+- ![Fixed:][fixed] [#703]( https://github.com/NREL/OpenStudio/issues/703 ), Clear Results Bug and graphic confusion
+- ![Fixed:][fixed] [#815]( https://github.com/NREL/OpenStudio/issues/815 ), Measure warning icon does not go away on update my measures
+- ![Fixed:][fixed] [#868]( https://github.com/NREL/OpenStudio/issues/868 ), Assert when running PAT project on the cloud
+- ![Fixed:][fixed] [#916]( https://github.com/NREL/OpenStudio/issues/916 ), Radiance warnings presented in PAT everytime cloud status changes
+- ![Fixed:][fixed] [#922]( https://github.com/NREL/OpenStudio/issues/922 ), Cannot download failed datapoints from server in PAT
+- ![Fixed:][fixed] [#958]( https://github.com/NREL/OpenStudio/issues/958 ), Scan for tools finding wrong Ruby version
+- ![Fixed:][fixed] [#959]( https://github.com/NREL/OpenStudio/issues/959 ), Spreadsheet export does not work with data points run on cloud
+- ![Fixed:][fixed] [#989]( https://github.com/NREL/OpenStudio/issues/989 ), PAT crash involving directories opened in Explorer
+- ![Fixed:][fixed] [#1001]( https://github.com/NREL/OpenStudio/issues/1001 ), PAT open last project path should not be altered when setting a baseline
+- ![Fixed:][fixed] [#1042]( https://github.com/NREL/OpenStudio/issues/1042 ), Error message says BCL key not working when internet is not working
+- ![Fixed:][fixed] [#1051]( https://github.com/NREL/OpenStudio/issues/1051 ), Scan for tools should be modal dialog
+- ![Fixed:][fixed] [#1066]( https://github.com/NREL/OpenStudio/issues/1066 ), Terminology used by RunManager doesn't match OS terminology.
+- ![Fixed:][fixed] [#1115]( https://github.com/NREL/OpenStudio/issues/1115 ), Items selected after clearing results seems random in PAT
+- ![Fixed:][fixed] [#1116]( https://github.com/NREL/OpenStudio/issues/1116 ), PAT slow switching to tab 3
+- ![Fixed:][fixed] [#1161]( https://github.com/NREL/OpenStudio/issues/1161 ), Info Messages not showing on cloud run
+- ![Fixed:][fixed] [#1203]( https://github.com/NREL/OpenStudio/issues/1203 ), App Opening Delayed When Offline
+- ![Fixed:][fixed] [#1204]( https://github.com/NREL/OpenStudio/issues/1204 ), Measure is added to project even if drop fails
+- ![Fixed:][fixed] [#1261]( https://github.com/NREL/OpenStudio/issues/1261 ), PAT cloud can get stuck
+- ![Fixed:][fixed] [#1315]( https://github.com/NREL/OpenStudio/issues/1315 ), QSslSocket: cannot resolve TLSv1_1_client_method
+- ![Fixed:][fixed] [#1439]( https://github.com/NREL/OpenStudio/issues/1439 ), AWS.rb script should put logs in project dir
+- ![Fixed:][fixed] [#1474]( https://github.com/NREL/OpenStudio/issues/1474 ), Bad warning message when no weather file attached
+- ![Fixed:][fixed] [#1477]( https://github.com/NREL/OpenStudio/issues/1477 ), URL links in measure description are not clickable 
+- ![Fixed:][fixed] [#1497]( https://github.com/NREL/OpenStudio/issues/1497 ), epw2wea check fails on Linux
+- ![Fixed:][fixed] [#1536]( https://github.com/NREL/OpenStudio/issues/1536 ), setMinimumHotWaterOrStreamFlowRate (should be steam instead of stream)
+- ![Fixed:][fixed] [#1690]( https://github.com/NREL/OpenStudio/issues/1690 ), Issues with commas in choice arguments in PAT
+- ![Fixed:][fixed] [#1708]( https://github.com/NREL/OpenStudio/issues/1708 ), Error exporting PAT project to analysis spreadsheet
+- ![Fixed:][fixed] [#1710]( https://github.com/NREL/OpenStudio/issues/1710 ), Export to spreadsheet when argument is choice list from model static value shows UUID vs. string
+- ![Fixed:][fixed] [#1723]( https://github.com/NREL/OpenStudio/issues/1723 ), PAT Cloud not able to download detailed results
+- ![Fixed:][fixed] [#1726]( https://github.com/NREL/OpenStudio/issues/1726 ), Runmanager loads models against wrong version of idd 
+- ![Fixed:][fixed] [#1735]( https://github.com/NREL/OpenStudio/issues/1735 ), Standard report results take too long to render in 1.8.0
+- ![Fixed:][fixed] [#1842]( https://github.com/NREL/OpenStudio/issues/1842 ), PAT - Amazon EC2 - Unable to update uuid with mismatches child job type
+- ![Fixed:][fixed] [#1885]( https://github.com/NREL/OpenStudio/issues/1885 ), Running paegent seems to interfere with PAT cloud
+- ![Fixed:][fixed] [#1898]( https://github.com/NREL/OpenStudio/issues/1898 ), When you copy a measure, the resulting measure has inadvertent space in display name.
+- ![Fixed:][fixed] [#2017]( https://github.com/NREL/OpenStudio/issues/2017 ), PAT's "Sync Project Measures with Library" only updates 10 measures
+- ![Fixed:][fixed] [#2021]( https://github.com/NREL/OpenStudio/issues/2021 ), Cannot use RubyJobBuilder for Reporting measures
+- ![Fixed:][fixed] [#2161]( https://github.com/NREL/OpenStudio/issues/2161 ), Open Studio 1.10.0 makes SketchUp 2016 crash
+- ![Fixed:][fixed] [#2167]( https://github.com/NREL/OpenStudio/issues/2167 ), Rename Fan Constant Volume object attribute "FanEfficiency" to "FanTotalEfficiency"
+- ![Fixed:][fixed] [#2229]( https://github.com/NREL/OpenStudio/issues/2229 ), AirLoopHVACUnitarySystem fan placement doesn't default
+- ![Fixed:][fixed] [#2273]( https://github.com/NREL/OpenStudio/issues/2273 ), Upgrade from 1.11.4 to 1.11.5 leads to empty OutdoorAir:NodeList in IDF file
+- ![Fixed:][fixed] [#2324]( https://github.com/NREL/OpenStudio/issues/2324 ), PAT cloud setting
+- ![Fixed:][fixed] [#2334]( https://github.com/NREL/OpenStudio/issues/2334 ), CLI documentation
+- ![Fixed:][fixed] [#2337]( https://github.com/NREL/OpenStudio/issues/2337 ), typo - "euqipment" instead of equipment
+- ![Fixed:][fixed] [#2339]( https://github.com/NREL/OpenStudio/issues/2339 ), Incorrect Display Name for 'Central Heating Maximum System Air Flow Ratio'
+- ![Fixed:][fixed] [#2345]( https://github.com/NREL/OpenStudio/issues/2345 ), isomodel measure inconsistency
+- ![Fixed:][fixed] [#2364]( https://github.com/NREL/OpenStudio/issues/2364 ), Crash in translate ZoneHVACEnergyRecoveryVentilator 
+- ![Fixed:][fixed] [#2404]( https://github.com/NREL/OpenStudio/issues/2404 ), Is the E+ Ground Heat Exchanger:Slinky model present in Open Studio?
+- ![Fixed:][fixed] [#2409]( https://github.com/NREL/OpenStudio/issues/2409 ), OpenStudio does not open & SketchUp plugin load errors
+- ![Fixed:][fixed] [#2413]( https://github.com/NREL/OpenStudio/issues/2413 ), Can't assign CoilHeatingElectric to ZoneHVACFourPipeFanCoil
+- ![Fixed:][fixed] [#2429]( https://github.com/NREL/OpenStudio/issues/2429 ), In PAT finder window (on mac), cannot create folder
+- ![Fixed:][fixed] [#2431]( https://github.com/NREL/OpenStudio/issues/2431 ), PAT unable to reopen 2.0.0 project on Mac
+- ![Fixed:][fixed] [#2435]( https://github.com/NREL/OpenStudio/issues/2435 ), Optional argument shows in red in OS 2.0
+- ![Fixed:][fixed] [#2497]( https://github.com/NREL/OpenStudio/issues/2497 ), All options not getting first column value when measure arg isn't "variable"
+- ![Fixed:][fixed] [#2501]( https://github.com/NREL/OpenStudio/issues/2501 ), Show units & descriptions for arguments in PAT
+- ![Fixed:][fixed] [#2507]( https://github.com/NREL/OpenStudio/issues/2507 ), For measure args without default values I have to set as variable to run properly
+- ![Fixed:][fixed] [#2518]( https://github.com/NREL/OpenStudio/issues/2518 ), AWS Workers Stuck in Queued State w/ 4 Core Server
+- ![Fixed:][fixed] [#2521]( https://github.com/NREL/OpenStudio/issues/2521 ), Results Tab Not Working on Cloud Run
+- ![Fixed:][fixed] [#2529]( https://github.com/NREL/OpenStudio/issues/2529 ), PAT won't download datapoint zip on Mac
+- ![Fixed:][fixed] [#2540]( https://github.com/NREL/OpenStudio/issues/2540 ), PAT projects created on Windows don't run successfully on Mac
+- ![Fixed:][fixed] [#2543]( https://github.com/NREL/OpenStudio/issues/2543 ), PAT Add Measure - Missing "Category" Filter
+- ![Fixed:][fixed] [#2545]( https://github.com/NREL/OpenStudio/issues/2545 ), Optional (string) argument not working as expected in PAT 2.1.0
+- ![Fixed:][fixed] [#2547]( https://github.com/NREL/OpenStudio/issues/2547 ), OpenStudio 2.0 Ruby inteface mismatch? or missing? from 1.x versions
+- ![Fixed:][fixed] [#2548]( https://github.com/NREL/OpenStudio/issues/2548 ), Results disappear from Run Tab in Cloud Mode
+- ![Fixed:][fixed] [#2551]( https://github.com/NREL/OpenStudio/issues/2551 ), Need some human-readable diagnostic messages for missing arguments
+- ![Fixed:][fixed] [#2557]( https://github.com/NREL/OpenStudio/issues/2557 ), PAT 2.1.0 datapoint error due to optional arg
+- ![Fixed:][fixed] [#2558]( https://github.com/NREL/OpenStudio/issues/2558 ), Can't start Amazon server on Windows w/ PAT 2.1.0
+- ![Fixed:][fixed] [#2559]( https://github.com/NREL/OpenStudio/issues/2559 ), PAT 2.1.0 missing units
+- ![Fixed:][fixed] [#2565]( https://github.com/NREL/OpenStudio/issues/2565 ), PAT 2.1.0 datapoint errors using duplicate measure
+- ![Fixed:][fixed] [#2566]( https://github.com/NREL/OpenStudio/issues/2566 ), Window 2.1 installer sometimes silently quits
+- ![Fixed:][fixed] [#2569]( https://github.com/NREL/OpenStudio/issues/2569 ), PAT 2.1.0 Analyses Fail w/ No Useful User Feedback Under Some Default Arg Conditions
+- ![Fixed:][fixed] [#2574]( https://github.com/NREL/OpenStudio/issues/2574 ), Odd behavior on measure options grid for bool template
+- ![Fixed:][fixed] [#2579]( https://github.com/NREL/OpenStudio/issues/2579 ), ShadowCalculation field updates another in OS App
+- ![Fixed:][fixed] [#2583]( https://github.com/NREL/OpenStudio/issues/2583 ), Diag.rb error using integer_sequence
+- ![Fixed:][fixed] [#2585]( https://github.com/NREL/OpenStudio/issues/2585 ), PAT 2.1.0 analysis error w/ no variables for diag
+- ![Fixed:][fixed] [#2586]( https://github.com/NREL/OpenStudio/issues/2586 ), PAT Project Measures Get Out of State
+- ![Fixed:][fixed] [#2591]( https://github.com/NREL/OpenStudio/issues/2591 ),  GroundHeatExchangerVertical::gFunctions not swigged
+- ![Fixed:][fixed] [#2596]( https://github.com/NREL/OpenStudio/issues/2596 ), Measure manager doesn't remove missing files from the XML
+- ![Fixed:][fixed] [#2605]( https://github.com/NREL/OpenStudio/issues/2605 ), Deal with external volume storage driver
+- ![Fixed:][fixed] [#2607]( https://github.com/NREL/OpenStudio/issues/2607 ), Use private swarm-based registry
+- ![Fixed:][fixed] [#2612]( https://github.com/NREL/OpenStudio/issues/2612 ), OpenStudio 2.1.1 Results Tab Unavailable
+- ![Fixed:][fixed] [#2617]( https://github.com/NREL/OpenStudio/issues/2617 ), Custom Output Variables don't make it into analysis JSON properly
+- ![Fixed:][fixed] [#2618]( https://github.com/NREL/OpenStudio/issues/2618 ), Static value for measure arguments/variables not being set properly in analysis JSON
+- ![Fixed:][fixed] [#2623]( https://github.com/NREL/OpenStudio/issues/2623 ), Forward Translate AvailabilityManager:DifferentialThermostat
+- ![Fixed:][fixed] [#2628]( https://github.com/NREL/OpenStudio/issues/2628 ), Feature Request: Add actual number of floors to model. 
+- ![Fixed:][fixed] [#2635]( https://github.com/NREL/OpenStudio/issues/2635 ), Area mismatch- not a software issue. an internal wall construction was force assigned to a exterior wall
+- ![Fixed:][fixed] [#2645]( https://github.com/NREL/OpenStudio/issues/2645 ), PTAC, PTHP and WAHP should omit OA Mixer when not used
+- ![Fixed:][fixed] [#2646]( https://github.com/NREL/OpenStudio/issues/2646 ), PTAC, PTHP, and water to air HP should support blow through and draw through
+- ![Fixed:][fixed] [#2651]( https://github.com/NREL/OpenStudio/issues/2651 ), ZoneHVACFourPipeFanCoil fan operating mode schedule
+- ![Improved:][improved] [#294]( https://github.com/NREL/OpenStudio/issues/294 ), View Reports Tab - Open Copy in OpenStudio doesn't bring weather file over (Bugzilla #1153)
+- ![Improved:][improved] [#305]( https://github.com/NREL/OpenStudio/issues/305 ), Tab 1 - gui isn't sorting choice objects in the pull down list (Bugzilla #1186)
+- ![Improved:][improved] [#1444]( https://github.com/NREL/OpenStudio/issues/1444 ), Easily set weather file in PAT
+- ![Improved:][improved] [#1483]( https://github.com/NREL/OpenStudio/issues/1483 ), Allow measures to require gems
+- ![Improved:][improved] [#1553]( https://github.com/NREL/OpenStudio/issues/1553 ), Remove scan for tools
+- ![Improved:][improved] [#1583]( https://github.com/NREL/OpenStudio/issues/1583 ), Wrap Tab Boundary Around Whole Viewing Pane
+- ![Improved:][improved] [#1724]( https://github.com/NREL/OpenStudio/issues/1724 ), RegisterInfo method very slow
+- ![Improved:][improved] [#1793]( https://github.com/NREL/OpenStudio/issues/1793 ), Show Simple ventilation in reporting measure
+- ![Improved:][improved] [#2044]( https://github.com/NREL/OpenStudio/issues/2044 ), Reorder design alternatives in PAT for reporting
+- ![Improved:][improved] [#2122]( https://github.com/NREL/OpenStudio/issues/2122 ), OS:ZoneHVAC:WaterToAirHeatPump accepts only boost optional for OA airflow
+- ![Improved:][improved] [#2575]( https://github.com/NREL/OpenStudio/issues/2575 ), Enable autosizing of WaterToWaterHeatPumps
+
 ## OpenStudio v2.1.1
 ###### 2017-04-19 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.1.0...v2.1.1 )
 

@@ -1,4 +1,4 @@
-!IDD_Version 2.1.2
+!IDD_Version 2.3.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -13,7 +13,7 @@
 !
 !  \type url         The field references a file on at some location.  The reference
 !                    may be a relative file path (in which case a set of search locations
-!                    are used to find the file at run time), or it may be an 
+!                    are used to find the file at run time), or it may be an
 !                    absolute path to a local file.
 !
 ! Object-level comments:
@@ -568,7 +568,7 @@ OS:ZoneAirMassFlowConservation,
        \unique-object
   A1,  \field Handle
        \type handle
-       \required-field       
+       \required-field
   A2,  \field Adjust Zone Mixing For Zone Air Mass Flow Balance
        \type choice
        \key Yes
@@ -585,7 +585,7 @@ OS:ZoneAirMassFlowConservation,
        \key MixingSourceZonesOnly
        \key AllZones
        \default MixingSourceZonesOnly
-       
+
 OS:ZoneCapacitanceMultiplier:ResearchSpecial,
        \memo Multiplier altering the relative capacitance of the air compared to an empty zone
        \unique-object
@@ -621,50 +621,50 @@ OS:RadianceParameters,
        \note The -c option tells rcontrib how  many  rays  to  accumulate  for  each
        \note record.  The default value is 1, meaning a full record will be produced
        \note for each input ray.  For values greater than 1, contributions  will  be
-       \note averaged together over the given number of input rays.  
+       \note averaged together over the given number of input rays.
        \type integer
        \minimum 1
        \default 1
   N2, \field Direct Threshold
-       \note direct sampling threshold, -dt option to rtrace/rpict. Sets the direct threshold to frac. 
-       \note Shadow testing will stop when the potential contribution of at least the next and at most 
-       \note all remaining light source samples is less than this fraction of the accumulated value. 
-       \note The remaining light source contributions are approximated statistically. A value of zero 
+       \note direct sampling threshold, -dt option to rtrace/rpict. Sets the direct threshold to frac.
+       \note Shadow testing will stop when the potential contribution of at least the next and at most
+       \note all remaining light source samples is less than this fraction of the accumulated value.
+       \note The remaining light source contributions are approximated statistically. A value of zero
        \note means that all light source samples will be tested for shadow.
        \type real
        \minimum 0.0
        \default 0.0
   N3, \field Direct Certainty
        \note direct certainty, -dc option to rtrace/rpict.
-       \note Sets the direct certainty to frac. A value of one guarantees that the absolute 
-       \note accuracy of the direct calculation will be equal to or better than that given 
-       \note in the -dt specification. A value of zero only insures that all shadow lines 
+       \note Sets the direct certainty to frac. A value of one guarantees that the absolute
+       \note accuracy of the direct calculation will be equal to or better than that given
+       \note in the -dt specification. A value of zero only insures that all shadow lines
        \note resulting in a contrast change greater than the -dt specification will be calculated.
        \type real
        \minimum 0.0
        \default 1.0
   N4, \field Direct Jitter
        \note direct jitter, -dj option to rtrace/rpict.
-       \note Sets the direct certainty to frac. A value of one guarantees that the absolute 
-       \note accuracy of the direct calculation will be equal to or better than that given 
-       \note in the -dt specification. A value of zero only insures that all shadow lines 
+       \note Sets the direct certainty to frac. A value of one guarantees that the absolute
+       \note accuracy of the direct calculation will be equal to or better than that given
+       \note in the -dt specification. A value of zero only insures that all shadow lines
        \note resulting in a contrast change greater than the -dt specification will be calculated.
        \type real
        \minimum 0.0
        \default 1.0
   N5, \field Direct Pretest
        \note direct jitter, -dp option to rtrace/rpict.
-       \note Set the secondary source presampling density to D. This is the number of 
-       \note samples per steradian that will be used to determine ahead of time whether 
-       \note or not it is worth following shadow rays through all the reflections and/or 
-       \note transmissions associated with a secondary source path. A value of 0 means that 
-       \note the full secondary source path will always be tested for shadows if it is tested at all. 
+       \note Set the secondary source presampling density to D. This is the number of
+       \note samples per steradian that will be used to determine ahead of time whether
+       \note or not it is worth following shadow rays through all the reflections and/or
+       \note transmissions associated with a secondary source path. A value of 0 means that
+       \note the full secondary source path will always be tested for shadows if it is tested at all.
        \type real
        \minimum 0.0
        \default 1.0
   N6, \field Ambient Bounces VMX
        \note ambient bounces, -ab option to rtrace/rpict.
-       \note Set the number of ambient bounces to N. This is the maximum number of diffuse 
+       \note Set the number of ambient bounces to N. This is the maximum number of diffuse
        \note bounces computed by the indirect calculation. A value of zero implies no indirect calculation.
        \note This is for view matrix (VMX) calculations with rcontrib.
        \type integer
@@ -672,7 +672,7 @@ OS:RadianceParameters,
        \default 6
   N7, \field Ambient Bounces DMX
        \note ambient bounces, -ab option to rtrace/rpict.
-       \note Set the number of ambient bounces to N. This is the maximum number of diffuse 
+       \note Set the number of ambient bounces to N. This is the maximum number of diffuse
        \note bounces computed by the indirect calculation. A value of zero implies no indirect calculation.
        \note This is for daylight matrix (DMX) calculations with rcontrib, and classic renderings with rpict.
        \type integer
@@ -680,8 +680,8 @@ OS:RadianceParameters,
        \default 2
   N8, \field Ambient Divisions VMX
        \note ambient bounces, -ad option to rtrace/rpict.
-       \note Set the number of ambient divisions to N. The error in the Monte Carlo 
-       \note calculation of indirect illuminance will be inversely proportional to the 
+       \note Set the number of ambient divisions to N. The error in the Monte Carlo
+       \note calculation of indirect illuminance will be inversely proportional to the
        \note square root of this number. A value of zero implies no indirect calculation.
        \note This is for view matrix (VMX) calculations with rcontrib.
        \type integer
@@ -689,8 +689,8 @@ OS:RadianceParameters,
        \default 4050
   N9, \field Ambient Divisions DMX
        \note ambient bounces, -ad option to rtrace/rpict.
-       \note Set the number of ambient divisions to N. The error in the Monte Carlo 
-       \note calculation of indirect illuminance will be inversely proportional to the 
+       \note Set the number of ambient divisions to N. The error in the Monte Carlo
+       \note calculation of indirect illuminance will be inversely proportional to the
        \note square root of this number. A value of zero implies no indirect calculation.
        \note This is for daylight matrix (DMX) calculations with rcontrib, and classic renderings with rpict.
        \type integer
@@ -698,41 +698,41 @@ OS:RadianceParameters,
        \default 512
   N10, \field Ambient Supersamples
        \note ambient supersamples, -as option to rtrace/rpict.
-       \note Set the number of ambient divisions to N. The error in the Monte Carlo 
-       \note calculation of indirect illuminance will be inversely proportional to the 
+       \note Set the number of ambient divisions to N. The error in the Monte Carlo
+       \note calculation of indirect illuminance will be inversely proportional to the
        \note square root of this number. A value of zero implies no indirect calculation.
        \type integer
        \minimum 0
        \default 256
   N11, \field Limit Weight VMX
        \note limit weight, -lw option to rtrace/rpict.
-       \note Limit the weight of each ray to a minimum of frac. During ray-tracing, a 
-       \note record is kept of the estimated contribution (weight) a ray would have in 
-       \note the image. If this weight is less than the specified minimum and the -lr 
-       \note setting (above) is positive, the ray is not traced. Otherwise, Russian 
-       \note roulette is used to continue rays with a probability equal to the ray weight 
+       \note Limit the weight of each ray to a minimum of frac. During ray-tracing, a
+       \note record is kept of the estimated contribution (weight) a ray would have in
+       \note the image. If this weight is less than the specified minimum and the -lr
+       \note setting (above) is positive, the ray is not traced. Otherwise, Russian
+       \note roulette is used to continue rays with a probability equal to the ray weight
        \note divided by the given frac. (Ideally, this value is the -ad value^-1 for VMX calcs)
        \type real
        \minimum 0.0
        \default 0.001
   N12, \field Limit Weight DMX
        \note limit weight, -lw option to rtrace/rpict.
-       \note Limit the weight of each ray to a minimum of frac. During ray-tracing, a 
-       \note record is kept of the estimated contribution (weight) a ray would have in 
-       \note the image. If this weight is less than the specified minimum and the -lr 
-       \note setting (above) is positive, the ray is not traced. Otherwise, Russian 
-       \note roulette is used to continue rays with a probability equal to the ray weight 
-       \note divided by the given frac. 
+       \note Limit the weight of each ray to a minimum of frac. During ray-tracing, a
+       \note record is kept of the estimated contribution (weight) a ray would have in
+       \note the image. If this weight is less than the specified minimum and the -lr
+       \note setting (above) is positive, the ray is not traced. Otherwise, Russian
+       \note roulette is used to continue rays with a probability equal to the ray weight
+       \note divided by the given frac.
        \type real
        \default 0.001
   N13, \field Klems Sampling Density
        \note number of rays per outgoing Klems direction, -c option to rcontrib.
-       \note Sets the Klems sampling density for daylight matrix calculations. 
+       \note Sets the Klems sampling density for daylight matrix calculations.
        \type integer
        \default 500
   A2; \field Sky Discretization Resolution
        \note number of rays per outgoing Klems direction, -m:n option to rcontrib.
-       \note Sets sky discretization resolution for daylight coefficient calculations. 
+       \note Sets sky discretization resolution for daylight coefficient calculations.
        \type choice
        \default 146
        \key 146
@@ -1059,7 +1059,7 @@ OS:Site:GroundTemperature:Deep,
        \units C
        \type real
        \default 16
-     
+
 OS:Site:GroundReflectance,
   \unique-object
   \min-fields 13
@@ -2207,7 +2207,7 @@ OS:SpaceType,
        \note This is a freeform field used to identify the space type for standards.
        \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
        \note More information can be found at https://github.com/NREL/openstudio-standards.
-        
+
 OS:ModelObjectList,
        \min-fields 1
        \extensible:1 Just duplicate last field and comments (changing numbering, please)
@@ -2696,7 +2696,7 @@ OS:WindowMaterial:Blind,
        \minimum 0
        \maximum 180
        \default 180
-       
+
 OS:WindowMaterial:DaylightRedirectionDevice,
        \memo This object is not in EnergyPlus, this represents a film or louver which redirects daylighting.
        \min-fields 2
@@ -2709,11 +2709,11 @@ OS:WindowMaterial:DaylightRedirectionDevice,
        \reference MaterialNames
        \reference WindowShadesScreensAndBlinds
   A3; \field Daylight Redirection Device Type
-       \type choice 
+       \type choice
        \default Louver
        \key Louver
        \key Film
-       
+
 OS:WindowMaterial:Gas,
        \memo Gas material properties that are used in Windows or Glass Doors
        \min-fields 4
@@ -3287,7 +3287,7 @@ OS:WindowMaterial:SimpleGlazingSystem,
        \type real
        \minimum> 0
        \maximum< 1
-       
+
 OS:StandardsInformation:Material,
        \min-fields 2
   A1, \field Handle
@@ -3302,9 +3302,9 @@ OS:StandardsInformation:Material,
        \note More information can be found at https://github.com/NREL/openstudio-standards.
        \type alpha
   A4, \field Material Standard Source
-       \note This is a freeform field used to identify the table or section in the standard which specifies this material.    
-       \note More information can be found at https://github.com/NREL/openstudio-standards.     
-       \type alpha       
+       \note This is a freeform field used to identify the table or section in the standard which specifies this material.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+       \type alpha
   A5, \field Standards Category
        \note This is a freeform field used to identify the category of this material, e.g. 'Plastering Materials' 'Composite', or 'Roofing'.
        \note More information can be found at https://github.com/NREL/openstudio-standards.
@@ -3332,14 +3332,14 @@ OS:StandardsInformation:Material,
   A11; \field Composite Cavity Insulation
        \note This is a freeform field used to identify the cavity insulation for a composite layer.
        \note More information can be found at https://github.com/NREL/openstudio-standards.
-       \type alpha 
-       
+       \type alpha
+
 OS:MaterialProperty:GlazingSpectralData,
        \memo Name is followed by up to 800 sets of normal-incidence measured values of
        \memo [wavelength, transmittance, front reflectance, back reflectance] for wavelengths
        \memo covering the solar spectrum (from about 0.25 to 2.5 microns)
        \format Spectral
-       \extensible:4 
+       \extensible:4
        \min-fields 1
        \max-fields 3201
   A1,  \field Handle
@@ -3355,7 +3355,7 @@ OS:MaterialProperty:GlazingSpectralData,
   N2,  \field Transmittance
   N3,  \field Front Reflectance
   N4;  \field Back Reflectance
- 
+
 \group OpenStudio Constructions
 
 OS:Construction,
@@ -3462,7 +3462,7 @@ OS:Construction:InternalSource,
        \note refers to the list of materials which follows
        \type integer
        \default 1
-       \minimum 1       
+       \minimum 1
   N3, \field Dimensions for the CTF Calculation
        \note 1 = 1-dimensional calculation, 2 = 2-dimensional calculation
        \type integer
@@ -3562,7 +3562,7 @@ OS:StandardsInformation:Construction,
        \type alpha
   A8, \field Construction Standard Source
        \note This is a freeform field used to identify the table or section of the standard which specifies this construction.
-       \type alpha       
+       \type alpha
   A9, \field Fenestration Type
        \note Specific type of fenestration that this construction represents.
        \type choice
@@ -3600,7 +3600,7 @@ OS:StandardsInformation:Construction,
   A13,\field Fenestration Divider Type
        \note Type of divider for this fenestration construction.
        \type choice
-       \key True Divided Lite 
+       \key True Divided Lite
        \key Between Panes < 7/16"
        \key Between Panes >= 7/16"
   A14,\field Fenestration Tint
@@ -4877,7 +4877,7 @@ OS:ShadingSurfaceGroup,
   A5; \field Shaded Object Name
        \type object-list
        \object-list SurfAndSubSurfNames
-       
+
 OS:Space,
        \min-fields 1
   A1, \field Handle
@@ -5139,7 +5139,7 @@ OS:ShadingControl,
        \min-fields 4
   A1 , \field Handle
        \type handle
-       \required-field       
+       \required-field
   A2 , \field Name
        \required-field
        \type alpha
@@ -5156,7 +5156,7 @@ OS:ShadingControl,
        \key ExteriorBlind
        \key BetweenGlassShade
        \key BetweenGlassBlind
-       \key SwitchableGlazing       
+       \key SwitchableGlazing
        \key InteriorDaylightRedirectionDevice
   A4 , \field Construction with Shading Name
        \type object-list
@@ -5165,15 +5165,15 @@ OS:ShadingControl,
        \note Required if Shading Type = interior or exterior shade or blind, or exterior screen, and
        \note "Shading Device Material Name" is not specified.
        \note If both "Construction with Shading Name" and "Shading Device Material Name" are entered,
-       \note the former takes precedence.       
+       \note the former takes precedence.
   A5,  \field Shading Device Material Name
        \type object-list
        \object-list WindowShadesScreensAndBlinds
-       \note Enter then name of a WindowMaterial:Shade, WindowMaterial:Screen or WindowMaterial:Blind object.  
+       \note Enter then name of a WindowMaterial:Shade, WindowMaterial:Screen or WindowMaterial:Blind object.
        \note Required if "Construction with Shading Name" is not specified.
        \note Not used if Shading Control Type = SwitchableGlazing, BetweenGlassShade, or BetweenGlassBlind.
        \note If both "Construction with Shading Name" and "Shading Device Material Name" are entered,
-       \note the former takes precedence. 
+       \note the former takes precedence.
   A6 , \field Shading Control Type
        \type choice
        \key AlwaysOn
@@ -5232,14 +5232,14 @@ OS:ShadingControl,
        \note OnIfHighZoneAirTempAndHighSolarOnWindow, and OnIfHighZoneAirTempAndHighHorizontalSolar
        \type real
        \ip-units unknown
-       
+
 OS:WindowProperty:FrameAndDivider,
          \memo Specifies the dimensions of a window frame, dividers, and reveal surfaces.
          \memo Referenced by the sub surface objects for exterior windows and glass doors
          \min-fields 20
   A1 , \field Handle
        \type handle
-       \required-field  
+       \required-field
   A2 , \field Name
        \required-field
        \type alpha
@@ -5377,7 +5377,7 @@ OS:WindowProperty:FrameAndDivider,
        \type real
        \minimum 0.0
        \maximum 2.0
-       \default 0.0       
+       \default 0.0
   N20, \field Outside Reveal Solar Absorptance
        \type real
        \minimum 0.0
@@ -5410,7 +5410,7 @@ OS:WindowProperty:FrameAndDivider,
        \minimum 0.0
        \maximum 1.0
        \default 0.0
-         
+
 \group OpenStudio Advanced Construction, Surface, Zone Concepts
 
 OS:SurfaceProperty:ConvectionCoefficients,
@@ -5565,7 +5565,7 @@ OS:SurfaceProperty:ConvectionCoefficients:MultipleSurface,
       \memo Defaults in HeatBalanceAlgorithm object are [.1,1000].
   A1, \field Handle
       \type handle
-      \required-field      
+      \required-field
   A2, \field Surface Type
       \type choice
       \key AllExteriorSurfaces
@@ -5800,7 +5800,7 @@ OS:SurfaceProperty:OtherSideConditionsModel,
       \note GroundCoupledSurface provides boundary conditions for surfaces
       \note  in contact with GroundDomain objects
       \default GapConvectionRadiation
-      
+
 \group OpenStudio Space Loads
 
 OS:InternalMass,
@@ -6247,7 +6247,7 @@ OS:SpaceInfiltration:DesignFlowRate,
        \note "D" in Equation
        \type real
        \default 0.0
-     
+
 OS:SpaceInfiltration:EffectiveLeakageArea,
        \min-fields 7
        \memo  Infiltration is specified as effective leakage area at 4 Pa, schedule fraction, stack and wind coefficients, and
@@ -7501,7 +7501,7 @@ OS:Refrigeration:Subcooler:LiquidSuction,
         \note Applicable only and required for liquid suction heat exchangers (LSHX)
         \note Design vapor inlet temperature must be less than or equal to
         \note      the Liquid inlet design temp
-    
+
 OS:Refrigeration:System,
         \min-fields 8
   A1,   \field Handle
@@ -8095,7 +8095,7 @@ OS:Refrigeration:AirChiller,
         \note In each case, select the rating option that corresponds to the expected service conditions.
         \note For example, U.S. manufacturers quote a separate Unit Load Factor for wet or frosted coils.
         \note If the evaporating temperature is less than 0C, input the frosted coil value.
-        \note Within the European convention, select SC1, 2, 3, 4, or 5 depending upon the expected evaporating temperature.        
+        \note Within the European convention, select SC1, 2, 3, 4, or 5 depending upon the expected evaporating temperature.
         \type choice
         \key UnitLoadFactorSensibleOnly
         \key EuropeanSC1Standard
@@ -8675,9 +8675,25 @@ OS:AirLoopHVAC,
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A14; \field Return Air Bypass Flow Temperature Setpoint Schedule Name
+  A14, \field Return Air Bypass Flow Temperature Setpoint Schedule Name
        \type object-list
        \object-list ScheduleNames
+  A15, \field Demand Mixer Name
+       \type object-list
+       \required-field
+       \object-list ConnectionObject
+  A16, \field Demand Splitter A Name
+       \type object-list
+       \required-field
+       \object-list ConnectionObject
+  A17, \field Demand Splitter B Name
+       \type object-list
+       \required-field
+       \object-list ConnectionObject
+  A18; \field Supply Splitter Name
+       \type object-list
+       \required-field
+       \object-list ConnectionObject
 
 OS:AirLoopHVAC:ControllerList,
        \memo List controllers in order of control sequence
@@ -9621,10 +9637,50 @@ OS:AirLoopHVAC:UnitarySystem,
        \type object-list
        \object-list ConnectionNames
        \note Enter the name of the heat recovery water outlet node if plant water loop connections are present.
-  A23; \field Design Specification Multispeed Heat Pump Object Name
+  A23; \field Design Specification Multispeed Object Name
        \type object-list
        \object-list UnitarySystemPerformaceNames
        \note Enter the name of the performance specification object used to describe the multispeed coil.
+
+OS:UnitarySystemPerformance:Multispeed,
+       \memo The UnitarySystemPerformance object is used to specify the air flow ratio at each
+       \memo operating speed. This object is primarily used for multispeed DX and water coils to allow
+       \memo operation at alternate flow rates different from those specified in the coil object.
+       \extensible:2 - repeat last two fields, remembering to remove ; from "inner" fields.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference UnitarySystemPerformaceNames
+  A3 , \field Single Mode Operation
+       \type choice
+       \key Yes
+       \key No
+       \default No
+       \note Controls coil operation during each HVAC timestep. 
+       \note This choice does not apply to speed 1 operation.
+       \note Yes = operate at the highest speed possible without exceeding the current load.
+       \note No = allow operation at the average of two adjacent speeds to match the current load.
+  N1 , \field Heating Speed 1 Supply Air Flow Ratio
+       \required-field
+       \type real
+       \autosizable
+       \minimum> 0
+       \begin-extensible
+       \note Used only for Multi speed coils
+       \note Enter the lowest operating supply air flow ratio during heating
+       \note operation or specify autosize. This value is the ratio of air flow
+       \note at this speed to the maximum air flow rate.
+  N2 ; \field Cooling Speed 1 Supply Air Flow Ratio
+       \required-field
+       \type real
+       \autosizable
+       \minimum> 0
+       \note Used only for Multi speed coils
+       \note Enter the lowest operating supply air flow ratio during cooling
+       \note operation or specify autosize. This value is the ratio of air flow
+       \note at this speed to the maximum air flow rate.
 
 OS:AirLoopHVAC:ZoneMixer,
        \memo Mix N inlet air streams into one (currently 50 per air loop, but extensible).  Node names cannot
@@ -10131,7 +10187,7 @@ OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
        \minimum 0.0
        \maximum 4.0
        \default Autocalculate
-       
+
 OS:AirTerminal:SingleDuct:Uncontrolled,
        \min-fields 6
   A1, \field Handle
@@ -10980,6 +11036,7 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
        \required-field
    A2,  \field Name
         \type alpha
+        \reference WWHPHeatingNames
         \required-field
         \reference ConnectionObject
    A3,  \field Source Side Inlet Node Name
@@ -10998,26 +11055,32 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
        \type object-list
        \required-field
        \object-list ConnectionNames
-   N1,  \field Rated Load Side Flow Rate
+   N1,  \field Reference Load Side Flow Rate
         \required-field
         \type real
         \minimum> 0.0
         \units m3/s
-   N2,  \field Rated Source Side Flow Rate
+        \ip-units gal/min
+        \autosizable
+   N2,  \field Reference Source Side Flow Rate
         \required-field
         \type real
         \minimum> 0.0
         \units m3/s
-   N3,  \field Rated Heating Capacity
+        \ip-units gal/min
+        \autosizable
+   N3,  \field Reference Heating Capacity
         \required-field
         \type real
         \minimum> 0.0
         \units W
-   N4,  \field Rated Heating Power Consumption
+        \autosizable
+   N4,  \field Reference Heating Power Consumption
         \required-field
         \type real
         \minimum> 0.0
         \units W
+        \autosizable
    N5,  \field Heating Capacity Coefficient 1
         \required-field
         \type real
@@ -11045,9 +11108,23 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
    N13, \field Heating Compressor Power Coefficient 4
         \required-field
         \type real
-   N14; \field Heating Compressor Power Coefficient 5
+   N14, \field Heating Compressor Power Coefficient 5
         \required-field
         \type real
+   N15, \field Reference Coefficient of Performance
+        \note This optional field is used to autosize Reference Heating Power Consumption
+        \note COP = Reference Heating Capacity / Reference Heating Power Consumption
+        \type real
+        \minimum> 0.0
+        \required-field
+   N16, \field Sizing Factor
+        \note Multiplies the autosized capacity and flow rates
+        \type real
+        \minimum> 0.0
+        \required-field
+   A7 ; \field Companion Cooling Heat Pump Name
+        \type object-list
+        \object-list WWHPCoolingNames
 
 OS:HeatPump:WaterToWater:EquationFit:Cooling,
    A1, \field Handle
@@ -11055,6 +11132,7 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
        \required-field
    A2,  \field Name
         \type alpha
+        \reference WWHPCoolingNames
         \required-field
         \reference ConnectionObject
    A3,  \field Source Side Inlet Node Name
@@ -11073,26 +11151,32 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
        \type object-list
        \required-field
        \object-list ConnectionNames
-   N1,  \field Rated Load Side Flow Rate
+   N1,  \field Reference Load Side Flow Rate
         \required-field
         \type real
         \minimum> 0.0
         \units m3/s
-   N2,  \field Rated Source Side Flow Rate
+        \ip-units gal/min
+        \autosizable
+   N2,  \field Reference Source Side Flow Rate
         \required-field
         \type real
         \minimum> 0.0
         \units m3/s
-   N3,  \field Rated Cooling Capacity
+        \ip-units gal/min
+        \autosizable
+   N3,  \field Reference Cooling Capacity
         \required-field
         \type real
         \minimum> 0.0
         \units W
-   N4,  \field Rated Cooling Power Consumption
+        \autosizable
+   N4,  \field Reference Cooling Power Consumption
         \required-field
         \type real
         \minimum> 0.0
         \units W
+        \autosizable
    N5,  \field Cooling Capacity Coefficient 1
         \required-field
         \type real
@@ -11120,9 +11204,24 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
    N13, \field Cooling Compressor Power Coefficient 4
         \required-field
         \type real
-   N14; \field Cooling Compressor Power Coefficient 5
+   N14, \field Cooling Compressor Power Coefficient 5
         \required-field
         \type real
+   N15, \field Reference Coefficient of Performance
+        \note This optional field is used to autosize Reference Cooling Power Consumption
+        \note COP = Rated Cooling Capacity / Rated Cooling Power Consumption
+        \type real
+        \minimum> 0.0
+        \default 8.0
+   N16, \field Sizing Factor
+        \note Multiplies the autosized capacity and flow rates
+        \type real
+        \minimum> 0.0
+        \default 1.0
+   A7 ; \field Companion Heating Heat Pump Name
+        \type object-list
+        \object-list WWHPHeatingNames
+        \note This optional field is used to coordinate sizing calculations between heating and cooling modes.
 
 OS:Chiller:Electric:EIR,
        \memo This chiller model is the empirical model from the DOE-2 building Energy
@@ -11854,7 +11953,7 @@ OS:Chiller:Absorption,
        \required-field
 
 OS:CoolingTower:SingleSpeed,
-       \min-fields 10 
+       \min-fields 10
   A1 , \field Handle
        \type handle
        \required-field
@@ -12826,7 +12925,7 @@ OS:DistrictHeating,
        \minimum 0.0
        \autosizable
        \required-field
-     
+
 OS:GroundHeatExchanger:Vertical,
         \extensible:2
         \min-fields 21
@@ -13124,13 +13223,13 @@ OS:Coil:Cooling:CooledBeam,
   N8, \field Model Parameter n
        \type real
        \minimum 0.0
-       \default 0.4 
+       \default 0.4
   N9; \field Leaving Pipe Inside Diameter
        \type real
        \units m
        \minimum> 0.0
        \default 0.0145
-       
+
 OS:Coil:Cooling:DX:SingleSpeed,
        \min-fields 15
   A1, \field Handle
@@ -14149,10 +14248,10 @@ OS:Coil:Cooling:LowTemperatureRadiant:ConstantFlow,
    A1 , \field Handle
         \type handle
         \required-field
-   A2 , \field Name      
+   A2 , \field Name
         \required-field
         \reference CoilCoolingLowTempRadiantConstantFlow
-        \reference ConnectionObject 
+        \reference ConnectionObject
    A3, \field Cooling Water Inlet Node Name
         \type object-list
         \required-field
@@ -14183,7 +14282,7 @@ OS:Coil:Cooling:LowTemperatureRadiant:ConstantFlow,
         \units C
         \default 1.0
 
-OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow,  
+OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow,
         \min-fields 7
    A1 , \field Handle
         \type handle
@@ -14191,13 +14290,13 @@ OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow,
    A2 , \field Name
         \required-field
         \reference CoilCoolingLowTempRadiantVariableFlow
-        \reference ConnectionObject        
+        \reference ConnectionObject
    N1 , \field Maximum Cold Water Flow
         \units m3/s
         \minimum 0
         \autosizable
         \ip-units gal/min
-        \default autosize        
+        \default autosize
    A3 , \field Cooling Water Inlet Node Name
         \type object-list
         \required-field
@@ -14979,10 +15078,10 @@ OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow,
    A1 , \field Handle
         \type handle
         \required-field
-   A2 , \field Name      
+   A2 , \field Name
         \required-field
         \reference CoilHeatingLowTempRadiantConstantFlow
-        \reference ConnectionObject     
+        \reference ConnectionObject
    A3 , \field Heating Water Inlet Node Name
         \type object-list
         \required-field
@@ -15014,7 +15113,7 @@ OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow,
    A8 ; \field Heating Low Control Temperature Schedule Name
         \type object-list
         \object-list ScheduleNames
-        
+
 OS:Coil:Heating:LowTemperatureRadiant:VariableFlow,
         \min-fields 7
    A1 , \field Handle
@@ -15045,7 +15144,7 @@ OS:Coil:Heating:LowTemperatureRadiant:VariableFlow,
    A5 ; \field Heating Control Temperature Schedule Name
         \type object-list
         \object-list ScheduleNames
-               
+
 OS:Coil:Heating:Water,
        \min-fields 16
   A1, \field Handle
@@ -15178,7 +15277,7 @@ OS:Coil:Heating:Water:Baseboard,
   N6, \field Convergence Tolerance
       \type real
       \minimum> 0.0
-      \default 0.001       
+      \default 0.001
   A4, \field Water Inlet Node Name
       \type object-list
       \required-field
@@ -15329,7 +15428,7 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
   N14; \field Heating Power Consumption Coefficient 5
        \type real
        \required-field
-      
+
 OS:Coil:Heating:DX:MultiSpeed,
        \min-fields 19
   A1 , \field Handle
@@ -17815,7 +17914,7 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \note this field is used when the previous field is set to autosize. The pump power is scaled with Secondary Design Air Flow Rate
   A13 , \field Water Pump Power Modifier Curve Name
        \note this curve modifies the pump power in the previous field by multiplying the design power by the result of this curve.
-       \note x = ff = flow fraction on the secondary side, secondary air flow rate during operation divided by Secondary Design Air Flow Rate 
+       \note x = ff = flow fraction on the secondary side, secondary air flow rate during operation divided by Secondary Design Air Flow Rate
        \type object-list
        \object-list AllCurves
        \note Any curve or table with one independent variable can be used:
@@ -17828,18 +17927,18 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \required-field
        \units dimensionless
        \note This field is used when the previous field is set to autoize.  The Primary Design Air Flow Rate is scaled using this factor
-       \note to calculate the secondary design air flow rate.  
+       \note to calculate the secondary design air flow rate.
   N13 , \field Secondary Air Fan Design Power
        \type real
        \required-field
        \units W
        \note This is the fan power at Secondary Design Air Flow Rate
-       \note this is the nominal design power at full speed. 
+       \note this is the nominal design power at full speed.
        \autosizable
   A14 , \field Secondary Air Fan Power Modifier Curve Name
        \note this curve modifies the design fan power in the previous field by multiplying the value by the result
-       \note of this curve.  It should have a value of 1.0 at a x = 1.0. 
-       \note x = ff = flow fraction on the secondary side, secondary air flow rate during operation divided by Secondary Design Air Flow Rate 
+       \note of this curve.  It should have a value of 1.0 at a x = 1.0.
+       \note x = ff = flow fraction on the secondary side, secondary air flow rate during operation divided by Secondary Design Air Flow Rate
        \type object-list
        \object-list AllCurves
        \note Any curve or table with one independent variable can be used:
@@ -17847,7 +17946,7 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
        \note Curve:RectangularHyperbola2, Curve:ExponentialDecay, Curve:DoubleExponentialDecay,
        \note Table:OneIndependentVariable
-  N14 ; \field Primary Design Air Flow Rate  
+  N14 ; \field Primary Design Air Flow Rate
        \type real
        \units m3/s
        \minimum> 0.0
@@ -17879,7 +17978,7 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \ip-units W
        \minimum 0
        \autosizable
-  N3 , \field Primary Air Design Flow Rate  
+  N3 , \field Primary Air Design Flow Rate
        \required-field
        \type real
        \units m3/s
@@ -17912,18 +18011,18 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \required-field
        \minimum 0
   A7,  \field Effectiveness Flow Ratio Modifier Curve Name
-       \note this curve modifies the design effectiveness in the previous field 
-       \note by multiplying the value by the result of this curve.  The effectiveness flow modifier curve 
-       \note is a function of flow fraction. Flow fraction is the ratio of current primary air flow rate to 
-       \note the primary air design flow rate. If this input field is left blank then, the effectiveness 
-       \note is assumed to be constant.   
+       \note this curve modifies the design effectiveness in the previous field
+       \note by multiplying the value by the result of this curve.  The effectiveness flow modifier curve
+       \note is a function of flow fraction. Flow fraction is the ratio of current primary air flow rate to
+       \note the primary air design flow rate. If this input field is left blank then, the effectiveness
+       \note is assumed to be constant.
        \type object-list
        \object-list AllCurves
        \note Any curve or table with one independent variable can be used:
        \note Curve:Linear, Curve:Quadratic, Curve:Cubic, Curve:Quartic, Curve:Exponent,
        \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
        \note Curve:RectangularHyperbola2, Curve:ExponentialDecay, Curve:DoubleExponentialDecay,
-       \note Table:OneIndependentVariable   
+       \note Table:OneIndependentVariable
   N6,  \field Water Pump Power Sizing Factor
        \type real
        \required-field
@@ -18500,18 +18599,18 @@ OS:Fan:OnOff,
        \type alpha
        \retaincase
        \default General
-       
+
 OS:Fan:ZoneExhaust,
        \memo Models a fan that exhausts air from a zone.
   \min-fields 10
   A1, \field Handle
        \type handle
-       \required-field  
+       \required-field
   A2, \field Name
-       \type alpha  
+       \type alpha
        \required-field
        \reference FansZoneExhaust
-       \reference ConnectionObject       
+       \reference ConnectionObject
   A3, \field Availability Schedule Name
        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
        \note If this field is blank, the system is always available.
@@ -18531,7 +18630,7 @@ OS:Fan:ZoneExhaust,
        \minimum 0.0
   A4, \field Air Inlet Node Name
        \type object-list
-       \object-list ConnectionNames       
+       \object-list ConnectionNames
   A5, \field Air Outlet Node Name
        \type object-list
        \object-list ConnectionNames
@@ -18557,7 +18656,7 @@ OS:Fan:ZoneExhaust,
        \note Used to control fan's impact on flow at the return air node. Enter the portion of the exhaust that is balanced by simple airflows.
        \note
        \type object-list
-       \object-list ScheduleNames       
+       \object-list ScheduleNames
 
 OS:HeatExchanger:AirToAir:SensibleAndLatent,
       \min-fields 24
@@ -18855,16 +18954,16 @@ OS:PortList,
   A3, \field HVAC Component
        \type object-list
        \object-list ConnectionObject
-  A4; \field Port 1 
+  A4; \field Port 1
        \begin-extensible
        \type object-list
        \object-list ConnectionNames
-       
+
 OS:Pipe:Adiabatic,
       \memo Passes Inlet Node state variables to Outlet Node state variables
   A1, \field Handle
        \type handle
-       \required-field      
+       \required-field
   A2, \field Name
        \required-field
        \reference ConnectionObject
@@ -18875,10 +18974,10 @@ OS:Pipe:Adiabatic,
   A4; \field Outlet Node Name
        \required-field
        \type object-list
-       \object-list ConnectionNames      
+       \object-list ConnectionNames
 
 OS:PlantLoop,
-       \min-fields 25 
+       \min-fields 25
   A1, \field Handle
        \type handle
        \required-field
@@ -18892,11 +18991,16 @@ OS:PlantLoop,
        \default Water
        \key Water
        \key Steam
-       \key UserDefinedFluidType
+       \key PropyleneGlycol
+       \key EthyleneGlycol
+  N1,  \field Glycol Concentration
+       \type integer
+       \minimum 0
+       \maximum 100
+       \note Only used with either "PropyleneGlycol" or "EthyleneGlycol"
   A4, \field User Defined Fluid Type
-       \note This field is only required when Fluid Type is UserDefinedFluidType
-       \type object-list
-       \object-list FluidAndGlycolNames
+       \note This field is not used.
+       \type alpha
   A5, \field Plant Equipment Operation Heating Load
        \type object-list
        \object-list ControlSchemeList
@@ -18910,61 +19014,61 @@ OS:PlantLoop,
        \type object-list
        \required-field
        \object-list Node
-  N1, \field Maximum Loop Temperature
+  N2, \field Maximum Loop Temperature
        \type real
        \units C
        \default 100.0
-  N2, \field Minimum Loop Temperature
+  N3, \field Minimum Loop Temperature
        \type real
        \units C
        \default 0.0
-  N3, \field Maximum Loop Flow Rate
+  N4, \field Maximum Loop Flow Rate
        \type real
        \autosizable
        \units m3/s
        \ip-units gal/min
        \minimum 0
        \default autosize
-  N4, \field Minimum Loop Flow Rate
+  N5, \field Minimum Loop Flow Rate
        \type real
        \units m3/s
        \ip-units gal/min
        \default 0.0
-  N5, \field Plant Loop Volume
+  N6, \field Plant Loop Volume
        \type real
        \autocalculatable
        \units m3
        \ip-units gal
        \minimum 0
        \default autocalculate
-  A8, \field Plant Side Inlet Node Name
+  A9, \field Plant Side Inlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A9, \field Plant Side Outlet Node Name
+  A10, \field Plant Side Outlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A10, \field Plant Side Branch List Name
+  A11, \field Plant Side Branch List Name
        \type object-list
        \required-field
        \object-list BranchLists
-  A11, \field Demand Side Inlet Node Name
+  A12, \field Demand Side Inlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A12, \field Demand Side Outlet Node Name
+  A13, \field Demand Side Outlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A13, \field Demand Side Branch List Name
+  A14, \field Demand Side Branch List Name
        \type object-list
        \required-field
        \object-list BranchLists
-  A14, \field Demand Side Connector List Name
+  A15, \field Demand Side Connector List Name
        \type object-list
        \object-list ConnectorLists
-  A15, \field Load Distribution Scheme
+  A16, \field Load Distribution Scheme
        \type choice
        \required-field
         \key Optimal
@@ -18972,15 +19076,15 @@ OS:PlantLoop,
         \key UniformLoad
         \key UniformPLR
         \key SequentialUniformPLR
-  A16, \field Availability Manager List Name
+  A17, \field Availability Manager Name
        \type object-list
-       \object-list SystemAvailabilityManagerLists
-  A17, \field Plant Loop Demand Calculation Scheme
+       \object-list SystemAvailabilityManagers
+  A18, \field Plant Loop Demand Calculation Scheme
        \type choice
        \default SingleSetpoint
        \key SingleSetpoint
        \key DualSetpointDeadband
-  A18, \field Common Pipe Simulation
+  A19, \field Common Pipe Simulation
        \note Specifies a primary-secondary loop configuration. The plant side is the
        \note primary loop, and the demand side is the secondary loop.
        \note A secondary supply pump is required on the demand side.
@@ -18994,24 +19098,40 @@ OS:PlantLoop,
        \key CommonPipe
        \key TwoWayCommonPipe
        \key None
-  A19, \field Pressure Simulation Type
+  A20, \field Pressure Simulation Type
        \type choice
        \default None
        \key PumpPowerCorrection
        \key LoopFlowCorrection
        \key None
-  A20, \field Plant Equipment Operation Heating Load Schedule
+  A21, \field Plant Equipment Operation Heating Load Schedule
        \type object-list
        \object-list ScheduleNames
-  A21, \field Plant Equipment Operation Cooling Load Schedule
+  A22, \field Plant Equipment Operation Cooling Load Schedule
        \type object-list
        \object-list ScheduleNames
-  A22, \field Primary Plant Equipment Operation Scheme Schedule
+  A23, \field Primary Plant Equipment Operation Scheme Schedule
        \type object-list
        \object-list ScheduleNames
-  A23; \field Component Setpoint Operation Scheme Schedule
+  A24, \field Component Setpoint Operation Scheme Schedule
        \type object-list
        \object-list ScheduleNames
+  A25, \field Demand Mixer Name
+       \type object-list
+       \required-field
+       \object-list ConnectionObject
+  A26, \field Demand Splitter Name
+       \type object-list
+       \required-field
+       \object-list ConnectionObject
+  A27, \field Supply Mixer Name
+       \type object-list
+       \required-field
+       \object-list ConnectionObject
+  A28; \field Supply Splitter Name
+       \type object-list
+       \required-field
+       \object-list ConnectionObject
 
 OS:PlantEquipmentOperation:CoolingLoad,
     \extensible:3
@@ -19324,7 +19444,7 @@ OS:LoadProfile:Plant,
 
 OS:Pump:ConstantSpeed,
        \memo This pump model is described in the ASHRAE secondary HVAC toolkit.
-       \min-fields 10 
+       \min-fields 10
   A1, \field Handle
        \type handle
        \required-field
@@ -20207,9 +20327,16 @@ OS:SetpointManager:FollowGroundTemperature,
        \required-field
        \units C
        \type real
-  A4 ; \field Setpoint Node or NodeList Name
+  A4 , \field Setpoint Node or NodeList Name
        \type object-list
        \object-list Node
+  A5 ; \field Reference Ground Temperature Object Type
+       \type choice
+       \key Site:GroundTemperature:BuildingSurface
+       \key Site:GroundTemperature:Shallow
+       \key Site:GroundTemperature:Deep
+       \key Site:GroundTemperature:FCfactorMethod
+       \default Site:GroundTemperature:BuildingSurface
 
 OS:SetpointManager:FollowSystemNodeTemperature,
        \memo This setpoint manager is used to place a temperature setpoint on a
@@ -20535,7 +20662,7 @@ OS:Sizing:Plant,
       \units deltaC
       \minimum> 0.0
   A4, \field Sizing Option
-      \note if Coincident is chosen, then sizing is based on HVAC Sizing Simulations and 
+      \note if Coincident is chosen, then sizing is based on HVAC Sizing Simulations and
       \note the input field called Do HVAC Sizing Simulation for Sizing Periods in SimulationControl must be set to Yes
       \required-field
       \type choice
@@ -20543,7 +20670,7 @@ OS:Sizing:Plant,
       \key NonCoincident
   N3, \field Zone Timesteps in Averaging Window
       \required-field
-      \note this is used in the coincident sizing algorithm to apply a running average to peak flow rates 
+      \note this is used in the coincident sizing algorithm to apply a running average to peak flow rates
       \note that occur during HVAC Sizing Simulations
       \type integer
       \minimum 1
@@ -20944,7 +21071,7 @@ OS:Sizing:Zone,
       \key No
        \required-field
   A7, \field Dedicated Outdoor Air System Control Strategy
-      \note 1)supply neutral ventilation air; 2)supply neutral dehumidified and reheated 
+      \note 1)supply neutral ventilation air; 2)supply neutral dehumidified and reheated
       \note ventilation air; 3)supply cold ventilation air
       \type choice
       \key NeutralSupplyAir
@@ -21415,7 +21542,7 @@ OS:ZoneHVAC:Baseboard:Convective:Electric,
        \required-field
   A2 , \field Name
        \type alpha
-       \reference ConnectionObject  
+       \reference ConnectionObject
   A3 , \field Availability Schedule
        \required-field
        \type object-list
@@ -21436,7 +21563,7 @@ OS:ZoneHVAC:Baseboard:Convective:Water,
        \required-field
   A2 , \field Name
        \type alpha
-       \reference ConnectionObject  
+       \reference ConnectionObject
   A3 , \field Availability Schedule Name
        \required-field
        \type object-list
@@ -21730,16 +21857,16 @@ OS:ZoneHVAC:IdealLoadsAirSystem,
        \minimum 0.0
        \maximum 1.0
        \default 0.65
-       
+
 OS:ZoneHVAC:FourPipeFanCoil,
-        \min-fields 24
+        \min-fields 25
    A1 , \field Handle
         \type handle
         \required-field
    A2 , \field Name
         \type alpha
         \required-field
-        \reference ConnectionObject        
+        \reference ConnectionObject
    A3 , \field Availability Schedule Name
         \required-field
         \type object-list
@@ -21751,6 +21878,8 @@ OS:ZoneHVAC:FourPipeFanCoil,
         \key CyclingFan
         \key VariableFanVariableFlow
         \key VariableFanConstantFlow
+        \key MultiSpeedFan
+        \key ASHRAE90VariableFan
    N1 , \field Maximum Supply Air Flow Rate
         \required-field
         \autosizable
@@ -21825,10 +21954,29 @@ OS:ZoneHVAC:FourPipeFanCoil,
         \default 0.0
         \units m3/s
         \ip-units gal/min
-   N10; \field Heating Convergence Tolerance
+   N10, \field Heating Convergence Tolerance
         \type real
         \minimum> 0.0
         \default 0.001       
+   A13, \field Supply Air Fan Operating Mode Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   N11, \field Minimum Supply Air Temperature in Cooling Mode
+        \note For Capacity Control Method = ASHRAE90VariableFan, enter the minimum air temperature in cooling mode.
+        \note Leave this field blank or enter 0 to control to the zone load per ASHRAE 90.1. In this case, a zone sizing simulation is required.
+        \type real
+        \units C
+        \minimum 0.0
+        \autosizable
+        \required-field
+   N12; \field Maximum Supply Air Temperature in Heating Mode
+        \note For Capacity Control Method = ASHRAE90VariableFan, enter the maximum air temperature in heating mode.
+        \note Leave this field blank or enter 0 to control to the zone load per ASHRAE 90.1. In this case, a zone sizing simulation is required.
+        \type real
+        \units C
+        \minimum 0.0
+        \autosizable
+        \required-field
 
 OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \min-fields 15
@@ -21869,12 +22017,12 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \default MeanAirTemperature
    A6 , \field Low Temp Radiant Constant Flow Heating Coil Name
         \type object-List
-        \required-field 
+        \required-field
         \object-list CoilHeatingLowTempRadiantConstantFlow
    A7 , \field Low Temp Radiant Constant Flow Cooling Coil Name
         \type object-List
-        \required-field 
-        \object-list CoilCoolingLowTempRadiantConstantFlow    
+        \required-field
+        \object-list CoilCoolingLowTempRadiantConstantFlow
    N3 , \field Rated Flow Rate
         \units m3/s
    A8 , \field Pump Flow Rate Schedule Name
@@ -21908,7 +22056,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
    N8 ; \field Circuit Length
         \units m
         \default 106.7
-        
+
 OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \min-fields 9
    A1 , \field Handle
@@ -21922,12 +22070,12 @@ OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \object-list ScheduleNames
    A4 , \field Low Temp Radiant Variable Flow Heating Coil Name
         \type object-List
-        \required-field 
+        \required-field
         \object-list CoilHeatingLowTempRadiantVariableFlow
    A5 , \field Low Temp Radiant Variable Flow Cooling Coil Name
         \type object-List
         \required-field
-        \object-list CoilCoolingLowTempRadiantVariableFlow    
+        \object-list CoilCoolingLowTempRadiantVariableFlow
    A6 , \field Radiant Surface Type
         \note Identifies they types of surfaces that radiant system is embedded in
         \type choice
@@ -21955,7 +22103,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \key OperativeTemperature
         \key OutdoorDryBulbTemperature
         \key OutdoorWetBulbTemperature
-        \default MeanAirTemperature       
+        \default MeanAirTemperature
    A8 , \field Number of Circuits
         \type choice
         \key OnePerSurface
@@ -21964,7 +22112,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
    N3 ; \field Circuit Length
         \units m
         \default 106.7
-        
+
 OS:ZoneHVAC:PackagedTerminalHeatPump,
        \min-fields 24
   A1, \field Handle
@@ -22323,7 +22471,7 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
        \type real
        \units W/W
        \minimum 1.0
-       
+
 OS:ZoneHVAC:WaterToAirHeatPump,
         \min-fields 25
    A1,  \field Handle
@@ -22359,7 +22507,7 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \autosizable
    N2,  \field Supply Air Flow Rate During Heating Operation
         \note Must be less than or equal to fan size.
-        \type real 
+        \type real
         \required-field
         \autosizable
         \units m3/s
@@ -22409,7 +22557,7 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \object-list HeatingCoilsWaterToAirHP
         \object-list HeatingCoilsWaterToAirVSHP
    A9, \field Cooling Coil Name
-        \note Needs to match in the water-to-air heatpump cooling coil object  
+        \note Needs to match in the water-to-air heatpump cooling coil object
         \type object-list
         \required-field
         \object-list CoolingCoilsWaterToAirHP
@@ -22446,7 +22594,7 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \default 60
    A10, \field Supplemental Heating Coil Name
         \note  Needs to match in the supplemental heating coil object
-        \type object-list 
+        \type object-list
         \required-field
         \object-list HeatingCoilName
    N11, \field Maximum Supply Air Temperature from Supplemental Heater
@@ -22478,7 +22626,7 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \note Enter the name of an AvailabilityManagerAssignmentList object.
         \type object-list
         \object-list SystemAvailabilityManagerLists
-        
+
 OS:ZoneHVAC:UnitHeater,
        \min-fields 10
   A1 , \field Handle
@@ -22488,7 +22636,7 @@ OS:ZoneHVAC:UnitHeater,
        \note Unique name for this unit heater.
        \type alpha
        \required-field
-       \reference ConnectionObject    
+       \reference ConnectionObject
   A3 , \field Availability Schedule Name
        \note Schedule values of 0 denote the unit is off.
        \type object-list
@@ -23658,7 +23806,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
 OS:WaterHeater:HeatPump:WrappedCondenser,
        \min-fields 30
        \memo This object models an air-source heat pump for water heating where the heating coil is wrapped around
-       \memo the tank, which is typical of residential HPWHs. 
+       \memo the tank, which is typical of residential HPWHs.
        \memo For pumped condenser HPWHs, see WaterHeater:HeatPump:PumpedCondenser.
        \memo WaterHeater:HeatPump:WrappedCondenser is a compound object that references other component objects -
        \memo Coil:WaterHeating:AirToWaterHeatPump:Pumped, Fan:OnOff, WaterHeater:Mixed
@@ -23756,7 +23904,7 @@ OS:WaterHeater:HeatPump:WrappedCondenser,
        \required-field
        \type object-list
        \object-list WaterHeaterStratifiedNames
-       \note Needs to match the name used in the corresponding Water Heater object. 
+       \note Needs to match the name used in the corresponding Water Heater object.
        \note Must be a WaterHeater:Stratified tank.
   A12, \field DX Coil Name
        \required-field
@@ -25207,7 +25355,7 @@ OS:SolarCollectorPerformance:IntegralCollectorStorage,
        \min-fields 20
   A1,  \field Handle
        \type handle
-       \required-field  
+       \required-field
   A2,  \field Name
        \required-field
        \type alpha
@@ -25388,10 +25536,10 @@ OS:SolarCollectorPerformance:PhotovoltaicThermal:Simple,
        \min-fields 7
   A1,  \field Handle
        \type handle
-       \required-field 
+       \required-field
   A2 , \field Name
        \type alpha
-       \required-field 
+       \required-field
        \reference FlatPlatePVTParameters
   N1 , \field Fraction of Surface Area with Active Thermal Collector
        \type real
@@ -25619,7 +25767,7 @@ OS:Generator:MicroTurbine,
       \note PLR = ratio of Generator Load to steady state Electrical Power Output at
       \note current operating conditions.
       \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
-      
+
 OS:Generator:MicroTurbine:HeatRecovery,
       \memo MicroTurbine generators are small combustion turbines (e.g., 25kW to 500kW). The model
       \memo calculates electrical power output, fuel use, standby and ancillary power.
@@ -25724,7 +25872,7 @@ OS:Generator:MicroTurbine:HeatRecovery,
       \minimum 0.0
       \default 0.0
       \note Eplus defaults to 0 but here it would be moot to have a Heat
-      \note Recovery module with a max flow of 0 
+      \note Recovery module with a max flow of 0
  N9, \field Maximum Heat Recovery Water Temperature
       \type real
       \units C
@@ -25741,7 +25889,7 @@ OS:Generator:Photovoltaic,
         \memo surface participates normally in all shading calculations.
    A1 , \field Handle
         \type handle
-        \required-field        
+        \required-field
    A2 , \field Name
         \required-field
         \reference GeneratorNames
@@ -25787,9 +25935,9 @@ OS:PhotovoltaicPerformance:Simple,
         \memo arrays of specific modules.
    A1 , \field Handle
         \type handle
-        \required-field        
+        \required-field
    A2 , \field Name
-        \required-field    
+        \required-field
         \reference PVModules
    N1 , \field Fraction of Surface Area with Active Solar Cells
         \type real
@@ -25816,9 +25964,9 @@ OS:PhotovoltaicPerformance:EquivalentOne-Diode,
         \memo the 4- or 5-parameter TRNSYS model for photovoltaics.
    A1 , \field Handle
         \type handle
-        \required-field        
+        \required-field
    A2 , \field Name
-        \required-field  
+        \required-field
         \reference PVModules
    A3 , \field Cell type
         \type choice
@@ -25930,7 +26078,7 @@ OS:Generator:FuelCell,
        \memo This generator model is the FC model from IEA Annex 42
   A1, \field Handle
        \type handle
-       \required-field     
+       \required-field
   A2, \field Name
       \required-field
       \reference GeneratorNames
@@ -26080,7 +26228,7 @@ OS:Generator:FuelCell:AirSupply,
       \extensible:2
   A1, \field Handle
        \type handle
-       \required-field    
+       \required-field
   A2, \field Name
       \required-field
       \reference FCAirSupNames
@@ -26426,7 +26574,7 @@ OS:ElectricLoadCenter:Inverter:Simple,
         \memo object is for the simplest inverter model and uses a fixed efficiency.
    A1 , \field Handle
         \type handle
-        \required-field          
+        \required-field
    A2 , \field Name
         \required-field
         \reference InverterList
@@ -26453,7 +26601,7 @@ OS:ElectricLoadCenter:Inverter:LookUpTable,
         \memo   Input data are at http://www.gosolarcalifornia.org/equipment/inverter_tests/summaries
    A1 , \field Handle
         \type handle
-        \required-field           
+        \required-field
    A2 , \field Name
         \required-field
         \reference InverterList
@@ -26503,7 +26651,7 @@ OS:ElectricLoadCenter:Storage:Simple,
        \memo ElectricLoadCenter:Distribution object.
   A1 , \field Handle
        \type handle
-       \required-field 
+       \required-field
   A2,  \field Name
        \reference ElecStorageList
   A3,  \field Availability Schedule Name
@@ -26550,12 +26698,12 @@ OS:ElectricLoadCenter:Distribution,
        \memo the meter dictionary file (.mdd) if the Output:VariableDictionary has been requested.
   A1 , \field Handle
        \type handle
-       \required-field      
+       \required-field
   A2 , \field Name
        \required-field
   A3 , \field Generator List Name
        \type object-list
-       \required-field 
+       \required-field
        \object-list ModelObjectLists
   A4 , \field Generator Operation Scheme Type
        \note required if Generator List is entered.
@@ -26607,11 +26755,11 @@ OS:ElectricLoadCenter:Distribution,
        \note Select method to govern how storage charge and discharge is controlled
        \type choice
        \key TrackFacilityElectricDemandStoreExcessOnSite
-       \note TrackFacilityElectricDemandStoreExcessOnSite indicates that storage control will follow the facility power demand 
+       \note TrackFacilityElectricDemandStoreExcessOnSite indicates that storage control will follow the facility power demand
        \note while accounting for any on-site generation.  Only excess on site generation  gets stored (legacy behavior).
        \default TrackFacilityElectricDemandStoreExcessOnSite
        \key TrackMeterDemandStoreExcessOnSite
-       \note TrackMeterDemandStoreExcessOnSite indicates that storage discharge control will follow an electric meter named in the field called Storage Control Track Meter Name.  This scheme is similiar 
+       \note TrackMeterDemandStoreExcessOnSite indicates that storage discharge control will follow an electric meter named in the field called Storage Control Track Meter Name.  This scheme is similiar
        \note to TrackFacilityElectricDemandStoreExcessOnSite except that instead of the main facility electric meter, the control is based off of a user-selected meter.
        \key TrackChargeDischargeSchedules
        \note TrackChargeDischargeSchedules indicates that control will follow the charging and discharging power and schedules defined in the fields called Maximum Storage Charge Grid Supply Power,
@@ -26620,7 +26768,7 @@ OS:ElectricLoadCenter:Distribution,
        \note FacilityDemandLeveling indicates that storage control will attempt to control the facility's power demand drawn from the utility service to a prescribed level.
        \note The target utility demand is entered in the fields called Storage Control Utility Demand Limit and Storage Control Utility Demand Limit Fraction Schedule Name
        \note This scheme first accounts for any on-site generation and during times of high use will discharge storage to reduce facility grid demand to meet the target level
-       \note and during times of low use will charge storage from the grid to increase facility grid demand to meet the target level. 
+       \note and during times of low use will charge storage from the grid to increase facility grid demand to meet the target level.
   A12, \field Storage Control Track Meter Name
        \note required when Storage Operation Scheme is set to TrackMeterDemandStoreExcessOnSite.
        \type alpha
@@ -26643,7 +26791,7 @@ OS:ElectricLoadCenter:Distribution,
   N4 , \field Design Storage Control Charge Power
        \note Maximum rate that electric power can be charged into storage.
        \note Storage charging adjusted downward for conversion losses.
-       \note Rate is modified by fractional values in the schedule named in the next field. 
+       \note Rate is modified by fractional values in the schedule named in the next field.
        \note Required field when using Storage Operation Schemes FacilityDemandLeveling or TrackChargeDischargeSchedules.
        \type real
        \units W
@@ -26655,7 +26803,7 @@ OS:ElectricLoadCenter:Distribution,
        \object-list ScheduleNames
   N5 , \field Design Storage Control Discharge Power
        \note Maximum rate that electric power can be discharged from storage.
-       \note Rate is modified by fractional values in the schedule named in the next field. 
+       \note Rate is modified by fractional values in the schedule named in the next field.
        \note Required field when using Storage Operation Schemes FacilityDemandLeveling or TrackChargeDischargeSchedules.
        \type real
        \units W
@@ -26666,7 +26814,7 @@ OS:ElectricLoadCenter:Distribution,
        \type object-list
        \object-list ScheduleNames
   N6,  \field Storage Control Utility Demand Target
-       \note Target utility service demand power for discharge control.  Storage draws are adjusted upwards for conversion losses. 
+       \note Target utility service demand power for discharge control.  Storage draws are adjusted upwards for conversion losses.
        \note Required field for FacilityDemandLeveling storage operation scheme
        \type real
        \units W
@@ -26717,7 +26865,7 @@ OS:ElectricLoadCenter:Storage:Converter,
         \object-list UniVariateCurves
         \object-list UniVariateTables
    N3 , \field Ancillary Power Consumed In Standby
-        \note Optional standby power consumed when converter is available but no power is being conditioned. 
+        \note Optional standby power consumed when converter is available but no power is being conditioned.
         \type real
         \units W
         \default 0.0
@@ -26734,7 +26882,7 @@ OS:ElectricLoadCenter:Storage:Converter,
         \default 0.0
         \memo This field was defaulted to 0.0 here, because the E+ doc says that if omitted,
         \memo all zone heat gains will be convective
-       
+
 \group OpenStudio Economics
 
 OS:ComponentCost:Adjustments,
@@ -26864,7 +27012,7 @@ OS:LifeCycleCost,
        \type integer
        \default 0
        \minimum 0
-       \maximum 1200 
+       \maximum 1200
 
 OS:CurrencyType,
        \memo If CurrencyType is not specified, it will default to USD and produce $ in the reports.
@@ -27255,14 +27403,14 @@ OS:UtilityBill,
        \required-field
   A2, \field Name
        \type alpha
-       \required-field       
+       \required-field
   A3, \field Fuel Type
        \type choice
        \required-field
        \key Electricity
        \key Gas
        \key Gasoline
-       \key Diesel      
+       \key Diesel
        \key FuelOil_1
        \key FuelOil_2
        \key Propane
@@ -27285,7 +27433,7 @@ OS:UtilityBill,
        \note Specific location the meter associated with this utility bill object is installed.
        \note Empty field indicates no specific location.
   A6, \field Meter End Use Category
-       \note Type of end use that meter is associated with.  
+       \note Type of end use that meter is associated with.
        \note Empty field indicates all end uses are included.
        \type choice
        \key Heating
@@ -27303,7 +27451,7 @@ OS:UtilityBill,
        \key Refrigeration
        \key Generators
   A7, \field Meter Specific End Use
-       \note Specific type of end use that meter is associated with.  
+       \note Specific type of end use that meter is associated with.
        \note Empty field indicates all end uses are included.
   A8, \field Consumption Unit
        \note Units that fuel consumption is measured in.  Valid choices depend on Fuel Type.
@@ -27327,12 +27475,12 @@ OS:UtilityBill,
        \key Mcf
        \key MMcf
   N1, \field Consumption Unit Conversion Factor
-       \note Number of J per unit of fuel consumption 
+       \note Number of J per unit of fuel consumption
        \note or number of m^3 per unit of water consumption.
        \type real
-       \required-field  
+       \required-field
   A9, \field Peak Demand Unit
-       \note Valid choices depend on Fuel Type.  
+       \note Valid choices depend on Fuel Type.
        \note Currently Peak demand is only supported for Electricity.
        \type choice
        \key kW
@@ -27550,7 +27698,7 @@ OS:Output:EnergyManagementSystem,
    \unique-object
    A1, \field Handle
        \type handle
-       \required-field 
+       \required-field
    A2, \field Name
        \required-field
        \type alpha
@@ -27603,7 +27751,7 @@ OS:EnergyManagementSystem:Actuator,
        \min-fields 4
   A1, \field Handle
        \type handle
-       \required-field 
+       \required-field
   A2, \field Name
        \required-field
        \type alpha
@@ -27716,7 +27864,7 @@ OS:EnergyManagementSystem:OutputVariable,
        \min-fields 5
   A1, \field Handle
        \type handle
-       \required-field 
+       \required-field
   A2, \field Name
        \required-field
        \type alpha
@@ -27846,7 +27994,7 @@ OS:EnergyManagementSystem:TrendVariable,
        \min-fields 4
   A1, \field Handle
        \type handle
-       \required-field      
+       \required-field
   A2, \field Name
        \required-field
        \type alpha

@@ -345,7 +345,7 @@ EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const
   bool ok = setEMSVariableName(object);
   if (!ok) {
     remove();
-    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to " 
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
       << object.briefDescription() << ".");
   }
   setUpdateFrequency("ZoneTimestep");
@@ -591,7 +591,7 @@ void EnergyManagementSystemOutputVariable::resetExportToBCVTB() {
 
 /// @cond
 EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(std::shared_ptr<detail::EnergyManagementSystemOutputVariable_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

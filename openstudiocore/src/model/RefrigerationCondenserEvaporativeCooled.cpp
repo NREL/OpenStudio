@@ -948,7 +948,7 @@ void RefrigerationCondenserEvaporativeCooled::resetCondensatePipingRefrigerantIn
 
 /// @cond
 RefrigerationCondenserEvaporativeCooled::RefrigerationCondenserEvaporativeCooled(std::shared_ptr<detail::RefrigerationCondenserEvaporativeCooled_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

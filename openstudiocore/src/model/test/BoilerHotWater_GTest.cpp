@@ -42,20 +42,20 @@ TEST_F(ModelFixture,BoilerHotWater_BoilerHotWater)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
-     BoilerHotWater boiler(m); 
+  ASSERT_EXIT (
+  {
+     Model m;
+     BoilerHotWater boiler(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
 TEST_F(ModelFixture,BoilerHotWater_connections)
 {
-  Model m; 
-  BoilerHotWater boiler(m); 
+  Model m;
+  BoilerHotWater boiler(m);
 
   Node inletNode(m);
   Node outletNode(m);
@@ -65,7 +65,7 @@ TEST_F(ModelFixture,BoilerHotWater_connections)
 
   ASSERT_TRUE( boiler.inletModelObject() );
   ASSERT_TRUE( boiler.outletModelObject() );
- 
+
   EXPECT_EQ( inletNode.handle(), boiler.inletModelObject()->handle() );
   EXPECT_EQ( outletNode.handle(), boiler.outletModelObject()->handle() );
 }
@@ -108,18 +108,39 @@ TEST_F(ModelFixture,BoilerHotWater_remove) {
   PlantLoop plant(m);
   BoilerHotWater b1(m);
   BoilerHotWater b2(m);
+  EXPECT_FALSE(b1.loop());
+  EXPECT_FALSE(b2.loop());
 
-  plant.addSupplyBranchForComponent(b1);
+  EXPECT_EQ(plant.supplyComponents(Node::iddObjectType()).size(), 3u);
+
+  EXPECT_TRUE(plant.addSupplyBranchForComponent(b1));
+  EXPECT_GT(plant.supplyComponents(b1, plant.supplyOutletNode()).size(), 0u);
+  EXPECT_TRUE(b1.loop());
+  EXPECT_EQ(plant.supplyComponents(Node::iddObjectType()).size(), 4u);
   {
     auto node = b1.outletModelObject()->cast<Node>();
-    b2.addToNode(node);
+    EXPECT_TRUE(b2.addToNode(node));
+    EXPECT_GT(plant.supplyComponents(b2, plant.supplyOutletNode()).size(), 0u);
+    EXPECT_TRUE(b2.loop());
   }
+
+  EXPECT_EQ(plant.supplyComponents(Node::iddObjectType()).size(), 5u);
+
+  EXPECT_GT(plant.supplyComponents(b1, plant.supplyOutletNode()).size(), 0u);
+  EXPECT_GT(plant.supplyComponents(b2, plant.supplyOutletNode()).size(), 0u);
+  EXPECT_EQ(plant.demandComponents(b1, plant.demandOutletNode()).size(), 0u);
+  EXPECT_EQ(plant.demandComponents(b2, plant.demandOutletNode()).size(), 0u);
 
   auto n1 = b1.outletModelObject().get();
   auto n2 = b2.outletModelObject().get();
 
   b1.remove();
+  EXPECT_EQ(plant.supplyComponents(b1, plant.supplyOutletNode()).size(), 0u);
+  EXPECT_GT(plant.supplyComponents(b2, plant.supplyOutletNode()).size(), 0u);
+  EXPECT_EQ(plant.supplyComponents(Node::iddObjectType()).size(), 4u);
   b2.remove();
+  EXPECT_EQ(plant.supplyComponents(b2, plant.supplyOutletNode()).size(), 0u);
+  EXPECT_EQ(plant.supplyComponents(Node::iddObjectType()).size(), 3u);
 
   EXPECT_TRUE(n1.handle().isNull());
   EXPECT_TRUE(n2.handle().isNull());

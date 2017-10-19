@@ -392,13 +392,6 @@ namespace openstudio {
       ":images/off_constructions_tab.png",
       ":images/disabled_constructions_tab.png");
 
-    // Geometry
-    m_mainWindow->addVerticalTabButton(GEOMETRY,
-      "Geometry",
-      ":images/on_geometry_tab.png",
-      ":images/off_geometry_tab.png",
-      ":images/disabled_geometry_tab.png");
-
     // Loads
     m_mainWindow->addVerticalTabButton(LOADS,
       "Loads",
@@ -412,6 +405,13 @@ namespace openstudio {
       ":images/on_space_types_tab.png",
       ":images/off_space_types_tab.png",
       ":images/disabled_space_types_tab.png");
+        
+    // Geometry
+    m_mainWindow->addVerticalTabButton(GEOMETRY,
+      "Geometry",
+      ":images/on_geometry_tab.png",
+      ":images/off_geometry_tab.png",
+      ":images/disabled_geometry_tab.png");
 
     // Facility
     m_mainWindow->addVerticalTabButton(FACILITY,
@@ -820,6 +820,7 @@ namespace openstudio {
     m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, m_enableTabsAfterRun);
+    m_mainWindow->verticalTabWidget()->enableTabButton(GEOMETRY, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACES, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(THERMAL_ZONES, m_enableTabsAfterRun);
@@ -849,6 +850,7 @@ namespace openstudio {
     m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, m_enableTabsAfterRun);
+    m_mainWindow->verticalTabWidget()->enableTabButton(GEOMETRY, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACES, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(THERMAL_ZONES, m_enableTabsAfterRun);
@@ -872,6 +874,7 @@ namespace openstudio {
     m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, false);
     m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, false);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(GEOMETRY, false);
     m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, false);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACES, false);
     m_mainWindow->verticalTabWidget()->enableTabButton(THERMAL_ZONES, false);
@@ -895,6 +898,7 @@ namespace openstudio {
     m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, true);
     m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, true);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(GEOMETRY, true);
     m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, true);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACES, true);
     m_mainWindow->verticalTabWidget()->enableTabButton(THERMAL_ZONES, true);
@@ -1175,6 +1179,9 @@ namespace openstudio {
     case SPACE_TYPES:
       m_mainRightColumnController->configureForSpaceTypesSubTab(m_subTabId);
       break;
+    case GEOMETRY:
+      m_mainRightColumnController->configureForGeometrySubTab(m_subTabId);
+      break;
     case FACILITY:
       m_mainRightColumnController->configureForFacilitySubTab(m_subTabId);
       break;
@@ -1420,13 +1427,13 @@ namespace openstudio {
 
       openstudio::path modelPath = toPath(m_savePath);
 
+      emit modelSaving(modelPath);
+
       // saves the model to modelTempDir / m_savePath.filename()
       // also copies the temp files to user location
       bool saved = saveModel(this->model(), modelPath, toPath(m_modelTempDir));
 
       this->setSavePath(toQString(modelPath));
-
-      emit modelSaving(modelPath);
 
       this->markAsUnmodified();
 
@@ -1492,13 +1499,13 @@ namespace openstudio {
         modelPath = setFileExtension(modelPath, modelFileExtension(), false, true);
       }
 
+      emit modelSaving(modelPath);
+
       // saves the model to modelTempDir / filePath.filename()
       // also copies the temp files to user location
       bool saved = saveModel(this->model(), modelPath, toPath(m_modelTempDir));
 
       this->setSavePath(toQString(modelPath));
-
-      emit modelSaving(modelPath);
 
       this->markAsUnmodified();
 

@@ -217,7 +217,7 @@ void OutputControlReportingTolerances::resetToleranceforTimeCoolingSetpointNotMe
 
 /// @cond
 OutputControlReportingTolerances::OutputControlReportingTolerances(std::shared_ptr<detail::OutputControlReportingTolerances_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 OutputControlReportingTolerances::OutputControlReportingTolerances(Model& model)
   : ModelObject(OutputControlReportingTolerances::iddObjectType(),model)

@@ -36,6 +36,8 @@ namespace openstudio {
 
 namespace model {
 
+class HeatPumpWaterToWaterEquationFitCooling;
+
 namespace detail {
 
   class HeatPumpWaterToWaterEquationFitHeating_Impl;
@@ -56,17 +58,29 @@ class MODEL_API HeatPumpWaterToWaterEquationFitHeating : public WaterToWaterComp
 
   static IddObjectType iddObjectType();
 
-  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Load Side Flow Rate" **/
+  boost::optional<double> referenceLoadSideFlowRate() const;
+
+  /** Prior to EnergyPlus 8.7.0 this field was not autosizeable. To preserve backwards compatibility this method will return -999.0 in autosized models.**/
   double ratedLoadSideFlowRate() const;
 
-  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Source Side Flow Rate" **/
+  bool isReferenceLoadSideFlowRateAutosized() const;
+
+  boost::optional<double> referenceSourceSideFlowRate() const;
+
+  /** Prior to EnergyPlus 8.7.0 this field was not autosizeable. To preserve backwards compatibility this method will return -999.0 in autosized models.**/
   double ratedSourceSideFlowRate() const;
 
+  bool isReferenceSourceSideFlowRateAutosized() const;
+
   /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Heating Capacity" **/
-  double ratedHeatingCapacity() const;
+  boost::optional<double> ratedHeatingCapacity() const;
+
+  bool isRatedHeatingCapacityAutosized() const;
 
   /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Heating Power Consumption" **/
-  double ratedHeatingPowerConsumption() const;
+  boost::optional<double> ratedHeatingPowerConsumption() const;
+
+  bool isRatedHeatingPowerConsumptionAutosized() const;
 
   double heatingCapacityCoefficient1() const;
 
@@ -88,21 +102,39 @@ class MODEL_API HeatPumpWaterToWaterEquationFitHeating : public WaterToWaterComp
 
   double heatingCompressorPowerCoefficient5() const;
 
+  double referenceCoefficientofPerformance() const;
+
+  double sizingFactor() const;
+
+  boost::optional<HeatPumpWaterToWaterEquationFitCooling> companionCoolingHeatPump() const;
+
   //@}
   /** @name Setters */
   //@{
 
-  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Load Side Flow Rate" **/
+  bool setReferenceLoadSideFlowRate(double referenceLoadSideFlowRate);
+
+  /** Synonym of setReferenceLoadSideFlowRate for backwards compatibility **/
   bool setRatedLoadSideFlowRate(double ratedLoadSideFlowRate);
 
-  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Source Side Flow Rate" **/
-  bool setRatedSourceSideFlowRate(double ratedSourceSideFlowRate);
+  void autosizeReferenceLoadSideFlowRate();
+
+  bool setReferenceSourceSideFlowRate(double referenceSourceSideFlowRate);
+
+  /** Synonym of setReferenceSourceSideFlowRate for backwards compatibility **/
+  bool setRatedSourceSideFlowRate(double ratedLoadSideFlowRate);
+
+  void autosizeReferenceSourceSideFlowRate();
 
   /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Heating Capacity" **/
   bool setRatedHeatingCapacity(double ratedHeatingCapacity);
 
+  void autosizeRatedHeatingCapacity();
+
   /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Heating Power Consumption" **/
   bool setRatedHeatingPowerConsumption(double ratedHeatingPowerConsumption);
+
+  void autosizeRatedHeatingPowerConsumption();
 
   void setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
 
@@ -123,6 +155,12 @@ class MODEL_API HeatPumpWaterToWaterEquationFitHeating : public WaterToWaterComp
   void setHeatingCompressorPowerCoefficient4(double heatingCompressorPowerCoefficient4);
 
   void setHeatingCompressorPowerCoefficient5(double heatingCompressorPowerCoefficient5);
+
+  void setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance);
+
+  void setSizingFactor(double sizingFactor);
+
+  bool setCompanionCoolingHeatPump(const HeatPumpWaterToWaterEquationFitCooling& companionHP);
 
   //@}
   /** @name Other */

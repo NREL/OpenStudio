@@ -369,7 +369,7 @@ void CurveCubic::resetOutputUnitType() {
 
 /// @cond
 CurveCubic::CurveCubic(std::shared_ptr<detail::CurveCubic_Impl> impl)
-  : Curve(impl)
+  : Curve(std::move(impl))
 {}
 /// @endcond
 

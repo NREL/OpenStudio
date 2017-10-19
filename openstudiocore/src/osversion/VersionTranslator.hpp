@@ -53,21 +53,21 @@ namespace model {
 }
 namespace osversion {
 
-/** This class updates OpenStudio Models and Components to the latest version of OpenStudio. It 
- *  must be maintained to keep everything working. The developer who is wrapping up the current 
+/** This class updates OpenStudio Models and Components to the latest version of OpenStudio. It
+ *  must be maintained to keep everything working. The developer who is wrapping up the current
  *  release and starting the next one should:
  *
  *  <ol>
  *  <li> Run openstudio_osversion_tests.exe and verify that all the tests pass. </li>
  *  <li> Create the release branch. </li>
- *  <li> Copy the latest resources/osversion folder from the build directory to the source 
+ *  <li> Copy the latest resources/osversion folder from the build directory to the source
  *       directory, add those files to the resources/CMakeLists.txt, and commit to trunk. </li>
  *  <li> Increment the OpenStudio version in CMakeLists.txt </li>
- *  <li> Increment the OpenStudio version in openstudiocore/resources/model/OpenStudio.idd (at the 
+ *  <li> Increment the OpenStudio version in openstudiocore/resources/model/OpenStudio.idd (at the
  *       top and in the \\default of OS:Version's Version Identifier field). </li>
- *  <li> Register a trivial update method for the new version in the constructor. Further 
+ *  <li> Register a trivial update method for the new version in the constructor. Further
  *       instructions are provided in the cpp code for VersionTranslator::VersionTranslator. </li>
- *  <li> Add the just-branched-for-release version number to m_startVersions, also in the 
+ *  <li> Add the just-branched-for-release version number to m_startVersions, also in the
  *       constructor. </li>
  *  </ol>
  *
@@ -76,9 +76,9 @@ namespace osversion {
  *  <ol>
  *  <li> Create a non-trivial update method upon the first IDD or other change that should result
  *       in data changes to models of the earlier vintages. </li>
- *  <li> Add to this non-trivial update method should any other such changes occur during the 
+ *  <li> Add to this non-trivial update method should any other such changes occur during the
  *       iteration. </li>
- *  <li> Feel free to just log warnings and errors if the desirable changes cannot be reliably 
+ *  <li> Feel free to just log warnings and errors if the desirable changes cannot be reliably
  *       completed at the data (IDF) level. Such messages could prompt the user to take specific
  *       actions in the OpenStudio Application once they have a nominally valid (updated) model. </li>
  *  </ol>
@@ -92,13 +92,13 @@ class OSVERSION_API VersionTranslator {
 
   //@}
   /** @name Actions
-   *  
+   *
    *  Update files on disk to the current version of OpenStudio. */
   //@{
 
   /** Returns a current-version OpenStudio Model, if possible. The file at pathToOldOsm must
-   *  be an osm of version 0.7.0 or later. */ 
-  boost::optional<model::Model> loadModel(const openstudio::path& pathToOldOsm, 
+   *  be an osm of version 0.7.0 or later. */
+  boost::optional<model::Model> loadModel(const openstudio::path& pathToOldOsm,
                                           ProgressBar* progressBar = nullptr);
 
   /** \overload */
@@ -109,9 +109,9 @@ class OSVERSION_API VersionTranslator {
   boost::optional<model::Model> loadModelFromString(const std::string& str,
                                                     ProgressBar* progressBar = nullptr);
 
-  /** Returns a current-version OpenStudio Component, if possible. The file at pathToOldOsc 
+  /** Returns a current-version OpenStudio Component, if possible. The file at pathToOldOsc
    *  must be an osc of version 0.7.0 or later. */
-  boost::optional<model::Component> loadComponent(const openstudio::path& pathToOldOsc, 
+  boost::optional<model::Component> loadComponent(const openstudio::path& pathToOldOsc,
                                                   ProgressBar* progressBar = nullptr);
 
   /** \overload */
@@ -119,13 +119,13 @@ class OSVERSION_API VersionTranslator {
                                                   ProgressBar* progressBar = nullptr);
 
   //@}
-  /** @name Queries 
+  /** @name Queries
    *
-   *  Access warnings, errors, and other information about the last translation process. All this 
+   *  Access warnings, errors, and other information about the last translation process. All this
    *  data is cleared by subsequent calls to loadModel or loadComponent. */
   //@{
 
-  /** Get the version of the loaded file. Is 0.0.0 before loadModel or loadComponent is called. 
+  /** Get the version of the loaded file. Is 0.0.0 before loadModel or loadComponent is called.
    *  0.7.0 is the default if no Version object is found in the file. */
   VersionString originalVersion() const;
 
@@ -139,15 +139,15 @@ class OSVERSION_API VersionTranslator {
    *  has been deprecated. */
   std::vector<IdfObject> deprecatedObjects() const;
 
-  /** Returns objects that were removed from the model because there is not a straightforward, 
+  /** Returns objects that were removed from the model because there is not a straightforward,
    *  unique way to upgrade them. */
   std::vector<IdfObject> untranslatedObjects() const;
 
-  /** Returns objects that were added to the model to make it work properly in the latest 
+  /** Returns objects that were added to the model to make it work properly in the latest
    *  version of OpenStudio. */
   std::vector<IdfObject> newObjects() const;
 
-  /** Returns an original object, new object pair for objects that have been significantly 
+  /** Returns an original object, new object pair for objects that have been significantly
    *  refactored. */
   std::vector< std::pair<IdfObject,IdfObject> > refactoredObjects() const;
 
@@ -157,7 +157,7 @@ class OSVERSION_API VersionTranslator {
   /** Set whether or not loading newer versions is allowed. */
   void setAllowNewerVersions(bool allowNewerVersions);
 
-  //@}  
+  //@}
  private:
   REGISTER_LOGGER("openstudio.osversion.VersionTranslator");
 
@@ -177,14 +177,14 @@ class OSVERSION_API VersionTranslator {
   bool m_isComponent;
   std::vector<IdfObject> m_cbeccSizingObjects;
 
-  boost::optional<model::Model> updateVersion(std::istream& is, 
+  boost::optional<model::Model> updateVersion(std::istream& is,
                                               bool isComponent,
                                               ProgressBar* progressBar = nullptr);
 
   void initializeMap(std::istream& is);
 
   IddFileAndFactoryWrapper getIddFile(const VersionString& version);
-  
+
   void update(const VersionString& startVersion);
 
   std::string defaultUpdate(const IdfFile& idf, const IddFileAndFactoryWrapper& targetIdd);
@@ -218,6 +218,7 @@ class OSVERSION_API VersionTranslator {
   std::string update_1_12_0_to_1_12_1(const IdfFile& idf_1_12_0, const IddFileAndFactoryWrapper& idd_1_12_1);
   std::string update_1_12_3_to_1_12_4(const IdfFile& idf_1_12_3, const IddFileAndFactoryWrapper& idd_1_12_4);
   std::string update_2_1_0_to_2_1_1(const IdfFile& idf_2_1_0, const IddFileAndFactoryWrapper& idd_2_1_1);
+  std::string update_2_1_1_to_2_1_2(const IdfFile& idf_2_1_1, const IddFileAndFactoryWrapper& idd_2_1_2);
 
   IdfObject updateUrlField_0_7_1_to_0_7_2(const IdfObject& object, unsigned index);
 

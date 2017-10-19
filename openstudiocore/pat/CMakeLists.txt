@@ -1,4 +1,4 @@
-set(PAT_SHA 256fecdcec1ef8ca2e5897a7c5bb8540fac43451)
+set(PAT_SHA 1ac3fa87a52020f095309f2a2732512fbb3dec87) 
 
 find_program(NPM_COMMAND npm)
 

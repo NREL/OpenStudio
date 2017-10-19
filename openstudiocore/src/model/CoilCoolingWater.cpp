@@ -307,14 +307,14 @@ namespace detail {
   {
     setString( openstudio::OS_Coil_Cooling_WaterFields::HeatExchangerConfiguration, value );
   }
-  
+
   bool CoilCoolingWater_Impl::addToNode(Node & node)
   {
     bool success;
-    
+
     success =  WaterToAirComponent_Impl::addToNode( node );
     auto t_containingZoneHVACComponent = containingZoneHVACComponent();
-    
+
     if( success && (! t_containingZoneHVACComponent) ) {
       if( auto t_waterInletModelObject = waterInletModelObject() ) {
         if( auto oldController = controllerWaterCoil() ) {
@@ -327,7 +327,7 @@ namespace detail {
         controller.setAction("Reverse");
       }
     }
-    
+
     return success;
   }
 
@@ -464,7 +464,7 @@ CoilCoolingWater::CoilCoolingWater(const Model& model)
 }
 
 CoilCoolingWater::CoilCoolingWater(std::shared_ptr<detail::CoilCoolingWater_Impl> p)
-  : WaterToAirComponent(p)
+  : WaterToAirComponent(std::move(p))
 {}
 
 Schedule CoilCoolingWater::availabilitySchedule() const

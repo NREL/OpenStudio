@@ -165,7 +165,7 @@ namespace detail {
     if (schedule){
       result = this->setNumberofPeopleSchedule(*schedule);
     }
-      
+
     // required by EnergyPlus
     schedule = this->activityLevelSchedule();
     if (schedule){
@@ -690,7 +690,7 @@ double People::getFloorAreaPerPerson(double floorArea) const {
 
 /// @cond
 People::People(std::shared_ptr<detail::People_Impl> impl)
-  : SpaceLoadInstance(impl)
+  : SpaceLoadInstance(std::move(impl))
 {}
 /// @endcond
 

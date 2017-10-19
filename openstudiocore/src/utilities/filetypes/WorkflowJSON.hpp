@@ -100,19 +100,32 @@ public:
   /** Sets the started at time. */
   void start();
 
-  /** Get the current step index. */
+  /** Get the zero based index of the current step. 
+  *   If a simulation completes normally, current step index will be one higher than index of the last step.
+  *   If a simulation is halted, current step index will point to the step after the last run step.
+  */
   unsigned currentStepIndex() const;
 
-  /** Get the current step. */
+  /** Get the current step.*/
   boost::optional<WorkflowStep> currentStep() const;
 
   /** Increments current step, returns true if there is another step. */
   bool incrementStep();
 
-  /** Returns the completion status, "Success" or "Fail". */
+  /** Returns the completion status, "Success", "Fail", "Invalid", or "Cancel". 
+  *   "Success" will be set automatically if all steps in the workflow complete successfully.
+  *   "Fail" will be set automatically if any step in the workflow reports an error.  
+  *   "Invalid" can be set by a measure if the workflow requests parameter combinations that are not valid.
+  *   "Cancel" will be set automatically if a workflow is cancelled externally during execution.
+  */
   boost::optional<std::string> completedStatus() const;
 
-  /** Sets the completion status, "Success" or "Fail". */
+  /** Sets the completion status, "Success", "Fail", "Invalid", or "Cancel". 
+  *   Measure writers can call this with "Success" if all required results have been generated.
+  *   Measure writers should not call this with "Fail", runner.registerError should be used instead.  
+  *   Measure writers can call this with "Invalid" if the workflow requests parameter combinations that are not valid.
+  *   Measure writers should not call this with "Cancel", this is reserved for external cancel operations. 
+  */
   void setCompletedStatus(const std::string& status);
 
   /** Returns the time this WorkflowJSON was created at. */

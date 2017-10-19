@@ -232,7 +232,7 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVAC( const WorkspaceObje
         for( const auto & _zoneHVACEquipmentConnection : _zoneHVACEquipmentConnections )
         {
 
-          OptionalString returnAirNodeName = _zoneHVACEquipmentConnection.getString(ZoneHVAC_EquipmentConnectionsFields::ZoneReturnAirNodeName);
+          OptionalString returnAirNodeName = _zoneHVACEquipmentConnection.getString(ZoneHVAC_EquipmentConnectionsFields::ZoneReturnAirNodeorNodeListName);
           OptionalString inletAirNodeName = _zoneHVACEquipmentConnection.getString(ZoneHVAC_EquipmentConnectionsFields::ZoneAirInletNodeorNodeListName);
           OptionalString zoneName = _zoneHVACEquipmentConnection.getString(ZoneHVAC_EquipmentConnectionsFields::ZoneName);
           OptionalString zoneEquipListName = _zoneHVACEquipmentConnection.getString(ZoneHVAC_EquipmentConnectionsFields::ZoneConditioningEquipmentListName);

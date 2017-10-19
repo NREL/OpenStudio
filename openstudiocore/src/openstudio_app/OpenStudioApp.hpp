@@ -58,6 +58,7 @@
 #include "../utilities/core/Path.hpp"
 
 #include <QProcess>
+#include <QFutureWatcher>
 
 #include <vector>
 #include <map>
@@ -91,7 +92,7 @@ class OpenStudioApp : public OSAppBase
 
   OpenStudioApp( int & argc, char ** argv);
 
-  virtual ~OpenStudioApp() {}
+  virtual ~OpenStudioApp();
 
   virtual std::shared_ptr<OSDocument> currentDocument() const override;
 
@@ -137,7 +138,7 @@ class OpenStudioApp : public OSAppBase
 
   void showAbout();
 
-  virtual void reloadFile(const QString& fileToLoad, bool modified, bool saveCurrentTabs) override;
+  virtual void reloadFile(const QString& osmPath, bool modified, bool saveCurrentTabs) override;
 
   void revertToSaved();
 
@@ -160,6 +161,14 @@ class OpenStudioApp : public OSAppBase
   void measureManagerProcessFinished();
 
   void startMeasureManagerProcess();
+
+  //void startMeasureManagerAndBuildCompLibraries();
+
+  // This is the second half of the OSApp creation process.
+  // Called after the comp libraries and measure manager are ready to go
+  // Uses QApplication arguments to load osm files passed by cli into new OSDocument,
+  // or creates a new empty OSDocument
+  void onMeasureManagerAndLibraryReady();
 
  private:
 
@@ -191,13 +200,14 @@ class OpenStudioApp : public OSAppBase
 
   openstudio::model::Model m_hvacCompLibrary;
 
-  std::shared_ptr<StartupView> m_startupView;
-
   std::shared_ptr<OSDocument> m_osDocument;
+
+  QString m_lastPath;
 
   std::shared_ptr<StartupMenu> m_startupMenu;
 
-  QString m_lastPath;
+  QFutureWatcher<void> m_buildCompLibWatcher;
+  QFutureWatcher<void> m_waitForMeasureManagerWatcher;
 };
 
 } // openstudio

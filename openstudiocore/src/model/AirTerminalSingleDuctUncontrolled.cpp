@@ -143,7 +143,7 @@ namespace detail{
 
       if( boost::optional<PortList> portList = outlet->optionalCast<PortList>() )
       {
-        thermalZone = portList->thermalZone(); 
+        thermalZone = portList->thermalZone();
       }
 
       if( thermalZone || (outlet->optionalCast<Mixer>() && node.airLoopHVAC()) )
@@ -303,7 +303,7 @@ namespace detail{
 
 AirTerminalSingleDuctUncontrolled::AirTerminalSingleDuctUncontrolled(const Model& model,
                                                                      Schedule & availabilitySchedule)
-  : StraightComponent(AirTerminalSingleDuctUncontrolled::iddObjectType(),model) 
+  : StraightComponent(AirTerminalSingleDuctUncontrolled::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirTerminalSingleDuctUncontrolled_Impl>());
 
@@ -323,7 +323,7 @@ bool AirTerminalSingleDuctUncontrolled::setAvailabilitySchedule(Schedule & sched
 }
 
 AirTerminalSingleDuctUncontrolled::AirTerminalSingleDuctUncontrolled(std::shared_ptr<detail::AirTerminalSingleDuctUncontrolled_Impl> p)
-  : StraightComponent(p)
+  : StraightComponent(std::move(p))
 {}
 
 IddObjectType AirTerminalSingleDuctUncontrolled::iddObjectType() {

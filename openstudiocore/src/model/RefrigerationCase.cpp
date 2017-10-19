@@ -2106,7 +2106,7 @@ void RefrigerationCase::removeFromSystem() {
 
 /// @cond
 RefrigerationCase::RefrigerationCase(std::shared_ptr<detail::RefrigerationCase_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

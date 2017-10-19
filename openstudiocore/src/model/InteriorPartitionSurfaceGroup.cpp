@@ -120,7 +120,7 @@ namespace detail {
   {
     Transformation transformation;
     if (this->space()){
-      transformation = this->space()->buildingTransformation() * this->transformation();
+      transformation = this->space()->transformation() * this->transformation();
     }else{
       transformation = this->transformation();
     }
@@ -358,7 +358,7 @@ InteriorPartitionSurfaceVector InteriorPartitionSurfaceGroup::interiorPartitionS
 
 /// @cond
 InteriorPartitionSurfaceGroup::InteriorPartitionSurfaceGroup(std::shared_ptr<detail::InteriorPartitionSurfaceGroup_Impl> impl)
-  : PlanarSurfaceGroup(impl)
+  : PlanarSurfaceGroup(std::move(impl))
 {}
 /// @endcond
 

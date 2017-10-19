@@ -345,7 +345,7 @@ void ScheduleFixedInterval::resetOutOfRangeValue() {
 
 /// @cond
 ScheduleFixedInterval::ScheduleFixedInterval(std::shared_ptr<detail::ScheduleFixedInterval_Impl> impl)
-  : ScheduleInterval(impl)
+  : ScheduleInterval(std::move(impl))
 {}
 /// @endcond
 

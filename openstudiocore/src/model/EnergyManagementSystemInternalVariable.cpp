@@ -146,7 +146,7 @@ bool EnergyManagementSystemInternalVariable::setInternalDataType(const std::stri
 
 /// @cond
 EnergyManagementSystemInternalVariable::EnergyManagementSystemInternalVariable(std::shared_ptr<detail::EnergyManagementSystemInternalVariable_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

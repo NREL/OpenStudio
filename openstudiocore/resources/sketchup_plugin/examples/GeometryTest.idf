@@ -101,7 +101,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,8.7;
+  Version,8.8;
 
   Timestep,4;
 
@@ -616,7 +616,7 @@
     EquipmentLevel,          !- Design Level Calculation Method
     5857.501,                !- Design Level {W}
     ,                        !- Power per Zone Floor Area {W/m2}
-    ,                        !- Power per Person {W/Person}
+    ,                        !- Power per Person {W/person}
     0.0000000E+00,           !- Fraction Latent
     0.3000000,               !- Fraction Radiant
     0.0000000E+00;           !- Fraction Lost
@@ -715,7 +715,7 @@
     EquipmentLevel,          !- Design Level Calculation Method
     29287.51,                !- Design Level {W}
     ,                        !- Power per Zone Floor Area {W/m2}
-    ,                        !- Power per Person {W/Person}
+    ,                        !- Power per Person {W/person}
     0.0000000E+00,           !- Fraction Latent
     0.3000000,               !- Fraction Radiant
     0.0000000E+00;           !- Fraction Lost
@@ -814,7 +814,7 @@
     Watts/Area,              !- Design Level Calculation Method
     ,                        !- Design Level {W}
     197,                     !- Power per Zone Floor Area {W/m2}
-    ,                        !- Power per Person {W/Person}
+    ,                        !- Power per Person {W/person}
     0.0000000E+00,           !- Fraction Latent
     0.3000000,               !- Fraction Radiant
     0.0000000E+00;           !- Fraction Lost
@@ -2239,7 +2239,7 @@
     PSI FOYER INLETS,        !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     PSI FOYER NODE,          !- Zone Air Node Name
-    PSI FOYER OUTLET;        !- Zone Return Air Node Name
+    PSI FOYER OUTLET;        !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     PSI FOYER EQUIPMENT,     !- Name
@@ -2253,6 +2253,7 @@
     ,                        !- Availability Schedule Name
     PSI FOYER INLETS,        !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -2312,7 +2313,7 @@
     DORM ROOMS AND COMMON AREAS INLETS,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     DORM ROOMS AND COMMON AREAS NODE,  !- Zone Air Node Name
-    DORM ROOMS AND COMMON AREAS OUTLET;  !- Zone Return Air Node Name
+    DORM ROOMS AND COMMON AREAS OUTLET;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     DORM ROOMS AND COMMON AREAS EQUIPMENT,  !- Name
@@ -2326,6 +2327,7 @@
     ,                        !- Availability Schedule Name
     DORM ROOMS AND COMMON AREAS INLETS,  !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -2385,7 +2387,7 @@
     LEFT FORK INLETS,        !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     LEFT FORK NODE,          !- Zone Air Node Name
-    LEFT FORK OUTLET;        !- Zone Return Air Node Name
+    LEFT FORK OUTLET;        !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     LEFT FORK EQUIPMENT,     !- Name
@@ -2399,6 +2401,7 @@
     ,                        !- Availability Schedule Name
     LEFT FORK INLETS,        !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -2458,7 +2461,7 @@
     MIDDLE FORK INLETS,      !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     MIDDLE FORK NODE,        !- Zone Air Node Name
-    MIDDLE FORK OUTLET;      !- Zone Return Air Node Name
+    MIDDLE FORK OUTLET;      !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     MIDDLE FORK EQUIPMENT,   !- Name
@@ -2472,6 +2475,7 @@
     ,                        !- Availability Schedule Name
     MIDDLE FORK INLETS,      !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -2531,7 +2535,7 @@
     RIGHT FORK INLETS,       !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     RIGHT FORK NODE,         !- Zone Air Node Name
-    RIGHT FORK OUTLET;       !- Zone Return Air Node Name
+    RIGHT FORK OUTLET;       !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     RIGHT FORK EQUIPMENT,    !- Name
@@ -2545,6 +2549,7 @@
     ,                        !- Availability Schedule Name
     RIGHT FORK INLETS,       !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}

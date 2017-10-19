@@ -297,7 +297,7 @@ void SolarCollectorIntegralCollectorStorage::resetMaximumFlowRate() {
 
 /// @cond
 SolarCollectorIntegralCollectorStorage::SolarCollectorIntegralCollectorStorage(std::shared_ptr<detail::SolarCollectorIntegralCollectorStorage_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

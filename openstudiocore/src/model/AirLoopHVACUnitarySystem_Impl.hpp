@@ -39,6 +39,7 @@ class ThermalZone;
 class Schedule;
 class HVACComponent;
 class Node;
+class UnitarySystemPerformanceMultispeed;
 
 namespace detail {
 
@@ -216,7 +217,7 @@ namespace detail {
 
     // bool isMaximumTemperatureforHeatRecoveryDefaulted() const;
 
-    // boost::optional<UnitarySystemPerformace> designSpecificationMultispeedHeatPumpObject() const;
+    boost::optional<UnitarySystemPerformanceMultispeed> designSpecificationMultispeedObject() const;
 
     //@}
     /** @name Setters */
@@ -398,9 +399,9 @@ namespace detail {
 
     // void resetMaximumTemperatureforHeatRecovery();
 
-    // bool setDesignSpecificationMultispeedHeatPumpObject(const boost::optional<UnitarySystemPerformace>& unitarySystemPerformace);
+    bool setDesignSpecificationMultispeedObject(const boost::optional<UnitarySystemPerformanceMultispeed>& unitarySystemPerformace);
 
-    // void resetDesignSpecificationMultispeedHeatPumpObject();
+    void resetDesignSpecificationMultispeedObject();
 
     //@}
     /** @name Other */

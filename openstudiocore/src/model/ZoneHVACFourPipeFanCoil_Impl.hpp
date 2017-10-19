@@ -45,71 +45,6 @@ namespace detail {
 
   /** ZoneHVACFourPipeFanCoil_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACFourPipeFanCoil.*/
   class MODEL_API ZoneHVACFourPipeFanCoil_Impl : public ZoneHVACComponent_Impl {
-    
-
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-
-    
-
-    
-    
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -310,6 +245,28 @@ namespace detail {
     bool setHeatingConvergenceTolerance(const Quantity& heatingConvergenceTolerance);
 
     void resetHeatingConvergenceTolerance();
+
+    boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
+
+    bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
+
+    void resetSupplyAirFanOperatingModeSchedule();
+
+    boost::optional<double> minimumSupplyAirTemperatureInCoolingMode() const;
+
+    bool isMinimumSupplyAirTemperatureInCoolingModeAutosized() const;
+
+    void autosizeMinimumSupplyAirTemperatureInCoolingMode();
+
+    bool setMinimumSupplyAirTemperatureInCoolingMode(double minimumSupplyAirTemperatureInCoolingMode);
+
+    boost::optional<double> maximumSupplyAirTemperatureInHeatingMode() const;
+
+    bool isMaximumSupplyAirTemperatureInHeatingModeAutosized() const;
+
+    void autosizeMaximumSupplyAirTemperatureInHeatingMode();
+
+    bool setMaximumSupplyAirTemperatureInHeatingMode(double maximumSupplyAirTemperatureInHeatingMode);
 
     //@}
     /** @name Other */

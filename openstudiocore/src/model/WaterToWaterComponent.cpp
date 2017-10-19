@@ -57,19 +57,19 @@ WaterToWaterComponent_Impl::WaterToWaterComponent_Impl(IddObjectType type, Model
 
 WaterToWaterComponent_Impl::WaterToWaterComponent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : HVACComponent_Impl(idfObject, model, keepHandle)
-{ 
+{
 }
 
 WaterToWaterComponent_Impl::WaterToWaterComponent_Impl(
-    const openstudio::detail::WorkspaceObject_Impl& other, 
-    Model_Impl* model, 
+    const openstudio::detail::WorkspaceObject_Impl& other,
+    Model_Impl* model,
     bool keepHandle)
   : HVACComponent_Impl(other,model,keepHandle)
 {
 }
 
-WaterToWaterComponent_Impl::WaterToWaterComponent_Impl(const WaterToWaterComponent_Impl& other, 
-                                               Model_Impl* model, 
+WaterToWaterComponent_Impl::WaterToWaterComponent_Impl(const WaterToWaterComponent_Impl& other,
+                                               Model_Impl* model,
                                                bool keepHandles)
   : HVACComponent_Impl(other,model,keepHandles)
 {
@@ -122,7 +122,7 @@ std::vector<HVACComponent> WaterToWaterComponent_Impl::edges(const boost::option
       edges.push_back(edgeHVACComponent.get());
     }
   };
-  
+
   if( prev) {
     if( auto inletModelObject = supplyInletModelObject() ) {
       if( prev.get() == inletModelObject.get() ) {
@@ -188,7 +188,7 @@ void WaterToWaterComponent_Impl::disconnect()
 
 bool WaterToWaterComponent_Impl::addToNode(Node & node)
 {
-  auto _model = node.model(); 
+  auto _model = node.model();
   auto thisModelObject = getObject<ModelObject>();
   auto t_plantLoop = node.plantLoop();
 
@@ -231,12 +231,12 @@ ModelObject WaterToWaterComponent_Impl::clone(Model model) const
 {
   WaterToWaterComponent mo =  HVACComponent_Impl::clone( model ).cast<WaterToWaterComponent>();
 
-  mo.setString(mo.supplyInletPort(),""); 
-  mo.setString(mo.supplyOutletPort(),""); 
-  mo.setString(mo.demandInletPort(),""); 
-  mo.setString(mo.demandOutletPort(),""); 
-  mo.setString(mo.getImpl<detail::WaterToWaterComponent_Impl>()->tertiaryInletPort(),""); 
-  mo.setString(mo.getImpl<detail::WaterToWaterComponent_Impl>()->tertiaryOutletPort(),""); 
+  mo.setString(mo.supplyInletPort(),"");
+  mo.setString(mo.supplyOutletPort(),"");
+  mo.setString(mo.demandInletPort(),"");
+  mo.setString(mo.demandOutletPort(),"");
+  mo.setString(mo.getImpl<detail::WaterToWaterComponent_Impl>()->tertiaryInletPort(),"");
+  mo.setString(mo.getImpl<detail::WaterToWaterComponent_Impl>()->tertiaryOutletPort(),"");
 
   return mo;
 }
@@ -321,12 +321,12 @@ bool WaterToWaterComponent_Impl::removeFromSecondaryPlantLoop()
   return false;
 }
 
-unsigned WaterToWaterComponent_Impl::tertiaryInletPort() const 
+unsigned WaterToWaterComponent_Impl::tertiaryInletPort() const
 {
   return std::numeric_limits<unsigned>::max();
 }
 
-unsigned WaterToWaterComponent_Impl::tertiaryOutletPort() const 
+unsigned WaterToWaterComponent_Impl::tertiaryOutletPort() const
 {
   return std::numeric_limits<unsigned>::max();
 }
@@ -380,7 +380,7 @@ bool WaterToWaterComponent_Impl::removeFromTertiaryPlantLoop()
 
 bool WaterToWaterComponent_Impl::addToTertiaryNode(Node & node)
 {
-  auto _model = node.model(); 
+  auto _model = node.model();
   auto thisModelObject = getObject<ModelObject>();
   auto t_plantLoop = node.plantLoop();
 
@@ -427,14 +427,14 @@ boost::optional<ModelObject> WaterToWaterComponent_Impl::tertiaryOutletModelObje
 
 } // detail
 
-WaterToWaterComponent::WaterToWaterComponent(IddObjectType type,const Model& model) 
+WaterToWaterComponent::WaterToWaterComponent(IddObjectType type,const Model& model)
   : HVACComponent(type,model)
 {
   OS_ASSERT(getImpl<detail::WaterToWaterComponent_Impl>());
-}     
+}
 
 WaterToWaterComponent::WaterToWaterComponent(std::shared_ptr<detail::WaterToWaterComponent_Impl> p)
-  : HVACComponent(p)
+  : HVACComponent(std::move(p))
 {}
 
 unsigned WaterToWaterComponent::supplyInletPort()

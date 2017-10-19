@@ -110,7 +110,7 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
 
   public slots:
 
-  virtual void reloadFile(const QString& fileToLoad, bool modified, bool saveCurrentTabs) = 0;
+  virtual void reloadFile(const QString& osmPath, bool modified, bool saveCurrentTabs) = 0;
 
   void showMeasureUpdateDlg();
 };

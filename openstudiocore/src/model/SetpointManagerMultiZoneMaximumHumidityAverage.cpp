@@ -174,7 +174,7 @@ bool SetpointManagerMultiZoneMaximumHumidityAverage::setMaximumSetpointHumidityR
 
 /// @cond
 SetpointManagerMultiZoneMaximumHumidityAverage::SetpointManagerMultiZoneMaximumHumidityAverage(std::shared_ptr<detail::SetpointManagerMultiZoneMaximumHumidityAverage_Impl> impl)
-  : SetpointManager(impl)
+  : SetpointManager(std::move(impl))
 {}
 /// @endcond
 

@@ -40,10 +40,10 @@
 #include <string>
 #include <ostream>
 #include <vector>
-#include <algorithm> 
+#include <algorithm>
 
 namespace openstudio{
- 
+
 // forward declarations
 class IddObject;
 struct IddObjectType;
@@ -92,14 +92,14 @@ class UTILITIES_API IdfObject {
 
   /** Constructor from type. Equivalent to IdfObject(IddFactory::instance.iddObject(type)),
    *  unless type == IddObjectType::UserCustom, in which case, the constructed object is equivalent
-   *  to IdfObject(IddObjectType::Catchall). If fastName is true a UUID is assigned as the name, 
+   *  to IdfObject(IddObjectType::Catchall). If fastName is true a UUID is assigned as the name,
    *  otherwise no name is assigned.*/
   explicit IdfObject(IddObjectType type, bool fastName=false);
 
-  /** Constructor from iddObject. If fastName is true a UUID is assigned as the name, 
+  /** Constructor from iddObject. If fastName is true a UUID is assigned as the name,
    *  otherwise no name is assigned.*/
   explicit IdfObject(const IddObject&, bool fastName=false);
-  
+
   /** Copy constructor. Shares data with other, so changes made by either copy affects the data of
    *  both. */
   IdfObject(const IdfObject& other);
@@ -109,7 +109,7 @@ class UTILITIES_API IdfObject {
   /** Creates a deep copy of this object. This object and the newly created object do not share
    *  data, and the new object is always unlocked. */
   IdfObject clone(bool keepHandle=false) const;
- 
+
   //@}
   /** @name Getters */
   //@{
@@ -124,15 +124,15 @@ class UTILITIES_API IdfObject {
   std::string comment() const;
 
   /** Returns the comment associated with field index, if one exists. Optionally, if returnDefault
-   *  is passed in as true, and no field comment exists for index, fieldComment will return a 
+   *  is passed in as true, and no field comment exists for index, fieldComment will return a
    *  comment-ized version of the IddField name, following a commonly used Idf convention. */
   boost::optional<std::string> fieldComment(unsigned index, bool returnDefault=false) const;
 
-  /** Get the name of the object, if it exists. Optionally, if returnDefault is passed in as true, 
+  /** Get the name of the object, if it exists. Optionally, if returnDefault is passed in as true,
    *  name will return the default name, if it exists. */
   boost::optional<std::string> name(bool returnDefault=false) const;
 
-  /** Returns the name if set or returns an empty string. Optionally, if returnDefault is passed in as true, 
+  /** Returns the name if set or returns an empty string. Optionally, if returnDefault is passed in as true,
    *  name will return the default name, if it exists. */
   std::string nameString(bool returnDefault=false) const;
 
@@ -143,10 +143,10 @@ class UTILITIES_API IdfObject {
   /** Returns true if the field is empty. */
   bool isEmpty(unsigned index) const;
 
-  /** Get the value of field index, if index < numFields(). Optionally, if returnDefault is 
-   *  passed in as true, getString will return the default value for non-existent 
-   *  (non-extensible) fields and fields with empty data, if a default exists. 
-   *  If the default does not exist or is not requested and the field is empty 
+  /** Get the value of field index, if index < numFields(). Optionally, if returnDefault is
+   *  passed in as true, getString will return the default value for non-existent
+   *  (non-extensible) fields and fields with empty data, if a default exists.
+   *  If the default does not exist or is not requested and the field is empty
    *  then returnUninitializedEmpty is used to determine if an uninitialized result is returned.
    */
   boost::optional<std::string> getString(unsigned index, bool returnDefault=false, bool returnUninitializedEmpty=false ) const;
@@ -189,11 +189,11 @@ class UTILITIES_API IdfObject {
 
   /** Get value of the field at index, converted to qurl, if possible. Returns an
    *  uninitialized object if the conversion is unsuccessful for any reason. Logs a warning
-   *  if the conversion fails, the field is URLType. Optionally, if returnDefault is passed 
-   *  in as true, getURL will return the default value for non-existent (non-extensible) 
+   *  if the conversion fails, the field is URLType. Optionally, if returnDefault is passed
+   *  in as true, getURL will return the default value for non-existent (non-extensible)
    *  fields and fields with empty data, if a url default exists. */
   boost::optional<QUrl> getURL(unsigned index, bool returnDefault=false) const;
-  
+
   /** Returns the IdfExtensibleGroup at groupIndex, if it exists. Otherwise, return value will be
    *  .empty(). */
   IdfExtensibleGroup getExtensibleGroup(unsigned groupIndex) const;
@@ -213,13 +213,13 @@ class UTILITIES_API IdfObject {
    *  false. */
   bool setFieldComment(unsigned index, const std::string& cmnt);
 
-  /** Sets the name field if it exists, returning the actual name string set. Returns false 
+  /** Sets the name field if it exists, returning the actual name string set. Returns false
    *  otherwise. The return value and newName may differ (by an appended integer) if a
-   *  conflict with newName was detected. Name conflicts will not be automatically avoided 
+   *  conflict with newName was detected. Name conflicts will not be automatically avoided
    *  in IDF (text-only) mode. */
   boost::optional<std::string> setName(const std::string& newName);
 
-  /** Sets the name field to a new, unique name, if the name field exists and (is empty or 
+  /** Sets the name field to a new, unique name, if the name field exists and (is empty or
    *  overwrite == true). Returns false otherwise. Created name is returned. */
   boost::optional<std::string> createName(bool overwrite=true);
 
@@ -236,12 +236,12 @@ class UTILITIES_API IdfObject {
   bool setQuantity (unsigned index, const Quantity& q);
 
   /** Sets the field at index to value, if possible. Returns false if the value cannot be set for
-   *  any reason. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out 
+   *  any reason. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out
    *  of bounds per IddField.properties()). */
   bool setUnsigned(unsigned index, unsigned value);
 
   /** Sets the field at index to value, if possible. Returns false if the value cannot be set for
-   *  any reason. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out 
+   *  any reason. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out
    *  of bounds per IddField.properties()). */
   bool setInt(unsigned index, int value);
 
@@ -259,14 +259,14 @@ class UTILITIES_API IdfObject {
 
   /** Inserts a new extensible group at groupIndex, if possible. Return value will be empty() if
    *  the operation cannot be completed for any reason. */
-  IdfExtensibleGroup insertExtensibleGroup(unsigned groupIndex, 
+  IdfExtensibleGroup insertExtensibleGroup(unsigned groupIndex,
                                            const std::vector<std::string>& values);
 
-  /** Pops the final extensible group from the object, if possible. Returns the popped data if 
+  /** Pops the final extensible group from the object, if possible. Returns the popped data if
    *  successful. Otherwise, the returned vector will be empty. */
   std::vector<std::string> popExtensibleGroup();
 
-  /** Erases the extensible group at groupIndex, if possible. Returns the erased data, and 
+  /** Erases the extensible group at groupIndex, if possible. Returns the erased data, and
    *  preserves the relative order of the remaining data if successful. Otherwise, the returned
    *  vector will be empty. */
   std::vector<std::string> eraseExtensibleGroup(unsigned groupIndex);
@@ -294,11 +294,11 @@ class UTILITIES_API IdfObject {
   /** Returns the number of extensible groups in the object. */
   unsigned numExtensibleGroups() const;
 
-  /** Returns the minimum number of \link IdfExtensibleGroup IdfExtensibleGroups\endlink an 
+  /** Returns the minimum number of \link IdfExtensibleGroup IdfExtensibleGroups\endlink an
    *  object of this type must have to be valid. */
   unsigned minExtensibleGroups() const;
 
-  /** Returns the maximum number of \link IdfExtensibleGroup IdfExtensibleGroups\endlink an 
+  /** Returns the maximum number of \link IdfExtensibleGroup IdfExtensibleGroups\endlink an
    *  object of this type must have to be valid. */
   boost::optional<unsigned> maxExtensibleGroups() const;
 
@@ -320,26 +320,26 @@ class UTILITIES_API IdfObject {
   std::vector<unsigned> requiredFields() const;
 
   /** Returns true if this IdfObject is valid, that is, has no errors at or below level. */
-  bool isValid(StrictnessLevel level) const;
+  bool isValid(StrictnessLevel level, bool checkNames=false) const;
 
   /** Returns a ValidityReport for this IdfObject containing all errors at or below level. */
-  ValidityReport validityReport(StrictnessLevel level, bool checkNames=true) const;
+  ValidityReport validityReport(StrictnessLevel level, bool checkNames=false) const;
 
-  /** Checks for equality of data (non-managedObjectList) fields. Prerequisite: iddObject()s 
-   *  must be equal. For objects with handle fields, checks for equality of handle OR equality 
+  /** Checks for equality of data (non-managedObjectList) fields. Prerequisite: iddObject()s
+   *  must be equal. For objects with handle fields, checks for equality of handle OR equality
    *  of name. */
   bool dataFieldsEqual(const IdfObject& other) const;
 
-  /** Checks for equality of objectListFields(). Prerequisite: iddObject()s must be 
+  /** Checks for equality of objectListFields(). Prerequisite: iddObject()s must be
    *  equal. */
   bool objectListFieldsEqual(const IdfObject& other) const;
 
-  /** Returns true if for all managedObjectListFields() that for both objects are non-empty, 
-   *  the values are equal (using the same criteria as objectListFieldsEqual). 
+  /** Returns true if for all managedObjectListFields() that for both objects are non-empty,
+   *  the values are equal (using the same criteria as objectListFieldsEqual).
    *  Prerequisite: iddObject()s must be equal. */
   bool objectListFieldsNonConflicting(const IdfObject& other) const;
 
-  /** Equality comparator for IdfObjects. Objects must be exactly equal, that is, they must 
+  /** Equality comparator for IdfObjects. Objects must be exactly equal, that is, they must
    *  share data for the operator to return true. */
   bool operator==(const IdfObject& other) const;
 
@@ -363,12 +363,12 @@ class UTILITIES_API IdfObject {
   /** Serialize this object to os as Idf text. */
   std::ostream& print(std::ostream& os) const;
 
-  /** Serialize just the preceding comments and name of this IdfObject in the format used by 
-   *  full object print. If hasFields, the name is followed by a ','. Otherwise, the name is 
+  /** Serialize just the preceding comments and name of this IdfObject in the format used by
+   *  full object print. If hasFields, the name is followed by a ','. Otherwise, the name is
    *  followed by a ';'. */
   std::ostream& printName(std::ostream& os, bool hasFields=true) const;
 
-  /** Serialize field index in the format used by full object print. If not isLastField, the 
+  /** Serialize field index in the format used by full object print. If not isLastField, the
    *  field value is followed by a ','. Otherwise, the object is ended by using a ';'. */
   std::ostream& printField(std::ostream& os, unsigned index, bool isLastField=false) const;
 
@@ -392,7 +392,7 @@ class UTILITIES_API IdfObject {
     if (!impl){
       throw(std::bad_cast());
     }
-    return T(impl);
+    return T(std::move(impl));
   }
 
   /// cast to optional of type T
@@ -401,7 +401,7 @@ class UTILITIES_API IdfObject {
     boost::optional<T> result;
     std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl){
-      result = T(impl);
+      result = T(std::move(impl));
     }
     return result;
   }
@@ -467,7 +467,7 @@ std::vector<Handle> getHandles(const std::vector<T>& objects)
   return result;
 }
 
-/** Returns obj.name().get() if it exists. Otherwise, returns the IddObject.name(), 
+/** Returns obj.name().get() if it exists. Otherwise, returns the IddObject.name(),
  *  which is a good choice for unique objects. */
 UTILITIES_API std::string objectName(const IdfObject& obj);
 

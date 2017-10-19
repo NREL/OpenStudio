@@ -51,19 +51,19 @@ AirToAirComponent_Impl::AirToAirComponent_Impl(IddObjectType type, Model_Impl* m
 
 AirToAirComponent_Impl::AirToAirComponent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : HVACComponent_Impl(idfObject, model, keepHandle)
-{ 
+{
 }
 
 AirToAirComponent_Impl::AirToAirComponent_Impl(
-    const openstudio::detail::WorkspaceObject_Impl& other, 
-    Model_Impl* model, 
+    const openstudio::detail::WorkspaceObject_Impl& other,
+    Model_Impl* model,
     bool keepHandle)
   : HVACComponent_Impl(other,model,keepHandle)
 {
 }
 
-AirToAirComponent_Impl::AirToAirComponent_Impl(const AirToAirComponent_Impl& other, 
-                                               Model_Impl* model, 
+AirToAirComponent_Impl::AirToAirComponent_Impl(const AirToAirComponent_Impl& other,
+                                               Model_Impl* model,
                                                bool keepHandles)
   : HVACComponent_Impl(other,model,keepHandles)
 {
@@ -187,11 +187,11 @@ std::vector<openstudio::IdfObject> AirToAirComponent_Impl::remove()
 
 bool AirToAirComponent_Impl::addToNode(Node & node)
 {
-  Model _model = node.model(); 
+  Model _model = node.model();
   boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = node.airLoopHVACOutdoorAirSystem();
 
   if( airLoopHVACOutdoorAirSystem() ) return false;
-  
+
   if( oaSystem )
   {
     // The OA node that we will connect to
@@ -253,7 +253,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       // Find prevSupplyComponent
 
-      auto rDropNodeLocation = 
+      auto rDropNodeLocation =
         std::find(oaComponents.rbegin(),oaComponents.rend(),node);
 
       OS_ASSERT( rDropNodeLocation != oaComponents.rend() );
@@ -274,7 +274,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
       }
 
       // Find prevReliefComponent
-      
+
       prevReliefComponent = nextSupplyComponent;
 
       // Find nextReliefComponent
@@ -382,7 +382,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       // Find prevReliefComponent
 
-      auto rDropNodeLocation = 
+      auto rDropNodeLocation =
         std::find(reliefComponents.rbegin(),reliefComponents.rend(),node);
 
       OS_ASSERT( rDropNodeLocation != reliefComponents.rend() );
@@ -403,7 +403,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
       }
 
       // Find prevSupplyComponent
-      
+
       if( nextReliefComponent.get() != outboardReliefNode )
       {
         prevSupplyComponent = nextReliefComponent;
@@ -529,10 +529,10 @@ ModelObject AirToAirComponent_Impl::clone(Model model) const
 {
   AirToAirComponent mo =  HVACComponent_Impl::clone( model ).cast<AirToAirComponent>();
 
-  mo.setString(mo.primaryAirInletPort(),""); 
-  mo.setString(mo.primaryAirOutletPort(),""); 
-  mo.setString(mo.secondaryAirInletPort(),""); 
-  mo.setString(mo.secondaryAirOutletPort(),""); 
+  mo.setString(mo.primaryAirInletPort(),"");
+  mo.setString(mo.primaryAirOutletPort(),"");
+  mo.setString(mo.secondaryAirInletPort(),"");
+  mo.setString(mo.secondaryAirOutletPort(),"");
 
   return mo;
 }
@@ -543,10 +543,10 @@ AirToAirComponent::AirToAirComponent(IddObjectType type,const Model& model)
   : HVACComponent(type,model)
 {
   OS_ASSERT(getImpl<detail::AirToAirComponent_Impl>());
-}     
+}
 
 AirToAirComponent::AirToAirComponent(std::shared_ptr<detail::AirToAirComponent_Impl> p)
-  : HVACComponent(p)
+  : HVACComponent(std::move(p))
 {}
 
 unsigned AirToAirComponent::primaryAirInletPort()

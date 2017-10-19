@@ -346,7 +346,7 @@ void WaterUseEquipmentDefinition::resetLatentFractionSchedule() {
 
 /// @cond
 WaterUseEquipmentDefinition::WaterUseEquipmentDefinition(std::shared_ptr<detail::WaterUseEquipmentDefinition_Impl> impl)
-  : SpaceLoadDefinition(impl)
+  : SpaceLoadDefinition(std::move(impl))
 {}
 /// @endcond
 

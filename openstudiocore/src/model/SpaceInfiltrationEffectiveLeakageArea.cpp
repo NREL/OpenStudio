@@ -52,7 +52,7 @@ namespace model {
 namespace detail {
 
   SpaceInfiltrationEffectiveLeakageArea_Impl::SpaceInfiltrationEffectiveLeakageArea_Impl(
-      const IdfObject& idfObject,                                                                                  
+      const IdfObject& idfObject,
       Model_Impl* model,
       bool keepHandle)
     : SpaceLoad_Impl(idfObject,model,keepHandle)
@@ -378,7 +378,7 @@ bool SpaceInfiltrationEffectiveLeakageArea::setWindCoefficient(const Quantity& w
 /// @cond
 SpaceInfiltrationEffectiveLeakageArea::SpaceInfiltrationEffectiveLeakageArea(
     std::shared_ptr<detail::SpaceInfiltrationEffectiveLeakageArea_Impl> impl)
-  : SpaceLoad(impl)
+  : SpaceLoad(std::move(impl))
 {}
 /// @endcond
 

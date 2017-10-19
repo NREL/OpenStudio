@@ -55,7 +55,6 @@
 #include "../units/OSOptionalQuantity.hpp"
 #include "../units/QuantityConverter.hpp"
 
- 
 #include <boost/lexical_cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
@@ -68,16 +67,16 @@
 using std::cout;
 using std::endl;
 
-namespace openstudio { 
+namespace openstudio {
 
-namespace detail { 
+namespace detail {
 
   // CONSTRUCTORS
 
   IdfObject_Impl::IdfObject_Impl(const IdfObject_Impl& other, bool keepHandle)
-    : m_comment(other.comment()), 
+    : m_comment(other.comment()),
       m_iddObject(other.iddObject()),
-      m_fields(other.fields()), 
+      m_fields(other.fields()),
       m_fieldComments(other.fieldComments())
   {
     if (keepHandle){
@@ -92,7 +91,7 @@ namespace detail {
     }
   }
 
-  IdfObject_Impl::IdfObject_Impl(IddObjectType type, bool fastName) 
+  IdfObject_Impl::IdfObject_Impl(IddObjectType type, bool fastName)
     : m_handle(openstudio::createUUID())
   {
     OptionalIddObject candidate = IddFactory::instance().getObject(type);
@@ -142,15 +141,15 @@ namespace detail {
   }
 
   IdfObject_Impl::IdfObject_Impl(const Handle& handle,
-                                 const std::string& comment, 
-                                 const IddObject& iddObject, 
+                                 const std::string& comment,
+                                 const IddObject& iddObject,
                                  const StringVector& fields,
-                                 const StringVector& fieldComments) 
-    : m_handle(handle),    
+                                 const StringVector& fieldComments)
+    : m_handle(handle),
       m_comment(comment),
       m_iddObject(iddObject),
       m_fields(fields),
-      m_fieldComments(fieldComments) 
+      m_fieldComments(fieldComments)
   {
     resizeToMinFields();
   }
@@ -169,8 +168,8 @@ namespace detail {
     return m_comment;
   }
 
-  boost::optional<std::string> IdfObject_Impl::fieldComment(unsigned index, 
-                                                            bool returnDefault) const 
+  boost::optional<std::string> IdfObject_Impl::fieldComment(unsigned index,
+                                                            bool returnDefault) const
   {
     if (index >= numFields()) {
       return boost::none;
@@ -184,7 +183,7 @@ namespace detail {
     if (returnDefault && result.empty()) {
       if (OptionalIddField iddField = m_iddObject.getField(index)) {
         std::stringstream ss;
-        ss << makeIdfEditorComment(iddField->name()); 
+        ss << makeIdfEditorComment(iddField->name());
         if (m_iddObject.isExtensibleField(index)) {
           ExtensibleIndex ei = m_iddObject.extensibleIndex(index);
           ss << " " << ei.group + 1;
@@ -279,11 +278,11 @@ namespace detail {
     OptionalDouble result;
     OptionalString value = getString(index, returnDefault, false);
     if (value){
-      if (!( istringEqual(*value,"") || 
-             istringEqual(*value,"autosize") || 
+      if (!( istringEqual(*value,"") ||
+             istringEqual(*value,"autosize") ||
              istringEqual(*value,"autocalculate") ))
       {
-        try { result = boost::lexical_cast<double>(*value); } 
+        try { result = boost::lexical_cast<double>(*value); }
         catch (const std::exception& ) {
           LOG(Error, "Could not convert '" << *value << "' to double");
         }
@@ -305,14 +304,14 @@ namespace detail {
     OptionalUnsigned result;
     OptionalString value = getString(index, returnDefault, false);
     if (value){
-      if (!( istringEqual(*value,"") || 
-             istringEqual(*value,"autosize") || 
+      if (!( istringEqual(*value,"") ||
+             istringEqual(*value,"autosize") ||
              istringEqual(*value,"autocalculate") ))
       {
         try {
           double temp = boost::lexical_cast<double>(*value);
           result = boost::numeric_cast<unsigned>(temp);
-        } 
+        }
         catch (const std::exception&) {
           LOG(Error, "Could not convert '" << *value << "' to unsigned");
         }
@@ -326,23 +325,23 @@ namespace detail {
     OptionalInt result;
     OptionalString value = getString(index, returnDefault, false);
     if (value){
-      if (!( istringEqual(*value,"") || 
-             istringEqual(*value,"autosize") || 
+      if (!( istringEqual(*value,"") ||
+             istringEqual(*value,"autosize") ||
              istringEqual(*value,"autocalculate") ))
       {
         try {
           double temp = boost::lexical_cast<double>(*value);
           result = boost::numeric_cast<int>(temp);
-        } 
+        }
         catch (const std::exception&) {
           LOG(Error, "Could not convert '" << *value << "' to int");
         }
       }
     }
-    return result; 
+    return result;
   }
 
-  boost::optional<QUrl> IdfObject_Impl::getURL(unsigned index, 
+  boost::optional<QUrl> IdfObject_Impl::getURL(unsigned index,
                                                bool returnDefault) const
   {
     UnsignedVector urlIdx = m_iddObject.urlFields();
@@ -354,7 +353,7 @@ namespace detail {
         if( result->isValid() ) { return result; }
       }
     }
-    
+
     // bad value (for whatever reason)
     return boost::optional<QUrl>();
   }
@@ -409,11 +408,11 @@ namespace detail {
       if (index >= m_fieldComments.size()) {
         m_fieldComments.resize(index+1);
       }
-      
+
       m_fieldComments[index] = makeComment(cmnt);
 
       m_diffs.push_back(IdfObjectDiff(index, m_fields[index], m_fields[index]));
-      
+
       return true;
     }
     return false;
@@ -427,7 +426,7 @@ namespace detail {
     return result;
   }
 
-  boost::optional<std::string> IdfObject_Impl::setName(const std::string& _newName, bool checkValidity) 
+  boost::optional<std::string> IdfObject_Impl::setName(const std::string& _newName, bool checkValidity)
   {
     std::string newName = encodeString(_newName);
 
@@ -478,8 +477,8 @@ namespace detail {
         std::string oldName = m_fields[i];
         m_fields[i] = newName;
         m_diffs.push_back(IdfObjectDiff(i, oldName, newName));
-      } 
-      else { 
+      }
+      else {
         m_fields.push_back(newName);
         m_diffs.push_back(IdfObjectDiff(i, boost::none, newName));
       }
@@ -518,7 +517,7 @@ namespace detail {
     std::string value = encodeString(_value);
 
     if (m_iddObject.hasNameField() && (index == m_iddObject.nameFieldIndex())) {
-      return IdfObject_Impl::setName(value,checkValidity); 
+      return IdfObject_Impl::setName(value,checkValidity);
     }
 
     // push fields and groups if necessary and possible
@@ -555,7 +554,7 @@ namespace detail {
         if (m_fieldComments.size() > n) {
           m_fieldComments.resize(n);
         }
-        
+
         return false;
       }
 
@@ -582,9 +581,9 @@ namespace detail {
     try {
       return setString(index, toString(value), checkValidity);
     }
-    catch (...) { 
-      return false; 
-    }    
+    catch (...) {
+      return false;
+    }
   }
 
   bool IdfObject_Impl::setQuantity (unsigned index, const Quantity& q) {
@@ -618,8 +617,8 @@ namespace detail {
       std::string str = boost::lexical_cast<std::string>(value);
       return setString(index, str, checkValidity);
     }
-    catch (...) { 
-      return false; 
+    catch (...) {
+      return false;
     }
   }
 
@@ -638,8 +637,8 @@ namespace detail {
       std::string str = boost::lexical_cast<std::string>(value);
       return setString(index, str, checkValidity);
     }
-    catch (...) { 
-      return false; 
+    catch (...) {
+      return false;
     }
   }
 
@@ -671,8 +670,8 @@ namespace detail {
     }
 
     // ok if nonextensible, or extensible w/ group size 1
-    if (m_iddObject.isNonextensibleField(index) || 
-        (m_iddObject.isExtensibleField(index) && (m_iddObject.properties().numExtensible == 1))) 
+    if (m_iddObject.isNonextensibleField(index) ||
+        (m_iddObject.isExtensibleField(index) && (m_iddObject.properties().numExtensible == 1)))
     {
       m_fields.push_back(value);
       m_diffs.push_back(IdfObjectDiff(index, boost::none, value));
@@ -690,16 +689,17 @@ namespace detail {
   }
 
   IdfExtensibleGroup IdfObject_Impl::pushExtensibleGroup(const std::vector<std::string>& values,
-                                                         bool checkValidity) 
+                                                         bool checkValidity)
   {
     unsigned groupSize = m_iddObject.properties().numExtensible;
     unsigned n = numFields();
-    IdfObject_ImplPtr p;
+    IdfObject_ImplPtr p = nullptr;
     IdfExtensibleGroup result(p,n);
+
     if (!values.empty() && (values.size() != groupSize)) { return result; }
-    
+
     StringVector wValues = values; // copy so can resize empty vector
-    OptionalUnsigned mf = maxFields();   
+    OptionalUnsigned mf = maxFields();
     unsigned diffSize = m_diffs.size();
 
     // push fields as needed
@@ -721,15 +721,15 @@ namespace detail {
 
     n = numFields();
     OS_ASSERT(n >= iddn);
-    
+
     // needs to be extensible, have all non-extensible fields defined, and not violate maxFields.
     if ((groupSize > 0) && (!mf || (n + groupSize <= *mf))) {
 
       OS_ASSERT(m_iddObject.properties().extensible);
 
-      if (wValues.empty()) { 
-        wValues.resize(groupSize); 
-      }     
+      if (wValues.empty()) {
+        wValues.resize(groupSize);
+      }
 
       m_fields.resize(n+groupSize);
 
@@ -739,7 +739,7 @@ namespace detail {
         if (!ok) {
           // remove the diffs
           m_diffs.resize(diffSize);
-          
+
           // resize the fields
           m_fields.resize(n);
           if (m_fieldComments.size() > n){
@@ -757,8 +757,8 @@ namespace detail {
     return result;
   }
 
-  IdfExtensibleGroup IdfObject_Impl::insertExtensibleGroup(unsigned groupIndex, 
-                                                           const std::vector<std::string>& values) 
+  IdfExtensibleGroup IdfObject_Impl::insertExtensibleGroup(unsigned groupIndex,
+                                                           const std::vector<std::string>& values)
   {
     IdfExtensibleGroup result = insertExtensibleGroup(groupIndex, values, true);
     if (!result.empty()) {
@@ -767,13 +767,13 @@ namespace detail {
     return result;
   }
 
-  IdfExtensibleGroup IdfObject_Impl::insertExtensibleGroup(unsigned groupIndex, 
+  IdfExtensibleGroup IdfObject_Impl::insertExtensibleGroup(unsigned groupIndex,
                                                            const std::vector<std::string>& values,
-                                                           bool checkValidity) 
+                                                           bool checkValidity)
   {
     // if really a push request, send it there
-    if (groupIndex == numExtensibleGroups()) { 
-      return pushExtensibleGroup(values, checkValidity); 
+    if (groupIndex == numExtensibleGroups()) {
+      return pushExtensibleGroup(values, checkValidity);
     }
 
     // now have groupIndex != numExtensibleGroups()
@@ -782,25 +782,25 @@ namespace detail {
     IdfObject_ImplPtr p;
     IdfExtensibleGroup result(p,n);
     // nothing to do if not extensible, groupIndex invalid, or values invalid
-    if ((groupSize == 0) || (groupIndex > numExtensibleGroups())) { 
-      return result; 
+    if ((groupSize == 0) || (groupIndex > numExtensibleGroups())) {
+      return result;
     }
-    if (!values.empty() && (values.size() != groupSize)) { 
-      return result; 
+    if (!values.empty() && (values.size() != groupSize)) {
+      return result;
     }
 
     // record diffs at start
     unsigned diffSize = m_diffs.size();
 
     // from now on, groupIndex < numExtensibleGroups(), and numExtensibleGroups() > 0
-    OptionalUnsigned mf = maxFields();  
+    OptionalUnsigned mf = maxFields();
     // needs to have all non-extensible fields defined, and not violate maxFields.
     if ((n >= m_iddObject.numFields()) && (!mf || (n + groupSize <= *mf))) {
       OS_ASSERT(m_iddObject.properties().extensible);
 
       StringVector wValues = values;
-      if (wValues.empty()) { 
-        wValues.resize(groupSize); 
+      if (wValues.empty()) {
+        wValues.resize(groupSize);
       }
 
       // push a new group on the end
@@ -808,11 +808,11 @@ namespace detail {
       IdfExtensibleGroup eg = getExtensibleGroup(i);
       OS_ASSERT(!eg.empty());
       IdfExtensibleGroup temp = pushExtensibleGroup(eg.fields(),checkValidity);
-      if (temp.empty()) { 
+      if (temp.empty()) {
         OS_ASSERT(numFields() == n);
         OS_ASSERT(m_diffs.size() == diffSize);
 
-        return result; 
+        return result;
       }
 
       // copy values from group i to i+1 down to and including groupIndex
@@ -881,10 +881,10 @@ namespace detail {
     return result;
   }
 
-  /** Pops the final extensible group from the object, if possible. Returns the popped data if 
+  /** Pops the final extensible group from the object, if possible. Returns the popped data if
    *  successful. Otherwise, the returned vector will be empty. */
   std::vector<std::string> IdfObject_Impl::popExtensibleGroup(bool checkValidity) {
-    
+
     unsigned groupSize = m_iddObject.properties().numExtensible;
     unsigned numBeforePop = numFields();
     unsigned numAfterPop = numBeforePop - groupSize;
@@ -912,7 +912,7 @@ namespace detail {
     return result;
   }
 
-  /** Erases the extensible group at groupIndex, if possible. Returns the erased data, and 
+  /** Erases the extensible group at groupIndex, if possible. Returns the erased data, and
    *  preserves the relative order of the remaining data if successful. Otherwise, the returned
    *  vector will be empty. */
   std::vector<std::string> IdfObject_Impl::eraseExtensibleGroup(unsigned groupIndex) {
@@ -923,8 +923,8 @@ namespace detail {
     return result;
   }
 
-  std::vector<std::string> IdfObject_Impl::eraseExtensibleGroup(unsigned groupIndex, 
-                                                                bool checkValidity) 
+  std::vector<std::string> IdfObject_Impl::eraseExtensibleGroup(unsigned groupIndex,
+                                                                bool checkValidity)
   {
     StringVector result;
     if (groupIndex >= numExtensibleGroups()) { return result; }
@@ -932,8 +932,8 @@ namespace detail {
 
     // start at bottom
     result = popExtensibleGroup(false);
-    if (result.empty()) { 
-      return result; 
+    if (result.empty()) {
+      return result;
     }
 
     // record diffs at start
@@ -966,7 +966,7 @@ namespace detail {
         return StringVector();
       }
     }
-    
+
     OS_ASSERT(ok);
     return result;
   }
@@ -986,7 +986,7 @@ namespace detail {
     // data to restore if cannot delete all groups
     std::vector<StringVector> rollbackValues;
     std::vector<StringVector> rollbackComments;
-    
+
     unsigned gn = numExtensibleGroups();
     if (gn == 0) { return rollbackValues; }
 
@@ -1020,7 +1020,7 @@ namespace detail {
           rollbackValues.pop_back();
           rollbackComments.pop_back();
         }
-        
+
         // remove the diffs
         m_diffs.resize(diffSize);
 
@@ -1034,7 +1034,7 @@ namespace detail {
     OS_ASSERT(!indices.empty());
 
     return rollbackValues;
-  }    
+  }
 
   // QUERIES
 
@@ -1137,27 +1137,27 @@ namespace detail {
   }
 
   bool IdfObject_Impl::isValid(StrictnessLevel level) const {
-    return isValid(level,true);
+    return isValid(level,false);
   }
 
-  bool IdfObject_Impl::isValid(StrictnessLevel level,bool checkNames) const {
+  bool IdfObject_Impl::isValid(StrictnessLevel level, bool checkNames) const {
     return (validityReport(level,checkNames).numErrors() == 0);
   }
-  
-  ValidityReport IdfObject_Impl::validityReport(StrictnessLevel level,bool checkNames) const {
+
+  ValidityReport IdfObject_Impl::validityReport(StrictnessLevel level, bool checkNames) const {
     ValidityReport report(level,getObject<IdfObject>());
     this->populateValidityReport(report,checkNames);
     return report;
   }
 
   bool IdfObject_Impl::dataFieldsEqual(const IdfObject& other) const {
-    if (m_iddObject != other.iddObject()) { 
-      return false; 
+    if (m_iddObject != other.iddObject()) {
+      return false;
     }
     UnsignedVector myFields = dataFields();
     UnsignedVector otherFields = other.dataFields();
-    if (myFields != otherFields) { 
-      return false; 
+    if (myFields != otherFields) {
+      return false;
     }
 
     OptionalUnsigned iName = m_iddObject.nameFieldIndex();
@@ -1171,10 +1171,10 @@ namespace detail {
       if (oIddField && (oIddField->properties().type == IddFieldType::IntegerType)) {
         OptionalInt oMyIntValue = getInt(i);
         OptionalInt oOtherIntValue = other.getInt(i);
-        if (oMyIntValue || oOtherIntValue) { 
+        if (oMyIntValue || oOtherIntValue) {
           if (!(oMyIntValue && oOtherIntValue)) { return false; }
           if (oMyIntValue.get() != oOtherIntValue.get()) { return false; }
-          compareStrings = false; 
+          compareStrings = false;
         }
       }
 
@@ -1182,10 +1182,10 @@ namespace detail {
       if (oIddField && (oIddField->properties().type == IddFieldType::RealType)) {
         OptionalDouble oMyDoubleValue = getDouble(i);
         OptionalDouble oOtherDoubleValue = other.getDouble(i);
-        if (oMyDoubleValue || oOtherDoubleValue) { 
+        if (oMyDoubleValue || oOtherDoubleValue) {
           if (!(oMyDoubleValue && oOtherDoubleValue)) { return false; }
           if (!equal(oMyDoubleValue.get(),oOtherDoubleValue.get())) { return false; }
-          compareStrings = false; 
+          compareStrings = false;
         }
       }
 
@@ -1193,10 +1193,10 @@ namespace detail {
       if (oIddField && (oIddField->properties().type == IddFieldType::URLType)) {
         OptionalUrl oMyUrlValue = getURL(i);
         OptionalUrl oOtherUrlValue = other.getURL(i);
-        if (oMyUrlValue || oOtherUrlValue) { 
+        if (oMyUrlValue || oOtherUrlValue) {
           if (!(oMyUrlValue && oOtherUrlValue)) { return false; }
           if (oMyUrlValue.get() != oOtherUrlValue.get()) { return false; }
-          compareStrings = false; 
+          compareStrings = false;
         }
       }
 
@@ -1206,11 +1206,11 @@ namespace detail {
         OptionalString oOtherStringValue = other.getString(i);
         OS_ASSERT(oMyStringValue);
         OS_ASSERT(oOtherStringValue);
-        if (!istringEqual(*oMyStringValue,*oOtherStringValue)) { 
+        if (!istringEqual(*oMyStringValue,*oOtherStringValue)) {
           if (iName && (i == iName.get()) && (handle() == other.handle())) {
             continue;
           }
-          return false; 
+          return false;
         }
       }
     }
@@ -1305,7 +1305,7 @@ namespace detail {
     else {
       printName(os,true);
     }
-    
+
     for (unsigned i = 0; i < n; ++i) {
       if (i < n-1) {
         printField(os,i);
@@ -1340,13 +1340,13 @@ namespace detail {
     else {
       os << ";" << std::endl;
     }
-      
+
     return os;
   }
 
-  std::ostream& IdfObject_Impl::printField(std::ostream& os, 
-                                           unsigned index, 
-                                           bool isLastField) const 
+  std::ostream& IdfObject_Impl::printField(std::ostream& os,
+                                           unsigned index,
+                                           bool isLastField) const
   {
     if (index < numFields()) {
       // different formatting for vertices
@@ -1405,7 +1405,7 @@ namespace detail {
     return os;
   }
 
-  void IdfObject_Impl::emitChangeSignals() 
+  void IdfObject_Impl::emitChangeSignals()
   {
     if (m_diffs.empty()){
       return;
@@ -1422,7 +1422,7 @@ namespace detail {
 
       boost::optional<unsigned> index = diff.index();
       if (index){
-        
+
         OptionalIddField oIddField = m_iddObject.getField(*index);
 
         if (oIddField && oIddField->isNameField()) {
@@ -1451,7 +1451,7 @@ namespace detail {
   void IdfObject_Impl::resizeToMinFields() {
     unsigned min_n = m_iddObject.numFieldsInDefaultObject();
     unsigned n = numFields();
-    if (n < min_n) { 
+    if (n < min_n) {
       m_fields.resize(min_n);
     }
     // also make sure extensible groups are whole
@@ -1478,7 +1478,7 @@ namespace detail {
     // get preceding comments
     boost::smatch matches;
     while(boost::regex_match(parsedText, idfRegex::commentOnlyLine()) && boost::regex_search(parsedText, matches, idfRegex::commentOnlyLine())){
-      std::string comment(matches[1].first, matches[1].second); 
+      std::string comment(matches[1].first, matches[1].second);
       std::string otherText(matches[2].first, matches[2].second); boost::trim_left(otherText);
 
       // append the comment
@@ -1489,7 +1489,7 @@ namespace detail {
       // reduce the parsed text
       parsedText = otherText;
     }
-    
+
     // the first entry will be the object type
     if (boost::regex_search(parsedText, matches, idfRegex::line())){
       objectType = std::string(matches[1].first, matches[1].second); boost::trim(objectType);
@@ -1500,9 +1500,9 @@ namespace detail {
         // find appropriate IddObject in IddFactory
         OptionalIddObject candidate = IddFactory::instance().getObject(objectType);
         if (candidate) { m_iddObject = *candidate; }
-        else { 
+        else {
           LOG(Warn, "IddObject type '" << objectType << "' not found in IddFactory. "
-              << "Reverting to default Catchall object."); 
+              << "Reverting to default Catchall object.");
           OS_ASSERT(m_iddObject.name() == "Catchall");
           m_fields.push_back(objectType);
           objectType = "Catchall";
@@ -1511,7 +1511,7 @@ namespace detail {
       else {
         if (!boost::iequals(objectType, m_iddObject.name())){
           if (m_iddObject.type() != IddObjectType::Catchall) {
-            LOG(Error, "IdfObject type '" << objectType << "', does not equal its IddObject name '" 
+            LOG(Error, "IdfObject type '" << objectType << "', does not equal its IddObject name '"
                 << m_iddObject.name() << "'. Reverting to default Catchall IddObject.");
           }
           m_iddObject = IddObject();
@@ -1540,7 +1540,7 @@ namespace detail {
 
    // get trailing comments
     while(boost::regex_match(parsedText, idfRegex::commentOnlyLine()) && boost::regex_search(parsedText, matches, idfRegex::commentOnlyLine())){
-      std::string comment(matches[1].first, matches[1].second); 
+      std::string comment(matches[1].first, matches[1].second);
       std::string otherText(matches[2].first, matches[2].second); boost::trim_left(otherText);
 
       // append the comment
@@ -1556,7 +1556,7 @@ namespace detail {
     boost::trim_right(m_comment);
 
     // parse the fields
-    parseFields(parsedText); 
+    parseFields(parsedText);
   }
 
   void IdfObject_Impl::parseFields(const std::string& text)
@@ -1567,15 +1567,15 @@ namespace detail {
     // cut down on this text as we parse
     std::string::const_iterator start = text.begin ();
     std::string::const_iterator stop = text.end ();
-    
+
     // current idd field index
     unsigned iddFieldIndex = 0;
 
     // parse all the fields
     while (boost::regex_search(start, stop, matches, idfRegex::line())) {
-      std::string fieldText(matches[1].first, matches[1].second); 
+      std::string fieldText(matches[1].first, matches[1].second);
       boost::trim(fieldText);
-      std::string commentOrOtherText(matches[2].first, matches[2].second); 
+      std::string commentOrOtherText(matches[2].first, matches[2].second);
       boost::trim(commentOrOtherText);
 
       if (commentOrOtherText.empty() ||
@@ -1584,7 +1584,7 @@ namespace detail {
         // reduce the text
         start = matches[3].first;
         stop = matches[3].second;
-      } 
+      }
       else {
         // reduce the text; there may be multiple fields on this line
         start = matches[2].first;
@@ -1636,7 +1636,7 @@ namespace detail {
     std::string unparsedText (start, stop);
     boost::trim (unparsedText);
     if (!unparsedText.empty()) {
-      LOG(Warn, "After parsing IdfObject fields, the following text remains unprocessed: " 
+      LOG(Warn, "After parsing IdfObject fields, the following text remains unprocessed: "
         << std::endl << unparsedText);
     }
 
@@ -1671,7 +1671,7 @@ namespace detail {
     // quick check to see if action is necessary
     if (!result.empty() && (result.back() >= n)) {
       // assume indices are in order and find first that is out of range
-      for (auto it = result.begin(), 
+      for (auto it = result.begin(),
            itEnd = result.end(); it != itEnd; ++it) {
         if (*it >= n) {
           result.erase(it,result.end());
@@ -1687,7 +1687,7 @@ namespace detail {
 
     // assume indices is in order, and any extensible field indices are from the first
     // extensible group
-    UnsignedVector result = indices; 
+    UnsignedVector result = indices;
 
     // nothing to do if not extensible
     if (!m_iddObject.properties().extensible) { return result; }
@@ -1708,7 +1708,7 @@ namespace detail {
     unsigned groupIndex = 1;
     while (nn + groupIndex*ne < n) {
       for (unsigned gi : groupIndices) {
-        unsigned index = nn + groupIndex*ne + gi; 
+        unsigned index = nn + groupIndex*ne + gi;
         if (index < n) { result.push_back(index); }
       }
       ++groupIndex;
@@ -1722,7 +1722,7 @@ namespace detail {
 void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNames) const
   {
     // field-level errors
-    for (unsigned index = 0; index < m_fields.size(); ++index) { 
+    for (unsigned index = 0; index < m_fields.size(); ++index) {
       DataErrorVector fieldErrors = fieldDataIsValid(index,report.level());
       for (const DataError& error : fieldErrors) {
         report.insertError(error);
@@ -1731,7 +1731,7 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
 
     // StrictnessLevel::Final
     if (report.level() > StrictnessLevel::Draft) {
-    
+
       // DataErrorType::NumberOfFields
       // object-level
       if ((numFields() < minFields()) ||
@@ -1794,9 +1794,9 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
   }
 
   bool IdfObject_Impl::fieldDataIsCorrectType(unsigned index) const {
-    OptionalIddField oIddField = m_iddObject.getField(index); 
-    if (!oIddField) { return true; } 
-    
+    OptionalIddField oIddField = m_iddObject.getField(index);
+    if (!oIddField) { return true; }
+
     IddField iddField = *oIddField;
     IddFieldType fieldType = iddField.properties().type;
     OS_ASSERT(m_fields.size() > index);
@@ -1807,20 +1807,20 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
         // ok if autosize or autocalculate
         if (iddField.properties().autosizable && istringEqual(m_fields[index],"autosize")) {
         }
-        else if (iddField.properties().autocalculatable && 
+        else if (iddField.properties().autocalculatable &&
                  istringEqual(m_fields[index],"autocalculate"))
         {
         }
-        else if (iddField.properties().autosizable && 
+        else if (iddField.properties().autosizable &&
                  istringEqual(m_fields[index],"autocalculate"))
         {
-          LOG(Info, "Field " << index << ", '" << iddField.name() << "', of an object of type " 
+          LOG(Info, "Field " << index << ", '" << iddField.name() << "', of an object of type "
               << m_iddObject.name() << " has 'autocalculate' as its value even though it is autosizable.");
         }
-        else if (iddField.properties().autocalculatable && 
+        else if (iddField.properties().autocalculatable &&
                  istringEqual(m_fields[index],"autosize"))
         {
-          LOG(Info, "Field " << index << ", '" << iddField.name() << "', of an object of type " 
+          LOG(Info, "Field " << index << ", '" << iddField.name() << "', of an object of type "
               << m_iddObject.name() << " has 'autosize' as its value even though it is autocalculable.");
         }
         else{
@@ -1835,20 +1835,20 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
         // ok if autosize or autocalculate
         if (iddField.properties().autosizable && istringEqual(m_fields[index],"autosize")) {
         }
-        else if (iddField.properties().autocalculatable && 
+        else if (iddField.properties().autocalculatable &&
                  istringEqual(m_fields[index],"autocalculate"))
         {
         }
-        else if (iddField.properties().autosizable && 
+        else if (iddField.properties().autosizable &&
                  istringEqual(m_fields[index],"autocalculate"))
         {
-          LOG(Info, "Field " << index << ", '" << iddField.name() << "', of an object of type " 
+          LOG(Info, "Field " << index << ", '" << iddField.name() << "', of an object of type "
               << m_iddObject.name() << " has 'autocalculate' as its value even though it is autosizable.");
         }
-        else if (iddField.properties().autocalculatable && 
+        else if (iddField.properties().autocalculatable &&
                  istringEqual(m_fields[index],"autosize"))
         {
-          LOG(Info, "Field " << index << ", '" << iddField.name() << "', of an object of type " 
+          LOG(Info, "Field " << index << ", '" << iddField.name() << "', of an object of type "
               << m_iddObject.name() << " has 'autosize' as its value even though it is autocalculable.");
         }
         else {
@@ -1871,7 +1871,7 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
   }
 
   bool IdfObject_Impl::fieldDataIsWithinBounds(unsigned index) const {
-    OptionalIddField oIddField = m_iddObject.getField(index); 
+    OptionalIddField oIddField = m_iddObject.getField(index);
     if (!oIddField) { return true; } // default to true
 
     IddField iddField = *oIddField;
@@ -1893,26 +1893,26 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
     }
 
     return true;
-  }          
+  }
 
   bool IdfObject_Impl::fieldIsNonnullIfRequired(unsigned index) const {
-    OptionalIddField oIddField = m_iddObject.getField(index); 
+    OptionalIddField oIddField = m_iddObject.getField(index);
     if (!oIddField) { return true; } // default to true
 
     IddField iddField = *oIddField;
     OS_ASSERT(m_fields.size() > index);
 
-    if (iddField.properties().required && (!iddField.isObjectListField()) && 
+    if (iddField.properties().required && (!iddField.isObjectListField()) &&
         m_fields[index].empty()) {
       return false;
     }
-    return true; 
+    return true;
   }
 
   bool IdfObject_Impl::withinBounds(double fieldValue,const IddField& iddField) const {
 
     // minimum bounds
-    OptionalDouble boundValue = iddField.properties().minBoundValue; 
+    OptionalDouble boundValue = iddField.properties().minBoundValue;
     IddFieldProperties::BoundTypes boundType = iddField.properties().minBoundType;
     if (boundType != IddFieldProperties::Unbounded) {
       OS_ASSERT(boundValue);
@@ -1936,7 +1936,7 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
 
     return true;
   }
-  
+
   OSOptionalQuantity IdfObject_Impl::getQuantityFromDouble(unsigned index, boost::optional<double> value, bool returnIP) const {
     OptionalIddField iddField = m_iddObject.getField(index);
     if (!iddField) {
@@ -1971,10 +1971,10 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
 
     return OSOptionalQuantity(*units);
   }
-    
+
   boost::optional<double> IdfObject_Impl::getDoubleFromQuantity(unsigned index, const Quantity& q) const {
     OptionalDouble result;
-  
+
     OptionalIddField iddField = m_iddObject.getField(index);
     if (!iddField) {
       LOG(Error,"get/setQuantity not available without an IddField. Asked to setQuantity at field "
@@ -2022,23 +2022,77 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
 
   std::string IdfObject_Impl::encodeString(const std::string& value) const
   {
-    std::string result(value);
-    boost::replace_all(result, ",", "&#44");
-    boost::replace_all(result, ";", "&#59");
-    boost::replace_all(result, "!", "&#33");
-    boost::replace_all(result, "\n", "&#10");
-    boost::replace_all(result, "\r", "&#13");
+    std::string result;
+    result.reserve(value.size() * 1.25);
+    for (auto const & s : value) {
+      switch (s) {
+        case '\n':
+          result.append("&#10");
+          break;
+        case '\r':
+          result.append("&#13");
+          break;
+        case ',':
+          result.append("&#44");
+          break;
+        case ';':
+          result.append("&#59");
+          break;
+        case '!':
+          result.append("&#33");
+          break;
+        default:
+          result.push_back(s);
+          break;
+      }
+    }
     return result;
   }
 
   std::string IdfObject_Impl::decodeString(const std::string& value) const
   {
-    std::string result(value);
-    boost::replace_all(result, "&#44", ",");
-    boost::replace_all(result, "&#59", ";");
-    boost::replace_all(result, "&#33", "!");
-    boost::replace_all(result, "&#10", "\n");
-    boost::replace_all(result, "&#13", "\r");
+    std::string result;
+    char c;
+    bool special_char = false;
+    auto const max_length = value.size();
+    auto const length = max_length - 3;
+    auto const * str = value.c_str();
+    result.reserve(max_length);
+
+    for (size_t i = 0; i < max_length; ++i) {
+      if (i < length && value[i] == '&' && value[i + 1] == '#') {
+        if (value[i + 2] == '1') {
+          if (value[i + 3] == '0') {
+            special_char = true;
+            c = '\n'; // "&#10"
+          }
+          else if (value[i + 3] == '3') {
+            special_char = true;
+            c = '\r'; // "&#13"
+          }
+        }
+        else if (value[i + 2] == '3' && value[i + 3] == '3') {
+          special_char = true;
+          c = '!'; // "&#33"
+        }
+        else if (value[i + 2] == '4' && value[i + 3] == '4') {
+          special_char = true;
+          c = ','; // "&#44"
+        }
+        else if (value[i + 2] == '5' && value[i + 3] == '9') {
+          special_char = true;
+          c = ';'; // "&#59"
+        }
+      }
+
+      if (special_char) {
+        special_char = false;
+        i += 3;
+        result.push_back(c);
+      } else {
+        result.push_back(value[i]);
+      }
+    }
     return result;
   }
 
@@ -2047,7 +2101,7 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
 
 // CONSTRUCTORS
 
-IdfObject::IdfObject(IddObjectType type, bool fastName) 
+IdfObject::IdfObject(IddObjectType type, bool fastName)
 {
   m_impl = std::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(type, fastName));
   OS_ASSERT(m_impl);
@@ -2060,12 +2114,12 @@ IdfObject::IdfObject(const IddObject& iddObject, bool fastName)
 }
 
 IdfObject::IdfObject(std::shared_ptr<detail::IdfObject_Impl> impl):
-  m_impl(impl) 
+  m_impl(std::move(impl))
 {
   OS_ASSERT(m_impl);
 }
 
-IdfObject::IdfObject(const IdfObject& other): 
+IdfObject::IdfObject(const IdfObject& other):
   m_impl(other.m_impl)
 {
   OS_ASSERT(m_impl);
@@ -2137,7 +2191,7 @@ OptionalInt IdfObject::getInt(unsigned index, bool returnDefault) const {
   return m_impl->getInt(index,returnDefault);
 }
 
-boost::optional<QUrl> IdfObject::getURL(unsigned index, bool returnDefault) const 
+boost::optional<QUrl> IdfObject::getURL(unsigned index, bool returnDefault) const
 {
   return m_impl->getURL(index,returnDefault);
 }
@@ -2203,8 +2257,8 @@ IdfExtensibleGroup IdfObject::insertExtensibleGroup(unsigned groupIndex) {
   return insertExtensibleGroup(groupIndex,StringVector());
 }
 
-IdfExtensibleGroup IdfObject::insertExtensibleGroup(unsigned groupIndex, 
-                                                    const std::vector<std::string>& values) 
+IdfExtensibleGroup IdfObject::insertExtensibleGroup(unsigned groupIndex,
+                                                    const std::vector<std::string>& values)
 {
   return m_impl->insertExtensibleGroup(groupIndex,values);
 }
@@ -2274,8 +2328,8 @@ std::vector<unsigned> IdfObject::requiredFields() const {
   return m_impl->requiredFields();
 }
 
-bool IdfObject::isValid(StrictnessLevel level) const {
-  return m_impl->isValid(level);
+bool IdfObject::isValid(StrictnessLevel level, bool checkNames) const {
+  return m_impl->isValid(level, checkNames);
 }
 
 ValidityReport IdfObject::validityReport(StrictnessLevel level, bool checkNames) const {

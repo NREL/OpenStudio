@@ -530,7 +530,7 @@ void RefrigerationWalkInZoneBoundary::resetStockingDoorOpeningProtectionTypeFaci
 
 /// @cond
 RefrigerationWalkInZoneBoundary::RefrigerationWalkInZoneBoundary(std::shared_ptr<detail::RefrigerationWalkInZoneBoundary_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

@@ -996,7 +996,7 @@ void WindowPropertyFrameAndDivider::resetInsideRevealSolarAbsorptance() {
 
 /// @cond
 WindowPropertyFrameAndDivider::WindowPropertyFrameAndDivider(std::shared_ptr<detail::WindowPropertyFrameAndDivider_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 /// @endcond
 

@@ -134,7 +134,7 @@ namespace detail {
   bool ConstructionWithInternalSource_Impl::setTemperatureCalculationRequestedAfterLayerNumber(int temperatureCalculationRequestedAfterLayerNumber) {
     if (temperatureCalculationRequestedAfterLayerNumber < 1 || temperatureCalculationRequestedAfterLayerNumber > (int)this->numLayers()){
       return false;
-    }    
+    }
     bool result = setInt(OS_Construction_InternalSourceFields::TemperatureCalculationRequestedAfterLayerNumber,temperatureCalculationRequestedAfterLayerNumber);
     return result;
   }
@@ -201,7 +201,7 @@ namespace detail {
 
     Model model = this->model();
     for (const ConstructionWithInternalSource& other : model.getConcreteModelObjects<ConstructionWithInternalSource>()) {
-      
+
       if (other.sourcePresentAfterLayerNumber() != reverseSourcePresentAfterLayerNumber){
         continue;
       }
@@ -338,7 +338,7 @@ ConstructionWithInternalSource ConstructionWithInternalSource::reverseConstructi
 /// @cond
 ConstructionWithInternalSource::ConstructionWithInternalSource(
     std::shared_ptr<detail::ConstructionWithInternalSource_Impl> impl)
-  : LayeredConstruction(impl)
+  : LayeredConstruction(std::move(impl))
 {}
 /// @endcond
 

@@ -49,12 +49,12 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateBoilerHotWater.cpp
   ForwardTranslator/ForwardTranslateBoilerSteam.cpp
   ForwardTranslator/ForwardTranslateBuilding.cpp
-##  ForwardTranslator/ForwardTranslateCentralHeatPumpSystem.cpp
+  ForwardTranslator/ForwardTranslateCentralHeatPumpSystem.cpp
   ForwardTranslator/ForwardTranslateCFactorUndergroundWallConstruction.cpp
   ForwardTranslator/ForwardTranslateChillerAbsorption.cpp
   ForwardTranslator/ForwardTranslateChillerAbsorptionIndirect.cpp
   ForwardTranslator/ForwardTranslateChillerElectricEIR.cpp
-##  ForwardTranslator/ForwardTranslateChillerHeaterPerformanceElectricEIR.cpp
+  ForwardTranslator/ForwardTranslateChillerHeaterPerformanceElectricEIR.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXMultiSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXTwoSpeed.cpp
@@ -328,6 +328,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateThermalZone.cpp
   ForwardTranslator/ForwardTranslateThermostatSetpointDualSetpoint.cpp
   ForwardTranslator/ForwardTranslateTimestep.cpp
+  ForwardTranslator/ForwardTranslateUnitarySystemPerformanceMultispeed.cpp
   ForwardTranslator/ForwardTranslateVersion.cpp
   ForwardTranslator/ForwardTranslateWaterHeaterMixed.cpp
   ForwardTranslator/ForwardTranslateWaterHeaterHeatPump.cpp
@@ -532,6 +533,7 @@ set(${target_name}_test_src
   Test/RunPeriodControlDaylightSavingTime_GTest.cpp
   Test/ScheduleInterval_GTest.cpp
   Test/ScheduleRuleset_GTest.cpp
+  Test/SetpointManagerFollowGroundTemperature_GTest.cpp
   Test/ShadingSurface_GTest.cpp
   Test/Space_GTest.cpp
   Test/SpaceInfiltrationDesignFlowRate_GTest.cpp

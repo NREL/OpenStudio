@@ -9,9 +9,11 @@
 !    8.5;                    !- Version Identifier
 !  Version,
 !    8.6;                    !- Version Identifier
-
 !  Version,
 !    8.7;                    !- Version Identifier
+
+!  Version,
+!    8.8;                    !- Version Identifier
 
   FluidProperties:Name,
     R404a,                   !- Fluid Name
@@ -36,7 +38,7 @@
     54.000,57.000,60.000,63.000,66.000,69.000,72.000;
 
   FluidProperties:Saturated,
-    R404a,                   !- Name
+    R404a,                   !- Fluid Name
     Pressure,                !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R404aSaturatedTemperatures,  !- Temperature Values Name
@@ -49,7 +51,7 @@
     2.5140E+06,2.6878E+06,2.8712E+06,3.0648E+06,3.2696E+06,3.4873E+06,3.7237E+06;
 
   FluidProperties:Saturated,
-    R404a,                   !- Name
+    R404a,                   !- Fluid Name
     Enthalpy,                !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R404aSaturatedTemperatures,  !- Temperature Values Name
@@ -62,7 +64,7 @@
     2.8503E+05,2.9092E+05,2.9713E+05,3.0380E+05,3.1118E+05,3.2003E+05,3.3838E+05;
 
   FluidProperties:Saturated,
-    R404a,                   !- Name
+    R404a,                   !- Fluid Name
     Enthalpy,                !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R404aSaturatedTemperatures,  !- Temperature Values Name
@@ -75,7 +77,7 @@
     3.8051E+05,3.7970E+05,3.7840E+05,3.7641E+05,3.7333E+05,3.6807E+05,3.5017E+05;
 
   FluidProperties:Saturated,
-    R404a,                   !- Name
+    R404a,                   !- Fluid Name
     Density,                 !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R404aSaturatedTemperatures,  !- Temperature Values Name
@@ -88,7 +90,7 @@
     8.6809E+02,8.4225E+02,8.1331E+02,7.7993E+02,7.3937E+02,6.8403E+02,5.3572E+02;
 
   FluidProperties:Saturated,
-    R404a,                   !- Name
+    R404a,                   !- Fluid Name
     Density,                 !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R404aSaturatedTemperatures,  !- Temperature Values Name
@@ -101,7 +103,7 @@
     1.5738E+02,1.7447E+02,1.9468E+02,2.1937E+02,2.5127E+02,2.9783E+02,4.3624E+02;
 
   FluidProperties:Saturated,
-    R404a,                   !- Name
+    R404a,                   !- Fluid Name
     SpecificHeat,            !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R404aSaturatedTemperatures,  !- Temperature Values Name
@@ -114,7 +116,7 @@
     2.1155E+03,2.2842E+03,2.5312E+03,2.9356E+03,3.7387E+03,6.2011E+03,1.6723E+05;
 
   FluidProperties:Saturated,
-    R404a,                   !- Name
+    R404a,                   !- Fluid Name
     SpecificHeat,            !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R404aSaturatedTemperatures,  !- Temperature Values Name

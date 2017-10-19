@@ -47,19 +47,19 @@ Mixer_Impl::Mixer_Impl(IddObjectType type, Model_Impl* model)
 
 Mixer_Impl::Mixer_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : HVACComponent_Impl(idfObject, model, keepHandle)
-{ 
+{
 }
 
 Mixer_Impl::Mixer_Impl(
-  const openstudio::detail::WorkspaceObject_Impl& other, 
-  Model_Impl* model, 
+  const openstudio::detail::WorkspaceObject_Impl& other,
+  Model_Impl* model,
   bool keepHandle)
   : HVACComponent_Impl(other,model,keepHandle)
 {
 }
 
-Mixer_Impl::Mixer_Impl(const Mixer_Impl& other, 
-  Model_Impl* model, 
+Mixer_Impl::Mixer_Impl(const Mixer_Impl& other,
+  Model_Impl* model,
   bool keepHandles)
   : HVACComponent_Impl(other,model,keepHandles)
 {
@@ -184,69 +184,69 @@ bool Mixer_Impl::isRemovable() const
 } // detail
 
 Mixer::Mixer(std::shared_ptr<detail::Mixer_Impl> p)
-  : HVACComponent(p)
+  : HVACComponent(std::move(p))
 {}
 
 Mixer::Mixer(IddObjectType type,const Model& model)
   : HVACComponent(type,model)
 {
   OS_ASSERT(getImpl<detail::Mixer_Impl>());
-}     
+}
 
 unsigned Mixer::outletPort() const
 {
   return getImpl<detail::Mixer_Impl>()->outletPort();
-}     
+}
 
 unsigned Mixer::inletPort(unsigned branchIndex) const
 {
   return getImpl<detail::Mixer_Impl>()->inletPort(branchIndex);
-}     
+}
 
 unsigned Mixer::nextInletPort() const
 {
   return getImpl<detail::Mixer_Impl>()->nextInletPort();
-}     
+}
 
 boost::optional<ModelObject> Mixer::outletModelObject() const
 {
   return getImpl<detail::Mixer_Impl>()->outletModelObject();
-}     
+}
 
 boost::optional<ModelObject> Mixer::inletModelObject(unsigned branchIndex) const
 {
   return getImpl<detail::Mixer_Impl>()->inletModelObject(branchIndex);
-}     
+}
 
 boost::optional<ModelObject> Mixer::lastInletModelObject() const
 {
   return getImpl<detail::Mixer_Impl>()->lastInletModelObject();
-}     
+}
 
 std::vector<ModelObject> Mixer::inletModelObjects() const
 {
   return getImpl<detail::Mixer_Impl>()->inletModelObjects();
-}     
+}
 
 unsigned Mixer::newInletPortAfterBranch(unsigned branchIndex)
 {
   return getImpl<detail::Mixer_Impl>()->newInletPortAfterBranch(branchIndex);
-}     
+}
 
 unsigned Mixer::branchIndexForInletModelObject( ModelObject modelObject ) const
 {
   return getImpl<detail::Mixer_Impl>()->branchIndexForInletModelObject(modelObject);
-}     
+}
 
 unsigned Mixer::nextBranchIndex() const
 {
   return getImpl<detail::Mixer_Impl>()->nextBranchIndex();
-}     
+}
 
 void Mixer::removePortForBranch(unsigned branchIndex)
 {
   return getImpl<detail::Mixer_Impl>()->removePortForBranch(branchIndex);
-}     
+}
 
 bool Mixer::isRemovable() const
 {

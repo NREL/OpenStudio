@@ -67,25 +67,9 @@ void FacilityTabController::setSubTab(int index)
     m_currentIndex = index;
   }
 
-  if (qobject_cast<BuildingInspectorView *>(m_currentView)) {
-    disconnect(this, &FacilityTabController::toggleUnitsClicked, qobject_cast<BuildingInspectorView *>(m_currentView), &BuildingInspectorView::toggleUnitsClicked);
-    disconnect(qobject_cast<BuildingInspectorView *>(m_currentView), &BuildingInspectorView::dropZoneItemClicked, this, &FacilityTabController::dropZoneItemClicked);
-  }
-  else if (qobject_cast<FacilityStoriesGridView *>(m_currentView)) {
-    disconnect(this, &FacilityTabController::toggleUnitsClicked, qobject_cast<FacilityStoriesGridView *>(m_currentView), &FacilityStoriesGridView::toggleUnitsClicked);
-    disconnect(qobject_cast<FacilityStoriesGridView *>(m_currentView), &FacilityStoriesGridView::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
-  }
-  else if (qobject_cast<FacilityShadingGridView *>(m_currentView)) {
-    disconnect(this, &FacilityTabController::toggleUnitsClicked, qobject_cast<FacilityShadingGridView *>(m_currentView), &FacilityShadingGridView::toggleUnitsClicked);
-    disconnect(qobject_cast<FacilityShadingGridView *>(m_currentView), &FacilityShadingGridView::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
-  }
-  else if (qobject_cast<FacilityExteriorEquipmentGridView *>(m_currentView)) {
-    disconnect(this, &FacilityTabController::toggleUnitsClicked, qobject_cast<FacilityExteriorEquipmentGridView *>(m_currentView), &FacilityExteriorEquipmentGridView::toggleUnitsClicked);
-    disconnect(qobject_cast<FacilityExteriorEquipmentGridView *>(m_currentView), &FacilityExteriorEquipmentGridView::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
-  }
-  else if (m_currentView) {
-    // Oops! Should never get here
-    OS_ASSERT(false);
+  if (m_currentView) {
+    m_currentView->disconnect();
+    delete m_currentView;
   }
 
   switch (index){

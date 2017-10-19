@@ -336,7 +336,7 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
                               sourcePort.get(),
                               inletNode,
                               inletNode.inletPort() );
-              
+
               _model.connect( inletNode,
                               inletNode.outletPort(),
                               this->getObject<ModelObject>(),
@@ -354,7 +354,7 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
                 thermalZone->addEquipment(mo);
               }
 
-              return true; 
+              return true;
             }
           }
         }
@@ -371,7 +371,7 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
 
     boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
     boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
-    
+
     boost::optional<ModelObject> targetModelObject = this->outletModelObject();
     boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
 
@@ -443,7 +443,7 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
   {
     return getBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ControlForOutdoorAir);
   }
-  
+
   void AirTerminalSingleDuctVAVNoReheat_Impl::setControlForOutdoorAir(bool controlForOutdoorAir)
   {
     setBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ControlForOutdoorAir,controlForOutdoorAir);
@@ -573,7 +573,7 @@ void AirTerminalSingleDuctVAVNoReheat::setControlForOutdoorAir(bool controlForOu
 
 /// @cond
 AirTerminalSingleDuctVAVNoReheat::AirTerminalSingleDuctVAVNoReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVNoReheat_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

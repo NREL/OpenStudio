@@ -74,6 +74,91 @@ If this is a major release
 - With Git, merge `develop` into `master`.
 
 
+DView Builds
+======
+
+Ubuntu
+------
+With Git, pull `iteration` branch.
+
+Ensure the correct version of wxWidgets is installed (currently 3.1.0, us "apt-get install libwxgtk3.0-dev")
+
+In a command window:
+
+    cd openstudio/buildMeta
+	ccmake ../
+
+In CMake check the following:
+
+- BUILD\_DVIEW
+- CMAKE\_BUILD\_TYPE = Release
+
+In CMake type the following:
+
+	c
+	g
+
+In a command window:
+
+	make DView
+
+Compress folder DView-install with DView, and upload to S3.
+
+Windows 64-bit
+--------------
+With Git, pull `iteration` branch.
+
+Ensure the correct version of wxWidgets is installed (currently 3.1.0)
+
+In CMake, select current 64-bit compiler
+
+Point CMake to the top folder for source, and buildMeta folder for binaries
+
+In CMake check the following:
+
+- BUILD\_DVIEW 
+
+Press `Configure` and `Generate` in CMake
+
+In Visual Studio:
+
+- Open OpenStudioMeta.sln
+- Select **Release** Solution Configuration
+
+Compress folder DView-install with DView, and upload to S3.
+
+Mac
+---
+With Git, pull `iteration` branch.
+
+Ensure the correct version of wxWidgets is installed (currently 3.1.0)
+
+In a command window:
+
+	cd openstudio/buildMeta
+	ccmake ../
+
+In CMake check the following:
+
+- BUILD\_DVIEW
+- CMAKE\_BUILD\_TYPE = Release
+
+In CMake type the following:
+
+	c
+	g
+
+In a command window:
+```bash
+make DView –j16
+# When done:
+⌘ + q (to quit a Mac app)
+```
+
+Locate the folder DView-install, right click and use Mac's compression algorithm. Upload to S3.
+
+Update all DView MD5 values in openstudiocore/cmakelists.txt and upload to OpenStusio's GitHub repository.
+
 OpenStudio 2 Builds
 ======
 
@@ -90,6 +175,7 @@ In a command window:
 
 In CMake check the following:
 
+- BUILD\_DVIEW
 - BUILD\_OS\_APP
 - BUILD\_PACKAGE
 - CMAKE\_BUILD\_TYPE = Release
@@ -127,10 +213,11 @@ In CMake check the following:
 
 - BUILD\_CSHARP\_BINDINGS
 - BUILD\_DOCUMENTATION
+- BUILD\_DVIEW 
 - BUILD\_OS\_APP
 - BUILD\_PACKAGE
 - BUILD\_PAT
-- BUILD\_TESTING (NOTE: not currently possible with e+ 8.7 issue)
+- BUILD\_TESTING
 
 In CMake **uncheck** the following:
 
@@ -158,6 +245,7 @@ In a command window:
 
 In CMake check the following:
 
+- BUILD\_DVIEW
 - BUILD\_OS\_APP
 - BUILD\_PACKAGE
 - BUILD\_PAT
@@ -192,9 +280,10 @@ Copy build to VM's share folder
 
 **Note:** The package will appear to be an empty folder in the build directory, when in fact the package is in OpenStudio/build/_CPack_Packages/Darwin/IFW and it's file name will have no file type extension.
 
+**Note:** Making a build while on NREL's network (even the Dev VPN) and using a VMWare Mac VM will often fail when cmake attempts to download from GitHub the PAT SHA-specific zip file, meaning the developer will need to do this step manually. Example: https://github.com/NREL/OpenStudio-PAT/archive/f942affb1897678c4dc17a137fcf338e00da2cfb.zip. The contents off the above zip file's parent directory will need to be deleted prior to attempting again to build the package.
+
 OSVersion Testing
 =================
-NOTE: not available while build testing is deprecated 
 
 In folder `build\Products\Release`
 

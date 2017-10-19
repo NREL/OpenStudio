@@ -37,11 +37,13 @@
 #include "../utilities/geometry/FloorplanJS.hpp"
 
 #include <QWidget>
+#include <QDialog>
 #include <QWebEngineView>
 #include <QProgressBar>
 
 class QComboBox;
 class QPushButton;
+class QTimer;
 
 namespace openstudio {
 
@@ -61,6 +63,20 @@ class GeometryEditorView : public QWidget
 
 };
 
+// debug widget
+class DebugWebView : public QDialog
+{
+  Q_OBJECT;
+
+  public:
+    DebugWebView(const QString& debugPort, QWidget * parent = nullptr);
+    virtual ~DebugWebView();
+
+  private:
+
+    QWebEngineView * m_view;
+};
+
 // main widget
 
 class EditorWebView : public QWidget
@@ -68,22 +84,29 @@ class EditorWebView : public QWidget
   Q_OBJECT;
 
   public:
-    EditorWebView(const openstudio::model::Model& model, QWidget *t_parent = nullptr);
+    EditorWebView(bool isIP, const openstudio::model::Model& model, QWidget *t_parent = nullptr);
     virtual ~EditorWebView();
 
   public slots:
     void onUnitSystemChange(bool t_isIP);
 
   private slots:
+    void geometrySourceChanged(const QString& text);
+    void newImportClicked();
     void refreshClicked();
+    void saveClickedBlocking(const openstudio::path&);
     void previewClicked();
     void mergeClicked();
+    void debugClicked();
+    void startEditor();
+    void doExport();
     void saveExport();
     void translateExport();
     void previewExport();
     void mergeExport();
+    void checkForUpdate();
+    void onChanged();
 
-    // DLM: for debugging
     void 	onLoadFinished(bool ok);
     void 	onLoadProgress(int progress);
     void 	onLoadStarted();
@@ -95,18 +118,28 @@ class EditorWebView : public QWidget
     openstudio::path floorplanPath() const;
 
     bool m_isIP;
+    bool m_geometryEditorStarted;
+    bool m_geometryEditorLoaded;
+    bool m_javascriptRunning;
     boost::optional<FloorplanJS> m_floorplan;
     model::Model m_model;
     QVariant m_export;
+    unsigned m_versionNumber;
     model::Model m_exportModel;
+    std::map<UUID, UUID> m_exportModelHandleMapping;
+    QTimer* m_checkForUpdateTimer;
+    QString m_debugPort;
 
-    QPushButton * m_previewBtn;
-
+    QComboBox * m_geometrySourceComboBox;
+    QPushButton * m_newImportGeometry;
     QProgressBar * m_progressBar;
     QPushButton * m_refreshBtn;
+    QPushButton * m_previewBtn;
     QPushButton * m_mergeBtn;
+    QPushButton * m_debugBtn;
 
     QWebEngineView * m_view;
+    std::shared_ptr<OSDocument> m_document;
 };
 
 } // openstudio
