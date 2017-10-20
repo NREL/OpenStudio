@@ -354,26 +354,31 @@ namespace detail {
   {
     auto newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXTwoStageWithHumidityControlMode>();
 
-    // If there are CoilPerformanceDXCooling objects, clone them as well
-    if (boost::optional<CoilPerformanceDXCooling> coilPerf1 = coil.normalModeStage1CoilPerformance())
-    {
-      CoilPerformanceDXCooling coilPerf1Clone = coilPerf1->clone(model).cast<CoilPerformanceDXCooling>();
-      newCoil.setNormalModeStage1CoilPerformance(coilPerf1Clone);
-    }
-    if (boost::optional<CoilPerformanceDXCooling> coilPerf2 = coil.normalModeStage1Plus2CoilPerformance())
-    {
-      CoilPerformanceDXCooling coilPerf2Clone = coilPerf2->clone(model).cast<CoilPerformanceDXCooling>();
-      newCoil.setNormalModeStage1Plus2CoilPerformance(coilPerf2Clone);
-    }
-    if (boost::optional<CoilPerformanceDXCooling> coilPerf3 = coil.dehumidificationMode1Stage1CoilPerformance())
-    {
-      CoilPerformanceDXCooling coilPerf3Clone = coilPerf3->clone(model).cast<CoilPerformanceDXCooling>();
-      newCoil.setDehumidificationMode1Stage1CoilPerformance(coilPerf3Clone);
-    }
-    if (boost::optional<CoilPerformanceDXCooling> coilPerf4 = coil.dehumidificationMode1Stage1Plus2CoilPerformance())
-    {
-      CoilPerformanceDXCooling coilPerf4Clone = coilPerf4->clone(model).cast<CoilPerformanceDXCooling>();
-      newCoil.setDehumidificationMode1Stage1Plus2CoilPerformance(coilPerf4Clone);
+    if (model != this->model()) {
+      // If there are CoilPerformanceDXCooling objects, clone them as well
+      if (boost::optional<CoilPerformanceDXCooling> coilPerf1 = normalModeStage1CoilPerformance())
+      {
+        CoilPerformanceDXCooling coilPerf1Clone = coilPerf1->clone(model).cast<CoilPerformanceDXCooling>();
+        newCoil.setNormalModeStage1CoilPerformance(coilPerf1Clone);
+      }
+
+      if (boost::optional<CoilPerformanceDXCooling> coilPerf2 = normalModeStage1Plus2CoilPerformance())
+      {
+        CoilPerformanceDXCooling coilPerf2Clone = coilPerf2->clone(model).cast<CoilPerformanceDXCooling>();
+        newCoil.setNormalModeStage1Plus2CoilPerformance(coilPerf2Clone);
+      }
+
+      if (boost::optional<CoilPerformanceDXCooling> coilPerf3 = dehumidificationMode1Stage1CoilPerformance())
+      {
+        CoilPerformanceDXCooling coilPerf3Clone = coilPerf3->clone(model).cast<CoilPerformanceDXCooling>();
+        newCoil.setDehumidificationMode1Stage1CoilPerformance(coilPerf3Clone);
+      }
+
+      if (boost::optional<CoilPerformanceDXCooling> coilPerf4 = dehumidificationMode1Stage1Plus2CoilPerformance())
+      {
+        CoilPerformanceDXCooling coilPerf4Clone = coilPerf4->clone(model).cast<CoilPerformanceDXCooling>();
+        newCoil.setDehumidificationMode1Stage1Plus2CoilPerformance(coilPerf4Clone);
+      }
     }
 
     return newCoil;

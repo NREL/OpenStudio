@@ -69,23 +69,34 @@ TEST_F(ModelFixture,CoilCoolingDXTwoStageWithHumidityControlMode_CloneCoilPerf)
   EXPECT_EQ(4u, m.getModelObjects<CoilPerformanceDXCooling>().size());
 
   // Clone in same model
-  CoilCoolingDXTwoStageWithHumidityControlMode cloneClone = coil.clone(m).cast<CoilCoolingDXTwoStageWithHumidityControlMode>();
-  ASSERT_TRUE(cloneClone.normalModeStage1CoilPerformance());
-  ASSERT_TRUE(cloneClone.normalModeStage1Plus2CoilPerformance());
-  ASSERT_TRUE(cloneClone.dehumidificationMode1Stage1CoilPerformance());
-  ASSERT_TRUE(cloneClone.dehumidificationMode1Stage1Plus2CoilPerformance());
-  // These are resources, so they should point to the same as the ori, not cloned
+  CoilCoolingDXTwoStageWithHumidityControlMode coilClone = coil.clone(m).cast<CoilCoolingDXTwoStageWithHumidityControlMode>();
+  ASSERT_TRUE(coilClone.normalModeStage1CoilPerformance());
+  ASSERT_TRUE(coilClone.normalModeStage1Plus2CoilPerformance());
+  ASSERT_TRUE(coilClone.dehumidificationMode1Stage1CoilPerformance());
+  ASSERT_TRUE(coilClone.dehumidificationMode1Stage1Plus2CoilPerformance());
+  // These are "resources", so they should point to the same as the ori, not cloned
   EXPECT_EQ(4u, m.getModelObjects<CoilPerformanceDXCooling>().size());
+
+  ASSERT_EQ(coil.normalModeStage1CoilPerformance().get().handle(), coilClone.normalModeStage1CoilPerformance().get().handle());
+  ASSERT_EQ(coil.normalModeStage1Plus2CoilPerformance().get().handle(), coilClone.normalModeStage1Plus2CoilPerformance().get().handle());
+  ASSERT_EQ(coil.dehumidificationMode1Stage1CoilPerformance().get().handle(), coilClone.dehumidificationMode1Stage1CoilPerformance().get().handle());
+  ASSERT_EQ(coil.dehumidificationMode1Stage1Plus2CoilPerformance().get().handle(), coilClone.dehumidificationMode1Stage1Plus2CoilPerformance().get().handle());
 
   // Clone in other model
   //
   // This line triggers an OS_ASSERT exception ModelObject_Impl::clone (868)
-  CoilCoolingDXTwoStageWithHumidityControlMode cloneClone2 = coil.clone(m2).cast<CoilCoolingDXTwoStageWithHumidityControlMode>();
-  ASSERT_TRUE(cloneClone2.normalModeStage1CoilPerformance());
-  ASSERT_TRUE(cloneClone2.normalModeStage1Plus2CoilPerformance());
-  ASSERT_TRUE(cloneClone2.dehumidificationMode1Stage1CoilPerformance());
-  ASSERT_TRUE(cloneClone2.dehumidificationMode1Stage1Plus2CoilPerformance());
+  CoilCoolingDXTwoStageWithHumidityControlMode coilClone2 = coil.clone(m2).cast<CoilCoolingDXTwoStageWithHumidityControlMode>();
+  ASSERT_TRUE(coilClone2.normalModeStage1CoilPerformance());
+  ASSERT_TRUE(coilClone2.normalModeStage1Plus2CoilPerformance());
+  ASSERT_TRUE(coilClone2.dehumidificationMode1Stage1CoilPerformance());
+  ASSERT_TRUE(coilClone2.dehumidificationMode1Stage1Plus2CoilPerformance());
   // They should have been cloned to the new model too
   EXPECT_EQ(4u, m2.getModelObjects<CoilPerformanceDXCooling>().size());
+
+  // Name comparison (can't do handle, not the same model, and actual clone)
+  ASSERT_EQ(coil.normalModeStage1CoilPerformance().get().name(), coilClone2.normalModeStage1CoilPerformance().get().name());
+  ASSERT_EQ(coil.normalModeStage1Plus2CoilPerformance().get().name(), coilClone2.normalModeStage1Plus2CoilPerformance().get().name());
+  ASSERT_EQ(coil.dehumidificationMode1Stage1CoilPerformance().get().name(), coilClone2.dehumidificationMode1Stage1CoilPerformance().get().name());
+  ASSERT_EQ(coil.dehumidificationMode1Stage1Plus2CoilPerformance().get().name(), coilClone2.dehumidificationMode1Stage1Plus2CoilPerformance().get().name());
 
 }
