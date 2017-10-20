@@ -14980,7 +14980,14 @@ OS:People,
   {249f5cf2-20a3-47f3-aef4-35a88eb68603}, !- Handle
   189.1-2009 - Retail - Back_Space - CZ1-3 People, !- Name
   {0c961437-620f-44b4-9ecb-596a759b9180}, !- People Definition Name
-  {122b492b-1765-414a-920f-ba512fdb780b}; !- Space or SpaceType Name
+  {122b492b-1765-414a-920f-ba512fdb780b}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:Schedule:Ruleset,
   {97bcd619-3a46-43cf-8b3b-370239c02211}, ! Handle
@@ -15817,7 +15824,14 @@ OS:People,
   {efe9b957-326f-4c5e-81a1-3dfa0a0bc14d}, !- Handle
   189.1-2009 - Retail - Entry - CZ1-3 People, !- Name
   {7dc92e54-1710-43e4-ae08-2f8b21ace022}, !- People Definition Name
-  {c2bf3b5a-f852-423f-ae14-57d8d65e147c}; !- Space or SpaceType Name
+  {c2bf3b5a-f852-423f-ae14-57d8d65e147c}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {b1c3cb4f-10d8-46b7-9a19-48be9c228ea4}, !- Handle
@@ -15912,7 +15926,14 @@ OS:People,
   {951ed6b7-64bc-4e60-8eaf-ec73a2d705b0}, !- Handle
   189.1-2009 - Retail - Point_of_Sale - CZ1-3 People, !- Name
   {4f01a390-ce59-4462-8c9d-5ceeb2a3801d}, !- People Definition Name
-  {769a5302-972d-4e9b-9950-2ae03171d6cc}; !- Space or SpaceType Name
+  {769a5302-972d-4e9b-9950-2ae03171d6cc}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {3794608b-7354-469e-b178-80487a3c2130}, !- Handle
@@ -16024,7 +16045,14 @@ OS:People,
   {c7e712ee-49ee-4838-b360-91d261ed19d1}, !- Handle
   189.1-2009 - Retail - Retail - CZ1-3 People, !- Name
   {ebd79295-7a33-45e2-a992-a09fda024cf6}, !- People Definition Name
-  {313330d9-37f9-41bf-9a99-59d3472a2782}; !- Space or SpaceType Name
+  {313330d9-37f9-41bf-9a99-59d3472a2782}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {b5edcf1b-e2db-456c-88bf-392d5014b38c}, !- Handle
@@ -16146,7 +16174,14 @@ OS:People,
   {00157799-5f2c-4cf2-bbfa-12e702469352}, !- Handle
   189.1-2009 - Retail - Back_Space - CZ4-8 People, !- Name
   {cef7440c-da45-45a6-82fa-fb60b0a40e9a}, !- People Definition Name
-  {726f14e5-2ab2-4ad3-9fff-5b53013fdabd}; !- Space or SpaceType Name
+  {726f14e5-2ab2-4ad3-9fff-5b53013fdabd}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {95c69f6f-e108-42ed-af0a-94e67fcd57c6}, !- Handle
@@ -16258,7 +16293,14 @@ OS:People,
   {746a5d62-0d7d-4060-81f2-623d6e49e5f4}, !- Handle
   189.1-2009 - Retail - Entry - CZ4-8 People, !- Name
   {53d1b684-d51b-4422-b3af-4fe361c11b2e}, !- People Definition Name
-  {5da0f32c-941a-42ed-8b42-3447142bcdd0}; !- Space or SpaceType Name
+  {5da0f32c-941a-42ed-8b42-3447142bcdd0}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {d153adcd-198e-49e0-a231-4d3b2b007361}, !- Handle
@@ -16353,7 +16395,14 @@ OS:People,
   {42572cf9-36f7-4d2a-aac9-9f7961536210}, !- Handle
   189.1-2009 - Retail - Point_of_Sale - CZ4-8 People, !- Name
   {1be77178-f54f-4a9c-b812-faafa609fdc4}, !- People Definition Name
-  {4b3ac728-71de-4723-9a7d-e15bfa34ca81}; !- Space or SpaceType Name
+  {4b3ac728-71de-4723-9a7d-e15bfa34ca81}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {93c72db7-d9d9-46de-8b0b-2e25a83b00f7}, !- Handle
@@ -16465,7 +16514,14 @@ OS:People,
   {d775cec2-3cfa-42be-a209-ba9725c6e439}, !- Handle
   189.1-2009 - Retail - Retail - CZ4-8 People, !- Name
   {476c3bdf-89ff-4908-909d-5007055e4159}, !- People Definition Name
-  {b7826b9b-e99f-466f-9ca5-ff80b4fed648}; !- Space or SpaceType Name
+  {b7826b9b-e99f-466f-9ca5-ff80b4fed648}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {ba26fd0c-16b0-4430-a2df-8b8e75fd7398}, !- Handle
@@ -16577,7 +16633,14 @@ OS:People,
   {c68f2602-fc08-4d42-b1d0-af0318bd3d72}, !- Handle
   90.1-2007 - Retail - Back_Space People, !- Name
   {9c5f688a-9f9c-4ed6-a65d-85c6239d2c7c}, !- People Definition Name
-  {6b4656cb-e1dc-4ea7-90f7-68a24323f160}; !- Space or SpaceType Name
+  {6b4656cb-e1dc-4ea7-90f7-68a24323f160}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {13276b82-dae1-415b-a8fe-9f72505c7adc}, !- Handle
@@ -16689,7 +16752,14 @@ OS:People,
   {db96c3b2-5f0a-4b27-8a17-a78fb305dbc5}, !- Handle
   90.1-2007 - Retail - Entry People,      !- Name
   {3fa11c42-3406-4cdd-a0ac-196ecebaae3a}, !- People Definition Name
-  {23a87049-5cff-4a3c-a79e-e20cbba4cba9}; !- Space or SpaceType Name
+  {23a87049-5cff-4a3c-a79e-e20cbba4cba9}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {a9d652d6-e262-4539-8913-2d6dbdcdfec0}, !- Handle
@@ -16784,7 +16854,14 @@ OS:People,
   {65d8e32b-be12-461b-82c3-3c91e3f15626}, !- Handle
   90.1-2007 - Retail - Point_of_Sale People, !- Name
   {540c9978-801b-449e-b387-94ca17733d3f}, !- People Definition Name
-  {a1f096c1-bc29-4c43-bff5-3d581164f73b}; !- Space or SpaceType Name
+  {a1f096c1-bc29-4c43-bff5-3d581164f73b}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {43dab942-f36c-48ab-9418-31dbb4f3d36f}, !- Handle
@@ -16896,7 +16973,14 @@ OS:People,
   {f4fe84e5-a331-4cbe-a005-be5e0d4665bd}, !- Handle
   90.1-2007 - Retail - Retail People,     !- Name
   {04f4e8ee-a04b-4cd7-ad24-a762f86d29ef}, !- People Definition Name
-  {b2d539b7-b57e-4943-822f-ff2e3b6c5f86}; !- Space or SpaceType Name
+  {b2d539b7-b57e-4943-822f-ff2e3b6c5f86}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {3f90a89b-cfe4-4085-b103-2afdb95894c4}, !- Handle
@@ -17008,7 +17092,14 @@ OS:People,
   {8e75b9cc-60eb-4947-8d94-2bde72055101}, !- Handle
   90.1-2010 - Retail - Back_Space People, !- Name
   {15882500-4aa1-4499-911c-b92634bc5267}, !- People Definition Name
-  {10f4aa09-806f-45d9-b8d7-ab20690858fc}; !- Space or SpaceType Name
+  {10f4aa09-806f-45d9-b8d7-ab20690858fc}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {62effa84-110c-48dd-b84c-2cd0393c7cac}, !- Handle
@@ -17120,7 +17211,14 @@ OS:People,
   {abce0124-e320-4383-a7ca-09e9f7a402c8}, !- Handle
   90.1-2010 - Retail - Entry People,      !- Name
   {efd048e2-8b79-4635-9d7a-dc955ba4a64f}, !- People Definition Name
-  {673a39a6-04e9-468e-af0f-e1665ab86025}; !- Space or SpaceType Name
+  {673a39a6-04e9-468e-af0f-e1665ab86025}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {3ae49196-4405-422b-be0f-600ce23c2902}, !- Handle
@@ -17215,7 +17313,14 @@ OS:People,
   {393ffbea-0662-454a-a8d3-fc1449900356}, !- Handle
   90.1-2010 - Retail - Point_of_Sale People, !- Name
   {1de285dc-8818-4412-95e0-fa0ee844aa22}, !- People Definition Name
-  {80856a48-61c6-46bc-901b-f224f9ecf788}; !- Space or SpaceType Name
+  {80856a48-61c6-46bc-901b-f224f9ecf788}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {995343a2-ca91-4cb9-b382-43c0616d1630}, !- Handle
@@ -17327,7 +17432,14 @@ OS:People,
   {41dff92a-86ed-498c-b074-200ab2fa4960}, !- Handle
   90.1-2010 - Retail - Retail People,     !- Name
   {c92d8926-898e-47c0-a713-7d24e6830145}, !- People Definition Name
-  {2fc6a454-e55a-467c-8a82-da9ceadd8a81}; !- Space or SpaceType Name
+  {2fc6a454-e55a-467c-8a82-da9ceadd8a81}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {4ba6ff38-25ab-413d-82bb-0c7d216c0406}, !- Handle
@@ -17439,7 +17551,14 @@ OS:People,
   {58b5d4da-12e4-427b-8a4d-5c4699b965b5}, !- Handle
   DOE Ref 1980-2004 - Retail - Back_Space People, !- Name
   {1a6cb798-b4fa-4972-ae6b-bdfe818b6429}, !- People Definition Name
-  {16817878-7fc2-4dfb-beff-4276c9fba4ec}; !- Space or SpaceType Name
+  {16817878-7fc2-4dfb-beff-4276c9fba4ec}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {2c9101d3-fd36-4aa9-9c52-06e437783e27}, !- Handle
@@ -17551,7 +17670,14 @@ OS:People,
   {f27ab2a7-a532-485c-8c34-9cb6c6bf4e91}, !- Handle
   DOE Ref 1980-2004 - Retail - Entry People, !- Name
   {4f535823-595b-4a8d-befa-1ac32f1cea28}, !- People Definition Name
-  {4b111a16-b0a8-42cf-8588-40ac4b4cc148}; !- Space or SpaceType Name
+  {4b111a16-b0a8-42cf-8588-40ac4b4cc148}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {12d0809d-9bcd-4b15-8a87-8e5342b4db20}, !- Handle
@@ -17646,7 +17772,14 @@ OS:People,
   {bbded0f4-07ad-4605-b00d-86444b152c88}, !- Handle
   DOE Ref 1980-2004 - Retail - Point_of_Sale People, !- Name
   {0a581dfe-273b-4538-9299-5d7ff594ee10}, !- People Definition Name
-  {5b0252bb-aabf-43c8-935a-3bbcf82a431d}; !- Space or SpaceType Name
+  {5b0252bb-aabf-43c8-935a-3bbcf82a431d}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {12636625-9849-452c-a6d4-3c0d55640d30}, !- Handle
@@ -17758,7 +17891,14 @@ OS:People,
   {eb4c73e4-e750-4cd6-86f2-49479f9ff681}, !- Handle
   DOE Ref 1980-2004 - Retail - Retail People, !- Name
   {6844e432-813f-494b-b1f8-11c206b77f4f}, !- People Definition Name
-  {cfd7dec7-4548-4cde-8b9d-2a8e83a61742}; !- Space or SpaceType Name
+  {cfd7dec7-4548-4cde-8b9d-2a8e83a61742}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {604a239b-0600-4175-8639-0cb5c0e7b332}, !- Handle
@@ -17870,7 +18010,14 @@ OS:People,
   {2b95a63b-0d2c-4b54-88ad-2c61ed2c22c6}, !- Handle
   DOE Ref 2004 - Retail - Back_Space People, !- Name
   {46617f19-03e6-4c6a-90a6-ef451b23cfc7}, !- People Definition Name
-  {6a1d2c3e-f984-4a58-9ce1-1f9b5c9ef86d}; !- Space or SpaceType Name
+  {6a1d2c3e-f984-4a58-9ce1-1f9b5c9ef86d}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {cfa46f89-c3c9-4009-b617-85d77a6dbbe6}, !- Handle
@@ -17982,7 +18129,14 @@ OS:People,
   {c50ee17e-a51d-4637-bd2d-ab741d998e0f}, !- Handle
   DOE Ref 2004 - Retail - Entry People,   !- Name
   {9b5d7929-e0c4-4981-8d81-a9bf4e128b82}, !- People Definition Name
-  {30f1b03d-9328-486a-aca1-871b7237ca0a}; !- Space or SpaceType Name
+  {30f1b03d-9328-486a-aca1-871b7237ca0a}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {bdb65b98-efab-45e2-aa5e-224c7c04b1e1}, !- Handle
@@ -18077,7 +18231,14 @@ OS:People,
   {5f846ad3-46af-4515-bb22-bfc9faed22e0}, !- Handle
   DOE Ref 2004 - Retail - Point_of_Sale People, !- Name
   {d2525dc2-1e75-488f-b60e-ebb56bce4202}, !- People Definition Name
-  {fb5afd9f-68d8-422a-bca0-8c65f07273c5}; !- Space or SpaceType Name
+  {fb5afd9f-68d8-422a-bca0-8c65f07273c5}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {120d3446-c8e7-458b-8cda-e28811f312d6}, !- Handle
@@ -18189,7 +18350,14 @@ OS:People,
   {d07e1d6c-4550-4079-8db5-741c6b5068a4}, !- Handle
   DOE Ref 2004 - Retail - Retail People,  !- Name
   {46514a6b-9708-4bec-ae1d-d5394e73e31e}, !- People Definition Name
-  {4cd87d6a-7bb0-4027-9050-d652f7964503}; !- Space or SpaceType Name
+  {4cd87d6a-7bb0-4027-9050-d652f7964503}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {8e80ed3b-21c7-4125-bd9e-e4c6591f2afc}, !- Handle
@@ -18301,7 +18469,14 @@ OS:People,
   {809d67e4-f758-4015-80a8-b8cb86b85d0f}, !- Handle
   DOE Ref Pre-1980 - Retail - Back_Space People, !- Name
   {52731c37-73f0-4fea-a5e6-2171b0167abb}, !- People Definition Name
-  {b07df698-1a70-454b-9622-df67d8633655}; !- Space or SpaceType Name
+  {b07df698-1a70-454b-9622-df67d8633655}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {2f56278d-6c08-43f5-9f5d-abee70b44e85}, !- Handle
@@ -18413,7 +18588,14 @@ OS:People,
   {466a3e9b-871d-4ef1-81fb-571bdc1042c6}, !- Handle
   DOE Ref Pre-1980 - Retail - Entry People, !- Name
   {692f3c0b-ee22-4751-93d6-7c1fcaae4777}, !- People Definition Name
-  {993a7d3f-2ed0-4a9e-b34a-397cfed09c07}; !- Space or SpaceType Name
+  {993a7d3f-2ed0-4a9e-b34a-397cfed09c07}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {193643a6-0678-47a5-b7f5-237f400122ea}, !- Handle
@@ -18508,7 +18690,14 @@ OS:People,
   {f0309968-b3ad-480f-8691-efbb2e92b2cf}, !- Handle
   DOE Ref Pre-1980 - Retail - Point_of_Sale People, !- Name
   {2d636a10-56be-43df-bdd2-728b4a2b7fb4}, !- People Definition Name
-  {b5c10bcf-b554-430b-81a4-a0217c0898c4}; !- Space or SpaceType Name
+  {b5c10bcf-b554-430b-81a4-a0217c0898c4}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {2082aa9d-1ca9-40a9-83ea-96bf1b960025}, !- Handle
@@ -18620,7 +18809,14 @@ OS:People,
   {49f75011-2393-46da-b39f-bf99139a4306}, !- Handle
   DOE Ref Pre-1980 - Retail - Retail People, !- Name
   {de24f281-6691-457c-9117-f771308ffdf6}, !- People Definition Name
-  {6979d2ee-b480-4ec3-a597-460735355b64}; !- Space or SpaceType Name
+  {6979d2ee-b480-4ec3-a597-460735355b64}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {b2bac782-9cc2-4a3f-8a4c-6f6d121ecf76}, !- Handle

@@ -15288,7 +15288,14 @@ OS:People,
   {caeb5341-f08b-4ec9-acea-571ee9a32aea}, !- Handle
   189.1-2009 - SmHotel - Exercise - CZ1-3 People, !- Name
   {08fb6ba0-4a21-4324-a961-30e4b4d279dd}, !- People Definition Name
-  {6c5f93fb-2afd-471e-8261-3a2ea6d041ba}; !- Space or SpaceType Name
+  {6c5f93fb-2afd-471e-8261-3a2ea6d041ba}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:Schedule:Ruleset,
   {befcf20f-5d84-45b1-950d-a8201cf66cd5}, ! Handle
@@ -15666,7 +15673,14 @@ OS:People,
   {bfa149a9-fd2e-4476-9339-02065ea11d5b}, !- Handle
   189.1-2009 - SmHotel - GuestLounge - CZ1-3 People, !- Name
   {92e99e94-2ac1-4a4e-8245-2ab91ccbb74a}, !- People Definition Name
-  {f6dff39c-1c28-45e6-97a8-87aa983bc1e2}; !- Space or SpaceType Name
+  {f6dff39c-1c28-45e6-97a8-87aa983bc1e2}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:Schedule:Ruleset,
   {a48e2656-99f3-47f9-8433-1afe9e3cf85a}, ! Handle
@@ -16256,7 +16270,14 @@ OS:People,
   {c3082ce8-b3e2-49f2-bab4-98407ff811e3}, !- Handle
   189.1-2009 - SmHotel - GuestRoom - CZ1-3 People, !- Name
   {6338724b-ebfb-4f04-84f7-17c078444aa4}, !- People Definition Name
-  {1b4be52b-c914-4746-bf37-2a3d0f0cd8f6}; !- Space or SpaceType Name
+  {1b4be52b-c914-4746-bf37-2a3d0f0cd8f6}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:Schedule:Ruleset,
   {3f696e8a-956a-4b38-a997-e9d21853042d}, ! Handle
@@ -16670,7 +16691,14 @@ OS:People,
   {d94bafe7-3e23-44a1-80cf-3441dcac41cc}, !- Handle
   189.1-2009 - SmHotel - Laundry - CZ1-3 People, !- Name
   {a0fdb020-59ce-489d-a856-33e9f3e06fc7}, !- People Definition Name
-  {b05bdcef-a510-4b6c-aa01-da9c5f861363}; !- Space or SpaceType Name
+  {b05bdcef-a510-4b6c-aa01-da9c5f861363}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:Schedule:Ruleset,
   {3d62b395-e492-4ca3-845f-22a77e27571d}, ! Handle
@@ -17123,7 +17151,14 @@ OS:People,
   {eaa22298-e54c-4322-97f9-83d21720d59e}, !- Handle
   189.1-2009 - SmHotel - Meeting - CZ1-3 People, !- Name
   {c23759b6-d3dc-4520-886d-2a8d9e6fe968}, !- People Definition Name
-  {a2464792-8da0-41ca-ad8b-1f2e9c4a8e5e}; !- Space or SpaceType Name
+  {a2464792-8da0-41ca-ad8b-1f2e9c4a8e5e}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:Schedule:Ruleset,
   {d7524afa-8f68-4bb9-b607-a750c87fcdc3}, ! Handle
@@ -17507,7 +17542,14 @@ OS:People,
   {ec670396-1469-4d0d-80e9-deb79e18226a}, !- Handle
   189.1-2009 - SmHotel - Office - CZ1-3 People, !- Name
   {9caaca56-9f4b-4350-8bb0-f00404b9414f}, !- People Definition Name
-  {ef33abdc-265c-4605-a659-8681801a0c0a}; !- Space or SpaceType Name
+  {ef33abdc-265c-4605-a659-8681801a0c0a}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:Schedule:Ruleset,
   {ed282626-b5c0-467f-ab88-be9fd93a28d6}, ! Handle
@@ -17828,7 +17870,14 @@ OS:People,
   {e1119ad1-981c-4fa8-9bf0-cac365a46ad6}, !- Handle
   189.1-2009 - SmHotel - PublicRestroom - CZ1-3 People, !- Name
   {465ad4b6-5fd7-4f10-b86c-f703591a345f}, !- People Definition Name
-  {59794818-18fb-4d27-833f-e7a6771db046}; !- Space or SpaceType Name
+  {59794818-18fb-4d27-833f-e7a6771db046}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {4061d2d7-d3db-4b78-8094-32b5f7c23f84}, !- Handle
@@ -18052,7 +18101,14 @@ OS:People,
   {cb697bd9-2a41-48b1-801a-6bcd556f0822}, !- Handle
   189.1-2009 - SmHotel - StaffLounge - CZ1-3 People, !- Name
   {39744c8c-b296-4184-b657-35a435b0f285}, !- People Definition Name
-  {a359b8a4-d818-4deb-bdee-65d930e73d65}; !- Space or SpaceType Name
+  {a359b8a4-d818-4deb-bdee-65d930e73d65}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:Schedule:Ruleset,
   {c70d2f19-c1e8-43a8-8459-63fdaade66b3}, ! Handle
@@ -18710,7 +18766,14 @@ OS:People,
   {c9bec128-757e-46c7-8b4b-a573eba3b293}, !- Handle
   189.1-2009 - SmHotel - Exercise - CZ4-8 People, !- Name
   {384d3e21-5188-40c2-af9a-8e9ec49feee1}, !- People Definition Name
-  {001dcc45-4772-414a-9561-494292002374}; !- Space or SpaceType Name
+  {001dcc45-4772-414a-9561-494292002374}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {7c4c3e14-eb43-4b84-882c-49af4126cce4}, !- Handle
@@ -18822,7 +18885,14 @@ OS:People,
   {d1d9062d-7e80-4c26-ad21-d1279c5bdb58}, !- Handle
   189.1-2009 - SmHotel - GuestLounge - CZ4-8 People, !- Name
   {657f794e-389a-4565-8a42-847048136292}, !- People Definition Name
-  {b28a72a5-fcaf-4118-8532-c303ceaf11ec}; !- Space or SpaceType Name
+  {b28a72a5-fcaf-4118-8532-c303ceaf11ec}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {bd4b015b-429e-4176-b249-8937bae91334}, !- Handle
@@ -18934,7 +19004,14 @@ OS:People,
   {4d03b8f8-ea47-4652-95d2-a3427d8bb771}, !- Handle
   189.1-2009 - SmHotel - GuestRoom - CZ4-8 People, !- Name
   {be8aa4f7-ed2b-4f2a-bc8f-438ce21cc4c1}, !- People Definition Name
-  {4c9777e0-b17b-4a38-81de-ec7db718c79e}; !- Space or SpaceType Name
+  {4c9777e0-b17b-4a38-81de-ec7db718c79e}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {64adfb27-5f92-4c5f-9ba8-42e51ca1e179}, !- Handle
@@ -19046,7 +19123,14 @@ OS:People,
   {11412533-3775-4645-8cfc-edda487d1aa8}, !- Handle
   189.1-2009 - SmHotel - Laundry - CZ4-8 People, !- Name
   {97faa03c-06ee-479a-ab0f-566f92fec144}, !- People Definition Name
-  {78c11edd-8fe8-4aae-a68a-0bfc882ba4f6}; !- Space or SpaceType Name
+  {78c11edd-8fe8-4aae-a68a-0bfc882ba4f6}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {1bce3160-8b63-422d-87c0-bbbba013f083}, !- Handle
@@ -19255,7 +19339,14 @@ OS:People,
   {51686808-f188-477b-88b4-a77ea6affe1c}, !- Handle
   189.1-2009 - SmHotel - Meeting - CZ4-8 People, !- Name
   {981911eb-9e3e-4875-b53b-a7aa0d95cf11}, !- People Definition Name
-  {2e9e9cda-fd06-4312-bca9-25b0e6c2b1c4}; !- Space or SpaceType Name
+  {2e9e9cda-fd06-4312-bca9-25b0e6c2b1c4}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {b04882d5-9b64-45cd-8109-814bcb94ee3c}, !- Handle
@@ -19367,7 +19458,14 @@ OS:People,
   {e1b3e315-8253-48f4-a5c8-0615a2f5bef1}, !- Handle
   189.1-2009 - SmHotel - Office - CZ4-8 People, !- Name
   {69da828f-b4c1-4780-978f-ce30180ad7e3}, !- People Definition Name
-  {fc2df6c8-64db-45e0-8643-57fea21b465c}; !- Space or SpaceType Name
+  {fc2df6c8-64db-45e0-8643-57fea21b465c}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {491ec8bc-81bd-44e4-8961-71ec17ba92f0}, !- Handle
@@ -19479,7 +19577,14 @@ OS:People,
   {c1d2f298-ad04-4586-8519-8f3ac0656cf1}, !- Handle
   189.1-2009 - SmHotel - PublicRestroom - CZ4-8 People, !- Name
   {687238f1-1898-407c-acaa-659a817e3b24}, !- People Definition Name
-  {87a1a6d8-0c74-43cf-800e-73aad8530954}; !- Space or SpaceType Name
+  {87a1a6d8-0c74-43cf-800e-73aad8530954}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {d1d5acb2-2f56-4a42-9f68-9030951cb696}, !- Handle
@@ -19591,7 +19696,14 @@ OS:People,
   {5da9ecb6-2d16-48ec-9791-7dcbc93a6195}, !- Handle
   189.1-2009 - SmHotel - StaffLounge - CZ4-8 People, !- Name
   {573d7f9b-6bdc-4250-bf37-bd2aacdb1638}, !- People Definition Name
-  {ccee342a-a9d8-427b-a815-c397488e42dc}; !- Space or SpaceType Name
+  {ccee342a-a9d8-427b-a815-c397488e42dc}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {2d4e62cd-cbe5-4746-9fe5-3a0d87befee2}, !- Handle
@@ -19943,7 +20055,14 @@ OS:People,
   {c8ae5de5-2e9c-4d4e-b0ca-0db26939c1c7}, !- Handle
   90.1-2007 - SmHotel - Exercise People,  !- Name
   {b2947b84-d897-4367-ad3a-e2e867eb8d33}, !- People Definition Name
-  {457d97ad-4e69-454b-a811-2c0244725c53}; !- Space or SpaceType Name
+  {457d97ad-4e69-454b-a811-2c0244725c53}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {a0141ae5-b0f5-4dbf-8d93-46a5e81f32da}, !- Handle
@@ -20055,7 +20174,14 @@ OS:People,
   {855b4931-9147-44ef-9ca8-48f9d3f9a2da}, !- Handle
   90.1-2007 - SmHotel - GuestLounge People, !- Name
   {f078ef96-80a5-4406-860d-c20d745ee7ca}, !- People Definition Name
-  {100d6814-573e-4cb1-8997-59fa07dcad74}; !- Space or SpaceType Name
+  {100d6814-573e-4cb1-8997-59fa07dcad74}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {f3ffad2c-5621-47e0-b33f-41174785ef6a}, !- Handle
@@ -20167,7 +20293,14 @@ OS:People,
   {199860e3-53c6-4786-bf67-c9dd1614e052}, !- Handle
   90.1-2007 - SmHotel - GuestRoom People, !- Name
   {71825a94-8907-4fb5-bc82-d89b126462c6}, !- People Definition Name
-  {ff37150d-038d-4c7e-9441-5a03ff06430d}; !- Space or SpaceType Name
+  {ff37150d-038d-4c7e-9441-5a03ff06430d}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {dec72da0-c1c2-40ab-bb5b-61f311bcad4a}, !- Handle
@@ -20279,7 +20412,14 @@ OS:People,
   {0e556136-ecca-49f2-ab63-a20d96a2ec79}, !- Handle
   90.1-2007 - SmHotel - Laundry People,   !- Name
   {804e9f62-3e4b-44a1-815c-548d77522d35}, !- People Definition Name
-  {a4bbdc04-ff68-47b2-8b5d-0d5f254711d2}; !- Space or SpaceType Name
+  {a4bbdc04-ff68-47b2-8b5d-0d5f254711d2}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {46a9a1c1-f1f1-491a-a5da-4dfc67e7e2d3}, !- Handle
@@ -20488,7 +20628,14 @@ OS:People,
   {8192d8ee-5b9a-4dae-9598-01e9c42b26d3}, !- Handle
   90.1-2007 - SmHotel - Meeting People,   !- Name
   {d9597022-7634-4c52-be20-f45960173a06}, !- People Definition Name
-  {79d6187c-dbae-47f6-ab1d-998106899b54}; !- Space or SpaceType Name
+  {79d6187c-dbae-47f6-ab1d-998106899b54}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {18d95562-af76-4974-9e3a-b1ed6af0144a}, !- Handle
@@ -20600,7 +20747,14 @@ OS:People,
   {1dac3bda-caeb-44ac-955c-5872f02e4d90}, !- Handle
   90.1-2007 - SmHotel - Office People,    !- Name
   {b409378f-5cfe-43ce-b6b4-57e132d66652}, !- People Definition Name
-  {f2c7aca6-f2e5-4340-a40c-b2e6df187655}; !- Space or SpaceType Name
+  {f2c7aca6-f2e5-4340-a40c-b2e6df187655}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {fc3c8bde-3bea-4b8f-8da5-e28fb10f7f22}, !- Handle
@@ -20712,7 +20866,14 @@ OS:People,
   {29977718-acf2-4ed9-bf8d-84cbd819c8ec}, !- Handle
   90.1-2007 - SmHotel - PublicRestroom People, !- Name
   {54b15270-d186-40d1-9b8d-0ce808b63aab}, !- People Definition Name
-  {dcd9e8fb-156a-4e39-b3ef-ac1fc4e5d7af}; !- Space or SpaceType Name
+  {dcd9e8fb-156a-4e39-b3ef-ac1fc4e5d7af}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {5d6cade8-1460-4e0e-afd7-334ebea838a7}, !- Handle
@@ -20824,7 +20985,14 @@ OS:People,
   {32fd2ae2-7779-44bf-90ed-f1f9ed9bc1ad}, !- Handle
   90.1-2007 - SmHotel - StaffLounge People, !- Name
   {766c718b-54c1-4bb3-ba3e-b3a5be5d5eb8}, !- People Definition Name
-  {bb455d19-86eb-48fc-b527-6f836e2a2150}; !- Space or SpaceType Name
+  {bb455d19-86eb-48fc-b527-6f836e2a2150}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {4aa9de99-4c7e-4821-8b72-132ab0cb3c07}, !- Handle
@@ -21176,7 +21344,14 @@ OS:People,
   {5f49cf9b-e912-4ad8-994a-fd11563860bc}, !- Handle
   90.1-2010 - SmHotel - Exercise People,  !- Name
   {4c99e6d2-1409-40d1-9e50-3af9bc200abb}, !- People Definition Name
-  {efeff672-892d-4069-810a-4e6a6523e322}; !- Space or SpaceType Name
+  {efeff672-892d-4069-810a-4e6a6523e322}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {fa57cc0f-5da4-481b-8e60-ee8759acbe87}, !- Handle
@@ -21288,7 +21463,14 @@ OS:People,
   {fa304c21-68fa-4cb7-afaf-390e3e1c3c92}, !- Handle
   90.1-2010 - SmHotel - GuestLounge People, !- Name
   {5ce8d734-a227-4b9c-9d2e-9019e550da7e}, !- People Definition Name
-  {cdc954d7-6b24-4444-a4e4-b59b03e2f314}; !- Space or SpaceType Name
+  {cdc954d7-6b24-4444-a4e4-b59b03e2f314}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {3b81f4ef-a9dd-4f5e-8c83-00eff3544c43}, !- Handle
@@ -21400,7 +21582,14 @@ OS:People,
   {b2f2b4e6-a273-469a-9134-24d20781ed6d}, !- Handle
   90.1-2010 - SmHotel - GuestRoom People, !- Name
   {eb33c2c0-98d5-4963-a709-08233ee19dd9}, !- People Definition Name
-  {cea9872b-de1f-4909-8603-f54cd09bf673}; !- Space or SpaceType Name
+  {cea9872b-de1f-4909-8603-f54cd09bf673}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {b3df2dd1-3d61-4e9b-b67d-91d9180ae267}, !- Handle
@@ -21512,7 +21701,14 @@ OS:People,
   {e25b28c6-b92d-4046-b502-0c7aa85cf3e0}, !- Handle
   90.1-2010 - SmHotel - Laundry People,   !- Name
   {99df0f0b-d21b-401f-bd41-1bbe8ce813d8}, !- People Definition Name
-  {8f1c8a80-70a9-466c-9ce9-497bd3f3e512}; !- Space or SpaceType Name
+  {8f1c8a80-70a9-466c-9ce9-497bd3f3e512}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {0a15169d-3e24-457f-871b-afd6160d2ba7}, !- Handle
@@ -21721,7 +21917,14 @@ OS:People,
   {28512263-0dd1-4a22-a227-27604f14f0e3}, !- Handle
   90.1-2010 - SmHotel - Meeting People,   !- Name
   {01fd73ae-2a5a-44a9-abf7-f14f125de9d8}, !- People Definition Name
-  {db41903c-60f3-4b9b-a8ee-2c1354371afa}; !- Space or SpaceType Name
+  {db41903c-60f3-4b9b-a8ee-2c1354371afa}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {18edf610-fe1f-4c08-a230-3113dab3c146}, !- Handle
@@ -21833,7 +22036,14 @@ OS:People,
   {1f04edbb-701e-4c51-ac11-1f8577537ee9}, !- Handle
   90.1-2010 - SmHotel - Office People,    !- Name
   {62e8c00e-59c3-484d-ab46-9e8969c888f9}, !- People Definition Name
-  {4794cd69-175f-4ac7-92c3-2bc0a24c1e1c}; !- Space or SpaceType Name
+  {4794cd69-175f-4ac7-92c3-2bc0a24c1e1c}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {e4cc7877-fe03-4994-a344-21d6a17c6d23}, !- Handle
@@ -21945,7 +22155,14 @@ OS:People,
   {5b75dbd0-8135-4a7b-98c8-25a7fba1ecc0}, !- Handle
   90.1-2010 - SmHotel - PublicRestroom People, !- Name
   {89902495-df61-42f6-993e-8727f4c00b31}, !- People Definition Name
-  {46c96658-f4d8-40f1-99fd-06b11c5b4ba8}; !- Space or SpaceType Name
+  {46c96658-f4d8-40f1-99fd-06b11c5b4ba8}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {95836956-ed9c-4ba6-bb93-001df4cecff7}, !- Handle
@@ -22057,7 +22274,14 @@ OS:People,
   {7cbf741d-81b3-45da-add6-c550e5cddd02}, !- Handle
   90.1-2010 - SmHotel - StaffLounge People, !- Name
   {327c48cf-c15b-40c7-b72a-248f460b9ad4}, !- People Definition Name
-  {8311f347-542e-4703-a504-7e508e85439e}; !- Space or SpaceType Name
+  {8311f347-542e-4703-a504-7e508e85439e}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {8435bf0e-ec00-41d6-96d8-c29399f5e1e6}, !- Handle
@@ -22409,7 +22633,14 @@ OS:People,
   {96416973-26c1-45d2-acff-ae6f987f354f}, !- Handle
   DOE Ref 1980-2004 - SmHotel - Exercise People, !- Name
   {4b660da3-7f79-4407-94a9-59037db49315}, !- People Definition Name
-  {78815007-f58d-4fc3-8839-3bb79f149f6b}; !- Space or SpaceType Name
+  {78815007-f58d-4fc3-8839-3bb79f149f6b}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {4c496782-1ef3-41f2-8516-ff5c6e64dee0}, !- Handle
@@ -22521,7 +22752,14 @@ OS:People,
   {9c4194e3-16ce-4fb7-bea6-1241f14560f8}, !- Handle
   DOE Ref 1980-2004 - SmHotel - GuestLounge People, !- Name
   {301cea90-cb03-4a29-9e46-8f2632adbde1}, !- People Definition Name
-  {15fc9cfd-0afa-4beb-a2f5-e4dce4c1d1b6}; !- Space or SpaceType Name
+  {15fc9cfd-0afa-4beb-a2f5-e4dce4c1d1b6}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {07367db5-cc5f-4ba3-83fa-7ed4f5f17ba4}, !- Handle
@@ -22633,7 +22871,14 @@ OS:People,
   {202bd2eb-fb92-49af-82a6-58159b37a298}, !- Handle
   DOE Ref 1980-2004 - SmHotel - GuestRoom People, !- Name
   {a6eea0ce-37b2-4096-89bd-e7de02a59bac}, !- People Definition Name
-  {f5bb6010-ee97-48de-824c-15b03fdf3944}; !- Space or SpaceType Name
+  {f5bb6010-ee97-48de-824c-15b03fdf3944}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {6038bc45-0a7a-4ce4-9940-73f800044e67}, !- Handle
@@ -22745,7 +22990,14 @@ OS:People,
   {430c880d-13fb-43db-a20d-0c67d674258a}, !- Handle
   DOE Ref 1980-2004 - SmHotel - Laundry People, !- Name
   {9375521e-d5e9-459c-b501-5b02821c530f}, !- People Definition Name
-  {92610738-f4cb-4036-a47d-3baeddd8f58e}; !- Space or SpaceType Name
+  {92610738-f4cb-4036-a47d-3baeddd8f58e}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {1484d8ac-7282-4ee5-a820-56be10de97d2}, !- Handle
@@ -22954,7 +23206,14 @@ OS:People,
   {d2f42276-36f1-49f0-88a2-0dc5cc2588d1}, !- Handle
   DOE Ref 1980-2004 - SmHotel - Meeting People, !- Name
   {eb98644e-1137-499a-8137-7b9366244663}, !- People Definition Name
-  {3f527d17-e507-41f7-8b64-b7afbb42a8f5}; !- Space or SpaceType Name
+  {3f527d17-e507-41f7-8b64-b7afbb42a8f5}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {08b56580-f331-489c-8c1f-4b4deb483aa8}, !- Handle
@@ -23066,7 +23325,14 @@ OS:People,
   {931ece0d-563f-47e3-8b81-20f6e89f6a40}, !- Handle
   DOE Ref 1980-2004 - SmHotel - Office People, !- Name
   {ac3b3e12-ea06-471d-a5de-5369c7b68858}, !- People Definition Name
-  {d3d9e33d-2cf5-44da-971b-296fc8cba3ea}; !- Space or SpaceType Name
+  {d3d9e33d-2cf5-44da-971b-296fc8cba3ea}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {e81507d9-1add-47c3-97ec-5bd0861fc83a}, !- Handle
@@ -23178,7 +23444,14 @@ OS:People,
   {e754c69b-de2c-4acb-92c1-23969459a1f0}, !- Handle
   DOE Ref 1980-2004 - SmHotel - PublicRestroom People, !- Name
   {51d6f81f-561d-40df-b866-d8a65417adb8}, !- People Definition Name
-  {fd3a1eb7-da7d-44db-8732-3b94c2074ff0}; !- Space or SpaceType Name
+  {fd3a1eb7-da7d-44db-8732-3b94c2074ff0}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {f60ed347-4c5c-4364-874f-e89bb3244829}, !- Handle
@@ -23290,7 +23563,14 @@ OS:People,
   {0fbfdad9-232d-40e7-9b72-dac7191f029b}, !- Handle
   DOE Ref 1980-2004 - SmHotel - StaffLounge People, !- Name
   {b543f66e-f399-45eb-8842-029c49b3e50c}, !- People Definition Name
-  {177edeb9-b454-434a-9bdf-6e157a841f2e}; !- Space or SpaceType Name
+  {177edeb9-b454-434a-9bdf-6e157a841f2e}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {bcbd36d6-2a34-4683-bba6-83317f03fca7}, !- Handle
@@ -23642,7 +23922,14 @@ OS:People,
   {20f84a79-002c-4bff-8e36-89cfc6a99203}, !- Handle
   DOE Ref 2004 - SmHotel - Exercise People, !- Name
   {0c967147-496f-4fbb-be5e-e5f57a9ad2f1}, !- People Definition Name
-  {5fae88ac-397e-4314-85a9-ea7cb135292f}; !- Space or SpaceType Name
+  {5fae88ac-397e-4314-85a9-ea7cb135292f}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {af406c5b-c9e7-449f-bcb6-892a86f9b6e7}, !- Handle
@@ -23754,7 +24041,14 @@ OS:People,
   {66d551d4-ef52-4091-9c65-1edc1f72e632}, !- Handle
   DOE Ref 2004 - SmHotel - GuestLounge People, !- Name
   {31a6b960-4979-40cb-ab0d-a1c5e6e10498}, !- People Definition Name
-  {831af15e-2373-4107-822a-ac6790fa9024}; !- Space or SpaceType Name
+  {831af15e-2373-4107-822a-ac6790fa9024}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {a66edb0b-2aeb-4ff7-8e34-427068dbf7ac}, !- Handle
@@ -23866,7 +24160,14 @@ OS:People,
   {a8014d7c-3ff1-4b7d-ba3f-9e41951cdff6}, !- Handle
   DOE Ref 2004 - SmHotel - GuestRoom People, !- Name
   {c355ffc4-4255-45fb-8d61-ce4998564994}, !- People Definition Name
-  {ecde16c8-a0bf-4365-94ce-116a48d07e5a}; !- Space or SpaceType Name
+  {ecde16c8-a0bf-4365-94ce-116a48d07e5a}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {ba84ab59-9806-415b-bf70-4b4e8c9f2268}, !- Handle
@@ -23978,7 +24279,14 @@ OS:People,
   {c56efd01-23bf-41f3-887e-cbd581adc89e}, !- Handle
   DOE Ref 2004 - SmHotel - Laundry People, !- Name
   {143f5afc-9726-4e31-b413-858fc8352571}, !- People Definition Name
-  {5ad70bb7-2fba-4d68-9f6d-f3f7575cab27}; !- Space or SpaceType Name
+  {5ad70bb7-2fba-4d68-9f6d-f3f7575cab27}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {72f58727-0310-4b17-9ab6-66b03c7016db}, !- Handle
@@ -24187,7 +24495,14 @@ OS:People,
   {6dbdffe3-b439-40f0-9daf-ef33ac41e63d}, !- Handle
   DOE Ref 2004 - SmHotel - Meeting People, !- Name
   {59565c7c-bcca-419d-9c0f-2abf7045cbd7}, !- People Definition Name
-  {5d960947-81e0-4897-b094-f0f4dbe55693}; !- Space or SpaceType Name
+  {5d960947-81e0-4897-b094-f0f4dbe55693}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {024f1575-5f58-47ae-ae87-9ed7bdb030f9}, !- Handle
@@ -24299,7 +24614,14 @@ OS:People,
   {82dc0117-9013-4f1a-a750-7c07a3e14416}, !- Handle
   DOE Ref 2004 - SmHotel - Office People, !- Name
   {b2294e77-78d4-408b-8e37-1a87d76e7d57}, !- People Definition Name
-  {1628e798-4cc0-42d2-9363-291d6582fec1}; !- Space or SpaceType Name
+  {1628e798-4cc0-42d2-9363-291d6582fec1}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {3ae2d5e9-0f21-423a-894a-5639cf41f5c2}, !- Handle
@@ -24411,7 +24733,14 @@ OS:People,
   {ae06f5de-5720-4224-9bb4-6aa83157677f}, !- Handle
   DOE Ref 2004 - SmHotel - PublicRestroom People, !- Name
   {af3ebca8-f5c0-4007-85ac-2af4b2e7bec9}, !- People Definition Name
-  {06fa8e4f-c141-4bf7-bb9f-fac580e15612}; !- Space or SpaceType Name
+  {06fa8e4f-c141-4bf7-bb9f-fac580e15612}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {0dd8e9c4-05f3-46ee-991e-7ce544b1fe7e}, !- Handle
@@ -24523,7 +24852,14 @@ OS:People,
   {9f35c5ff-37e2-499e-9f05-965a93f9c39c}, !- Handle
   DOE Ref 2004 - SmHotel - StaffLounge People, !- Name
   {51297599-708d-4a67-9669-363be93b6870}, !- People Definition Name
-  {078c5ffc-19d1-4246-833e-05704cea9f96}; !- Space or SpaceType Name
+  {078c5ffc-19d1-4246-833e-05704cea9f96}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {1aa629cc-dfcd-4e5e-90ad-bb5476c7b1b8}, !- Handle
@@ -24875,7 +25211,14 @@ OS:People,
   {51d1b762-f33d-4c63-87cb-3e9bc158625c}, !- Handle
   DOE Ref Pre-1980 - SmHotel - Exercise People, !- Name
   {c2525034-eab5-4b52-a424-fd58547a2c78}, !- People Definition Name
-  {c72f6337-591a-4613-915d-8b92713932ce}; !- Space or SpaceType Name
+  {c72f6337-591a-4613-915d-8b92713932ce}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {f93558c9-cbd4-46f8-97dd-72dd53205559}, !- Handle
@@ -24987,7 +25330,14 @@ OS:People,
   {e74e6a69-2e0c-46b9-b87f-989c78c22f23}, !- Handle
   DOE Ref Pre-1980 - SmHotel - GuestLounge People, !- Name
   {04969922-ad35-40cf-b216-dca18404d487}, !- People Definition Name
-  {513e1d49-d871-44de-a705-c2913f463b40}; !- Space or SpaceType Name
+  {513e1d49-d871-44de-a705-c2913f463b40}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {b6c060f5-2b85-4c53-8c1d-5e33a25bd6ef}, !- Handle
@@ -25099,7 +25449,14 @@ OS:People,
   {12798db6-c79d-44e4-a73e-75e85cc52950}, !- Handle
   DOE Ref Pre-1980 - SmHotel - GuestRoom People, !- Name
   {9fe6dc80-bd70-45b3-84bf-8a606fa382a9}, !- People Definition Name
-  {9118ce6a-2617-4cff-b006-b6427e2ea661}; !- Space or SpaceType Name
+  {9118ce6a-2617-4cff-b006-b6427e2ea661}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {007515e0-740c-48f8-b829-9f0e0bbeb8d6}, !- Handle
@@ -25211,7 +25568,14 @@ OS:People,
   {2100105e-c645-41d8-8e9b-1a40785bdc98}, !- Handle
   DOE Ref Pre-1980 - SmHotel - Laundry People, !- Name
   {963ab6b9-6317-44f6-9fc6-e7c34332da5c}, !- People Definition Name
-  {88789d1f-3086-4b96-bcc7-4fbde12e0508}; !- Space or SpaceType Name
+  {88789d1f-3086-4b96-bcc7-4fbde12e0508}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {ee778b37-0333-4e78-8e21-073cba113072}, !- Handle
@@ -25420,7 +25784,14 @@ OS:People,
   {e017702e-e0fb-46a7-831f-1e79dde3cdd2}, !- Handle
   DOE Ref Pre-1980 - SmHotel - Meeting People, !- Name
   {6d81b3bc-c860-4a65-a07f-46908117f475}, !- People Definition Name
-  {8da3ea60-120f-43b1-bcdf-91c147ac5723}; !- Space or SpaceType Name
+  {8da3ea60-120f-43b1-bcdf-91c147ac5723}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {eb0dbf8f-1fb8-4f62-9681-bfb6021eb2a0}, !- Handle
@@ -25532,7 +25903,14 @@ OS:People,
   {da5239b8-b6a7-48d6-9642-07e2321ee5d1}, !- Handle
   DOE Ref Pre-1980 - SmHotel - Office People, !- Name
   {696ebc21-b3b0-4545-b1f4-00a66c2b75a7}, !- People Definition Name
-  {d8994888-c94c-4c3d-b085-b3921f9e7792}; !- Space or SpaceType Name
+  {d8994888-c94c-4c3d-b085-b3921f9e7792}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {d41a921b-2145-454c-92d9-d72b356dfc8f}, !- Handle
@@ -25644,7 +26022,14 @@ OS:People,
   {71389b17-6ea3-42e3-b45e-04006f61a74c}, !- Handle
   DOE Ref Pre-1980 - SmHotel - PublicRestroom People, !- Name
   {4109d875-d5a1-46ad-ada8-f8296ecedbad}, !- People Definition Name
-  {3e6569ce-beec-4ba3-9ced-8f9507a703fe}; !- Space or SpaceType Name
+  {3e6569ce-beec-4ba3-9ced-8f9507a703fe}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {e20b8237-f421-43b3-b34c-e2407e8c5d77}, !- Handle
@@ -25756,7 +26141,14 @@ OS:People,
   {9bbe6826-01b2-4d42-9313-0f79af1e03f5}, !- Handle
   DOE Ref Pre-1980 - SmHotel - StaffLounge People, !- Name
   {10579b33-fcf0-4be5-acd6-55a523757e58}, !- People Definition Name
-  {bc0c0acc-6127-42c4-aadc-8886ad8e752d}; !- Space or SpaceType Name
+  {bc0c0acc-6127-42c4-aadc-8886ad8e752d}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {0a4fbebe-0ce6-4330-8174-1b42d4e31d05}, !- Handle

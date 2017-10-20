@@ -14984,7 +14984,14 @@ OS:People,
   {ed9a7cf3-cd2c-4c21-8006-7bf39795a963}, !- Handle
   189.1-2009 - MidriseApartment - Apartment - CZ1-3 People, !- Name
   {daefad81-1574-4488-8ec4-d3b92fbc17ee}, !- People Definition Name
-  {095c1c14-ffac-4e3c-b817-7ca711737d1b}; !- Space or SpaceType Name
+  {095c1c14-ffac-4e3c-b817-7ca711737d1b}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:Schedule:Ruleset,
   {3dd4f643-0dfb-4ffa-a0a5-565158a49a77}, ! Handle
@@ -15881,7 +15888,14 @@ OS:People,
   {2f0a0a1b-bfb1-4e6b-bf4d-1d0b4ff2dddf}, !- Handle
   189.1-2009 - MidriseApartment - Office - CZ1-3 People, !- Name
   {c6daa682-318f-40be-b496-e03ab1b64d37}, !- People Definition Name
-  {293287dd-f796-4c2e-8e87-981dad188c40}; !- Space or SpaceType Name
+  {293287dd-f796-4c2e-8e87-981dad188c40}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:Schedule:Ruleset,
   {ce78903f-a118-4487-9588-196f595ac79b}, ! Handle
@@ -16317,7 +16331,14 @@ OS:People,
   {42610045-a2d9-4fe2-b6f3-974c0517f993}, !- Handle
   189.1-2009 - MidriseApartment - Apartment - CZ4-8 People, !- Name
   {1e9b561f-3d9c-4961-ab1c-e2bdef69811b}, !- People Definition Name
-  {e2c4afce-902c-4ef2-99f7-0cfb8aa82764}; !- Space or SpaceType Name
+  {e2c4afce-902c-4ef2-99f7-0cfb8aa82764}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {e49c7aee-6fd8-493f-8184-482e6a1d654a}, !- Handle
@@ -16509,7 +16530,14 @@ OS:People,
   {28a1f3f1-4342-42c0-9cd8-86cc1e77f632}, !- Handle
   189.1-2009 - MidriseApartment - Office - CZ4-8 People, !- Name
   {fce887ee-1dea-4e2d-ac08-b7fb50102d01}, !- People Definition Name
-  {70523fb1-eabb-4a80-b82b-6025088eaa65}; !- Space or SpaceType Name
+  {70523fb1-eabb-4a80-b82b-6025088eaa65}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {88a0066f-4e1f-4394-9d54-13d9a4a216fd}, !- Handle
@@ -16611,7 +16639,14 @@ OS:People,
   {91b88865-cbb8-4077-b3be-c449d6a90615}, !- Handle
   90.1-2007 - MidriseApartment - Apartment People, !- Name
   {11fc0ab7-7437-4f08-8e03-76ebb45d2784}, !- People Definition Name
-  {2d8921f4-00de-4f32-8bc1-a93eab34adb6}; !- Space or SpaceType Name
+  {2d8921f4-00de-4f32-8bc1-a93eab34adb6}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {1fcd5c92-7ed9-4d43-abe5-b3ac8ee63910}, !- Handle
@@ -16803,7 +16838,14 @@ OS:People,
   {3c6c081e-b228-4514-9b14-3fdf7d6d6a37}, !- Handle
   90.1-2007 - MidriseApartment - Office People, !- Name
   {4c9fc5e3-2081-4fc0-b49d-f4d40fb8bab1}, !- People Definition Name
-  {c88d00dd-8f49-4dc8-acf5-263724c97c97}; !- Space or SpaceType Name
+  {c88d00dd-8f49-4dc8-acf5-263724c97c97}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {87f1bf1d-e7ca-4fb9-aa26-57d60da75e92}, !- Handle
@@ -16915,7 +16957,14 @@ OS:People,
   {e9712e1b-3748-4b00-b383-5998db8b0eb0}, !- Handle
   90.1-2010 - MidriseApartment - Apartment People, !- Name
   {98a8cc16-f337-4371-a49d-28d419a0e267}, !- People Definition Name
-  {b91ec900-af1a-430d-8128-9bcaa271860b}; !- Space or SpaceType Name
+  {b91ec900-af1a-430d-8128-9bcaa271860b}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {eb1f6fed-59e1-474a-a388-682eb214bd62}, !- Handle
@@ -17107,7 +17156,14 @@ OS:People,
   {a321b9d4-47a6-49b2-8fcb-31bce8386157}, !- Handle
   90.1-2010 - MidriseApartment - Office People, !- Name
   {19e12419-4654-4ec7-bfbe-046579d83d00}, !- People Definition Name
-  {03d0aa44-46de-46b5-95ff-4c614d9d357f}; !- Space or SpaceType Name
+  {03d0aa44-46de-46b5-95ff-4c614d9d357f}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {39da5d05-de71-4642-8e03-d078b4faa960}, !- Handle
@@ -17209,7 +17265,14 @@ OS:People,
   {3dcb645a-d263-4ff2-9165-b0d9c30c2df9}, !- Handle
   DOE Ref 1980-2004 - MidriseApartment - Apartment People, !- Name
   {3d2972ad-f959-473c-ad6a-eb680a26437b}, !- People Definition Name
-  {9f0be8e2-ca80-4d57-80bb-31e0706ae404}; !- Space or SpaceType Name
+  {9f0be8e2-ca80-4d57-80bb-31e0706ae404}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {5265952e-4b6a-48a2-85f5-4ecf2e7efb7f}, !- Handle
@@ -17401,7 +17464,14 @@ OS:People,
   {714267e1-5d11-4a3b-aa99-305e9cd06263}, !- Handle
   DOE Ref 1980-2004 - MidriseApartment - Office People, !- Name
   {4402c83b-661d-4d91-8757-7d448f9a1978}, !- People Definition Name
-  {dbd95899-0c59-4e47-b392-70b9099857a7}; !- Space or SpaceType Name
+  {dbd95899-0c59-4e47-b392-70b9099857a7}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {6365c5a2-722e-495d-91d9-88916f2f321a}, !- Handle
@@ -17503,7 +17573,14 @@ OS:People,
   {df4fcf4a-cf89-4ddc-8393-cab0d758713c}, !- Handle
   DOE Ref 2004 - MidriseApartment - Apartment People, !- Name
   {8c963a84-9a06-480d-a61b-680a59b8338f}, !- People Definition Name
-  {8088db39-0dbf-4805-ad82-2c8ee712afb1}; !- Space or SpaceType Name
+  {8088db39-0dbf-4805-ad82-2c8ee712afb1}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {e810165f-909b-400f-bd44-c955cd59412c}, !- Handle
@@ -17695,7 +17772,14 @@ OS:People,
   {9054fade-11d7-4a64-a25b-14b4569fb48c}, !- Handle
   DOE Ref 2004 - MidriseApartment - Office People, !- Name
   {00359f7d-3934-4c7d-894a-3267849d09a0}, !- People Definition Name
-  {5774ba6a-e4a8-4eaa-a898-dc460a714e2c}; !- Space or SpaceType Name
+  {5774ba6a-e4a8-4eaa-a898-dc460a714e2c}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {7edd26d5-04f9-4dba-832a-30d043e89d2c}, !- Handle
@@ -17797,7 +17881,14 @@ OS:People,
   {59dfeeb2-9db3-4b6a-b783-28565a6ce684}, !- Handle
   DOE Ref Pre-1980 - MidriseApartment - Apartment People, !- Name
   {29ab79b3-659c-41b5-9dc9-208c2502a834}, !- People Definition Name
-  {fd607f4c-cb4c-43d1-8fd5-f9b923bb4109}; !- Space or SpaceType Name
+  {fd607f4c-cb4c-43d1-8fd5-f9b923bb4109}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {91121e4c-3dec-4f8c-b211-0fac5e9e6ab2}, !- Handle
@@ -17989,7 +18080,14 @@ OS:People,
   {e63b81f9-a551-487b-85f0-83d8d22597f4}, !- Handle
   DOE Ref Pre-1980 - MidriseApartment - Office People, !- Name
   {c6e4b41f-4033-4613-af22-990041cfa6e1}, !- People Definition Name
-  {e7c20a08-99ad-43fa-8720-5a8bd242aa3b}; !- Space or SpaceType Name
+  {e7c20a08-99ad-43fa-8720-5a8bd242aa3b}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {6d1a6016-a3e7-4085-8ef3-abdc38139661}, !- Handle

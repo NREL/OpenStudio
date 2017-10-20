@@ -15527,7 +15527,14 @@ OS:People,
   {3ee421b6-2226-47ee-9fcf-2d94c436c0d6}, !- Handle
   189.1-2009 - Outpatient - Cafe - CZ1-3 People, !- Name
   {c9e4b226-3786-4917-94eb-95080200a6d7}, !- People Definition Name
-  {45f88137-1838-4163-873a-9fd81127b22e}; !- Space or SpaceType Name
+  {45f88137-1838-4163-873a-9fd81127b22e}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:Schedule:Ruleset,
   {ab815251-eb8b-41cb-93f2-f9ec566b471b}, ! Handle
@@ -15835,7 +15842,14 @@ OS:People,
   {2f7fc0fa-d19f-4eed-a88a-c5a97fe796da}, !- Handle
   189.1-2009 - Outpatient - CleanWork - CZ1-3 People, !- Name
   {fa2347c8-27b5-4a5d-b797-15f9efef4cff}, !- People Definition Name
-  {b3e8e482-17f6-4047-98bc-2332b1f54b48}; !- Space or SpaceType Name
+  {b3e8e482-17f6-4047-98bc-2332b1f54b48}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {58f4b4a6-2572-4033-9ac9-99f5fe60c657}, !- Handle
@@ -15947,7 +15961,14 @@ OS:People,
   {970842e3-6334-4bca-a5bd-fd098ca6f416}, !- Handle
   189.1-2009 - Outpatient - Conference - CZ1-3 People, !- Name
   {d676577e-9ea6-4452-9af5-f71315e4764b}, !- People Definition Name
-  {3f9965e2-fe44-4de3-beb9-0e550eec3d6e}; !- Space or SpaceType Name
+  {3f9965e2-fe44-4de3-beb9-0e550eec3d6e}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {7ad089a9-c781-4283-bad2-a424df6bef4a}, !- Handle
@@ -16059,7 +16080,14 @@ OS:People,
   {311862e7-f261-44d4-a979-facab94cd01f}, !- Handle
   189.1-2009 - Outpatient - DressingRoom - CZ1-3 People, !- Name
   {4ddc3dff-eba1-4cb4-bed0-8fa73194e035}, !- People Definition Name
-  {63bf2fa8-8010-45df-9c00-26175ac847d0}; !- Space or SpaceType Name
+  {63bf2fa8-8010-45df-9c00-26175ac847d0}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {2f186a35-40af-48b1-8a05-301a71309bd7}, !- Handle
@@ -16268,7 +16296,14 @@ OS:People,
   {3d30c8f2-f937-4d86-a755-0fb6d0ae70af}, !- Handle
   189.1-2009 - Outpatient - Exam - CZ1-3 People, !- Name
   {2f9f4087-80be-4ae4-af94-65e821f2bd69}, !- People Definition Name
-  {0c983046-1efc-49c2-b982-f2169bba9c7f}; !- Space or SpaceType Name
+  {0c983046-1efc-49c2-b982-f2169bba9c7f}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {5056aacf-1008-4a27-a546-327451903d0b}, !- Handle
@@ -16487,7 +16522,14 @@ OS:People,
   {2bfe97d6-22aa-4c6f-b261-f15ef16c7838}, !- Handle
   189.1-2009 - Outpatient - IT_Room - CZ1-3 People, !- Name
   {2e2aafca-492d-4612-b955-73c17be299aa}, !- People Definition Name
-  {52ec1f52-ddf7-4e73-aae6-c62efac091e9}; !- Space or SpaceType Name
+  {52ec1f52-ddf7-4e73-aae6-c62efac091e9}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {c60b9599-11ae-442c-a381-85f3c762c8ae}, !- Handle
@@ -16679,7 +16721,14 @@ OS:People,
   {f82a95d8-cb4b-43bd-b8b1-179d5df8666f}, !- Handle
   189.1-2009 - Outpatient - Lobby - CZ1-3 People, !- Name
   {9dc5f3e1-63ac-44ed-b4fc-17b4ae227cab}, !- People Definition Name
-  {73b7e673-6029-4ed4-a3a5-bae3cf5387c1}; !- Space or SpaceType Name
+  {73b7e673-6029-4ed4-a3a5-bae3cf5387c1}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {70282215-3518-4553-a997-9993db00677f}, !- Handle
@@ -16791,7 +16840,14 @@ OS:People,
   {e460f905-5be4-4290-89c4-d981212aaef8}, !- Handle
   189.1-2009 - Outpatient - LockerRoom - CZ1-3 People, !- Name
   {38f3044a-f8b3-43b0-9581-8e3328701ea9}, !- People Definition Name
-  {67574512-a438-45d5-9e21-d04c617e5dc9}; !- Space or SpaceType Name
+  {67574512-a438-45d5-9e21-d04c617e5dc9}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {23326e34-c9f4-4496-9afc-fcb9b7100026}, !- Handle
@@ -16903,7 +16959,14 @@ OS:People,
   {1ce37645-0dc5-4386-935b-227d88af8374}, !- Handle
   189.1-2009 - Outpatient - Lounge - CZ1-3 People, !- Name
   {011c7090-c65d-4440-abd1-1b39e9ee7f54}, !- People Definition Name
-  {d3d6558a-44b6-47b1-9c29-e006f38b69a9}; !- Space or SpaceType Name
+  {d3d6558a-44b6-47b1-9c29-e006f38b69a9}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {bbc3106c-b766-4a81-b135-ae751a6013e2}, !- Handle
@@ -17015,7 +17078,14 @@ OS:People,
   {6124623e-8672-4bd4-80f8-569c7a582ba8}, !- Handle
   189.1-2009 - Outpatient - MRI - CZ1-3 People, !- Name
   {e32205c2-0903-429a-bdcb-ff841d84dc7d}, !- People Definition Name
-  {00290438-b380-4505-b449-1f08526abdc8}; !- Space or SpaceType Name
+  {00290438-b380-4505-b449-1f08526abdc8}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {30e23fdc-49cf-4b1e-80a7-902038de9c5e}, !- Handle
@@ -17127,7 +17197,14 @@ OS:People,
   {0dfd8a9b-5e04-49ab-9b64-b8d23c6ee123}, !- Handle
   189.1-2009 - Outpatient - MRI_Control - CZ1-3 People, !- Name
   {9fb0c943-4c13-4340-bac2-cf6747eb7596}, !- People Definition Name
-  {bd0fe8ba-a3f0-4a8c-921c-facfc8f8037b}; !- Space or SpaceType Name
+  {bd0fe8ba-a3f0-4a8c-921c-facfc8f8037b}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {5166a4ce-b9dc-4593-97ea-db2613ae95a7}, !- Handle
@@ -17336,7 +17413,14 @@ OS:People,
   {0aebd559-65d8-4525-90a0-3568a2c5c1cb}, !- Handle
   189.1-2009 - Outpatient - NurseStation - CZ1-3 People, !- Name
   {37fb84ff-c4e8-4631-9a09-33f432b901d9}, !- People Definition Name
-  {7edf2bfc-0f03-4957-b5e4-8e32c84cc14d}; !- Space or SpaceType Name
+  {7edf2bfc-0f03-4957-b5e4-8e32c84cc14d}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {be2d2f98-7f6d-4d1f-bad6-e828268bcdd2}, !- Handle
@@ -17448,7 +17532,14 @@ OS:People,
   {fe9179f2-6e79-4b24-8580-96784079bfb2}, !- Handle
   189.1-2009 - Outpatient - OR - CZ1-3 People, !- Name
   {b9a35c6d-9c41-4ca6-95f3-2c589f039f74}, !- People Definition Name
-  {8f3e7960-4e92-4d64-a06a-708d74b38ddc}; !- Space or SpaceType Name
+  {8f3e7960-4e92-4d64-a06a-708d74b38ddc}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {686d7884-cd65-4893-b02d-abb968db5480}, !- Handle
@@ -17681,7 +17772,14 @@ OS:People,
   {ab40ba6b-204d-4964-86f1-3d1f2735b055}, !- Handle
   189.1-2009 - Outpatient - Office - CZ1-3 People, !- Name
   {4f16fa09-9562-4114-9722-6e0ad2b0c27a}, !- People Definition Name
-  {2852ca15-d89d-4880-9b7b-a3b823449495}; !- Space or SpaceType Name
+  {2852ca15-d89d-4880-9b7b-a3b823449495}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {33a8159e-198c-497d-9c93-0531c7e36322}, !- Handle
@@ -17793,7 +17891,14 @@ OS:People,
   {23317071-5b00-45a3-864c-aa44375ed1cb}, !- Handle
   189.1-2009 - Outpatient - PACU - CZ1-3 People, !- Name
   {5b49efcf-35ac-4357-98c6-d2aa9dfd89f1}, !- People Definition Name
-  {de7267d5-1e4c-4cb5-ae09-b5d4efe973c3}; !- Space or SpaceType Name
+  {de7267d5-1e4c-4cb5-ae09-b5d4efe973c3}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {68ba596b-76fe-47d7-82e2-bcef76c323fd}, !- Handle
@@ -17905,7 +18010,14 @@ OS:People,
   {c25a3fa2-5d0f-4543-822c-06e26862426b}, !- Handle
   189.1-2009 - Outpatient - PhysicalTherapy - CZ1-3 People, !- Name
   {5de5801f-b950-42e6-98ac-6f5f9d6b6fd1}, !- People Definition Name
-  {829d6c87-1d2d-41ba-9fc0-31db65fedda2}; !- Space or SpaceType Name
+  {829d6c87-1d2d-41ba-9fc0-31db65fedda2}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {6834e8e3-1dd2-4d2f-8089-65fac2e1fab7}, !- Handle
@@ -18017,7 +18129,14 @@ OS:People,
   {82c933b8-12a7-43bd-a595-ec038561fc3b}, !- Handle
   189.1-2009 - Outpatient - PreOp - CZ1-3 People, !- Name
   {a15a87e2-eebb-46fa-8daf-71efc5a190a2}, !- People Definition Name
-  {8ac2499f-bdc2-4e74-879c-ff9563ea05e2}; !- Space or SpaceType Name
+  {8ac2499f-bdc2-4e74-879c-ff9563ea05e2}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {60186d71-80b9-424c-b990-bc5a319f6c1d}, !- Handle
@@ -18129,7 +18248,14 @@ OS:People,
   {19da767f-d1f0-4737-8348-044da262fdea}, !- Handle
   189.1-2009 - Outpatient - ProcedureRoom - CZ1-3 People, !- Name
   {ec2c7108-90bc-4e94-bf2a-be104c6d2546}, !- People Definition Name
-  {5b522647-2db2-40ff-91bb-c38e4236ff29}; !- Space or SpaceType Name
+  {5b522647-2db2-40ff-91bb-c38e4236ff29}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {c7ee4181-5497-4f6c-9067-cfb7713b05fc}, !- Handle
@@ -18241,7 +18367,14 @@ OS:People,
   {f484f3b6-e442-4864-b9cb-95e2249c47e9}, !- Handle
   189.1-2009 - Outpatient - Soil Work - CZ1-3 People, !- Name
   {6a431f7b-31ff-4c44-9f25-183b7cd4bc69}, !- People Definition Name
-  {79052103-b8a5-473c-9dbf-e950e2180ecc}; !- Space or SpaceType Name
+  {79052103-b8a5-473c-9dbf-e950e2180ecc}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {c3317204-bba2-41f4-87df-ce3548876e82}, !- Handle
@@ -18530,7 +18663,14 @@ OS:People,
   {187a88f5-b335-4371-be28-75f7b3d685cb}, !- Handle
   189.1-2009 - Outpatient - Xray - CZ1-3 People, !- Name
   {557ef3f0-0fad-43ac-a349-bbde367dcc4a}, !- People Definition Name
-  {a2a3c3ad-6f33-4ff1-9c5a-4f5541bff944}; !- Space or SpaceType Name
+  {a2a3c3ad-6f33-4ff1-9c5a-4f5541bff944}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {e92e942d-8a0b-47ea-8290-06a5b84245e5}, !- Handle
@@ -18836,7 +18976,14 @@ OS:People,
   {ea8b84c7-470e-43a5-8433-523541dd4736}, !- Handle
   189.1-2009 - Outpatient - Cafe - CZ4-8 People, !- Name
   {86d7d1a0-13b1-4f6e-ab28-e2288a3af94e}, !- People Definition Name
-  {66952a34-577a-479a-ad56-c3e1aa4a46ce}; !- Space or SpaceType Name
+  {66952a34-577a-479a-ad56-c3e1aa4a46ce}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {06d7fc66-03a8-4c16-8e74-2663e0cf11e4}, !- Handle
@@ -18948,7 +19095,14 @@ OS:People,
   {9ff0ade2-28b8-4188-b965-bbb474425632}, !- Handle
   189.1-2009 - Outpatient - CleanWork - CZ4-8 People, !- Name
   {5f64bdab-1720-46a2-b05c-7ab93d86358e}, !- People Definition Name
-  {06a1719c-d808-4f65-b875-2a9bc050f695}; !- Space or SpaceType Name
+  {06a1719c-d808-4f65-b875-2a9bc050f695}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {41bc9bb4-2520-46ba-b714-0da809457a99}, !- Handle
@@ -19060,7 +19214,14 @@ OS:People,
   {1625af43-ba47-47a1-8154-2d8420cec831}, !- Handle
   189.1-2009 - Outpatient - Conference - CZ4-8 People, !- Name
   {31417488-ad31-4f89-a968-fae468d08823}, !- People Definition Name
-  {38aa7733-ec50-4b66-b963-0f026359096d}; !- Space or SpaceType Name
+  {38aa7733-ec50-4b66-b963-0f026359096d}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {5698dca4-333c-4260-957d-a903ed66c93c}, !- Handle
@@ -19172,7 +19333,14 @@ OS:People,
   {841c0b8c-1f4d-496d-abb5-d28ea77ead01}, !- Handle
   189.1-2009 - Outpatient - DressingRoom - CZ4-8 People, !- Name
   {9bafdc46-916c-4bf0-8223-a63dcbf3dff7}, !- People Definition Name
-  {b10c2fac-1cfa-4923-afac-e1a7ba53e655}; !- Space or SpaceType Name
+  {b10c2fac-1cfa-4923-afac-e1a7ba53e655}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {c1b7177f-9eba-493f-b5f6-b1edfd59bc3b}, !- Handle
@@ -19381,7 +19549,14 @@ OS:People,
   {1ad099ef-8efc-45a1-93b8-31d2dddc8a1c}, !- Handle
   189.1-2009 - Outpatient - Exam - CZ4-8 People, !- Name
   {bab3688e-6e61-460d-9143-faad5b1b671f}, !- People Definition Name
-  {19f8f819-bed1-4ac5-b834-d15d3f11e7bf}; !- Space or SpaceType Name
+  {19f8f819-bed1-4ac5-b834-d15d3f11e7bf}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {c3084c53-6b7f-4827-a9a6-7f9077a52835}, !- Handle
@@ -19590,7 +19765,14 @@ OS:People,
   {2fc327e1-84a5-4e38-b24c-0a7f294a6084}, !- Handle
   189.1-2009 - Outpatient - IT_Room - CZ4-8 People, !- Name
   {94cde74e-5904-4a76-9394-26c80d6559bc}, !- People Definition Name
-  {e724cc8b-4e2d-4683-9ebe-922063044b35}; !- Space or SpaceType Name
+  {e724cc8b-4e2d-4683-9ebe-922063044b35}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {b96a5015-1ca0-4140-a48a-30fed894e2c1}, !- Handle
@@ -19782,7 +19964,14 @@ OS:People,
   {3dc88099-0c18-4ea4-9f7f-b434cba17647}, !- Handle
   189.1-2009 - Outpatient - Lobby - CZ4-8 People, !- Name
   {42060d8c-8b64-4773-bfb3-2141a5912422}, !- People Definition Name
-  {9096b7a7-5fdf-4741-a32c-1f51a3e832ed}; !- Space or SpaceType Name
+  {9096b7a7-5fdf-4741-a32c-1f51a3e832ed}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {4e191df9-9e1a-45c9-8a15-3b25cbd4e299}, !- Handle
@@ -19894,7 +20083,14 @@ OS:People,
   {1254410e-e59d-4665-bbfc-e30a9e85a252}, !- Handle
   189.1-2009 - Outpatient - LockerRoom - CZ4-8 People, !- Name
   {8ee57b60-4d5d-4278-b7d0-7769c7869ff9}, !- People Definition Name
-  {bb9bb61a-2a61-435b-ba68-f14b5274aec7}; !- Space or SpaceType Name
+  {bb9bb61a-2a61-435b-ba68-f14b5274aec7}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {56c1e19b-e601-45b9-87a7-c9fa6deb7610}, !- Handle
@@ -20006,7 +20202,14 @@ OS:People,
   {130dc823-e8bb-459c-b974-f53d0260f7a9}, !- Handle
   189.1-2009 - Outpatient - Lounge - CZ4-8 People, !- Name
   {066f5cd2-cb82-46db-bc59-24e0dc4f145a}, !- People Definition Name
-  {e98756a0-0bae-4a11-8985-1c907170a1dc}; !- Space or SpaceType Name
+  {e98756a0-0bae-4a11-8985-1c907170a1dc}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {b05ea17f-ff4c-4347-a007-9e24bff5f916}, !- Handle
@@ -20118,7 +20321,14 @@ OS:People,
   {f62e08f1-beba-4baf-a587-88372e6bb874}, !- Handle
   189.1-2009 - Outpatient - MRI - CZ4-8 People, !- Name
   {d9b543d0-9eba-41b9-8d58-99dea8011af8}, !- People Definition Name
-  {ee632036-345b-4018-87db-112993baceb5}; !- Space or SpaceType Name
+  {ee632036-345b-4018-87db-112993baceb5}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {9095a31f-b1b5-4dad-bc0f-712301efb86e}, !- Handle
@@ -20230,7 +20440,14 @@ OS:People,
   {c3850dd8-f7fe-4272-9d89-c5ab82c9e7bf}, !- Handle
   189.1-2009 - Outpatient - MRI_Control - CZ4-8 People, !- Name
   {dd4de2dd-c638-4932-be25-11326b0595af}, !- People Definition Name
-  {ebb51eb9-1336-4d72-954b-948a20a02e6d}; !- Space or SpaceType Name
+  {ebb51eb9-1336-4d72-954b-948a20a02e6d}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {1b9e2979-ce64-46be-af37-e0631cab1111}, !- Handle
@@ -20439,7 +20656,14 @@ OS:People,
   {1521b7a7-ff56-46df-9d6a-a37cdaac5d82}, !- Handle
   189.1-2009 - Outpatient - NurseStation - CZ4-8 People, !- Name
   {d666eadd-b204-4ecf-950b-678ed71abda7}, !- People Definition Name
-  {04be5960-e4d5-4a20-a7ac-23ca49763a8d}; !- Space or SpaceType Name
+  {04be5960-e4d5-4a20-a7ac-23ca49763a8d}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {686cbe00-ac85-4e83-95f3-d8282954ad44}, !- Handle
@@ -20551,7 +20775,14 @@ OS:People,
   {d5f263a9-0e26-47c0-842c-f7e8409031b0}, !- Handle
   189.1-2009 - Outpatient - OR - CZ4-8 People, !- Name
   {0b39789e-3578-47a9-ad06-589d5b42177d}, !- People Definition Name
-  {fb394e3a-5602-4f5a-ae29-ad8b67a85e72}; !- Space or SpaceType Name
+  {fb394e3a-5602-4f5a-ae29-ad8b67a85e72}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {11838cbd-02df-4e16-9a7a-e08f8cfd6e96}, !- Handle
@@ -20680,7 +20911,14 @@ OS:People,
   {c95f5584-9a30-4bd9-9dd9-55aaca39a2c8}, !- Handle
   189.1-2009 - Outpatient - Office - CZ4-8 People, !- Name
   {de4200a3-1a35-4449-a199-0cca66b65252}, !- People Definition Name
-  {cab482f2-a02e-4943-81be-91229cb56d77}; !- Space or SpaceType Name
+  {cab482f2-a02e-4943-81be-91229cb56d77}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {694e3440-1e0d-47f6-a18c-4fdcc809b6cc}, !- Handle
@@ -20792,7 +21030,14 @@ OS:People,
   {b81dcfbd-970a-4ff3-b9dc-4ebd8f69cba5}, !- Handle
   189.1-2009 - Outpatient - PACU - CZ4-8 People, !- Name
   {78099151-9940-4d8e-9c65-123879837a01}, !- People Definition Name
-  {57595a18-989b-4abc-b7d6-ee3c3e5e2d16}; !- Space or SpaceType Name
+  {57595a18-989b-4abc-b7d6-ee3c3e5e2d16}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {93ef698c-1761-4655-b8a4-633e37744b69}, !- Handle
@@ -20904,7 +21149,14 @@ OS:People,
   {305eef40-09a4-49ee-a719-50ddc85a0082}, !- Handle
   189.1-2009 - Outpatient - PhysicalTherapy - CZ4-8 People, !- Name
   {7c3f8bee-d31b-4873-9306-64321cbce9f1}, !- People Definition Name
-  {d2c69d54-4ea0-4e4b-8022-141587a82237}; !- Space or SpaceType Name
+  {d2c69d54-4ea0-4e4b-8022-141587a82237}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {799da4e6-9fe0-4659-83f2-163a2e7588f6}, !- Handle
@@ -21016,7 +21268,14 @@ OS:People,
   {4969bab1-b09d-4a39-8bc5-f0ebcf5a66e0}, !- Handle
   189.1-2009 - Outpatient - PreOp - CZ4-8 People, !- Name
   {629de865-1083-4d69-a173-89a5c2724b23}, !- People Definition Name
-  {3f573dc9-9d18-4e54-9250-300f8ea0334a}; !- Space or SpaceType Name
+  {3f573dc9-9d18-4e54-9250-300f8ea0334a}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {5da4d9d6-9af7-4057-8c26-2230c56c0581}, !- Handle
@@ -21128,7 +21387,14 @@ OS:People,
   {df80b8c2-9c62-44c9-8173-7355abcfe586}, !- Handle
   189.1-2009 - Outpatient - ProcedureRoom - CZ4-8 People, !- Name
   {06ed342f-d066-4be2-9276-d86bf356c8e5}, !- People Definition Name
-  {5e5b3166-f31a-4325-b169-abbcafaf79b1}; !- Space or SpaceType Name
+  {5e5b3166-f31a-4325-b169-abbcafaf79b1}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {fd2edf1d-c083-48b3-b9ca-e19ef2cbba80}, !- Handle
@@ -21240,7 +21506,14 @@ OS:People,
   {83d2d875-5596-407a-8cb7-e160022a7cbc}, !- Handle
   189.1-2009 - Outpatient - Soil Work - CZ4-8 People, !- Name
   {4a4866ef-b1fb-4b35-8bd5-e747bbf169b5}, !- People Definition Name
-  {90d62a4e-2ac9-421d-a1ae-be038bf783e7}; !- Space or SpaceType Name
+  {90d62a4e-2ac9-421d-a1ae-be038bf783e7}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {7721874f-1bf5-492f-8aca-65778dd45a7e}, !- Handle
@@ -21529,7 +21802,14 @@ OS:People,
   {9ae3f81d-92c6-4e2b-8130-a969a6f1e335}, !- Handle
   189.1-2009 - Outpatient - Xray - CZ4-8 People, !- Name
   {e30f336c-d89d-40f2-a8e5-47ea89263f33}, !- People Definition Name
-  {98fba918-4f09-455d-b1c6-1dd06672f53f}; !- Space or SpaceType Name
+  {98fba918-4f09-455d-b1c6-1dd06672f53f}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {e6fb131e-620c-4050-9793-489dd6cabe5c}, !- Handle
@@ -21835,7 +22115,14 @@ OS:People,
   {99756246-62de-42fe-b2c3-d6c7f3d50ca0}, !- Handle
   90.1-2007 - Outpatient - Cafe People,   !- Name
   {0e5b68a4-2c99-452c-80e1-c5736e578231}, !- People Definition Name
-  {9cf07cf6-9d4e-412b-84de-de74b6dd0d59}; !- Space or SpaceType Name
+  {9cf07cf6-9d4e-412b-84de-de74b6dd0d59}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {0f0c147d-764b-461b-8c73-669bdf6ebe5c}, !- Handle
@@ -21947,7 +22234,14 @@ OS:People,
   {be17c8ea-5cc6-4781-ba5c-6032298ce428}, !- Handle
   90.1-2007 - Outpatient - CleanWork People, !- Name
   {509cbc67-4094-4930-b20f-4a6c72c90550}, !- People Definition Name
-  {5bba8b02-075e-46e1-8d6b-2e9ee60b848d}; !- Space or SpaceType Name
+  {5bba8b02-075e-46e1-8d6b-2e9ee60b848d}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {8f0c49db-2293-422b-b83f-a952cbfbe836}, !- Handle
@@ -22059,7 +22353,14 @@ OS:People,
   {502d1378-d66e-41e4-b6d7-e326da88b1ab}, !- Handle
   90.1-2007 - Outpatient - Conference People, !- Name
   {2a2bedde-7fe0-416e-9ad5-40decf348b75}, !- People Definition Name
-  {321515db-c36f-4388-8895-af1146ad2057}; !- Space or SpaceType Name
+  {321515db-c36f-4388-8895-af1146ad2057}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {68e47af3-766a-483c-995a-eedadb9229f3}, !- Handle
@@ -22171,7 +22472,14 @@ OS:People,
   {9652ea7e-01ff-4271-afea-6b3050f9f5ef}, !- Handle
   90.1-2007 - Outpatient - DressingRoom People, !- Name
   {39902727-d1fc-4051-855d-895b624388f4}, !- People Definition Name
-  {2ffa041b-8f4d-4796-85d8-099917c1a3d1}; !- Space or SpaceType Name
+  {2ffa041b-8f4d-4796-85d8-099917c1a3d1}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {c546c744-2bae-495a-aec0-dc17f9a85dc6}, !- Handle
@@ -22380,7 +22688,14 @@ OS:People,
   {a211319e-0fa5-4c64-873b-88ba4b80bbed}, !- Handle
   90.1-2007 - Outpatient - Exam People,   !- Name
   {d47dcd62-bd34-4b60-b397-8d57f6370013}, !- People Definition Name
-  {725354af-d120-4d10-93fc-293449449a21}; !- Space or SpaceType Name
+  {725354af-d120-4d10-93fc-293449449a21}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {71fa0f49-2a79-42f7-86ae-da7bd7ec33b6}, !- Handle
@@ -22589,7 +22904,14 @@ OS:People,
   {e4d2b54b-3778-400c-8d16-4afaa44d9734}, !- Handle
   90.1-2007 - Outpatient - IT_Room People, !- Name
   {1b00525e-1579-4d37-bc40-9239f97851a5}, !- People Definition Name
-  {972083a7-27e1-41f5-a6f7-f88e2743ca33}; !- Space or SpaceType Name
+  {972083a7-27e1-41f5-a6f7-f88e2743ca33}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {ba55202f-2464-4d2b-ac91-c8344500502e}, !- Handle
@@ -22781,7 +23103,14 @@ OS:People,
   {77814520-0db8-421c-b799-78861156a5df}, !- Handle
   90.1-2007 - Outpatient - Lobby People,  !- Name
   {34e47498-515d-4b62-a989-8af4c961bb83}, !- People Definition Name
-  {0f41b6b3-24e9-41c9-a71e-36d857473169}; !- Space or SpaceType Name
+  {0f41b6b3-24e9-41c9-a71e-36d857473169}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {419f7cd1-521f-49ec-980b-287a018a345c}, !- Handle
@@ -22893,7 +23222,14 @@ OS:People,
   {c0d4c993-42d5-4ffc-b9b3-7ed03a08956d}, !- Handle
   90.1-2007 - Outpatient - LockerRoom People, !- Name
   {c451c914-66e6-404b-b0d1-03dea30a79ee}, !- People Definition Name
-  {a711f563-c59b-406d-a75b-ea6144c818eb}; !- Space or SpaceType Name
+  {a711f563-c59b-406d-a75b-ea6144c818eb}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {3b984024-e359-401a-b550-88e44ebd23a7}, !- Handle
@@ -23005,7 +23341,14 @@ OS:People,
   {788ab625-e5a8-42cd-9093-c8208de86a49}, !- Handle
   90.1-2007 - Outpatient - Lounge People, !- Name
   {1e6e3f30-7471-474b-aa2a-38d8be762c46}, !- People Definition Name
-  {471b9124-f567-4bf3-b568-f5a73b79d957}; !- Space or SpaceType Name
+  {471b9124-f567-4bf3-b568-f5a73b79d957}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {ddfaa586-fe58-4457-beec-2b137e2833c3}, !- Handle
@@ -23117,7 +23460,14 @@ OS:People,
   {8d3545ad-038c-475a-9c79-62b08b590b56}, !- Handle
   90.1-2007 - Outpatient - MRI People,    !- Name
   {3b653bca-6cb8-4bb2-a9d5-c9f1a7a5cd16}, !- People Definition Name
-  {2c29a96e-3986-4e28-9891-1ffad0d2c167}; !- Space or SpaceType Name
+  {2c29a96e-3986-4e28-9891-1ffad0d2c167}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {9b463056-96ca-450a-bc9d-240bbdfe2a51}, !- Handle
@@ -23229,7 +23579,14 @@ OS:People,
   {eced4390-5715-443e-a50a-ede76cc916e5}, !- Handle
   90.1-2007 - Outpatient - MRI_Control People, !- Name
   {6e9459cd-0bb5-46da-a324-ec91535d4401}, !- People Definition Name
-  {72b038f8-1f19-42af-b9a7-8954905a96a2}; !- Space or SpaceType Name
+  {72b038f8-1f19-42af-b9a7-8954905a96a2}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {c33a3506-1c96-4845-8242-643fba058f78}, !- Handle
@@ -23438,7 +23795,14 @@ OS:People,
   {2e8b887b-f69d-4c9a-9635-0359ee44757c}, !- Handle
   90.1-2007 - Outpatient - NurseStation People, !- Name
   {e9499642-d5c2-4570-a49d-b9dfd983faa0}, !- People Definition Name
-  {5e967019-5b38-4b82-aad8-78e1d64870dd}; !- Space or SpaceType Name
+  {5e967019-5b38-4b82-aad8-78e1d64870dd}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {4f4dda77-9178-4427-ab2e-ac0ebefea107}, !- Handle
@@ -23550,7 +23914,14 @@ OS:People,
   {c38300f4-25da-462e-a2e8-f457a842bd98}, !- Handle
   90.1-2007 - Outpatient - OR People,     !- Name
   {f3b7d0f8-397d-4026-adba-cb59c6cc5718}, !- People Definition Name
-  {8c2ea96b-606f-41a4-bb85-dcbff0a0da15}; !- Space or SpaceType Name
+  {8c2ea96b-606f-41a4-bb85-dcbff0a0da15}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {60a56923-22bf-431e-99e7-edab53d804f9}, !- Handle
@@ -23679,7 +24050,14 @@ OS:People,
   {a545ce98-3287-426b-9456-e0029fced2fa}, !- Handle
   90.1-2007 - Outpatient - Office People, !- Name
   {39a36e07-f438-4b5c-bce1-0dfaf31909cc}, !- People Definition Name
-  {190b2c5d-bfb0-4623-b897-cc0ce7895f1f}; !- Space or SpaceType Name
+  {190b2c5d-bfb0-4623-b897-cc0ce7895f1f}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {f8570eda-38df-4159-b9ed-3124c114a038}, !- Handle
@@ -23791,7 +24169,14 @@ OS:People,
   {699bcc53-f149-4737-9bee-730d2783ce7b}, !- Handle
   90.1-2007 - Outpatient - PACU People,   !- Name
   {2817f80a-85c1-462b-afcc-7de95d3878b7}, !- People Definition Name
-  {ac6c21ef-14e9-42b3-9068-de2d4085e7fc}; !- Space or SpaceType Name
+  {ac6c21ef-14e9-42b3-9068-de2d4085e7fc}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {baeec2d4-d809-4844-8ee4-6bfc3dd1538a}, !- Handle
@@ -23903,7 +24288,14 @@ OS:People,
   {d7e7dc83-3d58-4bb8-890e-9e83a9ec8b7c}, !- Handle
   90.1-2007 - Outpatient - PhysicalTherapy People, !- Name
   {39516803-8630-4f9d-9ad5-ac27bdbd68a4}, !- People Definition Name
-  {38b3a033-1086-4e57-ac0a-470ac0500616}; !- Space or SpaceType Name
+  {38b3a033-1086-4e57-ac0a-470ac0500616}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {687c02a5-614a-4bfa-abbf-3317f5669ed1}, !- Handle
@@ -24015,7 +24407,14 @@ OS:People,
   {bc0332fc-514e-4719-ab2a-e59688d6bfbf}, !- Handle
   90.1-2007 - Outpatient - PreOp People,  !- Name
   {e5011fbc-9ae1-4db9-99c3-e4eb0b5c2f6b}, !- People Definition Name
-  {96dce070-ed90-4616-a7dc-ec34e9917e5a}; !- Space or SpaceType Name
+  {96dce070-ed90-4616-a7dc-ec34e9917e5a}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {deb9ab37-7f90-481f-9aee-807c0a248ba7}, !- Handle
@@ -24127,7 +24526,14 @@ OS:People,
   {c959af44-3d53-4442-9d09-262278b144d3}, !- Handle
   90.1-2007 - Outpatient - ProcedureRoom People, !- Name
   {8ac2b4ba-7590-4f42-8a78-f7957c40752e}, !- People Definition Name
-  {e80f37d4-2510-4def-a449-010f1b5e2be9}; !- Space or SpaceType Name
+  {e80f37d4-2510-4def-a449-010f1b5e2be9}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {d7cf43d5-d85f-4c72-ad58-a84c810def14}, !- Handle
@@ -24239,7 +24645,14 @@ OS:People,
   {df5fc540-5104-4265-a411-3bdfe88eca53}, !- Handle
   90.1-2007 - Outpatient - Soil Work People, !- Name
   {259b73ab-4607-4ea0-af87-85954589ad70}, !- People Definition Name
-  {4cc2430a-bfe0-40f6-84ed-fdf9c35ac9ac}; !- Space or SpaceType Name
+  {4cc2430a-bfe0-40f6-84ed-fdf9c35ac9ac}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {7a346838-8bbd-415c-a77d-716bebd8bbda}, !- Handle
@@ -24528,7 +24941,14 @@ OS:People,
   {084a2809-4593-4367-b8d2-72def542b848}, !- Handle
   90.1-2007 - Outpatient - Xray People,   !- Name
   {d0617067-dacd-4f5a-89c6-84189e90e565}, !- People Definition Name
-  {c55aa8df-61cc-41d3-bc95-5f738f22d820}; !- Space or SpaceType Name
+  {c55aa8df-61cc-41d3-bc95-5f738f22d820}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {667ac630-89d1-4dcd-9aa2-38f4398f5650}, !- Handle
@@ -24834,7 +25254,14 @@ OS:People,
   {05a68724-8482-49cf-a310-7258570e0296}, !- Handle
   90.1-2010 - Outpatient - Cafe People,   !- Name
   {3d3e9cd1-7024-467d-ad34-7362d09d2d03}, !- People Definition Name
-  {b2fe5938-fd63-4723-a046-0d519b3d17c7}; !- Space or SpaceType Name
+  {b2fe5938-fd63-4723-a046-0d519b3d17c7}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {09673e40-4a0a-4003-952e-337af3de23bd}, !- Handle
@@ -24946,7 +25373,14 @@ OS:People,
   {90e6496d-7d4f-441b-854f-5096f8e56f6c}, !- Handle
   90.1-2010 - Outpatient - CleanWork People, !- Name
   {2853eb03-a5c0-45f5-ac72-3a5193974d9b}, !- People Definition Name
-  {4e31d4c6-bdf9-4ea2-bcfb-a3d75195370a}; !- Space or SpaceType Name
+  {4e31d4c6-bdf9-4ea2-bcfb-a3d75195370a}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {a6199198-acea-4d34-96fe-73aabb6f11c8}, !- Handle
@@ -25058,7 +25492,14 @@ OS:People,
   {a2428bb9-4a8e-4e36-8762-bd1ed5f535e4}, !- Handle
   90.1-2010 - Outpatient - Conference People, !- Name
   {476543ea-8b45-4be9-af06-fa34591cdb76}, !- People Definition Name
-  {a4c4799a-4661-4d9b-ac64-cad85facefea}; !- Space or SpaceType Name
+  {a4c4799a-4661-4d9b-ac64-cad85facefea}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {67dee20a-d3c6-4d9e-8112-f5d13d4eab71}, !- Handle
@@ -25170,7 +25611,14 @@ OS:People,
   {9e99bfdf-1610-4c66-acde-d6eb25fbabcf}, !- Handle
   90.1-2010 - Outpatient - DressingRoom People, !- Name
   {079c30ee-3af5-4222-8a42-8d43c762d38b}, !- People Definition Name
-  {c59bfaf4-46a0-40bd-8f22-3471c6a8516f}; !- Space or SpaceType Name
+  {c59bfaf4-46a0-40bd-8f22-3471c6a8516f}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {880c625f-1ddf-4deb-a436-4ac957b4f36f}, !- Handle
@@ -25379,7 +25827,14 @@ OS:People,
   {53216f50-b58b-405b-aca4-6e0cc324b624}, !- Handle
   90.1-2010 - Outpatient - Exam People,   !- Name
   {cec54bef-f2ba-44b1-87c0-e323edd65b95}, !- People Definition Name
-  {e41cb7d2-03cb-4250-bedb-0cbd99579ea6}; !- Space or SpaceType Name
+  {e41cb7d2-03cb-4250-bedb-0cbd99579ea6}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {33ac72a5-c6c5-4caa-b280-faabb89c6b49}, !- Handle
@@ -25588,7 +26043,14 @@ OS:People,
   {07c05636-cb31-4e60-8c37-8717d42de323}, !- Handle
   90.1-2010 - Outpatient - IT_Room People, !- Name
   {b0c8c2f7-0559-4f77-9e71-55fa394d8ec6}, !- People Definition Name
-  {c42b05b6-6d74-4eb4-871b-638771007c7e}; !- Space or SpaceType Name
+  {c42b05b6-6d74-4eb4-871b-638771007c7e}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {46115267-a69c-48c7-9476-c07bc5259719}, !- Handle
@@ -25780,7 +26242,14 @@ OS:People,
   {29601395-b8d8-49dc-8dce-c3facb64926e}, !- Handle
   90.1-2010 - Outpatient - Lobby People,  !- Name
   {43238aa6-718b-4c4f-8433-911956f73537}, !- People Definition Name
-  {7407bfd0-6506-46be-9a38-af8a7ea363d2}; !- Space or SpaceType Name
+  {7407bfd0-6506-46be-9a38-af8a7ea363d2}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {73a09dfe-3c9e-47d1-ab6b-82e2bf1f4808}, !- Handle
@@ -25892,7 +26361,14 @@ OS:People,
   {bfad25ee-2e62-447f-866d-281afb8372d2}, !- Handle
   90.1-2010 - Outpatient - LockerRoom People, !- Name
   {863b5775-c22e-449d-8a0b-1148e1946e31}, !- People Definition Name
-  {10575563-5e98-463e-8ef2-06bff957fcb1}; !- Space or SpaceType Name
+  {10575563-5e98-463e-8ef2-06bff957fcb1}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {397a608f-2dde-4ea0-b11c-806a65e12e28}, !- Handle
@@ -26004,7 +26480,14 @@ OS:People,
   {72ffcee9-d910-4ba3-870b-785db83afab5}, !- Handle
   90.1-2010 - Outpatient - Lounge People, !- Name
   {498d202f-09b8-4bd1-b157-db38ce8bdca5}, !- People Definition Name
-  {04460670-da54-47eb-b2cc-6532cfa26a4a}; !- Space or SpaceType Name
+  {04460670-da54-47eb-b2cc-6532cfa26a4a}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {7b02a448-e0a8-4645-9c2a-7b1146891db8}, !- Handle
@@ -26116,7 +26599,14 @@ OS:People,
   {49e91aa8-6f6e-4740-befc-8b784b788a99}, !- Handle
   90.1-2010 - Outpatient - MRI People,    !- Name
   {4c6256d5-2041-46f5-813f-dca47ec09017}, !- People Definition Name
-  {634af666-095d-42d3-a21a-e09ee1b18cbd}; !- Space or SpaceType Name
+  {634af666-095d-42d3-a21a-e09ee1b18cbd}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {dd5a5353-a32a-4184-9678-d39c47f101cc}, !- Handle
@@ -26228,7 +26718,14 @@ OS:People,
   {53c7a1f3-5605-44ff-b417-49caad0d3fd4}, !- Handle
   90.1-2010 - Outpatient - MRI_Control People, !- Name
   {70ef90e6-53e6-49cc-a2d5-63b3dfe2bb74}, !- People Definition Name
-  {513be915-73c1-43bf-9280-4d5e233a5b49}; !- Space or SpaceType Name
+  {513be915-73c1-43bf-9280-4d5e233a5b49}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {c7f7e2ab-c5c9-4112-a6d7-333fb7869055}, !- Handle
@@ -26437,7 +26934,14 @@ OS:People,
   {82168766-10cd-44ae-8de6-af023d1acaad}, !- Handle
   90.1-2010 - Outpatient - NurseStation People, !- Name
   {4538eb2c-8b7e-4007-a52a-25b8329c5047}, !- People Definition Name
-  {018eb886-1d28-4ef1-9847-bb27a7999514}; !- Space or SpaceType Name
+  {018eb886-1d28-4ef1-9847-bb27a7999514}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {39089ca8-452f-4cb3-9f71-4eb8c90c35db}, !- Handle
@@ -26549,7 +27053,14 @@ OS:People,
   {3c1ac332-eeec-478c-958a-84752a64a2c9}, !- Handle
   90.1-2010 - Outpatient - OR People,     !- Name
   {33678ff1-9d1b-40a2-9748-f5ab3183451d}, !- People Definition Name
-  {38931ded-d768-4486-8871-17fc92c87d3c}; !- Space or SpaceType Name
+  {38931ded-d768-4486-8871-17fc92c87d3c}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {ac5b81d6-7c8d-448b-9d90-210bf2792447}, !- Handle
@@ -26678,7 +27189,14 @@ OS:People,
   {616414cd-ce19-4c04-be1c-feef89fcfdac}, !- Handle
   90.1-2010 - Outpatient - Office People, !- Name
   {1aef629f-4e30-4b2d-b3bb-8a92d1486727}, !- People Definition Name
-  {5d99da73-d2ee-4410-86ab-b58c22dbfe16}; !- Space or SpaceType Name
+  {5d99da73-d2ee-4410-86ab-b58c22dbfe16}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {2514c33e-b383-41d3-9036-a8af5b6eaa73}, !- Handle
@@ -26790,7 +27308,14 @@ OS:People,
   {33761f25-01d3-40d0-9e68-0fb70567c450}, !- Handle
   90.1-2010 - Outpatient - PACU People,   !- Name
   {c55d4f2d-bd2b-4d57-96b0-1f35cdecbaf1}, !- People Definition Name
-  {84b02808-bcc7-4fe7-a527-703a89f81723}; !- Space or SpaceType Name
+  {84b02808-bcc7-4fe7-a527-703a89f81723}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {c8daf24d-5b83-4925-82d1-c4e8f11fa55e}, !- Handle
@@ -26902,7 +27427,14 @@ OS:People,
   {cf4de0c0-0f13-4c05-ba55-556c054378a3}, !- Handle
   90.1-2010 - Outpatient - PhysicalTherapy People, !- Name
   {6eab29e0-aead-4f39-8751-51198e102b40}, !- People Definition Name
-  {08c1413c-c79c-48a4-b64f-3767e9ddcbf6}; !- Space or SpaceType Name
+  {08c1413c-c79c-48a4-b64f-3767e9ddcbf6}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {15b695d1-1bfa-4480-a8c0-b157c612f7ae}, !- Handle
@@ -27014,7 +27546,14 @@ OS:People,
   {c681bd1b-ce67-4441-9725-0275ced078ee}, !- Handle
   90.1-2010 - Outpatient - PreOp People,  !- Name
   {6d6865e3-67fa-4df0-98ff-70c4340e8bb2}, !- People Definition Name
-  {cd885d13-f570-4065-9582-6a0bc28ead72}; !- Space or SpaceType Name
+  {cd885d13-f570-4065-9582-6a0bc28ead72}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {bd77334e-e1ea-4eb3-a3ef-e1b2298c89ba}, !- Handle
@@ -27126,7 +27665,14 @@ OS:People,
   {0541453b-40ad-4aa8-80bb-18accd2dd7b7}, !- Handle
   90.1-2010 - Outpatient - ProcedureRoom People, !- Name
   {17a0d36c-1832-46b6-b6fd-14a63aa000cd}, !- People Definition Name
-  {39967097-c460-4436-a6f8-00cfc5e17f2a}; !- Space or SpaceType Name
+  {39967097-c460-4436-a6f8-00cfc5e17f2a}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {f59d95f6-a313-4e60-8381-936bb2a2d116}, !- Handle
@@ -27238,7 +27784,14 @@ OS:People,
   {5d3a9376-74e3-4742-82c7-9987dd600f52}, !- Handle
   90.1-2010 - Outpatient - Soil Work People, !- Name
   {beb92ca3-1b60-47f7-a809-e71e2c20d7fb}, !- People Definition Name
-  {ebf19c5a-5643-48cc-923b-2b0cdfa2529a}; !- Space or SpaceType Name
+  {ebf19c5a-5643-48cc-923b-2b0cdfa2529a}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {10f89ec6-ba3a-4911-858a-7025e8aa961f}, !- Handle
@@ -27527,7 +28080,14 @@ OS:People,
   {71b1d5c3-7e97-45da-b959-e7660a357bc8}, !- Handle
   90.1-2010 - Outpatient - Xray People,   !- Name
   {65b90a02-c4c6-4b34-a737-92234ca43cc7}, !- People Definition Name
-  {a3cca37e-6bd6-4d54-8581-9aab4020118c}; !- Space or SpaceType Name
+  {a3cca37e-6bd6-4d54-8581-9aab4020118c}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {2dbd6041-105f-4fe9-8d36-eee6c52f93b5}, !- Handle
@@ -27833,7 +28393,14 @@ OS:People,
   {5984d6e3-ebf7-41b5-ae17-6caffb34eb73}, !- Handle
   DOE Ref 1980-2004 - Outpatient - Cafe People, !- Name
   {28de02f6-5e22-41db-87c1-0b49eb1ae8bc}, !- People Definition Name
-  {e8f0a45f-3d9a-4a45-9971-d1d3e30cde0f}; !- Space or SpaceType Name
+  {e8f0a45f-3d9a-4a45-9971-d1d3e30cde0f}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {4db2f540-abf9-4522-9dd1-a6ff911bb30e}, !- Handle
@@ -27945,7 +28512,14 @@ OS:People,
   {aaefd402-5298-4ffa-903e-b65f9c712be2}, !- Handle
   DOE Ref 1980-2004 - Outpatient - CleanWork People, !- Name
   {f00de887-8396-4e12-8560-0c4f361e32d7}, !- People Definition Name
-  {b249913d-a15b-400d-9b6f-7df9160d1dc3}; !- Space or SpaceType Name
+  {b249913d-a15b-400d-9b6f-7df9160d1dc3}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {dd920d90-75e2-414f-9352-0a218432000c}, !- Handle
@@ -28057,7 +28631,14 @@ OS:People,
   {4a5be496-dcf5-4cc1-b6b2-23267857c30e}, !- Handle
   DOE Ref 1980-2004 - Outpatient - Conference People, !- Name
   {9ced3664-2521-4c46-a0b2-454eb5033cc9}, !- People Definition Name
-  {a835a22a-8b35-4a1b-b983-ffe210a3d8fd}; !- Space or SpaceType Name
+  {a835a22a-8b35-4a1b-b983-ffe210a3d8fd}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {aaf129f3-ef2d-4959-a0c9-648759ec73bf}, !- Handle
@@ -28169,7 +28750,14 @@ OS:People,
   {5cad494a-602a-4475-a600-621f57556de0}, !- Handle
   DOE Ref 1980-2004 - Outpatient - DressingRoom People, !- Name
   {507c892c-bf8b-4d18-9c23-2296d28fc370}, !- People Definition Name
-  {a4471ea6-1399-4aab-883e-cd608d4bf36b}; !- Space or SpaceType Name
+  {a4471ea6-1399-4aab-883e-cd608d4bf36b}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {15a26808-b438-48cf-927c-4fbcc4498551}, !- Handle
@@ -28378,7 +28966,14 @@ OS:People,
   {deb9ca39-1899-4111-9f85-e63adb5a9753}, !- Handle
   DOE Ref 1980-2004 - Outpatient - Exam People, !- Name
   {f23c5617-7c21-463b-b4a9-c30b6e78ce21}, !- People Definition Name
-  {7393ebfb-2f30-48b1-ba72-d6307e50db8b}; !- Space or SpaceType Name
+  {7393ebfb-2f30-48b1-ba72-d6307e50db8b}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {439419b1-542b-446a-9b61-a81d2df13138}, !- Handle
@@ -28587,7 +29182,14 @@ OS:People,
   {239b384d-c41f-4c18-96e4-3c9e8c029f35}, !- Handle
   DOE Ref 1980-2004 - Outpatient - IT_Room People, !- Name
   {e906d80f-f10d-4cfa-b6e0-fb1b4f403d5e}, !- People Definition Name
-  {1b1ec979-cda6-4055-b995-67bbeb028902}; !- Space or SpaceType Name
+  {1b1ec979-cda6-4055-b995-67bbeb028902}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {57d14db6-f6e4-41b8-aec7-6d1b44e5c52a}, !- Handle
@@ -28779,7 +29381,14 @@ OS:People,
   {1f790e0c-c12f-4064-b449-72ccb37615b8}, !- Handle
   DOE Ref 1980-2004 - Outpatient - Lobby People, !- Name
   {aa16d34e-28e3-4dca-b7e5-3641e7514bc2}, !- People Definition Name
-  {c69d96b3-03ea-499d-b70a-98b4f9a42dfd}; !- Space or SpaceType Name
+  {c69d96b3-03ea-499d-b70a-98b4f9a42dfd}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {f3462cff-3d59-4afd-914b-481e38d419b4}, !- Handle
@@ -28891,7 +29500,14 @@ OS:People,
   {54cb3e27-84a4-4928-9e2b-06bddd0601c4}, !- Handle
   DOE Ref 1980-2004 - Outpatient - LockerRoom People, !- Name
   {80dce5d2-5800-4391-9479-c3cd5c37471e}, !- People Definition Name
-  {11fff7bf-3ea3-4c46-8efb-4ef05655574b}; !- Space or SpaceType Name
+  {11fff7bf-3ea3-4c46-8efb-4ef05655574b}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {1fc3d76b-49cf-40c6-a178-6763e3daeb20}, !- Handle
@@ -29003,7 +29619,14 @@ OS:People,
   {254eba9f-a559-4fc8-a32f-dfc18c5a24ea}, !- Handle
   DOE Ref 1980-2004 - Outpatient - Lounge People, !- Name
   {f1b8440c-25f5-4705-8cbe-85540117b381}, !- People Definition Name
-  {3a6c88dc-3c9c-44c1-8893-3cd1f75357c9}; !- Space or SpaceType Name
+  {3a6c88dc-3c9c-44c1-8893-3cd1f75357c9}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {95f4227c-3dfd-428b-877a-809d20eb63e1}, !- Handle
@@ -29115,7 +29738,14 @@ OS:People,
   {56acbc1f-b0b3-4148-9ab3-7b313dd3385b}, !- Handle
   DOE Ref 1980-2004 - Outpatient - MRI People, !- Name
   {e1fdb495-a8dd-4a5b-b5d2-278cf73339bc}, !- People Definition Name
-  {a0f6215a-76df-4ac5-a052-02aea3aa6be7}; !- Space or SpaceType Name
+  {a0f6215a-76df-4ac5-a052-02aea3aa6be7}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {06aa20b8-4010-485d-8385-95f34f98f51c}, !- Handle
@@ -29227,7 +29857,14 @@ OS:People,
   {388decb1-8dce-42e5-9659-4c1da346e34a}, !- Handle
   DOE Ref 1980-2004 - Outpatient - MRI_Control People, !- Name
   {f8c8b331-68e3-4346-91f8-691e02c5a78b}, !- People Definition Name
-  {7ffd0b28-7d07-4ec4-973c-c692f8d95ed5}; !- Space or SpaceType Name
+  {7ffd0b28-7d07-4ec4-973c-c692f8d95ed5}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {c9f497a9-d46c-461b-8298-4883cca89489}, !- Handle
@@ -29436,7 +30073,14 @@ OS:People,
   {00beddd8-227e-467d-8649-7c7c3d405c29}, !- Handle
   DOE Ref 1980-2004 - Outpatient - NurseStation People, !- Name
   {45b528aa-edec-431b-85f5-475c45da2777}, !- People Definition Name
-  {dfbdd148-ec78-4e6b-9747-78ee4058bbb7}; !- Space or SpaceType Name
+  {dfbdd148-ec78-4e6b-9747-78ee4058bbb7}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {ba251032-abf4-4532-92f6-eeb7d520798b}, !- Handle
@@ -29548,7 +30192,14 @@ OS:People,
   {a06590c5-cbb6-4e41-9bfb-281e9ca02d32}, !- Handle
   DOE Ref 1980-2004 - Outpatient - OR People, !- Name
   {829cfed9-afdc-4b54-931a-f0f2e9abf345}, !- People Definition Name
-  {4fb6773a-88a2-46bd-989f-a9e1d72c6aa7}; !- Space or SpaceType Name
+  {4fb6773a-88a2-46bd-989f-a9e1d72c6aa7}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {41bce963-3de7-4ed0-ac06-d2af80b0b5a5}, !- Handle
@@ -29677,7 +30328,14 @@ OS:People,
   {db72185a-4fa3-4ee3-86f6-e58bfa837b48}, !- Handle
   DOE Ref 1980-2004 - Outpatient - Office People, !- Name
   {bf473d97-c0e8-471a-9a00-83c714550841}, !- People Definition Name
-  {3164c7bc-b087-4e51-9c38-b39b2b549ec5}; !- Space or SpaceType Name
+  {3164c7bc-b087-4e51-9c38-b39b2b549ec5}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {8a032cbc-7378-43b9-9959-6cfcfee532e5}, !- Handle
@@ -29789,7 +30447,14 @@ OS:People,
   {ee736f13-8bd2-426c-940b-034b99b8ca6f}, !- Handle
   DOE Ref 1980-2004 - Outpatient - PACU People, !- Name
   {870741da-ceee-4512-94da-9bdf997fc461}, !- People Definition Name
-  {8fc82de8-bc70-47e3-8ae0-589aa9e190bf}; !- Space or SpaceType Name
+  {8fc82de8-bc70-47e3-8ae0-589aa9e190bf}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {20dcbb2a-154e-4ef4-a363-eda99a2c58ed}, !- Handle
@@ -29901,7 +30566,14 @@ OS:People,
   {7f2fed7d-3812-4736-887c-1c1e06b876a7}, !- Handle
   DOE Ref 1980-2004 - Outpatient - PhysicalTherapy People, !- Name
   {b9a00ae0-de35-417d-8d7a-a69cd106cf11}, !- People Definition Name
-  {3b425e9d-e4fd-49f1-a4fc-ed299cbcd3d0}; !- Space or SpaceType Name
+  {3b425e9d-e4fd-49f1-a4fc-ed299cbcd3d0}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {c2a4d19b-524e-4111-a5c9-98fa0e3d40c4}, !- Handle
@@ -30013,7 +30685,14 @@ OS:People,
   {0fead893-c7ba-4452-94a0-bd7b95858008}, !- Handle
   DOE Ref 1980-2004 - Outpatient - PreOp People, !- Name
   {63b7d352-581b-44e4-9124-8b59532c3bcb}, !- People Definition Name
-  {72bf346c-227c-4d32-8b8d-f305afe3a347}; !- Space or SpaceType Name
+  {72bf346c-227c-4d32-8b8d-f305afe3a347}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {708112f3-c32d-43a3-97a3-6ceb0a84f34d}, !- Handle
@@ -30125,7 +30804,14 @@ OS:People,
   {7c0bb24f-d4e9-4265-866f-d7ffb5f7a617}, !- Handle
   DOE Ref 1980-2004 - Outpatient - ProcedureRoom People, !- Name
   {658bede9-a436-45db-b4ba-9b9ef2354542}, !- People Definition Name
-  {414885e3-42e0-46c6-b714-0262b1169900}; !- Space or SpaceType Name
+  {414885e3-42e0-46c6-b714-0262b1169900}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {3db451ba-cf69-4bc0-99de-32789ac3f2d5}, !- Handle
@@ -30237,7 +30923,14 @@ OS:People,
   {4769cbef-e2a6-47b7-bae4-ea89166558f9}, !- Handle
   DOE Ref 1980-2004 - Outpatient - Soil Work People, !- Name
   {8dc39b5e-4e36-46cf-8d13-083c58ab0b1a}, !- People Definition Name
-  {036f1bc7-c6f2-4567-938b-ea455b8fa244}; !- Space or SpaceType Name
+  {036f1bc7-c6f2-4567-938b-ea455b8fa244}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {d3aaff1d-8eae-43eb-bb5c-78d6697b599d}, !- Handle
@@ -30526,7 +31219,14 @@ OS:People,
   {367e234e-19f5-465f-a734-b51e182ce45a}, !- Handle
   DOE Ref 1980-2004 - Outpatient - Xray People, !- Name
   {9748218b-ccfd-46d1-93e6-6ae6e8f4e8c2}, !- People Definition Name
-  {93f21619-8823-4b6f-a112-11414198c8ff}; !- Space or SpaceType Name
+  {93f21619-8823-4b6f-a112-11414198c8ff}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {c394f81e-320d-4e09-a291-e143b78c9850}, !- Handle
@@ -30832,7 +31532,14 @@ OS:People,
   {683c6a79-74a1-4348-a5d6-e0f349d6f891}, !- Handle
   DOE Ref 2004 - Outpatient - Cafe People, !- Name
   {ba411f32-d58a-4f52-b6dd-8811298b7da6}, !- People Definition Name
-  {88ea2ac5-4fdb-49d4-a42e-402a36472596}; !- Space or SpaceType Name
+  {88ea2ac5-4fdb-49d4-a42e-402a36472596}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {1d2edefe-83df-41f8-a433-ee44fd352a07}, !- Handle
@@ -30944,7 +31651,14 @@ OS:People,
   {93456ca0-26d3-464c-b8f7-41491180e80d}, !- Handle
   DOE Ref 2004 - Outpatient - CleanWork People, !- Name
   {6eb6b6a6-44bd-4e63-b329-f52f0a09d5ed}, !- People Definition Name
-  {74af043e-805c-419c-8482-c82fed200587}; !- Space or SpaceType Name
+  {74af043e-805c-419c-8482-c82fed200587}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {92a59379-6fe7-4e1b-a4e0-28fcd82f3e45}, !- Handle
@@ -31056,7 +31770,14 @@ OS:People,
   {cdee9eb0-ac8c-4db5-8ff0-c2e66f66d49c}, !- Handle
   DOE Ref 2004 - Outpatient - Conference People, !- Name
   {6de969f7-5efc-449f-aa40-4b7fdc57503e}, !- People Definition Name
-  {ec5e6727-c09e-489b-b973-c0c87866b9ef}; !- Space or SpaceType Name
+  {ec5e6727-c09e-489b-b973-c0c87866b9ef}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {b8042e88-5664-493e-adfd-4105ebb87ca8}, !- Handle
@@ -31168,7 +31889,14 @@ OS:People,
   {cb549ad1-e73d-4c05-abbc-abfed44801e5}, !- Handle
   DOE Ref 2004 - Outpatient - DressingRoom People, !- Name
   {5dc90ad9-2ac9-444c-bf9f-a60294d88e34}, !- People Definition Name
-  {685c37af-4f7f-41f7-bbee-b3b64c120acd}; !- Space or SpaceType Name
+  {685c37af-4f7f-41f7-bbee-b3b64c120acd}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {dec35c5a-141a-466a-9e80-2ae79797855f}, !- Handle
@@ -31377,7 +32105,14 @@ OS:People,
   {d21e18c0-af48-4fe3-88c6-c970f89b4d63}, !- Handle
   DOE Ref 2004 - Outpatient - Exam People, !- Name
   {c2adf3ac-b103-444f-8691-2c9014122293}, !- People Definition Name
-  {af314309-bc17-40c2-89eb-951b7b0a7a57}; !- Space or SpaceType Name
+  {af314309-bc17-40c2-89eb-951b7b0a7a57}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {7f8c7e11-448b-4ff8-9cd5-4c8cbcc1fd65}, !- Handle
@@ -31586,7 +32321,14 @@ OS:People,
   {e6e51757-4e2e-442d-b773-74d1173bea8a}, !- Handle
   DOE Ref 2004 - Outpatient - IT_Room People, !- Name
   {985c6485-2470-4fa2-a758-8f58f0de6791}, !- People Definition Name
-  {0d03b9bb-a81e-47d3-a4b0-a7f54f7a94de}; !- Space or SpaceType Name
+  {0d03b9bb-a81e-47d3-a4b0-a7f54f7a94de}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {25f375b6-9beb-4cd7-a1ee-9ff521d63e08}, !- Handle
@@ -31778,7 +32520,14 @@ OS:People,
   {09c234b7-52ce-47b6-9856-8463ace55b85}, !- Handle
   DOE Ref 2004 - Outpatient - Lobby People, !- Name
   {7a277efd-b38d-4a1f-8b9b-36077afdcbbc}, !- People Definition Name
-  {5146cb50-98f2-48c9-9c75-041d390fa1a8}; !- Space or SpaceType Name
+  {5146cb50-98f2-48c9-9c75-041d390fa1a8}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {a18c5d64-e661-4b90-a30d-0c27788d07e0}, !- Handle
@@ -31890,7 +32639,14 @@ OS:People,
   {844563d2-16f9-456a-a324-2ba34cd2671f}, !- Handle
   DOE Ref 2004 - Outpatient - LockerRoom People, !- Name
   {ab421542-329e-457e-9471-25af0090daeb}, !- People Definition Name
-  {8cd77bec-85bf-4613-8fd5-1c5e7acf9494}; !- Space or SpaceType Name
+  {8cd77bec-85bf-4613-8fd5-1c5e7acf9494}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {cbaff5e1-8533-4145-bf9a-76cc94d760ce}, !- Handle
@@ -32002,7 +32758,14 @@ OS:People,
   {52e90fce-8a42-41ef-85d7-b7dcacad0aa3}, !- Handle
   DOE Ref 2004 - Outpatient - Lounge People, !- Name
   {3a411ba2-29bc-47a8-aa52-054ba0a5ddd6}, !- People Definition Name
-  {3a229f30-7d4d-441b-b6db-f23799aadf7e}; !- Space or SpaceType Name
+  {3a229f30-7d4d-441b-b6db-f23799aadf7e}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {7f3256c0-1405-4088-bb4d-3354c8131002}, !- Handle
@@ -32114,7 +32877,14 @@ OS:People,
   {e5f61b41-eed3-4719-8da2-50204cad24b0}, !- Handle
   DOE Ref 2004 - Outpatient - MRI People, !- Name
   {6dfac519-2145-4a6f-ada3-7399dbeef860}, !- People Definition Name
-  {3b2f004d-57f4-4a18-8b8f-b3045cb59301}; !- Space or SpaceType Name
+  {3b2f004d-57f4-4a18-8b8f-b3045cb59301}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {af7b7fa2-f3a8-4584-9600-9ed0068c4c30}, !- Handle
@@ -32226,7 +32996,14 @@ OS:People,
   {879ad0b5-3348-4338-a010-29649c1889f7}, !- Handle
   DOE Ref 2004 - Outpatient - MRI_Control People, !- Name
   {130ccb87-845d-4f39-92a1-9b34155246eb}, !- People Definition Name
-  {01c892e8-bfc4-4e60-bb7d-31427c49251b}; !- Space or SpaceType Name
+  {01c892e8-bfc4-4e60-bb7d-31427c49251b}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {bd0a1190-9cc1-45b1-9ab4-94c68aa1fcdf}, !- Handle
@@ -32435,7 +33212,14 @@ OS:People,
   {5a34c94c-87ea-4e70-9274-b97fb981bd8d}, !- Handle
   DOE Ref 2004 - Outpatient - NurseStation People, !- Name
   {7829768e-13db-45b3-a2c0-863f285aa5ef}, !- People Definition Name
-  {641ae681-acfc-4ec3-899b-7825a84f7efb}; !- Space or SpaceType Name
+  {641ae681-acfc-4ec3-899b-7825a84f7efb}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {f1864c30-99fc-4b7a-b8e2-346d8db80393}, !- Handle
@@ -32547,7 +33331,14 @@ OS:People,
   {7d9c3607-9336-4139-a375-32519be4c356}, !- Handle
   DOE Ref 2004 - Outpatient - OR People,  !- Name
   {381e2c19-e7bf-4e20-8c4f-3f7fa308df5e}, !- People Definition Name
-  {251ea4a3-9709-4e6c-9131-efae4e2bd428}; !- Space or SpaceType Name
+  {251ea4a3-9709-4e6c-9131-efae4e2bd428}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {3be8c643-68f3-46bd-a6e1-859b5431e443}, !- Handle
@@ -32676,7 +33467,14 @@ OS:People,
   {c660fb27-ca06-497f-9152-337d651976a2}, !- Handle
   DOE Ref 2004 - Outpatient - Office People, !- Name
   {58419663-0035-4d05-88cf-8446d724243f}, !- People Definition Name
-  {16b242b5-efcd-499d-aed5-1256cfeb11a1}; !- Space or SpaceType Name
+  {16b242b5-efcd-499d-aed5-1256cfeb11a1}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {43941ff9-9657-48e9-b811-ed66096421ea}, !- Handle
@@ -32788,7 +33586,14 @@ OS:People,
   {f6eef320-699b-4ce6-8f02-61ad83aba968}, !- Handle
   DOE Ref 2004 - Outpatient - PACU People, !- Name
   {a187b1d1-a131-4b91-a03f-25b4de88747b}, !- People Definition Name
-  {b5aaf7ad-0641-4b89-a736-deb9b4053f6d}; !- Space or SpaceType Name
+  {b5aaf7ad-0641-4b89-a736-deb9b4053f6d}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {4be5dd62-c633-4be7-bb73-9696a390313d}, !- Handle
@@ -32900,7 +33705,14 @@ OS:People,
   {c8288067-e895-485d-bff8-3a510e040c3d}, !- Handle
   DOE Ref 2004 - Outpatient - PhysicalTherapy People, !- Name
   {19b7ba73-8f93-48a0-8dcb-1d1bee247753}, !- People Definition Name
-  {aedfff31-857e-4631-bbde-50c7949cb01a}; !- Space or SpaceType Name
+  {aedfff31-857e-4631-bbde-50c7949cb01a}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {c17df095-d49a-4607-a918-78bef78c0827}, !- Handle
@@ -33012,7 +33824,14 @@ OS:People,
   {5662a815-0f47-455d-ad14-b0230723204f}, !- Handle
   DOE Ref 2004 - Outpatient - PreOp People, !- Name
   {ae07f1d8-5359-4903-a40a-7171d9795cde}, !- People Definition Name
-  {e9b10869-e6c0-42d6-a157-42530d9b098e}; !- Space or SpaceType Name
+  {e9b10869-e6c0-42d6-a157-42530d9b098e}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {63cfdca8-6db7-4485-a7e0-f719ba077c52}, !- Handle
@@ -33124,7 +33943,14 @@ OS:People,
   {ed53dd04-2350-49e3-9ed4-35b4e6ebbe51}, !- Handle
   DOE Ref 2004 - Outpatient - ProcedureRoom People, !- Name
   {910fa03b-3e75-476a-a699-2d29e27129c8}, !- People Definition Name
-  {fe2f00fb-e90e-4671-bb50-6d1874ba590a}; !- Space or SpaceType Name
+  {fe2f00fb-e90e-4671-bb50-6d1874ba590a}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {fbc16a2c-4d51-4f5b-b762-fea44fd6ea41}, !- Handle
@@ -33236,7 +34062,14 @@ OS:People,
   {6de6b370-140e-446a-b358-c6bd9b0308a6}, !- Handle
   DOE Ref 2004 - Outpatient - Soil Work People, !- Name
   {bbbdf39e-d2d0-4c3a-9648-b777d96519b6}, !- People Definition Name
-  {e8de72ea-4bfb-45ba-82d1-c9675ade9e18}; !- Space or SpaceType Name
+  {e8de72ea-4bfb-45ba-82d1-c9675ade9e18}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {e49afa74-2af1-4772-a1f5-d079067a054d}, !- Handle
@@ -33525,7 +34358,14 @@ OS:People,
   {0fb56262-3b59-4391-a3f3-cbd4d4446150}, !- Handle
   DOE Ref 2004 - Outpatient - Xray People, !- Name
   {2e8105f2-5dcc-4d97-9525-77b2d09c095c}, !- People Definition Name
-  {26e99577-d323-4305-9f45-63b35e991687}; !- Space or SpaceType Name
+  {26e99577-d323-4305-9f45-63b35e991687}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {1c49d586-f6f0-42e0-8ae7-1a852db49283}, !- Handle
@@ -33831,7 +34671,14 @@ OS:People,
   {aab921a2-2282-45e3-a69a-55c5357e983b}, !- Handle
   DOE Ref Pre-1980 - Outpatient - Cafe People, !- Name
   {f4dec055-9948-49dc-a209-d25517610a2c}, !- People Definition Name
-  {9e3f2b80-1a83-4ea7-90cb-ceaf253be338}; !- Space or SpaceType Name
+  {9e3f2b80-1a83-4ea7-90cb-ceaf253be338}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {56bd950f-9498-4668-b186-7a2cb91b1610}, !- Handle
@@ -33943,7 +34790,14 @@ OS:People,
   {ded028ed-ce56-49f7-ac93-6aec69d25c21}, !- Handle
   DOE Ref Pre-1980 - Outpatient - CleanWork People, !- Name
   {fe78942e-2e6e-421f-b88d-8eef59fd080d}, !- People Definition Name
-  {c58047f1-b818-4aba-840f-dd86a322bd76}; !- Space or SpaceType Name
+  {c58047f1-b818-4aba-840f-dd86a322bd76}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {58c95a4f-5249-4762-b5f6-54dceb1d8b8a}, !- Handle
@@ -34055,7 +34909,14 @@ OS:People,
   {823a0ef7-6dc3-49a7-b1b6-4ac909e8230d}, !- Handle
   DOE Ref Pre-1980 - Outpatient - Conference People, !- Name
   {90f483b8-0ae6-41b6-9578-924b4e230a55}, !- People Definition Name
-  {089a9e32-e605-4c46-a431-c7b5a6ee107e}; !- Space or SpaceType Name
+  {089a9e32-e605-4c46-a431-c7b5a6ee107e}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {5ee97b4a-931f-45b5-a647-97398bdf2c7b}, !- Handle
@@ -34167,7 +35028,14 @@ OS:People,
   {80a8316a-1fa8-437a-9d33-2db44026dd18}, !- Handle
   DOE Ref Pre-1980 - Outpatient - DressingRoom People, !- Name
   {6ca5f064-046f-46f9-8e16-fd17123a5ce3}, !- People Definition Name
-  {a8a7e49c-5ac3-4e0b-90aa-b5e206ce274b}; !- Space or SpaceType Name
+  {a8a7e49c-5ac3-4e0b-90aa-b5e206ce274b}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {ee0aac3c-d6ed-4d33-9fe6-dbfc99120d91}, !- Handle
@@ -34376,7 +35244,14 @@ OS:People,
   {fe0ee705-4405-4669-a972-92f7ad59aa04}, !- Handle
   DOE Ref Pre-1980 - Outpatient - Exam People, !- Name
   {5275e1d8-7079-45d6-9b87-25e0c64431ad}, !- People Definition Name
-  {a3f90462-ec7b-4256-b093-116f35bc3cfc}; !- Space or SpaceType Name
+  {a3f90462-ec7b-4256-b093-116f35bc3cfc}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {13c64e82-b18d-4031-b09c-7585bf65ef1a}, !- Handle
@@ -34585,7 +35460,14 @@ OS:People,
   {407e35b1-ea08-499c-898b-97b71d9effe1}, !- Handle
   DOE Ref Pre-1980 - Outpatient - IT_Room People, !- Name
   {021bfebc-2ec1-4711-8d80-d49b2fad5321}, !- People Definition Name
-  {a7ac220e-f0ae-430a-8728-5458ceda2cc7}; !- Space or SpaceType Name
+  {a7ac220e-f0ae-430a-8728-5458ceda2cc7}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {58f2cd4d-9506-46d8-a150-37369d76a8bd}, !- Handle
@@ -34777,7 +35659,14 @@ OS:People,
   {4a8b76b8-13e2-4c1d-8632-da2c47b112a2}, !- Handle
   DOE Ref Pre-1980 - Outpatient - Lobby People, !- Name
   {00672c25-b4b1-4dcd-b31e-193b96d87391}, !- People Definition Name
-  {509a1e2f-5f1a-4e41-970b-7003a6cce2e0}; !- Space or SpaceType Name
+  {509a1e2f-5f1a-4e41-970b-7003a6cce2e0}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {e1ccd6f1-1321-4ac9-a26a-0db2cfa9717b}, !- Handle
@@ -34889,7 +35778,14 @@ OS:People,
   {08d5da82-e850-42ef-af4c-51a0da4c866f}, !- Handle
   DOE Ref Pre-1980 - Outpatient - LockerRoom People, !- Name
   {9fc39386-4aeb-4021-8c6c-a8737b63160a}, !- People Definition Name
-  {50b0f5cf-004d-4056-a693-cd6d5cde66a0}; !- Space or SpaceType Name
+  {50b0f5cf-004d-4056-a693-cd6d5cde66a0}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {706a72c9-c2d0-47c1-b46a-3a9094e3d2ea}, !- Handle
@@ -35001,7 +35897,14 @@ OS:People,
   {9bb9e9b0-e745-4c8c-a8c5-9594bb9ec79b}, !- Handle
   DOE Ref Pre-1980 - Outpatient - Lounge People, !- Name
   {d6571645-11e7-48e7-84f7-678fcbd52812}, !- People Definition Name
-  {ad494565-1c69-4c45-88fe-5c7e1ef01f9c}; !- Space or SpaceType Name
+  {ad494565-1c69-4c45-88fe-5c7e1ef01f9c}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {e039f838-dc96-41bf-92f8-4e05b803ec92}, !- Handle
@@ -35113,7 +36016,14 @@ OS:People,
   {28d380df-9247-4a2d-be7f-57ad57b6d2f7}, !- Handle
   DOE Ref Pre-1980 - Outpatient - MRI People, !- Name
   {fe7d7b37-c3b3-40d8-b258-e1b56ba981b3}, !- People Definition Name
-  {effcedd0-df4b-4504-b34d-3c43152c4304}; !- Space or SpaceType Name
+  {effcedd0-df4b-4504-b34d-3c43152c4304}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {450b2a68-0c9c-4279-a9ee-6c49ca29c6cf}, !- Handle
@@ -35225,7 +36135,14 @@ OS:People,
   {b8bb20e7-cbf8-4223-9d67-ac63f8361df5}, !- Handle
   DOE Ref Pre-1980 - Outpatient - MRI_Control People, !- Name
   {375ea717-aebf-488c-9fc1-af1060e65aa5}, !- People Definition Name
-  {1b89535c-7f9f-4f4f-9af7-0e354aa0dbc0}; !- Space or SpaceType Name
+  {1b89535c-7f9f-4f4f-9af7-0e354aa0dbc0}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {f045b97c-4a53-4867-adcf-afc79c378f2b}, !- Handle
@@ -35434,7 +36351,14 @@ OS:People,
   {6870128e-7366-45bc-a341-4ccec5d0d62c}, !- Handle
   DOE Ref Pre-1980 - Outpatient - NurseStation People, !- Name
   {9963c1d2-ff1d-4bb6-ac78-c3c28ac92a7c}, !- People Definition Name
-  {95f33fef-2d30-4f17-874c-5472421b2ade}; !- Space or SpaceType Name
+  {95f33fef-2d30-4f17-874c-5472421b2ade}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {baf75a8a-c6fb-46e9-b99f-fc335b5a43b0}, !- Handle
@@ -35546,7 +36470,14 @@ OS:People,
   {01bc4809-7c5e-40c1-a0e3-e932e26fab15}, !- Handle
   DOE Ref Pre-1980 - Outpatient - OR People, !- Name
   {5a56ed46-663b-41e1-bbbe-07e0d6bf4f1c}, !- People Definition Name
-  {084a1fb2-5bc5-4f49-ac94-3d51436ef676}; !- Space or SpaceType Name
+  {084a1fb2-5bc5-4f49-ac94-3d51436ef676}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {1ead2c6c-51ce-4c65-af8d-81dad7d0a4e0}, !- Handle
@@ -35675,7 +36606,14 @@ OS:People,
   {506bbea6-50b8-4d63-9744-1e9c3a5c2e62}, !- Handle
   DOE Ref Pre-1980 - Outpatient - Office People, !- Name
   {61770863-3a7f-4a2c-bd91-9ba312c97917}, !- People Definition Name
-  {1c141737-4fed-47b8-9f2f-eec913ef9361}; !- Space or SpaceType Name
+  {1c141737-4fed-47b8-9f2f-eec913ef9361}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {a0cc246e-7755-463a-ae60-67318eea6d43}, !- Handle
@@ -35787,7 +36725,14 @@ OS:People,
   {90bad109-6016-44d4-b418-7015e2dcacfc}, !- Handle
   DOE Ref Pre-1980 - Outpatient - PACU People, !- Name
   {cf6df612-aa08-4532-965a-7bfa2e7b9e87}, !- People Definition Name
-  {823317bc-fad8-4f84-984b-2d837d6ebeea}; !- Space or SpaceType Name
+  {823317bc-fad8-4f84-984b-2d837d6ebeea}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {59e087d2-d72a-41bc-9a38-34bdd45a2f24}, !- Handle
@@ -35899,7 +36844,14 @@ OS:People,
   {c2d1fcb9-3424-4bd4-8c0c-5ab4631b30d7}, !- Handle
   DOE Ref Pre-1980 - Outpatient - PhysicalTherapy People, !- Name
   {782d7bc7-e931-4663-9ae3-b8e618dd7c8d}, !- People Definition Name
-  {580d4774-500e-4936-8531-f5b3a38bd597}; !- Space or SpaceType Name
+  {580d4774-500e-4936-8531-f5b3a38bd597}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {875c92e0-6066-45c9-9a16-c753e21585aa}, !- Handle
@@ -36011,7 +36963,14 @@ OS:People,
   {65983f87-c158-4a8b-b503-6117001e85dc}, !- Handle
   DOE Ref Pre-1980 - Outpatient - PreOp People, !- Name
   {6b3a3efe-55c2-40be-9247-9e4a5a6b4d61}, !- People Definition Name
-  {1ab6e01f-43aa-464f-a732-03e426bef15a}; !- Space or SpaceType Name
+  {1ab6e01f-43aa-464f-a732-03e426bef15a}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {622e3e85-6f03-43ac-af34-23fb7100a2c6}, !- Handle
@@ -36123,7 +37082,14 @@ OS:People,
   {d06a636c-fb43-4e69-8af9-2d619b44692d}, !- Handle
   DOE Ref Pre-1980 - Outpatient - ProcedureRoom People, !- Name
   {b94bfce0-a4e8-4fff-b597-255271eb2eea}, !- People Definition Name
-  {69f16096-c90a-4d6f-bd5f-1122a2319c96}; !- Space or SpaceType Name
+  {69f16096-c90a-4d6f-bd5f-1122a2319c96}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {50f33eb9-26e4-42de-9b36-bd2601086b11}, !- Handle
@@ -36235,7 +37201,14 @@ OS:People,
   {f84eddee-4547-4dd1-9db5-5856205a5afe}, !- Handle
   DOE Ref Pre-1980 - Outpatient - Soil Work People, !- Name
   {4483396d-c454-4792-8a32-3c1f38e74343}, !- People Definition Name
-  {fab4a17a-e303-4ddf-9d80-5e83cfad9142}; !- Space or SpaceType Name
+  {fab4a17a-e303-4ddf-9d80-5e83cfad9142}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {30549a95-9cb3-47f3-bb33-a614ad88f5b8}, !- Handle
@@ -36524,7 +37497,14 @@ OS:People,
   {e5b9af5f-d859-4a0a-9913-ef878a3460fb}, !- Handle
   DOE Ref Pre-1980 - Outpatient - Xray People, !- Name
   {8e09e941-edba-4673-96ef-308f4aa92d8d}, !- People Definition Name
-  {c153cf93-b7ec-4e6a-86c1-ca7f301227d6}; !- Space or SpaceType Name
+  {c153cf93-b7ec-4e6a-86c1-ca7f301227d6}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {6b757b98-43b6-41e8-a50b-1190e2e9cb6b}, !- Handle

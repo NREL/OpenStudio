@@ -62,6 +62,13 @@ files.each do |f|
     n_lun += 1
   end
 
+  # People
+  n_people = 0
+  m.getPeoples.each do |p|
+    p.setMultiplier(1.0)
+    n_people += 1
+  end
+
   # SteamEquipment
   n_steam = 0
   m.getSteamEquipments.each do |s|
@@ -71,7 +78,8 @@ files.each do |f|
 
   puts "ElectricEquipment (#{n_elec}), ExteriorLights (#{n_extlights}), " +
        "GasEquipment (#{n_gas}), HotWaterEquipment (#{n_hw}), " +
-       "Lights (#{n_lights}), Luminaire (#{n_lum}), SteamEquipment (#{n_steam})"
+       "Lights (#{n_lights}), Luminaire (#{n_lum}), " +
+       "People (#{n_people}), SteamEquipment (#{n_steam})"
 
   m.save(f, true)
 end
