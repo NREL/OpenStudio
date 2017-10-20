@@ -51,7 +51,7 @@ namespace detail {
   CoilPerformanceDXCooling_Impl::CoilPerformanceDXCooling_Impl(const IdfObject& idfObject,
                                                                Model_Impl* model,
                                                                bool keepHandle)
-    : ResourceObject_Impl(idfObject,model,keepHandle)
+    : ParentObject_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == CoilPerformanceDXCooling::iddObjectType());
   }
@@ -59,7 +59,7 @@ namespace detail {
   CoilPerformanceDXCooling_Impl::CoilPerformanceDXCooling_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                Model_Impl* model,
                                                                bool keepHandle)
-    : ResourceObject_Impl(other,model,keepHandle)
+    : ParentObject_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == CoilPerformanceDXCooling::iddObjectType());
   }
@@ -67,7 +67,7 @@ namespace detail {
   CoilPerformanceDXCooling_Impl::CoilPerformanceDXCooling_Impl(const CoilPerformanceDXCooling_Impl& other,
                                                                Model_Impl* model,
                                                                bool keepHandle)
-    : ResourceObject_Impl(other,model,keepHandle)
+    : ParentObject_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& CoilPerformanceDXCooling_Impl::outputVariableNames() const
@@ -494,7 +494,7 @@ CoilPerformanceDXCooling::CoilPerformanceDXCooling(const Model& model,
   const Curve& energyInputRatioFunctionofTemperature,
   const Curve& energyInputRatioFunctionofFlowFraction,
   const Curve& partLoadFractionCorrelation)
-  : ResourceObject(CoilPerformanceDXCooling::iddObjectType(),model)
+  : ParentObject(CoilPerformanceDXCooling::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilPerformanceDXCooling_Impl>());
 
@@ -520,7 +520,7 @@ CoilPerformanceDXCooling::CoilPerformanceDXCooling(const Model& model,
 }
 
 CoilPerformanceDXCooling::CoilPerformanceDXCooling(const Model& model)
-  : ResourceObject(CoilPerformanceDXCooling::iddObjectType(),model)
+  : ParentObject(CoilPerformanceDXCooling::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilPerformanceDXCooling_Impl>());
 
@@ -830,7 +830,7 @@ void CoilPerformanceDXCooling::resetSensibleHeatRatioFunctionofFlowFractionCurve
 
 /// @cond
 CoilPerformanceDXCooling::CoilPerformanceDXCooling(std::shared_ptr<detail::CoilPerformanceDXCooling_Impl> impl)
-  : ResourceObject(std::move(impl))
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

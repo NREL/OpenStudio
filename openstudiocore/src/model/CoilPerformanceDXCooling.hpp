@@ -30,7 +30,7 @@
 #define MODEL_COILPERFORMANCEDXCOOLING_HPP
 
 #include "ModelAPI.hpp"
-#include "ResourceObject.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 
@@ -46,7 +46,7 @@ namespace detail {
 } // detail
 
 /** CoilPerformanceDXCooling is a ModelObject that wraps the OpenStudio IDD object 'OS:CoilPerformance:DX:Cooling'. */
-class MODEL_API CoilPerformanceDXCooling : public ResourceObject {
+class MODEL_API CoilPerformanceDXCooling : public ParentObject {
  public:
   /** @name Constructors and Destructors */
   //@{
