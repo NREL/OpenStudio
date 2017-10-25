@@ -1858,6 +1858,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateMaterialPropertyGlazingSpectralData(spectralData);
       break;
     }
+  case openstudio::IddObjectType::OS_MaterialProperty_MoisturePenetrationDepth_Settings :
+    {
+      model::MaterialPropertyMoisturePenetrationDepthSettings empd = modelObject.cast<MaterialPropertyMoisturePenetrationDepthSettings>();
+      retVal = translateMaterialPropertyMoisturePenetrationDepthSettings(empd);
+      break;
+    }    
   case openstudio::IddObjectType::OS_Material_RoofVegetation :
     {
       model::RoofVegetation material = modelObject.cast<RoofVegetation>();
@@ -3186,6 +3192,7 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
 {
   std::vector<IddObjectType> iddObjectTypes;
   iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_GlazingSpectralData);
+  iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_MoisturePenetrationDepth_Settings);
   iddObjectTypes.push_back(IddObjectType::OS_Material);
   iddObjectTypes.push_back(IddObjectType::OS_Material_AirGap);
   iddObjectTypes.push_back(IddObjectType::OS_Material_AirWall);
