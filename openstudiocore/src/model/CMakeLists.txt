@@ -41,7 +41,7 @@ set(${target_name}_src
   ThreeJSReverseTranslator.cpp
   ModelMerger.hpp
   ModelMerger.cpp
-  
+
   ConcreteModelObjects.hpp
   AirConditionerVariableRefrigerantFlow.hpp
   AirConditionerVariableRefrigerantFlow_Impl.hpp
@@ -124,6 +124,9 @@ set(${target_name}_src
   AvailabilityManager.hpp
   AvailabilityManager_Impl.hpp
   AvailabilityManager.cpp
+  AvailabilityManagerAssignmentList.hpp
+  AvailabilityManagerAssignmentList_Impl.hpp
+  AvailabilityManagerAssignmentList.cpp
   AvailabilityManagerOptimumStart.hpp
   AvailabilityManagerOptimumStart_Impl.hpp
   AvailabilityManagerOptimumStart.cpp
@@ -1470,6 +1473,7 @@ set(${target_name}_test_src
   test/AirTerminalSingleDuctVAVHeatAndCoolReheat_GTest.cpp
   test/AirTerminalSingleDuctVAVHeatAndCoolNoReheat_GTest.cpp
   test/Alpha1_GTest.cpp
+  test/AvailabilityManagerAssignmentList_GTest.cpp
   test/AvailabilityManagerNightCycle_GTest.cpp
   test/AvailabilityManagerHybridVentilation_GTest.cpp
   test/AvailabilityManagerOptimumStart_GTest.cpp

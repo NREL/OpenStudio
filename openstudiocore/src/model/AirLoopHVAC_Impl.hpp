@@ -232,20 +232,22 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
 
   // AVM
+  // Impl_only
+  virtual AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const override;
 
-  AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const;
 
   std::vector<AvailabilityManager> availabilityManagers() const;
+  bool setAvailabilityManagers(const std::vector<AvailabilityManager> & avms);
+  void resetAvailabilityManagers();
 
   bool addAvailabilityManager(const AvailabilityManager & availabilityManager);
-
   bool addAvailabilityManager(const AvailabilityManager & availabilityManager, unsigned priority);
 
-  void clearAvailabilityManagers();
-
+  unsigned availabilityManagerPriority(const AvailabilityManager & availabilityManager) const;
   bool setAvailabilityManagerPriority(const AvailabilityManager & availabilityManager, unsigned priority);
 
-  unsigned availabilityManagerPriority(const AvailabilityManager & availabilityManager);
+  bool removeAvailabilityManager(const AvailabilityManager& avm);
+  bool removeAvailabilityManager(unsigned priority);
 
   private:
 

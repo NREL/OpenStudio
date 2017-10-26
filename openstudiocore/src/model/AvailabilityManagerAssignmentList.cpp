@@ -29,13 +29,23 @@
 #include "AvailabilityManagerAssignmentList.hpp"
 #include "AvailabilityManagerAssignmentList_Impl.hpp"
 
+#include "AvailabilityManager_Impl.hpp"
 #include "AvailabilityManager.hpp"
+
+#include "Loop_Impl.hpp"
 #include "Loop.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "PlantLoop_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "Model.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 namespace openstudio {
 namespace model {
@@ -82,15 +92,11 @@ namespace detail {
    * TODO: Clone all the AVMs
    * The Ctor gets a loop though... Perhaps should have a clone(Loop loop) method instead?
    * It's meant to be called in the Loop.clone method anwyays...
+   * TODO: This will need to change once ZOneHVAC equipment can have an AVMList too...
    */
   ModelObject AvailabilityManagerAssignmentList_Impl::clone(Model model) const
   {
-    boost::optional<Loop> thisLoop;
-    for(const Loop& loop: model.getLoops()) {
-      if (loop.availabilityManagerAssignmentList().handle() == this->handle()) {
-        thisLoop = loop;
-      }
-    }
+    boost::optional<Loop> thisLoop = loop();
     OS_ASSERT(thisLoop);
 
     // Create a new, blank, one
@@ -99,7 +105,7 @@ namespace detail {
     // Clone all AVMs and populate the clone
     std::vector<AvailabilityManager> avmVector = availabilityManagers();
     for (const AvailabilityManager& avm : avmVector) {
-      avmClone = avm.clone(model);
+      AvailabilityManager avmClone = avm.clone(model).cast<AvailabilityManager>();
       bool ok = avmListClone.addAvailabilityManager(avmClone);
       OS_ASSERT(ok);
     }
@@ -107,7 +113,7 @@ namespace detail {
   }
 
 
-  unsigned AvailabilityManagerAssignmentList_Impl::priority(const AvailabilityManager & avm) {
+  unsigned AvailabilityManagerAssignmentList_Impl::priority(const AvailabilityManager & avm) const {
 
     // TODO: perhaps I chould explicitly check that the avm is
     // 1. in the same model
@@ -121,16 +127,21 @@ namespace detail {
 
     for( const auto & group : groups )
     {
-      boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_AvailabilityManagerAssignmentList_Fields::AvailabilityManagerName);
+      boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName);
 
       OS_ASSERT(wo);
 
-      if( wo->handle() == equipment.handle() )
+      if( wo->handle() == avm.handle() )
       {
-        result = i
+        result = i;
         break;
       }
       i++;
+    }
+
+    if (!result.is_initialized()) {
+      LOG(Warn, avm.briefDescription() << " wasn't found in " << this->briefDescription());
+      // Should we return 0 for eg?
     }
 
     OS_ASSERT(result);
@@ -147,7 +158,7 @@ namespace detail {
 
     for( const auto & group : groups )
     {
-      boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_AvailabilityManagerAssignmentList_Fields::AvailabilityManagerName);
+      boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName);
 
       if( wo )
       {
@@ -163,17 +174,24 @@ namespace detail {
   {
     WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
 
-    bool ok = eg.setPointer(OS_AvailabilityManagerAssignmentList_Fields::AvailabilityManagerName, avm.handle());
+    bool ok = eg.setPointer(OS_AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName, avm.handle());
 
     return ok;
   }
 
+  bool AvailabilityManagerAssignmentList_Impl::addAvailabilityManager(const AvailabilityManager & avm, unsigned priority)
+  {
+    bool ok = addAvailabilityManager(avm);
+    OS_ASSERT(ok);
+    ok = setPriority(avm, priority);
+    return ok;
+  }
 
   bool AvailabilityManagerAssignmentList_Impl::setPriority(const AvailabilityManager & avm, unsigned priority)
   {
     std::vector<AvailabilityManager> avmVector = availabilityManagers();
 
-    OS_ASSERT( std::find(avmVector.begin(),avmVector.end(),equipment) != avmVector.end() );
+    OS_ASSERT( std::find(avmVector.begin(),avmVector.end(), avm) != avmVector.end() );
 
     if( priority > avmVector.size() ) priority = avmVector.size();
     if( priority < 1 ) priority = 1;
@@ -189,61 +207,194 @@ namespace detail {
       OS_ASSERT(ok);
     }
     return true;
+  }
+
+
+  bool AvailabilityManagerAssignmentList_Impl::setAvailabilityManagers(const std::vector<AvailabilityManager> & avms) {
+    // Clear the extensible groups, and redo them
+    clearExtensibleGroups();
+    for (const AvailabilityManager& a: avms) {
+      bool ok = addAvailabilityManager(a);
+      OS_ASSERT(ok);
+    }
+    return true;
+  }
+
+  void AvailabilityManagerAssignmentList_Impl::resetAvailabilityManagers() {
+    clearExtensibleGroups();
+  }
+
+  bool AvailabilityManagerAssignmentList_Impl::removeAvailabilityManager(const AvailabilityManager& avm) {
+
+    std::vector<AvailabilityManager> avmVector = availabilityManagers();
+
+    OS_ASSERT( std::find(avmVector.begin(),avmVector.end(), avm) != avmVector.end() );
+
+    avmVector.erase(std::find(avmVector.begin(),avmVector.end(),avm));
+
+    // Clear the extensible groups, and redo them
+    clearExtensibleGroups();
+    for (const AvailabilityManager& a : avmVector) {
+      bool ok = addAvailabilityManager(a);
+      OS_ASSERT(ok);
+    }
+    return true;
+  }
+
+  bool AvailabilityManagerAssignmentList_Impl::removeAvailabilityManager(const unsigned priority) {
+
+    std::vector<AvailabilityManager> avmVector = availabilityManagers();
+
+    if( (priority > avmVector.size() ) || ( priority < 1 ) ) {
+      LOG(Warn, "Priority of '" << priority << " is out of bounds for " << briefDescription());
+      return false;
+    }
+
+     // Clear the extensible groups, and redo them
+    clearExtensibleGroups();
+    // priority starts at one
+
+    unsigned i = 1;
+    bool result = false;
+
+    for (const AvailabilityManager& a : avmVector) {
+      if (i == priority) {
+        result = true;
+      } else {
+        bool ok = addAvailabilityManager(a);
+        OS_ASSERT(ok);
+      }
+      ++i;
+    }
+    return result;
+  }
+
+  boost::optional<AirLoopHVAC> AvailabilityManagerAssignmentList_Impl::airLoopHVAC() const
+  {
+    std::vector<AirLoopHVAC> airLoops = this->model().getConcreteModelObjects<AirLoopHVAC>();
+
+    for( auto & airLoop : airLoops)
+    {
+      // Call the Impl one (there is no public)
+      AvailabilityManagerAssignmentList avmList = airLoop.getImpl<detail::AirLoopHVAC_Impl>()->availabilityManagerAssignmentList();
+
+      if (avmList.handle() == this->handle())
+      {
+        return airLoop;
+      }
+    }
+    return boost::none;
+  }
+
+  boost::optional<PlantLoop> AvailabilityManagerAssignmentList_Impl::plantLoop() const
+  {
+    std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
+
+    for( auto & plantLoop : plantLoops)
+    {
+      // Call the Impl one (there is no public)
+      AvailabilityManagerAssignmentList avmList = plantLoop.getImpl<detail::PlantLoop_Impl>()->availabilityManagerAssignmentList();
+      if (avmList.handle() == this->handle())
+      {
+        return plantLoop;
+      }
+    }
+    return boost::none;
+  }
+
+  boost::optional<Loop> AvailabilityManagerAssignmentList_Impl::loop() const
+  {
+    if( boost::optional<AirLoopHVAC> airLoopHVAC = this->airLoopHVAC() )
+    {
+      return airLoopHVAC->optionalCast<Loop>();
+    }
+    else if( boost::optional<PlantLoop> plantLoop = this->plantLoop() )
+    {
+      return plantLoop->optionalCast<Loop>();
+    }
+    else
+    {
+      return boost::none;
     }
   }
-
-  bool AvailabilityManagerAssignmentList_Impl::addAvailabilityManager(const AvailabilityManager & avm, unsigned priority)
-  {
-    bool ok = addAvailabilityManager(avm);
-    OS_ASSERT(ok);
-    ok = setPriority(avm, priority);
-    return ok;
-  }
-
 
 } // detail
 
 
 /*
- * Ctor, accepts Loop as an input parameter
+ * Ctor, accepts Loop as an input parameter (for now that's the only thing that accepts an AVMlist in OS, but ZoneHVAC stuff should too)
  */
 AvailabilityManagerAssignmentList::AvailabilityManagerAssignmentList(const Loop& loop)
   : ModelObject(AvailabilityManagerAssignmentList::iddObjectType(),loop.model())
 {
   OS_ASSERT(getImpl<detail::AvailabilityManagerAssignmentList_Impl>());
 
-  this->setName(loop.name() + " AvailabilityManagerAssignmentList");
+  this->setName(loop.name().get() + " AvailabilityManagerAssignmentList");
 }
 
 IddObjectType AvailabilityManagerAssignmentList::iddObjectType() {
   return IddObjectType(IddObjectType::OS_AvailabilityManagerAssignmentList);
 }
 
-unsigned AvailabilityManagerAssignmentList::priority(const AvailabilityManager & avm)
-{
-  return getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->priority(avm);
-}
+
 
 std::vector<AvailabilityManager> AvailabilityManagerAssignmentList::availabilityManagers() const
 {
   return getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->availabilityManagers();
 }
 
+bool AvailabilityManagerAssignmentList::setAvailabilityManagers(const std::vector<AvailabilityManager> & avms) {
+  return getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->setAvailabilityManagers(avms);
+}
+
+void AvailabilityManagerAssignmentList::resetAvailabilityManagers() {
+  getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->resetAvailabilityManagers();
+}
+
+
 bool AvailabilityManagerAssignmentList::addAvailabilityManager(const AvailabilityManager & avm)
 {
   return getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->addAvailabilityManager(avm);
 }
-
-bool AvailabilityManagerAssignmentList::setPriority(const AvailabilityManager & avm, unsigned priority);
-{
-  return getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->setPriority(avm, priority);
-}
-
 bool AvailabilityManagerAssignmentList::addAvailabilityManager(const AvailabilityManager & avm, unsigned priority)
 {
   return getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->addAvailabilityManager(avm, priority);
 }
 
+
+bool AvailabilityManagerAssignmentList::removeAvailabilityManager(const AvailabilityManager & avm)
+{
+  return getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->removeAvailabilityManager(avm);
+}
+bool AvailabilityManagerAssignmentList::removeAvailabilityManager(unsigned priority)
+{
+  return getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->removeAvailabilityManager(priority);
+}
+
+
+unsigned AvailabilityManagerAssignmentList::priority(const AvailabilityManager & avm) const
+{
+  return getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->priority(avm);
+}
+bool AvailabilityManagerAssignmentList::setPriority(const AvailabilityManager & avm, unsigned priority)
+{
+  return getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->setPriority(avm, priority);
+}
+
+
+
+boost::optional<Loop> AvailabilityManagerAssignmentList::loop() const
+{
+  return getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->loop();
+}
+boost::optional<AirLoopHVAC> AvailabilityManagerAssignmentList::airLoopHVAC() const
+{
+  return getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->airLoopHVAC();
+}
+boost::optional<PlantLoop> AvailabilityManagerAssignmentList::plantLoop() const
+{
+  return getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->plantLoop();
+}
 
 
 

@@ -29,15 +29,27 @@
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
 #include "../Model.hpp"
-#include "../Node.hpp"
+
 #include "../AvailabilityManagerAssignmentList.hpp"
 #include "../AvailabilityManagerAssignmentList_Impl.hpp"
-#include "../AvailabilityManagerScheduled.hpp"
-#include "../AvailabilityManagerScheduled_Impl.hpp"
+
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
+
+
+#include "../AvailabilityManagerLowTemperatureTurnOn.hpp"
+#include "../AvailabilityManagerLowTemperatureTurnOff.hpp"
+#include "../AvailabilityManagerHighTemperatureTurnOn.hpp"
+#include "../AvailabilityManagerLowTemperatureTurnOff.hpp"
+#include "../AvailabilityManagerDifferentialThermostat.hpp"
+//#include "../AvailabilityManagerScheduled.hpp"
 #include "../AvailabilityManagerNightCycle.hpp"
-#include "../AvailabilityManagerNightCycle_Impl.hpp"
+#include "../AvailabilityManagerHybridVentilation_Impl.hpp"
+#include "../AvailabilityManagerNightVentilation_Impl.hpp"
+#include "../AvailabilityManagerOptimumStart_Impl.hpp"
 
 using namespace openstudio;
+using namespace model;
 
 TEST_F(ModelFixture,AvailabilityManagerAssignmentList)
 {
@@ -45,9 +57,10 @@ TEST_F(ModelFixture,AvailabilityManagerAssignmentList)
 
   ASSERT_EXIT (
     {
-      model::Model m;
+      Model m;
 
-      model::AvailabilityManagerAssignmentList amal(m);
+      PlantLoop p(m);
+      AvailabilityManagerAssignmentList avmList(p);
 
       exit(0);
     } ,
@@ -55,13 +68,14 @@ TEST_F(ModelFixture,AvailabilityManagerAssignmentList)
 
   ASSERT_EXIT (
     {
-      model::Model m;
+      Model m;
 
-      model::AvailabilityManagerAssignmentList amal(m);
+      AirLoopHVAC a(m);
+      AvailabilityManagerAssignmentList avmList(a);
 
-      amal.availabilityManagerScheduled();
+      // avmList.availabilityManagerScheduled();
 
-      amal.availabilityManagerNightCycle();
+      // avmList.availabilityManagerNightCycle();
 
       exit(0);
     } ,

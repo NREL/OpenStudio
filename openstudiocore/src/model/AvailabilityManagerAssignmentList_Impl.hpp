@@ -35,7 +35,12 @@
 namespace openstudio {
 namespace model {
 
+class Model;
 class AvailabilityManager;
+class Loop;
+class AirLoopHVAC;
+class PlantLoop;
+class ZoneHVACComponent;
 
 namespace detail {
 
@@ -73,17 +78,29 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    unsigned priority(const AvailabilityManager & avm);
+    unsigned priority(const AvailabilityManager & avm) const;
 
     std::vector<AvailabilityManager> availabilityManagers() const;
+
+
+    boost::optional<Loop> loop() const;
+    boost::optional<AirLoopHVAC> airLoopHVAC() const;
+    boost::optional<PlantLoop> plantLoop() const;
+    boost::optional<ZoneHVACComponent> zoneHVACComponent() const;
+
 
     //@}
     /** @name Setters */
     //@{
 
-    bool addAvailabilityManager(const AvailabilityManager & avm);
+    bool setAvailabilityManagers(const std::vector<AvailabilityManager> & avms);
+    void resetAvailabilityManagers();
 
-    bool addAvailabilityManager(const AvailabilityManager & avm, unsigned priority)
+    bool addAvailabilityManager(const AvailabilityManager & avm);
+    bool addAvailabilityManager(const AvailabilityManager & avm, unsigned priority);
+
+    bool removeAvailabilityManager(const AvailabilityManager& avm);
+    bool removeAvailabilityManager(unsigned priority);
 
     bool setPriority(const AvailabilityManager & avm, unsigned priority);
 

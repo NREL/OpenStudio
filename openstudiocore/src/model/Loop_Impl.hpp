@@ -39,18 +39,13 @@ class Node;
 class HVACComponent;
 class Splitter;
 class Mixer;
+class AvailabilityManagerAssignmentList;
 
 namespace detail {
 
   class Model_Impl;
 
   class MODEL_API Loop_Impl : public ParentObject_Impl {
-
-    
-    
-    
-    
-    
 
   public:
 
@@ -123,6 +118,9 @@ namespace detail {
     virtual Splitter demandSplitter() = 0;
 
     virtual Mixer demandMixer() = 0;
+
+    virtual AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const;
+
 
   private:
 
