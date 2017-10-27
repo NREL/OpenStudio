@@ -907,12 +907,12 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
 
   bool PlantLoop_Impl::setAvailabilityManagerPriority(const AvailabilityManager & availabilityManager, unsigned priority)
   {
-    return availabilityManagerAssignmentList().setPriority(availabilityManager, priority);
+    return availabilityManagerAssignmentList().setAvailabilityManagerPriority(availabilityManager, priority);
   }
 
   unsigned PlantLoop_Impl::availabilityManagerPriority(const AvailabilityManager & availabilityManager) const
   {
-    return availabilityManagerAssignmentList().priority(availabilityManager);
+    return availabilityManagerAssignmentList().availabilityManagerPriority(availabilityManager);
   }
 
   bool PlantLoop_Impl::removeAvailabilityManager(const AvailabilityManager& avm) {

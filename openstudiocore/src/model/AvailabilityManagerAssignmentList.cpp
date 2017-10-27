@@ -39,6 +39,13 @@
 #include "PlantLoop_Impl.hpp"
 #include "PlantLoop.hpp"
 #include "Model.hpp"
+#include "ZoneHVACComponent.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
+
+// for the containingZoneHVACComponent method
+#include "ZoneHVACFourPipeFanCoil.hpp"
+#include "ZoneHVACFourPipeFanCoil_Impl.hpp"
+
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
@@ -113,7 +120,7 @@ namespace detail {
   }
 
 
-  unsigned AvailabilityManagerAssignmentList_Impl::priority(const AvailabilityManager & avm) const {
+  unsigned AvailabilityManagerAssignmentList_Impl::availabilityManagerPriority(const AvailabilityManager & avm) const {
 
     // TODO: perhaps I chould explicitly check that the avm is
     // 1. in the same model
@@ -183,11 +190,11 @@ namespace detail {
   {
     bool ok = addAvailabilityManager(avm);
     OS_ASSERT(ok);
-    ok = setPriority(avm, priority);
+    ok = setAvailabilityManagerPriority(avm, priority);
     return ok;
   }
 
-  bool AvailabilityManagerAssignmentList_Impl::setPriority(const AvailabilityManager & avm, unsigned priority)
+  bool AvailabilityManagerAssignmentList_Impl::setAvailabilityManagerPriority(const AvailabilityManager & avm, unsigned priority)
   {
     std::vector<AvailabilityManager> avmVector = availabilityManagers();
 
@@ -288,18 +295,30 @@ namespace detail {
 
   boost::optional<PlantLoop> AvailabilityManagerAssignmentList_Impl::plantLoop() const
   {
-    std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
+    boost::optional<PlantLoop> plantLoop;
+    // try with getModelObjectSources instead
+    std::vector<PlantLoop> plantLoops = getObject<ModelObject>().getModelObjectSources<PlantLoop>(PlantLoop::iddObjectType());
 
-    for( auto & plantLoop : plantLoops)
-    {
-      // Call the Impl one (there is no public)
-      AvailabilityManagerAssignmentList avmList = plantLoop.getImpl<detail::PlantLoop_Impl>()->availabilityManagerAssignmentList();
-      if (avmList.handle() == this->handle())
-      {
-        return plantLoop;
+    if( plantLoops.size() > 0u) {
+      if( plantLoops.size() > 1u) {
+        LOG(Error, briefDescription() << " is referenced by more than one plantLoop, returning the first");
       }
+      plantLoop = plantLoops[0];
     }
-    return boost::none;
+/*
+ *    std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
+ *
+ *    for( auto & plantLoop : plantLoops)
+ *    {
+ *      // Call the Impl one (there is no public)
+ *      AvailabilityManagerAssignmentList avmList = plantLoop.getImpl<detail::PlantLoop_Impl>()->availabilityManagerAssignmentList();
+ *      if (avmList.handle() == this->handle())
+ *      {
+ *        return plantLoop;
+ *      }
+ *    }
+ */
+    return plantLoop;
   }
 
   boost::optional<Loop> AvailabilityManagerAssignmentList_Impl::loop() const
@@ -316,6 +335,66 @@ namespace detail {
     {
       return boost::none;
     }
+  }
+
+
+  boost::optional<ZoneHVACComponent> AvailabilityManagerAssignmentList_Impl::containingZoneHVACComponent() const {
+
+    boost::optional<ZoneHVACComponent> result;
+
+    // E+ V8-8-0 IDD, list of objects that reference SystemAvailabilityManagerLists
+    // ZoneHVAC:FourPipeFanCoil
+    std::vector<ZoneHVACFourPipeFanCoil> zoneHVACFourPipeFanCoils = getObject<ModelObject>().getModelObjectSources<ZoneHVACFourPipeFanCoil>(ZoneHVACFourPipeFanCoil::iddObjectType());
+
+    if( zoneHVACFourPipeFanCoils.size() > 0u) {
+      if( zoneHVACFourPipeFanCoils.size() > 1u) {
+        LOG(Error, briefDescription() << " is referenced by more than one zoneHVACFourPipeFanCoils, returning the first");
+      }
+      return zoneHVACFourPipeFanCoils[0];
+    }
+
+    /*
+     *for( const auto & zoneHVACFourPipeFanCoil : zoneHVACFourPipeFanCoils )
+     *{
+     *  if( boost::optional<HVACComponent> coil = zoneHVACFourPipeFanCoil.supplyAirFan() )
+     *  {
+     *    if( coil->handle() == this->handle() )
+     *    {
+     *      return zoneHVACFourPipeFanCoil;
+     *    }
+     *  }
+     *}
+     */
+
+
+
+    // ZoneHVAC:WindowAirConditioner
+    // ZoneHVAC:PackagedTerminalAirConditioner
+    // ZoneHVAC:PackagedTerminalHeatPump
+    // ZoneHVAC:WaterToAirHeatPump
+    // ZoneHVAC:EnergyRecoveryVentilator
+    // ZoneHVAC:UnitVentilator
+    // ZoneHVAC:UnitHeater
+    // ZoneHVAC:EvaporativeCoolerUnit
+    // ZoneHVAC:OutdoorAirUnit
+    // ZoneHVAC:TerminalUnit:VariableRefrigerantFlow
+    // ZoneHVAC:VentilatedSlab
+
+
+    // For this to work, would need ZoneHVACComponent to have a static iddObjectType defined
+/*
+ *    std::vector<ZoneHVACComponent> zoneHVACComps = getObject<ModelObject>().getModelObjectSources<ZoneHVACComponent>(ZoneHVACComponent::iddObjectType());
+ *
+ *    if( zoneHVACComps.size() > 0u) {
+ *      if( zoneHVACComps.size() > 1u) {
+ *        LOG(Error, briefDescription() << " is referenced by more than one ZoneHVACComponent, returning the first");
+ *      }
+ *      result = zoneHVACComps[0];
+ *    }
+ */
+
+    return result;
+
   }
 
 } // detail
@@ -372,13 +451,13 @@ bool AvailabilityManagerAssignmentList::removeAvailabilityManager(unsigned prior
 }
 
 
-unsigned AvailabilityManagerAssignmentList::priority(const AvailabilityManager & avm) const
+unsigned AvailabilityManagerAssignmentList::availabilityManagerPriority(const AvailabilityManager & avm) const
 {
-  return getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->priority(avm);
+  return getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->availabilityManagerPriority(avm);
 }
-bool AvailabilityManagerAssignmentList::setPriority(const AvailabilityManager & avm, unsigned priority)
+bool AvailabilityManagerAssignmentList::setAvailabilityManagerPriority(const AvailabilityManager & avm, unsigned priority)
 {
-  return getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->setPriority(avm, priority);
+  return getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->setAvailabilityManagerPriority(avm, priority);
 }
 
 
@@ -394,6 +473,10 @@ boost::optional<AirLoopHVAC> AvailabilityManagerAssignmentList::airLoopHVAC() co
 boost::optional<PlantLoop> AvailabilityManagerAssignmentList::plantLoop() const
 {
   return getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->plantLoop();
+}
+boost::optional<ZoneHVACComponent> AvailabilityManagerAssignmentList::containingZoneHVACComponent() const
+{
+  return getImpl<detail::AvailabilityManagerAssignmentList_Impl>()->containingZoneHVACComponent();
 }
 
 

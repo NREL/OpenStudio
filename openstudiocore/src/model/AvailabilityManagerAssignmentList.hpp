@@ -71,7 +71,7 @@ class MODEL_API AvailabilityManagerAssignmentList : public ModelObject {
   /*
    * Get the priority of a given AvailabilityManager
    */
-  unsigned priority(const AvailabilityManager & avm) const;
+  unsigned availabilityManagerPriority(const AvailabilityManager & avm) const;
 
   /*
    * Return all AvailabilityManagers assigned to this list, in the priority order
@@ -99,7 +99,7 @@ class MODEL_API AvailabilityManagerAssignmentList : public ModelObject {
    * A number of other objects such as most of the ZoneHVAC stuff (ZoneHVAC:FourPipeFanCoil, ZoneHVAC:PackagedTerminalHeatPump, etc)
    * as well as the AirLoopHVAC:OutdoorAirSystem can have an AvailabilityManagerAssignmentList, but it isn't implemented in OS IDD yet
    */
-  boost::optional<ZoneHVACComponent> zoneHVACComponent() const;
+  boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
 
 
 
@@ -114,7 +114,7 @@ class MODEL_API AvailabilityManagerAssignmentList : public ModelObject {
 
   /*
    * Add a new AvailabilityManager to the list which a given priority (1 to x).
-   * Internally calls addAvailabilityManager then setPriority, see remarks there
+   * Internally calls addAvailabilityManager then setAvailabilityManagerPriority, see remarks there
    */
   bool addAvailabilityManager(const AvailabilityManager & avm, unsigned priority);
 
@@ -143,7 +143,7 @@ class MODEL_API AvailabilityManagerAssignmentList : public ModelObject {
    * If priority is below 1, it's reset to 1.
    * If priority is greater than the number of availability managers, will reset to last
    */
-  bool setPriority(const AvailabilityManager & avm, unsigned priority);
+  bool setAvailabilityManagerPriority(const AvailabilityManager & avm, unsigned priority);
 
 
 

@@ -185,7 +185,7 @@ void addRequiredSetpointManagers(const AirLoopHVAC & airLoopHVAC)
         spm.addToNode(upperNode);
         spm.setName(upperNode.name().get() + " OS Default SPM");
       }
-    } 
+    }
 
     for( auto & lowerNode : lowerNodes )
     {
@@ -202,7 +202,7 @@ void addRequiredSetpointManagers(const AirLoopHVAC & airLoopHVAC)
 
     if( boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVAC.airLoopHVACOutdoorAirSystem() )
     {
-      boost::optional<Node> outboardOANode = oaSystem->outboardOANode(); 
+      boost::optional<Node> outboardOANode = oaSystem->outboardOANode();
       std::vector<Node> oaNodes = subsetCastVector<Node>(oaSystem->oaComponents());
       if( outboardOANode )
       {
@@ -228,7 +228,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   Model t_model = airLoopHVAC.model();
 
   addRequiredSetpointManagers(airLoopHVAC);
-  
+
   // Create a new IddObjectType::AirLoopHVAC
   IdfObject idfObject(IddObjectType::AirLoopHVAC);
   m_idfObjects.push_back(idfObject);
@@ -323,7 +323,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
     {
       controllers.push_back(controller.get());
     }
-  } 
+  }
 
   if( controllers.size() > 0 )
   {
@@ -344,7 +344,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
       {
         _controllerList.setString(i,_controller->iddObject().name());
         _controllerList.setString(i + 1,_controller->name().get());
-        
+
         i++;
         i++;
       }
@@ -352,6 +352,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   }
 
   // Availability Manager List Name
+  // TODO: revamp
   IdfObject availabilityManagerAssignmentListIdf(openstudio::IddObjectType::AvailabilityManagerAssignmentList);
   availabilityManagerAssignmentListIdf.setName(airLoopHVACName + "Availability Manager List");
   m_idfObjects.push_back(availabilityManagerAssignmentListIdf);
@@ -409,7 +410,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   if( splitter ) {
     // Dual Duct - There will be three branches, and two outlet nodes
     OS_ASSERT(supplyOutletNodes.size() == 2u );
-  
+
     IdfObject _connectorList(IddObjectType::ConnectorList);
     _connectorList.setName( airLoopHVACName + " Connector List" );
     m_idfObjects.push_back(_connectorList);

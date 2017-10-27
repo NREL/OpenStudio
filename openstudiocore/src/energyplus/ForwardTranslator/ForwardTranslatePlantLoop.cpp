@@ -133,7 +133,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject, 
+IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
                           std::vector<ModelObject> & modelObjects,
                           Loop & loop,
                           bool isSupplyBranch)
@@ -148,7 +148,7 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
       boost::optional<Node> outletNode;
       std::string objectName;
       std::string iddType;
-    
+
       //translate and map each model object
       //in most cases, the name and idd object type come directly from the resulting idfObject
       if( boost::optional<IdfObject> idfObject = this->translateAndMapModelObject(modelObject) ) {
@@ -165,7 +165,7 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
       {
         inletNode = straightComponent->inletModelObject()->optionalCast<Node>();
         outletNode = straightComponent->outletModelObject()->optionalCast<Node>();
-        //special case for ZoneHVAC:Baseboard:Convective:Water.  In E+, this object appears on both the 
+        //special case for ZoneHVAC:Baseboard:Convective:Water.  In E+, this object appears on both the
         //zonehvac:equipmentlist and the branch.  In OpenStudio, this object was broken into 2 objects:
         //ZoneHVACBaseboardConvectiveWater and CoilHeatingWaterBaseboard.  The ZoneHVAC goes onto the zone and
         //has a child coil that goes onto the plantloop.  In order to get the correct translation to E+, we need
@@ -183,7 +183,7 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
             }
           }
         }
-        //special case for ZoneHVAC:Baseeboard:RadiantConvective:Water.  In E+, this object appears on both the 
+        //special case for ZoneHVAC:Baseeboard:RadiantConvective:Water.  In E+, this object appears on both the
         //zonehvac:equipmentlist and the branch.  In OpenStudio, this object was broken into 2 objects:
         //ZoneHVACBaseboardRadiantConvectiveWater and CoilHeatingWaterBaseboardRadiant.  The ZoneHVAC goes onto the zone and
         //has a child coil that goes onto the plantloop.  In order to get the correct translation to E+, we need
@@ -205,7 +205,7 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
         if (boost::optional<CoilCoolingCooledBeam> coilCB = modelObject.optionalCast<CoilCoolingCooledBeam>() )
         {
           if (boost::optional<StraightComponent> airTerm = coilCB->containingStraightComponent())
-          {  
+          {
             boost::optional<IdfObject> idfAirDistUnit = this->translateAndMapModelObject(*airTerm);
             //translate and map containingStraightComponent
             if (idfAirDistUnit)
@@ -216,7 +216,7 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
             }
           }
         }
-        //special case for ZoneHVAC:LowTemperatureRadiant:ConstantFlow and ZoneHVAC:LowTemperatureRadiant:VariableFlow.  In E+, this object appears on both the 
+        //special case for ZoneHVAC:LowTemperatureRadiant:ConstantFlow and ZoneHVAC:LowTemperatureRadiant:VariableFlow.  In E+, this object appears on both the
         //zonehvac:equipmentlist and the branch.  In OpenStudio, this object was broken into 2 objects:
         //ZoneHVACBaseboardConvectiveWater and CoilHeatingWaterBaseboard.  The ZoneHVAC goes onto the zone and
         //has a child coil that goes onto the plantloop.  In order to get the correct translation to E+, we need
@@ -273,9 +273,9 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
             }
           }
         }
-        //special case for Generator:MicroTurbine. 
+        //special case for Generator:MicroTurbine.
         //In OpenStudio, this object was broken into 2 objects:
-        //GeneratorMicroTurbine and GeneratorMicroTurbineHeatRecovery. 
+        //GeneratorMicroTurbine and GeneratorMicroTurbineHeatRecovery.
         //The GeneratorMicroTurbineHeatRecovery goes onto the plantloop.  In order to get the correct translation to E+, we need
         //to put the name of the linked GeneratorMicroTurbine onto the branch.
         if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = modelObject.optionalCast<GeneratorMicroTurbineHeatRecovery>() )
@@ -326,7 +326,7 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
             outletNode = waterToWaterComponent->demandOutletModelObject()->optionalCast<Node>();
           }
         }
-        //special case for WaterHeater:HeatPump. In E+, this object appears on both the 
+        //special case for WaterHeater:HeatPump. In E+, this object appears on both the
         //zonehvac:equipmentlist and the branch.  In OpenStudio the tank (WaterHeater:Mixed)
         //is attached to the plant and the WaterHeaterHeatPump is connected to the zone and zonehvac equipment list.
         //Here we resolve all of that since it is the WaterHeaterHeatPump that must show up on both
@@ -370,8 +370,8 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
       i++;
     }
   }
-  
-  return branchIdfObject; 
+
+  return branchIdfObject;
 }
 
 boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & plantLoop )
@@ -429,15 +429,15 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   if( (value = plantLoop.maximumLoopTemperature()) )
   {
     idfObject.setDouble(PlantLoopFields::MaximumLoopTemperature,value.get());
-  } 
+  }
 
   // Minimum Loop Temperature
 
   if( (value = plantLoop.minimumLoopTemperature()) )
   {
     idfObject.setDouble(PlantLoopFields::MinimumLoopTemperature,value.get());
-  } 
-  
+  }
+
   // Maximum Loop Flow Rate
 
   if( plantLoop.isMaximumLoopFlowRateAutosized() )
@@ -448,7 +448,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     idfObject.setDouble(PlantLoopFields::MaximumLoopFlowRate,value.get());
   }
-  
+
   // Minimum Loop Flow Rate
 
   if( plantLoop.isMinimumLoopFlowRateAutosized() )
@@ -467,6 +467,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   }
 
   // AvailabilityManager
+  // TODO
   if (OptionalAvailabilityManager availMgr = plantLoop.availabilityManager()) {
 
     // Availability Manager List
@@ -509,7 +510,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   if( (s = plantLoop.commonPipeSimulation()) )
   {
     idfObject.setString(PlantLoopFields::CommonPipeSimulation,s.get());
-  } 
+  }
 
   // Inlet/Outlet Nodes
   idfObject.setString(PlantLoopFields::PlantSideInletNodeName,plantLoop.supplyInletNode().name().get());
@@ -633,7 +634,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
     std::vector<model::ModelObject> allComponents = plantLoop.supplyComponents(comp1,comp2);
 
-    IdfObject _equipmentBranch(IddObjectType::Branch); 
+    IdfObject _equipmentBranch(IddObjectType::Branch);
     _equipmentBranch.clearExtensibleGroups();
     _equipmentBranch.setName( plantLoop.name().get() + " Supply Branch " + istring );
     m_idfObjects.push_back(_equipmentBranch);
@@ -662,7 +663,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
       std::string inletNodeName = pipe.name().get() + " Inlet Node";
       std::string outletNodeName = pipe.name().get() + " Outlet Node";
-      
+
       pipe.setString(Pipe_AdiabaticFields::InletNodeName,inletNodeName);
       pipe.setString(Pipe_AdiabaticFields::OutletNodeName,outletNodeName);
 
@@ -689,7 +690,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   m_idfObjects.push_back(_supplyOutletBranch);
 
   std::vector<ModelObject> supplyOutletModelObjects;
-  supplyOutletModelObjects = plantLoop.supplyComponents(supplyMixer,supplyOutletNode);  
+  supplyOutletModelObjects = plantLoop.supplyComponents(supplyMixer,supplyOutletNode);
 
   OS_ASSERT( supplyOutletModelObjects.size() >= 2 );
 
@@ -708,7 +709,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
     std::string inletNodeName = plantLoop.name().get() + " Supply Outlet Pipe Node";
     std::string outletNodeName = plantLoop.supplyOutletNode().name().get();
-    
+
     pipe.setString(Pipe_AdiabaticFields::InletNodeName,inletNodeName);
     pipe.setString(Pipe_AdiabaticFields::OutletNodeName,outletNodeName);
 
@@ -778,7 +779,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   std::vector<ModelObject> demandInletModelObjects;
   demandInletModelObjects = plantLoop.demandComponents(demandInletNode,demandSplitter);
 
-  OS_ASSERT( demandInletModelObjects.size() >= 2u );  
+  OS_ASSERT( demandInletModelObjects.size() >= 2u );
 
   if( demandInletModelObjects.size() > 2u )
   {
@@ -795,7 +796,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
     std::string inletNodeName = plantLoop.demandInletNode().name().get();
     std::string outletNodeName = plantLoop.name().get() + " Demand Inlet Pipe Node";
-    
+
     pipe.setString(Pipe_AdiabaticFields::InletNodeName,inletNodeName);
     pipe.setString(Pipe_AdiabaticFields::OutletNodeName,outletNodeName);
 
@@ -826,7 +827,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
     std::vector<model::ModelObject> allComponents = plantLoop.demandComponents(comp1,comp2);
 
-    IdfObject _equipmentBranch(IddObjectType::Branch); 
+    IdfObject _equipmentBranch(IddObjectType::Branch);
     _equipmentBranch.clearExtensibleGroups();
     _equipmentBranch.setName( plantLoop.name().get() + " Demand Branch " + istring );
     m_idfObjects.push_back(_equipmentBranch);
@@ -855,7 +856,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
       std::string inletNodeName = pipe.name().get() + " Inlet Node";
       std::string outletNodeName = pipe.name().get() + " Outlet Node";
-      
+
       pipe.setString(Pipe_AdiabaticFields::InletNodeName,inletNodeName);
       pipe.setString(Pipe_AdiabaticFields::OutletNodeName,outletNodeName);
 
@@ -873,7 +874,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
   if( splitterOutletObjects.size() > 0u )
   {
-    IdfObject _equipmentBranch(IddObjectType::Branch); 
+    IdfObject _equipmentBranch(IddObjectType::Branch);
     _equipmentBranch.clearExtensibleGroups();
     _equipmentBranch.setName( plantLoop.name().get() + " Demand Bypass Branch" );
     m_idfObjects.push_back(_equipmentBranch);
@@ -893,7 +894,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
     std::string inletNodeName = pipe.name().get() + " Inlet Node";
     std::string outletNodeName = pipe.name().get() + " Outlet Node";
-    
+
     pipe.setString(Pipe_AdiabaticFields::InletNodeName,inletNodeName);
     pipe.setString(Pipe_AdiabaticFields::OutletNodeName,outletNodeName);
 
@@ -917,7 +918,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   m_idfObjects.push_back(_demandOutletBranch);
 
   std::vector<ModelObject> demandOutletModelObjects;
-  demandOutletModelObjects = plantLoop.demandComponents(demandMixer,demandOutletNode);  
+  demandOutletModelObjects = plantLoop.demandComponents(demandMixer,demandOutletNode);
 
   OS_ASSERT( demandOutletModelObjects.size() >= 2u );
 
@@ -936,7 +937,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
     std::string inletNodeName = plantLoop.name().get() + " Demand Outlet Pipe Node";
     std::string outletNodeName = plantLoop.demandOutletNode().name().get();
-    
+
     pipe.setString(Pipe_AdiabaticFields::InletNodeName,inletNodeName);
     pipe.setString(Pipe_AdiabaticFields::OutletNodeName,outletNodeName);
 

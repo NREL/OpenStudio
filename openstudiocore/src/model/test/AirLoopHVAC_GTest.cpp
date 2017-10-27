@@ -30,16 +30,6 @@
 #include "ModelFixture.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../AirLoopHVAC_Impl.hpp"
-#include "../AvailabilityManager.hpp"
-#include "../AvailabilityManager_Impl.hpp"
-#include "../AvailabilityManagerNightCycle.hpp"
-#include "../AvailabilityManagerNightCycle_Impl.hpp"
-#include "../AvailabilityManagerHybridVentilation.hpp"
-#include "../AvailabilityManagerHybridVentilation_Impl.hpp"
-#include "../AvailabilityManagerNightVentilation.hpp"
-#include "../AvailabilityManagerNightVentilation_Impl.hpp"
-#include "../AvailabilityManagerOptimumStart.hpp"
-#include "../AvailabilityManagerOptimumStart_Impl.hpp"
 #include "../AirLoopHVACSupplyPlenum.hpp"
 #include "../AirLoopHVACReturnPlenum.hpp"
 #include "../CoilHeatingWater.hpp"
@@ -75,6 +65,26 @@
 #include "../LifeCycleCost.hpp"
 #include "../ConnectorSplitter.hpp"
 #include "../ConnectorSplitter_Impl.hpp"
+
+
+
+#include "../AvailabilityManager.hpp"
+#include "../AvailabilityManager_Impl.hpp"
+
+#include "../AvailabilityManagerLowTemperatureTurnOn.hpp"
+#include "../AvailabilityManagerLowTemperatureTurnOff.hpp"
+#include "../AvailabilityManagerHighTemperatureTurnOn.hpp"
+#include "../AvailabilityManagerHighTemperatureTurnOff.hpp"
+#include "../AvailabilityManagerDifferentialThermostat.hpp"
+#include "../AvailabilityManagerOptimumStart.hpp"
+
+//#include "../AvailabilityManagerScheduled.hpp"
+#include "../AvailabilityManagerNightCycle.hpp"
+#include "../AvailabilityManagerHybridVentilation.hpp"
+#include "../AvailabilityManagerNightVentilation.hpp"
+
+// Casting in AVM test
+#include "../AvailabilityManagerNightCycle_Impl.hpp"
 
 using namespace openstudio::model;
 
@@ -757,63 +767,6 @@ TEST_F(ModelFixture,AirLoopHVAC_fans)
 
 // }
 
-TEST_F(ModelFixture,AirLoopHVAC_Availability)
-{
-  Model m;
-  AirLoopHVAC airLoopHVAC(m);
-
-  {
-    auto schedule = m.alwaysOnDiscreteSchedule();
-    EXPECT_EQ(schedule,airLoopHVAC.availabilitySchedule());
-  }
-
-  EXPECT_FALSE(airLoopHVAC.availabilityManager());
-
-  {
-    airLoopHVAC.setNightCycleControlType("CycleOnAny");
-    auto availabilityManager = airLoopHVAC.availabilityManager();
-    EXPECT_TRUE(availabilityManager);
-    auto nightCycle = availabilityManager->optionalCast<AvailabilityManagerNightCycle>();
-    EXPECT_TRUE(nightCycle);
-    EXPECT_EQ("CycleOnAny",nightCycle->controlType());
-
-    nightCycle->remove();
-    EXPECT_FALSE(airLoopHVAC.availabilityManager());
-    EXPECT_EQ("StayOff",airLoopHVAC.nightCycleControlType());
-  }
-
-  {
-    AvailabilityManagerHybridVentilation availabilityManager(m);
-    EXPECT_TRUE(airLoopHVAC.setAvailabilityManager(availabilityManager));
-    auto availabilityManager2 = airLoopHVAC.availabilityManager();
-    EXPECT_TRUE(availabilityManager2);
-    EXPECT_EQ(availabilityManager2.get(),availabilityManager);
-
-    airLoopHVAC.setNightCycleControlType("CycleOnAny");
-    auto availabilityManager3 = airLoopHVAC.availabilityManager();
-    EXPECT_TRUE(availabilityManager3);
-    auto nightCycle = availabilityManager3->optionalCast<AvailabilityManagerNightCycle>();
-    EXPECT_TRUE(nightCycle);
-    EXPECT_EQ("CycleOnAny",nightCycle->controlType());
-    EXPECT_TRUE(availabilityManager.handle().isNull());
-  }
-
-  {
-    AvailabilityManagerNightVentilation availabilityManager(m);
-    EXPECT_TRUE(airLoopHVAC.setAvailabilityManager(availabilityManager));
-    auto availabilityManager2 = airLoopHVAC.availabilityManager();
-    EXPECT_TRUE(availabilityManager2);
-    EXPECT_EQ(availabilityManager2.get(),availabilityManager);
-  }
-
-  {
-    AvailabilityManagerOptimumStart availabilityManager(m);
-    EXPECT_TRUE(airLoopHVAC.setAvailabilityManager(availabilityManager));
-    auto availabilityManager2 = airLoopHVAC.availabilityManager();
-    EXPECT_TRUE(availabilityManager2);
-    EXPECT_EQ(availabilityManager2.get(),availabilityManager);
-  }
-}
 
 TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
 {
@@ -973,4 +926,100 @@ TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
     EXPECT_TRUE(airLoop.supplySplitter());
   }
 }
+
+
+
+
+
+TEST_F(ModelFixture,AirLoopHVAC_AvailabilityManagers)
+{
+  Model m;
+  AirLoopHVAC a(m);
+
+  {
+    auto schedule = m.alwaysOnDiscreteSchedule();
+    EXPECT_EQ(schedule, a.availabilitySchedule());
+  }
+
+  ASSERT_EQ(0u, a.availabilityManagers().size());
+
+
+  AvailabilityManagerLowTemperatureTurnOn aLTOn(m);
+  ASSERT_TRUE(a.addAvailabilityManager(aLTOn));
+  ASSERT_EQ(1u, a.availabilityManagers().size());
+
+  AvailabilityManagerLowTemperatureTurnOff aLTOff(m);
+  ASSERT_TRUE(a.addAvailabilityManager(aLTOff));
+  ASSERT_EQ(2u, a.availabilityManagers().size());
+
+  AvailabilityManagerHighTemperatureTurnOn aHTOn(m);
+  ASSERT_TRUE(a.addAvailabilityManager(aHTOn));
+  ASSERT_EQ(3u, a.availabilityManagers().size());
+
+  AvailabilityManagerHighTemperatureTurnOff aHTOff(m);
+  ASSERT_TRUE(a.addAvailabilityManager(aHTOff));
+  ASSERT_EQ(4u, a.availabilityManagers().size());
+
+  AvailabilityManagerDifferentialThermostat aDiffTstat(m);
+  ASSERT_TRUE(a.addAvailabilityManager(aDiffTstat));
+  ASSERT_EQ(5u, a.availabilityManagers().size());
+
+  AvailabilityManagerOptimumStart aOptStart(m);
+  ASSERT_TRUE(a.addAvailabilityManager(aOptStart));
+  ASSERT_EQ(6u, a.availabilityManagers().size());
+
+
+  // Should work because this is a AirLoopHVAC
+  AvailabilityManagerNightCycle avm_nc(m);
+  ASSERT_EQ("StayOff", avm_nc.controlType());
+  ASSERT_TRUE(a.addAvailabilityManager(avm_nc));
+  ASSERT_EQ(7u, a.availabilityManagers().size());
+
+  AvailabilityManagerNightVentilation avm_nv(m);
+  ASSERT_TRUE(a.addAvailabilityManager(avm_nv));
+  ASSERT_EQ(8u, a.availabilityManagers().size());
+
+  AvailabilityManagerHybridVentilation avm_hv(m);
+  ASSERT_TRUE(a.addAvailabilityManager(avm_nv));
+  ASSERT_EQ(9u, a.availabilityManagers().size());
+
+
+  // Tests the setNightCycleControlType
+  // If there is already one, it should modify it in place
+  a.setNightCycleControlType("CycleOnAny");
+  ASSERT_EQ("CycleOnAny", avm_nc.controlType());
+  ASSERT_EQ(9u, a.availabilityManagers().size());
+
+  // If there isn't, it should add it at the end
+  ASSERT_TRUE(a.removeAvailabilityManager(avm_nc));
+  ASSERT_EQ(8u, a.availabilityManagers().size());
+  a.setNightCycleControlType("CycleOnControlZone");
+  ASSERT_EQ(9u, a.availabilityManagers().size());
+  AvailabilityManagerNightCycle avm_nc2 = a.availabilityManagers()[8].cast<AvailabilityManagerNightCycle>();
+  ASSERT_EQ("CycleOnControlZone", avm_nc2.controlType());
+
+
+  // Test Clone, same model
+  AirLoopHVAC a2 = a.clone(m).cast<AirLoopHVAC>();
+  ASSERT_EQ(9u, a2.availabilityManagers().size());
+
+  // reset shouldn't affect the clone
+  a.resetAvailabilityManagers();
+  ASSERT_EQ(0u, a.availabilityManagers().size());
+  ASSERT_EQ(9u, a2.availabilityManagers().size());
+
+
+  // TODO: this fails, but not my fault, it hits the PlantLoop_Impl::sizingPlant()  LOG_AND_THROW statement
+  // Test Clone, other model
+/*
+ *  Model m2;
+ *  PlantLoop p3 = p2.clone(m2).cast<PlantLoop>();
+ *  ASSERT_EQ(6u, p3.availabilityManagers().size());
+ *  ASSERT_EQ(6u, m2.getModelObjects<AvailabilityManager>().size());
+ *
+ */
+
+
+}
+
 

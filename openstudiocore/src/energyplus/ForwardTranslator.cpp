@@ -668,11 +668,27 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     }
   case openstudio::IddObjectType::OS_AvailabilityManagerAssignmentList :
     {
-      return retVal;
+      auto mo = modelObject.cast<AvailabilityManagerAssignmentList>();
+      retVal = translateAvailabilityManagerAssignmentList(mo);
+      break;
     }
   case openstudio::IddObjectType::OS_AvailabilityManager_Scheduled :
     {
-      return retVal;
+      auto mo = modelObject.cast<AvailabilityManagerScheduled>();
+      retVal = translateAvailabilityManagerScheduled(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_ScheduledOn :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerScheduledOn>();
+      retVal = translateAvailabilityManagerScheduledOn(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_ScheduledOff :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerScheduledOff>();
+      retVal = translateAvailabilityManagerScheduledOff(mo);
+      break;
     }
   case openstudio::IddObjectType::OS_Material_AirWall :
     {

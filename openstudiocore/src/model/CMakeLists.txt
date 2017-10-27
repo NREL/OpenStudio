@@ -154,6 +154,16 @@ set(${target_name}_src
   AvailabilityManagerLowTemperatureTurnOff.hpp
   AvailabilityManagerLowTemperatureTurnOff_Impl.hpp
   AvailabilityManagerLowTemperatureTurnOff.cpp
+  AvailabilityManagerScheduled.hpp
+  AvailabilityManagerScheduled_Impl.hpp
+  AvailabilityManagerScheduled.cpp
+  AvailabilityManagerScheduledOn.hpp
+  AvailabilityManagerScheduledOn_Impl.hpp
+  AvailabilityManagerScheduledOn.cpp
+  AvailabilityManagerScheduledOff.hpp
+  AvailabilityManagerScheduledOff_Impl.hpp
+  AvailabilityManagerScheduledOff.cpp
+
   Blind.hpp
   Blind_Impl.hpp
   Blind.cpp
@@ -1483,6 +1493,10 @@ set(${target_name}_test_src
   test/AvailabilityManagerHighTemperatureTurnOff_GTest.cpp
   test/AvailabilityManagerLowTemperatureTurnOn_GTest.cpp
   test/AvailabilityManagerLowTemperatureTurnOff_GTest.cpp
+  test/AvailabilityManagerScheduled_GTest.cpp
+  test/AvailabilityManagerScheduledOn_GTest.cpp
+  test/AvailabilityManagerScheduledOff_GTest.cpp
+
   test/Blind_GTest.cpp
   test/BoilerHotWater_GTest.cpp
   test/BoilerSteam_GTest.cpp

@@ -119,7 +119,7 @@ namespace detail {
 
     virtual Mixer demandMixer() = 0;
 
-    virtual AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const;
+    virtual AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const = 0;
 
 
   private:

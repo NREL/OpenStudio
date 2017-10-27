@@ -40,6 +40,10 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVHeatAndCoolNoReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVHeatAndCoolReheat.cpp
   ForwardTranslator/ForwardTranslateAirWallMaterial.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerAssignmentList.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerScheduled.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerScheduledOn.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerScheduledOff.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerHybridVentilation.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerOptimumStart.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerDifferentialThermostat.cpp
@@ -500,6 +504,10 @@ set(${target_name}_test_src
 
   Test/AirWallMaterial_GTest.cpp
 
+  # Test/AvailabilityManagerAssignmentList_GTest.cpp
+  Test/AvailabilityManagerScheduled_GTest.cpp
+  Test/AvailabilityManagerScheduledOn_GTest.cpp
+  Test/AvailabilityManagerScheduledOff_GTest.cpp
   Test/AvailabilityManagerHighTemperatureTurnOn_GTest.cpp
   Test/AvailabilityManagerHighTemperatureTurnOff_GTest.cpp
   Test/AvailabilityManagerLowTemperatureTurnOn_GTest.cpp

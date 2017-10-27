@@ -1030,7 +1030,6 @@ namespace detail {
 
   bool AirLoopHVAC_Impl::setNightCycleControlType(std::string const & controlType)
   {
-    // TODO: this should be added to the new AvailabilityManagerAssignmentList no?
     auto createNightCycleManager = [&]() {
       boost::optional<AvailabilityManagerNightCycle> result;
       auto t_model = model();
@@ -1188,7 +1187,7 @@ namespace detail {
     // All types should be allowed here except HybridVentilation (special, stand-alone)
     // Except that OS diverged from E+ (where HybridVentilation is the one referencing the AirLoopHVAC)
     // In OS, you can add it to the AVM list (forward translation handles it)
-
+    // TODO: perhaps should prevent the user from assigned twice an AVM:NightCycle? Or more generally twice the same
     return availabilityManagerAssignmentList().addAvailabilityManager(availabilityManager);
   }
 
@@ -1218,12 +1217,12 @@ namespace detail {
 
   bool AirLoopHVAC_Impl::setAvailabilityManagerPriority(const AvailabilityManager & availabilityManager, unsigned priority)
   {
-    return availabilityManagerAssignmentList().setPriority(availabilityManager, priority);
+    return availabilityManagerAssignmentList().setAvailabilityManagerPriority(availabilityManager, priority);
   }
 
   unsigned AirLoopHVAC_Impl::availabilityManagerPriority(const AvailabilityManager & availabilityManager) const
   {
-    return availabilityManagerAssignmentList().priority(availabilityManager);
+    return availabilityManagerAssignmentList().availabilityManagerPriority(availabilityManager);
   }
 
   bool AirLoopHVAC_Impl::removeAvailabilityManager(const AvailabilityManager& avm) {

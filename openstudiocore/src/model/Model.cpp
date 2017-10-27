@@ -241,6 +241,9 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AvailabilityManagerHighTemperatureTurnOff);
     REGISTER_CONSTRUCTOR(AvailabilityManagerLowTemperatureTurnOn);
     REGISTER_CONSTRUCTOR(AvailabilityManagerLowTemperatureTurnOff);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerScheduled);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerScheduledOn);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerScheduledOff);
     REGISTER_CONSTRUCTOR(Blind);
     REGISTER_CONSTRUCTOR(BoilerHotWater);
     REGISTER_CONSTRUCTOR(BoilerSteam);
@@ -687,6 +690,9 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerHighTemperatureTurnOff);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerLowTemperatureTurnOn);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerLowTemperatureTurnOff);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerScheduled);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerScheduledOn);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerScheduledOff);
     REGISTER_COPYCONSTRUCTORS(Blind);
     REGISTER_COPYCONSTRUCTORS(BoilerHotWater);
     REGISTER_COPYCONSTRUCTORS(BoilerSteam);
