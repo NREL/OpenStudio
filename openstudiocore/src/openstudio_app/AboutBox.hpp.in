@@ -1,7 +1,7 @@
 #ifndef OPENSTUDIO_ABOUTBOX
 
 #define OPENSTUDIO_ABOUTBOX \
-"<h2>OpenStudio</h2> \
+"<h2>OpenStudio Thai Edition</h2> \
 <p>Version: ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}</p> \
 <p>Build Number: ${PROJECT_VERSION_BUILD}</p> \
 <p>Compiler: ${ABOUT_COMPILER}</p> \
