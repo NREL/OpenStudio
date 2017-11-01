@@ -323,17 +323,17 @@ void OpenStudioApp::buildCompLibraries()
     parent = this->currentDocument()->mainWindow();
   }
 
-  path p = resourcesPath() / toPath("MinimalTemplate.osm");
+  path p = resourcesPath() / toPath("ThaiLibrary.osm");
   OS_ASSERT(exists(p));
   boost::optional<Model> temp = versionTranslator.loadModel(p);
   if (!temp){
-    LOG_FREE(Error, "OpenStudioApp", "Failed to load MinimalTemplate");
+    LOG_FREE(Error, "OpenStudioApp", "Failed to load ThaiLibrary");
     for (const auto& error : versionTranslator.errors()){
       LOG_FREE(Error, "OpenStudioApp", error.logMessage());
     }
   }
   if (!temp){
-    QMessageBox::critical(parent, QString("Failed to load MinimalTemplate"), QString("Failed to load MinimalTemplate, likely due to problem with VersionTranslator."));
+    QMessageBox::critical(parent, QString("Failed to load ThaiLibrary"), QString("Failed to load ThaiLibrary, likely due to problem with VersionTranslator."));
   }
   OS_ASSERT(temp);
   m_compLibrary = temp.get();
