@@ -1,0 +1,45 @@
+Original Source Data (c) 2001 American Society of Heating, Refrigerating and 
+Air-Conditioning Engineers (ASHRAE), Inc., Atlanta, GA, USA.  www.ashrae.org  
+
+All rights reserved as noted in the License Agreement and Additional Conditions.
+
+LICENSE: You may use the data on a single machine. You may also copy the data 
+into any machine-readable form for backup purposes in support of your use of 
+the data on a single machine. You may not copy or transfer the data except as
+expressly provided for in this license. To do so will result in the automatic
+termination of your license. Specifically, you may not copy or transfer the 
+data onto a machine other than your own unless the person to whom you are 
+copying or transferring the data also has a license to use them. However, 
+selected excerpts of content may be reproduced in paper form for distribution 
+to third parties with the written permission of ASHRAE. Distribution to third
+parties without ASHRAE's permission is expressly forbidden.
+
+DISCLAIMER OF WARRANTIES: The data is provided "as is" without warranty of any
+kind, either expressed or implied. The entire risk as to the quality and 
+performance of the data is with you. In no event will ASHRAE or its contractors
+be liable to you for any damages, including without limitation any lost profits,
+lost savings, or other incidental or consequential damages arising out of the 
+use or inability to use this data.
+
+ADDITIONAL LICENSE CONDITIONS: This Product is also intended for use in 
+software or other programmed information. You may embed some or all of the 
+program and data contained within in another work for personal use without 
+written permission of ASHRAE.  
+
+If a derivative work is to be sold, traded or have a commercial value otherwise 
+established, ASHRAE will grant permission for embedding some or all of the 
+program and data providing such requests are made in writing to the Publisher 
+and the following conditions are met: 
+a) The work has materially different purpose and function than the program and 
+data on this CD-ROM.  
+b) The ASHRAE copyright notice is included in the work's introductory displays,
+other displays, and wherever copyright notices are included.  
+c) The ASHRAE disclaimer of warranty is included in the work's license and 
+wherever other disclaimers are included.  
+d) There is no implication in or on the work or in materials promoting the work
+that ASHRAE has endorsed, reviewed, or certified the product.  
+e) The work's license conditions prohibit redistribution of modified versions 
+of the work or the ASHRAE Product.  
+
+Requests to ASHRAE for use in derivative works must explicitly acknowledge 
+acceptance of the terms and conditions above.
