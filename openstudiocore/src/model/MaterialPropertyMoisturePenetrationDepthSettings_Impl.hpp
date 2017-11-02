@@ -29,16 +29,17 @@
 #ifndef MODEL_MATERIALPROPERTYMOISTUREPENETRATIONDEPTHSETTINGS_IMPL_HPP
 #define MODEL_MATERIALPROPERTYMOISTUREPENETRATIONDEPTHSETTINGS_IMPL_HPP
 
+#include <vector>
 #include "ModelAPI.hpp"
-#include "ResourceObject_Impl.hpp"
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
 namespace detail {
 
-  /** MaterialPropertyMoisturePenetrationDepthSettings_Impl is a ResourceObject_Impl that is the implementation class for MaterialPropertyMoisturePenetrationDepthSettings.*/
-  class MODEL_API MaterialPropertyMoisturePenetrationDepthSettings_Impl : public ResourceObject_Impl {
+  /** MaterialPropertyMoisturePenetrationDepthSettings_Impl is a ModelObject_Impl that is the implementation class for MaterialPropertyMoisturePenetrationDepthSettings.*/
+  class MODEL_API MaterialPropertyMoisturePenetrationDepthSettings_Impl : public ModelObject_Impl {
   
   public:
 
@@ -66,6 +67,10 @@ namespace detail {
     virtual const std::vector<std::string>& outputVariableNames() const;
 
     virtual IddObjectType iddObjectType() const;
+
+    // virtual boost::optional<ParentObject> parent() const override;
+
+    // virtual bool setParent(ParentObject& newParent) override;
 
     //@}
     /** @name Getters */
@@ -99,29 +104,29 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setWaterVaporDiffusionResistanceFactor(double waterVaporDiffusionResistanceFactor);
+    bool setWaterVaporDiffusionResistanceFactor(double waterVaporDiffusionResistanceFactor);
 
-    void setMoistureEquationCoefficientA(double moistureEquationCoefficientA);
+    bool setMoistureEquationCoefficientA(double moistureEquationCoefficientA);
 
-    void setMoistureEquationCoefficientB(double moistureEquationCoefficientB);
+    bool setMoistureEquationCoefficientB(double moistureEquationCoefficientB);
 
-    void setMoistureEquationCoefficientC(double moistureEquationCoefficientC);
+    bool setMoistureEquationCoefficientC(double moistureEquationCoefficientC);
 
-    void setMoistureEquationCoefficientD(double moistureEquationCoefficientD);
+    bool setMoistureEquationCoefficientD(double moistureEquationCoefficientD);
     
-    void setMoistureEquationCoefficients(double moistureEquationCoefficientA, double moistureEquationCoefficientB, double moistureEquationCoefficientC, double moistureEquationCoefficientD);
+    bool setMoistureEquationCoefficients(double moistureEquationCoefficientA, double moistureEquationCoefficientB, double moistureEquationCoefficientC, double moistureEquationCoefficientD);
 
-    void setSurfaceLayerPenetrationDepth(double value);
+    bool setSurfaceLayerPenetrationDepth(double surfaceLayerPenetrationDepth);
 
     void autocalculateSurfaceLayerPenetrationDepth();
 
-    void setDeepLayerPenetrationDepth(double value);
+    bool setDeepLayerPenetrationDepth(double deepLayerPenetrationDepth);
 
     void autocalculateDeepLayerPenetrationDepth();
 
-    void setCoatingLayerThickness(double coatingLayerThickness);
+    bool setCoatingLayerThickness(double coatingLayerThickness);
 
-    void setCoatingLayerWaterVaporDiffusionResistanceFactor(double coatingLayerWaterVaporDiffusionResistanceFactor);
+    bool setCoatingLayerWaterVaporDiffusionResistanceFactor(double coatingLayerWaterVaporDiffusionResistanceFactor);
 
     //@}
     /** @name Other */

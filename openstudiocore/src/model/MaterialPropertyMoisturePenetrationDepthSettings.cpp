@@ -26,6 +26,7 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
+#include <vector>
 #include "MaterialPropertyMoisturePenetrationDepthSettings.hpp"
 #include "MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
 #include "ModelExtensibleGroup.hpp"
@@ -40,10 +41,10 @@ namespace model {
 
 namespace detail {
 
-MaterialPropertyMoisturePenetrationDepthSettings_Impl::MaterialPropertyMoisturePenetrationDepthSettings_Impl(const IdfObject& idfObject,
-                                                                                                             Model_Impl* model,
-                                                                                                             bool keepHandle)
-    : ResourceObject_Impl(idfObject,model,keepHandle)
+  MaterialPropertyMoisturePenetrationDepthSettings_Impl::MaterialPropertyMoisturePenetrationDepthSettings_Impl(const IdfObject& idfObject,
+                                                                                                               Model_Impl* model,
+                                                                                                               bool keepHandle)
+    : ModelObject_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType());
   }
@@ -51,7 +52,7 @@ MaterialPropertyMoisturePenetrationDepthSettings_Impl::MaterialPropertyMoistureP
   MaterialPropertyMoisturePenetrationDepthSettings_Impl::MaterialPropertyMoisturePenetrationDepthSettings_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                                                                Model_Impl* model,
                                                                                                                bool keepHandle)
-    : ResourceObject_Impl(other,model,keepHandle)
+    : ModelObject_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType());
   }
@@ -59,7 +60,7 @@ MaterialPropertyMoisturePenetrationDepthSettings_Impl::MaterialPropertyMoistureP
   MaterialPropertyMoisturePenetrationDepthSettings_Impl::MaterialPropertyMoisturePenetrationDepthSettings_Impl(const MaterialPropertyMoisturePenetrationDepthSettings_Impl& other,
                                                                                                                Model_Impl* model,
                                                                                                                bool keepHandle)
-    : ResourceObject_Impl(other,model,keepHandle)
+    : ModelObject_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& MaterialPropertyMoisturePenetrationDepthSettings_Impl::outputVariableNames() const
@@ -75,43 +76,43 @@ MaterialPropertyMoisturePenetrationDepthSettings_Impl::MaterialPropertyMoistureP
   }
 
   double MaterialPropertyMoisturePenetrationDepthSettings_Impl::waterVaporDiffusionResistanceFactor() const {
-    boost::optional<double> value = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::WaterVaporDiffusionResistanceFactor, true);
+    boost::optional<double> value = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::WaterVaporDiffusionResistanceFactor);
     OS_ASSERT(value);
     return value.get();
   }
 
   double MaterialPropertyMoisturePenetrationDepthSettings_Impl::moistureEquationCoefficientA() const {
-    boost::optional<double> value = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficienta, true);
+    boost::optional<double> value = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficienta);
     OS_ASSERT(value);
     return value.get();
   }
 
   double MaterialPropertyMoisturePenetrationDepthSettings_Impl::moistureEquationCoefficientB() const {
-    boost::optional<double> value = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientb, true);
+    boost::optional<double> value = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientb);
     OS_ASSERT(value);
     return value.get();
   }
 
   double MaterialPropertyMoisturePenetrationDepthSettings_Impl::moistureEquationCoefficientC() const {
-    boost::optional<double> value = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientc, true);
+    boost::optional<double> value = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientc);
     OS_ASSERT(value);
     return value.get();
   }
 
   double MaterialPropertyMoisturePenetrationDepthSettings_Impl::moistureEquationCoefficientD() const {
-    boost::optional<double> value = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientd, true);
+    boost::optional<double> value = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientd);
     OS_ASSERT(value);
     return value.get();
   }
 
   std::vector<double> MaterialPropertyMoisturePenetrationDepthSettings_Impl::moistureEquationCoefficients() const {
-    boost::optional<double> valuea = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficienta, true);
+    boost::optional<double> valuea = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficienta);
     OS_ASSERT(valuea);
-    boost::optional<double> valueb = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientb, true);
+    boost::optional<double> valueb = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientb);
     OS_ASSERT(valueb);
-    boost::optional<double> valuec = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientc, true);
+    boost::optional<double> valuec = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientc);
     OS_ASSERT(valuec);
-    boost::optional<double> valued = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientd, true);
+    boost::optional<double> valued = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientd);
     OS_ASSERT(valued);
     return {valuea.get(), valueb.get(), valuec.get(), valued.get()};
   }
@@ -143,43 +144,48 @@ MaterialPropertyMoisturePenetrationDepthSettings_Impl::MaterialPropertyMoistureP
   }
 
   double MaterialPropertyMoisturePenetrationDepthSettings_Impl::coatingLayerThickness() const {
-    boost::optional<double> value = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::CoatingLayerThickness, true);
+    boost::optional<double> value = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::CoatingLayerThickness);
     OS_ASSERT(value);
     return value.get();
   }
 
   double MaterialPropertyMoisturePenetrationDepthSettings_Impl::coatingLayerWaterVaporDiffusionResistanceFactor() const {
-    boost::optional<double> value = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::CoatingLayerWaterVaporDiffusionResistanceFactor, true);
+    boost::optional<double> value = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::CoatingLayerWaterVaporDiffusionResistanceFactor);
     OS_ASSERT(value);
     return value.get();
   }
 
-  void MaterialPropertyMoisturePenetrationDepthSettings_Impl::setWaterVaporDiffusionResistanceFactor(double waterVaporDiffusionResistanceFactor) {
+  bool MaterialPropertyMoisturePenetrationDepthSettings_Impl::setWaterVaporDiffusionResistanceFactor(double waterVaporDiffusionResistanceFactor) {
     bool result = setDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::WaterVaporDiffusionResistanceFactor, waterVaporDiffusionResistanceFactor);
     OS_ASSERT(result);
+    return result;
   }
 
-  void MaterialPropertyMoisturePenetrationDepthSettings_Impl::setMoistureEquationCoefficientA(double moistureEquationCoefficientA) {
+  bool MaterialPropertyMoisturePenetrationDepthSettings_Impl::setMoistureEquationCoefficientA(double moistureEquationCoefficientA) {
     bool result = setDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficienta, moistureEquationCoefficientA);
     OS_ASSERT(result);
+    return result;
   }
 
-  void MaterialPropertyMoisturePenetrationDepthSettings_Impl::setMoistureEquationCoefficientB(double moistureEquationCoefficientB) {
+  bool MaterialPropertyMoisturePenetrationDepthSettings_Impl::setMoistureEquationCoefficientB(double moistureEquationCoefficientB) {
     bool result = setDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientb, moistureEquationCoefficientB);
     OS_ASSERT(result);
+    return result;
   }
 
-  void MaterialPropertyMoisturePenetrationDepthSettings_Impl::setMoistureEquationCoefficientC(double moistureEquationCoefficientC) {
+  bool MaterialPropertyMoisturePenetrationDepthSettings_Impl::setMoistureEquationCoefficientC(double moistureEquationCoefficientC) {
     bool result = setDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientc, moistureEquationCoefficientC);
     OS_ASSERT(result);
+    return result;
   }
 
-  void MaterialPropertyMoisturePenetrationDepthSettings_Impl::setMoistureEquationCoefficientD(double moistureEquationCoefficientD) {
+  bool MaterialPropertyMoisturePenetrationDepthSettings_Impl::setMoistureEquationCoefficientD(double moistureEquationCoefficientD) {
     bool result = setDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientd, moistureEquationCoefficientD);
     OS_ASSERT(result);
+    return result;
   }
 
-  void MaterialPropertyMoisturePenetrationDepthSettings_Impl::setMoistureEquationCoefficients(double moistureEquationCoefficientA, double moistureEquationCoefficientB, double moistureEquationCoefficientC, double moistureEquationCoefficientD) {
+  bool MaterialPropertyMoisturePenetrationDepthSettings_Impl::setMoistureEquationCoefficients(double moistureEquationCoefficientA, double moistureEquationCoefficientB, double moistureEquationCoefficientC, double moistureEquationCoefficientD) {
     bool resulta = setDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficienta, moistureEquationCoefficientA);
     OS_ASSERT(resulta);
     bool resultb = setDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientb, moistureEquationCoefficientB);
@@ -188,35 +194,81 @@ MaterialPropertyMoisturePenetrationDepthSettings_Impl::MaterialPropertyMoistureP
     OS_ASSERT(resultc);
     bool resultd = setDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientd, moistureEquationCoefficientD);
     OS_ASSERT(resultd);
+    if (resulta && resultb && resultc && resultd) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  void MaterialPropertyMoisturePenetrationDepthSettings_Impl::setSurfaceLayerPenetrationDepth(double value) {
-    setDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::SurfaceLayerPenetrationDepth, value);
+  bool MaterialPropertyMoisturePenetrationDepthSettings_Impl::setSurfaceLayerPenetrationDepth(double surfaceLayerPenetrationDepth) {
+    bool result = setDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::SurfaceLayerPenetrationDepth, surfaceLayerPenetrationDepth);
+    OS_ASSERT(result);
+    return result;
   }
 
   void MaterialPropertyMoisturePenetrationDepthSettings_Impl::autocalculateSurfaceLayerPenetrationDepth() {
-    setString(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::SurfaceLayerPenetrationDepth, "Autocalculate");
+    bool result = setString(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::SurfaceLayerPenetrationDepth, "");
+    OS_ASSERT(result);
   }
 
-  void MaterialPropertyMoisturePenetrationDepthSettings_Impl::setDeepLayerPenetrationDepth(double value) {
-    setDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::DeepLayerPenetrationDepth, value);
+  bool MaterialPropertyMoisturePenetrationDepthSettings_Impl::setDeepLayerPenetrationDepth(double deepLayerPenetrationDepth) {
+    bool result = setDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::DeepLayerPenetrationDepth, deepLayerPenetrationDepth);
+    OS_ASSERT(result);
+    return result;
   }
 
   void MaterialPropertyMoisturePenetrationDepthSettings_Impl::autocalculateDeepLayerPenetrationDepth() {
-    setString(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::DeepLayerPenetrationDepth, "Autocalculate");
+    bool result = setString(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::DeepLayerPenetrationDepth, "");
+    OS_ASSERT(result);
   }
 
-  void MaterialPropertyMoisturePenetrationDepthSettings_Impl::setCoatingLayerThickness(double coatingLayerThickness) {
+  bool MaterialPropertyMoisturePenetrationDepthSettings_Impl::setCoatingLayerThickness(double coatingLayerThickness) {
     bool result = setDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::CoatingLayerThickness, coatingLayerThickness);
     OS_ASSERT(result);
+    return result;
   }
 
-  void MaterialPropertyMoisturePenetrationDepthSettings_Impl::setCoatingLayerWaterVaporDiffusionResistanceFactor(double coatingLayerWaterVaporDiffusionResistanceFactor) {
+  bool MaterialPropertyMoisturePenetrationDepthSettings_Impl::setCoatingLayerWaterVaporDiffusionResistanceFactor(double coatingLayerWaterVaporDiffusionResistanceFactor) {
     bool result = setDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::CoatingLayerWaterVaporDiffusionResistanceFactor, coatingLayerWaterVaporDiffusionResistanceFactor);
     OS_ASSERT(result);
+    return result;
   }
 
 } // detail
+
+MaterialPropertyMoisturePenetrationDepthSettings::MaterialPropertyMoisturePenetrationDepthSettings(const Model& model, double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA, double moistureEquationCoefficientB, double moistureEquationCoefficientC, double moistureEquationCoefficientD, double coatingLayerThickness, double coatingLayerWaterVaporDiffusionResistanceFactor)
+  : ModelObject(MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType(), model)
+{
+  OS_ASSERT(getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>());
+
+  bool ok = true;
+  OS_ASSERT(ok);
+
+  ok = setWaterVaporDiffusionResistanceFactor(waterVaporDiffusionResistanceFactor);
+  OS_ASSERT(ok);
+
+  ok = setMoistureEquationCoefficientA(moistureEquationCoefficientA);
+  OS_ASSERT(ok);
+
+  ok = setMoistureEquationCoefficientB(moistureEquationCoefficientB);
+  OS_ASSERT(ok);
+
+  ok = setMoistureEquationCoefficientC(moistureEquationCoefficientC);
+  OS_ASSERT(ok);
+
+  ok = setMoistureEquationCoefficientD(moistureEquationCoefficientD);
+  OS_ASSERT(ok);
+
+  autocalculateSurfaceLayerPenetrationDepth();
+  autocalculateDeepLayerPenetrationDepth();
+
+  ok = setCoatingLayerThickness(coatingLayerThickness);
+  OS_ASSERT(ok);
+
+  ok = setCoatingLayerWaterVaporDiffusionResistanceFactor(coatingLayerWaterVaporDiffusionResistanceFactor);
+  OS_ASSERT(ok);
+}
 
 IddObjectType MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType() {
   return IddObjectType(IddObjectType::OS_MaterialProperty_MoisturePenetrationDepth_Settings);
@@ -270,57 +322,57 @@ double MaterialPropertyMoisturePenetrationDepthSettings::coatingLayerWaterVaporD
   return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->coatingLayerWaterVaporDiffusionResistanceFactor();
 }
 
-void MaterialPropertyMoisturePenetrationDepthSettings::setWaterVaporDiffusionResistanceFactor(double waterVaporDiffusionResistanceFactor) {
-  getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setWaterVaporDiffusionResistanceFactor(waterVaporDiffusionResistanceFactor);
+bool MaterialPropertyMoisturePenetrationDepthSettings::setWaterVaporDiffusionResistanceFactor(double waterVaporDiffusionResistanceFactor) {
+  return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setWaterVaporDiffusionResistanceFactor(waterVaporDiffusionResistanceFactor);
 }
 
-void MaterialPropertyMoisturePenetrationDepthSettings::setMoistureEquationCoefficientA(double moistureEquationCoefficientA) {
-  getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setMoistureEquationCoefficientA(moistureEquationCoefficientA);
+bool MaterialPropertyMoisturePenetrationDepthSettings::setMoistureEquationCoefficientA(double moistureEquationCoefficientA) {
+  return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setMoistureEquationCoefficientA(moistureEquationCoefficientA);
 }
 
-void MaterialPropertyMoisturePenetrationDepthSettings::setMoistureEquationCoefficientB(double moistureEquationCoefficientB) {
-  getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setMoistureEquationCoefficientB(moistureEquationCoefficientB);
+bool MaterialPropertyMoisturePenetrationDepthSettings::setMoistureEquationCoefficientB(double moistureEquationCoefficientB) {
+  return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setMoistureEquationCoefficientB(moistureEquationCoefficientB);
 }
 
-void MaterialPropertyMoisturePenetrationDepthSettings::setMoistureEquationCoefficientC(double moistureEquationCoefficientC) {
-  getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setMoistureEquationCoefficientC(moistureEquationCoefficientC);
+bool MaterialPropertyMoisturePenetrationDepthSettings::setMoistureEquationCoefficientC(double moistureEquationCoefficientC) {
+  return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setMoistureEquationCoefficientC(moistureEquationCoefficientC);
 }
 
-void MaterialPropertyMoisturePenetrationDepthSettings::setMoistureEquationCoefficientD(double moistureEquationCoefficientD) {
-  getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setMoistureEquationCoefficientD(moistureEquationCoefficientD);
+bool MaterialPropertyMoisturePenetrationDepthSettings::setMoistureEquationCoefficientD(double moistureEquationCoefficientD) {
+  return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setMoistureEquationCoefficientD(moistureEquationCoefficientD);
 }
 
-void MaterialPropertyMoisturePenetrationDepthSettings::setMoistureEquationCoefficients(double moistureEquationCoefficientA, double moistureEquationCoefficientB, double moistureEquationCoefficientC, double moistureEquationCoefficientD) {
-  getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setMoistureEquationCoefficients(moistureEquationCoefficientA, moistureEquationCoefficientB, moistureEquationCoefficientC, moistureEquationCoefficientD);
+bool MaterialPropertyMoisturePenetrationDepthSettings::setMoistureEquationCoefficients(double moistureEquationCoefficientA, double moistureEquationCoefficientB, double moistureEquationCoefficientC, double moistureEquationCoefficientD) {
+  return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setMoistureEquationCoefficients(moistureEquationCoefficientA, moistureEquationCoefficientB, moistureEquationCoefficientC, moistureEquationCoefficientD);
 }
 
-void MaterialPropertyMoisturePenetrationDepthSettings::setSurfaceLayerPenetrationDepth(double value) {
-  getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setSurfaceLayerPenetrationDepth(value);
+bool MaterialPropertyMoisturePenetrationDepthSettings::setSurfaceLayerPenetrationDepth(double surfaceLayerPenetrationDepth) {
+  return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setSurfaceLayerPenetrationDepth(surfaceLayerPenetrationDepth);
 }
 
 void MaterialPropertyMoisturePenetrationDepthSettings::autocalculateSurfaceLayerPenetrationDepth() {
   getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->autocalculateSurfaceLayerPenetrationDepth();
 }
 
-void MaterialPropertyMoisturePenetrationDepthSettings::setDeepLayerPenetrationDepth(double value) {
-  getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setDeepLayerPenetrationDepth(value);
+bool MaterialPropertyMoisturePenetrationDepthSettings::setDeepLayerPenetrationDepth(double deepLayerPenetrationDepth) {
+  return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setDeepLayerPenetrationDepth(deepLayerPenetrationDepth);
 }
 
 void MaterialPropertyMoisturePenetrationDepthSettings::autocalculateDeepLayerPenetrationDepth() {
   getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->autocalculateDeepLayerPenetrationDepth();
 }
 
-void MaterialPropertyMoisturePenetrationDepthSettings::setCoatingLayerThickness(double coatingLayerThickness) {
-  getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setCoatingLayerThickness(coatingLayerThickness);
+bool MaterialPropertyMoisturePenetrationDepthSettings::setCoatingLayerThickness(double coatingLayerThickness) {
+  return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setCoatingLayerThickness(coatingLayerThickness);
 }
 
-void MaterialPropertyMoisturePenetrationDepthSettings::setCoatingLayerWaterVaporDiffusionResistanceFactor(double coatingLayerWaterVaporDiffusionResistanceFactor) {
-  getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setCoatingLayerWaterVaporDiffusionResistanceFactor(coatingLayerWaterVaporDiffusionResistanceFactor);
+bool MaterialPropertyMoisturePenetrationDepthSettings::setCoatingLayerWaterVaporDiffusionResistanceFactor(double coatingLayerWaterVaporDiffusionResistanceFactor) {
+  return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setCoatingLayerWaterVaporDiffusionResistanceFactor(coatingLayerWaterVaporDiffusionResistanceFactor);
 }
 
 /// @cond
 MaterialPropertyMoisturePenetrationDepthSettings::MaterialPropertyMoisturePenetrationDepthSettings(std::shared_ptr<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl> impl)
-  : ResourceObject(std::move(impl))
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

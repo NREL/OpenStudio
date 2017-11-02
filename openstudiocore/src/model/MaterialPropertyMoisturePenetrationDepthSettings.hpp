@@ -29,8 +29,9 @@
 #ifndef MODEL_MATERIALPROPERTYMOISTUREPENETRATIONDEPTHSETTINGS_HPP
 #define MODEL_MATERIALPROPERTYMOISTUREPENETRATIONDEPTHSETTINGS_HPP
 
+#include <vector>
 #include "ModelAPI.hpp"
-#include "ResourceObject.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -41,11 +42,20 @@ namespace detail {
 
 } // detail
 
-/** MaterialPropertyMoisturePenetrationDepthSettings is a ResourceObject that wraps the OpenStudio IDD object 'OS:MaterialProperty:MoisturePenetrationDepth:Settings'. */
-class MODEL_API MaterialPropertyMoisturePenetrationDepthSettings : public ResourceObject {
+/** MaterialPropertyMoisturePenetrationDepthSettings is a ModelObject that wraps the OpenStudio IDD object 'OS:MaterialProperty:MoisturePenetrationDepth:Settings'. */
+class MODEL_API MaterialPropertyMoisturePenetrationDepthSettings : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
+
+  explicit MaterialPropertyMoisturePenetrationDepthSettings(const Model& model,
+                                                            double waterVaporDiffusionResistanceFactor,
+                                                            double moistureEquationCoefficientA,
+                                                            double moistureEquationCoefficientB,
+                                                            double moistureEquationCoefficientC,
+                                                            double moistureEquationCoefficientD,
+                                                            double coatingLayerThickness,
+                                                            double coatingLayerWaterVaporDiffusionResistanceFactor);
 
   virtual ~MaterialPropertyMoisturePenetrationDepthSettings() {}
 
@@ -84,29 +94,29 @@ class MODEL_API MaterialPropertyMoisturePenetrationDepthSettings : public Resour
   /** @name Setters */
   //@{
 
-  void setWaterVaporDiffusionResistanceFactor(double waterVaporDiffusionResistanceFactor);
+  bool setWaterVaporDiffusionResistanceFactor(double waterVaporDiffusionResistanceFactor);
 
-  void setMoistureEquationCoefficientA(double moistureEquationCoefficientA);
+  bool setMoistureEquationCoefficientA(double moistureEquationCoefficientA);
 
-  void setMoistureEquationCoefficientB(double moistureEquationCoefficientB);
+  bool setMoistureEquationCoefficientB(double moistureEquationCoefficientB);
 
-  void setMoistureEquationCoefficientC(double moistureEquationCoefficientC);
+  bool setMoistureEquationCoefficientC(double moistureEquationCoefficientC);
 
-  void setMoistureEquationCoefficientD(double moistureEquationCoefficientD);
+  bool setMoistureEquationCoefficientD(double moistureEquationCoefficientD);
   
-  void setMoistureEquationCoefficients(double moistureEquationCoefficientA, double moistureEquationCoefficientB, double moistureEquationCoefficientC, double moistureEquationCoefficientD);
+  bool setMoistureEquationCoefficients(double moistureEquationCoefficientA, double moistureEquationCoefficientB, double moistureEquationCoefficientC, double moistureEquationCoefficientD);
 
-  void setSurfaceLayerPenetrationDepth(double value);
+  bool setSurfaceLayerPenetrationDepth(double surfaceLayerPenetrationDepth);
 
   void autocalculateSurfaceLayerPenetrationDepth();
 
-  void setDeepLayerPenetrationDepth(double value);
+  bool setDeepLayerPenetrationDepth(double deepLayerPenetrationDepth);
 
   void autocalculateDeepLayerPenetrationDepth();
 
-  void setCoatingLayerThickness(double coatingLayerThickness);
+  bool setCoatingLayerThickness(double coatingLayerThickness);
 
-  void setCoatingLayerWaterVaporDiffusionResistanceFactor(double coatingLayerWaterVaporDiffusionResistanceFactor);
+  bool setCoatingLayerWaterVaporDiffusionResistanceFactor(double coatingLayerWaterVaporDiffusionResistanceFactor);
 
   //@}
   /** @name Other */
