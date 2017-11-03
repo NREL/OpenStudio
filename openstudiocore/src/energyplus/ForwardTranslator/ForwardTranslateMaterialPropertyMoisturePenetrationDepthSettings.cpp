@@ -61,6 +61,8 @@ boost::optional<IdfObject> ForwardTranslator::translateMaterialPropertyMoistureP
   
   idfObject.setDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientd, modelObject.moistureEquationCoefficientD());
   
+  boost::optional<double> value;
+
   if( modelObject.isSurfaceLayerPenetrationDepthAutocalculated() )
   {
     idfObject.setString(MaterialProperty_MoisturePenetrationDepth_SettingsFields::SurfaceLayerPenetrationDepth,"Autocalculate");
