@@ -36,6 +36,8 @@
 namespace openstudio {
 namespace model {
 
+class Material;
+
 namespace detail {
 
   class MaterialPropertyMoisturePenetrationDepthSettings_Impl;
@@ -48,7 +50,7 @@ class MODEL_API MaterialPropertyMoisturePenetrationDepthSettings : public ModelO
   /** @name Constructors and Destructors */
   //@{
 
-  explicit MaterialPropertyMoisturePenetrationDepthSettings(const Model& model,
+  explicit MaterialPropertyMoisturePenetrationDepthSettings(Material& material,
                                                             double waterVaporDiffusionResistanceFactor,
                                                             double moistureEquationCoefficientA,
                                                             double moistureEquationCoefficientB,

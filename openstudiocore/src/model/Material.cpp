@@ -98,12 +98,13 @@ namespace detail {
                                                                                                                                           double moistureEquationCoefficientD,
                                                                                                                                           double coatingLayerThickness,
                                                                                                                                           double coatingLayerWaterVaporDiffusionResistanceFactor) {
-    std::vector<MaterialPropertyMoisturePenetrationDepthSettings> empds = getObject<ModelObject>().getModelObjectSources<MaterialPropertyMoisturePenetrationDepthSettings>(MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType());
+    Material thisMaterial = getObject<Material>();
+    std::vector<MaterialPropertyMoisturePenetrationDepthSettings> empds = thisMaterial.getModelObjectSources<MaterialPropertyMoisturePenetrationDepthSettings>(MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType());
     if (!empds.empty()) {
       return boost::none;
     }    
-    Model model = this->model();
-    MaterialPropertyMoisturePenetrationDepthSettings empd(model, waterVaporDiffusionResistanceFactor, moistureEquationCoefficientA, moistureEquationCoefficientB, moistureEquationCoefficientC, moistureEquationCoefficientD, coatingLayerThickness, coatingLayerWaterVaporDiffusionResistanceFactor);
+    
+    MaterialPropertyMoisturePenetrationDepthSettings empd(thisMaterial, waterVaporDiffusionResistanceFactor, moistureEquationCoefficientA, moistureEquationCoefficientB, moistureEquationCoefficientC, moistureEquationCoefficientD, coatingLayerThickness, coatingLayerWaterVaporDiffusionResistanceFactor);
     empd.setName(this->name().get());
     return empd;
   }  

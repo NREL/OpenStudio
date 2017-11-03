@@ -27,9 +27,11 @@
  **********************************************************************************************************************/
 
 #include <vector>
+#include "Material.hpp"
 #include "MaterialPropertyMoisturePenetrationDepthSettings.hpp"
 #include "MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
 #include "ModelExtensibleGroup.hpp"
+#include "Model.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_MaterialProperty_MoisturePenetrationDepth_Settings_FieldEnums.hxx>
@@ -237,12 +239,20 @@ namespace detail {
 
 } // detail
 
-MaterialPropertyMoisturePenetrationDepthSettings::MaterialPropertyMoisturePenetrationDepthSettings(const Model& model, double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA, double moistureEquationCoefficientB, double moistureEquationCoefficientC, double moistureEquationCoefficientD, double coatingLayerThickness, double coatingLayerWaterVaporDiffusionResistanceFactor)
-  : ModelObject(MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType(), model)
+MaterialPropertyMoisturePenetrationDepthSettings::MaterialPropertyMoisturePenetrationDepthSettings(Material& material, double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA, double moistureEquationCoefficientB, double moistureEquationCoefficientC, double moistureEquationCoefficientD, double coatingLayerThickness, double coatingLayerWaterVaporDiffusionResistanceFactor)
+  : ModelObject(MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType(), material.model())
 {
   OS_ASSERT(getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>());
 
+  if (material.materialPropertyMoisturePenetrationDepthSettings())
+  {
+    LOG_AND_THROW("Material '" << material.nameString() << "' already has an associated MaterialPropertyMoisturePenetrationDepthSettings object");
+  }
+
   bool ok = true;
+  OS_ASSERT(ok);
+
+  ok = setPointer(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MaterialName, material.handle());
   OS_ASSERT(ok);
 
   ok = setWaterVaporDiffusionResistanceFactor(waterVaporDiffusionResistanceFactor);
