@@ -50,6 +50,8 @@ boost::optional<IdfObject> ForwardTranslator::translateMaterialPropertyMoistureP
   IdfObject idfObject(openstudio::IddObjectType::MaterialProperty_MoisturePenetrationDepth_Settings);
 
   m_idfObjects.push_back(idfObject);
+  
+  idfObject.setName(modelObject.name().get());
 
   idfObject.setDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::WaterVaporDiffusionResistanceFactor, modelObject.waterVaporDiffusionResistanceFactor());
   
