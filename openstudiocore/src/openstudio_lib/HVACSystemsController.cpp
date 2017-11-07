@@ -728,14 +728,52 @@ void HVACSystemsController::addToModel(AddToModelEnum addToModelEnum)
 
   switch (addToModelEnum)
   {
-    case ADDTOMODEL_AIRLOOPHVAC:
-    {
-      model::AirLoopHVAC airLoopHVAC(m_model);
-
-      loop = airLoopHVAC;
-
-      break;
-    }
+	  case ADDTOMODEL_SPLIT_TYPE_0_THAI:
+	  {
+		  loop = model::addSplitTypeHVACTHAIType0(m_model);
+		  break;
+	  }
+	  case ADDTOMODEL_SPLIT_TYPE_1_THAI:
+	  {
+		  loop = model::addSplitTypeHVACTHAIType1(m_model);
+		  break;
+	  }
+	  case ADDTOMODEL_SPLIT_TYPE_2_THAI:
+	  {
+		  loop = model::addSplitTypeHVACTHAIType2(m_model);
+		  break;
+	  }
+	  case ADDTOMODEL_CENTRAL_SYSTEM_TYPE_0_THAI:
+	  {
+		  loop = model::addCentralSystemWithAirCooled(m_model);
+		  break;
+	  }
+	  case ADDTOMODEL_CENTRAL_SYSTEM_TYPE_1_THAI:
+	  {
+		  loop = model::addCentralSystemWithWaterCooled(m_model);
+		  break;
+	  }
+	  case ADDTOMODEL_AIRLOOPHVAC_1_THAI:
+	  {
+		  loop = model::addThaiAirLoop(m_model);
+		  break;
+	  }
+	  case ADDTOMODEL_AIRLOOPHVAC_2_THAI:
+	  {
+		  loop = model::addThaizAirLoopWithERV(m_model);
+		  break;
+	  }
+	case ADDTOMODEL_AIRLOOPHVAC_THAI:
+	  {
+		  loop = model::airLoopHVACTHAI(m_model);
+		  break;
+	  }
+	case ADDTOMODEL_AIRLOOPHVAC:
+      {
+          model::AirLoopHVAC airLoopHVAC(m_model);
+          loop = airLoopHVAC;
+          break;
+      }
     case ADDTOMODEL_DUAL_AIRLOOPHVAC:
     {
       model::AirLoopHVAC airLoopHVAC(m_model,true);

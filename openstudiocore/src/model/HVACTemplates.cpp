@@ -99,6 +99,8 @@
 #include "CoilCoolingWater_Impl.hpp"
 #include "CoilHeatingWater.hpp"
 #include "CoilHeatingWater_Impl.hpp"
+#include "EvaporativeCoolerDirectResearchSpecial.hpp"
+#include "EvaporativeCoolerDirectResearchSpecial_Impl.hpp"
 #include "Splitter.hpp"
 #include "Splitter_Impl.hpp"
 #include "Mixer.hpp"
@@ -106,6 +108,8 @@
 #include "CoolingTowerSingleSpeed.hpp"
 #include "CoolingTowerSingleSpeed_Impl.hpp"
 #include "../utilities/time/Time.hpp"
+#include "HeatExchangerAirToAirSensibleAndLatent.hpp"
+#include "HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
 
 namespace openstudio {
 
@@ -1022,6 +1026,638 @@ Loop addSystemType10(Model & model)
   return airLoopHVAC;
 }
 
+Loop airLoopHVACTHAI(Model & model){
+	Model tempModel;
+	Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
+
+	AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+	airLoopHVAC.setName("Thai Packaged Air Conditioner");
+	// when an airloophvac is contructed, its constructor automatically creates a sizing:system object
+	// the default sizing:system contstructor makes a system:sizing object appropriate for a multizone VAV system
+	// this systems is a constant volume system with no VAV terminals, and needs different default settings
+
+	// get the sizing:system object associated with the airloophvac
+	SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
+
+	//set the default parameters correctly for a constant volume system with no VAV terminals
+	sizingSystem.setTypeofLoadtoSizeOn("Sensible");
+	sizingSystem.autosizeDesignOutdoorAirFlowRate();
+	sizingSystem.setMinimumSystemAirFlowRatio(1.0);
+	sizingSystem.setPreheatDesignTemperature(7.0);
+	sizingSystem.setPreheatDesignHumidityRatio(0.008);
+	sizingSystem.setPrecoolDesignTemperature(12.8);
+	sizingSystem.setPrecoolDesignHumidityRatio(0.008);
+	sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
+	sizingSystem.setCentralHeatingDesignSupplyAirTemperature(40.0);
+	sizingSystem.setSizingOption("NonCoincident");
+	sizingSystem.setAllOutdoorAirinCooling("No");
+	sizingSystem.setAllOutdoorAirinHeating("No");
+	sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(0.0085);
+	sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(0.0080);
+	sizingSystem.setCoolingDesignAirFlowMethod("DesignDay");
+	sizingSystem.setCoolingDesignAirFlowRate(0.0);
+	sizingSystem.setHeatingDesignAirFlowMethod("DesignDay");
+	sizingSystem.setHeatingDesignAirFlowRate(0.0);
+	sizingSystem.setSystemOutdoorAirMethod("ZoneSum");
+
+	FanConstantVolume fan = FanConstantVolume(model);
+	fan.setPressureRise(500);
+
+	CoilHeatingGas coilHeatingGas = CoilHeatingGas(model, _alwaysOnSchedule);
+
+	CoilCoolingDXSingleSpeed coilCooling = CoilCoolingDXSingleSpeed(model);
+
+	SetpointManagerSingleZoneReheat setpointMSZR(model);
+
+	ControllerOutdoorAir controllerOutdoorAir = ControllerOutdoorAir(model);
+
+	AirLoopHVACOutdoorAirSystem outdoorAirSystem = AirLoopHVACOutdoorAirSystem(model, controllerOutdoorAir);
+
+	Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
+	outdoorAirSystem.addToNode(supplyOutletNode);
+	EvaporativeCoolerDirectResearchSpecial evaporativeCoolerDirectResearchSpecial(model, _alwaysOnSchedule);
+	Node oaNode = outdoorAirSystem.outdoorAirModelObject()->cast<Node>();
+	evaporativeCoolerDirectResearchSpecial.addToNode(oaNode);
+
+	coilCooling.addToNode(supplyOutletNode);
+	coilHeatingGas.addToNode(supplyOutletNode);
+	fan.addToNode(supplyOutletNode);
+
+	Node node1 = fan.outletModelObject()->cast<Node>();
+	setpointMSZR.addToNode(node1);
+
+	AirTerminalSingleDuctUncontrolled terminal(model, _alwaysOnSchedule);
+
+	airLoopHVAC.addBranchForHVACComponent(terminal);
+
+	return airLoopHVAC;
+}
+
+/*Split type/DX Type*/
+Loop addSplitTypeHVACTHAIType0(Model & model){
+	Model tempModel;
+	Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
+
+	AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+	airLoopHVAC.setName("Thai Split Type Air");
+
+	// get the sizing:system object associated with the airloophvac
+	SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
+
+	//set the default parameters correctly for a constant volume system with no VAV terminals
+	sizingSystem.setTypeofLoadtoSizeOn("Sensible");
+	sizingSystem.autosizeDesignOutdoorAirFlowRate();
+	sizingSystem.setMinimumSystemAirFlowRatio(1.0);
+	sizingSystem.setPreheatDesignTemperature(7.0);
+	sizingSystem.setPreheatDesignHumidityRatio(0.008);
+	sizingSystem.setPrecoolDesignTemperature(12.8);
+	sizingSystem.setPrecoolDesignHumidityRatio(0.008);
+	sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
+	sizingSystem.setCentralHeatingDesignSupplyAirTemperature(40.0);
+	sizingSystem.setSizingOption("NonCoincident");
+	sizingSystem.setAllOutdoorAirinCooling("No");
+	sizingSystem.setAllOutdoorAirinHeating("No");
+	sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(0.0085);
+	sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(0.0080);
+	sizingSystem.setCoolingDesignAirFlowMethod("DesignDay");
+	sizingSystem.setCoolingDesignAirFlowRate(0.0);
+	sizingSystem.setHeatingDesignAirFlowMethod("DesignDay");
+	sizingSystem.setHeatingDesignAirFlowRate(0.0);
+	sizingSystem.setSystemOutdoorAirMethod("ZoneSum");
+
+	FanConstantVolume fan = FanConstantVolume(model);
+	fan.setPressureRise(500);
+
+	CoilCoolingDXSingleSpeed coilCooling = CoilCoolingDXSingleSpeed(model);
+
+	SetpointManagerSingleZoneReheat setpointMSZR(model);
+
+	ControllerOutdoorAir controllerOutdoorAir = ControllerOutdoorAir(model);
+
+	AirLoopHVACOutdoorAirSystem outdoorAirSystem = AirLoopHVACOutdoorAirSystem(model, controllerOutdoorAir);
+
+	Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
+	outdoorAirSystem.addToNode(supplyOutletNode);
+
+	coilCooling.addToNode(supplyOutletNode);
+	fan.addToNode(supplyOutletNode);
+
+	Node node1 = fan.outletModelObject()->cast<Node>();
+	setpointMSZR.addToNode(node1);
+
+	AirTerminalSingleDuctUncontrolled terminal(model, _alwaysOnSchedule);
+
+	airLoopHVAC.addBranchForHVACComponent(terminal);
+
+	return airLoopHVAC;
+}
+
+/*Split type/DX Type (Inverter)*/
+Loop addSplitTypeHVACTHAIType1(Model & model){
+	Model tempModel;
+	Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
+
+	AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+	airLoopHVAC.setName("Thai Split Type Air (Inverter)");
+
+	// get the sizing:system object associated with the airloophvac
+	SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
+
+	//set the default parameters correctly for a constant volume system with no VAV terminals
+	sizingSystem.setTypeofLoadtoSizeOn("Sensible");
+	sizingSystem.autosizeDesignOutdoorAirFlowRate();
+	sizingSystem.setMinimumSystemAirFlowRatio(1.0);
+	sizingSystem.setPreheatDesignTemperature(7.0);
+	sizingSystem.setPreheatDesignHumidityRatio(0.008);
+	sizingSystem.setPrecoolDesignTemperature(12.8);
+	sizingSystem.setPrecoolDesignHumidityRatio(0.008);
+	sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
+	sizingSystem.setCentralHeatingDesignSupplyAirTemperature(40.0);
+	sizingSystem.setSizingOption("NonCoincident");
+	sizingSystem.setAllOutdoorAirinCooling("No");
+	sizingSystem.setAllOutdoorAirinHeating("No");
+	sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(0.0085);
+	sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(0.0080);
+	sizingSystem.setCoolingDesignAirFlowMethod("DesignDay");
+	sizingSystem.setCoolingDesignAirFlowRate(0.0);
+	sizingSystem.setHeatingDesignAirFlowMethod("DesignDay");
+	sizingSystem.setHeatingDesignAirFlowRate(0.0);
+	sizingSystem.setSystemOutdoorAirMethod("ZoneSum");
+
+	FanVariableVolume fan = FanVariableVolume(model);
+	fan.setPressureRise(500);
+
+	CoilCoolingDXSingleSpeed coilCooling = CoilCoolingDXSingleSpeed(model);
+
+	SetpointManagerSingleZoneReheat setpointMSZR(model);
+
+	ControllerOutdoorAir controllerOutdoorAir = ControllerOutdoorAir(model);
+
+	AirLoopHVACOutdoorAirSystem outdoorAirSystem = AirLoopHVACOutdoorAirSystem(model, controllerOutdoorAir);
+
+	Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
+	outdoorAirSystem.addToNode(supplyOutletNode);
+
+	coilCooling.addToNode(supplyOutletNode);
+	fan.addToNode(supplyOutletNode);
+
+	Node node1 = fan.outletModelObject()->cast<Node>();
+	setpointMSZR.addToNode(node1);
+
+	AirTerminalSingleDuctUncontrolled terminal(model, _alwaysOnSchedule);
+
+	airLoopHVAC.addBranchForHVACComponent(terminal);
+
+	return airLoopHVAC;
+}
+
+/*Split type/DX Type (Inverter) with ERV*/
+Loop addSplitTypeHVACTHAIType2(Model & model){
+	Model tempModel;
+	Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
+
+	AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+	airLoopHVAC.setName("Thai Split Type Air (Inverter) with ERV");
+
+	// get the sizing:system object associated with the airloophvac
+	SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
+
+	//set the default parameters correctly for a constant volume system with no VAV terminals
+	sizingSystem.setTypeofLoadtoSizeOn("Sensible");
+	sizingSystem.autosizeDesignOutdoorAirFlowRate();
+	sizingSystem.setMinimumSystemAirFlowRatio(1.0);
+	sizingSystem.setPreheatDesignTemperature(7.0);
+	sizingSystem.setPreheatDesignHumidityRatio(0.008);
+	sizingSystem.setPrecoolDesignTemperature(12.8);
+	sizingSystem.setPrecoolDesignHumidityRatio(0.008);
+	sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
+	sizingSystem.setCentralHeatingDesignSupplyAirTemperature(40.0);
+	sizingSystem.setSizingOption("NonCoincident");
+	sizingSystem.setAllOutdoorAirinCooling("No");
+	sizingSystem.setAllOutdoorAirinHeating("No");
+	sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(0.0085);
+	sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(0.0080);
+	sizingSystem.setCoolingDesignAirFlowMethod("DesignDay");
+	sizingSystem.setCoolingDesignAirFlowRate(0.0);
+	sizingSystem.setHeatingDesignAirFlowMethod("DesignDay");
+	sizingSystem.setHeatingDesignAirFlowRate(0.0);
+	sizingSystem.setSystemOutdoorAirMethod("ZoneSum");
+
+	FanVariableVolume fan = FanVariableVolume(model);
+	fan.setPressureRise(500);
+
+	CoilCoolingDXSingleSpeed coilCooling = CoilCoolingDXSingleSpeed(model);
+
+	SetpointManagerSingleZoneReheat setpointMSZR(model);
+
+	ControllerOutdoorAir controllerOutdoorAir = ControllerOutdoorAir(model);
+	
+	AirLoopHVACOutdoorAirSystem outdoorAirSystem = AirLoopHVACOutdoorAirSystem(model, controllerOutdoorAir);
+
+	Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
+	outdoorAirSystem.addToNode(supplyOutletNode);
+
+	coilCooling.addToNode(supplyOutletNode);
+	fan.addToNode(supplyOutletNode);
+	
+	Node node1 = fan.outletModelObject()->cast<Node>();
+	setpointMSZR.addToNode(node1);
+	
+	//Node oaNode = outdoorAirSystem.outdoorAirModelObject()->cast<Node>();
+	Node oaNode = outdoorAirSystem.reliefAirModelObject()->cast<Node>();
+	//oaNode = oaNode.inletModelObject()->cast<Node>();
+	//Node oaNode = outdoorAirSystem.
+
+
+	FanVariableVolume fan2 = FanVariableVolume(model, _alwaysOnSchedule);
+	fan2.addToNode(oaNode);
+
+	node1 = fan2.outletModelObject()->cast<Node>();
+
+	HeatExchangerAirToAirSensibleAndLatent heatExchange = HeatExchangerAirToAirSensibleAndLatent(model);
+	heatExchange.addToNode(node1);
+
+
+	AirTerminalSingleDuctUncontrolled terminal(model, _alwaysOnSchedule);
+
+	airLoopHVAC.addBranchForHVACComponent(terminal);
+
+	return airLoopHVAC;
+}
+
+/*Central System (Air Loop and Water Loop)*/
+Loop addCentralSystemHVACTHAI(Model & model){
+	Model tempModel;
+
+	Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
+
+	Schedule _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
+
+	Schedule _chilledWaterSchedule = chilledWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
+
+	AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+	airLoopHVAC.setName("Thai Air Loop");
+	SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
+	sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
+
+	FanVariableVolume fan = FanVariableVolume(model);
+	fan.setPressureRise(500);
+
+	CoilCoolingWater coilCoolingWater = CoilCoolingWater(model);
+
+	SetpointManagerScheduled deckTempSPM = SetpointManagerScheduled(model, _deckTempSchedule);
+
+	ControllerOutdoorAir controllerOutdoorAir = ControllerOutdoorAir(model);
+
+	AirLoopHVACOutdoorAirSystem outdoorAirSystem = AirLoopHVACOutdoorAirSystem(model, controllerOutdoorAir);
+
+	Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
+
+	outdoorAirSystem.addToNode(supplyOutletNode);
+	coilCoolingWater.addToNode(supplyOutletNode);
+	fan.addToNode(supplyOutletNode);
+
+	Node node1 = fan.outletModelObject()->cast<Node>();
+	deckTempSPM.addToNode(node1);
+
+	// Chilled Water Plant
+
+	PlantLoop chilledWaterPlant(model);
+	chilledWaterPlant.setName("Thai Chilled Water Loop");
+	SizingPlant chilledWaterSizing = chilledWaterPlant.sizingPlant();
+	chilledWaterSizing.setLoopType("Cooling");
+	chilledWaterSizing.setDesignLoopExitTemperature(7.22);
+	chilledWaterSizing.setLoopDesignTemperatureDifference(6.67);
+
+	Node chilledWaterOutletNode = chilledWaterPlant.supplyOutletNode();
+	Node chilledWaterInletNode = chilledWaterPlant.supplyInletNode();
+
+	Node chilledWaterDemandOutletNode = chilledWaterPlant.demandOutletNode();
+	Node chilledWaterDemandInletNode = chilledWaterPlant.demandInletNode();
+
+	PumpVariableSpeed pump2 = PumpVariableSpeed(model);
+
+	pump2.addToNode(chilledWaterInletNode);
+
+	ChillerElectricEIR chiller(model);
+	chiller.setCompressorType("Reciprocating");
+
+	Node node = chilledWaterPlant.supplySplitter().lastOutletModelObject()->cast<Node>();
+	chiller.addToNode(node);
+
+	PipeAdiabatic pipe3(model);
+	chilledWaterPlant.addSupplyBranchForComponent(pipe3);
+
+	PipeAdiabatic pipe4(model);
+	pipe4.addToNode(chilledWaterOutletNode);
+
+	chilledWaterPlant.addDemandBranchForComponent(coilCoolingWater);
+
+	SetpointManagerScheduled chilledWaterSPM(model, _chilledWaterSchedule);
+
+	chilledWaterSPM.addToNode(chilledWaterOutletNode);
+
+	AirTerminalSingleDuctUncontrolled waterTerminal(model, _alwaysOnSchedule);
+	airLoopHVAC.addBranchForHVACComponent(waterTerminal);
+
+	return airLoopHVAC;
+}
+
+/*Central System (Thai Central A/C Air Cooled System)*/
+Loop addCentralSystemWithAirCooled(Model & model){
+	Model tempModel;
+
+	Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
+
+	Schedule _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
+
+	Schedule _chilledWaterSchedule = chilledWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
+
+	AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+	airLoopHVAC.setName("Thai Air Loop");
+	SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
+	sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
+
+	FanVariableVolume fan = FanVariableVolume(model);
+	fan.setPressureRise(500);
+
+	CoilCoolingWater coilCoolingWater = CoilCoolingWater(model);
+
+	SetpointManagerScheduled deckTempSPM = SetpointManagerScheduled(model, _deckTempSchedule);
+
+	ControllerOutdoorAir controllerOutdoorAir = ControllerOutdoorAir(model);
+
+	AirLoopHVACOutdoorAirSystem outdoorAirSystem = AirLoopHVACOutdoorAirSystem(model, controllerOutdoorAir);
+
+	Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
+
+	outdoorAirSystem.addToNode(supplyOutletNode);
+	coilCoolingWater.addToNode(supplyOutletNode);
+	fan.addToNode(supplyOutletNode);
+
+	Node node1 = fan.outletModelObject()->cast<Node>();
+	deckTempSPM.addToNode(node1);
+
+	// Chilled Water Plant
+
+	PlantLoop chilledWaterPlant(model);
+	chilledWaterPlant.setName("Thai Chilled Water Loop");
+	SizingPlant chilledWaterSizing = chilledWaterPlant.sizingPlant();
+	chilledWaterSizing.setLoopType("Cooling");
+	chilledWaterSizing.setDesignLoopExitTemperature(7.22);
+	chilledWaterSizing.setLoopDesignTemperatureDifference(6.67);
+
+	Node chilledWaterOutletNode = chilledWaterPlant.supplyOutletNode();
+	Node chilledWaterInletNode = chilledWaterPlant.supplyInletNode();
+
+	Node chilledWaterDemandOutletNode = chilledWaterPlant.demandOutletNode();
+	Node chilledWaterDemandInletNode = chilledWaterPlant.demandInletNode();
+
+	PumpVariableSpeed pump2 = PumpVariableSpeed(model);
+
+	pump2.addToNode(chilledWaterInletNode);
+
+	ChillerElectricEIR chiller(model);
+	chiller.setCompressorType("Reciprocating");
+
+	Node node = chilledWaterPlant.supplySplitter().lastOutletModelObject()->cast<Node>();
+	chiller.addToNode(node);
+
+	PipeAdiabatic pipe3(model);
+	chilledWaterPlant.addSupplyBranchForComponent(pipe3);
+
+	PipeAdiabatic pipe4(model);
+	pipe4.addToNode(chilledWaterOutletNode);
+
+	chilledWaterPlant.addDemandBranchForComponent(coilCoolingWater);
+
+	SetpointManagerScheduled chilledWaterSPM(model, _chilledWaterSchedule);
+
+	chilledWaterSPM.addToNode(chilledWaterOutletNode);
+
+	AirTerminalSingleDuctUncontrolled waterTerminal(model, _alwaysOnSchedule);
+	airLoopHVAC.addBranchForHVACComponent(waterTerminal);
+
+	return airLoopHVAC;
+}
+
+/*Central System (Thai  Central  A/C Water Cooled System)*/
+Loop addCentralSystemWithWaterCooled(Model & model){
+	Model tempModel;
+
+	Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
+
+	Schedule _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
+
+	Schedule _chilledWaterSchedule = chilledWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
+
+	AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+	airLoopHVAC.setName("Thai Air Loop");
+	SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
+	sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
+
+	FanVariableVolume fan = FanVariableVolume(model);
+	fan.setPressureRise(500);
+
+	CoilCoolingWater coilCoolingWater = CoilCoolingWater(model);
+
+	SetpointManagerScheduled deckTempSPM = SetpointManagerScheduled(model, _deckTempSchedule);
+
+	ControllerOutdoorAir controllerOutdoorAir = ControllerOutdoorAir(model);
+
+	AirLoopHVACOutdoorAirSystem outdoorAirSystem = AirLoopHVACOutdoorAirSystem(model, controllerOutdoorAir);
+
+	Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
+
+	outdoorAirSystem.addToNode(supplyOutletNode);
+	coilCoolingWater.addToNode(supplyOutletNode);
+	fan.addToNode(supplyOutletNode);
+
+	Node node1 = fan.outletModelObject()->cast<Node>();
+	deckTempSPM.addToNode(node1);
+
+	// Chilled Water Plant
+
+	PlantLoop chilledWaterPlant(model);
+	chilledWaterPlant.setName("Thai Chilled Water Loop");
+	SizingPlant chilledWaterSizing = chilledWaterPlant.sizingPlant();
+	chilledWaterSizing.setLoopType("Cooling");
+	chilledWaterSizing.setDesignLoopExitTemperature(7.22);
+	chilledWaterSizing.setLoopDesignTemperatureDifference(6.67);
+
+	Node chilledWaterOutletNode = chilledWaterPlant.supplyOutletNode();
+	Node chilledWaterInletNode = chilledWaterPlant.supplyInletNode();
+
+	Node chilledWaterDemandOutletNode = chilledWaterPlant.demandOutletNode();
+	Node chilledWaterDemandInletNode = chilledWaterPlant.demandInletNode();
+
+	PumpVariableSpeed pump2 = PumpVariableSpeed(model);
+
+	pump2.addToNode(chilledWaterInletNode);
+
+	ChillerElectricEIR chiller(model);
+	chiller.setCondenserType("WaterCooled");
+	chiller.setCompressorType("Reciprocating");
+	Node node = chilledWaterPlant.supplySplitter().lastOutletModelObject()->cast<Node>();
+	chiller.addToNode(node);
+
+	PipeAdiabatic pipe3(model);
+	chilledWaterPlant.addSupplyBranchForComponent(pipe3);
+
+	PipeAdiabatic pipe4(model);
+	pipe4.addToNode(chilledWaterOutletNode);
+
+	chilledWaterPlant.addDemandBranchForComponent(coilCoolingWater);
+
+	SetpointManagerScheduled chilledWaterSPM(model, _chilledWaterSchedule);
+
+	chilledWaterSPM.addToNode(chilledWaterOutletNode);
+
+	AirTerminalSingleDuctUncontrolled waterTerminal(model, _alwaysOnSchedule);
+	airLoopHVAC.addBranchForHVACComponent(waterTerminal);
+
+	// Condenser System
+
+	PlantLoop condenserSystem(model);
+	condenserSystem.setName("Condenser Water Loop");
+	SizingPlant condenserSizing = condenserSystem.sizingPlant();
+	condenserSizing.setLoopType("Condenser");
+	condenserSizing.setDesignLoopExitTemperature(29.4);
+	condenserSizing.setLoopDesignTemperatureDifference(5.6);
+
+	CoolingTowerSingleSpeed tower(model);
+	condenserSystem.addSupplyBranchForComponent(tower);
+
+	PipeAdiabatic condenserSupplyBypass(model);
+	condenserSystem.addSupplyBranchForComponent(condenserSupplyBypass);
+
+	Node condenserSystemDemandOutletNode = condenserSystem.demandOutletNode();
+	Node condenserSystemDemandInletNode = condenserSystem.demandInletNode();
+	Node condenserSystemSupplyOutletNode = condenserSystem.supplyOutletNode();
+	Node condenserSystemSupplyInletNode = condenserSystem.supplyInletNode();
+
+	PipeAdiabatic condenserSupplyOutlet(model);
+
+	condenserSupplyOutlet.addToNode(condenserSystemSupplyOutletNode);
+
+	PumpVariableSpeed pump3 = PumpVariableSpeed(model);
+
+	pump3.addToNode(condenserSystemSupplyInletNode);
+
+	condenserSystem.addDemandBranchForComponent(chiller);
+
+	PipeAdiabatic condenserDemandBypass(model);
+
+	condenserSystem.addDemandBranchForComponent(condenserDemandBypass);
+
+	PipeAdiabatic condenserDemandInlet(model);
+
+	condenserDemandInlet.addToNode(condenserSystemDemandInletNode);
+
+	PipeAdiabatic condenserDemandOutlet(model);
+
+	condenserDemandOutlet.addToNode(condenserSystemDemandOutletNode);
+
+	SetpointManagerScheduled spm = SetpointManagerScheduled(model, _deckTempSchedule);
+	//SetpointManagerFollowOutdoorAirTemperature spm(model);
+
+	spm.addToNode(condenserSystemSupplyOutletNode);
+
+	return airLoopHVAC;
+}
+
+/*Thai Air Loop*/
+Loop addThaiAirLoop(Model & model){
+	Model tempModel;
+
+	Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
+
+	Schedule _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
+
+	Schedule _chilledWaterSchedule = chilledWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
+
+	AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+	airLoopHVAC.setName("Thai Air Loop");
+	SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
+	sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
+
+	FanVariableVolume fan = FanVariableVolume(model);
+	fan.setPressureRise(500);
+
+	CoilCoolingWater coilCoolingWater = CoilCoolingWater(model);
+
+	SetpointManagerScheduled deckTempSPM = SetpointManagerScheduled(model, _deckTempSchedule);
+
+	ControllerOutdoorAir controllerOutdoorAir = ControllerOutdoorAir(model);
+
+	AirLoopHVACOutdoorAirSystem outdoorAirSystem = AirLoopHVACOutdoorAirSystem(model, controllerOutdoorAir);
+
+	Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
+
+	outdoorAirSystem.addToNode(supplyOutletNode);
+	coilCoolingWater.addToNode(supplyOutletNode);
+	fan.addToNode(supplyOutletNode);
+
+	Node node1 = fan.outletModelObject()->cast<Node>();
+	deckTempSPM.addToNode(node1);
+
+	return airLoopHVAC;
+}
+
+/*Thai Air Loop with ERV*/
+Loop addThaizAirLoopWithERV(Model & model){
+	Model tempModel;
+
+	Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
+
+	Schedule _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
+
+	Schedule _chilledWaterSchedule = chilledWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
+
+	AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+	airLoopHVAC.setName("Thai Air Loop with ERV");
+	SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
+	sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
+
+	FanVariableVolume fan = FanVariableVolume(model);
+	fan.setPressureRise(500);
+
+	FanVariableVolume fan2 = FanVariableVolume(model);
+	fan.setPressureRise(500);
+
+	CoilCoolingWater coilCoolingWater = CoilCoolingWater(model);
+
+	SetpointManagerScheduled deckTempSPM = SetpointManagerScheduled(model, _deckTempSchedule);
+
+	ControllerOutdoorAir controllerOutdoorAir = ControllerOutdoorAir(model);
+
+	AirLoopHVACOutdoorAirSystem outdoorAirSystem = AirLoopHVACOutdoorAirSystem(model, controllerOutdoorAir);
+
+	HeatExchangerAirToAirSensibleAndLatent heatExchage = HeatExchangerAirToAirSensibleAndLatent(model);
+
+	Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
+
+	outdoorAirSystem.addToNode(supplyOutletNode);
+	coilCoolingWater.addToNode(supplyOutletNode);
+	fan.addToNode(supplyOutletNode);
+
+	//Node oaNode = outdoorAirSystem.outdoorAirModelObject()->cast<Node>();
+	Node oaNode = outdoorAirSystem.reliefAirModelObject()->cast<Node>();
+	fan2.addToNode(oaNode);
+
+	oaNode = fan2.outletModelObject()->cast<Node>();
+	heatExchage.addToNode(oaNode);
+	
+	Node node1 = fan.outletModelObject()->cast<Node>();
+	deckTempSPM.addToNode(node1);
+
+	AirTerminalSingleDuctUncontrolled AirTerminal(model, _alwaysOnSchedule);
+	airLoopHVAC.addBranchForHVACComponent(AirTerminal);
+
+	return airLoopHVAC;
+}
+
+/**/
 } // model
 
 } // openstudio

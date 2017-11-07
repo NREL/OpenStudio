@@ -43,6 +43,7 @@ namespace detail {
 
 class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 {
+
   
 
   
@@ -70,8 +71,8 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
   
   
   
-
-  
+  Q_PROPERTY(boost::optional<openstudio::model::ModelObject> basinHeaterSchedule READ basinHeaterScheduleAsModelObject WRITE setBasinHeaterScheduleAsModelObject RESET resetBasinHeaterSchedule);
+  Q_PROPERTY(std::string compressorType READ compressorType WRITE setCompressorType RESET resetCompressorType);
  public:
 
 
@@ -169,7 +170,11 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   std::string condenserType() const;
 
+  std::string compressorType() const;
+
   bool isCondenserTypeDefaulted() const;
+
+  bool isCompressorTypeDefaulted() const;
 
   double condenserFanPowerRatio() const;
 
@@ -286,6 +291,10 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
   bool setCondenserType(std::string condenserType);
 
   void resetCondenserType();
+
+  bool setCompressorType(std::string compressorType);
+
+  void resetCompressorType();
 
   bool setCondenserFanPowerRatio(double condenserFanPowerRatio);
 

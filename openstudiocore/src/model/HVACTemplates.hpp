@@ -62,6 +62,33 @@ MODEL_API Loop addSystemType9(Model & model);
 
 MODEL_API Loop addSystemType10(Model & model);
 
+MODEL_API Loop airLoopHVACTHAI(Model & model);
+
+/*Split type/DX Type*/
+MODEL_API Loop addSplitTypeHVACTHAIType0(Model & model);
+
+/*Split type/DX Type (Inverter)*/
+MODEL_API Loop addSplitTypeHVACTHAIType1(Model & model);
+
+/*Split type/DX Type (Inverter) with ERV*/
+MODEL_API Loop addSplitTypeHVACTHAIType2(Model & model);
+
+/*Central System (Air Loop and Water Loop)*/
+MODEL_API Loop addCentralSystemHVACTHAI(Model & model);
+
+/*Central System (Thai Central A/C Air Cooled System)*/
+MODEL_API Loop addCentralSystemWithAirCooled(Model & model);
+
+/*Central System (Thai  Central  A/C Water Cooled System)*/
+MODEL_API Loop addCentralSystemWithWaterCooled(Model & model);
+
+/*Thai Air Loop*/
+MODEL_API Loop addThaiAirLoop(Model & model);
+
+/*Thai Air Loop with ERV*/
+MODEL_API Loop addThaizAirLoopWithERV(Model & model);
+
+
 } // model
 
 } // openstudio

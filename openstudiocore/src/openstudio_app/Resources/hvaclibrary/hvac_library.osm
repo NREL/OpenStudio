@@ -503,6 +503,337 @@ OS:Coil:Cooling:DX:SingleSpeed,
   10,                                     ! Basin Heater Setpoint Temperature {C}
   ;                                       ! Basin Heater Operating Schedule Name
 
+  OS:Coil:Cooling:DX:SingleSpeed,
+  {2323aae7-f591-444f-9ed4-ff6eb640f191}, ! Handle
+  Spd DX SingleSpeed 9000 Btu/h,          ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  2637.60,                                ! Rated Total Cooling Capacity {W}
+  Autosize,                               ! Rated Sensible Heat Ratio
+  3.4,                                    ! Rated COP {W/W}
+  0.15,                               	  ! Rated Air Flow Rate {m3/s}
+  773.29999999999995,                     ! Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  {43241c62-f9aa-470c-877b-aed134698156}, ! Total Cooling Capacity Function of Temperature Curve Name
+  {94e3e298-d691-470d-ac68-e0271ae32bb2}, ! Total Cooling Capacity Function of Flow Fraction Curve Name
+  {8a71bbe5-637a-4261-8c9e-10d02300a49a}, ! Energy Input Ratio Function of Temperature Curve Name
+  {10a62043-5331-4374-a44c-8c540d3c6983}, ! Energy Input Ratio Function of Flow Fraction Curve Name
+  {01338ac0-de4d-4703-8c69-18d51edd0927}, ! Part Load Fraction Correlation Curve Name
+  ,                                       ! Nominal Time for Condensate Removal to Begin {s}
+  ,                                       ! Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  ,                                       ! Maximum Cycling Rate {cycles/hr}
+  ,                                       ! Latent Capacity Time Constant {s}
+  ,                                       ! Condenser Air Inlet Node Name
+  AirCooled,                              ! Condenser Type
+  0,                                      ! Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                               ! Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                               ! Evaporative Condenser Pump Rated Power Consumption {W}
+  0,                                      ! Crankcase Heater Capacity {W}
+  0,                                      ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                                       ! Supply Water Storage Tank Name
+  ,                                       ! Condensate Collection Water Storage Tank Name
+  0,                                      ! Basin Heater Capacity {W/K}
+  10,                                     ! Basin Heater Setpoint Temperature {C}
+  ;                                       ! Basin Heater Operating Schedule Name
+
+  OS:Coil:Cooling:DX:SingleSpeed,
+  {2323aae7-f591-444f-9ed4-ff6eb640f192}, ! Handle
+  Spd DX SingleSpeed 12000 Btu/h,         ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  3516.80,                                ! Rated Total Cooling Capacity {W}
+  Autosize,                               ! Rated Sensible Heat Ratio
+  3.4,                                    ! Rated COP {W/W}
+  0.18,                                   ! Rated Air Flow Rate {m3/s}
+  773.29999999999995,                     ! Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  {43241c62-f9aa-470c-877b-aed134698156}, ! Total Cooling Capacity Function of Temperature Curve Name
+  {94e3e298-d691-470d-ac68-e0271ae32bb2}, ! Total Cooling Capacity Function of Flow Fraction Curve Name
+  {8a71bbe5-637a-4261-8c9e-10d02300a49a}, ! Energy Input Ratio Function of Temperature Curve Name
+  {10a62043-5331-4374-a44c-8c540d3c6983}, ! Energy Input Ratio Function of Flow Fraction Curve Name
+  {01338ac0-de4d-4703-8c69-18d51edd0927}, ! Part Load Fraction Correlation Curve Name
+  ,                                       ! Nominal Time for Condensate Removal to Begin {s}
+  ,                                       ! Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  ,                                       ! Maximum Cycling Rate {cycles/hr}
+  ,                                       ! Latent Capacity Time Constant {s}
+  ,                                       ! Condenser Air Inlet Node Name
+  AirCooled,                              ! Condenser Type
+  0,                                      ! Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                               ! Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                               ! Evaporative Condenser Pump Rated Power Consumption {W}
+  0,                                      ! Crankcase Heater Capacity {W}
+  0,                                      ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                                       ! Supply Water Storage Tank Name
+  ,                                       ! Condensate Collection Water Storage Tank Name
+  0,                                      ! Basin Heater Capacity {W/K}
+  10,                                     ! Basin Heater Setpoint Temperature {C}
+  ;                                       ! Basin Heater Operating Schedule Name
+
+  OS:Coil:Cooling:DX:SingleSpeed,
+  {2323aae7-f591-444f-9ed4-ff6eb640f193}, ! Handle
+  Spd DX SingleSpeed 18000 Btu/h,         ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  5275.20,                                ! Rated Total Cooling Capacity {W}
+  Autosize,                               ! Rated Sensible Heat Ratio
+  3.4,                                    ! Rated COP {W/W}
+  0.29,                                   ! Rated Air Flow Rate {m3/s}
+  773.29999999999995,                     ! Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  {43241c62-f9aa-470c-877b-aed134698156}, ! Total Cooling Capacity Function of Temperature Curve Name
+  {94e3e298-d691-470d-ac68-e0271ae32bb2}, ! Total Cooling Capacity Function of Flow Fraction Curve Name
+  {8a71bbe5-637a-4261-8c9e-10d02300a49a}, ! Energy Input Ratio Function of Temperature Curve Name
+  {10a62043-5331-4374-a44c-8c540d3c6983}, ! Energy Input Ratio Function of Flow Fraction Curve Name
+  {01338ac0-de4d-4703-8c69-18d51edd0927}, ! Part Load Fraction Correlation Curve Name
+  ,                                       ! Nominal Time for Condensate Removal to Begin {s}
+  ,                                       ! Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  ,                                       ! Maximum Cycling Rate {cycles/hr}
+  ,                                       ! Latent Capacity Time Constant {s}
+  ,                                       ! Condenser Air Inlet Node Name
+  AirCooled,                              ! Condenser Type
+  0,                                      ! Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                               ! Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                               ! Evaporative Condenser Pump Rated Power Consumption {W}
+  0,                                      ! Crankcase Heater Capacity {W}
+  0,                                      ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                                       ! Supply Water Storage Tank Name
+  ,                                       ! Condensate Collection Water Storage Tank Name
+  0,                                      ! Basin Heater Capacity {W/K}
+  10,                                     ! Basin Heater Setpoint Temperature {C}
+  ;                                       ! Basin Heater Operating Schedule Name
+
+  OS:Coil:Cooling:DX:SingleSpeed,
+  {2323aae7-f591-444f-9ed4-ff6eb640f194}, ! Handle
+  Spd DX SingleSpeed 24000 Btu/h,         ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  7033.60,                                ! Rated Total Cooling Capacity {W}
+  Autosize,                               ! Rated Sensible Heat Ratio
+  3.4,                                    ! Rated COP {W/W}
+  0.35,                                   ! Rated Air Flow Rate {m3/s}
+  773.29999999999995,                     ! Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  {43241c62-f9aa-470c-877b-aed134698156}, ! Total Cooling Capacity Function of Temperature Curve Name
+  {94e3e298-d691-470d-ac68-e0271ae32bb2}, ! Total Cooling Capacity Function of Flow Fraction Curve Name
+  {8a71bbe5-637a-4261-8c9e-10d02300a49a}, ! Energy Input Ratio Function of Temperature Curve Name
+  {10a62043-5331-4374-a44c-8c540d3c6983}, ! Energy Input Ratio Function of Flow Fraction Curve Name
+  {01338ac0-de4d-4703-8c69-18d51edd0927}, ! Part Load Fraction Correlation Curve Name
+  ,                                       ! Nominal Time for Condensate Removal to Begin {s}
+  ,                                       ! Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  ,                                       ! Maximum Cycling Rate {cycles/hr}
+  ,                                       ! Latent Capacity Time Constant {s}
+  ,                                       ! Condenser Air Inlet Node Name
+  AirCooled,                              ! Condenser Type
+  0,                                      ! Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                               ! Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                               ! Evaporative Condenser Pump Rated Power Consumption {W}
+  0,                                      ! Crankcase Heater Capacity {W}
+  0,                                      ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                                       ! Supply Water Storage Tank Name
+  ,                                       ! Condensate Collection Water Storage Tank Name
+  0,                                      ! Basin Heater Capacity {W/K}
+  10,                                     ! Basin Heater Setpoint Temperature {C}
+  ;                                       ! Basin Heater Operating Schedule Name
+
+  OS:Coil:Cooling:DX:SingleSpeed,
+  {2323aae7-f591-444f-9ed4-ff6eb640f195}, ! Handle
+  Spd DX SingleSpeed 30000 Btu/h,         ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  8792.00,                                ! Rated Total Cooling Capacity {W}
+  Autosize,                               ! Rated Sensible Heat Ratio
+  3.22,                                   ! Rated COP {W/W}
+  0.47,                                   ! Rated Air Flow Rate {m3/s}
+  773.29999999999995,                     ! Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  {43241c62-f9aa-470c-877b-aed134698156}, ! Total Cooling Capacity Function of Temperature Curve Name
+  {94e3e298-d691-470d-ac68-e0271ae32bb2}, ! Total Cooling Capacity Function of Flow Fraction Curve Name
+  {8a71bbe5-637a-4261-8c9e-10d02300a49a}, ! Energy Input Ratio Function of Temperature Curve Name
+  {10a62043-5331-4374-a44c-8c540d3c6983}, ! Energy Input Ratio Function of Flow Fraction Curve Name
+  {01338ac0-de4d-4703-8c69-18d51edd0927}, ! Part Load Fraction Correlation Curve Name
+  ,                                       ! Nominal Time for Condensate Removal to Begin {s}
+  ,                                       ! Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  ,                                       ! Maximum Cycling Rate {cycles/hr}
+  ,                                       ! Latent Capacity Time Constant {s}
+  ,                                       ! Condenser Air Inlet Node Name
+  AirCooled,                              ! Condenser Type
+  0,                                      ! Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                               ! Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                               ! Evaporative Condenser Pump Rated Power Consumption {W}
+  0,                                      ! Crankcase Heater Capacity {W}
+  0,                                      ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                                       ! Supply Water Storage Tank Name
+  ,                                       ! Condensate Collection Water Storage Tank Name
+  0,                                      ! Basin Heater Capacity {W/K}
+  10,                                     ! Basin Heater Setpoint Temperature {C}
+  ;                                       ! Basin Heater Operating Schedule Name
+
+  OS:Coil:Cooling:DX:SingleSpeed,
+  {2323aae7-f591-444f-9ed4-ff6eb640f196}, ! Handle
+  Spd DX SingleSpeed 33000 Btu/h,         ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  9671.20,                                ! Rated Total Cooling Capacity {W}
+  Autosize,                               ! Rated Sensible Heat Ratio
+  3.22,                                   ! Rated COP {W/W}
+  0.49,                                   ! Rated Air Flow Rate {m3/s}
+  773.29999999999995,                     ! Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  {43241c62-f9aa-470c-877b-aed134698156}, ! Total Cooling Capacity Function of Temperature Curve Name
+  {94e3e298-d691-470d-ac68-e0271ae32bb2}, ! Total Cooling Capacity Function of Flow Fraction Curve Name
+  {8a71bbe5-637a-4261-8c9e-10d02300a49a}, ! Energy Input Ratio Function of Temperature Curve Name
+  {10a62043-5331-4374-a44c-8c540d3c6983}, ! Energy Input Ratio Function of Flow Fraction Curve Name
+  {01338ac0-de4d-4703-8c69-18d51edd0927}, ! Part Load Fraction Correlation Curve Name
+  ,                                       ! Nominal Time for Condensate Removal to Begin {s}
+  ,                                       ! Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  ,                                       ! Maximum Cycling Rate {cycles/hr}
+  ,                                       ! Latent Capacity Time Constant {s}
+  ,                                       ! Condenser Air Inlet Node Name
+  AirCooled,                              ! Condenser Type
+  0,                                      ! Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                               ! Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                               ! Evaporative Condenser Pump Rated Power Consumption {W}
+  0,                                      ! Crankcase Heater Capacity {W}
+  0,                                      ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                                       ! Supply Water Storage Tank Name
+  ,                                       ! Condensate Collection Water Storage Tank Name
+  0,                                      ! Basin Heater Capacity {W/K}
+  10,                                     ! Basin Heater Setpoint Temperature {C}
+  ;                                       ! Basin Heater Operating Schedule Name
+
+  OS:Coil:Cooling:DX:SingleSpeed,
+  {2323aae7-f591-444f-9ed4-ff6eb640f197}, ! Handle
+  Spd DX SingleSpeed 36000 Btu/h,         ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  10550.40,                               ! Rated Total Cooling Capacity {W}
+  Autosize,                               ! Rated Sensible Heat Ratio
+  3.22,                                   ! Rated COP {W/W}
+  0.54,                                   ! Rated Air Flow Rate {m3/s}
+  773.29999999999995,                     ! Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  {43241c62-f9aa-470c-877b-aed134698156}, ! Total Cooling Capacity Function of Temperature Curve Name
+  {94e3e298-d691-470d-ac68-e0271ae32bb2}, ! Total Cooling Capacity Function of Flow Fraction Curve Name
+  {8a71bbe5-637a-4261-8c9e-10d02300a49a}, ! Energy Input Ratio Function of Temperature Curve Name
+  {10a62043-5331-4374-a44c-8c540d3c6983}, ! Energy Input Ratio Function of Flow Fraction Curve Name
+  {01338ac0-de4d-4703-8c69-18d51edd0927}, ! Part Load Fraction Correlation Curve Name
+  ,                                       ! Nominal Time for Condensate Removal to Begin {s}
+  ,                                       ! Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  ,                                       ! Maximum Cycling Rate {cycles/hr}
+  ,                                       ! Latent Capacity Time Constant {s}
+  ,                                       ! Condenser Air Inlet Node Name
+  AirCooled,                              ! Condenser Type
+  0,                                      ! Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                               ! Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                               ! Evaporative Condenser Pump Rated Power Consumption {W}
+  0,                                      ! Crankcase Heater Capacity {W}
+  0,                                      ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                                       ! Supply Water Storage Tank Name
+  ,                                       ! Condensate Collection Water Storage Tank Name
+  0,                                      ! Basin Heater Capacity {W/K}
+  10,                                     ! Basin Heater Setpoint Temperature {C}
+  ;                                       ! Basin Heater Operating Schedule Name
+
+  OS:Coil:Cooling:DX:SingleSpeed,
+  {2323aae7-f591-444f-9ed4-ff6eb640f198}, ! Handle
+  Spd DX SingleSpeed 40000 Btu/h,         ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  1722.67,                                ! Rated Total Cooling Capacity {W}
+  Autosize,                               ! Rated Sensible Heat Ratio
+  3.22,                                   ! Rated COP {W/W}
+  0.61,                                   ! Rated Air Flow Rate {m3/s}
+  773.29999999999995,                     ! Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  {43241c62-f9aa-470c-877b-aed134698156}, ! Total Cooling Capacity Function of Temperature Curve Name
+  {94e3e298-d691-470d-ac68-e0271ae32bb2}, ! Total Cooling Capacity Function of Flow Fraction Curve Name
+  {8a71bbe5-637a-4261-8c9e-10d02300a49a}, ! Energy Input Ratio Function of Temperature Curve Name
+  {10a62043-5331-4374-a44c-8c540d3c6983}, ! Energy Input Ratio Function of Flow Fraction Curve Name
+  {01338ac0-de4d-4703-8c69-18d51edd0927}, ! Part Load Fraction Correlation Curve Name
+  ,                                       ! Nominal Time for Condensate Removal to Begin {s}
+  ,                                       ! Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  ,                                       ! Maximum Cycling Rate {cycles/hr}
+  ,                                       ! Latent Capacity Time Constant {s}
+  ,                                       ! Condenser Air Inlet Node Name
+  AirCooled,                              ! Condenser Type
+  0,                                      ! Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                               ! Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                               ! Evaporative Condenser Pump Rated Power Consumption {W}
+  0,                                      ! Crankcase Heater Capacity {W}
+  0,                                      ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                                       ! Supply Water Storage Tank Name
+  ,                                       ! Condensate Collection Water Storage Tank Name
+  0,                                      ! Basin Heater Capacity {W/K}
+  10,                                     ! Basin Heater Setpoint Temperature {C}
+  ;                                       ! Basin Heater Operating Schedule Name
+
+  OS:Coil:Cooling:DX:SingleSpeed,
+  {2323aae7-f591-444f-9ed4-ff6eb640f199}, ! Handle
+  Spd DX SingleSpeed 48000 Btu/h,         ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  14067.20,                               ! Rated Total Cooling Capacity {W}
+  Autosize,                               ! Rated Sensible Heat Ratio
+  3.22,                                   ! Rated COP {W/W}
+  0.73,                                   ! Rated Air Flow Rate {m3/s}
+  773.29999999999995,                     ! Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  {43241c62-f9aa-470c-877b-aed134698156}, ! Total Cooling Capacity Function of Temperature Curve Name
+  {94e3e298-d691-470d-ac68-e0271ae32bb2}, ! Total Cooling Capacity Function of Flow Fraction Curve Name
+  {8a71bbe5-637a-4261-8c9e-10d02300a49a}, ! Energy Input Ratio Function of Temperature Curve Name
+  {10a62043-5331-4374-a44c-8c540d3c6983}, ! Energy Input Ratio Function of Flow Fraction Curve Name
+  {01338ac0-de4d-4703-8c69-18d51edd0927}, ! Part Load Fraction Correlation Curve Name
+  ,                                       ! Nominal Time for Condensate Removal to Begin {s}
+  ,                                       ! Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  ,                                       ! Maximum Cycling Rate {cycles/hr}
+  ,                                       ! Latent Capacity Time Constant {s}
+  ,                                       ! Condenser Air Inlet Node Name
+  AirCooled,                              ! Condenser Type
+  0,                                      ! Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                               ! Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                               ! Evaporative Condenser Pump Rated Power Consumption {W}
+  0,                                      ! Crankcase Heater Capacity {W}
+  0,                                      ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                                       ! Supply Water Storage Tank Name
+  ,                                       ! Condensate Collection Water Storage Tank Name
+  0,                                      ! Basin Heater Capacity {W/K}
+  10,                                     ! Basin Heater Setpoint Temperature {C}
+  ;                                       ! Basin Heater Operating Schedule Name
+
+
+  OS:Coil:Cooling:DX:SingleSpeed,
+  {2323aae7-f591-444f-9ed4-ff6eb640f299}, ! Handle
+  Spd DX SingleSpeed 60000 Btu/h,         ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  17584.00,                               ! Rated Total Cooling Capacity {W}
+  Autosize,                               ! Rated Sensible Heat Ratio
+  3.22,                                   ! Rated COP {W/W}
+  0.88,                                   ! Rated Air Flow Rate {m3/s}
+  773.29999999999995,                     ! Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  {43241c62-f9aa-470c-877b-aed134698156}, ! Total Cooling Capacity Function of Temperature Curve Name
+  {94e3e298-d691-470d-ac68-e0271ae32bb2}, ! Total Cooling Capacity Function of Flow Fraction Curve Name
+  {8a71bbe5-637a-4261-8c9e-10d02300a49a}, ! Energy Input Ratio Function of Temperature Curve Name
+  {10a62043-5331-4374-a44c-8c540d3c6983}, ! Energy Input Ratio Function of Flow Fraction Curve Name
+  {01338ac0-de4d-4703-8c69-18d51edd0927}, ! Part Load Fraction Correlation Curve Name
+  ,                                       ! Nominal Time for Condensate Removal to Begin {s}
+  ,                                       ! Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  ,                                       ! Maximum Cycling Rate {cycles/hr}
+  ,                                       ! Latent Capacity Time Constant {s}
+  ,                                       ! Condenser Air Inlet Node Name
+  AirCooled,                              ! Condenser Type
+  0,                                      ! Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                               ! Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                               ! Evaporative Condenser Pump Rated Power Consumption {W}
+  0,                                      ! Crankcase Heater Capacity {W}
+  0,                                      ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                                       ! Supply Water Storage Tank Name
+  ,                                       ! Condensate Collection Water Storage Tank Name
+  0,                                      ! Basin Heater Capacity {W/K}
+  10,                                     ! Basin Heater Setpoint Temperature {C}
+  ;                                       ! Basin Heater Operating Schedule Name
+
 OS:CoolingTower:SingleSpeed,
   {b4c8a4f7-5eb1-4262-8227-0f232c5cfc93}, !- Handle
   1 Spd Cooling Tower,                    !- Name
@@ -1381,7 +1712,9 @@ OS:Chiller:Electric:EIR,
   1,                                      ! Sizing Factor
   0,                                      ! Basin Heater Capacity {W/K}
   10,                                     ! Basin Heater Setpoint Temperature {C}
-  ;                                       ! Basin Heater Operating Schedule Name
+  ,                                       !- Basin Heater Operating Schedule Name
+  Reciprocating;                          !- Compressor Type
+
 
 OS:Curve:Biquadratic,
   {238cb0b4-afac-4115-8524-7778555d6cfb}, ! Handle

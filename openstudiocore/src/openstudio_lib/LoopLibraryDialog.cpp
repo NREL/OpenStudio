@@ -84,14 +84,38 @@ LoopLibraryDialog::LoopLibraryDialog(QWidget * parent)
 
   mainVLayout->addStretch();
 
-  //newItem( ADDTOMODEL_SYSTEM_TYPE_1,
-  //         QString("Packaged Terminal \nAir Conditioner"),
-  //         QPixmap(":/images/system_type_1.png") );
+  newItem(ADDTOMODEL_SPLIT_TYPE_0_THAI,
+	  QString("Thai Split Type Air"),
+	  QPixmap(":/images/thai_air_loop_icon.png"));
 
-  //newItem( ADDTOMODEL_SYSTEM_TYPE_2,
-  //         QString("Packaged Terminal Heat Pump"),
-  //         QPixmap(":/images/system_type_2.png") );
+  newItem(ADDTOMODEL_SPLIT_TYPE_1_THAI,
+	  QString("Thai Split Type Air (Inverter)"),
+	  QPixmap(":/images/thai_air_loop_icon.png"));
 
+  newItem(ADDTOMODEL_SPLIT_TYPE_2_THAI,
+	  QString("Thai Split Type Air (Inverter) with ERV"),
+	  QPixmap(":/images/thai_air_loop_icon.png"));
+
+  newItem(ADDTOMODEL_CENTRAL_SYSTEM_TYPE_0_THAI,
+	  QString("Thai Central A/C Air Cooled System"),
+	  QPixmap(":/images/thai_air_loop_icon.png"));
+
+  newItem(ADDTOMODEL_CENTRAL_SYSTEM_TYPE_1_THAI,
+	  QString("Thai Central A/C Water Cooled System"),
+	  QPixmap(":/images/thai_air_loop_icon.png"));
+
+  newItem(ADDTOMODEL_AIRLOOPHVAC_1_THAI,
+	  QString("Thai Air Loop"),
+	  QPixmap(":/images/thai_air_loop_icon.png"));
+
+  newItem(ADDTOMODEL_AIRLOOPHVAC_2_THAI,
+	  QString("Thai Air Loop with ERV"),
+	  QPixmap(":/images/thai_air_loop_icon.png"));
+
+  newItem(ADDTOMODEL_AIRLOOPHVAC_THAI,
+	  QString("Thai Packaged Air Conditioner Loop"),
+	  QPixmap(":/images/thai_air_loop_icon.png"));
+  
   newItem( ADDTOMODEL_SYSTEM_TYPE_3,
            QString("Packaged Rooftop Unit"),
            QPixmap(":/images/system_type_3.png") );

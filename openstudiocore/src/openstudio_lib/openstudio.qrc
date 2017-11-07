@@ -8,6 +8,8 @@
     <file>images/add_press.png</file>
     <file>images/air_cooled.png</file>
     <file>images/air_loop_icon.png</file>
+    <file>images/thai_air_loop_icon.png</file>
+    <file>images/air_loop_icon2.png</file>
     <file>images/air_terminal_inlet_mixer.png</file>
     <file>images/airterminal_dualduct_vav.png</file>
     <file>images/arrow.png</file>
@@ -67,6 +69,7 @@
     <file>images/delete_press.png</file>
     <file>images/direct-air.png</file>
     <file>images/directEvap.png</file>
+    <file>images/disabled_building_stories_tab.png</file>
     <file>images/disabled_building_tab.png</file>
     <file>images/disabled_constructions_tab.png</file>
     <file>images/disabled_hvac_tab.png</file>
@@ -82,6 +85,7 @@
     <file>images/disabled_spaces_tab.png</file>
     <file>images/disabled_thermal_zone_tab.png</file>
     <file>images/disabled_var_tab.png</file>
+    <file>images/disabled_renewable_tab.png</file>
     <file>images/display_case.png</file>
     <file>images/districtcooling.png</file>
     <file>images/districtheating.png</file>
@@ -162,6 +166,8 @@
     <file>images/off_summary_tab.png</file>
     <file>images/off_thermal_zone_tab.png</file>
     <file>images/off_var_tab.png</file>
+    <file>images/off_renewable_tab.png</file>
+    <file>images/on_building_stories_tab.png</file>
     <file>images/on_building_tab.png</file>
     <file>images/on_constructions_tab.png</file>
     <file>images/on_hvac_tab.png</file>
@@ -178,7 +184,9 @@
     <file>images/on_summary_tab.png</file>
     <file>images/on_thermal_zone_tab.png</file>
     <file>images/on_var_tab.png</file>
+    <file>images/on_renewable_tab.png</file>
     <file>images/open_file.png</file>
+    <file>images/osm-icon-open.png</file>
     <file>images/os_16.png</file>
     <file>images/os_32.png</file>
     <file>images/os_48.png</file>
