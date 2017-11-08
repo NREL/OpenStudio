@@ -68,13 +68,11 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const;
 
-    // virtual boost::optional<ParentObject> parent() const override;
-
-    // virtual bool setParent(ParentObject& newParent) override;
-
     //@}
     /** @name Getters */
     //@{
+
+    std::string materialName() const;
 
     double waterVaporDiffusionResistanceFactor() const;
 

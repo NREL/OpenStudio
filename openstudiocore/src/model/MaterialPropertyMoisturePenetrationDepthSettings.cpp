@@ -28,10 +28,12 @@
 
 #include <vector>
 #include "Material.hpp"
+#include "Material_Impl.hpp"
 #include "MaterialPropertyMoisturePenetrationDepthSettings.hpp"
 #include "MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
 #include "ModelExtensibleGroup.hpp"
 #include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_MaterialProperty_MoisturePenetrationDepth_Settings_FieldEnums.hxx>
@@ -75,6 +77,12 @@ namespace detail {
 
   IddObjectType MaterialPropertyMoisturePenetrationDepthSettings_Impl::iddObjectType() const {
     return MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType();
+  }
+
+  std::string MaterialPropertyMoisturePenetrationDepthSettings_Impl::materialName() const {
+    boost::optional<Material> material = getObject<ModelObject>().getModelObjectTarget<Material>(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MaterialName);
+    OS_ASSERT(material);
+    return material.get().name().get();
   }
 
   double MaterialPropertyMoisturePenetrationDepthSettings_Impl::waterVaporDiffusionResistanceFactor() const {
@@ -282,6 +290,10 @@ MaterialPropertyMoisturePenetrationDepthSettings::MaterialPropertyMoisturePenetr
 
 IddObjectType MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType() {
   return IddObjectType(IddObjectType::OS_MaterialProperty_MoisturePenetrationDepth_Settings);
+}
+
+std::string MaterialPropertyMoisturePenetrationDepthSettings::materialName() const {
+  return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->materialName();
 }
 
 double MaterialPropertyMoisturePenetrationDepthSettings::waterVaporDiffusionResistanceFactor() const {

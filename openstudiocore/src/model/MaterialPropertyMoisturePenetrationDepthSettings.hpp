@@ -68,6 +68,8 @@ class MODEL_API MaterialPropertyMoisturePenetrationDepthSettings : public ModelO
   /** @name Getters */
   //@{
 
+  std::string materialName() const;
+
   double waterVaporDiffusionResistanceFactor() const;
 
   double moistureEquationCoefficientA() const;

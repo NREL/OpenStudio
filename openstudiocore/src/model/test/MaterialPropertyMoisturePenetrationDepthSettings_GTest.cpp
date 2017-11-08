@@ -140,6 +140,18 @@ TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_SetGetFiel
   EXPECT_FALSE(optdeeplayerpenetrationdepth2);
   EXPECT_TRUE(empd.isSurfaceLayerPenetrationDepthAutocalculated());
   EXPECT_TRUE(empd.isDeepLayerPenetrationDepthAutocalculated());
+
+  // check that all coefficients method works
+  empd.setMoistureEquationCoefficients(0.0069, 0.9066, 0.0404, 22.1121);
+  EXPECT_EQ(0.0069, empd.moistureEquationCoefficientA());
+  EXPECT_EQ(0.9066, empd.moistureEquationCoefficientB());
+  EXPECT_EQ(0.0404, empd.moistureEquationCoefficientC());
+  EXPECT_EQ(22.1121, empd.moistureEquationCoefficientD());
+  auto coefs = empd.moistureEquationCoefficients();
+  EXPECT_EQ(0.0069, coefs[0]);
+  EXPECT_EQ(0.9066, coefs[1]);
+  EXPECT_EQ(0.0404, coefs[2]);
+  EXPECT_EQ(22.1121, coefs[3]);
 }
 
 // check that parent reset works
@@ -173,4 +185,17 @@ TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_ChildRemov
   EXPECT_EQ(2, model.modelObjects().size());
   EXPECT_FALSE(empd.remove().empty());
   EXPECT_EQ(size, model.modelObjects().size());
+}
+
+// check that it points to the material
+TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_MaterialName) {
+  Model model;
+  StandardOpaqueMaterial material(model);
+  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> optempd = material.createMaterialPropertyMoisturePenetrationDepthSettings(8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140);
+  auto empd = optempd.get();
+  EXPECT_EQ("Material 1", empd.materialName());
+  StandardOpaqueMaterial material2(model);
+  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> optempd2 = material2.createMaterialPropertyMoisturePenetrationDepthSettings(8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140);
+  auto empd2 = optempd2.get();
+  EXPECT_EQ("Material 2", empd2.materialName());
 }
