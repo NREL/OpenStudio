@@ -3355,7 +3355,7 @@ OS:MaterialProperty:GlazingSpectralData,
   N2,  \field Transmittance
   N3,  \field Front Reflectance
   N4;  \field Back Reflectance
-
+  
 \group OpenStudio Constructions
 
 OS:Construction,
@@ -5801,6 +5801,179 @@ OS:SurfaceProperty:OtherSideConditionsModel,
       \note  in contact with GroundDomain objects
       \default GapConvectionRadiation
 
+OS:Foundation:Kiva,
+       \memo Refined definition of the foundation surface construction used to
+       \memo inform two-dimensional heat transfer calculated using the Kiva
+       \memo ground heat transfer methodology.
+       \extensible:4
+  A1,  \field Name
+       \required-field
+       \type alpha
+       \reference OutFaceEnvNames
+  A2,  \field Interior Horizontal Insulation Material Name
+       \type object-list
+       \object-list MaterialNames
+  N1,  \field Interior Horizontal Insulation Depth
+       \note Distance from the slab bottom to the top of interior horizontal
+       \note insulation
+       \units m
+       \type real
+       \minimum 0.0
+       \default 0.0
+  N2,  \field Interior Horizontal Insulation Width
+       \note Extent of insulation as measured from the wall interior
+       \units m
+       \type real
+       \minimum> 0.0
+  A3,  \field Interior Vertical Insulation Material Name
+       \type object-list
+       \object-list MaterialNames
+  N3,  \field Interior Vertical Insulation Depth
+       \note Extent of insulation as measured from the wall top to the bottom
+       \note edge of the interior vertical insulation
+       \units m
+       \type real
+       \minimum> 0.0
+  A4,  \field Exterior Horizontal Insulation Material Name
+       \type object-list
+       \object-list MaterialNames
+  N4,  \field Exterior Horizontal Insulation Depth
+       \note Distance from the exterior grade to the top of exterior horizontal
+       \note insulation
+       \units m
+       \type real
+       \minimum 0.0
+  N5,  \field Exterior Horizontal Insulation Width
+       \note Extent of insulation as measured from the wall exterior
+       \units m
+       \type real
+       \minimum 0.0
+       \default 0.0
+  A5,  \field Exterior Vertical Insulation Material Name
+       \type object-list
+       \object-list MaterialNames
+  N6,  \field Exterior Vertical Insulation Depth
+       \note Extent of insulation as measured from the wall top to the bottom
+       \note edge of the exterior vertical insulation
+       \units m
+       \type real
+       \minimum> 0.0
+  N7,  \field Wall Height Above Grade
+       \note Distance from the exterior grade to the wall top
+       \units m
+       \type real
+       \minimum 0.0
+       \default 0.2
+  N8,  \field Wall Depth Below Slab
+       \note Distance from the slab bottom to the bottom of the foundation wall
+       \units m
+       \type real
+       \minimum 0.0
+       \default 0.0
+  A6,  \field Footing Wall Construction Name
+       \note Defines the below-grade surface construction for slabs. Required
+       \note if foundation wall is not exposed to the zone.
+       \type object-list
+       \object-list ConstructionNames
+  A7,  \field Footing Material Name
+       \type object-list
+       \object-list MaterialNames
+  N9,  \field Footing Depth
+       \note Top-to-bottom dimension of the footing (not to be confused with its
+       \note depth in the ground). The width of the footing is defined by the
+       \note material's thickness.
+       \units m
+       \type real
+       \minimum> 0.0
+       \default 0.3
+  A8,  \field Custom Block Material Name 1
+       \begin-extensible
+       \type object-list
+       \object-list MaterialNames
+  N10, \field Custom Block Depth 1
+       \note Top-to-bottom dimension of the block downward.
+       \units m
+       \type real
+       \minimum> 0.0
+  N11, \field Custom Block X Position 1
+       \note Position outward (+) or inward (-) relative to the foundation wall
+       \note interior
+       \units m
+       \type real
+  N12; \field Custom Block Z Position 1
+       \note Position downward (+) relative to the foundation wall top
+       \units m
+       \type real
+
+OS:Foundation:Kiva:Settings,
+       \memo Settings applied across all Kiva foundation calculations.
+       \memo Object is not required. If not defined, defaults will be applied.
+  N1,  \field Soil Conductivity
+       \type real
+       \default 1.73
+       \units W/m-K
+       \minimum> 0.0
+  N2,  \field Soil Density
+       \type real
+       \default 1842
+       \units kg/m3
+       \minimum> 0.0
+  N3,  \field Soil Specific Heat
+       \type real
+       \default 419
+       \units J/kg-K
+       \minimum> 0.0
+  N4,  \field Ground Solar Absorptivity
+       \type real
+       \default 0.9
+       \units dimensionless
+       \minimum 0.0
+       \maximum 1.0
+  N5,  \field Ground Thermal Absorptivity
+       \type real
+       \default 0.9
+       \units dimensionless
+       \minimum 0.0
+       \maximum 1.0
+  N6,  \field Ground Surface Roughness
+       \type real
+       \default 0.03
+       \units m
+       \minimum> 0.0
+  N7,  \field Far-Field Width
+       \type real
+       \default 40
+       \units m
+       \minimum> 0.0
+  A1,  \field Deep-Ground Boundary Condition
+       \type choice
+       \key ZeroFlux
+       \key GroundWater
+       \key Autoselect
+       \default Autoselect
+  N8,  \field Deep-Ground Depth
+       \type real
+       \default 40
+       \units m
+       \minimum> 0.0
+       \autocalculatable
+       \default autocalculate
+  N9,  \field Minimum Cell Dimension
+       \type real
+       \default 0.02
+       \units m
+       \minimum> 0.0
+  N10, \field Maximum Cell Growth Coefficient
+       \type real
+       \default 1.5
+       \units dimensionless
+       \minimum 1.0
+  A2;  \field Simulation Timestep
+       \type choice
+       \key Hourly
+       \key Timestep
+       \default Hourly
+      
 \group OpenStudio Space Loads
 
 OS:InternalMass,
