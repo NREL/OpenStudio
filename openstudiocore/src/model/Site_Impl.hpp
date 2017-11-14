@@ -47,6 +47,7 @@ class SiteWaterMainsTemperature;
 class Facility;
 class ShadingSurfaceGroup;
 class Site;
+class FoundationKivaSettings;
 
 namespace detail {
 
@@ -184,6 +185,9 @@ namespace detail {
 
     /** Set the active climate zone institution to institution. */
     //bool setActiveClimateZoneInstitution(const std::string& institution);
+    
+    /** Unique FoundationKivaSettings object parented by Site. */
+    boost::optional<FoundationKivaSettings> foundationKivaSettings() const;
 
    protected:
    private:
