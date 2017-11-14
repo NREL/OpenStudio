@@ -504,6 +504,9 @@ set(${target_name}_test_src
 
   Test/AirWallMaterial_GTest.cpp
 
+  Test/AirLoopHVAC_GTest.cpp
+  Test/PlantLoop_GTest.cpp
+
   # Test/AvailabilityManagerAssignmentList_GTest.cpp
   Test/AvailabilityManagerScheduled_GTest.cpp
   Test/AvailabilityManagerScheduledOn_GTest.cpp

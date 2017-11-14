@@ -51,7 +51,6 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerAssignmentList( AvailabilityManagerAssignmentList & modelObject )
 {
 
-
   std::vector<AvailabilityManager> avmVector = modelObject.availabilityManagers();
 
   if (avmVector.empty()){
@@ -68,7 +67,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerAssign
   // Create an AVM list
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::AvailabilityManagerAssignmentList, modelObject);
 
-
   for( auto & avm : avmVector )
   {
     // Skip the AVM:HybridVentilation
@@ -80,8 +78,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerAssign
       }
     }
   }
-
-  m_idfObjects.push_back(idfObject);
 
   return idfObject;
 }

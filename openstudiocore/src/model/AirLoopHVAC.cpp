@@ -1014,6 +1014,7 @@ namespace detail {
   void AirLoopHVAC_Impl::setAvailabilitySchedule(Schedule & schedule)
   {
     // TODO: deal with this in regards to the new AvailabilityManagerAssignmentList
+    // Actually, no, this is going to end up in the Fan Schedule
     auto result = setPointer(OS_AirLoopHVACFields::AvailabilitySchedule,schedule.handle());
     OS_ASSERT(result);
 
@@ -1043,9 +1044,19 @@ namespace detail {
     };
 
     // Loop through the current AVMs, if you find an AVM NightCycle, set its controlType
+    // TODO: @kbenne: Unless the controType is "StayOff" in which case perhaps remove? what do you think?
     for (auto & t_availabilityManager: availabilityManagers()) {
       if( auto nightCycle = t_availabilityManager.optionalCast<AvailabilityManagerNightCycle>() ) {
+        /*
+         *if ( openstudio::istringEqual(controlType, "StayOff") ) {
+         *  nightCycle->remove()
+         *  return true
+         *} else {
+         *  return nightCycle->setControlType(controlType);
+         *}
+         */
         return nightCycle->setControlType(controlType);
+
       }
     }
 

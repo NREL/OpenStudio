@@ -31,6 +31,9 @@
 #include "../../model/Model.hpp"
 #include "../../model/PlantLoop.hpp"
 #include "../../model/PlantLoop_Impl.hpp"
+
+#include "../../model/AvailabilityManagerAssignmentList.hpp"
+#include "../../model/AvailabilityManagerAssignmentList_Impl.hpp"
 #include "../../model/AvailabilityManager.hpp"
 #include "../../model/AvailabilityManager_Impl.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
@@ -466,22 +469,15 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     idfObject.setString(PlantLoopFields::LoadDistributionScheme,scheme);
   }
 
-  // AvailabilityManager
-  // TODO
-  if (OptionalAvailabilityManager availMgr = plantLoop.availabilityManager()) {
+  // AvailabilityManagerAssignmentList
+  {
+    // The AvailabilityManagerAssignment list is translated by itself, we just need to set its name on the right IDF field
+    AvailabilityManagerAssignmentList avmList = plantLoop.getImpl<openstudio::model::detail::PlantLoop_Impl>()->availabilityManagerAssignmentList();
 
-    // Availability Manager List
-    IdfObject availabilityManagerAssignmentListIdf(openstudio::IddObjectType::AvailabilityManagerAssignmentList);
-    availabilityManagerAssignmentListIdf.setName(plantLoop.name().get() + " Availability Manager List");
-    m_idfObjects.push_back(availabilityManagerAssignmentListIdf);
-    idfObject.setString(PlantLoopFields::AvailabilityManagerListName, availabilityManagerAssignmentListIdf.name().get());
-
-    // Availability Manager
-    OptionalIdfObject availMgrIdf = translateAndMapModelObject(availMgr.get());
-    OS_ASSERT(availMgrIdf);
-    IdfExtensibleGroup eg = availabilityManagerAssignmentListIdf.pushExtensibleGroup();
-    eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,availMgrIdf->iddObject().name());
-    eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,availMgrIdf->name().get());
+    // If the avmList isn't empty of just with an HybridVentilation, it should have been translated
+    if( boost::optional<IdfObject> _avmList = this->translateAndMapModelObject(avmList) ) {
+        idfObject.setString(PlantLoopFields::AvailabilityManagerListName, _avmList->name().get());
+    }
   }
 
   //  PlantLoopDemandCalculationScheme

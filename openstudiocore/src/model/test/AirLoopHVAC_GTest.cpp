@@ -67,7 +67,8 @@
 #include "../ConnectorSplitter_Impl.hpp"
 
 
-
+#include "../AvailabilityManagerAssignmentList.hpp"
+#include "../AvailabilityManagerAssignmentList_Impl.hpp"
 #include "../AvailabilityManager.hpp"
 #include "../AvailabilityManager_Impl.hpp"
 
@@ -934,7 +935,10 @@ TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
 TEST_F(ModelFixture,AirLoopHVAC_AvailabilityManagers)
 {
   Model m;
+  ASSERT_EQ(0u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
+
   AirLoopHVAC a(m);
+  ASSERT_EQ(1u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
 
   {
     auto schedule = m.alwaysOnDiscreteSchedule();
@@ -942,32 +946,38 @@ TEST_F(ModelFixture,AirLoopHVAC_AvailabilityManagers)
   }
 
   ASSERT_EQ(0u, a.availabilityManagers().size());
+  ASSERT_EQ(1u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
 
 
   AvailabilityManagerLowTemperatureTurnOn aLTOn(m);
   ASSERT_TRUE(a.addAvailabilityManager(aLTOn));
   ASSERT_EQ(1u, a.availabilityManagers().size());
+  ASSERT_EQ(1u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
 
   AvailabilityManagerLowTemperatureTurnOff aLTOff(m);
   ASSERT_TRUE(a.addAvailabilityManager(aLTOff));
   ASSERT_EQ(2u, a.availabilityManagers().size());
+  ASSERT_EQ(1u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
 
   AvailabilityManagerHighTemperatureTurnOn aHTOn(m);
   ASSERT_TRUE(a.addAvailabilityManager(aHTOn));
   ASSERT_EQ(3u, a.availabilityManagers().size());
+  ASSERT_EQ(1u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
 
   AvailabilityManagerHighTemperatureTurnOff aHTOff(m);
   ASSERT_TRUE(a.addAvailabilityManager(aHTOff));
   ASSERT_EQ(4u, a.availabilityManagers().size());
+  ASSERT_EQ(1u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
 
   AvailabilityManagerDifferentialThermostat aDiffTstat(m);
   ASSERT_TRUE(a.addAvailabilityManager(aDiffTstat));
   ASSERT_EQ(5u, a.availabilityManagers().size());
+  ASSERT_EQ(1u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
 
   AvailabilityManagerOptimumStart aOptStart(m);
   ASSERT_TRUE(a.addAvailabilityManager(aOptStart));
   ASSERT_EQ(6u, a.availabilityManagers().size());
-
+  ASSERT_EQ(1u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
 
   // Should work because this is a AirLoopHVAC
   AvailabilityManagerNightCycle avm_nc(m);

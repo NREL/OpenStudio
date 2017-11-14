@@ -30,6 +30,9 @@
 #include "../../model/Model.hpp"
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/AirLoopHVAC_Impl.hpp"
+
+#include "../../model/AvailabilityManagerAssignmentList.hpp"
+#include "../../model/AvailabilityManagerAssignmentList_Impl.hpp"
 #include "../../model/AvailabilityManager.hpp"
 #include "../../model/AvailabilityManager_Impl.hpp"
 #include "../../model/AvailabilityManagerHybridVentilation.hpp"
@@ -351,42 +354,36 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
     }
   }
 
-  // Availability Manager List Name
-  // TODO: revamp
-  IdfObject availabilityManagerAssignmentListIdf(openstudio::IddObjectType::AvailabilityManagerAssignmentList);
-  availabilityManagerAssignmentListIdf.setName(airLoopHVACName + "Availability Manager List");
-  m_idfObjects.push_back(availabilityManagerAssignmentListIdf);
+  // AvailabilityManagerAssignmentList
+  {
+    // The AvailabilityManagerAssignment list is translated by itself, we just need to set its name on the right IDF field
+    AvailabilityManagerAssignmentList avmList = airLoopHVAC.getImpl<openstudio::model::detail::AirLoopHVAC_Impl>()->availabilityManagerAssignmentList();
 
-  idfObject.setString(openstudio::AirLoopHVACFields::AvailabilityManagerListName,
-                      availabilityManagerAssignmentListIdf.name().get());
-
-  auto createdAvailabilityManagerScheduled = [&]() {
-    IdfObject idf(IddObjectType::AvailabilityManager_Scheduled);
-    idf.setName(airLoopHVACName + " Availability Manager");
-    m_idfObjects.push_back(idf);
-
-    idf.setString(openstudio::AvailabilityManager_ScheduledFields::ScheduleName,
-      airLoopHVAC.availabilitySchedule().name().get());
-
-    auto eg = availabilityManagerAssignmentListIdf.pushExtensibleGroup();
-    eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,idf.iddObject().name());
-    eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,idf.name().get());
-  };
-
-  if( auto availabilityManager = airLoopHVAC.availabilityManager() ) {
-    auto idf = translateAndMapModelObject(availabilityManager.get());
-    OS_ASSERT(idf);
-    if( availabilityManager->optionalCast<model::AvailabilityManagerHybridVentilation>() ) {
-      // AvailabilityManagerHybridVentilation is an odd duck, it is not allowed on availabilityManagerAssignmentList.
-      // Poor thing :(
-      createdAvailabilityManagerScheduled();
-    } else {
-      auto eg = availabilityManagerAssignmentListIdf.pushExtensibleGroup();
-      eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,idf->iddObject().name());
-      eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,idf->name().get());
+    // If the avmList isn't empty of just with an HybridVentilation, it should have been translated
+    if( boost::optional<IdfObject> _avmList = this->translateAndMapModelObject(avmList) ) {
+      idfObject.setString(AirLoopHVACFields::AvailabilityManagerListName, _avmList->name().get());
     }
-  } else {
-    createdAvailabilityManagerScheduled();
+    // Otherwise, we default to the old behavior
+    else {
+      IdfObject availabilityManagerAssignmentListIdf(openstudio::IddObjectType::AvailabilityManagerAssignmentList);
+      availabilityManagerAssignmentListIdf.setName(airLoopHVACName + "Availability Manager List");
+      m_idfObjects.push_back(availabilityManagerAssignmentListIdf);
+
+      idfObject.setString(openstudio::AirLoopHVACFields::AvailabilityManagerListName,
+          availabilityManagerAssignmentListIdf.name().get());
+
+      IdfObject idf(IddObjectType::AvailabilityManager_Scheduled);
+      idf.setName(airLoopHVACName + " Availability Manager");
+      m_idfObjects.push_back(idf);
+
+      idf.setString(openstudio::AvailabilityManager_ScheduledFields::ScheduleName,
+          airLoopHVAC.availabilitySchedule().name().get());
+
+      auto eg = availabilityManagerAssignmentListIdf.pushExtensibleGroup();
+      eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,idf.iddObject().name());
+      eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,idf.name().get());
+    }
+
   }
 
   // Design Supply Air Flow Rate
