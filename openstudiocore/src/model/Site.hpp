@@ -46,6 +46,7 @@ class SiteGroundTemperatureFCfactorMethod;
 class SiteWaterMainsTemperature;
 class Facility;
 class ShadingSurfaceGroup;
+class FoundationKivaSettings;
 
 namespace detail {
 
@@ -158,6 +159,9 @@ class MODEL_API Site : public ParentObject {
   /** Set the active climate zone institution to institution. */
   //bool setActiveClimateZoneInstitution(const std::string& institution);
 
+  /** Unique FoundationKivaSettings object parented by Site. */
+  boost::optional<FoundationKivaSettings> foundationKivaSettings() const;
+  
  protected:
   /// @cond
   typedef detail::Site_Impl ImplType;

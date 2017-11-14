@@ -67,6 +67,8 @@
 #include "SiteGroundTemperatureShallow_Impl.hpp"
 #include "SiteGroundTemperatureFCfactorMethod.hpp"
 #include "SiteGroundTemperatureFCfactorMethod_Impl.hpp"
+#include "FoundationKivaSettings.hpp"
+#include "FoundationKivaSettings_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -165,6 +167,10 @@ namespace detail {
     std::vector<ShadingSurfaceGroup> shadingSurfaceGroups = this->shadingSurfaceGroups();
     result.insert(result.end(),shadingSurfaceGroups.begin(),shadingSurfaceGroups.end());
 
+    // foundation kiva settings
+    OptionalFoundationKivaSettings foundationKivaSettings = this->foundationKivaSettings();
+    if (foundationKivaSettings){ result.push_back(*foundationKivaSettings); }    
+    
     return result;
   }
 
@@ -184,6 +190,7 @@ namespace detail {
     result.push_back(SiteGroundTemperatureFCfactorMethod::iddObjectType());
     result.push_back(SiteWaterMainsTemperature::iddObjectType());
     result.push_back(ShadingSurfaceGroup::iddObjectType());
+    result.push_back(FoundationKivaSettings::iddObjectType());
     return result;
   }
 
@@ -378,6 +385,12 @@ namespace detail {
     return !climateZones.setActiveClimateZone(institution).empty();
   }
 */
+
+  boost::optional<FoundationKivaSettings> Site_Impl::foundationKivaSettings() const
+  {
+    return this->model().getOptionalUniqueModelObject<FoundationKivaSettings>();
+  }
+
 } // detail
 
 IddObjectType Site::iddObjectType() {
@@ -530,6 +543,12 @@ bool Site::setActiveClimateZoneInstitution(const std::string& institution) {
   return getImpl<detail::Site_Impl>()->setActiveClimateZoneInstitution(institution);
 }
 */
+
+boost::optional<FoundationKivaSettings> Site::foundationKivaSettings() const
+{
+  return getImpl<detail::Site_Impl>()->foundationKivaSettings();
+}
+
 /// @cond
 Site::Site(std::shared_ptr<detail::Site_Impl> impl)
   : ParentObject(std::move(impl))
