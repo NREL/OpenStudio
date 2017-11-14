@@ -1679,6 +1679,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateFluidCoolerTwoSpeed(fluidCoolerTwoSpeed);
     break;
   }
+  case openstudio::IddObjectType::OS_Foundation_Kiva_Settings:
+  {
+    model::FoundationKivaSettings kivaSettings = modelObject.cast<FoundationKivaSettings>();
+    retVal = translateFoundationKivaSettings(kivaSettings);
+    break;
+  }  
   case openstudio::IddObjectType::OS_Generator_MicroTurbine:
   {
     // Will also translate the Generator:MicroTurbine:HeatRecovery if there is one attached to the Generator:MicroTurbine
@@ -3200,6 +3206,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_SizingPeriod_DesignDay);
   result.push_back(IddObjectType::OS_SizingPeriod_WeatherFileConditionType);
   result.push_back(IddObjectType::OS_SizingPeriod_WeatherFileDays);
+  result.push_back(IddObjectType::OS_Foundation_Kiva_Settings);
 
   result.push_back(IddObjectType::OS_UtilityCost_Charge_Block);
   result.push_back(IddObjectType::OS_UtilityCost_Charge_Simple);
