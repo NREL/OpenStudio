@@ -180,7 +180,7 @@ boost::optional<double> flowrate(const HVACComponent & component)
     case openstudio::IddObjectType::OS_DistrictHeating :
     {
       break;
-    }      
+    }
     case openstudio::IddObjectType::OS_Chiller_Electric_EIR :
     {
       auto chiller = component.cast<ChillerElectricEIR>();
@@ -206,7 +206,7 @@ boost::optional<double> flowrate(const HVACComponent & component)
     case openstudio::IddObjectType::OS_DistrictCooling :
     {
       break;
-    }      
+    }
     case openstudio::IddObjectType::OS_CoolingTower_SingleSpeed :
     {
       auto tower = component.cast<CoolingTowerSingleSpeed>();
@@ -322,7 +322,58 @@ ComponentType componentType(const HVACComponent & component)
     }
     case openstudio::IddObjectType::OS_WaterHeater_Mixed :
     {
-      return ComponentType::HEATING;
+      // Need to handle the case where this is used purely as a storage tank
+      WaterHeaterMixed wh = component.cast<WaterHeaterMixed>();
+      if (boost::optional<double> _cap = wh.heaterMaximumCapacity() ) {
+        if (_cap.get() == 0.0) {
+
+          // Capacity is zero: it's a storage tank!
+
+          // get the Source loop
+          if ( boost::optional<PlantLoop> _p = wh.secondaryPlantLoop() ) {
+            // I guess we could rely on Heating/Cooling/Condenser set in the sizingPlant
+            // if ( openstudio::istringEqual(p->sizingPlant().loopType(), "Heating") { }
+            // Might be better to do a recursive call to see what type of equipment you have on the supply side of the plant loop though
+            bool has_cooling = false;
+            bool has_heating = false;
+            bool has_both = false;
+            for( const auto & comp : subsetCastVector<HVACComponent>(_p->supplyComponents()) ) {
+              if( componentType(comp) == ComponentType::COOLING ) {
+                has_cooling = true;
+              } else if( componentType(comp) == ComponentType::HEATING ) {
+                has_heating = true;
+              } else if( componentType(comp) == ComponentType::BOTH ) {
+                has_both = true;
+              }
+            }
+
+            // Let's not be too aggressive here, and only rule if we have only cooling, or only heating
+            if ( has_cooling and !has_heating and !has_both ) {
+              // If it's a tank, and the source side is purely cooling
+              return ComponentType::COOLING;
+            } else if ( !has_cooling and has_heating and !has_both ) {
+              // If it's a tank, and the source side is purely heating
+              return ComponentType::HEATING;
+            } else {
+              // It's a tank, source side has a mix
+              return ComponentType::BOTH;
+            }
+
+          } else {
+            // It isn't connected to a source side, and has zero capacity => it's NONE
+            return ComponentType::NONE;
+          } // End if has source loop
+
+
+        } else {
+          // If there is a capacity, and it's not zero, it's heating
+          return ComponentType::HEATING;
+        } // End cap == 0
+
+      } else {
+      // If autosize, then it's Heating
+        return ComponentType::HEATING;
+      } // end has a heater capacity
     }
     case openstudio::IddObjectType::OS_WaterHeater_Stratified :
     {
@@ -331,7 +382,7 @@ ComponentType componentType(const HVACComponent & component)
     case openstudio::IddObjectType::OS_DistrictHeating :
     {
       return ComponentType::HEATING;
-    }      
+    }
     case openstudio::IddObjectType::OS_Chiller_Electric_EIR :
     {
       return ComponentType::COOLING;
@@ -351,7 +402,7 @@ ComponentType componentType(const HVACComponent & component)
     case openstudio::IddObjectType::OS_DistrictCooling :
     {
       return ComponentType::COOLING;
-    }      
+    }
     case openstudio::IddObjectType::OS_CoolingTower_SingleSpeed :
     {
       return ComponentType::COOLING;
@@ -386,7 +437,28 @@ ComponentType componentType(const HVACComponent & component)
     }
     case openstudio::IddObjectType::OS_HeatExchanger_FluidToFluid :
     {
-      return ComponentType::BOTH;
+      // "Smart" defaults instead of ComponentType::BOTH;
+      HeatExchangerFluidToFluid hx = component.cast<HeatExchangerFluidToFluid>();
+
+      std::string controlType = hx.controlType();
+
+      if ( openstudio::istringEqual(controlType, "HeatingSetpointModulated") ||
+           openstudio::istringEqual(controlType, "HeatingSetpointOnOff") ) {
+        return ComponentType::HEATING;
+
+      } else if ( openstudio::istringEqual(controlType, "CoolingSetpointModulated") ||
+                  openstudio::istringEqual(controlType, "CoolingSetpointOnOff") ||
+                  openstudio::istringEqual(controlType, "CoolingDifferentialOnOff") ||
+                  openstudio::istringEqual(controlType, "CoolingSetpointOnOffWithComponentOverride") ) {
+        return ComponentType::COOLING;
+
+      } else {
+        // TODO: would need to open a log channel
+        //Log(Debug, "HeatExchangerFluidToFluid '" << hx.name().get() << "' doesn't have a "
+                   //"controlType ('" << controlType << "') that allows us to specify whether "
+                   //"it's heating or cooling, setting to ComponentType::BOTH");
+        return ComponentType::BOTH;
+      }
     }
     case openstudio::IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal :
     {
@@ -428,8 +500,8 @@ ComponentType componentType(const HVACComponent & component)
 }
 
 // Some plant components air in a containingHVACComponent() and it is that
-// container which needs to go on the plant operation scheme. Here is a filter to 
-// figure that out. 
+// container which needs to go on the plant operation scheme. Here is a filter to
+// figure that out.
 HVACComponent operationSchemeComponent(const HVACComponent & component) {
     boost::optional<HVACComponent> result;
 
@@ -616,7 +688,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
     }
 
     applyDefault = false;
-  } 
+  }
 
   if( auto heatingLoadScheme = plantLoop.plantEquipmentOperationHeatingLoad() ) {
     auto _scheme = translateAndMapModelObject(heatingLoadScheme.get());
@@ -650,7 +722,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
   }
 
   if( applyDefault ) {
-    // If we get here then there must not be any operation schemes defined in the model 
+    // If we get here then there must not be any operation schemes defined in the model
     // and we should go ahead and create default schemes.
     const auto & t_heatingComponents = heatingComponents( plantLoop );
     if( ! t_heatingComponents.empty() ) {
@@ -752,4 +824,3 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
 } // energyplus
 
 } // openstudio
-

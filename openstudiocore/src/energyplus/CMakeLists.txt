@@ -516,6 +516,8 @@ set(${target_name}_test_src
   Test/Luminaire_GTest.cpp
   Test/Meter_GTest.cpp
   Test/People_GTest.cpp
+  Test/PlantEquipmentOperationSchemes_GTest.cpp
+
   Test/RunPeriodControlDaylightSavingTime_GTest.cpp
   Test/ScheduleInterval_GTest.cpp
   Test/ScheduleRuleset_GTest.cpp
