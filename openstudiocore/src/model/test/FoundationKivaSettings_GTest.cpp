@@ -75,6 +75,19 @@ TEST_F(ModelFixture, FoundationKivaSettings_FoundationKivaSettings) {
   EXPECT_TRUE(kivaSettings.isMinimumCellDimensionDefaulted());
   EXPECT_TRUE(kivaSettings.isMaximumCellGrowthCoefficientDefaulted());
   EXPECT_TRUE(kivaSettings.isSimulationTimestepDefaulted());
+
+  ASSERT_EQ(1.73, kivaSettings.soilConductivity());
+  ASSERT_EQ(1842, kivaSettings.soilDensity());
+  ASSERT_EQ(419, kivaSettings.soilSpecificHeat());
+  ASSERT_EQ(0.9, kivaSettings.groundSolarAbsorptivity());
+  ASSERT_EQ(0.9, kivaSettings.groundThermalAbsorptivity());
+  ASSERT_EQ(0.03, kivaSettings.groundSurfaceRoughness());
+  ASSERT_EQ(40, kivaSettings.farFieldWidth());
+  ASSERT_EQ("Autoselect", kivaSettings.deepGroundBoundaryCondition());
+  ASSERT_FALSE(kivaSettings.deepGroundDepth());
+  ASSERT_EQ(0.02, kivaSettings.minimumCellDimension());
+  ASSERT_EQ(1.5, kivaSettings.maximumCellGrowthCoefficient());
+  ASSERT_EQ("Hourly", kivaSettings.simulationTimestep());
 }
 
 // test setting and getting
@@ -100,7 +113,6 @@ TEST_F(ModelFixture, FoundationKivaSettings_SetGetFields) {
   kivaSettings.setSimulationTimestep("Timestep");
   
   // check the fields
-
   ASSERT_FALSE(kivaSettings.isSoilConductivityDefaulted());
   ASSERT_EQ(1.75, kivaSettings.soilConductivity());
   ASSERT_FALSE(kivaSettings.isSoilDensityDefaulted());
@@ -179,7 +191,7 @@ TEST_F(ModelFixture, FoundationKivaSettings_Clone)
   Model model2;
   FoundationKivaSettings kivaSettingsClone2 = kivaSettings.clone(model2).cast<FoundationKivaSettings>();
   ASSERT_FALSE(kivaSettingsClone2.isSoilConductivityDefaulted());
-  ASSERT_EQ(25.0, kivaSettingsClone2.soilConductivity());
+  ASSERT_EQ(1.75, kivaSettingsClone2.soilConductivity());
   ASSERT_TRUE(kivaSettingsClone2.isSoilDensityDefaulted());
 }
 
