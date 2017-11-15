@@ -5909,11 +5909,14 @@ OS:Foundation:Kiva,
        \memo inform two-dimensional heat transfer calculated using the Kiva
        \memo ground heat transfer methodology.
        \extensible:4
-  A1,  \field Name
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
        \required-field
        \type alpha
        \reference OutFaceEnvNames
-  A2,  \field Interior Horizontal Insulation Material Name
+  A3,  \field Interior Horizontal Insulation Material Name
        \type object-list
        \object-list MaterialNames
   N1,  \field Interior Horizontal Insulation Depth
@@ -5928,7 +5931,7 @@ OS:Foundation:Kiva,
        \units m
        \type real
        \minimum> 0.0
-  A3,  \field Interior Vertical Insulation Material Name
+  A4,  \field Interior Vertical Insulation Material Name
        \type object-list
        \object-list MaterialNames
   N3,  \field Interior Vertical Insulation Depth
@@ -5937,7 +5940,7 @@ OS:Foundation:Kiva,
        \units m
        \type real
        \minimum> 0.0
-  A4,  \field Exterior Horizontal Insulation Material Name
+  A5,  \field Exterior Horizontal Insulation Material Name
        \type object-list
        \object-list MaterialNames
   N4,  \field Exterior Horizontal Insulation Depth
@@ -5952,7 +5955,7 @@ OS:Foundation:Kiva,
        \type real
        \minimum 0.0
        \default 0.0
-  A5,  \field Exterior Vertical Insulation Material Name
+  A6,  \field Exterior Vertical Insulation Material Name
        \type object-list
        \object-list MaterialNames
   N6,  \field Exterior Vertical Insulation Depth
@@ -5973,12 +5976,12 @@ OS:Foundation:Kiva,
        \type real
        \minimum 0.0
        \default 0.0
-  A6,  \field Footing Wall Construction Name
+  A7,  \field Footing Wall Construction Name
        \note Defines the below-grade surface construction for slabs. Required
        \note if foundation wall is not exposed to the zone.
        \type object-list
        \object-list ConstructionNames
-  A7,  \field Footing Material Name
+  A8,  \field Footing Material Name
        \type object-list
        \object-list MaterialNames
   N9,  \field Footing Depth
@@ -5989,7 +5992,7 @@ OS:Foundation:Kiva,
        \type real
        \minimum> 0.0
        \default 0.3
-  A8,  \field Custom Block Material Name 1
+  A9,  \field Custom Block Material Name 1
        \begin-extensible
        \type object-list
        \object-list MaterialNames
@@ -6011,6 +6014,9 @@ OS:Foundation:Kiva,
 OS:Foundation:Kiva:Settings,
        \memo Settings applied across all Kiva foundation calculations.
        \memo Object is not required. If not defined, defaults will be applied.
+  A1, \field Handle
+       \type handle
+       \required-field
   N1,  \field Soil Conductivity
        \type real
        \default 1.73
@@ -6048,7 +6054,7 @@ OS:Foundation:Kiva:Settings,
        \default 40
        \units m
        \minimum> 0.0
-  A1,  \field Deep-Ground Boundary Condition
+  A2,  \field Deep-Ground Boundary Condition
        \type choice
        \key ZeroFlux
        \key GroundWater
@@ -6071,7 +6077,7 @@ OS:Foundation:Kiva:Settings,
        \default 1.5
        \units dimensionless
        \minimum 1.0
-  A2;  \field Simulation Timestep
+  A3;  \field Simulation Timestep
        \type choice
        \key Hourly
        \key Timestep

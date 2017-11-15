@@ -348,7 +348,22 @@ namespace detail {
 
 FoundationKivaSettings::FoundationKivaSettings(Model& model)
   : ModelObject(FoundationKivaSettings::iddObjectType(), model)
-{}
+{
+  OS_ASSERT(getImpl<detail::FoundationKivaSettings_Impl>());
+
+  resetSoilConductivity();
+  resetSoilDensity();
+  resetSoilSpecificHeat();
+  resetGroundSolarAbsorptivity();
+  resetGroundThermalAbsorptivity();
+  resetGroundSurfaceRoughness();
+  resetFarFieldWidth();
+  resetDeepGroundBoundaryCondition();
+  autocalculateDeepGroundDepth();
+  resetMinimumCellDimension();
+  resetMaximumCellGrowthCoefficient();
+  resetSimulationTimestep();
+}
 
 IddObjectType FoundationKivaSettings::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Foundation_Kiva_Settings);
