@@ -33,11 +33,19 @@
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
+#include "Material.hpp"
+#include "Material_Impl.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+
 namespace openstudio {
 namespace model {
 
 class Material;
 class ConstructionBase;
+class Surface;
 
 namespace detail {
 
@@ -62,19 +70,19 @@ class MODEL_API FoundationKiva : public ModelObject {
   /** @name Getters */
   //@{
 
-  boost::optional<Material> interiorHorizontalInsulationMaterial() const override;
+  boost::optional<Material> interiorHorizontalInsulationMaterial() const;
 
-  double interiorHorizontalInsulationDepth();
+  double interiorHorizontalInsulationDepth() const;
 
   bool isInteriorHorizontalInsulationDepthDefaulted() const;
 
   boost::optional<double> interiorHorizontalInsulationWidth();
 
-  boost::optional<Material> interiorVerticalInsulationMaterial() const override;
+  boost::optional<Material> interiorVerticalInsulationMaterial() const;
 
-  boost::optional<double> interiorVerticalInsulationDepth() const;
+  boost::optional<double> interiorVerticalInsulationDepth();
 
-  boost::optional<Material> exteriorHorizontalInsulationMaterial() const override;
+  boost::optional<Material> exteriorHorizontalInsulationMaterial() const;
 
   boost::optional<double> exteriorHorizontalInsulationDepth();
 
@@ -82,7 +90,7 @@ class MODEL_API FoundationKiva : public ModelObject {
 
   bool isExteriorHorizontalInsulationWidthDefaulted() const;
 
-  boost::optional<Material> exteriorVerticalInsulationMaterial() const override;
+  boost::optional<Material> exteriorVerticalInsulationMaterial() const;
 
   boost::optional<double> exteriorVerticalInsulationDepth();
 
@@ -94,19 +102,21 @@ class MODEL_API FoundationKiva : public ModelObject {
 
   bool isWallDepthBelowSlabDefaulted() const;
 
-  boost::optional<ConstructionBase> footingWallConstruction const override;
+  boost::optional<ConstructionBase> footingWallConstruction() const;
 
-  boost::optional<Material> footingMaterial const override;
+  boost::optional<Material> footingMaterial() const;
 
   double footingDepth() const;
 
   bool isFootingDepthDefaulted() const;
 
+  std::vector<Surface> surfaces() const;
+
   //@}
   /** @name Setters */
   //@{
 
-  bool setInteriorHorizontalInsulationMaterial(const Material& material) override;
+  bool setInteriorHorizontalInsulationMaterial(const Material& material);
 
   void resetInteriorHorizontalInsulationMaterial();
 
@@ -116,13 +126,13 @@ class MODEL_API FoundationKiva : public ModelObject {
 
   bool setInteriorHorizontalInsulationWidth(double interiorHorizontalInsulationWidth);
 
-  bool setInteriorVerticalInsulationMaterial(const Material& material) override;
+  bool setInteriorVerticalInsulationMaterial(const Material& material);
 
   void resetInteriorVerticalInsulationMaterial();
 
   bool setInteriorVerticalInsulationDepth(double interiorVerticalInsulationDepth);
 
-  bool setExteriorHorizontalInsulationMaterial(const Material& material) override;
+  bool setExteriorHorizontalInsulationMaterial(const Material& material);
 
   void resetExteriorHorizontalInsulationMaterial();
 
@@ -132,7 +142,7 @@ class MODEL_API FoundationKiva : public ModelObject {
 
   void resetExteriorHorizontalInsulationWidth();
 
-  bool setExteriorVerticalInsulationMaterial(const Material& material) override;
+  bool setExteriorVerticalInsulationMaterial(const Material& material);
 
   void resetExteriorVerticalInsulationMaterial();
 
@@ -146,11 +156,11 @@ class MODEL_API FoundationKiva : public ModelObject {
 
   void resetWallDepthBelowSlab();
 
-  bool setFootingWallConstruction(const ConstructionBase& construction) override;
+  bool setFootingWallConstruction(const ConstructionBase& construction);
 
   void resetFootingWallConstruction();
 
-  bool setFootingMaterial(const Material& material) override;
+  bool setFootingMaterial(const Material& material);
 
   void resetFootingMaterial();
 

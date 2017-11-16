@@ -33,8 +33,10 @@
 #include "../../model/FoundationKiva_Impl.hpp"
 #include "../../model/Material.hpp"
 #include "../../model/Material_Impl.hpp"
+#include "../../model/ConstructionBase.hpp"
+#include "../../model/ConstructionBase_Impl.hpp"
 
-#include <utilities/idd/Foundation_Kiva_Settings_FieldEnums.hxx>
+#include <utilities/idd/Foundation_Kiva_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
@@ -55,9 +57,9 @@ boost::optional<IdfObject> ForwardTranslator::translateFoundationKiva( Foundatio
 
   idfObject.setString(Foundation_KivaFields::Name, modelObject.name().get());
 
-  boost::optional<Material> material = modelObject.interiorHorizontalInsulationMaterial();
-  if( material ) {
-    idfObject.setString(Foundation_KivaFields::InteriorHorizontalInsulationMaterialName, material->name().get());
+  boost::optional<Material> interiorHorizontalInsulationMaterial = modelObject.interiorHorizontalInsulationMaterial();
+  if( interiorHorizontalInsulationMaterial ) {
+    idfObject.setString(Foundation_KivaFields::InteriorHorizontalInsulationMaterialName, interiorHorizontalInsulationMaterial->name().get());
   }
 
   boost::optional<double> value;
@@ -68,18 +70,18 @@ boost::optional<IdfObject> ForwardTranslator::translateFoundationKiva( Foundatio
     idfObject.setDouble(Foundation_KivaFields::InteriorHorizontalInsulationWidth, value.get());
   }
   
-  boost::optional<Material> material = modelObject.interiorVerticalInsulationMaterial();
-  if( material ) {
-    idfObject.setString(Foundation_KivaFields::InteriorVerticalInsulationMaterialName, material->name().get());
+  boost::optional<Material> interiorVerticalInsulationMaterial = modelObject.interiorVerticalInsulationMaterial();
+  if( interiorVerticalInsulationMaterial ) {
+    idfObject.setString(Foundation_KivaFields::InteriorVerticalInsulationMaterialName, interiorVerticalInsulationMaterial->name().get());
   }
 
   if( (value = modelObject.interiorVerticalInsulationDepth()) ) {
     idfObject.setDouble(Foundation_KivaFields::InteriorVerticalInsulationDepth, value.get());
   }
 
-  boost::optional<Material> material = modelObject.exteriorHorizontalInsulationMaterial();
-  if( material ) {
-    idfObject.setString(Foundation_KivaFields::ExteriorHorizontalInsulationMaterialName, material->name().get());
+  boost::optional<Material> exteriorHorizontalInsulationMaterial = modelObject.exteriorHorizontalInsulationMaterial();
+  if( exteriorHorizontalInsulationMaterial ) {
+    idfObject.setString(Foundation_KivaFields::ExteriorHorizontalInsulationMaterialName, exteriorHorizontalInsulationMaterial->name().get());
   }
 
   if( (value = modelObject.exteriorHorizontalInsulationDepth()) ) {
@@ -88,9 +90,9 @@ boost::optional<IdfObject> ForwardTranslator::translateFoundationKiva( Foundatio
 
   idfObject.setDouble(Foundation_KivaFields::ExteriorHorizontalInsulationWidth, modelObject.exteriorHorizontalInsulationWidth());
 
-  boost::optional<Material> material = modelObject.exteriorVerticalInsulationMaterial();
-  if( material ) {
-    idfObject.setString(Foundation_KivaFields::ExteriorVerticalInsulationMaterialName, material->name().get());
+  boost::optional<Material> exteriorVerticalInsulationMaterial = modelObject.exteriorVerticalInsulationMaterial();
+  if( exteriorVerticalInsulationMaterial ) {
+    idfObject.setString(Foundation_KivaFields::ExteriorVerticalInsulationMaterialName, exteriorVerticalInsulationMaterial->name().get());
   }
 
   if( (value = modelObject.exteriorVerticalInsulationDepth()) ) {
@@ -101,14 +103,14 @@ boost::optional<IdfObject> ForwardTranslator::translateFoundationKiva( Foundatio
 
   idfObject.setDouble(Foundation_KivaFields::WallDepthBelowSlab, modelObject.wallDepthBelowSlab());
 
-  boost::optional<ConstructionBase> construction = modelObject.footingWallConstruction();
-  if( construction ) {
-    idfObject.setString(Foundation_KivaFields::FootingWallConstructionName, construction->name().get());
+  boost::optional<ConstructionBase> footingWallConstruction = modelObject.footingWallConstruction();
+  if( footingWallConstruction ) {
+    idfObject.setString(Foundation_KivaFields::FootingWallConstructionName, footingWallConstruction->name().get());
   }
 
-  boost::optional<Material> material = modelObject.footingMaterial();
-  if( material ) {
-    idfObject.setString(Foundation_KivaFields::FootingMaterialName, material->name().get());
+  boost::optional<Material> footingMaterial = modelObject.footingMaterial();
+  if( footingMaterial ) {
+    idfObject.setString(Foundation_KivaFields::FootingMaterialName, footingMaterial->name().get());
   }
 
   idfObject.setDouble(Foundation_KivaFields::FootingDepth, modelObject.footingDepth());

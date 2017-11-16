@@ -29,6 +29,12 @@
 #include <vector>
 #include "FoundationKiva.hpp"
 #include "FoundationKiva_Impl.hpp"
+#include "Material.hpp"
+#include "Material_Impl.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
@@ -44,8 +50,8 @@ namespace model {
 namespace detail {
 
   FoundationKiva_Impl::FoundationKiva_Impl(const IdfObject& idfObject,
-                                                   Model_Impl* model,
-                                                   bool keepHandle)
+                                           Model_Impl* model,
+                                           bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == FoundationKiva::iddObjectType());
@@ -65,7 +71,7 @@ namespace detail {
     : ModelObject_Impl(other,model,keepHandle)
   {}
 
-  const std::vector<std::string>& FoundationKivas_Impl::outputVariableNames() const
+  const std::vector<std::string>& FoundationKiva_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
     if (result.empty()){
@@ -78,7 +84,7 @@ namespace detail {
   }
 
   boost::optional<Material> FoundationKiva_Impl::interiorHorizontalInsulationMaterial() const {
-    return getObject<Material>().getModelObjectTarget<Material>(OS_Kiva_FoundationFields::InteriorHorizontalInsulationMaterialName);
+    return getObject<ModelObject>().getModelObjectTarget<Material>(OS_Foundation_KivaFields::InteriorHorizontalInsulationMaterialName);
   }
 
   double FoundationKiva_Impl::interiorHorizontalInsulationDepth() const {
@@ -96,7 +102,7 @@ namespace detail {
   }
   
   boost::optional<Material> FoundationKiva_Impl::interiorVerticalInsulationMaterial() const {
-    return getObject<Material>().getModelObjectTarget<Material>(OS_Kiva_FoundationFields::InteriorVerticalInsulationMaterialName);
+    return getObject<ModelObject>().getModelObjectTarget<Material>(OS_Foundation_KivaFields::InteriorVerticalInsulationMaterialName);
   }
 
   boost::optional<double> FoundationKiva_Impl::interiorVerticalInsulationDepth() {
@@ -104,7 +110,7 @@ namespace detail {
   }
 
   boost::optional<Material> FoundationKiva_Impl::exteriorHorizontalInsulationMaterial() const {
-    return getObject<Material>().getModelObjectTarget<Material>(OS_Kiva_FoundationFields::ExteriorHorizontalInsulationMaterialName);
+    return getObject<ModelObject>().getModelObjectTarget<Material>(OS_Foundation_KivaFields::ExteriorHorizontalInsulationMaterialName);
   }
 
   boost::optional<double> FoundationKiva_Impl::exteriorHorizontalInsulationDepth() {
@@ -122,7 +128,7 @@ namespace detail {
   }
 
   boost::optional<Material> FoundationKiva_Impl::exteriorVerticalInsulationMaterial() const {
-    return getObject<Material>().getModelObjectTarget<Material>(OS_Kiva_FoundationFields::ExteriorVerticalInsulationMaterialName);
+    return getObject<ModelObject>().getModelObjectTarget<Material>(OS_Foundation_KivaFields::ExteriorVerticalInsulationMaterialName);
   }
 
   boost::optional<double> FoundationKiva_Impl::exteriorVerticalInsulationDepth() {
@@ -150,11 +156,11 @@ namespace detail {
   }
 
   boost::optional<ConstructionBase> FoundationKiva_Impl::footingWallConstruction() const {
-    return getObject<ConstructionBase>().getModelObjectTarget<ConstructionBase>(OS_Kiva_FoundationFields::FootingWallConstructionName);
+    return getObject<ModelObject>().getModelObjectTarget<ConstructionBase>(OS_Foundation_KivaFields::FootingWallConstructionName);
   }
 
   boost::optional<Material> FoundationKiva_Impl::footingMaterial() const {
-    return getObject<Material>().getModelObjectTarget<Material>(OS_Kiva_FoundationFields::FootingMaterialName);
+    return getObject<ModelObject>().getModelObjectTarget<Material>(OS_Foundation_KivaFields::FootingMaterialName);
   }
 
   double FoundationKiva_Impl::footingDepth() const {
@@ -163,7 +169,7 @@ namespace detail {
     return value.get();
   }
 
-  bool FoundationKiva_Impl::isfootingDepthDefaulted() const {
+  bool FoundationKiva_Impl::isFootingDepthDefaulted() const {
     return isEmpty(OS_Foundation_KivaFields::FootingDepth);
   }
 
@@ -300,14 +306,15 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  SurfaceVector FoundationKiva_Impl::surfaces() const {
+    return getObject<ModelObject>().getModelObjectSources<Surface>(Surface::iddObjectType());
+  }
+
 } // detail
 
 FoundationKiva::FoundationKiva(Model& model)
   : ModelObject(FoundationKiva::iddObjectType(), model)
-{
-  OS_ASSERT(getImpl<detail::FoundationKiva_Impl>());
-
-}
+{}
 
 IddObjectType FoundationKiva::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Foundation_Kiva);
@@ -322,7 +329,7 @@ double FoundationKiva::interiorHorizontalInsulationDepth() const {
 }
 
 bool FoundationKiva::isInteriorHorizontalInsulationDepthDefaulted() const {
-  return getImpl<detail::FoundationKiva_Impl>()->isInteriorHorizontalInsulationDepthDefaulted
+  return getImpl<detail::FoundationKiva_Impl>()->isInteriorHorizontalInsulationDepthDefaulted();
 }
 
 boost::optional<double> FoundationKiva::interiorHorizontalInsulationWidth() {
@@ -333,7 +340,7 @@ boost::optional<Material> FoundationKiva::interiorVerticalInsulationMaterial() c
   return getImpl<detail::FoundationKiva_Impl>()->interiorVerticalInsulationMaterial();
 }
 
-boost::optional<double> FoundationKiva::interiorVerticalInsulationDepth() const {
+boost::optional<double> FoundationKiva::interiorVerticalInsulationDepth() {
   return getImpl<detail::FoundationKiva_Impl>()->interiorVerticalInsulationDepth();
 }
 
@@ -377,11 +384,11 @@ bool FoundationKiva::isWallDepthBelowSlabDefaulted() const {
   return getImpl<detail::FoundationKiva_Impl>()->isWallDepthBelowSlabDefaulted();
 }
 
-boost::optional<ConstructionBase> FoundationKiva::footingWallConstruction const {
+boost::optional<ConstructionBase> FoundationKiva::footingWallConstruction() const {
   return getImpl<detail::FoundationKiva_Impl>()->footingWallConstruction();
 }
 
-boost::optional<Material> FoundationKiva::footingMaterial const {
+boost::optional<Material> FoundationKiva::footingMaterial() const {
   return getImpl<detail::FoundationKiva_Impl>()->footingMaterial();
 }
 
@@ -495,6 +502,10 @@ bool FoundationKiva::setFootingDepth(double footingDepth) {
 
 void FoundationKiva::resetFootingDepth() {
   return getImpl<detail::FoundationKiva_Impl>()->resetFootingDepth();
+}
+
+std::vector<Surface> FoundationKiva::surfaces() const {
+  return getImpl<detail::FoundationKiva_Impl>()->surfaces();
 }
 
 /// @cond
