@@ -173,6 +173,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateFFactorGroundFloorConstruction.cpp
   ForwardTranslator/ForwardTranslateFluidCoolerSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateFluidCoolerTwoSpeed.cpp
+  ForwardTranslator/ForwardTranslateFoundationKiva.cpp
   ForwardTranslator/ForwardTranslateFoundationKivaSettings.cpp
   ForwardTranslator/ForwardTranslateGas.cpp
   ForwardTranslator/ForwardTranslateGasEquipment.cpp
