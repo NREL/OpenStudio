@@ -5912,6 +5912,7 @@ OS:Foundation:Kiva,
        \memo inform two-dimensional heat transfer calculated using the Kiva
        \memo ground heat transfer methodology.
        \extensible:4
+       \min-fields 17
   A1, \field Handle
        \type handle
        \required-field
@@ -6017,6 +6018,7 @@ OS:Foundation:Kiva,
 OS:Foundation:Kiva:Settings,
        \memo Settings applied across all Kiva foundation calculations.
        \memo Object is not required. If not defined, defaults will be applied.
+       \min-fields 13
   A1, \field Handle
        \type handle
        \required-field

@@ -38,6 +38,7 @@ namespace model {
 
 class Material;
 class ConstructionBase;
+class Surface;
 
 namespace detail {
 
@@ -75,7 +76,7 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    boost::optional<Material> interiorHorizontalInsulationMaterial() const override;
+    boost::optional<Material> interiorHorizontalInsulationMaterial() const;
 
     double interiorHorizontalInsulationDepth() const;
 
@@ -83,11 +84,11 @@ namespace detail {
 
     boost::optional<double> interiorHorizontalInsulationWidth();    
 
-    boost::optional<Material> interiorVerticalInsulationMaterial() const override;
+    boost::optional<Material> interiorVerticalInsulationMaterial() const;
 
-    boost::optional<double> interiorVerticalInsulationDepth() const;
+    boost::optional<double> interiorVerticalInsulationDepth();
 
-    boost::optional<Material> exteriorHorizontalInsulationMaterial() const override;
+    boost::optional<Material> exteriorHorizontalInsulationMaterial() const;
 
     boost::optional<double> exteriorHorizontalInsulationDepth();
 
@@ -95,7 +96,7 @@ namespace detail {
 
     bool isExteriorHorizontalInsulationWidthDefaulted() const;
 
-    boost::optional<Material> exteriorVerticalInsulationMaterial() const override;
+    boost::optional<Material> exteriorVerticalInsulationMaterial() const;
 
     boost::optional<double> exteriorVerticalInsulationDepth();
 
@@ -107,19 +108,21 @@ namespace detail {
 
     bool isWallDepthBelowSlabDefaulted() const;
 
-    boost::optional<ConstructionBase> footingWallConstruction const override;
+    boost::optional<ConstructionBase> footingWallConstruction() const;
 
-    boost::optional<Material> footingMaterial const override;
+    boost::optional<Material> footingMaterial() const;
 
     double footingDepth() const;
 
     bool isFootingDepthDefaulted() const;
 
+    std::vector<Surface> surfaces() const; 
+
     //@}
     /** @name Setters */
     //@{
 
-    bool setInteriorHorizontalInsulationMaterial(const Material& material) override;
+    bool setInteriorHorizontalInsulationMaterial(const Material& material);
 
     void resetInteriorHorizontalInsulationMaterial();
 
@@ -129,13 +132,13 @@ namespace detail {
 
     bool setInteriorHorizontalInsulationWidth(double interiorHorizontalInsulationWidth);    
 
-    bool setInteriorVerticalInsulationMaterial(const Material& material) override;
+    bool setInteriorVerticalInsulationMaterial(const Material& material);
 
     void resetInteriorVerticalInsulationMaterial();
 
     bool setInteriorVerticalInsulationDepth(double interiorVerticalInsulationDepth);
 
-    bool setExteriorHorizontalInsulationMaterial(const Material& material) override;
+    bool setExteriorHorizontalInsulationMaterial(const Material& material);
 
     void resetExteriorHorizontalInsulationMaterial();
 
@@ -145,7 +148,7 @@ namespace detail {
 
     void resetExteriorHorizontalInsulationWidth();
 
-    bool setExteriorVerticalInsulationMaterial(const Material& material) override;
+    bool setExteriorVerticalInsulationMaterial(const Material& material);
 
     void resetExteriorVerticalInsulationMaterial();
 
@@ -159,11 +162,11 @@ namespace detail {
 
     void resetWallDepthBelowSlab();
 
-    bool setFootingWallConstruction(const ConstructionBase& construction) override;
+    bool setFootingWallConstruction(const ConstructionBase& construction);
 
     void resetFootingWallConstruction();
 
-    bool setFootingMaterial(const Material& material) override;
+    bool setFootingMaterial(const Material& material);
 
     void resetFootingMaterial();
 
