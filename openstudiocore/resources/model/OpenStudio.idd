@@ -3360,7 +3360,7 @@ OS:MaterialProperty:MoisturePenetrationDepth:Settings,
        \memo Additional properties for moisture using EMPD procedure
        \memo HeatBalanceAlgorithm choice=MoisturePenetrationDepthConductionTransferFunction only
        \memo Has no effect with other HeatBalanceAlgorithm solution algorithms
-       \min-fields 10
+       \min-fields 11
   A1,  \field Handle
        \type handle
        \required-field
