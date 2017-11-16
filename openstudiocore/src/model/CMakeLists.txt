@@ -553,6 +553,9 @@ set(${target_name}_src
   FluidCoolerTwoSpeed.hpp
   FluidCoolerTwoSpeed_Impl.hpp
   FluidCoolerTwoSpeed.cpp
+  FoundationKiva.hpp
+  FoundationKiva_Impl.hpp
+  FoundationKiva.cpp  
   FoundationKivaSettings.hpp
   FoundationKivaSettings_Impl.hpp
   FoundationKivaSettings.cpp
@@ -1566,6 +1569,7 @@ set(${target_name}_test_src
   test/FloorplanJSForwardTranslator_GTest.cpp
   test/FluidCoolerSingleSpeed_GTest.cpp
   test/FluidCoolerTwoSpeed_GTest.cpp
+  test/FoundationKiva_GTest.cpp
   test/FoundationKivaSettings_GTest.cpp
   test/GasEquipment_GTest.cpp
   test/GasMixture_GTest.cpp

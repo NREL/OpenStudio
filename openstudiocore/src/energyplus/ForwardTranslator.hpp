@@ -178,6 +178,7 @@ class FanZoneExhaust;
 class FFactorGroundFloorConstruction;
 class FluidCoolerSingleSpeed;
 class FluidCoolerTwoSpeed;
+class FoundationKiva;
 class FoundationKivaSettings;
 class Gas;
 class GasEquipment;
@@ -733,6 +734,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateFluidCoolerTwoSpeed(model::FluidCoolerTwoSpeed & modelObject);
   
+  boost::optional<IdfObject> translateFoundationKiva(model::FoundationKiva & modelObject);
+
   boost::optional<IdfObject> translateFoundationKivaSettings(model::FoundationKivaSettings & modelObject);
 
   boost::optional<IdfObject> translateGas( model::Gas & modelObject );

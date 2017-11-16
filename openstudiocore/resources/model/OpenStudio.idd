@@ -4972,6 +4972,7 @@ OS:Surface,
        \key Adiabatic
        \key Surface
        \key Outdoors
+       \key Foundation
        \key Ground
        \key GroundFCfactorMethod
        \key OtherSideCoefficients
@@ -4982,11 +4983,13 @@ OS:Surface,
        \key GroundBasementPreprocessorAverageWall
        \key GroundBasementPreprocessorAverageFloor
        \key GroundBasementPreprocessorUpperWall
-       \key GroundBasementPreprocessorLowerWall
+       \key GroundBasementPreprocessorLowerWall       
   A7, \field Outside Boundary Condition Object
        \note Non-blank only if the field Outside Boundary Condition is Surface,
        \note OtherSideCoefficients or OtherSideConditionsModel
        \note If Surface, specify name of corresponding surface in adjacent space
+       \note If Foundation, specify the name of the corresponding Foundation object and
+       \note the program will calculate the heat transfer appropriately
        \note If OtherSideCoefficients, specify name of SurfaceProperty:OtherSideCoefficients
        \note If OtherSideConditionsModel, specify name of SurfaceProperty:OtherSideConditionsModel
        \type object-list

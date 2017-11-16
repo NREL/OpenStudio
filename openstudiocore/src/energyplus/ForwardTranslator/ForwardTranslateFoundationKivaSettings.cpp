@@ -69,13 +69,11 @@ boost::optional<IdfObject> ForwardTranslator::translateFoundationKivaSettings( F
   
   boost::optional<double> value;
 
-  if( modelObject.isDeepGroundDepthAutocalculated() )
-  {
-    idfObject.setString(Foundation_Kiva_SettingsFields::DeepGroundDepth,"Autocalculate");
+  if( modelObject.isDeepGroundDepthAutocalculated() ) {
+    idfObject.setString(Foundation_Kiva_SettingsFields::DeepGroundDepth, "Autocalculate");
   }
-  else if( (value = modelObject.deepGroundDepth()) )
-  {
-    idfObject.setDouble(Foundation_Kiva_SettingsFields::DeepGroundDepth,value.get());
+  else if( (value = modelObject.deepGroundDepth()) ) {
+    idfObject.setDouble(Foundation_Kiva_SettingsFields::DeepGroundDepth, value.get());
   }
   
   idfObject.setDouble(Foundation_Kiva_SettingsFields::MinimumCellDimension, modelObject.minimumCellDimension());
