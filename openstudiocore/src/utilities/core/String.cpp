@@ -28,21 +28,24 @@
 
 #include "String.hpp"
 
+#include "Logger.hpp"
+
 #include <sstream>
 #include <iomanip>
 #include <limits>
+#include <cmath>
 
 namespace openstudio {
 
 /** char* to std::string. */
 std::string toString(const char* s)
-{ 
+{
   return std::string(s);
 }
 
 /** string to std::string. */
 std::string toString(const std::string& s)
-{ 
+{
   return s;
 }
 
@@ -59,16 +62,33 @@ std::string toString(const std::wstring& w)
 }
 
 /** QString to UTF-8 encoded std::string. */
-std::string toString(const QString& q) 
+std::string toString(const QString& q)
 {
   const QByteArray& qb = q.toUtf8();
   return std::string(qb.data());
 }
 
 std::string toString(double v) {
-  std::stringstream ss;
-  ss << std::setprecision(std::numeric_limits<double>::digits10) << v;
-  return ss.str();
+
+  std::string result;
+
+  // Need to check for NaN and Inf here since it goes to String...
+  // Check validity, cannot be NaN, Inf, etc
+  // Will return an empty string if NaN or Inf
+  if (std::isinf(v)) {
+    // LOG(Error, "Cannot setDouble to Infinity");
+
+  } else if (std::isnan(v)) {
+    // LOG(Error, "Cannot setDouble to a NaN");
+  } else {
+
+    std::stringstream ss;
+    ss << std::setprecision(std::numeric_limits<double>::digits10) << v;
+    result = ss.str();
+
+  }
+
+  return result;
 }
 
 std::string toString(std::istream& s) {
@@ -96,7 +116,7 @@ std::wstring toWString(const QString& q)
 }
 
 /** UTF-8 encoded std::string to QString. */
-QString toQString(const std::string& s) 
+QString toQString(const std::string& s)
 {
   return QString::fromUtf8(s.c_str());
 }

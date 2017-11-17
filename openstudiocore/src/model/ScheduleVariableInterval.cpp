@@ -251,6 +251,16 @@ namespace detail {
       temp.push_back(boost::lexical_cast<std::string>(date.dayOfMonth()));
       temp.push_back(boost::lexical_cast<std::string>(time.hours()));
       temp.push_back(boost::lexical_cast<std::string>(time.minutes()));
+
+      // Check validity, cannot be NaN, Inf, etc
+      if (std::isinf(values[i])) {
+        LOG(Error, "Cannot setDouble to Infinity for " << this->briefDescription());
+        return false;
+      } else if (std::isnan(values[i])) {
+        LOG(Error, "Cannot setDouble to a NaN for " << this->briefDescription());
+        return false;
+      }
+
       temp.push_back(toString(values[i]));
 
       ModelExtensibleGroup group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();

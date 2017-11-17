@@ -48,7 +48,6 @@
 
 #include <QVariant>
 
-
 #include <boost/lexical_cast.hpp>
 
 #include <sstream>
@@ -745,16 +744,32 @@ TEST_F(IdfFixture, DoubleDisplayedAsString) {
 
 TEST_F(IdfFixture, IdfObject_SetDouble_NaN_and_Inf) {
 
+  // try with an IdfObject
   IdfObject object(IddObjectType::OS_People_Definition);
 
   // Set Number of People
   // Check for nan
   ASSERT_FALSE(object.setDouble(3, std::numeric_limits<double>::quiet_NaN()));
   ASSERT_FALSE(object.setDouble(3, 0.0/0.0));
+  ASSERT_FALSE(object.setDouble(3, 0/0.0));
+
 
   // Infinity
   ASSERT_FALSE(object.setDouble(3, std::numeric_limits<double>::infinity()));
   ASSERT_FALSE(object.setDouble(3, -std::numeric_limits<double>::infinity()));
+
+  // try with an IdfExtensibleGroup
+  IdfObject object2(IddObjectType::OS_Schedule_Day);
+  IdfExtensibleGroup eg = object2.pushExtensibleGroup();
+  // set the value field
+  // Check for nan
+  ASSERT_FALSE(eg.setDouble(2, std::numeric_limits<double>::quiet_NaN()));
+  ASSERT_FALSE(eg.setDouble(2, 0.0/0.0));
+  ASSERT_FALSE(eg.setDouble(2, 0/0.0));
+
+  // Infinity
+  ASSERT_FALSE(eg.setDouble(2, std::numeric_limits<double>::infinity()));
+  ASSERT_FALSE(eg.setDouble(2, -std::numeric_limits<double>::infinity()));
 
 }
 

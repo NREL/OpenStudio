@@ -334,3 +334,21 @@ TEST_F(ModelFixture, Schedule_Day_Clone)
   EXPECT_EQ(limits.handle(), daySchedule.scheduleTypeLimits()->handle());
   EXPECT_EQ(daySchedule.scheduleTypeLimits()->handle(), daySchedule2.scheduleTypeLimits()->handle());
 }
+
+// Test that addValue (which doesn't call IdfObject::setDouble...) will not affect NaNs/Infinity
+TEST_F(ModelFixture, Schedule_Day_addValue_NaN)
+{
+  Model model;
+
+  ScheduleDay sch_day(model);
+
+  Time t(0,6,0,0);
+  ASSERT_FALSE(sch_day.addValue(t, 0/0.0));
+  ASSERT_FALSE(sch_day.addValue(t, 0.0/0.0));
+  ASSERT_FALSE(sch_day.addValue(t, std::numeric_limits<double>::quiet_NaN()));
+  ASSERT_FALSE(sch_day.addValue(t, std::numeric_limits<double>::infinity()));
+  ASSERT_FALSE(sch_day.addValue(t, -std::numeric_limits<double>::infinity()));
+
+}
+
+
