@@ -43,6 +43,8 @@
 #include "../../model/SurfacePropertyOtherSideConditionsModel.hpp"
 #include "../../model/SurfacePropertyConvectionCoefficients.hpp"
 #include "../../model/PlanarSurface.hpp"
+#include "../../model/FoundationKiva.hpp"
+#include "../../model/FoundationKiva_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -91,6 +93,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSurface( model::Surface &
   }
 
   boost::optional<Surface> adjacentSurface = modelObject.adjacentSurface();
+  boost::optional<FoundationKiva> adjacentFoundation = modelObject.adjacentFoundation();
   boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients = modelObject.surfacePropertyOtherSideCoefficients();
   boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel = modelObject.surfacePropertyOtherSideConditionsModel();
   std::string outsideBoundaryCondition = modelObject.outsideBoundaryCondition();
@@ -134,6 +137,11 @@ boost::optional<IdfObject> ForwardTranslator::translateSurface( model::Surface &
     idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, adjacentSurface->name().get());
   }
 
+  if (adjacentFoundation){
+    // do not translate and map here, wait for adjacent foundation to be translated on its own
+    idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, adjacentFoundation->name().get());
+  }  
+  
   if (surfacePropertyOtherSideCoefficients){
     boost::optional<IdfObject> osc = translateAndMapModelObject(*surfacePropertyOtherSideCoefficients);
     if (osc && osc->name()){
