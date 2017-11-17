@@ -552,6 +552,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(Surface);
     REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficients)
     REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficientsMultipleSurface);
+    REGISTER_CONSTRUCTOR(SurfacePropertyExposedFoundationPerimeter);
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideCoefficients);
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideConditionsModel);
     REGISTER_CONSTRUCTOR(TableMultiVariableLookup);
@@ -995,6 +996,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(Surface);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyConvectionCoefficients);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyConvectionCoefficientsMultipleSurface);
+    REGISTER_COPYCONSTRUCTORS(SurfacePropertyExposedFoundationPerimeter);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideCoefficients);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideConditionsModel);
     REGISTER_COPYCONSTRUCTORS(TableMultiVariableLookup);

@@ -5708,6 +5708,52 @@ OS:SurfaceProperty:ConvectionCoefficients:MultipleSurface,
       \type object-list
       \object-list UserConvectionModels
 
+OS:SurfaceProperty:ExposedFoundationPerimeter,
+      \memo Defines the perimeter of a foundation floor that is exposed to the
+      \memo exterior environment through the floor. User may either define the
+      \memo total exposed perimeter, fraction of perimeter exposed or
+      \memo individually define which segments of the floor surface perimeter
+      \memo are exposed.
+      \extensible:1
+      \min-fields 4
+  A1, \field Handle
+      \type handle
+      \required-field  
+  A2, \field Surface Name
+      \required-field
+      \type object-list
+      \object-list FloorSurfaceNames
+  A3, \field Exposed Perimeter Calculation Method
+      \note Choices: TotalExposedPerimeter => total exposed perimeter in meters
+      \note ExposedPerimeterFraction => fraction of total perimeter that is
+      \note exposed. Value * Fraction = Total exposed perimeter
+      \note BySegment => define whether the segment between each set of
+      \note consecutive vertices of the floor surface is exposed.
+      \note SUM(exposed segement lengths) = Total exposed perimeter
+      \required-field
+      \type choice
+      \key TotalExposedPerimeter
+      \key ExposedPerimeterFraction
+      \key BySegment
+  N1, \field Total Exposed Perimeter
+      \type real
+      \units m
+      \minimum> 0.0
+  N2, \field Exposed Perimeter Fraction
+      \type real
+      \units dimensionless
+      \minimum 0.0
+      \maximum 1.0
+      \default 1.0
+  A4; \field Surface Segment Exposed 1
+      \note Surface Segment N is the perimeter between the Nth and (N+1)th
+      \note vertices
+      \begin-extensible
+      \type choice
+      \default Yes
+      \key Yes
+      \key No
+      
 OS:SurfaceProperty:OtherSideCoefficients,
       \memo This object sets the other side conditions for a surface in a variety of ways.
       \min-fields 9

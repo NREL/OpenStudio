@@ -2579,6 +2579,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateSurfacePropertyConvectionCoefficientsMultipleSurface(obj);
     break;
   }
+  case openstudio::IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter:
+  {
+    model::SurfacePropertyExposedFoundationPerimeter obj = modelObject.cast<SurfacePropertyExposedFoundationPerimeter>();
+    retVal = translateSurfacePropertyExposedFoundationPerimeter(obj);
+    break;
+  }  
   case openstudio::IddObjectType::OS_SurfaceProperty_OtherSideCoefficients:
   {
     model::SurfacePropertyOtherSideCoefficients obj = modelObject.cast<SurfacePropertyOtherSideCoefficients>();
@@ -3234,6 +3240,7 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
 
   iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);
   iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);
+  iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter);
   iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);
 
   for (const IddObjectType& iddObjectType : iddObjectTypes){

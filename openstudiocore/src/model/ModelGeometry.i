@@ -131,6 +131,7 @@ MODELOBJECT_TEMPLATES(SpaceType);
 MODELOBJECT_TEMPLATES(ExteriorLights);
 MODELOBJECT_TEMPLATES(LightingSimulationZone);
 MODELOBJECT_TEMPLATES(FoundationKiva);
+MODELOBJECT_TEMPLATES(SurfacePropertyExposedFoundationPerimeter);
 
 SWIG_UNIQUEMODELOBJECT(Site);
 SWIG_UNIQUEMODELOBJECT(Facility);
@@ -172,6 +173,7 @@ SWIG_MODELOBJECT(SpaceType, 1);
 SWIG_MODELOBJECT(ExteriorLights, 1);
 SWIG_MODELOBJECT(LightingSimulationZone, 1);
 SWIG_MODELOBJECT(FoundationKiva, 1);
+SWIG_MODELOBJECT(SurfacePropertyExposedFoundationPerimeter, 1);
 
 #if defined SWIGCSHARP || defined(SWIGJAVA)
 

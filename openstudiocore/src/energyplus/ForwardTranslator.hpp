@@ -338,6 +338,7 @@ class SubSurface;
 class Surface;
 class SurfacePropertyConvectionCoefficients;
 class SurfacePropertyConvectionCoefficientsMultipleSurface;
+class SurfacePropertyExposedFoundationPerimeter;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
 class TableMultiVariableLookup;
@@ -1044,6 +1045,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateSurfacePropertyConvectionCoefficients(model::SurfacePropertyConvectionCoefficients & modelObject);
 
   boost::optional<IdfObject> translateSurfacePropertyConvectionCoefficientsMultipleSurface(model::SurfacePropertyConvectionCoefficientsMultipleSurface & modelObject);
+  
+  boost::optional<IdfObject> translateSurfacePropertyExposedFoundationPerimeter(model::SurfacePropertyExposedFoundationPerimeter & modelObject);
 
   boost::optional<IdfObject> translateSurfacePropertyOtherSideCoefficients(model::SurfacePropertyOtherSideCoefficients & modelObject);
 

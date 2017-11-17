@@ -405,7 +405,7 @@ bool FoundationKiva::setInteriorHorizontalInsulationMaterial(const Material& mat
 }
 
 void FoundationKiva::resetInteriorHorizontalInsulationMaterial() {
-  return getImpl<detail::FoundationKiva_Impl>()->resetInteriorHorizontalInsulationMaterial();
+  getImpl<detail::FoundationKiva_Impl>()->resetInteriorHorizontalInsulationMaterial();
 }
 
 bool FoundationKiva::setInteriorHorizontalInsulationDepth(double interiorHorizontalInsulationDepth) {
@@ -413,7 +413,7 @@ bool FoundationKiva::setInteriorHorizontalInsulationDepth(double interiorHorizon
 }
 
 void FoundationKiva::resetInteriorHorizontalInsulationDepth() {
-  return getImpl<detail::FoundationKiva_Impl>()->resetInteriorHorizontalInsulationDepth();
+  getImpl<detail::FoundationKiva_Impl>()->resetInteriorHorizontalInsulationDepth();
 }
 
 bool FoundationKiva::setInteriorHorizontalInsulationWidth(double interiorHorizontalInsulationWidth) {
@@ -425,7 +425,7 @@ bool FoundationKiva::setInteriorVerticalInsulationMaterial(const Material& mater
 }
 
 void FoundationKiva::resetInteriorVerticalInsulationMaterial() {
-  return getImpl<detail::FoundationKiva_Impl>()->resetInteriorVerticalInsulationMaterial();
+  getImpl<detail::FoundationKiva_Impl>()->resetInteriorVerticalInsulationMaterial();
 }
 
 bool FoundationKiva::setInteriorVerticalInsulationDepth(double interiorVerticalInsulationDepth) {
@@ -437,7 +437,7 @@ bool FoundationKiva::setExteriorHorizontalInsulationMaterial(const Material& mat
 }
 
 void FoundationKiva::resetExteriorHorizontalInsulationMaterial() {
-  return getImpl<detail::FoundationKiva_Impl>()->resetExteriorHorizontalInsulationMaterial();
+  getImpl<detail::FoundationKiva_Impl>()->resetExteriorHorizontalInsulationMaterial();
 }
 
 bool FoundationKiva::setExteriorHorizontalInsulationDepth(double exteriorHorizontalInsulationDepth) {
@@ -449,7 +449,7 @@ bool FoundationKiva::setExteriorHorizontalInsulationWidth(double exteriorHorizon
 }
 
 void FoundationKiva::resetExteriorHorizontalInsulationWidth() {
-  return getImpl<detail::FoundationKiva_Impl>()->resetExteriorHorizontalInsulationWidth();
+  getImpl<detail::FoundationKiva_Impl>()->resetExteriorHorizontalInsulationWidth();
 }
 
 bool FoundationKiva::setExteriorVerticalInsulationMaterial(const Material& material) {
@@ -457,7 +457,7 @@ bool FoundationKiva::setExteriorVerticalInsulationMaterial(const Material& mater
 }
 
 void FoundationKiva::resetExteriorVerticalInsulationMaterial() {
-  return getImpl<detail::FoundationKiva_Impl>()->resetExteriorVerticalInsulationMaterial();
+  getImpl<detail::FoundationKiva_Impl>()->resetExteriorVerticalInsulationMaterial();
 }
 
 bool FoundationKiva::setExteriorVerticalInsulationDepth(double exteriorVerticalInsulationDepth) {
@@ -469,7 +469,7 @@ bool FoundationKiva::setWallHeightAboveGrade(double wallHeightAboveGrade) {
 }
 
 void FoundationKiva::resetWallHeightAboveGrade() {
-  return getImpl<detail::FoundationKiva_Impl>()->resetWallHeightAboveGrade();
+  getImpl<detail::FoundationKiva_Impl>()->resetWallHeightAboveGrade();
 }
 
 bool FoundationKiva::setWallDepthBelowSlab(double wallDepthBelowSlab) {
@@ -477,7 +477,7 @@ bool FoundationKiva::setWallDepthBelowSlab(double wallDepthBelowSlab) {
 }
 
 void FoundationKiva::resetWallDepthBelowSlab() {
-  return getImpl<detail::FoundationKiva_Impl>()->resetWallDepthBelowSlab();
+  getImpl<detail::FoundationKiva_Impl>()->resetWallDepthBelowSlab();
 }
 
 bool FoundationKiva::setFootingWallConstruction(const ConstructionBase& construction) {
@@ -485,7 +485,7 @@ bool FoundationKiva::setFootingWallConstruction(const ConstructionBase& construc
 }
 
 void FoundationKiva::resetFootingWallConstruction() {
-  return getImpl<detail::FoundationKiva_Impl>()->resetFootingWallConstruction();
+  getImpl<detail::FoundationKiva_Impl>()->resetFootingWallConstruction();
 }
 
 bool FoundationKiva::setFootingMaterial(const Material& material) {
@@ -493,7 +493,7 @@ bool FoundationKiva::setFootingMaterial(const Material& material) {
 }
 
 void FoundationKiva::resetFootingMaterial() {
-  return getImpl<detail::FoundationKiva_Impl>()->resetFootingMaterial();
+  getImpl<detail::FoundationKiva_Impl>()->resetFootingMaterial();
 }
 
 bool FoundationKiva::setFootingDepth(double footingDepth) {
@@ -501,7 +501,7 @@ bool FoundationKiva::setFootingDepth(double footingDepth) {
 }
 
 void FoundationKiva::resetFootingDepth() {
-  return getImpl<detail::FoundationKiva_Impl>()->resetFootingDepth();
+  getImpl<detail::FoundationKiva_Impl>()->resetFootingDepth();
 }
 
 std::vector<Surface> FoundationKiva::surfaces() const {

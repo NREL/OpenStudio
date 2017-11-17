@@ -1190,7 +1190,10 @@ set(${target_name}_src
   SurfacePropertyConvectionCoefficients_Impl.hpp
   SurfacePropertyConvectionCoefficientsMultipleSurface.cpp
   SurfacePropertyConvectionCoefficientsMultipleSurface.hpp
-  SurfacePropertyConvectionCoefficientsMultipleSurface_Impl.hpp
+  SurfacePropertyConvectionCoefficientsMultipleSurface_Impl.hpp  
+  SurfacePropertyExposedFoundationPerimeter.cpp
+  SurfacePropertyExposedFoundationPerimeter.hpp
+  SurfacePropertyExposedFoundationPerimeter_Impl.hpp  
   SurfacePropertyOtherSideCoefficients.cpp
   SurfacePropertyOtherSideCoefficients.hpp
   SurfacePropertyOtherSideCoefficients_Impl.hpp
@@ -1729,6 +1732,7 @@ set(${target_name}_test_src
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
   test/SurfacePropertyConvectionCoefficientsMultipleSurface_GTest.cpp
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
+  test/SurfacePropertyExposedFoundationPerimeter_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
   test/ThermalStorageIceDetailed_GTest.cpp
