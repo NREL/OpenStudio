@@ -42,6 +42,7 @@ class ConstructionBase;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
 class SurfacePropertyConvectionCoefficients;
+class FoundationKiva;
 
 namespace detail {
 
@@ -278,6 +279,12 @@ class MODEL_API Surface : public PlanarSurface {
    *  Returns false is this surface has any current sub surfaces or if there is an adjacent surface.*/
   std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
 
+  bool setAdjacentFoundation(const FoundationKiva& kiva);
+  
+  boost::optional<FoundationKiva> adjacentFoundation() const;
+  
+  void resetAdjacentFoundation();
+  
  protected:
   /// @cond
   typedef detail::Surface_Impl ImplType;

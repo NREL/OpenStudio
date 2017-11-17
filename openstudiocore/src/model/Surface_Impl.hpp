@@ -44,6 +44,7 @@ class ConstructionBase;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
 class SurfacePropertyConfectionCoefficients;
+class FoundationKiva;
 
 namespace detail {
 
@@ -272,6 +273,12 @@ namespace detail {
     std::vector<Surface> splitSurfaceForSubSurfaces();
 
     std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
+    
+    bool setAdjacentFoundation(const FoundationKiva& kiva);
+    
+    boost::optional<FoundationKiva> adjacentFoundation() const;
+    
+    void resetAdjacentFoundation();
 
    protected:
    private:

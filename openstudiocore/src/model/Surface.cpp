@@ -53,6 +53,8 @@
 #include "SurfacePropertyOtherSideConditionsModel_Impl.hpp"
 #include "SurfacePropertyConvectionCoefficients.hpp"
 #include "SurfacePropertyConvectionCoefficients_Impl.hpp"
+#include "FoundationKiva.hpp"
+#include "FoundationKiva_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -319,7 +321,8 @@ namespace detail {
         istringEqual("GroundBasementPreprocessorAverageWall", outsideBoundaryCondition) ||
         istringEqual("GroundBasementPreprocessorAverageFloor", outsideBoundaryCondition) ||
         istringEqual("GroundBasementPreprocessorUpperWall", outsideBoundaryCondition) ||
-        istringEqual("GroundBasementPreprocessorLowerWall", outsideBoundaryCondition)){
+        istringEqual("GroundBasementPreprocessorLowerWall", outsideBoundaryCondition) ||
+        istringEqual("Foundation", outsideBoundaryCondition)){
           return true;
     }
 
@@ -1202,6 +1205,9 @@ namespace detail {
     }else if (istringEqual("Floor", this->surfaceType())){
       bool test = this->setOutsideBoundaryCondition("Ground", driverMethod);
       OS_ASSERT(test);
+    }else if (this->adjacentFoundation()){
+      bool test = this->setOutsideBoundaryCondition("Foundation", driverMethod);
+      OS_ASSERT(test);
     }else{
       bool test = this->setOutsideBoundaryCondition("Outdoors", driverMethod);
       OS_ASSERT(test);
@@ -1229,7 +1235,8 @@ namespace detail {
               istringEqual("GroundBasementPreprocessorAverageWall", this->outsideBoundaryCondition()) ||
               istringEqual("GroundBasementPreprocessorAverageFloor", this->outsideBoundaryCondition()) ||
               istringEqual("GroundBasementPreprocessorUpperWall", this->outsideBoundaryCondition()) ||
-              istringEqual("GroundBasementPreprocessorLowerWall", this->outsideBoundaryCondition())){
+              istringEqual("GroundBasementPreprocessorLowerWall", this->outsideBoundaryCondition()) ||
+              istringEqual("Foundation", this->outsideBoundaryCondition())){
       bool test = this->setSunExposure("NoSun", driverMethod);
       OS_ASSERT(test);
     }else{
@@ -1265,7 +1272,8 @@ namespace detail {
                istringEqual("GroundBasementPreprocessorAverageWall", this->outsideBoundaryCondition()) ||
                istringEqual("GroundBasementPreprocessorAverageFloor", this->outsideBoundaryCondition()) ||
                istringEqual("GroundBasementPreprocessorUpperWall", this->outsideBoundaryCondition()) ||
-               istringEqual("GroundBasementPreprocessorLowerWall", this->outsideBoundaryCondition())){
+               istringEqual("GroundBasementPreprocessorLowerWall", this->outsideBoundaryCondition()) ||
+               istringEqual("Foundation", this->outsideBoundaryCondition())){
       bool test = this->setWindExposure("NoWind", driverMethod);
       OS_ASSERT(test);
     } else{
@@ -2053,7 +2061,29 @@ namespace detail {
 
     return result;
   }
-
+  
+  bool Surface_Impl::setAdjacentFoundation(const FoundationKiva& kiva) {
+    bool result = this->setPointer(OS_SurfaceFields::OutsideBoundaryConditionObject, kiva.handle());
+    OS_ASSERT(result);
+    result = this->setString(OS_SurfaceFields::OutsideBoundaryCondition, "Foundation");
+    OS_ASSERT(result);
+    return result;    
+  }
+  
+  boost::optional<FoundationKiva> Surface_Impl::adjacentFoundation() const {
+    return getObject<ModelObject>().getModelObjectTarget<FoundationKiva>(OS_SurfaceFields::OutsideBoundaryConditionObject);
+  }
+  
+  void Surface_Impl::resetAdjacentFoundation() {
+    boost::optional<FoundationKiva> adjacentFoundation = this->adjacentFoundation();
+    if (adjacentFoundation){
+      bool result = setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
+      OS_ASSERT(result);
+      this->assignDefaultBoundaryCondition();
+      this->assignDefaultSunExposure();
+      this->assignDefaultWindExposure();
+    }    
+  }
 
 } // detail
 
@@ -2338,6 +2368,18 @@ std::vector<ShadingSurfaceGroup> Surface::shadingSurfaceGroups() const
 std::vector<Surface> Surface::splitSurfaceForSubSurfaces()
 {
   return getImpl<detail::Surface_Impl>()->splitSurfaceForSubSurfaces();
+}
+
+bool Surface::setAdjacentFoundation(const FoundationKiva& kiva) {
+  return getImpl<detail::Surface_Impl>()->setAdjacentFoundation(kiva);
+}
+
+boost::optional<FoundationKiva> Surface::adjacentFoundation() const {
+  return getImpl<detail::Surface_Impl>()->adjacentFoundation();
+}
+
+void Surface::resetAdjacentFoundation() {
+  return getImpl<detail::Surface_Impl>()->resetAdjacentFoundation();
 }
 
 /// @cond

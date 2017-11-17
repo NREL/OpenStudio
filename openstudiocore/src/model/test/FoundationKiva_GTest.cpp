@@ -114,24 +114,30 @@ TEST_F(ModelFixture, FoundationKiva_SetGetFields) {
   kiva.setFootingDepth(1);
 
   // check the fields
-  // boost::optional<Material> optinteriorhorizontalinsulationmaterial = kiva.interiorHorizontalInsulationMaterial();
-  // EXPECT_TRUE(optinteriorhorizontalinsulationmaterial);
+  boost::optional<Material> optinteriorhorizontalinsulationmaterial = kiva.interiorHorizontalInsulationMaterial();
+  EXPECT_TRUE(optinteriorhorizontalinsulationmaterial);
   ASSERT_FALSE(kiva.isInteriorHorizontalInsulationDepthDefaulted());
   ASSERT_EQ(1, kiva.interiorHorizontalInsulationDepth());
   boost::optional<double> optinteriorhorizontalinsulationwidth = kiva.interiorHorizontalInsulationWidth();
   EXPECT_TRUE(optinteriorhorizontalinsulationwidth);
   auto interiorhorizontalinsulationwidth = optinteriorhorizontalinsulationwidth.get();
   ASSERT_EQ(1, interiorhorizontalinsulationwidth);
+  boost::optional<Material> optinteriorverticalinsulationmaterial = kiva.interiorVerticalInsulationMaterial();
+  EXPECT_TRUE(optinteriorverticalinsulationmaterial);
   boost::optional<double> optinteriorverticalinsulationdepth = kiva.interiorVerticalInsulationDepth();
   EXPECT_TRUE(optinteriorverticalinsulationdepth);
   auto interiorverticalinsulationdepth = optinteriorverticalinsulationdepth.get();
   ASSERT_EQ(1, interiorverticalinsulationdepth);
+  boost::optional<Material> optexteriorhorizontalinsulationmaterial = kiva.exteriorHorizontalInsulationMaterial();
+  EXPECT_TRUE(optexteriorhorizontalinsulationmaterial);
   boost::optional<double> optexteriorhorizontalinsulationdepth = kiva.exteriorHorizontalInsulationDepth();
   EXPECT_TRUE(optexteriorhorizontalinsulationdepth);
   auto exteriorhorizontalinsulationdepth = optexteriorhorizontalinsulationdepth.get();
   ASSERT_EQ(1, exteriorhorizontalinsulationdepth);
   ASSERT_FALSE(kiva.isExteriorHorizontalInsulationWidthDefaulted());
   ASSERT_EQ(1, kiva.exteriorHorizontalInsulationWidth());
+  boost::optional<Material> optexteriorverticalinsulationmaterial = kiva.exteriorVerticalInsulationMaterial();
+  EXPECT_TRUE(optexteriorverticalinsulationmaterial);
   boost::optional<double> optexteriorverticalinsulationdepth = kiva.exteriorVerticalInsulationDepth();
   EXPECT_TRUE(optexteriorverticalinsulationdepth);
   auto exteriorverticalinsulationdepth = optexteriorverticalinsulationdepth.get();
@@ -140,6 +146,10 @@ TEST_F(ModelFixture, FoundationKiva_SetGetFields) {
   ASSERT_EQ(1, kiva.wallHeightAboveGrade());
   ASSERT_FALSE(kiva.isWallDepthBelowSlabDefaulted());
   ASSERT_EQ(1, kiva.wallDepthBelowSlab());
+  boost::optional<ConstructionBase> optfootingwallconstruction = kiva.footingWallConstruction();
+  EXPECT_TRUE(optfootingwallconstruction);
+  boost::optional<Material> optfootingmaterial = kiva.footingMaterial();
+  EXPECT_TRUE(optfootingmaterial);
   ASSERT_FALSE(kiva.isFootingDepthDefaulted());
   ASSERT_EQ(1, kiva.footingDepth());
 
@@ -156,16 +166,16 @@ TEST_F(ModelFixture, FoundationKiva_SetGetFields) {
   kiva.resetFootingMaterial();
   kiva.resetFootingDepth();
 
-  // EXPECT_FALSE(kiva.interiorHorizontalInsulationMaterial());
+  EXPECT_FALSE(kiva.interiorHorizontalInsulationMaterial());
   EXPECT_TRUE(kiva.isInteriorHorizontalInsulationDepthDefaulted());
-  // EXPECT_FALSE(kiva.interiorVerticalInsulationMaterial());
-  // EXPECT_FALSE(kiva.exteriorHorizontalInsulationMaterial());
+  EXPECT_FALSE(kiva.interiorVerticalInsulationMaterial());
+  EXPECT_FALSE(kiva.exteriorHorizontalInsulationMaterial());
   EXPECT_TRUE(kiva.isExteriorHorizontalInsulationWidthDefaulted());
-  // EXPECT_FALSE(kiva.exteriorVerticalInsulationMaterial());
+  EXPECT_FALSE(kiva.exteriorVerticalInsulationMaterial());
   EXPECT_TRUE(kiva.isWallHeightAboveGradeDefaulted());
   EXPECT_TRUE(kiva.isWallDepthBelowSlabDefaulted());
-  // EXPECT_FALSE(kiva.footingWallConstruction());
-  // EXPECT_FALSE(kiva.footingMaterial());
+  EXPECT_FALSE(kiva.footingWallConstruction());
+  EXPECT_FALSE(kiva.footingMaterial());
   EXPECT_TRUE(kiva.isFootingDepthDefaulted());
 }
 
@@ -181,17 +191,20 @@ TEST_F(ModelFixture, FoundationKiva_Clone) {
   StandardOpaqueMaterial material(model);
 
   // change some of the fields
-  kiva.setInteriorHorizontalInsulationMaterial(material);
   kiva.setInteriorHorizontalInsulationDepth(2.5);
 
   // clone it into the same model
   FoundationKiva kivaClone = kiva.clone(model).cast<FoundationKiva>();
-  // TODO
+  ASSERT_FALSE(kivaClone.isInteriorHorizontalInsulationDepthDefaulted());
+  ASSERT_EQ(2.5, kivaClone.interiorHorizontalInsulationDepth());
+  ASSERT_TRUE(kivaClone.isExteriorHorizontalInsulationWidthDefaulted());
 
   // clone it into a different model
   Model model2;
   FoundationKiva kivaClone2 = kiva.clone(model2).cast<FoundationKiva>();
-  // TODO
+  ASSERT_FALSE(kivaClone2.isInteriorHorizontalInsulationDepthDefaulted());
+  ASSERT_EQ(2.5, kivaClone2.interiorHorizontalInsulationDepth());
+  ASSERT_TRUE(kivaClone2.isExteriorHorizontalInsulationWidthDefaulted());
 }
 
 // test setting on outside boundary of surface
@@ -205,10 +218,11 @@ TEST_F(ModelFixture, FoundationKiva_AdjacentFoundation) {
   Surface surface(points, model);
   FoundationKiva kiva(model);
   EXPECT_EQ(0, kiva.surfaces().size());
-  // surface.setAdjacentFoundation(kiva);
-  // EXPECT_EQ("Foundation", surface.outsideBoundaryCondition());
-  // EXPECT_TRUE(surface.adjacentFoundation());
-  // EXPECT_EQ(1, kiva.surfaces.size());
+  EXPECT_FALSE(surface.adjacentFoundation());
+  surface.setAdjacentFoundation(kiva);
+  EXPECT_EQ("Foundation", surface.outsideBoundaryCondition());
+  EXPECT_TRUE(surface.adjacentFoundation());
+  EXPECT_EQ(1, kiva.surfaces().size());
 }
 
 // check that parent reset works
@@ -221,9 +235,11 @@ TEST_F(ModelFixture, FoundationKiva_ParentReset) {
   points.push_back(Point3d(1, 0, 0));
   Surface surface(points, model);
   FoundationKiva kiva(model);
-  // surface.setAdjacentFoundation(kiva);
-  // surface.resetAdjacentFoundation
-  // EXPECT_EQ("Outdoors", surface.outsideBoundaryCondition());
+  surface.setAdjacentFoundation(kiva);
+  surface.resetAdjacentFoundation();
+  EXPECT_EQ("Outdoors", surface.outsideBoundaryCondition());
+  EXPECT_FALSE(surface.adjacentFoundation());
+  EXPECT_EQ(0, kiva.surfaces().size());
 }
 
 // check that remove works
