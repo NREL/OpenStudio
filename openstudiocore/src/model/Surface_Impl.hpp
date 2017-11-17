@@ -280,6 +280,15 @@ namespace detail {
     
     void resetAdjacentFoundation();
 
+    // if surface property exposed foundation perimeter already exists, do nothing and return nil; creates the surface property exposed foundation perimeter if it does not already exist and return it;
+    boost::optional<SurfacePropertyExposedFoundationPerimeter> createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod);
+
+    // returns the surface property exposed foundation perimeter if set
+    boost::optional<SurfacePropertyExposedFoundationPerimeter> surfacePropertyExposedFoundationPerimeter() const;
+
+    // resets the surface property exposed foundation perimeter
+    void resetSurfacePropertyExposedFoundationPerimeter();
+    
    protected:
    private:
     friend class openstudio::model::Surface;

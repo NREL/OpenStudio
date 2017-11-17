@@ -334,6 +334,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSurface.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyConvectionCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyConvectionCoefficientsMultipleSurface.cpp
+  ForwardTranslator/ForwardTranslateSurfacePropertyExposedFoundationPerimeter.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideConditionsModel.cpp
   ForwardTranslator/ForwardTranslateTableMultiVariableLookup.cpp

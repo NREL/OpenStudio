@@ -137,6 +137,7 @@ MODELOBJECT_TEMPLATES(DaylightingDeviceShelf);
 MODELOBJECT_TEMPLATES(SpaceType);
 MODELOBJECT_TEMPLATES(LightingSimulationZone);
 MODELOBJECT_TEMPLATES(FoundationKiva);
+MODELOBJECT_TEMPLATES(SurfacePropertyExposedFoundationPerimeter);
 
 MODELOBJECT_TEMPLATES(ExteriorLoadInstance);   
 MODELOBJECT_TEMPLATES(ExteriorLights);
@@ -183,6 +184,7 @@ SWIG_MODELOBJECT(DaylightingDeviceShelf, 1);
 SWIG_MODELOBJECT(SpaceType, 1);
 SWIG_MODELOBJECT(LightingSimulationZone, 1);
 SWIG_MODELOBJECT(FoundationKiva, 1);
+SWIG_MODELOBJECT(SurfacePropertyExposedFoundationPerimeter, 1);
 
 SWIG_MODELOBJECT(ExteriorLoadInstance, 0); 
 SWIG_MODELOBJECT(ExteriorLights, 1);

@@ -55,6 +55,8 @@
 #include "SurfacePropertyConvectionCoefficients_Impl.hpp"
 #include "FoundationKiva.hpp"
 #include "FoundationKiva_Impl.hpp"
+#include "SurfacePropertyExposedFoundationPerimeter.hpp"
+#include "SurfacePropertyExposedFoundationPerimeter_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -127,6 +129,10 @@ namespace detail {
    SubSurfaceVector subSurfaces = this->subSurfaces();
    result.insert(result.end(), subSurfaces.begin(), subSurfaces.end());
 
+   if (boost::optional<SurfacePropertyExposedFoundationPerimeter> prop = this->surfacePropertyExposedFoundationPerimeter()) {
+     result.push_back(prop.get());
+   }   
+   
    return result;
  }
 
@@ -1861,6 +1867,36 @@ namespace detail {
     }    
   }
 
+  boost::optional<SurfacePropertyExposedFoundationPerimeter> Surface_Impl::createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod) {
+    Surface thisSurface = getObject<Surface>();
+    std::vector<SurfacePropertyExposedFoundationPerimeter> props = thisSurface.getModelObjectSources<SurfacePropertyExposedFoundationPerimeter>(SurfacePropertyExposedFoundationPerimeter::iddObjectType());
+    if (!props.empty()) {
+      return boost::none;
+    }    
+    
+    SurfacePropertyExposedFoundationPerimeter prop(thisSurface, exposedPerimeterCalculationMethod);
+    return prop;
+  }  
+
+  boost::optional<SurfacePropertyExposedFoundationPerimeter> Surface_Impl::surfacePropertyExposedFoundationPerimeter() const {
+    std::vector<SurfacePropertyExposedFoundationPerimeter> props = getObject<ModelObject>().getModelObjectSources<SurfacePropertyExposedFoundationPerimeter>(SurfacePropertyExposedFoundationPerimeter::iddObjectType());
+    if (props.empty()) {
+      // no error
+    } else if (props.size() == 1) {
+      return props[0];
+    } else {
+      // error
+    }
+    return boost::none;
+  }
+
+  void Surface_Impl::resetSurfacePropertyExposedFoundationPerimeter() {
+    boost::optional<SurfacePropertyExposedFoundationPerimeter> prop = this->surfacePropertyExposedFoundationPerimeter();
+    if (prop) {
+      prop->remove();
+    }
+  }
+  
 } // detail
 
 Surface::Surface(const std::vector<Point3d>& vertices, const Model& model)
