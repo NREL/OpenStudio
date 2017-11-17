@@ -750,7 +750,11 @@ TEST_F(IdfFixture, IdfObject_SetDouble_NaN_and_Inf) {
   // Set Number of People
   // Check for nan
   ASSERT_FALSE(object.setDouble(3, std::numeric_limits<double>::quiet_NaN()));
+  ASSERT_FALSE(object.setDouble(3, 0.0/0.0));
+
   // Infinity
   ASSERT_FALSE(object.setDouble(3, std::numeric_limits<double>::infinity()));
+  ASSERT_FALSE(object.setDouble(3, -std::numeric_limits<double>::infinity()));
+
 }
 
