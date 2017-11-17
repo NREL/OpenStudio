@@ -381,7 +381,7 @@ ComponentType componentType(const HVACComponent & component)
             return plantLoopType(_p.get());
 
           } else {
-            // It isn't connected to a source side, and has zero capacity => it's NONE
+            // It isn't connected to a source side, and has zero capacity => it's a buffer tank => NONE
             return ComponentType::NONE;
           } // End if has source loop
 
@@ -410,7 +410,7 @@ ComponentType componentType(const HVACComponent & component)
               // Here we go check what's on the supply side of the secondary plantLoop
               return plantLoopType(_p.get());
             } else {
-              // It isn't connected to a source side, and has zero capacity => it's NONE
+              // It isn't connected to a source side, and has zero capacity => it's a buffer tank => NONE
               return ComponentType::NONE;
             }
           }
