@@ -70,6 +70,8 @@
 #include "../../model/SetpointManager_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
+#include "../../model/ThermalStorageChilledWaterStratified.hpp"
+#include "../../model/ThermalStorageChilledWaterStratified_Impl.hpp"
 #include "../../model/WaterHeaterMixed.hpp"
 #include "../../model/WaterHeaterMixed_Impl.hpp"
 #include "../../model/WaterHeaterStratified.hpp"
@@ -197,6 +199,12 @@ boost::optional<double> flowrate(const HVACComponent & component)
     {
       auto chiller = component.cast<ChillerAbsorption>();
       result = chiller.designChilledWaterFlowRate();
+      break;
+    }
+    case openstudio::IddObjectType::OS_ThermalStorage_ChilledWater_Stratified :
+    {
+      ThermalStorageChilledWaterStratified ts = component.cast<ThermalStorageChilledWaterStratified>();
+      result = ts.useSideDesignFlowRate();
       break;
     }
     case openstudio::IddObjectType::OS_ThermalStorage_Ice_Detailed :
@@ -436,8 +444,13 @@ ComponentType componentType(const HVACComponent & component)
     {
       return ComponentType::COOLING;
     }
+    case openstudio::IddObjectType::OS_ThermalStorage_ChilledWater_Stratified :
+    {
+      return ComponentType::COOLING;
+    }
     case openstudio::IddObjectType::OS_ThermalStorage_Ice_Detailed :
     {
+      // TODO: Are you sure about this @kbenne?
       return ComponentType::BOTH;
     }
     case openstudio::IddObjectType::OS_DistrictCooling :
