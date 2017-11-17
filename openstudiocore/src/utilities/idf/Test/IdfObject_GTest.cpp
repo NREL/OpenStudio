@@ -63,8 +63,8 @@ TEST_F(IdfFixture,IdfObject_URL)
 {
 
   std::string text = "Schedule:File,Dan,,file:///home/ramey/schedule.csv,1;";
-    
-    
+
+
   OptionalIdfObject oObj = IdfObject::load(text);
   ASSERT_TRUE(oObj);
   boost::optional<QUrl> urlOpt  = oObj->getURL(2);
@@ -152,7 +152,7 @@ TEST_F(IdfFixture, IdfObject_ConstructFromText_MultifieldLines)
   ASSERT_TRUE(oObj);
   IdfObject building = *oObj;
   EXPECT_EQ(8u,building.numFields());
-  ASSERT_TRUE(building.fieldComment(5,false)); 
+  ASSERT_TRUE(building.fieldComment(5,false));
   EXPECT_TRUE(building.fieldComment(5,false).get().empty()); // parser should strip !- comments
   ASSERT_TRUE(building.fieldComment(5,true));
   EXPECT_FALSE(building.fieldComment(5,true).get().empty());
@@ -252,7 +252,7 @@ TEST_F(IdfFixture, IdfObject_CommentGettersAndSetters) {
   ASSERT_TRUE(oObj);
   object = *oObj;
   // field comments setter properly extends field comments vector as needed
-  OptionalString optStr = object.fieldComment(0); 
+  OptionalString optStr = object.fieldComment(0);
   ASSERT_TRUE(optStr);
   EXPECT_EQ("",*optStr);
   optStr = object.fieldComment(1); ASSERT_TRUE(optStr);
@@ -387,7 +387,7 @@ TEST_F(IdfFixture, IdfObject_NameGetterWithReturnDefaultOption) {
 
 TEST_F(IdfFixture, IdfObject_IddObjectTypeInitialization) {
   IdfObject idfObject(IddObjectType::OS_Building);
-  
+
   // get string should not return empty, initialized optional string
   EXPECT_FALSE(idfObject.getString(OS_BuildingFields::BuildingSectorType, false, true));
   EXPECT_FALSE(idfObject.getDouble(OS_BuildingFields::NorthAxis));
@@ -741,5 +741,16 @@ TEST_F(IdfFixture, DoubleDisplayedAsString) {
   EXPECT_EQ("0.05",ss.str());
   ss >> roundTripValue;
   EXPECT_DOUBLE_EQ(value,roundTripValue);
+}
+
+TEST_F(IdfFixture, IdfObject_SetDouble_NaN_and_Inf) {
+
+  IdfObject object(IddObjectType::OS_People_Definition);
+
+  // Set Number of People
+  // Check for nan
+  ASSERT_FALSE(object.setDouble(3, std::numeric_limits<double>::quiet_NaN()));
+  // Infinity
+  ASSERT_FALSE(object.setDouble(3, std::numeric_limits<double>::infinity()));
 }
 

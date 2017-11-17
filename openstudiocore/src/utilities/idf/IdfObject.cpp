@@ -578,6 +578,16 @@ namespace detail {
 
   bool IdfObject_Impl::setDouble(unsigned index, double value, bool checkValidity)
   {
+
+    // Check validity, cannot be NaN, Inf, etc
+    if (std::isinf(value)) {
+        LOG(Error, "Cannot setDouble to Infinity for " << this->briefDescription());
+        return false;
+    } else if (std::isnan(value)) {
+      LOG(Error, "Cannot setDouble to a NaN for " << this->briefDescription());
+      return false;
+    }
+
     try {
       return setString(index, toString(value), checkValidity);
     }
@@ -2056,7 +2066,7 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
     bool special_char = false;
     auto const max_length = value.size();
     auto const length = max_length - 3;
-    auto const * str = value.c_str();
+    // auto const * str = value.c_str();
     result.reserve(max_length);
 
     for (size_t i = 0; i < max_length; ++i) {
