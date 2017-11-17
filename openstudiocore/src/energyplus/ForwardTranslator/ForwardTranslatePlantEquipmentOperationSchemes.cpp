@@ -308,6 +308,52 @@ boost::optional<double> flowrate(const HVACComponent & component)
 
 enum class ComponentType {HEATING, COOLING, BOTH, NONE};
 
+
+// Forward declaration (needed because componentType and plantLoopType call each other)
+ComponentType componentType(const HVACComponent & component);
+
+/*
+ * Check the overall type of a plantLoop by checking what is on the supply side
+ * The logic is as follows:
+ * * If there is only heating, no cooling, no "both": Heating
+ * * If there is only cooling, no heating, no "both": Cooling
+ * * If there is no cooling, no heating, no "both": None
+ * * All other cases: "both"
+ */
+ComponentType plantLoopType(const PlantLoop & plantLoop) {
+
+  bool has_cooling = false;
+  bool has_heating = false;
+  bool has_both = false;
+  for( const auto & comp : subsetCastVector<HVACComponent>(plantLoop.supplyComponents()) ) {
+    if( componentType(comp) == ComponentType::COOLING ) {
+      has_cooling = true;
+    } else if( componentType(comp) == ComponentType::HEATING ) {
+      has_heating = true;
+    } else if( componentType(comp) == ComponentType::BOTH ) {
+      has_both = true;
+    }
+  }
+
+  // If source side is purely cooling
+  if ( has_cooling and !has_heating and !has_both ) {
+        return ComponentType::COOLING;
+
+  // If source side is purely heating
+  } else if ( !has_cooling and has_heating and !has_both ) {
+    return ComponentType::HEATING;
+
+  // If there is nothing
+  } else if (!has_cooling and !has_heating and !has_both ) {
+    return ComponentType::NONE;
+
+  // All other cases: BOTH
+  } else {
+    return ComponentType::BOTH;
+  }
+}
+
+
 ComponentType componentType(const HVACComponent & component)
 {
   switch(component.iddObject().type().value())
@@ -326,38 +372,13 @@ ComponentType componentType(const HVACComponent & component)
       WaterHeaterMixed wh = component.cast<WaterHeaterMixed>();
       if (boost::optional<double> _cap = wh.heaterMaximumCapacity() ) {
         if (_cap.get() == 0.0) {
-
           // Capacity is zero: it's a storage tank!
-
           // get the Source loop
           if ( boost::optional<PlantLoop> _p = wh.secondaryPlantLoop() ) {
             // I guess we could rely on Heating/Cooling/Condenser set in the sizingPlant
             // if ( openstudio::istringEqual(p->sizingPlant().loopType(), "Heating") { }
             // Might be better to do a recursive call to see what type of equipment you have on the supply side of the plant loop though
-            bool has_cooling = false;
-            bool has_heating = false;
-            bool has_both = false;
-            for( const auto & comp : subsetCastVector<HVACComponent>(_p->supplyComponents()) ) {
-              if( componentType(comp) == ComponentType::COOLING ) {
-                has_cooling = true;
-              } else if( componentType(comp) == ComponentType::HEATING ) {
-                has_heating = true;
-              } else if( componentType(comp) == ComponentType::BOTH ) {
-                has_both = true;
-              }
-            }
-
-            // Let's not be too aggressive here, and only rule if we have only cooling, or only heating
-            if ( has_cooling and !has_heating and !has_both ) {
-              // If it's a tank, and the source side is purely cooling
-              return ComponentType::COOLING;
-            } else if ( !has_cooling and has_heating and !has_both ) {
-              // If it's a tank, and the source side is purely heating
-              return ComponentType::HEATING;
-            } else {
-              // It's a tank, source side has a mix
-              return ComponentType::BOTH;
-            }
+            return plantLoopType(_p.get());
 
           } else {
             // It isn't connected to a source side, and has zero capacity => it's NONE
@@ -377,6 +398,26 @@ ComponentType componentType(const HVACComponent & component)
     }
     case openstudio::IddObjectType::OS_WaterHeater_Stratified :
     {
+      // Need to handle the case where this is used purely as a storage tank
+      WaterHeaterStratified wh = component.cast<WaterHeaterStratified>();
+
+      if (wh.heater2Capacity() == 0.0) {
+        if ( boost::optional<double> _cap = wh.heater1Capacity() ) {
+          if (_cap.get() == 0.0) {
+            // Capacity is zero: it's a storage tank!
+            // get the Source loop
+            if ( boost::optional<PlantLoop> _p = wh.secondaryPlantLoop() ) {
+              // Here we go check what's on the supply side of the secondary plantLoop
+              return plantLoopType(_p.get());
+            } else {
+              // It isn't connected to a source side, and has zero capacity => it's NONE
+              return ComponentType::NONE;
+            }
+          }
+        }
+      }
+
+      // If we reach here, it means there is at least one heater that has a capacity non zero, so it's a HEATING type
       return ComponentType::HEATING;
     }
     case openstudio::IddObjectType::OS_DistrictHeating :
@@ -452,7 +493,23 @@ ComponentType componentType(const HVACComponent & component)
                   openstudio::istringEqual(controlType, "CoolingSetpointOnOffWithComponentOverride") ) {
         return ComponentType::COOLING;
 
+      } else if ( openstudio::istringEqual(controlType, "DualDeadbandSetpointModulated") ||
+                  openstudio::istringEqual(controlType, "DualDeadbandSetpointOnOff") ) {
+        return ComponentType::BOTH;
+      } else if ( openstudio::istringEqual(controlType, "UncontrolledOn") ) {
+        // Here we go check what's on the supply side of the secondary plantLoop if there is one
+        // It's going to crash if there isn't a secondary plant Loop anyways
+        // get the Source loop
+          if ( boost::optional<PlantLoop> _p = hx.secondaryPlantLoop() ) {
+            return plantLoopType(_p.get());
+          } else {
+            // It isn't connected to a source side (beats the point of the HX)
+            return ComponentType::NONE;
+          } // End if has source loop
+
       } else {
+        // For OperationSchemeModulated and OperationSchemeOnOff
+
         // TODO: would need to open a log channel
         //Log(Debug, "HeatExchangerFluidToFluid '" << hx.name().get() << "' doesn't have a "
                    //"controlType ('" << controlType << "') that allows us to specify whether "
