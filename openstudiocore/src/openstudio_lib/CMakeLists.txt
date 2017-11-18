@@ -137,6 +137,8 @@ set(${target_name}_SRC
   MainTabView.hpp
   MainWindow.cpp
   MainWindow.hpp
+  benchmarkdialog.cpp
+  benchmarkdialog.hpp
   MaterialAirGapInspectorView.cpp
   MaterialAirGapInspectorView.hpp
   MaterialAirWallInspectorView.cpp
@@ -204,6 +206,10 @@ set(${target_name}_SRC
   PeopleInspectorView.hpp
   PlanarSurfaceWidget.cpp
   PlanarSurfaceWidget.hpp
+  PhotovoltaicInspectorView.hpp
+  PhotovoltaicInspectorView.cpp
+  PhotovoltaicThermalInspectorView.hpp
+  PhotovoltaicThermalInspectorView.cpp
   RadianceDialog.cpp
   RadianceDialog.hpp
   RefrigerationController.cpp
@@ -218,6 +224,14 @@ set(${target_name}_SRC
   RefrigerationScene.hpp
   RenderingColorWidget.cpp
   RenderingColorWidget.hpp
+  RenewableEnergyController.cpp
+  RenewableEnergyController.hpp
+  RenewableEnergyTabController.cpp
+  RenewableEnergyTabController.hpp
+  RenewableEnergyTabView.cpp
+  RenewableEnergyTabView.hpp
+  RenewableEnergyView.cpp
+  RenewableEnergyView.hpp
   ResultsTabController.cpp
   ResultsTabController.hpp
   ResultsTabView.cpp
@@ -533,6 +547,7 @@ set(${target_name}_moc
   MainTabController.hpp
   MainTabView.hpp
   MainWindow.hpp
+  benchmarkdialog.hpp
   MaterialAirGapInspectorView.hpp
   MaterialAirWallInspectorView.hpp
   MaterialInfraredTransparentInspectorView.hpp
@@ -565,6 +580,8 @@ set(${target_name}_moc
   OSVectorController.hpp
   OtherEquipmentInspectorView.hpp
   PeopleInspectorView.hpp
+  PhotovoltaicInspectorView.hpp
+  PhotovoltaicThermalInspectorView.hpp
   PlanarSurfaceWidget.hpp
   RadianceDialog.hpp
   RefrigerationController.hpp
@@ -575,6 +592,14 @@ set(${target_name}_moc
   RenderingColorWidget.hpp
   ResultsTabController.hpp
   ResultsTabView.hpp
+  RenewableEnergyController.cpp
+  RenewableEnergyController.hpp
+  RenewableEnergyTabController.cpp
+  RenewableEnergyTabController.hpp
+  RenewableEnergyTabView.cpp
+  RenewableEnergyTabView.hpp
+  RenewableEnergyView.cpp
+  RenewableEnergyView.hpp
   RunTabController.hpp
   RunTabView.hpp
   ScheduleDayView.hpp
@@ -729,6 +754,7 @@ set(depends
   openstudio_measure
   openstudio_sdd
   openstudio_gbxml
+  #openstudio_bec
   ${QT_WEB_LIBS}
 )
 
