@@ -107,6 +107,7 @@
 
 #include "../energyplus/ForwardTranslator.hpp"
 #include "../gbxml/ForwardTranslator.hpp"
+#include "../bec/ForwardTranslator.hpp"
 #include "../sdd/ForwardTranslator.hpp"
 
 

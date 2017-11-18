@@ -754,7 +754,7 @@ set(depends
   openstudio_measure
   openstudio_sdd
   openstudio_gbxml
-  #openstudio_bec
+  openstudio_bec
   ${QT_WEB_LIBS}
 )
 

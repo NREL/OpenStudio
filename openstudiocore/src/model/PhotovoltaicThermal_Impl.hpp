@@ -8,11 +8,14 @@
 namespace openstudio {
 namespace model {
 
+// forward declaration
+class PhotovoltaicThermal;
+
 namespace detail {
 
 	class MODEL_API PhotovoltaicThermal_Impl : public ResourceObject_Impl {
-		Q_OBJECT;
-
+/* 	  
+      Q_OBJECT;
 	  Q_PROPERTY(std::string PVType READ PVType WRITE setPVType);
 	  Q_PROPERTY(std::vector<std::string> PVTypeValues READ PVTypeValues);
 
@@ -46,7 +49,7 @@ namespace detail {
 
 	  Q_PROPERTY(double gtEfficiency READ gtEfficiency WRITE setGTEfficiency RESET resetGTEfficiency);
 	  Q_PROPERTY(openstudio::Quantity gtEfficiency_SI  READ gtEfficiency_SI	WRITE setGTEfficiency);
-	  Q_PROPERTY(openstudio::Quantity gtEfficiency_IP  READ gtEfficiency_IP   WRITE setGTEfficiency);
+	  Q_PROPERTY(openstudio::Quantity gtEfficiency_IP  READ gtEfficiency_IP   WRITE setGTEfficiency); */
 	  
 		  
    public:
