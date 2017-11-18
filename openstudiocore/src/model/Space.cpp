@@ -2085,8 +2085,18 @@ namespace detail {
     Model model = this->model();
     Space space = this->getObject<Space>();
 
+    std::string plenumSpaceTypeName("Plenum Space Type");
+
     boost::optional<SpaceType> spaceType = this->spaceType();
     if (spaceType){
+
+      // Do not try to clone plenumSpaceType, this is a unique model object
+      if( boost::optional<std::string> name = spaceType.name() ) {
+        if( istringEqual(name.get(),plenumSpaceTypeName) ) {
+          LOG(Debug, "Cannot hard apply '" << plenumSpaceTypeName << "' for " << this->briefDescription());
+          return;
+        }
+      }
 
       // Clone the space type if there is a space type
       spaceType = spaceType->clone(model).cast<SpaceType>();
