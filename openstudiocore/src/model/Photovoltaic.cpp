@@ -68,7 +68,6 @@ namespace openstudio {
 				return value.get();
 			}
 
-
 			bool Photovoltaic_Impl::setSurfaceArea(double serfaceArea){
 				bool result = setDouble(OS_Exterior_PVFields::SurfaceArea, serfaceArea);
 				return result;
@@ -227,7 +226,11 @@ namespace openstudio {
 				OS_Exterior_PVFields::Type);
 		}
 
-		bool Photovoltaic::setPVType(std::string PVType) {
+    std::string Photovoltaic::PVType() const {
+      return getImpl<detail::Photovoltaic_Impl>()->PVType();
+    }
+
+    bool Photovoltaic::setPVType(std::string PVType) {
 			return getImpl<detail::Photovoltaic_Impl>()->setPVType(PVType);
 		}
 

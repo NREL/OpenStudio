@@ -194,6 +194,7 @@ set(depends
   openstudio_modeleditor
   openstudio_sdd
   openstudio_gbxml
+  openstudio_bec
   openstudio_bimserver
   ${QT_WEB_LIBS}
   #${QT_PLUGIN_LIBS}

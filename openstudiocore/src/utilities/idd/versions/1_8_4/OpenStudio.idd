@@ -5656,6 +5656,125 @@ OS:SpaceInfiltration:EffectiveLeakageArea,
 
 \group OpenStudio Exterior Equipment
 
+OS:Exterior:PV,
+       \memo only used for Meter type reporting, does not affect building loads
+       \min-fields 1
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+       \required-field
+       \reference ExteriorPVNames
+  A3, \field Type
+       \type choice
+       \required-field
+       \key Monocrystalline
+       \key Polycrystalline
+       \key Amorphous
+  N1, \field Surface Area 
+       \type real
+       \required-field
+       \units m2
+       \ip-units ft2
+       \minimum 0
+  N2, \field Faction Active 
+       \type real
+	   \units percent
+       \minimum 0
+       \maximum 100
+       \default 0.9
+  N2, \field Inverter Efficiency 
+       \type real
+	   \units percent
+       \minimum 0
+       \maximum 100
+       \default 98.5
+  N3,  \field Azimuth Angle 
+       \type real
+       \units deg
+	   \minimum 0
+       \maximum 180
+       \default 0.0
+  N4,  \field Inclination Angle 
+       \type real
+       \units deg
+	   \minimum 0
+       \maximum 180
+       \default 0.0
+  N5,  \field Cell Efficiency 
+       \type real
+	   \units percent
+	   \minimum 0
+       \maximum 100
+       \default 0.0
+  N6;  \field GT Efficiency 
+       \type real
+       \units Wh/m2
+	   \minimum 0
+       \default 1790100.0
+ 
+OS:Exterior:PV:Thermal,
+       \memo only used for Meter type reporting, does not affect building loads
+       \min-fields 1
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+       \required-field
+       \reference ExteriorPVThermalNames
+  A3, \field Type
+	   \type alpha
+	   \required-field
+  N1, \field Surface Area 
+       \type real
+       \required-field
+       \units m2
+       \ip-units ft2
+       \minimum 0
+  N2, \field Faction Active 
+       \type real
+	   \units percent
+       \minimum 0
+       \maximum 100
+       \default 0.8
+  N2, \field Collector Efficiency 
+       \type real
+	   \units percent
+       \minimum 0
+       \maximum 100
+       \default 0.7
+  N3,  \field Azimuth Angle 
+       \type real
+       \units deg
+	   \minimum 0
+       \maximum 180
+       \default 0.0
+  N4,  \field Inclination Angle 
+       \type real
+       \units deg
+	   \minimum 0
+       \maximum 180
+       \default 0.0
+  N5,  \field Cell Efficiency 
+       \type real
+	   \units percent
+	   \minimum 0
+	   \maximum 100
+       \default 0.0
+  N6,  \field GT Efficiency 
+       \type real
+       \units Wh/m2
+	   \minimum 0
+       \default 1790100.0
+  N7;  \field Boiler Efficiency 
+       \type real
+       \units percent
+	   \minimum 0
+	   \maximum 100
+       \default 0.8
+
 OS:Exterior:Lights,
        \memo only used for Meter type reporting, does not affect building loads
        \min-fields 1

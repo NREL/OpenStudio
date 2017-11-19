@@ -213,7 +213,7 @@ void PhotovoltaicThermalInspectorView::attach(openstudio::model::PhotovoltaicThe
     );
 
   //m_systemEfficiencyEdit->bind(PhotovoltaicThermal, "cellEfficiency", m_isIP);
-  m_gtEfficiencyEdit->bind(
+  m_systemEfficiencyEdit->bind(
     m_isIP,
     *m_photovoltaicThermal,
     DoubleGetter(std::bind(&model::PhotovoltaicThermal::cellEfficiency, m_photovoltaicThermal.get_ptr())),

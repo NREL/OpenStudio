@@ -102,6 +102,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.2.3")] = &VersionTranslator::update_1_2_2_to_1_2_3;
   m_updateMethods[VersionString("1.3.5")] = &VersionTranslator::update_1_3_4_to_1_3_5;
   m_updateMethods[VersionString("1.5.4")] = &VersionTranslator::update_1_5_3_to_1_5_4;
+  m_updateMethods[VersionString("1.7.1")] = &VersionTranslator::update_1_7_0_to_1_7_1;
   m_updateMethods[VersionString("1.7.2")] = &VersionTranslator::update_1_7_1_to_1_7_2;
   m_updateMethods[VersionString("1.7.5")] = &VersionTranslator::update_1_7_4_to_1_7_5;
   m_updateMethods[VersionString("1.8.4")] = &VersionTranslator::update_1_8_3_to_1_8_4;
@@ -2500,6 +2501,48 @@ std::string VersionTranslator::update_1_5_3_to_1_5_4(const IdfFile& idf_1_5_3, c
     } else {
       ss << object;
 
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_7_0_to_1_7_1(const IdfFile& idf_1_7_0, const IddFileAndFactoryWrapper& idd_1_7_1) {
+  std::stringstream ss;
+
+  ss << idf_1_7_0.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_7_1.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_7_0.objects()) {
+    if (object.iddObject().name() == "OS:Exterior:PV") {
+      auto iddObject = idd_1_7_1.getObject("OS:Exterior:PV");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < 10; ++i) {
+        if (auto s = object.getString(i)) {
+          newObject.setString(i, s.get());
+        }
+      }
+      m_refactored.push_back(std::pair<IdfObject, IdfObject>(object, newObject));
+      ss << newObject;
+    } else if (object.iddObject().name() == "OS:Exterior:PV:Thermal") {
+      auto iddObject = idd_1_7_1.getObject("OS:Exterior:PV:Thermal");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < 11; ++i) {
+        if (auto s = object.getString(i)) {
+          newObject.setString(i, s.get());
+        }
+      }
+      m_refactored.push_back(std::pair<IdfObject, IdfObject>(object, newObject));
+      ss << newObject;
+    } else {
+      ss << object;
     }
   }
 

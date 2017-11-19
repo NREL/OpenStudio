@@ -619,6 +619,44 @@ void MainRightColumnController::configureForLoadsSubTab(int subTabID)
   doc->openSidebar();
 }
 
+void MainRightColumnController::configureForRenewableEnergySubTab(int subTabID)
+{
+	std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+
+	model::Model lib = doc->componentLibrary();
+
+
+	setEditView(nullptr);
+
+	// my model
+
+	auto myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
+	myModelList->setItemsDraggable(true);
+	myModelList->setItemsRemoveable(false);
+	myModelList->setItemsType(OSItemType::LibraryItem);
+	myModelList->setShowFilterLayout(true);
+
+	myModelList->addModelObjectType(IddObjectType::OS_Exterior_PV, "Photovoltaic Rooftop");
+	myModelList->addModelObjectType(IddObjectType::OS_Exterior_PV_Thermal, "Solar Thermal");
+	setMyModelView(myModelList);
+
+	// my library
+
+	auto myLibraryList = new ModelObjectTypeListView(lib, true, OSItemType::CollapsibleListHeader, true);
+	myLibraryList->setItemsDraggable(true);
+	myLibraryList->setItemsRemoveable(false);
+	myLibraryList->setItemsType(OSItemType::LibraryItem);
+	myLibraryList->setShowFilterLayout(true);
+
+	myLibraryList->addModelObjectType(IddObjectType::OS_Exterior_PV, "Photovoltaic Rooftop");
+	myLibraryList->addModelObjectType(IddObjectType::OS_Exterior_PV_Thermal, "Solar Thermal");
+
+	setLibraryView(myLibraryList);
+
+	doc->openSidebar();
+}
+
+
 void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
 {
   // no sub tabs

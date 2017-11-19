@@ -38,6 +38,7 @@
 #include "InspectorView.hpp"
 #include "LibraryTabWidget.hpp"
 #include "LoadsTabController.hpp"
+#include "RenewableEnergyTabController.hpp"
 #include "LocationTabController.hpp"
 #include "LocationTabView.hpp"
 #include "MainRightColumnController.hpp"
@@ -400,6 +401,13 @@ namespace openstudio {
       ":images/off_loads_tab.png",
       ":images/disabled_loads_tab.png");
 
+  // Renewable Energy
+  m_mainWindow->addVerticalTabButton(RENEWABLE_ENERGY,
+	  "Renewable Energy",
+	  ":images/on_renewable_tab.png",
+	  ":images/off_renewable_tab.png",
+	  ":images/disabled_renewable_tab.png");
+  
     // Space Types
     m_mainWindow->addVerticalTabButton(SPACE_TYPES,
       "Space Types",
@@ -587,6 +595,23 @@ namespace openstudio {
 
       break;
 
+	  case RENEWABLE_ENERGY:
+		  // Renewable Energy
+
+		  m_mainTabController = std::shared_ptr<MainTabController>(new RenewableEnergyTabController(isIP, m_model));
+		  m_mainWindow->setView(m_mainTabController->mainContentWidget(), RENEWABLE_ENERGY);
+
+		  connect(this, &OSDocument::toggleUnitsClicked, m_mainTabController.get(), &RenewableEnergyTabController::toggleUnitsClicked);
+
+		  connect(m_mainTabController.get(), &RenewableEnergyTabController::downloadComponentsClicked, this, &OSDocument::downloadComponentsClicked);
+
+		  connect(m_mainTabController.get(), &RenewableEnergyTabController::openLibDlgClicked, this, &OSDocument::openLibDlgClicked);
+
+		  connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForRenewableEnergySubTab);
+
+		  connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
+
+		  break;
     case SPACE_TYPES:
       // Space Types
 
@@ -820,6 +845,7 @@ namespace openstudio {
     m_mainWindow->verticalTabWidget()->enableTabButton(SCHEDULES, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, m_enableTabsAfterRun);
+  	m_mainWindow->verticalTabWidget()->enableTabButton(RENEWABLE_ENERGY, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(GEOMETRY, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, m_enableTabsAfterRun);
@@ -850,6 +876,7 @@ namespace openstudio {
     m_mainWindow->verticalTabWidget()->enableTabButton(SCHEDULES, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, m_enableTabsAfterRun);
+  	m_mainWindow->verticalTabWidget()->enableTabButton(RENEWABLE_ENERGY, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(GEOMETRY, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, m_enableTabsAfterRun);
@@ -1177,6 +1204,9 @@ namespace openstudio {
     case LOADS:
       m_mainRightColumnController->configureForLoadsSubTab(m_subTabId);
       break;
+	  case RENEWABLE_ENERGY:
+		  m_mainRightColumnController->configureForRenewableEnergySubTab(m_subTabId);
+		  break;
     case SPACE_TYPES:
       m_mainRightColumnController->configureForSpaceTypesSubTab(m_subTabId);
       break;
