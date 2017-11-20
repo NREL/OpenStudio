@@ -134,7 +134,7 @@ void SurfacePropertyOtherSideConditionsModel::resetTypeOfModeling() {
 
 /// @cond
 SurfacePropertyOtherSideConditionsModel::SurfacePropertyOtherSideConditionsModel(std::shared_ptr<detail::SurfacePropertyOtherSideConditionsModel_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 /// @endcond
 

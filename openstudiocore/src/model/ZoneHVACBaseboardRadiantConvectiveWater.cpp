@@ -346,7 +346,7 @@ void ZoneHVACBaseboardRadiantConvectiveWater::removeFromThermalZone() {
 
 /// @cond
 ZoneHVACBaseboardRadiantConvectiveWater::ZoneHVACBaseboardRadiantConvectiveWater(std::shared_ptr<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

@@ -258,7 +258,7 @@ void CurveFunctionalPressureDrop::resetFixedFrictionFactor() {
 
 /// @cond
 CurveFunctionalPressureDrop::CurveFunctionalPressureDrop(std::shared_ptr<detail::CurveFunctionalPressureDrop_Impl> impl)
-  : Curve(impl)
+  : Curve(std::move(impl))
 {}
 /// @endcond
 

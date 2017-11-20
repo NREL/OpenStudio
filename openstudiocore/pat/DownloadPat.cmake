@@ -9,7 +9,7 @@ if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}.zip)
   # Make github public and use a direct github url please
   file(DOWNLOAD "https://github.com/NREL/OpenStudio-PAT/archive/${PAT_SHA}.zip"
     "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}.zip"
-    TIMEOUT 120 INACTIVITY_TIMEOUT 120 
+    TIMEOUT 480 INACTIVITY_TIMEOUT 480 
     SHOW_PROGRESS
     STATUS DOWNLOAD_STATUS
   )

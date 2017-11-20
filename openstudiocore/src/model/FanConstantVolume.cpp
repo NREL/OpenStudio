@@ -483,7 +483,7 @@ FanConstantVolume::FanConstantVolume(const Model& model)
 }
 
 FanConstantVolume::FanConstantVolume(std::shared_ptr<detail::FanConstantVolume_Impl> p)
-  : StraightComponent(p)
+  : StraightComponent(std::move(p))
 {}
 
 Schedule FanConstantVolume::availabilitySchedule() const

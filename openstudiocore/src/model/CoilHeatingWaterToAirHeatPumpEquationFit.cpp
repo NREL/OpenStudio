@@ -635,7 +635,7 @@ void CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingPowerConsumptionCoeffic
 
 /// @cond
 CoilHeatingWaterToAirHeatPumpEquationFit::CoilHeatingWaterToAirHeatPumpEquationFit(std::shared_ptr<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl> impl)
-  : WaterToAirComponent(impl)
+  : WaterToAirComponent(std::move(impl))
 {}
 /// @endcond
 

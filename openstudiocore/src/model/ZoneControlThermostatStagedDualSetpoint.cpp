@@ -405,7 +405,7 @@ bool ZoneControlThermostatStagedDualSetpoint::setStage4CoolingTemperatureOffset(
 
 /// @cond
 ZoneControlThermostatStagedDualSetpoint::ZoneControlThermostatStagedDualSetpoint(std::shared_ptr<detail::ZoneControlThermostatStagedDualSetpoint_Impl> impl)
-  : Thermostat(impl)
+  : Thermostat(std::move(impl))
 {}
 /// @endcond
 

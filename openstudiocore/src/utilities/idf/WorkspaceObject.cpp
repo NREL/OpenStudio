@@ -960,7 +960,7 @@ namespace detail {
 
     if (dataChange){
       this->onDataChange.nano_emit();
-    } 
+    }
 
     this->onChange.nano_emit();
 
@@ -1364,7 +1364,7 @@ IdfObject WorkspaceObject::idfObject() const {
 // PROTECTED
 
 WorkspaceObject::WorkspaceObject(std::shared_ptr<detail::WorkspaceObject_Impl> impl)
-  : IdfObject(impl)
+  : IdfObject(std::move(impl))
 {}
 
 std::ostream& operator<<(std::ostream& os, const WorkspaceObject& workspaceObject)

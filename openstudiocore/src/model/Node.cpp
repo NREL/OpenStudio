@@ -425,7 +425,7 @@ Node::Node(const Model& model)
 }
 
 Node::Node(std::shared_ptr<detail::Node_Impl> p)
-  : StraightComponent(p)
+  : StraightComponent(std::move(p))
 {}
 
 std::vector<SetpointManager> Node::setpointManagers() const

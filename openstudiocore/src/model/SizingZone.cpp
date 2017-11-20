@@ -1452,7 +1452,7 @@ void SizingZone::autosizeDedicatedOutdoorAirHighSetpointTemperatureforDesign() {
 
 /// @cond
 SizingZone::SizingZone(std::shared_ptr<detail::SizingZone_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

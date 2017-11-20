@@ -475,7 +475,7 @@ void DesignSpecificationOutdoorAir::resetOutdoorAirFlowRateFractionSchedule() {
 
 /// @cond
 DesignSpecificationOutdoorAir::DesignSpecificationOutdoorAir(std::shared_ptr<detail::DesignSpecificationOutdoorAir_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 /// @endcond
 

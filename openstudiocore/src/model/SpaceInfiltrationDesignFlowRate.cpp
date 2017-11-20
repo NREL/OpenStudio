@@ -183,7 +183,7 @@ namespace detail {
     if (istringEqual("Flow/ExteriorArea", this->designFlowRateCalculationMethod())){
       result = getDouble(OS_SpaceInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea,true);
     }
-    return result;  
+    return result;
   }
 
   boost::optional<double> SpaceInfiltrationDesignFlowRate_Impl::flowperExteriorWallArea() const {
@@ -191,7 +191,7 @@ namespace detail {
     if (istringEqual("Flow/ExteriorWallArea", this->designFlowRateCalculationMethod())){
       result = getDouble(OS_SpaceInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea,true);
     }
-    return result;  
+    return result;
   }
 
   boost::optional<double> SpaceInfiltrationDesignFlowRate_Impl::airChangesperHour() const {
@@ -199,7 +199,7 @@ namespace detail {
     if (istringEqual("AirChanges/Hour", this->designFlowRateCalculationMethod())){
       result = getDouble(OS_SpaceInfiltration_DesignFlowRateFields::AirChangesperHour,true);
     }
-    return result;  
+    return result;
   }
 
   double SpaceInfiltrationDesignFlowRate_Impl::constantTermCoefficient() const {
@@ -815,7 +815,7 @@ double SpaceInfiltrationDesignFlowRate::getAirChangesPerHour(double floorArea,
 
 /// @cond
 SpaceInfiltrationDesignFlowRate::SpaceInfiltrationDesignFlowRate(std::shared_ptr<detail::SpaceInfiltrationDesignFlowRate_Impl> impl)
-  : SpaceLoad(impl)
+  : SpaceLoad(std::move(impl))
 {}
 /// @endcond
 

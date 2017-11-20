@@ -61,7 +61,7 @@ namespace detail{
   }
 
   SetpointManagerSingleZoneReheat_Impl::SetpointManagerSingleZoneReheat_Impl(
-      const SetpointManagerSingleZoneReheat_Impl& other, 
+      const SetpointManagerSingleZoneReheat_Impl& other,
       Model_Impl* model,
       bool keepHandles)
     : SetpointManager_Impl(other,model,keepHandles)
@@ -192,9 +192,9 @@ namespace detail{
   }
 
 } // detail
-  
+
 SetpointManagerSingleZoneReheat::SetpointManagerSingleZoneReheat(const Model& model)
-  : SetpointManager(SetpointManagerSingleZoneReheat::iddObjectType(),model) 
+  : SetpointManager(SetpointManagerSingleZoneReheat::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::SetpointManagerSingleZoneReheat_Impl>());
 
@@ -204,7 +204,7 @@ SetpointManagerSingleZoneReheat::SetpointManagerSingleZoneReheat(const Model& mo
 }
 
 SetpointManagerSingleZoneReheat::SetpointManagerSingleZoneReheat(std::shared_ptr<detail::SetpointManagerSingleZoneReheat_Impl> p)
-  : SetpointManager(p)
+  : SetpointManager(std::move(p))
 {
 }
 

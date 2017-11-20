@@ -708,7 +708,7 @@ ControllerOutdoorAir::ControllerOutdoorAir(const Model& model)
 }
 
 ControllerOutdoorAir::ControllerOutdoorAir(std::shared_ptr<detail::ControllerOutdoorAir_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {
 }
 

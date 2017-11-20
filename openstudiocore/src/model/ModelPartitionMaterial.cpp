@@ -36,8 +36,8 @@ namespace model {
 
 namespace detail {
 
-  ModelPartitionMaterial_Impl::ModelPartitionMaterial_Impl(const IdfObject& idfObject, 
-                                                           Model_Impl* model, 
+  ModelPartitionMaterial_Impl::ModelPartitionMaterial_Impl(const IdfObject& idfObject,
+                                                           Model_Impl* model,
                                                            bool keepHandle)
     : Material_Impl(idfObject, model, keepHandle)
   {}
@@ -46,14 +46,14 @@ namespace detail {
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
     : Material_Impl(other, model, keepHandle)
   {}
-  
+
   ModelPartitionMaterial_Impl::ModelPartitionMaterial_Impl(
       const ModelPartitionMaterial_Impl& other,Model_Impl* model,bool keepHandle)
     : Material_Impl(other, model, keepHandle)
   {}
 
   double ModelPartitionMaterial_Impl::thickness() const {
-    return 0.0; 
+    return 0.0;
   }
 
   double ModelPartitionMaterial_Impl::thermalConductivity() const {
@@ -172,7 +172,7 @@ namespace detail {
 } // detail
 
 ModelPartitionMaterial::ModelPartitionMaterial(IddObjectType type,const Model& model)
-  : Material(type,model) 
+  : Material(type,model)
 {
   OS_ASSERT(getImpl<detail::ModelPartitionMaterial_Impl>());
 }
@@ -180,7 +180,7 @@ ModelPartitionMaterial::ModelPartitionMaterial(IddObjectType type,const Model& m
 /// @cond
 ModelPartitionMaterial::ModelPartitionMaterial(
     std::shared_ptr<detail::ModelPartitionMaterial_Impl> impl)
-  : Material(impl)
+  : Material(std::move(impl))
 {}
 /// @endcond
 

@@ -233,7 +233,7 @@ ScheduleCompact::ScheduleCompact(const Model& model,const Quantity& constantValu
 
 // constructor
 ScheduleCompact::ScheduleCompact(std::shared_ptr<detail::ScheduleCompact_Impl> impl)
-  : Schedule(impl)
+  : Schedule(std::move(impl))
 {}
 
 void ScheduleCompact::setToConstantValue(double value) {

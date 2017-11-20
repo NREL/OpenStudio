@@ -893,7 +893,7 @@ bool ChillerAbsorptionIndirect::setSizingFactor(double sizingFactor) {
 
 /// @cond
 ChillerAbsorptionIndirect::ChillerAbsorptionIndirect(std::shared_ptr<detail::ChillerAbsorptionIndirect_Impl> impl)
-  : WaterToWaterComponent(impl)
+  : WaterToWaterComponent(std::move(impl))
 {}
 /// @endcond
 

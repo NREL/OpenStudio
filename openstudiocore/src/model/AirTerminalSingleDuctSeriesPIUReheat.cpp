@@ -718,7 +718,7 @@ boost::optional<Node> AirTerminalSingleDuctSeriesPIUReheat::secondaryAirInletNod
 
 /// @cond
 AirTerminalSingleDuctSeriesPIUReheat::AirTerminalSingleDuctSeriesPIUReheat(std::shared_ptr<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

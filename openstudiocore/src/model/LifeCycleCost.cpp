@@ -556,7 +556,7 @@ LifeCycleCost::LifeCycleCost(const ModelObject& modelObject)
 
 // constructor
 LifeCycleCost::LifeCycleCost(std::shared_ptr<detail::LifeCycleCost_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 
 IddObjectType LifeCycleCost::iddObjectType()

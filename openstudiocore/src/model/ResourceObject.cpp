@@ -127,7 +127,7 @@ ResourceObject::ResourceObject(IddObjectType type,const Model& model)
 }
 
 ResourceObject::ResourceObject(std::shared_ptr<detail::ResourceObject_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 unsigned ResourceObject::directUseCount(bool excludeChildren) const {

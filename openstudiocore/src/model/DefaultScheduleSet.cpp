@@ -301,7 +301,7 @@ namespace detail {
   void DefaultScheduleSet_Impl::merge(const DefaultScheduleSet& other)
   {
     boost::optional<Schedule> schedule;
-    
+
     if (!(this->hoursofOperationSchedule())){
       schedule = other.hoursofOperationSchedule();
       if (schedule){
@@ -809,7 +809,7 @@ void DefaultScheduleSet::merge(const DefaultScheduleSet& other)
 
 /// @cond
 DefaultScheduleSet::DefaultScheduleSet(std::shared_ptr<detail::DefaultScheduleSet_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 /// @endcond
 

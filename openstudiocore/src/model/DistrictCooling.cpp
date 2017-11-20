@@ -169,7 +169,7 @@ void DistrictCooling::autosizeNominalCapacity() {
 /// @cond
 
 DistrictCooling::DistrictCooling(std::shared_ptr<detail::DistrictCooling_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

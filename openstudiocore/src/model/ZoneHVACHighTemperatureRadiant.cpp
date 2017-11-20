@@ -487,7 +487,7 @@ void ZoneHVACHighTemperatureRadiant::removeFromThermalZone()
 
 /// @cond
 ZoneHVACHighTemperatureRadiant::ZoneHVACHighTemperatureRadiant(std::shared_ptr<detail::ZoneHVACHighTemperatureRadiant_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

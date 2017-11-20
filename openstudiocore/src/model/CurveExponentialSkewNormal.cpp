@@ -377,7 +377,7 @@ void CurveExponentialSkewNormal::resetOutputUnitType() {
 
 /// @cond
 CurveExponentialSkewNormal::CurveExponentialSkewNormal(std::shared_ptr<detail::CurveExponentialSkewNormal_Impl> impl)
-  : Curve(impl)
+  : Curve(std::move(impl))
 {}
 /// @endcond
 

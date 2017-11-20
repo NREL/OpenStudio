@@ -147,7 +147,7 @@ TEST_F(IddFixture,IddFactory_IddObjects)
   EXPECT_TRUE(object == *candidate);
   EXPECT_EQ("Lights", object.name());
   ASSERT_TRUE(object.nonextensibleFields().size() > static_cast<unsigned>(0));
-  EXPECT_EQ("Return Air Fraction Function of Plenum Temperature Coefficient 2",
+  EXPECT_EQ("Return Air Heat Gain Node Name",
             object.nonextensibleFields().back().name());
 
   OptionalIddField field = object.getField(0);

@@ -441,7 +441,7 @@ void FanZoneExhaust::resetBalancedExhaustFractionSchedule() {
 
 /// @cond
 FanZoneExhaust::FanZoneExhaust(std::shared_ptr<detail::FanZoneExhaust_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

@@ -748,7 +748,7 @@ bool ZoneVentilationDesignFlowRate::setMaximumWindSpeed(double maximumWindSpeed)
 
 /// @cond
 ZoneVentilationDesignFlowRate::ZoneVentilationDesignFlowRate(std::shared_ptr<detail::ZoneVentilationDesignFlowRate_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

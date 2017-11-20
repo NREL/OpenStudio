@@ -525,7 +525,7 @@ bool ZoneHVACEnergyRecoveryVentilator::setVentilationRateperOccupant(double vent
 
 /// @cond
 ZoneHVACEnergyRecoveryVentilator::ZoneHVACEnergyRecoveryVentilator(std::shared_ptr<detail::ZoneHVACEnergyRecoveryVentilator_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

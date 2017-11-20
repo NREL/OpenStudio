@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.7.0)
 project(OpenStudioMeta)
 
 set(CMAKE_VERSION_MAJOR 2)
-set(CMAKE_VERSION_MINOR 2)
+set(CMAKE_VERSION_MINOR 3)
 set(CMAKE_VERSION_PATCH 0)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
@@ -87,37 +87,37 @@ option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
 set(MAXIMIZE_CPU_USAGE OFF CACHE BOOL "Attempt to fully load the CPU during builds")
 mark_as_advanced(MAXIMIZE_CPU_USAGE)
 
-if(MSVC)
-  # Visual Studio compiler check
-  # http://en.wikipedia.org/wiki/Visual_C%2B%2B#32-bit_and_64-bit_versions
-  if    (${CMAKE_C_COMPILER_VERSION} VERSION_LESS "18.0.21005.1")
-    message(FATAL_ERROR "Visual Studio earlier than VS2013 is not supported")
-  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.0.21005.1")
-    # VS2013
-    message(SEND_ERROR "Update 4 for Visual Studio 2013 is required")
-  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30501")
-    # VS2013 Update 2:
-    message(SEND_ERROR "Update 4 for Visual Studio 2013 is required")
-  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30723")
-    message(WARNING "Update 4 for Visual Studio 2013 is strongly recommended")
-  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.31101")
-    # VS2013 Update 4: no-op
-  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.40629")
-    # VS2013 Update 5: no-op
-  endif()
-
-  if ("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 12 2013 Win64")
-    set(CMAKE_GENERATOR_TOOLSET "v120</PlatformToolset><PreferredToolArchitecture>x64</PreferredToolArchitecture><PlatformToolset>v120")
-  elseif ("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 14 2015 Win64")
-    set(CMAKE_GENERATOR_TOOLSET "v140</PlatformToolset><PreferredToolArchitecture>x64</PreferredToolArchitecture><PlatformToolset>v140")
-  else()
-    message(STATUS "This version of Visual Studio will not use the 64 bit linker. Build times will likely suffer.")
-  endif()
-
-  # Build with Multiple Processes
-  set(BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization")
-  mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
-endif()
+#if(MSVC)
+#  # Visual Studio compiler check
+#  # http://en.wikipedia.org/wiki/Visual_C%2B%2B#32-bit_and_64-bit_versions
+#  if    (${CMAKE_C_COMPILER_VERSION} VERSION_LESS "18.0.21005.1")
+#    message(FATAL_ERROR "Visual Studio earlier than VS2013 is not supported")
+#  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.0.21005.1")
+#    # VS2013
+#    message(SEND_ERROR "Update 4 for Visual Studio 2013 is required")
+#  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30501")
+#    # VS2013 Update 2:
+#    message(SEND_ERROR "Update 4 for Visual Studio 2013 is required")
+#  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30723")
+#    message(WARNING "Update 4 for Visual Studio 2013 is strongly recommended")
+#  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.31101")
+#    # VS2013 Update 4: no-op
+#  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.40629")
+#    # VS2013 Update 5: no-op
+#  endif()
+#
+#  if ("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 12 2013 Win64")
+#    set(CMAKE_GENERATOR_TOOLSET "v120</PlatformToolset><PreferredToolArchitecture>x64</PreferredToolArchitecture><PlatformToolset>v120")
+#  elseif ("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 14 2015 Win64")
+#    set(CMAKE_GENERATOR_TOOLSET "v140</PlatformToolset><PreferredToolArchitecture>x64</PreferredToolArchitecture><PlatformToolset>v140")
+#  else()
+#    message(STATUS "This version of Visual Studio will not use the 64 bit linker. Build times will likely suffer.")
+#  endif()
+#
+#  # Build with Multiple Processes
+#  set(BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization")
+#  mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
+#endif()
 
 
 # Apple Sanity Check
@@ -243,7 +243,7 @@ elseif(WIN32)
   endif()
   if(NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OR NOT "${OPENSSL_HASH}" MATCHES "${OPENSSL_EXPECTED_HASH}")
     message(STATUS "Downloading OpenSSL ${OPENSSL_VERSION} (${OPENSSL_ARCH}-bit)")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/OpenSSL-Win${OPENSSL_ARCH}-${OPENSSL_VERSION}.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${OPENSSL_EXPECTED_HASH})
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/OpenSSL-Win${OPENSSL_ARCH}-${OPENSSL_VERSION}.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${OPENSSL_EXPECTED_HASH})
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
@@ -483,6 +483,40 @@ if(BUILD_QT)
 
 else()
   set(QT_INSTALL_DIR "")
+endif()
+
+option(BUILD_DVIEW "Build DView" OFF)
+if( BUILD_DVIEW )
+    ExternalProject_Add(curl
+      URL https://curl.haxx.se/download/curl-7.55.1.tar.gz
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND ""
+      INSTALL_COMMAND ""
+    )
+
+    ExternalProject_Add(lk
+      GIT_REPOSITORY git://github.com/NREL/lk
+      GIT_TAG develop
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND ""
+      INSTALL_COMMAND ""
+    )
+
+    ExternalProject_Add(DView
+      DEPENDS lk curl
+      GIT_REPOSITORY https://github.com/kbenne/wex.git
+      GIT_TAG develop
+      CMAKE_CACHE_ARGS
+        -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
+        -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
+        -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
+        -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+        -DLK_DIR:DIR=${CMAKE_BINARY_DIR}/lk-prefix/src/lk/
+        -DCURL_DIR:DIR=${CMAKE_BINARY_DIR}/curl-prefix/src/curl/
+        -DCMAKE_INSTALL_PREFIX:DIR=${CMAKE_BINARY_DIR}/DView-prefix/src/DView-install
+        -DwxWidgets_EXCLUDE_COMMON_LIBRARIES:BOOL=false
+        -DwxWidgets_USE_STATIC:BOOL=true
+    )
 endif()
 
 set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)

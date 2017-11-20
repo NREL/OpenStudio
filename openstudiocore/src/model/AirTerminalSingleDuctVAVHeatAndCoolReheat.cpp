@@ -506,7 +506,7 @@ bool AirTerminalSingleDuctVAVHeatAndCoolReheat::setMaximumReheatAirTemperature(d
 
 /// @cond
 AirTerminalSingleDuctVAVHeatAndCoolReheat::AirTerminalSingleDuctVAVHeatAndCoolReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

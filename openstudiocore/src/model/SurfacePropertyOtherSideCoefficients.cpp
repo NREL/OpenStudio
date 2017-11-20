@@ -541,7 +541,7 @@ void SurfacePropertyOtherSideCoefficients::resetMaximumOtherSideTemperatureLimit
 
 /// @cond
 SurfacePropertyOtherSideCoefficients::SurfacePropertyOtherSideCoefficients(std::shared_ptr<detail::SurfacePropertyOtherSideCoefficients_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 /// @endcond
 

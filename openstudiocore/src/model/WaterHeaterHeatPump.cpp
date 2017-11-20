@@ -863,7 +863,7 @@ bool WaterHeaterHeatPump::setControlSensorLocationInStratifiedTank(std::string c
 
 /// @cond
 WaterHeaterHeatPump::WaterHeaterHeatPump(std::shared_ptr<detail::WaterHeaterHeatPump_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

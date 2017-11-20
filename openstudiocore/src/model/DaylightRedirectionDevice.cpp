@@ -82,7 +82,7 @@ namespace detail {
   IddObjectType DaylightRedirectionDevice_Impl::iddObjectType() const {
     return DaylightRedirectionDevice::iddObjectType();
   }
-  
+
   std::string DaylightRedirectionDevice_Impl::daylightRedirectionDeviceType() const {
     OptionalString os = getString(OS_WindowMaterial_DaylightRedirectionDeviceFields::DaylightRedirectionDeviceType,true);
     OS_ASSERT(os);
@@ -138,7 +138,7 @@ void DaylightRedirectionDevice::resetDaylightRedirectionDeviceType() {
 
 /// @cond
 DaylightRedirectionDevice::DaylightRedirectionDevice(std::shared_ptr<detail::DaylightRedirectionDevice_Impl> impl)
-  : ShadingMaterial(impl)
+  : ShadingMaterial(std::move(impl))
 {}
 /// @endcond
 

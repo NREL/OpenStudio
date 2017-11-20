@@ -865,7 +865,7 @@ double Luminaire::getPowerPerPerson(double numPeople) const {
 
 /// @cond
 Luminaire::Luminaire(std::shared_ptr<detail::Luminaire_Impl> impl)
-  : SpaceLoadInstance(impl)
+  : SpaceLoadInstance(std::move(impl))
 {}
 /// @endcond
 

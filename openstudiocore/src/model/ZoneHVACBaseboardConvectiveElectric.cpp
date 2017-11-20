@@ -380,7 +380,7 @@ void ZoneHVACBaseboardConvectiveElectric::removeFromThermalZone()
 
 /// @cond
 ZoneHVACBaseboardConvectiveElectric::ZoneHVACBaseboardConvectiveElectric(std::shared_ptr<detail::ZoneHVACBaseboardConvectiveElectric_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

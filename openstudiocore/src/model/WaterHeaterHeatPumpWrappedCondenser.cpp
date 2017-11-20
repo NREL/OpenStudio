@@ -951,7 +951,7 @@ void WaterHeaterHeatPumpWrappedCondenser::resetControlSensor2HeightInStratifiedT
 
 /// @cond
 WaterHeaterHeatPumpWrappedCondenser::WaterHeaterHeatPumpWrappedCondenser(std::shared_ptr<detail::WaterHeaterHeatPumpWrappedCondenser_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

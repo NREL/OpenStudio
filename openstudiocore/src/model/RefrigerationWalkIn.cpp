@@ -1495,7 +1495,7 @@ void RefrigerationWalkIn::resetZoneBoundaryStockingDoorOpeningScheduleFacingZone
 
 /// @cond
 RefrigerationWalkIn::RefrigerationWalkIn(std::shared_ptr<detail::RefrigerationWalkIn_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

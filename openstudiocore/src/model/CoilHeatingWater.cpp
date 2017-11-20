@@ -576,7 +576,7 @@ CoilHeatingWater::CoilHeatingWater(const Model& model)
 }
 
 CoilHeatingWater::CoilHeatingWater(std::shared_ptr<detail::CoilHeatingWater_Impl> p)
-  : WaterToAirComponent(p)
+  : WaterToAirComponent(std::move(p))
 {}
 
 Schedule CoilHeatingWater::availabilitySchedule() const

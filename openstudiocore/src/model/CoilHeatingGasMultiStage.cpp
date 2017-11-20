@@ -288,7 +288,7 @@ void CoilHeatingGasMultiStage::addStage(CoilHeatingGasMultiStageStageData& stage
 
 /// @cond
 CoilHeatingGasMultiStage::CoilHeatingGasMultiStage(std::shared_ptr<detail::CoilHeatingGasMultiStage_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

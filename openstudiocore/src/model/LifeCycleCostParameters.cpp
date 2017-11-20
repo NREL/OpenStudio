@@ -849,7 +849,7 @@ LifeCycleCostParameters::LifeCycleCostParameters(const Model& model)
 
 // constructor
 LifeCycleCostParameters::LifeCycleCostParameters(std::shared_ptr<detail::LifeCycleCostParameters_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 int LifeCycleCostParameters::nistYear()

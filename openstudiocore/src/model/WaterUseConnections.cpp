@@ -356,7 +356,7 @@ bool WaterUseConnections::removeWaterUseEquipment(WaterUseEquipment & waterUseEq
 
 /// @cond
 WaterUseConnections::WaterUseConnections(std::shared_ptr<detail::WaterUseConnections_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

@@ -724,13 +724,13 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     if(optObj)
     {
       s = optObj->name().get();
-      connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneReturnAirNodeName,s);
+      connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneReturnAirNodeorNodeListName,s);
     }
     else
     {
       s = modelObject.name().get() + " Return Air Node";
 
-      connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneReturnAirNodeName,s);
+      connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneReturnAirNodeorNodeListName,s);
     }
 
     // ZoneHVAC_EquipmentList

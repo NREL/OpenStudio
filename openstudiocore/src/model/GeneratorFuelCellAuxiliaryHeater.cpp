@@ -500,7 +500,7 @@ GeneratorFuelCell GeneratorFuelCellAuxiliaryHeater::fuelCell() const {
 
 /// @cond
 GeneratorFuelCellAuxiliaryHeater::GeneratorFuelCellAuxiliaryHeater(std::shared_ptr<detail::GeneratorFuelCellAuxiliaryHeater_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

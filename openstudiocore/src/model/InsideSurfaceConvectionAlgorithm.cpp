@@ -153,7 +153,7 @@ InsideSurfaceConvectionAlgorithm::InsideSurfaceConvectionAlgorithm(const Model& 
 // constructor
 InsideSurfaceConvectionAlgorithm::InsideSurfaceConvectionAlgorithm(
     std::shared_ptr<detail::InsideSurfaceConvectionAlgorithm_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 
 } // model

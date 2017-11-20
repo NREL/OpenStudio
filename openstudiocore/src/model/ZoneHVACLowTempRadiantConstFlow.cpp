@@ -827,7 +827,7 @@ void ZoneHVACLowTempRadiantConstFlow::removeFromThermalZone()
 }
 /// @cond
 ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(std::shared_ptr<detail::ZoneHVACLowTempRadiantConstFlow_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

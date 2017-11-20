@@ -1155,7 +1155,7 @@ void GeneratorMicroTurbine::resetExhaustAirTemperatureFunctionofPartLoadRatioCur
 
 /// @cond
 GeneratorMicroTurbine::GeneratorMicroTurbine(std::shared_ptr<detail::GeneratorMicroTurbine_Impl> impl)
-  : Generator(impl)
+  : Generator(std::move(impl))
 {}
 /// @endcond
 

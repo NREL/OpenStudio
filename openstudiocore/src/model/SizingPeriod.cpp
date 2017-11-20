@@ -92,14 +92,14 @@ namespace detail {
 
 /// constructor
 SizingPeriod::SizingPeriod(IddObjectType type,const Model& model)
-  : ParentObject(type,model) 
+  : ParentObject(type,model)
 {
   OS_ASSERT(getImpl<detail::SizingPeriod_Impl>());
 }
 
 // constructor
 SizingPeriod::SizingPeriod(std::shared_ptr<detail::SizingPeriod_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 // ensure that this object does not contain the date 2/29

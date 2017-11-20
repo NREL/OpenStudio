@@ -1911,7 +1911,7 @@ void AirLoopHVACUnitarySystem::resetDesignSpecificationMultispeedObject() {
 
 /// @cond
 AirLoopHVACUnitarySystem::AirLoopHVACUnitarySystem(std::shared_ptr<detail::AirLoopHVACUnitarySystem_Impl> impl)
-  : WaterToAirComponent(impl)
+  : WaterToAirComponent(std::move(impl))
 {}
 /// @endcond
 

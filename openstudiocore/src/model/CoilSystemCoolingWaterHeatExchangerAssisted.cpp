@@ -201,7 +201,7 @@ bool CoilSystemCoolingWaterHeatExchangerAssisted::setCoolingCoil(const WaterToAi
 
 /// @cond
 CoilSystemCoolingWaterHeatExchangerAssisted::CoilSystemCoolingWaterHeatExchangerAssisted(std::shared_ptr<detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

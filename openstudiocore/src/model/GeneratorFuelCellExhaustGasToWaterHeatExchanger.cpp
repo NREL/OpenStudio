@@ -796,7 +796,7 @@ GeneratorFuelCell GeneratorFuelCellExhaustGasToWaterHeatExchanger::fuelCell() co
 
 /// @cond
 GeneratorFuelCellExhaustGasToWaterHeatExchanger::GeneratorFuelCellExhaustGasToWaterHeatExchanger(std::shared_ptr<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

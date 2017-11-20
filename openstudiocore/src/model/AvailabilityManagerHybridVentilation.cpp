@@ -436,7 +436,7 @@ void AvailabilityManagerHybridVentilation::resetOpeningFactorFunctionofWindSpeed
 
 /// @cond
 AvailabilityManagerHybridVentilation::AvailabilityManagerHybridVentilation(std::shared_ptr<detail::AvailabilityManagerHybridVentilation_Impl> impl)
-  : AvailabilityManager(impl)
+  : AvailabilityManager(std::move(impl))
 {}
 /// @endcond
 

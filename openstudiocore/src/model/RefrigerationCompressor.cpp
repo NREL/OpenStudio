@@ -527,7 +527,7 @@ void RefrigerationCompressor::resetTranscriticalCompressorCapacityCurve() {
 
 /// @cond
 RefrigerationCompressor::RefrigerationCompressor(std::shared_ptr<detail::RefrigerationCompressor_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

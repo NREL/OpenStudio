@@ -629,7 +629,7 @@ void RefrigerationCondenserWaterCooled::resetCondensatePipingRefrigerantInventor
 
 /// @cond
 RefrigerationCondenserWaterCooled::RefrigerationCondenserWaterCooled(std::shared_ptr<detail::RefrigerationCondenserWaterCooled_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

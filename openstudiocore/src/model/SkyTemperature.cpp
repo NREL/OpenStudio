@@ -122,7 +122,7 @@ SkyTemperature::SkyTemperature(const Model& model)
 
 // constructor
 SkyTemperature::SkyTemperature(std::shared_ptr<detail::SkyTemperature_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 
 IddObjectType SkyTemperature::iddObjectType() {

@@ -92,7 +92,7 @@ IddObjectType InfraredTransparentMaterial::iddObjectType() {
 
 /// @cond
 InfraredTransparentMaterial::InfraredTransparentMaterial(std::shared_ptr<detail::InfraredTransparentMaterial_Impl> impl)
-  : ModelPartitionMaterial(impl)
+  : ModelPartitionMaterial(std::move(impl))
 {}
 /// @endcond
 

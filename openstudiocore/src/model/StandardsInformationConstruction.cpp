@@ -195,14 +195,14 @@ namespace detail {
 
     // make unique
     // DLM: have to sort before calling unique, unique only works on consecutive elements
-    auto it = std::unique(result.begin(), result.end(), IstringEqual()); 
-    result.resize( std::distance(result.begin(),it) ); 
+    auto it = std::unique(result.begin(), result.end(), IstringEqual());
+    result.resize( std::distance(result.begin(),it) );
 
     // add current to front
     if (standardsConstructionType){
       result.insert(result.begin(), *standardsConstructionType);
     }
-  
+
     return result;
   }
 
@@ -232,7 +232,7 @@ namespace detail {
       if (otherValue) { result = *otherValue; }
     }
     else { result = *choiceValue; }
-    return result; 
+    return result;
   }
 
   bool StandardsInformationConstruction_Impl::isPerturbableLayerTypeDefaulted() const {
@@ -319,7 +319,7 @@ namespace detail {
       return result;
     }
 
-    
+
     // todo: pull from standards JSON file, for now just hard code here
     if (istringEqual(*constructionStandard, "CEC Title24-2013")){
       //result.push_back("NA6");
@@ -408,7 +408,7 @@ namespace detail {
     if (value){
       result = openstudio::istringEqual(value.get(), "True");
     }
-    return result;  
+    return result;
   }
 
   boost::optional<ParentObject> StandardsInformationConstruction_Impl::parent() const {
@@ -464,12 +464,12 @@ namespace detail {
 
     OptionalConstructionBase oConstructionBase = construction();
     if (!oConstructionBase) { return false; }
-    OptionalLayeredConstruction oLayeredConstruction = 
+    OptionalLayeredConstruction oLayeredConstruction =
         oConstructionBase->optionalCast<LayeredConstruction>();
     if (!oLayeredConstruction) { return false; }
 
     if (layerIndex >= oLayeredConstruction->numLayers()) { return false; }
-    
+
     ok = setUnsigned(OS_StandardsInformation_ConstructionFields::PerturbableLayer,layerIndex);
     OS_ASSERT(ok);
     return true;
@@ -480,13 +480,13 @@ namespace detail {
 
     OptionalConstructionBase oConstructionBase = construction();
     if (!oConstructionBase) { return false; }
-    OptionalLayeredConstruction oLayeredConstruction = 
+    OptionalLayeredConstruction oLayeredConstruction =
         oConstructionBase->optionalCast<LayeredConstruction>();
     if (!oLayeredConstruction) { return false; }
 
     UnsignedVector layerIndices = oLayeredConstruction->getLayerIndices(material);
     if (layerIndices.empty()) { return false; }
-    
+
     ok = setUnsigned(OS_StandardsInformation_ConstructionFields::PerturbableLayer,layerIndices[0]);
     OS_ASSERT(ok);
     return true;
@@ -499,14 +499,14 @@ namespace detail {
     OS_ASSERT(ok);
   }
 
-  void StandardsInformationConstruction_Impl::setPerturbableLayerType(const std::string& type) 
+  void StandardsInformationConstruction_Impl::setPerturbableLayerType(const std::string& type)
   {
     bool ok(true);
 
     if (type.empty()) {
       // clear any existing values
       ok = setString(OS_StandardsInformation_ConstructionFields::PerturbableLayerType,"");
-      OS_ASSERT(ok); 
+      OS_ASSERT(ok);
       ok = setString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType,"");
       OS_ASSERT(ok);
       return;
@@ -525,10 +525,10 @@ namespace detail {
     }
   }
 
-  void StandardsInformationConstruction_Impl::resetPerturbableLayerType() 
+  void StandardsInformationConstruction_Impl::resetPerturbableLayerType()
   {
     bool ok = setString(OS_StandardsInformation_ConstructionFields::PerturbableLayerType,"");
-    OS_ASSERT(ok); 
+    OS_ASSERT(ok);
     ok = setString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType,"");
     OS_ASSERT(ok);
   }
@@ -922,7 +922,7 @@ void StandardsInformationConstruction::resetFenestrationLowEmissivityCoating() {
 /// @cond
 StandardsInformationConstruction::StandardsInformationConstruction(
     std::shared_ptr<detail::StandardsInformationConstruction_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

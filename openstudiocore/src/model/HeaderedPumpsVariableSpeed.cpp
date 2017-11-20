@@ -543,7 +543,7 @@ bool HeaderedPumpsVariableSpeed::setSkinLossRadiativeFraction(double skinLossRad
 
 /// @cond
 HeaderedPumpsVariableSpeed::HeaderedPumpsVariableSpeed(std::shared_ptr<detail::HeaderedPumpsVariableSpeed_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

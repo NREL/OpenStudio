@@ -3267,7 +3267,7 @@ void ThermalZone::resetZoneControlContaminantController()
 
 /// @cond
 ThermalZone::ThermalZone(std::shared_ptr<detail::ThermalZone_Impl> impl)
-  : HVACComponent(impl)
+  : HVACComponent(std::move(impl))
 {}
 /// @endcond
 

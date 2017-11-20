@@ -469,7 +469,7 @@ bool EvaporativeCoolerDirectResearchSpecial::isPrimaryAirDesignFlowRateAutosized
 
 EvaporativeCoolerDirectResearchSpecial::EvaporativeCoolerDirectResearchSpecial(
   std::shared_ptr<detail::EvaporativeCoolerDirectResearchSpecial_Impl> p)
-  : StraightComponent(p)
+  : StraightComponent(std::move(p))
 {}
 
 IddObjectType EvaporativeCoolerDirectResearchSpecial::iddObjectType() {

@@ -260,7 +260,7 @@ void SizingParameters::resetTimestepsinAveragingWindow() {
 
 /// @cond
 SizingParameters::SizingParameters(std::shared_ptr<detail::SizingParameters_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 
 SizingParameters::SizingParameters(Model& model)

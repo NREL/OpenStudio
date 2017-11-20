@@ -336,7 +336,7 @@ std::string SizingPlant::coincidentSizingFactorMode() const {
 
 /// @cond
 SizingPlant::SizingPlant(std::shared_ptr<detail::SizingPlant_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

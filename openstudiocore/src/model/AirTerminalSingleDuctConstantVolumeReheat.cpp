@@ -665,7 +665,7 @@ void AirTerminalSingleDuctConstantVolumeReheat::resetMaximumReheatAirTemperature
 
 /// @cond
 AirTerminalSingleDuctConstantVolumeReheat::AirTerminalSingleDuctConstantVolumeReheat(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

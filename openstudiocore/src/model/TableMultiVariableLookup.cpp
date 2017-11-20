@@ -68,7 +68,7 @@ namespace detail {
         }
       }
     }
-    
+
     return result;
   }
 
@@ -679,11 +679,11 @@ namespace detail {
           ++it)
       {
         IdfExtensibleGroup eg = getObject<model::TableMultiVariableLookup>().pushExtensibleGroup();
-        eg.setDouble(0,*it);  
+        eg.setDouble(0,*it);
       }
 
       IdfExtensibleGroup eg = getObject<model::TableMultiVariableLookup>().pushExtensibleGroup();
-      eg.setDouble(0,t_yValue);  
+      eg.setDouble(0,t_yValue);
     }
 
     return true;
@@ -771,7 +771,7 @@ namespace detail {
     xValues[0] = x1;
     return addPoint(xValues,yValue);
   }
-  
+
   bool TableMultiVariableLookup_Impl::addPoint(double x1, double x2, double yValue)
   {
     std::vector<double> xValues(2);
@@ -779,7 +779,7 @@ namespace detail {
     xValues[1] = x2;
     return addPoint(xValues,yValue);
   }
-  
+
   bool TableMultiVariableLookup_Impl::addPoint(double x1, double x2, double x3, double yValue)
   {
     std::vector<double> xValues(3);
@@ -788,7 +788,7 @@ namespace detail {
     xValues[2] = x3;
     return addPoint(xValues,yValue);
   }
-  
+
   bool TableMultiVariableLookup_Impl::addPoint(double x1, double x2, double x3, double x4, double yValue)
   {
     std::vector<double> xValues(4);
@@ -798,7 +798,7 @@ namespace detail {
     xValues[3] = x4;
     return addPoint(xValues,yValue);
   }
-  
+
   bool TableMultiVariableLookup_Impl::addPoint(double x1, double x2, double x3, double x4, double x5, double yValue)
   {
     std::vector<double> xValues(5);
@@ -1260,7 +1260,7 @@ std::vector<double> TableMultiVariableLookup::xValues(int i) const
 
 /// @cond
 TableMultiVariableLookup::TableMultiVariableLookup(std::shared_ptr<detail::TableMultiVariableLookup_Impl> impl)
-  : Curve(std::dynamic_pointer_cast<detail::Curve_Impl>(impl))
+  : Curve(std::dynamic_pointer_cast<detail::Curve_Impl>(std::move(impl)))
 {}
 /// @endcond
 

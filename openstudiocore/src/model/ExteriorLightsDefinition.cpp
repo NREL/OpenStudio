@@ -109,7 +109,7 @@ bool ExteriorLightsDefinition::setDesignLevel(double designLevel) {
 
 /// @cond
 ExteriorLightsDefinition::ExteriorLightsDefinition(std::shared_ptr<detail::ExteriorLightsDefinition_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 /// @endcond
 

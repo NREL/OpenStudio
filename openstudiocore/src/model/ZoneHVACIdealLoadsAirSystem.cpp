@@ -1544,7 +1544,7 @@ void ZoneHVACIdealLoadsAirSystem::resetLatentHeatRecoveryEffectiveness() {
 
 /// @cond
 ZoneHVACIdealLoadsAirSystem::ZoneHVACIdealLoadsAirSystem(std::shared_ptr<detail::ZoneHVACIdealLoadsAirSystem_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

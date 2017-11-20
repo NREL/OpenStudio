@@ -556,7 +556,7 @@ bool CoilWaterHeatingAirToWaterHeatPumpWrapped::setPartLoadFractionCorrelationCu
 
 /// @cond
 CoilWaterHeatingAirToWaterHeatPumpWrapped::CoilWaterHeatingAirToWaterHeatPumpWrapped(std::shared_ptr<detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

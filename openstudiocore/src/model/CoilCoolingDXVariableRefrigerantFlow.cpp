@@ -380,7 +380,7 @@ bool CoilCoolingDXVariableRefrigerantFlow::setCoolingCapacityModifierCurveFuncti
 
 /// @cond
 CoilCoolingDXVariableRefrigerantFlow::CoilCoolingDXVariableRefrigerantFlow(std::shared_ptr<detail::CoilCoolingDXVariableRefrigerantFlow_Impl> impl)
-  : HVACComponent(impl)
+  : HVACComponent(std::move(impl))
 {}
 /// @endcond
 

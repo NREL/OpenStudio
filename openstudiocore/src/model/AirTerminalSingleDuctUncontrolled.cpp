@@ -328,7 +328,7 @@ bool AirTerminalSingleDuctUncontrolled::setAvailabilitySchedule(Schedule & sched
 }
 
 AirTerminalSingleDuctUncontrolled::AirTerminalSingleDuctUncontrolled(std::shared_ptr<detail::AirTerminalSingleDuctUncontrolled_Impl> p)
-  : StraightComponent(p)
+  : StraightComponent(std::move(p))
 {}
 
 IddObjectType AirTerminalSingleDuctUncontrolled::iddObjectType() {

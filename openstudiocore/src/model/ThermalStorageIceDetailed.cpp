@@ -422,7 +422,7 @@ bool ThermalStorageIceDetailed::setThawProcessIndicator(std::string thawProcessI
 
 /// @cond
 ThermalStorageIceDetailed::ThermalStorageIceDetailed(std::shared_ptr<detail::ThermalStorageIceDetailed_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

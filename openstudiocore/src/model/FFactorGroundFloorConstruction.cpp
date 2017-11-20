@@ -81,7 +81,7 @@ namespace detail {
   bool FFactorGroundFloorConstruction_Impl::isSolarDiffusing() const { return false; }
 
   bool FFactorGroundFloorConstruction_Impl::isModelPartition() const { return false; }
-  
+
   int FFactorGroundFloorConstruction_Impl::renderingColorIndex() const
   {
     return OS_Construction_FfactorGroundFloorFields::SurfaceRenderingName;
@@ -281,7 +281,7 @@ bool FFactorGroundFloorConstruction::setPerimeterExposed(const Quantity& perimet
 /// @cond
 FFactorGroundFloorConstruction::FFactorGroundFloorConstruction(
     std::shared_ptr<detail::FFactorGroundFloorConstruction_Impl> impl)
-  : ConstructionBase(impl)
+  : ConstructionBase(std::move(impl))
 {}
 /// @endcond
 

@@ -1139,7 +1139,7 @@ void RefrigerationAirChiller::resetAverageRefrigerantChargeInventory() {
 
 /// @cond
 RefrigerationAirChiller::RefrigerationAirChiller(std::shared_ptr<detail::RefrigerationAirChiller_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

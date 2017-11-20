@@ -168,7 +168,7 @@ CFactorUndergroundWallConstruction::CFactorUndergroundWallConstruction(const Mod
   : ConstructionBase(CFactorUndergroundWallConstruction::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CFactorUndergroundWallConstruction_Impl>());
-  
+
   this->setCFactor(cFactor);
   this->setHeight(height);
 }
@@ -217,7 +217,7 @@ bool CFactorUndergroundWallConstruction::setHeight(const Quantity& height) {
 /// @cond
 CFactorUndergroundWallConstruction::CFactorUndergroundWallConstruction(
     std::shared_ptr<detail::CFactorUndergroundWallConstruction_Impl> impl)
-  : ConstructionBase(impl)
+  : ConstructionBase(std::move(impl))
 {}
 /// @endcond
 

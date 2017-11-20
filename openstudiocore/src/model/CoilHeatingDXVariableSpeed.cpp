@@ -767,7 +767,7 @@ void CoilHeatingDXVariableSpeed::removeAllSpeeds() {
 
 /// @cond
 CoilHeatingDXVariableSpeed::CoilHeatingDXVariableSpeed(std::shared_ptr<detail::CoilHeatingDXVariableSpeed_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

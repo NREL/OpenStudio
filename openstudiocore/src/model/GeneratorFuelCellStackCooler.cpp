@@ -719,7 +719,7 @@ GeneratorFuelCell GeneratorFuelCellStackCooler::fuelCell() const {
 
 /// @cond
 GeneratorFuelCellStackCooler::GeneratorFuelCellStackCooler(std::shared_ptr<detail::GeneratorFuelCellStackCooler_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

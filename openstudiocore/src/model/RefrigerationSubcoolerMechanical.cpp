@@ -179,7 +179,7 @@ void RefrigerationSubcoolerMechanical::resetOutletControlTemperature() {
 
 /// @cond
 RefrigerationSubcoolerMechanical::RefrigerationSubcoolerMechanical(std::shared_ptr<detail::RefrigerationSubcoolerMechanical_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

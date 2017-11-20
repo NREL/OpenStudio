@@ -260,7 +260,7 @@ boost::optional<CentralHeatPumpSystem> CentralHeatPumpSystemModule::centralHeatP
 
 /// @cond
 CentralHeatPumpSystemModule::CentralHeatPumpSystemModule(std::shared_ptr<detail::CentralHeatPumpSystemModule_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

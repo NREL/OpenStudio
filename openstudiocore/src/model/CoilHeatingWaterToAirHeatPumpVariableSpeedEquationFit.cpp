@@ -512,7 +512,7 @@ void CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::removeAllSpeeds() {
 
 /// @cond
 CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit(std::shared_ptr<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl> impl)
-  : WaterToAirComponent(impl)
+  : WaterToAirComponent(std::move(impl))
 {}
 /// @endcond
 

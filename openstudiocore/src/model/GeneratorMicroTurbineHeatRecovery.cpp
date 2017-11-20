@@ -719,7 +719,7 @@ void GeneratorMicroTurbineHeatRecovery::resetRatedThermaltoElectricalPowerRatio(
 
 /// @cond
 GeneratorMicroTurbineHeatRecovery::GeneratorMicroTurbineHeatRecovery(std::shared_ptr<detail::GeneratorMicroTurbineHeatRecovery_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

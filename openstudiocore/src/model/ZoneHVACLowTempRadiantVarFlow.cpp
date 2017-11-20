@@ -702,7 +702,7 @@ void ZoneHVACLowTempRadiantVarFlow::removeFromThermalZone()
 }
 /// @cond
 ZoneHVACLowTempRadiantVarFlow::ZoneHVACLowTempRadiantVarFlow(std::shared_ptr<detail::ZoneHVACLowTempRadiantVarFlow_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

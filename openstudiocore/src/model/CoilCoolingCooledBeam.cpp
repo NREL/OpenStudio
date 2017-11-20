@@ -547,7 +547,7 @@ void CoilCoolingCooledBeam::resetLeavingPipeInsideDiameter()
 
 /// @cond
 CoilCoolingCooledBeam::CoilCoolingCooledBeam(std::shared_ptr<detail::CoilCoolingCooledBeam_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

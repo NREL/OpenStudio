@@ -201,7 +201,7 @@ bool CoilSystemCoolingDXHeatExchangerAssisted::setCoolingCoil(const StraightComp
 
 /// @cond
 CoilSystemCoolingDXHeatExchangerAssisted::CoilSystemCoolingDXHeatExchangerAssisted(std::shared_ptr<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

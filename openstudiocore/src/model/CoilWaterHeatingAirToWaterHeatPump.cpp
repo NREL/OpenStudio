@@ -802,7 +802,7 @@ bool CoilWaterHeatingAirToWaterHeatPump::setPartLoadFractionCorrelationCurve(con
 
 /// @cond
 CoilWaterHeatingAirToWaterHeatPump::CoilWaterHeatingAirToWaterHeatPump(std::shared_ptr<detail::CoilWaterHeatingAirToWaterHeatPump_Impl> impl)
-  : HVACComponent(impl)
+  : HVACComponent(std::move(impl))
 {}
 /// @endcond
 

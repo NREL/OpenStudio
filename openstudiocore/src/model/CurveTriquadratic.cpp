@@ -1437,7 +1437,7 @@ void CurveTriquadratic::resetOutputUnitType() {
 
 /// @cond
 CurveTriquadratic::CurveTriquadratic(std::shared_ptr<detail::CurveTriquadratic_Impl> impl)
-  : Curve(impl)
+  : Curve(std::move(impl))
 {}
 /// @endcond
 

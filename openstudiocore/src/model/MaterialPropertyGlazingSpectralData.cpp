@@ -202,7 +202,7 @@ void MaterialPropertyGlazingSpectralData::resetSpectralDataFields()
 
 /// @cond
 MaterialPropertyGlazingSpectralData::MaterialPropertyGlazingSpectralData(std::shared_ptr<detail::MaterialPropertyGlazingSpectralData_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 /// @endcond
 

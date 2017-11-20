@@ -699,7 +699,7 @@ bool AirTerminalSingleDuctVAVReheat::setAvailabilitySchedule(Schedule& schedule)
 }
 
 AirTerminalSingleDuctVAVReheat::AirTerminalSingleDuctVAVReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVReheat_Impl> p)
-  : StraightComponent(p)
+  : StraightComponent(std::move(p))
 {}
 
 IddObjectType AirTerminalSingleDuctVAVReheat::iddObjectType() {

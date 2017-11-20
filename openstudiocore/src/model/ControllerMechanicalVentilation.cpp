@@ -272,7 +272,7 @@ ControllerOutdoorAir ControllerMechanicalVentilation::controllerOutdoorAir() con
 
 /// @cond
 ControllerMechanicalVentilation::ControllerMechanicalVentilation(std::shared_ptr<detail::ControllerMechanicalVentilation_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

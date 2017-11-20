@@ -266,7 +266,7 @@ void TemperingValve::resetPumpOutletNode() {
 
 /// @cond
 TemperingValve::TemperingValve(std::shared_ptr<detail::TemperingValve_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

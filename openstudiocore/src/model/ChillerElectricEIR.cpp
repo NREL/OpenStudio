@@ -1322,7 +1322,7 @@ boost::optional<Schedule> ChillerElectricEIR::basinHeaterSchedule() const
 
 /// @cond
 ChillerElectricEIR::ChillerElectricEIR(std::shared_ptr<detail::ChillerElectricEIR_Impl> impl)
-  : WaterToWaterComponent(impl)
+  : WaterToWaterComponent(std::move(impl))
 {}
 
 /// @endcond

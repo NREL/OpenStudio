@@ -1427,14 +1427,14 @@ namespace openstudio {
 
       openstudio::path modelPath = toPath(m_savePath);
 
+      emit modelSaving(modelPath);
+
       // saves the model to modelTempDir / m_savePath.filename()
       // also copies the temp files to user location
       bool saved = saveModel(this->model(), modelPath, toPath(m_modelTempDir));
       OS_ASSERT(saved);
 
       this->setSavePath(toQString(modelPath));
-
-      emit modelSaving(modelPath);
 
       this->markAsUnmodified();
 
@@ -1500,14 +1500,14 @@ namespace openstudio {
         modelPath = setFileExtension(modelPath, modelFileExtension(), false, true);
       }
 
+      emit modelSaving(modelPath);
+
       // saves the model to modelTempDir / filePath.filename()
       // also copies the temp files to user location
       bool saved = saveModel(this->model(), modelPath, toPath(m_modelTempDir));
       OS_ASSERT(saved);
 
       this->setSavePath(toQString(modelPath));
-
-      emit modelSaving(modelPath);
 
       this->markAsUnmodified();
 

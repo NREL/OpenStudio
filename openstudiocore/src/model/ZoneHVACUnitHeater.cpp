@@ -612,7 +612,7 @@ void ZoneHVACUnitHeater::resetHeatingConvergenceTolerance()
 }
 
 ZoneHVACUnitHeater::ZoneHVACUnitHeater(std::shared_ptr<detail::ZoneHVACUnitHeater_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 
 } // model

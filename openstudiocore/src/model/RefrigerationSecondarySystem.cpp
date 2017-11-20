@@ -1072,7 +1072,7 @@ void RefrigerationSecondarySystem::resetEndUseSubcategory() {
 
 /// @cond
 RefrigerationSecondarySystem::RefrigerationSecondarySystem(std::shared_ptr<detail::RefrigerationSecondarySystem_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

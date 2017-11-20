@@ -486,7 +486,7 @@ GeneratorFuelCell GeneratorFuelCellWaterSupply::fuelCell() const {
 
 /// @cond
 GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(std::shared_ptr<detail::GeneratorFuelCellWaterSupply_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

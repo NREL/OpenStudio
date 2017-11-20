@@ -726,7 +726,7 @@ void BoilerHotWater::resetSizingFactor() {
 
 /// @cond
 BoilerHotWater::BoilerHotWater(std::shared_ptr<detail::BoilerHotWater_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

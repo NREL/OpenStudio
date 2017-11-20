@@ -867,7 +867,7 @@ unsigned AirTerminalSingleDuctParallelPIUReheat::secondaryAirInletPort() const
 /// @cond
 
 AirTerminalSingleDuctParallelPIUReheat::AirTerminalSingleDuctParallelPIUReheat(std::shared_ptr<detail::AirTerminalSingleDuctParallelPIUReheat_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 
 /// @endcond

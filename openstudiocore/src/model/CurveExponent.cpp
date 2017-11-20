@@ -354,7 +354,7 @@ void CurveExponent::resetOutputUnitType() {
 
 /// @cond
 CurveExponent::CurveExponent(std::shared_ptr<detail::CurveExponent_Impl> impl)
-  : Curve(impl)
+  : Curve(std::move(impl))
 {}
 /// @endcond
 

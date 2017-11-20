@@ -352,7 +352,7 @@ void HeatBalanceAlgorithm::resetMaximumSurfaceConvectionHeatTransferCoefficientV
 /// @cond
 /// constructor
 HeatBalanceAlgorithm::HeatBalanceAlgorithm(std::shared_ptr<detail::HeatBalanceAlgorithm_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {
 }
 

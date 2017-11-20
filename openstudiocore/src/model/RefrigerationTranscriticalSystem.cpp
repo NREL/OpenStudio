@@ -840,7 +840,7 @@ void RefrigerationTranscriticalSystem::resetEndUseSubcategory() {
 
 /// @cond
 RefrigerationTranscriticalSystem::RefrigerationTranscriticalSystem(std::shared_ptr<detail::RefrigerationTranscriticalSystem_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

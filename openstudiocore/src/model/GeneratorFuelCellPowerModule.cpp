@@ -1415,7 +1415,7 @@ GeneratorFuelCell GeneratorFuelCellPowerModule::fuelCell() const {
 
 /// @cond
 GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(std::shared_ptr<detail::GeneratorFuelCellPowerModule_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

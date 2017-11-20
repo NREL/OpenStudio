@@ -660,7 +660,7 @@ AirLoopHVACOutdoorAirSystem::AirLoopHVACOutdoorAirSystem(Model & model, const Co
 
 AirLoopHVACOutdoorAirSystem::AirLoopHVACOutdoorAirSystem(
     std::shared_ptr<detail::AirLoopHVACOutdoorAirSystem_Impl> impl)
-  : HVACComponent(impl)
+  : HVACComponent(std::move(impl))
 {
 }
 

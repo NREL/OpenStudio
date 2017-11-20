@@ -131,7 +131,7 @@ namespace detail {
     if (boost::optional<ElectricalStorage> optElectricalStorage = electricalStorage()) {
       result.push_back(optElectricalStorage.get());
     }
-    
+
     return result;
   }
 
@@ -418,9 +418,9 @@ namespace detail {
 
     // DLM: may have problems with signals here if inverter is temporarily on two load centers
     bool result = setPointer(OS_ElectricLoadCenter_DistributionFields::InverterName, inverter.handle());
- 
+
     if (result){
-      
+
       // TODO: update bus type
 
     } else{
@@ -431,7 +431,7 @@ namespace detail {
       }
 
     }
-    
+
     return result;
   }
 
@@ -493,7 +493,7 @@ namespace detail {
   bool ElectricLoadCenterDistribution_Impl::setStorageConverter(const ElectricLoadCenterStorageConverter& converter) {
     return setPointer(OS_ElectricLoadCenter_DistributionFields::StorageConverterObjectName, converter.handle());
   }
-  
+
   void ElectricLoadCenterDistribution_Impl::resetStorageConverter() {
     bool result = setString(OS_ElectricLoadCenter_DistributionFields::StorageConverterObjectName, "");
     OS_ASSERT(result);
@@ -585,7 +585,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  // Storage Control Utility Demand Target Fraction Schedule Name, will be used only if FacilityDemandLeveling, defaults to 1.0  
+  // Storage Control Utility Demand Target Fraction Schedule Name, will be used only if FacilityDemandLeveling, defaults to 1.0
   bool ElectricLoadCenterDistribution_Impl::setStorageControlUtilityDemandTargetFractionSchedule(Schedule& schedule) {
     bool result = setSchedule(OS_ElectricLoadCenter_DistributionFields::StorageControlUtilityDemandTargetFractionScheduleName,
       "ElectricLoadCenterDistribution",
@@ -602,7 +602,7 @@ namespace detail {
 
   // Validity Checking
   bool ElectricLoadCenterDistribution_Impl::validityCheck() const {
-    
+
     // Logic based on Electrical Buss Type to translate or not translate inverters, storage
     bool result = true;
 
@@ -745,7 +745,7 @@ namespace detail {
       LOG(Warn, briefDescription() << ": Your Electric Buss Type '" << bussType
         << "' is not compatible with storage objects. No storage objects will be translated including the Battery itself:'"
         << elcSto->name().get() << "'");
-    
+
       // Case 3: if there is a buss that expects Storage, but no Storage: this is bad, it'll throw a fatal in E+
     } else if (bussWithStorage && !elcSto) {
       LOG(Error, briefDescription() << ": Your Electric Buss Type '" << bussType
@@ -1093,7 +1093,7 @@ bool ElectricLoadCenterDistribution::validityCheck() const {
 
 /// @cond
 ElectricLoadCenterDistribution::ElectricLoadCenterDistribution(std::shared_ptr<detail::ElectricLoadCenterDistribution_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

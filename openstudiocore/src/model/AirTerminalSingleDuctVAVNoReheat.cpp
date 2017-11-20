@@ -576,7 +576,7 @@ void AirTerminalSingleDuctVAVNoReheat::setControlForOutdoorAir(bool controlForOu
 
 /// @cond
 AirTerminalSingleDuctVAVNoReheat::AirTerminalSingleDuctVAVNoReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVNoReheat_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

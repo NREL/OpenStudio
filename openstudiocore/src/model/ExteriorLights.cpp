@@ -363,7 +363,7 @@ Facility ExteriorLights::facility() const {
 
 /// @cond
 ExteriorLights::ExteriorLights(std::shared_ptr<detail::ExteriorLights_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

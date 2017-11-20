@@ -169,7 +169,7 @@ LifeCycleCostUsePriceEscalation::LifeCycleCostUsePriceEscalation(const Model& mo
 
 // constructor
 LifeCycleCostUsePriceEscalation::LifeCycleCostUsePriceEscalation(std::shared_ptr<detail::LifeCycleCostUsePriceEscalation_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 OptionalInt LifeCycleCostUsePriceEscalation::escalationStartYear() const

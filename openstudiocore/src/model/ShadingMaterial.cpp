@@ -45,7 +45,7 @@ namespace detail {
                                              bool keepHandle)
     : FenestrationMaterial_Impl(other, model, keepHandle)
   {}
-  
+
   ShadingMaterial_Impl::ShadingMaterial_Impl(const ShadingMaterial_Impl& other,
                                              Model_Impl* model,
                                              bool keepHandle)
@@ -55,14 +55,14 @@ namespace detail {
 } // detail
 
 ShadingMaterial::ShadingMaterial(IddObjectType type,const Model& model)
-  : FenestrationMaterial(type,model) 
+  : FenestrationMaterial(type,model)
 {
   OS_ASSERT(getImpl<detail::ShadingMaterial_Impl>());
 }
 
 /// @cond
 ShadingMaterial::ShadingMaterial(std::shared_ptr<detail::ShadingMaterial_Impl> impl)
-  : FenestrationMaterial(impl)
+  : FenestrationMaterial(std::move(impl))
 {}
 /// @endcond
 

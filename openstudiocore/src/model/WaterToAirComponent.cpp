@@ -57,19 +57,19 @@ WaterToAirComponent_Impl::WaterToAirComponent_Impl(IddObjectType type, Model_Imp
 
 WaterToAirComponent_Impl::WaterToAirComponent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : HVACComponent_Impl(idfObject, model, keepHandle)
-{ 
+{
 }
 
 WaterToAirComponent_Impl::WaterToAirComponent_Impl(
-    const openstudio::detail::WorkspaceObject_Impl& other, 
-    Model_Impl* model, 
+    const openstudio::detail::WorkspaceObject_Impl& other,
+    Model_Impl* model,
     bool keepHandle)
   : HVACComponent_Impl(other,model,keepHandle)
 {
 }
 
-WaterToAirComponent_Impl::WaterToAirComponent_Impl(const WaterToAirComponent_Impl& other, 
-                                               Model_Impl* model, 
+WaterToAirComponent_Impl::WaterToAirComponent_Impl(const WaterToAirComponent_Impl& other,
+                                               Model_Impl* model,
                                                bool keepHandles)
   : HVACComponent_Impl(other,model,keepHandles)
 {
@@ -119,7 +119,7 @@ std::vector<HVACComponent> WaterToAirComponent_Impl::edges(const boost::optional
       edges.push_back(edgeHVACComponent.get());
     }
   };
-  
+
   if( prev) {
     if( auto inletModelObject = waterInletModelObject() ) {
       if( prev.get() == inletModelObject.get() ) {
@@ -154,7 +154,7 @@ boost::optional<PlantLoop> WaterToAirComponent_Impl::plantLoop() const
 
 bool WaterToAirComponent_Impl::addToNode(Node & node)
 {
-  auto _model = node.model(); 
+  auto _model = node.model();
   auto thisModelObject = getObject<ModelObject>();
   auto t_airLoop = node.airLoopHVAC();
   auto t_plantLoop = node.plantLoop();
@@ -226,7 +226,7 @@ std::vector<openstudio::IdfObject> WaterToAirComponent_Impl::remove()
 
     return HVACComponent_Impl::remove();
   }
-  
+
   return std::vector<IdfObject>();
 }
 
@@ -234,11 +234,11 @@ ModelObject WaterToAirComponent_Impl::clone(Model model) const
 {
   WaterToAirComponent mo = HVACComponent_Impl::clone( model ).cast<WaterToAirComponent>();
 
-  mo.setString(mo.airInletPort(),""); 
-  mo.setString(mo.airOutletPort(),""); 
+  mo.setString(mo.airInletPort(),"");
+  mo.setString(mo.airOutletPort(),"");
 
-  mo.setString(mo.waterInletPort(),""); 
-  mo.setString(mo.waterOutletPort(),""); 
+  mo.setString(mo.waterInletPort(),"");
+  mo.setString(mo.waterOutletPort(),"");
 
   return mo;
 }
@@ -290,7 +290,7 @@ void WaterToAirComponent_Impl::disconnectWaterSide()
   Model _model = this->model();
 
   ModelObject mo = this->getObject<ModelObject>();
-  
+
   _model.disconnect(mo,this->waterInletPort());
 
   _model.disconnect(mo,this->waterOutletPort());
@@ -301,7 +301,7 @@ void WaterToAirComponent_Impl::disconnectAirSide()
   Model _model = this->model();
 
   ModelObject mo = this->getObject<ModelObject>();
-  
+
   _model.disconnect(mo,this->airInletPort());
 
   _model.disconnect(mo,this->airOutletPort());
@@ -310,7 +310,7 @@ void WaterToAirComponent_Impl::disconnectAirSide()
 void WaterToAirComponent_Impl::disconnect()
 {
   this->disconnectWaterSide();
-  
+
   this->disconnectAirSide();
 }
 
@@ -374,10 +374,10 @@ WaterToAirComponent::WaterToAirComponent(IddObjectType type,const Model& model)
   : HVACComponent(type,model)
 {
   OS_ASSERT(getImpl<detail::WaterToAirComponent_Impl>());
-}     
+}
 
 WaterToAirComponent::WaterToAirComponent(std::shared_ptr<detail::WaterToAirComponent_Impl> p)
-  : HVACComponent(p)
+  : HVACComponent(std::move(p))
 {}
 
 boost::optional<ModelObject> WaterToAirComponent::airInletModelObject()

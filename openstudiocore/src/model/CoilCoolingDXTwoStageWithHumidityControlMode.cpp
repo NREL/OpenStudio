@@ -811,7 +811,7 @@ void CoilCoolingDXTwoStageWithHumidityControlMode::resetBasinHeaterOperatingSche
 
 /// @cond
 CoilCoolingDXTwoStageWithHumidityControlMode::CoilCoolingDXTwoStageWithHumidityControlMode(std::shared_ptr<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

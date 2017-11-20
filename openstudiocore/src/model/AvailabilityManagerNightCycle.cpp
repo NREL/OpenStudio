@@ -344,7 +344,7 @@ void AvailabilityManagerNightCycle::resetControlThermalZone() {
 
 /// @cond
 AvailabilityManagerNightCycle::AvailabilityManagerNightCycle(std::shared_ptr<detail::AvailabilityManagerNightCycle_Impl> impl)
-  : AvailabilityManager(impl)
+  : AvailabilityManager(std::move(impl))
 {}
 /// @endcond
 

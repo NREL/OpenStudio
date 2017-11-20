@@ -771,7 +771,7 @@ unsigned AirTerminalSingleDuctConstantVolumeFourPipeInduction::inducedAirInletPo
 
 /// @cond
 AirTerminalSingleDuctConstantVolumeFourPipeInduction::AirTerminalSingleDuctConstantVolumeFourPipeInduction(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

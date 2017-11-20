@@ -830,7 +830,7 @@ void ZoneHVACPackagedTerminalAirConditioner::resetFanPlacement() {
 }
 
 ZoneHVACPackagedTerminalAirConditioner::ZoneHVACPackagedTerminalAirConditioner(std::shared_ptr<detail::ZoneHVACPackagedTerminalAirConditioner_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 
 boost::optional<Schedule> ZoneHVACPackagedTerminalAirConditioner::supplyAirFanOperatingModeSchedule() const

@@ -326,7 +326,7 @@ void RefrigerationCondenserCascade::resetCondensatePipingRefrigerantInventory() 
 
 /// @cond
 RefrigerationCondenserCascade::RefrigerationCondenserCascade(std::shared_ptr<detail::RefrigerationCondenserCascade_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

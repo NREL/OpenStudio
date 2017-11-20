@@ -215,14 +215,14 @@ CoilHeatingDXVariableSpeedSpeedData::CoilHeatingDXVariableSpeedSpeedData(const M
   heating_curve_1.setMaximumValueofx(23.33);
   heating_curve_1.setMinimumValueofy(-30.56);
   heating_curve_1.setMaximumValueofy(17.22);
-  
+
   CurveQuadratic heating_curve_2(model);
   heating_curve_2.setCoefficient1Constant(1.0);
   heating_curve_2.setCoefficient2x(0.0);
   heating_curve_2.setCoefficient3xPOW2(0.0);
   heating_curve_2.setMinimumValueofx(0.5);
   heating_curve_2.setMaximumValueofx(1.5);
-  
+
   CurveBiquadratic heating_curve_3(model);
   heating_curve_3.setCoefficient1Constant(0.9172082199);
   heating_curve_3.setCoefficient2x(-0.0116036212);
@@ -234,7 +234,7 @@ CoilHeatingDXVariableSpeedSpeedData::CoilHeatingDXVariableSpeedSpeedData(const M
   heating_curve_3.setMaximumValueofx(23.33);
   heating_curve_3.setMinimumValueofy(-30.56);
   heating_curve_3.setMaximumValueofy(17.22);
-  
+
   CurveQuadratic heating_curve_4(model);
   heating_curve_4.setCoefficient1Constant(1.0);
   heating_curve_4.setCoefficient2x(0.0);
@@ -349,7 +349,7 @@ bool CoilHeatingDXVariableSpeedSpeedData::setEnergyInputRatioFunctionofAirFlowFr
 
 /// @cond
 CoilHeatingDXVariableSpeedSpeedData::CoilHeatingDXVariableSpeedSpeedData(std::shared_ptr<detail::CoilHeatingDXVariableSpeedSpeedData_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

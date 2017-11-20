@@ -197,7 +197,7 @@ void AvailabilityManagerDifferentialThermostat::setTemperatureDifferenceOffLimit
 
 /// @cond
 AvailabilityManagerDifferentialThermostat::AvailabilityManagerDifferentialThermostat(std::shared_ptr<detail::AvailabilityManagerDifferentialThermostat_Impl> impl)
-  : AvailabilityManager(impl)
+  : AvailabilityManager(std::move(impl))
 {}
 /// @endcond
 
