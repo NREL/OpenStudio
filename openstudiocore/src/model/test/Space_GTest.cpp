@@ -1521,11 +1521,11 @@ TEST_F(ModelFixture, Space_hardApplySpaceType_Plenum)
   AirLoopHVACSupplyPlenum a(m);
   a.setThermalZone(z);
 
-  ASSERT_EQ(m.plenumSpaceType().handle(), s.spaceType().get());
+  ASSERT_EQ(m.plenumSpaceType().handle(), s.spaceType().get().handle());
 
   // This should not do anything, space Type should stay the same
   s.hardApplySpaceType(true);
 
-  ASSERT_EQ(m.plenumSpaceType().handle(), s.spaceType().get());
+  ASSERT_EQ(m.plenumSpaceType().handle(), s.spaceType().get().handle());
 
 }

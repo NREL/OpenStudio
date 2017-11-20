@@ -182,6 +182,18 @@ namespace detail {
     return result;
   }
 
+  ModelObject SpaceType_Impl::clone(Model model) const
+  {
+    // Do no allow cloning of Plenum Space Type
+    if (istringEqual("Plenum Space Type", this->nameString())) {
+      // LOG_AND_THROW("Cannot clone the unique object 'Plenum Space Type'");
+      LOG(Error, "Cannot clone the unique Space Type 'Plenum Space Type'");
+      // Return itself
+      return getObject<ModelObject>();
+    }
+    return ResourceObject_Impl::clone(model);
+  }
+
   boost::optional<std::string> SpaceType_Impl::setName(const std::string& newName)
   {
     // don't allow user to change name of plenum space type since this is found by name in Model::plenumSpaceType

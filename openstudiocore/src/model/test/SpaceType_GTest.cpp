@@ -57,7 +57,7 @@ TEST_F(ModelFixture, SpaceType_InternalGainAttributes_PeoplePerFloorArea) {
   // OptionalAttribute peoplePerFloorArea = spaceType.getAttribute("peoplePerFloorArea");
   // ASSERT_TRUE(peoplePerFloorArea);
   // EXPECT_TRUE(peoplePerFloorArea->valueType() == AttributeValueType::Double);
-  
+
   PeopleDefinition defPerArea(model);
   People instPerArea(defPerArea);
   instPerArea.setSpaceType(spaceType);
@@ -209,11 +209,11 @@ TEST_F(ModelFixture, SpaceType_StandardsTypes) {
   ASSERT_EQ(2u, suggestedStandardsSpaceTypes.size());
   EXPECT_EQ("Attic", suggestedStandardsSpaceTypes[0]);
   EXPECT_EQ("Plenum", suggestedStandardsSpaceTypes[1]);
-} 
+}
 
 TEST_F(ModelFixture, SpaceType_Clone) {
   Model library;
-  Model model;  
+  Model model;
 
   SpaceType librarySpaceType(library);
 
@@ -261,4 +261,15 @@ TEST_F(ModelFixture, SpaceType_Clone) {
   EXPECT_EQ(1u,model.getModelObjects<ScheduleRuleset>().size());
 }
 
+
+/* If the space type is the unique Plenum Space type, it should Log and Error and return itself */
+TEST_F(ModelFixture, SpaceType_Clone_Plenum) {
+
+  Model m;
+  SpaceType st = m.plenumSpaceType();
+
+  // Doesn't clone, and returns itself
+  SpaceType stClone = st.clone(m).cast<SpaceType>();
+  ASSERT_EQ(st.handle(), stClone.handle());
+}
 

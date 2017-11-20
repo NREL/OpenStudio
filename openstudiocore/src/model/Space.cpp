@@ -2091,8 +2091,8 @@ namespace detail {
     if (spaceType){
 
       // Do not try to clone plenumSpaceType, this is a unique model object
-      if( boost::optional<std::string> name = spaceType.name() ) {
-        if( istringEqual(name.get(),plenumSpaceTypeName) ) {
+      if( boost::optional<std::string> name = spaceType->name() ) {
+        if( istringEqual(name.get(), plenumSpaceTypeName) ) {
           LOG(Debug, "Cannot hard apply '" << plenumSpaceTypeName << "' for " << this->briefDescription());
           return;
         }
