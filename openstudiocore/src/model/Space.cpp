@@ -2089,7 +2089,6 @@ namespace detail {
 
     boost::optional<SpaceType> spaceType = this->spaceType();
     if (spaceType){
-
       // Do not try to clone plenumSpaceType, this is a unique model object
       if( boost::optional<std::string> name = spaceType->name() ) {
         if( istringEqual(name.get(), plenumSpaceTypeName) ) {

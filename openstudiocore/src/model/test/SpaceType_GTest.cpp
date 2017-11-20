@@ -266,10 +266,17 @@ TEST_F(ModelFixture, SpaceType_Clone) {
 TEST_F(ModelFixture, SpaceType_Clone_Plenum) {
 
   Model m;
-  SpaceType st = m.plenumSpaceType();
+
+  SpaceType m1_st = m.plenumSpaceType();
 
   // Doesn't clone, and returns itself
-  SpaceType stClone = st.clone(m).cast<SpaceType>();
-  ASSERT_EQ(st.handle(), stClone.handle());
+  SpaceType m1_stClone = m1_st.clone(m).cast<SpaceType>();
+  ASSERT_EQ(m1_st.handle(), m1_stClone.handle());
+
+  // Try in another model, should return target model's plenum space type
+  Model m2;
+  SpaceType m2_stClone = m1_st.clone(m2).cast<SpaceType>();
+  ASSERT_NE(m1_st.handle(), m2_stClone.handle());
+  ASSERT_EQ(m2.plenumSpaceType().handle(), m2_stClone.handle());
 }
 

@@ -186,10 +186,9 @@ namespace detail {
   {
     // Do no allow cloning of Plenum Space Type
     if (istringEqual("Plenum Space Type", this->nameString())) {
-      // LOG_AND_THROW("Cannot clone the unique object 'Plenum Space Type'");
       LOG(Error, "Cannot clone the unique Space Type 'Plenum Space Type'");
-      // Return itself
-      return getObject<ModelObject>();
+      // Return model.plenumSpaceType() so that it works with another target model too
+      return model.plenumSpaceType().cast<ModelObject>();
     }
     return ResourceObject_Impl::clone(model);
   }
