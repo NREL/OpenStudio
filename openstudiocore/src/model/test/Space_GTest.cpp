@@ -1523,9 +1523,33 @@ TEST_F(ModelFixture, Space_hardApplySpaceType_Plenum)
 
   ASSERT_EQ(m.plenumSpaceType().handle(), s.spaceType().get().handle());
 
-  // This should not do anything, space Type should stay the same
+  // This should not do anything, space type should change
   s.hardApplySpaceType(true);
 
-  ASSERT_EQ(m.plenumSpaceType().handle(), s.spaceType().get().handle());
+  ASSERT_NE(m.plenumSpaceType().handle(), s.spaceType().get().handle());
 
+}
+
+TEST_F(ModelFixture, Space_hardApplySpaceType_Plenum2)
+{
+  Model m;
+  Space s1(m);
+  Space s2(m);
+  ThermalZone z(m);
+  s1.setThermalZone(z);
+  s2.setThermalZone(z);
+
+  AirLoopHVACSupplyPlenum a(m);
+  a.setThermalZone(z);
+
+  ASSERT_EQ(m.plenumSpaceType().handle(), s1.spaceType().get().handle());
+  ASSERT_EQ(m.plenumSpaceType().handle(), s2.spaceType().get().handle());
+
+  // This should not do anything, space type should change
+  s1.hardApplySpaceType(true);
+  s2.hardApplySpaceType(true);
+
+  ASSERT_NE(m.plenumSpaceType().handle(), s1.spaceType().get().handle());
+  ASSERT_NE(m.plenumSpaceType().handle(), s2.spaceType().get().handle());
+  ASSERT_NE(s1.spaceType().get().handle(), s2.spaceType().get().handle());
 }
