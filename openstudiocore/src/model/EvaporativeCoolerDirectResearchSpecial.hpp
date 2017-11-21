@@ -143,29 +143,20 @@ class MODEL_API EvaporativeCoolerDirectResearchSpecial : public StraightComponen
   /** Sets the minimum and maximum operation temperatures **/
 
   /** Returns the value of the EvaporativeOperationMinimumDrybulbTemperature field. **/
-  boost::optional<double> evaporativeOperationMinimumDrybulbTemperature() const;
-  /** Check for defaulted **/
-  bool isEvaporativeOperationMinimumDrybulbTemperatureDefaulted() const;
+  double evaporativeOperationMinimumDrybulbTemperature() const;
   /** Sets or resets the value of the EvaporativeOperationMinimumDrybulbTemperature field. **/
-  bool setEvaporativeOperationMinimumDrybulbTemperature(double evaporativeOperationMinimumDrybulbTemperature); 
-  void resetEvaporativeOperationMinimumDrybulbTemperature();
+  bool setEvaporativeOperationMinimumDrybulbTemperature(double evaporativeOperationMinimumDrybulbTemperature);
 
   /** Returns the value of the EvaporativeOperationMaximumLimitWetbulbTemperature field. **/
-  boost::optional<double> evaporativeOperationMaximumLimitWetbulbTemperature() const;
-  /** Check for defaulted **/
-  bool isEvaporativeOperationMaximumLimitWetbulbTemperatureDefaulted() const;
-  /** Sets or resets the value of the EvaporativeOperationMaximumLimitWetbulbTemperature field. **/
+  double evaporativeOperationMaximumLimitWetbulbTemperature() const;
+  /** Sets the value of the EvaporativeOperationMaximumLimitWetbulbTemperature field. **/
   bool setEvaporativeOperationMaximumLimitWetbulbTemperature(double evaporativeOperationMaximumLimitWetbulbTemperature);
-  void resetEvaporativeOperationMaximumLimitWetbulbTemperature();
 
   /** Returns the value of the EvaporativeOperationMaximumLimitDrybulbTemperature field. **/
-  boost::optional<double> evaporativeOperationMaximumLimitDrybulbTemperature() const;
-  /** Check for defaulted **/
-  bool isEvaporativeOperationMaximumLimitDrybulbTemperatureDefaulted() const;
-  /** Sets or resets the value of the EvaporativeOperationMaximumLimitDrybulbTemperature field. **/
+  double evaporativeOperationMaximumLimitDrybulbTemperature() const;
+  /** Sets the value of the EvaporativeOperationMaximumLimitDrybulbTemperature field. **/
   bool setEvaporativeOperationMaximumLimitDrybulbTemperature(double evaporativeOperationMaximumLimitDrybulbTemperature);
-  void resetEvaporativeOperationMaximumLimitDrybulbTemperature();
-  
+
 
 
   boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const ;

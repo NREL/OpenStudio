@@ -132,20 +132,14 @@ namespace detail {
 
     bool isPrimaryAirDesignFlowRateAutosized() const;
 
-    boost::optional<double> evaporativeOperationMinimumDrybulbTemperature() const;
-    bool isEvaporativeOperationMinimumDrybulbTemperatureDefaulted() const;
+    double evaporativeOperationMinimumDrybulbTemperature() const;
     bool setEvaporativeOperationMinimumDrybulbTemperature(double evaporativeOperationMinimumDrybulbTemperature);
-    void resetEvaporativeOperationMinimumDrybulbTemperature();
 
-    boost::optional<double> evaporativeOperationMaximumLimitWetbulbTemperature() const;
-    bool isEvaporativeOperationMaximumLimitWetbulbTemperatureDefaulted() const;
+    double evaporativeOperationMaximumLimitWetbulbTemperature() const;
     bool setEvaporativeOperationMaximumLimitWetbulbTemperature(double evaporativeOperationMaximumLimitWetbulbTemperature);
-    void resetEvaporativeOperationMaximumLimitWetbulbTemperature();
 
-    boost::optional<double> evaporativeOperationMaximumLimitDrybulbTemperature() const;
-    bool isEvaporativeOperationMaximumLimitDrybulbTemperatureDefaulted() const;
+    double evaporativeOperationMaximumLimitDrybulbTemperature() const;
     bool setEvaporativeOperationMaximumLimitDrybulbTemperature(double evaporativeOperationMaximumLimitDrybulbTemperature);
-    void resetEvaporativeOperationMaximumLimitDrybulbTemperature();
 
     boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const ;
 
