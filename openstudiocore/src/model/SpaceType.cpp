@@ -183,54 +183,17 @@ namespace detail {
   }
 
   ModelObject SpaceType_Impl::clone(Model model) const
-  {/*
-    std::string plenumSpaceTypeName = this->model().plenumSpaceTypeName();
-
-    // DLM: seems like we should apply this logic to the other "specially named" model objects?
-
-    // Do no allow cloning of Plenum Space Type
-    if (istringEqual(plenumSpaceTypeName, this->nameString())) {
-      LOG(Warn, "Cannot clone the unique Space Type '" << plenumSpaceTypeName << "'");
-
-      // Return model.plenumSpaceType() so that it works with another target model too
-      return model.plenumSpaceType().cast<ModelObject>();
-    }
-    */
+  {
     return ResourceObject_Impl::clone(model);
   }
 
   boost::optional<std::string> SpaceType_Impl::setName(const std::string& newName)
-  {/*
-    std::string plenumSpaceTypeName = this->model().plenumSpaceTypeName();
-
-    // don't allow user to change name of plenum space type since this is found by name in Model::plenumSpaceType
-    if (istringEqual(plenumSpaceTypeName, this->nameString())){
-      return this->nameString();
-    }
-
-    // DLM: should we all user to name this the plenumSpaceTypeName?
-    //if (istringEqual(plenumSpaceTypeName, newName)){
-    //  return this->nameString();
-    //}
-    */
+  {
     return ResourceObject_Impl::setName(newName);
   }
 
   boost::optional<std::string> SpaceType_Impl::setName(const std::string& newName, bool checkValidity)
-  {/*
-    std::string plenumSpaceTypeName = this->model().plenumSpaceTypeName();
-
-    // don't allow user to change name of plenum space type since this is found by name in Model::plenumSpaceType
-    if (istringEqual("Plenum Space Type", this->nameString())){
-      return this->nameString();
-    }
-
-    // DLM: should we all user to name this the plenumSpaceTypeName?
-    //if (istringEqual(plenumSpaceTypeName, newName)){
-    //  return this->nameString();
-    //}
-    */
-
+  {
     return ResourceObject_Impl::setName(newName, checkValidity);
   }
 
