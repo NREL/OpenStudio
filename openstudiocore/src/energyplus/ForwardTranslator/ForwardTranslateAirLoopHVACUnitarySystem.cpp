@@ -107,8 +107,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   IdfObject unitarySystem = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirLoopHVAC_UnitarySystem, modelObject);
 
   // Control Type
-  //unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::ControlType,"Load");
-  s = modelObject.getImpl<model::detail::AirLoopHVACUnitarySystem_Impl>()->controlType();
+  s = modelObject.controlType();
   if (s) {
     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::ControlType,s.get());
   }

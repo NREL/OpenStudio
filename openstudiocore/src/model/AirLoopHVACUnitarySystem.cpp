@@ -1862,6 +1862,19 @@ void AirLoopHVACUnitarySystem::resetDesignSpecificationMultispeedObject() {
   getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetDesignSpecificationMultispeedObject();
 }
 
+
+bool AirLoopHVACUnitarySystem::setControlType(std::string controlType) {
+  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setControlType(controlType);
+}
+
+void AirLoopHVACUnitarySystem::resetControlType() {
+  getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetControlType();
+}
+
+std::string AirLoopHVACUnitarySystem::controlType() const {
+  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->controlType();
+}
+
 /// @cond
 AirLoopHVACUnitarySystem::AirLoopHVACUnitarySystem(std::shared_ptr<detail::AirLoopHVACUnitarySystem_Impl> impl)
   : WaterToAirComponent(std::move(impl))
