@@ -559,6 +559,7 @@ set(${target_name}_test_src
   Test/ElectricEquipment_GTest.cpp
   Test/EMS_GTest.cpp
   Test/FuelCell_GTest.cpp
+  Test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
   Test/ExteriorLights_GTest.cpp
   Test/ExteriorFuelEquipment_GTest.cpp
   Test/ExteriorWaterEquipment_GTest.cpp
