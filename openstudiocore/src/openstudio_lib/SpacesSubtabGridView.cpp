@@ -867,8 +867,12 @@ namespace openstudio {
 
   void SpacesSubtabGridView::purgeObjects(const IddObjectType& iddObjectType)
   {
-    for (auto mo : this->m_model.getConcreteModelObjects<model::Space>()){
-      mo.remove();
+    // Purge Spaces. The logic is to remove spaces that don't have a thermalZone nor surfaces
+    for (auto mo : this->m_model.getConcreteModelObjects<model::Space>())
+    {
+      if ( (!mo.thermalZone()) && (mo.surfaces().empty()) ) {
+        mo.remove();
+      }
     }
   }
 
