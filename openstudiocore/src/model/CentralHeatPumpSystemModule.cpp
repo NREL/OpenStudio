@@ -106,8 +106,21 @@ namespace detail {
 
     // If not using "children", then expliclity do it:
     bool ok = true;
-    // We don't want to clone the perf object, set it to the same ChillHeaterPerformanceElectricEIR
-    ok = newCentralHPMod.setChillerHeaterModulesPerformanceComponent(this->chillerHeaterModulesPerformanceComponent());
+    Model t_model = this->model();
+
+    // If it's the same model
+    if (t_model == model) {
+      // We don't want to clone the perf object, set it to the same ChillHeaterPerformanceElectricEIR
+      ChillerHeaterPerformanceElectricEIR chillerHeaterPerf = this->chillerHeaterModulesPerformanceComponent();
+      ok = newCentralHPMod.setChillerHeaterModulesPerformanceComponent(chillerHeaterPerf);
+
+    // If it's a different model
+    } else {
+      // We clone the chillerHeaterPerformance into the target model
+      ChillerHeaterPerformanceElectricEIR chillerHeaterPerf = this->chillerHeaterModulesPerformanceComponent().clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
+      ok = newCentralHPMod.setChillerHeaterModulesPerformanceComponent(chillerHeaterPerf);
+    }
+
     // This better have worked
     OS_ASSERT(ok);
 

@@ -297,7 +297,6 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_Clone)
   // The CentralHeatPumpModule should have been cloned
   ASSERT_EQ(2u, model.getModelObjects<CentralHeatPumpSystemModule>().size());
   // The chillerHeater shouldn't have, it should point to the same
-  // TODO: This fails
   ASSERT_EQ(1u, model.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
 
   ASSERT_EQ(1u, central_hpClone1.modules().size());
@@ -313,7 +312,6 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_Clone)
 
   //Clone into another model
   Model model2;
-  // TODO: this fails because the current implementation of the clone thing is trying to set the chillerPerf in a model where it doesn't exist.
   CentralHeatPumpSystem  central_hpClone2 = central_hp.clone(model2).cast<CentralHeatPumpSystem>();
   // Check that the Module and ChillerHeater are carried with
   ASSERT_EQ(1u, model2.getModelObjects<CentralHeatPumpSystem>().size());
@@ -333,7 +331,7 @@ TEST_F(ModelFixture, CentralHeatPumpSystemModule_ReverseLookup)
 
   CentralHeatPumpSystemModule central_hp_module(model);
   // Should be empty for now
-  ASSERT_TRUE(central_hp_module.centralHeatPumpSystem());
+  ASSERT_FALSE(central_hp_module.centralHeatPumpSystem());
 
   ASSERT_TRUE(central_hp.addModule(central_hp_module));
 
