@@ -107,7 +107,7 @@ if(MSVC)
   endif()
 
   if ("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 12 2013 Win64")
-    set(CMAKE_GENERATOR_TOOLSET "v120</PlatformToolset><PreferredToolArchitecture>x64</PreferredToolArchitecture><PlatformToolset>v120")
+    #set(CMAKE_GENERATOR_TOOLSET "v120</PlatformToolset><PreferredToolArchitecture>x64</PreferredToolArchitecture><PlatformToolset>v120")
   elseif ("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 14 2015 Win64")
     set(CMAKE_GENERATOR_TOOLSET "v140</PlatformToolset><PreferredToolArchitecture>x64</PreferredToolArchitecture><PlatformToolset>v140")
   else()
