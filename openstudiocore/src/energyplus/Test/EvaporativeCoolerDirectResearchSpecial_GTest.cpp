@@ -71,9 +71,12 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_EvaporativeCoolerDirectResearchSpecia
 
   WorkspaceObject idfObj(idfObjs[0]);
 
-  ASSERT_EQ(16, idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMinimumDrybulbTemperature).get());
-  ASSERT_EQ(24, idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitWetbulbTemperature).get());
-  ASSERT_EQ(28, idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitDrybulbTemperature).get());
+  ASSERT_EQ(e.evaporativeOperationMinimumDrybulbTemperature(),
+            idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMinimumDrybulbTemperature).get());
+  ASSERT_EQ(e.evaporativeOperationMaximumLimitWetbulbTemperature(),
+            idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitWetbulbTemperature).get());
+  ASSERT_EQ(e.evaporativeOperationMaximumLimitDrybulbTemperature(),
+            idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitDrybulbTemperature).get());
 
 }
 
