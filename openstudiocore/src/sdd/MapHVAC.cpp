@@ -4950,7 +4950,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   if( ok && (operableWinInterlock == 1) ) {
     model::ZoneVentilationDesignFlowRate zoneVent(model);
     zoneVent.setName(thermalZone.nameString() + " Operable Window Ventilation");
-    zoneVent.setDesignFlowRateCalculationMethod("Flow/Area");
     zoneVent.setFlowRateperZoneFloorArea(0.000762);
     zoneVent.setVentilationType("Intake");
     zoneVent.setFanPressureRise(0.0);
