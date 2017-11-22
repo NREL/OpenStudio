@@ -54,6 +54,7 @@
 #include "../../model/CoilHeatingDXVariableRefrigerantFlow_Impl.hpp"
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
+#include "../../utilities/math/FloatCompare.hpp"
 #include <utilities/idd/ZoneHVAC_TerminalUnit_VariableRefrigerantFlow_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
@@ -231,8 +232,31 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
 
   idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirOutletNodeName,outletNodeName);
 
+
+  auto translateMixer = [&]() {
+    auto t_airLoopHVAC = modelObject.airLoopHVAC();
+    if( t_airLoopHVAC ) {
+      return false;
+    }
+
+    bool zeroOA = false;
+    if( (value = modelObject.outdoorAirFlowRateDuringCoolingOperation()) ) {
+      zeroOA = equal(value.get(),0.0);
+    }
+    if( (value = modelObject.outdoorAirFlowRateDuringHeatingOperation()) ) {
+      zeroOA = (zeroOA && equal(value.get(),0.0));
+    }
+    if( (value = modelObject.outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded()) ) {
+      zeroOA = (zeroOA && equal(value.get(),0.0));
+    }
+
+    if( zeroOA ) return false;
+
+    return true;
+  };
+
   // OutdoorAirMixer
-  if( ! t_airLoopHVAC ) {
+  if( translateMixer() ) {
     IdfObject _outdoorAirMixer(IddObjectType::OutdoorAir_Mixer);
     _outdoorAirMixer.setName(modelObject.name().get() + " OA Mixer");
     m_idfObjects.push_back(_outdoorAirMixer);
@@ -269,8 +293,10 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
       
       idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::CoolingCoilObjectName,_coolingCoil->name().get());
 
-      std::string coolingCoilInletNodeName = mixerOutletNodeName;
-      if( t_airLoopHVAC ) {
+      std::string coolingCoilInletNodeName;
+      if( translateMixer() ) {
+        coolingCoilInletNodeName = mixerOutletNodeName;
+      } else {
         coolingCoilInletNodeName = inletNodeName;
       }
 
@@ -293,8 +319,10 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
 
       if( coolingCoil ) {
         _heatingCoil->setString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode,coolOutletNodeName);
-      } else {
+      } else if( translateMixer() ) {
         _heatingCoil->setString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode,mixerOutletNodeName);
+      } else {
+        _heatingCoil->setString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode,inletNodeName);
       }
 
       _heatingCoil->setString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirOutletNode,heatOutletNodeName);
@@ -317,8 +345,10 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
       fanInletNodeName = heatOutletNodeName;
     } else if( coolingCoil ) {
       fanInletNodeName = coolOutletNodeName;
-    } else {
+    } else if( translateMixer() ) {
       fanInletNodeName = mixerOutletNodeName;
+    } else {
+      fanInletNodeName = inletNodeName;
     }
 
     if( fan.iddObject().type() == model::FanOnOff::iddObjectType() ) {
