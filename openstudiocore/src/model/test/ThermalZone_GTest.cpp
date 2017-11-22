@@ -99,7 +99,7 @@ TEST_F(ModelFixture, ThermalZone_Spaces)
   EXPECT_EQ(thermalZone.handle(), space1.thermalZone()->handle());
   EXPECT_FALSE(space2.thermalZone());
   EXPECT_EQ(1u, thermalZone.spaces().size());
-  
+
   ASSERT_TRUE(space1.thermalZone());
   EXPECT_EQ(thermalZone.handle(), space1.thermalZone()->handle());
   EXPECT_TRUE(space2.setThermalZone(thermalZone));
@@ -222,12 +222,38 @@ TEST_F(ModelFixture,ThermalZone_FractionofZoneControlledbySecondaryDaylightingCo
   EXPECT_EQ(units.standardString(),q.units().standardString());
 }
 
+/* Tests that you cannot set Fractions that sum to greater than 1 */
+TEST_F(ModelFixture,ThermalZone_FractionofZoneControlledbyDaylightingControl_PriSecLimits) {
+  Model m;
+  ThermalZone z(m);
+
+  // As Fraction
+  ASSERT_TRUE(z.setFractionofZoneControlledbyPrimaryDaylightingControl(0.5));
+  ASSERT_TRUE(z.setFractionofZoneControlledbySecondaryDaylightingControl(0.5));
+  ASSERT_FALSE(z.setFractionofZoneControlledbySecondaryDaylightingControl(0.75));
+  ASSERT_FALSE(z.setFractionofZoneControlledbyPrimaryDaylightingControl(0.75));
+
+  // As Quantity
+  Unit units = z.getFractionofZoneControlledbySecondaryDaylightingControl(true).units(); // Get IP units.
+  double value(0.5);
+  double value2(0.7);
+  Quantity testQ(value, units);
+  Quantity testQ2(value2, units);
+
+  ASSERT_TRUE(z.setFractionofZoneControlledbyPrimaryDaylightingControl(testQ));
+  ASSERT_TRUE(z.setFractionofZoneControlledbySecondaryDaylightingControl(testQ));
+  ASSERT_FALSE(z.setFractionofZoneControlledbyPrimaryDaylightingControl(testQ2));
+  ASSERT_FALSE(z.setFractionofZoneControlledbySecondaryDaylightingControl(testQ2));
+
+}
+
+
 TEST_F(ModelFixture, CombinedInfiltration) {
   Model model;
   ThermalZone thermalZone(model);
 
   // 100 m^2
-  std::vector<Point3d> points; 
+  std::vector<Point3d> points;
   points.push_back(Point3d(0, 10, 0));
   points.push_back(Point3d(10, 10, 0));
   points.push_back(Point3d(10, 0, 0));
@@ -272,13 +298,13 @@ TEST_F(ModelFixture, CombinedInfiltration) {
 TEST_F(ModelFixture,ThermalZone_ThermalZone) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model model;
 
     ThermalZone thermalZone(model);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -356,7 +382,7 @@ TEST_F(ModelFixture,ThermalZone_equipment) {
 
 
   ZoneHVACPackagedTerminalAirConditioner ptac( model,
-                                               scheduleCompact, 
+                                               scheduleCompact,
                                                fan,
                                                heatingCoil,
                                                coolingCoil );
@@ -535,16 +561,16 @@ TEST_F(ModelFixture, ThermalZone_Clone)
 {
   Model m;
   ThermalZone thermalZone(m);
-  
+
   auto zoneAirNode = thermalZone.zoneAirNode();
-  
+
   ZoneControlHumidistat humidistat(m);
   thermalZone.setZoneControlHumidistat(humidistat);
   ScheduleRuleset humidSchedule(m);
   humidistat.setHumidifyingRelativeHumiditySetpointSchedule(humidSchedule);
   ScheduleRuleset dehumidSchedule(m);
   humidistat.setDehumidifyingRelativeHumiditySetpointSchedule(dehumidSchedule);
-  
+
   ThermostatSetpointDualSetpoint thermostat(m);
   thermalZone.setThermostat(thermostat);
   ScheduleRuleset coolingSchedule(m);
@@ -670,7 +696,7 @@ TEST_F(ModelFixture, ThermalZone_Thermostat)
   {
     Model m;
     ThermalZone zone(m);
-    ThermostatSetpointDualSetpoint thermostat(m); 
+    ThermostatSetpointDualSetpoint thermostat(m);
     zone.setThermostat(thermostat);
     auto zone2 = zone.clone().cast<model::ThermalZone>();
 
@@ -719,7 +745,7 @@ TEST_F(ModelFixture, ThermalZone_ZoneControlContaminantController)
   {
     Model m;
     ThermalZone zone(m);
-    ZoneControlContaminantController controller(m); 
+    ZoneControlContaminantController controller(m);
     zone.setZoneControlContaminantController(controller);
     auto zone2 = zone.clone().cast<model::ThermalZone>();
 
@@ -768,7 +794,7 @@ TEST_F(ModelFixture, ThermalZone_ZoneControlHumidistat)
   {
     Model m;
     ThermalZone zone(m);
-    ZoneControlHumidistat controller(m); 
+    ZoneControlHumidistat controller(m);
     zone.setZoneControlHumidistat(controller);
     auto zone2 = zone.clone().cast<model::ThermalZone>();
 
