@@ -614,7 +614,7 @@ namespace detail {
   bool IdfObject_Impl::setUnsigned(unsigned index, unsigned value, bool checkValidity)
   {
     try {
-      std::string str = toString(value);
+      std::string str = boost::lexical_cast<std::string>(value);
       return setString(index, str, checkValidity);
     }
     catch (...) {
@@ -634,7 +634,7 @@ namespace detail {
   bool IdfObject_Impl::setInt(unsigned index, int value, bool checkValidity)
   {
     try {
-      std::string str = toString(value);
+      std::string str = boost::lexical_cast<std::string>(value);
       return setString(index, str, checkValidity);
     }
     catch (...) {

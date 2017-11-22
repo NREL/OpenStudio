@@ -96,30 +96,6 @@ std::string toString(double v) {
   return result;
 }
 
-//std::string toString(int v) {
-
-  //std::string result;
-
-  //try {
-    //result = boost::lexical_cast<std::string>(v);
-  //} catch (...) {
-  //}
-
-  //return result;
-//}
-
-//std::string toString(unsigned v) {
-
-  //std::string result;
-
-  //try {
-    //result = boost::lexical_cast<std::string>(v);
-  //} catch (...) {
-  //}
-
-  //return result;
-//}
-
 std::string toString(std::istream& s) {
   // istream -> string code from
   // http://stackoverflow.com/questions/2602013/read-whole-ascii-file-into-c-stdstring
