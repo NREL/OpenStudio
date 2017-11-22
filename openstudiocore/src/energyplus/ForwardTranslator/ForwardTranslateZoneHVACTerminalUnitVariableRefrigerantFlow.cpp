@@ -202,6 +202,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
   std::string heatOutletNodeName;
   std::string oaNodeName;
 
+  auto coolingCoil = modelObject.coolingCoil();
+  auto heatingCoil = modelObject.heatingCoil();
+
   if( boost::optional<model::Node> node = modelObject.inletNode() )
   {
     inletNodeName = node->name().get();      
@@ -227,27 +230,6 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
   // TerminalUnitAirOutletNodeName
 
   idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirOutletNodeName,outletNodeName);
-
-  if( boost::optional<IdfObject> _fan = translateAndMapModelObject(fan) )
-  {
-    // SupplyAirFanObjectType
-
-    idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectType,_fan->iddObject().name());
-
-    // SupplyAirFanObjectName
-
-    idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectName,_fan->name().get());
-
-    if( fan.iddObject().type() == model::FanOnOff::iddObjectType() ) {
-      _fan->setString(Fan_OnOffFields::AirInletNodeName,heatOutletNodeName);
-      _fan->setString(Fan_OnOffFields::AirOutletNodeName,outletNodeName);
-    } else if( fan.iddObject().type() == model::FanConstantVolume::iddObjectType() ) {
-      _fan->setString(Fan_ConstantVolumeFields::AirInletNodeName,heatOutletNodeName);
-      _fan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,outletNodeName);
-    } else {
-      LOG(Error, "VRF named " << modelObject.name().get() << " uses an unsupported fan type.");
-    }
-  }
 
   // OutdoorAirMixer
   if( ! t_airLoopHVAC ) {
@@ -276,43 +258,78 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
     idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::OutsideAirMixerObjectName,_outdoorAirMixer.name().get());
   }
 
-  model::ModelObject coolingCoil = modelObject.coolingCoil();
-  
-  if( boost::optional<IdfObject> _coolingCoil = translateAndMapModelObject(coolingCoil) )
-  {
-    // CoolingCoilObjectType
+  if( coolingCoil ) {
+    if( boost::optional<IdfObject> _coolingCoil = translateAndMapModelObject(coolingCoil.get()) )
+    {
+      // CoolingCoilObjectType
 
-    idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::CoolingCoilObjectType,_coolingCoil->iddObject().name());
+      idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::CoolingCoilObjectType,_coolingCoil->iddObject().name());
 
-    // CoolingCoilObjectName
-    
-    idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::CoolingCoilObjectName,_coolingCoil->name().get());
+      // CoolingCoilObjectName
+      
+      idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::CoolingCoilObjectName,_coolingCoil->name().get());
 
-    std::string coolingCoilInletNodeName = mixerOutletNodeName;
-    if( t_airLoopHVAC ) {
-      coolingCoilInletNodeName = inletNodeName;
+      std::string coolingCoilInletNodeName = mixerOutletNodeName;
+      if( t_airLoopHVAC ) {
+        coolingCoilInletNodeName = inletNodeName;
+      }
+
+      _coolingCoil->setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirInletNode,coolingCoilInletNodeName);
+
+      _coolingCoil->setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode,coolOutletNodeName);
     }
-
-    _coolingCoil->setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirInletNode,coolingCoilInletNodeName);
-
-    _coolingCoil->setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode,coolOutletNodeName);
   }
 
-  model::ModelObject heatingCoil = modelObject.heatingCoil();
-  
-  if( boost::optional<IdfObject> _heatingCoil = translateAndMapModelObject(heatingCoil) )
+  if( heatingCoil ) {
+    if( boost::optional<IdfObject> _heatingCoil = translateAndMapModelObject(heatingCoil.get()) )
+    {
+      // HeatingCoilObjectType
+
+      idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingCoilObjectType,_heatingCoil->iddObject().name());
+
+      // HeatingCoilObjectName
+      
+      idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingCoilObjectName,_heatingCoil->name().get());
+
+      if( coolingCoil ) {
+        _heatingCoil->setString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode,coolOutletNodeName);
+      } else {
+        _heatingCoil->setString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode,mixerOutletNodeName);
+      }
+
+      _heatingCoil->setString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirOutletNode,heatOutletNodeName);
+    }
+  }
+
+  if( boost::optional<IdfObject> _fan = translateAndMapModelObject(fan) )
   {
-    // HeatingCoilObjectType
+    // SupplyAirFanObjectType
 
-    idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingCoilObjectType,_heatingCoil->iddObject().name());
+    idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectType,_fan->iddObject().name());
 
-    // HeatingCoilObjectName
-    
-    idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingCoilObjectName,_heatingCoil->name().get());
+    // SupplyAirFanObjectName
 
-    _heatingCoil->setString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode,coolOutletNodeName);
+    idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectName,_fan->name().get());
 
-    _heatingCoil->setString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirOutletNode,heatOutletNodeName);
+    std::string fanInletNodeName;
+
+    if( heatingCoil ) {
+      fanInletNodeName = heatOutletNodeName;
+    } else if( coolingCoil ) {
+      fanInletNodeName = coolOutletNodeName;
+    } else {
+      fanInletNodeName = mixerOutletNodeName;
+    }
+
+    if( fan.iddObject().type() == model::FanOnOff::iddObjectType() ) {
+      _fan->setString(Fan_OnOffFields::AirInletNodeName,fanInletNodeName);
+      _fan->setString(Fan_OnOffFields::AirOutletNodeName,outletNodeName);
+    } else if( fan.iddObject().type() == model::FanConstantVolume::iddObjectType() ) {
+      _fan->setString(Fan_ConstantVolumeFields::AirInletNodeName,fanInletNodeName);
+      _fan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,outletNodeName);
+    } else {
+      LOG(Error, "VRF named " << modelObject.name().get() << " uses an unsupported fan type.");
+    }
   }
 
   // ZoneTerminalUnitOnParasiticElectricEnergyUse
