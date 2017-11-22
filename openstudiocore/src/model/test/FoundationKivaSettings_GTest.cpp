@@ -49,7 +49,7 @@ TEST_F(ModelFixture, FoundationKivaSettings_FoundationKivaSettings) {
       Model model;
       
       // create a foundation kiva settings object to use
-      FoundationKivaSettings kivaSettings(model);
+      FoundationKivaSettings kivaSettings = model.getUniqueModelObject<FoundationKivaSettings>();
       
       exit(0);
     },
@@ -61,7 +61,7 @@ TEST_F(ModelFixture, FoundationKivaSettings_FoundationKivaSettings) {
   Model model;
   
   // create a foundation kiva settings object to use
-  FoundationKivaSettings kivaSettings(model);
+  FoundationKivaSettings kivaSettings = model.getUniqueModelObject<FoundationKivaSettings>();
   
   EXPECT_TRUE(kivaSettings.isSoilConductivityDefaulted());
   EXPECT_TRUE(kivaSettings.isSoilDensityDefaulted());
@@ -96,7 +96,7 @@ TEST_F(ModelFixture, FoundationKivaSettings_SetGetFields) {
   Model model;
   
   // create a foundation kiva settings object to use
-  FoundationKivaSettings kivaSettings(model);
+  FoundationKivaSettings kivaSettings = model.getUniqueModelObject<FoundationKivaSettings>();
   
   // set the fields
   kivaSettings.setSoilConductivity(1.75);
@@ -176,7 +176,7 @@ TEST_F(ModelFixture, FoundationKivaSettings_Clone)
   Model model;
 
   // create a foundation kiva settings object to use
-  FoundationKivaSettings kivaSettings(model);
+  FoundationKivaSettings kivaSettings = model.getUniqueModelObject<FoundationKivaSettings>();
 
   // change some of the fields
   kivaSettings.setSoilConductivity(1.75);
@@ -199,7 +199,7 @@ TEST_F(ModelFixture, FoundationKivaSettings_Clone)
 TEST_F(ModelFixture, FoundationKivaSettings_Remove) {
   Model model;
   auto size = model.modelObjects().size();
-  FoundationKivaSettings kivaSettings(model);
+  FoundationKivaSettings kivaSettings = model.getUniqueModelObject<FoundationKivaSettings>();
   EXPECT_FALSE(kivaSettings.remove().empty());
   EXPECT_EQ(size, model.modelObjects().size());
 }

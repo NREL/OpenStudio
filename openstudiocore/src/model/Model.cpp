@@ -1165,6 +1165,21 @@ if (_className::iddObjectType() == typeToCreate) { \
 
     return m_cachedBuilding;
   }
+  
+  boost::optional<FoundationKivaSettings> Model_Impl::foundationKivaSettings() const
+  {
+    if (m_cachedFoundationKivaSettings){
+      return m_cachedFoundationKivaSettings;
+    }
+
+    boost::optional<FoundationKivaSettings> result = this->model().getOptionalUniqueModelObject<FoundationKivaSettings>();
+    if (result){
+      m_cachedFoundationKivaSettings = result;
+      result->getImpl<FoundationKivaSettings_Impl>().get()->FoundationKivaSettings_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedFoundationKivaSettings>(const_cast<openstudio::model::detail::Model_Impl *>(this));
+    }
+
+    return m_cachedFoundationKivaSettings;
+  }  
 
   boost::optional<LifeCycleCostParameters> Model_Impl::lifeCycleCostParameters() const
   {
@@ -1865,6 +1880,7 @@ if (_className::iddObjectType() == typeToCreate) { \
   {
     Handle dummy;
     clearCachedBuilding(dummy);
+    clearCachedFoundationKivaSettings(dummy);
     clearCachedLifeCycleCostParameters(dummy);
     clearCachedRunPeriod(dummy);
     clearCachedYearDescription(dummy);
@@ -1875,6 +1891,11 @@ if (_className::iddObjectType() == typeToCreate) { \
   {
     m_cachedBuilding.reset();
   }
+  
+  void Model_Impl::clearCachedFoundationKivaSettings(const Handle &)
+  {
+    m_cachedFoundationKivaSettings.reset();
+  }  
 
   void Model_Impl::clearCachedLifeCycleCostParameters(const Handle &handle)
   {
@@ -2045,6 +2066,11 @@ Model::Model(std::shared_ptr<detail::Model_Impl> p)
 boost::optional<Building> Model::building() const
 {
   return getImpl<detail::Model_Impl>()->building();
+}
+
+boost::optional<FoundationKivaSettings> Model::foundationKivaSettings() const
+{
+  return getImpl<detail::Model_Impl>()->foundationKivaSettings();
 }
 
 boost::optional<LifeCycleCostParameters> Model::lifeCycleCostParameters() const

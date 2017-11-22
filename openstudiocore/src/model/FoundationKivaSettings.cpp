@@ -346,10 +346,6 @@ namespace detail {
   
 } // detail
 
-FoundationKivaSettings::FoundationKivaSettings(Model& model)
-  : ModelObject(FoundationKivaSettings::iddObjectType(), model)
-{}
-
 IddObjectType FoundationKivaSettings::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Foundation_Kiva_Settings);
 }
@@ -549,6 +545,10 @@ void FoundationKivaSettings::resetSimulationTimestep() {
 /// @cond
 FoundationKivaSettings::FoundationKivaSettings(std::shared_ptr<detail::FoundationKivaSettings_Impl> impl)
   : ModelObject(std::move(impl))
+{}
+
+FoundationKivaSettings::FoundationKivaSettings(Model& model)
+  : ModelObject(FoundationKivaSettings::iddObjectType(), model)
 {}
 
 /// @endcond

@@ -5054,6 +5054,7 @@ OS:Surface,
        \reference AllHeatTranAngFacNames
        \reference SurfGroupAndHTSurfNames
        \reference AllShadingAndHTSurfNames
+       \reference FloorSurfaceNames
   A3, \field Surface Type
        \type choice
        \required-field
