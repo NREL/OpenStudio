@@ -489,3 +489,56 @@ TEST_F(IdfFixture, WorkspaceObject_Filter_Sources)
   sourcesVector = node->getSources(IddObjectType::OS_SetpointManager_MixedAir);
   EXPECT_EQ(1, sourcesVector.size());
 }
+
+
+TEST_F(IdfFixture, WorkspaceObject_SetDouble_NaN_and_Inf) {
+
+  // try with an WorkspaceObject
+  // WorkspaceObject does prevent Infinity and NaN
+  Workspace ws;
+  WorkspaceObject object = ws.addObject(IdfObject(IddObjectType::OS_People_Definition)).get();
+
+  // Set Number of People
+  // Check for nan
+  EXPECT_FALSE(object.setDouble(3, std::numeric_limits<double>::quiet_NaN()));
+
+  // Infinity
+  EXPECT_FALSE(object.setDouble(3, std::numeric_limits<double>::infinity()));
+  EXPECT_FALSE(object.setDouble(3, -std::numeric_limits<double>::infinity()));
+
+  // try with an IdfExtensibleGroup (Hour, Minute, Value)
+  WorkspaceObject object2 = ws.addObject(IdfObject(IddObjectType::OS_Schedule_Day)).get();
+  IdfExtensibleGroup eg = object2.pushExtensibleGroup();
+  // set the value field
+  // Check for nan
+  EXPECT_FALSE(eg.setDouble(2, std::numeric_limits<double>::quiet_NaN()));
+
+  // Infinity
+  EXPECT_FALSE(eg.setDouble(2, std::numeric_limits<double>::infinity()));
+  EXPECT_FALSE(eg.setDouble(2, -std::numeric_limits<double>::infinity()));
+
+  // new extensible group
+  std::vector<std::string> group;
+  group.push_back("1");
+  group.push_back("2");
+  group.push_back(toString(std::numeric_limits<double>::quiet_NaN()));
+  EXPECT_EQ(1u, object2.numExtensibleGroups());
+  EXPECT_TRUE(object2.pushExtensibleGroup(group).empty());
+  EXPECT_EQ(1u, object2.numExtensibleGroups());
+
+  group.clear();
+  group.push_back("1");
+  group.push_back("2");
+  group.push_back(toString(std::numeric_limits<double>::infinity()));
+  EXPECT_EQ(1u, object2.numExtensibleGroups());
+  EXPECT_TRUE(object2.pushExtensibleGroup(group).empty());
+  EXPECT_EQ(1u, object2.numExtensibleGroups());
+
+  group.clear();
+  group.push_back("1");
+  group.push_back("2");
+  group.push_back(toString(3.0));
+  EXPECT_EQ(1u, object2.numExtensibleGroups());
+  EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
+  EXPECT_EQ(2u, object2.numExtensibleGroups());
+}

@@ -48,7 +48,6 @@
 
 #include <QVariant>
 
-
 #include <boost/lexical_cast.hpp>
 
 #include <sstream>
@@ -63,8 +62,8 @@ TEST_F(IdfFixture,IdfObject_URL)
 {
 
   std::string text = "Schedule:File,Dan,,file:///home/ramey/schedule.csv,1;";
-    
-    
+
+
   OptionalIdfObject oObj = IdfObject::load(text);
   ASSERT_TRUE(oObj);
   boost::optional<QUrl> urlOpt  = oObj->getURL(2);
@@ -152,7 +151,7 @@ TEST_F(IdfFixture, IdfObject_ConstructFromText_MultifieldLines)
   ASSERT_TRUE(oObj);
   IdfObject building = *oObj;
   EXPECT_EQ(8u,building.numFields());
-  ASSERT_TRUE(building.fieldComment(5,false)); 
+  ASSERT_TRUE(building.fieldComment(5,false));
   EXPECT_TRUE(building.fieldComment(5,false).get().empty()); // parser should strip !- comments
   ASSERT_TRUE(building.fieldComment(5,true));
   EXPECT_FALSE(building.fieldComment(5,true).get().empty());
@@ -252,7 +251,7 @@ TEST_F(IdfFixture, IdfObject_CommentGettersAndSetters) {
   ASSERT_TRUE(oObj);
   object = *oObj;
   // field comments setter properly extends field comments vector as needed
-  OptionalString optStr = object.fieldComment(0); 
+  OptionalString optStr = object.fieldComment(0);
   ASSERT_TRUE(optStr);
   EXPECT_EQ("",*optStr);
   optStr = object.fieldComment(1); ASSERT_TRUE(optStr);
@@ -387,7 +386,7 @@ TEST_F(IdfFixture, IdfObject_NameGetterWithReturnDefaultOption) {
 
 TEST_F(IdfFixture, IdfObject_IddObjectTypeInitialization) {
   IdfObject idfObject(IddObjectType::OS_Building);
-  
+
   // get string should not return empty, initialized optional string
   EXPECT_FALSE(idfObject.getString(OS_BuildingFields::BuildingSectorType, false, true));
   EXPECT_FALSE(idfObject.getDouble(OS_BuildingFields::NorthAxis));
@@ -741,5 +740,74 @@ TEST_F(IdfFixture, DoubleDisplayedAsString) {
   EXPECT_EQ("0.05",ss.str());
   ss >> roundTripValue;
   EXPECT_DOUBLE_EQ(value,roundTripValue);
+}
+
+TEST_F(IdfFixture, IdfObject_SetDouble_NaN_and_Inf) {
+
+  // try with an IdfObject
+  // IdfObject does not prevent Infinity and NaN
+  IdfObject object(IddObjectType::OS_People_Definition);
+
+  // Set Number of People
+  // Check for nan
+  EXPECT_TRUE(object.setDouble(3, std::numeric_limits<double>::quiet_NaN()));
+  ASSERT_TRUE(object.getDouble(3));
+  EXPECT_TRUE(std::isnan(object.getDouble(3).get()));
+
+  // Infinity
+  EXPECT_TRUE(object.setDouble(3, std::numeric_limits<double>::infinity()));
+  ASSERT_TRUE(object.getDouble(3));
+  EXPECT_TRUE(std::isinf(object.getDouble(3).get()));
+  EXPECT_TRUE(object.getDouble(3).get() > 100);
+
+  EXPECT_TRUE(object.setDouble(3, -std::numeric_limits<double>::infinity()));
+  ASSERT_TRUE(object.getDouble(3));
+  EXPECT_TRUE(std::isinf(object.getDouble(3).get()));
+  EXPECT_TRUE(object.getDouble(3).get() < -100);
+
+  // try with an IdfExtensibleGroup (Hour, Minute, Value)
+  IdfObject object2(IddObjectType::OS_Schedule_Day);
+  IdfExtensibleGroup eg = object2.pushExtensibleGroup();
+  // set the value field
+  // Check for nan
+  EXPECT_TRUE(eg.setDouble(2, std::numeric_limits<double>::quiet_NaN()));
+  ASSERT_TRUE(eg.getDouble(2));
+  EXPECT_TRUE(std::isnan(eg.getDouble(2).get()));
+
+  // Infinity
+  EXPECT_TRUE(eg.setDouble(2, std::numeric_limits<double>::infinity()));
+  ASSERT_TRUE(eg.getDouble(2));
+  EXPECT_TRUE(std::isinf(eg.getDouble(2).get()));
+  EXPECT_TRUE(eg.getDouble(2).get() > 100);
+
+  EXPECT_TRUE(eg.setDouble(2, -std::numeric_limits<double>::infinity()));
+  ASSERT_TRUE(eg.getDouble(2));
+  EXPECT_TRUE(std::isinf(eg.getDouble(2).get()));
+  EXPECT_TRUE(eg.getDouble(2).get() < -100);
+
+  // new extensible group
+  std::vector<std::string> group;
+  group.push_back("1");
+  group.push_back("2");
+  group.push_back(toString(std::numeric_limits<double>::quiet_NaN()));
+  EXPECT_EQ(1u, object2.numExtensibleGroups());
+  EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
+  EXPECT_EQ(2u, object2.numExtensibleGroups());
+
+  group.clear();
+  group.push_back("1");
+  group.push_back("2");
+  group.push_back(toString(std::numeric_limits<double>::infinity()));
+  EXPECT_EQ(2u, object2.numExtensibleGroups());
+  EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
+  EXPECT_EQ(3u, object2.numExtensibleGroups());
+
+  group.clear();
+  group.push_back("1");
+  group.push_back("2");
+  group.push_back(toString(3.0));
+  EXPECT_EQ(3u, object2.numExtensibleGroups());
+  EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
+  EXPECT_EQ(4u, object2.numExtensibleGroups());
 }
 

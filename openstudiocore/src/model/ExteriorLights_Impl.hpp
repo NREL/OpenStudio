@@ -43,20 +43,20 @@ namespace detail {
 
   /** ExteriorLights_Impl is a ModelObject_Impl that is the implementation class for ExteriorLights.*/
   class MODEL_API ExteriorLights_Impl : public ModelObject_Impl {
-    
-    
-    
-    
 
-    
-    
 
-    
-    
 
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -122,7 +122,7 @@ namespace detail {
 
     void resetMultiplier();
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
 

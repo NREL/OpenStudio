@@ -101,7 +101,7 @@ class MODEL_API Lights : public SpaceLoadInstance {
 
   void resetMultiplier();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 
@@ -109,27 +109,27 @@ class MODEL_API Lights : public SpaceLoadInstance {
   /** @name Other */
   //@{
 
-  /** Returns the lightingLevel if possible based on the underlying data of 
+  /** Returns the lightingLevel if possible based on the underlying data of
    *  lightsDefinition(). */
   boost::optional<double> lightingLevel() const;
 
-  /** Returns the powerPerFloorArea if possible based on the underlying data of 
+  /** Returns the powerPerFloorArea if possible based on the underlying data of
    *  lightsDefinition(). */
   boost::optional<double> powerPerFloorArea() const;
 
-  /** Returns the powerPerPerson if possible based on the underlying data of 
+  /** Returns the powerPerPerson if possible based on the underlying data of
    *  lightsDefinition(). */
   boost::optional<double> powerPerPerson() const;
 
-  /** Returns the lighting level represented by this instance, assuming floorArea (m^2) and 
+  /** Returns the lighting level represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
   double getLightingPower(double floorArea, double numPeople) const;
 
-  /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and 
+  /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
   double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-  /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and 
+  /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
   double getPowerPerPerson(double floorArea, double numPeople) const;
 
