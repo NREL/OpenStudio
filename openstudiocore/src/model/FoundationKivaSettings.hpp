@@ -48,8 +48,6 @@ class MODEL_API FoundationKivaSettings : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit FoundationKivaSettings(Model& model);
-
   virtual ~FoundationKivaSettings() {}
 
   //@}
@@ -165,6 +163,9 @@ class MODEL_API FoundationKivaSettings : public ModelObject {
 
   //@}
  protected:
+ 
+  explicit FoundationKivaSettings(Model& model);
+ 
   /// @cond
   typedef detail::FoundationKivaSettings_Impl ImplType;
 

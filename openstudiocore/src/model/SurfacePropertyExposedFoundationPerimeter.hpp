@@ -36,7 +36,7 @@
 namespace openstudio {
 namespace model {
 
-class Material;
+class Surface;
 
 namespace detail {
 
@@ -52,6 +52,10 @@ class MODEL_API SurfacePropertyExposedFoundationPerimeter : public ModelObject {
 
   explicit SurfacePropertyExposedFoundationPerimeter(Surface& surface,
                                                      std::string exposedPerimeterCalculationMethod);
+                                                     
+  explicit SurfacePropertyExposedFoundationPerimeter(Surface& surface,
+                                                     std::string exposedPerimeterCalculationMethod,
+                                                     double totalExposedPerimeter);
 
   virtual ~SurfacePropertyExposedFoundationPerimeter() {}
 

@@ -184,7 +184,7 @@ TEST_F(ModelFixture, FoundationKiva_Clone) {
   // create a model to use
   Model model;
 
-  // create a foundation kiva settings object to use
+  // create a foundation kiva object to use
   FoundationKiva kiva(model);
 
   // create a material object to use

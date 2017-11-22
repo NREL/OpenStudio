@@ -291,12 +291,15 @@ class MODEL_API Surface : public PlanarSurface {
   
   // if surface property exposed foundation perimeter already exists, do nothing and return nil; creates the surface property exposed foundation perimeter if it does not already exist and return it;
   boost::optional<SurfacePropertyExposedFoundationPerimeter> createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod);
+  boost::optional<SurfacePropertyExposedFoundationPerimeter> createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double totalExposedPerimeter);
 
   // returns the surface property exposed foundation perimeter if set
   boost::optional<SurfacePropertyExposedFoundationPerimeter> surfacePropertyExposedFoundationPerimeter() const;
 
   // resets the surface property exposed foundation perimeter
   void resetSurfacePropertyExposedFoundationPerimeter();
+  
+  boost::optional<double> exposedPerimeter();
   
  protected:
   /// @cond
