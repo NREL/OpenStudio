@@ -358,21 +358,15 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
           Daylighting_ReferencePointFields::ZCoordinateofReferencePoint,
           primaryDaylightingControl->positionZCoordinate());
 
-      std::string fractionofZoneControlledbyFirstReferencePoint;
+      double primaryFrac = modelObject.fractionofZoneControlledbyPrimaryDaylightingControl();
       if (istringEqual("None", primaryDaylightingControl->lightingControlType())){
-        fractionofZoneControlledbyFirstReferencePoint = "0.0";
-      } else {
-        std::stringstream ss;
-        ss << modelObject.fractionofZoneControlledbyPrimaryDaylightingControl();
-        fractionofZoneControlledbyFirstReferencePoint = ss.str();
+        if (primaryFrac > 0.0){
+          primaryFrac = 0.0;
+          LOG(Warn, "Fraction of Zone Controlled by Primary Daylight Control is " << primaryFrac << " but lighting control type is 'None'. Reseting Primary Fraction to " << 0.0);
+        }
       }
-
-      std::string illuminanceSetpointatFirstReferencePoint;
-      {
-        std::stringstream ss;
-        ss << primaryDaylightingControl->illuminanceSetpoint();
-        illuminanceSetpointatFirstReferencePoint = ss.str();
-      }
+      std::string fractionofZoneControlledbyFirstReferencePoint = toString(primaryFrac);
+      std::string illuminanceSetpointatFirstReferencePoint = toString(primaryDaylightingControl->illuminanceSetpoint());
 
       std::vector<std::string> firstGroup;
       firstGroup.push_back(primaryReferencePoint.nameString());
@@ -405,30 +399,25 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
             Daylighting_ReferencePointFields::ZCoordinateofReferencePoint,
             secondaryDaylightingControl->positionZCoordinate());
 
-        std::string fractionofZoneControlledbySecondReferencePoint;
+        
+        double secondaryFrac = modelObject.fractionofZoneControlledbySecondaryDaylightingControl();
         if (istringEqual("None", secondaryDaylightingControl->lightingControlType())){
-          fractionofZoneControlledbySecondReferencePoint = "0.0";
+          if (secondaryFrac > 0.0){
+            secondaryFrac = 0.0;
+            LOG(Warn, "Fraction of Zone Controlled by Secondary Daylight Control is " << secondaryFrac << " but lighting control type is 'None'. Reseting Secondary Fraction to " << 0.0);
+          }
         }else{
-          // Check that the sum of Pri+Sec isn't greater than one
-          double primaryFrac = modelObject.fractionofZoneControlledbyPrimaryDaylightingControl();
-          double secondaryFrac = modelObject.fractionofZoneControlledbySecondaryDaylightingControl();
           if ((primaryFrac + secondaryFrac) > 1) {
             // Reset secondary to 1 - Primary
-            LOG(Warn, "Fraction of Zone Controlled by Primary Daylight Control is " << primaryFrac << " while Secondary Fraction is "
-                  << secondaryFrac << ". Reseting Secondary Fraction to " << (1.0 - primaryFrac));
-            secondaryFrac = 1.0 - primaryFrac;
-          }
-          std::stringstream ss;
-          ss << secondaryFrac;
-          fractionofZoneControlledbySecondReferencePoint = ss.str();
-        }
+            secondaryFrac = std::max(1.0 - primaryFrac, 0.0);
 
-        std::string illuminanceSetpointatSecondReferencePoint;
-        {
-          std::stringstream ss;
-          ss << secondaryDaylightingControl->illuminanceSetpoint();
-          illuminanceSetpointatSecondReferencePoint = ss.str();
+            LOG(Warn, "Fraction of Zone Controlled by Primary Daylight Control is " << primaryFrac << " while Secondary Fraction is "
+                  << secondaryFrac << ". Reseting Secondary Fraction to " << secondaryFrac);
+            
+          }
         }
+        std::string fractionofZoneControlledbySecondReferencePoint = toString(secondaryFrac);
+        std::string illuminanceSetpointatSecondReferencePoint = toString(secondaryDaylightingControl->illuminanceSetpoint());
 
         std::vector<std::string> secondGroup;
         secondGroup.push_back(secondaryReferencePoint.nameString());
