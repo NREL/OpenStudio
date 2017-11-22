@@ -343,12 +343,13 @@ TEST_F(ModelFixture, Schedule_Day_addValue_NaN)
   ScheduleDay sch_day(model);
 
   Time t(0,6,0,0);
-  ASSERT_FALSE(sch_day.addValue(t, 0/0.0));
-  ASSERT_FALSE(sch_day.addValue(t, 0.0/0.0));
-  ASSERT_FALSE(sch_day.addValue(t, std::numeric_limits<double>::quiet_NaN()));
-  ASSERT_FALSE(sch_day.addValue(t, std::numeric_limits<double>::infinity()));
-  ASSERT_FALSE(sch_day.addValue(t, -std::numeric_limits<double>::infinity()));
-
+  EXPECT_FALSE(sch_day.addValue(t, std::numeric_limits<double>::quiet_NaN()));
+  EXPECT_FALSE(sch_day.addValue(t, std::numeric_limits<double>::infinity()));
+  EXPECT_FALSE(sch_day.addValue(t, -std::numeric_limits<double>::infinity()));
+  EXPECT_TRUE(sch_day.addValue(t, 1.0));
+  EXPECT_FALSE(sch_day.addValue(t, std::numeric_limits<double>::quiet_NaN()));
+  EXPECT_FALSE(sch_day.addValue(t, std::numeric_limits<double>::infinity()));
+  EXPECT_FALSE(sch_day.addValue(t, -std::numeric_limits<double>::infinity()));
 }
 
 

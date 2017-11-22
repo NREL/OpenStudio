@@ -288,6 +288,10 @@ namespace detail {
       return false;
     }
 
+    if (std::isnan(value) || std::isinf(value)){
+      return false;
+    }
+
     int untilHours = untilTime.hours() + 24*untilTime.days();
     int untilMinutes = untilTime.minutes() + floor((untilTime.seconds()/60.0) + 0.5);
 
@@ -313,16 +317,6 @@ namespace detail {
       std::vector<std::string> groupValues;
       groupValues.push_back(boost::lexical_cast<std::string>(untilHours));
       groupValues.push_back(boost::lexical_cast<std::string>(untilMinutes));
-
-      // Check validity, cannot be NaN, Inf, etc
-      if (std::isinf(value)) {
-        LOG(Error, "Cannot setDouble to Infinity for " << this->briefDescription());
-        return false;
-      } else if (std::isnan(value)) {
-        LOG(Error, "Cannot setDouble to a NaN for " << this->briefDescription());
-        return false;
-      }
-
       groupValues.push_back(toString(value));
 
       IdfExtensibleGroup group = insertExtensibleGroup(index, groupValues);

@@ -745,31 +745,69 @@ TEST_F(IdfFixture, DoubleDisplayedAsString) {
 TEST_F(IdfFixture, IdfObject_SetDouble_NaN_and_Inf) {
 
   // try with an IdfObject
+  // IdfObject does not prevent Infinity and NaN
   IdfObject object(IddObjectType::OS_People_Definition);
 
   // Set Number of People
   // Check for nan
-  ASSERT_FALSE(object.setDouble(3, std::numeric_limits<double>::quiet_NaN()));
-  ASSERT_FALSE(object.setDouble(3, 0.0/0.0));
-  ASSERT_FALSE(object.setDouble(3, 0/0.0));
-
+  EXPECT_TRUE(object.setDouble(3, std::numeric_limits<double>::quiet_NaN()));
+  ASSERT_TRUE(object.getDouble(3));
+  EXPECT_TRUE(std::isnan(object.getDouble(3).get()));
 
   // Infinity
-  ASSERT_FALSE(object.setDouble(3, std::numeric_limits<double>::infinity()));
-  ASSERT_FALSE(object.setDouble(3, -std::numeric_limits<double>::infinity()));
+  EXPECT_TRUE(object.setDouble(3, std::numeric_limits<double>::infinity()));
+  ASSERT_TRUE(object.getDouble(3));
+  EXPECT_TRUE(std::isinf(object.getDouble(3).get()));
+  EXPECT_TRUE(object.getDouble(3).get() > 100);
 
-  // try with an IdfExtensibleGroup
+  EXPECT_TRUE(object.setDouble(3, -std::numeric_limits<double>::infinity()));
+  ASSERT_TRUE(object.getDouble(3));
+  EXPECT_TRUE(std::isinf(object.getDouble(3).get()));
+  EXPECT_TRUE(object.getDouble(3).get() < -100);
+
+  // try with an IdfExtensibleGroup (Hour, Minute, Value)
   IdfObject object2(IddObjectType::OS_Schedule_Day);
   IdfExtensibleGroup eg = object2.pushExtensibleGroup();
   // set the value field
   // Check for nan
-  ASSERT_FALSE(eg.setDouble(2, std::numeric_limits<double>::quiet_NaN()));
-  ASSERT_FALSE(eg.setDouble(2, 0.0/0.0));
-  ASSERT_FALSE(eg.setDouble(2, 0/0.0));
+  EXPECT_TRUE(eg.setDouble(2, std::numeric_limits<double>::quiet_NaN()));
+  ASSERT_TRUE(eg.getDouble(2));
+  EXPECT_TRUE(std::isnan(eg.getDouble(2).get()));
 
   // Infinity
-  ASSERT_FALSE(eg.setDouble(2, std::numeric_limits<double>::infinity()));
-  ASSERT_FALSE(eg.setDouble(2, -std::numeric_limits<double>::infinity()));
+  EXPECT_TRUE(eg.setDouble(2, std::numeric_limits<double>::infinity()));
+  ASSERT_TRUE(eg.getDouble(2));
+  EXPECT_TRUE(std::isinf(eg.getDouble(2).get()));
+  EXPECT_TRUE(eg.getDouble(2).get() > 100);
 
+  EXPECT_TRUE(eg.setDouble(2, -std::numeric_limits<double>::infinity()));
+  ASSERT_TRUE(eg.getDouble(2));
+  EXPECT_TRUE(std::isinf(eg.getDouble(2).get()));
+  EXPECT_TRUE(eg.getDouble(2).get() < -100);
+
+  // new extensible group
+  std::vector<std::string> group;
+  group.push_back("1");
+  group.push_back("2");
+  group.push_back(toString(std::numeric_limits<double>::quiet_NaN()));
+  EXPECT_EQ(1u, object2.numExtensibleGroups());
+  EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
+  EXPECT_EQ(2u, object2.numExtensibleGroups());
+
+  group.clear();
+  group.push_back("1");
+  group.push_back("2");
+  group.push_back(toString(std::numeric_limits<double>::infinity()));
+  EXPECT_EQ(2u, object2.numExtensibleGroups());
+  EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
+  EXPECT_EQ(3u, object2.numExtensibleGroups());
+
+  group.clear();
+  group.push_back("1");
+  group.push_back("2");
+  group.push_back(toString(3.0));
+  EXPECT_EQ(3u, object2.numExtensibleGroups());
+  EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
+  EXPECT_EQ(4u, object2.numExtensibleGroups());
 }
 

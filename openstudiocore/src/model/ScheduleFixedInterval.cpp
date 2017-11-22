@@ -142,6 +142,14 @@ namespace detail {
       return false;
     }
 
+    // check the values
+    openstudio::Vector values = timeSeries.values();
+    for (const auto& value : values){
+      if (std::isnan(value) || std::isinf(value)){
+        return false;
+      }
+    }
+
     // at this point we are going to change the object
     clearExtensibleGroups(false);
 
@@ -165,19 +173,8 @@ namespace detail {
     }
 
     // set the values
-    openstudio::Vector values = timeSeries.values();
     for (unsigned i = 0; i < values.size(); ++i){
       std::vector<std::string> temp;
-
-      // Check validity, cannot be NaN, Inf, etc
-      if (std::isinf(values[i])) {
-        LOG(Error, "Cannot setDouble to Infinity for " << this->briefDescription());
-        return false;
-      } else if (std::isnan(values[i])) {
-        LOG(Error, "Cannot setDouble to a NaN for " << this->briefDescription());
-        return false;
-      }
-
       temp.push_back(toString(values[i]));
 
       ModelExtensibleGroup group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();

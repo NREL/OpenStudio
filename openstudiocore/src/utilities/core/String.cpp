@@ -30,10 +30,14 @@
 
 #include "Logger.hpp"
 
+#include <boost/lexical_cast.hpp>
+#include <boost/numeric/conversion/cast.hpp>
+
 #include <sstream>
 #include <iomanip>
 #include <limits>
 #include <cmath>
+#include <cfloat>
 
 namespace openstudio {
 
@@ -72,20 +76,45 @@ std::string toString(double v) {
 
   std::string result;
 
-  // Need to check for NaN and Inf here since it goes to String...
-  // Check validity, cannot be NaN, Inf, etc
-  // Will return an empty string if NaN or Inf
+  // Return Infinity or NaN as strings, getDouble in IdfObject will fail to convert to double which will cause setDouble to fail
   if (std::isinf(v)) {
-    // LOG(Error, "Cannot setDouble to Infinity");
-
+    if (v < 0){
+      result = "-Infinity";
+    } else{
+      result = "Infinity";
+    }
   } else if (std::isnan(v)) {
-    // LOG(Error, "Cannot setDouble to a NaN");
+    result = "NaN";
   } else {
 
     std::stringstream ss;
     ss << std::setprecision(std::numeric_limits<double>::digits10) << v;
     result = ss.str();
 
+  }
+
+  return result;
+}
+
+std::string toString(int v) {
+
+  std::string result;
+
+  try {
+    result = boost::lexical_cast<std::string>(v);
+  } catch (...) {
+  }
+
+  return result;
+}
+
+std::string toString(unsigned v) {
+
+  std::string result;
+
+  try {
+    result = boost::lexical_cast<std::string>(v);
+  } catch (...) {
   }
 
   return result;

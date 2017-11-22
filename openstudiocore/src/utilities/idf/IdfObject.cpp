@@ -578,16 +578,6 @@ namespace detail {
 
   bool IdfObject_Impl::setDouble(unsigned index, double value, bool checkValidity)
   {
-
-    // Check validity, cannot be NaN, Inf, etc
-    if (std::isinf(value)) {
-        LOG(Error, "Cannot setDouble to Infinity for " << this->briefDescription());
-        return false;
-    } else if (std::isnan(value)) {
-      LOG(Error, "Cannot setDouble to a NaN for " << this->briefDescription());
-      return false;
-    }
-
     try {
       return setString(index, toString(value), checkValidity);
     }
@@ -624,7 +614,7 @@ namespace detail {
   bool IdfObject_Impl::setUnsigned(unsigned index, unsigned value, bool checkValidity)
   {
     try {
-      std::string str = boost::lexical_cast<std::string>(value);
+      std::string str = toString(value);
       return setString(index, str, checkValidity);
     }
     catch (...) {
@@ -644,7 +634,7 @@ namespace detail {
   bool IdfObject_Impl::setInt(unsigned index, int value, bool checkValidity)
   {
     try {
-      std::string str = boost::lexical_cast<std::string>(value);
+      std::string str = toString(value);
       return setString(index, str, checkValidity);
     }
     catch (...) {
@@ -1836,6 +1826,8 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
         else{
           return false;
         }
+      } else {
+        // integers can't be NaN or Infinity 
       }
     }
 
@@ -1864,7 +1856,17 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
         else {
           return false;
         }
-      }
+      } else{
+        if (std::isnan(*value)) {
+          LOG(Info, "Cannot set field " << index << ", '" << iddField.name() << "', an object of type "
+              << m_iddObject.name() << " to NaN.");
+          return false;
+        }else if (std::isinf(*value)) {
+          LOG(Info, "Cannot set field " << index << ", '" << iddField.name() << "', an object of type "
+              << m_iddObject.name() << " to Infinity.");
+          return false;
+        }
+      } 
     }
 
     if ((fieldType == IddFieldType::ChoiceType) && (!m_fields[index].empty())) {
