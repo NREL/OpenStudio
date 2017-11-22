@@ -43,17 +43,17 @@ namespace detail {
 
   /** Lights_Impl is a SpaceLoadInstance_Impl that is the implementation class for Lights.*/
   class MODEL_API Lights_Impl : public SpaceLoadInstance_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
-    
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -73,9 +73,9 @@ namespace detail {
     //@}
     /** @name Virtual Methods */
     //@{
-    
+
     virtual const std::vector<std::string>& outputVariableNames() const override;
-    
+
     virtual IddObjectType iddObjectType() const override;
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
@@ -136,7 +136,7 @@ namespace detail {
 
     void resetMultiplier();
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -150,15 +150,15 @@ namespace detail {
 
     boost::optional<double> powerPerPerson() const;
 
-    /** Returns the lighting level represented by this instance, assuming floorArea (m^2) and 
+    /** Returns the lighting level represented by this instance, assuming floorArea (m^2) and
      *  numPeople. */
     double getLightingPower(double floorArea, double numPeople) const;
 
-    /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and 
+    /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
      *  numPeople. */
     double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-    /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and 
+    /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
      *  numPeople. */
     double getPowerPerPerson(double floorArea, double numPeople) const;
 
