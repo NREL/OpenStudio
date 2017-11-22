@@ -409,8 +409,17 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
         if (istringEqual("None", secondaryDaylightingControl->lightingControlType())){
           fractionofZoneControlledbySecondReferencePoint = "0.0";
         }else{
+          // Check that the sum of Pri+Sec isn't greater than one
+          double primaryFrac = modelObject.fractionofZoneControlledbyPrimaryDaylightingControl();
+          double secondaryFrac = modelObject.fractionofZoneControlledbySecondaryDaylightingControl();
+          if ((primaryFrac + secondaryFrac) > 1) {
+            // Reset secondary to 1 - Primary
+            LOG(Warn, "Fraction of Zone Controlled by Primary Daylight Control is " << primaryFrac << " while Secondary Fraction is "
+                  << secondaryFrac << ". Reseting Secondary Fraction to " << (1.0 - primaryFrac));
+            secondaryFrac = 1.0 - primaryFrac;
+          }
           std::stringstream ss;
-          ss << modelObject.fractionofZoneControlledbySecondaryDaylightingControl();
+          ss << secondaryFrac;
           fractionofZoneControlledbySecondReferencePoint = ss.str();
         }
 
