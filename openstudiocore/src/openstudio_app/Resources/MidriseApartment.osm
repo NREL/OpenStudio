@@ -14788,7 +14788,11 @@ OS:Lights,
   {6174b6e5-8d0b-4fb8-9feb-febaa462a407}, !- Handle
   189.1-2009 - MidriseApartment - Apartment - CZ1-3 Lights, !- Name
   {f30f6309-c74b-4519-92b6-8eab0ef6bdce}, !- Lights Definition Name
-  {095c1c14-ffac-4e3c-b817-7ca711737d1b}; !- Space or SpaceType Name
+  {095c1c14-ffac-4e3c-b817-7ca711737d1b}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:Schedule:Ruleset,
   {6e17bf48-dda3-4e42-b74b-47a6024c6ee1}, ! Handle
@@ -14980,7 +14984,14 @@ OS:People,
   {ed9a7cf3-cd2c-4c21-8006-7bf39795a963}, !- Handle
   189.1-2009 - MidriseApartment - Apartment - CZ1-3 People, !- Name
   {daefad81-1574-4488-8ec4-d3b92fbc17ee}, !- People Definition Name
-  {095c1c14-ffac-4e3c-b817-7ca711737d1b}; !- Space or SpaceType Name
+  {095c1c14-ffac-4e3c-b817-7ca711737d1b}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:Schedule:Ruleset,
   {3dd4f643-0dfb-4ffa-a0a5-565158a49a77}, ! Handle
@@ -15185,7 +15196,10 @@ OS:ElectricEquipment,
   {9f070b32-fa7a-4e1d-86d4-887e16486ae9}, !- Handle
   189.1-2009 - MidriseApartment - Apartment - CZ1-3 Electric Equipment, !- Name
   {433458c2-6d50-47de-9394-1d0414e4662a}, !- Electric Equipment Definition Name
-  {095c1c14-ffac-4e3c-b817-7ca711737d1b}; !- Space or SpaceType Name
+  {095c1c14-ffac-4e3c-b817-7ca711737d1b}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:Schedule:Ruleset,
   {69f12022-395b-4c05-a782-902116df3270}, ! Handle
@@ -15556,7 +15570,11 @@ OS:Lights,
   {8123f11f-8cc8-4b1c-b22c-7eef1016b3f2}, !- Handle
   189.1-2009 - MidriseApartment - Corridor - CZ1-3 Lights, !- Name
   {31ae688c-ab69-468e-9b94-0676b1533551}, !- Lights Definition Name
-  {430de628-82e7-4938-8253-be9e7166405e}; !- Space or SpaceType Name
+  {430de628-82e7-4938-8253-be9e7166405e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:Schedule:Ruleset,
   {9d30cd42-b959-4f0e-b5d0-5bf103a395f1}, ! Handle
@@ -15753,7 +15771,11 @@ OS:Lights,
   {dba53b03-a663-4b51-9d27-1df9185c63e0}, !- Handle
   189.1-2009 - MidriseApartment - Office - CZ1-3 Lights, !- Name
   {edc67372-ace4-4942-8847-9e87ee1791a8}, !- Lights Definition Name
-  {293287dd-f796-4c2e-8e87-981dad188c40}; !- Space or SpaceType Name
+  {293287dd-f796-4c2e-8e87-981dad188c40}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:Schedule:Ruleset,
   {4a58c74a-784d-4440-bc30-2c62ed966eb5}, ! Handle
@@ -15866,7 +15888,14 @@ OS:People,
   {2f0a0a1b-bfb1-4e6b-bf4d-1d0b4ff2dddf}, !- Handle
   189.1-2009 - MidriseApartment - Office - CZ1-3 People, !- Name
   {c6daa682-318f-40be-b496-e03ab1b64d37}, !- People Definition Name
-  {293287dd-f796-4c2e-8e87-981dad188c40}; !- Space or SpaceType Name
+  {293287dd-f796-4c2e-8e87-981dad188c40}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:Schedule:Ruleset,
   {ce78903f-a118-4487-9588-196f595ac79b}, ! Handle
@@ -15995,7 +16024,10 @@ OS:ElectricEquipment,
   {7120378a-534e-4056-b7c7-459ec4d9874c}, !- Handle
   189.1-2009 - MidriseApartment - Office - CZ1-3 Electric Equipment, !- Name
   {fe6e7f68-4dda-450f-be96-9c8ecb0400ac}, !- Electric Equipment Definition Name
-  {293287dd-f796-4c2e-8e87-981dad188c40}; !- Space or SpaceType Name
+  {293287dd-f796-4c2e-8e87-981dad188c40}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:Schedule:Ruleset,
   {98112547-a018-46e8-9ebb-a2da863be76c}, ! Handle
@@ -16280,7 +16312,11 @@ OS:Lights,
   {e3d9939a-142e-4afd-8a71-1f451d68018c}, !- Handle
   189.1-2009 - MidriseApartment - Apartment - CZ4-8 Lights, !- Name
   {e9b57283-aace-4531-99b7-0ef753db4a12}, !- Lights Definition Name
-  {e2c4afce-902c-4ef2-99f7-0cfb8aa82764}; !- Space or SpaceType Name
+  {e2c4afce-902c-4ef2-99f7-0cfb8aa82764}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:People:Definition,
   {1e9b561f-3d9c-4961-ab1c-e2bdef69811b}, !- Handle
@@ -16295,7 +16331,14 @@ OS:People,
   {42610045-a2d9-4fe2-b6f3-974c0517f993}, !- Handle
   189.1-2009 - MidriseApartment - Apartment - CZ4-8 People, !- Name
   {1e9b561f-3d9c-4961-ab1c-e2bdef69811b}, !- People Definition Name
-  {e2c4afce-902c-4ef2-99f7-0cfb8aa82764}; !- Space or SpaceType Name
+  {e2c4afce-902c-4ef2-99f7-0cfb8aa82764}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {e49c7aee-6fd8-493f-8184-482e6a1d654a}, !- Handle
@@ -16324,7 +16367,10 @@ OS:ElectricEquipment,
   {cbca2abe-a650-4cbc-b160-a4082cad54f6}, !- Handle
   189.1-2009 - MidriseApartment - Apartment - CZ4-8 Electric Equipment, !- Name
   {b0ddbdda-4756-4ee0-bac0-28a16df5285e}, !- Electric Equipment Definition Name
-  {e2c4afce-902c-4ef2-99f7-0cfb8aa82764}; !- Space or SpaceType Name
+  {e2c4afce-902c-4ef2-99f7-0cfb8aa82764}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {568fcbf8-e738-47f3-937e-35e9107582b5}, !- Handle
@@ -16375,7 +16421,11 @@ OS:Lights,
   {7673779c-4331-4595-bf9c-1588eb31e19f}, !- Handle
   189.1-2009 - MidriseApartment - Corridor - CZ4-8 Lights, !- Name
   {7acf0fe6-5e41-4c83-ac45-95cf05d4150d}, !- Lights Definition Name
-  {b47aad0c-c4b8-41be-89b6-f4bcd9cadbf8}; !- Space or SpaceType Name
+  {b47aad0c-c4b8-41be-89b6-f4bcd9cadbf8}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {d2b62b19-b20e-4abd-ab46-ea222c521b69}, !- Handle
@@ -16451,7 +16501,11 @@ OS:Lights,
   {9a657510-48f5-411a-9520-a3cfaee5dac7}, !- Handle
   189.1-2009 - MidriseApartment - Office - CZ4-8 Lights, !- Name
   {4f128c83-ffea-4e47-9c04-b28803211ad9}, !- Lights Definition Name
-  {70523fb1-eabb-4a80-b82b-6025088eaa65}; !- Space or SpaceType Name
+  {70523fb1-eabb-4a80-b82b-6025088eaa65}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {2004c64a-01ca-40df-ae19-16372997aed6}, !- Handle
@@ -16476,7 +16530,14 @@ OS:People,
   {28a1f3f1-4342-42c0-9cd8-86cc1e77f632}, !- Handle
   189.1-2009 - MidriseApartment - Office - CZ4-8 People, !- Name
   {fce887ee-1dea-4e2d-ac08-b7fb50102d01}, !- People Definition Name
-  {70523fb1-eabb-4a80-b82b-6025088eaa65}; !- Space or SpaceType Name
+  {70523fb1-eabb-4a80-b82b-6025088eaa65}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {88a0066f-4e1f-4394-9d54-13d9a4a216fd}, !- Handle
@@ -16505,7 +16566,10 @@ OS:ElectricEquipment,
   {ac7d9fbc-f6f2-41b3-8000-9bd2438de507}, !- Handle
   189.1-2009 - MidriseApartment - Office - CZ4-8 Electric Equipment, !- Name
   {8cb5f605-571b-4212-9fe0-919e46bf10a0}, !- Electric Equipment Definition Name
-  {70523fb1-eabb-4a80-b82b-6025088eaa65}; !- Space or SpaceType Name
+  {70523fb1-eabb-4a80-b82b-6025088eaa65}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {20168295-1191-48f5-9b33-0061afd23c30}, !- Handle
@@ -16556,7 +16620,11 @@ OS:Lights,
   {8553f7d2-641f-40c4-af0d-d052b40ca8d1}, !- Handle
   90.1-2007 - MidriseApartment - Apartment Lights, !- Name
   {ea68fb05-be29-4412-954a-b074209ebe61}, !- Lights Definition Name
-  {2d8921f4-00de-4f32-8bc1-a93eab34adb6}; !- Space or SpaceType Name
+  {2d8921f4-00de-4f32-8bc1-a93eab34adb6}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:People:Definition,
   {11fc0ab7-7437-4f08-8e03-76ebb45d2784}, !- Handle
@@ -16571,7 +16639,14 @@ OS:People,
   {91b88865-cbb8-4077-b3be-c449d6a90615}, !- Handle
   90.1-2007 - MidriseApartment - Apartment People, !- Name
   {11fc0ab7-7437-4f08-8e03-76ebb45d2784}, !- People Definition Name
-  {2d8921f4-00de-4f32-8bc1-a93eab34adb6}; !- Space or SpaceType Name
+  {2d8921f4-00de-4f32-8bc1-a93eab34adb6}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {1fcd5c92-7ed9-4d43-abe5-b3ac8ee63910}, !- Handle
@@ -16600,7 +16675,10 @@ OS:ElectricEquipment,
   {37ccd084-4d47-47cb-96bd-c3ded54a7740}, !- Handle
   90.1-2007 - MidriseApartment - Apartment Electric Equipment, !- Name
   {d8893658-16bb-4193-9e1e-112c6c698eee}, !- Electric Equipment Definition Name
-  {2d8921f4-00de-4f32-8bc1-a93eab34adb6}; !- Space or SpaceType Name
+  {2d8921f4-00de-4f32-8bc1-a93eab34adb6}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {969e17ad-f471-4683-8603-b8eddf494338}, !- Handle
@@ -16651,7 +16729,11 @@ OS:Lights,
   {b05867d4-d3a3-401e-9305-d37a96d1e751}, !- Handle
   90.1-2007 - MidriseApartment - Corridor Lights, !- Name
   {39660f05-9608-4ca7-a4cd-27b0acf8dc5e}, !- Lights Definition Name
-  {3c4a9aae-aaaf-4762-9161-fa5a7f3fae30}; !- Space or SpaceType Name
+  {3c4a9aae-aaaf-4762-9161-fa5a7f3fae30}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {2e4db369-2727-41a4-8475-89aa4a5e79c8}, !- Handle
@@ -16727,7 +16809,11 @@ OS:Lights,
   {92fd8724-43f1-4409-95c4-a08f14389330}, !- Handle
   90.1-2007 - MidriseApartment - Office Lights, !- Name
   {a8ef0139-9d5c-4961-8f4a-497e14cd0767}, !- Lights Definition Name
-  {c88d00dd-8f49-4dc8-acf5-263724c97c97}; !- Space or SpaceType Name
+  {c88d00dd-8f49-4dc8-acf5-263724c97c97}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {7641adc8-29c4-4236-82f3-b0b6961d81a3}, !- Handle
@@ -16752,7 +16838,14 @@ OS:People,
   {3c6c081e-b228-4514-9b14-3fdf7d6d6a37}, !- Handle
   90.1-2007 - MidriseApartment - Office People, !- Name
   {4c9fc5e3-2081-4fc0-b49d-f4d40fb8bab1}, !- People Definition Name
-  {c88d00dd-8f49-4dc8-acf5-263724c97c97}; !- Space or SpaceType Name
+  {c88d00dd-8f49-4dc8-acf5-263724c97c97}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {87f1bf1d-e7ca-4fb9-aa26-57d60da75e92}, !- Handle
@@ -16781,7 +16874,10 @@ OS:ElectricEquipment,
   {7002cca8-6b22-4d7c-923c-3dc1d5f0bc9e}, !- Handle
   90.1-2007 - MidriseApartment - Office Electric Equipment, !- Name
   {d1a67be9-d671-4636-8ac9-3a95d8a325a5}, !- Electric Equipment Definition Name
-  {c88d00dd-8f49-4dc8-acf5-263724c97c97}; !- Space or SpaceType Name
+  {c88d00dd-8f49-4dc8-acf5-263724c97c97}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {5b91e0ad-4e47-47dc-87ed-42d2ed853c33}, !- Handle
@@ -16832,7 +16928,11 @@ OS:Lights,
   {c2e02aa4-860b-4c9e-994f-4a397462cc83}, !- Handle
   90.1-2010 - MidriseApartment - Apartment Lights, !- Name
   {c6020e1a-c4bc-497d-ba6f-00f4d251f0dc}, !- Lights Definition Name
-  {b91ec900-af1a-430d-8128-9bcaa271860b}; !- Space or SpaceType Name
+  {b91ec900-af1a-430d-8128-9bcaa271860b}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {a0c8a29b-4f6d-4fdc-bc2f-36f2e49095cc}, !- Handle
@@ -16857,7 +16957,14 @@ OS:People,
   {e9712e1b-3748-4b00-b383-5998db8b0eb0}, !- Handle
   90.1-2010 - MidriseApartment - Apartment People, !- Name
   {98a8cc16-f337-4371-a49d-28d419a0e267}, !- People Definition Name
-  {b91ec900-af1a-430d-8128-9bcaa271860b}; !- Space or SpaceType Name
+  {b91ec900-af1a-430d-8128-9bcaa271860b}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {eb1f6fed-59e1-474a-a388-682eb214bd62}, !- Handle
@@ -16886,7 +16993,10 @@ OS:ElectricEquipment,
   {7b476a73-e9f8-4a60-ab47-3970e76cf38d}, !- Handle
   90.1-2010 - MidriseApartment - Apartment Electric Equipment, !- Name
   {01f0cbe2-ab81-40ce-8a07-55fe47e00d73}, !- Electric Equipment Definition Name
-  {b91ec900-af1a-430d-8128-9bcaa271860b}; !- Space or SpaceType Name
+  {b91ec900-af1a-430d-8128-9bcaa271860b}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {e7659205-c01d-44a1-95c9-1b960354feca}, !- Handle
@@ -16937,7 +17047,11 @@ OS:Lights,
   {c09e3210-ca7b-4794-919e-e47ddd71c882}, !- Handle
   90.1-2010 - MidriseApartment - Corridor Lights, !- Name
   {b852dd39-43ca-41cb-89db-ef396ddbbe66}, !- Lights Definition Name
-  {a3808611-8ad9-44b7-9fe9-87ff747843b6}; !- Space or SpaceType Name
+  {a3808611-8ad9-44b7-9fe9-87ff747843b6}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {8437b791-afc0-4ac8-bca0-ae4c2ca101c3}, !- Handle
@@ -17013,7 +17127,11 @@ OS:Lights,
   {bb2e15bd-c02b-4d40-b2e2-ba7a57a6fd4d}, !- Handle
   90.1-2010 - MidriseApartment - Office Lights, !- Name
   {a1bf5b42-1b24-4013-87db-c422abcbb29c}, !- Lights Definition Name
-  {03d0aa44-46de-46b5-95ff-4c614d9d357f}; !- Space or SpaceType Name
+  {03d0aa44-46de-46b5-95ff-4c614d9d357f}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {d2fd9ff4-a00b-4838-9127-0bd4f8e7c88e}, !- Handle
@@ -17038,7 +17156,14 @@ OS:People,
   {a321b9d4-47a6-49b2-8fcb-31bce8386157}, !- Handle
   90.1-2010 - MidriseApartment - Office People, !- Name
   {19e12419-4654-4ec7-bfbe-046579d83d00}, !- People Definition Name
-  {03d0aa44-46de-46b5-95ff-4c614d9d357f}; !- Space or SpaceType Name
+  {03d0aa44-46de-46b5-95ff-4c614d9d357f}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {39da5d05-de71-4642-8e03-d078b4faa960}, !- Handle
@@ -17067,7 +17192,10 @@ OS:ElectricEquipment,
   {d12b160d-eb61-43a0-ae78-a60299f69b9c}, !- Handle
   90.1-2010 - MidriseApartment - Office Electric Equipment, !- Name
   {f1d2cdcd-32b4-452a-b245-daacd26facde}, !- Electric Equipment Definition Name
-  {03d0aa44-46de-46b5-95ff-4c614d9d357f}; !- Space or SpaceType Name
+  {03d0aa44-46de-46b5-95ff-4c614d9d357f}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {df6a0b2c-5904-48d1-8879-67e6d2dbb567}, !- Handle
@@ -17118,7 +17246,11 @@ OS:Lights,
   {a17baa61-6abf-4445-a322-95fe312b39f9}, !- Handle
   DOE Ref 1980-2004 - MidriseApartment - Apartment Lights, !- Name
   {0cd71970-6f78-4a27-a464-2737d9dcfea9}, !- Lights Definition Name
-  {9f0be8e2-ca80-4d57-80bb-31e0706ae404}; !- Space or SpaceType Name
+  {9f0be8e2-ca80-4d57-80bb-31e0706ae404}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:People:Definition,
   {3d2972ad-f959-473c-ad6a-eb680a26437b}, !- Handle
@@ -17133,7 +17265,14 @@ OS:People,
   {3dcb645a-d263-4ff2-9165-b0d9c30c2df9}, !- Handle
   DOE Ref 1980-2004 - MidriseApartment - Apartment People, !- Name
   {3d2972ad-f959-473c-ad6a-eb680a26437b}, !- People Definition Name
-  {9f0be8e2-ca80-4d57-80bb-31e0706ae404}; !- Space or SpaceType Name
+  {9f0be8e2-ca80-4d57-80bb-31e0706ae404}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {5265952e-4b6a-48a2-85f5-4ecf2e7efb7f}, !- Handle
@@ -17162,7 +17301,10 @@ OS:ElectricEquipment,
   {0306d01a-3213-42e9-a58d-0de3c1790d58}, !- Handle
   DOE Ref 1980-2004 - MidriseApartment - Apartment Electric Equipment, !- Name
   {f70d4dfd-a98e-4ad0-a40b-29709d6b348f}, !- Electric Equipment Definition Name
-  {9f0be8e2-ca80-4d57-80bb-31e0706ae404}; !- Space or SpaceType Name
+  {9f0be8e2-ca80-4d57-80bb-31e0706ae404}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {e57a2ee0-6854-46e9-a50f-3715c0bc2a71}, !- Handle
@@ -17213,7 +17355,11 @@ OS:Lights,
   {26eccfa7-a69f-462c-a132-636cf16535ee}, !- Handle
   DOE Ref 1980-2004 - MidriseApartment - Corridor Lights, !- Name
   {571b7516-7b47-419b-b68a-43d38a7e007f}, !- Lights Definition Name
-  {e32fe4ed-904f-4dd6-8963-742a063cc1ac}; !- Space or SpaceType Name
+  {e32fe4ed-904f-4dd6-8963-742a063cc1ac}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {5564cbe0-d0e3-4c77-9e83-e26fa705ec78}, !- Handle
@@ -17289,7 +17435,11 @@ OS:Lights,
   {19e20af6-1da0-4afa-ab0f-cf9806d7a2d8}, !- Handle
   DOE Ref 1980-2004 - MidriseApartment - Office Lights, !- Name
   {64b79dac-d4ba-4333-99aa-77982125d04b}, !- Lights Definition Name
-  {dbd95899-0c59-4e47-b392-70b9099857a7}; !- Space or SpaceType Name
+  {dbd95899-0c59-4e47-b392-70b9099857a7}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {afb87816-7bb5-4bd9-af66-8d5e046dbae4}, !- Handle
@@ -17314,7 +17464,14 @@ OS:People,
   {714267e1-5d11-4a3b-aa99-305e9cd06263}, !- Handle
   DOE Ref 1980-2004 - MidriseApartment - Office People, !- Name
   {4402c83b-661d-4d91-8757-7d448f9a1978}, !- People Definition Name
-  {dbd95899-0c59-4e47-b392-70b9099857a7}; !- Space or SpaceType Name
+  {dbd95899-0c59-4e47-b392-70b9099857a7}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {6365c5a2-722e-495d-91d9-88916f2f321a}, !- Handle
@@ -17343,7 +17500,10 @@ OS:ElectricEquipment,
   {e28062ca-f46c-4044-833c-789f4c289b70}, !- Handle
   DOE Ref 1980-2004 - MidriseApartment - Office Electric Equipment, !- Name
   {98fb42fc-fcc5-40fb-ac23-e8548b5882d0}, !- Electric Equipment Definition Name
-  {dbd95899-0c59-4e47-b392-70b9099857a7}; !- Space or SpaceType Name
+  {dbd95899-0c59-4e47-b392-70b9099857a7}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {5eb06c21-937e-49a0-bb4c-ad8a69c57c29}, !- Handle
@@ -17394,7 +17554,11 @@ OS:Lights,
   {54818bfc-62ec-47a6-aa6d-00b8556e1256}, !- Handle
   DOE Ref 2004 - MidriseApartment - Apartment Lights, !- Name
   {a39896cb-90c1-49d4-b075-7d2fe5bee733}, !- Lights Definition Name
-  {8088db39-0dbf-4805-ad82-2c8ee712afb1}; !- Space or SpaceType Name
+  {8088db39-0dbf-4805-ad82-2c8ee712afb1}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:People:Definition,
   {8c963a84-9a06-480d-a61b-680a59b8338f}, !- Handle
@@ -17409,7 +17573,14 @@ OS:People,
   {df4fcf4a-cf89-4ddc-8393-cab0d758713c}, !- Handle
   DOE Ref 2004 - MidriseApartment - Apartment People, !- Name
   {8c963a84-9a06-480d-a61b-680a59b8338f}, !- People Definition Name
-  {8088db39-0dbf-4805-ad82-2c8ee712afb1}; !- Space or SpaceType Name
+  {8088db39-0dbf-4805-ad82-2c8ee712afb1}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {e810165f-909b-400f-bd44-c955cd59412c}, !- Handle
@@ -17438,7 +17609,10 @@ OS:ElectricEquipment,
   {77db03d7-c252-4103-b35b-819c981755a5}, !- Handle
   DOE Ref 2004 - MidriseApartment - Apartment Electric Equipment, !- Name
   {5842f8d2-38d4-48ee-b5ff-9a647108fd26}, !- Electric Equipment Definition Name
-  {8088db39-0dbf-4805-ad82-2c8ee712afb1}; !- Space or SpaceType Name
+  {8088db39-0dbf-4805-ad82-2c8ee712afb1}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {8669712d-8e40-4c57-8adb-8702347a2f83}, !- Handle
@@ -17489,7 +17663,11 @@ OS:Lights,
   {d05ca8bb-52a2-4bbd-9ca7-44f40b62bb74}, !- Handle
   DOE Ref 2004 - MidriseApartment - Corridor Lights, !- Name
   {094fd8ff-69c4-4e7f-8464-cbbbaeac52e0}, !- Lights Definition Name
-  {ebe7a342-82b3-480e-8f91-f3ef38615ecb}; !- Space or SpaceType Name
+  {ebe7a342-82b3-480e-8f91-f3ef38615ecb}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {fa50d282-ccfb-4de8-8a2e-71e70b1dc2dd}, !- Handle
@@ -17565,7 +17743,11 @@ OS:Lights,
   {2dbec57d-2995-435f-aee2-5ae006dfe088}, !- Handle
   DOE Ref 2004 - MidriseApartment - Office Lights, !- Name
   {1ce027fc-cc3d-4923-b496-b08823681167}, !- Lights Definition Name
-  {5774ba6a-e4a8-4eaa-a898-dc460a714e2c}; !- Space or SpaceType Name
+  {5774ba6a-e4a8-4eaa-a898-dc460a714e2c}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {a65db790-12cf-4031-b0ed-feaaf7497cc2}, !- Handle
@@ -17590,7 +17772,14 @@ OS:People,
   {9054fade-11d7-4a64-a25b-14b4569fb48c}, !- Handle
   DOE Ref 2004 - MidriseApartment - Office People, !- Name
   {00359f7d-3934-4c7d-894a-3267849d09a0}, !- People Definition Name
-  {5774ba6a-e4a8-4eaa-a898-dc460a714e2c}; !- Space or SpaceType Name
+  {5774ba6a-e4a8-4eaa-a898-dc460a714e2c}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {7edd26d5-04f9-4dba-832a-30d043e89d2c}, !- Handle
@@ -17619,7 +17808,10 @@ OS:ElectricEquipment,
   {3eed497d-9778-45b6-8544-a2cc17f8c2c3}, !- Handle
   DOE Ref 2004 - MidriseApartment - Office Electric Equipment, !- Name
   {1a350e7f-74c2-45ab-928c-83ae75f67a96}, !- Electric Equipment Definition Name
-  {5774ba6a-e4a8-4eaa-a898-dc460a714e2c}; !- Space or SpaceType Name
+  {5774ba6a-e4a8-4eaa-a898-dc460a714e2c}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {9ed58326-7322-49ec-b2fe-b8d34887201d}, !- Handle
@@ -17670,7 +17862,11 @@ OS:Lights,
   {c37f406b-a5ea-4a00-9503-77f713f5dfb3}, !- Handle
   DOE Ref Pre-1980 - MidriseApartment - Apartment Lights, !- Name
   {e8006150-a789-4371-9675-c41fea9d5deb}, !- Lights Definition Name
-  {fd607f4c-cb4c-43d1-8fd5-f9b923bb4109}; !- Space or SpaceType Name
+  {fd607f4c-cb4c-43d1-8fd5-f9b923bb4109}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:People:Definition,
   {29ab79b3-659c-41b5-9dc9-208c2502a834}, !- Handle
@@ -17685,7 +17881,14 @@ OS:People,
   {59dfeeb2-9db3-4b6a-b783-28565a6ce684}, !- Handle
   DOE Ref Pre-1980 - MidriseApartment - Apartment People, !- Name
   {29ab79b3-659c-41b5-9dc9-208c2502a834}, !- People Definition Name
-  {fd607f4c-cb4c-43d1-8fd5-f9b923bb4109}; !- Space or SpaceType Name
+  {fd607f4c-cb4c-43d1-8fd5-f9b923bb4109}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {91121e4c-3dec-4f8c-b211-0fac5e9e6ab2}, !- Handle
@@ -17714,7 +17917,10 @@ OS:ElectricEquipment,
   {bf304ad2-36c6-4d7f-934e-7d95e29c85e0}, !- Handle
   DOE Ref Pre-1980 - MidriseApartment - Apartment Electric Equipment, !- Name
   {47cc507d-86df-41cd-85e9-e0acf29d5e5d}, !- Electric Equipment Definition Name
-  {fd607f4c-cb4c-43d1-8fd5-f9b923bb4109}; !- Space or SpaceType Name
+  {fd607f4c-cb4c-43d1-8fd5-f9b923bb4109}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {60e2aa18-894d-4399-8580-934c8fc2acf6}, !- Handle
@@ -17765,7 +17971,11 @@ OS:Lights,
   {40c54a40-5755-433a-be14-778d22b8f0df}, !- Handle
   DOE Ref Pre-1980 - MidriseApartment - Corridor Lights, !- Name
   {710b95ea-ae7e-4ab0-8d67-9b72a11f21e7}, !- Lights Definition Name
-  {1c904750-255c-4138-acd2-500f156d45af}; !- Space or SpaceType Name
+  {1c904750-255c-4138-acd2-500f156d45af}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {fea7a8be-3b36-4626-a402-46a72c111a94}, !- Handle
@@ -17841,7 +18051,11 @@ OS:Lights,
   {08ba027d-0fb3-407b-8f31-00def49ca4d0}, !- Handle
   DOE Ref Pre-1980 - MidriseApartment - Office Lights, !- Name
   {611afc14-5d9a-4548-86c4-81f32ab46e55}, !- Lights Definition Name
-  {e7c20a08-99ad-43fa-8720-5a8bd242aa3b}; !- Space or SpaceType Name
+  {e7c20a08-99ad-43fa-8720-5a8bd242aa3b}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {80612840-f4e3-427e-b28d-f68ecff150af}, !- Handle
@@ -17866,7 +18080,14 @@ OS:People,
   {e63b81f9-a551-487b-85f0-83d8d22597f4}, !- Handle
   DOE Ref Pre-1980 - MidriseApartment - Office People, !- Name
   {c6e4b41f-4033-4613-af22-990041cfa6e1}, !- People Definition Name
-  {e7c20a08-99ad-43fa-8720-5a8bd242aa3b}; !- Space or SpaceType Name
+  {e7c20a08-99ad-43fa-8720-5a8bd242aa3b}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {6d1a6016-a3e7-4085-8ef3-abdc38139661}, !- Handle
@@ -17895,7 +18116,10 @@ OS:ElectricEquipment,
   {eb20cdec-fdd0-4fae-9caa-b3557580f2fe}, !- Handle
   DOE Ref Pre-1980 - MidriseApartment - Office Electric Equipment, !- Name
   {b4921d45-3b10-4a1e-95ed-ca51e379fc45}, !- Electric Equipment Definition Name
-  {e7c20a08-99ad-43fa-8720-5a8bd242aa3b}; !- Space or SpaceType Name
+  {e7c20a08-99ad-43fa-8720-5a8bd242aa3b}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {34fc2410-9fe5-4b59-94af-4e51226e88a8}, !- Handle

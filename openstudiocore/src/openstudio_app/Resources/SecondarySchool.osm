@@ -14788,7 +14788,11 @@ OS:Lights,
   {248a11c6-eac6-436c-8827-9d01d6719cb8}, !- Handle
   189.1-2009 - SecSchl - Auditorium - CZ1-3 Lights, !- Name
   {9e4ef48c-9a70-40a5-a02b-7b95251358c8}, !- Lights Definition Name
-  {f9bfedeb-25fd-428a-9c10-5fbac1f23ab8}; !- Space or SpaceType Name
+  {f9bfedeb-25fd-428a-9c10-5fbac1f23ab8}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:Schedule:Ruleset,
   {c30bd6e2-6d59-4235-8a66-5b3f8940fcc9}, ! Handle
@@ -15024,7 +15028,14 @@ OS:People,
   {7ac53b70-d9f5-41bd-82db-b65fd675838b}, !- Handle
   189.1-2009 - SecSchl - Auditorium - CZ1-3 People, !- Name
   {8be11753-538f-4928-92f0-f40abe6b24d8}, !- People Definition Name
-  {f9bfedeb-25fd-428a-9c10-5fbac1f23ab8}; !- Space or SpaceType Name
+  {f9bfedeb-25fd-428a-9c10-5fbac1f23ab8}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:Schedule:Ruleset,
   {d4c5117f-024f-450e-8ddb-be95d07be2ff}, ! Handle
@@ -15374,7 +15385,10 @@ OS:ElectricEquipment,
   {fec3e968-8d59-4c81-9b34-d44eb4b49eee}, !- Handle
   189.1-2009 - SecSchl - Auditorium - CZ1-3 Electric Equipment, !- Name
   {cfd6a71d-a2bf-45ba-aa77-deddcf9f50d8}, !- Electric Equipment Definition Name
-  {f9bfedeb-25fd-428a-9c10-5fbac1f23ab8}; !- Space or SpaceType Name
+  {f9bfedeb-25fd-428a-9c10-5fbac1f23ab8}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:Schedule:Ruleset,
   {d1d526f6-7e82-4715-995d-0b38961c61e2}, ! Handle
@@ -15867,7 +15881,11 @@ OS:Lights,
   {abdac9be-b580-4590-81ff-cc539d53f5b1}, !- Handle
   189.1-2009 - SecSchl - Cafeteria - CZ1-3 Lights, !- Name
   {2c3efbea-f54d-4fae-b714-2a09236868db}, !- Lights Definition Name
-  {a7d3dad0-27fb-4821-9167-5a9503774069}; !- Space or SpaceType Name
+  {a7d3dad0-27fb-4821-9167-5a9503774069}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {c7f221b8-5cea-4172-9e14-c0950d4d82a5}, !- Handle
@@ -15892,7 +15910,14 @@ OS:People,
   {145717f1-3dd6-4159-af07-8f96aa52476a}, !- Handle
   189.1-2009 - SecSchl - Cafeteria - CZ1-3 People, !- Name
   {2c89fc01-f1fe-4367-ad2c-3ec78a02bd8c}, !- People Definition Name
-  {a7d3dad0-27fb-4821-9167-5a9503774069}; !- Space or SpaceType Name
+  {a7d3dad0-27fb-4821-9167-5a9503774069}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:Schedule:Ruleset,
   {0b8a62ba-b70e-4de0-bd95-686ff12ea682}, ! Handle
@@ -16134,7 +16159,10 @@ OS:ElectricEquipment,
   {e7cd1d25-231c-4c74-a319-a5c8ba7d79de}, !- Handle
   189.1-2009 - SecSchl - Cafeteria - CZ1-3 Electric Equipment, !- Name
   {8ef86be8-9cd9-4041-bd48-252561154e6d}, !- Electric Equipment Definition Name
-  {a7d3dad0-27fb-4821-9167-5a9503774069}; !- Space or SpaceType Name
+  {a7d3dad0-27fb-4821-9167-5a9503774069}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {0e4589a2-84ed-4d0a-9450-d9e4a3f655b8}, !- Handle
@@ -16185,7 +16213,11 @@ OS:Lights,
   {d0ccbdf4-bc4a-4140-9324-d448d733014c}, !- Handle
   189.1-2009 - SecSchl - Classroom - CZ1-3 Lights, !- Name
   {473cdc26-46b7-484c-84ac-a11a23cd0368}, !- Lights Definition Name
-  {81bb6345-fbb2-450e-bb9e-01e8b06463f5}; !- Space or SpaceType Name
+  {81bb6345-fbb2-450e-bb9e-01e8b06463f5}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {ca1bdedc-ef91-49bd-ac08-da9af0ea6746}, !- Handle
@@ -16210,7 +16242,14 @@ OS:People,
   {7874998b-de31-4763-8e8e-5d0d746b2a46}, !- Handle
   189.1-2009 - SecSchl - Classroom - CZ1-3 People, !- Name
   {da346a57-9216-4b0a-a11d-9aaec645db7a}, !- People Definition Name
-  {81bb6345-fbb2-450e-bb9e-01e8b06463f5}; !- Space or SpaceType Name
+  {81bb6345-fbb2-450e-bb9e-01e8b06463f5}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {c27aab0c-e010-45dd-87cb-13c27766c80c}, !- Handle
@@ -16239,7 +16278,10 @@ OS:ElectricEquipment,
   {9cfe2672-7b93-4b4d-a452-42e11e04a1a6}, !- Handle
   189.1-2009 - SecSchl - Classroom - CZ1-3 Electric Equipment, !- Name
   {fb0fc1cd-99c6-4037-8e0c-aa3f2b155310}, !- Electric Equipment Definition Name
-  {81bb6345-fbb2-450e-bb9e-01e8b06463f5}; !- Space or SpaceType Name
+  {81bb6345-fbb2-450e-bb9e-01e8b06463f5}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {4c7fd51d-a457-4a54-b4c1-948d6ebed058}, !- Handle
@@ -16300,7 +16342,11 @@ OS:Lights,
   {eae4c7fe-1ed9-4bab-83d9-775eb73a0c9a}, !- Handle
   189.1-2009 - SecSchl - Corridor - CZ1-3 Lights, !- Name
   {84965770-b2b4-4ea6-bbf2-c46d71794e14}, !- Lights Definition Name
-  {7485bb29-06cf-4773-a979-f46304a2ed05}; !- Space or SpaceType Name
+  {7485bb29-06cf-4773-a979-f46304a2ed05}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {a4afb18f-eb9e-4d93-a26b-8929374f2a17}, !- Handle
@@ -16325,7 +16371,14 @@ OS:People,
   {7918d6bd-9b49-4fe6-8712-4e47bcdd95b9}, !- Handle
   189.1-2009 - SecSchl - Corridor - CZ1-3 People, !- Name
   {fdc52f3f-26e0-43c5-bf15-b07d0b635110}, !- People Definition Name
-  {7485bb29-06cf-4773-a979-f46304a2ed05}; !- Space or SpaceType Name
+  {7485bb29-06cf-4773-a979-f46304a2ed05}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {8773c590-6140-4fd1-b900-c545cb671e9b}, !- Handle
@@ -16354,7 +16407,10 @@ OS:ElectricEquipment,
   {8d4a1512-3135-4175-9cb5-29347ea678a4}, !- Handle
   189.1-2009 - SecSchl - Corridor - CZ1-3 Electric Equipment, !- Name
   {9221a117-78f6-40fa-a0f0-420ae5f80e08}, !- Electric Equipment Definition Name
-  {7485bb29-06cf-4773-a979-f46304a2ed05}; !- Space or SpaceType Name
+  {7485bb29-06cf-4773-a979-f46304a2ed05}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {044242c7-afff-4885-a777-8015af3ea9bb}, !- Handle
@@ -16503,7 +16559,11 @@ OS:Lights,
   {77a3bb9e-5837-46d5-aec4-9ab1c9376df2}, !- Handle
   189.1-2009 - SecSchl - Gym - CZ1-3 Lights, !- Name
   {8c565b1c-e062-421e-9c41-c0c6adc22492}, !- Lights Definition Name
-  {26e0cc59-2837-449e-be42-74b54ee350e3}; !- Space or SpaceType Name
+  {26e0cc59-2837-449e-be42-74b54ee350e3}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {ac75daa5-adaf-4752-b300-bb85d0bb05d6}, !- Handle
@@ -16528,7 +16588,14 @@ OS:People,
   {5a4e61e9-467e-4a62-a7bf-04b984d3eac6}, !- Handle
   189.1-2009 - SecSchl - Gym - CZ1-3 People, !- Name
   {3a510269-deef-4f29-b0f3-40380934fbb4}, !- People Definition Name
-  {26e0cc59-2837-449e-be42-74b54ee350e3}; !- Space or SpaceType Name
+  {26e0cc59-2837-449e-be42-74b54ee350e3}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:Schedule:Ruleset,
   {9913c080-9d28-4a5e-9adb-fe969839a24b}, ! Handle
@@ -16773,7 +16840,10 @@ OS:ElectricEquipment,
   {6caeb4b3-f07c-4081-8b3c-a687bc4a9cdb}, !- Handle
   189.1-2009 - SecSchl - Gym - CZ1-3 Electric Equipment, !- Name
   {132bd676-afba-41ce-aa2a-4d18d92de8e9}, !- Electric Equipment Definition Name
-  {26e0cc59-2837-449e-be42-74b54ee350e3}; !- Space or SpaceType Name
+  {26e0cc59-2837-449e-be42-74b54ee350e3}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {ba4e4af0-33f3-4344-b874-d166a868d6a5}, !- Handle
@@ -16824,7 +16894,11 @@ OS:Lights,
   {99e1967e-a71f-4619-bcc2-e11c8dc08988}, !- Handle
   189.1-2009 - SecSchl - Kitchen - CZ1-3 Lights, !- Name
   {3ada6022-a944-48d8-9679-4a6927312caa}, !- Lights Definition Name
-  {bec6ba42-3569-47f3-8718-0d68d5126c5a}; !- Space or SpaceType Name
+  {bec6ba42-3569-47f3-8718-0d68d5126c5a}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {098bfa7c-fa3a-496e-a978-8f9e15b28934}, !- Handle
@@ -16849,7 +16923,14 @@ OS:People,
   {18dfe8a1-0b91-46b9-a703-d761d09814fb}, !- Handle
   189.1-2009 - SecSchl - Kitchen - CZ1-3 People, !- Name
   {c6e1e9cb-8977-4cb1-a8f0-539addae18b7}, !- People Definition Name
-  {bec6ba42-3569-47f3-8718-0d68d5126c5a}; !- Space or SpaceType Name
+  {bec6ba42-3569-47f3-8718-0d68d5126c5a}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {a89ab9fd-da85-4c33-8ec8-8f970ad453ff}, !- Handle
@@ -16878,7 +16959,10 @@ OS:ElectricEquipment,
   {ac8576d0-eae8-4d02-b94c-770258a7dce5}, !- Handle
   189.1-2009 - SecSchl - Kitchen - CZ1-3 Electric Equipment, !- Name
   {b85a2cec-eae5-47cb-9405-42fe3f0a24fb}, !- Electric Equipment Definition Name
-  {bec6ba42-3569-47f3-8718-0d68d5126c5a}; !- Space or SpaceType Name
+  {bec6ba42-3569-47f3-8718-0d68d5126c5a}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:Schedule:Ruleset,
   {9730630a-aae0-4181-b4c2-2780d7c69732}, ! Handle
@@ -17120,7 +17204,10 @@ OS:GasEquipment,
   {a4b08279-605f-45be-bd51-8dbce6e62340}, !- Handle
   189.1-2009 - SecSchl - Kitchen - CZ1-3 Gas Equipment, !- Name
   {5e0ef647-dcdd-4c3f-9eab-396a70598508}, !- Gas Equipment Definition Name
-  {bec6ba42-3569-47f3-8718-0d68d5126c5a}; !- Space or SpaceType Name
+  {bec6ba42-3569-47f3-8718-0d68d5126c5a}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:Schedule:Ruleset,
   {33b93327-e168-4d9c-bf88-31186ba216d7}, ! Handle
@@ -17399,7 +17486,11 @@ OS:Lights,
   {e502e096-0f41-444d-89fb-197379c41a97}, !- Handle
   189.1-2009 - SecSchl - Library - CZ1-3 Lights, !- Name
   {4355e158-23f2-47c4-ad39-f63a181800d5}, !- Lights Definition Name
-  {fdef87d8-8753-4202-bfb6-d6420af736bd}; !- Space or SpaceType Name
+  {fdef87d8-8753-4202-bfb6-d6420af736bd}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {075f4396-a0d1-4c40-bb6e-ec60d0898f7b}, !- Handle
@@ -17424,7 +17515,14 @@ OS:People,
   {969b421d-320f-4565-aa6c-efe442526ad5}, !- Handle
   189.1-2009 - SecSchl - Library - CZ1-3 People, !- Name
   {1d8c2c38-f10e-45ec-9163-27f4f9eb4327}, !- People Definition Name
-  {fdef87d8-8753-4202-bfb6-d6420af736bd}; !- Space or SpaceType Name
+  {fdef87d8-8753-4202-bfb6-d6420af736bd}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {4deb1a98-0cf6-458c-abfb-c8ab0f0aed20}, !- Handle
@@ -17453,7 +17551,10 @@ OS:ElectricEquipment,
   {5db77e0b-204f-4cdb-815e-bff7805d29aa}, !- Handle
   189.1-2009 - SecSchl - Library - CZ1-3 Electric Equipment, !- Name
   {2c1ec20b-c60d-4b7e-91da-c3e68aba3a6d}, !- Electric Equipment Definition Name
-  {fdef87d8-8753-4202-bfb6-d6420af736bd}; !- Space or SpaceType Name
+  {fdef87d8-8753-4202-bfb6-d6420af736bd}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {76d82ee9-404c-4227-8f7f-1b8d74e3cc8a}, !- Handle
@@ -17504,7 +17605,11 @@ OS:Lights,
   {3d65617a-6ca8-48f0-a955-8b54b34006ab}, !- Handle
   189.1-2009 - SecSchl - Lobby - CZ1-3 Lights, !- Name
   {3283e66c-fc3f-4e4e-a01d-2ce80d593878}, !- Lights Definition Name
-  {c67cff47-0d3c-4892-afc9-8ea032b2a985}; !- Space or SpaceType Name
+  {c67cff47-0d3c-4892-afc9-8ea032b2a985}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {6c84a971-5db0-42a9-9536-255873c6744f}, !- Handle
@@ -17543,7 +17648,10 @@ OS:ElectricEquipment,
   {5e78af06-155f-42b4-b3d2-da91dda0b7f5}, !- Handle
   189.1-2009 - SecSchl - Lobby - CZ1-3 Electric Equipment, !- Name
   {c86454cc-b234-49e1-b71e-18b23c6573a9}, !- Electric Equipment Definition Name
-  {c67cff47-0d3c-4892-afc9-8ea032b2a985}; !- Space or SpaceType Name
+  {c67cff47-0d3c-4892-afc9-8ea032b2a985}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {147048e0-2aa8-4874-9757-6fea129ac1af}, !- Handle
@@ -17594,7 +17702,11 @@ OS:Lights,
   {d6a404ee-b552-4648-9138-750ad01a2eca}, !- Handle
   189.1-2009 - SecSchl - Mechanical - CZ1-3 Lights, !- Name
   {d58870c5-e650-408e-bc21-d392869acacc}, !- Lights Definition Name
-  {6c6e7e0a-5c98-434d-aae6-73695c59f5a8}; !- Space or SpaceType Name
+  {6c6e7e0a-5c98-434d-aae6-73695c59f5a8}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {2a4d3b6d-bca9-4ef9-845b-7e0c01d7c2f3}, !- Handle
@@ -17619,7 +17731,14 @@ OS:People,
   {424726d5-46a9-4cd5-ae92-949bc71b3033}, !- Handle
   189.1-2009 - SecSchl - Mechanical - CZ1-3 People, !- Name
   {7a1173b9-d001-4d3b-8e9d-914c3ef3085e}, !- People Definition Name
-  {6c6e7e0a-5c98-434d-aae6-73695c59f5a8}; !- Space or SpaceType Name
+  {6c6e7e0a-5c98-434d-aae6-73695c59f5a8}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {7bea5f88-6598-42e8-a75f-c9a60044e8ed}, !- Handle
@@ -17648,7 +17767,10 @@ OS:ElectricEquipment,
   {8a57a288-b3f0-47fc-9da1-05b506d2c4e7}, !- Handle
   189.1-2009 - SecSchl - Mechanical - CZ1-3 Electric Equipment, !- Name
   {6959c2c7-4f27-4759-a453-a4cc4d48eaf7}, !- Electric Equipment Definition Name
-  {6c6e7e0a-5c98-434d-aae6-73695c59f5a8}; !- Space or SpaceType Name
+  {6c6e7e0a-5c98-434d-aae6-73695c59f5a8}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {790263d8-5e3b-4296-8d3b-c304ace6344b}, !- Handle
@@ -17699,7 +17821,11 @@ OS:Lights,
   {2e7eddbf-4b50-4053-a33d-c51517fa7182}, !- Handle
   189.1-2009 - SecSchl - Office - CZ1-3 Lights, !- Name
   {935e74c5-1689-476c-b9c6-ea27b18ebfac}, !- Lights Definition Name
-  {60369279-3c58-4aab-aba8-c8bfffc39e5b}; !- Space or SpaceType Name
+  {60369279-3c58-4aab-aba8-c8bfffc39e5b}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {01a794b8-697d-44b6-9622-ce9a65586a8a}, !- Handle
@@ -17724,7 +17850,14 @@ OS:People,
   {610fe50a-7add-4af2-bbcb-8e88a25e8508}, !- Handle
   189.1-2009 - SecSchl - Office - CZ1-3 People, !- Name
   {42901ec7-81fd-432d-ab8c-286dae14c81c}, !- People Definition Name
-  {60369279-3c58-4aab-aba8-c8bfffc39e5b}; !- Space or SpaceType Name
+  {60369279-3c58-4aab-aba8-c8bfffc39e5b}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:Schedule:Ruleset,
   {c3d8897e-db71-45c0-932f-f1c16decd016}, ! Handle
@@ -17966,7 +18099,10 @@ OS:ElectricEquipment,
   {79f10eaf-fbfd-4123-8f4b-d49fa686126c}, !- Handle
   189.1-2009 - SecSchl - Office - CZ1-3 Electric Equipment, !- Name
   {aa1cf8ff-b6f6-4855-8516-f12a01f20c6c}, !- Electric Equipment Definition Name
-  {60369279-3c58-4aab-aba8-c8bfffc39e5b}; !- Space or SpaceType Name
+  {60369279-3c58-4aab-aba8-c8bfffc39e5b}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {f8345cbe-6a38-4544-9a0c-d5528d15f497}, !- Handle
@@ -18017,7 +18153,11 @@ OS:Lights,
   {309b7bf2-d16e-405e-9bec-d8bfdcac689f}, !- Handle
   189.1-2009 - SecSchl - Restroom - CZ1-3 Lights, !- Name
   {f915ecd7-70c2-42ce-b2a3-f461be484d07}, !- Lights Definition Name
-  {b3650f92-9051-426a-8fa8-522faadceb82}; !- Space or SpaceType Name
+  {b3650f92-9051-426a-8fa8-522faadceb82}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {26942bd6-9373-49c3-b1e3-ac9700a85cd4}, !- Handle
@@ -18042,7 +18182,14 @@ OS:People,
   {0c859b00-13a7-4fe9-b424-449d9d247b81}, !- Handle
   189.1-2009 - SecSchl - Restroom - CZ1-3 People, !- Name
   {a0d746be-91f3-44c6-a4d8-44407db21c01}, !- People Definition Name
-  {b3650f92-9051-426a-8fa8-522faadceb82}; !- Space or SpaceType Name
+  {b3650f92-9051-426a-8fa8-522faadceb82}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {cd70a569-d411-4859-9e52-6d8f826af879}, !- Handle
@@ -18071,7 +18218,10 @@ OS:ElectricEquipment,
   {349846e2-a9c1-44af-8921-02e7fa9f170c}, !- Handle
   189.1-2009 - SecSchl - Restroom - CZ1-3 Electric Equipment, !- Name
   {9edca51e-1c23-4193-8129-d6313259d67f}, !- Electric Equipment Definition Name
-  {b3650f92-9051-426a-8fa8-522faadceb82}; !- Space or SpaceType Name
+  {b3650f92-9051-426a-8fa8-522faadceb82}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {86ecdea0-425a-445a-9975-249c0f7a8731}, !- Handle
@@ -18122,7 +18272,11 @@ OS:Lights,
   {d6687e29-f8d7-4903-9346-94468f0f6b64}, !- Handle
   189.1-2009 - SecSchl - Auditorium - CZ4-8 Lights, !- Name
   {11ef5d15-66b2-4a62-932a-f246d1f17799}, !- Lights Definition Name
-  {bd333c40-aaf5-47e1-a613-f96ac7b1a4b6}; !- Space or SpaceType Name
+  {bd333c40-aaf5-47e1-a613-f96ac7b1a4b6}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {d3470242-9bc5-40a8-b60f-7087b653f26f}, !- Handle
@@ -18147,7 +18301,14 @@ OS:People,
   {da322eb0-7ddf-4b12-bc52-3b070b793e45}, !- Handle
   189.1-2009 - SecSchl - Auditorium - CZ4-8 People, !- Name
   {5e9a00f8-e55d-4f63-874c-7e48c5ea2c57}, !- People Definition Name
-  {bd333c40-aaf5-47e1-a613-f96ac7b1a4b6}; !- Space or SpaceType Name
+  {bd333c40-aaf5-47e1-a613-f96ac7b1a4b6}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {d507a87d-1082-498b-a9c5-44e63cb5a560}, !- Handle
@@ -18176,7 +18337,10 @@ OS:ElectricEquipment,
   {74a453f7-9ff2-4193-a3b8-63698b9f3828}, !- Handle
   189.1-2009 - SecSchl - Auditorium - CZ4-8 Electric Equipment, !- Name
   {bda22424-2347-408d-8601-3fdec27a4a2a}, !- Electric Equipment Definition Name
-  {bd333c40-aaf5-47e1-a613-f96ac7b1a4b6}; !- Space or SpaceType Name
+  {bd333c40-aaf5-47e1-a613-f96ac7b1a4b6}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {4a638a69-1344-49ff-95d6-e5c278c8b574}, !- Handle
@@ -18227,7 +18391,11 @@ OS:Lights,
   {a13bffc3-406e-4d5d-abcc-1ea9884913c2}, !- Handle
   189.1-2009 - SecSchl - Cafeteria - CZ4-8 Lights, !- Name
   {76a425d0-079d-4bd3-a409-66c61b69dfb6}, !- Lights Definition Name
-  {511cf96b-3042-418f-8225-65f0d38af5b4}; !- Space or SpaceType Name
+  {511cf96b-3042-418f-8225-65f0d38af5b4}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {31eaddf0-3d1f-486e-91be-ee80a3a2e869}, !- Handle
@@ -18252,7 +18420,14 @@ OS:People,
   {248edf45-e37b-4c0a-af14-cab245064657}, !- Handle
   189.1-2009 - SecSchl - Cafeteria - CZ4-8 People, !- Name
   {ac93626e-ee80-49f8-86d0-fde919cdf9d1}, !- People Definition Name
-  {511cf96b-3042-418f-8225-65f0d38af5b4}; !- Space or SpaceType Name
+  {511cf96b-3042-418f-8225-65f0d38af5b4}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {2b9b4b49-eee8-4ae6-9617-01bb4daff066}, !- Handle
@@ -18281,7 +18456,10 @@ OS:ElectricEquipment,
   {a1ae7913-3b50-4e4d-bd98-6e41547d8ee5}, !- Handle
   189.1-2009 - SecSchl - Cafeteria - CZ4-8 Electric Equipment, !- Name
   {b5a1493f-c2a7-4d05-a231-22c28c1a23c8}, !- Electric Equipment Definition Name
-  {511cf96b-3042-418f-8225-65f0d38af5b4}; !- Space or SpaceType Name
+  {511cf96b-3042-418f-8225-65f0d38af5b4}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {13698697-a778-4946-8a78-9805a38f0827}, !- Handle
@@ -18332,7 +18510,11 @@ OS:Lights,
   {dc4c7c5d-48db-4d70-b36c-55eeffb43eab}, !- Handle
   189.1-2009 - SecSchl - Classroom - CZ4-8 Lights, !- Name
   {99a2afba-c85d-44ad-840e-98d982eb8bd9}, !- Lights Definition Name
-  {cb1722e7-02af-4041-a078-b8e4f31e32ad}; !- Space or SpaceType Name
+  {cb1722e7-02af-4041-a078-b8e4f31e32ad}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {0610e4c8-0a53-4115-8764-8edea8465d07}, !- Handle
@@ -18357,7 +18539,14 @@ OS:People,
   {017cc47a-dd0c-4ccb-9939-ebf7f72becce}, !- Handle
   189.1-2009 - SecSchl - Classroom - CZ4-8 People, !- Name
   {bef81256-cb6a-4440-8836-d635f8df2a5a}, !- People Definition Name
-  {cb1722e7-02af-4041-a078-b8e4f31e32ad}; !- Space or SpaceType Name
+  {cb1722e7-02af-4041-a078-b8e4f31e32ad}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {96a2e46f-71ce-4f89-a397-48303221a6df}, !- Handle
@@ -18386,7 +18575,10 @@ OS:ElectricEquipment,
   {4038753c-9936-46d7-9ba3-0800b6213917}, !- Handle
   189.1-2009 - SecSchl - Classroom - CZ4-8 Electric Equipment, !- Name
   {20324ba0-6ba5-4c96-a7a3-ffa443a8636b}, !- Electric Equipment Definition Name
-  {cb1722e7-02af-4041-a078-b8e4f31e32ad}; !- Space or SpaceType Name
+  {cb1722e7-02af-4041-a078-b8e4f31e32ad}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {e25b12ac-c3c9-4b01-b78b-84d7455a9452}, !- Handle
@@ -18437,7 +18629,11 @@ OS:Lights,
   {1bf80b96-1f4f-4d14-96d8-b8a2fbd213c4}, !- Handle
   189.1-2009 - SecSchl - Corridor - CZ4-8 Lights, !- Name
   {d83658ce-abaa-44c0-ba36-28e457d5850e}, !- Lights Definition Name
-  {ad1a63ed-794a-46a3-b9b3-770e62b4bcca}; !- Space or SpaceType Name
+  {ad1a63ed-794a-46a3-b9b3-770e62b4bcca}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {a36f50a7-9618-451d-bab2-c4ab469588ba}, !- Handle
@@ -18462,7 +18658,14 @@ OS:People,
   {44b3ec64-39e8-4fd5-b652-d55b24763f60}, !- Handle
   189.1-2009 - SecSchl - Corridor - CZ4-8 People, !- Name
   {6e219289-fba0-4c08-810e-a541bc0389e4}, !- People Definition Name
-  {ad1a63ed-794a-46a3-b9b3-770e62b4bcca}; !- Space or SpaceType Name
+  {ad1a63ed-794a-46a3-b9b3-770e62b4bcca}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {ad0ee565-813f-4e24-aa00-87c6ef0b4b74}, !- Handle
@@ -18491,7 +18694,10 @@ OS:ElectricEquipment,
   {072677fd-cfa9-43e0-8495-df15dd5bf9d2}, !- Handle
   189.1-2009 - SecSchl - Corridor - CZ4-8 Electric Equipment, !- Name
   {65a52333-3fce-4e68-b94d-b0d4a9cf6830}, !- Electric Equipment Definition Name
-  {ad1a63ed-794a-46a3-b9b3-770e62b4bcca}; !- Space or SpaceType Name
+  {ad1a63ed-794a-46a3-b9b3-770e62b4bcca}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {b711da0c-9685-4eb2-8c32-773e2abd1dba}, !- Handle
@@ -18542,7 +18748,11 @@ OS:Lights,
   {c566c738-21b3-4645-a4da-1acc45c24c62}, !- Handle
   189.1-2009 - SecSchl - Gym - CZ4-8 Lights, !- Name
   {dbe7e8c3-e756-4307-ab57-b52ca3723704}, !- Lights Definition Name
-  {a56f19f1-95ad-4dda-bfc8-ef2135a1b280}; !- Space or SpaceType Name
+  {a56f19f1-95ad-4dda-bfc8-ef2135a1b280}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {c0a294fd-fb01-4923-be74-86ce640668f4}, !- Handle
@@ -18567,7 +18777,14 @@ OS:People,
   {2c3a15eb-0aa0-4bf0-b290-884e6591a084}, !- Handle
   189.1-2009 - SecSchl - Gym - CZ4-8 People, !- Name
   {42b04966-e91d-404b-94c6-15a4319ccaf5}, !- People Definition Name
-  {a56f19f1-95ad-4dda-bfc8-ef2135a1b280}; !- Space or SpaceType Name
+  {a56f19f1-95ad-4dda-bfc8-ef2135a1b280}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {ee28fc84-e6fc-48a7-8ce7-b2b06cccfab6}, !- Handle
@@ -18596,7 +18813,10 @@ OS:ElectricEquipment,
   {22a3fcea-a7cd-48bb-aa39-3057f785ee7d}, !- Handle
   189.1-2009 - SecSchl - Gym - CZ4-8 Electric Equipment, !- Name
   {493526c3-35a4-439f-8667-678d7505e7e5}, !- Electric Equipment Definition Name
-  {a56f19f1-95ad-4dda-bfc8-ef2135a1b280}; !- Space or SpaceType Name
+  {a56f19f1-95ad-4dda-bfc8-ef2135a1b280}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {bed5e21c-8604-45d7-b647-e923f6edb335}, !- Handle
@@ -18647,7 +18867,11 @@ OS:Lights,
   {17dfee85-ded4-4f62-91e0-23344f18ae4a}, !- Handle
   189.1-2009 - SecSchl - Kitchen - CZ4-8 Lights, !- Name
   {c14d4b87-29ce-458d-88b8-6275e506037f}, !- Lights Definition Name
-  {4a889535-b88b-4fb5-b8ca-9d6f8302abaf}; !- Space or SpaceType Name
+  {4a889535-b88b-4fb5-b8ca-9d6f8302abaf}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {c6d8a38f-ebbb-4267-bae4-790429036946}, !- Handle
@@ -18672,7 +18896,14 @@ OS:People,
   {74d86283-5071-4b0b-92ef-a4af26463419}, !- Handle
   189.1-2009 - SecSchl - Kitchen - CZ4-8 People, !- Name
   {c1b4d52d-332f-4cf4-9bd9-4e3aac7a5595}, !- People Definition Name
-  {4a889535-b88b-4fb5-b8ca-9d6f8302abaf}; !- Space or SpaceType Name
+  {4a889535-b88b-4fb5-b8ca-9d6f8302abaf}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {f454e8e7-8770-40e5-9f32-92cf8da444b5}, !- Handle
@@ -18701,7 +18932,10 @@ OS:ElectricEquipment,
   {b2b5d1b4-9278-426d-9b6e-e7c624a7dc81}, !- Handle
   189.1-2009 - SecSchl - Kitchen - CZ4-8 Electric Equipment, !- Name
   {38aa8bf4-4211-4793-9980-44fbc12f8ace}, !- Electric Equipment Definition Name
-  {4a889535-b88b-4fb5-b8ca-9d6f8302abaf}; !- Space or SpaceType Name
+  {4a889535-b88b-4fb5-b8ca-9d6f8302abaf}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:GasEquipment:Definition,
   {8af1c71d-95a2-4556-aa1a-788aac517a72}, !- Handle
@@ -18715,7 +18949,10 @@ OS:GasEquipment,
   {ddff805b-fdad-4cd0-a485-eba312e1cc52}, !- Handle
   189.1-2009 - SecSchl - Kitchen - CZ4-8 Gas Equipment, !- Name
   {8af1c71d-95a2-4556-aa1a-788aac517a72}, !- Gas Equipment Definition Name
-  {4a889535-b88b-4fb5-b8ca-9d6f8302abaf}; !- Space or SpaceType Name
+  {4a889535-b88b-4fb5-b8ca-9d6f8302abaf}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {a3fa1a09-48b3-456a-a4fb-fd7d4234572c}, !- Handle
@@ -18766,7 +19003,11 @@ OS:Lights,
   {11a5ccad-0d4a-4b6b-8307-7ce4b382e11f}, !- Handle
   189.1-2009 - SecSchl - Library - CZ4-8 Lights, !- Name
   {deba3cfe-64a6-4404-ad69-65cc3015da6e}, !- Lights Definition Name
-  {70205d55-a4e2-40a2-8257-c47d24a332b1}; !- Space or SpaceType Name
+  {70205d55-a4e2-40a2-8257-c47d24a332b1}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {b0a4d50d-fb94-4ea3-b912-bc171237a9ac}, !- Handle
@@ -18791,7 +19032,14 @@ OS:People,
   {533cece7-c86a-4d6b-8ff5-df942191d100}, !- Handle
   189.1-2009 - SecSchl - Library - CZ4-8 People, !- Name
   {a21765c7-72d4-41e3-bb82-c3e3c26d1a07}, !- People Definition Name
-  {70205d55-a4e2-40a2-8257-c47d24a332b1}; !- Space or SpaceType Name
+  {70205d55-a4e2-40a2-8257-c47d24a332b1}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {4ed4ff30-b0be-4e8e-ae4b-51e71194b4d7}, !- Handle
@@ -18820,7 +19068,10 @@ OS:ElectricEquipment,
   {74d0d1e2-afa7-4754-8466-48007534c9aa}, !- Handle
   189.1-2009 - SecSchl - Library - CZ4-8 Electric Equipment, !- Name
   {1d6d77d8-a055-4a11-b278-ac65b239563b}, !- Electric Equipment Definition Name
-  {70205d55-a4e2-40a2-8257-c47d24a332b1}; !- Space or SpaceType Name
+  {70205d55-a4e2-40a2-8257-c47d24a332b1}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {683cb07a-c171-47ec-9c06-51a20fa194b0}, !- Handle
@@ -18871,7 +19122,11 @@ OS:Lights,
   {a9966331-1801-45ea-aade-bbd6085f9055}, !- Handle
   189.1-2009 - SecSchl - Lobby - CZ4-8 Lights, !- Name
   {f733224f-a8f2-402d-9168-7160c80fb88c}, !- Lights Definition Name
-  {2bec403b-d9de-4890-84d5-10230d71c43d}; !- Space or SpaceType Name
+  {2bec403b-d9de-4890-84d5-10230d71c43d}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {b7030adc-78e7-4fda-839a-25001b826172}, !- Handle
@@ -18910,7 +19165,10 @@ OS:ElectricEquipment,
   {7520293d-0baa-42cf-8be8-d98bf7d29d20}, !- Handle
   189.1-2009 - SecSchl - Lobby - CZ4-8 Electric Equipment, !- Name
   {cb643581-3580-402a-a097-0ec5d2c91efb}, !- Electric Equipment Definition Name
-  {2bec403b-d9de-4890-84d5-10230d71c43d}; !- Space or SpaceType Name
+  {2bec403b-d9de-4890-84d5-10230d71c43d}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {67bb8c31-bd5e-4375-b49c-080900d0280f}, !- Handle
@@ -18961,7 +19219,11 @@ OS:Lights,
   {ebc7774a-4b6f-4b68-8e39-8aa126b3d0e9}, !- Handle
   189.1-2009 - SecSchl - Mechanical - CZ4-8 Lights, !- Name
   {c2fd9398-adf1-43de-a62c-e879df546f45}, !- Lights Definition Name
-  {ea9d2a45-2a5a-4ac1-a087-3cdcca5b0f63}; !- Space or SpaceType Name
+  {ea9d2a45-2a5a-4ac1-a087-3cdcca5b0f63}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {9b6f0da3-0ac6-44db-8fea-f2fe79c4dfa5}, !- Handle
@@ -18986,7 +19248,14 @@ OS:People,
   {8c4f86f7-4048-4241-aab3-d20d68ee059f}, !- Handle
   189.1-2009 - SecSchl - Mechanical - CZ4-8 People, !- Name
   {2ef65792-44cc-4e40-aaba-1c3413b41bbf}, !- People Definition Name
-  {ea9d2a45-2a5a-4ac1-a087-3cdcca5b0f63}; !- Space or SpaceType Name
+  {ea9d2a45-2a5a-4ac1-a087-3cdcca5b0f63}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {527f2484-0c40-4f98-996c-bb1049cd1aa3}, !- Handle
@@ -19015,7 +19284,10 @@ OS:ElectricEquipment,
   {ce9f6f4c-a1af-4704-a95c-bdf127599be9}, !- Handle
   189.1-2009 - SecSchl - Mechanical - CZ4-8 Electric Equipment, !- Name
   {e0e1635e-7a9a-4750-88ec-60c29359dc11}, !- Electric Equipment Definition Name
-  {ea9d2a45-2a5a-4ac1-a087-3cdcca5b0f63}; !- Space or SpaceType Name
+  {ea9d2a45-2a5a-4ac1-a087-3cdcca5b0f63}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {3520a51f-aa08-4c63-b1a7-dbe3ae071f2f}, !- Handle
@@ -19066,7 +19338,11 @@ OS:Lights,
   {7320f32c-0604-4c7a-9be9-d5c7a35b308a}, !- Handle
   189.1-2009 - SecSchl - Office - CZ4-8 Lights, !- Name
   {1d92f3f4-c84c-4ecc-b9f2-0f20dd11b278}, !- Lights Definition Name
-  {f574cdd7-95c5-4ca2-a8ae-fc350b04dbf2}; !- Space or SpaceType Name
+  {f574cdd7-95c5-4ca2-a8ae-fc350b04dbf2}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {65f6cd7c-5d8c-4676-9b1e-82ef4571239b}, !- Handle
@@ -19091,7 +19367,14 @@ OS:People,
   {9c9790cd-a713-49c1-8ed1-542da6857b53}, !- Handle
   189.1-2009 - SecSchl - Office - CZ4-8 People, !- Name
   {d2c53fef-9ee9-4fcd-a83a-c4c3daad0882}, !- People Definition Name
-  {f574cdd7-95c5-4ca2-a8ae-fc350b04dbf2}; !- Space or SpaceType Name
+  {f574cdd7-95c5-4ca2-a8ae-fc350b04dbf2}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {2baf56cd-2c3d-4417-b58f-86c07cb14df8}, !- Handle
@@ -19120,7 +19403,10 @@ OS:ElectricEquipment,
   {24d1a94d-4026-4c33-9b94-e8a7fe4af0b4}, !- Handle
   189.1-2009 - SecSchl - Office - CZ4-8 Electric Equipment, !- Name
   {5dd06120-9f94-4074-b747-c4d9dade7966}, !- Electric Equipment Definition Name
-  {f574cdd7-95c5-4ca2-a8ae-fc350b04dbf2}; !- Space or SpaceType Name
+  {f574cdd7-95c5-4ca2-a8ae-fc350b04dbf2}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {e89b84ac-2e3a-47a3-89c2-98ed2382abb2}, !- Handle
@@ -19171,7 +19457,11 @@ OS:Lights,
   {9ed527fd-63b4-4255-b99f-318c695da528}, !- Handle
   189.1-2009 - SecSchl - Restroom - CZ4-8 Lights, !- Name
   {dc2447b1-1128-4151-af2c-669dd33d1732}, !- Lights Definition Name
-  {1a505a99-e32b-4e67-84f6-7e683845aa08}; !- Space or SpaceType Name
+  {1a505a99-e32b-4e67-84f6-7e683845aa08}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {fbd51a78-575e-4d8a-9349-cbe0e5fd641b}, !- Handle
@@ -19196,7 +19486,14 @@ OS:People,
   {e587c5ee-5cba-4857-a047-2adee9bc261e}, !- Handle
   189.1-2009 - SecSchl - Restroom - CZ4-8 People, !- Name
   {c451e2a9-011f-4e24-8f48-242c0fa600e6}, !- People Definition Name
-  {1a505a99-e32b-4e67-84f6-7e683845aa08}; !- Space or SpaceType Name
+  {1a505a99-e32b-4e67-84f6-7e683845aa08}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {aadbef71-7160-4057-8021-428e0a1a3cc5}, !- Handle
@@ -19225,7 +19522,10 @@ OS:ElectricEquipment,
   {d62cf59e-96a9-4237-9a79-d30ad0235bbb}, !- Handle
   189.1-2009 - SecSchl - Restroom - CZ4-8 Electric Equipment, !- Name
   {59718b6f-71ad-4a70-aff5-627895aa91df}, !- Electric Equipment Definition Name
-  {1a505a99-e32b-4e67-84f6-7e683845aa08}; !- Space or SpaceType Name
+  {1a505a99-e32b-4e67-84f6-7e683845aa08}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {12b6b306-3442-4379-b6a8-a7f83b46255b}, !- Handle
@@ -19276,7 +19576,11 @@ OS:Lights,
   {ddb25ffa-b865-48d7-a04c-b2c97beabb2c}, !- Handle
   90.1-2007 - SecSchl - Auditorium Lights, !- Name
   {279c9b5e-7fe0-4295-a3b6-3976cd21b289}, !- Lights Definition Name
-  {6dc33a1c-877f-4d27-808e-b43d33f20279}; !- Space or SpaceType Name
+  {6dc33a1c-877f-4d27-808e-b43d33f20279}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {87be0c24-dad3-4c35-81a9-6009239d8c67}, !- Handle
@@ -19301,7 +19605,14 @@ OS:People,
   {746bcf70-2cef-4793-8042-bc989a8fdc09}, !- Handle
   90.1-2007 - SecSchl - Auditorium People, !- Name
   {0bcaf9fd-8f60-496a-8f8e-005c70eba6ec}, !- People Definition Name
-  {6dc33a1c-877f-4d27-808e-b43d33f20279}; !- Space or SpaceType Name
+  {6dc33a1c-877f-4d27-808e-b43d33f20279}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {117b34fa-3dcb-4ab3-9aec-9d3a2ace795d}, !- Handle
@@ -19330,7 +19641,10 @@ OS:ElectricEquipment,
   {4bb98a87-089d-429f-8978-5948eac25777}, !- Handle
   90.1-2007 - SecSchl - Auditorium Electric Equipment, !- Name
   {9c6be3d9-1e60-4a38-8d5b-b649a02b6b9b}, !- Electric Equipment Definition Name
-  {6dc33a1c-877f-4d27-808e-b43d33f20279}; !- Space or SpaceType Name
+  {6dc33a1c-877f-4d27-808e-b43d33f20279}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {679c3450-c739-4e98-b3f2-be84345e7d1d}, !- Handle
@@ -19381,7 +19695,11 @@ OS:Lights,
   {29ca365d-9141-4381-b5cd-864a51b97ff4}, !- Handle
   90.1-2007 - SecSchl - Cafeteria Lights, !- Name
   {db72a5b1-2015-4969-8222-97369f051843}, !- Lights Definition Name
-  {218c9298-3602-4ff6-a347-9c713639fd8d}; !- Space or SpaceType Name
+  {218c9298-3602-4ff6-a347-9c713639fd8d}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {7f3e8ed8-9067-4daf-89dc-a0ab4f585019}, !- Handle
@@ -19406,7 +19724,14 @@ OS:People,
   {69b19b85-04b1-428a-afb6-ee02e3e7e0e3}, !- Handle
   90.1-2007 - SecSchl - Cafeteria People, !- Name
   {8c507593-5995-44ee-ba48-623ec0933931}, !- People Definition Name
-  {218c9298-3602-4ff6-a347-9c713639fd8d}; !- Space or SpaceType Name
+  {218c9298-3602-4ff6-a347-9c713639fd8d}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {2ee9a7f6-e82f-41a9-925f-4e2f02e13a5d}, !- Handle
@@ -19435,7 +19760,10 @@ OS:ElectricEquipment,
   {d8815b9d-9b13-45b5-859f-a2aee201d328}, !- Handle
   90.1-2007 - SecSchl - Cafeteria Electric Equipment, !- Name
   {3f4f4ec7-f5aa-4059-922a-8ac2ec53fc71}, !- Electric Equipment Definition Name
-  {218c9298-3602-4ff6-a347-9c713639fd8d}; !- Space or SpaceType Name
+  {218c9298-3602-4ff6-a347-9c713639fd8d}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {3322b440-99c8-4f36-b442-5088c5c9446a}, !- Handle
@@ -19486,7 +19814,11 @@ OS:Lights,
   {d5088415-4ef2-4b60-bbd7-0e1ad9cccb00}, !- Handle
   90.1-2007 - SecSchl - Classroom Lights, !- Name
   {562b70e7-046c-484a-a585-6a10e29c27cb}, !- Lights Definition Name
-  {09259732-96de-4a1f-b353-cea5815cf2fb}; !- Space or SpaceType Name
+  {09259732-96de-4a1f-b353-cea5815cf2fb}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {7d5073df-8bd6-4123-b6b2-b91a0bfeb2c3}, !- Handle
@@ -19511,7 +19843,14 @@ OS:People,
   {52260a6e-7a24-4c76-8493-0fe258a68c1a}, !- Handle
   90.1-2007 - SecSchl - Classroom People, !- Name
   {20ccf57d-03d1-4f77-b500-8bdce8549a4c}, !- People Definition Name
-  {09259732-96de-4a1f-b353-cea5815cf2fb}; !- Space or SpaceType Name
+  {09259732-96de-4a1f-b353-cea5815cf2fb}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {60a46ebb-360c-47a6-a239-6609c13a27e0}, !- Handle
@@ -19540,7 +19879,10 @@ OS:ElectricEquipment,
   {23f55b55-e32c-4eab-8508-bf59e8bfb1ba}, !- Handle
   90.1-2007 - SecSchl - Classroom Electric Equipment, !- Name
   {4684e2db-e889-4bf1-b9ac-be8202c270ac}, !- Electric Equipment Definition Name
-  {09259732-96de-4a1f-b353-cea5815cf2fb}; !- Space or SpaceType Name
+  {09259732-96de-4a1f-b353-cea5815cf2fb}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {c164a482-ee9e-4b2b-9381-a3220e810e2a}, !- Handle
@@ -19591,7 +19933,11 @@ OS:Lights,
   {0b9c8159-e305-4ba1-80d1-5c8559461904}, !- Handle
   90.1-2007 - SecSchl - Corridor Lights,  !- Name
   {061068b0-75aa-4745-933a-d470fef04554}, !- Lights Definition Name
-  {3d21e994-97f9-42c2-a652-6d1d1e17d41b}; !- Space or SpaceType Name
+  {3d21e994-97f9-42c2-a652-6d1d1e17d41b}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {d65aeb10-52bd-4c2b-8951-1018262384a2}, !- Handle
@@ -19616,7 +19962,14 @@ OS:People,
   {f6718292-0325-4e9d-9c67-c2991419905a}, !- Handle
   90.1-2007 - SecSchl - Corridor People,  !- Name
   {f662e194-48c8-4584-a80a-c3933c2ccb23}, !- People Definition Name
-  {3d21e994-97f9-42c2-a652-6d1d1e17d41b}; !- Space or SpaceType Name
+  {3d21e994-97f9-42c2-a652-6d1d1e17d41b}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {075a593d-c3b6-4dc5-ac42-7063dfd70763}, !- Handle
@@ -19645,7 +19998,10 @@ OS:ElectricEquipment,
   {fcee4f26-88fa-45c3-8c46-7e02bf30f28f}, !- Handle
   90.1-2007 - SecSchl - Corridor Electric Equipment, !- Name
   {943f124e-fe86-43e4-8d3f-e0b6a0ebfdc7}, !- Electric Equipment Definition Name
-  {3d21e994-97f9-42c2-a652-6d1d1e17d41b}; !- Space or SpaceType Name
+  {3d21e994-97f9-42c2-a652-6d1d1e17d41b}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {120f3c74-a5b6-4fe2-a824-ff8c65ca7cce}, !- Handle
@@ -19696,7 +20052,11 @@ OS:Lights,
   {84d87151-1aea-4cf8-8d3d-f3820ff326cd}, !- Handle
   90.1-2007 - SecSchl - Gym Lights,       !- Name
   {c877c334-5c32-4d15-b3af-a880b04b8ea5}, !- Lights Definition Name
-  {ecdead65-879c-49d4-af10-b4259e19c90a}; !- Space or SpaceType Name
+  {ecdead65-879c-49d4-af10-b4259e19c90a}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {55e63ea7-2a1b-41a7-84ea-8f2aa21452e3}, !- Handle
@@ -19721,7 +20081,14 @@ OS:People,
   {7b7010b0-17e6-455c-b5c7-b1a54421de4f}, !- Handle
   90.1-2007 - SecSchl - Gym People,       !- Name
   {10799a02-a14f-40bb-bcaf-a6fd0e8d1c70}, !- People Definition Name
-  {ecdead65-879c-49d4-af10-b4259e19c90a}; !- Space or SpaceType Name
+  {ecdead65-879c-49d4-af10-b4259e19c90a}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {ec9ed8e9-c8fd-4d1c-a501-7765f683669c}, !- Handle
@@ -19750,7 +20117,10 @@ OS:ElectricEquipment,
   {98e3ca39-9b83-4b63-8292-0f44d83a120e}, !- Handle
   90.1-2007 - SecSchl - Gym Electric Equipment, !- Name
   {bfae45ec-e29a-46ff-8001-bfcb46d3feec}, !- Electric Equipment Definition Name
-  {ecdead65-879c-49d4-af10-b4259e19c90a}; !- Space or SpaceType Name
+  {ecdead65-879c-49d4-af10-b4259e19c90a}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {74de4e65-9a5e-4160-b4b8-3aa1404f0649}, !- Handle
@@ -19801,7 +20171,11 @@ OS:Lights,
   {8d8c59ee-1107-453f-8b37-c5f2fb2138d1}, !- Handle
   90.1-2007 - SecSchl - Kitchen Lights,   !- Name
   {4c3ddb3a-2d86-46d2-8ce8-4a5ff2a7fb88}, !- Lights Definition Name
-  {a182da2e-63bb-41bc-9cc8-5c6da81c87df}; !- Space or SpaceType Name
+  {a182da2e-63bb-41bc-9cc8-5c6da81c87df}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {7d758284-37ea-4366-8f63-a1f67cc14177}, !- Handle
@@ -19826,7 +20200,14 @@ OS:People,
   {edf25f4b-1d75-4a83-9342-31157254ef65}, !- Handle
   90.1-2007 - SecSchl - Kitchen People,   !- Name
   {2d34da5a-b713-4f75-96b9-573c16612012}, !- People Definition Name
-  {a182da2e-63bb-41bc-9cc8-5c6da81c87df}; !- Space or SpaceType Name
+  {a182da2e-63bb-41bc-9cc8-5c6da81c87df}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {e39a9817-745f-4740-ba83-eb2d9e6f5478}, !- Handle
@@ -19855,7 +20236,10 @@ OS:ElectricEquipment,
   {b0fc0873-e1f3-4a09-85bc-9116d6b52276}, !- Handle
   90.1-2007 - SecSchl - Kitchen Electric Equipment, !- Name
   {f6eb8231-e079-4037-a795-294ce902cadc}, !- Electric Equipment Definition Name
-  {a182da2e-63bb-41bc-9cc8-5c6da81c87df}; !- Space or SpaceType Name
+  {a182da2e-63bb-41bc-9cc8-5c6da81c87df}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:GasEquipment:Definition,
   {45fb1d50-f87c-4abf-99f9-6ee8c11e4ae7}, !- Handle
@@ -19869,7 +20253,10 @@ OS:GasEquipment,
   {aa87063a-59aa-4c7d-a04d-b9cd9b2c46f8}, !- Handle
   90.1-2007 - SecSchl - Kitchen Gas Equipment, !- Name
   {45fb1d50-f87c-4abf-99f9-6ee8c11e4ae7}, !- Gas Equipment Definition Name
-  {a182da2e-63bb-41bc-9cc8-5c6da81c87df}; !- Space or SpaceType Name
+  {a182da2e-63bb-41bc-9cc8-5c6da81c87df}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {0e38838d-f35a-4093-a1e2-7c3b3fa69ae2}, !- Handle
@@ -19920,7 +20307,11 @@ OS:Lights,
   {22e6b458-7f7b-4059-aeb8-c2a2355c160f}, !- Handle
   90.1-2007 - SecSchl - Library Lights,   !- Name
   {f4ce3b42-8a5f-4a01-a707-deb559224d29}, !- Lights Definition Name
-  {8df9664c-fc0f-471c-a3fc-0034c43ffecb}; !- Space or SpaceType Name
+  {8df9664c-fc0f-471c-a3fc-0034c43ffecb}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {31320289-e6a9-4047-ac3e-1dbcec7dadf9}, !- Handle
@@ -19945,7 +20336,14 @@ OS:People,
   {9f94d2b2-b885-421e-b424-ef90c87c3cd2}, !- Handle
   90.1-2007 - SecSchl - Library People,   !- Name
   {786542ca-49e9-4a57-b52f-7b5381f4f9e9}, !- People Definition Name
-  {8df9664c-fc0f-471c-a3fc-0034c43ffecb}; !- Space or SpaceType Name
+  {8df9664c-fc0f-471c-a3fc-0034c43ffecb}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {cbafa705-cadc-41b1-b888-771e0ce172a8}, !- Handle
@@ -19974,7 +20372,10 @@ OS:ElectricEquipment,
   {7315b9b9-0f3a-4cc0-8063-f3a2a290d096}, !- Handle
   90.1-2007 - SecSchl - Library Electric Equipment, !- Name
   {cd226ec2-d5c7-4121-b628-3b58397595be}, !- Electric Equipment Definition Name
-  {8df9664c-fc0f-471c-a3fc-0034c43ffecb}; !- Space or SpaceType Name
+  {8df9664c-fc0f-471c-a3fc-0034c43ffecb}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {e87fd893-501c-437b-8e4b-f3d83804555c}, !- Handle
@@ -20025,7 +20426,11 @@ OS:Lights,
   {5276ea35-44d3-4799-a058-06337978a604}, !- Handle
   90.1-2007 - SecSchl - Lobby Lights,     !- Name
   {2102897e-cb2c-4584-91ce-61c28d1dbad0}, !- Lights Definition Name
-  {3877004a-e482-4ac5-b483-fcfc8c3304d7}; !- Space or SpaceType Name
+  {3877004a-e482-4ac5-b483-fcfc8c3304d7}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {82d03e97-5e5b-4ae9-aa0b-aedfa82a9cfb}, !- Handle
@@ -20064,7 +20469,10 @@ OS:ElectricEquipment,
   {f0e97393-d2cb-475d-917b-3e87e1b004b6}, !- Handle
   90.1-2007 - SecSchl - Lobby Electric Equipment, !- Name
   {6c62b0fb-2ccc-4efd-9da6-6a27464b81d2}, !- Electric Equipment Definition Name
-  {3877004a-e482-4ac5-b483-fcfc8c3304d7}; !- Space or SpaceType Name
+  {3877004a-e482-4ac5-b483-fcfc8c3304d7}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {dfcd7288-25fe-457a-b519-f55f6f99088a}, !- Handle
@@ -20115,7 +20523,11 @@ OS:Lights,
   {f137716e-0bba-48be-9637-62ed9fad7c80}, !- Handle
   90.1-2007 - SecSchl - Mechanical Lights, !- Name
   {333c6771-96ce-4b42-be35-9e982113f982}, !- Lights Definition Name
-  {f045e60b-cb9b-406f-8e4b-69fc304cae11}; !- Space or SpaceType Name
+  {f045e60b-cb9b-406f-8e4b-69fc304cae11}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {55a6255e-42b1-438a-b134-3acf1faa8ace}, !- Handle
@@ -20140,7 +20552,14 @@ OS:People,
   {9749b8c4-5853-4af5-9840-a57cc1d1e8a0}, !- Handle
   90.1-2007 - SecSchl - Mechanical People, !- Name
   {ab7e4fdb-83fa-4240-a95d-e380a6ca1a11}, !- People Definition Name
-  {f045e60b-cb9b-406f-8e4b-69fc304cae11}; !- Space or SpaceType Name
+  {f045e60b-cb9b-406f-8e4b-69fc304cae11}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {914c9eae-4902-4a41-b061-980db881826c}, !- Handle
@@ -20169,7 +20588,10 @@ OS:ElectricEquipment,
   {bb31195c-86d4-4e6d-813b-f3acfe986b2c}, !- Handle
   90.1-2007 - SecSchl - Mechanical Electric Equipment, !- Name
   {7f9779a0-024b-4f4f-97d4-28832360299b}, !- Electric Equipment Definition Name
-  {f045e60b-cb9b-406f-8e4b-69fc304cae11}; !- Space or SpaceType Name
+  {f045e60b-cb9b-406f-8e4b-69fc304cae11}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {5aa7b0ad-22f9-4edd-9be0-872e31c99c12}, !- Handle
@@ -20220,7 +20642,11 @@ OS:Lights,
   {6bdf5aca-0d1d-477d-93e9-1156a2549db6}, !- Handle
   90.1-2007 - SecSchl - Office Lights,    !- Name
   {874a8943-70b9-425a-9119-87bdf159158f}, !- Lights Definition Name
-  {5573be55-6b06-4be3-96c8-5c09a494b4e0}; !- Space or SpaceType Name
+  {5573be55-6b06-4be3-96c8-5c09a494b4e0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {b8fc15e3-40f5-40cb-8dad-c331e6b54a92}, !- Handle
@@ -20245,7 +20671,14 @@ OS:People,
   {975b8b72-388f-4f30-ba2c-80e70206b636}, !- Handle
   90.1-2007 - SecSchl - Office People,    !- Name
   {ecd77e29-3663-48b2-9175-2035bc110d9d}, !- People Definition Name
-  {5573be55-6b06-4be3-96c8-5c09a494b4e0}; !- Space or SpaceType Name
+  {5573be55-6b06-4be3-96c8-5c09a494b4e0}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {089cc312-fa4f-4cf8-8a68-a334133ae600}, !- Handle
@@ -20274,7 +20707,10 @@ OS:ElectricEquipment,
   {302f74f9-a16c-40a5-b065-3fc9c5398639}, !- Handle
   90.1-2007 - SecSchl - Office Electric Equipment, !- Name
   {b29c6661-4ae6-4fca-b3d8-252bc21163c5}, !- Electric Equipment Definition Name
-  {5573be55-6b06-4be3-96c8-5c09a494b4e0}; !- Space or SpaceType Name
+  {5573be55-6b06-4be3-96c8-5c09a494b4e0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {67423d29-7fe2-4023-b782-ff3b8237c392}, !- Handle
@@ -20325,7 +20761,11 @@ OS:Lights,
   {e971a1ea-8b41-4562-836c-3bfccba5c275}, !- Handle
   90.1-2007 - SecSchl - Restroom Lights,  !- Name
   {553ecef8-ebb0-4cc3-b581-8745a242279e}, !- Lights Definition Name
-  {767bcc9f-d2d9-4049-be98-f8ef62c5b731}; !- Space or SpaceType Name
+  {767bcc9f-d2d9-4049-be98-f8ef62c5b731}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {40f99149-163e-4718-b54f-a4266088d58b}, !- Handle
@@ -20350,7 +20790,14 @@ OS:People,
   {00855b29-6028-4ee8-9a01-c3bc272b5cfc}, !- Handle
   90.1-2007 - SecSchl - Restroom People,  !- Name
   {7c9ed849-ff81-448c-8b4e-0bfe5a970ddd}, !- People Definition Name
-  {767bcc9f-d2d9-4049-be98-f8ef62c5b731}; !- Space or SpaceType Name
+  {767bcc9f-d2d9-4049-be98-f8ef62c5b731}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {570bf8ba-3168-4e56-967e-a12e79bddb31}, !- Handle
@@ -20379,7 +20826,10 @@ OS:ElectricEquipment,
   {09fb058b-5e0a-4f2c-8f69-c8420ed8a70c}, !- Handle
   90.1-2007 - SecSchl - Restroom Electric Equipment, !- Name
   {3e0f5d16-ea69-4679-8cea-3025ee9a8f5f}, !- Electric Equipment Definition Name
-  {767bcc9f-d2d9-4049-be98-f8ef62c5b731}; !- Space or SpaceType Name
+  {767bcc9f-d2d9-4049-be98-f8ef62c5b731}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {9a6c8ad4-f5ba-462b-b066-b950d2d710c3}, !- Handle
@@ -20430,7 +20880,11 @@ OS:Lights,
   {86d5a6d4-61a3-42f3-a03f-26e71919dd7b}, !- Handle
   90.1-2010 - SecSchl - Auditorium Lights, !- Name
   {9ce27831-00f3-4f47-a2c6-aba516e656ed}, !- Lights Definition Name
-  {9c1fc161-746c-4a4f-8e5d-f6717d813ce6}; !- Space or SpaceType Name
+  {9c1fc161-746c-4a4f-8e5d-f6717d813ce6}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {c11d7d13-35c4-48cd-ad2d-e1efa2b64575}, !- Handle
@@ -20455,7 +20909,14 @@ OS:People,
   {3f3df86f-13d2-4de7-8be6-156bbce5555b}, !- Handle
   90.1-2010 - SecSchl - Auditorium People, !- Name
   {f640557e-ea53-4e0d-b664-cd7219e632a0}, !- People Definition Name
-  {9c1fc161-746c-4a4f-8e5d-f6717d813ce6}; !- Space or SpaceType Name
+  {9c1fc161-746c-4a4f-8e5d-f6717d813ce6}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {89524826-0dec-4bc6-99b5-2bc9f9cdac68}, !- Handle
@@ -20484,7 +20945,10 @@ OS:ElectricEquipment,
   {7b6f1d6b-df4d-4050-b2c8-4542f1b123c6}, !- Handle
   90.1-2010 - SecSchl - Auditorium Electric Equipment, !- Name
   {3583bde0-3dc4-426f-8eef-69daf928a71f}, !- Electric Equipment Definition Name
-  {9c1fc161-746c-4a4f-8e5d-f6717d813ce6}; !- Space or SpaceType Name
+  {9c1fc161-746c-4a4f-8e5d-f6717d813ce6}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {7de35304-e675-468d-b22f-520e98f33bb3}, !- Handle
@@ -20535,7 +20999,11 @@ OS:Lights,
   {13924ccc-c2b4-46bb-8ddd-41428ca4c1c0}, !- Handle
   90.1-2010 - SecSchl - Cafeteria Lights, !- Name
   {654fc0d6-ac11-46da-95c5-a38f1c42330e}, !- Lights Definition Name
-  {b1cd3d5d-ef63-4e47-8d86-d733b588a5c3}; !- Space or SpaceType Name
+  {b1cd3d5d-ef63-4e47-8d86-d733b588a5c3}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {838e6d06-12d8-43e7-bf54-4a90c6896738}, !- Handle
@@ -20560,7 +21028,14 @@ OS:People,
   {76ce6a32-2986-463b-a0e2-03d9e37644cd}, !- Handle
   90.1-2010 - SecSchl - Cafeteria People, !- Name
   {dae7c7c0-517c-430f-9521-735cfd7a272e}, !- People Definition Name
-  {b1cd3d5d-ef63-4e47-8d86-d733b588a5c3}; !- Space or SpaceType Name
+  {b1cd3d5d-ef63-4e47-8d86-d733b588a5c3}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {2cc09f17-f92a-4b5a-9f0c-ce647e04323f}, !- Handle
@@ -20589,7 +21064,10 @@ OS:ElectricEquipment,
   {ba465186-d641-4327-880f-fd12ad0e3a59}, !- Handle
   90.1-2010 - SecSchl - Cafeteria Electric Equipment, !- Name
   {7a3748c8-7cd8-4e0c-b60f-97ed1423b7ae}, !- Electric Equipment Definition Name
-  {b1cd3d5d-ef63-4e47-8d86-d733b588a5c3}; !- Space or SpaceType Name
+  {b1cd3d5d-ef63-4e47-8d86-d733b588a5c3}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {870ee347-52f7-4741-bcb5-80d734b7ed2c}, !- Handle
@@ -20640,7 +21118,11 @@ OS:Lights,
   {12d8370b-d7fd-41a1-addc-1f7e2d3dfbfe}, !- Handle
   90.1-2010 - SecSchl - Classroom Lights, !- Name
   {3ea8181e-1a18-40bc-9d6c-d29d71962985}, !- Lights Definition Name
-  {2173a590-7e0e-40f4-b441-0294231e6632}; !- Space or SpaceType Name
+  {2173a590-7e0e-40f4-b441-0294231e6632}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {7adba70f-1b43-42c9-a689-78fdd1fa8843}, !- Handle
@@ -20665,7 +21147,14 @@ OS:People,
   {ce2cdf73-de1d-4623-92b8-4b43daf20840}, !- Handle
   90.1-2010 - SecSchl - Classroom People, !- Name
   {72c5913e-2799-4163-892f-ed55d283cf9b}, !- People Definition Name
-  {2173a590-7e0e-40f4-b441-0294231e6632}; !- Space or SpaceType Name
+  {2173a590-7e0e-40f4-b441-0294231e6632}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {ba783b20-7ad0-4706-b2b1-ca81baebc25c}, !- Handle
@@ -20694,7 +21183,10 @@ OS:ElectricEquipment,
   {293597e6-4afd-4f28-9f41-c8dfba18ef80}, !- Handle
   90.1-2010 - SecSchl - Classroom Electric Equipment, !- Name
   {ea2ea3c6-d1c2-49bd-baec-a8c17036033c}, !- Electric Equipment Definition Name
-  {2173a590-7e0e-40f4-b441-0294231e6632}; !- Space or SpaceType Name
+  {2173a590-7e0e-40f4-b441-0294231e6632}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {c682ec6d-5c98-4c2a-b0e2-be474bf0dbc1}, !- Handle
@@ -20745,7 +21237,11 @@ OS:Lights,
   {b31a41c0-4ebf-4642-9f8f-0c47122deec6}, !- Handle
   90.1-2010 - SecSchl - Corridor Lights,  !- Name
   {24fbcfcb-fd7f-4c3d-9f5c-c6f5701cc1df}, !- Lights Definition Name
-  {e389c228-a8ed-4d7c-a55c-ba12c426ba2e}; !- Space or SpaceType Name
+  {e389c228-a8ed-4d7c-a55c-ba12c426ba2e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {7476bc83-36cb-4780-bfb1-551daceb4e6f}, !- Handle
@@ -20770,7 +21266,14 @@ OS:People,
   {b3c8b333-2fab-4f0e-bfb2-bce5fafa31c8}, !- Handle
   90.1-2010 - SecSchl - Corridor People,  !- Name
   {2801a67a-799f-4639-be82-082173815102}, !- People Definition Name
-  {e389c228-a8ed-4d7c-a55c-ba12c426ba2e}; !- Space or SpaceType Name
+  {e389c228-a8ed-4d7c-a55c-ba12c426ba2e}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {f0eff2c5-453d-494e-8603-6e3811a8a885}, !- Handle
@@ -20799,7 +21302,10 @@ OS:ElectricEquipment,
   {d9673399-62df-4880-8665-e23bb4d95c01}, !- Handle
   90.1-2010 - SecSchl - Corridor Electric Equipment, !- Name
   {03250ad9-3251-4496-b2a9-4a4fb2e0ad49}, !- Electric Equipment Definition Name
-  {e389c228-a8ed-4d7c-a55c-ba12c426ba2e}; !- Space or SpaceType Name
+  {e389c228-a8ed-4d7c-a55c-ba12c426ba2e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {2e3ca384-ae24-492f-8bc1-167e8ec60e24}, !- Handle
@@ -20850,7 +21356,11 @@ OS:Lights,
   {1459b875-cc02-49f2-b1a4-9632706e8c9a}, !- Handle
   90.1-2010 - SecSchl - Gym Lights,       !- Name
   {d7b9113b-7bb8-4f86-bee2-132e973e8298}, !- Lights Definition Name
-  {2f4b1254-3642-41d7-bd86-9e3e407ee329}; !- Space or SpaceType Name
+  {2f4b1254-3642-41d7-bd86-9e3e407ee329}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {58a210b1-c78c-4cca-997f-e3cacc1c1fe6}, !- Handle
@@ -20875,7 +21385,14 @@ OS:People,
   {7ca1e970-5abb-4355-b874-3341a06e8823}, !- Handle
   90.1-2010 - SecSchl - Gym People,       !- Name
   {6347a214-9f63-44e6-92e8-46835c83d26e}, !- People Definition Name
-  {2f4b1254-3642-41d7-bd86-9e3e407ee329}; !- Space or SpaceType Name
+  {2f4b1254-3642-41d7-bd86-9e3e407ee329}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {7d0d9f07-af3a-45da-98b5-5e88644d5221}, !- Handle
@@ -20904,7 +21421,10 @@ OS:ElectricEquipment,
   {6613412c-ba8e-4770-a6a8-c4c003e1af72}, !- Handle
   90.1-2010 - SecSchl - Gym Electric Equipment, !- Name
   {d6a7c579-5273-4cac-9b69-0fd0b88a5ec0}, !- Electric Equipment Definition Name
-  {2f4b1254-3642-41d7-bd86-9e3e407ee329}; !- Space or SpaceType Name
+  {2f4b1254-3642-41d7-bd86-9e3e407ee329}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {f27542da-0a99-4042-b996-26dea322474a}, !- Handle
@@ -20955,7 +21475,11 @@ OS:Lights,
   {0748d75c-092e-4e5a-baf7-11be20026998}, !- Handle
   90.1-2010 - SecSchl - Kitchen Lights,   !- Name
   {17cde02b-6fdb-4284-a5db-76dba78dbf52}, !- Lights Definition Name
-  {b53c4b05-1e42-41fa-97f9-410ba010b45d}; !- Space or SpaceType Name
+  {b53c4b05-1e42-41fa-97f9-410ba010b45d}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {579a25df-9643-4414-b892-221ff40ffa39}, !- Handle
@@ -20980,7 +21504,14 @@ OS:People,
   {7943f744-077d-40a9-9edc-3d41ace1c335}, !- Handle
   90.1-2010 - SecSchl - Kitchen People,   !- Name
   {7e9a6932-7647-4579-a36d-69cbb581aa8b}, !- People Definition Name
-  {b53c4b05-1e42-41fa-97f9-410ba010b45d}; !- Space or SpaceType Name
+  {b53c4b05-1e42-41fa-97f9-410ba010b45d}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {c7bf780b-844b-4adc-816f-5e91f0022de8}, !- Handle
@@ -21009,7 +21540,10 @@ OS:ElectricEquipment,
   {1ba631f9-398d-44fc-90a1-915335a3740a}, !- Handle
   90.1-2010 - SecSchl - Kitchen Electric Equipment, !- Name
   {1a62bed4-eb73-424c-be3a-b3bb960ab52b}, !- Electric Equipment Definition Name
-  {b53c4b05-1e42-41fa-97f9-410ba010b45d}; !- Space or SpaceType Name
+  {b53c4b05-1e42-41fa-97f9-410ba010b45d}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:GasEquipment:Definition,
   {7f30229b-ddae-4c27-a1a0-2d311e378921}, !- Handle
@@ -21023,7 +21557,10 @@ OS:GasEquipment,
   {b5cfbeb0-adee-4e06-9cc5-bc265f7e5db2}, !- Handle
   90.1-2010 - SecSchl - Kitchen Gas Equipment, !- Name
   {7f30229b-ddae-4c27-a1a0-2d311e378921}, !- Gas Equipment Definition Name
-  {b53c4b05-1e42-41fa-97f9-410ba010b45d}; !- Space or SpaceType Name
+  {b53c4b05-1e42-41fa-97f9-410ba010b45d}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {454175b6-3ffa-4a1d-9633-c09f8d6b58f1}, !- Handle
@@ -21074,7 +21611,11 @@ OS:Lights,
   {b0ab3494-ef9b-42c2-9b13-3fd0cd4cc87a}, !- Handle
   90.1-2010 - SecSchl - Library Lights,   !- Name
   {90c8d76d-3239-4c33-82ea-cfc25cf97263}, !- Lights Definition Name
-  {b895fe51-7410-458d-8a48-548c1ec54b96}; !- Space or SpaceType Name
+  {b895fe51-7410-458d-8a48-548c1ec54b96}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {e2967946-fcfe-418e-bbe2-a1e2eeaab51a}, !- Handle
@@ -21099,7 +21640,14 @@ OS:People,
   {abbcfebf-933f-466e-a019-73cebfae5701}, !- Handle
   90.1-2010 - SecSchl - Library People,   !- Name
   {0ef2006f-fa76-4a5c-bda6-4ff196e921b8}, !- People Definition Name
-  {b895fe51-7410-458d-8a48-548c1ec54b96}; !- Space or SpaceType Name
+  {b895fe51-7410-458d-8a48-548c1ec54b96}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {f5a328d5-9a72-4ad4-807f-77b08f735372}, !- Handle
@@ -21128,7 +21676,10 @@ OS:ElectricEquipment,
   {526f6069-7c85-4a59-b2cd-a34cf6ec9227}, !- Handle
   90.1-2010 - SecSchl - Library Electric Equipment, !- Name
   {c9a8b7f0-089f-4f5d-9ff9-abd9ed3b13fc}, !- Electric Equipment Definition Name
-  {b895fe51-7410-458d-8a48-548c1ec54b96}; !- Space or SpaceType Name
+  {b895fe51-7410-458d-8a48-548c1ec54b96}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {835d2bc7-8486-4073-9ec2-da2d7e71805d}, !- Handle
@@ -21179,7 +21730,11 @@ OS:Lights,
   {c2efe53e-5ff8-41ed-8e6e-f6bb6e58d51a}, !- Handle
   90.1-2010 - SecSchl - Lobby Lights,     !- Name
   {b282f37f-0281-487a-ab68-75786db5da31}, !- Lights Definition Name
-  {82820fc2-e662-4232-b4f6-e0c547eee4e0}; !- Space or SpaceType Name
+  {82820fc2-e662-4232-b4f6-e0c547eee4e0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {3d595de0-1852-48f6-86a5-b5936e43f21b}, !- Handle
@@ -21218,7 +21773,10 @@ OS:ElectricEquipment,
   {10902061-2d16-43fc-83d7-7b4f46e4b5bf}, !- Handle
   90.1-2010 - SecSchl - Lobby Electric Equipment, !- Name
   {b1659ca4-9953-40e2-bed8-2913f9ad7011}, !- Electric Equipment Definition Name
-  {82820fc2-e662-4232-b4f6-e0c547eee4e0}; !- Space or SpaceType Name
+  {82820fc2-e662-4232-b4f6-e0c547eee4e0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {336a1f2b-0048-4dc6-9e5e-3adfe0a7afb1}, !- Handle
@@ -21269,7 +21827,11 @@ OS:Lights,
   {51e77655-c02b-4f4e-8c62-db5dc4c076d2}, !- Handle
   90.1-2010 - SecSchl - Mechanical Lights, !- Name
   {970a3ccc-ef44-4f47-ad32-57d1bd49f0f9}, !- Lights Definition Name
-  {a372a801-7f2b-409f-85dd-5692fe59aad2}; !- Space or SpaceType Name
+  {a372a801-7f2b-409f-85dd-5692fe59aad2}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {54a6fbba-f17b-4a7c-be1f-a2df81d11ace}, !- Handle
@@ -21294,7 +21856,14 @@ OS:People,
   {3fa6be61-5f48-4825-b799-b8cf5774c933}, !- Handle
   90.1-2010 - SecSchl - Mechanical People, !- Name
   {f1795afa-e83a-4c7c-bd74-49085d2a8b75}, !- People Definition Name
-  {a372a801-7f2b-409f-85dd-5692fe59aad2}; !- Space or SpaceType Name
+  {a372a801-7f2b-409f-85dd-5692fe59aad2}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {48102124-f037-4db0-b07a-451a5162dd06}, !- Handle
@@ -21323,7 +21892,10 @@ OS:ElectricEquipment,
   {f568ebcc-0ac4-4286-aa11-c50a3fecf384}, !- Handle
   90.1-2010 - SecSchl - Mechanical Electric Equipment, !- Name
   {eb775ef0-b9d1-4f28-a237-66bcd34e2594}, !- Electric Equipment Definition Name
-  {a372a801-7f2b-409f-85dd-5692fe59aad2}; !- Space or SpaceType Name
+  {a372a801-7f2b-409f-85dd-5692fe59aad2}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {4b922a16-ba8f-4584-ace1-a91b2c3476d5}, !- Handle
@@ -21374,7 +21946,11 @@ OS:Lights,
   {1051627a-7cf5-485d-a73e-2e37a4c47ef0}, !- Handle
   90.1-2010 - SecSchl - Office Lights,    !- Name
   {9c0ea7ad-42d9-4d21-a394-538a55735351}, !- Lights Definition Name
-  {73735d07-373a-4b50-a906-ff73c008daa5}; !- Space or SpaceType Name
+  {73735d07-373a-4b50-a906-ff73c008daa5}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {337ebe7c-9a53-45e7-b564-538a57381fa0}, !- Handle
@@ -21399,7 +21975,14 @@ OS:People,
   {ef3fe95b-62c8-4a51-9f31-49abc8a47d7a}, !- Handle
   90.1-2010 - SecSchl - Office People,    !- Name
   {9b051ec8-4210-4ad6-98e5-3ee82acf1539}, !- People Definition Name
-  {73735d07-373a-4b50-a906-ff73c008daa5}; !- Space or SpaceType Name
+  {73735d07-373a-4b50-a906-ff73c008daa5}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {8ad25bec-2fa8-4cd7-b492-b264d15b6159}, !- Handle
@@ -21428,7 +22011,10 @@ OS:ElectricEquipment,
   {6d32a207-e4d5-4500-a9fe-726c405d7479}, !- Handle
   90.1-2010 - SecSchl - Office Electric Equipment, !- Name
   {fae3ec65-4e36-4329-9f97-b81d375a05c3}, !- Electric Equipment Definition Name
-  {73735d07-373a-4b50-a906-ff73c008daa5}; !- Space or SpaceType Name
+  {73735d07-373a-4b50-a906-ff73c008daa5}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {cf44cd76-40e8-4ff5-b0a3-5f3b5f9bcef9}, !- Handle
@@ -21479,7 +22065,11 @@ OS:Lights,
   {dc44f614-556e-4221-9d6a-bba7e3b4187b}, !- Handle
   90.1-2010 - SecSchl - Restroom Lights,  !- Name
   {668420b4-a5ba-45ee-8907-1ed799f49f83}, !- Lights Definition Name
-  {bdb6638f-0b62-43f3-af88-ccc1915afaac}; !- Space or SpaceType Name
+  {bdb6638f-0b62-43f3-af88-ccc1915afaac}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {b9b9c00a-4d3a-45bb-a2f7-b91d74eb77fe}, !- Handle
@@ -21504,7 +22094,14 @@ OS:People,
   {6a3a954c-9e96-4f71-8f46-6532668f59e5}, !- Handle
   90.1-2010 - SecSchl - Restroom People,  !- Name
   {733616a9-1351-47f0-9a04-29cd68e40ad0}, !- People Definition Name
-  {bdb6638f-0b62-43f3-af88-ccc1915afaac}; !- Space or SpaceType Name
+  {bdb6638f-0b62-43f3-af88-ccc1915afaac}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {b7efc9ef-36bb-4def-a3bb-7b68edb7022b}, !- Handle
@@ -21533,7 +22130,10 @@ OS:ElectricEquipment,
   {b617e9aa-f80a-48b6-bd7f-9ac967fb4917}, !- Handle
   90.1-2010 - SecSchl - Restroom Electric Equipment, !- Name
   {f821a621-7ad1-4977-bee4-76ba97bce5f4}, !- Electric Equipment Definition Name
-  {bdb6638f-0b62-43f3-af88-ccc1915afaac}; !- Space or SpaceType Name
+  {bdb6638f-0b62-43f3-af88-ccc1915afaac}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {3630dd34-9f9a-4f8a-891d-ddaa98327429}, !- Handle
@@ -21584,7 +22184,11 @@ OS:Lights,
   {7a64c0e9-4d3f-423b-825c-963a9b98b9b1}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Auditorium Lights, !- Name
   {50211415-1d8c-4b45-9a02-bc79854e6b39}, !- Lights Definition Name
-  {7d7a7537-0dee-443b-9e32-6357965e4753}; !- Space or SpaceType Name
+  {7d7a7537-0dee-443b-9e32-6357965e4753}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {c78929a6-b674-4635-9709-6c488e37588b}, !- Handle
@@ -21609,7 +22213,14 @@ OS:People,
   {857da907-c64b-4cf4-93fe-58372cbb7097}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Auditorium People, !- Name
   {0ce5f375-7959-4ebf-9a1b-72c4a162f095}, !- People Definition Name
-  {7d7a7537-0dee-443b-9e32-6357965e4753}; !- Space or SpaceType Name
+  {7d7a7537-0dee-443b-9e32-6357965e4753}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {23b6082e-9e6a-490a-ae83-9587b510648b}, !- Handle
@@ -21638,7 +22249,10 @@ OS:ElectricEquipment,
   {ffa869fc-b7ca-4b94-b786-eea72197c2ea}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Auditorium Electric Equipment, !- Name
   {99d976b9-63b8-4ce7-b0dc-22f27a425ecd}, !- Electric Equipment Definition Name
-  {7d7a7537-0dee-443b-9e32-6357965e4753}; !- Space or SpaceType Name
+  {7d7a7537-0dee-443b-9e32-6357965e4753}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {a6d01846-4849-4b40-a008-98aec42a0cfc}, !- Handle
@@ -21689,7 +22303,11 @@ OS:Lights,
   {a0c251b7-e7b8-4cac-9764-aa24cd248323}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Cafeteria Lights, !- Name
   {8d613436-31de-4a0a-b537-b2547e108889}, !- Lights Definition Name
-  {48e4b132-83ea-4510-bee6-d92f2de87b6c}; !- Space or SpaceType Name
+  {48e4b132-83ea-4510-bee6-d92f2de87b6c}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {fa8a0f43-b497-4ce4-87fb-5f37002041cf}, !- Handle
@@ -21714,7 +22332,14 @@ OS:People,
   {0952cc86-d7d7-4896-9176-0aad34b9611e}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Cafeteria People, !- Name
   {9d8ed727-7d61-438d-bfc9-233efe22b74a}, !- People Definition Name
-  {48e4b132-83ea-4510-bee6-d92f2de87b6c}; !- Space or SpaceType Name
+  {48e4b132-83ea-4510-bee6-d92f2de87b6c}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {8ee48e85-48ee-48fe-b0ff-1e4382220d2d}, !- Handle
@@ -21743,7 +22368,10 @@ OS:ElectricEquipment,
   {9db8fd2a-e7f2-4ae2-aaee-f0f7278399ef}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Cafeteria Electric Equipment, !- Name
   {537ae13d-e968-4546-93db-73edc578a871}, !- Electric Equipment Definition Name
-  {48e4b132-83ea-4510-bee6-d92f2de87b6c}; !- Space or SpaceType Name
+  {48e4b132-83ea-4510-bee6-d92f2de87b6c}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {8304749b-9865-4c79-be73-fe2c979e84c5}, !- Handle
@@ -21794,7 +22422,11 @@ OS:Lights,
   {69bdab97-ba4e-44f3-84f1-1043049c2b5c}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Classroom Lights, !- Name
   {3e8cbbf7-316b-4289-8dec-25db32e3ef80}, !- Lights Definition Name
-  {65ae232e-2be4-41ce-b390-f3def6b21162}; !- Space or SpaceType Name
+  {65ae232e-2be4-41ce-b390-f3def6b21162}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {ebc067b2-832a-456c-9098-b586bb8a4371}, !- Handle
@@ -21819,7 +22451,14 @@ OS:People,
   {2a74ffca-8dd4-4860-9c5c-ab921861ad5c}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Classroom People, !- Name
   {3913dbc2-ab74-4e34-a953-0737e1a4a64a}, !- People Definition Name
-  {65ae232e-2be4-41ce-b390-f3def6b21162}; !- Space or SpaceType Name
+  {65ae232e-2be4-41ce-b390-f3def6b21162}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {4ebb4ae1-921a-4b26-b22f-4f4a73230f0f}, !- Handle
@@ -21848,7 +22487,10 @@ OS:ElectricEquipment,
   {5c58ef47-6752-4845-9647-953061258032}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Classroom Electric Equipment, !- Name
   {9d98229b-8259-4269-a22c-b4e26948e0c3}, !- Electric Equipment Definition Name
-  {65ae232e-2be4-41ce-b390-f3def6b21162}; !- Space or SpaceType Name
+  {65ae232e-2be4-41ce-b390-f3def6b21162}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {f1d85d5e-c188-40c2-8048-57d9f7a33bb0}, !- Handle
@@ -21899,7 +22541,11 @@ OS:Lights,
   {1bfb8908-8c64-4aa2-87ae-fad433dba5b8}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Corridor Lights, !- Name
   {35be572c-f527-4433-8fd9-6125fd2c45e3}, !- Lights Definition Name
-  {a181cf62-1cec-4d2d-86ef-5be58cd0393b}; !- Space or SpaceType Name
+  {a181cf62-1cec-4d2d-86ef-5be58cd0393b}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {3d170981-5242-49e9-9978-1cc82d359087}, !- Handle
@@ -21924,7 +22570,14 @@ OS:People,
   {49cf7262-31eb-4f6b-9683-4ca5cd2c8bde}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Corridor People, !- Name
   {58c8dd5b-a795-45ef-b8b9-4f70d3039544}, !- People Definition Name
-  {a181cf62-1cec-4d2d-86ef-5be58cd0393b}; !- Space or SpaceType Name
+  {a181cf62-1cec-4d2d-86ef-5be58cd0393b}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {7b69914a-b434-4f86-aeef-b6d323450f89}, !- Handle
@@ -21953,7 +22606,10 @@ OS:ElectricEquipment,
   {8de82c35-45cf-439a-82e4-6b141814c4a2}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Corridor Electric Equipment, !- Name
   {7648d5da-4a81-40ed-bde7-0e7faaa4bef5}, !- Electric Equipment Definition Name
-  {a181cf62-1cec-4d2d-86ef-5be58cd0393b}; !- Space or SpaceType Name
+  {a181cf62-1cec-4d2d-86ef-5be58cd0393b}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {7975d1a2-2749-4d92-b860-c1e93532c2b8}, !- Handle
@@ -22004,7 +22660,11 @@ OS:Lights,
   {284b24a8-56fc-4baa-8d5b-4e3b30edc40e}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Gym Lights, !- Name
   {09d8dcdc-00db-4b6b-aa1c-1769d83ac9e7}, !- Lights Definition Name
-  {b0a79562-465a-491f-ba6e-e15c9df01023}; !- Space or SpaceType Name
+  {b0a79562-465a-491f-ba6e-e15c9df01023}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {36a29bcf-4795-4ba2-b4e9-e22a0400b335}, !- Handle
@@ -22029,7 +22689,14 @@ OS:People,
   {80bc32e3-3f13-4c4f-abf1-2cd6920649ae}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Gym People, !- Name
   {942f3ba5-5328-481f-b15c-7dbfc7dab8b0}, !- People Definition Name
-  {b0a79562-465a-491f-ba6e-e15c9df01023}; !- Space or SpaceType Name
+  {b0a79562-465a-491f-ba6e-e15c9df01023}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {9f68b132-9c3b-40f1-8717-4d7508f45d97}, !- Handle
@@ -22058,7 +22725,10 @@ OS:ElectricEquipment,
   {34eff0b2-153f-4685-a135-635a807188e7}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Gym Electric Equipment, !- Name
   {6877824c-0076-43a9-b4bd-bb1a4b4d4303}, !- Electric Equipment Definition Name
-  {b0a79562-465a-491f-ba6e-e15c9df01023}; !- Space or SpaceType Name
+  {b0a79562-465a-491f-ba6e-e15c9df01023}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {e68fc0af-574e-424e-9bf4-f1c8f73738cb}, !- Handle
@@ -22109,7 +22779,11 @@ OS:Lights,
   {ef28016d-a122-40b3-a2c8-9d0f08259681}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Kitchen Lights, !- Name
   {4f28e838-0caa-472f-9d5c-d216cd1b4c00}, !- Lights Definition Name
-  {2d9227ad-88a5-456d-bf1b-93a01a4e8af0}; !- Space or SpaceType Name
+  {2d9227ad-88a5-456d-bf1b-93a01a4e8af0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {0811c002-ef4e-444d-98a3-f35beda97e7c}, !- Handle
@@ -22134,7 +22808,14 @@ OS:People,
   {6f18f98f-eec2-4885-8724-cce1b3bae9b9}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Kitchen People, !- Name
   {d331efd1-252c-4b6e-8e19-3473c1ae7535}, !- People Definition Name
-  {2d9227ad-88a5-456d-bf1b-93a01a4e8af0}; !- Space or SpaceType Name
+  {2d9227ad-88a5-456d-bf1b-93a01a4e8af0}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {72fdc7de-b740-46a3-b015-8c476601456e}, !- Handle
@@ -22163,7 +22844,10 @@ OS:ElectricEquipment,
   {6c3e0404-1e3b-45b9-8dfe-85bdc8a81b03}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Kitchen Electric Equipment, !- Name
   {868aa605-393e-4a77-abb3-57f395dfe8e3}, !- Electric Equipment Definition Name
-  {2d9227ad-88a5-456d-bf1b-93a01a4e8af0}; !- Space or SpaceType Name
+  {2d9227ad-88a5-456d-bf1b-93a01a4e8af0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:GasEquipment:Definition,
   {ad7f0a08-91c5-41de-adc8-d9352066abe6}, !- Handle
@@ -22177,7 +22861,10 @@ OS:GasEquipment,
   {d0647e20-4e54-4412-8a2b-37e16c00a857}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Kitchen Gas Equipment, !- Name
   {ad7f0a08-91c5-41de-adc8-d9352066abe6}, !- Gas Equipment Definition Name
-  {2d9227ad-88a5-456d-bf1b-93a01a4e8af0}; !- Space or SpaceType Name
+  {2d9227ad-88a5-456d-bf1b-93a01a4e8af0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {c5074e26-0817-4d55-8872-1ddc08c9a36d}, !- Handle
@@ -22228,7 +22915,11 @@ OS:Lights,
   {68226278-aa26-4758-9293-164d7fc28a81}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Library Lights, !- Name
   {d010d21a-79d5-4f4f-81b5-225a78053541}, !- Lights Definition Name
-  {40879399-6068-41c1-9233-a4b336b4cd64}; !- Space or SpaceType Name
+  {40879399-6068-41c1-9233-a4b336b4cd64}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {f1036c7e-4f26-463f-87ec-809be17f2a31}, !- Handle
@@ -22253,7 +22944,14 @@ OS:People,
   {a1f9e65b-5290-4250-9586-45ad5e4d643f}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Library People, !- Name
   {67648e52-8b8e-4b7d-b55e-98a98a2fe4b5}, !- People Definition Name
-  {40879399-6068-41c1-9233-a4b336b4cd64}; !- Space or SpaceType Name
+  {40879399-6068-41c1-9233-a4b336b4cd64}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {308c820e-22b0-4faa-bd47-e15a64397b7c}, !- Handle
@@ -22282,7 +22980,10 @@ OS:ElectricEquipment,
   {a28bedff-a7ce-4863-92fd-c6847d8c5366}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Library Electric Equipment, !- Name
   {b42345bf-bdc7-4d2b-8d2f-1b29c1f31158}, !- Electric Equipment Definition Name
-  {40879399-6068-41c1-9233-a4b336b4cd64}; !- Space or SpaceType Name
+  {40879399-6068-41c1-9233-a4b336b4cd64}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {0b253103-a607-498b-bbef-6bdbc1299236}, !- Handle
@@ -22333,7 +23034,11 @@ OS:Lights,
   {89c2a8e0-8c4c-410a-ac78-7b77c99d8c4d}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Lobby Lights, !- Name
   {7d74c308-dd13-4417-9f83-7544bca6ea8b}, !- Lights Definition Name
-  {746cd07d-4775-4537-82f5-ee7cd3746fb0}; !- Space or SpaceType Name
+  {746cd07d-4775-4537-82f5-ee7cd3746fb0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {f1589629-f8a6-4838-82a6-4ce486c1b842}, !- Handle
@@ -22372,7 +23077,10 @@ OS:ElectricEquipment,
   {f316a796-1915-48e5-a100-3702b01e2c94}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Lobby Electric Equipment, !- Name
   {13cf36b3-c57c-407b-8094-2ea98b0c7b5b}, !- Electric Equipment Definition Name
-  {746cd07d-4775-4537-82f5-ee7cd3746fb0}; !- Space or SpaceType Name
+  {746cd07d-4775-4537-82f5-ee7cd3746fb0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {c9fe1ce0-cd7a-466d-80a1-cd5340e6d0d0}, !- Handle
@@ -22423,7 +23131,11 @@ OS:Lights,
   {964c05d6-347b-4db0-b06d-b2ea5c448402}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Mechanical Lights, !- Name
   {a978ae8b-25fa-4a1a-8f35-8343fe0672bd}, !- Lights Definition Name
-  {7ebbf6de-c6ac-4b13-a0b6-63361858eaf6}; !- Space or SpaceType Name
+  {7ebbf6de-c6ac-4b13-a0b6-63361858eaf6}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {2e4cc1ab-cdf5-4f51-b7da-d5030e65f61a}, !- Handle
@@ -22448,7 +23160,14 @@ OS:People,
   {3d46c07d-e65e-494e-b6f3-f60ead1a260e}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Mechanical People, !- Name
   {5700d6ae-a83e-4bb1-9350-a4e92447ffa6}, !- People Definition Name
-  {7ebbf6de-c6ac-4b13-a0b6-63361858eaf6}; !- Space or SpaceType Name
+  {7ebbf6de-c6ac-4b13-a0b6-63361858eaf6}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {ac9233f3-06ef-40aa-84d0-7852eea1e0f8}, !- Handle
@@ -22477,7 +23196,10 @@ OS:ElectricEquipment,
   {7782a84f-d92d-4a42-b05d-ac2df4ee1ed2}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Mechanical Electric Equipment, !- Name
   {25df082e-c96f-4dbd-9715-b71e154dbbb4}, !- Electric Equipment Definition Name
-  {7ebbf6de-c6ac-4b13-a0b6-63361858eaf6}; !- Space or SpaceType Name
+  {7ebbf6de-c6ac-4b13-a0b6-63361858eaf6}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {716f6452-168f-4d56-930f-121cf59b0012}, !- Handle
@@ -22528,7 +23250,11 @@ OS:Lights,
   {f7693bf0-3833-40b0-93c2-263d43c11771}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Office Lights, !- Name
   {efd0d9b3-a486-4c49-a765-290271670200}, !- Lights Definition Name
-  {7e41c815-8833-495b-9c18-03c8de6d253d}; !- Space or SpaceType Name
+  {7e41c815-8833-495b-9c18-03c8de6d253d}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {3a0f84bf-62d0-4bcb-b441-7fc381d0d6c1}, !- Handle
@@ -22553,7 +23279,14 @@ OS:People,
   {8bd884c7-95ca-4459-8f3e-13cb5b649c9a}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Office People, !- Name
   {6157293f-381b-4c9a-8cd4-29b639891afb}, !- People Definition Name
-  {7e41c815-8833-495b-9c18-03c8de6d253d}; !- Space or SpaceType Name
+  {7e41c815-8833-495b-9c18-03c8de6d253d}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {32624753-10fb-4abf-9c4b-a8465271ee0b}, !- Handle
@@ -22582,7 +23315,10 @@ OS:ElectricEquipment,
   {223ab17d-084d-4922-b9f8-55e5b9402e7c}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Office Electric Equipment, !- Name
   {9b5bae4d-4374-4929-905b-87a8c26b15f5}, !- Electric Equipment Definition Name
-  {7e41c815-8833-495b-9c18-03c8de6d253d}; !- Space or SpaceType Name
+  {7e41c815-8833-495b-9c18-03c8de6d253d}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {304901c9-ef62-413c-84d7-7a2e0a49d8e4}, !- Handle
@@ -22633,7 +23369,11 @@ OS:Lights,
   {4af2b5b5-6d57-4d84-8d14-a11a4114be25}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Restroom Lights, !- Name
   {ccd1a0bd-b11c-4532-8e8e-93aed008cdbd}, !- Lights Definition Name
-  {0739482b-7e71-407f-b928-2889e1099bdb}; !- Space or SpaceType Name
+  {0739482b-7e71-407f-b928-2889e1099bdb}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {9a768725-2b59-4d00-9c3b-d81e4fd742b8}, !- Handle
@@ -22658,7 +23398,14 @@ OS:People,
   {b2e541d0-b2d6-445f-a3fb-289444b3eefd}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Restroom People, !- Name
   {c3b4720c-dee3-4a3a-9a01-f43e8828af81}, !- People Definition Name
-  {0739482b-7e71-407f-b928-2889e1099bdb}; !- Space or SpaceType Name
+  {0739482b-7e71-407f-b928-2889e1099bdb}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {916f79d2-b9d5-452b-a7fa-fca154123d58}, !- Handle
@@ -22687,7 +23434,10 @@ OS:ElectricEquipment,
   {f4e4daa4-a3d2-4850-ae6b-1bb0896c6811}, !- Handle
   DOE Ref 1980-2004 - SecSchl - Restroom Electric Equipment, !- Name
   {40a45760-44cc-4cfb-83dd-e912e4534509}, !- Electric Equipment Definition Name
-  {0739482b-7e71-407f-b928-2889e1099bdb}; !- Space or SpaceType Name
+  {0739482b-7e71-407f-b928-2889e1099bdb}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {aae6666b-5066-4f71-a2b5-427ebfe95246}, !- Handle
@@ -22738,7 +23488,11 @@ OS:Lights,
   {d60696dc-c882-4ed7-91b8-d3ac3ae8afc5}, !- Handle
   DOE Ref 2004 - SecSchl - Auditorium Lights, !- Name
   {17385721-db47-4430-9fce-9dd57647fdba}, !- Lights Definition Name
-  {a6b0d657-f58c-42bd-88b4-ef8a1123cca4}; !- Space or SpaceType Name
+  {a6b0d657-f58c-42bd-88b4-ef8a1123cca4}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {a079b83e-1093-462b-8726-a64b02633281}, !- Handle
@@ -22763,7 +23517,14 @@ OS:People,
   {3a6e6b76-95d7-46f1-a645-61fdd89af0a2}, !- Handle
   DOE Ref 2004 - SecSchl - Auditorium People, !- Name
   {9554b6cb-af1c-48fb-be09-2cfe65486388}, !- People Definition Name
-  {a6b0d657-f58c-42bd-88b4-ef8a1123cca4}; !- Space or SpaceType Name
+  {a6b0d657-f58c-42bd-88b4-ef8a1123cca4}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {c2eb539e-8de0-4ae4-b707-d69d47d76ea9}, !- Handle
@@ -22792,7 +23553,10 @@ OS:ElectricEquipment,
   {010cca73-564f-4c2a-8bfe-56f82e85b867}, !- Handle
   DOE Ref 2004 - SecSchl - Auditorium Electric Equipment, !- Name
   {0bcd3031-c47c-4124-acf2-6f3943bf59e0}, !- Electric Equipment Definition Name
-  {a6b0d657-f58c-42bd-88b4-ef8a1123cca4}; !- Space or SpaceType Name
+  {a6b0d657-f58c-42bd-88b4-ef8a1123cca4}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {8b1d50d6-fe45-4aa7-a0a8-a2be6c05be40}, !- Handle
@@ -22843,7 +23607,11 @@ OS:Lights,
   {d15543bc-961a-41fc-87f6-9f6dc5d54374}, !- Handle
   DOE Ref 2004 - SecSchl - Cafeteria Lights, !- Name
   {da48cb30-6b2e-409c-8594-b64553d72b88}, !- Lights Definition Name
-  {c92a7be1-0b54-4bb8-9a15-4ea54010f878}; !- Space or SpaceType Name
+  {c92a7be1-0b54-4bb8-9a15-4ea54010f878}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {17ddc593-9da9-4694-8a53-6d5d4eb70de6}, !- Handle
@@ -22868,7 +23636,14 @@ OS:People,
   {0c8044f4-e455-4c35-9c62-5d0bb1094a8a}, !- Handle
   DOE Ref 2004 - SecSchl - Cafeteria People, !- Name
   {d1b4b9a9-a4d3-43ca-a998-be91f8ee7e51}, !- People Definition Name
-  {c92a7be1-0b54-4bb8-9a15-4ea54010f878}; !- Space or SpaceType Name
+  {c92a7be1-0b54-4bb8-9a15-4ea54010f878}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {93aaac6e-838b-4167-9372-4349a827f0b9}, !- Handle
@@ -22897,7 +23672,10 @@ OS:ElectricEquipment,
   {15fbb711-7b4e-4bec-93d3-2757c713ac22}, !- Handle
   DOE Ref 2004 - SecSchl - Cafeteria Electric Equipment, !- Name
   {97f99725-4732-46cf-9725-50828cffbb71}, !- Electric Equipment Definition Name
-  {c92a7be1-0b54-4bb8-9a15-4ea54010f878}; !- Space or SpaceType Name
+  {c92a7be1-0b54-4bb8-9a15-4ea54010f878}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {742d2148-62af-4a39-9bae-16bdd5d723a2}, !- Handle
@@ -22948,7 +23726,11 @@ OS:Lights,
   {73814e4a-316d-4cc9-8974-d9f2371b9558}, !- Handle
   DOE Ref 2004 - SecSchl - Classroom Lights, !- Name
   {f8b16eb9-658d-435a-aed5-806dc980654f}, !- Lights Definition Name
-  {2216bb9a-c6e6-4881-a965-1c2e0f5658e6}; !- Space or SpaceType Name
+  {2216bb9a-c6e6-4881-a965-1c2e0f5658e6}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {d6e86393-28ee-4d25-9dde-687c7d6b0476}, !- Handle
@@ -22973,7 +23755,14 @@ OS:People,
   {0c042b1a-e46d-450a-b35a-06dd5497e83f}, !- Handle
   DOE Ref 2004 - SecSchl - Classroom People, !- Name
   {01eca484-6bf9-4a17-a2d6-2a62c16c0ea2}, !- People Definition Name
-  {2216bb9a-c6e6-4881-a965-1c2e0f5658e6}; !- Space or SpaceType Name
+  {2216bb9a-c6e6-4881-a965-1c2e0f5658e6}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {ca24a7cf-6be2-44b8-aede-f95cc5b0028c}, !- Handle
@@ -23002,7 +23791,10 @@ OS:ElectricEquipment,
   {ccf4dc17-3259-4671-9d58-9ae90eec5752}, !- Handle
   DOE Ref 2004 - SecSchl - Classroom Electric Equipment, !- Name
   {2cc2dde8-6e36-4da2-85ff-28cde4c91bfe}, !- Electric Equipment Definition Name
-  {2216bb9a-c6e6-4881-a965-1c2e0f5658e6}; !- Space or SpaceType Name
+  {2216bb9a-c6e6-4881-a965-1c2e0f5658e6}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {c72ce82a-042b-4613-8f78-8f162e070f6e}, !- Handle
@@ -23053,7 +23845,11 @@ OS:Lights,
   {2ea185b4-cbe2-4e5b-b349-4d2e4cadcba6}, !- Handle
   DOE Ref 2004 - SecSchl - Corridor Lights, !- Name
   {a67ec94f-2f9f-4bcb-82e9-3519c9b15f53}, !- Lights Definition Name
-  {b9d2065f-c7ee-4f8f-aab3-1fd5c54ca68d}; !- Space or SpaceType Name
+  {b9d2065f-c7ee-4f8f-aab3-1fd5c54ca68d}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {a5d9312e-b2b0-43b0-bf53-bee11f3ed7c0}, !- Handle
@@ -23078,7 +23874,14 @@ OS:People,
   {eb3b52c3-0263-4417-88f3-8cb19fbe110e}, !- Handle
   DOE Ref 2004 - SecSchl - Corridor People, !- Name
   {97903585-eb0a-465b-b59b-99d2b99f95e1}, !- People Definition Name
-  {b9d2065f-c7ee-4f8f-aab3-1fd5c54ca68d}; !- Space or SpaceType Name
+  {b9d2065f-c7ee-4f8f-aab3-1fd5c54ca68d}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {f2a36fda-8d57-4e1b-a569-49fc5ca7f26c}, !- Handle
@@ -23107,7 +23910,10 @@ OS:ElectricEquipment,
   {1150f370-ecef-4b85-95a6-57811d8f55a9}, !- Handle
   DOE Ref 2004 - SecSchl - Corridor Electric Equipment, !- Name
   {8796d7b2-56cd-4823-9442-a4fe643554cc}, !- Electric Equipment Definition Name
-  {b9d2065f-c7ee-4f8f-aab3-1fd5c54ca68d}; !- Space or SpaceType Name
+  {b9d2065f-c7ee-4f8f-aab3-1fd5c54ca68d}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {707e53ae-fe32-4a55-8b78-1ce245a74002}, !- Handle
@@ -23158,7 +23964,11 @@ OS:Lights,
   {5651b1e2-cc5b-414a-84f6-32586f5724e6}, !- Handle
   DOE Ref 2004 - SecSchl - Gym Lights,    !- Name
   {0adb02ae-1613-4425-ab27-d758809b8ea2}, !- Lights Definition Name
-  {6680bed2-c4a1-4bae-a9f2-2a8b55f0d218}; !- Space or SpaceType Name
+  {6680bed2-c4a1-4bae-a9f2-2a8b55f0d218}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {9d5928bd-2b01-4e97-918b-8186556b79e1}, !- Handle
@@ -23183,7 +23993,14 @@ OS:People,
   {e8229dca-54d9-4505-98a8-775573d0cf2c}, !- Handle
   DOE Ref 2004 - SecSchl - Gym People,    !- Name
   {48886744-11eb-4c76-9b70-800481bd8991}, !- People Definition Name
-  {6680bed2-c4a1-4bae-a9f2-2a8b55f0d218}; !- Space or SpaceType Name
+  {6680bed2-c4a1-4bae-a9f2-2a8b55f0d218}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {9d8557c1-156c-434d-b832-a26bf93131a6}, !- Handle
@@ -23212,7 +24029,10 @@ OS:ElectricEquipment,
   {97abbe40-4f2a-43c2-b516-29e7d5e54be7}, !- Handle
   DOE Ref 2004 - SecSchl - Gym Electric Equipment, !- Name
   {3374f33f-b561-4126-8edd-027a26858254}, !- Electric Equipment Definition Name
-  {6680bed2-c4a1-4bae-a9f2-2a8b55f0d218}; !- Space or SpaceType Name
+  {6680bed2-c4a1-4bae-a9f2-2a8b55f0d218}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {54ddee95-1c1c-4f3f-b740-de68bd3a4af6}, !- Handle
@@ -23263,7 +24083,11 @@ OS:Lights,
   {a81fd41c-d3b2-4e71-9b92-734151152d4c}, !- Handle
   DOE Ref 2004 - SecSchl - Kitchen Lights, !- Name
   {4c394b8c-9d3f-458a-b4ca-4b1437cac519}, !- Lights Definition Name
-  {b526bafd-eb17-4525-b17f-dbd1a2eebafd}; !- Space or SpaceType Name
+  {b526bafd-eb17-4525-b17f-dbd1a2eebafd}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {d6f9f596-b2a0-433f-8a3e-f63a538ef8eb}, !- Handle
@@ -23288,7 +24112,14 @@ OS:People,
   {4ac848d7-a75b-4f5c-b955-2a79e0dbf7f9}, !- Handle
   DOE Ref 2004 - SecSchl - Kitchen People, !- Name
   {e77747ea-4e2f-49b9-ae1a-5dd645a4e15c}, !- People Definition Name
-  {b526bafd-eb17-4525-b17f-dbd1a2eebafd}; !- Space or SpaceType Name
+  {b526bafd-eb17-4525-b17f-dbd1a2eebafd}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {1d50d841-7042-446e-bec2-37ec6858265c}, !- Handle
@@ -23317,7 +24148,10 @@ OS:ElectricEquipment,
   {c8bbccb6-74c0-4689-9437-184ae87f0091}, !- Handle
   DOE Ref 2004 - SecSchl - Kitchen Electric Equipment, !- Name
   {07817f0b-4527-44e3-9cb6-397d0a85cf35}, !- Electric Equipment Definition Name
-  {b526bafd-eb17-4525-b17f-dbd1a2eebafd}; !- Space or SpaceType Name
+  {b526bafd-eb17-4525-b17f-dbd1a2eebafd}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:GasEquipment:Definition,
   {35bec93f-b875-45d4-9532-dcaeae91133a}, !- Handle
@@ -23331,7 +24165,10 @@ OS:GasEquipment,
   {f6280e72-0c9e-401c-bf57-4db500af789a}, !- Handle
   DOE Ref 2004 - SecSchl - Kitchen Gas Equipment, !- Name
   {35bec93f-b875-45d4-9532-dcaeae91133a}, !- Gas Equipment Definition Name
-  {b526bafd-eb17-4525-b17f-dbd1a2eebafd}; !- Space or SpaceType Name
+  {b526bafd-eb17-4525-b17f-dbd1a2eebafd}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {23299777-b429-4c58-ab52-88b6ccf18c79}, !- Handle
@@ -23382,7 +24219,11 @@ OS:Lights,
   {30c93337-fb94-413c-bb53-f4e4d480ce12}, !- Handle
   DOE Ref 2004 - SecSchl - Library Lights, !- Name
   {ea03375b-46b8-45ea-a6a3-066e95d9b6c3}, !- Lights Definition Name
-  {76df2ee0-d2de-4b5b-a0e6-92d5f1b54c09}; !- Space or SpaceType Name
+  {76df2ee0-d2de-4b5b-a0e6-92d5f1b54c09}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {bddb9898-fca9-4d39-afcf-3c57551f7308}, !- Handle
@@ -23407,7 +24248,14 @@ OS:People,
   {72b209b9-26e9-414a-bd91-3e9183403e7c}, !- Handle
   DOE Ref 2004 - SecSchl - Library People, !- Name
   {e0d904ef-db48-4a5e-b43b-60a474f66c8f}, !- People Definition Name
-  {76df2ee0-d2de-4b5b-a0e6-92d5f1b54c09}; !- Space or SpaceType Name
+  {76df2ee0-d2de-4b5b-a0e6-92d5f1b54c09}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {d07efe6a-cb8a-40ad-bf80-ec5e075a306c}, !- Handle
@@ -23436,7 +24284,10 @@ OS:ElectricEquipment,
   {42906b30-dc4e-4036-9b80-3358fec48c43}, !- Handle
   DOE Ref 2004 - SecSchl - Library Electric Equipment, !- Name
   {62c0d204-9b03-4c98-9134-3df67a67d4cc}, !- Electric Equipment Definition Name
-  {76df2ee0-d2de-4b5b-a0e6-92d5f1b54c09}; !- Space or SpaceType Name
+  {76df2ee0-d2de-4b5b-a0e6-92d5f1b54c09}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {5d56687c-9a0d-410d-bf65-7eb37edbf044}, !- Handle
@@ -23487,7 +24338,11 @@ OS:Lights,
   {c9072442-080a-43c0-8728-f4cc445c81fa}, !- Handle
   DOE Ref 2004 - SecSchl - Lobby Lights,  !- Name
   {d9b5dd31-2af3-41f9-a9f9-1fbb25ccd593}, !- Lights Definition Name
-  {6cc58a48-de27-4d8c-8fb9-de09368d941f}; !- Space or SpaceType Name
+  {6cc58a48-de27-4d8c-8fb9-de09368d941f}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {8376403a-7044-4b75-bb00-6cc0c5bd7294}, !- Handle
@@ -23526,7 +24381,10 @@ OS:ElectricEquipment,
   {54a75b43-3128-45b7-946f-012c5a6c803e}, !- Handle
   DOE Ref 2004 - SecSchl - Lobby Electric Equipment, !- Name
   {08dc685c-7cd5-4477-94a9-f05c1909cfad}, !- Electric Equipment Definition Name
-  {6cc58a48-de27-4d8c-8fb9-de09368d941f}; !- Space or SpaceType Name
+  {6cc58a48-de27-4d8c-8fb9-de09368d941f}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {a26cfb04-cfa5-445c-b790-289c20a1c3b9}, !- Handle
@@ -23577,7 +24435,11 @@ OS:Lights,
   {375bafa6-cfba-49d8-b4e3-3f038798a987}, !- Handle
   DOE Ref 2004 - SecSchl - Mechanical Lights, !- Name
   {090a2e97-95a4-468f-9938-fa9b3e2e0b54}, !- Lights Definition Name
-  {d61e872f-ca45-4102-8e12-d6cc38c1970e}; !- Space or SpaceType Name
+  {d61e872f-ca45-4102-8e12-d6cc38c1970e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {04314eee-a904-41cc-a1f2-24a5c170d9be}, !- Handle
@@ -23602,7 +24464,14 @@ OS:People,
   {635bf9e3-5cc5-406d-a714-43767595d46a}, !- Handle
   DOE Ref 2004 - SecSchl - Mechanical People, !- Name
   {b00dd088-a45c-4cce-8307-19869af6f84b}, !- People Definition Name
-  {d61e872f-ca45-4102-8e12-d6cc38c1970e}; !- Space or SpaceType Name
+  {d61e872f-ca45-4102-8e12-d6cc38c1970e}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {19f44960-aead-4fd6-8822-882052eb141f}, !- Handle
@@ -23631,7 +24500,10 @@ OS:ElectricEquipment,
   {4352ed13-e01d-415c-8c72-0721d09e4e6f}, !- Handle
   DOE Ref 2004 - SecSchl - Mechanical Electric Equipment, !- Name
   {cf7b01e1-1bd0-40d6-aef6-09df3c38b57b}, !- Electric Equipment Definition Name
-  {d61e872f-ca45-4102-8e12-d6cc38c1970e}; !- Space or SpaceType Name
+  {d61e872f-ca45-4102-8e12-d6cc38c1970e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {333ad8e8-bf8d-4c5b-90b3-bac977b2bb98}, !- Handle
@@ -23682,7 +24554,11 @@ OS:Lights,
   {0df6f2d2-74ec-4b05-a28f-a6c02095b07f}, !- Handle
   DOE Ref 2004 - SecSchl - Office Lights, !- Name
   {e7c58617-8c0f-4682-9856-9e8b97d8c6c0}, !- Lights Definition Name
-  {4fb9bfa4-caf3-430e-ae89-66f55d3b2b4e}; !- Space or SpaceType Name
+  {4fb9bfa4-caf3-430e-ae89-66f55d3b2b4e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {2d51cf37-ba4f-45f7-b216-8de369ad3502}, !- Handle
@@ -23707,7 +24583,14 @@ OS:People,
   {e4ab81bf-b4ca-4fb6-8d5f-fb76a2db561f}, !- Handle
   DOE Ref 2004 - SecSchl - Office People, !- Name
   {1be301c0-f17a-4a3d-9a6e-1000f7098cda}, !- People Definition Name
-  {4fb9bfa4-caf3-430e-ae89-66f55d3b2b4e}; !- Space or SpaceType Name
+  {4fb9bfa4-caf3-430e-ae89-66f55d3b2b4e}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {50ab47a6-bb24-4d04-ab16-f8cb79220e8c}, !- Handle
@@ -23736,7 +24619,10 @@ OS:ElectricEquipment,
   {b0e45f21-5e8b-4002-81da-75d3bb46aa06}, !- Handle
   DOE Ref 2004 - SecSchl - Office Electric Equipment, !- Name
   {bd0fd446-f8f8-4490-b37b-23ad58487faf}, !- Electric Equipment Definition Name
-  {4fb9bfa4-caf3-430e-ae89-66f55d3b2b4e}; !- Space or SpaceType Name
+  {4fb9bfa4-caf3-430e-ae89-66f55d3b2b4e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {e87dbe5a-912b-4c72-bb38-e5a771242660}, !- Handle
@@ -23787,7 +24673,11 @@ OS:Lights,
   {52450831-e14d-47b8-966b-0c816c4ad9e3}, !- Handle
   DOE Ref 2004 - SecSchl - Restroom Lights, !- Name
   {e49227a8-d331-427d-9e9d-c2b8bbbd0035}, !- Lights Definition Name
-  {bca4e8ac-e7b2-4ad2-8183-cc9b6c3cb48e}; !- Space or SpaceType Name
+  {bca4e8ac-e7b2-4ad2-8183-cc9b6c3cb48e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {1cd208d3-8b43-48a0-96ea-588f5ea8b236}, !- Handle
@@ -23812,7 +24702,14 @@ OS:People,
   {9d631d36-eea4-4124-a868-f3985e8ecda1}, !- Handle
   DOE Ref 2004 - SecSchl - Restroom People, !- Name
   {a9faeb0c-b04e-4948-a769-e8846efe6fd1}, !- People Definition Name
-  {bca4e8ac-e7b2-4ad2-8183-cc9b6c3cb48e}; !- Space or SpaceType Name
+  {bca4e8ac-e7b2-4ad2-8183-cc9b6c3cb48e}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {9369289b-6e8d-45f6-91c6-21479503a57f}, !- Handle
@@ -23841,7 +24738,10 @@ OS:ElectricEquipment,
   {a6de4723-ead6-43cb-9835-08cce1035881}, !- Handle
   DOE Ref 2004 - SecSchl - Restroom Electric Equipment, !- Name
   {57059c10-19da-4e5a-b8b9-636fd560fd82}, !- Electric Equipment Definition Name
-  {bca4e8ac-e7b2-4ad2-8183-cc9b6c3cb48e}; !- Space or SpaceType Name
+  {bca4e8ac-e7b2-4ad2-8183-cc9b6c3cb48e}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {f58c875a-7290-47f5-af26-ca3550ca61d9}, !- Handle
@@ -23892,7 +24792,11 @@ OS:Lights,
   {667cd476-dd8a-4bbd-bad7-1f6f73f535bb}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Auditorium Lights, !- Name
   {c12b5195-e9a5-41fd-9840-142229c04646}, !- Lights Definition Name
-  {ecd76f26-ac9c-44de-a89b-5ce0bcfdd613}; !- Space or SpaceType Name
+  {ecd76f26-ac9c-44de-a89b-5ce0bcfdd613}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {ad7cee7b-7e3f-4787-bd78-28b2f45d7570}, !- Handle
@@ -23917,7 +24821,14 @@ OS:People,
   {f0c022d6-6129-472b-8390-9a05ed1ec80f}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Auditorium People, !- Name
   {ac97c030-3a93-4846-8423-ab8b86f9dd9e}, !- People Definition Name
-  {ecd76f26-ac9c-44de-a89b-5ce0bcfdd613}; !- Space or SpaceType Name
+  {ecd76f26-ac9c-44de-a89b-5ce0bcfdd613}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {16b7bd70-f8b5-452e-82ce-a1bfc101b661}, !- Handle
@@ -23946,7 +24857,10 @@ OS:ElectricEquipment,
   {2c7ff511-fd05-4be2-b8a2-2110fb6cb608}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Auditorium Electric Equipment, !- Name
   {2214f6be-a5a0-47e8-81b9-4470be489973}, !- Electric Equipment Definition Name
-  {ecd76f26-ac9c-44de-a89b-5ce0bcfdd613}; !- Space or SpaceType Name
+  {ecd76f26-ac9c-44de-a89b-5ce0bcfdd613}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {d443a3d8-9139-4c8f-ad47-89fb431ae62f}, !- Handle
@@ -23997,7 +24911,11 @@ OS:Lights,
   {dead9539-c112-4805-839e-52b5f3eff4e6}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Cafeteria Lights, !- Name
   {4aecc8d5-d650-46a7-9b39-2d3f2abb1b9a}, !- Lights Definition Name
-  {7e02cf4c-2ad1-4f73-b4b8-570edf3ba5d9}; !- Space or SpaceType Name
+  {7e02cf4c-2ad1-4f73-b4b8-570edf3ba5d9}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {224a48f4-cc36-4236-b137-c684a7d9b059}, !- Handle
@@ -24022,7 +24940,14 @@ OS:People,
   {f7121a41-ee89-4603-bf56-84b0ac7ab0f2}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Cafeteria People, !- Name
   {2341a2a7-e86b-458a-b270-b96a59b3be66}, !- People Definition Name
-  {7e02cf4c-2ad1-4f73-b4b8-570edf3ba5d9}; !- Space or SpaceType Name
+  {7e02cf4c-2ad1-4f73-b4b8-570edf3ba5d9}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {00fc31f2-f62b-4a5a-b2ae-418c300c85e1}, !- Handle
@@ -24051,7 +24976,10 @@ OS:ElectricEquipment,
   {787ee840-45f2-44f0-baff-e8f2bc747f77}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Cafeteria Electric Equipment, !- Name
   {9740e0e9-aa13-4d36-8569-0d654f2a2157}, !- Electric Equipment Definition Name
-  {7e02cf4c-2ad1-4f73-b4b8-570edf3ba5d9}; !- Space or SpaceType Name
+  {7e02cf4c-2ad1-4f73-b4b8-570edf3ba5d9}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {e24d43b2-bbca-46cb-a0ff-789393f9cc2f}, !- Handle
@@ -24102,7 +25030,11 @@ OS:Lights,
   {2c7796c3-b4ea-4035-90fa-260e45ea4c26}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Classroom Lights, !- Name
   {103fd1db-e333-45dd-a417-f5f9e46107f7}, !- Lights Definition Name
-  {a95e00b2-3452-4e38-8856-d66ec88784a0}; !- Space or SpaceType Name
+  {a95e00b2-3452-4e38-8856-d66ec88784a0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {97963898-b4af-4a12-af8d-3ce1fc22ff69}, !- Handle
@@ -24127,7 +25059,14 @@ OS:People,
   {bacd8d96-77f5-4d5b-8f9d-89db582ea5d1}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Classroom People, !- Name
   {f4e49355-c545-456d-b456-6ba3fa9f280c}, !- People Definition Name
-  {a95e00b2-3452-4e38-8856-d66ec88784a0}; !- Space or SpaceType Name
+  {a95e00b2-3452-4e38-8856-d66ec88784a0}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {e4a645a4-93f8-4d53-be38-0556f716211b}, !- Handle
@@ -24156,7 +25095,10 @@ OS:ElectricEquipment,
   {8e11c725-5937-4e7b-a624-be469739da42}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Classroom Electric Equipment, !- Name
   {07db9528-3483-48f0-8f7a-dac439762703}, !- Electric Equipment Definition Name
-  {a95e00b2-3452-4e38-8856-d66ec88784a0}; !- Space or SpaceType Name
+  {a95e00b2-3452-4e38-8856-d66ec88784a0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {1f7cf078-c6f0-43f5-84bd-7a7d09e17b0e}, !- Handle
@@ -24207,7 +25149,11 @@ OS:Lights,
   {e177da81-0638-46d3-a685-3f0330ff47ee}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Corridor Lights, !- Name
   {b1c3b709-bedf-4fc6-b5d3-799329148b43}, !- Lights Definition Name
-  {58e1e1d0-5a3e-4e05-bdaa-37b350580a03}; !- Space or SpaceType Name
+  {58e1e1d0-5a3e-4e05-bdaa-37b350580a03}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {d2d2f12d-ccc7-4197-9f7c-2856abe3f64c}, !- Handle
@@ -24232,7 +25178,14 @@ OS:People,
   {e549272d-f1e2-482c-add9-4eda5eec8715}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Corridor People, !- Name
   {c5b9a48a-5753-4a80-a0dc-806925a39687}, !- People Definition Name
-  {58e1e1d0-5a3e-4e05-bdaa-37b350580a03}; !- Space or SpaceType Name
+  {58e1e1d0-5a3e-4e05-bdaa-37b350580a03}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {50315c8c-8abd-4afd-9e46-987696f75c61}, !- Handle
@@ -24261,7 +25214,10 @@ OS:ElectricEquipment,
   {8f37fc0e-03cc-4b58-b7ee-785ac9f02193}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Corridor Electric Equipment, !- Name
   {913a5ff8-e9a4-4f15-905b-b46d63890036}, !- Electric Equipment Definition Name
-  {58e1e1d0-5a3e-4e05-bdaa-37b350580a03}; !- Space or SpaceType Name
+  {58e1e1d0-5a3e-4e05-bdaa-37b350580a03}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {6a3464a3-6de6-4cb5-8b8a-86de130c9d14}, !- Handle
@@ -24312,7 +25268,11 @@ OS:Lights,
   {58c55c74-8f5a-49b9-a98e-ca720a5decf8}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Gym Lights, !- Name
   {cdfda004-79e8-4542-b788-0044c3ca0d18}, !- Lights Definition Name
-  {cf455c13-1d39-44b7-91c6-0387a13ba07a}; !- Space or SpaceType Name
+  {cf455c13-1d39-44b7-91c6-0387a13ba07a}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {a599281d-7f54-4da4-b20c-68ea987af25b}, !- Handle
@@ -24337,7 +25297,14 @@ OS:People,
   {c2c40733-d720-4943-b301-a650c754e008}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Gym People, !- Name
   {b3359c70-bd67-4950-a0a8-f5e6696a9fd1}, !- People Definition Name
-  {cf455c13-1d39-44b7-91c6-0387a13ba07a}; !- Space or SpaceType Name
+  {cf455c13-1d39-44b7-91c6-0387a13ba07a}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {a7e0d947-13a8-4b0e-bf05-64928695ea58}, !- Handle
@@ -24366,7 +25333,10 @@ OS:ElectricEquipment,
   {e0cbc069-331d-4ea0-b3e9-a7bd3872412e}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Gym Electric Equipment, !- Name
   {3279c208-511a-4c7b-8d21-3cb395c9406a}, !- Electric Equipment Definition Name
-  {cf455c13-1d39-44b7-91c6-0387a13ba07a}; !- Space or SpaceType Name
+  {cf455c13-1d39-44b7-91c6-0387a13ba07a}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {a0cfe772-6401-44d2-880f-f8b757f8a74f}, !- Handle
@@ -24417,7 +25387,11 @@ OS:Lights,
   {a21c6ff4-eee0-4b16-9bd3-8516020b5691}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Kitchen Lights, !- Name
   {79dd0c4b-f3ed-41cf-ab39-eb83dade907f}, !- Lights Definition Name
-  {5fabf10e-81ba-47cf-8e49-b7f982d3a465}; !- Space or SpaceType Name
+  {5fabf10e-81ba-47cf-8e49-b7f982d3a465}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {637530ab-6ed2-4787-9fbc-bd69576f5075}, !- Handle
@@ -24442,7 +25416,14 @@ OS:People,
   {adaba4d7-7e2c-44e8-92f5-cfd877b02751}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Kitchen People, !- Name
   {3c8287a4-098c-4afe-9fec-527b876c7b13}, !- People Definition Name
-  {5fabf10e-81ba-47cf-8e49-b7f982d3a465}; !- Space or SpaceType Name
+  {5fabf10e-81ba-47cf-8e49-b7f982d3a465}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {b4de7289-97fc-4f03-90ff-8560ec46b5de}, !- Handle
@@ -24471,7 +25452,10 @@ OS:ElectricEquipment,
   {bb86481a-af51-4e41-a367-4884be7dce40}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Kitchen Electric Equipment, !- Name
   {5adcf78a-1db7-4430-a912-c6ab6c7173c7}, !- Electric Equipment Definition Name
-  {5fabf10e-81ba-47cf-8e49-b7f982d3a465}; !- Space or SpaceType Name
+  {5fabf10e-81ba-47cf-8e49-b7f982d3a465}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:GasEquipment:Definition,
   {3a3d852a-1136-44e7-bdc4-e6da1ef992b5}, !- Handle
@@ -24485,7 +25469,10 @@ OS:GasEquipment,
   {96cb04c8-602f-444e-8379-1a5338a8f091}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Kitchen Gas Equipment, !- Name
   {3a3d852a-1136-44e7-bdc4-e6da1ef992b5}, !- Gas Equipment Definition Name
-  {5fabf10e-81ba-47cf-8e49-b7f982d3a465}; !- Space or SpaceType Name
+  {5fabf10e-81ba-47cf-8e49-b7f982d3a465}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {4306de76-83df-4b8d-9997-7f16711a4de3}, !- Handle
@@ -24536,7 +25523,11 @@ OS:Lights,
   {af2c85ab-4b8e-4097-b10e-4c0dfe9b7e78}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Library Lights, !- Name
   {7e97e0b4-2ed3-467a-9809-a0a1a0aa3ad6}, !- Lights Definition Name
-  {a5fb0ef5-5fa7-4dad-95e5-1282a2480313}; !- Space or SpaceType Name
+  {a5fb0ef5-5fa7-4dad-95e5-1282a2480313}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {3c52c5dd-ba2e-4ac7-9c1f-ed5179374e7e}, !- Handle
@@ -24561,7 +25552,14 @@ OS:People,
   {98908755-ce44-49ce-ae3a-b06318235b70}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Library People, !- Name
   {43e4822f-485d-440e-9e22-451ba55e2b91}, !- People Definition Name
-  {a5fb0ef5-5fa7-4dad-95e5-1282a2480313}; !- Space or SpaceType Name
+  {a5fb0ef5-5fa7-4dad-95e5-1282a2480313}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {d0b4286f-c89b-450a-aad5-a8af30583941}, !- Handle
@@ -24590,7 +25588,10 @@ OS:ElectricEquipment,
   {8f89203a-f6d1-4aa9-8aaf-904ae4b0728e}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Library Electric Equipment, !- Name
   {fadecfe9-2815-4730-a966-4b9755e397d8}, !- Electric Equipment Definition Name
-  {a5fb0ef5-5fa7-4dad-95e5-1282a2480313}; !- Space or SpaceType Name
+  {a5fb0ef5-5fa7-4dad-95e5-1282a2480313}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {a0ceb7a6-9252-4eec-8234-bc53a52121fd}, !- Handle
@@ -24641,7 +25642,11 @@ OS:Lights,
   {429b5142-07ae-43d1-a609-9ea12aaa483f}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Lobby Lights, !- Name
   {4c8c6734-666a-4da6-8aea-078fc7bfd043}, !- Lights Definition Name
-  {471c8547-da87-4f5e-9442-ed386b502ed0}; !- Space or SpaceType Name
+  {471c8547-da87-4f5e-9442-ed386b502ed0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {2dc4f562-d3bf-4221-9635-17467f5fd564}, !- Handle
@@ -24680,7 +25685,10 @@ OS:ElectricEquipment,
   {e653caee-7b3c-42da-8358-9af96e3b521c}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Lobby Electric Equipment, !- Name
   {95454296-e259-4111-995f-ef7de5a3cc28}, !- Electric Equipment Definition Name
-  {471c8547-da87-4f5e-9442-ed386b502ed0}; !- Space or SpaceType Name
+  {471c8547-da87-4f5e-9442-ed386b502ed0}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {22ca6bf4-8636-4931-aecc-80eae8da5789}, !- Handle
@@ -24731,7 +25739,11 @@ OS:Lights,
   {8964fa5a-92dc-4fa5-a383-619fdfd5e225}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Mechanical Lights, !- Name
   {3227c5ab-5952-40e7-9694-5d95fc910f1b}, !- Lights Definition Name
-  {033a32d6-96cc-4cf0-856a-726124c06cdb}; !- Space or SpaceType Name
+  {033a32d6-96cc-4cf0-856a-726124c06cdb}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {a959fc87-010e-42fe-93cb-80ce605698fc}, !- Handle
@@ -24756,7 +25768,14 @@ OS:People,
   {a71064e3-80af-4f01-b940-889f341970ee}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Mechanical People, !- Name
   {3b28c8f2-0764-4a90-a44b-e656b07336ee}, !- People Definition Name
-  {033a32d6-96cc-4cf0-856a-726124c06cdb}; !- Space or SpaceType Name
+  {033a32d6-96cc-4cf0-856a-726124c06cdb}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {e21c606b-092c-452c-bcab-ae925ba275b1}, !- Handle
@@ -24785,7 +25804,10 @@ OS:ElectricEquipment,
   {a65f1f96-c210-484f-a09a-7ea18dfe2a95}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Mechanical Electric Equipment, !- Name
   {8808ec3a-a8b8-4aed-871c-4b05c6183f65}, !- Electric Equipment Definition Name
-  {033a32d6-96cc-4cf0-856a-726124c06cdb}; !- Space or SpaceType Name
+  {033a32d6-96cc-4cf0-856a-726124c06cdb}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {42bf0c13-60ed-4ef8-bdc7-900850e68691}, !- Handle
@@ -24836,7 +25858,11 @@ OS:Lights,
   {0363a601-ebe0-4ddc-bf84-d69f8c50b5ec}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Office Lights, !- Name
   {e79d9774-9867-4279-8d55-33216dbeb7d1}, !- Lights Definition Name
-  {d3fb92f8-1cf9-4ba5-bdbb-82f34ca82268}; !- Space or SpaceType Name
+  {d3fb92f8-1cf9-4ba5-bdbb-82f34ca82268}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {d388fadc-e0fc-4238-9fae-6c2f27505f3c}, !- Handle
@@ -24861,7 +25887,14 @@ OS:People,
   {6f901c51-3ec5-4011-9205-4800599ba0dd}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Office People, !- Name
   {ef3dee8b-9182-4f1a-8413-500b7e7f457f}, !- People Definition Name
-  {d3fb92f8-1cf9-4ba5-bdbb-82f34ca82268}; !- Space or SpaceType Name
+  {d3fb92f8-1cf9-4ba5-bdbb-82f34ca82268}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {99a7bebd-bec5-438d-bac4-7d4e15ef3abb}, !- Handle
@@ -24890,7 +25923,10 @@ OS:ElectricEquipment,
   {ba3c4782-4b08-464e-b8e3-f38e55699fb4}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Office Electric Equipment, !- Name
   {7573422f-c70f-4b40-a8ca-b25d516c8834}, !- Electric Equipment Definition Name
-  {d3fb92f8-1cf9-4ba5-bdbb-82f34ca82268}; !- Space or SpaceType Name
+  {d3fb92f8-1cf9-4ba5-bdbb-82f34ca82268}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {b1be53ac-d2ac-494b-a75e-a58bad62dcfe}, !- Handle
@@ -24941,7 +25977,11 @@ OS:Lights,
   {4c0c7d8d-6488-4b7f-93dc-27912426150f}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Restroom Lights, !- Name
   {99cefbc7-01cb-4092-ae9c-09c9e7a612d2}, !- Lights Definition Name
-  {71f0a67e-5eaa-4534-9621-bee1cf77c3d5}; !- Space or SpaceType Name
+  {71f0a67e-5eaa-4534-9621-bee1cf77c3d5}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:DesignSpecification:OutdoorAir,
   {745ee8a6-b221-4f58-af4d-a3042a3244fe}, !- Handle
@@ -24966,7 +26006,14 @@ OS:People,
   {fea84fcd-661a-4cd0-a0fa-9683cf679533}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Restroom People, !- Name
   {0dbd0a6b-2fd2-44eb-a9fc-155cd58845cb}, !- People Definition Name
-  {71f0a67e-5eaa-4534-9621-bee1cf77c3d5}; !- Space or SpaceType Name
+  {71f0a67e-5eaa-4534-9621-bee1cf77c3d5}, !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1;                                      !- Multiplier
 
 OS:SpaceInfiltration:DesignFlowRate,
   {1e0bce77-1b68-407b-b916-bbf2060f2794}, !- Handle
@@ -24995,7 +26042,10 @@ OS:ElectricEquipment,
   {1fe4d60d-7367-4bb7-b8d3-c724e59df830}, !- Handle
   DOE Ref Pre-1980 - SecSchl - Restroom Electric Equipment, !- Name
   {c89f2ca1-da35-4199-bbfb-54dc47e85041}, !- Electric Equipment Definition Name
-  {71f0a67e-5eaa-4534-9621-bee1cf77c3d5}; !- Space or SpaceType Name
+  {71f0a67e-5eaa-4534-9621-bee1cf77c3d5}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
 
 OS:ThermostatSetpoint:DualSetpoint,
   {ab864393-ee9c-4633-8163-4c7e7d7d5678}, !- Handle

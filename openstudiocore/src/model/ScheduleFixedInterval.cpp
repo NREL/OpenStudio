@@ -142,6 +142,21 @@ namespace detail {
       return false;
     }
 
+    // check the values
+    openstudio::Vector values = timeSeries.values();
+    for (const auto& value : values){
+      // Get the position
+      int pos = &value-&values[0];
+      // Check validity, cannot be NaN, Inf, etc
+      if (std::isinf(value)) {
+        LOG(Warn, "There is Infinity on position " << pos <<" in the timeSeries provided for " << this->briefDescription());
+        return false;
+      } else if (std::isnan(value)) {
+        LOG(Warn, "There is a NaN on position " << pos <<" in the timeSeries provided for " << this->briefDescription());
+        return false;
+      }
+    }
+
     // at this point we are going to change the object
     clearExtensibleGroups(false);
 
@@ -165,7 +180,6 @@ namespace detail {
     }
 
     // set the values
-    openstudio::Vector values = timeSeries.values();
     for (unsigned i = 0; i < values.size(); ++i){
       std::vector<std::string> temp;
       temp.push_back(toString(values[i]));
