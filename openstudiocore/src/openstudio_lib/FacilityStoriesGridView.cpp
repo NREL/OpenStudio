@@ -240,16 +240,16 @@ namespace openstudio {
   {
     //m_itemSelectorButtons->enableAddButton();
     //m_itemSelectorButtons->enableCopyButton();
-    // m_itemSelectorButtons->enableRemoveButton();
-    // m_itemSelectorButtons->enablePurgeButton();
+    m_itemSelectorButtons->enableRemoveButton();
+    //m_itemSelectorButtons->enablePurgeButton();
   }
 
   void FacilityStoriesGridView::onClearSelection()
   {
     //m_itemSelectorButtons->disableAddButton();
     //m_itemSelectorButtons->disableCopyButton();
-    // m_itemSelectorButtons->disableRemoveButton();
-    // m_itemSelectorButtons->disablePurgeButton();
+    m_itemSelectorButtons->disableRemoveButton();
+    //m_itemSelectorButtons->disablePurgeButton();
   }
 
   FacilityStoriesGridController::FacilityStoriesGridController(bool isIP,
