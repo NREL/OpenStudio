@@ -335,9 +335,20 @@ macro(AddCXXFlagIfSupported flag test)
 endmacro()
 
 if("Ninja" STREQUAL ${CMAKE_GENERATOR})
-   AddCXXFlagIfSupported(-fcolor-diagnostics COMPILER_SUPPORTS_fcolor-diagnostics)
+  # Clang
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    AddCXXFlagIfSupported(-fcolor-diagnostics COMPILER_SUPPORTS_fcolor-diagnostics)
+  endif()
+
+  # g++
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    # For some reason it doesn't say its supported, but it works...
+    # AddCXXFlagIfSupported(-fdiagnostics-color COMPILER_SUPPORTS_fdiagnostics-color)
+    message("Forcing -fdiagnostics-color=always")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
+  endif()
 endif()
-###############################################################################
+##############################################################################
 
 
 ###############################################################################
