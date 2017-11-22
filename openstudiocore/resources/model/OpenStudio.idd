@@ -12124,11 +12124,47 @@ OS:CoolingTower:SingleSpeed,
        \minimum 1
        \default 2.5
        \note The allowable maximal fraction of the nominal flow rate per cell
-  N17; \field Sizing Factor
+  N17, \field Sizing Factor
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
        \default 1.0
+  N18 , \field Free Convection Air Flow Rate Sizing Factor
+       \type real
+       \minimum> 0.0
+       \maximum< 1.0
+  N19 , \field Free Convection U-Factor Times Area Value Sizing Factor
+       \type real
+       \minimum> 0.0
+       \maximum< 1.0
+  N20 , \field Heat Rejection Capacity and Nominal Capacity Sizing Ratio
+       \type real
+       \default 1.25
+  N21, \field Free Convection Nominal Capacity Sizing Factor
+       \type real
+       \minimum> 0.0
+       \maximum< 1.0
+  N22, \field Design Inlet Air Dry-Bulb Temperature
+       \type real
+       \units C
+       \minimum 20.0
+  N23, \field Design Inlet Air Wet-Bulb Temperature
+       \type real
+       \units C
+       \minimum 20.0
+  N24, \field Design Approach Temperature
+       \type real
+       \units deltaC
+       \autosizable
+       \minimum> 0
+  N25, \field Design Range Temperature
+       \type real
+       \units deltaC
+       \autosizable
+       \minimum> 0
+  A13; \field End-Use Subcategory
+       \type alpha
+       \retaincase
 
 OS:CoolingTower:TwoSpeed,
        \min-fields 25

@@ -1150,6 +1150,122 @@ namespace detail {
     return false;
   }
 
+  double CoolingTowerSingleSpeed_Impl::freeConvectionAirFlowRateSizingFactor() const {
+    auto value = getDouble(OS_CoolingTower_SingleSpeedFields::FreeConvectionAirFlowRateSizingFactor,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool CoolingTowerSingleSpeed_Impl::setFreeConvectionAirFlowRateSizingFactor(double freeConvectionAirFlowRateSizingFactor) {
+    return setDouble(OS_CoolingTower_SingleSpeedFields::FreeConvectionAirFlowRateSizingFactor,freeConvectionAirFlowRateSizingFactor);
+  }
+  
+  double CoolingTowerSingleSpeed_Impl::freeConvectionUFactorTimesAreaValueSizingFactor() const {
+    auto value = getDouble(OS_CoolingTower_SingleSpeedFields::FreeConvectionUFactorTimesAreaValueSizingFactor,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool CoolingTowerSingleSpeed_Impl::setFreeConvectionUFactorTimesAreaValueSizingFactor(double freeConvectionUFactorTimesAreaValueSizingFactor) {
+    return setDouble(OS_CoolingTower_SingleSpeedFields::FreeConvectionUFactorTimesAreaValueSizingFactor,freeConvectionUFactorTimesAreaValueSizingFactor);
+  }
+  
+  double CoolingTowerSingleSpeed_Impl::heatRejectionCapacityAndNominalCapacitySizingRatio() const {
+    auto value = getDouble(OS_CoolingTower_SingleSpeedFields::HeatRejectionCapacityandNominalCapacitySizingRatio,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool CoolingTowerSingleSpeed_Impl::setHeatRejectionCapacityAndNominalCapacitySizingRatio(double heatRejectionCapacityAndNominalCapacitySizingRatio) {
+    return setDouble(OS_CoolingTower_SingleSpeedFields::HeatRejectionCapacityandNominalCapacitySizingRatio,heatRejectionCapacityAndNominalCapacitySizingRatio);
+  }
+  
+  double CoolingTowerSingleSpeed_Impl::freeConvectionNominalCapacitySizingFactor() const {
+    auto value = getDouble(OS_CoolingTower_SingleSpeedFields::FreeConvectionNominalCapacitySizingFactor,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool CoolingTowerSingleSpeed_Impl::setFreeConvectionNominalCapacitySizingFactor(double freeConvectionNominalCapacitySizingFactor) {
+    return setDouble(OS_CoolingTower_SingleSpeedFields::FreeConvectionNominalCapacitySizingFactor,freeConvectionNominalCapacitySizingFactor);
+  }
+  
+  double CoolingTowerSingleSpeed_Impl::designInletAirDryBulbTemperature() const {
+    auto value = getDouble(OS_CoolingTower_SingleSpeedFields::DesignInletAirDryBulbTemperature,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool CoolingTowerSingleSpeed_Impl::setDesignInletAirDryBulbTemperature(double designInletAirDryBulbTemperature) {
+    return setDouble(OS_CoolingTower_SingleSpeedFields::DesignInletAirDryBulbTemperature,designInletAirDryBulbTemperature);
+  }
+  
+  double CoolingTowerSingleSpeed_Impl::designInletAirWetBulbTemperature() const {
+    auto value = getDouble(OS_CoolingTower_SingleSpeedFields::DesignInletAirWetBulbTemperature,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool CoolingTowerSingleSpeed_Impl::setDesignInletAirWetBulbTemperature(double designInletAirWetBulbTemperature) {
+    return setDouble(OS_CoolingTower_SingleSpeedFields::DesignInletAirWetBulbTemperature,designInletAirWetBulbTemperature);
+  }
+  
+  boost::optional<double> CoolingTowerSingleSpeed_Impl::designApproachTemperature() const {
+    auto value = getDouble(OS_CoolingTower_SingleSpeedFields::DesignApproachTemperature,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool CoolingTowerSingleSpeed_Impl::isDesignApproachTemperatureAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_CoolingTower_SingleSpeedFields::DesignApproachTemperature, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "autosize");
+    }
+    return result;
+  }
+  
+  bool CoolingTowerSingleSpeed_Impl::setDesignApproachTemperature(double designApproachTemperature) {
+    return setDouble(OS_CoolingTower_SingleSpeedFields::DesignApproachTemperature,designApproachTemperature);
+  }
+  
+  void CoolingTowerSingleSpeed_Impl::autosizeDesignApproachTemperature() {
+    setString(OS_CoolingTower_SingleSpeedFields::DesignApproachTemperature,"autosize");
+  }
+  
+  boost::optional<double> CoolingTowerSingleSpeed_Impl::designRangeTemperature() const {
+    auto value = getDouble(OS_CoolingTower_SingleSpeedFields::DesignRangeTemperature,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool CoolingTowerSingleSpeed_Impl::isDesignRangeTemperatureAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_CoolingTower_SingleSpeedFields::DesignRangeTemperature, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "autosize");
+    }
+    return result;
+  }
+  
+  bool CoolingTowerSingleSpeed_Impl::setDesignRangeTemperature(double designRangeTemperature) {
+    return setDouble(OS_CoolingTower_SingleSpeedFields::DesignRangeTemperature,designRangeTemperature);
+  }
+  
+  void CoolingTowerSingleSpeed_Impl::autosizeDesignRangeTemperature() {
+    setString(OS_CoolingTower_SingleSpeedFields::DesignRangeTemperature,"autosize");
+  }
+  
+  std::string CoolingTowerSingleSpeed_Impl::endUseSubcategory() const {
+    auto value = getString(OS_CoolingTower_SingleSpeedFields::EndUseSubcategory,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool CoolingTowerSingleSpeed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
+    return setString(OS_CoolingTower_SingleSpeedFields::EndUseSubcategory,endUseSubcategory);
+  }
+
 } // detail
 
 CoolingTowerSingleSpeed::CoolingTowerSingleSpeed(const Model& model)
@@ -1749,6 +1865,94 @@ bool CoolingTowerSingleSpeed::setSizingFactor(const Quantity& sizingFactor) {
 
 void CoolingTowerSingleSpeed::resetSizingFactor() {
   getImpl<detail::CoolingTowerSingleSpeed_Impl>()->resetSizingFactor();
+}
+
+double CoolingTowerSingleSpeed::freeConvectionAirFlowRateSizingFactor() const {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->freeConvectionAirFlowRateSizingFactor();
+}
+
+bool CoolingTowerSingleSpeed::setFreeConvectionAirFlowRateSizingFactor(double freeConvectionAirFlowRateSizingFactor) {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->setFreeConvectionAirFlowRateSizingFactor(freeConvectionAirFlowRateSizingFactor);
+}
+
+double CoolingTowerSingleSpeed::freeConvectionUFactorTimesAreaValueSizingFactor() const {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->freeConvectionUFactorTimesAreaValueSizingFactor();
+}
+
+bool CoolingTowerSingleSpeed::setFreeConvectionUFactorTimesAreaValueSizingFactor(double freeConvectionUFactorTimesAreaValueSizingFactor) {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->setFreeConvectionUFactorTimesAreaValueSizingFactor(freeConvectionUFactorTimesAreaValueSizingFactor);
+}
+
+double CoolingTowerSingleSpeed::heatRejectionCapacityAndNominalCapacitySizingRatio() const {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->heatRejectionCapacityAndNominalCapacitySizingRatio();
+}
+
+bool CoolingTowerSingleSpeed::setHeatRejectionCapacityAndNominalCapacitySizingRatio(double heatRejectionCapacityAndNominalCapacitySizingRatio) {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->setHeatRejectionCapacityAndNominalCapacitySizingRatio(heatRejectionCapacityAndNominalCapacitySizingRatio);
+}
+
+double CoolingTowerSingleSpeed::freeConvectionNominalCapacitySizingFactor() const {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->freeConvectionNominalCapacitySizingFactor();
+}
+
+bool CoolingTowerSingleSpeed::setFreeConvectionNominalCapacitySizingFactor(double freeConvectionNominalCapacitySizingFactor) {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->setFreeConvectionNominalCapacitySizingFactor(freeConvectionNominalCapacitySizingFactor);
+}
+
+double CoolingTowerSingleSpeed::designInletAirDryBulbTemperature() const {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->designInletAirWetBulbTemperature();
+}
+
+bool CoolingTowerSingleSpeed::setDesignInletAirDryBulbTemperature(double designInletAirDryBulbTemperature) {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->setDesignInletAirDryBulbTemperature(designInletAirDryBulbTemperature);
+}
+
+double CoolingTowerSingleSpeed::designInletAirWetBulbTemperature() const {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->designInletAirWetBulbTemperature();
+}
+
+bool CoolingTowerSingleSpeed::setDesignInletAirWetBulbTemperature(double designInletAirWetBulbTemperature) {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->setDesignInletAirWetBulbTemperature(designInletAirWetBulbTemperature);
+}
+
+boost::optional<double> CoolingTowerSingleSpeed::designApproachTemperature() const {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->designApproachTemperature();
+}
+
+bool CoolingTowerSingleSpeed::setDesignApproachTemperature(double designApproachTemperature) {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->setDesignApproachTemperature(designApproachTemperature);
+}
+
+void CoolingTowerSingleSpeed::autosizeDesignApproachTemperature() {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->autosizeDesignApproachTemperature();
+}
+
+boost::optional<double> CoolingTowerSingleSpeed::designRangeTemperature() const {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->designRangeTemperature();
+}
+
+bool CoolingTowerSingleSpeed::setDesignRangeTemperature(double designRangeTemperature) {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->setDesignRangeTemperature(designRangeTemperature);
+}
+
+void CoolingTowerSingleSpeed::autosizeDesignRangeTemperature() {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->autosizeDesignRangeTemperature();
+}
+
+std::string CoolingTowerSingleSpeed::endUseSubcategory() const {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->endUseSubcategory();
+}
+
+bool CoolingTowerSingleSpeed::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->setEndUseSubcategory(endUseSubcategory);
+}
+
+bool CoolingTowerSingleSpeed::isDesignRangeTemperatureAutosized() const {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->isDesignRangeTemperatureAutosized();
+}
+
+bool CoolingTowerSingleSpeed::isDesignApproachTemperatureAutosized() const {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->isDesignApproachTemperatureAutosized();
 }
 
 /// @cond
