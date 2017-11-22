@@ -28,21 +28,28 @@
 
 #include "String.hpp"
 
+#include "Logger.hpp"
+
+#include <boost/lexical_cast.hpp>
+#include <boost/numeric/conversion/cast.hpp>
+
 #include <sstream>
 #include <iomanip>
 #include <limits>
+#include <cmath>
+#include <cfloat>
 
 namespace openstudio {
 
 /** char* to std::string. */
 std::string toString(const char* s)
-{ 
+{
   return std::string(s);
 }
 
 /** string to std::string. */
 std::string toString(const std::string& s)
-{ 
+{
   return s;
 }
 
@@ -59,16 +66,34 @@ std::string toString(const std::wstring& w)
 }
 
 /** QString to UTF-8 encoded std::string. */
-std::string toString(const QString& q) 
+std::string toString(const QString& q)
 {
   const QByteArray& qb = q.toUtf8();
   return std::string(qb.data());
 }
 
 std::string toString(double v) {
-  std::stringstream ss;
-  ss << std::setprecision(std::numeric_limits<double>::digits10) << v;
-  return ss.str();
+
+  std::string result;
+
+  // Return Infinity or NaN as strings, getDouble in IdfObject will fail to convert to double which will cause setDouble to fail
+  if (std::isinf(v)) {
+    if (v < 0){
+      result = "-Infinity";
+    } else{
+      result = "Infinity";
+    }
+  } else if (std::isnan(v)) {
+    result = "NaN";
+  } else {
+
+    std::stringstream ss;
+    ss << std::setprecision(std::numeric_limits<double>::digits10) << v;
+    result = ss.str();
+
+  }
+
+  return result;
 }
 
 std::string toString(std::istream& s) {
@@ -96,7 +121,7 @@ std::wstring toWString(const QString& q)
 }
 
 /** UTF-8 encoded std::string to QString. */
-QString toQString(const std::string& s) 
+QString toQString(const std::string& s)
 {
   return QString::fromUtf8(s.c_str());
 }

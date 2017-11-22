@@ -288,6 +288,15 @@ namespace detail {
       return false;
     }
 
+    // Check validity, cannot be NaN, Inf, etc
+    if (std::isinf(value)) {
+      LOG(Warn, "Cannot setDouble to Infinity for " << this->briefDescription());
+      return false;
+    } else if (std::isnan(value)) {
+      LOG(Warn, "Cannot setDouble to a NaN for " << this->briefDescription());
+      return false;
+    }
+
     int untilHours = untilTime.hours() + 24*untilTime.days();
     int untilMinutes = untilTime.minutes() + floor((untilTime.seconds()/60.0) + 0.5);
 
