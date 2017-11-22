@@ -145,7 +145,14 @@ namespace detail {
     // check the values
     openstudio::Vector values = timeSeries.values();
     for (const auto& value : values){
-      if (std::isnan(value) || std::isinf(value)){
+      // Get the position
+      int pos = &value-&values[0];
+      // Check validity, cannot be NaN, Inf, etc
+      if (std::isinf(value)) {
+        LOG(Warn, "There is Infinity on position " << pos <<" in the timeSeries provided for " << this->briefDescription());
+        return false;
+      } else if (std::isnan(value)) {
+        LOG(Warn, "There is a NaN on position " << pos <<" in the timeSeries provided for " << this->briefDescription());
         return false;
       }
     }

@@ -288,7 +288,12 @@ namespace detail {
       return false;
     }
 
-    if (std::isnan(value) || std::isinf(value)){
+    // Check validity, cannot be NaN, Inf, etc
+    if (std::isinf(value)) {
+      LOG(Warn, "Cannot setDouble to Infinity for " << this->briefDescription());
+      return false;
+    } else if (std::isnan(value)) {
+      LOG(Warn, "Cannot setDouble to a NaN for " << this->briefDescription());
       return false;
     }
 
