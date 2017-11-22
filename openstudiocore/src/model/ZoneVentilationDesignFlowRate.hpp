@@ -31,6 +31,7 @@
 
 #include "ModelAPI.hpp"
 #include "ZoneHVACComponent.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -119,7 +120,10 @@ class MODEL_API ZoneVentilationDesignFlowRate : public ZoneHVACComponent {
 
   bool setSchedule(Schedule& schedule);
 
-  bool setDesignFlowRateCalculationMethod(std::string designFlowRateCalculationMethod);
+  /** \deprecated ZoneVentilationDesignFlowRate::setDesignFlowRateCalculationMethod has been deprecated and will be removed in a future release, \n
+   *  the design flow rate calculation method is set during the call to setDesignFlowRate, setFlowRateperZoneFloorArea, setAirChangesperHour, etc
+   **/
+  OS_DEPRECATED bool setDesignFlowRateCalculationMethod(std::string designFlowRateCalculationMethod);
 
   bool setDesignFlowRate(double designFlowRate);
 
