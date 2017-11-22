@@ -1827,7 +1827,7 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
           return false;
         }
       } else {
-        // integers can't be NaN or Infinity 
+        // integers can't be NaN or Infinity
       }
     }
 
@@ -1858,15 +1858,15 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
         }
       } else{
         if (std::isnan(*value)) {
-          LOG(Info, "Cannot set field " << index << ", '" << iddField.name() << "', an object of type "
+          LOG(Warn, "Cannot set field " << index << ", '" << iddField.name() << "', an object of type "
               << m_iddObject.name() << " to NaN.");
           return false;
         }else if (std::isinf(*value)) {
-          LOG(Info, "Cannot set field " << index << ", '" << iddField.name() << "', an object of type "
+          LOG(Warn, "Cannot set field " << index << ", '" << iddField.name() << "', an object of type "
               << m_iddObject.name() << " to Infinity.");
           return false;
         }
-      } 
+      }
     }
 
     if ((fieldType == IddFieldType::ChoiceType) && (!m_fields[index].empty())) {
