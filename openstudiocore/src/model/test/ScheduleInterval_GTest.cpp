@@ -60,7 +60,7 @@ TEST_F(ModelFixture, Schedule_FixedInterval)
 
   TimeSeries timeSeries2(startDate, intervalLength, values, "");
   EXPECT_TRUE(schedule.setTimeSeries(timeSeries2));
-  
+
   TimeSeries timeSeries3 = schedule.timeSeries();
   EXPECT_EQ(Date(MonthOfYear::Jan, 1), timeSeries3.firstReportDateTime().date());
   EXPECT_EQ(Time(0,0,60), timeSeries3.firstReportDateTime().time());
@@ -83,6 +83,31 @@ TEST_F(ModelFixture, Schedule_FixedInterval)
   EXPECT_EQ(timeSeries2.values().size(), timeSeries4.values().size());
 }
 
+TEST_F(ModelFixture, Schedule_FixedInterval_NaN_Infinity)
+{
+  Model model;
+  ScheduleFixedInterval schedule(model);
+
+  Date startDate(MonthOfYear::Jan, 1);
+  Time intervalLength(0, 0, 60);
+
+
+  // Make a vector of values with a NaN on position 10
+  Vector values(8760, 1);
+  values[10] = std::numeric_limits<double>::quiet_NaN();
+
+  TimeSeries timeSeriesNaN(startDate, intervalLength, values, "");
+  EXPECT_FALSE(schedule.setTimeSeries(timeSeriesNaN));
+
+
+  // Set it to Infinity instead
+  values[10] = std::numeric_limits<double>::infinity();
+  TimeSeries timeSeriesInf(startDate, intervalLength, values, "");
+  EXPECT_FALSE(schedule.setTimeSeries(timeSeriesInf));
+
+}
+
+
 TEST_F(ModelFixture, Schedule_VariableInterval)
 {
   Model model;
@@ -104,7 +129,7 @@ TEST_F(ModelFixture, Schedule_VariableInterval)
 
   TimeSeries timeSeries2(dateTimes, values, "");
   EXPECT_TRUE(schedule.setTimeSeries(timeSeries2));
-  
+
   TimeSeries timeSeries3 = schedule.timeSeries();
   EXPECT_EQ(Date(MonthOfYear::Jan, 1), timeSeries3.firstReportDateTime().date());
   EXPECT_EQ(Time(0,0,60), timeSeries3.firstReportDateTime().time());

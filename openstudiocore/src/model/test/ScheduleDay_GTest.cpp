@@ -336,7 +336,7 @@ TEST_F(ModelFixture, Schedule_Day_Clone)
 }
 
 // Test that addValue (which doesn't call IdfObject::setDouble...) will not affect NaNs/Infinity
-TEST_F(ModelFixture, Schedule_Day_addValue_NaN)
+TEST_F(ModelFixture, Schedule_Day_addValue_NaN_Infinity)
 {
   Model model;
 
