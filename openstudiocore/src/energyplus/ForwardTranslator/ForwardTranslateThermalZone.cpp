@@ -253,7 +253,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     for (Surface& surface : surfaces){
       translateAndMapModelObject(surface);
     }
-    
+
     // translate internal mass
     InternalMassVector internalMasses = spaces[0].internalMass();
     std::sort(internalMasses.begin(), internalMasses.end(), WorkspaceObjectNameLess());
@@ -347,7 +347,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
           primaryReferencePoint.setString(Daylighting_ReferencePointFields::ZoneName, refThermalZone->nameString());
         }
       }
-      
+
       primaryReferencePoint.setDouble(
           Daylighting_ReferencePointFields::XCoordinateofReferencePoint,
           primaryDaylightingControl->positionXCoordinate());
@@ -357,22 +357,16 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       primaryReferencePoint.setDouble(
           Daylighting_ReferencePointFields::ZCoordinateofReferencePoint,
           primaryDaylightingControl->positionZCoordinate());
-      
-      std::string fractionofZoneControlledbyFirstReferencePoint;
+
+      double primaryFrac = modelObject.fractionofZoneControlledbyPrimaryDaylightingControl();
       if (istringEqual("None", primaryDaylightingControl->lightingControlType())){
-        fractionofZoneControlledbyFirstReferencePoint = "0.0";
-      }else{
-        std::stringstream ss;
-        ss << modelObject.fractionofZoneControlledbyPrimaryDaylightingControl();
-        fractionofZoneControlledbyFirstReferencePoint = ss.str();
+        if (primaryFrac > 0.0){
+          primaryFrac = 0.0;
+          LOG(Warn, "Fraction of Zone Controlled by Primary Daylight Control is " << primaryFrac << " but lighting control type is 'None'. Reseting Primary Fraction to " << 0.0);
+        }
       }
-      
-      std::string illuminanceSetpointatFirstReferencePoint;
-      if (!primaryDaylightingControl->isIlluminanceSetpointDefaulted()){
-        std::stringstream ss;
-        ss << primaryDaylightingControl->illuminanceSetpoint();
-        illuminanceSetpointatFirstReferencePoint = ss.str();
-      }
+      std::string fractionofZoneControlledbyFirstReferencePoint = toString(primaryFrac);
+      std::string illuminanceSetpointatFirstReferencePoint = toString(primaryDaylightingControl->illuminanceSetpoint());
 
       std::vector<std::string> firstGroup;
       firstGroup.push_back(primaryReferencePoint.nameString());
@@ -404,22 +398,26 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
         secondaryReferencePoint.setDouble(
             Daylighting_ReferencePointFields::ZCoordinateofReferencePoint,
             secondaryDaylightingControl->positionZCoordinate());
-        
-        std::string fractionofZoneControlledbySecondReferencePoint;
-        if (istringEqual("None", secondaryDaylightingControl->lightingControlType())){
-          fractionofZoneControlledbySecondReferencePoint = "0.0";
-        }else{
-          std::stringstream ss;
-          ss << modelObject.fractionofZoneControlledbySecondaryDaylightingControl();
-          fractionofZoneControlledbySecondReferencePoint = ss.str();
-        }
 
-        std::string illuminanceSetpointatSecondReferencePoint;
-        if (!secondaryDaylightingControl->isIlluminanceSetpointDefaulted()){
-          std::stringstream ss;
-          ss << secondaryDaylightingControl->illuminanceSetpoint();
-          illuminanceSetpointatSecondReferencePoint = ss.str();      
+        
+        double secondaryFrac = modelObject.fractionofZoneControlledbySecondaryDaylightingControl();
+        if (istringEqual("None", secondaryDaylightingControl->lightingControlType())){
+          if (secondaryFrac > 0.0){
+            secondaryFrac = 0.0;
+            LOG(Warn, "Fraction of Zone Controlled by Secondary Daylight Control is " << secondaryFrac << " but lighting control type is 'None'. Reseting Secondary Fraction to " << 0.0);
+          }
+        }else{
+          if ((primaryFrac + secondaryFrac) > 1) {
+            // Reset secondary to 1 - Primary
+            secondaryFrac = std::max(1.0 - primaryFrac, 0.0);
+
+            LOG(Warn, "Fraction of Zone Controlled by Primary Daylight Control is " << primaryFrac << " while Secondary Fraction is "
+                  << secondaryFrac << ". Reseting Secondary Fraction to " << secondaryFrac);
+            
+          }
         }
+        std::string fractionofZoneControlledbySecondReferencePoint = toString(secondaryFrac);
+        std::string illuminanceSetpointatSecondReferencePoint = toString(secondaryDaylightingControl->illuminanceSetpoint());
 
         std::vector<std::string> secondGroup;
         secondGroup.push_back(secondaryReferencePoint.nameString());
@@ -458,7 +456,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
         LOG(Warn, "Rotation of " << primaryDaylightingControl->phiRotationAroundZAxis() << " degrees about Z axis not mapped for OS:Daylighting:Control " << primaryDaylightingControl->name().get());
       }
 
-      // glare 
+      // glare
       double glareAngle = -openstudio::radToDeg(primaryDaylightingControl->thetaRotationAroundYAxis());
       daylightingControlObject.setDouble(
           Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis,
@@ -469,11 +467,11 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
           Daylighting_ControlsFields::MaximumAllowableDiscomfortGlareIndex,
           *d);
       }
-      
+
       daylightingControlObject.setString(
         Daylighting_ControlsFields::GlareCalculationDaylightingReferencePointName,
         primaryReferencePoint.nameString());
-      
+
 
       if (!primaryDaylightingControl->isMinimumInputPowerFractionforContinuousDimmingControlDefaulted()){
         daylightingControlObject.setDouble(
@@ -498,17 +496,17 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
             Daylighting_ControlsFields::ProbabilityLightingwillbeResetWhenNeededinManualSteppedControl,
             primaryDaylightingControl->probabilityLightingwillbeResetWhenNeededinManualSteppedControl());
       }
-      
+
     }
 
     // translate illuminance map
     boost::optional<IlluminanceMap> illuminanceMap = modelObject.illuminanceMap();
     if (illuminanceMap){
 
-      
+
       if (!primaryDaylightingControl){
         LOG(Warn, "Daylighting:Controls object is required to trigger daylighting calculations in EnergyPlus, adding a minimal one to Zone " << modelObject.name().get());
-        
+
         IdfObject referencePoint(openstudio::IddObjectType::Daylighting_ReferencePoint);
         referencePoint.setName(modelObject.nameString() + " Daylighting Reference Point");
         m_idfObjects.push_back(referencePoint);
@@ -527,7 +525,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
         group.push_back(""); // illuminance setpoint
         daylightingControlObject.pushExtensibleGroup(group);
       }
-      
+
 
       IdfObject illuminanceMapObject(openstudio::IddObjectType::Output_IlluminanceMap);
       m_idfObjects.push_back(illuminanceMapObject);
@@ -541,11 +539,11 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       illuminanceMapObject.setDouble(Output_IlluminanceMapFields::XMinimumCoordinate, illuminanceMap->originXCoordinate());
       illuminanceMapObject.setDouble(Output_IlluminanceMapFields::XMaximumCoordinate, illuminanceMap->originXCoordinate() + illuminanceMap->xLength());
       illuminanceMapObject.setInt(Output_IlluminanceMapFields::NumberofXGridPoints, illuminanceMap->numberofXGridPoints());
-      
+
       illuminanceMapObject.setDouble(Output_IlluminanceMapFields::YMinimumCoordinate, illuminanceMap->originYCoordinate());
       illuminanceMapObject.setDouble(Output_IlluminanceMapFields::YMaximumCoordinate, illuminanceMap->originYCoordinate() + illuminanceMap->yLength());
       illuminanceMapObject.setInt(Output_IlluminanceMapFields::NumberofYGridPoints, illuminanceMap->numberofYGridPoints());
-      
+
       if (illuminanceMap->psiRotationAroundXAxis() != 0.0){
         LOG(Warn, "Rotation of " << illuminanceMap->psiRotationAroundXAxis() << " degrees about X axis not mapped for OS:IlluminanceMap " << illuminanceMap->name().get());
       }
@@ -644,7 +642,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
         if( auto dualSetpoint = thermostat->optionalCast<ThermostatSetpointDualSetpoint>() ) {
           if( dualSetpoint->heatingSetpointTemperatureSchedule() && dualSetpoint->coolingSetpointTemperatureSchedule() ) {
             createZoneControlThermostat();
-          }  
+          }
         } else {
           createZoneControlThermostat();
         }
@@ -672,7 +670,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
 
     idealLoadsAirSystem.setString(HVACTemplate_Zone_IdealLoadsAirSystemFields::ZoneName,modelObject.name().get());
 
-    m_idfObjects.push_back(idealLoadsAirSystem); 
+    m_idfObjects.push_back(idealLoadsAirSystem);
   }
 
   // ZoneVentilationDesignFlowRate does not go on equipment connections or associated list
@@ -734,8 +732,8 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     }
 
     // ZoneHVAC_EquipmentList
-    
-    ZoneHVACEquipmentList equipmentList = modelObject.getImpl<model::detail::ThermalZone_Impl>()->zoneHVACEquipmentList(); 
+
+    ZoneHVACEquipmentList equipmentList = modelObject.getImpl<model::detail::ThermalZone_Impl>()->zoneHVACEquipmentList();
 
     boost::optional<IdfObject> _equipmentList = translateAndMapModelObject(equipmentList);
 
@@ -747,7 +745,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     }
   }
 
-  // SizingZone 
+  // SizingZone
 
   if( (zoneEquipment.size() > 0) || modelObject.useIdealAirLoads() )
   {
@@ -815,7 +813,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
               outdoorAirFlowRate = 0;
               //outdoorAirFlowAirChangesperHour = 0;
             }
-          
+
           }else{
             // sum
           }
@@ -859,7 +857,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
             IdfObject zoneVentilation(IddObjectType::ZoneVentilation_DesignFlowRate);
             zoneVentilation.setName(modelObject.name().get() + " Ventilation per Floor Area");
             zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, modelObject.name().get());
-            zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, this->alwaysOnSchedule().name().get()); 
+            zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, this->alwaysOnSchedule().name().get());
             zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Area");
             zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, outdoorAirFlowperFloorArea);
             m_idfObjects.push_back(zoneVentilation);
@@ -869,7 +867,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
             IdfObject zoneVentilation(IddObjectType::ZoneVentilation_DesignFlowRate);
             zoneVentilation.setName(modelObject.name().get() + " Ventilation Rate");
             zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, modelObject.name().get());
-            zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, this->alwaysOnSchedule().name().get()); 
+            zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, this->alwaysOnSchedule().name().get());
             zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Zone");
             zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::DesignFlowRate, outdoorAirFlowRate);
             m_idfObjects.push_back(zoneVentilation);
@@ -879,7 +877,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
             IdfObject zoneVentilation(IddObjectType::ZoneVentilation_DesignFlowRate);
             zoneVentilation.setName(modelObject.name().get() + " Ventilation Air Changes per Hour");
             zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, modelObject.name().get());
-            zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, this->alwaysOnSchedule().name().get()); 
+            zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, this->alwaysOnSchedule().name().get());
             zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "AirChanges/Hour");
             zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::AirChangesperHour, outdoorAirFlowAirChangesperHour);
             m_idfObjects.push_back(zoneVentilation);
