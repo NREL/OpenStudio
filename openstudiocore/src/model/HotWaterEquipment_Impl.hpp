@@ -43,17 +43,6 @@ namespace detail {
 
   /** HotWaterEquipment_Impl is a SpaceLoadInstance_Impl that is the implementation class for HotWaterEquipment.*/
   class MODEL_API HotWaterEquipment_Impl : public SpaceLoadInstance_Impl {
-    
-    
-
-    
-    
-
-    
-    
-
-    
-    
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -128,7 +117,7 @@ namespace detail {
 
     void resetMultiplier();
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -136,15 +125,15 @@ namespace detail {
     /** @name Other */
     //@{
 
-    /** Returns the design level represented by this instance, assuming floorArea (m^2) and 
+    /** Returns the design level represented by this instance, assuming floorArea (m^2) and
      *  numPeople. */
     double getDesignLevel(double floorArea, double numPeople) const;
 
-    /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and 
+    /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
      *  numPeople. */
     double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-    /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and 
+    /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
      *  numPeople. */
     double getPowerPerPerson(double floorArea, double numPeople) const;
 
