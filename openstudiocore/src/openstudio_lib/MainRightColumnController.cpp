@@ -663,8 +663,8 @@ void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
 
   //myModelList->addModelObjectType(IddObjectType::OS_SpaceInfiltration_DesignFlowRate, "Space Infiltration Design Flow Rates"); // do not show in my model because these are not shareable
   myModelList->addModelObjectType(IddObjectType::OS_DesignSpecification_OutdoorAir, "Design Specification Outdoor Air");
-  myModelList->addModelObjectType(IddObjectType::OS_DefaultScheduleSet, "Default Schedule Sets");
-  myModelList->addModelObjectType(IddObjectType::OS_DefaultConstructionSet, "Default Construction Sets");
+  myModelList->addModelObjectType(IddObjectType::OS_DefaultScheduleSet, "Schedule Sets");
+  myModelList->addModelObjectType(IddObjectType::OS_DefaultConstructionSet, "Construction Sets");
 
   setMyModelView(myModelList);
 
@@ -697,8 +697,8 @@ void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
   myLibraryList->addModelObjectType(IddObjectType::OS_SpaceInfiltration_DesignFlowRate, "Space Infiltration Design Flow Rates");
   myLibraryList->addModelObjectType(IddObjectType::OS_SpaceInfiltration_EffectiveLeakageArea, "Space Infiltration Effective Leakage Areas");
   myLibraryList->addModelObjectType(IddObjectType::OS_DesignSpecification_OutdoorAir, "Design Specification Outdoor Air");
-  myLibraryList->addModelObjectType(IddObjectType::OS_DefaultScheduleSet, "Default Schedule Sets");
-  myLibraryList->addModelObjectType(IddObjectType::OS_DefaultConstructionSet, "Default Construction Sets");
+  myLibraryList->addModelObjectType(IddObjectType::OS_DefaultScheduleSet, "Schedule Sets");
+  myLibraryList->addModelObjectType(IddObjectType::OS_DefaultConstructionSet, "Construction Sets");
   myLibraryList->addModelObjectType(IddObjectType::OS_SpaceType, "Space Types");
   setLibraryView(myLibraryList);
 
@@ -743,8 +743,8 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_People_Definition, "People Definitions");
   //myModelList->addModelObjectType(IddObjectType::OS_SpaceInfiltration_DesignFlowRate, "Space Infiltration Design Flow Rates"); // do not show in my model because these are not shareable
   myModelList->addModelObjectType(IddObjectType::OS_DesignSpecification_OutdoorAir, "Design Specification Outdoor Air");
-  myModelList->addModelObjectType(IddObjectType::OS_DefaultScheduleSet, "Default Schedule Sets");
-  myModelList->addModelObjectType(IddObjectType::OS_DefaultConstructionSet, "Default Construction Sets");
+  myModelList->addModelObjectType(IddObjectType::OS_DefaultScheduleSet, "Schedule Sets");
+  myModelList->addModelObjectType(IddObjectType::OS_DefaultConstructionSet, "Construction Sets");
   myModelList->addModelObjectType(IddObjectType::OS_SpaceType, "Space Types");
   myModelList->addModelObjectType(IddObjectType::OS_ThermalZone, "Thermal Zones");
   myModelList->addModelObjectType(IddObjectType::OS_BuildingStory, "Building Stories");
@@ -792,8 +792,8 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
   myLibraryList->addModelObjectType(IddObjectType::OS_SpaceInfiltration_DesignFlowRate, "Space Infiltration Design Flow Rates");
   myLibraryList->addModelObjectType(IddObjectType::OS_SpaceInfiltration_EffectiveLeakageArea, "Space Infiltration Effective Leakage Areas");
   myLibraryList->addModelObjectType(IddObjectType::OS_DesignSpecification_OutdoorAir, "Design Specification Outdoor Air");
-  myLibraryList->addModelObjectType(IddObjectType::OS_DefaultScheduleSet, "Default Schedule Sets");
-  myLibraryList->addModelObjectType(IddObjectType::OS_DefaultConstructionSet, "Default Construction Sets");
+  myLibraryList->addModelObjectType(IddObjectType::OS_DefaultScheduleSet, "Schedule Sets");
+  myLibraryList->addModelObjectType(IddObjectType::OS_DefaultConstructionSet, "Construction Sets");
   myLibraryList->addModelObjectType(IddObjectType::OS_SpaceType, "Space Types");
 
   setLibraryView(myLibraryList);
@@ -848,8 +848,8 @@ void MainRightColumnController::configureForSpacesSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_People_Definition, "People Definitions");
   //myModelList->addModelObjectType(IddObjectType::OS_SpaceInfiltration_DesignFlowRate, "Space Infiltration Design Flow Rates"); // do not show in my model because these are not shareable
   myModelList->addModelObjectType(IddObjectType::OS_DesignSpecification_OutdoorAir, "Design Specification Outdoor Air");
-  myModelList->addModelObjectType(IddObjectType::OS_DefaultScheduleSet, "Default Schedule Sets");
-  myModelList->addModelObjectType(IddObjectType::OS_DefaultConstructionSet, "Default Construction Sets");
+  myModelList->addModelObjectType(IddObjectType::OS_DefaultScheduleSet, "Schedule Sets");
+  myModelList->addModelObjectType(IddObjectType::OS_DefaultConstructionSet, "Construction Sets");
   myModelList->addModelObjectType(IddObjectType::OS_SpaceType, "Space Types");
   myModelList->addModelObjectType(IddObjectType::OS_ThermalZone, "Thermal Zones");
   myModelList->addModelObjectType(IddObjectType::OS_BuildingStory, "Building Stories");
@@ -903,8 +903,8 @@ void MainRightColumnController::configureForSpacesSubTab(int subTabID)
   myLibraryList->addModelObjectType(IddObjectType::OS_SpaceInfiltration_DesignFlowRate, "Space Infiltration Design Flow Rates");
   myLibraryList->addModelObjectType(IddObjectType::OS_SpaceInfiltration_EffectiveLeakageArea, "Space Infiltration Effective Leakage Areas");
   myLibraryList->addModelObjectType(IddObjectType::OS_DesignSpecification_OutdoorAir, "Design Specification Outdoor Air");
-  myLibraryList->addModelObjectType(IddObjectType::OS_DefaultScheduleSet, "Default Schedule Sets");
-  myLibraryList->addModelObjectType(IddObjectType::OS_DefaultConstructionSet, "Default Construction Sets");
+  myLibraryList->addModelObjectType(IddObjectType::OS_DefaultScheduleSet, "Schedule Sets");
+  myLibraryList->addModelObjectType(IddObjectType::OS_DefaultConstructionSet, "Construction Sets");
   myLibraryList->addModelObjectType(IddObjectType::OS_SpaceType, "Space Types");
 
   setLibraryView(myLibraryList);
