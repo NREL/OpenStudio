@@ -31,6 +31,8 @@
 
 #include "ModelAPI.hpp"
 #include "AvailabilityManager.hpp"
+#include "../utilities/core/Deprecated.hpp"
+
 
 namespace openstudio {
 
@@ -95,12 +97,33 @@ class MODEL_API AvailabilityManagerNightCycle : public AvailabilityManager {
 
   bool isCyclingRunTimeDefaulted() const;
 
+  /** \deprecated AvailabilityManagerNightCycle::controlThermalZone has been deprecated and will be removed in a future release, please use AvailabilityManagerNightCycle::controlThermalZones\n
+    * Get the controlThermalZone if it's unique, otherwise returns the first one found and issues a warning. **/
+  OS_DEPRECATED boost::optional<ThermalZone> controlThermalZone() const;
 
-  boost::optional<ThermalZone> controlThermalZone() const;
+  /** \deprecated AvailabilityManagerNightCycle::setControlThermalZone has been deprecated and will be removed in a future release, please use AvailabilityManagerNightCycle::setControlThermalZones\n
+  * sets the list of controlThermalZones by calling setControlThermalZones([thermalZone]) **/
+  OS_DEPRECATED bool setControlThermalZone(const ThermalZone& thermalZone);
 
-  bool setControlThermalZone(const ThermalZone& thermalZone);
+  /** \deprecated AvailabilityManagerNightCycle::resetControlThermalZone has been deprecated and will be removed in a future release, please use AvailabilityManagerNightCycle::resetControlThermalZones\n
+  * Resets the list of controlThermalZones **/
+  OS_DEPRECATED void resetControlThermalZone();
 
-  void resetControlThermalZone();
+  std::vector<ThermalZone> controlThermalZones() const;
+  bool setControlThermalZones(const std::vector<ThermalZone>& thermalZones);
+  void resetControlThermalZones();
+
+  std::vector<ThermalZone> coolingControlThermalZones() const;
+  bool setCoolingControlThermalZones(const std::vector<ThermalZone>& thermalZones);
+  void resetCoolingControlThermalZones();
+
+  std::vector<ThermalZone> heatingControlThermalZones() const;
+  bool setHeatingControlThermalZones(const std::vector<ThermalZone>& thermalZones);
+  void resetHeatingControlThermalZones();
+
+  std::vector<ThermalZone> heatingZoneFansOnlyThermalZones() const;
+  bool setHeatingZoneFansOnlyThermalZones(const std::vector<ThermalZone>& thermalZones);
+  void resetHeatingZoneFansOnlyThermalZones();
 
  protected:
 

@@ -9658,7 +9658,7 @@ OS:UnitarySystemPerformance:Multispeed,
        \key Yes
        \key No
        \default No
-       \note Controls coil operation during each HVAC timestep. 
+       \note Controls coil operation during each HVAC timestep.
        \note This choice does not apply to speed 1 operation.
        \note Yes = operate at the highest speed possible without exceeding the current load.
        \note No = allow operation at the average of two adjacent speeds to match the current load.
@@ -10581,6 +10581,10 @@ OS:AvailabilityManager:NightCycle,
        \key CycleOnAny
        \key CycleOnControlZone
        \key CycleOnAnyZoneFansOnly
+       \key CycleOnAnyCoolingOrHeatingZone
+       \key CycleOnAnyCoolingZone
+       \key CycleOnAnyHeatingZone
+       \key CycleOnAnyHeatingZoneFansOnly
        \default StayOff
        \note When AvailabilityManager:NightCycle is used in the zone component availability
        \note manager assignment list, the key choices for Control Type would only be
@@ -10588,15 +10592,30 @@ OS:AvailabilityManager:NightCycle,
   N1 , \field Thermostat Tolerance
        \default 1.0
        \units deltaC
+  A5 , \field Cycling Run Time Control Type
+       \type choice
+       \key FixedRunTime
+       \key Thermostat
+       \key ThermostatWithMinimumRunTime
+       \default FixedRunTime
   N2 , \field Cycling Run Time
        \default 3600.
        \units s
-  A6 ; \field Control Thermal Zone
+  A7 , \field Control Zone or Zone List Name
        \type object-list
-       \object-list ThermalZoneNames
+       \object-list ModelObjectLists
        \note When AvailabilityManager:NightCycle is used in the zone component availability
        \note manager assignment list, the Control Zone Name should be the name of the zone in which the
        \note zone component is.
+  A8 , \field Cooling Control Zone or Zone List Name
+       \type object-list
+       \object-list ModelObjectLists
+  A9 , \field Heating Control Zone or Zone List Name
+       \type object-list
+       \object-list ModelObjectLists
+  A10 ; \field Heating Zone Fans Only Zone or Zone List Name
+       \type object-list
+       \object-list ModelObjectLists
 
 OS:AvailabilityManager:OptimumStart,
        \memo Determines the optimal start of HVAC systems before occupancy.
@@ -10624,7 +10643,7 @@ OS:AvailabilityManager:OptimumStart,
        \object-list ThermalZoneNames
   A7 , \field Zone List
        \type object-list
-       \object-list ZoneListNames
+       \object-list ThermalZoneListNames
   N1 , \field Maximum Value for Optimum Start Time
        \required-field
        \units hr
@@ -21957,7 +21976,7 @@ OS:ZoneHVAC:FourPipeFanCoil,
    N10, \field Heating Convergence Tolerance
         \type real
         \minimum> 0.0
-        \default 0.001       
+        \default 0.001
    A13, \field Supply Air Fan Operating Mode Schedule Name
         \type object-list
         \object-list ScheduleNames
@@ -28051,4 +28070,3 @@ OS:EnergyManagementSystem:ConstructionIndexVariable,
        \type object-list
        \object-list ConstructionNames
        \required-field
-
