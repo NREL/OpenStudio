@@ -270,17 +270,19 @@ namespace detail {
     bool result = true;
     if (designFlowRate < 0){
       result = false;
-    }else{
-      result = setString(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Zone");
-      OS_ASSERT(result);
+    } else {
+      // This is the only case where it could really fail, if the user passed NaN/Inf
       result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRate, designFlowRate);
-      OS_ASSERT(result);
-      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, 0.0);
-      OS_ASSERT(result);
-      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, 0.0);
-      OS_ASSERT(result);
-      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 0.0);
-      OS_ASSERT(result);
+      if (result) {
+        result = setString(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Zone");
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, 0.0);
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, 0.0);
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 0.0);
+        OS_ASSERT(result);
+      }
     }
     return result;
   }
@@ -289,17 +291,18 @@ namespace detail {
     bool result = true;
     if (flowRateperZoneFloorArea < 0){
       result = false;
-    }else{
-      result = setString(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Area");
-      OS_ASSERT(result);
-      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRate, 0.0);
-      OS_ASSERT(result);
+    } else {
       result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, flowRateperZoneFloorArea);
-      OS_ASSERT(result);
-      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, 0.0);
-      OS_ASSERT(result);
-      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 0.0);
-      OS_ASSERT(result);
+      if (result) {
+        result = setString(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Area");
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRate, 0.0);
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, 0.0);
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 0.0);
+        OS_ASSERT(result);
+      }
     }
     return result;
   }
@@ -308,17 +311,18 @@ namespace detail {
     bool result = true;
     if (flowRateperPerson < 0){
       result = false;
-    }else{
-      result = setString(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Person");
-      OS_ASSERT(result);
-      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRate, 0.0);
-      OS_ASSERT(result);
-      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, 0.0);
-      OS_ASSERT(result);
+    } else {
       result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, flowRateperPerson);
-      OS_ASSERT(result);
-      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 0.0);
-      OS_ASSERT(result);
+      if (result) {
+        result = setString(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Person");
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRate, 0.0);
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, 0.0);
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 0.0);
+        OS_ASSERT(result);
+      }
     }
     return result;
   }
@@ -327,17 +331,18 @@ namespace detail {
     bool result = true;
     if (airChangesperHour < 0){
       result = false;
-    }else{
-      result = setString(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "AirChanges/Hour");
-      OS_ASSERT(result);
-      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRate, 0.0);
-      OS_ASSERT(result);
-      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, 0.0);
-      OS_ASSERT(result);
-      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, 0.0);
-      OS_ASSERT(result);
+    } else {
       result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::AirChangesperHour, airChangesperHour);
-      OS_ASSERT(result);
+      if (result) {
+        result = setString(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "AirChanges/Hour");
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRate, 0.0);
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, 0.0);
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, 0.0);
+        OS_ASSERT(result);
+      }
     }
     return result;
   }
