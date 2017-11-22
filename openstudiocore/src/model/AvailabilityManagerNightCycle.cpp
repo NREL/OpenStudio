@@ -212,9 +212,9 @@ namespace detail {
 
 
   // Control Zone
-  void AvailabilityManagerNightCycle_Impl::clearControlThermalZoneList() const {
+  void AvailabilityManagerNightCycle_Impl::clearControlThermalZoneList() {
     ModelObjectList mo_list = controlThermalZoneList();
-    for (const ModelObject& mo :  mo_list) {
+    for (const ModelObject& mo : mo_list.modelObjects()) {
       mo_list.removeModelObject(mo);
     }
     // Assert size = 0?
@@ -224,7 +224,7 @@ namespace detail {
   std::vector<ThermalZone> AvailabilityManagerNightCycle_Impl::controlThermalZones() const {
     ModelObjectList mo_list = controlThermalZoneList();
     std::vector<ThermalZone> result;
-    for ( ModelObject mo : mo_list ) {
+    for ( ModelObject mo : mo_list.modelObjects() ) {
       boost::optional<ThermalZone> thermalZone = mo.optionalCast<ThermalZone>();
       if (thermalZone) {
         result.push_back(thermalZone.get());
@@ -268,9 +268,9 @@ namespace detail {
     }
   }
 
-  void AvailabilityManagerNightCycle_Impl::clearCoolingControlThermalZoneList() const {
+  void AvailabilityManagerNightCycle_Impl::clearCoolingControlThermalZoneList() {
     ModelObjectList mo_list = coolingControlThermalZoneList();
-    for (const ModelObject& mo :  mo_list) {
+    for (const ModelObject& mo : mo_list.modelObjects()) {
       mo_list.removeModelObject(mo);
     }
     // Assert size = 0?
@@ -280,7 +280,7 @@ namespace detail {
   std::vector<ThermalZone> AvailabilityManagerNightCycle_Impl::coolingControlThermalZones() const {
     ModelObjectList mo_list = coolingControlThermalZoneList();
     std::vector<ThermalZone> result;
-    for ( ModelObject mo : mo_list ) {
+    for ( ModelObject mo : mo_list.modelObjects() ) {
       boost::optional<ThermalZone> thermalZone = mo.optionalCast<ThermalZone>();
       if (thermalZone) {
         result.push_back(thermalZone.get());
@@ -323,9 +323,9 @@ namespace detail {
     }
   }
 
-  void AvailabilityManagerNightCycle_Impl::clearHeatingControlThermalZoneList() const {
+  void AvailabilityManagerNightCycle_Impl::clearHeatingControlThermalZoneList() {
     ModelObjectList mo_list = heatingControlThermalZoneList();
-    for (const ModelObject& mo :  mo_list) {
+    for (const ModelObject& mo : mo_list.modelObjects()) {
       mo_list.removeModelObject(mo);
     }
     // Assert size = 0?
@@ -335,7 +335,7 @@ namespace detail {
   std::vector<ThermalZone> AvailabilityManagerNightCycle_Impl::heatingControlThermalZones() const {
     ModelObjectList mo_list = heatingControlThermalZoneList();
     std::vector<ThermalZone> result;
-    for ( ModelObject mo : mo_list ) {
+    for ( ModelObject mo : mo_list.modelObjects() ) {
       boost::optional<ThermalZone> thermalZone = mo.optionalCast<ThermalZone>();
       if (thermalZone) {
         result.push_back(thermalZone.get());
@@ -379,9 +379,9 @@ namespace detail {
     }
   }
 
-  void AvailabilityManagerNightCycle_Impl::clearHeatingZoneFansOnlyThermalZoneList() const {
+  void AvailabilityManagerNightCycle_Impl::clearHeatingZoneFansOnlyThermalZoneList() {
     ModelObjectList mo_list = heatingZoneFansOnlyThermalZoneList();
-    for (const ModelObject& mo :  mo_list) {
+    for (const ModelObject& mo : mo_list.modelObjects()) {
       mo_list.removeModelObject(mo);
     }
     // Assert size = 0?
@@ -391,7 +391,7 @@ namespace detail {
   std::vector<ThermalZone> AvailabilityManagerNightCycle_Impl::heatingZoneFansOnlyThermalZones() const {
     ModelObjectList mo_list = heatingZoneFansOnlyThermalZoneList();
     std::vector<ThermalZone> result;
-    for ( ModelObject mo : mo_list ) {
+    for ( ModelObject mo : mo_list.modelObjects() ) {
       boost::optional<ThermalZone> thermalZone = mo.optionalCast<ThermalZone>();
       if (thermalZone) {
         result.push_back(thermalZone.get());
@@ -581,46 +581,46 @@ void AvailabilityManagerNightCycle::resetControlThermalZone() {
   getImpl<detail::AvailabilityManagerNightCycle_Impl>()->resetControlThermalZones();
 }
 
-std::vector<ThermalZone> controlThermalZones() const {
+std::vector<ThermalZone> AvailabilityManagerNightCycle::controlThermalZones() const {
   return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->controlThermalZones();
 }
-bool setControlThermalZones(const std::vector<ThermalZone>& thermalZones) {
+bool AvailabilityManagerNightCycle::setControlThermalZones(const std::vector<ThermalZone>& thermalZones) {
   return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setControlThermalZones(thermalZones);
 }
-void resetControlThermalZones() {
+void AvailabilityManagerNightCycle::resetControlThermalZones() {
  getImpl<detail::AvailabilityManagerNightCycle_Impl>()->resetControlThermalZones();
 }
 
 
-std::vector<ThermalZone> coolingControlThermalZones() const {
+std::vector<ThermalZone> AvailabilityManagerNightCycle::coolingControlThermalZones() const {
   return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->coolingControlThermalZones();
 }
-bool setCoolingControlThermalZones(const std::vector<ThermalZone>& thermalZones) {
+bool AvailabilityManagerNightCycle::setCoolingControlThermalZones(const std::vector<ThermalZone>& thermalZones) {
   return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setCoolingControlThermalZones(thermalZones);
 }
-void resetCoolingControlThermalZones() {
+void AvailabilityManagerNightCycle::resetCoolingControlThermalZones() {
  getImpl<detail::AvailabilityManagerNightCycle_Impl>()->resetCoolingControlThermalZones();
 }
 
 
-std::vector<ThermalZone> heatingControlThermalZones() const {
+std::vector<ThermalZone> AvailabilityManagerNightCycle::heatingControlThermalZones() const {
   return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->heatingControlThermalZones();
 }
-bool setHeatingControlThermalZones(const std::vector<ThermalZone>& thermalZones) {
+bool AvailabilityManagerNightCycle::setHeatingControlThermalZones(const std::vector<ThermalZone>& thermalZones) {
   return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setHeatingControlThermalZones(thermalZones);
 }
-void resetHeatingControlThermalZones() {
+void AvailabilityManagerNightCycle::resetHeatingControlThermalZones() {
  getImpl<detail::AvailabilityManagerNightCycle_Impl>()->resetHeatingControlThermalZones();
 }
 
 
-std::vector<ThermalZone> heatingZoneFansOnlyThermalZones() const {
+std::vector<ThermalZone> AvailabilityManagerNightCycle::heatingZoneFansOnlyThermalZones() const {
   return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->heatingZoneFansOnlyThermalZones();
 }
-bool setHeatingZoneFansOnlyThermalZones(const std::vector<ThermalZone>& thermalZones) {
+bool AvailabilityManagerNightCycle::setHeatingZoneFansOnlyThermalZones(const std::vector<ThermalZone>& thermalZones) {
   return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setHeatingZoneFansOnlyThermalZones(thermalZones);
 }
-void resetHeatingZoneFansOnlyThermalZones() {
+void AvailabilityManagerNightCycle::resetHeatingZoneFansOnlyThermalZones() {
  getImpl<detail::AvailabilityManagerNightCycle_Impl>()->resetHeatingZoneFansOnlyThermalZones();
 }
 
