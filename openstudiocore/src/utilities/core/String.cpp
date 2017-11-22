@@ -96,29 +96,29 @@ std::string toString(double v) {
   return result;
 }
 
-std::string toString(int v) {
+//std::string toString(int v) {
 
-  std::string result;
+  //std::string result;
 
-  try {
-    result = boost::lexical_cast<std::string>(v);
-  } catch (...) {
-  }
+  //try {
+    //result = boost::lexical_cast<std::string>(v);
+  //} catch (...) {
+  //}
 
-  return result;
-}
+  //return result;
+//}
 
-std::string toString(unsigned v) {
+//std::string toString(unsigned v) {
 
-  std::string result;
+  //std::string result;
 
-  try {
-    result = boost::lexical_cast<std::string>(v);
-  } catch (...) {
-  }
+  //try {
+    //result = boost::lexical_cast<std::string>(v);
+  //} catch (...) {
+  //}
 
-  return result;
-}
+  //return result;
+//}
 
 std::string toString(std::istream& s) {
   // istream -> string code from

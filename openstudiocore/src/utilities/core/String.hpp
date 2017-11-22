@@ -39,7 +39,7 @@
 #include <QMetaType>
 
 /** \file String.hpp
- *  
+ *
  *  All strings are assumed to be UTF-8 encoded std::string.  Note that length of the std::string
  *  may therefore not match number of characters in the std::string. */
 
@@ -64,10 +64,10 @@ namespace openstudio {
   UTILITIES_API std::string toString(double v);
 
   /** Int to std::string at full precision. */
-  UTILITIES_API std::string toString(int v);
+  // UTILITIES_API std::string toString(int v);
 
   /** Unsigned to std::string at full precision. */
-  UTILITIES_API std::string toString(unsigned v);
+  // UTILITIES_API std::string toString(unsigned v);
 
   /** Load data in istream into string. */
   UTILITIES_API std::string toString(std::istream& s);
