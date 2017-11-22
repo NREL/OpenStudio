@@ -1826,6 +1826,8 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
         else{
           return false;
         }
+      } else {
+        // integers can't be NaN or Infinity
       }
     }
 
@@ -1852,6 +1854,16 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
               << m_iddObject.name() << " has 'autosize' as its value even though it is autocalculable.");
         }
         else {
+          return false;
+        }
+      } else{
+        if (std::isnan(*value)) {
+          LOG(Warn, "Cannot set field " << index << ", '" << iddField.name() << "', an object of type "
+              << m_iddObject.name() << " to NaN.");
+          return false;
+        }else if (std::isinf(*value)) {
+          LOG(Warn, "Cannot set field " << index << ", '" << iddField.name() << "', an object of type "
+              << m_iddObject.name() << " to Infinity.");
           return false;
         }
       }
@@ -2056,7 +2068,7 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
     bool special_char = false;
     auto const max_length = value.size();
     auto const length = max_length - 3;
-    auto const * str = value.c_str();
+    // auto const * str = value.c_str();
     result.reserve(max_length);
 
     for (size_t i = 0; i < max_length; ++i) {

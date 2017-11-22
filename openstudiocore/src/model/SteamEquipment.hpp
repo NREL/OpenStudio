@@ -93,7 +93,7 @@ class MODEL_API SteamEquipment : public SpaceLoadInstance {
 
   void resetMultiplier();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 
@@ -101,15 +101,15 @@ class MODEL_API SteamEquipment : public SpaceLoadInstance {
   /** @name Other */
   //@{
 
-  /** Returns the design level represented by this instance, assuming floorArea (m^2) and 
+  /** Returns the design level represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
   double getDesignLevel(double floorArea, double numPeople) const;
 
-  /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and 
+  /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
   double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-  /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and 
+  /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
   double getPowerPerPerson(double floorArea, double numPeople) const;
 
