@@ -28070,3 +28070,4 @@ OS:EnergyManagementSystem:ConstructionIndexVariable,
        \type object-list
        \object-list ConstructionNames
        \required-field
+

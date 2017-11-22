@@ -207,6 +207,7 @@ namespace detail {
       return mo_list.get();
     } else {
       LOG_AND_THROW(briefDescription() << " does not have a controlThermalZoneList attached");
+    }
   }
 
 
@@ -229,13 +230,15 @@ namespace detail {
         result.push_back(thermalZone.get());
       } else {
         LOG_AND_THROW(briefDescription() << " appears to have non ThermalZone objects in the controlThermalZones list");
+      }
     }
     return result;
   }
 
-  bool AvailabilityManagerNightCycle_Impl::setControlZones(const std::vector<ThermalZone>& thermalZones) {
+  bool AvailabilityManagerNightCycle_Impl::setControlThermalZones(const std::vector<ThermalZone>& thermalZones) {
     // Clear it first
     clearControlThermalZoneList();
+    bool result = false;
 
     ModelObjectList mo_list = controlThermalZoneList();
     for (ThermalZone thermalZone: thermalZones) {
@@ -244,9 +247,10 @@ namespace detail {
         LOG_AND_THROW("Adding " << thermalZone.briefDescription() << " to ControlThermalZones failed for " << briefDescription());
       }
     }
+    return result;
   }
 
-  void AvailabilityManagerNightCycle_Impl::resetControlZones() {
+  void AvailabilityManagerNightCycle_Impl::resetControlThermalZones() {
     // Clear it
     clearControlThermalZoneList();
   }
@@ -261,6 +265,7 @@ namespace detail {
       return mo_list.get();
     } else {
       LOG_AND_THROW(briefDescription() << " does not have a coolingControlThermalZoneList attached");
+    }
   }
 
   void AvailabilityManagerNightCycle_Impl::clearCoolingControlThermalZoneList() const {
@@ -281,13 +286,15 @@ namespace detail {
         result.push_back(thermalZone.get());
       } else {
         LOG_AND_THROW(briefDescription() << " appears to have non ThermalZone objects in the coolingControlThermalZones list");
+      }
     }
     return result;
   }
 
-  bool AvailabilityManagerNightCycle_Impl::setControlZones(const std::vector<ThermalZone>& thermalZones) {
+  bool AvailabilityManagerNightCycle_Impl::setCoolingControlThermalZones(const std::vector<ThermalZone>& thermalZones) {
     // Clear it first
     clearCoolingControlThermalZoneList();
+    bool result = false;
 
     ModelObjectList mo_list = coolingControlThermalZoneList();
     for (ThermalZone thermalZone: thermalZones) {
@@ -296,9 +303,10 @@ namespace detail {
         LOG_AND_THROW("Adding " << thermalZone.briefDescription() << " to CoolingControlThermalZones failed for " << briefDescription());
       }
     }
+    return result;
   }
 
-  void AvailabilityManagerNightCycle_Impl::resetControlZones() {
+  void AvailabilityManagerNightCycle_Impl::resetCoolingControlThermalZones() {
     // Clear it
     clearCoolingControlThermalZoneList();
   }
@@ -312,6 +320,7 @@ namespace detail {
       return mo_list.get();
     } else {
       LOG_AND_THROW(briefDescription() << " does not have a heatingControlThermalZoneList attached");
+    }
   }
 
   void AvailabilityManagerNightCycle_Impl::clearHeatingControlThermalZoneList() const {
@@ -332,13 +341,15 @@ namespace detail {
         result.push_back(thermalZone.get());
       } else {
         LOG_AND_THROW(briefDescription() << " appears to have non ThermalZone objects in the heatingControlThermalZones list");
+      }
     }
     return result;
   }
 
-  bool AvailabilityManagerNightCycle_Impl::setControlZones(const std::vector<ThermalZone>& thermalZones) {
+  bool AvailabilityManagerNightCycle_Impl::setHeatingControlThermalZones(const std::vector<ThermalZone>& thermalZones) {
     // Clear it first
     clearHeatingControlThermalZoneList();
+    bool result = false;
 
     ModelObjectList mo_list = heatingControlThermalZoneList();
     for (ThermalZone thermalZone: thermalZones) {
@@ -347,9 +358,10 @@ namespace detail {
         LOG_AND_THROW("Adding " << thermalZone.briefDescription() << " to HeatingControlThermalZones failed for " << briefDescription());
       }
     }
+    return result;
   }
 
-  void AvailabilityManagerNightCycle_Impl::resetControlZones() {
+  void AvailabilityManagerNightCycle_Impl::resetHeatingControlThermalZones() {
     // Clear it
     clearHeatingControlThermalZoneList();
   }
@@ -364,6 +376,7 @@ namespace detail {
       return mo_list.get();
     } else {
       LOG_AND_THROW(briefDescription() << " does not have a heatingZoneFansOnlyThermalZoneList attached");
+    }
   }
 
   void AvailabilityManagerNightCycle_Impl::clearHeatingZoneFansOnlyThermalZoneList() const {
@@ -384,14 +397,15 @@ namespace detail {
         result.push_back(thermalZone.get());
       } else {
         LOG_AND_THROW(briefDescription() << " appears to have non ThermalZone objects in the heatingZoneFansOnlyThermalZones list");
+      }
     }
     return result;
   }
 
-  bool AvailabilityManagerNightCycle_Impl::setControlZones(const std::vector<ThermalZone>& thermalZones) {
+  bool AvailabilityManagerNightCycle_Impl::setHeatingZoneFansOnlyThermalZones(const std::vector<ThermalZone>& thermalZones) {
     // Clear it first
     clearHeatingZoneFansOnlyThermalZoneList();
-
+    bool result = false;
     ModelObjectList mo_list = heatingZoneFansOnlyThermalZoneList();
     for (ThermalZone thermalZone: thermalZones) {
       result = mo_list.addModelObject(thermalZone);
@@ -399,9 +413,10 @@ namespace detail {
         LOG_AND_THROW("Adding " << thermalZone.briefDescription() << " to HeatingZoneFansOnlyThermalZones failed for " << briefDescription());
       }
     }
+    return result;
   }
 
-  void AvailabilityManagerNightCycle_Impl::resetControlZones() {
+  void AvailabilityManagerNightCycle_Impl::resetHeatingZoneFansOnlyThermalZones() {
     // Clear it
     clearHeatingZoneFansOnlyThermalZoneList();
   }
@@ -435,26 +450,26 @@ AvailabilityManagerNightCycle::AvailabilityManagerNightCycle(const Model& model)
 
   ModelObjectList controlThermalZoneList = ModelObjectList(model);
   controlThermalZoneList.setName(this->name().get() + " Control Zone List");
-  ok = setPointer(OS_AvailabilityManager_NightCycleFields::ControlZoneorZoneListName, controlThermalZoneList.get().handle());
+  bool ok = setPointer(OS_AvailabilityManager_NightCycleFields::ControlZoneorZoneListName, controlThermalZoneList.handle());
   OS_ASSERT(ok);
 
   // Cooling Control Zone List
   ModelObjectList coolingControlThermalZoneList = ModelObjectList(model);
   controlThermalZoneList.setName(this->name().get() + " Cooling Control Zone List");
-  ok = setPointer(OS_AvailabilityManager_NightCycleFields::CoolingControlZoneorZoneListName, coolingControlThermalZoneList.get().handle());
+  ok = setPointer(OS_AvailabilityManager_NightCycleFields::CoolingControlZoneorZoneListName, coolingControlThermalZoneList.handle());
   OS_ASSERT(ok);
 
   // Cooling Control Zone List
   ModelObjectList heatingControlThermalZoneList = ModelObjectList(model);
   controlThermalZoneList.setName(this->name().get() + " Heating Control Zone List");
-  ok = setPointer(OS_AvailabilityManager_NightCycleFields::HeatingControlZoneorZoneListName, heatingControlThermalZoneList.get().handle());
+  ok = setPointer(OS_AvailabilityManager_NightCycleFields::HeatingControlZoneorZoneListName, heatingControlThermalZoneList.handle());
   OS_ASSERT(ok);
 
 
   // Heating Zone Fans Only Zone List
   ModelObjectList heatingZoneFansOnlyThermalZoneList = ModelObjectList(model);
   controlThermalZoneList.setName(this->name().get() + " Heating Zone Fans Only Zone List");
-  ok = setPointer(OS_AvailabilityManager_NightCycleFields::HeatingZoneFansOnlyZoneorZoneListName, heatingZoneFansOnlyThermalZoneList.get().handle());
+  ok = setPointer(OS_AvailabilityManager_NightCycleFields::HeatingZoneFansOnlyZoneorZoneListName, heatingZoneFansOnlyThermalZoneList.handle());
   OS_ASSERT(ok);
 }
 
