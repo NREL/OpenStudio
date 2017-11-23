@@ -44,7 +44,7 @@
 #include <QScrollArea>
 
 namespace openstudio {
-  
+
   GridViewSubTab::GridViewSubTab(bool isIP, const model::Model & model, QWidget * parent)
     : QWidget(parent),
     m_model(model),
