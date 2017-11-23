@@ -26,72 +26,71 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef UTILITIES_CORE_STRING_HPP
-#define UTILITIES_CORE_STRING_HPP
+#include <gtest/gtest.h>
+#include "EnergyPlusFixture.hpp"
 
-#include "../UtilitiesAPI.hpp"
+#include "../ForwardTranslator.hpp"
 
-#include <string>
-#include <vector>
+#include "../../model/Model.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVACUnitarySystem.hpp"
+#include "../../model/Node.hpp"
 
-#include <QString>
-#include <QTextStream>
-#include <QMetaType>
 
-/** \file String.hpp
- *
- *  All strings are assumed to be UTF-8 encoded std::string.  Note that length of the std::string
- *  may therefore not match number of characters in the std::string. */
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
-namespace openstudio {
 
-  /** string to std::string. */
-  UTILITIES_API std::string toString(const std::string& s);
+#include <utilities/idd/AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
-  /** char* to std::string. */
-  UTILITIES_API std::string toString(const char* s);
+#include <resources.hxx>
 
-  /** wstring to std::string. */
-  UTILITIES_API std::string toString(const std::wstring& w);
+#include <sstream>
 
-  /** wchar_t* to std::string. */
-  UTILITIES_API std::string toString(const wchar_t* w);
+using namespace openstudio::energyplus;
+using namespace openstudio::model;
+using namespace openstudio;
 
-  /** QString to UTF-8 encoded std::string. */
-  UTILITIES_API std::string toString(const QString& q);
+/**
+ * Tests only the controlType of the ForwardTranslator which I exposed after the fact
+ **/
+TEST_F(EnergyPlusFixture,ForwardTranslator_AirLoopHVACUnitarySystem_ControlType)
+{
+  Model m;
 
-  /** Double to std::string at full precision. */
-  UTILITIES_API std::string toString(double v);
+  AirLoopHVAC airLoop(m);
+  AirLoopHVACUnitarySystem unitary(m);
 
-  /** Load data in istream into string. */
-  UTILITIES_API std::string toString(std::istream& s);
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  unitary.addToNode(supplyOutletNode);
 
-  /** QString to wstring. */
-  UTILITIES_API std::wstring toWString(const QString& q);
+  // test if Setpoint
+  unitary.setControlType("Setpoint");
 
-  /** UTF-8 encoded std::string to QString. */
-  UTILITIES_API QString toQString(const std::string& s);
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(m);
 
-  /** wstring to QString. */
-  UTILITIES_API QString toQString(const std::wstring& w);
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVAC).size());
 
-} // openstudio
+  IdfObject idf_unitary = workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem)[0];
 
-// declare these types so we can use them as properties
-Q_DECLARE_METATYPE(std::string);
-Q_DECLARE_METATYPE(std::vector<std::string>);
+  ASSERT_EQ("Setpoint",
+            idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::ControlType).get() );
 
-// allow string to be written to QTextStream
-UTILITIES_API QTextStream& operator<<(QTextStream& qts, const std::string& s);
+  // test if load (make sure nothing is hardcoded)
+  unitary.setControlType("Load");
 
-namespace openstudio {
-namespace detail {
+  workspace = ft.translateModel(m);
 
-  // register meta datatypes
-  struct StringMetaTypeInitializer{
-    StringMetaTypeInitializer();
-  };
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVAC).size());
+
+  idf_unitary = workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem)[0];
+
+  ASSERT_EQ("Load",
+            idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::ControlType).get() );
+
+
 }
-}
-
-#endif // UTILITIES_CORE_STRING_HPP

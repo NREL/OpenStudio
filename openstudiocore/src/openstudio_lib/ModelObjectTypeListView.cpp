@@ -41,22 +41,22 @@
 
 namespace openstudio {
 
-ModelObjectTypeListView::ModelObjectTypeListView(const model::Model& model, 
-                                                 bool addScrollArea, 
-                                                 OSItemType headerType, 
+ModelObjectTypeListView::ModelObjectTypeListView(const model::Model& model,
+                                                 bool addScrollArea,
+                                                 OSItemType headerType,
                                                  bool showLocalBCL,
                                                  QWidget * parent )
   : OSCollapsibleItemList(addScrollArea, parent), m_model(model), m_headerType(headerType), m_showLocalBCL(showLocalBCL)
-{ 
+{
 }
 
 ModelObjectTypeListView::ModelObjectTypeListView(const std::vector<std::pair<IddObjectType, std::string> >& modelObjectTypesAndNames,
-                                                 const model::Model& model, bool addScrollArea, 
+                                                 const model::Model& model, bool addScrollArea,
                                                  OSItemType headerType, bool showLocalBCL, QWidget * parent )
-  : OSCollapsibleItemList(addScrollArea, parent), 
-    m_modelObjectTypesAndNames(modelObjectTypesAndNames), 
+  : OSCollapsibleItemList(addScrollArea, parent),
+    m_modelObjectTypesAndNames(modelObjectTypesAndNames),
     m_model(model), m_headerType(headerType), m_showLocalBCL(showLocalBCL)
-{ 
+{
   for(auto modelObjectTypeAndName = m_modelObjectTypesAndNames.rbegin();
       modelObjectTypeAndName != m_modelObjectTypesAndNames.rend();
       ++modelObjectTypeAndName)
@@ -68,7 +68,7 @@ ModelObjectTypeListView::ModelObjectTypeListView(const std::vector<std::pair<Idd
 void ModelObjectTypeListView::addModelObjectType(const IddObjectType& iddObjectType, const std::string& name)
 {
   OSCollapsibleItemHeader* collapsibleItemHeader = new OSCollapsibleItemHeader(name, OSItemId("", "", false), m_headerType);
-  auto modelObjectListView = new ModelObjectListView(iddObjectType, m_model, false,m_showLocalBCL);
+  auto modelObjectListView = new ModelObjectListView(iddObjectType, m_model, false, m_showLocalBCL);
   auto modelObjectTypeItem = new ModelObjectTypeItem(collapsibleItemHeader, modelObjectListView);
 
   addCollapsibleItem(modelObjectTypeItem);
