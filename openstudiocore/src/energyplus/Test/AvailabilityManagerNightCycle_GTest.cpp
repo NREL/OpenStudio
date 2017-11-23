@@ -57,7 +57,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerNightCycle) {
   EXPECT_TRUE(avm.setCyclingRunTimeControlType("Thermostat"));
   EXPECT_EQ("Thermostat", avm.cyclingRunTimeControlType());
 
-
   // Assign it to a loop
   AirLoopHVAC a(m);
   // TODO: This is going to be deprecated once #2844 gets merged in, replace it
@@ -69,7 +68,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerNightCycle) {
   ThermalZone z2(m);
   ThermalZone z3(m);
   ThermalZone z4(m);
-
 
   EXPECT_TRUE(a.addBranchForZone(z1));
   EXPECT_TRUE(a.addBranchForZone(z2));
@@ -107,6 +105,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerNightCycle) {
   ASSERT_EQ(avm.cyclingRunTimeControlType(), idf_avm.getString(AvailabilityManager_NightCycleFields::CyclingRunTimeControlType).get());
   ASSERT_EQ(avm.cyclingRunTime(), idf_avm.getDouble(AvailabilityManager_NightCycleFields::CyclingRunTime).get());
 
+
   // Check the Zone Lists
 
   // Control Zones: single zone means no ZoneList, just the name of the zone here
@@ -129,6 +128,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerNightCycle) {
   ASSERT_TRUE(idf_coolingControlThermalZones);
   EXPECT_EQ(a.thermalZones().size(), idf_coolingControlThermalZones->extensibleGroups().size());
 
+
+
+  // Second Check
 
   // If we set to CycleOnAny, the cooling zone list should be present because no defaulting needed
   EXPECT_TRUE(avm.setControlType("CycleOnAny"));
