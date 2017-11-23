@@ -185,7 +185,7 @@ namespace openstudio {
     bool isConnected;
 
     m_verticalId = 0;
-    m_subTabIds = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    m_subTabIds = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     // Make sure that the vector is the same size as the number of tabs
     OS_ASSERT(m_subTabIds.size() == static_cast<unsigned>(RESULTS_SUMMARY + 1));
 
