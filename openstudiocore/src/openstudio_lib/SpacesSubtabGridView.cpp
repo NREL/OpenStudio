@@ -373,6 +373,7 @@ namespace openstudio {
   {
     m_spaceTypeFilter->clear();
     m_spaceTypeFilter->addItem(ALL);
+    m_spaceTypeFilter->addItem(UNASSIGNED);
     auto spacetypes = this->m_model.getConcreteModelObjects<model::SpaceType>();
     std::sort(spacetypes.begin(), spacetypes.end(), ModelObjectNameSorter());
     for (auto st : spacetypes)
@@ -866,8 +867,12 @@ namespace openstudio {
 
   void SpacesSubtabGridView::purgeObjects(const IddObjectType& iddObjectType)
   {
-    for (auto mo : this->m_model.getConcreteModelObjects<model::Space>()){
-      mo.remove();
+    // Purge Spaces. The logic is to remove spaces that don't have a thermalZone nor surfaces
+    for (auto mo : this->m_model.getConcreteModelObjects<model::Space>())
+    {
+      if ( (!mo.thermalZone()) && (mo.surfaces().empty()) ) {
+        mo.remove();
+      }
     }
   }
 

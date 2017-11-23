@@ -495,6 +495,7 @@ set(${target_name}_test_src
   Test/ForwardTranslator_GTest.cpp
   Test/ReverseTranslator_GTest.cpp
 
+  Test/AirLoopHVACUnitarySystem_GTest.cpp
   Test/AirWallMaterial_GTest.cpp
   Test/Building_GTest.cpp
   Test/CoilHeatingGas_GTest.cpp
