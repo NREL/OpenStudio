@@ -69,8 +69,8 @@ namespace openstudio {
 
     REGISTER_LOGGER("openstudio::RunView");
 
+    enum RUNMODE { RUN_NONE=0, RUN_ENERGY, RUN_BEC, RUN_ENERGY_BEC};
     void playButtonClicked(bool t_checked);
-
     void onRunProcessFinished(int exitCode, QProcess::ExitStatus status);
 
     //void onSimDirChanged(const QString &path);
@@ -91,6 +91,8 @@ namespace openstudio {
     void logNormalText(const QString & text, const QString colorName=QString());
     void logH1Text(const QString & text, const QString colorName=QString());
     void logH2Text(const QString & text, const QString colorName=QString());
+    void playButtonClicked00(bool t_checked, RUNMODE runmode);
+    void becFinished();
     //END BEC CODE.
 
     // Given an osm file, return the companion directory
@@ -113,8 +115,10 @@ namespace openstudio {
     openstudio::path m_tempFolder;
     QString becoutputPath;
     double buildingArea;
+    RUNMODE runmode;
     enum State { stopped = 0, initialization = 1, os_measures = 2, translator = 3, ep_measures = 4, preprocess = 5, simulation = 6, reporting_measures = 7, postprocess = 8, complete = 9 };
     State m_state = State::stopped;
+    void doFinish();
   };
 
   class RunTabView : public MainTabView

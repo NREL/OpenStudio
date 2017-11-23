@@ -236,9 +236,9 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir, con
     } else if (openstudio::toString(p.filename()) == "radout.sql") {
       radout.push_back(p);
     } else if (openstudio::toString(p.filename()) == "report.html") {
-      //reports.push_back(p);
+      reports.push_back(p);
     } else if (openstudio::toString(p.filename()) == "eplustbl.htm") {
-      //reports.push_back(p);
+      reports.push_back(p);
     }
   }
 
