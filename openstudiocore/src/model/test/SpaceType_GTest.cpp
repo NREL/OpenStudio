@@ -57,7 +57,7 @@ TEST_F(ModelFixture, SpaceType_InternalGainAttributes_PeoplePerFloorArea) {
   // OptionalAttribute peoplePerFloorArea = spaceType.getAttribute("peoplePerFloorArea");
   // ASSERT_TRUE(peoplePerFloorArea);
   // EXPECT_TRUE(peoplePerFloorArea->valueType() == AttributeValueType::Double);
-  
+
   PeopleDefinition defPerArea(model);
   People instPerArea(defPerArea);
   instPerArea.setSpaceType(spaceType);
@@ -209,11 +209,11 @@ TEST_F(ModelFixture, SpaceType_StandardsTypes) {
   ASSERT_EQ(2u, suggestedStandardsSpaceTypes.size());
   EXPECT_EQ("Attic", suggestedStandardsSpaceTypes[0]);
   EXPECT_EQ("Plenum", suggestedStandardsSpaceTypes[1]);
-} 
+}
 
 TEST_F(ModelFixture, SpaceType_Clone) {
   Model library;
-  Model model;  
+  Model model;
 
   SpaceType librarySpaceType(library);
 
@@ -261,4 +261,47 @@ TEST_F(ModelFixture, SpaceType_Clone) {
   EXPECT_EQ(1u,model.getModelObjects<ScheduleRuleset>().size());
 }
 
+TEST_F(ModelFixture, SpaceType_Name_Clone) {
+  Model m;
+
+  SpaceType st1(m);
+  EXPECT_TRUE(st1.setName("My Space Type"));
+
+  SpaceType st2 = st1.clone(m).cast<SpaceType>();
+  EXPECT_NE(st1.handle(), st2.handle());
+  EXPECT_NE(st1.nameString(), st2.nameString());
+
+  Model m2;
+  SpaceType st3 = st1.clone(m2).cast<SpaceType>();
+  EXPECT_NE(st1.handle(), st3.handle());
+  EXPECT_EQ(st1.nameString(), st3.nameString());
+}
+
+/* If the space type is the unique Plenum Space type, it should Log and Error and return itself */
+TEST_F(ModelFixture, SpaceType_Clone_Plenum) {
+
+  Model m;
+
+  SpaceType m1_st = m.plenumSpaceType();
+
+  // Does clone
+  SpaceType m1_stClone = m1_st.clone(m).cast<SpaceType>();
+  ASSERT_NE(m1_st.handle(), m1_stClone.handle());
+  ASSERT_NE(m1_st.nameString(), m1_stClone.nameString()) << m;
+
+  // Try in another model with no plenum space type, the clone should become the new plenum space type
+  Model m2;
+  SpaceType m2_stClone = m1_st.clone(m2).cast<SpaceType>();
+  ASSERT_NE(m1_st.handle(), m2_stClone.handle());
+  ASSERT_EQ(m1_st.nameString(), m2_stClone.nameString());
+  ASSERT_EQ(m2.plenumSpaceType().handle(), m2_stClone.handle());
+
+  // Try in another model with a plenum space type, the clone should not become the new plenum space type
+  Model m3;
+  m3.plenumSpaceType();
+  SpaceType m3_stClone = m1_st.clone(m3).cast<SpaceType>();
+  ASSERT_NE(m1_st.handle(), m3_stClone.handle());
+  ASSERT_NE(m1_st.nameString(), m3_stClone.nameString());
+  ASSERT_NE(m3.plenumSpaceType().handle(), m3_stClone.handle());
+}
 

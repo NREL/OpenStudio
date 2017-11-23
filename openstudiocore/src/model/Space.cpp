@@ -2085,6 +2085,8 @@ namespace detail {
     Model model = this->model();
     Space space = this->getObject<Space>();
 
+    std::string plenumSpaceTypeName = model.plenumSpaceTypeName();
+
     boost::optional<SpaceType> spaceType = this->spaceType();
     if (spaceType){
 
