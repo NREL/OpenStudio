@@ -96,6 +96,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerNightCycle) {
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
 
+  // Should have 3 zonelists only (control zone is one zone = just name and no zonelist)
+  EXPECT_EQ(3u, w.getObjectsByType(IddObjectType::ZoneList).size());
+
   WorkspaceObjectVector idfObjs(w.getObjectsByType(IddObjectType::AvailabilityManager_NightCycle));
   EXPECT_EQ(1u, idfObjs.size());
   WorkspaceObject idf_avm(idfObjs[0]);
@@ -106,10 +109,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerNightCycle) {
 
   // Check the Zone Lists
 
-  // Control Zones
-  boost::optional<WorkspaceObject> idf_controlThermalZones = idf_avm.getTarget(AvailabilityManager_NightCycleFields::ControlZoneorZoneListName);
-  ASSERT_TRUE(idf_controlThermalZones);
-  EXPECT_EQ(1u, idf_controlThermalZones->extensibleGroups().size());
+  // Control Zones: single zone means no ZoneList, just the name of the zone here
+  ASSERT_TRUE(idf_avm.getString(AvailabilityManager_NightCycleFields::ControlZoneorZoneListName));
+  EXPECT_EQ(z1.name().get(), idf_avm.getString(AvailabilityManager_NightCycleFields::ControlZoneorZoneListName).get());
 
   // Heating Control Zones
   boost::optional<WorkspaceObject> idf_heatingControlThermalZones = idf_avm.getTarget(AvailabilityManager_NightCycleFields::HeatingControlZoneorZoneListName);
@@ -126,6 +128,23 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerNightCycle) {
   boost::optional<WorkspaceObject> idf_coolingControlThermalZones = idf_avm.getTarget(AvailabilityManager_NightCycleFields::CoolingControlZoneorZoneListName);
   ASSERT_TRUE(idf_coolingControlThermalZones);
   EXPECT_EQ(a.thermalZones().size(), idf_coolingControlThermalZones->extensibleGroups().size());
+
+
+  // If we set to CycleOnAny, the cooling zone list should be present because no defaulting needed
+  EXPECT_TRUE(avm.setControlType("CycleOnAny"));
+
+  // Re translate
+  w = ft.translateModel(m);
+
+  // Should have 2 zonelists only (control zone is one zone = just name and no zonelist, and no cooling one)
+  EXPECT_EQ(2u, w.getObjectsByType(IddObjectType::ZoneList).size());
+
+  WorkspaceObjectVector idfObjs2(w.getObjectsByType(IddObjectType::AvailabilityManager_NightCycle));
+  EXPECT_EQ(1u, idfObjs2.size());
+  WorkspaceObject idf_avm2(idfObjs2[0]);
+
+  boost::optional<WorkspaceObject> idf_coolingControlThermalZones2 = idf_avm2.getTarget(AvailabilityManager_NightCycleFields::CoolingControlZoneorZoneListName);
+  EXPECT_FALSE(idf_coolingControlThermalZones2);
 
 }
 

@@ -74,7 +74,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
     idfObject.setString(AvailabilityManager_NightCycleFields::FanScheduleName,airLoopHVAC->availabilitySchedule().name().get());
   }
 
-  // TODO: @kbenne, should we even translate the AVM:NightCycle if it's not on an airloop?
+  // TODO: @kbenne, we don't even translate the AVM:NightCycle if it's not on an airloop anyways
+  // Translation is triggered from the AirLoopHVAC itself
 
   if( auto s = modelObject.name() ) {
     idfObject.setName(*s);
@@ -94,7 +95,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
     std::string cycRTCType = modelObject.cyclingRunTimeControlType();
 
     if (istringEqual(cycRTCType, "Thermostat")) {
-      LOG(Warn, "With a Cycling Run Time Control Type set to '" << cycRTCType
+      LOG(Info, "With a Cycling Run Time Control Type set to '" << cycRTCType
           << "', the entered Cycling Run Time of '" << runtime << "' seconds will be ignored for "
           << modelObject.briefDescription());
     }
@@ -244,7 +245,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
     IdfObject zoneList(IddObjectType::ZoneList);
     std::string zoneListName = modelObject.name().get() + " Control Zones List";
     zoneList.setName(zoneListName);
-    m_idfObjects.push_back(zoneList);
+    bool write_zonelist;
 
     if (default_controlThermalZones) {
       // Get all zones served by the AirLoop attached to it
@@ -253,20 +254,40 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
           auto eg = zoneList.pushExtensibleGroup();
           eg.setString(ZoneListExtensibleFields::ZoneName, tz.name().get());
         }
-        LOG(Info, "Defaulting the Control Zone List to all zones served by the AirLoopHVAC attached to "
+        LOG(Warn, "Defaulting the Control Zone List to all zones served by the AirLoopHVAC attached to "
                << modelObject.briefDescription());
+        write_zonelist = true;
       } else {
-        LOG(Warn, "Control Zone List is expected for " << modelObject.briefDescription()
+        // Note: we never get here because the translation of the AVM:NightCyle isn't done if no AirLoopHVAC attached
+        LOG(Error, "Control Zone List is expected for " << modelObject.briefDescription()
                << " but it cannot be defaulted because it isn't on an AirLoopHVAC");
+        write_zonelist = false;
       }
     } else {
-      for (const ThermalZone& tz: controlThermalZones) {
-        auto eg = zoneList.pushExtensibleGroup();
-        eg.setString(ZoneListExtensibleFields::ZoneName, tz.name().get());
+      if (n_controlThermalZones > 0) {
+        if (n_controlThermalZones == 1) {
+          // If only one, just write the thermalZone name directly
+          write_zonelist = false;
+          idfObject.setString(AvailabilityManager_NightCycleFields::ControlZoneorZoneListName,
+                              controlThermalZones[0].name().get());
+        } else {
+          // More than one, we indeed create a zone list
+          for (const ThermalZone& tz: controlThermalZones) {
+            auto eg = zoneList.pushExtensibleGroup();
+            eg.setString(ZoneListExtensibleFields::ZoneName, tz.name().get());
+          }
+          write_zonelist = true;
+        }
+      } else {
+        // No zones = no zonelist
+        write_zonelist = false;
       }
-
     }
-    idfObject.setString(AvailabilityManager_NightCycleFields::ControlZoneorZoneListName, zoneListName);
+    // Write ZoneList to the IDF and set the AVM ZoneList field to it only if something meaningful happened
+    if (write_zonelist) {
+      idfObject.setString(AvailabilityManager_NightCycleFields::ControlZoneorZoneListName, zoneListName);
+      m_idfObjects.push_back(zoneList);
+    }
   }
 
 
@@ -276,7 +297,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
     IdfObject zoneList(IddObjectType::ZoneList);
     std::string zoneListName = modelObject.name().get() + " Cooling Control Zones List";
     zoneList.setName(zoneListName);
-    m_idfObjects.push_back(zoneList);
+    bool write_zonelist;
 
     if (default_coolingControlThermalZones) {
       // Get all zones served by the AirLoop attached to it
@@ -285,20 +306,39 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
           auto eg = zoneList.pushExtensibleGroup();
           eg.setString(ZoneListExtensibleFields::ZoneName, tz.name().get());
         }
-        LOG(Info, "Defaulting the Cooling Control Zone List to all zones served by the AirLoopHVAC attached to "
+        LOG(Warn, "Defaulting the Cooling Control Zone List to all zones served by the AirLoopHVAC attached to "
                << modelObject.briefDescription());
+        write_zonelist = true;
       } else {
-        LOG(Warn, "Cooling Control Zone List is expected for " << modelObject.briefDescription()
+        LOG(Error, "Cooling Control Zone List is expected for " << modelObject.briefDescription()
                << " but it cannot be defaulted because it isn't on an AirLoopHVAC");
+        write_zonelist = false;
       }
     } else {
-      for (const ThermalZone& tz: coolingControlThermalZones) {
-        auto eg = zoneList.pushExtensibleGroup();
-        eg.setString(ZoneListExtensibleFields::ZoneName, tz.name().get());
+      if (n_coolingControlThermalZones > 0) {
+        if (n_coolingControlThermalZones == 1) {
+          // If only one, just write the thermalZone name directly
+          write_zonelist = false;
+          idfObject.setString(AvailabilityManager_NightCycleFields::CoolingControlZoneorZoneListName,
+                              coolingControlThermalZones[0].name().get());
+        } else {
+          // More than one, we indeed create a zone list
+          for (const ThermalZone& tz: coolingControlThermalZones) {
+            auto eg = zoneList.pushExtensibleGroup();
+            eg.setString(ZoneListExtensibleFields::ZoneName, tz.name().get());
+          }
+          write_zonelist = true;
+        }
+      } else {
+        // No zones = no zonelist
+        write_zonelist = false;
       }
-
     }
-    idfObject.setString(AvailabilityManager_NightCycleFields::CoolingControlZoneorZoneListName, zoneListName);
+    // Write ZoneList to the IDF and set the AVM ZoneList field to it only if something meaningful happened
+    if (write_zonelist) {
+      idfObject.setString(AvailabilityManager_NightCycleFields::CoolingControlZoneorZoneListName, zoneListName);
+      m_idfObjects.push_back(zoneList);
+    }
   }
 
 
@@ -308,7 +348,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
     IdfObject zoneList(IddObjectType::ZoneList);
     std::string zoneListName = modelObject.name().get() + " Heating Control Zones List";
     zoneList.setName(zoneListName);
-    m_idfObjects.push_back(zoneList);
+    bool write_zonelist;
 
     if (default_heatingControlThermalZones) {
       // Get all zones served by the AirLoop attached to it
@@ -317,29 +357,49 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
           auto eg = zoneList.pushExtensibleGroup();
           eg.setString(ZoneListExtensibleFields::ZoneName, tz.name().get());
         }
-        LOG(Info, "Defaulting the Heating Control Zone List to all zones served by the AirLoopHVAC attached to "
+        LOG(Warn, "Defaulting the Heating Control Zone List to all zones served by the AirLoopHVAC attached to "
                << modelObject.briefDescription());
+        write_zonelist = true;
       } else {
-        LOG(Warn, "Cooling Heating Zone List is expected for " << modelObject.briefDescription()
+        LOG(Error, "Cooling Heating Zone List is expected for " << modelObject.briefDescription()
                << " but it cannot be defaulted because it isn't on an AirLoopHVAC");
+        write_zonelist = false;
       }
     } else {
-      for (const ThermalZone& tz: heatingControlThermalZones) {
-        auto eg = zoneList.pushExtensibleGroup();
-        eg.setString(ZoneListExtensibleFields::ZoneName, tz.name().get());
-      }
+      if (n_heatingControlThermalZones > 0) {
+        if (n_heatingControlThermalZones == 1) {
+          // If only one, just write the thermalZone name directly
+          write_zonelist = false;
+          idfObject.setString(AvailabilityManager_NightCycleFields::HeatingControlZoneorZoneListName,
+                              heatingControlThermalZones[0].name().get());
+        } else {
+          // More than one, we indeed create a zone list
 
+          for (const ThermalZone& tz: heatingControlThermalZones) {
+            auto eg = zoneList.pushExtensibleGroup();
+            eg.setString(ZoneListExtensibleFields::ZoneName, tz.name().get());
+          }
+          write_zonelist = true;
+        }
+      } else {
+        // No zones = no zonelist
+        write_zonelist = false;
+      }
     }
-    idfObject.setString(AvailabilityManager_NightCycleFields::HeatingControlZoneorZoneListName, zoneListName);
+    // Write ZoneList to the IDF and set the AVM ZoneList field to it only if something meaningful happened
+    if (write_zonelist) {
+      idfObject.setString(AvailabilityManager_NightCycleFields::HeatingControlZoneorZoneListName, zoneListName);
+      m_idfObjects.push_back(zoneList);
+    }
   }
 
-  // Heating Control Thermal Zones
+  // Heating Zone Fans Only Thermal Zones
   {
     // Create a ZoneList, and populate it
     IdfObject zoneList(IddObjectType::ZoneList);
     std::string zoneListName = modelObject.name().get() + " Heating Zone Fans Only Zones List";
     zoneList.setName(zoneListName);
-    m_idfObjects.push_back(zoneList);
+    bool write_zonelist;
 
     if (default_heatingZoneFansOnlyThermalZones) {
       // Get all zones served by the AirLoop attached to it
@@ -348,20 +408,39 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
           auto eg = zoneList.pushExtensibleGroup();
           eg.setString(ZoneListExtensibleFields::ZoneName, tz.name().get());
         }
-        LOG(Info, "Defaulting the Heating Zone Fans Only Zones List to all zones served by the AirLoopHVAC attached to "
+        LOG(Warn, "Defaulting the Heating Zone Fans Only Zones List to all zones served by the AirLoopHVAC attached to "
                << modelObject.briefDescription());
+        write_zonelist = true;
       } else {
-        LOG(Warn, "Heating Zone Fans Only Zones List is expected for " << modelObject.briefDescription()
+        LOG(Error, "Heating Zone Fans Only Zones List is expected for " << modelObject.briefDescription()
                << " but it cannot be defaulted because it isn't on an AirLoopHVAC");
+        write_zonelist = false;
       }
     } else {
-      for (const ThermalZone& tz: heatingZoneFansOnlyThermalZones) {
-        auto eg = zoneList.pushExtensibleGroup();
-        eg.setString(ZoneListExtensibleFields::ZoneName, tz.name().get());
+      if (n_heatingZoneFansOnlyThermalZones > 0) {
+        if (n_heatingZoneFansOnlyThermalZones == 1) {
+          // If only one, just write the thermalZone name directly
+          write_zonelist = false;
+          idfObject.setString(AvailabilityManager_NightCycleFields::HeatingZoneFansOnlyZoneorZoneListName,
+                              heatingZoneFansOnlyThermalZones[0].name().get());
+        } else {
+          // More than one, we indeed create a zone list
+          for (const ThermalZone& tz: heatingZoneFansOnlyThermalZones) {
+            auto eg = zoneList.pushExtensibleGroup();
+            eg.setString(ZoneListExtensibleFields::ZoneName, tz.name().get());
+          }
+          write_zonelist = true;
+        }
+      } else {
+        // No zones = no zonelist
+        write_zonelist = false;
       }
-
     }
-    idfObject.setString(AvailabilityManager_NightCycleFields::HeatingZoneFansOnlyZoneorZoneListName, zoneListName);
+    // Write ZoneList to the IDF and set the AVM ZoneList field to it only if something meaningful happened
+    if (write_zonelist) {
+      idfObject.setString(AvailabilityManager_NightCycleFields::HeatingZoneFansOnlyZoneorZoneListName, zoneListName);
+      m_idfObjects.push_back(zoneList);
+    }
   }
 
   return idfObject;
