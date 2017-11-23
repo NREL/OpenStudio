@@ -149,18 +149,30 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Get an always on schedule with discrete type limits if there is one.
    *  create a new schedule if necessary and add it to the model */
   Schedule alwaysOnDiscreteSchedule() const;
+    
+  /** Get the always on schedule with discrete type limits name. */
+  std::string alwaysOnDiscreteScheduleName() const;
 
   /** Get an always off schedule with discrete type limits if there is one.
    *  create a new schedule if necessary and add it to the model */
   Schedule alwaysOffDiscreteSchedule() const;
 
+  /** Get the always off schedule with discrete type limits name. */
+  std::string alwaysOffDiscreteScheduleName() const;
+
   /** Get an always on schedule with continuous type limits if there is one.
   *  create a new schedule if necessary and add it to the model */
   Schedule alwaysOnContinuousSchedule() const;
 
+  /** Get the always on schedule with continuous type limits name.*/
+  std::string alwaysOnContinuousScheduleName() const;
+
   /** Get the space type used for plenums if there is one.
    *  Create a new space type if necessary and add it to the model */
   SpaceType plenumSpaceType() const;
+
+  /** Get the space type name used for plenums. */
+  std::string plenumSpaceTypeName() const;
 
   //@}
   /** @name Setters */
