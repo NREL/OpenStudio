@@ -87,12 +87,6 @@ namespace detail {
 
     virtual std::vector<ModelObject> children() const override;
 
-    virtual boost::optional<std::string> setName(const std::string& newName) override;
-    virtual boost::optional<std::string> setName(const std::string& newName, bool checkValidity) override;
-
-    /// Overriden to not allow cloning of Plenum Space Type
-    virtual ModelObject clone(Model model) const override;
-
     //@}
     /** @name Getters */
     //@{
@@ -361,6 +355,8 @@ namespace detail {
     double getGasEquipmentPowerPerPerson(double floorArea, double numPeople) const;
 
     double floorArea() const;
+
+    boost::optional<std::string> setNameProtected(const std::string& newName);
 
     //@}
    protected:

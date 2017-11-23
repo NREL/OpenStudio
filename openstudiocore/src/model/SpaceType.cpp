@@ -182,19 +182,13 @@ namespace detail {
     return result;
   }
 
-  ModelObject SpaceType_Impl::clone(Model model) const
+  boost::optional<std::string> SpaceType_Impl::setNameProtected(const std::string& newName)
   {
-    return ResourceObject_Impl::clone(model);
-  }
-
-  boost::optional<std::string> SpaceType_Impl::setName(const std::string& newName)
-  {
+    // don't allow user to change name of plenum space type since this is found by name in Model::plenumSpaceType
+    if (istringEqual(this->model().plenumSpaceTypeName(), this->nameString())){
+      return this->nameString();
+    }
     return ResourceObject_Impl::setName(newName);
-  }
-
-  boost::optional<std::string> SpaceType_Impl::setName(const std::string& newName, bool checkValidity)
-  {
-    return ResourceObject_Impl::setName(newName, checkValidity);
   }
 
   boost::optional<DefaultConstructionSet> SpaceType_Impl::defaultConstructionSet() const
@@ -1729,6 +1723,11 @@ double SpaceType::getGasEquipmentPowerPerPerson(double floorArea, double numPeop
 double SpaceType::floorArea() const
 {
   return getImpl<detail::SpaceType_Impl>()->floorArea();
+}
+
+boost::optional<std::string> SpaceType::setNameProtected(const std::string& newName)
+{
+  return getImpl<detail::SpaceType_Impl>()->setNameProtected(newName);
 }
 
 /// @cond
