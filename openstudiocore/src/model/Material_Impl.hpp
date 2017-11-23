@@ -95,6 +95,21 @@ namespace detail {
     /** Set thickness to value (m). For some materials, false is always returned. */
     virtual bool setThickness(double value);
 
+    // if material property moisture penetration depth settings already exists, do nothing and return nil; creates the material property moisture penetration depth settings if it does not already exist and return it;
+    boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> createMaterialPropertyMoisturePenetrationDepthSettings(double waterVaporDiffusionResistanceFactor,
+                                                                                                                             double moistureEquationCoefficientA,
+                                                                                                                             double moistureEquationCoefficientB,
+                                                                                                                             double moistureEquationCoefficientC,
+                                                                                                                             double moistureEquationCoefficientD,
+                                                                                                                             double coatingLayerThickness,
+                                                                                                                             double coatingLayerWaterVaporDiffusionResistanceFactor);
+
+    // returns the material property moisture penetration depth settings if set
+    boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> materialPropertyMoisturePenetrationDepthSettings() const;
+
+    // resets the material property moisture penetration depth settings
+    void resetMaterialPropertyMoisturePenetrationDepthSettings();
+    
     //@}
 
    private:
