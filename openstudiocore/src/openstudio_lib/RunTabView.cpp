@@ -1082,7 +1082,8 @@ void RunView::playButtonClicked00(bool t_checked, RunView::RUNMODE runmode, bool
               }
 
               //////////////////////////
-              QFile file(outpath+"../5-EnergyPlus-0/eplustbl.htm");
+			  QString eplustbl_path = outpath + "../eplustbl.htm";
+			  QFile file(eplustbl_path);
               sunlits.clear();
               wwr_totoal = 0.0f;
               if (file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -1150,7 +1151,7 @@ void RunView::playButtonClicked00(bool t_checked, RunView::RUNMODE runmode, bool
                   }
               }else{
                   //logErrorText(QString("<font color=\"red\">ERROR:Can't read eblustbl.htm</font>"));
-                  logErrorText(QString("ERROR:Can't read eblustbl.htm"));
+				  logErrorText(QString("ERROR:Can't read %1").arg(eplustbl_path));
               }
               ///////////////////////////
 
