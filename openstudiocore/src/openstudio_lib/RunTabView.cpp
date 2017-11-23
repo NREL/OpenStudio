@@ -978,7 +978,7 @@ void RunView::onRunProcessFinished(int exitCode, QProcess::ExitStatus status)
   if(runmode == RUN_ENERGY_BEC)
   {
     runmode = RUN_BEC;
-    playButtonClicked00(true, runmode);
+    playButtonClicked00(true, runmode, false);
   }
   else if(runmode == RUN_BEC){
     becFinished();
@@ -997,7 +997,7 @@ openstudio::path RunView::resourcePath(const openstudio::path & osmPath) const
   return resourcePath; 
 }
 
-void RunView::playButtonClicked00(bool t_checked, RunView::RUNMODE runmode)
+void RunView::playButtonClicked00(bool t_checked, RunView::RUNMODE runmode, bool clearLog)
 {
     std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
 
@@ -1035,18 +1035,21 @@ void RunView::playButtonClicked00(bool t_checked, RunView::RUNMODE runmode)
       osdocument->disableTabsDuringRun();
       m_openSimDirButton->setEnabled(false);
 
-      if (exists(stdoutPath)){
-        remove(stdoutPath);
-      }
-      if (exists(stderrPath)){
-        remove(stderrPath);
-      }
-
       m_progressBar->setValue(0);
       m_state = State::stopped;
-      m_textInfo->clear();
-      m_runProcess->setStandardOutputFile( toQString(stdoutPath) );
-      m_runProcess->setStandardErrorFile( toQString(stderrPath) );
+
+      if(clearLog)
+      {
+          if (exists(stdoutPath)){
+              remove(stdoutPath);
+          }
+          if (exists(stderrPath)){
+              remove(stderrPath);
+          }
+          m_textInfo->clear();
+          m_runProcess->setStandardOutputFile( toQString(stdoutPath) );
+          m_runProcess->setStandardErrorFile( toQString(stderrPath) );
+      }
 
       if(runmode == RUN_ENERGY || runmode == RUN_ENERGY_BEC){
           QStringList arguments;
@@ -1214,7 +1217,7 @@ void RunView::playButtonClicked(bool t_checked)
     else
         runmode = RUN_ENERGY_BEC;
 
-    playButtonClicked00(t_checked, runmode);
+    playButtonClicked00(t_checked, runmode, true);
 
 }
 

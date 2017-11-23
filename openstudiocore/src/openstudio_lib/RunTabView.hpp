@@ -91,7 +91,7 @@ namespace openstudio {
     void logNormalText(const QString & text, const QString colorName=QString());
     void logH1Text(const QString & text, const QString colorName=QString());
     void logH2Text(const QString & text, const QString colorName=QString());
-    void playButtonClicked00(bool t_checked, RUNMODE runmode);
+    void playButtonClicked00(bool t_checked, RUNMODE runmode, bool clearLog);
     void becFinished();
     //END BEC CODE.
 
