@@ -39,6 +39,8 @@
 #include "../model/SpaceLoadInstance.hpp"
 #include "../model/SpaceType.hpp"
 
+#include "../utilities/idf/WorkspaceObject_Impl.hpp"
+
 
 #include <QWidget>
 

@@ -175,11 +175,19 @@ namespace detail {
 
     Schedule alwaysOnDiscreteSchedule() const;
 
+    std::string alwaysOnDiscreteScheduleName() const;
+
     Schedule alwaysOffDiscreteSchedule() const;
+
+    std::string alwaysOffDiscreteScheduleName() const;
 
     Schedule alwaysOnContinuousSchedule() const;
 
+    std::string alwaysOnContinuousScheduleName() const;
+
     SpaceType plenumSpaceType() const;
+
+    std::string plenumSpaceTypeName() const;
 
     //@}
     /** @name Setters */

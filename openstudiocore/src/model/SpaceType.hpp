@@ -355,6 +355,9 @@ class MODEL_API SpaceType : public ResourceObject {
   // Returns the floor area in the building using this SpaceType.  Includes Space multipliers.
   double floorArea() const;
 
+  // Will not allow user to set name to protected values such as "Plenum Space Type"
+  boost::optional<std::string> setNameProtected(const std::string& newName);
+
   //@}
  protected:
   /// @cond
