@@ -64,29 +64,21 @@ class MODEL_API AvailabilityManagerNightCycle : public AvailabilityManager {
 
 
   std::string controlType() const;
-
   bool setControlType(std::string controlType);
-
   void resetControlType();
-
   bool isControlTypeDefaulted() const;
 
 
   double thermostatTolerance() const;
-
   Quantity getThermostatTolerance(bool returnIP=false) const;
-
   bool setThermostatTolerance(const Quantity& thermostatTolerance);
-
-  void setThermostatTolerance(double thermostatTolerance);
-
+  bool setThermostatTolerance(double thermostatTolerance);
   bool isThermostatToleranceDefaulted() const;
-
   void resetThermostatTolerance();
 
 
   double cyclingRunTime() const;
-  void setCyclingRunTime(double cyclingRunTime);
+  bool setCyclingRunTime(double cyclingRunTime);
   bool setCyclingRunTime(const Quantity& cyclingRunTime);
   void resetCyclingRunTime();
   Quantity getCyclingRunTime(bool returnIP=false) const;

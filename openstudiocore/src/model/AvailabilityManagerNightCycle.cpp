@@ -143,9 +143,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void AvailabilityManagerNightCycle_Impl::setThermostatTolerance(double thermostatTolerance) {
+  bool AvailabilityManagerNightCycle_Impl::setThermostatTolerance(double thermostatTolerance) {
     bool result = setDouble(OS_AvailabilityManager_NightCycleFields::ThermostatTolerance, thermostatTolerance);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool AvailabilityManagerNightCycle_Impl::setThermostatTolerance(const Quantity& thermostatTolerance) {
@@ -162,9 +162,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void AvailabilityManagerNightCycle_Impl::setCyclingRunTime(double cyclingRunTime) {
+  bool AvailabilityManagerNightCycle_Impl::setCyclingRunTime(double cyclingRunTime) {
     bool result = setDouble(OS_AvailabilityManager_NightCycleFields::CyclingRunTime, cyclingRunTime);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool AvailabilityManagerNightCycle_Impl::setCyclingRunTime(const Quantity& cyclingRunTime) {
@@ -552,8 +552,8 @@ void AvailabilityManagerNightCycle::resetControlType() {
   getImpl<detail::AvailabilityManagerNightCycle_Impl>()->resetControlType();
 }
 
-void AvailabilityManagerNightCycle::setThermostatTolerance(double thermostatTolerance) {
-  getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setThermostatTolerance(thermostatTolerance);
+bool AvailabilityManagerNightCycle::setThermostatTolerance(double thermostatTolerance) {
+  return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setThermostatTolerance(thermostatTolerance);
 }
 
 bool AvailabilityManagerNightCycle::setThermostatTolerance(const Quantity& thermostatTolerance) {
@@ -564,8 +564,8 @@ void AvailabilityManagerNightCycle::resetThermostatTolerance() {
   getImpl<detail::AvailabilityManagerNightCycle_Impl>()->resetThermostatTolerance();
 }
 
-void AvailabilityManagerNightCycle::setCyclingRunTime(double cyclingRunTime) {
-  getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setCyclingRunTime(cyclingRunTime);
+bool AvailabilityManagerNightCycle::setCyclingRunTime(double cyclingRunTime) {
+  return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setCyclingRunTime(cyclingRunTime);
 }
 
 bool AvailabilityManagerNightCycle::setCyclingRunTime(const Quantity& cyclingRunTime) {

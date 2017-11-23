@@ -83,7 +83,7 @@ namespace detail {
     double thermostatTolerance() const;
     Quantity getThermostatTolerance(bool returnIP=false) const;
     bool isThermostatToleranceDefaulted() const;
-    void setThermostatTolerance(double thermostatTolerance);
+    bool setThermostatTolerance(double thermostatTolerance);
     bool setThermostatTolerance(const Quantity& thermostatTolerance);
     void resetThermostatTolerance();
 
@@ -95,7 +95,7 @@ namespace detail {
     double cyclingRunTime() const;
     Quantity getCyclingRunTime(bool returnIP=false) const;
     bool isCyclingRunTimeDefaulted() const;
-    void setCyclingRunTime(double cyclingRunTime);
+    bool setCyclingRunTime(double cyclingRunTime);
     bool setCyclingRunTime(const Quantity& cyclingRunTime);
     void resetCyclingRunTime();
 
