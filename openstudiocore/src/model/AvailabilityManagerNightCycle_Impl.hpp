@@ -87,6 +87,11 @@ namespace detail {
     bool setThermostatTolerance(const Quantity& thermostatTolerance);
     void resetThermostatTolerance();
 
+    std::string cyclingRunTimeControlType() const;
+    bool isCyclingRunTimeControlTypeDefaulted() const;
+    bool setCyclingRunTimeControlType(std::string cyclingRunTimeControlType);
+    void resetCyclingRunTimeControlType();
+
     double cyclingRunTime() const;
     Quantity getCyclingRunTime(bool returnIP=false) const;
     bool isCyclingRunTimeDefaulted() const;
@@ -123,6 +128,9 @@ namespace detail {
     openstudio::Quantity thermostatTolerance_IP() const;
     openstudio::Quantity cyclingRunTime_SI() const;
     openstudio::Quantity cyclingRunTime_IP() const;
+
+    std::vector<std::string> cyclingRunTimeControlTypeValues() const;
+
 
     boost::optional<ModelObject> applicabilityScheduleAsModelObject() const;
     boost::optional<ModelObject> fanScheduleAsModelObject() const;

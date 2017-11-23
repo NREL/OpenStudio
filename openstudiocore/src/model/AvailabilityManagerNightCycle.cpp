@@ -185,6 +185,36 @@ namespace detail {
     return AvailabilityManagerNightCycle::controlTypeValues();
   }
 
+
+  // Cycling Run Time Control Type
+  std::vector<std::string> AvailabilityManagerNightCycle_Impl::cyclingRunTimeControlTypeValues() const {
+    return AvailabilityManagerNightCycle::cyclingRunTimeControlTypeValues();
+  }
+
+  std::string AvailabilityManagerNightCycle_Impl::cyclingRunTimeControlType() const {
+    boost::optional<std::string> value = getString(OS_AvailabilityManager_NightCycleFields::CyclingRunTimeControlType, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool AvailabilityManagerNightCycle_Impl::isCyclingRunTimeControlTypeDefaulted() const {
+    return isEmpty(OS_AvailabilityManager_NightCycleFields::CyclingRunTimeControlType);
+  }
+
+  bool AvailabilityManagerNightCycle_Impl::setCyclingRunTimeControlType(std::string cyclingRunTimeControlType) {
+    bool result = setString(OS_AvailabilityManager_NightCycleFields::CyclingRunTimeControlType, cyclingRunTimeControlType);
+    return result;
+
+  }
+
+  void AvailabilityManagerNightCycle_Impl::resetCyclingRunTimeControlType() {
+    bool result = setString(OS_AvailabilityManager_NightCycleFields::CyclingRunTimeControlType, "");
+    OS_ASSERT(result);
+
+  }
+
+
+
   openstudio::Quantity AvailabilityManagerNightCycle_Impl::thermostatTolerance_SI() const {
     return getThermostatTolerance(false);
   }
@@ -201,6 +231,10 @@ namespace detail {
     return getCyclingRunTime(true);
   }
 
+
+
+
+  // Control Zone
   ModelObjectList AvailabilityManagerNightCycle_Impl::controlThermalZoneList() const {
     boost::optional<ModelObjectList> mo_list = getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_AvailabilityManager_NightCycleFields::ControlZoneorZoneListName);
     if (mo_list) {
@@ -209,9 +243,6 @@ namespace detail {
       LOG_AND_THROW(briefDescription() << " does not have a controlThermalZoneList attached");
     }
   }
-
-
-  // Control Zone
   void AvailabilityManagerNightCycle_Impl::clearControlThermalZoneList() {
     ModelObjectList mo_list = controlThermalZoneList();
     for (const ModelObject& mo : mo_list.modelObjects()) {
@@ -313,7 +344,6 @@ namespace detail {
 
 
   // Heating Control Zones
-
   ModelObjectList AvailabilityManagerNightCycle_Impl::heatingControlThermalZoneList() const {
     boost::optional<ModelObjectList> mo_list = getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_AvailabilityManager_NightCycleFields::HeatingControlZoneorZoneListName);
     if (mo_list) {
@@ -626,6 +656,27 @@ void AvailabilityManagerNightCycle::resetHeatingZoneFansOnlyThermalZones() {
 
 
 
+// Cycling Run Time Control Type
+std::vector<std::string> AvailabilityManagerNightCycle::cyclingRunTimeControlTypeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_AvailabilityManager_NightCycleFields::CyclingRunTimeControlType);
+}
+
+std::string AvailabilityManagerNightCycle::cyclingRunTimeControlType() const {
+  return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->cyclingRunTimeControlType();
+}
+
+bool AvailabilityManagerNightCycle::isCyclingRunTimeControlTypeDefaulted() const {
+  return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->isCyclingRunTimeControlTypeDefaulted();
+}
+
+bool AvailabilityManagerNightCycle::setCyclingRunTimeControlType(std::string cyclingRunTimeControlType) {
+  return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setCyclingRunTimeControlType(cyclingRunTimeControlType);
+}
+
+void AvailabilityManagerNightCycle::resetCyclingRunTimeControlType() {
+  getImpl<detail::AvailabilityManagerNightCycle_Impl>()->resetCyclingRunTimeControlType();
+}
 
 
 

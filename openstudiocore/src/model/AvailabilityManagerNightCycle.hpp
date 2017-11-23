@@ -86,16 +86,19 @@ class MODEL_API AvailabilityManagerNightCycle : public AvailabilityManager {
 
 
   double cyclingRunTime() const;
-
   void setCyclingRunTime(double cyclingRunTime);
-
   bool setCyclingRunTime(const Quantity& cyclingRunTime);
-
   void resetCyclingRunTime();
-
   Quantity getCyclingRunTime(bool returnIP=false) const;
-
   bool isCyclingRunTimeDefaulted() const;
+
+
+  static std::vector<std::string> cyclingRunTimeControlTypeValues();
+  std::string cyclingRunTimeControlType() const;
+  bool isCyclingRunTimeControlTypeDefaulted() const;
+  bool setCyclingRunTimeControlType(std::string cyclingRunTimeControlType);
+  void resetCyclingRunTimeControlType();
+
 
   /** \deprecated AvailabilityManagerNightCycle::controlThermalZone has been deprecated and will be removed in a future release, please use AvailabilityManagerNightCycle::controlThermalZones\n
     * Get the controlThermalZone if it's unique, otherwise returns the first one found and issues a warning. **/
