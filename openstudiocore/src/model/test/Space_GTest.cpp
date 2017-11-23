@@ -1364,8 +1364,15 @@ TEST_F(ModelFixture,Space_Plenum)
   ASSERT_EQ(2u, plenumSpaces.size());
 
   EXPECT_EQ("Plenum Space Type", plenumSpaceType.nameString());
-  plenumSpaceType.setName("Some Other Name");
+  plenumSpaceType.setNameProtected("Some Other Name");
   EXPECT_EQ("Plenum Space Type", plenumSpaceType.nameString());
+
+  EXPECT_EQ("Plenum Space Type", plenumSpaceType.nameString());
+  plenumSpaceType.setName("Some Other Name");
+  EXPECT_EQ("Some Other Name", plenumSpaceType.nameString());
+
+  plenumSpaceType = model.plenumSpaceType();
+  EXPECT_EQ(3u, model.getConcreteModelObjects<model::SpaceType>().size());
 
   ASSERT_TRUE(supplySpace.spaceType());
   EXPECT_EQ(plenumSpaceType.handle(), supplySpace.spaceType()->handle());
