@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+
+  <mime-type type="application/openstudio.osm">
+    <comment>OpenStudio Model</comment>
+    <glob pattern="*.osm"/>
+    <icon name="application-openstudio.osm"/>
+  </mime-type>
+
+  <mime-type type="application/openstudio.osc">
+    <comment>OpenStudio Component</comment>
+    <glob pattern="*.osc"/>
+    <icon name="application-openstudio.osc"/>
+  </mime-type>
+
+  <mime-type type="application/openstudio.ossr">
+    <comment>OpenStudio Standard Result</comment>
+    <glob pattern="*.ossr"/>
+    <icon name="application-openstudio.ossr"/>
+  </mime-type>
+
+</mime-info>

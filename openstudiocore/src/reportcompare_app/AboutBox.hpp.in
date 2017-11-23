@@ -1,0 +1,9 @@
+#ifndef REPORTCOMPARE_ABOUTBOX
+
+#define REPORTCOMPARE_ABOUTBOX \
+"<h2>Report compare Thai Edition</h2> \
+<p>Version: ${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}-TH</p> \
+<p>Build Number: ${CMAKE_VERSION_BUILD}</p> \
+<p>Compiler: ${ABOUT_COMPILER}</p> \
+
+#endif // REPORTCOMPARE_ABOUTBOX

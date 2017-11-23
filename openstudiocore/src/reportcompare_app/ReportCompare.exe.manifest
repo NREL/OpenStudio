@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+  <assemblyIdentity version="1.0.0.0" name="ReportCompare" type="win32"/>
+  <description>ReportCompare</description>
+  <!-- Identify the application security requirements. -->
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
+    <security>
+      <requestedPrivileges>
+        <requestedExecutionLevel level="asInvoker" uiAccess="false"/>
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!--The ID below indicates application support for Windows Vista -->
+      <supportedOS Id="{97dec5cc-fe03-4897-983e-d0d054cd6b92}"/>
+      <!--The ID below indicates application support for Windows 7 -->
+      <supportedOS Id="{8fb72fa6-15e5-4f2e-877f-13cc8b9bb3bc}"/>
+      <!--The ID below indicates application support for Windows 8 -->
+      <supportedOS Id="{096f8d34-3a80-4d0f-9dd2-aa3c5dfb4e17}"/>
+      <!--The ID below indicates application support for Windows 8.1 -->
+      <supportedOS Id="{d79f485a-4420-4128-b58a-a5dd45783e76}"/>
+    </application>
+  </compatibility>
+</assembly>

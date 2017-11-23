@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=ReportCompare
+Comment=Supports whole building energy modeling using EnergyPlus
+Exec=${CMAKE_INSTALL_PREFIX}/bin/ReportCompare %f
+Terminal=false
+Type=Application
+Icon=ReportCompare
+Categories=Science;Engineering;

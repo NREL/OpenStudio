@@ -211,6 +211,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void aboutClicked();
 
+  // called before actual save (copy from temp to user location) occurs
   void modelSaving(const openstudio::path &t_path);
 
   void downloadComponentsClicked();
@@ -236,6 +237,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   void exportgbXML();
 
   void exportSDD();
+
+  void exportBEC();
 
   // returns if a file was saved
   bool save();
@@ -301,7 +304,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   enum fileType{
     SDD,
-    GBXML
+    GBXML,
+    BEC
   };
 
   void exportFile(fileType type);

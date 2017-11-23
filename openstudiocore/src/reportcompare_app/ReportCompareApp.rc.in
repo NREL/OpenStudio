@@ -1,0 +1,30 @@
+IDI_ICON1   ICON  DISCARDABLE  "${CMAKE_CURRENT_SOURCE_DIR}/../../icons/os.ico"
+IDI_ICON2   ICON  DISCARDABLE  "${CMAKE_CURRENT_SOURCE_DIR}/../../icons/osm.ico"
+IDI_ICON3   ICON  DISCARDABLE  "${CMAKE_CURRENT_SOURCE_DIR}/../../icons/osc.ico"
+IDI_ICON4   ICON  DISCARDABLE  "${CMAKE_CURRENT_SOURCE_DIR}/../../icons/ossr.ico"
+
+1 RT_MANIFEST "${CMAKE_CURRENT_SOURCE_DIR}/ReportCompare.exe.manifest"
+1 VERSIONINFO
+FILEVERSION ${CMAKE_VERSION_MAJOR},${CMAKE_VERSION_MINOR},${CMAKE_VERSION_PATCH},${RC_BUILD_STR}
+PRODUCTVERSION ${CMAKE_VERSION_MAJOR},${CMAKE_VERSION_MINOR},${CMAKE_VERSION_PATCH}
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "CompanyName",      "NREL\0"
+            VALUE "FileDescription",  "ReportCompare\0"
+            VALUE "FileVersion",      "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.${CMAKE_VERSION_BUILD}\0"
+            VALUE "InternalName",     "ReportCompare\0"
+            VALUE "LegalCopyright",   "Copyright © 2015 National Renewable Energy Laboratory\0"
+            VALUE "LegalTrademarks",  "ReportCompare (TM) is a trademark of NREL\0"
+            VALUE "OriginalFilename", "ReportCompare.exe\0"
+            VALUE "ProductName",      "ReportCompare\0"
+            VALUE "ProductVersion",   "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END

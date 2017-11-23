@@ -1,0 +1,10 @@
+[General]
+building_standard0="Office building=171"
+building_standard1="Department store=231"
+building_standard2="Community building=298"
+building_standard3="Hotel=199"
+building_standard4="Condominium=211"
+building_standard5="Medical Center=195"
+building_standard6="Educational Institution=85"
+building_standard7="Service Facility=134"
+building_standard8="Theater=231"
