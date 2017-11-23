@@ -74,6 +74,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
     idfObject.setString(AvailabilityManager_NightCycleFields::FanScheduleName,airLoopHVAC->availabilitySchedule().name().get());
   }
 
+  // TODO: @kbenne, should we even translate the AVM:NightCycle if it's not on an airloop?
+
   if( auto s = modelObject.name() ) {
     idfObject.setName(*s);
   }
@@ -132,7 +134,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
          + n_coolingControlThermalZones
          + n_heatingControlThermalZones
          + n_heatingZoneFansOnlyThermalZones) > 0 ) {
-      LOG(Warn, "All Control Zone Lists will be ignored for " << modelObject.briefDescription()
+      LOG(Info, "All Control Zone Lists will be ignored for " << modelObject.briefDescription()
             << " due to the Control Type of '" << controlType << "'.");
     }
 
@@ -142,7 +144,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
     if ((  n_coolingControlThermalZones
          + n_heatingControlThermalZones
          + n_heatingZoneFansOnlyThermalZones) > 0 ) {
-      LOG(Warn, "All Control Zone Lists other than 'Control Zone List' will be ignored for " << modelObject.briefDescription()
+      LOG(Info, "All Control Zone Lists other than 'Control Zone List' will be ignored for " << modelObject.briefDescription()
             << " due to the Control Type of '" << controlType << "'.");
     }
 
@@ -158,7 +160,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
     if ((  n_controlThermalZones
          + n_heatingControlThermalZones
          + n_heatingZoneFansOnlyThermalZones) > 0 ) {
-      LOG(Warn, "All Control Zone Lists  other than 'Cooling Control Zone List' will be ignored for " << modelObject.briefDescription()
+      LOG(Info, "All Control Zone Lists  other than 'Cooling Control Zone List' will be ignored for " << modelObject.briefDescription()
             << " due to the Control Type of '" << controlType << "'.");
     }
 
@@ -173,7 +175,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
     // Only the heatingControlThermalZones, and heatingZoneFansOnlyThermalZones aren't ignored
     if (( n_controlThermalZones
           + n_coolingControlThermalZones) > 0 ) {
-      LOG(Warn, "All Control Zone Lists  other than 'Heating Control Zone List' and optionally "
+      LOG(Info, "All Control Zone Lists  other than 'Heating Control Zone List' and optionally "
                 "'Heating Zone Fans Only Zone List' will be ignored for " << modelObject.briefDescription()
                 << " due to the Control Type of '" << controlType << "'.");
     }
@@ -193,7 +195,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
     if ((  n_controlThermalZones
           + n_coolingControlThermalZones
           + n_heatingControlThermalZones) > 0 ) {
-      LOG(Warn, "All Control Zone Lists  other than 'Heating Zone Fans Only Zone List' will be ignored for "
+      LOG(Info, "All Control Zone Lists  other than 'Heating Zone Fans Only Zone List' will be ignored for "
                 << modelObject.briefDescription()
                 << " due to the Control Type of '" << controlType << "'.");
     }
@@ -208,7 +210,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
 
     // Only the coolingControlThermalZones, coolingControlThermalZones, and optionally heatingZoneFansOnlyThermalZones aren't ignored
       if ( n_controlThermalZones > 0 ) {
-      LOG(Warn, "All Control Zone Lists  other than 'Heating Control Zone List', 'Cooling Control Zone List' and optionally "
+      LOG(Info, "All Control Zone Lists  other than 'Heating Control Zone List', 'Cooling Control Zone List' and optionally "
                 "'Heating Zone Fans Only Zone List' will be ignored for " << modelObject.briefDescription()
                 << " due to the Control Type of '" << controlType << "'.");
     }
@@ -246,7 +248,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
 
     if (default_controlThermalZones) {
       // Get all zones served by the AirLoop attached to it
-      // I need work done on PR #2844 for that
+      if( airLoopHVAC ) {
+        for( const ThermalZone & tz : airLoopHVAC->thermalZones() ) {
+          auto eg = zoneList.pushExtensibleGroup();
+          eg.setString(ZoneListExtensibleFields::ZoneName, tz.name().get());
+        }
+        LOG(Info, "Defaulting the Control Zone List to all zones served by the AirLoopHVAC attached to "
+               << modelObject.briefDescription());
+      } else {
+        LOG(Warn, "Control Zone List is expected for " << modelObject.briefDescription()
+               << " but it cannot be defaulted because it isn't on an AirLoopHVAC");
+      }
     } else {
       for (const ThermalZone& tz: controlThermalZones) {
         auto eg = zoneList.pushExtensibleGroup();
@@ -268,7 +280,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
 
     if (default_coolingControlThermalZones) {
       // Get all zones served by the AirLoop attached to it
-      // I need work done on PR #2844 for that
+      if( airLoopHVAC ) {
+        for( const ThermalZone & tz : airLoopHVAC->thermalZones() ) {
+          auto eg = zoneList.pushExtensibleGroup();
+          eg.setString(ZoneListExtensibleFields::ZoneName, tz.name().get());
+        }
+        LOG(Info, "Defaulting the Cooling Control Zone List to all zones served by the AirLoopHVAC attached to "
+               << modelObject.briefDescription());
+      } else {
+        LOG(Warn, "Cooling Control Zone List is expected for " << modelObject.briefDescription()
+               << " but it cannot be defaulted because it isn't on an AirLoopHVAC");
+      }
     } else {
       for (const ThermalZone& tz: coolingControlThermalZones) {
         auto eg = zoneList.pushExtensibleGroup();
@@ -290,7 +312,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
 
     if (default_heatingControlThermalZones) {
       // Get all zones served by the AirLoop attached to it
-      // I need work done on PR #2844 for that
+      if( airLoopHVAC ) {
+        for( const ThermalZone & tz : airLoopHVAC->thermalZones() ) {
+          auto eg = zoneList.pushExtensibleGroup();
+          eg.setString(ZoneListExtensibleFields::ZoneName, tz.name().get());
+        }
+        LOG(Info, "Defaulting the Heating Control Zone List to all zones served by the AirLoopHVAC attached to "
+               << modelObject.briefDescription());
+      } else {
+        LOG(Warn, "Cooling Heating Zone List is expected for " << modelObject.briefDescription()
+               << " but it cannot be defaulted because it isn't on an AirLoopHVAC");
+      }
     } else {
       for (const ThermalZone& tz: heatingControlThermalZones) {
         auto eg = zoneList.pushExtensibleGroup();
@@ -311,7 +343,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
 
     if (default_heatingZoneFansOnlyThermalZones) {
       // Get all zones served by the AirLoop attached to it
-      // I need work done on PR #2844 for that
+      if( airLoopHVAC ) {
+        for( const ThermalZone & tz : airLoopHVAC->thermalZones() ) {
+          auto eg = zoneList.pushExtensibleGroup();
+          eg.setString(ZoneListExtensibleFields::ZoneName, tz.name().get());
+        }
+        LOG(Info, "Defaulting the Heating Zone Fans Only Zones List to all zones served by the AirLoopHVAC attached to "
+               << modelObject.briefDescription());
+      } else {
+        LOG(Warn, "Heating Zone Fans Only Zones List is expected for " << modelObject.briefDescription()
+               << " but it cannot be defaulted because it isn't on an AirLoopHVAC");
+      }
     } else {
       for (const ThermalZone& tz: heatingZoneFansOnlyThermalZones) {
         auto eg = zoneList.pushExtensibleGroup();
