@@ -114,7 +114,7 @@ TEST_F(ModelFixture, OtherEquipment_EndUseSubcategory)
   OtherEquipment equipment(definition);
 
   EXPECT_EQ(equipment.endUseSubcategory(), "General");
-  EXPECT_TRUE(equipment.isEndUseSubcategoryDefaulted());
+  EXPECT_FALSE(equipment.isEndUseSubcategoryDefaulted());
   EXPECT_TRUE(equipment.setEndUseSubcategory("Category A"));
   EXPECT_EQ(equipment.endUseSubcategory(), "Category A");
   EXPECT_TRUE(equipment.setEndUseSubcategory("Category B"));

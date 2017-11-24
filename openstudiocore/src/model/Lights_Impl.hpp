@@ -125,7 +125,7 @@ namespace detail {
 
     void resetMultiplier();
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
 

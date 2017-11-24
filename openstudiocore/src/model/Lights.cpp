@@ -40,6 +40,7 @@
 #include "DefaultScheduleSet.hpp"
 #include "DefaultScheduleSet_Impl.hpp"
 #include "LifeCycleCost.hpp"
+#include "Model.hpp"
 
 #include <utilities/idd/OS_Lights_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -223,9 +224,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void Lights_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool Lights_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_LightsFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void Lights_Impl::resetEndUseSubcategory() {
@@ -378,6 +380,18 @@ Lights::Lights(const LightsDefinition& lightsDefinition)
   : SpaceLoadInstance(Lights::iddObjectType(),lightsDefinition)
 {
   OS_ASSERT(getImpl<detail::Lights_Impl>());
+
+  /*
+   *Schedule sch = this->model().alwaysOnDiscreteSchedule();
+   *bool test = this->setSchedule(sch);
+   *OS_ASSERT(test);
+   *test = this->setMultiplier(1.0);
+   *OS_ASSERT(test);
+   */
+  bool test = this->setEndUseSubcategory("General");
+  OS_ASSERT(test);
+  test = this->setFractionReplaceable(1.0);
+  OS_ASSERT(test);
 }
 
 IddObjectType Lights::iddObjectType() {
@@ -417,8 +431,8 @@ void Lights::resetMultiplier() {
   getImpl<detail::Lights_Impl>()->resetMultiplier();
 }
 
-void Lights::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::Lights_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool Lights::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::Lights_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void Lights::resetEndUseSubcategory() {

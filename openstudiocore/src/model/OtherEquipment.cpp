@@ -40,6 +40,7 @@
 #include "DefaultScheduleSet.hpp"
 #include "DefaultScheduleSet_Impl.hpp"
 #include "LifeCycleCost.hpp"
+#include "Model.hpp"
 
 #include <utilities/idd/OS_OtherEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -340,6 +341,14 @@ OtherEquipment::OtherEquipment(const OtherEquipmentDefinition& definition)
   : SpaceLoadInstance(OtherEquipment::iddObjectType(),definition)
 {
   OS_ASSERT(getImpl<detail::OtherEquipment_Impl>());
+
+  /*
+   *Schedule sch = this->model().alwaysOnDiscreteSchedule();
+   *setSchedule(sch);
+   *setMultiplier(1.0);
+   *setFuelType("NaturalGas");
+   */
+  setEndUseSubcategory("General");
 }
 
 IddObjectType OtherEquipment::iddObjectType() {

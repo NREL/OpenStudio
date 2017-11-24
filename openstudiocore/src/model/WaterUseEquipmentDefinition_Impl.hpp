@@ -66,7 +66,7 @@ class MODEL_API WaterUseEquipmentDefinition_Impl : public SpaceLoadDefinition_Im
 
   std::string endUseSubcategory() const;
   bool isEndUseSubcategoryDefaulted() const;
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
   void resetEndUseSubcategory();
 
   double peakFlowRate() const;

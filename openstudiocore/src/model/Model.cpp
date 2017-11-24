@@ -419,6 +419,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(Luminaire);
     REGISTER_CONSTRUCTOR(LuminaireDefinition);
     REGISTER_CONSTRUCTOR(MaterialPropertyGlazingSpectralData);
+    REGISTER_CONSTRUCTOR(MaterialPropertyMoisturePenetrationDepthSettings);
     REGISTER_CONSTRUCTOR(MasslessOpaqueMaterial);
     REGISTER_CONSTRUCTOR(MeterCustom);
     REGISTER_CONSTRUCTOR(MeterCustomDecrement);
@@ -860,6 +861,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(Luminaire);
     REGISTER_COPYCONSTRUCTORS(LuminaireDefinition);
     REGISTER_COPYCONSTRUCTORS(MaterialPropertyGlazingSpectralData);
+    REGISTER_COPYCONSTRUCTORS(MaterialPropertyMoisturePenetrationDepthSettings);
     REGISTER_COPYCONSTRUCTORS(MasslessOpaqueMaterial);
     REGISTER_COPYCONSTRUCTORS(MeterCustom);
     REGISTER_COPYCONSTRUCTORS(MeterCustomDecrement);
@@ -1310,7 +1312,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 
   Schedule Model_Impl::alwaysOffDiscreteSchedule() const
   {
-    std::string alwaysOffName("Always Off Discrete");
+    std::string alwaysOffName = this->alwaysOffDiscreteScheduleName();
 
     std::vector<ScheduleConstant> schedules = model().getConcreteModelObjects<ScheduleConstant>();
 
@@ -1320,6 +1322,8 @@ if (_className::iddObjectType() == typeToCreate) { \
       {
         if( istringEqual(name.get(),alwaysOffName) )
         {
+          // DLM: if a schedule matches the name but not these other properties we should reclaim the name or at least warn
+
           if( equal<double>(schedule.value(),0.0) )
           {
             if( boost::optional<ScheduleTypeLimits> limits = schedule.scheduleTypeLimits() )
@@ -1360,9 +1364,14 @@ if (_className::iddObjectType() == typeToCreate) { \
     return schedule;
   }
 
+  std::string Model_Impl::alwaysOffDiscreteScheduleName() const
+  {
+    return "Always Off Discrete";
+  }
+
   Schedule Model_Impl::alwaysOnDiscreteSchedule() const
   {
-    std::string alwaysOnName("Always On Discrete");
+    std::string alwaysOnName = this->alwaysOffDiscreteScheduleName();
 
     std::vector<ScheduleConstant> schedules = model().getConcreteModelObjects<ScheduleConstant>();
 
@@ -1372,6 +1381,8 @@ if (_className::iddObjectType() == typeToCreate) { \
       {
         if( istringEqual(name.get(),alwaysOnName) )
         {
+          // DLM: if a schedule matches the name but not these other properties we should reclaim the name or at least warn
+
           if( equal<double>(schedule.value(),1.0) )
           {
             if( boost::optional<ScheduleTypeLimits> limits = schedule.scheduleTypeLimits() )
@@ -1412,9 +1423,14 @@ if (_className::iddObjectType() == typeToCreate) { \
     return schedule;
   }
 
+  std::string Model_Impl::alwaysOnDiscreteScheduleName() const
+  {
+    return "Always On Discrete";
+  }
+
   Schedule Model_Impl::alwaysOnContinuousSchedule() const
   {
-    std::string alwaysOnName("Always On Continuous");
+    std::string alwaysOnName = this->alwaysOnContinuousScheduleName();
 
     std::vector<ScheduleConstant> schedules = model().getConcreteModelObjects<ScheduleConstant>();
 
@@ -1424,6 +1440,8 @@ if (_className::iddObjectType() == typeToCreate) { \
       {
         if (istringEqual(name.get(), alwaysOnName))
         {
+          // DLM: if a schedule matches the name but not these other properties we should reclaim the name or at least warn
+
           if (equal<double>(schedule.value(), 1.0))
           {
             if (boost::optional<ScheduleTypeLimits> limits = schedule.scheduleTypeLimits())
@@ -1464,9 +1482,14 @@ if (_className::iddObjectType() == typeToCreate) { \
     return schedule;
   }
 
+  std::string Model_Impl::alwaysOnContinuousScheduleName() const
+  {
+    return "Always On Continuous";
+  }
+
   SpaceType Model_Impl::plenumSpaceType() const
   {
-    std::string plenumSpaceTypeName("Plenum Space Type");
+    std::string plenumSpaceTypeName = this->plenumSpaceTypeName();
 
     std::vector<SpaceType> spaceTypes = model().getConcreteModelObjects<SpaceType>();
 
@@ -1486,6 +1509,11 @@ if (_className::iddObjectType() == typeToCreate) { \
     spaceType.setName(plenumSpaceTypeName);
 
     return spaceType;
+  }
+
+  std::string Model_Impl::plenumSpaceTypeName() const
+  {
+    return "Plenum Space Type";
   }
 
   WorkflowJSON Model_Impl::workflowJSON() const
@@ -1981,9 +2009,19 @@ Schedule Model::alwaysOffDiscreteSchedule() const
   return getImpl<detail::Model_Impl>()->alwaysOffDiscreteSchedule();
 }
 
+std::string Model::alwaysOffDiscreteScheduleName() const
+{
+  return getImpl<detail::Model_Impl>()->alwaysOffDiscreteScheduleName();
+}
+
 Schedule Model::alwaysOnDiscreteSchedule() const
 {
   return getImpl<detail::Model_Impl>()->alwaysOnDiscreteSchedule();
+}
+
+std::string Model::alwaysOnDiscreteScheduleName() const
+{
+  return getImpl<detail::Model_Impl>()->alwaysOnDiscreteScheduleName();
 }
 
 Schedule Model::alwaysOnContinuousSchedule() const
@@ -1991,11 +2029,20 @@ Schedule Model::alwaysOnContinuousSchedule() const
   return getImpl<detail::Model_Impl>()->alwaysOnContinuousSchedule();
 }
 
+std::string Model::alwaysOnContinuousScheduleName() const
+{
+  return getImpl<detail::Model_Impl>()->alwaysOnContinuousScheduleName();
+}
+
 SpaceType Model::plenumSpaceType() const
 {
   return getImpl<detail::Model_Impl>()->plenumSpaceType();
 }
 
+std::string Model::plenumSpaceTypeName() const
+{
+  return getImpl<detail::Model_Impl>()->plenumSpaceTypeName();
+}
 openstudio::WorkflowJSON Model::workflowJSON() const
 {
   return getImpl<detail::Model_Impl>()->workflowJSON();

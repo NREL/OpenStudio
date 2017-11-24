@@ -40,6 +40,8 @@
 #include "DefaultScheduleSet.hpp"
 #include "DefaultScheduleSet_Impl.hpp"
 #include "LifeCycleCost.hpp"
+#include "Model.hpp"
+
 
 #include <utilities/idd/OS_GasEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -202,9 +204,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GasEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool GasEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_GasEquipmentFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void GasEquipment_Impl::resetEndUseSubcategory() {
@@ -358,6 +361,16 @@ GasEquipment::GasEquipment(const GasEquipmentDefinition& gasEquipmentDefinition)
   : SpaceLoadInstance(GasEquipment::iddObjectType(),gasEquipmentDefinition)
 {
   OS_ASSERT(getImpl<detail::GasEquipment_Impl>());
+
+  /*
+   *Schedule sch = this->model().alwaysOnDiscreteSchedule();
+   *bool test = this->setSchedule(sch);
+   *OS_ASSERT(test);
+   *test = this->setMultiplier(1.0);
+   *OS_ASSERT(test);
+   */
+  bool test = this->setEndUseSubcategory("General");
+  OS_ASSERT(test);
 }
 
 IddObjectType GasEquipment::iddObjectType() {
@@ -381,8 +394,8 @@ void GasEquipment::resetMultiplier() {
   getImpl<detail::GasEquipment_Impl>()->resetMultiplier();
 }
 
-void GasEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::GasEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool GasEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::GasEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void GasEquipment::resetEndUseSubcategory() {

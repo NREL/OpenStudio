@@ -40,6 +40,7 @@
 #include "DefaultScheduleSet.hpp"
 #include "DefaultScheduleSet_Impl.hpp"
 #include "LifeCycleCost.hpp"
+#include "Model.hpp"
 
 #include <utilities/idd/OS_HotWaterEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -202,9 +203,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void HotWaterEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool HotWaterEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_HotWaterEquipmentFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void HotWaterEquipment_Impl::resetEndUseSubcategory() {
@@ -335,6 +337,16 @@ HotWaterEquipment::HotWaterEquipment(const HotWaterEquipmentDefinition& hotWater
   : SpaceLoadInstance(HotWaterEquipment::iddObjectType(),hotWaterEquipmentDefinition)
 {
   OS_ASSERT(getImpl<detail::HotWaterEquipment_Impl>());
+
+  /*
+   *Schedule sch = this->model().alwaysOnDiscreteSchedule();
+   *bool test = this->setSchedule(sch);
+   *OS_ASSERT(test);
+   *test = this->setMultiplier(1.0);
+   *OS_ASSERT(test);
+   */
+  bool test = this->setEndUseSubcategory("General");
+  OS_ASSERT(test);
 }
 
 IddObjectType HotWaterEquipment::iddObjectType() {
@@ -358,8 +370,8 @@ void HotWaterEquipment::resetMultiplier() {
   getImpl<detail::HotWaterEquipment_Impl>()->resetMultiplier();
 }
 
-void HotWaterEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::HotWaterEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool HotWaterEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::HotWaterEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void HotWaterEquipment::resetEndUseSubcategory() {

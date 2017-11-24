@@ -255,6 +255,10 @@ InternalMass::InternalMass(const InternalMassDefinition& internalMassDefinition)
   : SpaceLoadInstance(InternalMass::iddObjectType(),internalMassDefinition)
 {
   OS_ASSERT(getImpl<detail::InternalMass_Impl>());
+
+  bool test = this->setMultiplier(1.0);
+  OS_ASSERT(test);
+
 }
 
 IddObjectType InternalMass::iddObjectType() {

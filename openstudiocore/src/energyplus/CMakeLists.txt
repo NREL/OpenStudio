@@ -186,6 +186,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateLights.cpp
   ForwardTranslator/ForwardTranslateLuminaire.cpp
   ForwardTranslator/ForwardTranslateMaterialPropertyGlazingSpectralData.cpp
+  ForwardTranslator/ForwardTranslateMaterialPropertyMoisturePenetrationDepthSettings.cpp
   ForwardTranslator/ForwardTranslateMasslessOpaqueMaterial.cpp
   ForwardTranslator/ForwardTranslateMeterCustom.cpp
   ForwardTranslator/ForwardTranslateMeterCustomDecrement.cpp
@@ -494,6 +495,7 @@ set(${target_name}_test_src
   Test/ForwardTranslator_GTest.cpp
   Test/ReverseTranslator_GTest.cpp
 
+  Test/AirLoopHVACUnitarySystem_GTest.cpp
   Test/AirWallMaterial_GTest.cpp
   Test/Building_GTest.cpp
 

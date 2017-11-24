@@ -114,9 +114,10 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterUse_Equipment_DefinitionFields::LatentFractionScheduleName);
   }
 
-  void WaterUseEquipmentDefinition_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool WaterUseEquipmentDefinition_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_WaterUse_Equipment_DefinitionFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void WaterUseEquipmentDefinition_Impl::resetEndUseSubcategory() {
@@ -307,8 +308,8 @@ boost::optional<Schedule> WaterUseEquipmentDefinition::latentFractionSchedule() 
   return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->latentFractionSchedule();
 }
 
-void WaterUseEquipmentDefinition::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::WaterUseEquipmentDefinition_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool WaterUseEquipmentDefinition::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void WaterUseEquipmentDefinition::resetEndUseSubcategory() {

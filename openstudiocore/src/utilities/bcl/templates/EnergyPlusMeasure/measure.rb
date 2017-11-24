@@ -2,7 +2,7 @@
 # http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/
 
 # start the measure
-class EnergyPlusMeasureName < OpenStudio::Ruleset::WorkspaceUserScript
+class EnergyPlusMeasureName < OpenStudio::Measure::EnergyPlusMeasure
 
   # human readable name
   def name
@@ -21,10 +21,10 @@ class EnergyPlusMeasureName < OpenStudio::Ruleset::WorkspaceUserScript
 
   # define the arguments that the user will input
   def arguments(workspace)
-    args = OpenStudio::Ruleset::OSArgumentVector.new
+    args = OpenStudio::Measure::OSArgumentVector.new
 
     # the name of the zone to add to the model
-    zone_name = OpenStudio::Ruleset::OSArgument.makeStringArgument("zone_name", true)
+    zone_name = OpenStudio::Measure::OSArgument.makeStringArgument("zone_name", true)
     zone_name.setDisplayName("New zone name")
     zone_name.setDescription("This name will be used as the name of the new zone.")
     args << zone_name

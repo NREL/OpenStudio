@@ -195,14 +195,16 @@ namespace detail {
       if (*lightingLevel < 0){
         result = false;
       }else{
-        result = setString(OS_Lights_DefinitionFields::DesignLevelCalculationMethod, "LightingLevel");
-        OS_ASSERT(result);
+        // This one could return false for good reasons, if NaN of Infinity was passed
         result = setDouble(OS_Lights_DefinitionFields::LightingLevel, lightingLevel.get());
-        OS_ASSERT(result);
-        result = setString(OS_Lights_DefinitionFields::WattsperSpaceFloorArea, "");
-        OS_ASSERT(result);
-        result = setString(OS_Lights_DefinitionFields::WattsperPerson, "");
-        OS_ASSERT(result);
+        if (result) {
+          result = setString(OS_Lights_DefinitionFields::DesignLevelCalculationMethod, "LightingLevel");
+          OS_ASSERT(result);
+          result = setString(OS_Lights_DefinitionFields::WattsperSpaceFloorArea, "");
+          OS_ASSERT(result);
+          result = setString(OS_Lights_DefinitionFields::WattsperPerson, "");
+          OS_ASSERT(result);
+        }
       }
     } else {
       if (istringEqual("LightingLevel", this->designLevelCalculationMethod())){
@@ -218,14 +220,16 @@ namespace detail {
       if (*wattsperSpaceFloorArea < 0){
         result = false;
       }else{
-        result = setString(OS_Lights_DefinitionFields::DesignLevelCalculationMethod, "Watts/Area");
-        OS_ASSERT(result);
-        result = setString(OS_Lights_DefinitionFields::LightingLevel, "");
-        OS_ASSERT(result);
+        // This one could return false for good reasons, if NaN of Infinity was passed
         result = setDouble(OS_Lights_DefinitionFields::WattsperSpaceFloorArea, wattsperSpaceFloorArea.get());
-        OS_ASSERT(result);
-        result = setString(OS_Lights_DefinitionFields::WattsperPerson, "");
-        OS_ASSERT(result);
+        if (result) {
+          result = setString(OS_Lights_DefinitionFields::DesignLevelCalculationMethod, "Watts/Area");
+          OS_ASSERT(result);
+          result = setString(OS_Lights_DefinitionFields::LightingLevel, "");
+          OS_ASSERT(result);
+          result = setString(OS_Lights_DefinitionFields::WattsperPerson, "");
+          OS_ASSERT(result);
+        }
       }
     } else {
       if (istringEqual("Watts/Area", this->designLevelCalculationMethod())){
@@ -241,14 +245,16 @@ namespace detail {
       if (*wattsperPerson < 0){
         result = false;
       }else{
-        result = setString(OS_Lights_DefinitionFields::DesignLevelCalculationMethod, "Watts/Person");
-        OS_ASSERT(result);
-        result = setString(OS_Lights_DefinitionFields::LightingLevel, "");
-        OS_ASSERT(result);
-        result = setString(OS_Lights_DefinitionFields::WattsperSpaceFloorArea, "");
-        OS_ASSERT(result);
+        // This one could return false for good reasons, if NaN of Infinity was passed
         result = setDouble(OS_Lights_DefinitionFields::WattsperPerson, wattsperPerson.get());
-        OS_ASSERT(result);
+        if (result) {
+          result = setString(OS_Lights_DefinitionFields::DesignLevelCalculationMethod, "Watts/Person");
+          OS_ASSERT(result);
+          result = setString(OS_Lights_DefinitionFields::LightingLevel, "");
+          OS_ASSERT(result);
+          result = setString(OS_Lights_DefinitionFields::WattsperSpaceFloorArea, "");
+          OS_ASSERT(result);
+        }
       }
     } else {
       if (istringEqual("Watts/Person", this->designLevelCalculationMethod())){

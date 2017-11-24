@@ -80,7 +80,6 @@
 #define WINDDIRECTION "Wind Direction"
 #define RAININDICATOR "Rain Indicator"
 #define SNOWINDICATOR "Snow Indicator"
-#define SKYCLEARNESS "Sky Clearness"
 
 // SOLAR
 #define SOLARMODELINDICATOR "Solar Model Indicator"
@@ -88,6 +87,7 @@
 #define DIFFUSESOLARDAYSCHEDULE "Diffuse Solar Day Schedule"
 #define ASHRAETAUB "ASHRAE Taub"
 #define ASHRAETAUD "ASHRAE Taud"
+#define SKYCLEARNESS "Sky Clearness"
 
 namespace openstudio {
 
@@ -255,7 +255,6 @@ void DesignDayGridController::setCategoriesAndFields()
     fields.push_back(WINDDIRECTION);
     fields.push_back(RAININDICATOR);
     fields.push_back(SNOWINDICATOR);
-    fields.push_back(SKYCLEARNESS);
     std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Pressure\nWind\nPrecipitation"), fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
@@ -267,6 +266,7 @@ void DesignDayGridController::setCategoriesAndFields()
     fields.push_back(DIFFUSESOLARDAYSCHEDULE);
     fields.push_back(ASHRAETAUB);
     fields.push_back(ASHRAETAUD);
+    fields.push_back(SKYCLEARNESS);
     std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Solar"), fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
@@ -371,16 +371,7 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
         boost::optional<DataSource>()
         );
     }
-    else if (field == HUMIDITYINDICATINGCONDITIONSATMAXIMUMDRYBULB){
-      addValueEditColumn(Heading(QString(HUMIDITYINDICATINGCONDITIONSATMAXIMUMDRYBULB)),
-        NullAdapter(&model::DesignDay::humidityIndicatingConditionsAtMaximumDryBulb),
-        NullAdapter(&model::DesignDay::setHumidityIndicatingConditionsAtMaximumDryBulb),
-        boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetHumidityIndicatingConditionsAtMaximumDryBulb)),
-        boost::optional<std::function<bool(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted)),
-        boost::optional<DataSource>()
-        );
-    }
-    // STRING
+        // STRING
     else if (field == NAME) {
       addNameLineEditColumn(Heading(QString(NAME), false, false),
         false,
@@ -415,6 +406,22 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
         boost::optional<DataSource>()
         );
     }
+
+    // This should be reset when the humidity indication condition type is changed to something incompatible
+    else if (field == HUMIDITYINDICATINGCONDITIONSATMAXIMUMDRYBULB){
+      addQuantityEditColumn(Heading(QString(HUMIDITYINDICATINGCONDITIONSATMAXIMUMDRYBULB)),
+        QString("C"),
+        QString("C"),
+        QString("F"),
+        m_isIP,
+        NullAdapter(&model::DesignDay::humidityIndicatingConditionsAtMaximumDryBulb),
+        NullAdapter(&model::DesignDay::setHumidityIndicatingConditionsAtMaximumDryBulb),
+        boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetHumidityIndicatingConditionsAtMaximumDryBulb)),
+        boost::optional<std::function<bool(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted)),
+        boost::optional<DataSource>()
+        );
+    }
+
     else if (field == BAROMETRICPRESSURE){
       addQuantityEditColumn(Heading(QString(BAROMETRICPRESSURE)),
         QString("Pa"),
@@ -474,6 +481,7 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
         );
     }
     else if (field == HUMIDITYINDICATINGTYPE) {
+      // I don't see any problem here, yet the box stays empty. Checked the ReverseTranslator, it does its job too
       addComboBoxColumn<std::string, model::DesignDay>(Heading(QString(HUMIDITYINDICATINGTYPE)),
         static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
         std::function<std::vector<std::string>()>(&model::DesignDay::validHumidityIndicatingTypeValues),
@@ -563,8 +571,8 @@ void DesignDayGridController::onItemDropped(const OSItemId& itemId)
 
 void DesignDayGridController::refreshModelObjects()
 {
-  auto desighDays = m_model.getConcreteModelObjects<model::DesignDay>();
-  m_modelObjects = subsetCastVector<model::ModelObject>(desighDays);
+  auto designDays = m_model.getConcreteModelObjects<model::DesignDay>();
+  m_modelObjects = subsetCastVector<model::ModelObject>(designDays);
   std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
 }
 

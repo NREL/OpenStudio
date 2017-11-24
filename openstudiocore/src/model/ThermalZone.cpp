@@ -767,12 +767,28 @@ namespace detail {
   }
 
   bool ThermalZone_Impl::setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl) {
+
+    double secondaryFrac = fractionofZoneControlledbySecondaryDaylightingControl();
+    if ( (fractionofZoneControlledbyPrimaryDaylightingControl + secondaryFrac) > 1.0) {
+      LOG(Error, "Fraction of Zone Controlled by Secondary Daylight Control is " << secondaryFrac
+          << " and you supplied a Primary Fraction of " << fractionofZoneControlledbyPrimaryDaylightingControl
+          << " which would result in a sum greater than 1.0");
+      return false;
+    }
     bool result = setDouble(OS_ThermalZoneFields::FractionofZoneControlledbyPrimaryDaylightingControl, fractionofZoneControlledbyPrimaryDaylightingControl);
     return result;
   }
 
   bool ThermalZone_Impl::setFractionofZoneControlledbyPrimaryDaylightingControl(const Quantity& fractionofZoneControlledbyPrimaryDaylightingControl) {
-    return setQuantity(OS_ThermalZoneFields::FractionofZoneControlledbyPrimaryDaylightingControl,fractionofZoneControlledbyPrimaryDaylightingControl);
+    // Get double
+    OptionalDouble value = getDoubleFromQuantity(OS_ThermalZoneFields::FractionofZoneControlledbyPrimaryDaylightingControl,
+                                                 fractionofZoneControlledbyPrimaryDaylightingControl);
+    if (!value) {
+      return false;
+    } else {
+      // Call the method with the double, where the sanity check is
+      return setFractionofZoneControlledbyPrimaryDaylightingControl(value.get());
+    }
   }
 
   void ThermalZone_Impl::resetFractionofZoneControlledbyPrimaryDaylightingControl() {
@@ -781,12 +797,27 @@ namespace detail {
   }
 
   bool ThermalZone_Impl::setFractionofZoneControlledbySecondaryDaylightingControl(double fractionofZoneControlledbySecondaryDaylightingControl) {
+    double primaryFrac = fractionofZoneControlledbyPrimaryDaylightingControl();
+    if ( (fractionofZoneControlledbySecondaryDaylightingControl + primaryFrac) > 1.0) {
+      LOG(Error, "Fraction of Zone Controlled by Primary Daylight Control is " << primaryFrac
+          << " and you supplied a Secondary Fraction of " << fractionofZoneControlledbySecondaryDaylightingControl
+          << " which would result in a sum greater than 1.0");
+      return false;
+    }
     bool result = setDouble(OS_ThermalZoneFields::FractionofZoneControlledbySecondaryDaylightingControl, fractionofZoneControlledbySecondaryDaylightingControl);
     return result;
   }
 
   bool ThermalZone_Impl::setFractionofZoneControlledbySecondaryDaylightingControl(const Quantity& fractionofZoneControlledbySecondaryDaylightingControl) {
-    return setQuantity(OS_ThermalZoneFields::FractionofZoneControlledbySecondaryDaylightingControl,fractionofZoneControlledbySecondaryDaylightingControl);
+    // Get double
+    OptionalDouble value = getDoubleFromQuantity(OS_ThermalZoneFields::FractionofZoneControlledbySecondaryDaylightingControl,
+                                                 fractionofZoneControlledbySecondaryDaylightingControl);
+    if (!value) {
+      return false;
+    } else {
+      // Call the method with the double, where the sanity check is
+      return setFractionofZoneControlledbySecondaryDaylightingControl(value.get());
+    }
   }
 
   void ThermalZone_Impl::resetFractionofZoneControlledbySecondaryDaylightingControl() {

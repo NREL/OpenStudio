@@ -3356,6 +3356,73 @@ OS:MaterialProperty:GlazingSpectralData,
   N3,  \field Front Reflectance
   N4;  \field Back Reflectance
 
+OS:MaterialProperty:MoisturePenetrationDepth:Settings,
+       \memo Additional properties for moisture using EMPD procedure
+       \memo HeatBalanceAlgorithm choice=MoisturePenetrationDepthConductionTransferFunction only
+       \memo Has no effect with other HeatBalanceAlgorithm solution algorithms
+       \min-fields 11
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Material Name
+       \required-field
+       \type object-list
+       \object-list MaterialNames
+       \note Material Name that the moisture properties will be added to.
+       \note Additional material properties required to perform the EMPD model.
+       \note Effective Mean Penetration Depth (EMPD)
+  N1,  \field Water Vapor Diffusion Resistance Factor
+       \required-field
+       \units dimensionless
+       \minimum 0.0
+       \type real
+       \note Ratio of water vapor permeability of stagnant air to water vapor
+       \note permeability of material
+  N2,  \field Moisture Equation Coefficient a
+       \required-field
+       \units dimensionless
+       \type real
+  N3,  \field Moisture Equation Coefficient b
+       \required-field
+       \units dimensionless
+       \type real
+  N4,  \field Moisture Equation Coefficient c
+       \required-field
+       \units dimensionless
+       \type real
+  N5,  \field Moisture Equation Coefficient d
+       \required-field
+       \units dimensionless
+       \type real
+  N6,  \field Surface Layer Penetration Depth
+       \units m
+       \ip-units in
+       \type real
+       \minimum> 0
+       \autocalculatable
+       \default autocalculate
+  N7,  \field Deep Layer Penetration Depth
+       \units m
+       \ip-units in
+       \type real
+       \minimum 0
+       \autocalculatable
+       \default autocalculate
+  N8,  \field Coating Layer Thickness
+       \required-field
+       \type real
+       \units m
+       \ip-units in
+       \minimum 0
+  N9;  \field Coating Layer Water Vapor Diffusion Resistance Factor
+       \required-field
+       \type real
+       \units dimensionless
+       \minimum 0
+       \note The coating's resistance to water vapor diffusion relative to the
+       \note resistance to water vapor diffusion in stagnant air
+       \note (see Water Vapor Diffusion Resistance Factor above).
+  
 \group OpenStudio Constructions
 
 OS:Construction,
