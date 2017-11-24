@@ -91,7 +91,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setRatedCondensingTemperature(double ratedCondensingTemperature);
+    bool setRatedCondensingTemperature(double ratedCondensingTemperature);
 
     bool setRatedApproachTemperatureDifference(double ratedApproachTemperatureDifference);
 
@@ -131,4 +131,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONCONDENSERCASCADE_IMPL_HPP
-

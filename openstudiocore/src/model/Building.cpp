@@ -344,9 +344,9 @@ namespace detail {
     return isEmpty(OS_BuildingFields::Relocatable);
   }
 
-  void Building_Impl::setNorthAxis(double northAxis) {
+  bool Building_Impl::setNorthAxis(double northAxis) {
     bool result = setDouble(OS_BuildingFields::NorthAxis, northAxis);
-    OS_ASSERT(result);
+    return result;
   }
 
   void Building_Impl::resetNorthAxis() {
@@ -1053,8 +1053,8 @@ bool Building::isRelocatableDefaulted() const {
   return getImpl<detail::Building_Impl>()->isRelocatableDefaulted();
 }
 
-void Building::setNorthAxis(double northAxis) {
-  getImpl<detail::Building_Impl>()->setNorthAxis(northAxis);
+bool Building::setNorthAxis(double northAxis) {
+  return getImpl<detail::Building_Impl>()->setNorthAxis(northAxis);
 }
 
 void Building::resetNorthAxis() {
@@ -1308,4 +1308,3 @@ Building::Building(Model& model)
 
 } // model
 } // openstudio
-

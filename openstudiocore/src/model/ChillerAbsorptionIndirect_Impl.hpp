@@ -147,11 +147,11 @@ namespace detail {
 
     bool setOptimumPartLoadRatio(double optimumPartLoadRatio);
 
-    void setDesignCondenserInletTemperature(double designCondenserInletTemperature);
+    bool setDesignCondenserInletTemperature(double designCondenserInletTemperature);
 
-    void setCondenserInletTemperatureLowerLimit(double condenserInletTemperatureLowerLimit);
+    bool setCondenserInletTemperatureLowerLimit(double condenserInletTemperatureLowerLimit);
 
-    void setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit);
+    bool setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit);
 
     bool setDesignChilledWaterFlowRate(boost::optional<double> designChilledWaterFlowRate);
 
@@ -183,7 +183,7 @@ namespace detail {
 
     void autosizeDesignGeneratorFluidFlowRate();
 
-    void setTemperatureLowerLimitGeneratorInlet(double temperatureLowerLimitGeneratorInlet);
+    bool setTemperatureLowerLimitGeneratorInlet(double temperatureLowerLimitGeneratorInlet);
 
     bool setDegreeofSubcoolinginSteamGenerator(double degreeofSubcoolinginSteamGenerator);
 
@@ -225,4 +225,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_CHILLERABSORPTIONINDIRECT_IMPL_HPP
-

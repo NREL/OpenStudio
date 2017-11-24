@@ -500,9 +500,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void EvaporativeFluidCoolerSingleSpeed_Impl::setDriftLossPercent(double driftLossPercent) {
+  bool EvaporativeFluidCoolerSingleSpeed_Impl::setDriftLossPercent(double driftLossPercent) {
     bool result = setDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DriftLossPercent, driftLossPercent);
-    OS_ASSERT(result);
+    return result;
   }
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetDriftLossPercent() {
@@ -877,8 +877,8 @@ void EvaporativeFluidCoolerSingleSpeed::resetEvaporationLossFactor() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetEvaporationLossFactor();
 }
 
-void EvaporativeFluidCoolerSingleSpeed::setDriftLossPercent(double driftLossPercent) {
-  getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDriftLossPercent(driftLossPercent);
+bool EvaporativeFluidCoolerSingleSpeed::setDriftLossPercent(double driftLossPercent) {
+  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDriftLossPercent(driftLossPercent);
 }
 
 void EvaporativeFluidCoolerSingleSpeed::resetDriftLossPercent() {
@@ -917,4 +917,3 @@ EvaporativeFluidCoolerSingleSpeed::EvaporativeFluidCoolerSingleSpeed(std::shared
 
 } // model
 } // openstudio
-

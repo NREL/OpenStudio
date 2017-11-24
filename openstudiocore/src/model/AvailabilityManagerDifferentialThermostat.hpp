@@ -81,9 +81,9 @@ class MODEL_API AvailabilityManagerDifferentialThermostat : public AvailabilityM
 
   void resetColdNode();
 
-  void setTemperatureDifferenceOnLimit(double temperatureDifferenceOnLimit);
+  bool setTemperatureDifferenceOnLimit(double temperatureDifferenceOnLimit);
 
-  void setTemperatureDifferenceOffLimit(double temperatureDifferenceOffLimit);
+  bool setTemperatureDifferenceOffLimit(double temperatureDifferenceOffLimit);
 
   //@}
   /** @name Other */
@@ -115,4 +115,3 @@ typedef std::vector<AvailabilityManagerDifferentialThermostat> AvailabilityManag
 } // openstudio
 
 #endif // MODEL_AVAILABILITYMANAGERDIFFERENTIALTHERMOSTAT_HPP
-

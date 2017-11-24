@@ -198,11 +198,11 @@ namespace detail {
 
     void resetMaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature();
 
-    void setCoilMaterialCorrectionFactor(double coilMaterialCorrectionFactor);
+    bool setCoilMaterialCorrectionFactor(double coilMaterialCorrectionFactor);
 
     void resetCoilMaterialCorrectionFactor();
 
-    void setRefrigerantCorrectionFactor(double refrigerantCorrectionFactor);
+    bool setRefrigerantCorrectionFactor(double refrigerantCorrectionFactor);
 
     void resetRefrigerantCorrectionFactor();
 
@@ -218,7 +218,7 @@ namespace detail {
 
     void resetSHR60CorrectionFactor();
 
-    void setRatedTotalHeatingPower(double ratedTotalHeatingPower);
+    bool setRatedTotalHeatingPower(double ratedTotalHeatingPower);
 
     bool setHeatingPowerSchedule(Schedule& schedule);
 
@@ -232,7 +232,7 @@ namespace detail {
 
     void resetRatedFanPower();
 
-    void setRatedAirFlow(double ratedAirFlow);
+    bool setRatedAirFlow(double ratedAirFlow);
 
     bool setMinimumFanAirFlowRatio(double minimumFanAirFlowRatio);
 
@@ -264,7 +264,7 @@ namespace detail {
 
     void resetVerticalLocation();
 
-    void setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
+    bool setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
 
     void resetAverageRefrigerantChargeInventory();
 
@@ -289,4 +289,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONAIRCHILLER_IMPL_HPP
-

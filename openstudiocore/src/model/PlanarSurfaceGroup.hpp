@@ -73,19 +73,19 @@ class MODEL_API PlanarSurfaceGroup : public ParentObject {
   /** @name Setters */
   //@{
 
-  void setDirectionofRelativeNorth(double directionofRelativeNorth);
+  bool setDirectionofRelativeNorth(double directionofRelativeNorth);
 
   void resetDirectionofRelativeNorth();
 
-  void setXOrigin(double xOrigin);
+  bool setXOrigin(double xOrigin);
 
   void resetXOrigin();
 
-  void setYOrigin(double yOrigin);
+  bool setYOrigin(double yOrigin);
 
   void resetYOrigin();
 
-  void setZOrigin(double zOrigin);
+  bool setZOrigin(double zOrigin);
 
   void resetZOrigin();
 

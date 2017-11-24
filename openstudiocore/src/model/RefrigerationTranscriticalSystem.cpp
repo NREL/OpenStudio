@@ -456,9 +456,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationTranscriticalSystem_Impl::setReceiverPressure(double receiverPressure) {
+  bool RefrigerationTranscriticalSystem_Impl::setReceiverPressure(double receiverPressure) {
     bool result = setDouble(OS_Refrigeration_TranscriticalSystemFields::ReceiverPressure, receiverPressure);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationTranscriticalSystem_Impl::resetReceiverPressure() {
@@ -466,9 +466,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationTranscriticalSystem_Impl::setSubcoolerEffectiveness(double subcoolerEffectiveness) {
+  bool RefrigerationTranscriticalSystem_Impl::setSubcoolerEffectiveness(double subcoolerEffectiveness) {
     bool result = setDouble(OS_Refrigeration_TranscriticalSystemFields::SubcoolerEffectiveness, subcoolerEffectiveness);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationTranscriticalSystem_Impl::resetSubcoolerEffectiveness() {
@@ -481,9 +481,9 @@ namespace detail {
     return result;
   }
 
-  void RefrigerationTranscriticalSystem_Impl::setSumUASuctionPipingforMediumTemperatureLoads(double sumUASuctionPipingforMediumTemperatureLoads) {
+  bool RefrigerationTranscriticalSystem_Impl::setSumUASuctionPipingforMediumTemperatureLoads(double sumUASuctionPipingforMediumTemperatureLoads) {
     bool result = setDouble(OS_Refrigeration_TranscriticalSystemFields::SumUASuctionPipingforMediumTemperatureLoads, sumUASuctionPipingforMediumTemperatureLoads);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationTranscriticalSystem_Impl::resetSumUASuctionPipingforMediumTemperatureLoads() {
@@ -508,9 +508,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationTranscriticalSystem_Impl::setSumUASuctionPipingforLowTemperatureLoads(double sumUASuctionPipingforLowTemperatureLoads) {
+  bool RefrigerationTranscriticalSystem_Impl::setSumUASuctionPipingforLowTemperatureLoads(double sumUASuctionPipingforLowTemperatureLoads) {
     bool result = setDouble(OS_Refrigeration_TranscriticalSystemFields::SumUASuctionPipingforLowTemperatureLoads, sumUASuctionPipingforLowTemperatureLoads);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationTranscriticalSystem_Impl::resetSumUASuctionPipingforLowTemperatureLoads() {
@@ -750,16 +750,16 @@ bool RefrigerationTranscriticalSystem::setRefrigerationGasCooler(const Refrigera
   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setRefrigerationGasCooler(refrigerationGasCoolerAirCooled);
 }
 
-void RefrigerationTranscriticalSystem::setReceiverPressure(double receiverPressure) {
-  getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setReceiverPressure(receiverPressure);
+bool RefrigerationTranscriticalSystem::setReceiverPressure(double receiverPressure) {
+  return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setReceiverPressure(receiverPressure);
 }
 
 void RefrigerationTranscriticalSystem::resetReceiverPressure() {
   getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->resetReceiverPressure();
 }
 
-void RefrigerationTranscriticalSystem::setSubcoolerEffectiveness(double subcoolerEffectiveness) {
-  getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setSubcoolerEffectiveness(subcoolerEffectiveness);
+bool RefrigerationTranscriticalSystem::setSubcoolerEffectiveness(double subcoolerEffectiveness) {
+  return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setSubcoolerEffectiveness(subcoolerEffectiveness);
 }
 
 void RefrigerationTranscriticalSystem::resetSubcoolerEffectiveness() {
@@ -770,8 +770,8 @@ bool RefrigerationTranscriticalSystem::setRefrigerationSystemWorkingFluidType(st
   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setRefrigerationSystemWorkingFluidType(refrigerationSystemWorkingFluidType);
 }
 
-void RefrigerationTranscriticalSystem::setSumUASuctionPipingforMediumTemperatureLoads(double sumUASuctionPipingforMediumTemperatureLoads) {
-  getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setSumUASuctionPipingforMediumTemperatureLoads(sumUASuctionPipingforMediumTemperatureLoads);
+bool RefrigerationTranscriticalSystem::setSumUASuctionPipingforMediumTemperatureLoads(double sumUASuctionPipingforMediumTemperatureLoads) {
+  return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setSumUASuctionPipingforMediumTemperatureLoads(sumUASuctionPipingforMediumTemperatureLoads);
 }
 
 void RefrigerationTranscriticalSystem::resetSumUASuctionPipingforMediumTemperatureLoads() {
@@ -786,8 +786,8 @@ void RefrigerationTranscriticalSystem::resetMediumTemperatureSuctionPipingZone()
   getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->resetMediumTemperatureSuctionPipingZone();
 }
 
-void RefrigerationTranscriticalSystem::setSumUASuctionPipingforLowTemperatureLoads(double sumUASuctionPipingforLowTemperatureLoads) {
-  getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setSumUASuctionPipingforLowTemperatureLoads(sumUASuctionPipingforLowTemperatureLoads);
+bool RefrigerationTranscriticalSystem::setSumUASuctionPipingforLowTemperatureLoads(double sumUASuctionPipingforLowTemperatureLoads) {
+  return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setSumUASuctionPipingforLowTemperatureLoads(sumUASuctionPipingforLowTemperatureLoads);
 }
 
 void RefrigerationTranscriticalSystem::resetSumUASuctionPipingforLowTemperatureLoads() {
@@ -818,4 +818,3 @@ RefrigerationTranscriticalSystem::RefrigerationTranscriticalSystem(std::shared_p
 
 } // model
 } // openstudio
-

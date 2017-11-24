@@ -80,7 +80,7 @@ namespace detail {
     virtual std::vector<IdfObject> remove() override;
 
     virtual unsigned airInletPort() override;
-   
+
     virtual unsigned airOutletPort() override;
 
     virtual unsigned waterInletPort() override;
@@ -359,7 +359,7 @@ namespace detail {
 
     void autosizeMaximumSupplyAirTemperature();
 
-    void setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+    bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
 
     void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
 
@@ -420,4 +420,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_AIRLOOPHVACUNITARYSYSTEM_IMPL_HPP
-

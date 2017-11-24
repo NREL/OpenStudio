@@ -159,34 +159,34 @@ namespace detail {
     return isEmpty(OS_Curve_ExponentialSkewNormalFields::OutputUnitType);
   }
 
-  void CurveExponentialSkewNormal_Impl::setCoefficient1C1(double coefficient1C1) {
+  bool CurveExponentialSkewNormal_Impl::setCoefficient1C1(double coefficient1C1) {
     bool result = setDouble(OS_Curve_ExponentialSkewNormalFields::Coefficient1C1, coefficient1C1);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveExponentialSkewNormal_Impl::setCoefficient2C2(double coefficient2C2) {
+  bool CurveExponentialSkewNormal_Impl::setCoefficient2C2(double coefficient2C2) {
     bool result = setDouble(OS_Curve_ExponentialSkewNormalFields::Coefficient2C2, coefficient2C2);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveExponentialSkewNormal_Impl::setCoefficient3C3(double coefficient3C3) {
+  bool CurveExponentialSkewNormal_Impl::setCoefficient3C3(double coefficient3C3) {
     bool result = setDouble(OS_Curve_ExponentialSkewNormalFields::Coefficient3C3, coefficient3C3);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveExponentialSkewNormal_Impl::setCoefficient4C4(double coefficient4C4) {
+  bool CurveExponentialSkewNormal_Impl::setCoefficient4C4(double coefficient4C4) {
     bool result = setDouble(OS_Curve_ExponentialSkewNormalFields::Coefficient4C4, coefficient4C4);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveExponentialSkewNormal_Impl::setMinimumValueofx(double minimumValueofx) {
+  bool CurveExponentialSkewNormal_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_ExponentialSkewNormalFields::MinimumValueofx, minimumValueofx);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveExponentialSkewNormal_Impl::setMaximumValueofx(double maximumValueofx) {
+  bool CurveExponentialSkewNormal_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_ExponentialSkewNormalFields::MaximumValueofx, maximumValueofx);
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveExponentialSkewNormal_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
@@ -316,28 +316,28 @@ bool CurveExponentialSkewNormal::isOutputUnitTypeDefaulted() const {
   return getImpl<detail::CurveExponentialSkewNormal_Impl>()->isOutputUnitTypeDefaulted();
 }
 
-void CurveExponentialSkewNormal::setCoefficient1C1(double coefficient1C1) {
-  getImpl<detail::CurveExponentialSkewNormal_Impl>()->setCoefficient1C1(coefficient1C1);
+bool CurveExponentialSkewNormal::setCoefficient1C1(double coefficient1C1) {
+  return getImpl<detail::CurveExponentialSkewNormal_Impl>()->setCoefficient1C1(coefficient1C1);
 }
 
-void CurveExponentialSkewNormal::setCoefficient2C2(double coefficient2C2) {
-  getImpl<detail::CurveExponentialSkewNormal_Impl>()->setCoefficient2C2(coefficient2C2);
+bool CurveExponentialSkewNormal::setCoefficient2C2(double coefficient2C2) {
+  return getImpl<detail::CurveExponentialSkewNormal_Impl>()->setCoefficient2C2(coefficient2C2);
 }
 
-void CurveExponentialSkewNormal::setCoefficient3C3(double coefficient3C3) {
-  getImpl<detail::CurveExponentialSkewNormal_Impl>()->setCoefficient3C3(coefficient3C3);
+bool CurveExponentialSkewNormal::setCoefficient3C3(double coefficient3C3) {
+  return getImpl<detail::CurveExponentialSkewNormal_Impl>()->setCoefficient3C3(coefficient3C3);
 }
 
-void CurveExponentialSkewNormal::setCoefficient4C4(double coefficient4C4) {
-  getImpl<detail::CurveExponentialSkewNormal_Impl>()->setCoefficient4C4(coefficient4C4);
+bool CurveExponentialSkewNormal::setCoefficient4C4(double coefficient4C4) {
+  return getImpl<detail::CurveExponentialSkewNormal_Impl>()->setCoefficient4C4(coefficient4C4);
 }
 
-void CurveExponentialSkewNormal::setMinimumValueofx(double minimumValueofx) {
-  getImpl<detail::CurveExponentialSkewNormal_Impl>()->setMinimumValueofx(minimumValueofx);
+bool CurveExponentialSkewNormal::setMinimumValueofx(double minimumValueofx) {
+  return getImpl<detail::CurveExponentialSkewNormal_Impl>()->setMinimumValueofx(minimumValueofx);
 }
 
-void CurveExponentialSkewNormal::setMaximumValueofx(double maximumValueofx) {
-  getImpl<detail::CurveExponentialSkewNormal_Impl>()->setMaximumValueofx(maximumValueofx);
+bool CurveExponentialSkewNormal::setMaximumValueofx(double maximumValueofx) {
+  return getImpl<detail::CurveExponentialSkewNormal_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
 void CurveExponentialSkewNormal::setMinimumCurveOutput(double minimumCurveOutput) {
@@ -380,4 +380,3 @@ CurveExponentialSkewNormal::CurveExponentialSkewNormal(std::shared_ptr<detail::C
 
 } // model
 } // openstudio
-

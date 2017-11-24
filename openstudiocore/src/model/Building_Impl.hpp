@@ -55,38 +55,38 @@ namespace detail {
 
   /** Building_Impl is a ParentObject_Impl that is the implementation class for Building.*/
   class MODEL_API Building_Impl : public ParentObject_Impl {
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   public:
     /** @name Constructors and Destructors */
     //@{
@@ -146,7 +146,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setNorthAxis(double northAxis);
+    bool setNorthAxis(double northAxis);
 
     void resetNorthAxis();
 
@@ -179,7 +179,7 @@ namespace detail {
     bool setSpaceType(const SpaceType& spaceType);
 
     void resetSpaceType();
-  
+
     boost::optional<DefaultConstructionSet> defaultConstructionSet() const;
 
     bool setDefaultConstructionSet(const DefaultConstructionSet& defaultConstructionSet);
@@ -223,7 +223,7 @@ namespace detail {
     double floorAreaPerPerson() const;
 
     double lightingPower() const;
-    
+
     double lightingPowerPerFloorArea() const;
 
     double lightingPowerPerPerson() const;
@@ -260,11 +260,11 @@ namespace detail {
 
     openstudio::Quantity northAxis_SI() const;
     openstudio::Quantity northAxis_IP() const;
-    bool setNorthAxis(const Quantity& northAxis);   
+    bool setNorthAxis(const Quantity& northAxis);
 
     openstudio::Quantity nominalFloortoFloorHeight_SI() const;
     openstudio::Quantity nominalFloortoFloorHeight_IP() const;
-    bool setNominalFloortoFloorHeight(const Quantity& nominalFloortoFloorHeight);   
+    bool setNominalFloortoFloorHeight(const Quantity& nominalFloortoFloorHeight);
 
     boost::optional<ModelObject> spaceTypeAsModelObject() const;
     boost::optional<ModelObject> defaultConstructionSetAsModelObject() const;
@@ -288,4 +288,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_BUILDING_IMPL_HPP
-

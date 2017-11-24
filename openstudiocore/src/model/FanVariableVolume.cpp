@@ -315,9 +315,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanVariableVolume_Impl::setPressureRise(double pressureRise) {
+  bool FanVariableVolume_Impl::setPressureRise(double pressureRise) {
     bool result = setDouble(OS_Fan_VariableVolumeFields::PressureRise, pressureRise);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool FanVariableVolume_Impl::setPressureRise(const Quantity& pressureRise) {
@@ -1069,8 +1069,8 @@ void FanVariableVolume::resetFanEfficiency() {
   getImpl<detail::FanVariableVolume_Impl>()->resetFanEfficiency();
 }
 
-void FanVariableVolume::setPressureRise(double pressureRise) {
-  getImpl<detail::FanVariableVolume_Impl>()->setPressureRise(pressureRise);
+bool FanVariableVolume::setPressureRise(double pressureRise) {
+  return getImpl<detail::FanVariableVolume_Impl>()->setPressureRise(pressureRise);
 }
 
 bool FanVariableVolume::setPressureRise(const Quantity& pressureRise) {

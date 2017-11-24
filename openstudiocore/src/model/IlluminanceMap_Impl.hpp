@@ -45,24 +45,24 @@ namespace detail {
 
   /** IlluminanceMap_Impl is a SpaceItem_Impl that is the implementation class for IlluminanceMap.*/
   class MODEL_API IlluminanceMap_Impl : public SpaceItem_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -127,11 +127,11 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setOriginXCoordinate(double originXCoordinate);
+    bool setOriginXCoordinate(double originXCoordinate);
 
-    void setOriginYCoordinate(double originYCoordinate);
+    bool setOriginYCoordinate(double originYCoordinate);
 
-    void setOriginZCoordinate(double originZCoordinate);
+    bool setOriginZCoordinate(double originZCoordinate);
 
     bool setPsiRotationAroundXAxis(double psiRotationAroundXAxis);
 
@@ -145,7 +145,7 @@ namespace detail {
 
     void resetPhiRotationAroundZAxis();
 
-    void setXLength(double xLength);
+    bool setXLength(double xLength);
 
     void resetXLength();
 
@@ -153,7 +153,7 @@ namespace detail {
 
     void resetNumberofXGridPoints();
 
-    void setYLength(double yLength);
+    bool setYLength(double yLength);
 
     void resetYLength();
 
@@ -168,7 +168,7 @@ namespace detail {
     bool setTransformation(const openstudio::Transformation& transformation);
 
     std::vector<Point3d> referencePoints() const;
-    
+
     std::vector<Point3d> corners() const;
 
    protected:
@@ -186,4 +186,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_ILLUMINANCEMAP_IMPL_HPP
-

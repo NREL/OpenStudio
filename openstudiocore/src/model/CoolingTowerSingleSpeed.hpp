@@ -47,7 +47,7 @@ class CoolingTowerSingleSpeed_Impl;
 
 } // detail
 
-/** CoolingTowerSingleSpeed is a StraightComponent that wraps the OpenStudio IDD object 
+/** CoolingTowerSingleSpeed is a StraightComponent that wraps the OpenStudio IDD object
  *  'OS:CoolingTower:SingleSpeed'. */
 class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
  public:
@@ -279,13 +279,13 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
 
   void resetEvaporationLossMode();
 
-  void setEvaporationLossFactor(double evaporationLossFactor);
+  bool setEvaporationLossFactor(double evaporationLossFactor);
 
   bool setEvaporationLossFactor(const Quantity& evaporationLossFactor);
 
   void resetEvaporationLossFactor();
 
-  void setDriftLossPercent(double driftLossPercent);
+  bool setDriftLossPercent(double driftLossPercent);
 
   bool setDriftLossPercent(const Quantity& driftLossPercent);
 
@@ -364,4 +364,3 @@ typedef std::vector<CoolingTowerSingleSpeed> CoolingTowerSingleSpeedVector;
 } // openstudio
 
 #endif // MODEL_COOLINGTOWERSINGLESPEED_HPP
-

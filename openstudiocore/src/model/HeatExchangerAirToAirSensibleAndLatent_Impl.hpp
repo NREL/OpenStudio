@@ -49,73 +49,73 @@ namespace detail {
 
   /** HeatExchangerAirToAirSensibleAndLatent_Impl is a AirToAirComponent_Impl that is the implementation class for HeatExchangerAirToAirSensibleAndLatent.*/
   class MODEL_API HeatExchangerAirToAirSensibleAndLatent_Impl : public AirToAirComponent_Impl {
-    
 
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
 
-    
-    
 
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
    public:
 
@@ -272,7 +272,7 @@ namespace detail {
 
     bool setFrostControlType(std::string frostControlType);
 
-    void setThresholdTemperature(double thresholdTemperature);
+    bool setThresholdTemperature(double thresholdTemperature);
 
     bool setThresholdTemperature(const Quantity& thresholdTemperature);
 
@@ -356,4 +356,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_HEATEXCHANGERAIRTOAIRSENSIBLEANDLATENT_IMPL_HPP
-

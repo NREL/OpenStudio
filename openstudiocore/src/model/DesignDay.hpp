@@ -158,7 +158,7 @@ class MODEL_API DesignDay : public SizingPeriod {
 
   void resetDailyDryBulbTemperatureRange();
 
-  void setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb);
+  bool setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb);
 
   void resetHumidityIndicatingConditionsAtMaximumDryBulb();
 
@@ -244,7 +244,7 @@ class MODEL_API DesignDay : public SizingPeriod {
 
   void resetAshraeTaud();
 
-  void setDailyWetBulbTemperatureRange(double dailyWetBulbTemperatureRange);
+  bool setDailyWetBulbTemperatureRange(double dailyWetBulbTemperatureRange);
 
   void resetDailyWetBulbTemperatureRange();
 

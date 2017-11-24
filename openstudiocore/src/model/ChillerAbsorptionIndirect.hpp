@@ -141,11 +141,11 @@ class MODEL_API ChillerAbsorptionIndirect : public WaterToWaterComponent {
 
   bool setOptimumPartLoadRatio(double optimumPartLoadRatio);
 
-  void setDesignCondenserInletTemperature(double designCondenserInletTemperature);
+  bool setDesignCondenserInletTemperature(double designCondenserInletTemperature);
 
-  void setCondenserInletTemperatureLowerLimit(double condenserInletTemperatureLowerLimit);
+  bool setCondenserInletTemperatureLowerLimit(double condenserInletTemperatureLowerLimit);
 
-  void setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit);
+  bool setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit);
 
   bool setDesignChilledWaterFlowRate(double designChilledWaterFlowRate);
 
@@ -177,7 +177,7 @@ class MODEL_API ChillerAbsorptionIndirect : public WaterToWaterComponent {
 
   void autosizeDesignGeneratorFluidFlowRate();
 
-  void setTemperatureLowerLimitGeneratorInlet(double temperatureLowerLimitGeneratorInlet);
+  bool setTemperatureLowerLimitGeneratorInlet(double temperatureLowerLimitGeneratorInlet);
 
   bool setDegreeofSubcoolinginSteamGenerator(double degreeofSubcoolinginSteamGenerator);
 
@@ -215,4 +215,3 @@ typedef std::vector<ChillerAbsorptionIndirect> ChillerAbsorptionIndirectVector;
 } // openstudio
 
 #endif // MODEL_CHILLERABSORPTIONINDIRECT_HPP
-

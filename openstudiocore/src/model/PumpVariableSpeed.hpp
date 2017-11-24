@@ -46,7 +46,7 @@ namespace detail {
 
 /** PumpVariableSpeed is a StraightComponent that wraps the OpenStudio IDD object
  *  'OS:Pump:VariableSpeed'. */
-class MODEL_API PumpVariableSpeed : public StraightComponent 
+class MODEL_API PumpVariableSpeed : public StraightComponent
 {
   public:
 
@@ -175,7 +175,7 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
 
   void autosizeRatedFlowRate();
 
-  void setRatedPumpHead(double ratedPumpHead);
+  bool setRatedPumpHead(double ratedPumpHead);
 
   bool setRatedPumpHead(const Quantity& ratedPumpHead);
 
@@ -201,31 +201,31 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
 
   void resetFractionofMotorInefficienciestoFluidStream();
 
-  void setCoefficient1ofthePartLoadPerformanceCurve(double coefficient1ofthePartLoadPerformanceCurve);
+  bool setCoefficient1ofthePartLoadPerformanceCurve(double coefficient1ofthePartLoadPerformanceCurve);
 
   bool setCoefficient1ofthePartLoadPerformanceCurve(const Quantity& coefficient1ofthePartLoadPerformanceCurve);
 
   void resetCoefficient1ofthePartLoadPerformanceCurve();
 
-  void setCoefficient2ofthePartLoadPerformanceCurve(double coefficient2ofthePartLoadPerformanceCurve);
+  bool setCoefficient2ofthePartLoadPerformanceCurve(double coefficient2ofthePartLoadPerformanceCurve);
 
   bool setCoefficient2ofthePartLoadPerformanceCurve(const Quantity& coefficient2ofthePartLoadPerformanceCurve);
 
   void resetCoefficient2ofthePartLoadPerformanceCurve();
 
-  void setCoefficient3ofthePartLoadPerformanceCurve(double coefficient3ofthePartLoadPerformanceCurve);
+  bool setCoefficient3ofthePartLoadPerformanceCurve(double coefficient3ofthePartLoadPerformanceCurve);
 
   bool setCoefficient3ofthePartLoadPerformanceCurve(const Quantity& coefficient3ofthePartLoadPerformanceCurve);
 
   void resetCoefficient3ofthePartLoadPerformanceCurve();
 
-  void setCoefficient4ofthePartLoadPerformanceCurve(double coefficient4ofthePartLoadPerformanceCurve);
+  bool setCoefficient4ofthePartLoadPerformanceCurve(double coefficient4ofthePartLoadPerformanceCurve);
 
   bool setCoefficient4ofthePartLoadPerformanceCurve(const Quantity& coefficient4ofthePartLoadPerformanceCurve);
 
   void resetCoefficient4ofthePartLoadPerformanceCurve();
 
-  void setMinimumFlowRate(double minimumFlowRate);
+  bool setMinimumFlowRate(double minimumFlowRate);
 
   bool setMinimumFlowRate(const Quantity& minimumFlowRate);
 
@@ -302,4 +302,3 @@ typedef std::vector<PumpVariableSpeed> PumpVariableSpeedVector;
 } // openstudio
 
 #endif // MODEL_PUMPVARIABLESPEED_HPP
-

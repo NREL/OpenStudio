@@ -145,13 +145,13 @@ namespace detail {
 
     bool setFanTotalEfficiency(double fanTotalEfficiency);
 
-    void setConstantTermCoefficient(double constantTermCoefficient);
+    bool setConstantTermCoefficient(double constantTermCoefficient);
 
-    void setTemperatureTermCoefficient(double temperatureTermCoefficient);
+    bool setTemperatureTermCoefficient(double temperatureTermCoefficient);
 
-    void setVelocityTermCoefficient(double velocityTermCoefficient);
+    bool setVelocityTermCoefficient(double velocityTermCoefficient);
 
-    void setVelocitySquaredTermCoefficient(double velocitySquaredTermCoefficient);
+    bool setVelocitySquaredTermCoefficient(double velocitySquaredTermCoefficient);
 
     bool setMinimumIndoorTemperature(double minimumIndoorTemperature);
 
@@ -192,7 +192,7 @@ namespace detail {
     unsigned inletPort() const override;
 
     unsigned outletPort() const override;
-  
+
     boost::optional<ThermalZone> thermalZone() override;
 
     bool addToThermalZone(ThermalZone & thermalZone) override;
@@ -213,4 +213,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_ZONEVENTILATIONDESIGNFLOWRATE_IMPL_HPP
-

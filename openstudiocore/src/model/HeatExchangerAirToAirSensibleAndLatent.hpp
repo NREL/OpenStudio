@@ -168,7 +168,7 @@ class MODEL_API HeatExchangerAirToAirSensibleAndLatent : public AirToAirComponen
 
   bool isThresholdTemperatureDefaulted() const;
 
-  void setThresholdTemperature(double thresholdTemperature);
+  bool setThresholdTemperature(double thresholdTemperature);
 
   bool setThresholdTemperature(const Quantity& thresholdTemperature);
 
@@ -227,4 +227,3 @@ typedef std::vector<HeatExchangerAirToAirSensibleAndLatent> HeatExchangerAirToAi
 } // openstudio
 
 #endif // MODEL_HEATEXCHANGERAIRTOAIRSENSIBLEANDLATENT_HPP
-

@@ -365,7 +365,7 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
 
   void autosizeMaximumSupplyAirTemperature();
 
-  void setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+  bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
 
   void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
 
@@ -439,4 +439,3 @@ typedef std::vector<AirLoopHVACUnitarySystem> AirLoopHVACUnitarySystemVector;
 } // openstudio
 
 #endif // MODEL_AIRLOOPHVACUNITARYSYSTEM_HPP
-

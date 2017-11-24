@@ -121,9 +121,9 @@ namespace detail {
     return getDouble(OS_Refrigeration_Condenser_CascadeFields::CondensatePipingRefrigerantInventory,true);
   }
 
-  void RefrigerationCondenserCascade_Impl::setRatedCondensingTemperature(double ratedCondensingTemperature) {
+  bool RefrigerationCondenserCascade_Impl::setRatedCondensingTemperature(double ratedCondensingTemperature) {
     bool result = setDouble(OS_Refrigeration_Condenser_CascadeFields::RatedCondensingTemperature, ratedCondensingTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool RefrigerationCondenserCascade_Impl::setRatedApproachTemperatureDifference(double ratedApproachTemperatureDifference) {
@@ -267,8 +267,8 @@ boost::optional<double> RefrigerationCondenserCascade::condensatePipingRefrigera
   return getImpl<detail::RefrigerationCondenserCascade_Impl>()->condensatePipingRefrigerantInventory();
 }
 
-void RefrigerationCondenserCascade::setRatedCondensingTemperature(double ratedCondensingTemperature) {
-  getImpl<detail::RefrigerationCondenserCascade_Impl>()->setRatedCondensingTemperature(ratedCondensingTemperature);
+bool RefrigerationCondenserCascade::setRatedCondensingTemperature(double ratedCondensingTemperature) {
+  return getImpl<detail::RefrigerationCondenserCascade_Impl>()->setRatedCondensingTemperature(ratedCondensingTemperature);
 }
 
 bool RefrigerationCondenserCascade::setRatedApproachTemperatureDifference(double ratedApproachTemperatureDifference) {
@@ -323,4 +323,3 @@ RefrigerationCondenserCascade::RefrigerationCondenserCascade(std::shared_ptr<det
 
 } // model
 } // openstudio
-

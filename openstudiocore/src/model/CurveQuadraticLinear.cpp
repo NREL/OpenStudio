@@ -192,54 +192,54 @@ namespace detail {
     return isEmpty(OS_Curve_QuadraticLinearFields::OutputUnitType);
   }
 
-  void CurveQuadraticLinear_Impl::setCoefficient1Constant(double coefficient1Constant) {
+  bool CurveQuadraticLinear_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = setDouble(OS_Curve_QuadraticLinearFields::Coefficient1Constant, coefficient1Constant);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuadraticLinear_Impl::setCoefficient2x(double coefficient2x) {
+  bool CurveQuadraticLinear_Impl::setCoefficient2x(double coefficient2x) {
     bool result = setDouble(OS_Curve_QuadraticLinearFields::Coefficient2x, coefficient2x);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuadraticLinear_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
+  bool CurveQuadraticLinear_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
     bool result = setDouble(OS_Curve_QuadraticLinearFields::Coefficient3x_POW_2, coefficient3xPOW2);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuadraticLinear_Impl::setCoefficient4y(double coefficient4y) {
+  bool CurveQuadraticLinear_Impl::setCoefficient4y(double coefficient4y) {
     bool result = setDouble(OS_Curve_QuadraticLinearFields::Coefficient4y, coefficient4y);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuadraticLinear_Impl::setCoefficient5xTIMESY(double coefficient5xTIMESY) {
+  bool CurveQuadraticLinear_Impl::setCoefficient5xTIMESY(double coefficient5xTIMESY) {
     bool result = setDouble(OS_Curve_QuadraticLinearFields::Coefficient5x_TIMES_y, coefficient5xTIMESY);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuadraticLinear_Impl::setCoefficient6xPOW2TIMESY(double coefficient6xPOW2TIMESY) {
+  bool CurveQuadraticLinear_Impl::setCoefficient6xPOW2TIMESY(double coefficient6xPOW2TIMESY) {
     bool result = setDouble(OS_Curve_QuadraticLinearFields::Coefficient6x_POW_2_TIMES_y, coefficient6xPOW2TIMESY);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuadraticLinear_Impl::setMinimumValueofx(double minimumValueofx) {
+  bool CurveQuadraticLinear_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_QuadraticLinearFields::MinimumValueofx, minimumValueofx);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuadraticLinear_Impl::setMaximumValueofx(double maximumValueofx) {
+  bool CurveQuadraticLinear_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_QuadraticLinearFields::MaximumValueofx, maximumValueofx);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuadraticLinear_Impl::setMinimumValueofy(double minimumValueofy) {
+  bool CurveQuadraticLinear_Impl::setMinimumValueofy(double minimumValueofy) {
     bool result = setDouble(OS_Curve_QuadraticLinearFields::MinimumValueofy, minimumValueofy);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuadraticLinear_Impl::setMaximumValueofy(double maximumValueofy) {
+  bool CurveQuadraticLinear_Impl::setMaximumValueofy(double maximumValueofy) {
     bool result = setDouble(OS_Curve_QuadraticLinearFields::MaximumValueofy, maximumValueofy);
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveQuadraticLinear_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
@@ -412,44 +412,44 @@ bool CurveQuadraticLinear::isOutputUnitTypeDefaulted() const {
   return getImpl<detail::CurveQuadraticLinear_Impl>()->isOutputUnitTypeDefaulted();
 }
 
-void CurveQuadraticLinear::setCoefficient1Constant(double coefficient1Constant) {
-  getImpl<detail::CurveQuadraticLinear_Impl>()->setCoefficient1Constant(coefficient1Constant);
+bool CurveQuadraticLinear::setCoefficient1Constant(double coefficient1Constant) {
+  return getImpl<detail::CurveQuadraticLinear_Impl>()->setCoefficient1Constant(coefficient1Constant);
 }
 
-void CurveQuadraticLinear::setCoefficient2x(double coefficient2x) {
-  getImpl<detail::CurveQuadraticLinear_Impl>()->setCoefficient2x(coefficient2x);
+bool CurveQuadraticLinear::setCoefficient2x(double coefficient2x) {
+  return getImpl<detail::CurveQuadraticLinear_Impl>()->setCoefficient2x(coefficient2x);
 }
 
-void CurveQuadraticLinear::setCoefficient3xPOW2(double coefficient3xPOW2) {
-  getImpl<detail::CurveQuadraticLinear_Impl>()->setCoefficient3xPOW2(coefficient3xPOW2);
+bool CurveQuadraticLinear::setCoefficient3xPOW2(double coefficient3xPOW2) {
+  return getImpl<detail::CurveQuadraticLinear_Impl>()->setCoefficient3xPOW2(coefficient3xPOW2);
 }
 
-void CurveQuadraticLinear::setCoefficient4y(double coefficient4y) {
-  getImpl<detail::CurveQuadraticLinear_Impl>()->setCoefficient4y(coefficient4y);
+bool CurveQuadraticLinear::setCoefficient4y(double coefficient4y) {
+  return getImpl<detail::CurveQuadraticLinear_Impl>()->setCoefficient4y(coefficient4y);
 }
 
-void CurveQuadraticLinear::setCoefficient5xTIMESY(double coefficient5xTIMESY) {
-  getImpl<detail::CurveQuadraticLinear_Impl>()->setCoefficient5xTIMESY(coefficient5xTIMESY);
+bool CurveQuadraticLinear::setCoefficient5xTIMESY(double coefficient5xTIMESY) {
+  return getImpl<detail::CurveQuadraticLinear_Impl>()->setCoefficient5xTIMESY(coefficient5xTIMESY);
 }
 
-void CurveQuadraticLinear::setCoefficient6xPOW2TIMESY(double coefficient6xPOW2TIMESY) {
-  getImpl<detail::CurveQuadraticLinear_Impl>()->setCoefficient6xPOW2TIMESY(coefficient6xPOW2TIMESY);
+bool CurveQuadraticLinear::setCoefficient6xPOW2TIMESY(double coefficient6xPOW2TIMESY) {
+  return getImpl<detail::CurveQuadraticLinear_Impl>()->setCoefficient6xPOW2TIMESY(coefficient6xPOW2TIMESY);
 }
 
-void CurveQuadraticLinear::setMinimumValueofx(double minimumValueofx) {
-  getImpl<detail::CurveQuadraticLinear_Impl>()->setMinimumValueofx(minimumValueofx);
+bool CurveQuadraticLinear::setMinimumValueofx(double minimumValueofx) {
+  return getImpl<detail::CurveQuadraticLinear_Impl>()->setMinimumValueofx(minimumValueofx);
 }
 
-void CurveQuadraticLinear::setMaximumValueofx(double maximumValueofx) {
-  getImpl<detail::CurveQuadraticLinear_Impl>()->setMaximumValueofx(maximumValueofx);
+bool CurveQuadraticLinear::setMaximumValueofx(double maximumValueofx) {
+  return getImpl<detail::CurveQuadraticLinear_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
-void CurveQuadraticLinear::setMinimumValueofy(double minimumValueofy) {
-  getImpl<detail::CurveQuadraticLinear_Impl>()->setMinimumValueofy(minimumValueofy);
+bool CurveQuadraticLinear::setMinimumValueofy(double minimumValueofy) {
+  return getImpl<detail::CurveQuadraticLinear_Impl>()->setMinimumValueofy(minimumValueofy);
 }
 
-void CurveQuadraticLinear::setMaximumValueofy(double maximumValueofy) {
-  getImpl<detail::CurveQuadraticLinear_Impl>()->setMaximumValueofy(maximumValueofy);
+bool CurveQuadraticLinear::setMaximumValueofy(double maximumValueofy) {
+  return getImpl<detail::CurveQuadraticLinear_Impl>()->setMaximumValueofy(maximumValueofy);
 }
 
 void CurveQuadraticLinear::setMinimumCurveOutput(double minimumCurveOutput) {
@@ -500,4 +500,3 @@ CurveQuadraticLinear::CurveQuadraticLinear(std::shared_ptr<detail::CurveQuadrati
 
 } // model
 } // openstudio
-

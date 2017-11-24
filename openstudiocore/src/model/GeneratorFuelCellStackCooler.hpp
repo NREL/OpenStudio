@@ -105,59 +105,59 @@ class MODEL_API GeneratorFuelCellStackCooler : public StraightComponent {
   /** @name Setters */
   //@{
 
-  void setNominalStackTemperature(double nominalStackTemperature);
+  bool setNominalStackTemperature(double nominalStackTemperature);
 
   void resetNominalStackTemperature();
 
-  void setActualStackTemperature(double actualStackTemperature);
+  bool setActualStackTemperature(double actualStackTemperature);
 
   void resetActualStackTemperature();
 
-  void setCoefficientr0(double coefficientr0);
+  bool setCoefficientr0(double coefficientr0);
 
   void resetCoefficientr0();
 
-  void setCoefficientr1(double coefficientr1);
+  bool setCoefficientr1(double coefficientr1);
 
   void resetCoefficientr1();
 
-  void setCoefficientr2(double coefficientr2);
+  bool setCoefficientr2(double coefficientr2);
 
   void resetCoefficientr2();
 
-  void setCoefficientr3(double coefficientr3);
+  bool setCoefficientr3(double coefficientr3);
 
   void resetCoefficientr3();
 
-  void setStackCoolantFlowRate(double stackCoolantFlowRate);
+  bool setStackCoolantFlowRate(double stackCoolantFlowRate);
 
   void resetStackCoolantFlowRate();
 
-  void setStackCoolerUFactorTimesAreaValue(double stackCoolerUFactorTimesAreaValue);
+  bool setStackCoolerUFactorTimesAreaValue(double stackCoolerUFactorTimesAreaValue);
 
   void resetStackCoolerUFactorTimesAreaValue();
 
-  void setFscogenAdjustmentFactor(double fscogenAdjustmentFactor);
+  bool setFscogenAdjustmentFactor(double fscogenAdjustmentFactor);
 
   void resetFscogenAdjustmentFactor();
 
-  void setStackCogenerationExchangerArea(double stackCogenerationExchangerArea);
+  bool setStackCogenerationExchangerArea(double stackCogenerationExchangerArea);
 
   void resetStackCogenerationExchangerArea();
 
-  void setStackCogenerationExchangerNominalFlowRate(double stackCogenerationExchangerNominalFlowRate);
+  bool setStackCogenerationExchangerNominalFlowRate(double stackCogenerationExchangerNominalFlowRate);
 
   void resetStackCogenerationExchangerNominalFlowRate();
 
-  void setStackCogenerationExchangerNominalHeatTransferCoefficient(double stackCogenerationExchangerNominalHeatTransferCoefficient);
+  bool setStackCogenerationExchangerNominalHeatTransferCoefficient(double stackCogenerationExchangerNominalHeatTransferCoefficient);
 
   void resetStackCogenerationExchangerNominalHeatTransferCoefficient();
 
-  void setStackCogenerationExchangerNominalHeatTransferCoefficientExponent(double stackCogenerationExchangerNominalHeatTransferCoefficientExponent);
+  bool setStackCogenerationExchangerNominalHeatTransferCoefficientExponent(double stackCogenerationExchangerNominalHeatTransferCoefficientExponent);
 
   void resetStackCogenerationExchangerNominalHeatTransferCoefficientExponent();
 
-  void setStackCoolerPumpPower(double stackCoolerPumpPower);
+  bool setStackCoolerPumpPower(double stackCoolerPumpPower);
 
   void resetStackCoolerPumpPower();
 
@@ -165,15 +165,15 @@ class MODEL_API GeneratorFuelCellStackCooler : public StraightComponent {
 
   void resetStackCoolerPumpHeatLossFraction();
 
-  void setStackAirCoolerFanCoefficientf0(double stackAirCoolerFanCoefficientf0);
+  bool setStackAirCoolerFanCoefficientf0(double stackAirCoolerFanCoefficientf0);
 
   void resetStackAirCoolerFanCoefficientf0();
 
-  void setStackAirCoolerFanCoefficientf1(double stackAirCoolerFanCoefficientf1);
+  bool setStackAirCoolerFanCoefficientf1(double stackAirCoolerFanCoefficientf1);
 
   void resetStackAirCoolerFanCoefficientf1();
 
-  void setStackAirCoolerFanCoefficientf2(double stackAirCoolerFanCoefficientf2);
+  bool setStackAirCoolerFanCoefficientf2(double stackAirCoolerFanCoefficientf2);
 
   void resetStackAirCoolerFanCoefficientf2();
 
@@ -207,4 +207,3 @@ typedef std::vector<GeneratorFuelCellStackCooler> GeneratorFuelCellStackCoolerVe
 } // openstudio
 
 #endif // MODEL_GENERATORFUELCELLSTACKCOOLER_HPP
-

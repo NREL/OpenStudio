@@ -83,7 +83,7 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   bool isRatedPumpHeadDefaulted() const;
 
-  void setRatedPumpHead(double ratedPumpHead);
+  bool setRatedPumpHead(double ratedPumpHead);
 
   bool setRatedPumpHead(const Quantity& ratedPumpHead);
 
@@ -213,4 +213,3 @@ typedef std::vector<PumpConstantSpeed> PumpConstantSpeedVector;
 } // openstudio
 
 #endif // MODEL_PUMPCONSTANTSPEED_HPP
-

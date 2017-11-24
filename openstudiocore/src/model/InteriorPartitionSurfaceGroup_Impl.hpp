@@ -46,20 +46,7 @@ namespace detail {
 
   /** InteriorPartitionSurfaceGroup_Impl is a PlanarSurfaceGroup_Impl that is the implementation class for InteriorPartitionSurfaceGroup.*/
   class MODEL_API InteriorPartitionSurfaceGroup_Impl : public PlanarSurfaceGroup_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
-    
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -129,19 +116,19 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    virtual void setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod = true) override;
+    virtual bool setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod = true) override;
 
     virtual void resetDirectionofRelativeNorth() override;
 
-    virtual void setXOrigin(double xOrigin, bool driverMethod = true) override;
+    virtual bool setXOrigin(double xOrigin, bool driverMethod = true) override;
 
     virtual void resetXOrigin() override;
 
-    virtual void setYOrigin(double yOrigin, bool driverMethod = true) override;
+    virtual bool setYOrigin(double yOrigin, bool driverMethod = true) override;
 
     virtual void resetYOrigin() override;
 
-    virtual void setZOrigin(double zOrigin, bool driverMethod = true) override;
+    virtual bool setZOrigin(double zOrigin, bool driverMethod = true) override;
 
     virtual void resetZOrigin() override;
 

@@ -279,7 +279,7 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   void resetPerformanceInputMethod();
 
-  void setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio);
+  bool setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio);
 
   void resetHeatRejectionCapacityandNominalCapacitySizingRatio();
 
@@ -323,11 +323,11 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   void resetEvaporationLossMode();
 
-  void setEvaporationLossFactor(double evaporationLossFactor);
+  bool setEvaporationLossFactor(double evaporationLossFactor);
 
   void resetEvaporationLossFactor();
 
-  void setDriftLossPercent(double driftLossPercent);
+  bool setDriftLossPercent(double driftLossPercent);
 
   void resetDriftLossPercent();
 
@@ -397,4 +397,3 @@ typedef std::vector<CoolingTowerTwoSpeed> CoolingTowerTwoSpeedVector;
 } // openstudio
 
 #endif // MODEL_COOLINGTOWERTWOSPEED_HPP
-

@@ -77,7 +77,7 @@ class MODEL_API SetpointManagerOutdoorAirReset : public SetpointManager {
 
   Quantity getSetpointatOutdoorLowTemperature(bool returnIP=false) const;
 
-  void setSetpointatOutdoorLowTemperature(double setpointatOutdoorLowTemperature);
+  bool setSetpointatOutdoorLowTemperature(double setpointatOutdoorLowTemperature);
 
   bool setSetpointatOutdoorLowTemperature(const Quantity& setpointatOutdoorLowTemperature);
 
@@ -86,7 +86,7 @@ class MODEL_API SetpointManagerOutdoorAirReset : public SetpointManager {
 
   Quantity getOutdoorLowTemperature(bool returnIP=false) const;
 
-  void setOutdoorLowTemperature(double outdoorLowTemperature);
+  bool setOutdoorLowTemperature(double outdoorLowTemperature);
 
   bool setOutdoorLowTemperature(const Quantity& outdoorLowTemperature);
 
@@ -95,7 +95,7 @@ class MODEL_API SetpointManagerOutdoorAirReset : public SetpointManager {
 
   Quantity getSetpointatOutdoorHighTemperature(bool returnIP=false) const;
 
-  void setSetpointatOutdoorHighTemperature(double setpointatOutdoorHighTemperature);
+  bool setSetpointatOutdoorHighTemperature(double setpointatOutdoorHighTemperature);
 
   bool setSetpointatOutdoorHighTemperature(const Quantity& setpointatOutdoorHighTemperature);
 
@@ -104,7 +104,7 @@ class MODEL_API SetpointManagerOutdoorAirReset : public SetpointManager {
 
   Quantity getOutdoorHighTemperature(bool returnIP=false) const;
 
-  void setOutdoorHighTemperature(double outdoorHighTemperature);
+  bool setOutdoorHighTemperature(double outdoorHighTemperature);
 
   bool setOutdoorHighTemperature(const Quantity& outdoorHighTemperature);
 
@@ -160,7 +160,7 @@ class MODEL_API SetpointManagerOutdoorAirReset : public SetpointManager {
   void resetOutdoorHighTemperature2();
 
  protected:
-  
+
   /// @cond
   typedef detail::SetpointManagerOutdoorAirReset_Impl ImplType;
 
@@ -187,4 +187,3 @@ typedef std::vector<SetpointManagerOutdoorAirReset> SetpointManagerOutdoorAirRes
 } // openstudio
 
 #endif // MODEL_SETPOINTMANAGEROUTDOORAIRRESET_HPP
-

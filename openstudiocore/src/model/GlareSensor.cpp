@@ -138,24 +138,24 @@ namespace detail {
     return getDouble(OS_Glare_SensorFields::MaximumAllowableDaylightGlareProbability,true);
   }
 
-  void GlareSensor_Impl::setPositionXCoordinate(double positionXCoordinate) {
+  bool GlareSensor_Impl::setPositionXCoordinate(double positionXCoordinate) {
     bool result = setDouble(OS_Glare_SensorFields::PositionXCoordinate, positionXCoordinate);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void GlareSensor_Impl::setPositionYCoordinate(double positionYCoordinate) {
+  bool GlareSensor_Impl::setPositionYCoordinate(double positionYCoordinate) {
     bool result = setDouble(OS_Glare_SensorFields::PositionYCoordinate, positionYCoordinate);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void GlareSensor_Impl::setPositionZCoordinate(double positionZCoordinate) {
+  bool GlareSensor_Impl::setPositionZCoordinate(double positionZCoordinate) {
     bool result = setDouble(OS_Glare_SensorFields::PositionZCoordinate, positionZCoordinate);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void GlareSensor_Impl::setPsiRotationAroundXAxis(double psiRotationAroundXAxis) {
+  bool GlareSensor_Impl::setPsiRotationAroundXAxis(double psiRotationAroundXAxis) {
     bool result = setDouble(OS_Glare_SensorFields::PsiRotationAroundXAxis, psiRotationAroundXAxis);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GlareSensor_Impl::resetPsiRotationAroundXAxis() {
@@ -163,9 +163,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GlareSensor_Impl::setThetaRotationAroundYAxis(double thetaRotationAroundYAxis) {
+  bool GlareSensor_Impl::setThetaRotationAroundYAxis(double thetaRotationAroundYAxis) {
     bool result = setDouble(OS_Glare_SensorFields::ThetaRotationAroundYAxis, thetaRotationAroundYAxis);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GlareSensor_Impl::resetThetaRotationAroundYAxis() {
@@ -173,9 +173,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GlareSensor_Impl::setPhiRotationAroundZAxis(double phiRotationAroundZAxis) {
+  bool GlareSensor_Impl::setPhiRotationAroundZAxis(double phiRotationAroundZAxis) {
     bool result = setDouble(OS_Glare_SensorFields::PhiRotationAroundZAxis, phiRotationAroundZAxis);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GlareSensor_Impl::resetPhiRotationAroundZAxis() {
@@ -369,19 +369,19 @@ boost::optional<double> GlareSensor::maximumAllowableDaylightGlareProbability() 
   return getImpl<detail::GlareSensor_Impl>()->maximumAllowableDaylightGlareProbability();
 }
 
-void GlareSensor::setPositionXCoordinate(double positionXCoordinate) {
-  getImpl<detail::GlareSensor_Impl>()->setPositionXCoordinate(positionXCoordinate);
+bool GlareSensor::setPositionXCoordinate(double positionXCoordinate) {
+  return getImpl<detail::GlareSensor_Impl>()->setPositionXCoordinate(positionXCoordinate);
 }
 
-void GlareSensor::setPositionYCoordinate(double positionYCoordinate) {
-  getImpl<detail::GlareSensor_Impl>()->setPositionYCoordinate(positionYCoordinate);
+bool GlareSensor::setPositionYCoordinate(double positionYCoordinate) {
+  return getImpl<detail::GlareSensor_Impl>()->setPositionYCoordinate(positionYCoordinate);
 }
 
-void GlareSensor::setPositionZCoordinate(double positionZCoordinate) {
-  getImpl<detail::GlareSensor_Impl>()->setPositionZCoordinate(positionZCoordinate);
+bool GlareSensor::setPositionZCoordinate(double positionZCoordinate) {
+  return getImpl<detail::GlareSensor_Impl>()->setPositionZCoordinate(positionZCoordinate);
 }
 
-void GlareSensor::setPsiRotationAroundXAxis(double psiRotationAroundXAxis) {
+bool GlareSensor::setPsiRotationAroundXAxis(double psiRotationAroundXAxis) {
   return getImpl<detail::GlareSensor_Impl>()->setPsiRotationAroundXAxis(psiRotationAroundXAxis);
 }
 
@@ -389,7 +389,7 @@ void GlareSensor::resetPsiRotationAroundXAxis() {
   getImpl<detail::GlareSensor_Impl>()->resetPsiRotationAroundXAxis();
 }
 
-void GlareSensor::setThetaRotationAroundYAxis(double thetaRotationAroundYAxis) {
+bool GlareSensor::setThetaRotationAroundYAxis(double thetaRotationAroundYAxis) {
   return getImpl<detail::GlareSensor_Impl>()->setThetaRotationAroundYAxis(thetaRotationAroundYAxis);
 }
 
@@ -397,7 +397,7 @@ void GlareSensor::resetThetaRotationAroundYAxis() {
   getImpl<detail::GlareSensor_Impl>()->resetThetaRotationAroundYAxis();
 }
 
-void GlareSensor::setPhiRotationAroundZAxis(double phiRotationAroundZAxis) {
+bool GlareSensor::setPhiRotationAroundZAxis(double phiRotationAroundZAxis) {
   return getImpl<detail::GlareSensor_Impl>()->setPhiRotationAroundZAxis(phiRotationAroundZAxis);
 }
 
@@ -454,4 +454,3 @@ GlareSensor::GlareSensor(std::shared_ptr<detail::GlareSensor_Impl> impl)
 
 } // model
 } // openstudio
-

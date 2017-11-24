@@ -39,13 +39,13 @@ class Curve;
 namespace detail {
 
   class MODEL_API EvaporativeCoolerDirectResearchSpecial_Impl : public StraightComponent_Impl {
-    
 
-    
-    
-    
 
-    
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -122,7 +122,7 @@ namespace detail {
 
     double waterPumpPowerSizingFactor() const;
 
-    void setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
+    bool setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
 
     boost::optional<Curve> waterPumpPowerModifierCurve() const;
 
@@ -153,4 +153,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_EVAPORATIVECOOLERDIRECTRESEARCHSPECIAL_IMPL_HPP
-

@@ -39,18 +39,18 @@ namespace detail {
 
   /** CurveExponentialDecay_Impl is a Curve_Impl that is the implementation class for CurveExponentialDecay.*/
   class MODEL_API CurveExponentialDecay_Impl : public Curve_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
    public:
 
     /** @name Constructors and Destructors */
@@ -110,15 +110,15 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setCoefficient1C1(double coefficient1C1);
+    bool setCoefficient1C1(double coefficient1C1);
 
-    void setCoefficient2C2(double coefficient2C2);
+    bool setCoefficient2C2(double coefficient2C2);
 
-    void setCoefficient3C3(double coefficient3C3);
+    bool setCoefficient3C3(double coefficient3C3);
 
-    void setMinimumValueofx(double minimumValueofx);
+    bool setMinimumValueofx(double minimumValueofx);
 
-    void setMaximumValueofx(double maximumValueofx);
+    bool setMaximumValueofx(double maximumValueofx);
 
     void setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
 
@@ -152,4 +152,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_CURVEEXPONENTIALDECAY_IMPL_HPP
-

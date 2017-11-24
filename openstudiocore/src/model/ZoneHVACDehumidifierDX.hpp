@@ -110,9 +110,9 @@ class MODEL_API ZoneHVACDehumidifierDX : public ZoneHVACComponent {
 
   bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
-  void setMinimumDryBulbTemperatureforDehumidifierOperation(double minimumDryBulbTemperatureforDehumidifierOperation);
+  bool setMinimumDryBulbTemperatureforDehumidifierOperation(double minimumDryBulbTemperatureforDehumidifierOperation);
 
-  void setMaximumDryBulbTemperatureforDehumidifierOperation(double maximumDryBulbTemperatureforDehumidifierOperation);
+  bool setMaximumDryBulbTemperatureforDehumidifierOperation(double maximumDryBulbTemperatureforDehumidifierOperation);
 
   bool setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad);
 
@@ -150,4 +150,3 @@ typedef std::vector<ZoneHVACDehumidifierDX> ZoneHVACDehumidifierDXVector;
 } // openstudio
 
 #endif // MODEL_ZONEHVACDEHUMIDIFIERDX_HPP
-

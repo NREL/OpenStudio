@@ -305,7 +305,7 @@ namespace detail {
 
     void resetOperatingCaseFanPowerperUnitLength();
 
-    void setStandardCaseLightingPowerperUnitLength(double standardCaseLightingPowerperUnitLength);
+    bool setStandardCaseLightingPowerperUnitLength(double standardCaseLightingPowerperUnitLength);
 
     void resetStandardCaseLightingPowerperUnitLength();
 
@@ -333,7 +333,7 @@ namespace detail {
 
     void resetAntiSweatHeaterControlType();
 
-    void setHumidityatZeroAntiSweatHeaterEnergy(double humidityatZeroAntiSweatHeaterEnergy);
+    bool setHumidityatZeroAntiSweatHeaterEnergy(double humidityatZeroAntiSweatHeaterEnergy);
 
     void resetHumidityatZeroAntiSweatHeaterEnergy();
 
@@ -385,7 +385,7 @@ namespace detail {
 
     void resetDesignEvaporatorTemperatureorBrineInletTemperature();
 
-    void setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
+    bool setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
 
     void resetAverageRefrigerantChargeInventory();
 
@@ -496,4 +496,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONCASE_IMPL_HPP
-

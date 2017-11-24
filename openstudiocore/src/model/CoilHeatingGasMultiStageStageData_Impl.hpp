@@ -87,7 +87,7 @@ namespace detail {
 
     void autosizeNominalCapacity();
 
-    void setParasiticElectricLoad(double StageParasiticElectricLoad);
+    bool setParasiticElectricLoad(double StageParasiticElectricLoad);
 
     //@}
     /** @name Other */
@@ -105,4 +105,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILHEATINGGASMULTISTAGESTAGEDATA_IMPL_HPP
-

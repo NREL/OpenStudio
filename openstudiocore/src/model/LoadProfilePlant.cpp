@@ -146,9 +146,9 @@ namespace detail {
     return result;
   }
 
-  void LoadProfilePlant_Impl::setPeakFlowRate(double peakFlowRate) {
+  bool LoadProfilePlant_Impl::setPeakFlowRate(double peakFlowRate) {
     bool result = setDouble(OS_LoadProfile_PlantFields::PeakFlowRate, peakFlowRate);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool LoadProfilePlant_Impl::setFlowRateFractionSchedule(Schedule& schedule) {
@@ -232,8 +232,8 @@ bool LoadProfilePlant::setLoadSchedule(Schedule& schedule) {
   return getImpl<detail::LoadProfilePlant_Impl>()->setLoadSchedule(schedule);
 }
 
-void LoadProfilePlant::setPeakFlowRate(double peakFlowRate) {
-  getImpl<detail::LoadProfilePlant_Impl>()->setPeakFlowRate(peakFlowRate);
+bool LoadProfilePlant::setPeakFlowRate(double peakFlowRate) {
+  return getImpl<detail::LoadProfilePlant_Impl>()->setPeakFlowRate(peakFlowRate);
 }
 
 bool LoadProfilePlant::setFlowRateFractionSchedule(Schedule& schedule) {
@@ -248,4 +248,3 @@ LoadProfilePlant::LoadProfilePlant(std::shared_ptr<detail::LoadProfilePlant_Impl
 
 } // model
 } // openstudio
-

@@ -74,7 +74,7 @@ namespace detail {
     virtual const std::vector<std::string>& outputVariableNames() const;
 
     virtual IddObjectType iddObjectType() const;
-    
+
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     virtual std::string generatorObjectType() const;
@@ -99,10 +99,10 @@ namespace detail {
     bool isMaximumFullLoadElectricalPowerOutputDefaulted() const;
 
     double referenceElectricalEfficiencyUsingLowerHeatingValue() const;
-    
+
     double referenceCombustionAirInletTemperature() const;
     bool isReferenceCombustionAirInletTemperatureDefaulted() const;
-    
+
     double referenceCombustionAirInletHumidityRatio() const;
     bool isReferenceCombustionAirInletHumidityRatioDefaulted() const;
 
@@ -167,7 +167,7 @@ namespace detail {
 
     bool setAvailabilitySchedule(Schedule& schedule);
     void resetAvailabilitySchedule();
-    
+
     bool setReferenceElectricalPowerOutput(double referenceElectricalPowerOutput);
 
     bool setMinimumFullLoadElectricalPowerOutput(double minimumFullLoadElectricalPowerOutput);
@@ -178,7 +178,7 @@ namespace detail {
 
     bool setReferenceElectricalEfficiencyUsingLowerHeatingValue(double referenceElectricalEfficiencyUsingLowerHeatingValue);
 
-    void setReferenceCombustionAirInletTemperature(double referenceCombustionAirInletTemperature);
+    bool setReferenceCombustionAirInletTemperature(double referenceCombustionAirInletTemperature);
     void resetReferenceCombustionAirInletTemperature();
 
     bool setReferenceCombustionAirInletHumidityRatio(double referenceCombustionAirInletHumidityRatio);
@@ -238,7 +238,7 @@ namespace detail {
     bool setExhaustAirFlowRateFunctionofPartLoadRatioCurve(const Curve& exhaustAirFlowRateFunctionofPartLoadRatioCurve);
     void resetExhaustAirFlowRateFunctionofPartLoadRatioCurve();
 
-    void setNominalExhaustAirOutletTemperature(double nominalExhaustAirOutletTemperature);
+    bool setNominalExhaustAirOutletTemperature(double nominalExhaustAirOutletTemperature);
     void resetNominalExhaustAirOutletTemperature();
 
     // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
@@ -252,7 +252,7 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-      
+
     ModelObject clone(Model model) const override;
 
     std::vector<IddObjectType> allowableChildTypes() const override;
@@ -272,4 +272,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_GENERATORMICROTURBINE_IMPL_HPP
-

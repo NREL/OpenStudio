@@ -444,9 +444,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ZoneHVACLowTempRadiantConstFlow_Impl::setRatedPumpHead(double ratedPumpHead) {
+  bool ZoneHVACLowTempRadiantConstFlow_Impl::setRatedPumpHead(double ratedPumpHead) {
     bool result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedPumpHead, ratedPumpHead);
-    OS_ASSERT(result);
+    return result;
   }
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::resetRatedPumpHead() {
@@ -496,9 +496,9 @@ namespace detail {
     return result;
   }
 
-  void ZoneHVACLowTempRadiantConstFlow_Impl::setCircuitLength(double circuitLength) {
+  bool ZoneHVACLowTempRadiantConstFlow_Impl::setCircuitLength(double circuitLength) {
     bool result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::CircuitLength, circuitLength);
-    OS_ASSERT(result);
+    return result;
   }
 
   boost::optional<Schedule> ZoneHVACLowTempRadiantConstFlow_Impl::optionalAvailabilitySchedule() const {
@@ -752,8 +752,8 @@ void ZoneHVACLowTempRadiantConstFlow::resetPumpFlowRateSchedule() {
   getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->resetPumpFlowRateSchedule();
 }
 
-void ZoneHVACLowTempRadiantConstFlow::setRatedPumpHead(double ratedPumpHead) {
-  getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setRatedPumpHead(ratedPumpHead);
+bool ZoneHVACLowTempRadiantConstFlow::setRatedPumpHead(double ratedPumpHead) {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setRatedPumpHead(ratedPumpHead);
 }
 
 void ZoneHVACLowTempRadiantConstFlow::resetRatedPumpHead() {
@@ -788,8 +788,8 @@ bool ZoneHVACLowTempRadiantConstFlow::setNumberofCircuits(std::string numberofCi
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setNumberofCircuits(numberofCircuits);
 }
 
-void ZoneHVACLowTempRadiantConstFlow::setCircuitLength(double circLength) {
-  getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setCircuitLength(circLength);
+bool ZoneHVACLowTempRadiantConstFlow::setCircuitLength(double circLength) {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setCircuitLength(circLength);
 }
 
 boost::optional<ThermalZone> ZoneHVACLowTempRadiantConstFlow::thermalZone() const
@@ -814,4 +814,3 @@ ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(std::shared_ptr
 
 } // model
 } // openstudio
-

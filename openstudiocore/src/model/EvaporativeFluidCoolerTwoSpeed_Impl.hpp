@@ -176,13 +176,13 @@ namespace detail {
 
     void autosizeLowFanSpeedAirFlowRate();
 
-    void setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor);
+    bool setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor);
 
     bool setLowFanSpeedFanPower(boost::optional<double> lowFanSpeedFanPower);
 
     void autosizeLowFanSpeedFanPower();
 
-    void setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor);
+    bool setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor);
 
     bool setDesignSprayWaterFlowRate(double designSprayWaterFlowRate);
 
@@ -192,7 +192,7 @@ namespace detail {
 
     void resetOutdoorAirInletNodeName();
 
-    void setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio);
+    bool setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio);
 
     bool setHighSpeedStandardDesignCapacity(boost::optional<double> highSpeedStandardDesignCapacity);
 
@@ -204,7 +204,7 @@ namespace detail {
 
     void autosizeLowSpeedStandardDesignCapacity();
 
-    void setLowSpeedStandardCapacitySizingFactor(double lowSpeedStandardCapacitySizingFactor);
+    bool setLowSpeedStandardCapacitySizingFactor(double lowSpeedStandardCapacitySizingFactor);
 
     bool setHighFanSpeedUfactorTimesAreaValue(boost::optional<double> highFanSpeedUfactorTimesAreaValue);
 
@@ -218,7 +218,7 @@ namespace detail {
 
     void autosizeLowFanSpeedUfactorTimesAreaValue();
 
-    void setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor);
+    bool setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor);
 
     bool setDesignWaterFlowRate(boost::optional<double> designWaterFlowRate);
 
@@ -236,7 +236,7 @@ namespace detail {
 
     void autosizeLowSpeedUserSpecifiedDesignCapacity();
 
-    void setLowSpeedUserSpecifiedDesignCapacitySizingFactor(double lowSpeedUserSpecifiedDesignCapacitySizingFactor);
+    bool setLowSpeedUserSpecifiedDesignCapacitySizingFactor(double lowSpeedUserSpecifiedDesignCapacitySizingFactor);
 
     bool setDesignEnteringWaterTemperature(boost::optional<double> designEnteringWaterTemperature);
 
@@ -258,7 +258,7 @@ namespace detail {
 
     void resetEvaporationLossFactor();
 
-    void setDriftLossPercent(double driftLossPercent);
+    bool setDriftLossPercent(double driftLossPercent);
 
     bool setBlowdownCalculationMode(std::string blowdownCalculationMode);
 
@@ -292,4 +292,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_EVAPORATIVEFLUIDCOOLERTWOSPEED_IMPL_HPP
-

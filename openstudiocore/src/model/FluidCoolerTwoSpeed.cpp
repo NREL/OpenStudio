@@ -281,9 +281,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FluidCoolerTwoSpeed_Impl::setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor) {
+  bool FluidCoolerTwoSpeed_Impl::setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor) {
     bool result = setDouble(OS_FluidCooler_TwoSpeedFields::LowFanSpeedUFactorTimesAreaSizingFactor, lowFanSpeedUFactorTimesAreaSizingFactor);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool FluidCoolerTwoSpeed_Impl::setHighSpeedNominalCapacity(double highSpeedNominalCapacity) {
@@ -304,9 +304,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FluidCoolerTwoSpeed_Impl::setLowSpeedNominalCapacitySizingFactor(double lowSpeedNominalCapacitySizingFactor) {
+  bool FluidCoolerTwoSpeed_Impl::setLowSpeedNominalCapacitySizingFactor(double lowSpeedNominalCapacitySizingFactor) {
     bool result = setDouble(OS_FluidCooler_TwoSpeedFields::LowSpeedNominalCapacitySizingFactor, lowSpeedNominalCapacitySizingFactor);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool FluidCoolerTwoSpeed_Impl::setDesignEnteringWaterTemperature(double designEnteringWaterTemperature) {
@@ -376,9 +376,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FluidCoolerTwoSpeed_Impl::setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor) {
+  bool FluidCoolerTwoSpeed_Impl::setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor) {
     bool result = setDouble(OS_FluidCooler_TwoSpeedFields::LowFanSpeedAirFlowRateSizingFactor, lowFanSpeedAirFlowRateSizingFactor);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool FluidCoolerTwoSpeed_Impl::setLowFanSpeedFanPower(boost::optional<double> lowFanSpeedFanPower) {
@@ -394,9 +394,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FluidCoolerTwoSpeed_Impl::setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor) {
+  bool FluidCoolerTwoSpeed_Impl::setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor) {
     bool result = setDouble(OS_FluidCooler_TwoSpeedFields::LowFanSpeedFanPowerSizingFactor, lowFanSpeedFanPowerSizingFactor);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool FluidCoolerTwoSpeed_Impl::setOutdoorAirInletNode(const boost::optional<Node>& node) {
@@ -586,8 +586,8 @@ void FluidCoolerTwoSpeed::autosizeLowFanSpeedUfactorTimesAreaValue() {
   getImpl<detail::FluidCoolerTwoSpeed_Impl>()->autosizeLowFanSpeedUfactorTimesAreaValue();
 }
 
-void FluidCoolerTwoSpeed::setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor) {
-  getImpl<detail::FluidCoolerTwoSpeed_Impl>()->setLowFanSpeedUFactorTimesAreaSizingFactor(lowFanSpeedUFactorTimesAreaSizingFactor);
+bool FluidCoolerTwoSpeed::setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor) {
+  return getImpl<detail::FluidCoolerTwoSpeed_Impl>()->setLowFanSpeedUFactorTimesAreaSizingFactor(lowFanSpeedUFactorTimesAreaSizingFactor);
 }
 
 bool FluidCoolerTwoSpeed::setHighSpeedNominalCapacity(double highSpeedNominalCapacity) {
@@ -602,8 +602,8 @@ void FluidCoolerTwoSpeed::autosizeLowSpeedNominalCapacity() {
   getImpl<detail::FluidCoolerTwoSpeed_Impl>()->autosizeLowSpeedNominalCapacity();
 }
 
-void FluidCoolerTwoSpeed::setLowSpeedNominalCapacitySizingFactor(double lowSpeedNominalCapacitySizingFactor) {
-  getImpl<detail::FluidCoolerTwoSpeed_Impl>()->setLowSpeedNominalCapacitySizingFactor(lowSpeedNominalCapacitySizingFactor);
+bool FluidCoolerTwoSpeed::setLowSpeedNominalCapacitySizingFactor(double lowSpeedNominalCapacitySizingFactor) {
+  return getImpl<detail::FluidCoolerTwoSpeed_Impl>()->setLowSpeedNominalCapacitySizingFactor(lowSpeedNominalCapacitySizingFactor);
 }
 
 bool FluidCoolerTwoSpeed::setDesignEnteringWaterTemperature(double designEnteringWaterTemperature) {
@@ -650,8 +650,8 @@ void FluidCoolerTwoSpeed::autosizeLowFanSpeedAirFlowRate() {
   getImpl<detail::FluidCoolerTwoSpeed_Impl>()->autosizeLowFanSpeedAirFlowRate();
 }
 
-void FluidCoolerTwoSpeed::setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor) {
-  getImpl<detail::FluidCoolerTwoSpeed_Impl>()->setLowFanSpeedAirFlowRateSizingFactor(lowFanSpeedAirFlowRateSizingFactor);
+bool FluidCoolerTwoSpeed::setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor) {
+  return getImpl<detail::FluidCoolerTwoSpeed_Impl>()->setLowFanSpeedAirFlowRateSizingFactor(lowFanSpeedAirFlowRateSizingFactor);
 }
 
 bool FluidCoolerTwoSpeed::setLowFanSpeedFanPower(double lowFanSpeedFanPower) {
@@ -662,8 +662,8 @@ void FluidCoolerTwoSpeed::autosizeLowFanSpeedFanPower() {
   getImpl<detail::FluidCoolerTwoSpeed_Impl>()->autosizeLowFanSpeedFanPower();
 }
 
-void FluidCoolerTwoSpeed::setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor) {
-  getImpl<detail::FluidCoolerTwoSpeed_Impl>()->setLowFanSpeedFanPowerSizingFactor(lowFanSpeedFanPowerSizingFactor);
+bool FluidCoolerTwoSpeed::setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor) {
+  return getImpl<detail::FluidCoolerTwoSpeed_Impl>()->setLowFanSpeedFanPowerSizingFactor(lowFanSpeedFanPowerSizingFactor);
 }
 
 bool FluidCoolerTwoSpeed::setOutdoorAirInletNode(const Node& node) {
@@ -682,4 +682,3 @@ FluidCoolerTwoSpeed::FluidCoolerTwoSpeed(std::shared_ptr<detail::FluidCoolerTwoS
 
 } // model
 } // openstudio
-

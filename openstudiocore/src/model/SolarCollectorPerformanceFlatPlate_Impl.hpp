@@ -104,9 +104,9 @@ namespace detail {
 
     bool setTestCorrelationType(std::string testCorrelationType);
 
-    void setCoefficient1ofEfficiencyEquation(double coefficient1ofEfficiencyEquation);
+    bool setCoefficient1ofEfficiencyEquation(double coefficient1ofEfficiencyEquation);
 
-    void setCoefficient2ofEfficiencyEquation(double coefficient2ofEfficiencyEquation);
+    bool setCoefficient2ofEfficiencyEquation(double coefficient2ofEfficiencyEquation);
 
     void setCoefficient3ofEfficiencyEquation(boost::optional<double> coefficient3ofEfficiencyEquation);
 
@@ -136,4 +136,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SOLARCOLLECTORPERFORMANCEFLATPLATE_IMPL_HPP
-

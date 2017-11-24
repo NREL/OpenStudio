@@ -137,7 +137,7 @@ namespace detail {
 
     virtual bool setVisibleReflectance(double value);
 
-    void  setOpticalDataTemperature(double value);
+    bool setOpticalDataTemperature(double value);
 
     // TODO: Handle this object's extensible fields.
 
@@ -160,4 +160,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_THERMOCHROMICGLAZING_IMPL_HPP
-

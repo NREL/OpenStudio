@@ -652,54 +652,54 @@ namespace detail {
     return result;
   }
 
-  void ThermalStorageChilledWaterStratified_Impl::setNode1AdditionalLossCoefficient(double node1AdditionalLossCoefficient) {
+  bool ThermalStorageChilledWaterStratified_Impl::setNode1AdditionalLossCoefficient(double node1AdditionalLossCoefficient) {
     bool result = setDouble(OS_ThermalStorage_ChilledWater_StratifiedFields::Node1AdditionalLossCoefficient, node1AdditionalLossCoefficient);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ThermalStorageChilledWaterStratified_Impl::setNode2AdditionalLossCoefficient(double node2AdditionalLossCoefficient) {
+  bool ThermalStorageChilledWaterStratified_Impl::setNode2AdditionalLossCoefficient(double node2AdditionalLossCoefficient) {
     bool result = setDouble(OS_ThermalStorage_ChilledWater_StratifiedFields::Node2AdditionalLossCoefficient, node2AdditionalLossCoefficient);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ThermalStorageChilledWaterStratified_Impl::setNode3AdditionalLossCoefficient(double node3AdditionalLossCoefficient) {
+  bool ThermalStorageChilledWaterStratified_Impl::setNode3AdditionalLossCoefficient(double node3AdditionalLossCoefficient) {
     bool result = setDouble(OS_ThermalStorage_ChilledWater_StratifiedFields::Node3AdditionalLossCoefficient, node3AdditionalLossCoefficient);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ThermalStorageChilledWaterStratified_Impl::setNode4AdditionalLossCoefficient(double node4AdditionalLossCoefficient) {
+  bool ThermalStorageChilledWaterStratified_Impl::setNode4AdditionalLossCoefficient(double node4AdditionalLossCoefficient) {
     bool result = setDouble(OS_ThermalStorage_ChilledWater_StratifiedFields::Node4AdditionalLossCoefficient, node4AdditionalLossCoefficient);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ThermalStorageChilledWaterStratified_Impl::setNode5AdditionalLossCoefficient(double node5AdditionalLossCoefficient) {
+  bool ThermalStorageChilledWaterStratified_Impl::setNode5AdditionalLossCoefficient(double node5AdditionalLossCoefficient) {
     bool result = setDouble(OS_ThermalStorage_ChilledWater_StratifiedFields::Node5AdditionalLossCoefficient, node5AdditionalLossCoefficient);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ThermalStorageChilledWaterStratified_Impl::setNode6AdditionalLossCoefficient(double node6AdditionalLossCoefficient) {
+  bool ThermalStorageChilledWaterStratified_Impl::setNode6AdditionalLossCoefficient(double node6AdditionalLossCoefficient) {
     bool result = setDouble(OS_ThermalStorage_ChilledWater_StratifiedFields::Node6AdditionalLossCoefficient, node6AdditionalLossCoefficient);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ThermalStorageChilledWaterStratified_Impl::setNode7AdditionalLossCoefficient(double node7AdditionalLossCoefficient) {
+  bool ThermalStorageChilledWaterStratified_Impl::setNode7AdditionalLossCoefficient(double node7AdditionalLossCoefficient) {
     bool result = setDouble(OS_ThermalStorage_ChilledWater_StratifiedFields::Node7AdditionalLossCoefficient, node7AdditionalLossCoefficient);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ThermalStorageChilledWaterStratified_Impl::setNode8AdditionalLossCoefficient(double node8AdditionalLossCoefficient) {
+  bool ThermalStorageChilledWaterStratified_Impl::setNode8AdditionalLossCoefficient(double node8AdditionalLossCoefficient) {
     bool result = setDouble(OS_ThermalStorage_ChilledWater_StratifiedFields::Node8AdditionalLossCoefficient, node8AdditionalLossCoefficient);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ThermalStorageChilledWaterStratified_Impl::setNode9AdditionalLossCoefficient(double node9AdditionalLossCoefficient) {
+  bool ThermalStorageChilledWaterStratified_Impl::setNode9AdditionalLossCoefficient(double node9AdditionalLossCoefficient) {
     bool result = setDouble(OS_ThermalStorage_ChilledWater_StratifiedFields::Node9AdditionalLossCoefficient, node9AdditionalLossCoefficient);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ThermalStorageChilledWaterStratified_Impl::setNode10AdditionalLossCoefficient(double node10AdditionalLossCoefficient) {
+  bool ThermalStorageChilledWaterStratified_Impl::setNode10AdditionalLossCoefficient(double node10AdditionalLossCoefficient) {
     bool result = setDouble(OS_ThermalStorage_ChilledWater_StratifiedFields::Node10AdditionalLossCoefficient, node10AdditionalLossCoefficient);
-    OS_ASSERT(result);
+    return result;
   }
 
 } // detail
@@ -1116,44 +1116,44 @@ bool ThermalStorageChilledWaterStratified::setAdditionalDestratificationConducti
   return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setAdditionalDestratificationConductivity(additionalDestratificationConductivity);
 }
 
-void ThermalStorageChilledWaterStratified::setNode1AdditionalLossCoefficient(double node1AdditionalLossCoefficient) {
-  getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode1AdditionalLossCoefficient(node1AdditionalLossCoefficient);
+bool ThermalStorageChilledWaterStratified::setNode1AdditionalLossCoefficient(double node1AdditionalLossCoefficient) {
+  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode1AdditionalLossCoefficient(node1AdditionalLossCoefficient);
 }
 
-void ThermalStorageChilledWaterStratified::setNode2AdditionalLossCoefficient(double node2AdditionalLossCoefficient) {
-  getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode2AdditionalLossCoefficient(node2AdditionalLossCoefficient);
+bool ThermalStorageChilledWaterStratified::setNode2AdditionalLossCoefficient(double node2AdditionalLossCoefficient) {
+  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode2AdditionalLossCoefficient(node2AdditionalLossCoefficient);
 }
 
-void ThermalStorageChilledWaterStratified::setNode3AdditionalLossCoefficient(double node3AdditionalLossCoefficient) {
-  getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode3AdditionalLossCoefficient(node3AdditionalLossCoefficient);
+bool ThermalStorageChilledWaterStratified::setNode3AdditionalLossCoefficient(double node3AdditionalLossCoefficient) {
+  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode3AdditionalLossCoefficient(node3AdditionalLossCoefficient);
 }
 
-void ThermalStorageChilledWaterStratified::setNode4AdditionalLossCoefficient(double node4AdditionalLossCoefficient) {
-  getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode4AdditionalLossCoefficient(node4AdditionalLossCoefficient);
+bool ThermalStorageChilledWaterStratified::setNode4AdditionalLossCoefficient(double node4AdditionalLossCoefficient) {
+  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode4AdditionalLossCoefficient(node4AdditionalLossCoefficient);
 }
 
-void ThermalStorageChilledWaterStratified::setNode5AdditionalLossCoefficient(double node5AdditionalLossCoefficient) {
-  getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode5AdditionalLossCoefficient(node5AdditionalLossCoefficient);
+bool ThermalStorageChilledWaterStratified::setNode5AdditionalLossCoefficient(double node5AdditionalLossCoefficient) {
+  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode5AdditionalLossCoefficient(node5AdditionalLossCoefficient);
 }
 
-void ThermalStorageChilledWaterStratified::setNode6AdditionalLossCoefficient(double node6AdditionalLossCoefficient) {
-  getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode6AdditionalLossCoefficient(node6AdditionalLossCoefficient);
+bool ThermalStorageChilledWaterStratified::setNode6AdditionalLossCoefficient(double node6AdditionalLossCoefficient) {
+  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode6AdditionalLossCoefficient(node6AdditionalLossCoefficient);
 }
 
-void ThermalStorageChilledWaterStratified::setNode7AdditionalLossCoefficient(double node7AdditionalLossCoefficient) {
-  getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode7AdditionalLossCoefficient(node7AdditionalLossCoefficient);
+bool ThermalStorageChilledWaterStratified::setNode7AdditionalLossCoefficient(double node7AdditionalLossCoefficient) {
+  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode7AdditionalLossCoefficient(node7AdditionalLossCoefficient);
 }
 
-void ThermalStorageChilledWaterStratified::setNode8AdditionalLossCoefficient(double node8AdditionalLossCoefficient) {
-  getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode8AdditionalLossCoefficient(node8AdditionalLossCoefficient);
+bool ThermalStorageChilledWaterStratified::setNode8AdditionalLossCoefficient(double node8AdditionalLossCoefficient) {
+  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode8AdditionalLossCoefficient(node8AdditionalLossCoefficient);
 }
 
-void ThermalStorageChilledWaterStratified::setNode9AdditionalLossCoefficient(double node9AdditionalLossCoefficient) {
-  getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode9AdditionalLossCoefficient(node9AdditionalLossCoefficient);
+bool ThermalStorageChilledWaterStratified::setNode9AdditionalLossCoefficient(double node9AdditionalLossCoefficient) {
+  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode9AdditionalLossCoefficient(node9AdditionalLossCoefficient);
 }
 
-void ThermalStorageChilledWaterStratified::setNode10AdditionalLossCoefficient(double node10AdditionalLossCoefficient) {
-  getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode10AdditionalLossCoefficient(node10AdditionalLossCoefficient);
+bool ThermalStorageChilledWaterStratified::setNode10AdditionalLossCoefficient(double node10AdditionalLossCoefficient) {
+  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNode10AdditionalLossCoefficient(node10AdditionalLossCoefficient);
 }
 
 /// @cond
@@ -1164,4 +1164,3 @@ ThermalStorageChilledWaterStratified::ThermalStorageChilledWaterStratified(std::
 
 } // model
 } // openstudio
-

@@ -408,9 +408,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void PumpVariableSpeed_Impl::setRatedPumpHead(double ratedPumpHead) {
+  bool PumpVariableSpeed_Impl::setRatedPumpHead(double ratedPumpHead) {
     bool result = setDouble(OS_Pump_VariableSpeedFields::RatedPumpHead, ratedPumpHead);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool PumpVariableSpeed_Impl::setRatedPumpHead(const Quantity& ratedPumpHead) {
@@ -502,9 +502,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void PumpVariableSpeed_Impl::setCoefficient1ofthePartLoadPerformanceCurve(double coefficient1ofthePartLoadPerformanceCurve) {
+  bool PumpVariableSpeed_Impl::setCoefficient1ofthePartLoadPerformanceCurve(double coefficient1ofthePartLoadPerformanceCurve) {
     bool result = setDouble(OS_Pump_VariableSpeedFields::Coefficient1ofthePartLoadPerformanceCurve, coefficient1ofthePartLoadPerformanceCurve);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool PumpVariableSpeed_Impl::setCoefficient1ofthePartLoadPerformanceCurve(const Quantity& coefficient1ofthePartLoadPerformanceCurve) {
@@ -521,9 +521,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void PumpVariableSpeed_Impl::setCoefficient2ofthePartLoadPerformanceCurve(double coefficient2ofthePartLoadPerformanceCurve) {
+  bool PumpVariableSpeed_Impl::setCoefficient2ofthePartLoadPerformanceCurve(double coefficient2ofthePartLoadPerformanceCurve) {
     bool result = setDouble(OS_Pump_VariableSpeedFields::Coefficient2ofthePartLoadPerformanceCurve, coefficient2ofthePartLoadPerformanceCurve);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool PumpVariableSpeed_Impl::setCoefficient2ofthePartLoadPerformanceCurve(const Quantity& coefficient2ofthePartLoadPerformanceCurve) {
@@ -540,9 +540,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void PumpVariableSpeed_Impl::setCoefficient3ofthePartLoadPerformanceCurve(double coefficient3ofthePartLoadPerformanceCurve) {
+  bool PumpVariableSpeed_Impl::setCoefficient3ofthePartLoadPerformanceCurve(double coefficient3ofthePartLoadPerformanceCurve) {
     bool result = setDouble(OS_Pump_VariableSpeedFields::Coefficient3ofthePartLoadPerformanceCurve, coefficient3ofthePartLoadPerformanceCurve);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool PumpVariableSpeed_Impl::setCoefficient3ofthePartLoadPerformanceCurve(const Quantity& coefficient3ofthePartLoadPerformanceCurve) {
@@ -559,9 +559,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void PumpVariableSpeed_Impl::setCoefficient4ofthePartLoadPerformanceCurve(double coefficient4ofthePartLoadPerformanceCurve) {
+  bool PumpVariableSpeed_Impl::setCoefficient4ofthePartLoadPerformanceCurve(double coefficient4ofthePartLoadPerformanceCurve) {
     bool result = setDouble(OS_Pump_VariableSpeedFields::Coefficient4ofthePartLoadPerformanceCurve, coefficient4ofthePartLoadPerformanceCurve);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool PumpVariableSpeed_Impl::setCoefficient4ofthePartLoadPerformanceCurve(const Quantity& coefficient4ofthePartLoadPerformanceCurve) {
@@ -578,9 +578,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void PumpVariableSpeed_Impl::setMinimumFlowRate(double minimumFlowRate) {
+  bool PumpVariableSpeed_Impl::setMinimumFlowRate(double minimumFlowRate) {
     bool result = setDouble(OS_Pump_VariableSpeedFields::MinimumFlowRate, minimumFlowRate);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool PumpVariableSpeed_Impl::setMinimumFlowRate(const Quantity& minimumFlowRate) {
@@ -1266,8 +1266,8 @@ void PumpVariableSpeed::autosizeRatedFlowRate() {
   getImpl<detail::PumpVariableSpeed_Impl>()->autosizeRatedFlowRate();
 }
 
-void PumpVariableSpeed::setRatedPumpHead(double ratedPumpHead) {
-  getImpl<detail::PumpVariableSpeed_Impl>()->setRatedPumpHead(ratedPumpHead);
+bool PumpVariableSpeed::setRatedPumpHead(double ratedPumpHead) {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->setRatedPumpHead(ratedPumpHead);
 }
 
 bool PumpVariableSpeed::setRatedPumpHead(const Quantity& ratedPumpHead) {
@@ -1318,8 +1318,8 @@ void PumpVariableSpeed::resetFractionofMotorInefficienciestoFluidStream() {
   getImpl<detail::PumpVariableSpeed_Impl>()->resetFractionofMotorInefficienciestoFluidStream();
 }
 
-void PumpVariableSpeed::setCoefficient1ofthePartLoadPerformanceCurve(double coefficient1ofthePartLoadPerformanceCurve) {
-  getImpl<detail::PumpVariableSpeed_Impl>()->setCoefficient1ofthePartLoadPerformanceCurve(coefficient1ofthePartLoadPerformanceCurve);
+bool PumpVariableSpeed::setCoefficient1ofthePartLoadPerformanceCurve(double coefficient1ofthePartLoadPerformanceCurve) {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->setCoefficient1ofthePartLoadPerformanceCurve(coefficient1ofthePartLoadPerformanceCurve);
 }
 
 bool PumpVariableSpeed::setCoefficient1ofthePartLoadPerformanceCurve(const Quantity& coefficient1ofthePartLoadPerformanceCurve) {
@@ -1330,8 +1330,8 @@ void PumpVariableSpeed::resetCoefficient1ofthePartLoadPerformanceCurve() {
   getImpl<detail::PumpVariableSpeed_Impl>()->resetCoefficient1ofthePartLoadPerformanceCurve();
 }
 
-void PumpVariableSpeed::setCoefficient2ofthePartLoadPerformanceCurve(double coefficient2ofthePartLoadPerformanceCurve) {
-  getImpl<detail::PumpVariableSpeed_Impl>()->setCoefficient2ofthePartLoadPerformanceCurve(coefficient2ofthePartLoadPerformanceCurve);
+bool PumpVariableSpeed::setCoefficient2ofthePartLoadPerformanceCurve(double coefficient2ofthePartLoadPerformanceCurve) {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->setCoefficient2ofthePartLoadPerformanceCurve(coefficient2ofthePartLoadPerformanceCurve);
 }
 
 bool PumpVariableSpeed::setCoefficient2ofthePartLoadPerformanceCurve(const Quantity& coefficient2ofthePartLoadPerformanceCurve) {
@@ -1342,8 +1342,8 @@ void PumpVariableSpeed::resetCoefficient2ofthePartLoadPerformanceCurve() {
   getImpl<detail::PumpVariableSpeed_Impl>()->resetCoefficient2ofthePartLoadPerformanceCurve();
 }
 
-void PumpVariableSpeed::setCoefficient3ofthePartLoadPerformanceCurve(double coefficient3ofthePartLoadPerformanceCurve) {
-  getImpl<detail::PumpVariableSpeed_Impl>()->setCoefficient3ofthePartLoadPerformanceCurve(coefficient3ofthePartLoadPerformanceCurve);
+bool PumpVariableSpeed::setCoefficient3ofthePartLoadPerformanceCurve(double coefficient3ofthePartLoadPerformanceCurve) {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->setCoefficient3ofthePartLoadPerformanceCurve(coefficient3ofthePartLoadPerformanceCurve);
 }
 
 bool PumpVariableSpeed::setCoefficient3ofthePartLoadPerformanceCurve(const Quantity& coefficient3ofthePartLoadPerformanceCurve) {
@@ -1354,8 +1354,8 @@ void PumpVariableSpeed::resetCoefficient3ofthePartLoadPerformanceCurve() {
   getImpl<detail::PumpVariableSpeed_Impl>()->resetCoefficient3ofthePartLoadPerformanceCurve();
 }
 
-void PumpVariableSpeed::setCoefficient4ofthePartLoadPerformanceCurve(double coefficient4ofthePartLoadPerformanceCurve) {
-  getImpl<detail::PumpVariableSpeed_Impl>()->setCoefficient4ofthePartLoadPerformanceCurve(coefficient4ofthePartLoadPerformanceCurve);
+bool PumpVariableSpeed::setCoefficient4ofthePartLoadPerformanceCurve(double coefficient4ofthePartLoadPerformanceCurve) {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->setCoefficient4ofthePartLoadPerformanceCurve(coefficient4ofthePartLoadPerformanceCurve);
 }
 
 bool PumpVariableSpeed::setCoefficient4ofthePartLoadPerformanceCurve(const Quantity& coefficient4ofthePartLoadPerformanceCurve) {
@@ -1366,8 +1366,8 @@ void PumpVariableSpeed::resetCoefficient4ofthePartLoadPerformanceCurve() {
   getImpl<detail::PumpVariableSpeed_Impl>()->resetCoefficient4ofthePartLoadPerformanceCurve();
 }
 
-void PumpVariableSpeed::setMinimumFlowRate(double minimumFlowRate) {
-  getImpl<detail::PumpVariableSpeed_Impl>()->setMinimumFlowRate(minimumFlowRate);
+bool PumpVariableSpeed::setMinimumFlowRate(double minimumFlowRate) {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->setMinimumFlowRate(minimumFlowRate);
 }
 
 bool PumpVariableSpeed::setMinimumFlowRate(const Quantity& minimumFlowRate) {

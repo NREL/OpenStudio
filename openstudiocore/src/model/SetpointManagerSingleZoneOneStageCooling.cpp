@@ -135,14 +135,14 @@ namespace detail {
     return result;
   }
 
-  void SetpointManagerSingleZoneOneStageCooling_Impl::setCoolingStageOnSupplyAirSetpointTemperature(double coolingStageOnSupplyAirSetpointTemperature) {
+  bool SetpointManagerSingleZoneOneStageCooling_Impl::setCoolingStageOnSupplyAirSetpointTemperature(double coolingStageOnSupplyAirSetpointTemperature) {
     bool result = setDouble(OS_SetpointManager_SingleZone_OneStageCoolingFields::CoolingStageOnSupplyAirSetpointTemperature, coolingStageOnSupplyAirSetpointTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void SetpointManagerSingleZoneOneStageCooling_Impl::setCoolingStageOffSupplyAirSetpointTemperature(double coolingStageOffSupplyAirSetpointTemperature) {
+  bool SetpointManagerSingleZoneOneStageCooling_Impl::setCoolingStageOffSupplyAirSetpointTemperature(double coolingStageOffSupplyAirSetpointTemperature) {
     bool result = setDouble(OS_SetpointManager_SingleZone_OneStageCoolingFields::CoolingStageOffSupplyAirSetpointTemperature, coolingStageOffSupplyAirSetpointTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool SetpointManagerSingleZoneOneStageCooling_Impl::setControlZone(const ThermalZone& thermalZone) {
@@ -210,12 +210,12 @@ bool SetpointManagerSingleZoneOneStageCooling::setControlVariable(const std::str
   return getImpl<detail::SetpointManagerSingleZoneOneStageCooling_Impl>()->setControlVariable(controlVariable);
 }
 
-void SetpointManagerSingleZoneOneStageCooling::setCoolingStageOnSupplyAirSetpointTemperature(double coolingStageOnSupplyAirSetpointTemperature) {
-  getImpl<detail::SetpointManagerSingleZoneOneStageCooling_Impl>()->setCoolingStageOnSupplyAirSetpointTemperature(coolingStageOnSupplyAirSetpointTemperature);
+bool SetpointManagerSingleZoneOneStageCooling::setCoolingStageOnSupplyAirSetpointTemperature(double coolingStageOnSupplyAirSetpointTemperature) {
+  return getImpl<detail::SetpointManagerSingleZoneOneStageCooling_Impl>()->setCoolingStageOnSupplyAirSetpointTemperature(coolingStageOnSupplyAirSetpointTemperature);
 }
 
-void SetpointManagerSingleZoneOneStageCooling::setCoolingStageOffSupplyAirSetpointTemperature(double coolingStageOffSupplyAirSetpointTemperature) {
-  getImpl<detail::SetpointManagerSingleZoneOneStageCooling_Impl>()->setCoolingStageOffSupplyAirSetpointTemperature(coolingStageOffSupplyAirSetpointTemperature);
+bool SetpointManagerSingleZoneOneStageCooling::setCoolingStageOffSupplyAirSetpointTemperature(double coolingStageOffSupplyAirSetpointTemperature) {
+  return getImpl<detail::SetpointManagerSingleZoneOneStageCooling_Impl>()->setCoolingStageOffSupplyAirSetpointTemperature(coolingStageOffSupplyAirSetpointTemperature);
 }
 
 bool SetpointManagerSingleZoneOneStageCooling::setControlZone(const ThermalZone& thermalZone) {
@@ -234,4 +234,3 @@ SetpointManagerSingleZoneOneStageCooling::SetpointManagerSingleZoneOneStageCooli
 
 } // model
 } // openstudio
-

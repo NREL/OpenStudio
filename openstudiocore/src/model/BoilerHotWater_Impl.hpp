@@ -40,30 +40,30 @@ namespace detail {
 
   /** BoilerHotWater_Impl is a StraightComponent_Impl that is the implementation class for BoilerHotWater.*/
   class MODEL_API BoilerHotWater_Impl : public StraightComponent_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
 
     /** @name Constructors and Destructors */
@@ -197,7 +197,7 @@ namespace detail {
 
     // TODO: Handle Non-Extensible IddField Boiler Water Outlet Node Name.
 
-    void setWaterOutletUpperTemperatureLimit(double waterOutletUpperTemperatureLimit);
+    bool setWaterOutletUpperTemperatureLimit(double waterOutletUpperTemperatureLimit);
 
     void resetWaterOutletUpperTemperatureLimit();
 

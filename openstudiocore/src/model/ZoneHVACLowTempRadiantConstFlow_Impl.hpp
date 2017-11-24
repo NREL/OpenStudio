@@ -44,7 +44,7 @@ namespace detail {
 
   /** ZoneHVACLowTempRadiantConstFlow_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACLowTempRadiantConstFlow.*/
   class MODEL_API ZoneHVACLowTempRadiantConstFlow_Impl : public ZoneHVACComponent_Impl {
-   
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -67,7 +67,7 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
     virtual ModelObject clone(Model model) const override;
-   
+
     virtual std::vector<IdfObject> remove() override;
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
@@ -163,7 +163,7 @@ namespace detail {
 
     void resetPumpFlowRateSchedule();
 
-    void setRatedPumpHead(double ratedPumpHead);
+    bool setRatedPumpHead(double ratedPumpHead);
 
     void resetRatedPumpHead();
 
@@ -181,7 +181,7 @@ namespace detail {
 
     bool setNumberofCircuits(std::string numberofCircuits);
 
-    void setCircuitLength(double circuitLength);
+    bool setCircuitLength(double circuitLength);
 
     boost::optional<ThermalZone> thermalZone() const;
 
@@ -217,4 +217,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_ZONEHVACLOWTEMPRADIANTCONSTFLOW_IMPL_HPP
-

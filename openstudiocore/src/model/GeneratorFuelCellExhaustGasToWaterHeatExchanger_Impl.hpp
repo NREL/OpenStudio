@@ -122,7 +122,7 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl : public St
     /** @name Setters */
     //@{
 
-    void setHeatRecoveryWaterMaximumFlowRate(double heatRecoveryWaterMaximumFlowRate);
+    bool setHeatRecoveryWaterMaximumFlowRate(double heatRecoveryWaterMaximumFlowRate);
 
     void resetHeatRecoveryWaterMaximumFlowRate();
 
@@ -134,75 +134,75 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl : public St
 
     void resetHeatExchangerCalculationMethod();
 
-    void setMethod1HeatExchangerEffectiveness(double method1HeatExchangerEffectiveness);
+    bool setMethod1HeatExchangerEffectiveness(double method1HeatExchangerEffectiveness);
 
     void resetMethod1HeatExchangerEffectiveness();
 
-    void setMethod2Parameterhxs0(double method2Parameterhxs0);
+    bool setMethod2Parameterhxs0(double method2Parameterhxs0);
 
     void resetMethod2Parameterhxs0();
 
-    void setMethod2Parameterhxs1(double method2Parameterhxs1);
+    bool setMethod2Parameterhxs1(double method2Parameterhxs1);
 
     void resetMethod2Parameterhxs1();
 
-    void setMethod2Parameterhxs2(double method2Parameterhxs2);
+    bool setMethod2Parameterhxs2(double method2Parameterhxs2);
 
     void resetMethod2Parameterhxs2();
 
-    void setMethod2Parameterhxs3(double method2Parameterhxs3);
+    bool setMethod2Parameterhxs3(double method2Parameterhxs3);
 
     void resetMethod2Parameterhxs3();
 
-    void setMethod2Parameterhxs4(double method2Parameterhxs4);
+    bool setMethod2Parameterhxs4(double method2Parameterhxs4);
 
     void resetMethod2Parameterhxs4();
 
-    void setMethod3h0GasCoefficient(double method3h0GasCoefficient);
+    bool setMethod3h0GasCoefficient(double method3h0GasCoefficient);
 
     void resetMethod3h0GasCoefficient();
 
-    void setMethod3NdotGasRefCoefficient(double method3NdotGasRefCoefficient);
+    bool setMethod3NdotGasRefCoefficient(double method3NdotGasRefCoefficient);
 
     void resetMethod3NdotGasRefCoefficient();
 
-    void setMethod3nCoefficient(double method3nCoefficient);
+    bool setMethod3nCoefficient(double method3nCoefficient);
 
     void resetMethod3nCoefficient();
 
-    void setMethod3GasArea(double method3GasArea);
+    bool setMethod3GasArea(double method3GasArea);
 
     void resetMethod3GasArea();
 
-    void setMethod3h0WaterCoefficient(double method3h0WaterCoefficient);
+    bool setMethod3h0WaterCoefficient(double method3h0WaterCoefficient);
 
     void resetMethod3h0WaterCoefficient();
 
-    void setMethod3NdotWaterrefCoefficient(double method3NdotWaterrefCoefficient);
+    bool setMethod3NdotWaterrefCoefficient(double method3NdotWaterrefCoefficient);
 
     void resetMethod3NdotWaterrefCoefficient();
 
-    void setMethod3mCoefficient(double method3mCoefficient);
+    bool setMethod3mCoefficient(double method3mCoefficient);
 
     void resetMethod3mCoefficient();
 
-    void setMethod3WaterArea(double method3WaterArea);
+    bool setMethod3WaterArea(double method3WaterArea);
 
     void resetMethod3WaterArea();
 
-    void setMethod3FAdjustmentFactor(double method3FAdjustmentFactor);
+    bool setMethod3FAdjustmentFactor(double method3FAdjustmentFactor);
 
     void resetMethod3FAdjustmentFactor();
 
-    void setMethod4hxl1Coefficient(double method4hxl1Coefficient);
+    bool setMethod4hxl1Coefficient(double method4hxl1Coefficient);
 
     void resetMethod4hxl1Coefficient();
 
-    void setMethod4hxl2Coefficient(double method4hxl2Coefficient);
+    bool setMethod4hxl2Coefficient(double method4hxl2Coefficient);
 
     void resetMethod4hxl2Coefficient();
 
-    void setMethod4CondensationThreshold(double method4CondensationThreshold);
+    bool setMethod4CondensationThreshold(double method4CondensationThreshold);
 
     void resetMethod4CondensationThreshold();
 
@@ -238,4 +238,3 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl : public St
 } // openstudio
 
 #endif // MODEL_GENERATORFUELCELLEXHAUSTGASTOWATERHEATEXCHANGER_IMPL_HPP
-

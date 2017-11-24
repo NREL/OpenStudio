@@ -132,15 +132,15 @@ class MODEL_API RefrigerationCondenserAirCooled : public ParentObject {
 
   void resetEndUseSubcategory();
 
-  void setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
+  bool setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
 
   void resetCondenserRefrigerantOperatingChargeInventory();
 
-  void setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
+  bool setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
 
   void resetCondensateReceiverRefrigerantInventory();
 
-  void setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
+  bool setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
 
   void resetCondensatePipingRefrigerantInventory();
 
@@ -174,4 +174,3 @@ typedef std::vector<RefrigerationCondenserAirCooled> RefrigerationCondenserAirCo
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONCONDENSERAIRCOOLED_HPP
-

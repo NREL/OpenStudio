@@ -91,15 +91,15 @@ class MODEL_API CurveExponent : public Curve {
   /** @name Setters */
   //@{
 
-  void setCoefficient1Constant(double coefficient1Constant);
+  bool setCoefficient1Constant(double coefficient1Constant);
 
-  void setCoefficient2Constant(double coefficient2Constant);
+  bool setCoefficient2Constant(double coefficient2Constant);
 
-  void setCoefficient3Constant(double coefficient3Constant);
+  bool setCoefficient3Constant(double coefficient3Constant);
 
-  void setMinimumValueofx(double minimumValueofx);
+  bool setMinimumValueofx(double minimumValueofx);
 
-  void setMaximumValueofx(double maximumValueofx);
+  bool setMaximumValueofx(double maximumValueofx);
 
   void setMinimumCurveOutput(double minimumCurveOutput);
 
@@ -149,4 +149,3 @@ typedef std::vector<CurveExponent> CurveExponentVector;
 } // openstudio
 
 #endif // MODEL_CURVEEXPONENT_HPP
-

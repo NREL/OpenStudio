@@ -53,7 +53,7 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
   /** @name Constructors and Destructors */
   //@{
 
-  ZoneHVACLowTempRadiantConstFlow(const Model& model, 
+  ZoneHVACLowTempRadiantConstFlow(const Model& model,
                                   Schedule& availabilitySchedule,
                                   HVACComponent& heatingCoil,
                                   HVACComponent& coolingCoil,
@@ -91,7 +91,7 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
   HVACComponent heatingCoil() const;
 
   HVACComponent coolingCoil() const;
- 
+
   boost::optional<double> ratedFlowRate() const;
 
   boost::optional<Schedule> pumpFlowRateSchedule() const;
@@ -148,7 +148,7 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   void resetPumpFlowRateSchedule();
 
-  void setRatedPumpHead(double ratedPumpHead);
+  bool setRatedPumpHead(double ratedPumpHead);
 
   void resetRatedPumpHead();
 
@@ -166,7 +166,7 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   bool setNumberofCircuits(std::string numberofCircuits);
 
-  void setCircuitLength(double circuitLength);
+  bool setCircuitLength(double circuitLength);
 
   boost::optional<ThermalZone> thermalZone() const;
 
@@ -204,4 +204,3 @@ typedef std::vector<ZoneHVACLowTempRadiantConstFlow> ZoneHVACLowTempRadiantConst
 } // openstudio
 
 #endif // MODEL_ZONEHVACLOWTEMPRADIANTCONSTFLOW_HPP
-

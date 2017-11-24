@@ -193,9 +193,9 @@ namespace detail {
     return result;
   }
 
-  void HeaderedPumpsConstantSpeed_Impl::setRatedPumpHead(double ratedPumpHead) {
+  bool HeaderedPumpsConstantSpeed_Impl::setRatedPumpHead(double ratedPumpHead) {
     bool result = setDouble(OS_HeaderedPumps_ConstantSpeedFields::RatedPumpHead, ratedPumpHead);
-    OS_ASSERT(result);
+    return result;
   }
 
   void HeaderedPumpsConstantSpeed_Impl::setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption) {
@@ -378,8 +378,8 @@ bool HeaderedPumpsConstantSpeed::setFlowSequencingControlScheme(std::string flow
   return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setFlowSequencingControlScheme(flowSequencingControlScheme);
 }
 
-void HeaderedPumpsConstantSpeed::setRatedPumpHead(double ratedPumpHead) {
-  getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setRatedPumpHead(ratedPumpHead);
+bool HeaderedPumpsConstantSpeed::setRatedPumpHead(double ratedPumpHead) {
+  return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setRatedPumpHead(ratedPumpHead);
 }
 
 void HeaderedPumpsConstantSpeed::setRatedPowerConsumption(double ratedPowerConsumption) {
@@ -430,4 +430,3 @@ HeaderedPumpsConstantSpeed::HeaderedPumpsConstantSpeed(std::shared_ptr<detail::H
 
 } // model
 } // openstudio
-

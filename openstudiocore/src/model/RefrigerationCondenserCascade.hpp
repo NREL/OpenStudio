@@ -83,7 +83,7 @@ class MODEL_API RefrigerationCondenserCascade : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setRatedCondensingTemperature(double ratedCondensingTemperature);
+  bool setRatedCondensingTemperature(double ratedCondensingTemperature);
 
   bool setRatedApproachTemperatureDifference(double ratedApproachTemperatureDifference);
 
@@ -137,4 +137,3 @@ typedef std::vector<RefrigerationCondenserCascade> RefrigerationCondenserCascade
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONCONDENSERCASCADE_HPP
-

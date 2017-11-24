@@ -74,7 +74,7 @@ namespace detail {
     //@{
 
     virtual std::string controlVariable() const override;
-    
+
     std::string referenceGroundTemperatureObjectType() const;
 
     double offsetTemperatureDifference() const;
@@ -90,14 +90,14 @@ namespace detail {
     //@{
 
     virtual bool setControlVariable(const std::string& controlVariable) override;
-    
+
     bool setReferenceGroundTemperatureObjectType(const std::string& groundTemperatureObjType);
 
-    void setOffsetTemperatureDifference(double offsetTemperatureDifference);
+    bool setOffsetTemperatureDifference(double offsetTemperatureDifference);
 
-    void setMaximumSetpointTemperature(double maximumSetpointTemperature);
+    bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
 
-    void setMinimumSetpointTemperature(double minimumSetpointTemperature);
+    bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
     //@}
     /** @name Other */
@@ -119,4 +119,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SETPOINTMANAGERFOLLOWGROUNDTEMPERATURE_IMPL_HPP
-

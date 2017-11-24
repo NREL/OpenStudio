@@ -44,9 +44,9 @@ namespace detail {
 
 } // detail
 
-/** ControllerWaterCoil is a HVACComponent that wraps the OpenStudio IDD object 
+/** ControllerWaterCoil is a HVACComponent that wraps the OpenStudio IDD object
  *  'OS:Controller:WaterCoil'. */
-class MODEL_API ControllerWaterCoil : public HVACComponent 
+class MODEL_API ControllerWaterCoil : public HVACComponent
 {
   public:
 
@@ -129,7 +129,7 @@ class MODEL_API ControllerWaterCoil : public HVACComponent
 
   void autosizeMaximumActuatedFlow();
 
-  void setMinimumActuatedFlow(double minimumActuatedFlow);
+  bool setMinimumActuatedFlow(double minimumActuatedFlow);
 
   void resetMinimumActuatedFlow();
 
@@ -164,4 +164,3 @@ typedef std::vector<ControllerWaterCoil> ControllerWaterCoilVector;
 } // openstudio
 
 #endif // MODEL_CONTROLLERWATERCOIL_HPP
-

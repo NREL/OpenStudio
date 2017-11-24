@@ -45,18 +45,18 @@ namespace detail {
 
   /** GlareSensor_Impl is a SpaceItem_Impl that is the implementation class for GlareSensor.*/
   class MODEL_API GlareSensor_Impl : public SpaceItem_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -105,28 +105,28 @@ namespace detail {
     bool isNumberofGlareViewVectorsDefaulted() const;
 
     boost::optional<double> maximumAllowableDaylightGlareProbability() const;
-    
-    bool isMaximumAllowableDaylightGlareProbabilityDefaulted() const;   
+
+    bool isMaximumAllowableDaylightGlareProbabilityDefaulted() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    void setPositionXCoordinate(double positionXCoordinate);
+    bool setPositionXCoordinate(double positionXCoordinate);
 
-    void setPositionYCoordinate(double positionYCoordinate);
+    bool setPositionYCoordinate(double positionYCoordinate);
 
-    void setPositionZCoordinate(double positionZCoordinate);
+    bool setPositionZCoordinate(double positionZCoordinate);
 
-    void setPsiRotationAroundXAxis(double psiRotationAroundXAxis);
+    bool setPsiRotationAroundXAxis(double psiRotationAroundXAxis);
 
     void resetPsiRotationAroundXAxis();
 
-    void setThetaRotationAroundYAxis(double thetaRotationAroundYAxis);
+    bool setThetaRotationAroundYAxis(double thetaRotationAroundYAxis);
 
     void resetThetaRotationAroundYAxis();
 
-    void setPhiRotationAroundZAxis(double phiRotationAroundZAxis);
+    bool setPhiRotationAroundZAxis(double phiRotationAroundZAxis);
 
     void resetPhiRotationAroundZAxis();
 
@@ -150,7 +150,7 @@ namespace detail {
 
     bool aimAt(const Point3d& target);
 
-   protected: 
+   protected:
 
     // index of the space name
     virtual int spaceIndex() const override;
@@ -165,4 +165,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_GLARESENSOR_IMPL_HPP
-

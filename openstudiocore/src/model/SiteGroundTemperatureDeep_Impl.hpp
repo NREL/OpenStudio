@@ -132,51 +132,51 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setJanuaryDeepGroundTemperature(double januaryDeepGroundTemperature);
+    bool setJanuaryDeepGroundTemperature(double januaryDeepGroundTemperature);
 
     void resetJanuaryDeepGroundTemperature();
 
-    void setFebruaryDeepGroundTemperature(double februaryDeepGroundTemperature);
+    bool setFebruaryDeepGroundTemperature(double februaryDeepGroundTemperature);
 
     void resetFebruaryDeepGroundTemperature();
 
-    void setMarchDeepGroundTemperature(double marchDeepGroundTemperature);
+    bool setMarchDeepGroundTemperature(double marchDeepGroundTemperature);
 
     void resetMarchDeepGroundTemperature();
 
-    void setAprilDeepGroundTemperature(double aprilDeepGroundTemperature);
+    bool setAprilDeepGroundTemperature(double aprilDeepGroundTemperature);
 
     void resetAprilDeepGroundTemperature();
 
-    void setMayDeepGroundTemperature(double mayDeepGroundTemperature);
+    bool setMayDeepGroundTemperature(double mayDeepGroundTemperature);
 
     void resetMayDeepGroundTemperature();
 
-    void setJuneDeepGroundTemperature(double juneDeepGroundTemperature);
+    bool setJuneDeepGroundTemperature(double juneDeepGroundTemperature);
 
     void resetJuneDeepGroundTemperature();
 
-    void setJulyDeepGroundTemperature(double julyDeepGroundTemperature);
+    bool setJulyDeepGroundTemperature(double julyDeepGroundTemperature);
 
     void resetJulyDeepGroundTemperature();
 
-    void setAugustDeepGroundTemperature(double augustDeepGroundTemperature);
+    bool setAugustDeepGroundTemperature(double augustDeepGroundTemperature);
 
     void resetAugustDeepGroundTemperature();
 
-    void setSeptemberDeepGroundTemperature(double septemberDeepGroundTemperature);
+    bool setSeptemberDeepGroundTemperature(double septemberDeepGroundTemperature);
 
     void resetSeptemberDeepGroundTemperature();
 
-    void setOctoberDeepGroundTemperature(double octoberDeepGroundTemperature);
+    bool setOctoberDeepGroundTemperature(double octoberDeepGroundTemperature);
 
     void resetOctoberDeepGroundTemperature();
 
-    void setNovemberDeepGroundTemperature(double novemberDeepGroundTemperature);
+    bool setNovemberDeepGroundTemperature(double novemberDeepGroundTemperature);
 
     void resetNovemberDeepGroundTemperature();
 
-    void setDecemberDeepGroundTemperature(double decemberDeepGroundTemperature);
+    bool setDecemberDeepGroundTemperature(double decemberDeepGroundTemperature);
 
     void resetDecemberDeepGroundTemperature();
 

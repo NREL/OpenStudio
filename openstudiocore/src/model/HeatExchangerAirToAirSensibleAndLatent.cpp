@@ -462,9 +462,9 @@ namespace detail {
     return result;
   }
 
-  void HeatExchangerAirToAirSensibleAndLatent_Impl::setThresholdTemperature(double thresholdTemperature) {
+  bool HeatExchangerAirToAirSensibleAndLatent_Impl::setThresholdTemperature(double thresholdTemperature) {
     bool result = setDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::ThresholdTemperature, thresholdTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool HeatExchangerAirToAirSensibleAndLatent_Impl::setThresholdTemperature(const Quantity& thresholdTemperature) {
@@ -988,8 +988,8 @@ bool HeatExchangerAirToAirSensibleAndLatent::setFrostControlType(std::string fro
   return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setFrostControlType(frostControlType);
 }
 
-void HeatExchangerAirToAirSensibleAndLatent::setThresholdTemperature(double thresholdTemperature) {
-  getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setThresholdTemperature(thresholdTemperature);
+bool HeatExchangerAirToAirSensibleAndLatent::setThresholdTemperature(double thresholdTemperature) {
+  return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setThresholdTemperature(thresholdTemperature);
 }
 
 bool HeatExchangerAirToAirSensibleAndLatent::setThresholdTemperature(const Quantity& thresholdTemperature) {
@@ -1036,4 +1036,3 @@ HeatExchangerAirToAirSensibleAndLatent::HeatExchangerAirToAirSensibleAndLatent(s
 
 } // model
 } // openstudio
-

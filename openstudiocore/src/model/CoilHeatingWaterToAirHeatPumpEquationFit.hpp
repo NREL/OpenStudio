@@ -108,7 +108,7 @@ class MODEL_API CoilHeatingWaterToAirHeatPumpEquationFit : public WaterToAirComp
   /** @name Setters */
   //@{
 
- 
+
   bool setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate);
 
   bool setRatedAirFlowRate(double ratedAirFlowRate);
@@ -137,25 +137,25 @@ class MODEL_API CoilHeatingWaterToAirHeatPumpEquationFit : public WaterToAirComp
 
   void resetRatedHeatingCoefficientofPerformance();
 
-  void setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
+  bool setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
 
-  void setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2);
+  bool setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2);
 
-  void setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3);
+  bool setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3);
 
-  void setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4);
+  bool setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4);
 
-  void setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5);
+  bool setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5);
 
-  void setHeatingPowerConsumptionCoefficient1(double heatingPowerConsumptionCoefficient1);
+  bool setHeatingPowerConsumptionCoefficient1(double heatingPowerConsumptionCoefficient1);
 
-  void setHeatingPowerConsumptionCoefficient2(double heatingPowerConsumptionCoefficient2);
+  bool setHeatingPowerConsumptionCoefficient2(double heatingPowerConsumptionCoefficient2);
 
-  void setHeatingPowerConsumptionCoefficient3(double heatingPowerConsumptionCoefficient3);
+  bool setHeatingPowerConsumptionCoefficient3(double heatingPowerConsumptionCoefficient3);
 
-  void setHeatingPowerConsumptionCoefficient4(double heatingPowerConsumptionCoefficient4);
+  bool setHeatingPowerConsumptionCoefficient4(double heatingPowerConsumptionCoefficient4);
 
-  void setHeatingPowerConsumptionCoefficient5(double heatingPowerConsumptionCoefficient5);
+  bool setHeatingPowerConsumptionCoefficient5(double heatingPowerConsumptionCoefficient5);
 
   //@}
   /** @name Other */
@@ -187,4 +187,3 @@ typedef std::vector<CoilHeatingWaterToAirHeatPumpEquationFit> CoilHeatingWaterTo
 } // openstudio
 
 #endif // MODEL_COILHEATINGWATERTOAIRHEATPUMPEQUATIONFIT_HPP
-

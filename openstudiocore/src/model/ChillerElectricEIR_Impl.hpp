@@ -43,35 +43,35 @@ namespace detail {
 
 class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 {
-  
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
 
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  public:
 
 
@@ -221,11 +221,11 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   bool setReferenceCOP(double referenceCOP);
 
-  void setReferenceLeavingChilledWaterTemperature(double referenceLeavingChilledWaterTemperature);
+  bool setReferenceLeavingChilledWaterTemperature(double referenceLeavingChilledWaterTemperature);
 
   void resetReferenceLeavingChilledWaterTemperature();
 
-  void setReferenceEnteringCondenserFluidTemperature(double referenceEnteringCondenserFluidTemperature);
+  bool setReferenceEnteringCondenserFluidTemperature(double referenceEnteringCondenserFluidTemperature);
 
   void resetReferenceEnteringCondenserFluidTemperature();
 
@@ -295,7 +295,7 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   void resetCompressorMotorEfficiency();
 
-  void setLeavingChilledWaterLowerTemperatureLimit(double leavingChilledWaterLowerTemperatureLimit);
+  bool setLeavingChilledWaterLowerTemperatureLimit(double leavingChilledWaterLowerTemperatureLimit);
 
   void resetLeavingChilledWaterLowerTemperatureLimit();
 
@@ -352,4 +352,3 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 } // openstudio
 
 #endif // MODEL_CHILLERELECTRICEIR_IMPL_HPP
-

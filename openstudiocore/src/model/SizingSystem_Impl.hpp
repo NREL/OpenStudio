@@ -41,42 +41,42 @@ class AirLoopHVAC;
 namespace detail {
 
 /** SizingSystem_Impl is a ModelObject_Impl that is the implementation class for SizingSystem.*/
-class MODEL_API SizingSystem_Impl : public ModelObject_Impl 
+class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 {
-  
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   public:
 
@@ -210,17 +210,17 @@ class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 
   bool setMinimumSystemAirFlowRatio(double minimumSystemAirFlowRatio);
 
-  void setPreheatDesignTemperature(double preheatDesignTemperature);
+  bool setPreheatDesignTemperature(double preheatDesignTemperature);
 
-  void setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio);
+  bool setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio);
 
-  void setPrecoolDesignTemperature(double precoolDesignTemperature);
+  bool setPrecoolDesignTemperature(double precoolDesignTemperature);
 
-  void setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio);
+  bool setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio);
 
-  void setCentralCoolingDesignSupplyAirTemperature(double centralCoolingDesignSupplyAirTemperature);
+  bool setCentralCoolingDesignSupplyAirTemperature(double centralCoolingDesignSupplyAirTemperature);
 
-  void setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature);
+  bool setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature);
 
   bool setSizingOption(std::string sizingOption);
 
@@ -234,11 +234,11 @@ class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 
   void resetAllOutdoorAirinHeating();
 
-  void setCentralCoolingDesignSupplyAirHumidityRatio(double centralCoolingDesignSupplyAirHumidityRatio);
+  bool setCentralCoolingDesignSupplyAirHumidityRatio(double centralCoolingDesignSupplyAirHumidityRatio);
 
   void resetCentralCoolingDesignSupplyAirHumidityRatio();
 
-  void setCentralHeatingDesignSupplyAirHumidityRatio(double centralHeatingDesignSupplyAirHumidityRatio);
+  bool setCentralHeatingDesignSupplyAirHumidityRatio(double centralHeatingDesignSupplyAirHumidityRatio);
 
   void resetCentralHeatingDesignSupplyAirHumidityRatio();
 
@@ -318,4 +318,3 @@ class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 } // openstudio
 
 #endif // MODEL_SIZINGSYSTEM_IMPL_HPP
-

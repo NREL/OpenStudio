@@ -41,7 +41,7 @@ namespace detail {
 
 } // detail
 
-/** ScheduleVariableInterval is a ScheduleInterval that wraps the OpenStudio IDD object 
+/** ScheduleVariableInterval is a ScheduleInterval that wraps the OpenStudio IDD object
  *  'OS_Schedule_VariableInterval'. */
 class MODEL_API ScheduleVariableInterval : public ScheduleInterval {
  public:
@@ -79,7 +79,7 @@ class MODEL_API ScheduleVariableInterval : public ScheduleInterval {
 
   void resetInterpolatetoTimestep();
 
-  void setOutOfRangeValue(double outOfRangeValue);
+  bool setOutOfRangeValue(double outOfRangeValue);
 
   void resetOutOfRangeValue();
 
@@ -113,4 +113,3 @@ typedef std::vector<ScheduleVariableInterval> ScheduleVariableIntervalVector;
 } // openstudio
 
 #endif // MODEL_SCHEDULEVARIABLEINTERVAL_HPP
-

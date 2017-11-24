@@ -67,7 +67,7 @@ class MODEL_API ThermochromicGlazing : public Glazing {
   /** @name Setters */
   //@{
 
-  void setOpticalDataTemperature(double value);
+  bool setOpticalDataTemperature(double value);
 
   // TODO: Handle this object's extensible fields.
 
@@ -101,4 +101,3 @@ typedef std::vector<ThermochromicGlazing> ThermochromicGlazingVector;
 } // openstudio
 
 #endif // MODEL_THERMOCHROMICGLAZING_HPP
-

@@ -91,9 +91,9 @@ namespace detail {
 
     void resetColdNode();
 
-    void setTemperatureDifferenceOnLimit(double temperatureDifferenceOnLimit);
+    bool setTemperatureDifferenceOnLimit(double temperatureDifferenceOnLimit);
 
-    void setTemperatureDifferenceOffLimit(double temperatureDifferenceOffLimit);
+    bool setTemperatureDifferenceOffLimit(double temperatureDifferenceOffLimit);
 
     //@}
     /** @name Other */
@@ -111,4 +111,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_AVAILABILITYMANAGERDIFFERENTIALTHERMOSTAT_IMPL_HPP
-

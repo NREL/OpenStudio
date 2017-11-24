@@ -245,9 +245,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorPhotovoltaic_Impl::setRatedElectricPowerOutput(double ratedElectricPowerOutput) {
+  bool GeneratorPhotovoltaic_Impl::setRatedElectricPowerOutput(double ratedElectricPowerOutput) {
     bool result = setDouble(OS_Generator_PhotovoltaicFields::RatedElectricPowerOutput, ratedElectricPowerOutput);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorPhotovoltaic_Impl::resetRatedElectricPowerOutput() {
@@ -377,8 +377,8 @@ void GeneratorPhotovoltaic::resetNumberOfModulesInSeries() {
   getImpl<detail::GeneratorPhotovoltaic_Impl>()->resetNumberOfModulesInSeries();
 }
 
-void GeneratorPhotovoltaic::setRatedElectricPowerOutput(double ratedElectricPowerOutput) {
-  getImpl<detail::GeneratorPhotovoltaic_Impl>()->setRatedElectricPowerOutput(ratedElectricPowerOutput);
+bool GeneratorPhotovoltaic::setRatedElectricPowerOutput(double ratedElectricPowerOutput) {
+  return getImpl<detail::GeneratorPhotovoltaic_Impl>()->setRatedElectricPowerOutput(ratedElectricPowerOutput);
 }
 
 void GeneratorPhotovoltaic::resetRatedElectricPowerOutput() {
@@ -401,4 +401,3 @@ GeneratorPhotovoltaic::GeneratorPhotovoltaic(std::shared_ptr<detail::GeneratorPh
 
 } // model
 } // openstudio
-

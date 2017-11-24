@@ -151,7 +151,7 @@ class MODEL_API FanVariableVolume : public StraightComponent {
 
   void resetFanEfficiency();
 
-  void setPressureRise(double pressureRise);
+  bool setPressureRise(double pressureRise);
 
   bool setPressureRise(const Quantity& pressureRise);
 
@@ -255,4 +255,3 @@ typedef std::vector<FanVariableVolume> FanVariableVolumeVector;
 } // openstudio
 
 #endif // MODEL_FANVARIABLEVOLUME_HPP
-

@@ -189,19 +189,19 @@ class MODEL_API SizingZone : public ModelObject {
 
   bool setZoneCoolingDesignSupplyAirTemperatureInputMethod(const std::string &value);
 
-  void setZoneCoolingDesignSupplyAirTemperature(double zoneCoolingDesignSupplyAirTemperature);
+  bool setZoneCoolingDesignSupplyAirTemperature(double zoneCoolingDesignSupplyAirTemperature);
 
   bool setZoneCoolingDesignSupplyAirTemperature(const Quantity& zoneCoolingDesignSupplyAirTemperature);
 
-  void setZoneCoolingDesignSupplyAirTemperatureDifference(double value);
+  bool setZoneCoolingDesignSupplyAirTemperatureDifference(double value);
 
   bool setZoneHeatingDesignSupplyAirTemperatureInputMethod(const std::string &value);
 
-  void setZoneHeatingDesignSupplyAirTemperature(double zoneHeatingDesignSupplyAirTemperature);
+  bool setZoneHeatingDesignSupplyAirTemperature(double zoneHeatingDesignSupplyAirTemperature);
 
   bool setZoneHeatingDesignSupplyAirTemperature(const Quantity& zoneHeatingDesignSupplyAirTemperature);
 
-  void setZoneHeatingDesignSupplyAirTemperatureDifference(double value);
+  bool setZoneHeatingDesignSupplyAirTemperatureDifference(double value);
 
   bool setZoneCoolingDesignSupplyAirHumidityRatio(double zoneCoolingDesignSupplyAirHumidityRatio);
 
@@ -338,4 +338,3 @@ typedef std::vector<SizingZone> SizingZoneVector;
 } // openstudio
 
 #endif // MODEL_SIZINGZONE_HPP
-

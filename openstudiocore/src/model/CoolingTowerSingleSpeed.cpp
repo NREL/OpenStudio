@@ -766,9 +766,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoolingTowerSingleSpeed_Impl::setEvaporationLossFactor(double evaporationLossFactor) {
+  bool CoolingTowerSingleSpeed_Impl::setEvaporationLossFactor(double evaporationLossFactor) {
     bool result = setDouble(OS_CoolingTower_SingleSpeedFields::EvaporationLossFactor, evaporationLossFactor);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool CoolingTowerSingleSpeed_Impl::setEvaporationLossFactor(const Quantity& evaporationLossFactor) {
@@ -786,9 +786,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoolingTowerSingleSpeed_Impl::setDriftLossPercent(double driftLossPercent) {
+  bool CoolingTowerSingleSpeed_Impl::setDriftLossPercent(double driftLossPercent) {
     bool result = setDouble(OS_CoolingTower_SingleSpeedFields::DriftLossPercent, driftLossPercent);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool CoolingTowerSingleSpeed_Impl::setDriftLossPercent(const Quantity& driftLossPercent) {
@@ -1639,8 +1639,8 @@ void CoolingTowerSingleSpeed::resetEvaporationLossMode() {
   getImpl<detail::CoolingTowerSingleSpeed_Impl>()->resetEvaporationLossMode();
 }
 
-void CoolingTowerSingleSpeed::setEvaporationLossFactor(double evaporationLossFactor) {
-  getImpl<detail::CoolingTowerSingleSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
+bool CoolingTowerSingleSpeed::setEvaporationLossFactor(double evaporationLossFactor) {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
 }
 
 bool CoolingTowerSingleSpeed::setEvaporationLossFactor(const Quantity& evaporationLossFactor) {
@@ -1651,8 +1651,8 @@ void CoolingTowerSingleSpeed::resetEvaporationLossFactor() {
   getImpl<detail::CoolingTowerSingleSpeed_Impl>()->resetEvaporationLossFactor();
 }
 
-void CoolingTowerSingleSpeed::setDriftLossPercent(double driftLossPercent) {
-  getImpl<detail::CoolingTowerSingleSpeed_Impl>()->setDriftLossPercent(driftLossPercent);
+bool CoolingTowerSingleSpeed::setDriftLossPercent(double driftLossPercent) {
+  return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->setDriftLossPercent(driftLossPercent);
 }
 
 bool CoolingTowerSingleSpeed::setDriftLossPercent(const Quantity& driftLossPercent) {
@@ -1759,4 +1759,3 @@ CoolingTowerSingleSpeed::CoolingTowerSingleSpeed(std::shared_ptr<detail::Cooling
 
 } // model
 } // openstudio
-

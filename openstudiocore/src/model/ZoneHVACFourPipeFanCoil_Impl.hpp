@@ -214,7 +214,7 @@ namespace detail {
 
     void autosizeMaximumColdWaterFlowRate();
 
-    void setMinimumColdWaterFlowRate(double minimumColdWaterFlowRate);
+    bool setMinimumColdWaterFlowRate(double minimumColdWaterFlowRate);
 
     bool setMinimumColdWaterFlowRate(const Quantity& minimumColdWaterFlowRate);
 
@@ -234,7 +234,7 @@ namespace detail {
 
     void autosizeMaximumHotWaterFlowRate();
 
-    void setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate);
+    bool setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate);
 
     bool setMinimumHotWaterFlowRate(const Quantity& minimumHotWaterFlowRate);
 
@@ -325,4 +325,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_ZONEHVACFOURPIPEFANCOIL_IMPL_HPP
-

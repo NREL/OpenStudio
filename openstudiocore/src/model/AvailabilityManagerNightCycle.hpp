@@ -76,7 +76,7 @@ class MODEL_API AvailabilityManagerNightCycle : public AvailabilityManager {
 
   bool setThermostatTolerance(const Quantity& thermostatTolerance);
 
-  void setThermostatTolerance(double thermostatTolerance);
+  bool setThermostatTolerance(double thermostatTolerance);
 
   bool isThermostatToleranceDefaulted() const;
 
@@ -85,7 +85,7 @@ class MODEL_API AvailabilityManagerNightCycle : public AvailabilityManager {
 
   double cyclingRunTime() const;
 
-  void setCyclingRunTime(double cyclingRunTime);
+  bool setCyclingRunTime(double cyclingRunTime);
 
   bool setCyclingRunTime(const Quantity& cyclingRunTime);
 
@@ -130,4 +130,3 @@ typedef std::vector<AvailabilityManagerNightCycle> AvailabilityManagerNightCycle
 } // openstudio
 
 #endif // MODEL_AVAILABILITYMANAGERNIGHTCYCLE_HPP
-

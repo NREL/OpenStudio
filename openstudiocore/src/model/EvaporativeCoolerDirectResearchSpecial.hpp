@@ -131,7 +131,7 @@ class MODEL_API EvaporativeCoolerDirectResearchSpecial : public StraightComponen
 
   double waterPumpPowerSizingFactor() const;
 
-  void setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
+  bool setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
 
   boost::optional<Curve> waterPumpPowerModifierCurve() const;
 
@@ -163,4 +163,3 @@ typedef std::vector<EvaporativeCoolerDirectResearchSpecial> EvaporativeCoolerDir
 } // openstudio
 
 #endif // MODEL_EVAPORATIVECOOLERDIRECTRESEARCHSPECIAL_HPP
-

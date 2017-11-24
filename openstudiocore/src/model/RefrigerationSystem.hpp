@@ -185,7 +185,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
   */
   bool setRefrigerationCondenser(const ModelObject& refrigerationCondenser);
 
-  void setMinimumCondensingTemperature(double minimumCondensingTemperature);
+  bool setMinimumCondensingTemperature(double minimumCondensingTemperature);
 
   bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
 
@@ -201,7 +201,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   void resetLiquidSuctionHeatExchangerSubcooler();
 
-  void setSumUASuctionPiping(double sumUASuctionPiping);
+  bool setSumUASuctionPiping(double sumUASuctionPiping);
 
   void resetSumUASuctionPiping();
 
@@ -217,7 +217,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   void resetIntercoolerType();
 
-  void setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness);
+  bool setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness);
 
   void resetShellandCoilIntercoolerEffectiveness();
 
@@ -251,4 +251,3 @@ typedef std::vector<RefrigerationSystem> RefrigerationSystemVector;
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONSYSTEM_HPP
-

@@ -263,9 +263,9 @@ namespace detail {
     return result;
   }
 
-  void ScheduleFixedInterval_Impl::setOutOfRangeValue(double outOfRangeValue, bool driverMethod) {
+  bool ScheduleFixedInterval_Impl::setOutOfRangeValue(double outOfRangeValue, bool driverMethod) {
     bool result = setDouble(OS_Schedule_FixedIntervalFields::OutOfRangeValue, outOfRangeValue, driverMethod);
-    OS_ASSERT(result);
+    return result;
   }
 
   void ScheduleFixedInterval_Impl::resetOutOfRangeValue(bool driverMethod) {
@@ -349,8 +349,8 @@ bool ScheduleFixedInterval::setIntervalLength(double intervalLength) {
   return getImpl<detail::ScheduleFixedInterval_Impl>()->setIntervalLength(intervalLength);
 }
 
-void ScheduleFixedInterval::setOutOfRangeValue(double outOfRangeValue) {
-  getImpl<detail::ScheduleFixedInterval_Impl>()->setOutOfRangeValue(outOfRangeValue);
+bool ScheduleFixedInterval::setOutOfRangeValue(double outOfRangeValue) {
+  return getImpl<detail::ScheduleFixedInterval_Impl>()->setOutOfRangeValue(outOfRangeValue);
 }
 
 void ScheduleFixedInterval::resetOutOfRangeValue() {
@@ -366,4 +366,3 @@ ScheduleFixedInterval::ScheduleFixedInterval(std::shared_ptr<detail::ScheduleFix
 
 } // model
 } // openstudio
-

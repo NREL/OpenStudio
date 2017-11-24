@@ -115,9 +115,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilHeatingGasMultiStageStageData_Impl::setParasiticElectricLoad(double ParasiticElectricLoad) {
+  bool CoilHeatingGasMultiStageStageData_Impl::setParasiticElectricLoad(double ParasiticElectricLoad) {
     bool result = setDouble(OS_Coil_Heating_Gas_MultiStage_StageDataFields::ParasiticElectricLoad, ParasiticElectricLoad);
-    OS_ASSERT(result);
+    return result;
   }
 
 } // detail
@@ -164,8 +164,8 @@ void CoilHeatingGasMultiStageStageData::autosizeNominalCapacity() {
   getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->autosizeNominalCapacity();
 }
 
-void CoilHeatingGasMultiStageStageData::setParasiticElectricLoad(double ParasiticElectricLoad) {
-  getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->setParasiticElectricLoad(ParasiticElectricLoad);
+bool CoilHeatingGasMultiStageStageData::setParasiticElectricLoad(double ParasiticElectricLoad) {
+  return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->setParasiticElectricLoad(ParasiticElectricLoad);
 }
 
 /// @cond
@@ -176,4 +176,3 @@ CoilHeatingGasMultiStageStageData::CoilHeatingGasMultiStageStageData(std::shared
 
 } // model
 } // openstudio
-

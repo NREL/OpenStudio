@@ -83,9 +83,9 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setMinimumSupplyAirTemperature(double minimumSupplyAirTemperature);
+    bool setMinimumSupplyAirTemperature(double minimumSupplyAirTemperature);
 
-    void setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
+    bool setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
 
     bool setControlZone(const ThermalZone& thermalZone);
 
@@ -122,4 +122,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SETPOINTMANAGERSINGLEZONECOOLING_IMPL_HPP
-

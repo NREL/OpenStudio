@@ -202,9 +202,9 @@ namespace detail {
 
     void resetEvaporatorFlowRateforSecondaryFluid();
 
-    void setEvaporatorEvaporatingTemperature(double evaporatorEvaporatingTemperature);
+    bool setEvaporatorEvaporatingTemperature(double evaporatorEvaporatingTemperature);
 
-    void setEvaporatorApproachTemperatureDifference(double evaporatorApproachTemperatureDifference);
+    bool setEvaporatorApproachTemperatureDifference(double evaporatorApproachTemperatureDifference);
 
     void setEvaporatorRangeTemperatureDifference(boost::optional<double> evaporatorRangeTemperatureDifference);
 
@@ -242,7 +242,7 @@ namespace detail {
 
     void resetPumpMotorHeattoFluid();
 
-    void setSumUADistributionPiping(double sumUADistributionPiping);
+    bool setSumUADistributionPiping(double sumUADistributionPiping);
 
     void resetSumUADistributionPiping();
 
@@ -250,7 +250,7 @@ namespace detail {
 
     void resetDistributionPipingZone();
 
-    void setSumUAReceiverSeparatorShell(double sumUAReceiverSeparatorShell);
+    bool setSumUAReceiverSeparatorShell(double sumUAReceiverSeparatorShell);
 
     void resetSumUAReceiverSeparatorShell();
 
@@ -258,7 +258,7 @@ namespace detail {
 
     void resetReceiverSeparatorZone();
 
-    void setEvaporatorRefrigerantInventory(double evaporatorRefrigerantInventory);
+    bool setEvaporatorRefrigerantInventory(double evaporatorRefrigerantInventory);
 
     void resetEvaporatorRefrigerantInventory();
 
@@ -282,4 +282,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONSECONDARYSYSTEM_IMPL_HPP
-

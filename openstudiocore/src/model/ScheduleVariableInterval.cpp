@@ -144,9 +144,9 @@ namespace detail {
     return result;
   }
 
-  void ScheduleVariableInterval_Impl::setOutOfRangeValue(double outOfRangeValue, bool driverMethod) {
+  bool ScheduleVariableInterval_Impl::setOutOfRangeValue(double outOfRangeValue, bool driverMethod) {
     bool result = setDouble(OS_Schedule_VariableIntervalFields::OutOfRangeValue, outOfRangeValue, driverMethod);
-    OS_ASSERT(result);
+    return result;
   }
 
   void ScheduleVariableInterval_Impl::resetOutOfRangeValue(bool driverMethod) {
@@ -328,8 +328,8 @@ bool ScheduleVariableInterval::setStartDay(int startDay) {
   return getImpl<detail::ScheduleVariableInterval_Impl>()->setStartDay(startDay);
 }
 
-void ScheduleVariableInterval::setOutOfRangeValue(double outOfRangeValue) {
-  getImpl<detail::ScheduleVariableInterval_Impl>()->setOutOfRangeValue(outOfRangeValue);
+bool ScheduleVariableInterval::setOutOfRangeValue(double outOfRangeValue) {
+  return getImpl<detail::ScheduleVariableInterval_Impl>()->setOutOfRangeValue(outOfRangeValue);
 }
 
 void ScheduleVariableInterval::resetOutOfRangeValue() {
@@ -345,4 +345,3 @@ ScheduleVariableInterval::ScheduleVariableInterval(std::shared_ptr<detail::Sched
 
 } // model
 } // openstudio
-

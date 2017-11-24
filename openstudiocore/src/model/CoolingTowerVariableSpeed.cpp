@@ -510,9 +510,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoolingTowerVariableSpeed_Impl::setEvaporationLossFactor(double evaporationLossFactor) {
+  bool CoolingTowerVariableSpeed_Impl::setEvaporationLossFactor(double evaporationLossFactor) {
     bool result = setDouble(OS_CoolingTower_VariableSpeedFields::EvaporationLossFactor, evaporationLossFactor);
-    OS_ASSERT(result);
+    return result;
   }
 
   void CoolingTowerVariableSpeed_Impl::resetEvaporationLossFactor() {
@@ -989,8 +989,8 @@ void CoolingTowerVariableSpeed::resetEvaporationLossMode() {
   getImpl<detail::CoolingTowerVariableSpeed_Impl>()->resetEvaporationLossMode();
 }
 
-void CoolingTowerVariableSpeed::setEvaporationLossFactor(double evaporationLossFactor) {
-  getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
+bool CoolingTowerVariableSpeed::setEvaporationLossFactor(double evaporationLossFactor) {
+  return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
 }
 
 void CoolingTowerVariableSpeed::resetEvaporationLossFactor() {
@@ -1077,4 +1077,3 @@ CoolingTowerVariableSpeed::CoolingTowerVariableSpeed(std::shared_ptr<detail::Coo
 
 } // model
 } // openstudio
-

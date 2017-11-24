@@ -44,23 +44,23 @@ namespace detail {
 
   /** AvailabilityManagerNightCycle_Impl is a ModelObject_Impl that is the implementation class for AvailabilityManagerNightCycle.*/
   class MODEL_API AvailabilityManagerNightCycle_Impl : public AvailabilityManager_Impl {
-    
 
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
 
     AvailabilityManagerNightCycle_Impl(const IdfObject& idfObject,
@@ -113,13 +113,13 @@ namespace detail {
 
     void resetControlType();
 
-    void setThermostatTolerance(double thermostatTolerance);
+    bool setThermostatTolerance(double thermostatTolerance);
 
     bool setThermostatTolerance(const Quantity& thermostatTolerance);
 
     void resetThermostatTolerance();
 
-    void setCyclingRunTime(double cyclingRunTime);
+    bool setCyclingRunTime(double cyclingRunTime);
 
     bool setCyclingRunTime(const Quantity& cyclingRunTime);
 
@@ -156,4 +156,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_AVAILABILITYMANAGERNIGHTCYCLE_IMPL_HPP
-

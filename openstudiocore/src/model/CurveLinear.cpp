@@ -140,24 +140,24 @@ namespace detail {
     return isEmpty(OS_Curve_LinearFields::OutputUnitType);
   }
 
-  void CurveLinear_Impl::setCoefficient1Constant(double coefficient1Constant) {
+  bool CurveLinear_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = setDouble(OS_Curve_LinearFields::Coefficient1Constant, coefficient1Constant);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveLinear_Impl::setCoefficient2x(double coefficient2x) {
+  bool CurveLinear_Impl::setCoefficient2x(double coefficient2x) {
     bool result = setDouble(OS_Curve_LinearFields::Coefficient2x, coefficient2x);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveLinear_Impl::setMinimumValueofx(double minimumValueofx) {
+  bool CurveLinear_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_LinearFields::MinimumValueofx, minimumValueofx);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveLinear_Impl::setMaximumValueofx(double maximumValueofx) {
+  bool CurveLinear_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_LinearFields::MaximumValueofx, maximumValueofx);
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveLinear_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
@@ -277,20 +277,20 @@ bool CurveLinear::isOutputUnitTypeDefaulted() const {
   return getImpl<detail::CurveLinear_Impl>()->isOutputUnitTypeDefaulted();
 }
 
-void CurveLinear::setCoefficient1Constant(double coefficient1Constant) {
-  getImpl<detail::CurveLinear_Impl>()->setCoefficient1Constant(coefficient1Constant);
+bool CurveLinear::setCoefficient1Constant(double coefficient1Constant) {
+  return getImpl<detail::CurveLinear_Impl>()->setCoefficient1Constant(coefficient1Constant);
 }
 
-void CurveLinear::setCoefficient2x(double coefficient2x) {
-  getImpl<detail::CurveLinear_Impl>()->setCoefficient2x(coefficient2x);
+bool CurveLinear::setCoefficient2x(double coefficient2x) {
+  return getImpl<detail::CurveLinear_Impl>()->setCoefficient2x(coefficient2x);
 }
 
-void CurveLinear::setMinimumValueofx(double minimumValueofx) {
-  getImpl<detail::CurveLinear_Impl>()->setMinimumValueofx(minimumValueofx);
+bool CurveLinear::setMinimumValueofx(double minimumValueofx) {
+  return getImpl<detail::CurveLinear_Impl>()->setMinimumValueofx(minimumValueofx);
 }
 
-void CurveLinear::setMaximumValueofx(double maximumValueofx) {
-  getImpl<detail::CurveLinear_Impl>()->setMaximumValueofx(maximumValueofx);
+bool CurveLinear::setMaximumValueofx(double maximumValueofx) {
+  return getImpl<detail::CurveLinear_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
 void CurveLinear::setMinimumCurveOutput(double minimumCurveOutput) {
@@ -333,4 +333,3 @@ CurveLinear::CurveLinear(std::shared_ptr<detail::CurveLinear_Impl> impl)
 
 } // model
 } // openstudio
-

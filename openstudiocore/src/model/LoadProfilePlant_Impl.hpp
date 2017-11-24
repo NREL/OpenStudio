@@ -92,7 +92,7 @@ namespace detail {
 
     bool setLoadSchedule(Schedule& schedule);
 
-    void setPeakFlowRate(double peakFlowRate);
+    bool setPeakFlowRate(double peakFlowRate);
 
     bool setFlowRateFractionSchedule(Schedule& schedule);
 
@@ -118,4 +118,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_LOADPROFILEPLANT_IMPL_HPP
-

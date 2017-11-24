@@ -75,7 +75,7 @@ class MODEL_API LoadProfilePlant : public StraightComponent {
 
   bool setLoadSchedule(Schedule& schedule);
 
-  void setPeakFlowRate(double peakFlowRate);
+  bool setPeakFlowRate(double peakFlowRate);
 
   bool setFlowRateFractionSchedule(Schedule& schedule);
 
@@ -109,4 +109,3 @@ typedef std::vector<LoadProfilePlant> LoadProfilePlantVector;
 } // openstudio
 
 #endif // MODEL_LOADPROFILEPLANT_HPP
-

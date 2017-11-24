@@ -91,11 +91,11 @@ class MODEL_API SetpointManagerFollowSystemNodeTemperature : public SetpointMana
 
   bool setReferenceTemperatureType(const std::string& referenceTemperatureType);
 
-  void setOffsetTemperatureDifference(double offsetTemperatureDifference);
+  bool setOffsetTemperatureDifference(double offsetTemperatureDifference);
 
-  void setMaximumLimitSetpointTemperature(double maximumLimitSetpointTemperature);
+  bool setMaximumLimitSetpointTemperature(double maximumLimitSetpointTemperature);
 
-  void setMinimumLimitSetpointTemperature(double minimumLimitSetpointTemperature);
+  bool setMinimumLimitSetpointTemperature(double minimumLimitSetpointTemperature);
 
   //@}
   /** @name Other */
@@ -127,4 +127,3 @@ typedef std::vector<SetpointManagerFollowSystemNodeTemperature> SetpointManagerF
 } // openstudio
 
 #endif // MODEL_SETPOINTMANAGERFOLLOWSYSTEMNODETEMPERATURE_HPP
-

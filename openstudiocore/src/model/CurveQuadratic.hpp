@@ -91,15 +91,15 @@ class MODEL_API CurveQuadratic : public Curve {
   /** @name Setters */
   //@{
 
-  void setCoefficient1Constant(double coefficient1Constant);
+  bool setCoefficient1Constant(double coefficient1Constant);
 
-  void setCoefficient2x(double coefficient2x);
+  bool setCoefficient2x(double coefficient2x);
 
-  void setCoefficient3xPOW2(double coefficient3xPOW2);
+  bool setCoefficient3xPOW2(double coefficient3xPOW2);
 
-  void setMinimumValueofx(double minimumValueofx);
+  bool setMinimumValueofx(double minimumValueofx);
 
-  void setMaximumValueofx(double maximumValueofx);
+  bool setMaximumValueofx(double maximumValueofx);
 
   void setMinimumCurveOutput(double minimumCurveOutput);
 

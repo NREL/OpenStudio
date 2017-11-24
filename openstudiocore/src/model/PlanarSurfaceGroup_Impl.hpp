@@ -42,7 +42,7 @@ namespace model {
 namespace detail {
 
   class MODEL_API PlanarSurfaceGroup_Impl : public ParentObject_Impl {
-    
+
    public:
 
     /** @name Constructors and Destructors */
@@ -76,20 +76,20 @@ namespace detail {
     virtual double zOrigin() const = 0;
 
     virtual bool isZOriginDefaulted() const = 0;
-  
-    virtual void setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod = true) = 0;
+
+    virtual bool setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod = true) = 0;
 
     virtual void resetDirectionofRelativeNorth() = 0;
 
-    virtual void setXOrigin(double xOrigin, bool driverMethod = true) = 0;
+    virtual bool setXOrigin(double xOrigin, bool driverMethod = true) = 0;
 
     virtual void resetXOrigin() = 0;
 
-    virtual void setYOrigin(double yOrigin, bool driverMethod = true) = 0;
+    virtual bool setYOrigin(double yOrigin, bool driverMethod = true) = 0;
 
     virtual void resetYOrigin() = 0;
 
-    virtual void setZOrigin(double zOrigin, bool driverMethod = true) = 0;
+    virtual bool setZOrigin(double zOrigin, bool driverMethod = true) = 0;
 
     virtual void resetZOrigin() = 0;
 

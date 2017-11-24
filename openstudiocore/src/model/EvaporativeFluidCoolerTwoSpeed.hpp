@@ -164,13 +164,13 @@ class MODEL_API EvaporativeFluidCoolerTwoSpeed : public StraightComponent {
 
   void autosizeLowFanSpeedAirFlowRate();
 
-  void setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor);
+  bool setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor);
 
   bool setLowFanSpeedFanPower(double lowFanSpeedFanPower);
 
   void autosizeLowFanSpeedFanPower();
 
-  void setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor);
+  bool setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor);
 
   bool setDesignSprayWaterFlowRate(double designSprayWaterFlowRate);
 
@@ -180,7 +180,7 @@ class MODEL_API EvaporativeFluidCoolerTwoSpeed : public StraightComponent {
 
   void resetOutdoorAirInletNodeName();
 
-  void setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio);
+  bool setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio);
 
   bool setHighSpeedStandardDesignCapacity(double highSpeedStandardDesignCapacity);
 
@@ -192,7 +192,7 @@ class MODEL_API EvaporativeFluidCoolerTwoSpeed : public StraightComponent {
 
   void autosizeLowSpeedStandardDesignCapacity();
 
-  void setLowSpeedStandardCapacitySizingFactor(double lowSpeedStandardCapacitySizingFactor);
+  bool setLowSpeedStandardCapacitySizingFactor(double lowSpeedStandardCapacitySizingFactor);
 
   bool setHighFanSpeedUfactorTimesAreaValue(double highFanSpeedUfactorTimesAreaValue);
 
@@ -206,7 +206,7 @@ class MODEL_API EvaporativeFluidCoolerTwoSpeed : public StraightComponent {
 
   void autosizeLowFanSpeedUfactorTimesAreaValue();
 
-  void setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor);
+  bool setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor);
 
   bool setDesignWaterFlowRate(double designWaterFlowRate);
 
@@ -224,7 +224,7 @@ class MODEL_API EvaporativeFluidCoolerTwoSpeed : public StraightComponent {
 
   void autosizeLowSpeedUserSpecifiedDesignCapacity();
 
-  void setLowSpeedUserSpecifiedDesignCapacitySizingFactor(double lowSpeedUserSpecifiedDesignCapacitySizingFactor);
+  bool setLowSpeedUserSpecifiedDesignCapacitySizingFactor(double lowSpeedUserSpecifiedDesignCapacitySizingFactor);
 
   bool setDesignEnteringWaterTemperature(double designEnteringWaterTemperature);
 
@@ -246,7 +246,7 @@ class MODEL_API EvaporativeFluidCoolerTwoSpeed : public StraightComponent {
 
   void resetEvaporationLossFactor();
 
-  void setDriftLossPercent(double driftLossPercent);
+  bool setDriftLossPercent(double driftLossPercent);
 
   bool setBlowdownCalculationMode(std::string blowdownCalculationMode);
 
@@ -290,4 +290,3 @@ typedef std::vector<EvaporativeFluidCoolerTwoSpeed> EvaporativeFluidCoolerTwoSpe
 } // openstudio
 
 #endif // MODEL_EVAPORATIVEFLUIDCOOLERTWOSPEED_HPP
-

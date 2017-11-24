@@ -435,9 +435,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ThermalZone_Impl::setCeilingHeight(double ceilingHeight) {
+  bool ThermalZone_Impl::setCeilingHeight(double ceilingHeight) {
     bool result = setDouble(OS_ThermalZoneFields::CeilingHeight, ceilingHeight);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool ThermalZone_Impl::setCeilingHeight(const OSOptionalQuantity& ceilingHeight) {
@@ -470,9 +470,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ThermalZone_Impl::setVolume(double volume) {
+  bool ThermalZone_Impl::setVolume(double volume) {
     bool result = setDouble(OS_ThermalZoneFields::Volume, volume);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool ThermalZone_Impl::setVolume(const OSOptionalQuantity& volume) {
@@ -2601,12 +2601,12 @@ void ThermalZone::resetMultiplier() {
   getImpl<detail::ThermalZone_Impl>()->resetMultiplier();
 }
 
-void ThermalZone::setCeilingHeight(boost::optional<double> ceilingHeight) {
-  getImpl<detail::ThermalZone_Impl>()->setCeilingHeight(ceilingHeight);
+bool ThermalZone::setCeilingHeight(boost::optional<double> ceilingHeight) {
+  return getImpl<detail::ThermalZone_Impl>()->setCeilingHeight(ceilingHeight);
 }
 
-void ThermalZone::setCeilingHeight(double ceilingHeight) {
-  getImpl<detail::ThermalZone_Impl>()->setCeilingHeight(ceilingHeight);
+bool ThermalZone::setCeilingHeight(double ceilingHeight) {
+  return getImpl<detail::ThermalZone_Impl>()->setCeilingHeight(ceilingHeight);
 }
 
 bool ThermalZone::setCeilingHeight(const Quantity& ceilingHeight) {
@@ -2621,12 +2621,12 @@ void ThermalZone::autocalculateCeilingHeight() {
   getImpl<detail::ThermalZone_Impl>()->autocalculateCeilingHeight();
 }
 
-void ThermalZone::setVolume(boost::optional<double> volume) {
-  getImpl<detail::ThermalZone_Impl>()->setVolume(volume);
+bool ThermalZone::setVolume(boost::optional<double> volume) {
+  return getImpl<detail::ThermalZone_Impl>()->setVolume(volume);
 }
 
-void ThermalZone::setVolume(double volume) {
-  getImpl<detail::ThermalZone_Impl>()->setVolume(volume);
+bool ThermalZone::setVolume(double volume) {
+  return getImpl<detail::ThermalZone_Impl>()->setVolume(volume);
 }
 
 bool ThermalZone::setVolume(const Quantity& volume) {

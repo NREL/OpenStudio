@@ -184,11 +184,11 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
 
   bool setReferenceCOP(double referenceCOP);
 
-  void setReferenceLeavingChilledWaterTemperature(double referenceLeavingChilledWaterTemperature);
+  bool setReferenceLeavingChilledWaterTemperature(double referenceLeavingChilledWaterTemperature);
 
   void resetReferenceLeavingChilledWaterTemperature();
 
-  void setReferenceEnteringCondenserFluidTemperature(double referenceEnteringCondenserFluidTemperature);
+  bool setReferenceEnteringCondenserFluidTemperature(double referenceEnteringCondenserFluidTemperature);
 
   void resetReferenceEnteringCondenserFluidTemperature();
 
@@ -258,7 +258,7 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
 
   void resetCompressorMotorEfficiency();
 
-  void setLeavingChilledWaterLowerTemperatureLimit(double leavingChilledWaterLowerTemperatureLimit);
+  bool setLeavingChilledWaterLowerTemperatureLimit(double leavingChilledWaterLowerTemperatureLimit);
 
   void resetLeavingChilledWaterLowerTemperatureLimit();
 
@@ -326,4 +326,3 @@ typedef std::vector<ChillerElectricEIR> ChillerElectricEIRVector;
 } // openstudio
 
 #endif // MODEL_CHILLERELECTRICEIR_HPP
-

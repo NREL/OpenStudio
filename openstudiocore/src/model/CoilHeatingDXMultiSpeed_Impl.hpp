@@ -126,7 +126,7 @@ namespace detail {
 
     void resetAvailabilitySchedule();
 
-    void setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+    bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
     void setOutdoorDryBulbTemperaturetoTurnOnCompressor(boost::optional<double> outdoorDryBulbTemperaturetoTurnOnCompressor);
 
@@ -194,4 +194,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILHEATINGDXMULTISPEED_IMPL_HPP
-

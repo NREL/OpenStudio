@@ -248,9 +248,9 @@ namespace detail {
     return result;
   }
 
-  void FanZoneExhaust_Impl::setPressureRise(double pressureRise) {
+  bool FanZoneExhaust_Impl::setPressureRise(double pressureRise) {
     bool result = setDouble(OS_Fan_ZoneExhaustFields::PressureRise, pressureRise);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool FanZoneExhaust_Impl::setMaximumFlowRate(boost::optional<double> maximumFlowRate) {
@@ -389,8 +389,8 @@ bool FanZoneExhaust::setFanEfficiency(double fanEfficiency) {
   return getImpl<detail::FanZoneExhaust_Impl>()->setFanEfficiency(fanEfficiency);
 }
 
-void FanZoneExhaust::setPressureRise(double pressureRise) {
-  getImpl<detail::FanZoneExhaust_Impl>()->setPressureRise(pressureRise);
+bool FanZoneExhaust::setPressureRise(double pressureRise) {
+  return getImpl<detail::FanZoneExhaust_Impl>()->setPressureRise(pressureRise);
 }
 
 bool FanZoneExhaust::setMaximumFlowRate(double maximumFlowRate) {
@@ -441,4 +441,3 @@ FanZoneExhaust::FanZoneExhaust(std::shared_ptr<detail::FanZoneExhaust_Impl> impl
 
 } // model
 } // openstudio
-

@@ -89,13 +89,13 @@ class MODEL_API CurveLinear : public Curve {
   /** @name Setters */
   //@{
 
-  void setCoefficient1Constant(double coefficient1Constant);
+  bool setCoefficient1Constant(double coefficient1Constant);
 
-  void setCoefficient2x(double coefficient2x);
+  bool setCoefficient2x(double coefficient2x);
 
-  void setMinimumValueofx(double minimumValueofx);
+  bool setMinimumValueofx(double minimumValueofx);
 
-  void setMaximumValueofx(double maximumValueofx);
+  bool setMaximumValueofx(double maximumValueofx);
 
   void setMinimumCurveOutput(double minimumCurveOutput);
 
@@ -145,4 +145,3 @@ typedef std::vector<CurveLinear> CurveLinearVector;
 } // openstudio
 
 #endif // MODEL_CURVELINEAR_HPP
-

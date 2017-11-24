@@ -202,25 +202,25 @@ namespace detail {
     return getDouble(OS_Daylighting_ControlFields::MaximumAllowableDiscomfortGlareIndex,true);
   }
 
-  void DaylightingControl_Impl::setPositionXCoordinate(double positionXCoordinate) {
+  bool DaylightingControl_Impl::setPositionXCoordinate(double positionXCoordinate) {
     bool result = setDouble(OS_Daylighting_ControlFields::PositionXCoordinate, positionXCoordinate);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void DaylightingControl_Impl::setPositionYCoordinate(double positionYCoordinate) {
+  bool DaylightingControl_Impl::setPositionYCoordinate(double positionYCoordinate) {
     bool result = setDouble(OS_Daylighting_ControlFields::PositionYCoordinate, positionYCoordinate);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void DaylightingControl_Impl::setPositionZCoordinate(double positionZCoordinate) {
+  bool DaylightingControl_Impl::setPositionZCoordinate(double positionZCoordinate) {
     bool result = setDouble(OS_Daylighting_ControlFields::PositionZCoordinate, positionZCoordinate);
-    OS_ASSERT(result);
+    return result;
   }
 
 
-  void DaylightingControl_Impl::setPsiRotationAroundXAxis(double psiRotationAroundXAxis) {
+  bool DaylightingControl_Impl::setPsiRotationAroundXAxis(double psiRotationAroundXAxis) {
     bool result = setDouble(OS_Daylighting_ControlFields::PsiRotationAroundXAxis, psiRotationAroundXAxis);
-    OS_ASSERT(result);
+    return result;
   }
 
   void DaylightingControl_Impl::resetPsiRotationAroundXAxis() {
@@ -228,9 +228,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void DaylightingControl_Impl::setThetaRotationAroundYAxis(double thetaRotationAroundYAxis) {
+  bool DaylightingControl_Impl::setThetaRotationAroundYAxis(double thetaRotationAroundYAxis) {
     bool result = setDouble(OS_Daylighting_ControlFields::ThetaRotationAroundYAxis, thetaRotationAroundYAxis);
-    OS_ASSERT(result);
+    return result;
   }
 
   void DaylightingControl_Impl::resetThetaRotationAroundYAxis() {
@@ -238,9 +238,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void DaylightingControl_Impl::setPhiRotationAroundZAxis(double phiRotationAroundZAxis) {
+  bool DaylightingControl_Impl::setPhiRotationAroundZAxis(double phiRotationAroundZAxis) {
     bool result = setDouble(OS_Daylighting_ControlFields::PhiRotationAroundZAxis, phiRotationAroundZAxis);
-    OS_ASSERT(result);
+    return result;
   }
 
   void DaylightingControl_Impl::resetPhiRotationAroundZAxis() {
@@ -553,19 +553,19 @@ boost::optional<double> DaylightingControl::maximumAllowableDiscomfortGlareIndex
   return getImpl<detail::DaylightingControl_Impl>()->maximumAllowableDiscomfortGlareIndex();
 }
 
-void DaylightingControl::setPositionXCoordinate(double positionXCoordinate) {
-  getImpl<detail::DaylightingControl_Impl>()->setPositionXCoordinate(positionXCoordinate);
+bool DaylightingControl::setPositionXCoordinate(double positionXCoordinate) {
+  return getImpl<detail::DaylightingControl_Impl>()->setPositionXCoordinate(positionXCoordinate);
 }
 
-void DaylightingControl::setPositionYCoordinate(double positionYCoordinate) {
-  getImpl<detail::DaylightingControl_Impl>()->setPositionYCoordinate(positionYCoordinate);
+bool DaylightingControl::setPositionYCoordinate(double positionYCoordinate) {
+  return getImpl<detail::DaylightingControl_Impl>()->setPositionYCoordinate(positionYCoordinate);
 }
 
-void DaylightingControl::setPositionZCoordinate(double positionZCoordinate) {
-  getImpl<detail::DaylightingControl_Impl>()->setPositionZCoordinate(positionZCoordinate);
+bool DaylightingControl::setPositionZCoordinate(double positionZCoordinate) {
+  return getImpl<detail::DaylightingControl_Impl>()->setPositionZCoordinate(positionZCoordinate);
 }
 
-void DaylightingControl::setPsiRotationAroundXAxis(double psiRotationAroundXAxis) {
+bool DaylightingControl::setPsiRotationAroundXAxis(double psiRotationAroundXAxis) {
   return getImpl<detail::DaylightingControl_Impl>()->setPsiRotationAroundXAxis(psiRotationAroundXAxis);
 }
 
@@ -573,7 +573,7 @@ void DaylightingControl::resetPsiRotationAroundXAxis() {
   getImpl<detail::DaylightingControl_Impl>()->resetPsiRotationAroundXAxis();
 }
 
-void DaylightingControl::setThetaRotationAroundYAxis(double thetaRotationAroundYAxis) {
+bool DaylightingControl::setThetaRotationAroundYAxis(double thetaRotationAroundYAxis) {
   return getImpl<detail::DaylightingControl_Impl>()->setThetaRotationAroundYAxis(thetaRotationAroundYAxis);
 }
 
@@ -581,7 +581,7 @@ void DaylightingControl::resetThetaRotationAroundYAxis() {
   getImpl<detail::DaylightingControl_Impl>()->resetThetaRotationAroundYAxis();
 }
 
-void DaylightingControl::setPhiRotationAroundZAxis(double phiRotationAroundZAxis) {
+bool DaylightingControl::setPhiRotationAroundZAxis(double phiRotationAroundZAxis) {
   return getImpl<detail::DaylightingControl_Impl>()->setPhiRotationAroundZAxis(phiRotationAroundZAxis);
 }
 
@@ -696,4 +696,3 @@ DaylightingControl::DaylightingControl(std::shared_ptr<detail::DaylightingContro
 
 } // model
 } // openstudio
-

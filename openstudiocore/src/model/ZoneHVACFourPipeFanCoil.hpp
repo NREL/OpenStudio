@@ -163,7 +163,7 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
   bool isMinimumSupplyAirTemperatureInCoolingModeAutosized() const;
 
   boost::optional<double> minimumSupplyAirTemperatureInCoolingMode() const;
-  
+
   bool isMaximumSupplyAirTemperatureInHeatingModeAutosized() const;
 
   boost::optional<double> maximumSupplyAirTemperatureInHeatingMode() const;
@@ -218,7 +218,7 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   void autosizeMaximumColdWaterFlowRate();
 
-  void setMinimumColdWaterFlowRate(double minimumColdWaterFlowRate);
+  bool setMinimumColdWaterFlowRate(double minimumColdWaterFlowRate);
 
   bool setMinimumColdWaterFlowRate(const Quantity& minimumColdWaterFlowRate);
 
@@ -238,7 +238,7 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   void autosizeMaximumHotWaterFlowRate();
 
-  void setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate);
+  bool setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate);
 
   bool setMinimumHotWaterFlowRate(const Quantity& minimumHotWaterFlowRate);
 
@@ -250,8 +250,8 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   void resetHeatingConvergenceTolerance();
 
-  /** Sets the supply air fan operating mode schedule. Values of zero indicate that the fan 
-   *  cycles on and off with the active (heating or cooling) coil. Other values operate the 
+  /** Sets the supply air fan operating mode schedule. Values of zero indicate that the fan
+   *  cycles on and off with the active (heating or cooling) coil. Other values operate the
    *  fan continuously. */
   bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
@@ -297,4 +297,3 @@ typedef std::vector<ZoneHVACFourPipeFanCoil> ZoneHVACFourPipeFanCoilVector;
 } // openstudio
 
 #endif // MODEL_ZONEHVACFOURPIPEFANCOIL_HPP
-

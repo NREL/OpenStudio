@@ -44,111 +44,111 @@ namespace detail {
 
   /** CoolingTowerSingleSpeed_Impl is a StraightComponent_Impl that is the implementation class for CoolingTowerSingleSpeed.*/
   class MODEL_API CoolingTowerSingleSpeed_Impl : public StraightComponent_Impl {
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
 
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
    public:
     /** @name Constructors and Destructors */
@@ -390,13 +390,13 @@ namespace detail {
 
     void resetEvaporationLossMode();
 
-    void setEvaporationLossFactor(double evaporationLossFactor);
+    bool setEvaporationLossFactor(double evaporationLossFactor);
 
     bool setEvaporationLossFactor(const Quantity& evaporationLossFactor);
 
     void resetEvaporationLossFactor();
 
-    void setDriftLossPercent(double driftLossPercent);
+    bool setDriftLossPercent(double driftLossPercent);
 
     bool setDriftLossPercent(const Quantity& driftLossPercent);
 
@@ -506,4 +506,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COOLINGTOWERSINGLESPEED_IMPL_HPP
-

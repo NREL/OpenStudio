@@ -47,52 +47,52 @@ namespace detail {
 
   /** PumpConstantSpeed_Impl is a StraightComponent_Impl that is the implementation class for PumpConstantSpeed.*/
   class MODEL_API PumpConstantSpeed_Impl : public StraightComponent_Impl {
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
 
     PumpConstantSpeed_Impl(const IdfObject& idfObject,
@@ -175,7 +175,7 @@ namespace detail {
 
     void autosizeRatedFlowRate();
 
-    void setRatedPumpHead(double ratedPumpHead);
+    bool setRatedPumpHead(double ratedPumpHead);
 
     bool setRatedPumpHead(const Quantity& ratedPumpHead);
 
@@ -283,4 +283,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_PUMPCONSTANTSPEED_IMPL_HPP
-

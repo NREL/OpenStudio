@@ -146,44 +146,44 @@ namespace detail {
     return getDouble(OS_Curve_FanPressureRiseFields::MaximumCurveOutput,true);
   }
 
-  void CurveFanPressureRise_Impl::setCoefficient1C1(double coefficient1C1) {
+  bool CurveFanPressureRise_Impl::setCoefficient1C1(double coefficient1C1) {
     bool result = setDouble(OS_Curve_FanPressureRiseFields::Coefficient1C1, coefficient1C1);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveFanPressureRise_Impl::setCoefficient2C2(double coefficient2C2) {
+  bool CurveFanPressureRise_Impl::setCoefficient2C2(double coefficient2C2) {
     bool result = setDouble(OS_Curve_FanPressureRiseFields::Coefficient2C2, coefficient2C2);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveFanPressureRise_Impl::setCoefficient3C3(double coefficient3C3) {
+  bool CurveFanPressureRise_Impl::setCoefficient3C3(double coefficient3C3) {
     bool result = setDouble(OS_Curve_FanPressureRiseFields::Coefficient3C3, coefficient3C3);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveFanPressureRise_Impl::setCoefficient4C4(double coefficient4C4) {
+  bool CurveFanPressureRise_Impl::setCoefficient4C4(double coefficient4C4) {
     bool result = setDouble(OS_Curve_FanPressureRiseFields::Coefficient4C4, coefficient4C4);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveFanPressureRise_Impl::setMinimumValueofQfan(double minimumValueofQfan) {
+  bool CurveFanPressureRise_Impl::setMinimumValueofQfan(double minimumValueofQfan) {
     bool result = setDouble(OS_Curve_FanPressureRiseFields::MinimumValueofQfan, minimumValueofQfan);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveFanPressureRise_Impl::setMaximumValueofQfan(double maximumValueofQfan) {
+  bool CurveFanPressureRise_Impl::setMaximumValueofQfan(double maximumValueofQfan) {
     bool result = setDouble(OS_Curve_FanPressureRiseFields::MaximumValueofQfan, maximumValueofQfan);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveFanPressureRise_Impl::setMinimumValueofPsm(double minimumValueofPsm) {
+  bool CurveFanPressureRise_Impl::setMinimumValueofPsm(double minimumValueofPsm) {
     bool result = setDouble(OS_Curve_FanPressureRiseFields::MinimumValueofPsm, minimumValueofPsm);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveFanPressureRise_Impl::setMaximumValueofPsm(double maximumValueofPsm) {
+  bool CurveFanPressureRise_Impl::setMaximumValueofPsm(double maximumValueofPsm) {
     bool result = setDouble(OS_Curve_FanPressureRiseFields::MaximumValueofPsm, maximumValueofPsm);
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveFanPressureRise_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
@@ -277,36 +277,36 @@ boost::optional<double> CurveFanPressureRise::maximumCurveOutput() const {
   return getImpl<detail::CurveFanPressureRise_Impl>()->maximumCurveOutput();
 }
 
-void CurveFanPressureRise::setCoefficient1C1(double coefficient1C1) {
-  getImpl<detail::CurveFanPressureRise_Impl>()->setCoefficient1C1(coefficient1C1);
+bool CurveFanPressureRise::setCoefficient1C1(double coefficient1C1) {
+  return getImpl<detail::CurveFanPressureRise_Impl>()->setCoefficient1C1(coefficient1C1);
 }
 
-void CurveFanPressureRise::setCoefficient2C2(double coefficient2C2) {
-  getImpl<detail::CurveFanPressureRise_Impl>()->setCoefficient2C2(coefficient2C2);
+bool CurveFanPressureRise::setCoefficient2C2(double coefficient2C2) {
+  return getImpl<detail::CurveFanPressureRise_Impl>()->setCoefficient2C2(coefficient2C2);
 }
 
-void CurveFanPressureRise::setCoefficient3C3(double coefficient3C3) {
-  getImpl<detail::CurveFanPressureRise_Impl>()->setCoefficient3C3(coefficient3C3);
+bool CurveFanPressureRise::setCoefficient3C3(double coefficient3C3) {
+  return getImpl<detail::CurveFanPressureRise_Impl>()->setCoefficient3C3(coefficient3C3);
 }
 
-void CurveFanPressureRise::setCoefficient4C4(double coefficient4C4) {
-  getImpl<detail::CurveFanPressureRise_Impl>()->setCoefficient4C4(coefficient4C4);
+bool CurveFanPressureRise::setCoefficient4C4(double coefficient4C4) {
+  return getImpl<detail::CurveFanPressureRise_Impl>()->setCoefficient4C4(coefficient4C4);
 }
 
-void CurveFanPressureRise::setMinimumValueofQfan(double minimumValueofQfan) {
-  getImpl<detail::CurveFanPressureRise_Impl>()->setMinimumValueofQfan(minimumValueofQfan);
+bool CurveFanPressureRise::setMinimumValueofQfan(double minimumValueofQfan) {
+  return getImpl<detail::CurveFanPressureRise_Impl>()->setMinimumValueofQfan(minimumValueofQfan);
 }
 
-void CurveFanPressureRise::setMaximumValueofQfan(double maximumValueofQfan) {
-  getImpl<detail::CurveFanPressureRise_Impl>()->setMaximumValueofQfan(maximumValueofQfan);
+bool CurveFanPressureRise::setMaximumValueofQfan(double maximumValueofQfan) {
+  return getImpl<detail::CurveFanPressureRise_Impl>()->setMaximumValueofQfan(maximumValueofQfan);
 }
 
-void CurveFanPressureRise::setMinimumValueofPsm(double minimumValueofPsm) {
-  getImpl<detail::CurveFanPressureRise_Impl>()->setMinimumValueofPsm(minimumValueofPsm);
+bool CurveFanPressureRise::setMinimumValueofPsm(double minimumValueofPsm) {
+  return getImpl<detail::CurveFanPressureRise_Impl>()->setMinimumValueofPsm(minimumValueofPsm);
 }
 
-void CurveFanPressureRise::setMaximumValueofPsm(double maximumValueofPsm) {
-  getImpl<detail::CurveFanPressureRise_Impl>()->setMaximumValueofPsm(maximumValueofPsm);
+bool CurveFanPressureRise::setMaximumValueofPsm(double maximumValueofPsm) {
+  return getImpl<detail::CurveFanPressureRise_Impl>()->setMaximumValueofPsm(maximumValueofPsm);
 }
 
 void CurveFanPressureRise::setMinimumCurveOutput(double minimumCurveOutput) {
@@ -333,4 +333,3 @@ CurveFanPressureRise::CurveFanPressureRise(std::shared_ptr<detail::CurveFanPress
 
 } // model
 } // openstudio
-

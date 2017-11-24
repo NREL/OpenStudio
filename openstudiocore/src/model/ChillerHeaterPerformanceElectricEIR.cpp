@@ -300,24 +300,24 @@ namespace detail {
     return result;
   }
 
-  void ChillerHeaterPerformanceElectricEIR_Impl::setReferenceCoolingModeLeavingChilledWaterTemperature(double referenceCoolingModeLeavingChilledWaterTemperature) {
+  bool ChillerHeaterPerformanceElectricEIR_Impl::setReferenceCoolingModeLeavingChilledWaterTemperature(double referenceCoolingModeLeavingChilledWaterTemperature) {
     bool result = setDouble(OS_ChillerHeaterPerformance_Electric_EIRFields::ReferenceCoolingModeLeavingChilledWaterTemperature, referenceCoolingModeLeavingChilledWaterTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ChillerHeaterPerformanceElectricEIR_Impl::setReferenceCoolingModeEnteringCondenserFluidTemperature(double referenceCoolingModeEnteringCondenserFluidTemperature) {
+  bool ChillerHeaterPerformanceElectricEIR_Impl::setReferenceCoolingModeEnteringCondenserFluidTemperature(double referenceCoolingModeEnteringCondenserFluidTemperature) {
     bool result = setDouble(OS_ChillerHeaterPerformance_Electric_EIRFields::ReferenceCoolingModeEnteringCondenserFluidTemperature, referenceCoolingModeEnteringCondenserFluidTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ChillerHeaterPerformanceElectricEIR_Impl::setReferenceCoolingModeLeavingCondenserWaterTemperature(double referenceCoolingModeLeavingCondenserWaterTemperature) {
+  bool ChillerHeaterPerformanceElectricEIR_Impl::setReferenceCoolingModeLeavingCondenserWaterTemperature(double referenceCoolingModeLeavingCondenserWaterTemperature) {
     bool result = setDouble(OS_ChillerHeaterPerformance_Electric_EIRFields::ReferenceCoolingModeLeavingCondenserWaterTemperature, referenceCoolingModeLeavingCondenserWaterTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ChillerHeaterPerformanceElectricEIR_Impl::setReferenceHeatingModeCoolingCapacityRatio(double referenceHeatingModeCoolingCapacityRatio) {
+  bool ChillerHeaterPerformanceElectricEIR_Impl::setReferenceHeatingModeCoolingCapacityRatio(double referenceHeatingModeCoolingCapacityRatio) {
     bool result = setDouble(OS_ChillerHeaterPerformance_Electric_EIRFields::ReferenceHeatingModeCoolingCapacityRatio, referenceHeatingModeCoolingCapacityRatio);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool ChillerHeaterPerformanceElectricEIR_Impl::setReferenceHeatingModeCoolingPowerInputRatio(double referenceHeatingModeCoolingPowerInputRatio) {
@@ -325,24 +325,24 @@ namespace detail {
     return result;
   }
 
-  void ChillerHeaterPerformanceElectricEIR_Impl::setReferenceHeatingModeLeavingChilledWaterTemperature(double referenceHeatingModeLeavingChilledWaterTemperature) {
+  bool ChillerHeaterPerformanceElectricEIR_Impl::setReferenceHeatingModeLeavingChilledWaterTemperature(double referenceHeatingModeLeavingChilledWaterTemperature) {
     bool result = setDouble(OS_ChillerHeaterPerformance_Electric_EIRFields::ReferenceHeatingModeLeavingChilledWaterTemperature, referenceHeatingModeLeavingChilledWaterTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ChillerHeaterPerformanceElectricEIR_Impl::setReferenceHeatingModeLeavingCondenserWaterTemperature(double referenceHeatingModeLeavingCondenserWaterTemperature) {
+  bool ChillerHeaterPerformanceElectricEIR_Impl::setReferenceHeatingModeLeavingCondenserWaterTemperature(double referenceHeatingModeLeavingCondenserWaterTemperature) {
     bool result = setDouble(OS_ChillerHeaterPerformance_Electric_EIRFields::ReferenceHeatingModeLeavingCondenserWaterTemperature, referenceHeatingModeLeavingCondenserWaterTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ChillerHeaterPerformanceElectricEIR_Impl::setReferenceHeatingModeEnteringCondenserFluidTemperature(double referenceHeatingModeEnteringCondenserFluidTemperature) {
+  bool ChillerHeaterPerformanceElectricEIR_Impl::setReferenceHeatingModeEnteringCondenserFluidTemperature(double referenceHeatingModeEnteringCondenserFluidTemperature) {
     bool result = setDouble(OS_ChillerHeaterPerformance_Electric_EIRFields::ReferenceHeatingModeEnteringCondenserFluidTemperature, referenceHeatingModeEnteringCondenserFluidTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ChillerHeaterPerformanceElectricEIR_Impl::setHeatingModeEnteringChilledWaterTemperatureLowLimit(double heatingModeEnteringChilledWaterTemperatureLowLimit) {
+  bool ChillerHeaterPerformanceElectricEIR_Impl::setHeatingModeEnteringChilledWaterTemperatureLowLimit(double heatingModeEnteringChilledWaterTemperatureLowLimit) {
     bool result = setDouble(OS_ChillerHeaterPerformance_Electric_EIRFields::HeatingModeEnteringChilledWaterTemperatureLowLimit, heatingModeEnteringChilledWaterTemperatureLowLimit);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool ChillerHeaterPerformanceElectricEIR_Impl::setChilledWaterFlowModeType(std::string chilledWaterFlowModeType) {
@@ -840,40 +840,40 @@ bool ChillerHeaterPerformanceElectricEIR::setReferenceCoolingModeCOP(double refe
   return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setReferenceCoolingModeCOP(referenceCoolingModeCOP);
 }
 
-void ChillerHeaterPerformanceElectricEIR::setReferenceCoolingModeLeavingChilledWaterTemperature(double referenceCoolingModeLeavingChilledWaterTemperature) {
-  getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setReferenceCoolingModeLeavingChilledWaterTemperature(referenceCoolingModeLeavingChilledWaterTemperature);
+bool ChillerHeaterPerformanceElectricEIR::setReferenceCoolingModeLeavingChilledWaterTemperature(double referenceCoolingModeLeavingChilledWaterTemperature) {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setReferenceCoolingModeLeavingChilledWaterTemperature(referenceCoolingModeLeavingChilledWaterTemperature);
 }
 
-void ChillerHeaterPerformanceElectricEIR::setReferenceCoolingModeEnteringCondenserFluidTemperature(double referenceCoolingModeEnteringCondenserFluidTemperature) {
-  getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setReferenceCoolingModeEnteringCondenserFluidTemperature(referenceCoolingModeEnteringCondenserFluidTemperature);
+bool ChillerHeaterPerformanceElectricEIR::setReferenceCoolingModeEnteringCondenserFluidTemperature(double referenceCoolingModeEnteringCondenserFluidTemperature) {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setReferenceCoolingModeEnteringCondenserFluidTemperature(referenceCoolingModeEnteringCondenserFluidTemperature);
 }
 
-void ChillerHeaterPerformanceElectricEIR::setReferenceCoolingModeLeavingCondenserWaterTemperature(double referenceCoolingModeLeavingCondenserWaterTemperature) {
-  getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setReferenceCoolingModeLeavingCondenserWaterTemperature(referenceCoolingModeLeavingCondenserWaterTemperature);
+bool ChillerHeaterPerformanceElectricEIR::setReferenceCoolingModeLeavingCondenserWaterTemperature(double referenceCoolingModeLeavingCondenserWaterTemperature) {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setReferenceCoolingModeLeavingCondenserWaterTemperature(referenceCoolingModeLeavingCondenserWaterTemperature);
 }
 
-void ChillerHeaterPerformanceElectricEIR::setReferenceHeatingModeCoolingCapacityRatio(double referenceHeatingModeCoolingCapacityRatio) {
-  getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setReferenceHeatingModeCoolingCapacityRatio(referenceHeatingModeCoolingCapacityRatio);
+bool ChillerHeaterPerformanceElectricEIR::setReferenceHeatingModeCoolingCapacityRatio(double referenceHeatingModeCoolingCapacityRatio) {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setReferenceHeatingModeCoolingCapacityRatio(referenceHeatingModeCoolingCapacityRatio);
 }
 
 bool ChillerHeaterPerformanceElectricEIR::setReferenceHeatingModeCoolingPowerInputRatio(double referenceHeatingModeCoolingPowerInputRatio) {
   return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setReferenceHeatingModeCoolingPowerInputRatio(referenceHeatingModeCoolingPowerInputRatio);
 }
 
-void ChillerHeaterPerformanceElectricEIR::setReferenceHeatingModeLeavingChilledWaterTemperature(double referenceHeatingModeLeavingChilledWaterTemperature) {
-  getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setReferenceHeatingModeLeavingChilledWaterTemperature(referenceHeatingModeLeavingChilledWaterTemperature);
+bool ChillerHeaterPerformanceElectricEIR::setReferenceHeatingModeLeavingChilledWaterTemperature(double referenceHeatingModeLeavingChilledWaterTemperature) {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setReferenceHeatingModeLeavingChilledWaterTemperature(referenceHeatingModeLeavingChilledWaterTemperature);
 }
 
-void ChillerHeaterPerformanceElectricEIR::setReferenceHeatingModeLeavingCondenserWaterTemperature(double referenceHeatingModeLeavingCondenserWaterTemperature) {
-  getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setReferenceHeatingModeLeavingCondenserWaterTemperature(referenceHeatingModeLeavingCondenserWaterTemperature);
+bool ChillerHeaterPerformanceElectricEIR::setReferenceHeatingModeLeavingCondenserWaterTemperature(double referenceHeatingModeLeavingCondenserWaterTemperature) {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setReferenceHeatingModeLeavingCondenserWaterTemperature(referenceHeatingModeLeavingCondenserWaterTemperature);
 }
 
-void ChillerHeaterPerformanceElectricEIR::setReferenceHeatingModeEnteringCondenserFluidTemperature(double referenceHeatingModeEnteringCondenserFluidTemperature) {
-  getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setReferenceHeatingModeEnteringCondenserFluidTemperature(referenceHeatingModeEnteringCondenserFluidTemperature);
+bool ChillerHeaterPerformanceElectricEIR::setReferenceHeatingModeEnteringCondenserFluidTemperature(double referenceHeatingModeEnteringCondenserFluidTemperature) {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setReferenceHeatingModeEnteringCondenserFluidTemperature(referenceHeatingModeEnteringCondenserFluidTemperature);
 }
 
-void ChillerHeaterPerformanceElectricEIR::setHeatingModeEnteringChilledWaterTemperatureLowLimit(double heatingModeEnteringChilledWaterTemperatureLowLimit) {
-  getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setHeatingModeEnteringChilledWaterTemperatureLowLimit(heatingModeEnteringChilledWaterTemperatureLowLimit);
+bool ChillerHeaterPerformanceElectricEIR::setHeatingModeEnteringChilledWaterTemperatureLowLimit(double heatingModeEnteringChilledWaterTemperatureLowLimit) {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setHeatingModeEnteringChilledWaterTemperatureLowLimit(heatingModeEnteringChilledWaterTemperatureLowLimit);
 }
 
 bool ChillerHeaterPerformanceElectricEIR::setChilledWaterFlowModeType(std::string chilledWaterFlowModeType) {
@@ -968,4 +968,3 @@ ChillerHeaterPerformanceElectricEIR::ChillerHeaterPerformanceElectricEIR(std::sh
 
 } // model
 } // openstudio
-

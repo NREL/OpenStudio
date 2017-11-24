@@ -45,45 +45,45 @@ namespace detail {
 
   /** SetpointManagerOutdoorAirReset_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerOutdoorAirReset.*/
   class MODEL_API SetpointManagerOutdoorAirReset_Impl : public SetpointManager_Impl {
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -166,19 +166,19 @@ namespace detail {
 
     void resetControlVariable();
 
-    void setSetpointatOutdoorLowTemperature(double setpointatOutdoorLowTemperature);
+    bool setSetpointatOutdoorLowTemperature(double setpointatOutdoorLowTemperature);
 
     bool setSetpointatOutdoorLowTemperature(const Quantity& setpointatOutdoorLowTemperature);
 
-    void setOutdoorLowTemperature(double outdoorLowTemperature);
+    bool setOutdoorLowTemperature(double outdoorLowTemperature);
 
     bool setOutdoorLowTemperature(const Quantity& outdoorLowTemperature);
 
-    void setSetpointatOutdoorHighTemperature(double setpointatOutdoorHighTemperature);
+    bool setSetpointatOutdoorHighTemperature(double setpointatOutdoorHighTemperature);
 
     bool setSetpointatOutdoorHighTemperature(const Quantity& setpointatOutdoorHighTemperature);
 
-    void setOutdoorHighTemperature(double outdoorHighTemperature);
+    bool setOutdoorHighTemperature(double outdoorHighTemperature);
 
     bool setOutdoorHighTemperature(const Quantity& outdoorHighTemperature);
 
@@ -256,4 +256,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SETPOINTMANAGEROUTDOORAIRRESET_IMPL_HPP
-

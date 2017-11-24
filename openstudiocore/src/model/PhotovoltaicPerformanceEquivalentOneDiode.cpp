@@ -386,9 +386,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void PhotovoltaicPerformanceEquivalentOneDiode_Impl::setTemperatureCoefficientofShortCircuitCurrent(double temperatureCoefficientofShortCircuitCurrent) {
+  bool PhotovoltaicPerformanceEquivalentOneDiode_Impl::setTemperatureCoefficientofShortCircuitCurrent(double temperatureCoefficientofShortCircuitCurrent) {
     bool result = setDouble(OS_PhotovoltaicPerformance_EquivalentOneDiodeFields::TemperatureCoefficientofShortCircuitCurrent, temperatureCoefficientofShortCircuitCurrent);
-    OS_ASSERT(result);
+    return result;
   }
 
   void PhotovoltaicPerformanceEquivalentOneDiode_Impl::resetTemperatureCoefficientofShortCircuitCurrent() {
@@ -396,9 +396,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void PhotovoltaicPerformanceEquivalentOneDiode_Impl::setTemperatureCoefficientofOpenCircuitVoltage(double temperatureCoefficientofOpenCircuitVoltage) {
+  bool PhotovoltaicPerformanceEquivalentOneDiode_Impl::setTemperatureCoefficientofOpenCircuitVoltage(double temperatureCoefficientofOpenCircuitVoltage) {
     bool result = setDouble(OS_PhotovoltaicPerformance_EquivalentOneDiodeFields::TemperatureCoefficientofOpenCircuitVoltage, temperatureCoefficientofOpenCircuitVoltage);
-    OS_ASSERT(result);
+    return result;
   }
 
   void PhotovoltaicPerformanceEquivalentOneDiode_Impl::resetTemperatureCoefficientofOpenCircuitVoltage() {
@@ -726,16 +726,16 @@ void PhotovoltaicPerformanceEquivalentOneDiode::resetModuleVoltageatMaximumPower
   getImpl<detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl>()->resetModuleVoltageatMaximumPower();
 }
 
-void PhotovoltaicPerformanceEquivalentOneDiode::setTemperatureCoefficientofShortCircuitCurrent(double temperatureCoefficientofShortCircuitCurrent) {
-  getImpl<detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl>()->setTemperatureCoefficientofShortCircuitCurrent(temperatureCoefficientofShortCircuitCurrent);
+bool PhotovoltaicPerformanceEquivalentOneDiode::setTemperatureCoefficientofShortCircuitCurrent(double temperatureCoefficientofShortCircuitCurrent) {
+  return getImpl<detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl>()->setTemperatureCoefficientofShortCircuitCurrent(temperatureCoefficientofShortCircuitCurrent);
 }
 
 void PhotovoltaicPerformanceEquivalentOneDiode::resetTemperatureCoefficientofShortCircuitCurrent() {
   getImpl<detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl>()->resetTemperatureCoefficientofShortCircuitCurrent();
 }
 
-void PhotovoltaicPerformanceEquivalentOneDiode::setTemperatureCoefficientofOpenCircuitVoltage(double temperatureCoefficientofOpenCircuitVoltage) {
-  getImpl<detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl>()->setTemperatureCoefficientofOpenCircuitVoltage(temperatureCoefficientofOpenCircuitVoltage);
+bool PhotovoltaicPerformanceEquivalentOneDiode::setTemperatureCoefficientofOpenCircuitVoltage(double temperatureCoefficientofOpenCircuitVoltage) {
+  return getImpl<detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl>()->setTemperatureCoefficientofOpenCircuitVoltage(temperatureCoefficientofOpenCircuitVoltage);
 }
 
 void PhotovoltaicPerformanceEquivalentOneDiode::resetTemperatureCoefficientofOpenCircuitVoltage() {
@@ -790,4 +790,3 @@ PhotovoltaicPerformanceEquivalentOneDiode::PhotovoltaicPerformanceEquivalentOneD
 
 } // model
 } // openstudio
-

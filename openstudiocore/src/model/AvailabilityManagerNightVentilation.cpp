@@ -160,14 +160,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void AvailabilityManagerNightVentilation_Impl::setVentilationTemperatureDifference(double ventilationTemperatureDifference) {
+  bool AvailabilityManagerNightVentilation_Impl::setVentilationTemperatureDifference(double ventilationTemperatureDifference) {
     bool result = setDouble(OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureDifference, ventilationTemperatureDifference);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void AvailabilityManagerNightVentilation_Impl::setVentilationTemperatureLowLimit(double ventilationTemperatureLowLimit) {
+  bool AvailabilityManagerNightVentilation_Impl::setVentilationTemperatureLowLimit(double ventilationTemperatureLowLimit) {
     bool result = setDouble(OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureLowLimit, ventilationTemperatureLowLimit);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool AvailabilityManagerNightVentilation_Impl::setNightVentingFlowFraction(double nightVentingFlowFraction) {
@@ -253,12 +253,12 @@ void AvailabilityManagerNightVentilation::resetVentilationTemperatureSchedule() 
   getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->resetVentilationTemperatureSchedule();
 }
 
-void AvailabilityManagerNightVentilation::setVentilationTemperatureDifference(double ventilationTemperatureDifference) {
-  getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->setVentilationTemperatureDifference(ventilationTemperatureDifference);
+bool AvailabilityManagerNightVentilation::setVentilationTemperatureDifference(double ventilationTemperatureDifference) {
+  return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->setVentilationTemperatureDifference(ventilationTemperatureDifference);
 }
 
-void AvailabilityManagerNightVentilation::setVentilationTemperatureLowLimit(double ventilationTemperatureLowLimit) {
-  getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->setVentilationTemperatureLowLimit(ventilationTemperatureLowLimit);
+bool AvailabilityManagerNightVentilation::setVentilationTemperatureLowLimit(double ventilationTemperatureLowLimit) {
+  return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->setVentilationTemperatureLowLimit(ventilationTemperatureLowLimit);
 }
 
 bool AvailabilityManagerNightVentilation::setNightVentingFlowFraction(double nightVentingFlowFraction) {
@@ -281,4 +281,3 @@ AvailabilityManagerNightVentilation::AvailabilityManagerNightVentilation(std::sh
 
 } // model
 } // openstudio
-

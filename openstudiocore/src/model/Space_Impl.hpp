@@ -76,70 +76,7 @@ namespace detail {
 
   /** Space_Impl is a PlanarSurfaceGroup_Impl that is the implementation class for Space.*/
   class MODEL_API Space_Impl : public PlanarSurfaceGroup_Impl {
-    
 
-    
-    
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
   public:
     /** @name Constructors and Destructors */
     //@{
@@ -207,23 +144,23 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    virtual void setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod = true) override;
+    virtual bool setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod = true) override;
 
     virtual void resetDirectionofRelativeNorth() override;
 
-    virtual void setXOrigin(double xOrigin, bool driverMethod = true) override;
+    virtual bool setXOrigin(double xOrigin, bool driverMethod = true) override;
 
     virtual void resetXOrigin() override;
 
-    virtual void setYOrigin(double yOrigin, bool driverMethod = true) override;
+    virtual bool setYOrigin(double yOrigin, bool driverMethod = true) override;
 
     virtual void resetYOrigin() override;
 
-    virtual void setZOrigin(double zOrigin, bool driverMethod = true) override;
+    virtual bool setZOrigin(double zOrigin, bool driverMethod = true) override;
 
     virtual void resetZOrigin() override;
 
-    void setPartofTotalFloorArea(bool partofTotalFloorArea);
+    bool setPartofTotalFloorArea(bool partofTotalFloorArea);
 
     void resetPartofTotalFloorArea();
 
@@ -245,7 +182,7 @@ namespace detail {
     boost::optional<DefaultConstructionSet> defaultConstructionSet() const;
 
     /// Returns the default construction for this planar surface if available by searching (in order):
-    /// This space's default construction set, search distance = 1 
+    /// This space's default construction set, search distance = 1
     /// This space's space type's default construction set, search distance = 2
     /// This space's building story's default construction set, search distance = 3
     /// The building's default construction set, search distance = 4
@@ -334,10 +271,10 @@ namespace detail {
     std::vector<SteamEquipment> steamEquipment() const;
 
     /// Returns all OtherEquipment in this space.
-    std::vector<OtherEquipment> otherEquipment() const;  
+    std::vector<OtherEquipment> otherEquipment() const;
 
     /// Returns all WaterUseEquipment in this space.
-    std::vector<WaterUseEquipment> waterUseEquipment() const; 
+    std::vector<WaterUseEquipment> waterUseEquipment() const;
 
     /// Returns all DaylightingControls in this space.
     std::vector<DaylightingControl> daylightingControls() const;
@@ -346,8 +283,8 @@ namespace detail {
     std::vector<IlluminanceMap> illuminanceMaps() const;
 
     /// Returns all GlareSensors in this space.
-    std::vector<GlareSensor> glareSensors() const;  
-    
+    std::vector<GlareSensor> glareSensors() const;
+
     /// Returns all SpaceInfiltrationDesignFlowRate objects in this space.
     std::vector<SpaceInfiltrationDesignFlowRate> spaceInfiltrationDesignFlowRates() const;
 
@@ -382,21 +319,21 @@ namespace detail {
 
     bool setNumberOfPeople(double numberOfPeople);
 
-    bool setNumberOfPeople(double numberOfPeople, 
+    bool setNumberOfPeople(double numberOfPeople,
                            const boost::optional<People>& templatePeople);
 
     double peoplePerFloorArea() const;
 
     bool setPeoplePerFloorArea(double peoplePerFloorArea);
 
-    bool setPeoplePerFloorArea(double peoplePerFloorArea, 
+    bool setPeoplePerFloorArea(double peoplePerFloorArea,
                                const boost::optional<People>& templatePeople);
 
     double floorAreaPerPerson() const;
 
     bool setFloorAreaPerPerson(double floorAreaPerPerson);
 
-    bool setFloorAreaPerPerson(double floorAreaPerPerson, 
+    bool setFloorAreaPerPerson(double floorAreaPerPerson,
                                const boost::optional<People>& templatePeople);
 
     double lightingPower() const;
@@ -409,14 +346,14 @@ namespace detail {
 
     bool setLightingPowerPerFloorArea(double lightingPowerPerFloorArea);
 
-    bool setLightingPowerPerFloorArea(double lightingPowerPerFloorArea, 
+    bool setLightingPowerPerFloorArea(double lightingPowerPerFloorArea,
                                       const boost::optional<Lights>& templateLights);
 
     double lightingPowerPerPerson() const;
 
     bool setLightingPowerPerPerson(double lightingPowerPerPerson);
 
-    bool setLightingPowerPerPerson(double lightingPowerPerPerson, 
+    bool setLightingPowerPerPerson(double lightingPowerPerPerson,
                                    const boost::optional<Lights>& templateLights);
 
     double electricEquipmentPower() const;
@@ -424,7 +361,7 @@ namespace detail {
     bool setElectricEquipmentPower(double electricEquipmentPower);
 
     bool setElectricEquipmentPower(
-        double electricEquipmentPower, 
+        double electricEquipmentPower,
         const boost::optional<ElectricEquipment>& templateElectricEquipment);
 
     double electricEquipmentPowerPerFloorArea() const;
@@ -432,7 +369,7 @@ namespace detail {
     bool setElectricEquipmentPowerPerFloorArea(double electricEquipmentPowerPerFloorArea);
 
     bool setElectricEquipmentPowerPerFloorArea(
-        double electricEquipmentPowerPerFloorArea, 
+        double electricEquipmentPowerPerFloorArea,
         const boost::optional<ElectricEquipment>& templateElectricEquipment);
 
     double electricEquipmentPowerPerPerson() const;
@@ -440,14 +377,14 @@ namespace detail {
     bool setElectricEquipmentPowerPerPerson(double electricEquipmentPowerPerPerson);
 
     bool setElectricEquipmentPowerPerPerson(
-        double electricEquipmentPowerPerPerson, 
+        double electricEquipmentPowerPerPerson,
         const boost::optional<ElectricEquipment>& templateElectricEquipment);
 
     double gasEquipmentPower() const;
 
     bool setGasEquipmentPower(double gasEquipmentPower);
 
-    bool setGasEquipmentPower(double gasEquipmentPower, 
+    bool setGasEquipmentPower(double gasEquipmentPower,
                               const boost::optional<GasEquipment>& templateGasEquipment);
 
     double gasEquipmentPowerPerFloorArea() const;
@@ -455,7 +392,7 @@ namespace detail {
     bool setGasEquipmentPowerPerFloorArea(double gasEquipmentPowerPerFloorArea);
 
     bool setGasEquipmentPowerPerFloorArea(
-        double gasEquipmentPowerPerFloorArea, 
+        double gasEquipmentPowerPerFloorArea,
         const boost::optional<GasEquipment>& templateGasEquipment);
 
     double gasEquipmentPowerPerPerson() const;
@@ -463,7 +400,7 @@ namespace detail {
     bool setGasEquipmentPowerPerPerson(double gasEquipmentPowerPerPerson);
 
     bool setGasEquipmentPowerPerPerson(
-        double gasEquipmentPowerPerPerson, 
+        double gasEquipmentPowerPerPerson,
         const boost::optional<GasEquipment>& templateGasEquipment);
 
     /** Returns the infiltration design flow rate (m^3/s) in the space. Ignores
@@ -543,7 +480,7 @@ namespace detail {
 
     openstudio::Quantity directionofRelativeNorth_SI() const;
     openstudio::Quantity directionofRelativeNorth_IP() const;
-    bool setDirectionofRelativeNorth(const Quantity& directionofRelativeNorth);   
+    bool setDirectionofRelativeNorth(const Quantity& directionofRelativeNorth);
 
     openstudio::Quantity xOrigin_SI() const;
     openstudio::Quantity xOrigin_IP() const;
@@ -586,7 +523,7 @@ namespace detail {
     bool setThermalZoneAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setBuildingStoryAsModelObject(const boost::optional<ModelObject>& modelObject);
 
-    template <typename T, typename TDef> 
+    template <typename T, typename TDef>
     boost::optional<T> getMySpaceLoadInstance(const boost::optional<T>& templateSpaceLoadInstance);
 
     template <typename T>

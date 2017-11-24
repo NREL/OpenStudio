@@ -141,29 +141,29 @@ namespace detail {
 
     void autosizeRatedHeatingPowerConsumption();
 
-    void setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
+    bool setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
 
-    void setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2);
+    bool setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2);
 
-    void setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3);
+    bool setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3);
 
-    void setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4);
+    bool setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4);
 
-    void setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5);
+    bool setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5);
 
-    void setHeatingCompressorPowerCoefficient1(double heatingCompressorPowerCoefficient1);
+    bool setHeatingCompressorPowerCoefficient1(double heatingCompressorPowerCoefficient1);
 
-    void setHeatingCompressorPowerCoefficient2(double heatingCompressorPowerCoefficient2);
+    bool setHeatingCompressorPowerCoefficient2(double heatingCompressorPowerCoefficient2);
 
-    void setHeatingCompressorPowerCoefficient3(double heatingCompressorPowerCoefficient3);
+    bool setHeatingCompressorPowerCoefficient3(double heatingCompressorPowerCoefficient3);
 
-    void setHeatingCompressorPowerCoefficient4(double heatingCompressorPowerCoefficient4);
+    bool setHeatingCompressorPowerCoefficient4(double heatingCompressorPowerCoefficient4);
 
-    void setHeatingCompressorPowerCoefficient5(double heatingCompressorPowerCoefficient5);
+    bool setHeatingCompressorPowerCoefficient5(double heatingCompressorPowerCoefficient5);
 
-    void setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance);
+    bool setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance);
 
-    void setSizingFactor(double sizingFactor);
+    bool setSizingFactor(double sizingFactor);
 
     bool setCompanionCoolingHeatPump(const HeatPumpWaterToWaterEquationFitCooling& companionHP);
 
@@ -191,4 +191,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_HEATPUMPWATERTOWATEREQUATIONFITHEATING_IMPL_HPP
-

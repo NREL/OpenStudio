@@ -193,11 +193,11 @@ class MODEL_API PhotovoltaicPerformanceEquivalentOneDiode : public PhotovoltaicP
 
   void resetModuleVoltageatMaximumPower();
 
-  void setTemperatureCoefficientofShortCircuitCurrent(double temperatureCoefficientofShortCircuitCurrent);
+  bool setTemperatureCoefficientofShortCircuitCurrent(double temperatureCoefficientofShortCircuitCurrent);
 
   void resetTemperatureCoefficientofShortCircuitCurrent();
 
-  void setTemperatureCoefficientofOpenCircuitVoltage(double temperatureCoefficientofOpenCircuitVoltage);
+  bool setTemperatureCoefficientofOpenCircuitVoltage(double temperatureCoefficientofOpenCircuitVoltage);
 
   void resetTemperatureCoefficientofOpenCircuitVoltage();
 
@@ -251,4 +251,3 @@ typedef std::vector<PhotovoltaicPerformanceEquivalentOneDiode> PhotovoltaicPerfo
 } // openstudio
 
 #endif // MODEL_PHOTOVOLTAICPERFORMANCEEQUIVALENTONEDIODE_HPP
-

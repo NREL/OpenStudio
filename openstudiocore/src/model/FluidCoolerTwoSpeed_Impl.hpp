@@ -141,7 +141,7 @@ namespace detail {
 
     void autosizeLowFanSpeedUfactorTimesAreaValue();
 
-    void setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor);
+    bool setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor);
 
     bool setHighSpeedNominalCapacity(double highSpeedNominalCapacity);
 
@@ -149,7 +149,7 @@ namespace detail {
 
     void autosizeLowSpeedNominalCapacity();
 
-    void setLowSpeedNominalCapacitySizingFactor(double lowSpeedNominalCapacitySizingFactor);
+    bool setLowSpeedNominalCapacitySizingFactor(double lowSpeedNominalCapacitySizingFactor);
 
     bool setDesignEnteringWaterTemperature(double designEnteringWaterTemperature);
 
@@ -173,13 +173,13 @@ namespace detail {
 
     void autosizeLowFanSpeedAirFlowRate();
 
-    void setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor);
+    bool setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor);
 
     bool setLowFanSpeedFanPower(boost::optional<double> lowFanSpeedFanPower);
 
     void autosizeLowFanSpeedFanPower();
 
-    void setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor);
+    bool setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor);
 
     bool setOutdoorAirInletNode(const boost::optional<Node>& node);
 
@@ -203,4 +203,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_FLUIDCOOLERTWOSPEED_IMPL_HPP
-

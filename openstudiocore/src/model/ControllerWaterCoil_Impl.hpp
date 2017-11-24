@@ -40,18 +40,18 @@ namespace detail {
 
 /** ControllerWaterCoil_Impl is a HVACComponent_Impl that is the implementation class for ControllerWaterCoil.*/
 class MODEL_API ControllerWaterCoil_Impl : public HVACComponent_Impl {
-  
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
+
+
  public:
 
   /** @name Constructors and Destructors */
@@ -125,7 +125,7 @@ class MODEL_API ControllerWaterCoil_Impl : public HVACComponent_Impl {
 
   void autosizeMaximumActuatedFlow();
 
-  void setMinimumActuatedFlow(double minimumActuatedFlow);
+  bool setMinimumActuatedFlow(double minimumActuatedFlow);
 
   void resetMinimumActuatedFlow();
 
@@ -157,4 +157,3 @@ class MODEL_API ControllerWaterCoil_Impl : public HVACComponent_Impl {
 } // openstudio
 
 #endif // MODEL_CONTROLLERWATERCOIL_IMPL_HPP
-

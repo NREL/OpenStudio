@@ -39,57 +39,57 @@ class ScheduleDay;
 namespace detail {
 
   class MODEL_API DesignDay_Impl : public SizingPeriod_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
 
     // constructor
     DesignDay_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    DesignDay_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                   Model_Impl* model, 
+    DesignDay_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                   Model_Impl* model,
                    bool keepHandle);
 
     // clone copy constructor
@@ -200,7 +200,7 @@ namespace detail {
 
     void resetDailyDryBulbTemperatureRange();
 
-    void setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb);
+    bool setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb);
 
     void resetHumidityIndicatingConditionsAtMaximumDryBulb();
 
@@ -280,7 +280,7 @@ namespace detail {
 
     void resetAshraeTaud();
 
-    void setDailyWetBulbTemperatureRange(boost::optional<double> dailyWetBulbTemperatureRange);
+    bool setDailyWetBulbTemperatureRange(boost::optional<double> dailyWetBulbTemperatureRange);
 
     void resetDailyWetBulbTemperatureRange();
 
@@ -288,7 +288,7 @@ namespace detail {
     virtual void ensureNoLeapDays() override;
 
     //@}
-  
+
    private:
 
     REGISTER_LOGGER("openstudio.model.DesignDay");

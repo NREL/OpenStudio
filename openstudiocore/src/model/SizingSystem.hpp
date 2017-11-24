@@ -45,7 +45,7 @@ class SizingSystem_Impl;
 } // detail
 
 /** SizingSystem is a ModelObject that wraps the OpenStudio IDD object 'OS:Sizing:System'. */
-class MODEL_API SizingSystem : public ModelObject 
+class MODEL_API SizingSystem : public ModelObject
 {
   public:
 
@@ -185,17 +185,17 @@ class MODEL_API SizingSystem : public ModelObject
 
   bool setMinimumSystemAirFlowRatio(double minimumSystemAirFlowRatio);
 
-  void setPreheatDesignTemperature(double preheatDesignTemperature);
+  bool setPreheatDesignTemperature(double preheatDesignTemperature);
 
-  void setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio);
+  bool setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio);
 
-  void setPrecoolDesignTemperature(double precoolDesignTemperature);
+  bool setPrecoolDesignTemperature(double precoolDesignTemperature);
 
-  void setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio);
+  bool setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio);
 
-  void setCentralCoolingDesignSupplyAirTemperature(double centralCoolingDesignSupplyAirTemperature);
+  bool setCentralCoolingDesignSupplyAirTemperature(double centralCoolingDesignSupplyAirTemperature);
 
-  void setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature);
+  bool setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature);
 
   bool setSizingOption(std::string sizingOption);
 
@@ -209,11 +209,11 @@ class MODEL_API SizingSystem : public ModelObject
 
   void resetAllOutdoorAirinHeating();
 
-  void setCentralCoolingDesignSupplyAirHumidityRatio(double centralCoolingDesignSupplyAirHumidityRatio);
+  bool setCentralCoolingDesignSupplyAirHumidityRatio(double centralCoolingDesignSupplyAirHumidityRatio);
 
   void resetCentralCoolingDesignSupplyAirHumidityRatio();
 
-  void setCentralHeatingDesignSupplyAirHumidityRatio(double centralHeatingDesignSupplyAirHumidityRatio);
+  bool setCentralHeatingDesignSupplyAirHumidityRatio(double centralHeatingDesignSupplyAirHumidityRatio);
 
   void resetCentralHeatingDesignSupplyAirHumidityRatio();
 
@@ -311,4 +311,3 @@ typedef std::vector<SizingSystem> SizingSystemVector;
 } // openstudio
 
 #endif // MODEL_SIZINGSYSTEM_HPP
-

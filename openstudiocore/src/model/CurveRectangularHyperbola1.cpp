@@ -148,29 +148,29 @@ namespace detail {
     return isEmpty(OS_Curve_RectangularHyperbola1Fields::OutputUnitType);
   }
 
-  void CurveRectangularHyperbola1_Impl::setCoefficient1C1(double coefficient1C1) {
+  bool CurveRectangularHyperbola1_Impl::setCoefficient1C1(double coefficient1C1) {
     bool result = setDouble(OS_Curve_RectangularHyperbola1Fields::Coefficient1C1, coefficient1C1);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveRectangularHyperbola1_Impl::setCoefficient2C2(double coefficient2C2) {
+  bool CurveRectangularHyperbola1_Impl::setCoefficient2C2(double coefficient2C2) {
     bool result = setDouble(OS_Curve_RectangularHyperbola1Fields::Coefficient2C2, coefficient2C2);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveRectangularHyperbola1_Impl::setCoefficient3C3(double coefficient3C3) {
+  bool CurveRectangularHyperbola1_Impl::setCoefficient3C3(double coefficient3C3) {
     bool result = setDouble(OS_Curve_RectangularHyperbola1Fields::Coefficient3C3, coefficient3C3);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveRectangularHyperbola1_Impl::setMinimumValueofx(double minimumValueofx) {
+  bool CurveRectangularHyperbola1_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_RectangularHyperbola1Fields::MinimumValueofx, minimumValueofx);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveRectangularHyperbola1_Impl::setMaximumValueofx(double maximumValueofx) {
+  bool CurveRectangularHyperbola1_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_RectangularHyperbola1Fields::MaximumValueofx, maximumValueofx);
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveRectangularHyperbola1_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
@@ -295,24 +295,24 @@ bool CurveRectangularHyperbola1::isOutputUnitTypeDefaulted() const {
   return getImpl<detail::CurveRectangularHyperbola1_Impl>()->isOutputUnitTypeDefaulted();
 }
 
-void CurveRectangularHyperbola1::setCoefficient1C1(double coefficient1C1) {
-  getImpl<detail::CurveRectangularHyperbola1_Impl>()->setCoefficient1C1(coefficient1C1);
+bool CurveRectangularHyperbola1::setCoefficient1C1(double coefficient1C1) {
+  return getImpl<detail::CurveRectangularHyperbola1_Impl>()->setCoefficient1C1(coefficient1C1);
 }
 
-void CurveRectangularHyperbola1::setCoefficient2C2(double coefficient2C2) {
-  getImpl<detail::CurveRectangularHyperbola1_Impl>()->setCoefficient2C2(coefficient2C2);
+bool CurveRectangularHyperbola1::setCoefficient2C2(double coefficient2C2) {
+  return getImpl<detail::CurveRectangularHyperbola1_Impl>()->setCoefficient2C2(coefficient2C2);
 }
 
-void CurveRectangularHyperbola1::setCoefficient3C3(double coefficient3C3) {
-  getImpl<detail::CurveRectangularHyperbola1_Impl>()->setCoefficient3C3(coefficient3C3);
+bool CurveRectangularHyperbola1::setCoefficient3C3(double coefficient3C3) {
+  return getImpl<detail::CurveRectangularHyperbola1_Impl>()->setCoefficient3C3(coefficient3C3);
 }
 
-void CurveRectangularHyperbola1::setMinimumValueofx(double minimumValueofx) {
-  getImpl<detail::CurveRectangularHyperbola1_Impl>()->setMinimumValueofx(minimumValueofx);
+bool CurveRectangularHyperbola1::setMinimumValueofx(double minimumValueofx) {
+  return getImpl<detail::CurveRectangularHyperbola1_Impl>()->setMinimumValueofx(minimumValueofx);
 }
 
-void CurveRectangularHyperbola1::setMaximumValueofx(double maximumValueofx) {
-  getImpl<detail::CurveRectangularHyperbola1_Impl>()->setMaximumValueofx(maximumValueofx);
+bool CurveRectangularHyperbola1::setMaximumValueofx(double maximumValueofx) {
+  return getImpl<detail::CurveRectangularHyperbola1_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
 void CurveRectangularHyperbola1::setMinimumCurveOutput(double minimumCurveOutput) {
@@ -355,4 +355,3 @@ CurveRectangularHyperbola1::CurveRectangularHyperbola1(std::shared_ptr<detail::C
 
 } // model
 } // openstudio
-

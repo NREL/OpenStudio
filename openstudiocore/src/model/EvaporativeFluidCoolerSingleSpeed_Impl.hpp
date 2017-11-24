@@ -76,7 +76,7 @@ namespace detail {
     virtual unsigned outletPort() override;
 
     virtual bool addToNode(Node & node) override;
-    
+
     //@}
     /** @name Getters */
     //@{
@@ -206,7 +206,7 @@ namespace detail {
 
     void resetEvaporationLossFactor();
 
-    void setDriftLossPercent(double driftLossPercent);
+    bool setDriftLossPercent(double driftLossPercent);
 
     void resetDriftLossPercent();
 
@@ -245,4 +245,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_EVAPORATIVEFLUIDCOOLERSINGLESPEED_IMPL_HPP
-

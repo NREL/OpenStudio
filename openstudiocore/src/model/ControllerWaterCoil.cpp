@@ -211,9 +211,9 @@ void ControllerWaterCoil_Impl::autosizeMaximumActuatedFlow() {
   OS_ASSERT(result);
 }
 
-void ControllerWaterCoil_Impl::setMinimumActuatedFlow(double minimumActuatedFlow) {
+bool ControllerWaterCoil_Impl::setMinimumActuatedFlow(double minimumActuatedFlow) {
   bool result = setDouble(OS_Controller_WaterCoilFields::MinimumActuatedFlow, minimumActuatedFlow);
-  OS_ASSERT(result);
+  return result;
 }
 
 void ControllerWaterCoil_Impl::resetMinimumActuatedFlow() {
@@ -369,8 +369,8 @@ void ControllerWaterCoil::autosizeMaximumActuatedFlow() {
   getImpl<detail::ControllerWaterCoil_Impl>()->autosizeMaximumActuatedFlow();
 }
 
-void ControllerWaterCoil::setMinimumActuatedFlow(double minimumActuatedFlow) {
-  getImpl<detail::ControllerWaterCoil_Impl>()->setMinimumActuatedFlow(minimumActuatedFlow);
+bool ControllerWaterCoil::setMinimumActuatedFlow(double minimumActuatedFlow) {
+  return getImpl<detail::ControllerWaterCoil_Impl>()->setMinimumActuatedFlow(minimumActuatedFlow);
 }
 
 void ControllerWaterCoil::resetMinimumActuatedFlow() {
@@ -407,4 +407,3 @@ ControllerWaterCoil::ControllerWaterCoil(std::shared_ptr<detail::ControllerWater
 } // model
 
 } // openstudio
-

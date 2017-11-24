@@ -109,9 +109,9 @@ namespace detail {
     return getDouble(OS_Curve_Functional_PressureDropFields::FixedFrictionFactor,true);
   }
 
-  void CurveFunctionalPressureDrop_Impl::setDiameter(double diameter) {
+  bool CurveFunctionalPressureDrop_Impl::setDiameter(double diameter) {
     bool result = setDouble(OS_Curve_Functional_PressureDropFields::Diameter, diameter);
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveFunctionalPressureDrop_Impl::setMinorLossCoefficient(boost::optional<double> minorLossCoefficient) {
@@ -208,8 +208,8 @@ boost::optional<double> CurveFunctionalPressureDrop::fixedFrictionFactor() const
   return getImpl<detail::CurveFunctionalPressureDrop_Impl>()->fixedFrictionFactor();
 }
 
-void CurveFunctionalPressureDrop::setDiameter(double diameter) {
-  getImpl<detail::CurveFunctionalPressureDrop_Impl>()->setDiameter(diameter);
+bool CurveFunctionalPressureDrop::setDiameter(double diameter) {
+  return getImpl<detail::CurveFunctionalPressureDrop_Impl>()->setDiameter(diameter);
 }
 
 void CurveFunctionalPressureDrop::setMinorLossCoefficient(double minorLossCoefficient) {
@@ -252,4 +252,3 @@ CurveFunctionalPressureDrop::CurveFunctionalPressureDrop(std::shared_ptr<detail:
 
 } // model
 } // openstudio
-

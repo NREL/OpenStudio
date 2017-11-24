@@ -132,51 +132,51 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setJanuarySurfaceGroundTemperature(double januarySurfaceGroundTemperature);
+    bool setJanuarySurfaceGroundTemperature(double januarySurfaceGroundTemperature);
 
     void resetJanuarySurfaceGroundTemperature();
 
-    void setFebruarySurfaceGroundTemperature(double februarySurfaceGroundTemperature);
+    bool setFebruarySurfaceGroundTemperature(double februarySurfaceGroundTemperature);
 
     void resetFebruarySurfaceGroundTemperature();
 
-    void setMarchSurfaceGroundTemperature(double marchSurfaceGroundTemperature);
+    bool setMarchSurfaceGroundTemperature(double marchSurfaceGroundTemperature);
 
     void resetMarchSurfaceGroundTemperature();
 
-    void setAprilSurfaceGroundTemperature(double aprilSurfaceGroundTemperature);
+    bool setAprilSurfaceGroundTemperature(double aprilSurfaceGroundTemperature);
 
     void resetAprilSurfaceGroundTemperature();
 
-    void setMaySurfaceGroundTemperature(double maySurfaceGroundTemperature);
+    bool setMaySurfaceGroundTemperature(double maySurfaceGroundTemperature);
 
     void resetMaySurfaceGroundTemperature();
 
-    void setJuneSurfaceGroundTemperature(double juneSurfaceGroundTemperature);
+    bool setJuneSurfaceGroundTemperature(double juneSurfaceGroundTemperature);
 
     void resetJuneSurfaceGroundTemperature();
 
-    void setJulySurfaceGroundTemperature(double julySurfaceGroundTemperature);
+    bool setJulySurfaceGroundTemperature(double julySurfaceGroundTemperature);
 
     void resetJulySurfaceGroundTemperature();
 
-    void setAugustSurfaceGroundTemperature(double augustSurfaceGroundTemperature);
+    bool setAugustSurfaceGroundTemperature(double augustSurfaceGroundTemperature);
 
     void resetAugustSurfaceGroundTemperature();
 
-    void setSeptemberSurfaceGroundTemperature(double septemberSurfaceGroundTemperature);
+    bool setSeptemberSurfaceGroundTemperature(double septemberSurfaceGroundTemperature);
 
     void resetSeptemberSurfaceGroundTemperature();
 
-    void setOctoberSurfaceGroundTemperature(double octoberSurfaceGroundTemperature);
+    bool setOctoberSurfaceGroundTemperature(double octoberSurfaceGroundTemperature);
 
     void resetOctoberSurfaceGroundTemperature();
 
-    void setNovemberSurfaceGroundTemperature(double novemberSurfaceGroundTemperature);
+    bool setNovemberSurfaceGroundTemperature(double novemberSurfaceGroundTemperature);
 
     void resetNovemberSurfaceGroundTemperature();
 
-    void setDecemberSurfaceGroundTemperature(double decemberSurfaceGroundTemperature);
+    bool setDecemberSurfaceGroundTemperature(double decemberSurfaceGroundTemperature);
 
     void resetDecemberSurfaceGroundTemperature();
 

@@ -122,7 +122,7 @@ namespace detail {
 
     bool setFlowSequencingControlScheme(std::string flowSequencingControlScheme);
 
-    void setRatedPumpHead(double ratedPumpHead);
+    bool setRatedPumpHead(double ratedPumpHead);
 
     void setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
 
@@ -132,13 +132,13 @@ namespace detail {
 
     bool setFractionofMotorInefficienciestoFluidStream(double fractionofMotorInefficienciestoFluidStream);
 
-    void setCoefficient1ofthePartLoadPerformanceCurve(double coefficient1ofthePartLoadPerformanceCurve);
+    bool setCoefficient1ofthePartLoadPerformanceCurve(double coefficient1ofthePartLoadPerformanceCurve);
 
-    void setCoefficient2ofthePartLoadPerformanceCurve(double coefficient2ofthePartLoadPerformanceCurve);
+    bool setCoefficient2ofthePartLoadPerformanceCurve(double coefficient2ofthePartLoadPerformanceCurve);
 
-    void setCoefficient3ofthePartLoadPerformanceCurve(double coefficient3ofthePartLoadPerformanceCurve);
+    bool setCoefficient3ofthePartLoadPerformanceCurve(double coefficient3ofthePartLoadPerformanceCurve);
 
-    void setCoefficient4ofthePartLoadPerformanceCurve(double coefficient4ofthePartLoadPerformanceCurve);
+    bool setCoefficient4ofthePartLoadPerformanceCurve(double coefficient4ofthePartLoadPerformanceCurve);
 
     bool setMinimumFlowRateFraction(double minimumFlowRateFraction);
 
@@ -176,4 +176,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_HEADEREDPUMPSVARIABLESPEED_IMPL_HPP
-

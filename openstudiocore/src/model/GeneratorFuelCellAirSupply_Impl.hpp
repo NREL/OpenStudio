@@ -127,7 +127,7 @@ namespace detail {
 
     bool setAirSupplyRateCalculationMode(const std::string& airSupplyRateCalculationMode);
 
-    void setStoichiometricRatio(double stoichiometricRatio);
+    bool setStoichiometricRatio(double stoichiometricRatio);
 
     void resetStoichiometricRatio();
 
@@ -135,7 +135,7 @@ namespace detail {
 
     void resetAirRateFunctionofElectricPowerCurve();
 
-    void setAirRateAirTemperatureCoefficient(double airRateAirTemperatureCoefficient);
+    bool setAirRateAirTemperatureCoefficient(double airRateAirTemperatureCoefficient);
 
     void resetAirRateAirTemperatureCoefficient();
 
@@ -173,4 +173,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_GENERATORFUELCELLAIRSUPPLY_IMPL_HPP
-

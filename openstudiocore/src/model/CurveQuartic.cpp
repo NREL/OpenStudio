@@ -161,39 +161,39 @@ namespace detail {
     return isEmpty(OS_Curve_QuarticFields::OutputUnitType);
   }
 
-  void CurveQuartic_Impl::setCoefficient1Constant(double coefficient1Constant) {
+  bool CurveQuartic_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = setDouble(OS_Curve_QuarticFields::Coefficient1Constant, coefficient1Constant);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuartic_Impl::setCoefficient2x(double coefficient2x) {
+  bool CurveQuartic_Impl::setCoefficient2x(double coefficient2x) {
     bool result = setDouble(OS_Curve_QuarticFields::Coefficient2x, coefficient2x);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuartic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
+  bool CurveQuartic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
     bool result = setDouble(OS_Curve_QuarticFields::Coefficient3x_POW_2, coefficient3xPOW2);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuartic_Impl::setCoefficient4xPOW3(double coefficient4xPOW3) {
+  bool CurveQuartic_Impl::setCoefficient4xPOW3(double coefficient4xPOW3) {
     bool result = setDouble(OS_Curve_QuarticFields::Coefficient4x_POW_3, coefficient4xPOW3);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuartic_Impl::setCoefficient5xPOW4(double coefficient5xPOW4) {
+  bool CurveQuartic_Impl::setCoefficient5xPOW4(double coefficient5xPOW4) {
     bool result = setDouble(OS_Curve_QuarticFields::Coefficient5x_POW_4, coefficient5xPOW4);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuartic_Impl::setMinimumValueofx(double minimumValueofx) {
+  bool CurveQuartic_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_QuarticFields::MinimumValueofx, minimumValueofx);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuartic_Impl::setMaximumValueofx(double maximumValueofx) {
+  bool CurveQuartic_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_QuarticFields::MaximumValueofx, maximumValueofx);
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveQuartic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
@@ -328,32 +328,32 @@ bool CurveQuartic::isOutputUnitTypeDefaulted() const {
   return getImpl<detail::CurveQuartic_Impl>()->isOutputUnitTypeDefaulted();
 }
 
-void CurveQuartic::setCoefficient1Constant(double coefficient1Constant) {
-  getImpl<detail::CurveQuartic_Impl>()->setCoefficient1Constant(coefficient1Constant);
+bool CurveQuartic::setCoefficient1Constant(double coefficient1Constant) {
+  return getImpl<detail::CurveQuartic_Impl>()->setCoefficient1Constant(coefficient1Constant);
 }
 
-void CurveQuartic::setCoefficient2x(double coefficient2x) {
-  getImpl<detail::CurveQuartic_Impl>()->setCoefficient2x(coefficient2x);
+bool CurveQuartic::setCoefficient2x(double coefficient2x) {
+  return getImpl<detail::CurveQuartic_Impl>()->setCoefficient2x(coefficient2x);
 }
 
-void CurveQuartic::setCoefficient3xPOW2(double coefficient3xPOW2) {
-  getImpl<detail::CurveQuartic_Impl>()->setCoefficient3xPOW2(coefficient3xPOW2);
+bool CurveQuartic::setCoefficient3xPOW2(double coefficient3xPOW2) {
+  return getImpl<detail::CurveQuartic_Impl>()->setCoefficient3xPOW2(coefficient3xPOW2);
 }
 
-void CurveQuartic::setCoefficient4xPOW3(double coefficient4xPOW3) {
-  getImpl<detail::CurveQuartic_Impl>()->setCoefficient4xPOW3(coefficient4xPOW3);
+bool CurveQuartic::setCoefficient4xPOW3(double coefficient4xPOW3) {
+  return getImpl<detail::CurveQuartic_Impl>()->setCoefficient4xPOW3(coefficient4xPOW3);
 }
 
-void CurveQuartic::setCoefficient5xPOW4(double coefficient5xPOW4) {
-  getImpl<detail::CurveQuartic_Impl>()->setCoefficient5xPOW4(coefficient5xPOW4);
+bool CurveQuartic::setCoefficient5xPOW4(double coefficient5xPOW4) {
+  return getImpl<detail::CurveQuartic_Impl>()->setCoefficient5xPOW4(coefficient5xPOW4);
 }
 
-void CurveQuartic::setMinimumValueofx(double minimumValueofx) {
-  getImpl<detail::CurveQuartic_Impl>()->setMinimumValueofx(minimumValueofx);
+bool CurveQuartic::setMinimumValueofx(double minimumValueofx) {
+  return getImpl<detail::CurveQuartic_Impl>()->setMinimumValueofx(minimumValueofx);
 }
 
-void CurveQuartic::setMaximumValueofx(double maximumValueofx) {
-  getImpl<detail::CurveQuartic_Impl>()->setMaximumValueofx(maximumValueofx);
+bool CurveQuartic::setMaximumValueofx(double maximumValueofx) {
+  return getImpl<detail::CurveQuartic_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
 void CurveQuartic::setMinimumCurveOutput(double minimumCurveOutput) {
@@ -396,4 +396,3 @@ CurveQuartic::CurveQuartic(std::shared_ptr<detail::CurveQuartic_Impl> impl)
 
 } // model
 } // openstudio
-

@@ -638,9 +638,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ZoneHVACFourPipeFanCoil_Impl::setMinimumColdWaterFlowRate(double minimumColdWaterFlowRate) {
+  bool ZoneHVACFourPipeFanCoil_Impl::setMinimumColdWaterFlowRate(double minimumColdWaterFlowRate) {
     bool result = setDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumColdWaterFlowRate, minimumColdWaterFlowRate);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool ZoneHVACFourPipeFanCoil_Impl::setMinimumColdWaterFlowRate(const Quantity& minimumColdWaterFlowRate) {
@@ -710,9 +710,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ZoneHVACFourPipeFanCoil_Impl::setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate) {
+  bool ZoneHVACFourPipeFanCoil_Impl::setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate) {
     bool result = setDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumHotWaterFlowRate, minimumHotWaterFlowRate);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool ZoneHVACFourPipeFanCoil_Impl::setMinimumHotWaterFlowRate(const Quantity& minimumHotWaterFlowRate) {
@@ -1310,8 +1310,8 @@ void ZoneHVACFourPipeFanCoil::autosizeMaximumColdWaterFlowRate() {
   getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->autosizeMaximumColdWaterFlowRate();
 }
 
-void ZoneHVACFourPipeFanCoil::setMinimumColdWaterFlowRate(double minimumColdWaterFlowRate) {
-  getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMinimumColdWaterFlowRate(minimumColdWaterFlowRate);
+bool ZoneHVACFourPipeFanCoil::setMinimumColdWaterFlowRate(double minimumColdWaterFlowRate) {
+  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMinimumColdWaterFlowRate(minimumColdWaterFlowRate);
 }
 
 bool ZoneHVACFourPipeFanCoil::setMinimumColdWaterFlowRate(const Quantity& minimumColdWaterFlowRate) {
@@ -1351,8 +1351,8 @@ void ZoneHVACFourPipeFanCoil::autosizeMaximumHotWaterFlowRate() {
   getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->autosizeMaximumHotWaterFlowRate();
 }
 
-void ZoneHVACFourPipeFanCoil::setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate) {
-  getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMinimumHotWaterFlowRate(minimumHotWaterFlowRate);
+bool ZoneHVACFourPipeFanCoil::setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate) {
+  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMinimumHotWaterFlowRate(minimumHotWaterFlowRate);
 }
 
 bool ZoneHVACFourPipeFanCoil::setMinimumHotWaterFlowRate(const Quantity& minimumHotWaterFlowRate) {
@@ -1427,4 +1427,3 @@ ZoneHVACFourPipeFanCoil::ZoneHVACFourPipeFanCoil(std::shared_ptr<detail::ZoneHVA
 
 } // model
 } // openstudio
-

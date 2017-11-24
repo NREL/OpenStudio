@@ -396,34 +396,34 @@ bool SizingSystem_Impl::setMinimumSystemAirFlowRatio(double minimumSystemAirFlow
   return result;
 }
 
-void SizingSystem_Impl::setPreheatDesignTemperature(double preheatDesignTemperature) {
+bool SizingSystem_Impl::setPreheatDesignTemperature(double preheatDesignTemperature) {
   bool result = setDouble(OS_Sizing_SystemFields::PreheatDesignTemperature, preheatDesignTemperature);
-  OS_ASSERT(result);
+  return result;
 }
 
-void SizingSystem_Impl::setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio) {
+bool SizingSystem_Impl::setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio) {
   bool result = setDouble(OS_Sizing_SystemFields::PreheatDesignHumidityRatio, preheatDesignHumidityRatio);
-  OS_ASSERT(result);
+  return result;
 }
 
-void SizingSystem_Impl::setPrecoolDesignTemperature(double precoolDesignTemperature) {
+bool SizingSystem_Impl::setPrecoolDesignTemperature(double precoolDesignTemperature) {
   bool result = setDouble(OS_Sizing_SystemFields::PrecoolDesignTemperature, precoolDesignTemperature);
-  OS_ASSERT(result);
+  return result;
 }
 
-void SizingSystem_Impl::setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio) {
+bool SizingSystem_Impl::setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio) {
   bool result = setDouble(OS_Sizing_SystemFields::PrecoolDesignHumidityRatio, precoolDesignHumidityRatio);
-  OS_ASSERT(result);
+  return result;
 }
 
-void SizingSystem_Impl::setCentralCoolingDesignSupplyAirTemperature(double centralCoolingDesignSupplyAirTemperature) {
+bool SizingSystem_Impl::setCentralCoolingDesignSupplyAirTemperature(double centralCoolingDesignSupplyAirTemperature) {
   bool result = setDouble(OS_Sizing_SystemFields::CentralCoolingDesignSupplyAirTemperature, centralCoolingDesignSupplyAirTemperature);
-  OS_ASSERT(result);
+  return result;
 }
 
-void SizingSystem_Impl::setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature) {
+bool SizingSystem_Impl::setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature) {
   bool result = setDouble(OS_Sizing_SystemFields::CentralHeatingDesignSupplyAirTemperature, centralHeatingDesignSupplyAirTemperature);
-  OS_ASSERT(result);
+  return result;
 }
 
 bool SizingSystem_Impl::setSizingOption(std::string sizingOption) {
@@ -466,9 +466,9 @@ void SizingSystem_Impl::resetAllOutdoorAirinHeating() {
   OS_ASSERT(result);
 }
 
-void SizingSystem_Impl::setCentralCoolingDesignSupplyAirHumidityRatio(double centralCoolingDesignSupplyAirHumidityRatio) {
+bool SizingSystem_Impl::setCentralCoolingDesignSupplyAirHumidityRatio(double centralCoolingDesignSupplyAirHumidityRatio) {
   bool result = setDouble(OS_Sizing_SystemFields::CentralCoolingDesignSupplyAirHumidityRatio, centralCoolingDesignSupplyAirHumidityRatio);
-  OS_ASSERT(result);
+  return result;
 }
 
 void SizingSystem_Impl::resetCentralCoolingDesignSupplyAirHumidityRatio() {
@@ -476,9 +476,9 @@ void SizingSystem_Impl::resetCentralCoolingDesignSupplyAirHumidityRatio() {
   OS_ASSERT(result);
 }
 
-void SizingSystem_Impl::setCentralHeatingDesignSupplyAirHumidityRatio(double centralHeatingDesignSupplyAirHumidityRatio) {
+bool SizingSystem_Impl::setCentralHeatingDesignSupplyAirHumidityRatio(double centralHeatingDesignSupplyAirHumidityRatio) {
   bool result = setDouble(OS_Sizing_SystemFields::CentralHeatingDesignSupplyAirHumidityRatio, centralHeatingDesignSupplyAirHumidityRatio);
-  OS_ASSERT(result);
+  return result;
 }
 
 void SizingSystem_Impl::resetCentralHeatingDesignSupplyAirHumidityRatio() {
@@ -959,28 +959,28 @@ bool SizingSystem::setMinimumSystemAirFlowRatio(double minimumSystemAirFlowRatio
   return getImpl<detail::SizingSystem_Impl>()->setMinimumSystemAirFlowRatio(minimumSystemAirFlowRatio);
 }
 
-void SizingSystem::setPreheatDesignTemperature(double preheatDesignTemperature) {
-  getImpl<detail::SizingSystem_Impl>()->setPreheatDesignTemperature(preheatDesignTemperature);
+bool SizingSystem::setPreheatDesignTemperature(double preheatDesignTemperature) {
+  return getImpl<detail::SizingSystem_Impl>()->setPreheatDesignTemperature(preheatDesignTemperature);
 }
 
-void SizingSystem::setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio) {
-  getImpl<detail::SizingSystem_Impl>()->setPreheatDesignHumidityRatio(preheatDesignHumidityRatio);
+bool SizingSystem::setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio) {
+  return getImpl<detail::SizingSystem_Impl>()->setPreheatDesignHumidityRatio(preheatDesignHumidityRatio);
 }
 
-void SizingSystem::setPrecoolDesignTemperature(double precoolDesignTemperature) {
-  getImpl<detail::SizingSystem_Impl>()->setPrecoolDesignTemperature(precoolDesignTemperature);
+bool SizingSystem::setPrecoolDesignTemperature(double precoolDesignTemperature) {
+  return getImpl<detail::SizingSystem_Impl>()->setPrecoolDesignTemperature(precoolDesignTemperature);
 }
 
-void SizingSystem::setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio) {
-  getImpl<detail::SizingSystem_Impl>()->setPrecoolDesignHumidityRatio(precoolDesignHumidityRatio);
+bool SizingSystem::setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio) {
+  return getImpl<detail::SizingSystem_Impl>()->setPrecoolDesignHumidityRatio(precoolDesignHumidityRatio);
 }
 
-void SizingSystem::setCentralCoolingDesignSupplyAirTemperature(double centralCoolingDesignSupplyAirTemperature) {
-  getImpl<detail::SizingSystem_Impl>()->setCentralCoolingDesignSupplyAirTemperature(centralCoolingDesignSupplyAirTemperature);
+bool SizingSystem::setCentralCoolingDesignSupplyAirTemperature(double centralCoolingDesignSupplyAirTemperature) {
+  return getImpl<detail::SizingSystem_Impl>()->setCentralCoolingDesignSupplyAirTemperature(centralCoolingDesignSupplyAirTemperature);
 }
 
-void SizingSystem::setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature) {
-  getImpl<detail::SizingSystem_Impl>()->setCentralHeatingDesignSupplyAirTemperature(centralHeatingDesignSupplyAirTemperature);
+bool SizingSystem::setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature) {
+  return getImpl<detail::SizingSystem_Impl>()->setCentralHeatingDesignSupplyAirTemperature(centralHeatingDesignSupplyAirTemperature);
 }
 
 bool SizingSystem::setSizingOption(std::string sizingOption) {
@@ -1007,16 +1007,16 @@ void SizingSystem::resetAllOutdoorAirinHeating() {
   getImpl<detail::SizingSystem_Impl>()->resetAllOutdoorAirinHeating();
 }
 
-void SizingSystem::setCentralCoolingDesignSupplyAirHumidityRatio(double centralCoolingDesignSupplyAirHumidityRatio) {
-  getImpl<detail::SizingSystem_Impl>()->setCentralCoolingDesignSupplyAirHumidityRatio(centralCoolingDesignSupplyAirHumidityRatio);
+bool SizingSystem::setCentralCoolingDesignSupplyAirHumidityRatio(double centralCoolingDesignSupplyAirHumidityRatio) {
+  return getImpl<detail::SizingSystem_Impl>()->setCentralCoolingDesignSupplyAirHumidityRatio(centralCoolingDesignSupplyAirHumidityRatio);
 }
 
 void SizingSystem::resetCentralCoolingDesignSupplyAirHumidityRatio() {
   getImpl<detail::SizingSystem_Impl>()->resetCentralCoolingDesignSupplyAirHumidityRatio();
 }
 
-void SizingSystem::setCentralHeatingDesignSupplyAirHumidityRatio(double centralHeatingDesignSupplyAirHumidityRatio) {
-  getImpl<detail::SizingSystem_Impl>()->setCentralHeatingDesignSupplyAirHumidityRatio(centralHeatingDesignSupplyAirHumidityRatio);
+bool SizingSystem::setCentralHeatingDesignSupplyAirHumidityRatio(double centralHeatingDesignSupplyAirHumidityRatio) {
+  return getImpl<detail::SizingSystem_Impl>()->setCentralHeatingDesignSupplyAirHumidityRatio(centralHeatingDesignSupplyAirHumidityRatio);
 }
 
 void SizingSystem::resetCentralHeatingDesignSupplyAirHumidityRatio() {
@@ -1158,4 +1158,3 @@ SizingSystem::SizingSystem(std::shared_ptr<detail::SizingSystem_Impl> impl)
 } // model
 
 } // openstudio
-

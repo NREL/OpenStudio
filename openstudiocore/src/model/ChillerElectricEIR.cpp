@@ -350,9 +350,9 @@ namespace detail {
     return setDouble(OS_Chiller_Electric_EIRFields::ReferenceCOP, referenceCOP);
   }
 
-  void ChillerElectricEIR_Impl::setReferenceLeavingChilledWaterTemperature(double referenceLeavingChilledWaterTemperature) {
+  bool ChillerElectricEIR_Impl::setReferenceLeavingChilledWaterTemperature(double referenceLeavingChilledWaterTemperature) {
     bool result = setDouble(OS_Chiller_Electric_EIRFields::ReferenceLeavingChilledWaterTemperature, referenceLeavingChilledWaterTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
   void ChillerElectricEIR_Impl::resetReferenceLeavingChilledWaterTemperature() {
@@ -360,9 +360,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ChillerElectricEIR_Impl::setReferenceEnteringCondenserFluidTemperature(double referenceEnteringCondenserFluidTemperature) {
+  bool ChillerElectricEIR_Impl::setReferenceEnteringCondenserFluidTemperature(double referenceEnteringCondenserFluidTemperature) {
     bool result = setDouble(OS_Chiller_Electric_EIRFields::ReferenceEnteringCondenserFluidTemperature, referenceEnteringCondenserFluidTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
   void ChillerElectricEIR_Impl::resetReferenceEnteringCondenserFluidTemperature() {
@@ -561,9 +561,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ChillerElectricEIR_Impl::setLeavingChilledWaterLowerTemperatureLimit(double leavingChilledWaterLowerTemperatureLimit) {
+  bool ChillerElectricEIR_Impl::setLeavingChilledWaterLowerTemperatureLimit(double leavingChilledWaterLowerTemperatureLimit) {
     bool result = setDouble(OS_Chiller_Electric_EIRFields::LeavingChilledWaterLowerTemperatureLimit, leavingChilledWaterLowerTemperatureLimit);
-    OS_ASSERT(result);
+    return result;
   }
 
   void ChillerElectricEIR_Impl::resetLeavingChilledWaterLowerTemperatureLimit() {
@@ -1081,16 +1081,16 @@ bool ChillerElectricEIR::setReferenceCOP(double referenceCOP) {
   return getImpl<detail::ChillerElectricEIR_Impl>()->setReferenceCOP(referenceCOP);
 }
 
-void ChillerElectricEIR::setReferenceLeavingChilledWaterTemperature(double referenceLeavingChilledWaterTemperature) {
-  getImpl<detail::ChillerElectricEIR_Impl>()->setReferenceLeavingChilledWaterTemperature(referenceLeavingChilledWaterTemperature);
+bool ChillerElectricEIR::setReferenceLeavingChilledWaterTemperature(double referenceLeavingChilledWaterTemperature) {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->setReferenceLeavingChilledWaterTemperature(referenceLeavingChilledWaterTemperature);
 }
 
 void ChillerElectricEIR::resetReferenceLeavingChilledWaterTemperature() {
   getImpl<detail::ChillerElectricEIR_Impl>()->resetReferenceLeavingChilledWaterTemperature();
 }
 
-void ChillerElectricEIR::setReferenceEnteringCondenserFluidTemperature(double referenceEnteringCondenserFluidTemperature) {
-  getImpl<detail::ChillerElectricEIR_Impl>()->setReferenceEnteringCondenserFluidTemperature(referenceEnteringCondenserFluidTemperature);
+bool ChillerElectricEIR::setReferenceEnteringCondenserFluidTemperature(double referenceEnteringCondenserFluidTemperature) {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->setReferenceEnteringCondenserFluidTemperature(referenceEnteringCondenserFluidTemperature);
 }
 
 void ChillerElectricEIR::resetReferenceEnteringCondenserFluidTemperature() {
@@ -1217,8 +1217,8 @@ void ChillerElectricEIR::resetCompressorMotorEfficiency() {
   getImpl<detail::ChillerElectricEIR_Impl>()->resetCompressorMotorEfficiency();
 }
 
-void ChillerElectricEIR::setLeavingChilledWaterLowerTemperatureLimit(double leavingChilledWaterLowerTemperatureLimit) {
-  getImpl<detail::ChillerElectricEIR_Impl>()->setLeavingChilledWaterLowerTemperatureLimit(leavingChilledWaterLowerTemperatureLimit);
+bool ChillerElectricEIR::setLeavingChilledWaterLowerTemperatureLimit(double leavingChilledWaterLowerTemperatureLimit) {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->setLeavingChilledWaterLowerTemperatureLimit(leavingChilledWaterLowerTemperatureLimit);
 }
 
 void ChillerElectricEIR::resetLeavingChilledWaterLowerTemperatureLimit() {
@@ -1313,4 +1313,3 @@ ChillerElectricEIR::ChillerElectricEIR(std::shared_ptr<detail::ChillerElectricEI
 
 } // model
 } // openstudio
-

@@ -46,68 +46,68 @@ namespace detail {
   /** FanVariableVolume_Impl is a StraightComponent_Impl that is the implementation
  *  class for FanVariableVolume.*/
   class MODEL_API FanVariableVolume_Impl : public StraightComponent_Impl {
-    
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   public:
     /** @name Constructors and Destructors */
     //@{
@@ -224,7 +224,7 @@ namespace detail {
 
     void resetFanEfficiency();
 
-    void setPressureRise(double pressureRise);
+    bool setPressureRise(double pressureRise);
 
     bool setPressureRise(const Quantity& pressureRise);
 
@@ -344,4 +344,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_FANVARIABLEVOLUME_IMPL_HPP
-

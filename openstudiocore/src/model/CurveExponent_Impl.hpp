@@ -39,18 +39,18 @@ namespace detail {
 
   /** CurveExponent_Impl is a Curve_Impl that is the implementation class for CurveExponent.*/
   class MODEL_API CurveExponent_Impl : public Curve_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
    public:
 
     /** @name Constructors and Destructors */
@@ -110,15 +110,15 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setCoefficient1Constant(double coefficient1Constant);
+    bool setCoefficient1Constant(double coefficient1Constant);
 
-    void setCoefficient2Constant(double coefficient2Constant);
+    bool setCoefficient2Constant(double coefficient2Constant);
 
-    void setCoefficient3Constant(double coefficient3Constant);
+    bool setCoefficient3Constant(double coefficient3Constant);
 
-    void setMinimumValueofx(double minimumValueofx);
+    bool setMinimumValueofx(double minimumValueofx);
 
-    void setMaximumValueofx(double maximumValueofx);
+    bool setMaximumValueofx(double maximumValueofx);
 
     void setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
 
@@ -152,4 +152,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_CURVEEXPONENT_IMPL_HPP
-

@@ -314,19 +314,19 @@ namespace detail {
     return result;
   }
 
-  void ChillerAbsorptionIndirect_Impl::setDesignCondenserInletTemperature(double designCondenserInletTemperature) {
+  bool ChillerAbsorptionIndirect_Impl::setDesignCondenserInletTemperature(double designCondenserInletTemperature) {
     bool result = setDouble(OS_Chiller_Absorption_IndirectFields::DesignCondenserInletTemperature, designCondenserInletTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ChillerAbsorptionIndirect_Impl::setCondenserInletTemperatureLowerLimit(double condenserInletTemperatureLowerLimit) {
+  bool ChillerAbsorptionIndirect_Impl::setCondenserInletTemperatureLowerLimit(double condenserInletTemperatureLowerLimit) {
     bool result = setDouble(OS_Chiller_Absorption_IndirectFields::CondenserInletTemperatureLowerLimit, condenserInletTemperatureLowerLimit);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ChillerAbsorptionIndirect_Impl::setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit) {
+  bool ChillerAbsorptionIndirect_Impl::setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit) {
     bool result = setDouble(OS_Chiller_Absorption_IndirectFields::ChilledWaterOutletTemperatureLowerLimit, chilledWaterOutletTemperatureLowerLimit);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool ChillerAbsorptionIndirect_Impl::setDesignChilledWaterFlowRate(boost::optional<double> designChilledWaterFlowRate) {
@@ -413,9 +413,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ChillerAbsorptionIndirect_Impl::setTemperatureLowerLimitGeneratorInlet(double temperatureLowerLimitGeneratorInlet) {
+  bool ChillerAbsorptionIndirect_Impl::setTemperatureLowerLimitGeneratorInlet(double temperatureLowerLimitGeneratorInlet) {
     bool result = setDouble(OS_Chiller_Absorption_IndirectFields::TemperatureLowerLimitGeneratorInlet, temperatureLowerLimitGeneratorInlet);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool ChillerAbsorptionIndirect_Impl::setDegreeofSubcoolinginSteamGenerator(double degreeofSubcoolinginSteamGenerator) {
@@ -767,16 +767,16 @@ bool ChillerAbsorptionIndirect::setOptimumPartLoadRatio(double optimumPartLoadRa
   return getImpl<detail::ChillerAbsorptionIndirect_Impl>()->setOptimumPartLoadRatio(optimumPartLoadRatio);
 }
 
-void ChillerAbsorptionIndirect::setDesignCondenserInletTemperature(double designCondenserInletTemperature) {
-  getImpl<detail::ChillerAbsorptionIndirect_Impl>()->setDesignCondenserInletTemperature(designCondenserInletTemperature);
+bool ChillerAbsorptionIndirect::setDesignCondenserInletTemperature(double designCondenserInletTemperature) {
+  return getImpl<detail::ChillerAbsorptionIndirect_Impl>()->setDesignCondenserInletTemperature(designCondenserInletTemperature);
 }
 
-void ChillerAbsorptionIndirect::setCondenserInletTemperatureLowerLimit(double condenserInletTemperatureLowerLimit) {
-  getImpl<detail::ChillerAbsorptionIndirect_Impl>()->setCondenserInletTemperatureLowerLimit(condenserInletTemperatureLowerLimit);
+bool ChillerAbsorptionIndirect::setCondenserInletTemperatureLowerLimit(double condenserInletTemperatureLowerLimit) {
+  return getImpl<detail::ChillerAbsorptionIndirect_Impl>()->setCondenserInletTemperatureLowerLimit(condenserInletTemperatureLowerLimit);
 }
 
-void ChillerAbsorptionIndirect::setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit) {
-  getImpl<detail::ChillerAbsorptionIndirect_Impl>()->setChilledWaterOutletTemperatureLowerLimit(chilledWaterOutletTemperatureLowerLimit);
+bool ChillerAbsorptionIndirect::setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit) {
+  return getImpl<detail::ChillerAbsorptionIndirect_Impl>()->setChilledWaterOutletTemperatureLowerLimit(chilledWaterOutletTemperatureLowerLimit);
 }
 
 bool ChillerAbsorptionIndirect::setDesignChilledWaterFlowRate(double designChilledWaterFlowRate) {
@@ -839,8 +839,8 @@ void ChillerAbsorptionIndirect::autosizeDesignGeneratorFluidFlowRate() {
   getImpl<detail::ChillerAbsorptionIndirect_Impl>()->autosizeDesignGeneratorFluidFlowRate();
 }
 
-void ChillerAbsorptionIndirect::setTemperatureLowerLimitGeneratorInlet(double temperatureLowerLimitGeneratorInlet) {
-  getImpl<detail::ChillerAbsorptionIndirect_Impl>()->setTemperatureLowerLimitGeneratorInlet(temperatureLowerLimitGeneratorInlet);
+bool ChillerAbsorptionIndirect::setTemperatureLowerLimitGeneratorInlet(double temperatureLowerLimitGeneratorInlet) {
+  return getImpl<detail::ChillerAbsorptionIndirect_Impl>()->setTemperatureLowerLimitGeneratorInlet(temperatureLowerLimitGeneratorInlet);
 }
 
 bool ChillerAbsorptionIndirect::setDegreeofSubcoolinginSteamGenerator(double degreeofSubcoolinginSteamGenerator) {
@@ -863,4 +863,3 @@ ChillerAbsorptionIndirect::ChillerAbsorptionIndirect(std::shared_ptr<detail::Chi
 
 } // model
 } // openstudio
-

@@ -131,7 +131,7 @@ class MODEL_API ChillerAbsorption : public WaterToWaterComponent {
 
   bool setOptimumPartLoadRatio(double optimumPartLoadRatio);
 
-  void setDesignCondenserInletTemperature(double designCondenserInletTemperature);
+  bool setDesignCondenserInletTemperature(double designCondenserInletTemperature);
 
   bool setDesignChilledWaterFlowRate(double designChilledWaterFlowRate);
 
@@ -141,19 +141,19 @@ class MODEL_API ChillerAbsorption : public WaterToWaterComponent {
 
   void autosizeDesignCondenserWaterFlowRate();
 
-  void setCoefficient1oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient1oftheHotWaterorSteamUsePartLoadRatioCurve);
+  bool setCoefficient1oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient1oftheHotWaterorSteamUsePartLoadRatioCurve);
 
-  void setCoefficient2oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient2oftheHotWaterorSteamUsePartLoadRatioCurve);
+  bool setCoefficient2oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient2oftheHotWaterorSteamUsePartLoadRatioCurve);
 
-  void setCoefficient3oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient3oftheHotWaterorSteamUsePartLoadRatioCurve);
+  bool setCoefficient3oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient3oftheHotWaterorSteamUsePartLoadRatioCurve);
 
-  void setCoefficient1ofthePumpElectricUsePartLoadRatioCurve(double coefficient1ofthePumpElectricUsePartLoadRatioCurve);
+  bool setCoefficient1ofthePumpElectricUsePartLoadRatioCurve(double coefficient1ofthePumpElectricUsePartLoadRatioCurve);
 
-  void setCoefficient2ofthePumpElectricUsePartLoadRatioCurve(double coefficient2ofthePumpElectricUsePartLoadRatioCurve);
+  bool setCoefficient2ofthePumpElectricUsePartLoadRatioCurve(double coefficient2ofthePumpElectricUsePartLoadRatioCurve);
 
-  void setCoefficient3ofthePumpElectricUsePartLoadRatioCurve(double coefficient3ofthePumpElectricUsePartLoadRatioCurve);
+  bool setCoefficient3ofthePumpElectricUsePartLoadRatioCurve(double coefficient3ofthePumpElectricUsePartLoadRatioCurve);
 
-  void setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit);
+  bool setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit);
 
   bool setChillerFlowMode(std::string chillerFlowMode);
 
@@ -163,7 +163,7 @@ class MODEL_API ChillerAbsorption : public WaterToWaterComponent {
 
   void autosizeDesignGeneratorFluidFlowRate();
 
-  void setDegreeofSubcoolinginSteamGenerator(double degreeofSubcoolinginSteamGenerator);
+  bool setDegreeofSubcoolinginSteamGenerator(double degreeofSubcoolinginSteamGenerator);
 
   bool setSizingFactor(double sizingFactor);
 
@@ -197,4 +197,3 @@ typedef std::vector<ChillerAbsorption> ChillerAbsorptionVector;
 } // openstudio
 
 #endif // MODEL_CHILLERABSORPTION_HPP
-

@@ -398,9 +398,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserEvaporativeCooled_Impl::setMinimumCapacityFactor(double minimumCapacityFactor) {
+  bool RefrigerationCondenserEvaporativeCooled_Impl::setMinimumCapacityFactor(double minimumCapacityFactor) {
     bool result = setDouble(OS_Refrigeration_Condenser_EvaporativeCooledFields::MinimumCapacityFactor, minimumCapacityFactor);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserEvaporativeCooled_Impl::resetMinimumCapacityFactor() {
@@ -408,9 +408,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserEvaporativeCooled_Impl::setMaximumCapacityFactor(double maximumCapacityFactor) {
+  bool RefrigerationCondenserEvaporativeCooled_Impl::setMaximumCapacityFactor(double maximumCapacityFactor) {
     bool result = setDouble(OS_Refrigeration_Condenser_EvaporativeCooledFields::MaximumCapacityFactor, maximumCapacityFactor);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserEvaporativeCooled_Impl::resetMaximumCapacityFactor() {
@@ -532,9 +532,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserEvaporativeCooled_Impl::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
+  bool RefrigerationCondenserEvaporativeCooled_Impl::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
     bool result = setDouble(OS_Refrigeration_Condenser_EvaporativeCooledFields::CondenserRefrigerantOperatingChargeInventory, condenserRefrigerantOperatingChargeInventory);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserEvaporativeCooled_Impl::resetCondenserRefrigerantOperatingChargeInventory() {
@@ -542,9 +542,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserEvaporativeCooled_Impl::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
+  bool RefrigerationCondenserEvaporativeCooled_Impl::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
     bool result = setDouble(OS_Refrigeration_Condenser_EvaporativeCooledFields::CondensateReceiverRefrigerantInventory, condensateReceiverRefrigerantInventory);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserEvaporativeCooled_Impl::resetCondensateReceiverRefrigerantInventory() {
@@ -552,9 +552,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserEvaporativeCooled_Impl::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
+  bool RefrigerationCondenserEvaporativeCooled_Impl::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
     bool result = setDouble(OS_Refrigeration_Condenser_EvaporativeCooledFields::CondensatePipingRefrigerantInventory, condensatePipingRefrigerantInventory);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserEvaporativeCooled_Impl::resetCondensatePipingRefrigerantInventory() {
@@ -834,16 +834,16 @@ void RefrigerationCondenserEvaporativeCooled::resetApproachTemperatureCoefficien
   getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetApproachTemperatureCoefficient4();
 }
 
-void RefrigerationCondenserEvaporativeCooled::setMinimumCapacityFactor(double minimumCapacityFactor) {
-  getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setMinimumCapacityFactor(minimumCapacityFactor);
+bool RefrigerationCondenserEvaporativeCooled::setMinimumCapacityFactor(double minimumCapacityFactor) {
+  return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setMinimumCapacityFactor(minimumCapacityFactor);
 }
 
 void RefrigerationCondenserEvaporativeCooled::resetMinimumCapacityFactor() {
   getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetMinimumCapacityFactor();
 }
 
-void RefrigerationCondenserEvaporativeCooled::setMaximumCapacityFactor(double maximumCapacityFactor) {
-  getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setMaximumCapacityFactor(maximumCapacityFactor);
+bool RefrigerationCondenserEvaporativeCooled::setMaximumCapacityFactor(double maximumCapacityFactor) {
+  return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setMaximumCapacityFactor(maximumCapacityFactor);
 }
 
 void RefrigerationCondenserEvaporativeCooled::resetMaximumCapacityFactor() {
@@ -922,24 +922,24 @@ void RefrigerationCondenserEvaporativeCooled::resetEndUseSubcategory() {
   getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetEndUseSubcategory();
 }
 
-void RefrigerationCondenserEvaporativeCooled::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
-  getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setCondenserRefrigerantOperatingChargeInventory(condenserRefrigerantOperatingChargeInventory);
+bool RefrigerationCondenserEvaporativeCooled::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
+  return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setCondenserRefrigerantOperatingChargeInventory(condenserRefrigerantOperatingChargeInventory);
 }
 
 void RefrigerationCondenserEvaporativeCooled::resetCondenserRefrigerantOperatingChargeInventory() {
   getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetCondenserRefrigerantOperatingChargeInventory();
 }
 
-void RefrigerationCondenserEvaporativeCooled::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
-  getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setCondensateReceiverRefrigerantInventory(condensateReceiverRefrigerantInventory);
+bool RefrigerationCondenserEvaporativeCooled::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
+  return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setCondensateReceiverRefrigerantInventory(condensateReceiverRefrigerantInventory);
 }
 
 void RefrigerationCondenserEvaporativeCooled::resetCondensateReceiverRefrigerantInventory() {
   getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetCondensateReceiverRefrigerantInventory();
 }
 
-void RefrigerationCondenserEvaporativeCooled::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
-  getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setCondensatePipingRefrigerantInventory(condensatePipingRefrigerantInventory);
+bool RefrigerationCondenserEvaporativeCooled::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
+  return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setCondensatePipingRefrigerantInventory(condensatePipingRefrigerantInventory);
 }
 
 void RefrigerationCondenserEvaporativeCooled::resetCondensatePipingRefrigerantInventory() {
@@ -954,4 +954,3 @@ RefrigerationCondenserEvaporativeCooled::RefrigerationCondenserEvaporativeCooled
 
 } // model
 } // openstudio
-

@@ -183,11 +183,11 @@ class MODEL_API RefrigerationCondenserEvaporativeCooled : public ParentObject {
 
   void resetApproachTemperatureCoefficient4();
 
-  void setMinimumCapacityFactor(double minimumCapacityFactor);
+  bool setMinimumCapacityFactor(double minimumCapacityFactor);
 
   void resetMinimumCapacityFactor();
 
-  void setMaximumCapacityFactor(double maximumCapacityFactor);
+  bool setMaximumCapacityFactor(double maximumCapacityFactor);
 
   void resetMaximumCapacityFactor();
 
@@ -227,15 +227,15 @@ class MODEL_API RefrigerationCondenserEvaporativeCooled : public ParentObject {
 
   void resetEndUseSubcategory();
 
-  void setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
+  bool setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
 
   void resetCondenserRefrigerantOperatingChargeInventory();
 
-  void setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
+  bool setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
 
   void resetCondensateReceiverRefrigerantInventory();
 
-  void setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
+  bool setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
 
   void resetCondensatePipingRefrigerantInventory();
 
@@ -269,4 +269,3 @@ typedef std::vector<RefrigerationCondenserEvaporativeCooled> RefrigerationConden
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONCONDENSEREVAPORATIVECOOLED_HPP
-

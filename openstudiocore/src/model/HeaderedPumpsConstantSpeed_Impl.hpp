@@ -112,7 +112,7 @@ namespace detail {
 
     bool setFlowSequencingControlScheme(std::string flowSequencingControlScheme);
 
-    void setRatedPumpHead(double ratedPumpHead);
+    bool setRatedPumpHead(double ratedPumpHead);
 
     void setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
 
@@ -157,4 +157,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_HEADEREDPUMPSCONSTANTSPEED_IMPL_HPP
-

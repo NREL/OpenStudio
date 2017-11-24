@@ -275,9 +275,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void PumpConstantSpeed_Impl::setRatedPumpHead(double ratedPumpHead) {
+  bool PumpConstantSpeed_Impl::setRatedPumpHead(double ratedPumpHead) {
     bool result = setDouble(OS_Pump_ConstantSpeedFields::RatedPumpHead, ratedPumpHead);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool PumpConstantSpeed_Impl::setRatedPumpHead(const Quantity& ratedPumpHead) {
@@ -848,8 +848,8 @@ void PumpConstantSpeed::autosizeRatedFlowRate() {
   getImpl<detail::PumpConstantSpeed_Impl>()->autosizeRatedFlowRate();
 }
 
-void PumpConstantSpeed::setRatedPumpHead(double ratedPumpHead) {
-  getImpl<detail::PumpConstantSpeed_Impl>()->setRatedPumpHead(ratedPumpHead);
+bool PumpConstantSpeed::setRatedPumpHead(double ratedPumpHead) {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->setRatedPumpHead(ratedPumpHead);
 }
 
 bool PumpConstantSpeed::setRatedPumpHead(const Quantity& ratedPumpHead) {
@@ -976,4 +976,3 @@ PumpConstantSpeed::PumpConstantSpeed(std::shared_ptr<detail::PumpConstantSpeed_I
 
 } // model
 } // openstudio
-

@@ -80,9 +80,9 @@ class MODEL_API SetpointManagerSingleZoneOneStageHeating : public SetpointManage
 
   bool setControlVariable(const std::string& controlVariable);
 
-  void setHeatingStageOnSupplyAirSetpointTemperature(double heatingStageOnSupplyAirSetpointTemperature);
+  bool setHeatingStageOnSupplyAirSetpointTemperature(double heatingStageOnSupplyAirSetpointTemperature);
 
-  void setHeatingStageOffSupplyAirSetpointTemperature(double heatingStageOffSupplyAirSetpointTemperature);
+  bool setHeatingStageOffSupplyAirSetpointTemperature(double heatingStageOffSupplyAirSetpointTemperature);
 
   bool setControlZone(const ThermalZone& thermalZone);
 
@@ -118,4 +118,3 @@ typedef std::vector<SetpointManagerSingleZoneOneStageHeating> SetpointManagerSin
 } // openstudio
 
 #endif // MODEL_SETPOINTMANAGERSINGLEZONEONESTAGEHEATING_HPP
-

@@ -64,7 +64,7 @@ class MODEL_API GeneratorMicroTurbine : public Generator {
   explicit GeneratorMicroTurbine(const Model& model);
 
   virtual ~GeneratorMicroTurbine() {}
-  
+
   virtual boost::optional<double> ratedThermaltoElectricalPowerRatio() const;
 
   //@}
@@ -75,7 +75,7 @@ class MODEL_API GeneratorMicroTurbine : public Generator {
 
   /** @name Getters */
   //@{
-    
+
   // TODO: In E+ there's ElectricLoadCenter:GeneratorList where you'll specify the order of generators and the availability Schedule
   // here it's been moved to the Generator themselves
   boost::optional<Schedule> availabilitySchedule() const;
@@ -101,9 +101,9 @@ class MODEL_API GeneratorMicroTurbine : public Generator {
   bool isReferenceElevationDefaulted() const;
 
   Curve electricalPowerFunctionofTemperatureandElevationCurve() const;
-  
+
   Curve electricalEfficiencyFunctionofTemperatureCurve() const;
-  
+
   Curve electricalEfficiencyFunctionofPartLoadRatioCurve() const;
 
   std::string fuelType() const;
@@ -126,7 +126,7 @@ class MODEL_API GeneratorMicroTurbine : public Generator {
 
   // Optional Generator:MicroTurbine:HeatRecovery
   boost::optional<GeneratorMicroTurbineHeatRecovery> generatorMicroTurbineHeatRecovery() const;
-  
+
   // TODO: Check return type. From object lists, some candidates are: Connection.
   //boost::optional<Connection> combustionAirInletNode() const;
 
@@ -152,7 +152,7 @@ class MODEL_API GeneratorMicroTurbine : public Generator {
   //@}
   /** @name Setters */
   //@{
-    
+
   bool setAvailabilitySchedule(Schedule& schedule);
   void resetAvailabilitySchedule();
 
@@ -166,7 +166,7 @@ class MODEL_API GeneratorMicroTurbine : public Generator {
 
   bool setReferenceElectricalEfficiencyUsingLowerHeatingValue(double referenceElectricalEfficiencyUsingLowerHeatingValue);
 
-  void setReferenceCombustionAirInletTemperature(double referenceCombustionAirInletTemperature);
+  bool setReferenceCombustionAirInletTemperature(double referenceCombustionAirInletTemperature);
   void resetReferenceCombustionAirInletTemperature();
 
   bool setReferenceCombustionAirInletHumidityRatio(double referenceCombustionAirInletHumidityRatio);
@@ -202,7 +202,7 @@ class MODEL_API GeneratorMicroTurbine : public Generator {
   // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
   bool setAncillaryPowerFunctionofFuelInputCurve(const Curve& ancillaryPowerFunctionofFuelInputCurve);
   void resetAncillaryPowerFunctionofFuelInputCurve();
-  
+
   // Optional Generator:MicroTurbine:HeatRecovery
   //bool setGeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& generatorMicroTurbineHeatRecovery);
   //void resetGeneratorMicroTurbineHeatRecovery();
@@ -214,7 +214,7 @@ class MODEL_API GeneratorMicroTurbine : public Generator {
   // TODO: Check argument type. From object lists, some candidates are: Connection.
   //bool setCombustionAirOutletNode(const Connection& connection);
   //void resetCombustionAirOutletNode();
-  
+
   bool setReferenceExhaustAirMassFlowRate(double referenceExhaustAirMassFlowRate);
   void resetReferenceExhaustAirMassFlowRate();
 
@@ -226,7 +226,7 @@ class MODEL_API GeneratorMicroTurbine : public Generator {
   bool setExhaustAirFlowRateFunctionofPartLoadRatioCurve(const Curve& exhaustAirFlowRateFunctionofPartLoadRatioCurve);
   void resetExhaustAirFlowRateFunctionofPartLoadRatioCurve();
 
-  void setNominalExhaustAirOutletTemperature(double nominalExhaustAirOutletTemperature);
+  bool setNominalExhaustAirOutletTemperature(double nominalExhaustAirOutletTemperature);
   void resetNominalExhaustAirOutletTemperature();
 
   // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
@@ -267,4 +267,3 @@ typedef std::vector<GeneratorMicroTurbine> GeneratorMicroTurbineVector;
 } // openstudio
 
 #endif // MODEL_GENERATORMICROTURBINE_HPP
-
