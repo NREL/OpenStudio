@@ -113,7 +113,7 @@ class MODEL_API HeaderedPumpsVariableSpeed : public StraightComponent {
 
   void autosizeTotalRatedFlowRate();
 
-  void setNumberofPumpsinBank(int numberofPumpsinBank);
+  bool setNumberofPumpsinBank(int numberofPumpsinBank);
 
   bool setFlowSequencingControlScheme(std::string flowSequencingControlScheme);
 

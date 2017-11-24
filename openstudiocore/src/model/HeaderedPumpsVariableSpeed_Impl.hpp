@@ -118,7 +118,7 @@ namespace detail {
 
     void autosizeTotalRatedFlowRate();
 
-    void setNumberofPumpsinBank(int numberofPumpsinBank);
+    bool setNumberofPumpsinBank(int numberofPumpsinBank);
 
     bool setFlowSequencingControlScheme(std::string flowSequencingControlScheme);
 

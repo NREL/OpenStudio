@@ -179,7 +179,7 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
 
   void resetEvaporatorRangeTemperatureDifference();
 
-  void setNumberofPumpsinLoop(int numberofPumpsinLoop);
+  bool setNumberofPumpsinLoop(int numberofPumpsinLoop);
 
   void resetNumberofPumpsinLoop();
 

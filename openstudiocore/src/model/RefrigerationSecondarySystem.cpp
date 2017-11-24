@@ -492,9 +492,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationSecondarySystem_Impl::setNumberofPumpsinLoop(int numberofPumpsinLoop) {
+  bool RefrigerationSecondarySystem_Impl::setNumberofPumpsinLoop(int numberofPumpsinLoop) {
     bool result = setInt(OS_Refrigeration_SecondarySystemFields::NumberofPumpsinLoop, numberofPumpsinLoop);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSecondarySystem_Impl::resetNumberofPumpsinLoop() {
@@ -931,8 +931,8 @@ void RefrigerationSecondarySystem::resetEvaporatorRangeTemperatureDifference() {
   getImpl<detail::RefrigerationSecondarySystem_Impl>()->resetEvaporatorRangeTemperatureDifference();
 }
 
-void RefrigerationSecondarySystem::setNumberofPumpsinLoop(int numberofPumpsinLoop) {
-  getImpl<detail::RefrigerationSecondarySystem_Impl>()->setNumberofPumpsinLoop(numberofPumpsinLoop);
+bool RefrigerationSecondarySystem::setNumberofPumpsinLoop(int numberofPumpsinLoop) {
+  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setNumberofPumpsinLoop(numberofPumpsinLoop);
 }
 
 void RefrigerationSecondarySystem::resetNumberofPumpsinLoop() {

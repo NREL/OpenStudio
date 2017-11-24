@@ -84,7 +84,7 @@ class MODEL_API CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit : public W
   /** @name Setters */
   //@{
 
-  void setNominalSpeedLevel(int nominalSpeedLevel);
+  bool setNominalSpeedLevel(int nominalSpeedLevel);
 
   bool setRatedHeatingCapacityAtSelectedNominalSpeedLevel(double ratedHeatingCapacityAtSelectedNominalSpeedLevel);
 

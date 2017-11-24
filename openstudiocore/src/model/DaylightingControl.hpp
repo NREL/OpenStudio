@@ -153,7 +153,7 @@ class MODEL_API DaylightingControl : public SpaceItem {
 
   void resetMinimumLightOutputFractionforContinuousDimmingControl();
 
-  void setNumberofSteppedControlSteps(int numberofSteppedControlSteps);
+  bool setNumberofSteppedControlSteps(int numberofSteppedControlSteps);
 
   void resetNumberofSteppedControlSteps();
 

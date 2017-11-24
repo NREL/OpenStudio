@@ -106,7 +106,7 @@ class MODEL_API CoilHeatingDXVariableSpeed : public StraightComponent {
   /** @name Setters */
   //@{
 
-  void setNominalSpeedLevel(int nominalSpeedLevel);
+  bool setNominalSpeedLevel(int nominalSpeedLevel);
 
   bool setRatedHeatingCapacityAtSelectedNominalSpeedLevel(double ratedHeatingCapacityAtSelectedNominalSpeedLevel);
 

@@ -288,9 +288,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void DaylightingControl_Impl::setNumberofSteppedControlSteps(int numberofSteppedControlSteps) {
+  bool DaylightingControl_Impl::setNumberofSteppedControlSteps(int numberofSteppedControlSteps) {
     bool result = setInt(OS_Daylighting_ControlFields::NumberofSteppedControlSteps, numberofSteppedControlSteps);
-    OS_ASSERT(result);
+    return result;
   }
 
   void DaylightingControl_Impl::resetNumberofSteppedControlSteps() {
@@ -621,8 +621,8 @@ void DaylightingControl::resetMinimumLightOutputFractionforContinuousDimmingCont
   getImpl<detail::DaylightingControl_Impl>()->resetMinimumLightOutputFractionforContinuousDimmingControl();
 }
 
-void DaylightingControl::setNumberofSteppedControlSteps(int numberofSteppedControlSteps) {
-  getImpl<detail::DaylightingControl_Impl>()->setNumberofSteppedControlSteps(numberofSteppedControlSteps);
+bool DaylightingControl::setNumberofSteppedControlSteps(int numberofSteppedControlSteps) {
+  return getImpl<detail::DaylightingControl_Impl>()->setNumberofSteppedControlSteps(numberofSteppedControlSteps);
 }
 
 void DaylightingControl::resetNumberofSteppedControlSteps() {

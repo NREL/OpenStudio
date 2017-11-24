@@ -132,16 +132,17 @@ namespace detail{
     }
   }
 
-  void SetpointManagerFollowOutdoorAirTemperature_Impl::setReferenceTemperatureType(const std::string & value)
+  bool SetpointManagerFollowOutdoorAirTemperature_Impl::setReferenceTemperatureType(const std::string & value)
   {
     if( istringEqual(value,"OutdoorAirWetBulb") )
     {
-      this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ReferenceTemperatureType,"OutdoorAirWetBulb");
+      return this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ReferenceTemperatureType,"OutdoorAirWetBulb");
     }
     else if( istringEqual(value,"OutdoorAirDryBulb") )
     {
-      this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ReferenceTemperatureType,"OutdoorAirDryBulb");
+      return this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ReferenceTemperatureType,"OutdoorAirDryBulb");
     }
+    return false;
   }
 
   std::string SetpointManagerFollowOutdoorAirTemperature_Impl::referenceTemperatureType() const
@@ -154,9 +155,9 @@ namespace detail{
     return getDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::OffsetTemperatureDifference).get();
   }
 
-  void SetpointManagerFollowOutdoorAirTemperature_Impl::setOffsetTemperatureDifference(double value)
+  bool SetpointManagerFollowOutdoorAirTemperature_Impl::setOffsetTemperatureDifference(double value)
   {
-    setDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::OffsetTemperatureDifference,value);
+    return setDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::OffsetTemperatureDifference,value);
   }
 
   double SetpointManagerFollowOutdoorAirTemperature_Impl::maximumSetpointTemperature() const
@@ -164,9 +165,9 @@ namespace detail{
     return getDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::MaximumSetpointTemperature).get();
   }
 
-  void SetpointManagerFollowOutdoorAirTemperature_Impl::setMaximumSetpointTemperature(double value)
+  bool SetpointManagerFollowOutdoorAirTemperature_Impl::setMaximumSetpointTemperature(double value)
   {
-    setDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::MaximumSetpointTemperature,value);
+    return setDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::MaximumSetpointTemperature,value);
   }
 
   double SetpointManagerFollowOutdoorAirTemperature_Impl::minimumSetpointTemperature() const
@@ -174,9 +175,9 @@ namespace detail{
     return getDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::MinimumSetpointTemperature).get();
   }
 
-  void SetpointManagerFollowOutdoorAirTemperature_Impl::setMinimumSetpointTemperature(double value)
+  bool SetpointManagerFollowOutdoorAirTemperature_Impl::setMinimumSetpointTemperature(double value)
   {
-    setDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::MinimumSetpointTemperature,value);
+    return setDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::MinimumSetpointTemperature,value);
   }
 
 } // detail
@@ -222,9 +223,9 @@ std::string SetpointManagerFollowOutdoorAirTemperature::referenceTemperatureType
   return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->referenceTemperatureType();
 }
 
-void SetpointManagerFollowOutdoorAirTemperature::setReferenceTemperatureType(const std::string & value)
+bool SetpointManagerFollowOutdoorAirTemperature::setReferenceTemperatureType(const std::string & value)
 {
-  getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setReferenceTemperatureType(value);
+  return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setReferenceTemperatureType(value);
 }
 
 double SetpointManagerFollowOutdoorAirTemperature::offsetTemperatureDifference() const
@@ -232,9 +233,9 @@ double SetpointManagerFollowOutdoorAirTemperature::offsetTemperatureDifference()
   return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->offsetTemperatureDifference();
 }
 
-void SetpointManagerFollowOutdoorAirTemperature::setOffsetTemperatureDifference(double value)
+bool SetpointManagerFollowOutdoorAirTemperature::setOffsetTemperatureDifference(double value)
 {
-  getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setOffsetTemperatureDifference(value);
+  return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setOffsetTemperatureDifference(value);
 }
 
 double SetpointManagerFollowOutdoorAirTemperature::maximumSetpointTemperature() const
@@ -242,9 +243,9 @@ double SetpointManagerFollowOutdoorAirTemperature::maximumSetpointTemperature() 
   return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->maximumSetpointTemperature();
 }
 
-void SetpointManagerFollowOutdoorAirTemperature::setMaximumSetpointTemperature(double value)
+bool SetpointManagerFollowOutdoorAirTemperature::setMaximumSetpointTemperature(double value)
 {
-  getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setMaximumSetpointTemperature(value);
+  return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setMaximumSetpointTemperature(value);
 }
 
 double SetpointManagerFollowOutdoorAirTemperature::minimumSetpointTemperature() const
@@ -252,9 +253,9 @@ double SetpointManagerFollowOutdoorAirTemperature::minimumSetpointTemperature() 
   return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->minimumSetpointTemperature();
 }
 
-void SetpointManagerFollowOutdoorAirTemperature::setMinimumSetpointTemperature(double value)
+bool SetpointManagerFollowOutdoorAirTemperature::setMinimumSetpointTemperature(double value)
 {
-  getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setMinimumSetpointTemperature(value);
+  return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setMinimumSetpointTemperature(value);
 }
 
 } // model

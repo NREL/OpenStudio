@@ -207,9 +207,9 @@ namespace detail {
     return result;
   }
 
-  void CoilHeatingDXVariableSpeed_Impl::setNominalSpeedLevel(int nominalSpeedLevel) {
+  bool CoilHeatingDXVariableSpeed_Impl::setNominalSpeedLevel(int nominalSpeedLevel) {
     bool result = setInt(OS_Coil_Heating_DX_VariableSpeedFields::NominalSpeedLevel, nominalSpeedLevel);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool CoilHeatingDXVariableSpeed_Impl::setRatedHeatingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> ratedHeatingCapacityAtSelectedNominalSpeedLevel) {
@@ -651,8 +651,8 @@ bool CoilHeatingDXVariableSpeed::isResistiveDefrostHeaterCapacityAutosized() con
   return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->isResistiveDefrostHeaterCapacityAutosized();
 }
 
-void CoilHeatingDXVariableSpeed::setNominalSpeedLevel(int nominalSpeedLevel) {
-  getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setNominalSpeedLevel(nominalSpeedLevel);
+bool CoilHeatingDXVariableSpeed::setNominalSpeedLevel(int nominalSpeedLevel) {
+  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setNominalSpeedLevel(nominalSpeedLevel);
 }
 
 bool CoilHeatingDXVariableSpeed::setRatedHeatingCapacityAtSelectedNominalSpeedLevel(double ratedHeatingCapacityAtSelectedNominalSpeedLevel) {

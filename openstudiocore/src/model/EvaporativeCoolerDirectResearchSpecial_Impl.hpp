@@ -92,11 +92,11 @@ namespace detail {
 
     double coolerEffectiveness() const;
 
-    void setCoolerEffectiveness( double value );
+    bool setCoolerEffectiveness( double value );
 
     boost::optional<double> recirculatingWaterPumpPowerConsumption() const;
 
-    void setRecirculatingWaterPumpPowerConsumption( double value );
+    bool setRecirculatingWaterPumpPowerConsumption( double value );
 
     void autosizeRecirculatingWaterPumpPowerConsumption();
 
@@ -104,15 +104,15 @@ namespace detail {
 
     boost::optional<Node> sensorNode() const;
 
-    void setSensorNode( const Node & node );
+    bool setSensorNode( const Node & node );
 
     double driftLossFraction() const;
 
-    void setDriftLossFraction( double value );
+    bool setDriftLossFraction( double value );
 
     double blowdownConcentrationRatio() const;
 
-    void setBlowdownConcentrationRatio( double value );
+    bool setBlowdownConcentrationRatio( double value );
 
     boost::optional<Curve> effectivenessFlowRatioModifierCurve() const;
 
@@ -132,7 +132,7 @@ namespace detail {
 
     boost::optional<double> primaryAirDesignFlowRate() const;
 
-    void setPrimaryAirDesignFlowRate( double value );
+    bool setPrimaryAirDesignFlowRate( double value );
 
     void autosizePrimaryAirDesignFlowRate();
 

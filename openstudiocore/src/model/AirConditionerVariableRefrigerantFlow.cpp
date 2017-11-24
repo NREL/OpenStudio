@@ -1072,9 +1072,9 @@ namespace detail {
     return result;
   }
 
-  void AirConditionerVariableRefrigerantFlow_Impl::setNumberofCompressors(int numberofCompressors) {
+  bool AirConditionerVariableRefrigerantFlow_Impl::setNumberofCompressors(int numberofCompressors) {
     bool result = setInt(OS_AirConditioner_VariableRefrigerantFlowFields::NumberofCompressors, numberofCompressors);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setRatioofCompressorSizetoTotalCompressorCapacity(double ratioofCompressorSizetoTotalCompressorCapacity) {
@@ -2824,8 +2824,8 @@ bool AirConditionerVariableRefrigerantFlow::setCrankcaseHeaterPowerperCompressor
   return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setCrankcaseHeaterPowerperCompressor(crankcaseHeaterPowerperCompressor);
 }
 
-void AirConditionerVariableRefrigerantFlow::setNumberofCompressors(int numberofCompressors) {
-  getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setNumberofCompressors(numberofCompressors);
+bool AirConditionerVariableRefrigerantFlow::setNumberofCompressors(int numberofCompressors) {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setNumberofCompressors(numberofCompressors);
 }
 
 bool AirConditionerVariableRefrigerantFlow::setRatioofCompressorSizetoTotalCompressorCapacity(double ratioofCompressorSizetoTotalCompressorCapacity) {

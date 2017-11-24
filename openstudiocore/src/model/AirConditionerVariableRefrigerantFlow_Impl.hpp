@@ -371,7 +371,7 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   bool setCrankcaseHeaterPowerperCompressor(double crankcaseHeaterPowerperCompressor);
 
-  void setNumberofCompressors(int numberofCompressors);
+  bool setNumberofCompressors(int numberofCompressors);
 
   bool setRatioofCompressorSizetoTotalCompressorCapacity(double ratioofCompressorSizetoTotalCompressorCapacity);
 

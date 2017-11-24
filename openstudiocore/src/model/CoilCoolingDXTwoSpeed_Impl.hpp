@@ -143,19 +143,19 @@ namespace detail {
 
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    void setRatedHighSpeedTotalCoolingCapacity( boost::optional<double> value );
+    bool setRatedHighSpeedTotalCoolingCapacity( boost::optional<double> value );
 
-    void setRatedHighSpeedTotalCoolingCapacity( double value );
+    bool setRatedHighSpeedTotalCoolingCapacity( double value );
 
-    void setRatedHighSpeedSensibleHeatRatio( boost::optional<double> value );
+    bool setRatedHighSpeedSensibleHeatRatio( boost::optional<double> value );
 
-    void setRatedHighSpeedSensibleHeatRatio( double value );
+    bool setRatedHighSpeedSensibleHeatRatio( double value );
 
-    void setRatedHighSpeedCOP( double value );
+    bool setRatedHighSpeedCOP( double value );
 
-    void setRatedHighSpeedAirFlowRate( boost::optional<double> value );
+    bool setRatedHighSpeedAirFlowRate( boost::optional<double> value );
 
-    void setRatedHighSpeedAirFlowRate( double value );
+    bool setRatedHighSpeedAirFlowRate( double value );
 
     bool setTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve );
 
@@ -167,47 +167,47 @@ namespace detail {
 
     bool setPartLoadFractionCorrelationCurve(const Curve& curve );
 
-    void setRatedLowSpeedTotalCoolingCapacity( boost::optional<double> value );
+    bool setRatedLowSpeedTotalCoolingCapacity( boost::optional<double> value );
 
-    void setRatedLowSpeedTotalCoolingCapacity( double value );
+    bool setRatedLowSpeedTotalCoolingCapacity( double value );
 
-    void setRatedLowSpeedSensibleHeatRatio( boost::optional<double> value );
+    bool setRatedLowSpeedSensibleHeatRatio( boost::optional<double> value );
 
-    void setRatedLowSpeedSensibleHeatRatio( double value );
+    bool setRatedLowSpeedSensibleHeatRatio( double value );
 
-    void setRatedLowSpeedCOP( double value );
+    bool setRatedLowSpeedCOP( double value );
 
-    void setRatedLowSpeedAirFlowRate( boost::optional<double> value );
+    bool setRatedLowSpeedAirFlowRate( boost::optional<double> value );
 
-    void setRatedLowSpeedAirFlowRate( double value );
+    bool setRatedLowSpeedAirFlowRate( double value );
 
     bool setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve );
 
     bool setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(const Curve& curve );
 
-    void setCondenserAirInletNodeName( const std::string& value );
+    bool setCondenserAirInletNodeName( const std::string& value );
 
-    void setCondenserType( const std::string& value );
+    bool setCondenserType( const std::string& value );
 
-    void setHighSpeedEvaporativeCondenserEffectiveness( double value );
+    bool setHighSpeedEvaporativeCondenserEffectiveness( double value );
 
-    void setHighSpeedEvaporativeCondenserAirFlowRate( boost::optional<double> value );
+    bool setHighSpeedEvaporativeCondenserAirFlowRate( boost::optional<double> value );
 
-    void setHighSpeedEvaporativeCondenserAirFlowRate( double value );
+    bool setHighSpeedEvaporativeCondenserAirFlowRate( double value );
 
-    void setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( boost::optional<double> value );
+    bool setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( boost::optional<double> value );
 
-    void setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value );
+    bool setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value );
 
-    void setLowSpeedEvaporativeCondenserEffectiveness( double value );
+    bool setLowSpeedEvaporativeCondenserEffectiveness( double value );
 
-    void setLowSpeedEvaporativeCondenserAirFlowRate( boost::optional<double> value );
+    bool setLowSpeedEvaporativeCondenserAirFlowRate( boost::optional<double> value );
 
-    void setLowSpeedEvaporativeCondenserAirFlowRate( double value );
+    bool setLowSpeedEvaporativeCondenserAirFlowRate( double value );
 
-    void setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( boost::optional<double> value );
+    bool setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( boost::optional<double> value );
 
-    void setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value );
+    bool setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value );
 
     //TODO
     // A14, \field Supply Water Storage Tank Name
@@ -219,9 +219,9 @@ namespace detail {
     // getCondensateCollectionWaterStorageTankName
     // setCondensateCollectionWaterStorageTankName
 
-    void setBasinHeaterCapacity( double value );
+    bool setBasinHeaterCapacity( double value );
 
-    void setBasinHeaterSetpointTemperature( double value );
+    bool setBasinHeaterSetpointTemperature( double value );
 
     bool setBasinHeaterOperatingSchedule(Schedule& schedule);
 

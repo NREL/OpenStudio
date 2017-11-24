@@ -110,7 +110,7 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
   /** @name Setters */
   //@{
 
-  void setNominalSpeedLevel(int nominalSpeedLevel);
+  bool setNominalSpeedLevel(int nominalSpeedLevel);
 
   bool setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(double grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel);
 

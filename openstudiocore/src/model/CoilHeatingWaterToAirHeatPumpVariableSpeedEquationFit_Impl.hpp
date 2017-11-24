@@ -111,7 +111,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setNominalSpeedLevel(int nominalSpeedLevel);
+    bool setNominalSpeedLevel(int nominalSpeedLevel);
 
     bool setRatedHeatingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> ratedHeatingCapacityAtSelectedNominalSpeedLevel);
 

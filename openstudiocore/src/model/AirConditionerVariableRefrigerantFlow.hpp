@@ -347,7 +347,7 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
 
   int numberofCompressors() const;
 
-  void setNumberofCompressors(int numberofCompressors);
+  bool setNumberofCompressors(int numberofCompressors);
 
 
   double ratioofCompressorSizetoTotalCompressorCapacity() const;

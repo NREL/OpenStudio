@@ -213,9 +213,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void HeaderedPumpsVariableSpeed_Impl::setNumberofPumpsinBank(int numberofPumpsinBank) {
+  bool HeaderedPumpsVariableSpeed_Impl::setNumberofPumpsinBank(int numberofPumpsinBank) {
     bool result = setInt(OS_HeaderedPumps_VariableSpeedFields::NumberofPumpsinBank, numberofPumpsinBank);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool HeaderedPumpsVariableSpeed_Impl::setFlowSequencingControlScheme(std::string flowSequencingControlScheme) {
@@ -450,8 +450,8 @@ void HeaderedPumpsVariableSpeed::autosizeTotalRatedFlowRate() {
   getImpl<detail::HeaderedPumpsVariableSpeed_Impl>()->autosizeTotalRatedFlowRate();
 }
 
-void HeaderedPumpsVariableSpeed::setNumberofPumpsinBank(int numberofPumpsinBank) {
-  getImpl<detail::HeaderedPumpsVariableSpeed_Impl>()->setNumberofPumpsinBank(numberofPumpsinBank);
+bool HeaderedPumpsVariableSpeed::setNumberofPumpsinBank(int numberofPumpsinBank) {
+  return getImpl<detail::HeaderedPumpsVariableSpeed_Impl>()->setNumberofPumpsinBank(numberofPumpsinBank);
 }
 
 bool HeaderedPumpsVariableSpeed::setFlowSequencingControlScheme(std::string flowSequencingControlScheme) {

@@ -182,7 +182,7 @@ namespace detail {
 
     void resetMinimumLightOutputFractionforContinuousDimmingControl();
 
-    void setNumberofSteppedControlSteps(int numberofSteppedControlSteps);
+    bool setNumberofSteppedControlSteps(int numberofSteppedControlSteps);
 
     void resetNumberofSteppedControlSteps();
 
