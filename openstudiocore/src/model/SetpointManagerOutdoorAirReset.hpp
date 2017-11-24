@@ -120,7 +120,7 @@ class MODEL_API SetpointManagerOutdoorAirReset : public SetpointManager {
 
   OSOptionalQuantity getSetpointatOutdoorLowTemperature2(bool returnIP=false) const;
 
-  void setSetpointatOutdoorLowTemperature2(double setpointatOutdoorLowTemperature2);
+  bool setSetpointatOutdoorLowTemperature2(double setpointatOutdoorLowTemperature2);
 
   bool setSetpointatOutdoorLowTemperature2(const Quantity& setpointatOutdoorLowTemperature2);
 
@@ -131,7 +131,7 @@ class MODEL_API SetpointManagerOutdoorAirReset : public SetpointManager {
 
   OSOptionalQuantity getOutdoorLowTemperature2(bool returnIP=false) const;
 
-  void setOutdoorLowTemperature2(double outdoorLowTemperature2);
+  bool setOutdoorLowTemperature2(double outdoorLowTemperature2);
 
   bool setOutdoorLowTemperature2(const Quantity& outdoorLowTemperature2);
 
@@ -142,7 +142,7 @@ class MODEL_API SetpointManagerOutdoorAirReset : public SetpointManager {
 
   OSOptionalQuantity getSetpointatOutdoorHighTemperature2(bool returnIP=false) const;
 
-  void setSetpointatOutdoorHighTemperature2(double setpointatOutdoorHighTemperature2);
+  bool setSetpointatOutdoorHighTemperature2(double setpointatOutdoorHighTemperature2);
 
   bool setSetpointatOutdoorHighTemperature2(const Quantity& setpointatOutdoorHighTemperature2);
 
@@ -153,7 +153,7 @@ class MODEL_API SetpointManagerOutdoorAirReset : public SetpointManager {
 
   OSOptionalQuantity getOutdoorHighTemperature2(bool returnIP=false) const;
 
-  void setOutdoorHighTemperature2(double outdoorHighTemperature2);
+  bool setOutdoorHighTemperature2(double outdoorHighTemperature2);
 
   bool setOutdoorHighTemperature2(const Quantity& outdoorHighTemperature2);
 

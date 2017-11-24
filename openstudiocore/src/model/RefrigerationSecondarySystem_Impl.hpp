@@ -206,7 +206,7 @@ namespace detail {
 
     bool setEvaporatorApproachTemperatureDifference(double evaporatorApproachTemperatureDifference);
 
-    void setEvaporatorRangeTemperatureDifference(boost::optional<double> evaporatorRangeTemperatureDifference);
+    bool setEvaporatorRangeTemperatureDifference(boost::optional<double> evaporatorRangeTemperatureDifference);
 
     void resetEvaporatorRangeTemperatureDifference();
 

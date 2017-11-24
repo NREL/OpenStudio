@@ -264,31 +264,31 @@ namespace detail {
 
     void resetMotorInAirstreamFraction();
 
-    void setFanPowerCoefficient1(boost::optional<double> fanPowerCoefficient1);
+    bool setFanPowerCoefficient1(boost::optional<double> fanPowerCoefficient1);
 
     bool setFanPowerCoefficient1(const OSOptionalQuantity& fanPowerCoefficient1);
 
     void resetFanPowerCoefficient1();
 
-    void setFanPowerCoefficient2(boost::optional<double> fanPowerCoefficient2);
+    bool setFanPowerCoefficient2(boost::optional<double> fanPowerCoefficient2);
 
     bool setFanPowerCoefficient2(const OSOptionalQuantity& fanPowerCoefficient2);
 
     void resetFanPowerCoefficient2();
 
-    void setFanPowerCoefficient3(boost::optional<double> fanPowerCoefficient3);
+    bool setFanPowerCoefficient3(boost::optional<double> fanPowerCoefficient3);
 
     bool setFanPowerCoefficient3(const OSOptionalQuantity& fanPowerCoefficient3);
 
     void resetFanPowerCoefficient3();
 
-    void setFanPowerCoefficient4(boost::optional<double> fanPowerCoefficient4);
+    bool setFanPowerCoefficient4(boost::optional<double> fanPowerCoefficient4);
 
     bool setFanPowerCoefficient4(const OSOptionalQuantity& fanPowerCoefficient4);
 
     void resetFanPowerCoefficient4();
 
-    void setFanPowerCoefficient5(boost::optional<double> fanPowerCoefficient5);
+    bool setFanPowerCoefficient5(boost::optional<double> fanPowerCoefficient5);
 
     bool setFanPowerCoefficient5(const OSOptionalQuantity& fanPowerCoefficient5);
 

@@ -254,7 +254,7 @@ namespace detail {
 
     bool setEvaporationLossMode(std::string evaporationLossMode);
 
-    void setEvaporationLossFactor(boost::optional<double> evaporationLossFactor);
+    bool setEvaporationLossFactor(boost::optional<double> evaporationLossFactor);
 
     void resetEvaporationLossFactor();
 

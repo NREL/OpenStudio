@@ -95,19 +95,19 @@ class MODEL_API RefrigerationCompressor : public ParentObject {
 
   bool setRefrigerationCompressorCapacityCurve(const CurveBicubic& curveBicubic);
 
-  void setRatedSuperheat(double ratedSuperheat);
+  bool setRatedSuperheat(double ratedSuperheat);
 
   void resetRatedSuperheat();
 
-  void setRatedReturnGasTemperature(double ratedReturnGasTemperature);
+  bool setRatedReturnGasTemperature(double ratedReturnGasTemperature);
 
   void resetRatedReturnGasTemperature();
 
-  void setRatedLiquidTemperature(double ratedLiquidTemperature);
+  bool setRatedLiquidTemperature(double ratedLiquidTemperature);
 
   void resetRatedLiquidTemperature();
 
-  void setRatedSubcooling(double ratedSubcooling);
+  bool setRatedSubcooling(double ratedSubcooling);
 
   void resetRatedSubcooling();
 
@@ -157,4 +157,3 @@ typedef std::vector<RefrigerationCompressor> RefrigerationCompressorVector;
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONCOMPRESSOR_HPP
-

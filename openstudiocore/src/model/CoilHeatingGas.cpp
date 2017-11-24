@@ -361,7 +361,7 @@ namespace detail{
     return result;
   }
 
-  void CoilHeatingGas_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
+  bool CoilHeatingGas_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
     bool result(false);
     if (nominalCapacity) {
       result = setDouble(OS_Coil_Heating_GasFields::NominalCapacity, nominalCapacity.get());
@@ -370,7 +370,7 @@ namespace detail{
       resetNominalCapacity();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool CoilHeatingGas_Impl::setNominalCapacity(const OSOptionalQuantity& nominalCapacity) {
@@ -576,8 +576,8 @@ bool CoilHeatingGas::isNominalCapacityAutosized() const {
   return getImpl<detail::CoilHeatingGas_Impl>()->isNominalCapacityAutosized();
 }
 
-void CoilHeatingGas::setNominalCapacity(double nominalCapacity) {
-  getImpl<detail::CoilHeatingGas_Impl>()->setNominalCapacity(nominalCapacity);
+bool CoilHeatingGas::setNominalCapacity(double nominalCapacity) {
+  return getImpl<detail::CoilHeatingGas_Impl>()->setNominalCapacity(nominalCapacity);
 }
 
 bool CoilHeatingGas::setNominalCapacity(const Quantity& nominalCapacity) {

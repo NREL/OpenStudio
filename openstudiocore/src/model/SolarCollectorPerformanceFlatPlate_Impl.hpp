@@ -108,15 +108,15 @@ namespace detail {
 
     bool setCoefficient2ofEfficiencyEquation(double coefficient2ofEfficiencyEquation);
 
-    void setCoefficient3ofEfficiencyEquation(boost::optional<double> coefficient3ofEfficiencyEquation);
+    bool setCoefficient3ofEfficiencyEquation(boost::optional<double> coefficient3ofEfficiencyEquation);
 
     void resetCoefficient3ofEfficiencyEquation();
 
-    void setCoefficient2ofIncidentAngleModifier(boost::optional<double> coefficient2ofIncidentAngleModifier);
+    bool setCoefficient2ofIncidentAngleModifier(boost::optional<double> coefficient2ofIncidentAngleModifier);
 
     void resetCoefficient2ofIncidentAngleModifier();
 
-    void setCoefficient3ofIncidentAngleModifier(boost::optional<double> coefficient3ofIncidentAngleModifier);
+    bool setCoefficient3ofIncidentAngleModifier(boost::optional<double> coefficient3ofIncidentAngleModifier);
 
     void resetCoefficient3ofIncidentAngleModifier();
 

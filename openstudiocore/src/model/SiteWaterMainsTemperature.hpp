@@ -88,7 +88,7 @@ class MODEL_API SiteWaterMainsTemperature : public ModelObject {
   void resetTemperatureSchedule();
 
   /** Also sets calculation method to 'Correlation'. */
-  void setAnnualAverageOutdoorAirTemperature(double annualAverageOutdoorAirTemperature);
+  bool setAnnualAverageOutdoorAirTemperature(double annualAverageOutdoorAirTemperature);
 
   /** Also sets calculation method to 'Correlation'. */
   bool setAnnualAverageOutdoorAirTemperature(const Quantity& annualAverageOutdoorAirTemperature);
@@ -133,4 +133,3 @@ typedef std::vector<SiteWaterMainsTemperature> SiteWaterMainsTemperatureVector;
 } // openstudio
 
 #endif // MODEL_SITEWATERMAINSTEMPERATURE_HPP
-

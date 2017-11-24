@@ -44,19 +44,19 @@ namespace detail {
 
   /** SiteWaterMainsTemperature_Impl is a ModelObject_Impl that is the implementation class for SiteWaterMainsTemperature.*/
   class MODEL_API SiteWaterMainsTemperature_Impl : public ModelObject_Impl {
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -111,7 +111,7 @@ namespace detail {
 
     void resetTemperatureSchedule();
 
-    void setAnnualAverageOutdoorAirTemperature(boost::optional<double> annualAverageOutdoorAirTemperature);
+    bool setAnnualAverageOutdoorAirTemperature(boost::optional<double> annualAverageOutdoorAirTemperature);
 
     bool setAnnualAverageOutdoorAirTemperature(const OSOptionalQuantity& annualAverageOutdoorAirTemperature);
 
@@ -146,4 +146,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SITEWATERMAINSTEMPERATURE_IMPL_HPP
-

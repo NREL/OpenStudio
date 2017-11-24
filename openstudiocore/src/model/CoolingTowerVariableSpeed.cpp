@@ -520,7 +520,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoolingTowerVariableSpeed_Impl::setDriftLossPercent(boost::optional<double> driftLossPercent) {
+  bool CoolingTowerVariableSpeed_Impl::setDriftLossPercent(boost::optional<double> driftLossPercent) {
     bool result(false);
     if (driftLossPercent) {
       result = setDouble(OS_CoolingTower_VariableSpeedFields::DriftLossPercent, driftLossPercent.get());
@@ -529,7 +529,7 @@ namespace detail {
       resetDriftLossPercent();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CoolingTowerVariableSpeed_Impl::resetDriftLossPercent() {
@@ -997,8 +997,8 @@ void CoolingTowerVariableSpeed::resetEvaporationLossFactor() {
   getImpl<detail::CoolingTowerVariableSpeed_Impl>()->resetEvaporationLossFactor();
 }
 
-void CoolingTowerVariableSpeed::setDriftLossPercent(double driftLossPercent) {
-  getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setDriftLossPercent(driftLossPercent);
+bool CoolingTowerVariableSpeed::setDriftLossPercent(double driftLossPercent) {
+  return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setDriftLossPercent(driftLossPercent);
 }
 
 void CoolingTowerVariableSpeed::resetDriftLossPercent() {

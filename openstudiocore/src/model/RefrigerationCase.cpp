@@ -760,7 +760,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCase_Impl::setInstalledCaseLightingPowerperUnitLength(boost::optional<double> installedCaseLightingPowerperUnitLength) {
+  bool RefrigerationCase_Impl::setInstalledCaseLightingPowerperUnitLength(boost::optional<double> installedCaseLightingPowerperUnitLength) {
     bool result(false);
     if (installedCaseLightingPowerperUnitLength) {
       result = setDouble(OS_Refrigeration_CaseFields::InstalledCaseLightingPowerperUnitLength, installedCaseLightingPowerperUnitLength.get());
@@ -769,7 +769,7 @@ namespace detail {
       resetInstalledCaseLightingPowerperUnitLength();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCase_Impl::resetInstalledCaseLightingPowerperUnitLength() {
@@ -1776,8 +1776,8 @@ void RefrigerationCase::resetStandardCaseLightingPowerperUnitLength() {
   getImpl<detail::RefrigerationCase_Impl>()->resetStandardCaseLightingPowerperUnitLength();
 }
 
-void RefrigerationCase::setInstalledCaseLightingPowerperUnitLength(double installedCaseLightingPowerperUnitLength) {
-  getImpl<detail::RefrigerationCase_Impl>()->setInstalledCaseLightingPowerperUnitLength(installedCaseLightingPowerperUnitLength);
+bool RefrigerationCase::setInstalledCaseLightingPowerperUnitLength(double installedCaseLightingPowerperUnitLength) {
+  return getImpl<detail::RefrigerationCase_Impl>()->setInstalledCaseLightingPowerperUnitLength(installedCaseLightingPowerperUnitLength);
 }
 
 void RefrigerationCase::resetInstalledCaseLightingPowerperUnitLength() {

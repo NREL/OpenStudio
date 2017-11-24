@@ -171,7 +171,7 @@ namespace detail {
 
     void resetNormalizedBoilerEfficiencyCurve();
 
-    void setDesignWaterOutletTemperature(boost::optional<double> designWaterOutletTemperature);
+    bool setDesignWaterOutletTemperature(boost::optional<double> designWaterOutletTemperature);
 
     void resetDesignWaterOutletTemperature();
 

@@ -353,7 +353,7 @@ namespace detail {
 
     void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
 
-    void setMaximumSupplyAirTemperature(boost::optional<double> maximumSupplyAirTemperature);
+    bool setMaximumSupplyAirTemperature(boost::optional<double> maximumSupplyAirTemperature);
 
     void resetMaximumSupplyAirTemperature();
 

@@ -143,11 +143,11 @@ class MODEL_API CurveBicubic : public Curve {
 
   bool setMaximumValueofy(double maximumValueofy);
 
-  void setMinimumCurveOutput(double minimumCurveOutput);
+  bool setMinimumCurveOutput(double minimumCurveOutput);
 
   void resetMinimumCurveOutput();
 
-  void setMaximumCurveOutput(double maximumCurveOutput);
+  bool setMaximumCurveOutput(double maximumCurveOutput);
 
   void resetMaximumCurveOutput();
 

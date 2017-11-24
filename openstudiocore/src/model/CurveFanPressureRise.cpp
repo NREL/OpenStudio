@@ -186,14 +186,14 @@ namespace detail {
     return result;
   }
 
-  void CurveFanPressureRise_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
+  bool CurveFanPressureRise_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
     bool result = false;
     if (minimumCurveOutput) {
       result = setDouble(OS_Curve_FanPressureRiseFields::MinimumCurveOutput, minimumCurveOutput.get());
     } else {
       result = setString(OS_Curve_FanPressureRiseFields::MinimumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveFanPressureRise_Impl::resetMinimumCurveOutput() {
@@ -201,14 +201,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveFanPressureRise_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
+  bool CurveFanPressureRise_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
     bool result = false;
     if (maximumCurveOutput) {
       result = setDouble(OS_Curve_FanPressureRiseFields::MaximumCurveOutput, maximumCurveOutput.get());
     } else {
       result = setString(OS_Curve_FanPressureRiseFields::MaximumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveFanPressureRise_Impl::resetMaximumCurveOutput() {
@@ -309,16 +309,16 @@ bool CurveFanPressureRise::setMaximumValueofPsm(double maximumValueofPsm) {
   return getImpl<detail::CurveFanPressureRise_Impl>()->setMaximumValueofPsm(maximumValueofPsm);
 }
 
-void CurveFanPressureRise::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveFanPressureRise_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+bool CurveFanPressureRise::setMinimumCurveOutput(double minimumCurveOutput) {
+  return getImpl<detail::CurveFanPressureRise_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveFanPressureRise::resetMinimumCurveOutput() {
   getImpl<detail::CurveFanPressureRise_Impl>()->resetMinimumCurveOutput();
 }
 
-void CurveFanPressureRise::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveFanPressureRise_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+bool CurveFanPressureRise::setMaximumCurveOutput(double maximumCurveOutput) {
+  return getImpl<detail::CurveFanPressureRise_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveFanPressureRise::resetMaximumCurveOutput() {

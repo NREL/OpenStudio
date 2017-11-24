@@ -202,7 +202,7 @@ namespace detail {
 
     void resetEvaporationLossMode();
 
-    void setEvaporationLossFactor(boost::optional<double> evaporationLossFactor);
+    bool setEvaporationLossFactor(boost::optional<double> evaporationLossFactor);
 
     void resetEvaporationLossFactor();
 

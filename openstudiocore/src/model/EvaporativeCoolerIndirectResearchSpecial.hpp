@@ -171,7 +171,7 @@ class MODEL_API EvaporativeCoolerIndirectResearchSpecial : public StraightCompon
 
   bool setSecondaryAirFlowScalingFactor(double secondaryAirFlowScalingFactor);
 
-  void setSecondaryAirFanDesignPower(double secondaryAirFanDesignPower);
+  bool setSecondaryAirFanDesignPower(double secondaryAirFanDesignPower);
 
   void autosizeSecondaryAirFanDesignPower();
 

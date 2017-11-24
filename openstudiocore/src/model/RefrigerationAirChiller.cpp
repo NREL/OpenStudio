@@ -393,7 +393,7 @@ namespace detail {
     return result;
   }
 
-  void RefrigerationAirChiller_Impl::setRatedUnitLoadFactor(boost::optional<double> ratedUnitLoadFactor) {
+  bool RefrigerationAirChiller_Impl::setRatedUnitLoadFactor(boost::optional<double> ratedUnitLoadFactor) {
     bool result(false);
     if (ratedUnitLoadFactor) {
       result = setDouble(OS_Refrigeration_AirChillerFields::RatedUnitLoadFactor, ratedUnitLoadFactor.get());
@@ -402,7 +402,7 @@ namespace detail {
       resetRatedUnitLoadFactor();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationAirChiller_Impl::resetRatedUnitLoadFactor() {
@@ -410,7 +410,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationAirChiller_Impl::setRatedCapacity(boost::optional<double> ratedCapacity) {
+  bool RefrigerationAirChiller_Impl::setRatedCapacity(boost::optional<double> ratedCapacity) {
     bool result(false);
     if (ratedCapacity) {
       result = setDouble(OS_Refrigeration_AirChillerFields::RatedCapacity, ratedCapacity.get());
@@ -419,7 +419,7 @@ namespace detail {
       resetRatedCapacity();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationAirChiller_Impl::resetRatedCapacity() {
@@ -917,16 +917,16 @@ bool RefrigerationAirChiller::setCapacityRatingType(std::string capacityRatingTy
   return getImpl<detail::RefrigerationAirChiller_Impl>()->setCapacityRatingType(capacityRatingType);
 }
 
-void RefrigerationAirChiller::setRatedUnitLoadFactor(double ratedUnitLoadFactor) {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedUnitLoadFactor(ratedUnitLoadFactor);
+bool RefrigerationAirChiller::setRatedUnitLoadFactor(double ratedUnitLoadFactor) {
+  return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedUnitLoadFactor(ratedUnitLoadFactor);
 }
 
 void RefrigerationAirChiller::resetRatedUnitLoadFactor() {
   getImpl<detail::RefrigerationAirChiller_Impl>()->resetRatedUnitLoadFactor();
 }
 
-void RefrigerationAirChiller::setRatedCapacity(double ratedCapacity) {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedCapacity(ratedCapacity);
+bool RefrigerationAirChiller::setRatedCapacity(double ratedCapacity) {
+  return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedCapacity(ratedCapacity);
 }
 
 void RefrigerationAirChiller::resetRatedCapacity() {

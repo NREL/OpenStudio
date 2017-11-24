@@ -45,40 +45,40 @@ namespace detail {
   /** ZoneHVACPackagedTerminalHeatPump_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACPackagedTerminalHeatPump.*/
   class MODEL_API ZoneHVACPackagedTerminalHeatPump_Impl : public ZoneHVACComponent_Impl
   {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -239,7 +239,7 @@ namespace detail {
 
     void setSupplementalHeatingCoil( HVACComponent & hvacComponent );
 
-    void setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater);
+    bool setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater);
 
     void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 
@@ -292,4 +292,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_ZONEHVACPACKAGEDTERMINALHEATPUMP_IMPL_HPP
-

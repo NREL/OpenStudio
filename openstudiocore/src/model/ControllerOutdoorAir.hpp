@@ -63,11 +63,11 @@ class MODEL_API ControllerOutdoorAir : public ParentObject {
   boost::optional<Schedule> minimumFractionofOutdoorAirSchedule() const;
   bool setMinimumFractionofOutdoorAirSchedule(Schedule& schedule);
   void resetMinimumFractionofOutdoorAirSchedule();
-  
+
   boost::optional<Schedule> maximumFractionofOutdoorAirSchedule() const;
   bool setMaximumFractionofOutdoorAirSchedule(Schedule& schedule);
   void resetMaximumFractionofOutdoorAirSchedule();
-  
+
   boost::optional<Schedule> timeofDayEconomizerControlSchedule() const;
   bool setTimeofDayEconomizerControlSchedule(Schedule& schedule);
   void resetTimeofDayEconomizerControlSchedule();
@@ -75,14 +75,14 @@ class MODEL_API ControllerOutdoorAir : public ParentObject {
   boost::optional<double> minimumOutdoorAirFlowRate() const;
   OSOptionalQuantity getMinimumOutdoorAirFlowRate(bool returnIP=false) const;
   bool isMinimumOutdoorAirFlowRateAutosized() const;
-  void setMinimumOutdoorAirFlowRate(double minimumOutdoorAirFlowRate);
+  bool setMinimumOutdoorAirFlowRate(double minimumOutdoorAirFlowRate);
   bool setMinimumOutdoorAirFlowRate(const Quantity& minimumOutdoorAirFlowRate);
   void autosizeMinimumOutdoorAirFlowRate();
 
   boost::optional<double> maximumOutdoorAirFlowRate() const;
   OSOptionalQuantity getMaximumOutdoorAirFlowRate(bool returnIP=false) const;
   bool isMaximumOutdoorAirFlowRateAutosized() const;
-  void setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate);
+  bool setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate);
   bool setMaximumOutdoorAirFlowRate(const Quantity& maximumOutdoorAirFlowRate);
   void autosizeMaximumOutdoorAirFlowRate();
 
@@ -181,4 +181,3 @@ typedef std::vector<ControllerOutdoorAir> ControllerOutdoorAirVector;
 } // openstudio
 
 #endif // MODEL_CONTROLLEROUTDOORAIR_HPP
-

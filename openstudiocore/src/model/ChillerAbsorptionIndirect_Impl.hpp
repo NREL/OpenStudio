@@ -179,7 +179,7 @@ namespace detail {
 
     bool setGeneratorHeatSourceType(std::string generatorHeatSourceType);
 
-    void setDesignGeneratorFluidFlowRate(boost::optional<double> designGeneratorFluidFlowRate);
+    bool setDesignGeneratorFluidFlowRate(boost::optional<double> designGeneratorFluidFlowRate);
 
     void autosizeDesignGeneratorFluidFlowRate();
 

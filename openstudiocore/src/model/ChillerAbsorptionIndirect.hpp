@@ -173,7 +173,7 @@ class MODEL_API ChillerAbsorptionIndirect : public WaterToWaterComponent {
 
   bool setGeneratorHeatSourceType(std::string generatorHeatSourceType);
 
-  void setDesignGeneratorFluidFlowRate(double designGeneratorFluidFlowRate);
+  bool setDesignGeneratorFluidFlowRate(double designGeneratorFluidFlowRate);
 
   void autosizeDesignGeneratorFluidFlowRate();
 

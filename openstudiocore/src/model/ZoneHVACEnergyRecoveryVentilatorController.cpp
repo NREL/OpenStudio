@@ -155,7 +155,7 @@ namespace detail {
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
-  void ZoneHVACEnergyRecoveryVentilatorController_Impl::setTemperatureHighLimit(boost::optional<double> temperatureHighLimit) {
+  bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setTemperatureHighLimit(boost::optional<double> temperatureHighLimit) {
     bool result(false);
     if (temperatureHighLimit) {
       result = setDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TemperatureHighLimit, temperatureHighLimit.get());
@@ -164,7 +164,7 @@ namespace detail {
       resetTemperatureHighLimit();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void ZoneHVACEnergyRecoveryVentilatorController_Impl::resetTemperatureHighLimit() {
@@ -172,7 +172,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ZoneHVACEnergyRecoveryVentilatorController_Impl::setTemperatureLowLimit(boost::optional<double> temperatureLowLimit) {
+  bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setTemperatureLowLimit(boost::optional<double> temperatureLowLimit) {
     bool result(false);
     if (temperatureLowLimit) {
       result = setDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TemperatureLowLimit, temperatureLowLimit.get());
@@ -181,7 +181,7 @@ namespace detail {
       resetTemperatureLowLimit();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void ZoneHVACEnergyRecoveryVentilatorController_Impl::resetTemperatureLowLimit() {
@@ -189,7 +189,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ZoneHVACEnergyRecoveryVentilatorController_Impl::setEnthalpyHighLimit(boost::optional<double> enthalpyHighLimit) {
+  bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setEnthalpyHighLimit(boost::optional<double> enthalpyHighLimit) {
     bool result(false);
     if (enthalpyHighLimit) {
       result = setDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::EnthalpyHighLimit, enthalpyHighLimit.get());
@@ -198,7 +198,7 @@ namespace detail {
       resetEnthalpyHighLimit();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void ZoneHVACEnergyRecoveryVentilatorController_Impl::resetEnthalpyHighLimit() {
@@ -206,7 +206,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ZoneHVACEnergyRecoveryVentilatorController_Impl::setDewpointTemperatureLimit(boost::optional<double> dewpointTemperatureLimit) {
+  bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setDewpointTemperatureLimit(boost::optional<double> dewpointTemperatureLimit) {
     bool result(false);
     if (dewpointTemperatureLimit) {
       result = setDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::DewpointTemperatureLimit, dewpointTemperatureLimit.get());
@@ -215,7 +215,7 @@ namespace detail {
       resetDewpointTemperatureLimit();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void ZoneHVACEnergyRecoveryVentilatorController_Impl::resetDewpointTemperatureLimit() {
@@ -352,32 +352,32 @@ bool ZoneHVACEnergyRecoveryVentilatorController::controlHighIndoorHumidityBasedo
   return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->controlHighIndoorHumidityBasedonOutdoorHumidityRatio();
 }
 
-void ZoneHVACEnergyRecoveryVentilatorController::setTemperatureHighLimit(double temperatureHighLimit) {
-  getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setTemperatureHighLimit(temperatureHighLimit);
+bool ZoneHVACEnergyRecoveryVentilatorController::setTemperatureHighLimit(double temperatureHighLimit) {
+  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setTemperatureHighLimit(temperatureHighLimit);
 }
 
 void ZoneHVACEnergyRecoveryVentilatorController::resetTemperatureHighLimit() {
   getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->resetTemperatureHighLimit();
 }
 
-void ZoneHVACEnergyRecoveryVentilatorController::setTemperatureLowLimit(double temperatureLowLimit) {
-  getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setTemperatureLowLimit(temperatureLowLimit);
+bool ZoneHVACEnergyRecoveryVentilatorController::setTemperatureLowLimit(double temperatureLowLimit) {
+  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setTemperatureLowLimit(temperatureLowLimit);
 }
 
 void ZoneHVACEnergyRecoveryVentilatorController::resetTemperatureLowLimit() {
   getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->resetTemperatureLowLimit();
 }
 
-void ZoneHVACEnergyRecoveryVentilatorController::setEnthalpyHighLimit(double enthalpyHighLimit) {
-  getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setEnthalpyHighLimit(enthalpyHighLimit);
+bool ZoneHVACEnergyRecoveryVentilatorController::setEnthalpyHighLimit(double enthalpyHighLimit) {
+  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setEnthalpyHighLimit(enthalpyHighLimit);
 }
 
 void ZoneHVACEnergyRecoveryVentilatorController::resetEnthalpyHighLimit() {
   getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->resetEnthalpyHighLimit();
 }
 
-void ZoneHVACEnergyRecoveryVentilatorController::setDewpointTemperatureLimit(double dewpointTemperatureLimit) {
-  getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setDewpointTemperatureLimit(dewpointTemperatureLimit);
+bool ZoneHVACEnergyRecoveryVentilatorController::setDewpointTemperatureLimit(double dewpointTemperatureLimit) {
+  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setDewpointTemperatureLimit(dewpointTemperatureLimit);
 }
 
 void ZoneHVACEnergyRecoveryVentilatorController::resetDewpointTemperatureLimit() {
@@ -428,4 +428,3 @@ ZoneHVACEnergyRecoveryVentilatorController::ZoneHVACEnergyRecoveryVentilatorCont
 
 } // model
 } // openstudio
-

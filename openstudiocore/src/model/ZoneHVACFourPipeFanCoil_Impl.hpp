@@ -172,7 +172,7 @@ namespace detail {
 
     bool setCapacityControlMethod(std::string capacityControlMethod);
 
-    void setMaximumSupplyAirFlowRate(boost::optional<double> maximumSupplyAirFlowRate);
+    bool setMaximumSupplyAirFlowRate(boost::optional<double> maximumSupplyAirFlowRate);
 
     bool setMaximumSupplyAirFlowRate(const OSOptionalQuantity& maximumSupplyAirFlowRate);
 
@@ -190,7 +190,7 @@ namespace detail {
 
     void resetMediumSpeedSupplyAirFlowRatio();
 
-    void setMaximumOutdoorAirFlowRate(boost::optional<double> maximumOutdoorAirFlowRate);
+    bool setMaximumOutdoorAirFlowRate(boost::optional<double> maximumOutdoorAirFlowRate);
 
     bool setMaximumOutdoorAirFlowRate(const OSOptionalQuantity& maximumOutdoorAirFlowRate);
 
@@ -208,7 +208,7 @@ namespace detail {
 
     bool setCoolingCoil( HVACComponent & coolingCoil );
 
-    void setMaximumColdWaterFlowRate(boost::optional<double> maximumColdWaterFlowRate);
+    bool setMaximumColdWaterFlowRate(boost::optional<double> maximumColdWaterFlowRate);
 
     bool setMaximumColdWaterFlowRate(const OSOptionalQuantity& maximumColdWaterFlowRate);
 
@@ -228,7 +228,7 @@ namespace detail {
 
     bool setHeatingCoil( HVACComponent & heatingCoil );
 
-    void setMaximumHotWaterFlowRate(boost::optional<double> maximumHotWaterFlowRate);
+    bool setMaximumHotWaterFlowRate(boost::optional<double> maximumHotWaterFlowRate);
 
     bool setMaximumHotWaterFlowRate(const OSOptionalQuantity& maximumHotWaterFlowRate);
 

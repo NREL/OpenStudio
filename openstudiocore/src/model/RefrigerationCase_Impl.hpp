@@ -309,7 +309,7 @@ namespace detail {
 
     void resetStandardCaseLightingPowerperUnitLength();
 
-    void setInstalledCaseLightingPowerperUnitLength(boost::optional<double> installedCaseLightingPowerperUnitLength);
+    bool setInstalledCaseLightingPowerperUnitLength(boost::optional<double> installedCaseLightingPowerperUnitLength);
 
     void resetInstalledCaseLightingPowerperUnitLength();
 

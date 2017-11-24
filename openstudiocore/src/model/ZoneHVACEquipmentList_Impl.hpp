@@ -55,13 +55,13 @@ class MODEL_API ZoneHVACEquipmentList_Impl : public ModelObject_Impl {
                              Model_Impl* model,
                              bool keepHandle);
 
-  void addEquipment(const ModelObject & equipment);
+  bool addEquipment(const ModelObject & equipment);
 
-  void removeEquipment(const ModelObject & equipment);
+  bool removeEquipment(const ModelObject & equipment);
 
-  void setCoolingPriority(const ModelObject & equipment, unsigned priority);
+  bool setCoolingPriority(const ModelObject & equipment, unsigned priority);
 
-  void setHeatingPriority(const ModelObject & euqipment, unsigned priority);
+  bool setHeatingPriority(const ModelObject & euqipment, unsigned priority);
 
   std::vector<ModelObject> equipment() const;
 

@@ -102,19 +102,19 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setTemperatureHighLimit(boost::optional<double> temperatureHighLimit);
+    bool setTemperatureHighLimit(boost::optional<double> temperatureHighLimit);
 
     void resetTemperatureHighLimit();
 
-    void setTemperatureLowLimit(boost::optional<double> temperatureLowLimit);
+    bool setTemperatureLowLimit(boost::optional<double> temperatureLowLimit);
 
     void resetTemperatureLowLimit();
 
-    void setEnthalpyHighLimit(boost::optional<double> enthalpyHighLimit);
+    bool setEnthalpyHighLimit(boost::optional<double> enthalpyHighLimit);
 
     void resetEnthalpyHighLimit();
 
-    void setDewpointTemperatureLimit(boost::optional<double> dewpointTemperatureLimit);
+    bool setDewpointTemperatureLimit(boost::optional<double> dewpointTemperatureLimit);
 
     void resetDewpointTemperatureLimit();
 
@@ -152,4 +152,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_ZONEHVACENERGYRECOVERYVENTILATORCONTROLLER_IMPL_HPP
-

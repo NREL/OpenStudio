@@ -44,15 +44,15 @@ namespace detail {
   /** CoilHeatingElectric_Impl is a StraightComponent_Impl that is the
    *  implementation class for CoilHeatingElectric.*/
   class MODEL_API CoilHeatingElectric_Impl : public StraightComponent_Impl {
-    
 
-    
-    
-    
-    
-    
 
-    
+
+
+
+
+
+
+
   public:
     /** @name Constructors and Destructors */
     //@{
@@ -87,7 +87,7 @@ namespace detail {
 
     virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;    
+    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
     //@}
     /** @name Getters */
@@ -117,7 +117,7 @@ namespace detail {
 
     void resetEfficiency();
 
-    void setNominalCapacity(boost::optional<double> nominalCapacity);
+    bool setNominalCapacity(boost::optional<double> nominalCapacity);
 
     void resetNominalCapacity();
 
@@ -143,4 +143,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILHEATINGELECTRIC_IMPL_HPP
-

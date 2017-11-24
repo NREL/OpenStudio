@@ -244,12 +244,12 @@ namespace detail {
     return result;
   }
 
-  void ControllerOutdoorAir_Impl::setMinimumOutdoorAirFlowRate(boost::optional<double> minimumOutdoorAirFlowRate) {
+  bool ControllerOutdoorAir_Impl::setMinimumOutdoorAirFlowRate(boost::optional<double> minimumOutdoorAirFlowRate) {
     bool result(false);
     if (minimumOutdoorAirFlowRate) {
       result = setDouble(OS_Controller_OutdoorAirFields::MinimumOutdoorAirFlowRate, minimumOutdoorAirFlowRate.get());
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool ControllerOutdoorAir_Impl::setMinimumOutdoorAirFlowRate(const OSOptionalQuantity& minimumOutdoorAirFlowRate) {
@@ -274,12 +274,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ControllerOutdoorAir_Impl::setMaximumOutdoorAirFlowRate(boost::optional<double> maximumOutdoorAirFlowRate) {
+  bool ControllerOutdoorAir_Impl::setMaximumOutdoorAirFlowRate(boost::optional<double> maximumOutdoorAirFlowRate) {
     bool result(false);
     if (maximumOutdoorAirFlowRate) {
       result = setDouble(OS_Controller_OutdoorAirFields::MaximumOutdoorAirFlowRate, maximumOutdoorAirFlowRate.get());
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool ControllerOutdoorAir_Impl::setMaximumOutdoorAirFlowRate(const OSOptionalQuantity& maximumOutdoorAirFlowRate) {
@@ -898,8 +898,8 @@ bool ControllerOutdoorAir::isMaximumOutdoorAirFlowRateAutosized() const {
   return getImpl<detail::ControllerOutdoorAir_Impl>()->isMaximumOutdoorAirFlowRateAutosized();
 }
 
-void ControllerOutdoorAir::setMinimumOutdoorAirFlowRate(double minimumOutdoorAirFlowRate) {
-  getImpl<detail::ControllerOutdoorAir_Impl>()->setMinimumOutdoorAirFlowRate(minimumOutdoorAirFlowRate);
+bool ControllerOutdoorAir::setMinimumOutdoorAirFlowRate(double minimumOutdoorAirFlowRate) {
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->setMinimumOutdoorAirFlowRate(minimumOutdoorAirFlowRate);
 }
 
 bool ControllerOutdoorAir::setMinimumOutdoorAirFlowRate(const Quantity& minimumOutdoorAirFlowRate) {
@@ -910,8 +910,8 @@ void ControllerOutdoorAir::autosizeMinimumOutdoorAirFlowRate() {
   getImpl<detail::ControllerOutdoorAir_Impl>()->autosizeMinimumOutdoorAirFlowRate();
 }
 
-void ControllerOutdoorAir::setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate) {
-  getImpl<detail::ControllerOutdoorAir_Impl>()->setMaximumOutdoorAirFlowRate(maximumOutdoorAirFlowRate);
+bool ControllerOutdoorAir::setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate) {
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->setMaximumOutdoorAirFlowRate(maximumOutdoorAirFlowRate);
 }
 
 bool ControllerOutdoorAir::setMaximumOutdoorAirFlowRate(const Quantity& maximumOutdoorAirFlowRate) {

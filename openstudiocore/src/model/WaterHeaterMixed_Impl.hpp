@@ -45,139 +45,139 @@ class ThermalZone;
 namespace detail {
 
   class MODEL_API WaterHeaterMixed_Impl : public WaterToWaterComponent_Impl {
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
 
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
 
-    
-    
-    
-    
 
-    
-    
 
-    
 
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
    public:
     /** @name Constructors and Destructors */
@@ -393,7 +393,7 @@ namespace detail {
 
     void resetDeadbandTemperatureDifference();
 
-    void setMaximumTemperatureLimit(boost::optional<double> maximumTemperatureLimit);
+    bool setMaximumTemperatureLimit(boost::optional<double> maximumTemperatureLimit);
 
     bool setMaximumTemperatureLimit(const OSOptionalQuantity& maximumTemperatureLimit);
 
@@ -639,4 +639,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_WATERHEATERMIXED_IMPL_HPP
-

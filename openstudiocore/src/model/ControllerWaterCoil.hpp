@@ -117,13 +117,13 @@ class MODEL_API ControllerWaterCoil : public HVACComponent
 
   void setActuatorNode( Node & node );
 
-  void setControllerConvergenceTolerance(double controllerConvergenceTolerance);
+  bool setControllerConvergenceTolerance(double controllerConvergenceTolerance);
 
   void resetControllerConvergenceTolerance();
 
   void autosizeControllerConvergenceTolerance();
 
-  void setMaximumActuatedFlow(double maximumActuatedFlow);
+  bool setMaximumActuatedFlow(double maximumActuatedFlow);
 
   void resetMaximumActuatedFlow();
 

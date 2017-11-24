@@ -283,7 +283,7 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   void resetCoolingPartLoadFractionCorrelationCurve();
 
-  void setRatedTotalHeatingCapacity(boost::optional<double> ratedTotalHeatingCapacity);
+  bool setRatedTotalHeatingCapacity(boost::optional<double> ratedTotalHeatingCapacity);
 
   void autosizeRatedTotalHeatingCapacity();
 
@@ -393,7 +393,7 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   bool setMaximumOutdoorDrybulbTemperatureforDefrostOperation(double maximumOutdoorDrybulbTemperatureforDefrostOperation);
 
-  void setWaterCondenserVolumeFlowRate(boost::optional<double> waterCondenserVolumeFlowRate);
+  bool setWaterCondenserVolumeFlowRate(boost::optional<double> waterCondenserVolumeFlowRate);
 
   void autosizeWaterCondenserVolumeFlowRate();
 

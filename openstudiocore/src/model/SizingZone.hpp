@@ -295,11 +295,11 @@ class MODEL_API SizingZone : public ModelObject {
 
   bool setDedicatedOutdoorAirSystemControlStrategy(std::string dedicatedOutdoorAirSystemControlStrategy);
 
-  void setDedicatedOutdoorAirLowSetpointTemperatureforDesign(double dedicatedOutdoorAirLowSetpointTemperatureforDesign);
+  bool setDedicatedOutdoorAirLowSetpointTemperatureforDesign(double dedicatedOutdoorAirLowSetpointTemperatureforDesign);
 
   void autosizeDedicatedOutdoorAirLowSetpointTemperatureforDesign();
 
-  void setDedicatedOutdoorAirHighSetpointTemperatureforDesign(double dedicatedOutdoorAirHighSetpointTemperatureforDesign);
+  bool setDedicatedOutdoorAirHighSetpointTemperatureforDesign(double dedicatedOutdoorAirHighSetpointTemperatureforDesign);
 
   void autosizeDedicatedOutdoorAirHighSetpointTemperatureforDesign();
 

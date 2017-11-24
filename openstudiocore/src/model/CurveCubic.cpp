@@ -184,14 +184,14 @@ namespace detail {
     return result;
   }
 
-  void CurveCubic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
+  bool CurveCubic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
     bool result = false;
     if (minimumCurveOutput) {
       result = setDouble(OS_Curve_CubicFields::MinimumCurveOutput, minimumCurveOutput.get());
     } else {
       result = setString(OS_Curve_CubicFields::MinimumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveCubic_Impl::resetMinimumCurveOutput() {
@@ -199,14 +199,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveCubic_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
+  bool CurveCubic_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
     bool result = false;
     if (maximumCurveOutput) {
       result = setDouble(OS_Curve_CubicFields::MaximumCurveOutput, maximumCurveOutput.get());
     } else {
       result = setString(OS_Curve_CubicFields::MaximumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveCubic_Impl::resetMaximumCurveOutput() {
@@ -335,16 +335,16 @@ bool CurveCubic::setMaximumValueofx(double maximumValueofx) {
   return getImpl<detail::CurveCubic_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
-void CurveCubic::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveCubic_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+bool CurveCubic::setMinimumCurveOutput(double minimumCurveOutput) {
+  return getImpl<detail::CurveCubic_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveCubic::resetMinimumCurveOutput() {
   getImpl<detail::CurveCubic_Impl>()->resetMinimumCurveOutput();
 }
 
-void CurveCubic::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveCubic_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+bool CurveCubic::setMaximumCurveOutput(double maximumCurveOutput) {
+  return getImpl<detail::CurveCubic_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveCubic::resetMaximumCurveOutput() {

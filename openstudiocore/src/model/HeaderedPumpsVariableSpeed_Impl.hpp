@@ -124,7 +124,7 @@ namespace detail {
 
     bool setRatedPumpHead(double ratedPumpHead);
 
-    void setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
+    bool setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
 
     void autosizeRatedPowerConsumption();
 

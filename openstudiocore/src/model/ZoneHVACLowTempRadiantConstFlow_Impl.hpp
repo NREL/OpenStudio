@@ -155,7 +155,7 @@ namespace detail {
 
     bool setCoolingCoil(HVACComponent& coolingCoil);
 
-    void setRatedFlowRate(boost::optional<double> ratedFlowRate);
+    bool setRatedFlowRate(boost::optional<double> ratedFlowRate);
 
     void resetRatedFlowRate();
 
@@ -167,7 +167,7 @@ namespace detail {
 
     void resetRatedPumpHead();
 
-    void setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
+    bool setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
 
     void resetRatedPowerConsumption();
 

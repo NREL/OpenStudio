@@ -44,19 +44,19 @@ namespace detail {
 
   /** ZoneHVACBaseboardConvectiveElectric_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACBaseboardConvectiveElectric.*/
   class MODEL_API ZoneHVACBaseboardConvectiveElectric_Impl : public ZoneHVACComponent_Impl {
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -109,7 +109,7 @@ namespace detail {
 
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    void setNominalCapacity(boost::optional<double> nominalCapacity);
+    bool setNominalCapacity(boost::optional<double> nominalCapacity);
 
     bool setNominalCapacity(const OSOptionalQuantity& nominalCapacity);
 
@@ -128,7 +128,7 @@ namespace detail {
     unsigned inletPort() const override;
 
     unsigned outletPort() const override;
-  
+
     boost::optional<ThermalZone> thermalZone() override;
 
     bool addToThermalZone(ThermalZone & thermalZone) override;
@@ -161,4 +161,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_ZONEHVACBASEBOARDCONVECTIVEELECTRIC_IMPL_HPP
-

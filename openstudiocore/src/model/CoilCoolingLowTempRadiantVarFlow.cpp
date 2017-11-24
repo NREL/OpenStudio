@@ -265,10 +265,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilCoolingLowTempRadiantVarFlow_Impl::setCondensationControlDewpointOffset(double condensationControlDewpointOffset)
+  bool CoilCoolingLowTempRadiantVarFlow_Impl::setCondensationControlDewpointOffset(double condensationControlDewpointOffset)
   {
     bool result = setDouble(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CondensationControlDewpointOffset, condensationControlDewpointOffset);
-    OS_ASSERT(result);
+    return result;
   }
 
   void CoilCoolingLowTempRadiantVarFlow_Impl::resetCondensationControlDewpointOffset()
@@ -446,9 +446,9 @@ void CoilCoolingLowTempRadiantVarFlow::resetCondensationControlType()
   getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->resetCondensationControlType();
 }
 
-void CoilCoolingLowTempRadiantVarFlow::setCondensationControlDewpointOffset(double condensationControlDewpointOffset)
+bool CoilCoolingLowTempRadiantVarFlow::setCondensationControlDewpointOffset(double condensationControlDewpointOffset)
 {
-  getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->setCondensationControlDewpointOffset(condensationControlDewpointOffset);
+  return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->setCondensationControlDewpointOffset(condensationControlDewpointOffset);
 }
 
 void CoilCoolingLowTempRadiantVarFlow::resetCondensationControlDewpointOffset()
@@ -464,4 +464,3 @@ CoilCoolingLowTempRadiantVarFlow::CoilCoolingLowTempRadiantVarFlow(std::shared_p
 
 } // model
 } // openstudio
-

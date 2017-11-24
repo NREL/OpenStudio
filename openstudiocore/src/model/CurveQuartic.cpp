@@ -196,14 +196,14 @@ namespace detail {
     return result;
   }
 
-  void CurveQuartic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
+  bool CurveQuartic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
     bool result = false;
     if (minimumCurveOutput) {
       result = setDouble(OS_Curve_QuarticFields::MinimumCurveOutput, minimumCurveOutput.get());
     } else {
       result = setString(OS_Curve_QuarticFields::MinimumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveQuartic_Impl::resetMinimumCurveOutput() {
@@ -211,14 +211,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveQuartic_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
+  bool CurveQuartic_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
     bool result = false;
     if (maximumCurveOutput) {
       result = setDouble(OS_Curve_QuarticFields::MaximumCurveOutput, maximumCurveOutput.get());
     } else {
       result = setString(OS_Curve_QuarticFields::MaximumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveQuartic_Impl::resetMaximumCurveOutput() {
@@ -356,16 +356,16 @@ bool CurveQuartic::setMaximumValueofx(double maximumValueofx) {
   return getImpl<detail::CurveQuartic_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
-void CurveQuartic::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveQuartic_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+bool CurveQuartic::setMinimumCurveOutput(double minimumCurveOutput) {
+  return getImpl<detail::CurveQuartic_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveQuartic::resetMinimumCurveOutput() {
   getImpl<detail::CurveQuartic_Impl>()->resetMinimumCurveOutput();
 }
 
-void CurveQuartic::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveQuartic_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+bool CurveQuartic::setMaximumCurveOutput(double maximumCurveOutput) {
+  return getImpl<detail::CurveQuartic_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveQuartic::resetMaximumCurveOutput() {

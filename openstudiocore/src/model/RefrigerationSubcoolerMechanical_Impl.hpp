@@ -85,7 +85,7 @@ namespace detail {
 
     void resetCapacityProvidingSystem();
 
-    void setOutletControlTemperature(boost::optional<double> outletControlTemperature);
+    bool setOutletControlTemperature(boost::optional<double> outletControlTemperature);
 
     void resetOutletControlTemperature();
 
@@ -105,4 +105,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONSUBCOOLERMECHANICAL_IMPL_HPP
-

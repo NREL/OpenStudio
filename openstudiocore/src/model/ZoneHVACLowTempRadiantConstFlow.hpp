@@ -140,7 +140,7 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   bool setCoolingCoil(HVACComponent& coolingCoil);
 
-  void setRatedFlowRate(double ratedFlowRate);
+  bool setRatedFlowRate(double ratedFlowRate);
 
   void resetRatedFlowRate();
 
@@ -152,7 +152,7 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   void resetRatedPumpHead();
 
-  void setRatedPowerConsumption(double ratedPowerConsumption);
+  bool setRatedPowerConsumption(double ratedPowerConsumption);
 
   void resetRatedPowerConsumption();
 

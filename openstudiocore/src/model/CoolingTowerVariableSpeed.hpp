@@ -173,7 +173,7 @@ class MODEL_API CoolingTowerVariableSpeed : public StraightComponent {
 
   boost::optional<double> driftLossPercent() const;
 
-  void setDriftLossPercent(double driftLossPercent);
+  bool setDriftLossPercent(double driftLossPercent);
 
   void resetDriftLossPercent();
 

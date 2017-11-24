@@ -165,143 +165,143 @@ class MODEL_API CurveTriquadratic : public Curve {
   /** @name Setters */
   //@{
 
-  void setCoefficient1Constant(double coefficient1Constant);
+  bool setCoefficient1Constant(double coefficient1Constant);
 
   void resetCoefficient1Constant();
 
-  void setCoefficient2xPOW2(double coefficient2xPOW2);
+  bool setCoefficient2xPOW2(double coefficient2xPOW2);
 
   void resetCoefficient2xPOW2();
 
-  void setCoefficient3x(double coefficient3x);
+  bool setCoefficient3x(double coefficient3x);
 
   void resetCoefficient3x();
 
-  void setCoefficient4yPOW2(double coefficient4yPOW2);
+  bool setCoefficient4yPOW2(double coefficient4yPOW2);
 
   void resetCoefficient4yPOW2();
 
-  void setCoefficient5y(double coefficient5y);
+  bool setCoefficient5y(double coefficient5y);
 
   void resetCoefficient5y();
 
-  void setCoefficient6zPOW2(double coefficient6zPOW2);
+  bool setCoefficient6zPOW2(double coefficient6zPOW2);
 
   void resetCoefficient6zPOW2();
 
-  void setCoefficient7z(double coefficient7z);
+  bool setCoefficient7z(double coefficient7z);
 
   void resetCoefficient7z();
 
-  void setCoefficient8xPOW2TIMESYPOW2(double coefficient8xPOW2TIMESYPOW2);
+  bool setCoefficient8xPOW2TIMESYPOW2(double coefficient8xPOW2TIMESYPOW2);
 
   void resetCoefficient8xPOW2TIMESYPOW2();
 
-  void setCoefficient9xTIMESY(double coefficient9xTIMESY);
+  bool setCoefficient9xTIMESY(double coefficient9xTIMESY);
 
   void resetCoefficient9xTIMESY();
 
-  void setCoefficient10xTIMESYPOW2(double coefficient10xTIMESYPOW2);
+  bool setCoefficient10xTIMESYPOW2(double coefficient10xTIMESYPOW2);
 
   void resetCoefficient10xTIMESYPOW2();
 
-  void setCoefficient11xPOW2TIMESY(double coefficient11xPOW2TIMESY);
+  bool setCoefficient11xPOW2TIMESY(double coefficient11xPOW2TIMESY);
 
   void resetCoefficient11xPOW2TIMESY();
 
-  void setCoefficient12xPOW2TIMESZPOW2(double coefficient12xPOW2TIMESZPOW2);
+  bool setCoefficient12xPOW2TIMESZPOW2(double coefficient12xPOW2TIMESZPOW2);
 
   void resetCoefficient12xPOW2TIMESZPOW2();
 
-  void setCoefficient13xTIMESZ(double coefficient13xTIMESZ);
+  bool setCoefficient13xTIMESZ(double coefficient13xTIMESZ);
 
   void resetCoefficient13xTIMESZ();
 
-  void setCoefficient14xTIMESZPOW2(double coefficient14xTIMESZPOW2);
+  bool setCoefficient14xTIMESZPOW2(double coefficient14xTIMESZPOW2);
 
   void resetCoefficient14xTIMESZPOW2();
 
-  void setCoefficient15xPOW2TIMESZ(double coefficient15xPOW2TIMESZ);
+  bool setCoefficient15xPOW2TIMESZ(double coefficient15xPOW2TIMESZ);
 
   void resetCoefficient15xPOW2TIMESZ();
 
-  void setCoefficient16yPOW2TIMESZPOW2(double coefficient16yPOW2TIMESZPOW2);
+  bool setCoefficient16yPOW2TIMESZPOW2(double coefficient16yPOW2TIMESZPOW2);
 
   void resetCoefficient16yPOW2TIMESZPOW2();
 
-  void setCoefficient17yTIMESZ(double coefficient17yTIMESZ);
+  bool setCoefficient17yTIMESZ(double coefficient17yTIMESZ);
 
   void resetCoefficient17yTIMESZ();
 
-  void setCoefficient18yTIMESZPOW2(double coefficient18yTIMESZPOW2);
+  bool setCoefficient18yTIMESZPOW2(double coefficient18yTIMESZPOW2);
 
   void resetCoefficient18yTIMESZPOW2();
 
-  void setCoefficient19yPOW2TIMESZ(double coefficient19yPOW2TIMESZ);
+  bool setCoefficient19yPOW2TIMESZ(double coefficient19yPOW2TIMESZ);
 
   void resetCoefficient19yPOW2TIMESZ();
 
-  void setCoefficient20xPOW2TIMESYPOW2TIMESZPOW2(double coefficient20xPOW2TIMESYPOW2TIMESZPOW2);
+  bool setCoefficient20xPOW2TIMESYPOW2TIMESZPOW2(double coefficient20xPOW2TIMESYPOW2TIMESZPOW2);
 
   void resetCoefficient20xPOW2TIMESYPOW2TIMESZPOW2();
 
-  void setCoefficient21xPOW2TIMESYPOW2TIMESZ(double coefficient21xPOW2TIMESYPOW2TIMESZ);
+  bool setCoefficient21xPOW2TIMESYPOW2TIMESZ(double coefficient21xPOW2TIMESYPOW2TIMESZ);
 
   void resetCoefficient21xPOW2TIMESYPOW2TIMESZ();
 
-  void setCoefficient22xPOW2TIMESYTIMESZPOW2(double coefficient22xPOW2TIMESYTIMESZPOW2);
+  bool setCoefficient22xPOW2TIMESYTIMESZPOW2(double coefficient22xPOW2TIMESYTIMESZPOW2);
 
   void resetCoefficient22xPOW2TIMESYTIMESZPOW2();
 
-  void setCoefficient23xTIMESYPOW2TIMESZPOW2(double coefficient23xTIMESYPOW2TIMESZPOW2);
+  bool setCoefficient23xTIMESYPOW2TIMESZPOW2(double coefficient23xTIMESYPOW2TIMESZPOW2);
 
   void resetCoefficient23xTIMESYPOW2TIMESZPOW2();
 
-  void setCoefficient24xPOW2TIMESYTIMESZ(double coefficient24xPOW2TIMESYTIMESZ);
+  bool setCoefficient24xPOW2TIMESYTIMESZ(double coefficient24xPOW2TIMESYTIMESZ);
 
   void resetCoefficient24xPOW2TIMESYTIMESZ();
 
-  void setCoefficient25xTIMESYPOW2TIMESZ(double coefficient25xTIMESYPOW2TIMESZ);
+  bool setCoefficient25xTIMESYPOW2TIMESZ(double coefficient25xTIMESYPOW2TIMESZ);
 
   void resetCoefficient25xTIMESYPOW2TIMESZ();
 
-  void setCoefficient26xTIMESYTIMESZPOW2(double coefficient26xTIMESYTIMESZPOW2);
+  bool setCoefficient26xTIMESYTIMESZPOW2(double coefficient26xTIMESYTIMESZPOW2);
 
   void resetCoefficient26xTIMESYTIMESZPOW2();
 
-  void setCoefficient27xTIMESYTIMESZ(double coefficient27xTIMESYTIMESZ);
+  bool setCoefficient27xTIMESYTIMESZ(double coefficient27xTIMESYTIMESZ);
 
   void resetCoefficient27xTIMESYTIMESZ();
 
-  void setMinimumValueofx(double minimumValueofx);
+  bool setMinimumValueofx(double minimumValueofx);
 
   void resetMinimumValueofx();
 
-  void setMaximumValueofx(double maximumValueofx);
+  bool setMaximumValueofx(double maximumValueofx);
 
   void resetMaximumValueofx();
 
-  void setMinimumValueofy(double minimumValueofy);
+  bool setMinimumValueofy(double minimumValueofy);
 
   void resetMinimumValueofy();
 
-  void setMaximumValueofy(double maximumValueofy);
+  bool setMaximumValueofy(double maximumValueofy);
 
   void resetMaximumValueofy();
 
-  void setMinimumValueofz(double minimumValueofz);
+  bool setMinimumValueofz(double minimumValueofz);
 
   void resetMinimumValueofz();
 
-  void setMaximumValueofz(double maximumValueofz);
+  bool setMaximumValueofz(double maximumValueofz);
 
   void resetMaximumValueofz();
 
-  void setMinimumCurveOutput(double minimumCurveOutput);
+  bool setMinimumCurveOutput(double minimumCurveOutput);
 
   void resetMinimumCurveOutput();
 
-  void setMaximumCurveOutput(double maximumCurveOutput);
+  bool setMaximumCurveOutput(double maximumCurveOutput);
 
   void resetMaximumCurveOutput();
 
@@ -353,4 +353,3 @@ typedef std::vector<CurveTriquadratic> CurveTriquadraticVector;
 } // openstudio
 
 #endif // MODEL_CURVETRIQUADRATIC_HPP
-

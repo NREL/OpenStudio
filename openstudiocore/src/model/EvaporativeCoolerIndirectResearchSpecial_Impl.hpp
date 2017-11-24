@@ -173,7 +173,7 @@ namespace detail {
 
     bool setSecondaryAirFlowScalingFactor(double secondaryAirFlowScalingFactor);
 
-    void setSecondaryAirFanDesignPower(boost::optional<double> secondaryAirFanDesignPower);
+    bool setSecondaryAirFanDesignPower(boost::optional<double> secondaryAirFanDesignPower);
 
     void autosizeSecondaryAirFanDesignPower();
 

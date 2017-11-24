@@ -86,19 +86,19 @@ class MODEL_API CurveFunctionalPressureDrop : public Curve {
 
   bool setDiameter(double diameter);
 
-  void setMinorLossCoefficient(double minorLossCoefficient);
+  bool setMinorLossCoefficient(double minorLossCoefficient);
 
   void resetMinorLossCoefficient();
 
-  void setLength(double length);
+  bool setLength(double length);
 
   void resetLength();
 
-  void setRoughness(double roughness);
+  bool setRoughness(double roughness);
 
   void resetRoughness();
 
-  void setFixedFrictionFactor(double fixedFrictionFactor);
+  bool setFixedFrictionFactor(double fixedFrictionFactor);
 
   void resetFixedFrictionFactor();
 

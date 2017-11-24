@@ -117,7 +117,7 @@ namespace detail {
 
     bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
 
-    void setMaximumWaterFlowRate(boost::optional<double> maximumWaterFlowRate);
+    bool setMaximumWaterFlowRate(boost::optional<double> maximumWaterFlowRate);
 
     void autosizeMaximumWaterFlowRate();
 
@@ -139,4 +139,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILHEATINGWATERBASEBOARDRADIANT_IMPL_HPP
-

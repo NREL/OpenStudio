@@ -113,13 +113,13 @@ class MODEL_API ControllerWaterCoil_Impl : public HVACComponent_Impl {
 
   void resetActuatorVariable();
 
-  void setControllerConvergenceTolerance(boost::optional<double> controllerConvergenceTolerance);
+  bool setControllerConvergenceTolerance(boost::optional<double> controllerConvergenceTolerance);
 
   void resetControllerConvergenceTolerance();
 
   void autosizeControllerConvergenceTolerance();
 
-  void setMaximumActuatedFlow(boost::optional<double> maximumActuatedFlow);
+  bool setMaximumActuatedFlow(boost::optional<double> maximumActuatedFlow);
 
   void resetMaximumActuatedFlow();
 

@@ -426,12 +426,12 @@ namespace detail {
     return result;
   }
 
-  void EvaporativeCoolerIndirectResearchSpecial_Impl::setSecondaryAirFanDesignPower(boost::optional<double> secondaryAirFanDesignPower) {
+  bool EvaporativeCoolerIndirectResearchSpecial_Impl::setSecondaryAirFanDesignPower(boost::optional<double> secondaryAirFanDesignPower) {
     bool result(false);
     if (secondaryAirFanDesignPower) {
       result = setDouble(OS_EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryAirFanDesignPower, secondaryAirFanDesignPower.get());
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void EvaporativeCoolerIndirectResearchSpecial_Impl::autosizeSecondaryAirFanDesignPower() {
@@ -688,8 +688,8 @@ bool EvaporativeCoolerIndirectResearchSpecial::setSecondaryAirFlowScalingFactor(
   return getImpl<detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->setSecondaryAirFlowScalingFactor(secondaryAirFlowScalingFactor);
 }
 
-void EvaporativeCoolerIndirectResearchSpecial::setSecondaryAirFanDesignPower(double secondaryAirFanDesignPower) {
-  getImpl<detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->setSecondaryAirFanDesignPower(secondaryAirFanDesignPower);
+bool EvaporativeCoolerIndirectResearchSpecial::setSecondaryAirFanDesignPower(double secondaryAirFanDesignPower) {
+  return getImpl<detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->setSecondaryAirFanDesignPower(secondaryAirFanDesignPower);
 }
 
 void EvaporativeCoolerIndirectResearchSpecial::autosizeSecondaryAirFanDesignPower() {

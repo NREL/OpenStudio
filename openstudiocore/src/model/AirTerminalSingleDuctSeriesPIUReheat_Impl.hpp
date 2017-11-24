@@ -124,7 +124,7 @@ namespace detail {
 
     bool setReheatCoil(const HVACComponent& coil);
 
-    void setMaximumHotWaterorSteamFlowRate(boost::optional<double> maximumHotWaterorSteamFlowRate);
+    bool setMaximumHotWaterorSteamFlowRate(boost::optional<double> maximumHotWaterorSteamFlowRate);
 
     void resetMaximumHotWaterorSteamFlowRate();
 
@@ -171,4 +171,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_AIRTERMINALSINGLEDUCTSERIESPIUREHEAT_IMPL_HPP
-

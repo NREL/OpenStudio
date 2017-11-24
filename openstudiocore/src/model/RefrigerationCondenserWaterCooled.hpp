@@ -145,15 +145,15 @@ class MODEL_API RefrigerationCondenserWaterCooled : public StraightComponent {
 
   void resetEndUseSubcategory();
 
-  void setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
+  bool setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
 
   void resetCondenserRefrigerantOperatingChargeInventory();
 
-  void setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
+  bool setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
 
   void resetCondensateReceiverRefrigerantInventory();
 
-  void setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
+  bool setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
 
   void resetCondensatePipingRefrigerantInventory();
 
@@ -187,4 +187,3 @@ typedef std::vector<RefrigerationCondenserWaterCooled> RefrigerationCondenserWat
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONCONDENSERWATERCOOLED_HPP
-

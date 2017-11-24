@@ -101,11 +101,11 @@ class MODEL_API CurveQuadratic : public Curve {
 
   bool setMaximumValueofx(double maximumValueofx);
 
-  void setMinimumCurveOutput(double minimumCurveOutput);
+  bool setMinimumCurveOutput(double minimumCurveOutput);
 
   void resetMinimumCurveOutput();
 
-  void setMaximumCurveOutput(double maximumCurveOutput);
+  bool setMaximumCurveOutput(double maximumCurveOutput);
 
   void resetMaximumCurveOutput();
 

@@ -135,11 +135,11 @@ namespace detail {
 
     void setNominalSpeedLevel(int nominalSpeedLevel);
 
-    void setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel);
+    bool setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel);
 
     void autosizeGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
 
-    void setRatedAirFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel);
+    bool setRatedAirFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel);
 
     void autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
 
@@ -216,4 +216,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILCOOLINGDXVARIABLESPEED_IMPL_HPP
-

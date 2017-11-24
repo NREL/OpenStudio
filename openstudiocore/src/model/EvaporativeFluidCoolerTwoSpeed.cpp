@@ -662,7 +662,7 @@ namespace detail {
     return result;
   }
 
-  void EvaporativeFluidCoolerTwoSpeed_Impl::setEvaporationLossFactor(boost::optional<double> evaporationLossFactor) {
+  bool EvaporativeFluidCoolerTwoSpeed_Impl::setEvaporationLossFactor(boost::optional<double> evaporationLossFactor) {
     bool result(false);
     if (evaporationLossFactor) {
       result = setDouble(OS_EvaporativeFluidCooler_TwoSpeedFields::EvaporationLossFactor, evaporationLossFactor.get());
@@ -671,7 +671,7 @@ namespace detail {
       resetEvaporationLossFactor();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void EvaporativeFluidCoolerTwoSpeed_Impl::resetEvaporationLossFactor() {
@@ -1121,8 +1121,8 @@ bool EvaporativeFluidCoolerTwoSpeed::setEvaporationLossMode(std::string evaporat
   return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setEvaporationLossMode(evaporationLossMode);
 }
 
-void EvaporativeFluidCoolerTwoSpeed::setEvaporationLossFactor(double evaporationLossFactor) {
-  getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
+bool EvaporativeFluidCoolerTwoSpeed::setEvaporationLossFactor(double evaporationLossFactor) {
+  return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
 }
 
 void EvaporativeFluidCoolerTwoSpeed::resetEvaporationLossFactor() {

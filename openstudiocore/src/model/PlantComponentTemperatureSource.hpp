@@ -83,7 +83,7 @@ class MODEL_API PlantComponentTemperatureSource : public StraightComponent {
 
   bool setTemperatureSpecificationType(std::string temperatureSpecificationType);
 
-  void setSourceTemperature(double sourceTemperature);
+  bool setSourceTemperature(double sourceTemperature);
 
   void resetSourceTemperature();
 
@@ -121,4 +121,3 @@ typedef std::vector<PlantComponentTemperatureSource> PlantComponentTemperatureSo
 } // openstudio
 
 #endif // MODEL_PLANTCOMPONENTTEMPERATURESOURCE_HPP
-

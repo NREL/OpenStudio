@@ -207,7 +207,7 @@ namespace detail {
 
     //void resetAirInletNode();
 
-    void setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate);
+    bool setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate);
 
     void resetRatedAirFlowRate();
 
@@ -221,7 +221,7 @@ namespace detail {
 
     void resetBasinHeaterSetpointTemperature();
 
-    void setRatedWaterPumpPower(boost::optional<double> ratedWaterPumpPower);
+    bool setRatedWaterPumpPower(boost::optional<double> ratedWaterPumpPower);
 
     void resetRatedWaterPumpPower();
 

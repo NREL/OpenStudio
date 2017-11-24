@@ -912,12 +912,12 @@ namespace detail {
     return result;
   }
 
-  void SizingZone_Impl::setDedicatedOutdoorAirLowSetpointTemperatureforDesign(boost::optional<double> dedicatedOutdoorAirLowSetpointTemperatureforDesign) {
+  bool SizingZone_Impl::setDedicatedOutdoorAirLowSetpointTemperatureforDesign(boost::optional<double> dedicatedOutdoorAirLowSetpointTemperatureforDesign) {
     bool result(false);
     if (dedicatedOutdoorAirLowSetpointTemperatureforDesign) {
       result = setDouble(OS_Sizing_ZoneFields::DedicatedOutdoorAirLowSetpointTemperatureforDesign, dedicatedOutdoorAirLowSetpointTemperatureforDesign.get());
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void SizingZone_Impl::autosizeDedicatedOutdoorAirLowSetpointTemperatureforDesign() {
@@ -925,12 +925,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SizingZone_Impl::setDedicatedOutdoorAirHighSetpointTemperatureforDesign(boost::optional<double> dedicatedOutdoorAirHighSetpointTemperatureforDesign) {
+  bool SizingZone_Impl::setDedicatedOutdoorAirHighSetpointTemperatureforDesign(boost::optional<double> dedicatedOutdoorAirHighSetpointTemperatureforDesign) {
     bool result(false);
     if (dedicatedOutdoorAirHighSetpointTemperatureforDesign) {
       result = setDouble(OS_Sizing_ZoneFields::DedicatedOutdoorAirHighSetpointTemperatureforDesign, dedicatedOutdoorAirHighSetpointTemperatureforDesign.get());
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void SizingZone_Impl::autosizeDedicatedOutdoorAirHighSetpointTemperatureforDesign() {
@@ -1434,16 +1434,16 @@ bool SizingZone::setDedicatedOutdoorAirSystemControlStrategy(std::string dedicat
   return getImpl<detail::SizingZone_Impl>()->setDedicatedOutdoorAirSystemControlStrategy(dedicatedOutdoorAirSystemControlStrategy);
 }
 
-void SizingZone::setDedicatedOutdoorAirLowSetpointTemperatureforDesign(double dedicatedOutdoorAirLowSetpointTemperatureforDesign) {
-  getImpl<detail::SizingZone_Impl>()->setDedicatedOutdoorAirLowSetpointTemperatureforDesign(dedicatedOutdoorAirLowSetpointTemperatureforDesign);
+bool SizingZone::setDedicatedOutdoorAirLowSetpointTemperatureforDesign(double dedicatedOutdoorAirLowSetpointTemperatureforDesign) {
+  return getImpl<detail::SizingZone_Impl>()->setDedicatedOutdoorAirLowSetpointTemperatureforDesign(dedicatedOutdoorAirLowSetpointTemperatureforDesign);
 }
 
 void SizingZone::autosizeDedicatedOutdoorAirLowSetpointTemperatureforDesign() {
   getImpl<detail::SizingZone_Impl>()->autosizeDedicatedOutdoorAirLowSetpointTemperatureforDesign();
 }
 
-void SizingZone::setDedicatedOutdoorAirHighSetpointTemperatureforDesign(double dedicatedOutdoorAirHighSetpointTemperatureforDesign) {
-  getImpl<detail::SizingZone_Impl>()->setDedicatedOutdoorAirHighSetpointTemperatureforDesign(dedicatedOutdoorAirHighSetpointTemperatureforDesign);
+bool SizingZone::setDedicatedOutdoorAirHighSetpointTemperatureforDesign(double dedicatedOutdoorAirHighSetpointTemperatureforDesign) {
+  return getImpl<detail::SizingZone_Impl>()->setDedicatedOutdoorAirHighSetpointTemperatureforDesign(dedicatedOutdoorAirHighSetpointTemperatureforDesign);
 }
 
 void SizingZone::autosizeDedicatedOutdoorAirHighSetpointTemperatureforDesign() {

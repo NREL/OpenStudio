@@ -359,7 +359,7 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
 
   void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
 
-  void setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
+  bool setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
 
   void resetMaximumSupplyAirTemperature();
 

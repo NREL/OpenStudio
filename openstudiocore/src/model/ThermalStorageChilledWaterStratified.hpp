@@ -176,11 +176,11 @@ class MODEL_API ThermalStorageChilledWaterStratified : public WaterToWaterCompon
 
   void resetTemperatureSensorHeight();
 
-  void setMinimumTemperatureLimit(double minimumTemperatureLimit);
+  bool setMinimumTemperatureLimit(double minimumTemperatureLimit);
 
   void resetMinimumTemperatureLimit();
 
-  void setNominalCoolingCapacity(double nominalCoolingCapacity);
+  bool setNominalCoolingCapacity(double nominalCoolingCapacity);
 
   void resetNominalCoolingCapacity();
 

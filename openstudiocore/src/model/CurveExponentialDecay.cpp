@@ -171,14 +171,14 @@ namespace detail {
     return result;
   }
 
-  void CurveExponentialDecay_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
+  bool CurveExponentialDecay_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
     bool result = false;
     if (minimumCurveOutput) {
       result = setDouble(OS_Curve_ExponentialDecayFields::MinimumCurveOutput, minimumCurveOutput.get());
     } else {
       result = setString(OS_Curve_ExponentialDecayFields::MinimumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveExponentialDecay_Impl::resetMinimumCurveOutput() {
@@ -186,14 +186,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveExponentialDecay_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
+  bool CurveExponentialDecay_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
     bool result = false;
     if (maximumCurveOutput) {
       result = setDouble(OS_Curve_ExponentialDecayFields::MaximumCurveOutput, maximumCurveOutput.get());
     } else {
       result = setString(OS_Curve_ExponentialDecayFields::MaximumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveExponentialDecay_Impl::resetMaximumCurveOutput() {
@@ -313,16 +313,16 @@ bool CurveExponentialDecay::setMaximumValueofx(double maximumValueofx) {
   return getImpl<detail::CurveExponentialDecay_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
-void CurveExponentialDecay::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveExponentialDecay_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+bool CurveExponentialDecay::setMinimumCurveOutput(double minimumCurveOutput) {
+  return getImpl<detail::CurveExponentialDecay_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveExponentialDecay::resetMinimumCurveOutput() {
   getImpl<detail::CurveExponentialDecay_Impl>()->resetMinimumCurveOutput();
 }
 
-void CurveExponentialDecay::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveExponentialDecay_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+bool CurveExponentialDecay::setMaximumCurveOutput(double maximumCurveOutput) {
+  return getImpl<detail::CurveExponentialDecay_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveExponentialDecay::resetMaximumCurveOutput() {

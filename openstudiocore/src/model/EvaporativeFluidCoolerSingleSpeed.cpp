@@ -483,7 +483,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void EvaporativeFluidCoolerSingleSpeed_Impl::setEvaporationLossFactor(boost::optional<double> evaporationLossFactor) {
+  bool EvaporativeFluidCoolerSingleSpeed_Impl::setEvaporationLossFactor(boost::optional<double> evaporationLossFactor) {
     bool result(false);
     if (evaporationLossFactor) {
       result = setDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::EvaporationLossFactor, evaporationLossFactor.get());
@@ -492,7 +492,7 @@ namespace detail {
       resetEvaporationLossFactor();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetEvaporationLossFactor() {
@@ -869,8 +869,8 @@ void EvaporativeFluidCoolerSingleSpeed::resetEvaporationLossMode() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetEvaporationLossMode();
 }
 
-void EvaporativeFluidCoolerSingleSpeed::setEvaporationLossFactor(double evaporationLossFactor) {
-  getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
+bool EvaporativeFluidCoolerSingleSpeed::setEvaporationLossFactor(double evaporationLossFactor) {
+  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
 }
 
 void EvaporativeFluidCoolerSingleSpeed::resetEvaporationLossFactor() {

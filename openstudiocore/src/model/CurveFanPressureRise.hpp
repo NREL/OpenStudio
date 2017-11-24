@@ -101,11 +101,11 @@ class MODEL_API CurveFanPressureRise : public Curve {
 
   bool setMaximumValueofPsm(double maximumValueofPsm);
 
-  void setMinimumCurveOutput(double minimumCurveOutput);
+  bool setMinimumCurveOutput(double minimumCurveOutput);
 
   void resetMinimumCurveOutput();
 
-  void setMaximumCurveOutput(double maximumCurveOutput);
+  bool setMaximumCurveOutput(double maximumCurveOutput);
 
   void resetMaximumCurveOutput();
 

@@ -1025,7 +1025,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void AirLoopHVACUnitarySystem_Impl::setMaximumSupplyAirTemperature(boost::optional<double> maximumSupplyAirTemperature) {
+  bool AirLoopHVACUnitarySystem_Impl::setMaximumSupplyAirTemperature(boost::optional<double> maximumSupplyAirTemperature) {
     bool result(false);
     if (maximumSupplyAirTemperature) {
       result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::MaximumSupplyAirTemperature, maximumSupplyAirTemperature.get());
@@ -1034,7 +1034,7 @@ namespace detail {
       resetMaximumSupplyAirTemperature();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void AirLoopHVACUnitarySystem_Impl::resetMaximumSupplyAirTemperature() {
@@ -1763,8 +1763,8 @@ void AirLoopHVACUnitarySystem::resetDesignSupplyAirFlowRatePerUnitofCapacityDuri
   getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
 }
 
-void AirLoopHVACUnitarySystem::setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature) {
-  getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setMaximumSupplyAirTemperature(maximumSupplyAirTemperature);
+bool AirLoopHVACUnitarySystem::setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature) {
+  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setMaximumSupplyAirTemperature(maximumSupplyAirTemperature);
 }
 
 void AirLoopHVACUnitarySystem::resetMaximumSupplyAirTemperature() {

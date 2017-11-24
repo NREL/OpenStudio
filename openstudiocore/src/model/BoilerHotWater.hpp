@@ -140,7 +140,7 @@ class MODEL_API BoilerHotWater : public StraightComponent {
 
   void resetNormalizedBoilerEfficiencyCurve();
 
-  void setDesignWaterOutletTemperature(double designWaterOutletTemperature);
+  bool setDesignWaterOutletTemperature(double designWaterOutletTemperature);
 
   void resetDesignWaterOutletTemperature();
 

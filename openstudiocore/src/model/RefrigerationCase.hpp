@@ -297,7 +297,7 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   void resetStandardCaseLightingPowerperUnitLength();
 
-  void setInstalledCaseLightingPowerperUnitLength(double installedCaseLightingPowerperUnitLength);
+  bool setInstalledCaseLightingPowerperUnitLength(double installedCaseLightingPowerperUnitLength);
 
   void resetInstalledCaseLightingPowerperUnitLength();
 

@@ -130,11 +130,11 @@ namespace detail {
 
     bool setMaximumValueofx(double maximumValueofx);
 
-    void setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
+    bool setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
 
     void resetMinimumCurveOutput();
 
-    void setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
+    bool setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
 
     void resetMaximumCurveOutput();
 

@@ -398,12 +398,12 @@ namespace detail {
     return result;
   }
 
-  void AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater) {
+  bool AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater) {
     bool result(false);
     if (maximumSupplyAirTemperaturefromSupplementalHeater) {
       result = setDouble(OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::MaximumSupplyAirTemperaturefromSupplementalHeater, maximumSupplyAirTemperaturefromSupplementalHeater.get());
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::autosizeMaximumSupplyAirTemperaturefromSupplementalHeater() {
@@ -858,8 +858,8 @@ bool AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::setSupplementalHeatingCoil(co
   return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl>()->setSupplementalHeatingCoil(coil);
 }
 
-void AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater) {
-  getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl>()->setMaximumSupplyAirTemperaturefromSupplementalHeater(maximumSupplyAirTemperaturefromSupplementalHeater);
+bool AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater) {
+  return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl>()->setMaximumSupplyAirTemperaturefromSupplementalHeater(maximumSupplyAirTemperaturefromSupplementalHeater);
 }
 
 void AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::autosizeMaximumSupplyAirTemperaturefromSupplementalHeater() {
@@ -974,4 +974,3 @@ AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::AirLoopHVACUnitaryHeatPumpAirToAir
 
 } // model
 } // openstudio
-

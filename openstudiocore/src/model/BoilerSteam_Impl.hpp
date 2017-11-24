@@ -43,56 +43,56 @@ namespace detail {
 
   /** BoilerSteam_Impl is a StraightComponent_Impl that is the implementation class for BoilerSteam.*/
   class MODEL_API BoilerSteam_Impl : public StraightComponent_Impl {
-    
 
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
    public:
     /** @name Constructors and Destructors */
@@ -180,7 +180,7 @@ namespace detail {
 
     bool setFuelType(std::string fuelType);
 
-    void setMaximumOperatingPressure(boost::optional<double> maximumOperatingPressure);
+    bool setMaximumOperatingPressure(boost::optional<double> maximumOperatingPressure);
 
     bool setMaximumOperatingPressure(const OSOptionalQuantity& maximumOperatingPressure);
 
@@ -192,13 +192,13 @@ namespace detail {
 
     void resetTheoreticalEfficiency();
 
-    void setDesignOutletSteamTemperature(boost::optional<double> designOutletSteamTemperature);
+    bool setDesignOutletSteamTemperature(boost::optional<double> designOutletSteamTemperature);
 
     bool setDesignOutletSteamTemperature(const OSOptionalQuantity& designOutletSteamTemperature);
 
     void resetDesignOutletSteamTemperature();
 
-    void setNominalCapacity(boost::optional<double> nominalCapacity);
+    bool setNominalCapacity(boost::optional<double> nominalCapacity);
 
     bool setNominalCapacity(const OSOptionalQuantity& nominalCapacity);
 
@@ -224,19 +224,19 @@ namespace detail {
 
     void resetOptimumPartLoadRatio();
 
-    void setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(boost::optional<double> coefficient1ofFuelUseFunctionofPartLoadRatioCurve);
+    bool setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(boost::optional<double> coefficient1ofFuelUseFunctionofPartLoadRatioCurve);
 
     bool setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(const OSOptionalQuantity& coefficient1ofFuelUseFunctionofPartLoadRatioCurve);
 
     void resetCoefficient1ofFuelUseFunctionofPartLoadRatioCurve();
 
-    void setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(boost::optional<double> coefficient2ofFuelUseFunctionofPartLoadRatioCurve);
+    bool setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(boost::optional<double> coefficient2ofFuelUseFunctionofPartLoadRatioCurve);
 
     bool setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(const OSOptionalQuantity& coefficient2ofFuelUseFunctionofPartLoadRatioCurve);
 
     void resetCoefficient2ofFuelUseFunctionofPartLoadRatioCurve();
 
-    void setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(boost::optional<double> coefficient3ofFuelUseFunctionofPartLoadRatioCurve);
+    bool setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(boost::optional<double> coefficient3ofFuelUseFunctionofPartLoadRatioCurve);
 
     bool setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(const OSOptionalQuantity& coefficient3ofFuelUseFunctionofPartLoadRatioCurve);
 
@@ -295,4 +295,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_BOILERSTEAM_IMPL_HPP
-

@@ -212,12 +212,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilHeatingDXVariableSpeed_Impl::setRatedHeatingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> ratedHeatingCapacityAtSelectedNominalSpeedLevel) {
+  bool CoilHeatingDXVariableSpeed_Impl::setRatedHeatingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> ratedHeatingCapacityAtSelectedNominalSpeedLevel) {
     bool result(false);
     if (ratedHeatingCapacityAtSelectedNominalSpeedLevel) {
       result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::RatedHeatingCapacityAtSelectedNominalSpeedLevel, ratedHeatingCapacityAtSelectedNominalSpeedLevel.get());
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CoilHeatingDXVariableSpeed_Impl::autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel() {
@@ -225,12 +225,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilHeatingDXVariableSpeed_Impl::setRatedAirFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel) {
+  bool CoilHeatingDXVariableSpeed_Impl::setRatedAirFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel) {
     bool result(false);
     if (ratedAirFlowRateAtSelectedNominalSpeedLevel) {
       result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::RatedAirFlowRateAtSelectedNominalSpeedLevel, ratedAirFlowRateAtSelectedNominalSpeedLevel.get());
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CoilHeatingDXVariableSpeed_Impl::autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel() {
@@ -265,7 +265,7 @@ namespace detail {
     return result;
   }
 
-  void CoilHeatingDXVariableSpeed_Impl::setOutdoorDryBulbTemperaturetoTurnOnCompressor(boost::optional<double> outdoorDryBulbTemperaturetoTurnOnCompressor) {
+  bool CoilHeatingDXVariableSpeed_Impl::setOutdoorDryBulbTemperaturetoTurnOnCompressor(boost::optional<double> outdoorDryBulbTemperaturetoTurnOnCompressor) {
     bool result(false);
     if (outdoorDryBulbTemperaturetoTurnOnCompressor) {
       result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::OutdoorDryBulbTemperaturetoTurnOnCompressor, outdoorDryBulbTemperaturetoTurnOnCompressor.get());
@@ -274,7 +274,7 @@ namespace detail {
       resetOutdoorDryBulbTemperaturetoTurnOnCompressor();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CoilHeatingDXVariableSpeed_Impl::resetOutdoorDryBulbTemperaturetoTurnOnCompressor() {
@@ -655,16 +655,16 @@ void CoilHeatingDXVariableSpeed::setNominalSpeedLevel(int nominalSpeedLevel) {
   getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setNominalSpeedLevel(nominalSpeedLevel);
 }
 
-void CoilHeatingDXVariableSpeed::setRatedHeatingCapacityAtSelectedNominalSpeedLevel(double ratedHeatingCapacityAtSelectedNominalSpeedLevel) {
-  getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setRatedHeatingCapacityAtSelectedNominalSpeedLevel(ratedHeatingCapacityAtSelectedNominalSpeedLevel);
+bool CoilHeatingDXVariableSpeed::setRatedHeatingCapacityAtSelectedNominalSpeedLevel(double ratedHeatingCapacityAtSelectedNominalSpeedLevel) {
+  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setRatedHeatingCapacityAtSelectedNominalSpeedLevel(ratedHeatingCapacityAtSelectedNominalSpeedLevel);
 }
 
 void CoilHeatingDXVariableSpeed::autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel() {
   getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel();
 }
 
-void CoilHeatingDXVariableSpeed::setRatedAirFlowRateAtSelectedNominalSpeedLevel(double ratedAirFlowRateAtSelectedNominalSpeedLevel) {
-  getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setRatedAirFlowRateAtSelectedNominalSpeedLevel(ratedAirFlowRateAtSelectedNominalSpeedLevel);
+bool CoilHeatingDXVariableSpeed::setRatedAirFlowRateAtSelectedNominalSpeedLevel(double ratedAirFlowRateAtSelectedNominalSpeedLevel) {
+  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setRatedAirFlowRateAtSelectedNominalSpeedLevel(ratedAirFlowRateAtSelectedNominalSpeedLevel);
 }
 
 void CoilHeatingDXVariableSpeed::autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel() {
@@ -687,8 +687,8 @@ bool CoilHeatingDXVariableSpeed::setMinimumOutdoorDryBulbTemperatureforCompresso
   return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(minimumOutdoorDryBulbTemperatureforCompressorOperation);
 }
 
-void CoilHeatingDXVariableSpeed::setOutdoorDryBulbTemperaturetoTurnOnCompressor(double outdoorDryBulbTemperaturetoTurnOnCompressor) {
-  getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setOutdoorDryBulbTemperaturetoTurnOnCompressor(outdoorDryBulbTemperaturetoTurnOnCompressor);
+bool CoilHeatingDXVariableSpeed::setOutdoorDryBulbTemperaturetoTurnOnCompressor(double outdoorDryBulbTemperaturetoTurnOnCompressor) {
+  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setOutdoorDryBulbTemperaturetoTurnOnCompressor(outdoorDryBulbTemperaturetoTurnOnCompressor);
 }
 
 void CoilHeatingDXVariableSpeed::resetOutdoorDryBulbTemperaturetoTurnOnCompressor() {
@@ -751,4 +751,3 @@ CoilHeatingDXVariableSpeed::CoilHeatingDXVariableSpeed(std::shared_ptr<detail::C
 
 } // model
 } // openstudio
-

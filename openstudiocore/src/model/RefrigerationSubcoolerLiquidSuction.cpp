@@ -87,7 +87,7 @@ namespace detail {
     return getDouble(OS_Refrigeration_Subcooler_LiquidSuctionFields::DesignVaporInletTemperature,true);
   }
 
-  void RefrigerationSubcoolerLiquidSuction_Impl::setLiquidSuctionDesignSubcoolingTemperatureDifference(boost::optional<double> liquidSuctionDesignSubcoolingTemperatureDifference) {
+  bool RefrigerationSubcoolerLiquidSuction_Impl::setLiquidSuctionDesignSubcoolingTemperatureDifference(boost::optional<double> liquidSuctionDesignSubcoolingTemperatureDifference) {
     bool result(false);
     if (liquidSuctionDesignSubcoolingTemperatureDifference) {
       result = setDouble(OS_Refrigeration_Subcooler_LiquidSuctionFields::LiquidSuctionDesignSubcoolingTemperatureDifference, liquidSuctionDesignSubcoolingTemperatureDifference.get());
@@ -96,7 +96,7 @@ namespace detail {
       resetLiquidSuctionDesignSubcoolingTemperatureDifference();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSubcoolerLiquidSuction_Impl::resetLiquidSuctionDesignSubcoolingTemperatureDifference() {
@@ -104,7 +104,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationSubcoolerLiquidSuction_Impl::setDesignLiquidInletTemperature(boost::optional<double> designLiquidInletTemperature) {
+  bool RefrigerationSubcoolerLiquidSuction_Impl::setDesignLiquidInletTemperature(boost::optional<double> designLiquidInletTemperature) {
     bool result(false);
     if (designLiquidInletTemperature) {
       result = setDouble(OS_Refrigeration_Subcooler_LiquidSuctionFields::DesignLiquidInletTemperature, designLiquidInletTemperature.get());
@@ -113,7 +113,7 @@ namespace detail {
       resetDesignLiquidInletTemperature();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSubcoolerLiquidSuction_Impl::resetDesignLiquidInletTemperature() {
@@ -121,7 +121,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationSubcoolerLiquidSuction_Impl::setDesignVaporInletTemperature(boost::optional<double> designVaporInletTemperature) {
+  bool RefrigerationSubcoolerLiquidSuction_Impl::setDesignVaporInletTemperature(boost::optional<double> designVaporInletTemperature) {
     bool result(false);
     if (designVaporInletTemperature) {
       result = setDouble(OS_Refrigeration_Subcooler_LiquidSuctionFields::DesignVaporInletTemperature, designVaporInletTemperature.get());
@@ -130,7 +130,7 @@ namespace detail {
       resetDesignVaporInletTemperature();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSubcoolerLiquidSuction_Impl::resetDesignVaporInletTemperature() {
@@ -171,24 +171,24 @@ boost::optional<double> RefrigerationSubcoolerLiquidSuction::designVaporInletTem
   return getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->designVaporInletTemperature();
 }
 
-void RefrigerationSubcoolerLiquidSuction::setLiquidSuctionDesignSubcoolingTemperatureDifference(double liquidSuctionDesignSubcoolingTemperatureDifference) {
-  getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->setLiquidSuctionDesignSubcoolingTemperatureDifference(liquidSuctionDesignSubcoolingTemperatureDifference);
+bool RefrigerationSubcoolerLiquidSuction::setLiquidSuctionDesignSubcoolingTemperatureDifference(double liquidSuctionDesignSubcoolingTemperatureDifference) {
+  return getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->setLiquidSuctionDesignSubcoolingTemperatureDifference(liquidSuctionDesignSubcoolingTemperatureDifference);
 }
 
 void RefrigerationSubcoolerLiquidSuction::resetLiquidSuctionDesignSubcoolingTemperatureDifference() {
   getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->resetLiquidSuctionDesignSubcoolingTemperatureDifference();
 }
 
-void RefrigerationSubcoolerLiquidSuction::setDesignLiquidInletTemperature(double designLiquidInletTemperature) {
-  getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->setDesignLiquidInletTemperature(designLiquidInletTemperature);
+bool RefrigerationSubcoolerLiquidSuction::setDesignLiquidInletTemperature(double designLiquidInletTemperature) {
+  return getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->setDesignLiquidInletTemperature(designLiquidInletTemperature);
 }
 
 void RefrigerationSubcoolerLiquidSuction::resetDesignLiquidInletTemperature() {
   getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->resetDesignLiquidInletTemperature();
 }
 
-void RefrigerationSubcoolerLiquidSuction::setDesignVaporInletTemperature(double designVaporInletTemperature) {
-  getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->setDesignVaporInletTemperature(designVaporInletTemperature);
+bool RefrigerationSubcoolerLiquidSuction::setDesignVaporInletTemperature(double designVaporInletTemperature) {
+  return getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->setDesignVaporInletTemperature(designVaporInletTemperature);
 }
 
 void RefrigerationSubcoolerLiquidSuction::resetDesignVaporInletTemperature() {
@@ -203,4 +203,3 @@ RefrigerationSubcoolerLiquidSuction::RefrigerationSubcoolerLiquidSuction(std::sh
 
 } // model
 } // openstudio
-

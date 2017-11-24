@@ -167,7 +167,7 @@ namespace detail {
 
     OSOptionalQuantity getSkinLossRadiativeFraction(bool returnIP=false) const;
 
-    void setRatedFlowRate(boost::optional<double> ratedFlowRate);
+    bool setRatedFlowRate(boost::optional<double> ratedFlowRate);
 
     bool setRatedFlowRate(const OSOptionalQuantity& ratedFlowRate);
 
@@ -181,7 +181,7 @@ namespace detail {
 
     void resetRatedPumpHead();
 
-    void setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
+    bool setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
 
     bool setRatedPowerConsumption(const OSOptionalQuantity& ratedPowerConsumption);
 
@@ -213,13 +213,13 @@ namespace detail {
 
     void resetPumpCurve();
 
-    void setImpellerDiameter(boost::optional<double> impellerDiameter);
+    bool setImpellerDiameter(boost::optional<double> impellerDiameter);
 
     bool setImpellerDiameter(const OSOptionalQuantity& impellerDiameter);
 
     void resetImpellerDiameter();
 
-    void setRotationalSpeed(boost::optional<double> rotationalSpeed);
+    bool setRotationalSpeed(boost::optional<double> rotationalSpeed);
 
     bool setRotationalSpeed(const OSOptionalQuantity& rotationalSpeed);
 

@@ -366,23 +366,23 @@ class MODEL_API ThermalZone : public HVACComponent {
    *  This method is relatively dumb.  It will add any model object to the list
    *  even if it is not hvac equipment.  That might change in the future.
    */
-  void addEquipment(const ModelObject & equipment);
+  bool addEquipment(const ModelObject & equipment);
 
   /** Remove equipment from the EquipmentList.
     * This will not remove the equipment from the model or
     * disconnect any node connections.  Use only if you know what you are doing.
     */
-  void removeEquipment(const ModelObject & equipment);
+  bool removeEquipment(const ModelObject & equipment);
 
   /** Set cooling priority of equipment.
-   *  Asserts when equipment is not in the ZoneHVACEquipmentList
+   *  Returns false when equipment is not in the ZoneHVACEquipmentList
    */
-  void setCoolingPriority(const ModelObject & equipment, unsigned priority);
+  bool setCoolingPriority(const ModelObject & equipment, unsigned priority);
 
   /** Set heating priority of equipment.
-   *  Asserts when equipment is not in the ZoneHVACEquipmentList
+   *  Returns false when equipment is not in the ZoneHVACEquipmentList
    */
-  void setHeatingPriority(const ModelObject & euqipment, unsigned priority);
+  bool setHeatingPriority(const ModelObject & euqipment, unsigned priority);
 
   /** Return all equipment.  Order is determined by heating priority */
   std::vector<ModelObject> equipmentInHeatingOrder();

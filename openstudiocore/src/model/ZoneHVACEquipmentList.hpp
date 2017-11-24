@@ -53,29 +53,29 @@ class MODEL_API ZoneHVACEquipmentList : public ModelObject {
 
   static IddObjectType iddObjectType();
 
-  /** Add new equipment setting the heating and cooling priorities 
+  /** Add new equipment setting the heating and cooling priorities
    *  to the next available priority level.
    *  Air terminals associated with AirLoopHVAC will be moved to first priority.
    *  This method is relatively dumb.  It will add any model object to the list
    *  even if it is not hvac equipment.  That might change in the future.
    */
-  void addEquipment(const ModelObject & equipment);
+  bool addEquipment(const ModelObject & equipment);
 
   /** Remove equipment from the EquipmentList.
-    * This will not remove the equipment from the model or 
+    * This will not remove the equipment from the model or
     * disconnect any node connections.  Use only if you know what you are doing.
     */
-  void removeEquipment(const ModelObject & equipment);
+  bool removeEquipment(const ModelObject & equipment);
 
   /** Set cooling priority of equipment.
-   *  Asserts when equipment is not in the ZoneHVACEquipmentList
+   *  Returns false when equipment is not in the ZoneHVACEquipmentList
    */
-  void setCoolingPriority(const ModelObject & equipment, unsigned priority);
+  bool setCoolingPriority(const ModelObject & equipment, unsigned priority);
 
   /** Set heating priority of equipment.
-   *  Asserts when equipment is not in the ZoneHVACEquipmentList
+   *  Returns false when equipment is not in the ZoneHVACEquipmentList
    */
-  void setHeatingPriority(const ModelObject & euqipment, unsigned priority);
+  bool setHeatingPriority(const ModelObject & euqipment, unsigned priority);
 
   /** Return all equipment.  Order is undetermined. */
   std::vector<ModelObject> equipment() const;

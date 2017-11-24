@@ -173,14 +173,14 @@ namespace detail {
     return result;
   }
 
-  void CurveRectangularHyperbola1_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
+  bool CurveRectangularHyperbola1_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
     bool result = false;
     if (minimumCurveOutput) {
       result = setDouble(OS_Curve_RectangularHyperbola1Fields::MinimumCurveOutput, minimumCurveOutput.get());
     } else {
       result = setString(OS_Curve_RectangularHyperbola1Fields::MinimumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveRectangularHyperbola1_Impl::resetMinimumCurveOutput() {
@@ -188,14 +188,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveRectangularHyperbola1_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
+  bool CurveRectangularHyperbola1_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
     bool result = false;
     if (maximumCurveOutput) {
       result = setDouble(OS_Curve_RectangularHyperbola1Fields::MaximumCurveOutput, maximumCurveOutput.get());
     } else {
       result = setString(OS_Curve_RectangularHyperbola1Fields::MaximumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveRectangularHyperbola1_Impl::resetMaximumCurveOutput() {
@@ -315,16 +315,16 @@ bool CurveRectangularHyperbola1::setMaximumValueofx(double maximumValueofx) {
   return getImpl<detail::CurveRectangularHyperbola1_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
-void CurveRectangularHyperbola1::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveRectangularHyperbola1_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+bool CurveRectangularHyperbola1::setMinimumCurveOutput(double minimumCurveOutput) {
+  return getImpl<detail::CurveRectangularHyperbola1_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveRectangularHyperbola1::resetMinimumCurveOutput() {
   getImpl<detail::CurveRectangularHyperbola1_Impl>()->resetMinimumCurveOutput();
 }
 
-void CurveRectangularHyperbola1::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveRectangularHyperbola1_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+bool CurveRectangularHyperbola1::setMaximumCurveOutput(double maximumCurveOutput) {
+  return getImpl<detail::CurveRectangularHyperbola1_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveRectangularHyperbola1::resetMaximumCurveOutput() {

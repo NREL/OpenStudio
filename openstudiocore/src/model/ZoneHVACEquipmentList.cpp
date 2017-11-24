@@ -77,7 +77,7 @@ IddObjectType ZoneHVACEquipmentList_Impl::iddObjectType() const {
   return ZoneHVACEquipmentList::iddObjectType();
 }
 
-void ZoneHVACEquipmentList_Impl::addEquipment(const ModelObject & equipment)
+bool ZoneHVACEquipmentList_Impl::addEquipment(const ModelObject & equipment)
 {
   unsigned count = this->equipment().size();
 
@@ -94,13 +94,17 @@ void ZoneHVACEquipmentList_Impl::addEquipment(const ModelObject & equipment)
   {
     getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
   }
+  return ok;
 }
 
-void ZoneHVACEquipmentList_Impl::setCoolingPriority(const ModelObject & equipment, unsigned priority)
+bool ZoneHVACEquipmentList_Impl::setCoolingPriority(const ModelObject & equipment, unsigned priority)
 {
   std::vector<ModelObject> equipmentVector = equipmentInCoolingOrder();
 
-  OS_ASSERT( std::find(equipmentVector.begin(),equipmentVector.end(),equipment) != equipmentVector.end() );
+  if ( std::find(equipmentVector.begin(),equipmentVector.end(),equipment) == equipmentVector.end() ) {
+    LOG(Warn, "Cannot set cooling priority of an equipment that isn't in the ZoneHVACEquipmentList for " << briefDescription());
+    return false;
+  }
 
   if( priority > equipmentVector.size() ) priority = equipmentVector.size();
   if( priority < 1 ) priority = 1;
@@ -119,13 +123,17 @@ void ZoneHVACEquipmentList_Impl::setCoolingPriority(const ModelObject & equipmen
 
     newPriority++;
   }
+  return true;
 }
 
-void ZoneHVACEquipmentList_Impl::setHeatingPriority(const ModelObject & equipment, unsigned priority)
+bool ZoneHVACEquipmentList_Impl::setHeatingPriority(const ModelObject & equipment, unsigned priority)
 {
   std::vector<ModelObject> equipmentVector = equipmentInHeatingOrder();
 
-  OS_ASSERT( std::find(equipmentVector.begin(),equipmentVector.end(),equipment) != equipmentVector.end() );
+  if ( std::find(equipmentVector.begin(),equipmentVector.end(),equipment) == equipmentVector.end() ) {
+    LOG(Warn, "Cannot set Heating priority of an equipment that isn't in the ZoneHVACEquipmentList for " << briefDescription());
+    return false;
+  }
 
   if( priority > equipmentVector.size() ) priority = equipmentVector.size();
   if( priority < 1 ) priority = 1;
@@ -144,6 +152,7 @@ void ZoneHVACEquipmentList_Impl::setHeatingPriority(const ModelObject & equipmen
 
     newPriority++;
   }
+  return true;
 }
 
 WorkspaceExtensibleGroup ZoneHVACEquipmentList_Impl::getGroupForModelObject(const ModelObject & modelObject)
@@ -261,8 +270,10 @@ ThermalZone ZoneHVACEquipmentList_Impl::thermalZone() const
   return wo->cast<ThermalZone>();
 }
 
-void ZoneHVACEquipmentList_Impl::removeEquipment(const ModelObject & equipment)
+bool ZoneHVACEquipmentList_Impl::removeEquipment(const ModelObject & equipment)
 {
+  bool result = false;
+
   std::vector<ModelObject> coolingVector = equipmentInCoolingOrder();
   std::vector<ModelObject> heatingVector = equipmentInHeatingOrder();
 
@@ -277,7 +288,8 @@ void ZoneHVACEquipmentList_Impl::removeEquipment(const ModelObject & equipment)
     if( wo->handle() == equipment.handle() )
     {
       getObject<ModelObject>().eraseExtensibleGroup(group.groupIndex());
-
+      // Found it
+      result = true;
       break;
     }
   }
@@ -306,6 +318,8 @@ void ZoneHVACEquipmentList_Impl::removeEquipment(const ModelObject & equipment)
 
     priority++;
   }
+
+  return result;
 
 }
 
@@ -373,19 +387,19 @@ IddObjectType ZoneHVACEquipmentList::iddObjectType() {
   return IddObjectType(IddObjectType::OS_ZoneHVAC_EquipmentList);
 }
 
-void ZoneHVACEquipmentList::addEquipment(const ModelObject & equipment)
+bool ZoneHVACEquipmentList::addEquipment(const ModelObject & equipment)
 {
-  getImpl<detail::ZoneHVACEquipmentList_Impl>()->addEquipment(equipment);
+  return getImpl<detail::ZoneHVACEquipmentList_Impl>()->addEquipment(equipment);
 }
 
-void ZoneHVACEquipmentList::setCoolingPriority(const ModelObject & equipment, unsigned priority)
+bool ZoneHVACEquipmentList::setCoolingPriority(const ModelObject & equipment, unsigned priority)
 {
-  getImpl<detail::ZoneHVACEquipmentList_Impl>()->setCoolingPriority(equipment,priority);
+  return getImpl<detail::ZoneHVACEquipmentList_Impl>()->setCoolingPriority(equipment,priority);
 }
 
-void ZoneHVACEquipmentList::setHeatingPriority(const ModelObject & equipment, unsigned priority)
+bool ZoneHVACEquipmentList::setHeatingPriority(const ModelObject & equipment, unsigned priority)
 {
-  getImpl<detail::ZoneHVACEquipmentList_Impl>()->setHeatingPriority(equipment,priority);
+  return getImpl<detail::ZoneHVACEquipmentList_Impl>()->setHeatingPriority(equipment,priority);
 }
 
 std::vector<ModelObject> ZoneHVACEquipmentList::equipment() const
@@ -408,9 +422,9 @@ ThermalZone ZoneHVACEquipmentList::thermalZone() const
   return getImpl<detail::ZoneHVACEquipmentList_Impl>()->thermalZone();
 }
 
-void ZoneHVACEquipmentList::removeEquipment(const ModelObject & equipment)
+bool ZoneHVACEquipmentList::removeEquipment(const ModelObject & equipment)
 {
-  getImpl<detail::ZoneHVACEquipmentList_Impl>()->removeEquipment(equipment);
+  return getImpl<detail::ZoneHVACEquipmentList_Impl>()->removeEquipment(equipment);
 }
 
 unsigned ZoneHVACEquipmentList::heatingPriority(const ModelObject & equipment)

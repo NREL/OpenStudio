@@ -228,12 +228,12 @@ namespace detail {
     return result;
   }
 
-  void HeaderedPumpsVariableSpeed_Impl::setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption) {
+  bool HeaderedPumpsVariableSpeed_Impl::setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption) {
     bool result(false);
     if (ratedPowerConsumption) {
       result = setDouble(OS_HeaderedPumps_VariableSpeedFields::RatedPowerConsumption, ratedPowerConsumption.get());
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void HeaderedPumpsVariableSpeed_Impl::autosizeRatedPowerConsumption() {
@@ -462,8 +462,8 @@ bool HeaderedPumpsVariableSpeed::setRatedPumpHead(double ratedPumpHead) {
   return getImpl<detail::HeaderedPumpsVariableSpeed_Impl>()->setRatedPumpHead(ratedPumpHead);
 }
 
-void HeaderedPumpsVariableSpeed::setRatedPowerConsumption(double ratedPowerConsumption) {
-  getImpl<detail::HeaderedPumpsVariableSpeed_Impl>()->setRatedPowerConsumption(ratedPowerConsumption);
+bool HeaderedPumpsVariableSpeed::setRatedPowerConsumption(double ratedPowerConsumption) {
+  return getImpl<detail::HeaderedPumpsVariableSpeed_Impl>()->setRatedPowerConsumption(ratedPowerConsumption);
 }
 
 void HeaderedPumpsVariableSpeed::autosizeRatedPowerConsumption() {

@@ -189,14 +189,14 @@ namespace detail {
     return result;
   }
 
-  void CurveExponentialSkewNormal_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
+  bool CurveExponentialSkewNormal_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
     bool result = false;
     if (minimumCurveOutput) {
       result = setDouble(OS_Curve_ExponentialSkewNormalFields::MinimumCurveOutput, minimumCurveOutput.get());
     } else {
       result = setString(OS_Curve_ExponentialSkewNormalFields::MinimumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveExponentialSkewNormal_Impl::resetMinimumCurveOutput() {
@@ -204,14 +204,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveExponentialSkewNormal_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
+  bool CurveExponentialSkewNormal_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
     bool result = false;
     if (maximumCurveOutput) {
       result = setDouble(OS_Curve_ExponentialSkewNormalFields::MaximumCurveOutput, maximumCurveOutput.get());
     } else {
       result = setString(OS_Curve_ExponentialSkewNormalFields::MaximumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveExponentialSkewNormal_Impl::resetMaximumCurveOutput() {
@@ -340,16 +340,16 @@ bool CurveExponentialSkewNormal::setMaximumValueofx(double maximumValueofx) {
   return getImpl<detail::CurveExponentialSkewNormal_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
-void CurveExponentialSkewNormal::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveExponentialSkewNormal_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+bool CurveExponentialSkewNormal::setMinimumCurveOutput(double minimumCurveOutput) {
+  return getImpl<detail::CurveExponentialSkewNormal_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveExponentialSkewNormal::resetMinimumCurveOutput() {
   getImpl<detail::CurveExponentialSkewNormal_Impl>()->resetMinimumCurveOutput();
 }
 
-void CurveExponentialSkewNormal::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveExponentialSkewNormal_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+bool CurveExponentialSkewNormal::setMaximumCurveOutput(double maximumCurveOutput) {
+  return getImpl<detail::CurveExponentialSkewNormal_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveExponentialSkewNormal::resetMaximumCurveOutput() {

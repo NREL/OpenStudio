@@ -962,7 +962,7 @@ namespace detail {
     return result;
   }
 
-  void AirLoopHVAC_Impl::setDesignSupplyAirFlowRate(boost::optional<double> designSupplyAirFlowRate) {
+  bool AirLoopHVAC_Impl::setDesignSupplyAirFlowRate(boost::optional<double> designSupplyAirFlowRate) {
     bool result(false);
     if (designSupplyAirFlowRate) {
       result = setDouble(OS_AirLoopHVACFields::DesignSupplyAirFlowRate, designSupplyAirFlowRate.get());
@@ -971,7 +971,7 @@ namespace detail {
       resetDesignSupplyAirFlowRate();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool AirLoopHVAC_Impl::setDesignSupplyAirFlowRate(const OSOptionalQuantity& designSupplyAirFlowRate) {
@@ -1845,8 +1845,8 @@ bool AirLoopHVAC::isDesignSupplyAirFlowRateAutosized() const {
   return getImpl<detail::AirLoopHVAC_Impl>()->isDesignSupplyAirFlowRateAutosized();
 }
 
-void AirLoopHVAC::setDesignSupplyAirFlowRate(double designSupplyAirFlowRate) {
-  getImpl<detail::AirLoopHVAC_Impl>()->setDesignSupplyAirFlowRate(designSupplyAirFlowRate);
+bool AirLoopHVAC::setDesignSupplyAirFlowRate(double designSupplyAirFlowRate) {
+  return getImpl<detail::AirLoopHVAC_Impl>()->setDesignSupplyAirFlowRate(designSupplyAirFlowRate);
 }
 
 bool AirLoopHVAC::setDesignSupplyAirFlowRate(const Quantity& designSupplyAirFlowRate) {

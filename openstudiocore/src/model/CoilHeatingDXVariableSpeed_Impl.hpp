@@ -127,11 +127,11 @@ namespace detail {
 
     void setNominalSpeedLevel(int nominalSpeedLevel);
 
-    void setRatedHeatingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> ratedHeatingCapacityAtSelectedNominalSpeedLevel);
+    bool setRatedHeatingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> ratedHeatingCapacityAtSelectedNominalSpeedLevel);
 
     void autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel();
 
-    void setRatedAirFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel);
+    bool setRatedAirFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel);
 
     void autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
 
@@ -143,7 +143,7 @@ namespace detail {
 
     bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
-    void setOutdoorDryBulbTemperaturetoTurnOnCompressor(boost::optional<double> outdoorDryBulbTemperaturetoTurnOnCompressor);
+    bool setOutdoorDryBulbTemperaturetoTurnOnCompressor(boost::optional<double> outdoorDryBulbTemperaturetoTurnOnCompressor);
 
     void resetOutdoorDryBulbTemperaturetoTurnOnCompressor();
 
@@ -200,4 +200,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILHEATINGDXVARIABLESPEED_IMPL_HPP
-

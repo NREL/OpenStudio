@@ -147,7 +147,7 @@ namespace detail {
 
     bool setHeatingCoil(const HVACComponent& heatingCoil);
 
-    void setMaximumHotWaterFlowRate(boost::optional<double> maximumHotWaterFlowRate);
+    bool setMaximumHotWaterFlowRate(boost::optional<double> maximumHotWaterFlowRate);
 
     void resetMaximumHotWaterFlowRate();
 
@@ -165,7 +165,7 @@ namespace detail {
 
     void resetCoolingCoil();
 
-    void setMaximumColdWaterFlowRate(boost::optional<double> maximumColdWaterFlowRate);
+    bool setMaximumColdWaterFlowRate(boost::optional<double> maximumColdWaterFlowRate);
 
     void resetMaximumColdWaterFlowRate();
 
@@ -201,4 +201,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMEFOURPIPEINDUCTION_IMPL_HPP
-

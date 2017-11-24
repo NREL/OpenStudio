@@ -235,7 +235,7 @@ namespace detail {
     return getQuantityFromDouble(OS_Pump_ConstantSpeedFields::SkinLossRadiativeFraction, value, returnIP);
   }
 
-  void PumpConstantSpeed_Impl::setRatedFlowRate(boost::optional<double> ratedFlowRate) {
+  bool PumpConstantSpeed_Impl::setRatedFlowRate(boost::optional<double> ratedFlowRate) {
     bool result(false);
     if (ratedFlowRate) {
       result = setDouble(OS_Pump_ConstantSpeedFields::RatedFlowRate, ratedFlowRate.get());
@@ -244,7 +244,7 @@ namespace detail {
       resetRatedFlowRate();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool PumpConstantSpeed_Impl::setRatedFlowRate(const OSOptionalQuantity& ratedFlowRate) {
@@ -294,7 +294,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void PumpConstantSpeed_Impl::setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption) {
+  bool PumpConstantSpeed_Impl::setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption) {
     bool result(false);
     if (ratedPowerConsumption) {
       result = setDouble(OS_Pump_ConstantSpeedFields::RatedPowerConsumption, ratedPowerConsumption.get());
@@ -303,7 +303,7 @@ namespace detail {
       resetRatedPowerConsumption();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool PumpConstantSpeed_Impl::setRatedPowerConsumption(const OSOptionalQuantity& ratedPowerConsumption) {
@@ -412,7 +412,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void PumpConstantSpeed_Impl::setImpellerDiameter(boost::optional<double> impellerDiameter) {
+  bool PumpConstantSpeed_Impl::setImpellerDiameter(boost::optional<double> impellerDiameter) {
     bool result(false);
     if (impellerDiameter) {
       result = setDouble(OS_Pump_ConstantSpeedFields::ImpellerDiameter, impellerDiameter.get());
@@ -421,7 +421,7 @@ namespace detail {
       resetImpellerDiameter();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool PumpConstantSpeed_Impl::setImpellerDiameter(const OSOptionalQuantity& impellerDiameter) {
@@ -447,7 +447,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void PumpConstantSpeed_Impl::setRotationalSpeed(boost::optional<double> rotationalSpeed) {
+  bool PumpConstantSpeed_Impl::setRotationalSpeed(boost::optional<double> rotationalSpeed) {
     bool result(false);
     if (rotationalSpeed) {
       result = setDouble(OS_Pump_ConstantSpeedFields::RotationalSpeed, rotationalSpeed.get());
@@ -456,7 +456,7 @@ namespace detail {
       resetRotationalSpeed();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool PumpConstantSpeed_Impl::setRotationalSpeed(const OSOptionalQuantity& rotationalSpeed) {
@@ -832,8 +832,8 @@ OSOptionalQuantity PumpConstantSpeed::getSkinLossRadiativeFraction(bool returnIP
   return getImpl<detail::PumpConstantSpeed_Impl>()->getSkinLossRadiativeFraction(returnIP);
 }
 
-void PumpConstantSpeed::setRatedFlowRate(double ratedFlowRate) {
-  getImpl<detail::PumpConstantSpeed_Impl>()->setRatedFlowRate(ratedFlowRate);
+bool PumpConstantSpeed::setRatedFlowRate(double ratedFlowRate) {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->setRatedFlowRate(ratedFlowRate);
 }
 
 bool PumpConstantSpeed::setRatedFlowRate(const Quantity& ratedFlowRate) {
@@ -860,8 +860,8 @@ void PumpConstantSpeed::resetRatedPumpHead() {
   getImpl<detail::PumpConstantSpeed_Impl>()->resetRatedPumpHead();
 }
 
-void PumpConstantSpeed::setRatedPowerConsumption(double ratedPowerConsumption) {
-  getImpl<detail::PumpConstantSpeed_Impl>()->setRatedPowerConsumption(ratedPowerConsumption);
+bool PumpConstantSpeed::setRatedPowerConsumption(double ratedPowerConsumption) {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->setRatedPowerConsumption(ratedPowerConsumption);
 }
 
 bool PumpConstantSpeed::setRatedPowerConsumption(const Quantity& ratedPowerConsumption) {
@@ -924,8 +924,8 @@ void PumpConstantSpeed::resetPumpCurve() {
   getImpl<detail::PumpConstantSpeed_Impl>()->resetPumpCurve();
 }
 
-void PumpConstantSpeed::setImpellerDiameter(double impellerDiameter) {
-  getImpl<detail::PumpConstantSpeed_Impl>()->setImpellerDiameter(impellerDiameter);
+bool PumpConstantSpeed::setImpellerDiameter(double impellerDiameter) {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->setImpellerDiameter(impellerDiameter);
 }
 
 bool PumpConstantSpeed::setImpellerDiameter(const Quantity& impellerDiameter) {
@@ -936,8 +936,8 @@ void PumpConstantSpeed::resetImpellerDiameter() {
   getImpl<detail::PumpConstantSpeed_Impl>()->resetImpellerDiameter();
 }
 
-void PumpConstantSpeed::setRotationalSpeed(double rotationalSpeed) {
-  getImpl<detail::PumpConstantSpeed_Impl>()->setRotationalSpeed(rotationalSpeed);
+bool PumpConstantSpeed::setRotationalSpeed(double rotationalSpeed) {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->setRotationalSpeed(rotationalSpeed);
 }
 
 bool PumpConstantSpeed::setRotationalSpeed(const Quantity& rotationalSpeed) {

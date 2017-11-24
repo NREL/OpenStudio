@@ -369,7 +369,7 @@ namespace detail {
     return getObject<PumpVariableSpeed>().getModelObjectTarget<Schedule>(OS_Pump_VariableSpeedFields::MaximumRPMSchedule);
   }
 
-  void PumpVariableSpeed_Impl::setRatedFlowRate(boost::optional<double> ratedFlowRate) {
+  bool PumpVariableSpeed_Impl::setRatedFlowRate(boost::optional<double> ratedFlowRate) {
     bool result(false);
     if (ratedFlowRate) {
       result = setDouble(OS_Pump_VariableSpeedFields::RatedFlowRate, ratedFlowRate.get());
@@ -378,7 +378,7 @@ namespace detail {
       resetRatedFlowRate();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool PumpVariableSpeed_Impl::setRatedFlowRate(const OSOptionalQuantity& ratedFlowRate) {
@@ -427,7 +427,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void PumpVariableSpeed_Impl::setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption) {
+  bool PumpVariableSpeed_Impl::setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption) {
     bool result(false);
     if (ratedPowerConsumption) {
       result = setDouble(OS_Pump_VariableSpeedFields::RatedPowerConsumption, ratedPowerConsumption.get());
@@ -436,7 +436,7 @@ namespace detail {
       resetRatedPowerConsumption();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool PumpVariableSpeed_Impl::setRatedPowerConsumption(const OSOptionalQuantity& ratedPowerConsumption) {
@@ -642,7 +642,7 @@ namespace detail {
     OS_ASSERT(ok);
   }
 
-  void PumpVariableSpeed_Impl::setImpellerDiameter(boost::optional<double> impellerDiameter) {
+  bool PumpVariableSpeed_Impl::setImpellerDiameter(boost::optional<double> impellerDiameter) {
     bool result(false);
     if (impellerDiameter) {
       result = setDouble(OS_Pump_VariableSpeedFields::ImpellerDiameter, impellerDiameter.get());
@@ -651,7 +651,7 @@ namespace detail {
       resetImpellerDiameter();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool PumpVariableSpeed_Impl::setImpellerDiameter(const OSOptionalQuantity& impellerDiameter) {
@@ -1250,8 +1250,8 @@ boost::optional<Schedule> PumpVariableSpeed::maximumRPMSchedule() const {
   return getImpl<detail::PumpVariableSpeed_Impl>()->maximumRPMSchedule();
 }
 
-void PumpVariableSpeed::setRatedFlowRate(double ratedFlowRate) {
-  getImpl<detail::PumpVariableSpeed_Impl>()->setRatedFlowRate(ratedFlowRate);
+bool PumpVariableSpeed::setRatedFlowRate(double ratedFlowRate) {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->setRatedFlowRate(ratedFlowRate);
 }
 
 bool PumpVariableSpeed::setRatedFlowRate(const Quantity& ratedFlowRate) {
@@ -1278,8 +1278,8 @@ void PumpVariableSpeed::resetRatedPumpHead() {
   getImpl<detail::PumpVariableSpeed_Impl>()->resetRatedPumpHead();
 }
 
-void PumpVariableSpeed::setRatedPowerConsumption(double ratedPowerConsumption) {
-  getImpl<detail::PumpVariableSpeed_Impl>()->setRatedPowerConsumption(ratedPowerConsumption);
+bool PumpVariableSpeed::setRatedPowerConsumption(double ratedPowerConsumption) {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->setRatedPowerConsumption(ratedPowerConsumption);
 }
 
 bool PumpVariableSpeed::setRatedPowerConsumption(const Quantity& ratedPowerConsumption) {
@@ -1402,8 +1402,8 @@ void PumpVariableSpeed::resetPumpCurve() {
   getImpl<detail::PumpVariableSpeed_Impl>()->resetPumpCurve();
 }
 
-void PumpVariableSpeed::setImpellerDiameter(double impellerDiameter) {
-  getImpl<detail::PumpVariableSpeed_Impl>()->setImpellerDiameter(impellerDiameter);
+bool PumpVariableSpeed::setImpellerDiameter(double impellerDiameter) {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->setImpellerDiameter(impellerDiameter);
 }
 
 bool PumpVariableSpeed::setImpellerDiameter(const Quantity& impellerDiameter) {

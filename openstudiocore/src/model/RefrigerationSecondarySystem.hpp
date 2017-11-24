@@ -175,7 +175,7 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
 
   bool setEvaporatorApproachTemperatureDifference(double evaporatorApproachTemperatureDifference);
 
-  void setEvaporatorRangeTemperatureDifference(double evaporatorRangeTemperatureDifference);
+  bool setEvaporatorRangeTemperatureDifference(double evaporatorRangeTemperatureDifference);
 
   void resetEvaporatorRangeTemperatureDifference();
 

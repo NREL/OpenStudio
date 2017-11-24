@@ -167,7 +167,7 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
   /** @name Setters */
   //@{
 
-  void setRatedFlowRate(double ratedFlowRate);
+  bool setRatedFlowRate(double ratedFlowRate);
 
   bool setRatedFlowRate(const Quantity& ratedFlowRate);
 
@@ -181,7 +181,7 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
 
   void resetRatedPumpHead();
 
-  void setRatedPowerConsumption(double ratedPowerConsumption);
+  bool setRatedPowerConsumption(double ratedPowerConsumption);
 
   bool setRatedPowerConsumption(const Quantity& ratedPowerConsumption);
 
@@ -244,7 +244,7 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
 
   void resetPumpCurve();
 
-  void setImpellerDiameter(double impellerDiameter);
+  bool setImpellerDiameter(double impellerDiameter);
 
   bool setImpellerDiameter(const Quantity& impellerDiameter);
 

@@ -205,7 +205,7 @@ namespace detail {
 
     void resetEvaporationLossFactor();
 
-    void setDriftLossPercent(boost::optional<double> driftLossPercent);
+    bool setDriftLossPercent(boost::optional<double> driftLossPercent);
 
     void resetDriftLossPercent();
 

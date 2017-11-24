@@ -120,13 +120,13 @@ namespace detail {
 
     bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
 
-    void setUFactorTimesAreaValue(boost::optional<double> uFactorTimesAreaValue);
+    bool setUFactorTimesAreaValue(boost::optional<double> uFactorTimesAreaValue);
 
     void resetUFactorTimesAreaValue();
 
     void autosizeUFactorTimesAreaValue();
 
-    void setMaximumWaterFlowRate(boost::optional<double> maximumWaterFlowRate);
+    bool setMaximumWaterFlowRate(boost::optional<double> maximumWaterFlowRate);
 
     void resetMaximumWaterFlowRate();
 
@@ -155,4 +155,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILHEATINGWATERBASEBOARD_IMPL_HPP
-

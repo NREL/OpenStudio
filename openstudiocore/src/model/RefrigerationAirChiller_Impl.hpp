@@ -178,11 +178,11 @@ namespace detail {
 
     bool setCapacityRatingType(std::string capacityRatingType);
 
-    void setRatedUnitLoadFactor(boost::optional<double> ratedUnitLoadFactor);
+    bool setRatedUnitLoadFactor(boost::optional<double> ratedUnitLoadFactor);
 
     void resetRatedUnitLoadFactor();
 
-    void setRatedCapacity(boost::optional<double> ratedCapacity);
+    bool setRatedCapacity(boost::optional<double> ratedCapacity);
 
     void resetRatedCapacity();
 

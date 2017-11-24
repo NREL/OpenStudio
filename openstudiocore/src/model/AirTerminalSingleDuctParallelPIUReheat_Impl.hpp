@@ -41,24 +41,24 @@ namespace detail {
 
   /** AirTerminalSingleDuctParallelPIUReheat_Impl is a StraightComponent_Impl that is the implementation class for AirTerminalSingleDuctParallelPIUReheat.*/
   class MODEL_API AirTerminalSingleDuctParallelPIUReheat_Impl : public StraightComponent_Impl {
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -145,19 +145,19 @@ namespace detail {
 
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    void setMaximumPrimaryAirFlowRate(boost::optional<double> maximumPrimaryAirFlowRate);
+    bool setMaximumPrimaryAirFlowRate(boost::optional<double> maximumPrimaryAirFlowRate);
 
     void autosizeMaximumPrimaryAirFlowRate();
 
-    void setMaximumSecondaryAirFlowRate(boost::optional<double> maximumSecondaryAirFlowRate);
+    bool setMaximumSecondaryAirFlowRate(boost::optional<double> maximumSecondaryAirFlowRate);
 
     void autosizeMaximumSecondaryAirFlowRate();
 
-    void setMinimumPrimaryAirFlowFraction(boost::optional<double> minimumPrimaryAirFlowFraction);
+    bool setMinimumPrimaryAirFlowFraction(boost::optional<double> minimumPrimaryAirFlowFraction);
 
     void autosizeMinimumPrimaryAirFlowFraction();
 
-    void setFanOnFlowFraction(boost::optional<double> fanOnFlowFraction);
+    bool setFanOnFlowFraction(boost::optional<double> fanOnFlowFraction);
 
     void autosizeFanOnFlowFraction();
 
@@ -165,7 +165,7 @@ namespace detail {
 
     void setReheatCoil( HVACComponent & hvacComponent );
 
-    void setMaximumHotWaterorSteamFlowRate(boost::optional<double> maximumHotWaterorSteamFlowRate);
+    bool setMaximumHotWaterorSteamFlowRate(boost::optional<double> maximumHotWaterorSteamFlowRate);
 
     void resetMaximumHotWaterorSteamFlowRate();
 
@@ -206,4 +206,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_AIRTERMINALSINGLEDUCTPARALLELPIUREHEAT_IMPL_HPP
-

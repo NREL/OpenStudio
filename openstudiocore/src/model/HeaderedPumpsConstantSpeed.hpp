@@ -109,7 +109,7 @@ class MODEL_API HeaderedPumpsConstantSpeed : public StraightComponent {
 
   bool setRatedPumpHead(double ratedPumpHead);
 
-  void setRatedPowerConsumption(double ratedPowerConsumption);
+  bool setRatedPowerConsumption(double ratedPowerConsumption);
 
   void autosizeRatedPowerConsumption();
 

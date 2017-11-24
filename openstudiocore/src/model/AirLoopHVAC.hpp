@@ -91,7 +91,7 @@ class MODEL_API AirLoopHVAC : public Loop
 
   bool isDesignSupplyAirFlowRateAutosized() const;
 
-  void setDesignSupplyAirFlowRate(double designSupplyAirFlowRate);
+  bool setDesignSupplyAirFlowRate(double designSupplyAirFlowRate);
 
   bool setDesignSupplyAirFlowRate(const Quantity& designSupplyAirFlowRate);
 

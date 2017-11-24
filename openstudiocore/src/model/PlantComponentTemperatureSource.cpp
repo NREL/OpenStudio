@@ -149,7 +149,7 @@ namespace detail {
     return result;
   }
 
-  void PlantComponentTemperatureSource_Impl::setSourceTemperature(boost::optional<double> sourceTemperature) {
+  bool PlantComponentTemperatureSource_Impl::setSourceTemperature(boost::optional<double> sourceTemperature) {
     bool result(false);
     if (sourceTemperature) {
       result = setDouble(OS_PlantComponent_TemperatureSourceFields::SourceTemperature, sourceTemperature.get());
@@ -158,7 +158,7 @@ namespace detail {
       resetSourceTemperature();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void PlantComponentTemperatureSource_Impl::resetSourceTemperature() {
@@ -234,8 +234,8 @@ bool PlantComponentTemperatureSource::setTemperatureSpecificationType(std::strin
   return getImpl<detail::PlantComponentTemperatureSource_Impl>()->setTemperatureSpecificationType(temperatureSpecificationType);
 }
 
-void PlantComponentTemperatureSource::setSourceTemperature(double sourceTemperature) {
-  getImpl<detail::PlantComponentTemperatureSource_Impl>()->setSourceTemperature(sourceTemperature);
+bool PlantComponentTemperatureSource::setSourceTemperature(double sourceTemperature) {
+  return getImpl<detail::PlantComponentTemperatureSource_Impl>()->setSourceTemperature(sourceTemperature);
 }
 
 void PlantComponentTemperatureSource::resetSourceTemperature() {
@@ -258,4 +258,3 @@ PlantComponentTemperatureSource::PlantComponentTemperatureSource(std::shared_ptr
 
 } // model
 } // openstudio
-

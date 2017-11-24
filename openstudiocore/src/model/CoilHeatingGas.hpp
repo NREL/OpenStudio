@@ -128,7 +128,7 @@ class MODEL_API CoilHeatingGas : public StraightComponent {
 
   bool isNominalCapacityAutosized() const;
 
-  void setNominalCapacity(double nominalCapacity);
+  bool setNominalCapacity(double nominalCapacity);
 
   bool setNominalCapacity(const Quantity& nominalCapacity);
 
@@ -172,4 +172,3 @@ typedef std::vector<CoilHeatingGas> CoilHeatingGasVector;
 } // openstudio
 
 #endif // MODEL_COILHEATINGGAS_HPP
-

@@ -454,7 +454,7 @@ namespace detail {
     return result;
   }
 
-  void AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::setMaximumHotWaterFlowRate(boost::optional<double> maximumHotWaterFlowRate) {
+  bool AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::setMaximumHotWaterFlowRate(boost::optional<double> maximumHotWaterFlowRate) {
     bool result(false);
     if (maximumHotWaterFlowRate) {
       result = setDouble(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::MaximumHotWaterFlowRate, maximumHotWaterFlowRate.get());
@@ -463,7 +463,7 @@ namespace detail {
       resetMaximumHotWaterFlowRate();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::resetMaximumHotWaterFlowRate() {
@@ -513,7 +513,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::setMaximumColdWaterFlowRate(boost::optional<double> maximumColdWaterFlowRate) {
+  bool AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::setMaximumColdWaterFlowRate(boost::optional<double> maximumColdWaterFlowRate) {
     bool result(false);
     if (maximumColdWaterFlowRate) {
       result = setDouble(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::MaximumColdWaterFlowRate, maximumColdWaterFlowRate.get());
@@ -522,7 +522,7 @@ namespace detail {
       resetMaximumColdWaterFlowRate();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::resetMaximumColdWaterFlowRate() {
@@ -695,8 +695,8 @@ bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::setHeatingCoil(const 
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->setHeatingCoil(heatingCoil);
 }
 
-void AirTerminalSingleDuctConstantVolumeFourPipeInduction::setMaximumHotWaterFlowRate(double maximumHotWaterFlowRate) {
-  getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->setMaximumHotWaterFlowRate(maximumHotWaterFlowRate);
+bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::setMaximumHotWaterFlowRate(double maximumHotWaterFlowRate) {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->setMaximumHotWaterFlowRate(maximumHotWaterFlowRate);
 }
 
 void AirTerminalSingleDuctConstantVolumeFourPipeInduction::resetMaximumHotWaterFlowRate() {
@@ -731,8 +731,8 @@ void AirTerminalSingleDuctConstantVolumeFourPipeInduction::resetCoolingCoil() {
   getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->resetCoolingCoil();
 }
 
-void AirTerminalSingleDuctConstantVolumeFourPipeInduction::setMaximumColdWaterFlowRate(double maximumColdWaterFlowRate) {
-  getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->setMaximumColdWaterFlowRate(maximumColdWaterFlowRate);
+bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::setMaximumColdWaterFlowRate(double maximumColdWaterFlowRate) {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->setMaximumColdWaterFlowRate(maximumColdWaterFlowRate);
 }
 
 void AirTerminalSingleDuctConstantVolumeFourPipeInduction::resetMaximumColdWaterFlowRate() {
@@ -775,4 +775,3 @@ AirTerminalSingleDuctConstantVolumeFourPipeInduction::AirTerminalSingleDuctConst
 
 } // model
 } // openstudio
-

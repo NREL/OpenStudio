@@ -190,11 +190,11 @@ namespace detail {
 
     void resetTemperatureSensorHeight();
 
-    void setMinimumTemperatureLimit(boost::optional<double> minimumTemperatureLimit);
+    bool setMinimumTemperatureLimit(boost::optional<double> minimumTemperatureLimit);
 
     void resetMinimumTemperatureLimit();
 
-    void setNominalCoolingCapacity(boost::optional<double> nominalCoolingCapacity);
+    bool setNominalCoolingCapacity(boost::optional<double> nominalCoolingCapacity);
 
     void resetNominalCoolingCapacity();
 

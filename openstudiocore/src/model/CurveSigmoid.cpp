@@ -198,14 +198,14 @@ namespace detail {
     return result;
   }
 
-  void CurveSigmoid_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
+  bool CurveSigmoid_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
     bool result = false;
     if (minimumCurveOutput) {
       result = setDouble(OS_Curve_SigmoidFields::MinimumCurveOutput, minimumCurveOutput.get());
     } else {
       result = setString(OS_Curve_SigmoidFields::MinimumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveSigmoid_Impl::resetMinimumCurveOutput() {
@@ -213,14 +213,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveSigmoid_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
+  bool CurveSigmoid_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
     bool result = false;
     if (maximumCurveOutput) {
       result = setDouble(OS_Curve_SigmoidFields::MaximumCurveOutput, maximumCurveOutput.get());
     } else {
       result = setString(OS_Curve_SigmoidFields::MaximumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveSigmoid_Impl::resetMaximumCurveOutput() {
@@ -359,16 +359,16 @@ bool CurveSigmoid::setMaximumValueofx(double maximumValueofx) {
   return getImpl<detail::CurveSigmoid_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
-void CurveSigmoid::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveSigmoid_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+bool CurveSigmoid::setMinimumCurveOutput(double minimumCurveOutput) {
+  return getImpl<detail::CurveSigmoid_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveSigmoid::resetMinimumCurveOutput() {
   getImpl<detail::CurveSigmoid_Impl>()->resetMinimumCurveOutput();
 }
 
-void CurveSigmoid::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveSigmoid_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+bool CurveSigmoid::setMaximumCurveOutput(double maximumCurveOutput) {
+  return getImpl<detail::CurveSigmoid_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveSigmoid::resetMaximumCurveOutput() {

@@ -109,7 +109,7 @@ class MODEL_API CoilHeatingDXMultiSpeed : public StraightComponent {
 
   bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
-  void setOutdoorDryBulbTemperaturetoTurnOnCompressor(double outdoorDryBulbTemperaturetoTurnOnCompressor);
+  bool setOutdoorDryBulbTemperaturetoTurnOnCompressor(double outdoorDryBulbTemperaturetoTurnOnCompressor);
 
   void resetOutdoorDryBulbTemperaturetoTurnOnCompressor();
 

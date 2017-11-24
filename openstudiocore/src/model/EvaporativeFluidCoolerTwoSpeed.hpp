@@ -242,7 +242,7 @@ class MODEL_API EvaporativeFluidCoolerTwoSpeed : public StraightComponent {
 
   bool setEvaporationLossMode(std::string evaporationLossMode);
 
-  void setEvaporationLossFactor(double evaporationLossFactor);
+  bool setEvaporationLossFactor(double evaporationLossFactor);
 
   void resetEvaporationLossFactor();
 

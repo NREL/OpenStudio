@@ -186,25 +186,25 @@ namespace detail {
 
     void resetSchedule();
 
-    void setSetpointatOutdoorLowTemperature2(boost::optional<double> setpointatOutdoorLowTemperature2);
+    bool setSetpointatOutdoorLowTemperature2(boost::optional<double> setpointatOutdoorLowTemperature2);
 
     bool setSetpointatOutdoorLowTemperature2(const OSOptionalQuantity& setpointatOutdoorLowTemperature2);
 
     void resetSetpointatOutdoorLowTemperature2();
 
-    void setOutdoorLowTemperature2(boost::optional<double> outdoorLowTemperature2);
+    bool setOutdoorLowTemperature2(boost::optional<double> outdoorLowTemperature2);
 
     bool setOutdoorLowTemperature2(const OSOptionalQuantity& outdoorLowTemperature2);
 
     void resetOutdoorLowTemperature2();
 
-    void setSetpointatOutdoorHighTemperature2(boost::optional<double> setpointatOutdoorHighTemperature2);
+    bool setSetpointatOutdoorHighTemperature2(boost::optional<double> setpointatOutdoorHighTemperature2);
 
     bool setSetpointatOutdoorHighTemperature2(const OSOptionalQuantity& setpointatOutdoorHighTemperature2);
 
     void resetSetpointatOutdoorHighTemperature2();
 
-    void setOutdoorHighTemperature2(boost::optional<double> outdoorHighTemperature2);
+    bool setOutdoorHighTemperature2(boost::optional<double> outdoorHighTemperature2);
 
     bool setOutdoorHighTemperature2(const OSOptionalQuantity& outdoorHighTemperature2);
 

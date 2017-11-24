@@ -172,14 +172,14 @@ namespace detail {
     return result;
   }
 
-  void CurveQuadratic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
+  bool CurveQuadratic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
     bool result = false;
     if (minimumCurveOutput) {
       result = setDouble(OS_Curve_QuadraticFields::MinimumCurveOutput, minimumCurveOutput.get());
     } else {
       result = setString(OS_Curve_QuadraticFields::MinimumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveQuadratic_Impl::resetMinimumCurveOutput() {
@@ -187,14 +187,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveQuadratic_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
+  bool CurveQuadratic_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
     bool result = false;
     if (maximumCurveOutput) {
       result = setDouble(OS_Curve_QuadraticFields::MaximumCurveOutput, maximumCurveOutput.get());
     } else {
       result = setString(OS_Curve_QuadraticFields::MaximumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveQuadratic_Impl::resetMaximumCurveOutput() {
@@ -314,16 +314,16 @@ bool CurveQuadratic::setMaximumValueofx(double maximumValueofx) {
   return getImpl<detail::CurveQuadratic_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
-void CurveQuadratic::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveQuadratic_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+bool CurveQuadratic::setMinimumCurveOutput(double minimumCurveOutput) {
+  return getImpl<detail::CurveQuadratic_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveQuadratic::resetMinimumCurveOutput() {
   getImpl<detail::CurveQuadratic_Impl>()->resetMinimumCurveOutput();
 }
 
-void CurveQuadratic::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveQuadratic_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+bool CurveQuadratic::setMaximumCurveOutput(double maximumCurveOutput) {
+  return getImpl<detail::CurveQuadratic_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveQuadratic::resetMaximumCurveOutput() {

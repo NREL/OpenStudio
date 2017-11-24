@@ -139,7 +139,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilHeatingGasMultiStage_Impl::setParasiticGasLoad(boost::optional<double> parasiticGasLoad) {
+  bool CoilHeatingGasMultiStage_Impl::setParasiticGasLoad(boost::optional<double> parasiticGasLoad) {
     bool result(false);
     if (parasiticGasLoad) {
       result = setDouble(OS_Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad, parasiticGasLoad.get());
@@ -148,7 +148,7 @@ namespace detail {
       resetParasiticGasLoad();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CoilHeatingGasMultiStage_Impl::resetParasiticGasLoad() {
@@ -260,8 +260,8 @@ void CoilHeatingGasMultiStage::resetPartLoadFractionCorrelationCurve() {
   getImpl<detail::CoilHeatingGasMultiStage_Impl>()->resetPartLoadFractionCorrelationCurve();
 }
 
-void CoilHeatingGasMultiStage::setParasiticGasLoad(double parasiticGasLoad) {
-  getImpl<detail::CoilHeatingGasMultiStage_Impl>()->setParasiticGasLoad(parasiticGasLoad);
+bool CoilHeatingGasMultiStage::setParasiticGasLoad(double parasiticGasLoad) {
+  return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->setParasiticGasLoad(parasiticGasLoad);
 }
 
 void CoilHeatingGasMultiStage::resetParasiticGasLoad() {
@@ -284,4 +284,3 @@ CoilHeatingGasMultiStage::CoilHeatingGasMultiStage(std::shared_ptr<detail::CoilH
 
 } // model
 } // openstudio
-

@@ -576,14 +576,14 @@ namespace detail {
     setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplementalHeatingCoilName,hvacComponent.handle());
   }
 
-  void ZoneHVACPackagedTerminalHeatPump_Impl::setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater) {
+  bool ZoneHVACPackagedTerminalHeatPump_Impl::setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater) {
     bool result = false;
     if (maximumSupplyAirTemperaturefromSupplementalHeater) {
       result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater, maximumSupplyAirTemperaturefromSupplementalHeater.get());
     } else {
       result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void ZoneHVACPackagedTerminalHeatPump_Impl::autosizeMaximumSupplyAirTemperaturefromSupplementalHeater() {
@@ -994,8 +994,8 @@ void ZoneHVACPackagedTerminalHeatPump::resetCoolingConvergenceTolerance() {
   getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetCoolingConvergenceTolerance();
 }
 
-void ZoneHVACPackagedTerminalHeatPump::setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater) {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setMaximumSupplyAirTemperaturefromSupplementalHeater(maximumSupplyAirTemperaturefromSupplementalHeater);
+bool ZoneHVACPackagedTerminalHeatPump::setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater) {
+  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setMaximumSupplyAirTemperaturefromSupplementalHeater(maximumSupplyAirTemperaturefromSupplementalHeater);
 }
 
 void ZoneHVACPackagedTerminalHeatPump::autosizeMaximumSupplyAirTemperaturefromSupplementalHeater() {
@@ -1090,4 +1090,3 @@ ZoneHVACPackagedTerminalHeatPump::ZoneHVACPackagedTerminalHeatPump(std::shared_p
 
 } // model
 } // openstudio
-

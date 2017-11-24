@@ -73,7 +73,7 @@ class MODEL_API RefrigerationSubcoolerMechanical : public ModelObject {
 
   void resetCapacityProvidingSystem();
 
-  void setOutletControlTemperature(double outletControlTemperature);
+  bool setOutletControlTemperature(double outletControlTemperature);
 
   void resetOutletControlTemperature();
 
@@ -107,4 +107,3 @@ typedef std::vector<RefrigerationSubcoolerMechanical> RefrigerationSubcoolerMech
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONSUBCOOLERMECHANICAL_HPP
-

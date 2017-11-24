@@ -162,11 +162,11 @@ class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent {
 
   bool setCapacityRatingType(std::string capacityRatingType);
 
-  void setRatedUnitLoadFactor(double ratedUnitLoadFactor);
+  bool setRatedUnitLoadFactor(double ratedUnitLoadFactor);
 
   void resetRatedUnitLoadFactor();
 
-  void setRatedCapacity(double ratedCapacity);
+  bool setRatedCapacity(double ratedCapacity);
 
   void resetRatedCapacity();
 

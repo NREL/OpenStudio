@@ -41,7 +41,7 @@ class Curve;
 namespace detail {
 
   /** FanOnOff_Impl is a StraightComponent_Impl that is the implementation class for FanOnOff.*/
-  class MODEL_API FanOnOff_Impl : public StraightComponent_Impl 
+  class MODEL_API FanOnOff_Impl : public StraightComponent_Impl
   {
    public:
     /** @name Constructors and Destructors */
@@ -69,7 +69,7 @@ namespace detail {
     virtual std::vector<openstudio::IdfObject> remove() override;
 
     virtual ModelObject clone(Model model) const override;
-    
+
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
@@ -108,7 +108,7 @@ namespace detail {
 
     double pressureRise() const;
 
-    void setPressureRise(double pressureRise);
+    bool setPressureRise(double pressureRise);
 
     // Field Maximum Flow Rate
 
@@ -182,4 +182,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_FANONOFF_IMPL_HPP
-

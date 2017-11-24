@@ -172,7 +172,7 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
 
   bool isRatedTotalHeatingCapacityAutosized() const;
 
-  void setRatedTotalHeatingCapacity(double ratedTotalHeatingCapacity);
+  bool setRatedTotalHeatingCapacity(double ratedTotalHeatingCapacity);
 
   void autosizeRatedTotalHeatingCapacity();
 
@@ -400,7 +400,7 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
 
   bool isWaterCondenserVolumeFlowRateAutosized() const;
 
-  void setWaterCondenserVolumeFlowRate(double waterCondenserVolumeFlowRate);
+  bool setWaterCondenserVolumeFlowRate(double waterCondenserVolumeFlowRate);
 
   void autosizeWaterCondenserVolumeFlowRate();
 

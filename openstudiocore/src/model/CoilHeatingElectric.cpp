@@ -145,14 +145,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilHeatingElectric_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
+  bool CoilHeatingElectric_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
     bool result = false;
     if (nominalCapacity) {
       result = setDouble(OS_Coil_Heating_ElectricFields::NominalCapacity, nominalCapacity.get());
     } else {
       result = setString(OS_Coil_Heating_ElectricFields::NominalCapacity, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CoilHeatingElectric_Impl::resetNominalCapacity() {
@@ -446,8 +446,8 @@ void CoilHeatingElectric::resetEfficiency() {
   getImpl<detail::CoilHeatingElectric_Impl>()->resetEfficiency();
 }
 
-void CoilHeatingElectric::setNominalCapacity(double nominalCapacity) {
-  getImpl<detail::CoilHeatingElectric_Impl>()->setNominalCapacity(nominalCapacity);
+bool CoilHeatingElectric::setNominalCapacity(double nominalCapacity) {
+  return getImpl<detail::CoilHeatingElectric_Impl>()->setNominalCapacity(nominalCapacity);
 }
 
 void CoilHeatingElectric::resetNominalCapacity() {
@@ -485,4 +485,3 @@ CoilHeatingElectric::CoilHeatingElectric(std::shared_ptr<detail::CoilHeatingElec
 } // model
 
 } // openstudio
-

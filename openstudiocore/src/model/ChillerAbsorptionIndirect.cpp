@@ -400,12 +400,12 @@ namespace detail {
     return result;
   }
 
-  void ChillerAbsorptionIndirect_Impl::setDesignGeneratorFluidFlowRate(boost::optional<double> designGeneratorFluidFlowRate) {
+  bool ChillerAbsorptionIndirect_Impl::setDesignGeneratorFluidFlowRate(boost::optional<double> designGeneratorFluidFlowRate) {
     bool result(false);
     if (designGeneratorFluidFlowRate) {
       result = setDouble(OS_Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate, designGeneratorFluidFlowRate.get());
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void ChillerAbsorptionIndirect_Impl::autosizeDesignGeneratorFluidFlowRate() {
@@ -831,8 +831,8 @@ bool ChillerAbsorptionIndirect::setGeneratorHeatSourceType(std::string generator
   return getImpl<detail::ChillerAbsorptionIndirect_Impl>()->setGeneratorHeatSourceType(generatorHeatSourceType);
 }
 
-void ChillerAbsorptionIndirect::setDesignGeneratorFluidFlowRate(double designGeneratorFluidFlowRate) {
-  getImpl<detail::ChillerAbsorptionIndirect_Impl>()->setDesignGeneratorFluidFlowRate(designGeneratorFluidFlowRate);
+bool ChillerAbsorptionIndirect::setDesignGeneratorFluidFlowRate(double designGeneratorFluidFlowRate) {
+  return getImpl<detail::ChillerAbsorptionIndirect_Impl>()->setDesignGeneratorFluidFlowRate(designGeneratorFluidFlowRate);
 }
 
 void ChillerAbsorptionIndirect::autosizeDesignGeneratorFluidFlowRate() {

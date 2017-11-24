@@ -171,14 +171,14 @@ void ControllerWaterCoil_Impl::resetActuatorVariable() {
   OS_ASSERT(result);
 }
 
-void ControllerWaterCoil_Impl::setControllerConvergenceTolerance(boost::optional<double> controllerConvergenceTolerance) {
+bool ControllerWaterCoil_Impl::setControllerConvergenceTolerance(boost::optional<double> controllerConvergenceTolerance) {
   bool result = false;
   if (controllerConvergenceTolerance) {
     result = setDouble(OS_Controller_WaterCoilFields::ControllerConvergenceTolerance, controllerConvergenceTolerance.get());
   } else {
     result = setString(OS_Controller_WaterCoilFields::ControllerConvergenceTolerance, "");
   }
-  OS_ASSERT(result);
+  return result;
 }
 
 void ControllerWaterCoil_Impl::resetControllerConvergenceTolerance() {
@@ -191,14 +191,14 @@ void ControllerWaterCoil_Impl::autosizeControllerConvergenceTolerance() {
   OS_ASSERT(result);
 }
 
-void ControllerWaterCoil_Impl::setMaximumActuatedFlow(boost::optional<double> maximumActuatedFlow) {
+bool ControllerWaterCoil_Impl::setMaximumActuatedFlow(boost::optional<double> maximumActuatedFlow) {
   bool result = false;
   if (maximumActuatedFlow) {
     result = setDouble(OS_Controller_WaterCoilFields::MaximumActuatedFlow, maximumActuatedFlow.get());
   } else {
     result = setString(OS_Controller_WaterCoilFields::MaximumActuatedFlow, "");
   }
-  OS_ASSERT(result);
+  return result;
 }
 
 void ControllerWaterCoil_Impl::resetMaximumActuatedFlow() {
@@ -345,8 +345,8 @@ void ControllerWaterCoil::resetActuatorVariable() {
   getImpl<detail::ControllerWaterCoil_Impl>()->resetActuatorVariable();
 }
 
-void ControllerWaterCoil::setControllerConvergenceTolerance(double controllerConvergenceTolerance) {
-  getImpl<detail::ControllerWaterCoil_Impl>()->setControllerConvergenceTolerance(controllerConvergenceTolerance);
+bool ControllerWaterCoil::setControllerConvergenceTolerance(double controllerConvergenceTolerance) {
+  return getImpl<detail::ControllerWaterCoil_Impl>()->setControllerConvergenceTolerance(controllerConvergenceTolerance);
 }
 
 void ControllerWaterCoil::resetControllerConvergenceTolerance() {
@@ -357,8 +357,8 @@ void ControllerWaterCoil::autosizeControllerConvergenceTolerance() {
   getImpl<detail::ControllerWaterCoil_Impl>()->autosizeControllerConvergenceTolerance();
 }
 
-void ControllerWaterCoil::setMaximumActuatedFlow(double maximumActuatedFlow) {
-  getImpl<detail::ControllerWaterCoil_Impl>()->setMaximumActuatedFlow(maximumActuatedFlow);
+bool ControllerWaterCoil::setMaximumActuatedFlow(double maximumActuatedFlow) {
+  return getImpl<detail::ControllerWaterCoil_Impl>()->setMaximumActuatedFlow(maximumActuatedFlow);
 }
 
 void ControllerWaterCoil::resetMaximumActuatedFlow() {

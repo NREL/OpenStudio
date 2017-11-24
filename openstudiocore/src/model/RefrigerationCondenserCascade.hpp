@@ -95,15 +95,15 @@ class MODEL_API RefrigerationCondenserCascade : public ModelObject {
 
   void resetCondensingTemperatureControlType();
 
-  void setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
+  bool setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
 
   void resetCondenserRefrigerantOperatingChargeInventory();
 
-  void setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
+  bool setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
 
   void resetCondensateReceiverRefrigerantInventory();
 
-  void setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
+  bool setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
 
   void resetCondensatePipingRefrigerantInventory();
 

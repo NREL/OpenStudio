@@ -475,7 +475,7 @@ namespace detail {
     return result;
   }
 
-  void RefrigerationSecondarySystem_Impl::setEvaporatorRangeTemperatureDifference(boost::optional<double> evaporatorRangeTemperatureDifference) {
+  bool RefrigerationSecondarySystem_Impl::setEvaporatorRangeTemperatureDifference(boost::optional<double> evaporatorRangeTemperatureDifference) {
     bool result(false);
     if (evaporatorRangeTemperatureDifference) {
       result = setDouble(OS_Refrigeration_SecondarySystemFields::EvaporatorRangeTemperatureDifference, evaporatorRangeTemperatureDifference.get());
@@ -484,7 +484,7 @@ namespace detail {
       resetEvaporatorRangeTemperatureDifference();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSecondarySystem_Impl::resetEvaporatorRangeTemperatureDifference() {
@@ -923,8 +923,8 @@ bool RefrigerationSecondarySystem::setEvaporatorApproachTemperatureDifference(do
   return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setEvaporatorApproachTemperatureDifference(evaporatorApproachTemperatureDifference);
 }
 
-void RefrigerationSecondarySystem::setEvaporatorRangeTemperatureDifference(double evaporatorRangeTemperatureDifference) {
-  getImpl<detail::RefrigerationSecondarySystem_Impl>()->setEvaporatorRangeTemperatureDifference(evaporatorRangeTemperatureDifference);
+bool RefrigerationSecondarySystem::setEvaporatorRangeTemperatureDifference(double evaporatorRangeTemperatureDifference) {
+  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setEvaporatorRangeTemperatureDifference(evaporatorRangeTemperatureDifference);
 }
 
 void RefrigerationSecondarySystem::resetEvaporatorRangeTemperatureDifference() {

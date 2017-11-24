@@ -113,15 +113,15 @@ namespace detail {
 
     void setNominalSpeedLevel(int nominalSpeedLevel);
 
-    void setRatedHeatingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> ratedHeatingCapacityAtSelectedNominalSpeedLevel);
+    bool setRatedHeatingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> ratedHeatingCapacityAtSelectedNominalSpeedLevel);
 
     void autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel();
 
-    void setRatedAirFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel);
+    bool setRatedAirFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel);
 
     void autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
 
-    void setRatedWaterFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedWaterFlowRateAtSelectedNominalSpeedLevel);
+    bool setRatedWaterFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedWaterFlowRateAtSelectedNominalSpeedLevel);
 
     void autosizeRatedWaterFlowRateAtSelectedNominalSpeedLevel();
 
@@ -162,4 +162,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILHEATINGWATERTOAIRHEATPUMPVARIABLESPEEDEQUATIONFIT_IMPL_HPP
-

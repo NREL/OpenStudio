@@ -176,7 +176,7 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   bool setCapacityControlMethod(std::string capacityControlMethod);
 
-  void setMaximumSupplyAirFlowRate(double maximumSupplyAirFlowRate);
+  bool setMaximumSupplyAirFlowRate(double maximumSupplyAirFlowRate);
 
   bool setMaximumSupplyAirFlowRate(const Quantity& maximumSupplyAirFlowRate);
 
@@ -194,7 +194,7 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   void resetMediumSpeedSupplyAirFlowRatio();
 
-  void setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate);
+  bool setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate);
 
   bool setMaximumOutdoorAirFlowRate(const Quantity& maximumOutdoorAirFlowRate);
 
@@ -212,7 +212,7 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   bool setCoolingCoil( HVACComponent & coolingCoil );
 
-  void setMaximumColdWaterFlowRate(double maximumColdWaterFlowRate);
+  bool setMaximumColdWaterFlowRate(double maximumColdWaterFlowRate);
 
   bool setMaximumColdWaterFlowRate(const Quantity& maximumColdWaterFlowRate);
 
@@ -232,7 +232,7 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   bool setHeatingCoil( HVACComponent & heatingCoil );
 
-  void setMaximumHotWaterFlowRate(double maximumHotWaterFlowRate);
+  bool setMaximumHotWaterFlowRate(double maximumHotWaterFlowRate);
 
   bool setMaximumHotWaterFlowRate(const Quantity& maximumHotWaterFlowRate);
 

@@ -251,10 +251,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanOnOff_Impl::setPressureRise(double pressureRise)
+  bool FanOnOff_Impl::setPressureRise(double pressureRise)
   {
     bool result = setDouble(OS_Fan_OnOffFields::PressureRise, pressureRise);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool FanOnOff_Impl::setMaximumFlowRate(boost::optional<double> maximumFlowRate)
@@ -646,9 +646,9 @@ double FanOnOff::pressureRise() const
   return getImpl<detail::FanOnOff_Impl>()->pressureRise();
 }
 
-void FanOnOff::setPressureRise(double pressureRise)
+bool FanOnOff::setPressureRise(double pressureRise)
 {
-  getImpl<detail::FanOnOff_Impl>()->setPressureRise(pressureRise);
+  return getImpl<detail::FanOnOff_Impl>()->setPressureRise(pressureRise);
 }
 
 // Field Maximum Flow Rate
@@ -771,4 +771,3 @@ FanOnOff::FanOnOff(std::shared_ptr<detail::FanOnOff_Impl> impl)
 
 } // model
 } // openstudio
-

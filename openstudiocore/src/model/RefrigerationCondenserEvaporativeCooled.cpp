@@ -428,7 +428,7 @@ namespace detail {
   //   OS_ASSERT(result);
   // }
 
-  void RefrigerationCondenserEvaporativeCooled_Impl::setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate) {
+  bool RefrigerationCondenserEvaporativeCooled_Impl::setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate) {
     bool result(false);
     if (ratedAirFlowRate) {
       result = setDouble(OS_Refrigeration_Condenser_EvaporativeCooledFields::RatedAirFlowRate, ratedAirFlowRate.get());
@@ -437,7 +437,7 @@ namespace detail {
       resetRatedAirFlowRate();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserEvaporativeCooled_Impl::resetRatedAirFlowRate() {
@@ -470,7 +470,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserEvaporativeCooled_Impl::setRatedWaterPumpPower(boost::optional<double> ratedWaterPumpPower) {
+  bool RefrigerationCondenserEvaporativeCooled_Impl::setRatedWaterPumpPower(boost::optional<double> ratedWaterPumpPower) {
     bool result(false);
     if (ratedWaterPumpPower) {
       result = setDouble(OS_Refrigeration_Condenser_EvaporativeCooledFields::RatedWaterPumpPower, ratedWaterPumpPower.get());
@@ -479,7 +479,7 @@ namespace detail {
       resetRatedWaterPumpPower();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserEvaporativeCooled_Impl::resetRatedWaterPumpPower() {
@@ -858,8 +858,8 @@ void RefrigerationCondenserEvaporativeCooled::resetMaximumCapacityFactor() {
 //   getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetAirInletNode();
 // }
 
-void RefrigerationCondenserEvaporativeCooled::setRatedAirFlowRate(double ratedAirFlowRate) {
-  getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setRatedAirFlowRate(ratedAirFlowRate);
+bool RefrigerationCondenserEvaporativeCooled::setRatedAirFlowRate(double ratedAirFlowRate) {
+  return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setRatedAirFlowRate(ratedAirFlowRate);
 }
 
 void RefrigerationCondenserEvaporativeCooled::resetRatedAirFlowRate() {
@@ -886,8 +886,8 @@ void RefrigerationCondenserEvaporativeCooled::resetBasinHeaterSetpointTemperatur
   getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetBasinHeaterSetpointTemperature();
 }
 
-void RefrigerationCondenserEvaporativeCooled::setRatedWaterPumpPower(double ratedWaterPumpPower) {
-  getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setRatedWaterPumpPower(ratedWaterPumpPower);
+bool RefrigerationCondenserEvaporativeCooled::setRatedWaterPumpPower(double ratedWaterPumpPower) {
+  return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setRatedWaterPumpPower(ratedWaterPumpPower);
 }
 
 void RefrigerationCondenserEvaporativeCooled::resetRatedWaterPumpPower() {

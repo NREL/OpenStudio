@@ -171,14 +171,14 @@ namespace detail {
     return result;
   }
 
-  void CurveExponent_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
+  bool CurveExponent_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
     bool result = false;
     if (minimumCurveOutput) {
       result = setDouble(OS_Curve_ExponentFields::MinimumCurveOutput, minimumCurveOutput.get());
     } else {
       result = setString(OS_Curve_ExponentFields::MinimumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveExponent_Impl::resetMinimumCurveOutput() {
@@ -186,14 +186,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveExponent_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
+  bool CurveExponent_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
     bool result = false;
     if (maximumCurveOutput) {
       result = setDouble(OS_Curve_ExponentFields::MaximumCurveOutput, maximumCurveOutput.get());
     } else {
       result = setString(OS_Curve_ExponentFields::MaximumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveExponent_Impl::resetMaximumCurveOutput() {
@@ -317,16 +317,16 @@ bool CurveExponent::setMaximumValueofx(double maximumValueofx) {
   return getImpl<detail::CurveExponent_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
-void CurveExponent::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveExponent_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+bool CurveExponent::setMinimumCurveOutput(double minimumCurveOutput) {
+  return getImpl<detail::CurveExponent_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveExponent::resetMinimumCurveOutput() {
   getImpl<detail::CurveExponent_Impl>()->resetMinimumCurveOutput();
 }
 
-void CurveExponent::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveExponent_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+bool CurveExponent::setMaximumCurveOutput(double maximumCurveOutput) {
+  return getImpl<detail::CurveExponent_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveExponent::resetMaximumCurveOutput() {

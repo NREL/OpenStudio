@@ -414,7 +414,7 @@ namespace detail {
     return result;
   }
 
-  void ZoneHVACLowTempRadiantConstFlow_Impl::setRatedFlowRate(boost::optional<double> ratedFlowRate) {
+  bool ZoneHVACLowTempRadiantConstFlow_Impl::setRatedFlowRate(boost::optional<double> ratedFlowRate) {
     bool result(false);
     if (ratedFlowRate) {
       result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedFlowRate, ratedFlowRate.get());
@@ -423,7 +423,7 @@ namespace detail {
       resetRatedFlowRate();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::resetRatedFlowRate() {
@@ -454,7 +454,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ZoneHVACLowTempRadiantConstFlow_Impl::setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption) {
+  bool ZoneHVACLowTempRadiantConstFlow_Impl::setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption) {
     bool result(false);
     if (ratedPowerConsumption) {
       result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedPowerConsumption, ratedPowerConsumption.get());
@@ -463,7 +463,7 @@ namespace detail {
       resetRatedPowerConsumption();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::resetRatedPowerConsumption() {
@@ -736,8 +736,8 @@ bool ZoneHVACLowTempRadiantConstFlow::setCoolingCoil(HVACComponent& coolingCoil)
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setCoolingCoil(coolingCoil);
 }
 
-void ZoneHVACLowTempRadiantConstFlow::setRatedFlowRate(double ratedFlowRate) {
-  getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setRatedFlowRate(ratedFlowRate);
+bool ZoneHVACLowTempRadiantConstFlow::setRatedFlowRate(double ratedFlowRate) {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setRatedFlowRate(ratedFlowRate);
 }
 
 void ZoneHVACLowTempRadiantConstFlow::resetRatedFlowRate() {
@@ -760,8 +760,8 @@ void ZoneHVACLowTempRadiantConstFlow::resetRatedPumpHead() {
   getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->resetRatedPumpHead();
 }
 
-void ZoneHVACLowTempRadiantConstFlow::setRatedPowerConsumption(double ratedPowerConsumption) {
-  getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setRatedPowerConsumption(ratedPowerConsumption);
+bool ZoneHVACLowTempRadiantConstFlow::setRatedPowerConsumption(double ratedPowerConsumption) {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setRatedPowerConsumption(ratedPowerConsumption);
 }
 
 void ZoneHVACLowTempRadiantConstFlow::resetRatedPowerConsumption() {

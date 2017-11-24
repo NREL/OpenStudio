@@ -160,14 +160,14 @@ namespace detail {
     return result;
   }
 
-  void CurveLinear_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
+  bool CurveLinear_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
     bool result = false;
     if (minimumCurveOutput) {
       result = setDouble(OS_Curve_LinearFields::MinimumCurveOutput, minimumCurveOutput.get());
     } else {
       result = setString(OS_Curve_LinearFields::MinimumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveLinear_Impl::resetMinimumCurveOutput() {
@@ -175,14 +175,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveLinear_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
+  bool CurveLinear_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
     bool result = false;
     if (maximumCurveOutput) {
       result = setDouble(OS_Curve_LinearFields::MaximumCurveOutput, maximumCurveOutput.get());
     } else {
       result = setString(OS_Curve_LinearFields::MaximumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveLinear_Impl::resetMaximumCurveOutput() {
@@ -293,16 +293,16 @@ bool CurveLinear::setMaximumValueofx(double maximumValueofx) {
   return getImpl<detail::CurveLinear_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
-void CurveLinear::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveLinear_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+bool CurveLinear::setMinimumCurveOutput(double minimumCurveOutput) {
+  return getImpl<detail::CurveLinear_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveLinear::resetMinimumCurveOutput() {
   getImpl<detail::CurveLinear_Impl>()->resetMinimumCurveOutput();
 }
 
-void CurveLinear::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveLinear_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+bool CurveLinear::setMaximumCurveOutput(double maximumCurveOutput) {
+  return getImpl<detail::CurveLinear_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveLinear::resetMaximumCurveOutput() {

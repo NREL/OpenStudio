@@ -68,7 +68,7 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   bool isRatedFlowRateAutosized() const;
 
-  void setRatedFlowRate(double ratedFlowRate);
+  bool setRatedFlowRate(double ratedFlowRate);
 
   bool setRatedFlowRate(const Quantity& ratedFlowRate);
 
@@ -96,7 +96,7 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   bool isRatedPowerConsumptionAutosized() const;
 
-  void setRatedPowerConsumption(double ratedPowerConsumption);
+  bool setRatedPowerConsumption(double ratedPowerConsumption);
 
   bool setRatedPowerConsumption(const Quantity& ratedPowerConsumption);
 
@@ -152,7 +152,7 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   OSOptionalQuantity getImpellerDiameter(bool returnIP=false) const;
 
-  void setImpellerDiameter(double impellerDiameter);
+  bool setImpellerDiameter(double impellerDiameter);
 
   bool setImpellerDiameter(const Quantity& impellerDiameter);
 
@@ -162,7 +162,7 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   OSOptionalQuantity getRotationalSpeed(bool returnIP=false) const;
 
-  void setRotationalSpeed(double rotationalSpeed);
+  bool setRotationalSpeed(double rotationalSpeed);
 
   bool setRotationalSpeed(const Quantity& rotationalSpeed);
 

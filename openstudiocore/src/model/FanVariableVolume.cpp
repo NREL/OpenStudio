@@ -460,7 +460,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanVariableVolume_Impl::setFanPowerCoefficient1(boost::optional<double> fanPowerCoefficient1) {
+  bool FanVariableVolume_Impl::setFanPowerCoefficient1(boost::optional<double> fanPowerCoefficient1) {
     bool result(false);
     if (fanPowerCoefficient1) {
       result = setDouble(OS_Fan_VariableVolumeFields::FanPowerCoefficient1, fanPowerCoefficient1.get());
@@ -469,7 +469,7 @@ namespace detail {
       resetFanPowerCoefficient1();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool FanVariableVolume_Impl::setFanPowerCoefficient1(const OSOptionalQuantity& fanPowerCoefficient1) {
@@ -494,7 +494,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanVariableVolume_Impl::setFanPowerCoefficient2(boost::optional<double> fanPowerCoefficient2) {
+  bool FanVariableVolume_Impl::setFanPowerCoefficient2(boost::optional<double> fanPowerCoefficient2) {
     bool result(false);
     if (fanPowerCoefficient2) {
       result = setDouble(OS_Fan_VariableVolumeFields::FanPowerCoefficient2, fanPowerCoefficient2.get());
@@ -503,7 +503,7 @@ namespace detail {
       resetFanPowerCoefficient2();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool FanVariableVolume_Impl::setFanPowerCoefficient2(const OSOptionalQuantity& fanPowerCoefficient2) {
@@ -528,7 +528,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanVariableVolume_Impl::setFanPowerCoefficient3(boost::optional<double> fanPowerCoefficient3) {
+  bool FanVariableVolume_Impl::setFanPowerCoefficient3(boost::optional<double> fanPowerCoefficient3) {
     bool result(false);
     if (fanPowerCoefficient3) {
       result = setDouble(OS_Fan_VariableVolumeFields::FanPowerCoefficient3, fanPowerCoefficient3.get());
@@ -537,7 +537,7 @@ namespace detail {
       resetFanPowerCoefficient3();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool FanVariableVolume_Impl::setFanPowerCoefficient3(const OSOptionalQuantity& fanPowerCoefficient3) {
@@ -562,7 +562,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanVariableVolume_Impl::setFanPowerCoefficient4(boost::optional<double> fanPowerCoefficient4) {
+  bool FanVariableVolume_Impl::setFanPowerCoefficient4(boost::optional<double> fanPowerCoefficient4) {
     bool result(false);
     if (fanPowerCoefficient4) {
       result = setDouble(OS_Fan_VariableVolumeFields::FanPowerCoefficient4, fanPowerCoefficient4.get());
@@ -571,7 +571,7 @@ namespace detail {
       resetFanPowerCoefficient4();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool FanVariableVolume_Impl::setFanPowerCoefficient4(const OSOptionalQuantity& fanPowerCoefficient4) {
@@ -596,7 +596,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanVariableVolume_Impl::setFanPowerCoefficient5(boost::optional<double> fanPowerCoefficient5) {
+  bool FanVariableVolume_Impl::setFanPowerCoefficient5(boost::optional<double> fanPowerCoefficient5) {
     bool result(false);
     if (fanPowerCoefficient5) {
       result = setDouble(OS_Fan_VariableVolumeFields::FanPowerCoefficient5, fanPowerCoefficient5.get());
@@ -605,7 +605,7 @@ namespace detail {
       resetFanPowerCoefficient5();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool FanVariableVolume_Impl::setFanPowerCoefficient5(const OSOptionalQuantity& fanPowerCoefficient5) {
@@ -1149,8 +1149,8 @@ void FanVariableVolume::resetMotorInAirstreamFraction() {
   getImpl<detail::FanVariableVolume_Impl>()->resetMotorInAirstreamFraction();
 }
 
-void FanVariableVolume::setFanPowerCoefficient1(double fanPowerCoefficient1) {
-  getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient1(fanPowerCoefficient1);
+bool FanVariableVolume::setFanPowerCoefficient1(double fanPowerCoefficient1) {
+  return getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient1(fanPowerCoefficient1);
 }
 
 bool FanVariableVolume::setFanPowerCoefficient1(const Quantity& fanPowerCoefficient1) {
@@ -1161,8 +1161,8 @@ void FanVariableVolume::resetFanPowerCoefficient1() {
   getImpl<detail::FanVariableVolume_Impl>()->resetFanPowerCoefficient1();
 }
 
-void FanVariableVolume::setFanPowerCoefficient2(double fanPowerCoefficient2) {
-  getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient2(fanPowerCoefficient2);
+bool FanVariableVolume::setFanPowerCoefficient2(double fanPowerCoefficient2) {
+  return getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient2(fanPowerCoefficient2);
 }
 
 bool FanVariableVolume::setFanPowerCoefficient2(const Quantity& fanPowerCoefficient2) {
@@ -1173,8 +1173,8 @@ void FanVariableVolume::resetFanPowerCoefficient2() {
   getImpl<detail::FanVariableVolume_Impl>()->resetFanPowerCoefficient2();
 }
 
-void FanVariableVolume::setFanPowerCoefficient3(double fanPowerCoefficient3) {
-  getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient3(fanPowerCoefficient3);
+bool FanVariableVolume::setFanPowerCoefficient3(double fanPowerCoefficient3) {
+  return getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient3(fanPowerCoefficient3);
 }
 
 bool FanVariableVolume::setFanPowerCoefficient3(const Quantity& fanPowerCoefficient3) {
@@ -1185,8 +1185,8 @@ void FanVariableVolume::resetFanPowerCoefficient3() {
   getImpl<detail::FanVariableVolume_Impl>()->resetFanPowerCoefficient3();
 }
 
-void FanVariableVolume::setFanPowerCoefficient4(double fanPowerCoefficient4) {
-  getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient4(fanPowerCoefficient4);
+bool FanVariableVolume::setFanPowerCoefficient4(double fanPowerCoefficient4) {
+  return getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient4(fanPowerCoefficient4);
 }
 
 bool FanVariableVolume::setFanPowerCoefficient4(const Quantity& fanPowerCoefficient4) {
@@ -1197,8 +1197,8 @@ void FanVariableVolume::resetFanPowerCoefficient4() {
   getImpl<detail::FanVariableVolume_Impl>()->resetFanPowerCoefficient4();
 }
 
-void FanVariableVolume::setFanPowerCoefficient5(double fanPowerCoefficient5) {
-  getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient5(fanPowerCoefficient5);
+bool FanVariableVolume::setFanPowerCoefficient5(double fanPowerCoefficient5) {
+  return getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient5(fanPowerCoefficient5);
 }
 
 bool FanVariableVolume::setFanPowerCoefficient5(const Quantity& fanPowerCoefficient5) {

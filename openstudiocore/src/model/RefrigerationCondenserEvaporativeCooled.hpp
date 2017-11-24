@@ -195,7 +195,7 @@ class MODEL_API RefrigerationCondenserEvaporativeCooled : public ParentObject {
 
   //void resetAirInletNode();
 
-  void setRatedAirFlowRate(double ratedAirFlowRate);
+  bool setRatedAirFlowRate(double ratedAirFlowRate);
 
   void resetRatedAirFlowRate();
 
@@ -209,7 +209,7 @@ class MODEL_API RefrigerationCondenserEvaporativeCooled : public ParentObject {
 
   void resetBasinHeaterSetpointTemperature();
 
-  void setRatedWaterPumpPower(double ratedWaterPumpPower);
+  bool setRatedWaterPumpPower(double ratedWaterPumpPower);
 
   void resetRatedWaterPumpPower();
 

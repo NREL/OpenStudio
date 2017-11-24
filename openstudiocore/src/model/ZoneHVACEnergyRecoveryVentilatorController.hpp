@@ -92,19 +92,19 @@ class MODEL_API ZoneHVACEnergyRecoveryVentilatorController : public ParentObject
   /** @name Setters */
   //@{
 
-  void setTemperatureHighLimit(double temperatureHighLimit);
+  bool setTemperatureHighLimit(double temperatureHighLimit);
 
   void resetTemperatureHighLimit();
 
-  void setTemperatureLowLimit(double temperatureLowLimit);
+  bool setTemperatureLowLimit(double temperatureLowLimit);
 
   void resetTemperatureLowLimit();
 
-  void setEnthalpyHighLimit(double enthalpyHighLimit);
+  bool setEnthalpyHighLimit(double enthalpyHighLimit);
 
   void resetEnthalpyHighLimit();
 
-  void setDewpointTemperatureLimit(double dewpointTemperatureLimit);
+  bool setDewpointTemperatureLimit(double dewpointTemperatureLimit);
 
   void resetDewpointTemperatureLimit();
 
@@ -156,4 +156,3 @@ typedef std::vector<ZoneHVACEnergyRecoveryVentilatorController> ZoneHVACEnergyRe
 } // openstudio
 
 #endif // MODEL_ZONEHVACENERGYRECOVERYVENTILATORCONTROLLER_HPP
-

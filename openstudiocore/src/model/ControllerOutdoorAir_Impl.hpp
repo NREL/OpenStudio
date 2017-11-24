@@ -139,7 +139,7 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
 
   bool isMinimumOutdoorAirFlowRateAutosized() const;
 
-  void setMinimumOutdoorAirFlowRate(boost::optional<double> minimumOutdoorAirFlowRate);
+  bool setMinimumOutdoorAirFlowRate(boost::optional<double> minimumOutdoorAirFlowRate);
 
   bool setMinimumOutdoorAirFlowRate(const OSOptionalQuantity& minimumOutdoorAirFlowRate);
 
@@ -151,7 +151,7 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
 
   bool isMaximumOutdoorAirFlowRateAutosized() const;
 
-  void setMaximumOutdoorAirFlowRate(boost::optional<double> maximumOutdoorAirFlowRate);
+  bool setMaximumOutdoorAirFlowRate(boost::optional<double> maximumOutdoorAirFlowRate);
 
   bool setMaximumOutdoorAirFlowRate(const OSOptionalQuantity& maximumOutdoorAirFlowRate);
 
@@ -168,11 +168,11 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
   boost::optional<Schedule> minimumFractionofOutdoorAirSchedule() const;
   bool setMinimumFractionofOutdoorAirSchedule(Schedule& schedule);
   void resetMinimumFractionofOutdoorAirSchedule();
-  
+
   boost::optional<Schedule> maximumFractionofOutdoorAirSchedule() const;
   bool setMaximumFractionofOutdoorAirSchedule(Schedule& schedule);
   void resetMaximumFractionofOutdoorAirSchedule();
-  
+
   boost::optional<Schedule> timeofDayEconomizerControlSchedule() const;
   bool setTimeofDayEconomizerControlSchedule(Schedule& schedule);
   void resetTimeofDayEconomizerControlSchedule();
@@ -195,4 +195,3 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
 } // openstudio
 
 #endif // MODEL_CONTROLLEROUTDOORAIR_IMPL_HPP
-

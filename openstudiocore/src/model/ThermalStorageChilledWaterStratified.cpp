@@ -431,7 +431,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ThermalStorageChilledWaterStratified_Impl::setMinimumTemperatureLimit(boost::optional<double> minimumTemperatureLimit) {
+  bool ThermalStorageChilledWaterStratified_Impl::setMinimumTemperatureLimit(boost::optional<double> minimumTemperatureLimit) {
     bool result(false);
     if (minimumTemperatureLimit) {
       result = setDouble(OS_ThermalStorage_ChilledWater_StratifiedFields::MinimumTemperatureLimit, minimumTemperatureLimit.get());
@@ -440,7 +440,7 @@ namespace detail {
       resetMinimumTemperatureLimit();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void ThermalStorageChilledWaterStratified_Impl::resetMinimumTemperatureLimit() {
@@ -448,7 +448,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ThermalStorageChilledWaterStratified_Impl::setNominalCoolingCapacity(boost::optional<double> nominalCoolingCapacity) {
+  bool ThermalStorageChilledWaterStratified_Impl::setNominalCoolingCapacity(boost::optional<double> nominalCoolingCapacity) {
     bool result(false);
     if (nominalCoolingCapacity) {
       result = setDouble(OS_ThermalStorage_ChilledWater_StratifiedFields::NominalCoolingCapacity, nominalCoolingCapacity.get());
@@ -457,7 +457,7 @@ namespace detail {
       resetNominalCoolingCapacity();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void ThermalStorageChilledWaterStratified_Impl::resetNominalCoolingCapacity() {
@@ -984,16 +984,16 @@ void ThermalStorageChilledWaterStratified::resetTemperatureSensorHeight() {
   getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->resetTemperatureSensorHeight();
 }
 
-void ThermalStorageChilledWaterStratified::setMinimumTemperatureLimit(double minimumTemperatureLimit) {
-  getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setMinimumTemperatureLimit(minimumTemperatureLimit);
+bool ThermalStorageChilledWaterStratified::setMinimumTemperatureLimit(double minimumTemperatureLimit) {
+  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setMinimumTemperatureLimit(minimumTemperatureLimit);
 }
 
 void ThermalStorageChilledWaterStratified::resetMinimumTemperatureLimit() {
   getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->resetMinimumTemperatureLimit();
 }
 
-void ThermalStorageChilledWaterStratified::setNominalCoolingCapacity(double nominalCoolingCapacity) {
-  getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNominalCoolingCapacity(nominalCoolingCapacity);
+bool ThermalStorageChilledWaterStratified::setNominalCoolingCapacity(double nominalCoolingCapacity) {
+  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setNominalCoolingCapacity(nominalCoolingCapacity);
 }
 
 void ThermalStorageChilledWaterStratified::resetNominalCoolingCapacity() {

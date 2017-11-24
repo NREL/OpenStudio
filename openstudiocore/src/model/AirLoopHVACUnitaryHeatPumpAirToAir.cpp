@@ -441,14 +441,14 @@ namespace detail {
     }
   }
 
-  void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater) {
+  bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater) {
     bool result = false;
     if (maximumSupplyAirTemperaturefromSupplementalHeater) {
       result = setDouble(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::MaximumSupplyAirTemperaturefromSupplementalHeater, maximumSupplyAirTemperaturefromSupplementalHeater.get());
     } else {
       result = setString(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::MaximumSupplyAirTemperaturefromSupplementalHeater, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::autosizeMaximumSupplyAirTemperaturefromSupplementalHeater() {
@@ -749,8 +749,8 @@ void AirLoopHVACUnitaryHeatPumpAirToAir::autosizeSupplyAirFlowRateWhenNoCoolingo
   getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
 }
 
-void AirLoopHVACUnitaryHeatPumpAirToAir::setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater) {
-  getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setMaximumSupplyAirTemperaturefromSupplementalHeater(maximumSupplyAirTemperaturefromSupplementalHeater);
+bool AirLoopHVACUnitaryHeatPumpAirToAir::setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater) {
+  return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setMaximumSupplyAirTemperaturefromSupplementalHeater(maximumSupplyAirTemperaturefromSupplementalHeater);
 }
 
 void AirLoopHVACUnitaryHeatPumpAirToAir::autosizeMaximumSupplyAirTemperaturefromSupplementalHeater() {
@@ -868,4 +868,3 @@ AirLoopHVACUnitaryHeatPumpAirToAir::AirLoopHVACUnitaryHeatPumpAirToAir(std::shar
 
 } // model
 } // openstudio
-

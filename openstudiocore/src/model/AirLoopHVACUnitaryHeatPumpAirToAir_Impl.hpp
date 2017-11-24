@@ -48,30 +48,30 @@ namespace detail {
   /** AirLoopHVACUnitaryHeatPumpAirToAir_Impl is a StraightComponent_Impl that is the implementation class for AirLoopHVACUnitaryHeatPumpAirToAir.*/
   class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAir_Impl : public StraightComponent_Impl
   {
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -185,7 +185,7 @@ namespace detail {
     void setCoolingCoil( HVACComponent & hvacComponent );
 
     void setSupplementalHeatingCoil( HVACComponent & hvacComponent );
-    void setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater);
+    bool setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater);
 
     void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 
@@ -237,4 +237,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_AIRLOOPHVACUNITARYHEATPUMPAIRTOAIR_IMPL_HPP
-
