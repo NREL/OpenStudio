@@ -64,7 +64,7 @@
 //#elif defined(Q_OS_WIN)
 //  Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 //#elif defined(Q_OS_LINUX)
-//  Q_IMPORT_PLUGIN(QXcbIntegrationPlugin);  
+//  Q_IMPORT_PLUGIN(QXcbIntegrationPlugin);
 //#endif
 
 void qDebugMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -149,14 +149,14 @@ int main(int argc, char *argv[])
     for (const auto& path : openstudio::getOpenStudioBareRubyPaths()){
       modules.push_back(openstudio::toString(path));
     }
-    
+
     //try {
     // Initialize the embedded Ruby interpreter
     std::shared_ptr<openstudio::detail::RubyInterpreter> rubyInterpreter(
         new openstudio::detail::RubyInterpreter(openstudio::getOpenStudioRubyPath(),
           openstudio::getOpenStudioRubyScriptsPath(),
           modules));
-         
+
     // Initialize the measure info getter
     QSharedPointer<openstudio::measure::OSMeasureInfoGetter> infoGetter(
       new openstudio::measure::EmbeddedRubyMeasureInfoGetter<openstudio::detail::RubyInterpreter>(rubyInterpreter));

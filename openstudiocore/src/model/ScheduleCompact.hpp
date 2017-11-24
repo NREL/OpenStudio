@@ -51,8 +51,8 @@ class MODEL_API ScheduleCompact : public Schedule {
   /** Creates a ScheduleCompact with constantValue applied to the entire year. */
   ScheduleCompact(const Model& model, double constantValue);
 
-  /** Creates a ScheduleCompact with constantValue applied to the entire year, if 
-   *  scheduleTypeLimits() and the units are compatible. Otherwise creates an empty 
+  /** Creates a ScheduleCompact with constantValue applied to the entire year, if
+   *  scheduleTypeLimits() and the units are compatible. Otherwise creates an empty
    *  ScheduleCompact. */
   ScheduleCompact(const Model& model, const Quantity& constantValue);
 
@@ -65,7 +65,7 @@ class MODEL_API ScheduleCompact : public Schedule {
   /** @name Setters */
   //@{
 
-  /** Clears all existing data and sets the data so that value will be applied to the entire 
+  /** Clears all existing data and sets the data so that value will be applied to the entire
    *  year. */
   void setToConstantValue(double value);
 
@@ -77,16 +77,16 @@ class MODEL_API ScheduleCompact : public Schedule {
   /** @name Queries */
   //@{
 
-  /** Returns true if this ScheduleCompact has a single value applied to the entire year. 
+  /** Returns true if this ScheduleCompact has a single value applied to the entire year.
    *  (Roughly--the text fields are not checked.) */
   bool isConstantValue() const;
 
-  /** Returns this ScheduleCompact's constant value, if this ScheduleCompact conforms to that 
+  /** Returns this ScheduleCompact's constant value, if this ScheduleCompact conforms to that
    *  pattern. Otherwise returns boost::none (evaluates to false). */
   boost::optional<double> constantValue() const;
 
-  /** Returns this ScheduleCompact's constant value as a Quantity, if this ScheduleCompact 
-   *  conforms to that pattern and scheduleTypeLimits() is set. Otherwise returns boost::none 
+  /** Returns this ScheduleCompact's constant value as a Quantity, if this ScheduleCompact
+   *  conforms to that pattern and scheduleTypeLimits() is set. Otherwise returns boost::none
    *  (evaluates to false). */
   boost::optional<Quantity> getConstantValue(bool returnIP=false) const;
 

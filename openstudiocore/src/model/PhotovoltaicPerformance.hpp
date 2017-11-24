@@ -55,7 +55,7 @@ class MODEL_API PhotovoltaicPerformance : public ModelObject {
 
   friend class openstudio::IdfObject;
 
-  /// @cond 
+  /// @cond
 
   typedef detail::PhotovoltaicPerformance_Impl ImplType;
 
@@ -65,7 +65,7 @@ class MODEL_API PhotovoltaicPerformance : public ModelObject {
 
   REGISTER_LOGGER("openstudio.model.PhotovoltaicPerformance");
 
-  /// @endcond 
+  /// @endcond
 
 };
 

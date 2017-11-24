@@ -53,8 +53,8 @@ class MODEL_API LightingDesignDay : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  LightingDesignDay(const std::string& cieSkyModel, 
-                    const openstudio::Date& date, 
+  LightingDesignDay(const std::string& cieSkyModel,
+                    const openstudio::Date& date,
                     const Model& model);
 
   virtual ~LightingDesignDay() {}

@@ -176,7 +176,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
 
     // Heating Design Capacity - introduced in 8.2.0 and not yet supported in OS
     idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity,"Autosize");
-    
+
     // field Maximum Hot Water Flow
     if( coilHeat.isMaximumHotWaterFlowAutosized() )
     {

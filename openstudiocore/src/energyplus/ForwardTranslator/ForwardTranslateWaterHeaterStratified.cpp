@@ -467,7 +467,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterStratified( Wa
   {
     idfObject.setDouble(WaterHeater_StratifiedFields::SourceSideOutletHeight,value.get());
   }
-  
+
   // Inlet Mode
   s = modelObject.inletMode();
   if( s )

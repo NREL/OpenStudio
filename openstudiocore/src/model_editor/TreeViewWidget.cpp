@@ -275,7 +275,7 @@ std::vector<openstudio::IddObjectType> TreeViewWidget::getAllowableChildTypes()
     TreeModel * model = static_cast<TreeModel *>(mTreeView->model());
     OptionalModelObject temp = model->modelAtIndex(rowList.at(0));
     OptionalParentObject tempParent;
-    if( temp && 
+    if( temp &&
         ( tempParent = temp->optionalCast<ParentObject>() ) )
     {
       allowableChildTypes = tempParent->allowableChildTypes();
@@ -299,7 +299,7 @@ void TreeViewWidget::setExpandedIndexHandles()
   mExpandedIndexHandles.clear();
 
   std::pair<QModelIndex, openstudio::Handle> expandedIndexHandle;
-  
+
   QModelIndex index;
   QModelIndexList persistentIndexList = mTreeModel->getPersistentIndexList();
 

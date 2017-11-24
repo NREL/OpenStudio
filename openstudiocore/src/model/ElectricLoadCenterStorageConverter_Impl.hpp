@@ -75,7 +75,7 @@ namespace detail {
     //@}
     /** @name Getters */
     //@{
-      
+
     boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
     Schedule availabilitySchedule() const;

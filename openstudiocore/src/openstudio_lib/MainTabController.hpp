@@ -69,7 +69,7 @@ class MainTabController : public OSQObjectController
 
     void downloadComponentsClicked();
 
-    void openLibDlgClicked();  
+    void openLibDlgClicked();
 
   public slots:
 

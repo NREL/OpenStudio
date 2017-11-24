@@ -147,8 +147,8 @@ std::ostream& ImfFile::print(std::ostream& os) const
 bool ImfFile::save(const openstudio::path& p, bool overwrite) {
 
   path wp = completePathToFile(p,path(),"imf",true);
-  if (!wp.empty() && (overwrite == false)) { 
-    LOG(Info,"ImfFile save method failed because instructed not to overwrite path '" 
+  if (!wp.empty() && (overwrite == false)) {
+    LOG(Info,"ImfFile save method failed because instructed not to overwrite path '"
         << toString(p) << "'.");
     return false;
   }
@@ -166,7 +166,7 @@ bool ImfFile::save(const openstudio::path& p, bool overwrite) {
     }
   }
 
-  LOG(Error,"Unable to write ImfFile to path '" << toString(p) 
+  LOG(Error,"Unable to write ImfFile to path '" << toString(p)
       << "', because parent directory could not be created.");
   return false;
 }
@@ -345,7 +345,7 @@ bool ImfFile::m_load(std::istream& is) {
       // construct the object
       OptionalIdfObject object = IdfObject::load(text,*iddObject);
       if (!object) {
-        LOG(Error,"Unable to construct IdfObject from text: " << std::endl << text 
+        LOG(Error,"Unable to construct IdfObject from text: " << std::endl << text
             << std::endl << "Throwing this object out and parsing the remainder of the file.");
         continue;
       }

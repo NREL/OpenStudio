@@ -48,11 +48,11 @@ namespace detail {
  *  IDD object named "OS:Output:Variable".
  *
  *  OutputVariable is used to request output data from EnergyPlus simulations.  Each ModelObject defines
- *  a list of available output variable names which can be used to create OutputVariable requests.  An 
- *  OutputVariable request can apply to all objects (e.g. if the 'Key Value' field is set to '*') or only 
+ *  a list of available output variable names which can be used to create OutputVariable requests.  An
+ *  OutputVariable request can apply to all objects (e.g. if the 'Key Value' field is set to '*') or only
  *  a particular object (e.g. if the 'Key Value' field is set to an object's name).  If an OutputVariable object
  *  refers to a particular ModelObject then it is parented by that ModelObject, otherwise it is unparented.
- *  If an OutputVariable object is present when a Model is simulated in EnergyPlus, the OutputVariable can be 
+ *  If an OutputVariable object is present when a Model is simulated in EnergyPlus, the OutputVariable can be
  *  used to access simulation results for its parent ModelObject.
  */
 class MODEL_API OutputVariable : public ModelObject {
@@ -109,7 +109,7 @@ class MODEL_API OutputVariable : public ModelObject {
   //@}
  protected:
 
-  /// @cond 
+  /// @cond
 
   typedef detail::OutputVariable_Impl ImplType;
 

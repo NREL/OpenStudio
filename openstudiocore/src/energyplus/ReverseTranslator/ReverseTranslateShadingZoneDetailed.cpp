@@ -58,7 +58,7 @@ OptionalModelObject ReverseTranslator::translateShadingZoneDetailed( const Works
   }
 
   openstudio::Point3dVector vertices = getVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, workspaceObject);
- 
+
   boost::optional<ShadingSurface> shadingSurface;
   try{
     shadingSurface = ShadingSurface(vertices, m_model);

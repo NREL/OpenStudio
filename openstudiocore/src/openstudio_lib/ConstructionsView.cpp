@@ -111,7 +111,7 @@ void ConstructionsInspectorView::onSelectModelObject(const openstudio::model::Mo
       this->showWindowDataFileInspector(modelObject);
       break;
     default:
-      showDefaultView();      
+      showDefaultView();
   }
 }
 

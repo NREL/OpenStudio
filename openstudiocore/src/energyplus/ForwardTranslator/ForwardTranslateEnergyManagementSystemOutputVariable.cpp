@@ -83,7 +83,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemOut
   if (m.is_initialized()) {
     idfObject.setString(EnergyManagementSystem_OutputVariableFields::Units, m.get());
   }
- 
+
   return idfObject;
 }
 

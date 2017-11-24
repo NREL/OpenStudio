@@ -85,7 +85,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACSupplyPlenum( 
 
 
   // OutletNodeName
-  
+
   std::vector<ModelObject> outletModelObjects = modelObject.outletModelObjects();
   for( const auto & outletModelObject : outletModelObjects )
   {

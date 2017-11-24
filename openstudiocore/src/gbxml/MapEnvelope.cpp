@@ -54,7 +54,7 @@
 
 namespace openstudio {
 namespace gbxml {
- 
+
   boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateConstruction(const QDomElement& element, const QDomNodeList& layerElements, const QDomDocument& doc, openstudio::model::Model& model)
   {
     // Krishnan, this constructor should only be used for unique objects like Building and Site
@@ -66,7 +66,7 @@ namespace gbxml {
 
     QString constructionName = element.firstChildElement("Name").toElement().text();
     construction.setName(escapeName(constructionId, constructionName));
-        
+
     QDomNodeList layerIdList = element.elementsByTagName("LayerId");
 
     if (layerIdList.isEmpty()){
@@ -96,7 +96,7 @@ namespace gbxml {
     // now assign all layers to real material, does gbXML have same layer order convention as E+?
     for (unsigned i = 0; i < materials.size(); ++i){
       bool test = false;
-          
+
       if (materials[i].optionalCast<openstudio::model::OpaqueMaterial>()){
         test = construction.insertLayer(i, materials[i].cast<openstudio::model::OpaqueMaterial>());
       }else if (materials[i].optionalCast<openstudio::model::FenestrationMaterial>()){
@@ -104,7 +104,7 @@ namespace gbxml {
       }else if (materials[i].optionalCast<openstudio::model::ModelPartitionMaterial>()){
         test = construction.setLayer(materials[i].cast<openstudio::model::ModelPartitionMaterial>());
       }
-          
+
       OS_ASSERT(test); // Krishnan, what type of error handling do you want?
     }
 
@@ -112,7 +112,7 @@ namespace gbxml {
   }
 
   boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWindowType(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
-  {  
+  {
     openstudio::model::Construction construction(model);
     QString windowTypeId = element.attribute("id");
     m_idToObjectMap.insert(std::make_pair(windowTypeId, construction));
@@ -132,7 +132,7 @@ namespace gbxml {
         break;
       }
     }
-        
+
     QDomNodeList shgcElements = element.elementsByTagName("SolarHeatGainCoeff");
     for (int i = 0; i < shgcElements.count(); i++){
       QDomElement shgcElement = shgcElements.at(i).toElement();
@@ -141,7 +141,7 @@ namespace gbxml {
         break;
       }
     }
-        
+
     QDomNodeList transmittanceElements = element.elementsByTagName("Transmittance");
     for (int i = 0; i < transmittanceElements.count(); i++){
       QDomElement transmittanceElement = transmittanceElements.at(i).toElement();
@@ -161,7 +161,7 @@ namespace gbxml {
       layers.push_back(glazing);
       construction.setLayers(layers);
     }
-    
+
     return construction;
   }
 
@@ -190,13 +190,13 @@ namespace gbxml {
 
       openstudio::model::StandardOpaqueMaterial material(model);
       result = material;
-        
+
       QString id = element.attribute("id");
       m_idToObjectMap.insert(std::make_pair(id, material));
 
       QString name = element.firstChildElement("Name").toElement().text();
       material.setName(escapeName(id, name));
-        
+
       material.setDensity(density);
       material.setThermalConductivity(conductivity);
       material.setThickness(thickness);
@@ -219,13 +219,13 @@ namespace gbxml {
       QString id = element.attribute("id");
       m_idToObjectMap.insert(std::make_pair(id, material));
 
-      QString name = element.firstChildElement("Name").toElement().text(); 
+      QString name = element.firstChildElement("Name").toElement().text();
       material.setName(escapeName(id, name));
 
       material.setThermalResistance(rvalue);
 
-    } else { 
-        
+    } else {
+
         // make a stub material
       openstudio::model::MasslessOpaqueMaterial material(model);
       result = material;
@@ -267,7 +267,7 @@ namespace gbxml {
     QDomElement nameElement = doc.createElement("Name");
     result->appendChild(nameElement);
     nameElement.appendChild(doc.createTextNode(QString::fromStdString(name)));
-    
+
     if (isOpaque){
       if (constructionBase.optionalCast<model::LayeredConstruction>()){
         for (const auto& layer : constructionBase.cast<model::LayeredConstruction>().layers()){
@@ -356,7 +356,7 @@ namespace gbxml {
 
     return result;
   }
-  
+
   boost::optional<QDomElement> ForwardTranslator::translateMaterial(const openstudio::model::Material& material, QDomDocument& doc)
   {
     boost::optional<QDomElement> result;
@@ -395,7 +395,7 @@ namespace gbxml {
       thickness = som.thickness();
       conductivity = som.conductivity();
       density = som.density();
-      specificHeat = som.specificHeat(); 
+      specificHeat = som.specificHeat();
       thermalAbsorptance = som.thermalAbsorptance();
       solarAbsorptance = som.solarAbsorptance();
       visibleAbsorptance = som.visibleAbsorptance();
@@ -471,7 +471,7 @@ namespace gbxml {
       element.appendChild(doc.createTextNode(QString::number(*thickness)));
       element.setAttribute("unit", "Meters");
     }
-    
+
     if (conductivity){
       QDomElement element = doc.createElement("Conductivity");
       result->appendChild(element);
@@ -485,7 +485,7 @@ namespace gbxml {
       element.appendChild(doc.createTextNode(QString::number(*resistance)));
       element.setAttribute("unit", "SquareMeterKPerW");
     }
-    
+
     if (density){
       QDomElement element = doc.createElement("Density");
       result->appendChild(element);
@@ -541,6 +541,6 @@ namespace gbxml {
     }
     return result;
   }
-  
+
 } // gbxml
 } // openstudio

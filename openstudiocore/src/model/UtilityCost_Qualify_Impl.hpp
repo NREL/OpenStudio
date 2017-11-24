@@ -38,7 +38,7 @@ namespace model {
 namespace detail {
 
 class MODEL_API UtilityCost_Qualify_Impl : public ParentObject_Impl{
-  
+
 public:
   // constructor
   UtilityCost_Qualify_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);

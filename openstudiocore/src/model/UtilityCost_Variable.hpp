@@ -45,7 +45,7 @@ namespace detail{
  *  UtilityCost_Variable allows for the direct entry of monthly values into a variable.
  */
 class MODEL_API UtilityCost_Variable : public ParentObject{
- 
+
 public:
 
   /** @name Constructors and Destructors */
@@ -94,25 +94,25 @@ public:
   //@}
   /** @name Setters */
   //@{
-  
+
   void setJanuaryValue(double januaryValue);
 
   void setFebruaryValue(double februaryValue);
-  
+
   void setMarchValue(double marchValue);
-  
+
   void setAprilValue(double aprilValue);
-  
+
   void setMayValue(double mayValue);
 
   void setJuneValue(double juneValue);
 
   void setJulyValue(double julyValue);
-  
+
   void setAugustValue(double augustValue);
 
   void setSeptemberValue(double septemberValue);
-  
+
   void setOctoberValue(double octoberValue);
 
   void setNovemberValue(double novemberValue);
@@ -122,7 +122,7 @@ public:
   void setName(const std::string& name);
 
   void setTariffName(const std::string& tariffName);
- 
+
   void setVariableType(const std::string& variableType);
 
   //@}

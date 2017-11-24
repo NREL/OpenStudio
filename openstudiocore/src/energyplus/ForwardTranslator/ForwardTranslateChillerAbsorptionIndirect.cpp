@@ -143,7 +143,7 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerAbsorptionIndirect
   if( modelObject.isDesignChilledWaterFlowRateAutosized() ) {
     idfObject.setString(Chiller_Absorption_IndirectFields::DesignChilledWaterFlowRate,"Autosize");
   } else if( auto value = modelObject.designChilledWaterFlowRate() ) {
-    idfObject.setDouble(Chiller_Absorption_IndirectFields::DesignChilledWaterFlowRate,value.get()); 
+    idfObject.setDouble(Chiller_Absorption_IndirectFields::DesignChilledWaterFlowRate,value.get());
   }
 
   if( modelObject.isDesignCondenserWaterFlowRateAutosized() ) {

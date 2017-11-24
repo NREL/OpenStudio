@@ -59,7 +59,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellWaterSup
   boost::optional<CurveQuadratic> curvequad;
   boost::optional<CurveCubic> curvecubic;
   boost::optional<Schedule> sch;
-  
+
   IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_WaterSupply, modelObject);
   //Name
   s = modelObject.name();
@@ -104,7 +104,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellWaterSup
   }
 
   return pcm;
-  
+
 }
 
 } // energyplus

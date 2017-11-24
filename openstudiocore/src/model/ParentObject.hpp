@@ -40,7 +40,7 @@ namespace detail{
 }
 
 /** ParentObject is an abstract class derived from ModelObject.
- *   
+ *
  *  \todo It is an open question if the functionality of ParentObject should be merged
  *  with ModelObject and ParentObject deprecated.
  */
@@ -50,7 +50,7 @@ class MODEL_API ParentObject : public ModelObject {
 
   /** @name Constructors and Destructors */
   //@{
-  
+
   //@}
   /** @name Getters */
   //@{
@@ -75,7 +75,7 @@ class MODEL_API ParentObject : public ModelObject {
 
   /// Constructs a new ParentObject object in the model.
   ParentObject(IddObjectType type, const Model& model);
-  
+
   //@}
 
   /// @cond
@@ -103,8 +103,8 @@ typedef boost::optional<ParentObject> OptionalParentObject;
 // vector of ParentObject
 typedef std::vector<ParentObject> ParentObjectVector;
 
-/** Returns object and all other objects accessible by calling children() on encountered 
- *  \link ParentObject ParentObjects \endlink. LifeCycleCost objects are not technically children but may be included 
+/** Returns object and all other objects accessible by calling children() on encountered
+ *  \link ParentObject ParentObjects \endlink. LifeCycleCost objects are not technically children but may be included
  *  by setting the optional second argument to true. \relates ParentObject */
 MODEL_API std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool includeLifeCycleCosts = false);
 

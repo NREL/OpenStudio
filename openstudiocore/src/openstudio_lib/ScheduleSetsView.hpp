@@ -75,7 +75,7 @@ class ScheduleSetsInspectorView : public ModelObjectInspectorView
     virtual void onUpdate() override;
 
   private:
-    
+
     std::map<openstudio::IddObjectType, int> m_inspectorIndexMap;
 };
 

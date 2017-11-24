@@ -93,7 +93,7 @@ WaterUseConnectionsDetailItem::WaterUseConnectionsDetailItem(WaterUseConnections
     auto leftVItem2 = new OneTwoFourStraightItem(this);
 
     leftVItem2->setEnableHighlight(false);
-    
+
     leftVItem2->setGridPos(i,j + 2);
   }
   else
@@ -237,7 +237,7 @@ WaterUseConnectionsDetailItem::WaterUseConnectionsDetailItem(WaterUseConnections
 
   for( int b = 0; b < branchCount; b++ )
   {
-    i = 4; 
+    i = 4;
 
     auto outletItem = new OneThreeStraightItem(this);
 
@@ -326,8 +326,8 @@ WaterUseConnectionsDetailItem::WaterUseConnectionsDetailItem(WaterUseConnections
 
 }
 
-void WaterUseConnectionsDetailItem::paint( QPainter *painter, 
-                           const QStyleOptionGraphicsItem *option, 
+void WaterUseConnectionsDetailItem::paint( QPainter *painter,
+                           const QStyleOptionGraphicsItem *option,
                            QWidget *widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -368,7 +368,7 @@ ServiceWaterItem::ServiceWaterItem(ServiceWaterScene * serviceWaterScene)
     auto leftVItem1 = new TwoThreeFourStraightItem(this);
 
     leftVItem1->setEnableHighlight(false);
-    
+
     leftVItem1->setGridPos(i,j + 1);
   }
   else
@@ -463,7 +463,7 @@ ServiceWaterItem::ServiceWaterItem(ServiceWaterScene * serviceWaterScene)
 
   for( int b = 0; b < branchCount; b++ )
   {
-    i = 4; 
+    i = 4;
 
     auto outletItem = new OneThreeStraightItem(this);
 
@@ -542,8 +542,8 @@ ServiceWaterItem::ServiceWaterItem(ServiceWaterScene * serviceWaterScene)
   setVGridLength(j);
 }
 
-void ServiceWaterItem::paint( QPainter *painter, 
-                           const QStyleOptionGraphicsItem *option, 
+void ServiceWaterItem::paint( QPainter *painter,
+                           const QStyleOptionGraphicsItem *option,
                            QWidget *widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -594,8 +594,8 @@ ButtonItem * SewerItem::sewerButton() const
   return m_sewerButton;
 }
 
-void SewerItem::paint( QPainter *painter, 
-                       const QStyleOptionGraphicsItem *option, 
+void SewerItem::paint( QPainter *painter,
+                       const QStyleOptionGraphicsItem *option,
                        QWidget *widget )
 {
   GridItem::paint(painter,option,widget);
@@ -643,8 +643,8 @@ void HotWaterSupplyItem::onHotWaterSupplyButtonClicked()
   }
 }
 
-void HotWaterSupplyItem::paint( QPainter *painter, 
-                           const QStyleOptionGraphicsItem *option, 
+void HotWaterSupplyItem::paint( QPainter *painter,
+                           const QStyleOptionGraphicsItem *option,
                            QWidget *widget )
 {
   GridItem::paint(painter,option,widget);
@@ -682,8 +682,8 @@ ButtonItem * MainsSupplyItem::mainsSupplyButton() const
   return m_mainsSupplyButton;
 }
 
-void MainsSupplyItem::paint( QPainter *painter, 
-                           const QStyleOptionGraphicsItem *option, 
+void MainsSupplyItem::paint( QPainter *painter,
+                           const QStyleOptionGraphicsItem *option,
                            QWidget *widget )
 {
   GridItem::paint(painter,option,widget);
@@ -705,8 +705,8 @@ DoubleOneThreeStraightItem::DoubleOneThreeStraightItem( QGraphicsItem * parent )
 {
 }
 
-void DoubleOneThreeStraightItem::paint(QPainter *painter, 
-                                       const QStyleOptionGraphicsItem *option, 
+void DoubleOneThreeStraightItem::paint(QPainter *painter,
+                                       const QStyleOptionGraphicsItem *option,
                                        QWidget *widget)
 {
   GridItem::paint(painter,option,widget);
@@ -724,8 +724,8 @@ DoubleThreeFourStraightItem::DoubleThreeFourStraightItem( QGraphicsItem * parent
 {
 }
 
-void DoubleThreeFourStraightItem::paint(QPainter *painter, 
-                                       const QStyleOptionGraphicsItem *option, 
+void DoubleThreeFourStraightItem::paint(QPainter *painter,
+                                       const QStyleOptionGraphicsItem *option,
                                        QWidget *widget)
 {
   GridItem::paint(painter,option,widget);
@@ -746,8 +746,8 @@ DoubleTwoFourStraightItem::DoubleTwoFourStraightItem( QGraphicsItem * parent )
 {
 }
 
-void DoubleTwoFourStraightItem::paint(QPainter *painter, 
-                                       const QStyleOptionGraphicsItem *option, 
+void DoubleTwoFourStraightItem::paint(QPainter *painter,
+                                       const QStyleOptionGraphicsItem *option,
                                        QWidget *widget)
 {
   GridItem::paint(painter,option,widget);
@@ -765,8 +765,8 @@ DoubleTwoThreeStraightItem::DoubleTwoThreeStraightItem( QGraphicsItem * parent )
 {
 }
 
-void DoubleTwoThreeStraightItem::paint(QPainter *painter, 
-                                       const QStyleOptionGraphicsItem *option, 
+void DoubleTwoThreeStraightItem::paint(QPainter *painter,
+                                       const QStyleOptionGraphicsItem *option,
                                        QWidget *widget)
 {
   GridItem::paint(painter,option,widget);
@@ -789,8 +789,8 @@ HotWaterJunctionItem::HotWaterJunctionItem( QGraphicsItem * parent )
 {
 }
 
-void HotWaterJunctionItem::paint(QPainter *painter, 
-                                       const QStyleOptionGraphicsItem *option, 
+void HotWaterJunctionItem::paint(QPainter *painter,
+                                       const QStyleOptionGraphicsItem *option,
                                        QWidget *widget)
 {
   DoubleTwoFourStraightItem::paint(painter,option,widget);
@@ -807,8 +807,8 @@ ColdWaterJunctionItem::ColdWaterJunctionItem( int isElbow, QGraphicsItem * paren
   setEnableHighlight(false);
 }
 
-void ColdWaterJunctionItem::paint(QPainter *painter, 
-                                  const QStyleOptionGraphicsItem *option, 
+void ColdWaterJunctionItem::paint(QPainter *painter,
+                                  const QStyleOptionGraphicsItem *option,
                                   QWidget *widget)
 {
   GridItem::paint(painter,option,widget);
@@ -838,8 +838,8 @@ DoubleTwoThreeFourStraightItem::DoubleTwoThreeFourStraightItem(QGraphicsItem * p
 {
 }
 
-void DoubleTwoThreeFourStraightItem::paint(QPainter *painter, 
-                                   const QStyleOptionGraphicsItem *option, 
+void DoubleTwoThreeFourStraightItem::paint(QPainter *painter,
+                                   const QStyleOptionGraphicsItem *option,
                                    QWidget *widget)
 {
   GridItem::paint(painter,option,widget);
@@ -865,8 +865,8 @@ WaterUseConnectionsItem::WaterUseConnectionsItem(QGraphicsItem * parent)
   setDeletable(true);
 }
 
-void WaterUseConnectionsItem::paint(QPainter *painter, 
-                                    const QStyleOptionGraphicsItem *option, 
+void WaterUseConnectionsItem::paint(QPainter *painter,
+                                    const QStyleOptionGraphicsItem *option,
                                     QWidget *widget)
 {
   GridItem::paint(painter,option,widget);
@@ -894,8 +894,8 @@ void WaterUseEquipmentItem::setModelObject( model::OptionalModelObject modelObje
   GridItem::setModelObject(modelObject);
 }
 
-void WaterUseEquipmentItem::paint(QPainter *painter, 
-                                  const QStyleOptionGraphicsItem *option, 
+void WaterUseEquipmentItem::paint(QPainter *painter,
+                                  const QStyleOptionGraphicsItem *option,
                                   QWidget *widget)
 {
   GridItem::paint(painter,option,widget);
@@ -917,7 +917,7 @@ MakeupWaterItem::MakeupWaterItem(QGraphicsItem * parent)
 
   m_mainsSupplyButton->setToolTip("Go back to water mains editor");
 
-  m_mainsSupplyButton->setPos(75,0); 
+  m_mainsSupplyButton->setPos(75,0);
 
   QPixmap hotWaterSupplyPixmap(":/images/loop_button.png");
   QPixmap hotWaterSupplyPressPixmap(":/images/loop_button_press.png");
@@ -934,8 +934,8 @@ MakeupWaterItem::MakeupWaterItem(QGraphicsItem * parent)
   m_hotWaterSupplyButton->setPos(90,137);
 }
 
-void MakeupWaterItem::paint(QPainter *painter, 
-                            const QStyleOptionGraphicsItem *option, 
+void MakeupWaterItem::paint(QPainter *painter,
+                            const QStyleOptionGraphicsItem *option,
                             QWidget *widget)
 {
   painter->setRenderHint(QPainter::Antialiasing, true);

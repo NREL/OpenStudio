@@ -48,7 +48,7 @@ class DefaultConstructionSetsView : public ModelSubTabView
                                 const QString& tabLabel,
                                 bool hasSubTabs,
                                 QWidget * parent = nullptr);
-                                
+
     virtual ~DefaultConstructionSetsView() {}
 
   private:

@@ -33,13 +33,13 @@
 
 namespace openstudio {
 
-/** Index pair for IdfObject fields in extensible groups. For example, in 
+/** Index pair for IdfObject fields in extensible groups. For example, in
  *
- *  \code 
- *  ExtensibleIndex extIndex(1,2) 
+ *  \code
+ *  ExtensibleIndex extIndex(1,2)
  *  \endcode
  *
- *  extIndex can be used to access the 3rd field in an object's 2nd extensible group. 
+ *  extIndex can be used to access the 3rd field in an object's 2nd extensible group.
  *  extIndex.group == 1, extIndex.field == 2. */
 class UTILITIES_API ExtensibleIndex {
  public:
@@ -49,7 +49,7 @@ class UTILITIES_API ExtensibleIndex {
   unsigned field;
 
  private:
-  ExtensibleIndex(); 
+  ExtensibleIndex();
 };
 
 } // openstudio

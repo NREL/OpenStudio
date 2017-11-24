@@ -44,8 +44,8 @@ namespace detail {
 
   /** ScheduleBase_Impl is a ResourceObject_Impl that is the implementation class for ScheduleBase.*/
   class MODEL_API ScheduleBase_Impl : public ResourceObject_Impl {
-    
-    
+
+
    public:
     /** @name Constructors and Destructors */
     //@{

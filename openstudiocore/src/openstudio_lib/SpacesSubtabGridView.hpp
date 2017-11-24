@@ -75,7 +75,7 @@ namespace openstudio{
     QComboBox *  m_surfaceTypeFilter = nullptr;
 
     QComboBox *  m_interiorPartitionGroupFilter = nullptr;
-    
+
   protected:
 
     REGISTER_LOGGER("openstudio.SpacesSubtabGridView");

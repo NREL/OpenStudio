@@ -83,7 +83,7 @@ namespace detail {
     //@}
     /** @name Setters */
     //@{
-    
+
     bool addToNode(Node & node) override;
 
     //@}

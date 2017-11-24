@@ -59,7 +59,7 @@ namespace detail {
 
     /// remove this object from any ElectricLoadCenterDistribution objects then remove from file
     virtual std::vector<openstudio::IdfObject> remove() override;
-    
+
     virtual std::string generatorObjectType() const = 0;
 
     virtual boost::optional<double> ratedElectricPowerOutput() const = 0;
@@ -82,7 +82,7 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
- 
+
     //@}
    private:
 

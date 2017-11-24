@@ -2404,7 +2404,7 @@ void RunControlImpl::read(Reader &input)
 
 std::string RunControlImpl::write()
 {
-  std::string string;    
+  std::string string;
   string += ANY_TO_STR(m_sim_af) + ' ' + ANY_TO_STR(m_afcalc) + ' ' + ANY_TO_STR(m_afmaxi) + ' '
     + ANY_TO_STR(m_afrcnvg) + ' ' + ANY_TO_STR(m_afacnvg) + ' ' + ANY_TO_STR(m_afrelax) + ' '
     + ANY_TO_STR(m_uac2) + ' ' + ANY_TO_STR(m_Pres) + ' ' + ANY_TO_STR(m_uPres) + '\n';

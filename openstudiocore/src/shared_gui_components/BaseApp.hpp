@@ -43,7 +43,7 @@ namespace openstudio {
   //namespace analysisdriver {
   //  class SimpleProject;
   //}
-  
+
   namespace model {
     class Model;
   }

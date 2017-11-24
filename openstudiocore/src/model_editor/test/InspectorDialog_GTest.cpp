@@ -209,7 +209,7 @@ TEST_F(ModelEditorFixture, InspectorDialog_SignalsOnIddObjectTypeChange)
   thermalZoneWatcher.clearState();
 
   EXPECT_FALSE(spaceWatcher.dirty());
-  EXPECT_FALSE(thermalZoneWatcher.dirty()); 
+  EXPECT_FALSE(thermalZoneWatcher.dirty());
 
   EXPECT_TRUE(inspectorDialog->setIddObjectType(Space::iddObjectType()));
   EXPECT_EQ(Space::iddObjectType(), inspectorDialog->iddObjectType());
@@ -217,7 +217,7 @@ TEST_F(ModelEditorFixture, InspectorDialog_SignalsOnIddObjectTypeChange)
   EXPECT_EQ(space.handle(), inspectorDialog->selectedObjectHandles()[0]);
 
   EXPECT_FALSE(spaceWatcher.dirty());
-  EXPECT_FALSE(thermalZoneWatcher.dirty()); 
+  EXPECT_FALSE(thermalZoneWatcher.dirty());
 
   EXPECT_TRUE(inspectorDialog->setIddObjectType(ThermalZone::iddObjectType()));
   EXPECT_EQ(ThermalZone::iddObjectType(), inspectorDialog->iddObjectType());
@@ -225,7 +225,7 @@ TEST_F(ModelEditorFixture, InspectorDialog_SignalsOnIddObjectTypeChange)
   EXPECT_EQ(thermalZone.handle(), inspectorDialog->selectedObjectHandles()[0]);
 
   EXPECT_FALSE(spaceWatcher.dirty());
-  EXPECT_FALSE(thermalZoneWatcher.dirty()); 
+  EXPECT_FALSE(thermalZoneWatcher.dirty());
 }
 
 TEST_F(ModelEditorFixture, InspectorDialog_SketchUpPlugin)

@@ -45,8 +45,8 @@ struct StaticInitializer
       // This constructor does nothing more than ensure that instance()
       //  is called before main() begins, thus creating the static
       //  T object before multithreading race issues can come up.
-      object_creator() { 
-        StaticInitializer<T>::do_initialize(); 
+      object_creator() {
+        StaticInitializer<T>::do_initialize();
       }
 
       inline void do_nothing() const {  }

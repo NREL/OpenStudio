@@ -39,11 +39,11 @@
 
 namespace openstudio{
 
-  /** Functor object for finding objects by name. Templated on T where T has method 
+  /** Functor object for finding objects by name. Templated on T where T has method
    *  name(). Applies to T and to shared_ptr<T>. */
   template <class T>
   class NameFinder{
-    public: 
+    public:
       NameFinder(const std::string& name, bool caseSensitive=false)
         : m_name(name), m_caseSensitive(caseSensitive)
       {}
@@ -52,14 +52,14 @@ namespace openstudio{
         if (m_caseSensitive) {
           return (m_name == object.name());
         }
-        return boost::iequals(m_name, object.name()); 
+        return boost::iequals(m_name, object.name());
       }
 
       bool operator()(const std::shared_ptr<T>& object) const {
         if (m_caseSensitive) {
           return (m_name == object->name());
         }
-        return boost::iequals(m_name, object->name()); 
+        return boost::iequals(m_name, object->name());
       }
 
     private:
@@ -130,11 +130,11 @@ namespace openstudio{
     return it;
   }
 
-  /** Functor object for finding objects by name. Templated on T where T has method 
+  /** Functor object for finding objects by name. Templated on T where T has method
    *  name(). Applies to T and to shared_ptr<T>. */
   template <class T>
   class StructNameFinder{
-    public: 
+    public:
       StructNameFinder(const std::string& name, bool caseSensitive=false)
         : m_name(name), m_caseSensitive(caseSensitive)
       {}
@@ -143,14 +143,14 @@ namespace openstudio{
         if (m_caseSensitive) {
           return (m_name == object.name);
         }
-        return boost::iequals(m_name, object.name); 
+        return boost::iequals(m_name, object.name);
       }
 
       bool operator()(const std::shared_ptr<T>& object) const {
         if (m_caseSensitive) {
           return (m_name == object->name);
         }
-        return boost::iequals(m_name, object->name); 
+        return boost::iequals(m_name, object->name);
       }
 
     private:
@@ -224,7 +224,7 @@ namespace openstudio{
   /** Functor object for finding objects by value. Templated on T, which has method U value(). */
   template <class T, typename U>
     class ValueFinder{
-      public: 
+      public:
         ValueFinder(const U& value)
           : m_value(value)
         {};

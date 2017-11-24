@@ -83,7 +83,7 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVACOutdoorAirSystem( con
 
   if( controllerName && controllerType )
   {
-    boost::optional<WorkspaceObject> wo = _workspace.getObjectByTypeAndName(IddObjectType(controllerType.get()),controllerName.get()); 
+    boost::optional<WorkspaceObject> wo = _workspace.getObjectByTypeAndName(IddObjectType(controllerType.get()),controllerName.get());
     if( wo )
     {
       boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(wo.get());

@@ -494,7 +494,7 @@ public:
   /** Create a new object with default values. */
   AirflowPath();
   /** Create a new (exterior wall type) object. */
-  AirflowPath(int flags, int pzn, int pe, int pw, int pld, std::string relHt, std::string mult, std::string wPset, 
+  AirflowPath(int flags, int pzn, int pe, int pw, int pld, std::string relHt, std::string mult, std::string wPset,
     std::string wPmod, std::string wazm, unsigned int icon);
   /** Create a new (exterior wall type) object. */
   AirflowPath(int flags, int pzn, int pe, int pw, int pld, double relHt, double mult, double wPset,
@@ -1494,7 +1494,7 @@ private:
 *  angle from north. */
 class AIRFLOW_API WindPressureProfile
 {
-public:    
+public:
   /** @name Constructors and Destructors */
   //@{
 

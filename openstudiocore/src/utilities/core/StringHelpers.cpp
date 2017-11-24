@@ -34,7 +34,7 @@
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
 
-#include <cmath> 
+#include <cmath>
 #include <iomanip>
 #include <sstream>
 
@@ -64,8 +64,8 @@ std::string toUnderscoreCase(const std::string& s) {
   //std::string result = toLowerCamelCase(s);
   //result = boost::regex_replace(result,boost::regex("(.)([A-Z])"),"$1_\\l$2");
 
-  std::string result = boost::replace_all_copy(s, "OpenStudio", "Openstudio");  
-  boost::replace_all(result, "EnergyPlus", "Energyplus");  
+  std::string result = boost::replace_all_copy(s, "OpenStudio", "Openstudio");
+  boost::replace_all(result, "EnergyPlus", "Energyplus");
 
   //http://stackoverflow.com/questions/1509915/converting-camel-case-to-underscore-case-in-ruby
   // DLM: there is a to_underscore method in the BCL gem, this should be synchronized
@@ -105,8 +105,8 @@ std::string iddObjectNameToIdfObjectName(const std::string& s) {
   return result;
 }
 
-std::string toNeatString(double value, 
-                         unsigned numFractionalDigits, 
+std::string toNeatString(double value,
+                         unsigned numFractionalDigits,
                          bool applyCommas)
 {
   std::stringstream ss;
@@ -167,7 +167,7 @@ unsigned numFractionalDigits(double value,unsigned numSigFigs) {
 }
 
 std::pair<unsigned,unsigned> numFractionalDigits(const std::vector<double>& values,
-                                                 unsigned numSigFigs) 
+                                                 unsigned numSigFigs)
 {
   if (numSigFigs == 0u) {
     LOG_FREE_AND_THROW("openstudio.core.StringHelpers","Number of significant figures must be > 0.");
@@ -204,7 +204,7 @@ double toNumSigFigs(double value, unsigned numSigFigs) {
 
   double absValue = fabs(value);
   bool negative = (value != absValue);
-  
+
   double orderOfMagnitude = floor(log10(absValue)); // 1683 => 3
                                                     // 0.001683892 => -3
   //                             X.XXXXX             add more sig-figs

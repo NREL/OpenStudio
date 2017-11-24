@@ -47,14 +47,14 @@ boost::optional<IdfObject> ForwardTranslator::translateShade( Shade & modelObjec
   m_idfObjects.push_back(idfObject);
 
   idfObject.setString(WindowMaterial_ShadeFields::Name, modelObject.name().get());
-  
+
   OptionalDouble d = modelObject.getDouble(OS_WindowMaterial_ShadeFields::SolarTransmittance, true);
   if (d){
     idfObject.setDouble(WindowMaterial_ShadeFields::SolarTransmittance, *d);
   }else{
     LOG(Error, "Missing required input 'Solar Transmittance' for WindowMaterial:Shade named '" << modelObject.name().get() << "'");
   }
-    
+
   d = modelObject.getDouble(OS_WindowMaterial_ShadeFields::SolarReflectance, true);
   if (d){
     idfObject.setDouble(WindowMaterial_ShadeFields::SolarReflectance, *d);

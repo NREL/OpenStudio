@@ -38,14 +38,14 @@ using namespace openstudio::model;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateCurveLinear( 
+boost::optional<ModelObject> ReverseTranslator::translateCurveLinear(
     const WorkspaceObject& workspaceObject )
 {
   CurveLinear curve(m_model);
 
   OptionalString s;
   OptionalDouble d;
-  
+
   if ((s = workspaceObject.name())) {
     curve.setName(*s);
   }

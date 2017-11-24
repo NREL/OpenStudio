@@ -77,7 +77,7 @@ protected:
   void mouseMoveEvent(QMouseEvent *event) override;
 
   void mouseReleaseEvent(QMouseEvent *event) override;
-  
+
   void mousePressEvent(QMouseEvent *event) override;
 
   void resizeEvent(QResizeEvent * event) override;
@@ -118,8 +118,8 @@ signals:
 
 protected slots:
 
-  virtual void on_backButton(bool checked); 
-  
+  virtual void on_backButton(bool checked);
+
   virtual void on_cancelButton(bool checked);
 
   virtual void on_okButton(bool checked);

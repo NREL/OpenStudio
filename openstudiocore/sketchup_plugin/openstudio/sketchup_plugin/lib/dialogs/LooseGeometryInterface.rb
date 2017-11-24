@@ -37,7 +37,7 @@ module OpenStudio
       super
       @dialog = LooseGeometryDialog.new(nil, self, @hash)
     end
-    
+
   end
 
 end

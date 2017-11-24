@@ -150,7 +150,7 @@ namespace energyplus {
           LOG(Error, "Unknown warning or error level '" << warningOrErrorType << "'");
         }
 
-      }else if (boost::regex_match(line, completedSuccessful) 
+      }else if (boost::regex_match(line, completedSuccessful)
                 || boost::regex_match(line, groundTempCompletedSuccessful)) {
         m_completed = true;
         m_completedSuccessfully = true;

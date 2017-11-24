@@ -101,7 +101,7 @@ TEST_F(ModelFixture, SpaceInfiltrationDesignFlowRate)
 
   boost::optional<model::ModelObject> clone2 = clone1->cast<model::SpaceInfiltrationDesignFlowRate>().clone(clone1->model());
   EXPECT_EQ(3u, model.numObjects());
-  
+
   auto spaceType1 = SpaceType(model);
   auto success = clone1->cast<model::SpaceInfiltrationDesignFlowRate>().setSpaceType(spaceType1);
   ASSERT_TRUE(success);

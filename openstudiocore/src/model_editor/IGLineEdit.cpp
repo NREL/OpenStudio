@@ -219,7 +219,7 @@ void IGLineEdit::editDone()
   QString val;
   if( checkValue(val) )
   {
-    setText(val); // emits textChanged but not textEdited 
+    setText(val); // emits textChanged but not textEdited
     emit newValue(val);
   }
 }

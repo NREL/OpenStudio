@@ -425,7 +425,7 @@ TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex5)
 
   std::vector<ScheduleRule> rules = schedule.scheduleRules();
   ASSERT_EQ(2u, rules.size());
-  
+
   EXPECT_EQ(scheduleRule2.handle(), rules[0].handle());
   EXPECT_EQ(scheduleRule1.handle(), rules[1].handle());
   EXPECT_EQ(1, scheduleRule1.ruleIndex());

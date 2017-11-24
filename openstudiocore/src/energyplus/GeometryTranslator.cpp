@@ -2472,7 +2472,7 @@ namespace energyplus {
         if (x && y && z){
           result.push_back(Point3d(*x, *y, *z));
         }else{
-          LOG_FREE(Error, "openstudio.energyplus.GeometryTranslator", 
+          LOG_FREE(Error, "openstudio.energyplus.GeometryTranslator",
                    "Could not read vertex " << vertexIndex << " at indices " <<
                    firstVertex + 3*vertexIndex + 0 << " to " << firstVertex + 3*vertexIndex + 2 );
         }

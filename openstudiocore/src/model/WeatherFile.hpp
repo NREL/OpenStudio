@@ -52,13 +52,13 @@ namespace detail {
  *  EnergyPlus requires the weather file for simulation be named in.epw and located in the same directory as the input IDF file.
  *  The WeatherFile object provides a mechanism for an OpenStudio Model to reference a weather file in a more permanent way.
  *  The RunManager is able to locate the actual weather file needed and place it in the EnergyPlus run directory at simulation time.
- *  WeatherFile does not have a public constructor because it is a unique ModelObject.  
- *  To get the WeatherFile object for a Model or create one if it does not yet exist use model.getUniqueObject<WeatherFile>().  
+ *  WeatherFile does not have a public constructor because it is a unique ModelObject.
+ *  To get the WeatherFile object for a Model or create one if it does not yet exist use model.getUniqueObject<WeatherFile>().
  *  To get the WeatherFile object for a Model but not create one if it does not yet exist use model.getOptionalUniqueObject<WeatherFile>().
  */
 class MODEL_API WeatherFile : public ModelObject {
  public:
-  
+
    /** @name Constructors and Destructors */
   //@{
   virtual ~WeatherFile() {}
@@ -147,7 +147,7 @@ class MODEL_API WeatherFile : public ModelObject {
   if url field is relative. */
   boost::optional<EpwFile> file(const openstudio::path& dir=openstudio::path()) const;
 
-  /** Save the url as relative to basePath, or just keep the file name and extension if 
+  /** Save the url as relative to basePath, or just keep the file name and extension if
   *  basePath.empty(). */
   bool makeUrlRelative(const openstudio::path& basePath=openstudio::path());
 

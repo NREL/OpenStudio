@@ -39,7 +39,7 @@ namespace detail{
   class WindowDataFile_Impl;
 }
 
-/** WindowDataFile is a ConstructionBase that wraps EnergyPlus IDD object 
+/** WindowDataFile is a ConstructionBase that wraps EnergyPlus IDD object
  *  'Construction:WindowDataFile'. WindowDataFile is an alternative to Construction that isFenestration. */
 class MODEL_API WindowDataFile : public ConstructionBase {
  public:
@@ -65,7 +65,7 @@ class MODEL_API WindowDataFile : public ConstructionBase {
   friend class openstudio::IdfObject;
   friend class detail::WindowDataFile_Impl;
 
-  explicit WindowDataFile(std::shared_ptr<detail::WindowDataFile_Impl> impl);  
+  explicit WindowDataFile(std::shared_ptr<detail::WindowDataFile_Impl> impl);
 
   /// @endcond
  private:

@@ -140,7 +140,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCurveTriquadratic(CurveTr
     idfObject.setDouble(Curve_TriquadraticFields::MinimumValueofx,*d);
   }
   if ((d = modelObject.maximumValueofx())) {
-    idfObject.setDouble(Curve_TriquadraticFields::MaximumValueofx,*d); 
+    idfObject.setDouble(Curve_TriquadraticFields::MaximumValueofx,*d);
   }
   if ((d = modelObject.minimumValueofy())) {
     idfObject.setDouble(Curve_TriquadraticFields::MinimumValueofy,*d);

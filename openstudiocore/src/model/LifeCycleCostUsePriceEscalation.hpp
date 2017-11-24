@@ -45,19 +45,19 @@ namespace detail{
  *  LifeCycleCostUsePriceEscalation specifies escalation about energy and water costs separately from general inflation assumptions.
  */
 class MODEL_API LifeCycleCostUsePriceEscalation : public ParentObject{
- 
+
 public:
 
   /** @name Constructors and Destructors */
   //@{
-  virtual ~LifeCycleCostUsePriceEscalation() {} 
+  virtual ~LifeCycleCostUsePriceEscalation() {}
 
   /// Constructs a new LifeCycleCostUsePriceEscalation object in the model.
   explicit LifeCycleCostUsePriceEscalation(const Model& model);
-  
+
   //@}
   /** @name Getters */
-  //@{  
+  //@{
 
   boost::optional<std::string> resource() const;
 
@@ -85,7 +85,7 @@ public:
 
   /// Returns the IddObjectType.
   static IddObjectType iddObjectType();
-  
+
   /// Returns the number of years for which escalation data is specified, e.g. the number of extensible fields.
   unsigned numYears() const;
 

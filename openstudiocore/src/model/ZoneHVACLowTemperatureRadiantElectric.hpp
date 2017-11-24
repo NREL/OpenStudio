@@ -68,8 +68,8 @@ class MODEL_API ZoneHVACLowTemperatureRadiantElectric : public ZoneHVACComponent
   /** @name Getters */
 
   Schedule availabilitySchedule() const;
-  
-  Schedule heatingSetpointTemperatureSchedule() const; 
+
+  Schedule heatingSetpointTemperatureSchedule() const;
 
   boost::optional<std::string> radiantSurfaceType() const;
 
@@ -93,7 +93,7 @@ class MODEL_API ZoneHVACLowTemperatureRadiantElectric : public ZoneHVACComponent
   /** @name Setters */
 
   bool setAvailabilitySchedule(Schedule& schedule);
-  
+
   bool setHeatingSetpointTemperatureSchedule(Schedule& schedule);
 
   bool setRadiantSurfaceType(std::string radiantSurfaceType);
@@ -113,7 +113,7 @@ class MODEL_API ZoneHVACLowTemperatureRadiantElectric : public ZoneHVACComponent
   bool setHeatingThrottlingRange(double heatingThrottlingRange);
 
   void resetHeatingThrottlingRange();
-  
+
   boost::optional<ThermalZone> thermalZone() const;
 
   bool addToThermalZone(ThermalZone & thermalZone);

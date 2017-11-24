@@ -45,7 +45,7 @@ namespace detail {
 
 } // detail
 
-/** CoilCoolingDXMultiSpeed is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:MultiSpeed'. 
+/** CoilCoolingDXMultiSpeed is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:MultiSpeed'.
  * Performance data for each stage is contained in a separate ModelObject called CoilCoolingDXMultiSpeedStageData **/
 class MODEL_API CoilCoolingDXMultiSpeed : public StraightComponent {
  public:

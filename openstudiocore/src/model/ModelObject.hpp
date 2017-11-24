@@ -99,17 +99,17 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   /** @name Components and Relationships
    *
    *  Once a Component has been created, it can be saved to local and online %Building %Component
-   *  Libraries (BCLs) for web-enabled storing and sharing. (At this time, only select BCL users 
-   *  have permissions to upload, but this capability is to be extended to all users in time.) 
-   *  Components plus Relationships are the preferred method for specifying and swapping out 
-   *  groups of related ModelObjects (e.g. constructions, schedules, etc.) in higher-level 
-   *  libraries such as standardsinterface and analysis. Like Attributes, Relationships provide 
-   *  access to a related getter (required), setter (optional), and reset (optional) method 
-   *  using a single string. Unlike Attributes, the Relationship methods all work off of 
+   *  Libraries (BCLs) for web-enabled storing and sharing. (At this time, only select BCL users
+   *  have permissions to upload, but this capability is to be extended to all users in time.)
+   *  Components plus Relationships are the preferred method for specifying and swapping out
+   *  groups of related ModelObjects (e.g. constructions, schedules, etc.) in higher-level
+   *  libraries such as standardsinterface and analysis. Like Attributes, Relationships provide
+   *  access to a related getter (required), setter (optional), and reset (optional) method
+   *  using a single string. Unlike Attributes, the Relationship methods all work off of
    *  ModelObjects (not simple alpha or numeric data). */
   //@{
 
-  /** Method for creating sharable Model snippets. Creates a Component with this ModelObject as 
+  /** Method for creating sharable Model snippets. Creates a Component with this ModelObject as
    *  the primary object. Uses the clone(Model&) method to select Component contents. */
   Component createComponent() const;
 
@@ -122,22 +122,22 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   /** Get the \link Relationship relationship\endlink named name, if it exists. */
   // boost::optional<Relationship> getRelationship(const std::string& name) const;
 
-  /** Set this ModelObject's relationship name to point to relatedModelObject (or clear the 
+  /** Set this ModelObject's relationship name to point to relatedModelObject (or clear the
    *  relationship if relatedModelObject == boost::none). */
   // bool setRelationship(const std::string& name, boost::optional<ModelObject> relatedModelObject);
 
-  /** Inserts component into this model and sets this ModelObject's relationship name to 
+  /** Inserts component into this model and sets this ModelObject's relationship name to
    *  point to component.primaryObject(). */
   // bool setRelationship(const std::string& name, const Component& component);
 
   //@}
   /** @name Attributes
    *
-   *  A single string provides access to a related getter (required), setter (optional), and 
-   *  reset (optional) method for simple pieces of data such as a ThermalZone's lighting power 
-   *  density or a fan's efficiency. Attributes are the preferred method for accessing basic 
-   *  data (double, int, bool, and string) in higher-level libraries such as standardsinterface 
-   *  and analysis. See the OpenStudio Utilities library documentation for information on the 
+   *  A single string provides access to a related getter (required), setter (optional), and
+   *  reset (optional) method for simple pieces of data such as a ThermalZone's lighting power
+   *  density or a fan's efficiency. Attributes are the preferred method for accessing basic
+   *  data (double, int, bool, and string) in higher-level libraries such as standardsinterface
+   *  and analysis. See the OpenStudio Utilities library documentation for information on the
    *  Attribute class. */
   //@{
 
@@ -167,7 +167,7 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
 
   /** \overload */
   // bool setAttribute(const std::string& name, double value);
-  
+
   /** \overload */
   // bool setAttribute(const std::string& name, const Quantity& value);
 
@@ -257,7 +257,7 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   /** Get data associated with this output variable and this object. */
   boost::optional<openstudio::TimeSeries> getData(const OutputVariable& variable, const std::string& envPeriod) const;
 
-  /** Returns the list of all LifeCycleCosts that refer to this object. 
+  /** Returns the list of all LifeCycleCosts that refer to this object.
    */
   std::vector<LifeCycleCost> lifeCycleCosts() const;
 
@@ -291,7 +291,7 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   bool operator!=(const ModelObject& other) const;
 
   /** Return the ScheduleTypeKeys indicating how schedule is used in this object. If schedule is not directly
-   *  used by this object, return value will be .empty(). Used to maintain compatibility between schedule's 
+   *  used by this object, return value will be .empty(). Used to maintain compatibility between schedule's
    *  ScheduleTypeLimits and how schedule is used by other objects. */
   std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
@@ -304,7 +304,7 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
 
   // DLM@20100716: should this stay in ModelObject
   boost::optional<unsigned> connectedObjectPort(unsigned port) const;
-  
+
   //@}
  protected:
 

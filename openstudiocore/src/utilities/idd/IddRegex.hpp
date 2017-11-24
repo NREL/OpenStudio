@@ -144,7 +144,7 @@ namespace iddRegex{
   /// matches[2], the last field
   UTILITIES_API const boost::regex &lastField();
 
-  /// Match a field name 
+  /// Match a field name
   /// matches[1], the field name
   UTILITIES_API const boost::regex &name();
 
@@ -193,7 +193,7 @@ namespace iddRegex{
   UTILITIES_API const boost::regex &deprecatedProperty();
 
   /// Match a field default property
-  /// matches[1], default value 
+  /// matches[1], default value
   UTILITIES_API const boost::regex &defaultProperty();
 
   /// Match a field default property with either autocalculate or autosize
@@ -204,11 +204,11 @@ namespace iddRegex{
   UTILITIES_API const boost::regex &typeProperty();
 
   /// Match a field key property
-  /// matches[1], key value 
+  /// matches[1], key value
   UTILITIES_API const boost::regex &keyProperty();
 
   /// Match a field object-list property
-  /// matches[1], object-list value 
+  /// matches[1], object-list value
   UTILITIES_API const boost::regex &objectListProperty();
 
   /// Match a field external-list property
@@ -216,11 +216,11 @@ namespace iddRegex{
   UTILITIES_API const boost::regex &externalListProperty();
 
   /// Match a field reference property
-  /// matches[1], reference value 
+  /// matches[1], reference value
   UTILITIES_API const boost::regex &referenceProperty();
 
   /// Match a field reference-class-name property
-  /// matches[1], reference-class-name value 
+  /// matches[1], reference-class-name value
   UTILITIES_API const boost::regex &referenceClassNameProperty();
 
   /// Match begin extensible

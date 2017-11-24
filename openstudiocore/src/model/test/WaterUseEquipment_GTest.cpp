@@ -43,23 +43,23 @@ TEST_F(ModelFixture,WaterUseEquipment_WaterUseEquipment)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     //create a model to use in testing this code.
-    model::Model m; 
+    model::Model m;
 
     model::WaterUseEquipmentDefinition definition(m);
 
     model::WaterUseEquipment waterUseEquipment(definition);
 
-    exit(0); 
+    exit(0);
   } ,
   ::testing::ExitedWithCode(0), "" );
 }
 
 TEST_F(ModelFixture,WaterUseEquipment_Space)
 {
-  model::Model m; 
+  model::Model m;
 
   model::Space space(m);
 

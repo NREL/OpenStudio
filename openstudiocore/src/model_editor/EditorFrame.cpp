@@ -211,7 +211,7 @@ void EditorFrame::createActions()
   mShowAllFields->setCheckable(true);
   mShowAllFields->setChecked(true);
   connect(mShowAllFields, &QAction::triggered, mModelExplorer, &ModelExplorer::showAllFields);
-    
+
   mCreateAllFields = new QAction(tr("Create all Fields"),this);
   connect(mCreateAllFields, &QAction::triggered, mModelExplorer, &ModelExplorer::createAllFields);
 
@@ -230,7 +230,7 @@ void EditorFrame::createActions()
   mAddAction->setShortcuts(QKeySequence::New);
   mAddAction->setStatusTip(tr("Add an object"));
   connect(mAddAction, &QAction::triggered, this, &EditorFrame::addObjects);
-  
+
   mRemoveAction = new QAction(QIcon(":/images/edit_remove.png"), tr("&Remove"), this);
   mRemoveAction->setShortcuts(QKeySequence::Delete);
   mRemoveAction->setStatusTip(tr("Remove an object"));
@@ -328,7 +328,7 @@ void EditorFrame::createLayout()
 void EditorFrame::loadStyleSheet(QString& style)
 {
   QFile data(":/openstudio.qss");
-  if(data.open(QFile::ReadOnly)) 
+  if(data.open(QFile::ReadOnly))
   {
       QTextStream styleIn(&data);
       style = styleIn.readAll();

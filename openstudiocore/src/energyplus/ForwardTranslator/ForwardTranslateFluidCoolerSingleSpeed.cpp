@@ -71,12 +71,12 @@ boost::optional<IdfObject> ForwardTranslator::translateFluidCoolerSingleSpeed(Fl
       idfObject.setDouble(FluidCooler_SingleSpeedFields::DesignAirFlowRateUfactorTimesAreaValue,value.get());
     }
   }
-  
+
   if( istringEqual("NominalCapacity",modelObject.performanceInputMethod()) ) {
     auto value = modelObject.nominalCapacity();
     idfObject.setDouble(FluidCooler_SingleSpeedFields::NominalCapacity,value);
   }
-  
+
   {
     auto value = modelObject.designEnteringWaterTemperature();
     idfObject.setDouble(FluidCooler_SingleSpeedFields::DesignEnteringWaterTemperature,value);
@@ -103,7 +103,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFluidCoolerSingleSpeed(Fl
   } else if( auto value = modelObject.designAirFlowRate() ) {
     idfObject.setDouble(FluidCooler_SingleSpeedFields::DesignAirFlowRate,value.get());
   }
-  
+
   if( modelObject.isDesignAirFlowRateFanPowerAutosized() ) {
     idfObject.setString(FluidCooler_SingleSpeedFields::DesignAirFlowRateFanPower,"Autosize");
   } else if( auto value = modelObject.designAirFlowRateFanPower() ) {

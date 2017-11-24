@@ -35,7 +35,7 @@ namespace openstudio{
 namespace radiance{
 
   /** Renderer describes where, how, and when to render an image.
-  */ 
+  */
   class RADIANCE_API Renderer{
     public:
   };

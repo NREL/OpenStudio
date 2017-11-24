@@ -252,7 +252,7 @@ TEST(DateTime, ISO8601Conversions_2) {
   EXPECT_EQ(0, test->time().seconds());
   EXPECT_EQ(1, test->utcOffset());
 
-  test = DateTime::fromISO8601("19970716T1920+0100");  
+  test = DateTime::fromISO8601("19970716T1920+0100");
   ASSERT_TRUE(test);
   EXPECT_EQ(1997, test->date().year());
   EXPECT_EQ(7, test->date().monthOfYear().value());
@@ -303,7 +303,7 @@ TEST(DateTime, ISO8601Conversions_2) {
   EXPECT_EQ(30, test->time().seconds());
   EXPECT_EQ(1, test->utcOffset());
 
-  test = DateTime::fromISO8601("19970716T192030Z"); 
+  test = DateTime::fromISO8601("19970716T192030Z");
   ASSERT_TRUE(test);
   EXPECT_EQ(1997, test->date().year());
   EXPECT_EQ(7, test->date().monthOfYear().value());

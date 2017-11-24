@@ -37,7 +37,7 @@
 
 namespace openstudio{
 
-/** IddObjectProperties describes the properties of an IddObject, as specified by 
+/** IddObjectProperties describes the properties of an IddObject, as specified by
  *  object-level IDD markup. */
 struct UTILITIES_API IddObjectProperties{
  public:
@@ -72,7 +72,7 @@ struct UTILITIES_API IddObjectProperties{
   /** Returns the number of fields in this object's extensible group (zero if !extensible). */
   unsigned numExtensible;
 
-  /** Returns the minimum number of extensible groups an IdfObject following this schema must 
+  /** Returns the minimum number of extensible groups an IdfObject following this schema must
    *  have to be valid. */
   unsigned numExtensibleGroupsRequired;
 
@@ -83,7 +83,7 @@ struct UTILITIES_API IddObjectProperties{
   /** Minimum number of fields required for an IdfObject to be valid according to this schema. */
   unsigned minFields;
 
-  /** Maximum number of fields allowed in IdfObjects following this schema. Limits the number of 
+  /** Maximum number of fields allowed in IdfObjects following this schema. Limits the number of
    *  allowable extensible groups. */
   boost::optional<unsigned> maxFields;
 

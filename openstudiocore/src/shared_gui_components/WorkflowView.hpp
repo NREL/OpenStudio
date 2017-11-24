@@ -44,7 +44,7 @@ namespace openstudio {
 class MeasureType;
 
 namespace measuretab {
-  
+
   class WorkflowSectionContentView;
   class WorkflowStepButton;
 
@@ -56,7 +56,7 @@ namespace measuretab {
 class RectangularDropZone : public QWidget
 {
   Q_OBJECT
-  
+
   public:
 
   RectangularDropZone();
@@ -88,7 +88,7 @@ class RectangularDropZone : public QWidget
 class NewMeasureDropZone : public RectangularDropZone
 {
   Q_OBJECT
-  
+
   public:
 
   NewMeasureDropZone();

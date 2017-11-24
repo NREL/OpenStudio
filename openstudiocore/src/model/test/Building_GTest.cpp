@@ -104,7 +104,7 @@ TEST_F(ModelFixture, Building_SpaceAttributes)
 
   Space space(model);
 
-  // floor 
+  // floor
   Point3dVector points;
   points.push_back(Point3d(0, 10, 0));
   points.push_back(Point3d(10, 10, 0));
@@ -174,7 +174,7 @@ TEST_F(ModelFixture, Building_SpaceTypeAttributes)
   EXPECT_EQ(0, building.lightingPowerPerFloorArea());
   EXPECT_EQ(0, building.peoplePerFloorArea());
 
-  // floor 
+  // floor
   Point3dVector points;
   points.push_back(Point3d(0, 10, 0));
   points.push_back(Point3d(10, 10, 0));
@@ -303,14 +303,14 @@ TEST_F(ModelFixture, Building_Clone)
 {
   // Remember that Building is a unique object
   // There are basically three scenarios to consider,
-  // cloning into the same model, cloning into a different model that already has a building object, 
+  // cloning into the same model, cloning into a different model that already has a building object,
   // and cloning into a different model that doesn't have a building object.
 
   // Clone into the same model
   {
-    Model model; 
+    Model model;
 
-    auto building = model.getUniqueModelObject<Building>(); 
+    auto building = model.getUniqueModelObject<Building>();
     auto buildingClone = building.clone(model);
 
     // Don't expect cloning into the same model to do anything.

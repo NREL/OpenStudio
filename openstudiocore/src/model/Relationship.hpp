@@ -67,7 +67,7 @@ class MODEL_API Relationship {
   /// Returns true if there is a write method for this relationship
   bool isSettable() const;
 
-  /// Returns true if this Relationship concerns 0-1 other ModelObjects, 
+  /// Returns true if this Relationship concerns 0-1 other ModelObjects,
   /// otherwise this Relationship can access an unlimited number of other ModelObjects.
   bool isSingular() const;
 
@@ -77,7 +77,7 @@ class MODEL_API Relationship {
   /// Return all related ModelObjects, will throw if Relationship is singular.
   std::vector<ModelObject> relatedModelObjects() const;
 
-  /// Resets the related ModelObject and forms relationship with the new ModelObject, 
+  /// Resets the related ModelObject and forms relationship with the new ModelObject,
   /// throws if Relationship is not singular.
   bool setRelatedModelObject(boost::optional<ModelObject> relatedModelObject);
 
@@ -88,7 +88,7 @@ class MODEL_API Relationship {
   /// Equivalent to setRelatedModelObject(boost::none)
   bool resetRelatedModelObject();
 
-  /// Clears all related ModelObjects and then forms relationships with the new ModelObjects, 
+  /// Clears all related ModelObjects and then forms relationships with the new ModelObjects,
   /// throws if Relationship is singular.
   bool setRelatedModelObjects(std::vector<ModelObject> relatedModelObjects);
 

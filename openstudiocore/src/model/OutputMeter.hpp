@@ -47,7 +47,7 @@ namespace detail {
 
 } // detail
 
-/** OutputMeter is a ModelObject that wraps the OpenStudio IDD object 'OS_Output_Meter'. 
+/** OutputMeter is a ModelObject that wraps the OpenStudio IDD object 'OS_Output_Meter'.
  *
  *  A OutputMeter is a virtual instrument measuring energy use of some fuel type at a particular location.
  *  OutputMeter objects may be associated with various classes in the building model hierarchy (e.g. Facility, Building, Zone, Plant, etc).

@@ -43,8 +43,8 @@ ValidityReport::ValidityReport(StrictnessLevel level)
 }
 
 ValidityReport::ValidityReport(StrictnessLevel level,const IdfObject& object)
-  : m_level(level), 
-    m_scope(Scope::Object), 
+  : m_level(level),
+    m_scope(Scope::Object),
     m_objectType(object.iddObject().type())
 {
   m_currentError = m_errors.end();
@@ -52,7 +52,7 @@ ValidityReport::ValidityReport(StrictnessLevel level,const IdfObject& object)
   if (oName) { m_objectName = *oName; }
 }
 
-ValidityReport::ValidityReport(const ValidityReport& other) 
+ValidityReport::ValidityReport(const ValidityReport& other)
   : m_level(other.m_level),
     m_scope(other.m_scope),
     m_objectType(other.m_objectType),
@@ -87,7 +87,7 @@ boost::optional<IddObjectType> ValidityReport::objectType() const {
 unsigned ValidityReport::numErrors() const {
   return m_errors.size();
 }
-  
+
 boost::optional<DataError> ValidityReport::nextError() {
   // cycle through errors
   if (m_currentError == m_errors.end()) { m_currentError = m_errors.begin(); }
@@ -102,7 +102,7 @@ boost::optional<DataError> ValidityReport::nextError() {
 
 std::ostream& operator<<(std::ostream& os,const ValidityReport& report) {
   if (report.scope() == Scope::Collection) {
-    if (report.numErrors() == 0) { 
+    if (report.numErrors() == 0) {
       os << "The collection is VALID at strictness level '" << report.level().valueName();
       os << "'. There are no errors to report." << std::endl;
     }
@@ -114,7 +114,7 @@ std::ostream& operator<<(std::ostream& os,const ValidityReport& report) {
   else {
     OS_ASSERT(report.scope() == Scope::Object);
     OS_ASSERT(report.objectType());
-    if (report.numErrors() == 0) { 
+    if (report.numErrors() == 0) {
       os << "The object of type '" << report.objectType()->valueDescription() << "', named '";
       os << report.objectName() << "', is VALID at strictness level '";
       os << report.level().valueName() << "'. There are no errors to report." << std::endl;

@@ -47,11 +47,11 @@ namespace detail {
 
     SetpointManagerFollowOutdoorAirTemperature_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerFollowOutdoorAirTemperature_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                                         Model_Impl* model, 
+    SetpointManagerFollowOutdoorAirTemperature_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                         Model_Impl* model,
                                          bool keepHandle);
 
-    SetpointManagerFollowOutdoorAirTemperature_Impl(const SetpointManagerFollowOutdoorAirTemperature_Impl& other, 
+    SetpointManagerFollowOutdoorAirTemperature_Impl(const SetpointManagerFollowOutdoorAirTemperature_Impl& other,
                                          Model_Impl* model,
                                          bool keepHandles);
 

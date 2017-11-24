@@ -38,12 +38,12 @@ TEST_F(ModelFixture,CoilCoolingDXVariableSpeedSpeedData)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
-     CoilCoolingDXVariableSpeedSpeedData coil(m); 
+  ASSERT_EXIT (
+  {
+     Model m;
+     CoilCoolingDXVariableSpeedSpeedData coil(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }

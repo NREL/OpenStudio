@@ -5,20 +5,20 @@
 #define Q_OBJECT
 
 // ignore these
-#define Q_DECLARE_METATYPE(type) 
+#define Q_DECLARE_METATYPE(type)
 
 // slots remain public or private
-#define slots 
+#define slots
 
 // all signals are turned private
-#define signals private 
+#define signals private
 
 // DLM@20091231: we need to generalize our plotting stuff
 namespace Qt{
-  enum GlobalColor { white, black, red, darkRed, green, darkGreen, blue, darkBlue, cyan, 
-                     darkCyan, magenta, darkMagenta, yellow, darkYellow, gray, darkGray, 
+  enum GlobalColor { white, black, red, darkRed, green, darkGreen, blue, darkBlue, cyan,
+                     darkCyan, magenta, darkMagenta, yellow, darkYellow, gray, darkGray,
                      lightGray, transparent, color0, color1 };
-                     
+
   enum ConnectionType { AutoConnection=0,
                         DirectConnection=1,
                         QueuedConnection=2,
@@ -37,7 +37,7 @@ namespace Qt{
   #include <QAbstractItemModel>
   #include <QModelIndex>
   #include <QModelIndexList>
-  #include <QDateTime> 
+  #include <QDateTime>
   #include <QDomElement>
   #include <QSqlQuery>
   #include <QSqlDatabase>
@@ -128,7 +128,7 @@ public:
   bool isActiveWindow() const;
   void activateWindow();
   void raise();
-  void lower(); 
+  void lower();
   bool isAncestorOf(const QWidget* child) const;
   bool isEnabled() const;
   bool isEnabledTo(QWidget * ancestor) const;
@@ -157,8 +157,8 @@ class QTextStream{};
 class QRgb{};
 
 class QString{};
-  
-%extend QString{      
+
+%extend QString{
   // to std::string
   std::string __str__() const{
     return toString(*self);
@@ -174,12 +174,12 @@ class QModelIndexList{};
 %nodefaultctor QCoreApplication;
 class QCoreApplication{};
 
-%extend QCoreApplication{      
+%extend QCoreApplication{
 
   void setApplicationName(const std::string& applicationName) const{
     self->setApplicationName(toQString(applicationName));
   }
-    
+
   void setOrganizationName(const std::string& organizationName) const{
     self->setOrganizationName(toQString(organizationName));
   }
@@ -239,8 +239,8 @@ class QStandardItem
 %template(QVariantVectorVector) std::vector<std::vector<QVariant> >;
 class QVariant {
  public:
-  enum Type { Invalid = 0, 
-              Bool = 1, 
+  enum Type { Invalid = 0,
+              Bool = 1,
               Int = 2,
               UInt = 3,
               LongLong = 4,
@@ -249,7 +249,7 @@ class QVariant {
               String = 10,
               Url = 17,
               UserType = 127 };
- 
+
   QVariant();
   explicit QVariant( const QVariant& p);
   explicit QVariant( int val );
@@ -260,7 +260,7 @@ class QVariant {
   explicit QVariant( const QString& val );
   explicit QVariant( const QUrl& val );
   ~QVariant();
-  
+
   bool canConvert( Type t ) const;
   void clear();
   bool convert( Type t );
@@ -274,11 +274,11 @@ class QVariant {
   QUrl toUrl() const;
   Type type() const;
   const char * typeName() const;
-  
+
   bool operator!=( const QVariant& v) const;
   QVariant& operator=( const QVariant& variant);
   bool operator==(const QVariant& v) const;
-  
+
   static Type nameToType( const char* name);
   const char* typeToName( Type typ );
 };
@@ -287,17 +287,17 @@ class QThread : public QObject
 {
  public:
   enum Priority { IdlePriority, LowestPriority, LowPriority, NormalPriority, InheritPriority };
-  
+
   void exit ( int returnCode = 0 );
   bool isFinished () const;
   bool isRunning () const;
   void quit ();
   void start ( Priority priority = InheritPriority );
   void terminate ();
-  
+
  protected:
   virtual void run();
-  int exec();  
+  int exec();
 };
 
 class QFile

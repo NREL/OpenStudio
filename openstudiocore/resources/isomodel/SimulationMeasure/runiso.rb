@@ -1,13 +1,13 @@
 
 ######################################################################
-# == Synopsis 
+# == Synopsis
 #
-#   Load an isomodel and run the isomodel code 
+#   Load an isomodel and run the isomodel code
 #
 # == Usage
 #
-#   ruby runiso.rb ARGV[0] 
-# 
+#   ruby runiso.rb ARGV[0]
+#
 #   ARGV[0] - path to OSM file for conversion
 #
 # == Examples (replace input.osm with your input file/path
@@ -21,7 +21,7 @@
 
 
 # V0.2 18-Sep-2013 RTM
-# 
+#
 #print out the results file
 
 
@@ -55,8 +55,8 @@ eui_output_file = File.join(dirname, basename + ".eui.csv")
 puts "Writing processing log to #{runiso_log_file} on #{time.ctime}"
 puts "Writing output to #{runiso_output_file} and #{eui_output_file}"
 
-# create log file and start writing out 
-logfile = File.new(runiso_log_file, 'w') 
+# create log file and start writing out
+logfile = File.new(runiso_log_file, 'w')
 logfile.puts "Starting #{runiso_log_file}  on #{time.ctime}"
 logfile.puts "Running ruby #{$0} #{input_file} "
 
@@ -121,9 +121,9 @@ logfile.puts "*****************************"
 
 
 
-  
+
  # copy results to a more useful table by creating a 14x12 arrays called elec_enduse and gas_enduse
- 
+
 elec_enduse=Array.new(14) {Array.new(12,0.0)}
 gas_enduse=Array.new(14) {Array.new(12,0.0)}
 (0..13).each do |cat|
@@ -132,23 +132,23 @@ gas_enduse=Array.new(14) {Array.new(12,0.0)}
 		gas_enduse[cat][month] = simResults.monthlyResults[month].getEndUse(OpenStudio::EndUses.fuelTypes[1], OpenStudio::EndUses.categories[cat])
 	end	
 end
-  
-  
+
+
 floorArea=userModel.floorArea
-months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] 
+months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
 # openstudio::OPENSTUDIO_ENUM(EndUseFuelType ,((Electricity)(Electricity))((Gas)(Natural Gas))((OtherFuel)(Other Fuel))((DistrictCooling)(District Cooling))((DistrictHeating)(District Heating))((Water)(Water)) 	 )	
 #openstudio::OPENSTUDIO_ENUM(EndUseCategoryType ,((Heating)(Heating))((Cooling)(Cooling))((InteriorLights)(Interior Lighting))((ExteriorLights)(Exterior Lighting))((InteriorEquipment)(Interior Equipment))((ExteriorEquipment)(Exterior Equipment))((Fans)(Fans))((Pumps)(Pumps))((HeatRejection)(Heat Rejection))((Humidifier)(Humidification))((HeatRecovery)(Heat Recovery))((WaterSystems)(Water Systems))((Refrigeration)(Refrigeration))((Generators)(Generators)) 	 )	
  puts "Monthly Energy Use By Category in kWh/m2"
- puts "Month \tEHeat \tECool \tEIntLt \tEExtLt \tEInEqp \tEFan \tEPump \tEDHW \tGHeat \tGInEqp \tGDHW" 
- 
+ puts "Month \tEHeat \tECool \tEIntLt \tEExtLt \tEInEqp \tEFan \tEPump \tEDHW \tGHeat \tGInEqp \tGDHW"
+
  logfile.puts "Monthly Energy Use By Category in kWh/m2"
- logfile.puts "Month \tEHeat \tECool \tEIntLt \tEExtLt \tEInEqp  \tEFan \tEPump \tEDHW \tGHeat \tGInEqp \tGDHW" 
- 
+ logfile.puts "Month \tEHeat \tECool \tEIntLt \tEExtLt \tEInEqp  \tEFan \tEPump \tEDHW \tGHeat \tGInEqp \tGDHW"
+
  totaluse=Array.new(13,0.0)
- 
+
  #totaluse=[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
- 
+
  (0..11).each do |month|
 	print months[month]
 	logfile.print months[month], "\t"
@@ -390,7 +390,7 @@ euifile.print "Total,"
 end
 euifile.printf("%4.3g \n", gas_total)
 
-euifile.puts 
+euifile.puts
 euifile.puts "Total EUIs (kWh/m2)"
 euifile.puts "Month , Jan, Feb, Mar, Apr , May, Jun, Jul, Aug, Sep, Oct, Nov, Dec, Total"
 

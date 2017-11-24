@@ -42,11 +42,11 @@ namespace detail {
   class ScheduleInterval_Impl;
 } // detail
 
-// ETH@20120919 Perhaps all Schedules should be able to return their data as TimeSeries (and TimeSeries should be 
-// convertible to and/or implemented using OSQuantityVector). 
+// ETH@20120919 Perhaps all Schedules should be able to return their data as TimeSeries (and TimeSeries should be
+// convertible to and/or implemented using OSQuantityVector).
 
 /** ScheduleInterval is a Schedule that serves as an abstract base class for ScheduleFixedInterval
- *  and ScheduleVariableInterval. ScheduleIntervals may be constructed from TimeSeries, and can return 
+ *  and ScheduleVariableInterval. ScheduleIntervals may be constructed from TimeSeries, and can return
  *  their values as TimeSeries. */
 class MODEL_API ScheduleInterval : public Schedule {
  public:
@@ -56,20 +56,20 @@ class MODEL_API ScheduleInterval : public Schedule {
   virtual ~ScheduleInterval() {}
 
   //@}
-  
+
   static boost::optional<ScheduleInterval> fromTimeSeries(const openstudio::TimeSeries& timeSeries, Model& model);
-  
+
   /** @name Getters */
   //@{
 
   openstudio::TimeSeries timeSeries() const;
-  
+
   //@}
   /** @name Setters */
   //@{
 
   bool setTimeSeries(const openstudio::TimeSeries& timeSeries);
-  
+
   //@}
  protected:
 

@@ -60,7 +60,7 @@ ComponentList::ComponentList(const std::vector<Component *> & components,
 
 void ComponentList::createLayout()
 {
-  this->setObjectName("GrayWidget"); 
+  this->setObjectName("GrayWidget");
 
   QString style;
 

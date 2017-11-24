@@ -115,7 +115,7 @@ namespace openstudio{
     m_impl(other.impl())
   {}
 
-  /// Time from impl 
+  /// Time from impl
   Time::Time(const ImplType& implType)
   {
     m_impl = implType;
@@ -202,7 +202,7 @@ namespace openstudio{
 
   /// greater than operator
   bool Time::operator> (const Time& rhs) const
-  { 
+  {
     return totalSeconds() > rhs.totalSeconds();
   }
 

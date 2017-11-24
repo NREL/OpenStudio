@@ -73,10 +73,10 @@ class ConstructionCfactorUndergroundWallInspectorView : public ModelObjectInspec
 
     bool m_isIP;
 
-    OSLineEdit2 * m_nameEdit; 
+    OSLineEdit2 * m_nameEdit;
 
     StandardsInformationConstructionWidget * m_standardsInformationWidget;
-      
+
     OSQuantityEdit2 * m_cfactorEdit;
 
     OSQuantityEdit2 * m_heightEdit;

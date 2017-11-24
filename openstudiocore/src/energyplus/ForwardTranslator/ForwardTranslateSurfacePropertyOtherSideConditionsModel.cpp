@@ -56,7 +56,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSurfacePropertyOtherSideC
                                                        modelObject);
 
   idfObject.setString(SurfaceProperty_OtherSideConditionsModelFields::TypeofModeling, modelObject.typeOfModeling());
-  
+
   return idfObject;
 }
 

@@ -148,9 +148,9 @@ TEST(String, SimpleConversions)
 //    out << boost::serialization::make_nvp("str", str);
 //    out << boost::serialization::make_nvp("dir", dir);
 //  }
-// 
+//
 //  // read in
-//  std::string newStr;  
+//  std::string newStr;
 //  path newDir;
 //  {
 //    openstudio::filesystem::ifstream ifs(dir / toPath(str + ".txt"));
@@ -176,7 +176,7 @@ TEST(String, SimpleConversions)
 //    ASSERT_EQ(str, newStr);
 //    ASSERT_TRUE(dir == newDir);
 //  }
-//  
+//
 //}
 
 TEST(String, Regex)
@@ -291,7 +291,7 @@ TEST(String,NeatStrings) {
   str = toNeatString(value,5);
   EXPECT_EQ("-0.00019",str);
   EXPECT_EQ(5u,numFractionalDigits(str));
-  
+
   value = -1326.32;
   str = toNeatString(toNumSigFigs(value,3),1);
   EXPECT_EQ("-1,330.0",str);
@@ -338,7 +338,7 @@ TEST(String,NumFractionalDigits) {
   EXPECT_EQ(0u,result.first); EXPECT_EQ(4u,result.second);
 
   result = numFractionalDigits(values,5u);
-  EXPECT_EQ(2u,result.first); EXPECT_EQ(6u,result.second);  
+  EXPECT_EQ(2u,result.first); EXPECT_EQ(6u,result.second);
 
   values.clear();
   values.push_back(0.0);

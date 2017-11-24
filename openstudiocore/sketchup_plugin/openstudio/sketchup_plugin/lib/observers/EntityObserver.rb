@@ -36,32 +36,32 @@ module OpenStudio
       @drawing_interface = drawing_interface
       @enabled = false
     end
-    
+
     def disable
       was_enabled = @enabled
       @enabled = false
       return was_enabled
     end
-    
+
     def enable
       @enabled = true
     end
-    
+
     def destroy
       @drawing_interface = nil
       @enabled = false
-    end    
-    
+    end
+
     def onChangeEntity(entity)
-      
+
       Plugin.log(OpenStudio::Trace, "#{current_method_name}, @enabled = #{@enabled}")
-      
+
       return if not @enabled
-      
+
       # http://www.thomthom.net/software/sketchup/observers/#note_EntityObserver
-      # EntityObserver.onChangeEntity mistriggers right before EntityObserver.onEraseEntity, referencing a non-existant entity. 
-      # EntityObserver.onEraseEntity reference a non-existant entity. 
-      
+      # EntityObserver.onChangeEntity mistriggers right before EntityObserver.onEraseEntity, referencing a non-existant entity.
+      # EntityObserver.onEraseEntity reference a non-existant entity.
+
       proc = Proc.new {
         @drawing_interface.on_change_entity
       }
@@ -69,15 +69,15 @@ module OpenStudio
     end
 
     def onEraseEntity(entity)
-      
+
       Plugin.log(OpenStudio::Trace, "#{current_method_name}, @enabled = #{@enabled}")
-      
+
       return if not @enabled
-      
+
       # http://www.thomthom.net/software/sketchup/observers/#note_EntityObserver
-      # EntityObserver.onChangeEntity mistriggers right before EntityObserver.onEraseEntity, referencing a non-existant entity. 
-      # EntityObserver.onEraseEntity reference a non-existant entity. 
-      
+      # EntityObserver.onChangeEntity mistriggers right before EntityObserver.onEraseEntity, referencing a non-existant entity.
+      # EntityObserver.onEraseEntity reference a non-existant entity.
+
       proc = Proc.new {
         @drawing_interface.on_erase_entity
       }

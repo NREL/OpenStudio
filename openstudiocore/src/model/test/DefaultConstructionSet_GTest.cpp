@@ -507,7 +507,7 @@ TEST_F(ModelFixture, DefaultConstructionSet_Clone)
   DefaultConstructionSet defaultConstructionSet3(model);
   defaultConstructionSet3.setDefaultExteriorSurfaceConstructions(defaultSurfaceConstructions);
   EXPECT_EQ(3u, defaultSurfaceConstructions.getModelObjectSources<model::DefaultConstructionSet>().size());
- 
+
   boost::optional<model::DefaultSurfaceConstructions> defExtSurfCons = defaultConstructionSet1.defaultExteriorSurfaceConstructions();
   ASSERT_TRUE(defExtSurfCons);
   EXPECT_EQ(3u, defExtSurfCons->getModelObjectSources<model::DefaultConstructionSet>().size());

@@ -119,11 +119,11 @@ private:
 class MODELEDITOR_API ModelObjectSelectorDialogWatcher : public QObject, public Nano::Observer
 {
   Q_OBJECT
-  
+
 public:
 
   ModelObjectSelectorDialogWatcher(std::shared_ptr<ModelObjectSelectorDialog> modelObjectSelectorDialog);
-  
+
   /// get the selected object
   boost::optional<openstudio::model::ModelObject> selectedModelObject() const;
 

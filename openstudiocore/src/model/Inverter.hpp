@@ -66,7 +66,7 @@ class MODEL_API Inverter : public ParentObject {
 
   friend class openstudio::IdfObject;
 
-  /// @cond 
+  /// @cond
 
   typedef detail::Inverter_Impl ImplType;
 
@@ -76,7 +76,7 @@ class MODEL_API Inverter : public ParentObject {
 
   REGISTER_LOGGER("openstudio.model.Inverter");
 
-  /// @endcond 
+  /// @endcond
 
 };
 

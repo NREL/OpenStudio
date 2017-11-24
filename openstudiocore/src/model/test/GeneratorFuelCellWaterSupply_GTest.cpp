@@ -140,5 +140,5 @@ TEST_F(ModelFixture, FuelCellWaterSupply5) {
   EXPECT_TRUE(model.getOptionalUniqueModelObject<SiteWaterMainsTemperature>());
   EXPECT_EQ(10.0, model.getUniqueModelObject<SiteWaterMainsTemperature>().annualAverageOutdoorAirTemperature());
   EXPECT_EQ(11.0, model.getUniqueModelObject<SiteWaterMainsTemperature>().maximumDifferenceInMonthlyAverageOutdoorAirTemperatures());
-  
+
 }

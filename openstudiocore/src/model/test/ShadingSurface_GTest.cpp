@@ -42,7 +42,7 @@ using namespace openstudio;
 TEST_F(ModelFixture, ShadingSurface)
 {
   Model model;
- 
+
   Point3dVector points;
   points.push_back(Point3d(0, 1, 0));
   points.push_back(Point3d(0, 0, 0));

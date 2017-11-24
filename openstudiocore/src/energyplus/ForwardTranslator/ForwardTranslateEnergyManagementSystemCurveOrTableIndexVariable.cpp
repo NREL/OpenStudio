@@ -61,7 +61,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemCur
   if (s) {
     idfObject.setName(*s);
   }
- 
+
   idfObject.setString(EnergyManagementSystem_CurveOrTableIndexVariableFields::CurveorTableObjectName, modelObject.curveOrTableObject().nameString());
 
   return idfObject;

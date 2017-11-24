@@ -40,7 +40,7 @@ namespace detail{
 }
 
 /** Construction is a LayeredConstruction that wraps the EnergyPlus IDD object 'Construction'.
- *  A Construction consists of a number of material layers, each of which should belong to the 
+ *  A Construction consists of a number of material layers, each of which should belong to the
  *  same base class: OpaqueMaterial, FenestrationMaterial, or ModelPartitionMaterial. In addition
  *  the layers must satisfy some restrictions in order to form a valid EnergyPlus construction,
  *  see the documentation for LayeredConstruction. */
@@ -67,7 +67,7 @@ class MODEL_API Construction : public LayeredConstruction {
 
   //@}
 
-  /** Searches the model for a layered construction with layers which are the reverse of this one.  Returns that construction 
+  /** Searches the model for a layered construction with layers which are the reverse of this one.  Returns that construction
    *  if found, creates one if not. */
   Construction reverseConstruction() const;
 
@@ -80,7 +80,7 @@ class MODEL_API Construction : public LayeredConstruction {
   friend class openstudio::detail::IdfObject_Impl;
   friend class detail::Construction_Impl;
 
-  explicit Construction(std::shared_ptr<detail::Construction_Impl> impl);  
+  explicit Construction(std::shared_ptr<detail::Construction_Impl> impl);
 
   /// @endcond
  private:

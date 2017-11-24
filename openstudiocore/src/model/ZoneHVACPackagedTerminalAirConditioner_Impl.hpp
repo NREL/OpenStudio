@@ -44,29 +44,29 @@ namespace detail {
    *  ZoneHVACPackagedTerminalAirConditioner. */
   class MODEL_API ZoneHVACPackagedTerminalAirConditioner_Impl : public ZoneHVACComponent_Impl
   {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{

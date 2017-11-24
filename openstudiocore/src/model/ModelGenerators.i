@@ -42,7 +42,7 @@
 
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelGenerators
-  
+
 #endif
 
 namespace openstudio {
@@ -120,18 +120,18 @@ SWIG_MODELOBJECT(PhotovoltaicPerformanceSimple, 1);
 #if defined(SWIGCSHARP)
   //%pragma(csharp) imclassimports=%{
   %pragma(csharp) moduleimports=%{
-  
+
     using System;
     using System.Runtime.InteropServices;
-        
+
     public partial class PlanarSurface : ParentObject {
       public GeneratorPhotovoltaicVector generatorPhotovoltaics()
       {
         return OpenStudio.OpenStudioModelGenerators.getGeneratorPhotovoltaics(this);
       }
-    }  
-    
+    }
+
   %}
 #endif
 
-#endif 
+#endif

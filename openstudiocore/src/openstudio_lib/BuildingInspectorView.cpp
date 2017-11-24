@@ -303,7 +303,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   mainGridLayout->addLayout(vLayout, row, 0);
   mainGridLayout->setRowMinimumHeight(row, 30);
 
-  // Relocatable 
+  // Relocatable
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
@@ -505,7 +505,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   ++row;
 
-  // widths and heights 
+  // widths and heights
 
   mainGridLayout->setColumnMinimumWidth(0, 80);
   mainGridLayout->setColumnMinimumWidth(1, 80);

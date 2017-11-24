@@ -231,7 +231,7 @@ void ClassViewWidget::pasteObjects()
     loadModel();
     ///! select the first new row
     mTableView->selectRow(selectedRow.row()+1);
-    
+
     emit modelDirty();
   }
 }

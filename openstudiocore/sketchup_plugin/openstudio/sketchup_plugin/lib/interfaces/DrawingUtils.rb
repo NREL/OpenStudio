@@ -45,16 +45,16 @@ module DrawingUtils
           return true
         end
       end
-    end  
+    end
     return false
   end
-  
+
   # Strictly determined using Faces, not drawing interfaces.
   # Tries to match a face to a base face.
   def DrawingUtils.detect_base_face(face)
     base_face = nil
     first_guess = nil
-    
+
     # try the current parent as a first guess
     if drawing_interface = face.drawing_interface
       if drawing_interface.class == OpenStudio::SubSurface
@@ -65,17 +65,17 @@ module DrawingUtils
         end
       end
     end
-    
+
     face_normal = face.normal
     face_points = face.full_polygon.reduce.points
-    
+
     all_connected = face.all_connected
     if first_guess
       if all_connected.reject!{|e| e == first_guess}
         all_connected = [first_guess].concat(all_connected)
       end
     end
-    
+
     for entity in all_connected
       if is_base_face(face, face_normal, face_points, entity)
         base_face = entity
@@ -90,7 +90,7 @@ module DrawingUtils
   # 'entity1' already has an interface.
   def DrawingUtils.swap_interfaces(entity1, entity2)
 
-  
+
     #drawing_interface.attach_entity(entity)
         #    detach_entity(@entity)  # fix old entity
         #
@@ -102,7 +102,7 @@ module DrawingUtils
         #      ? maybe call on_changed_entity
         #    ##add_observers  (optional)  or do externally
 
-  
+
     #  .attach_model_object(model_object)
     #      @model_object = model_object
     #      @entity.model_object_key = @model_object.key
@@ -133,17 +133,17 @@ module DrawingUtils
 
   # Checks only the case of swapping a sub_face with a base_face.
   def DrawingUtils.swapped_face_on_divide?(entity)
-    
+
     # first check if either entity or the drawing_interface have been deleted
     if entity.deleted?
       raise("entity.deleted? is true")
     end
-    
+
     drawing_interface = entity.drawing_interface
     if drawing_interface.nil? or drawing_interface.deleted?
       raise("drawing_interface.nil? or drawing_interface.deleted? is true")
     end
-    
+
     old_entity = drawing_interface.entity
     if old_entity.nil? or old_entity.deleted?
       # this can happen if a push/pull operation creates a new face and deletes the old face at the same time
@@ -152,7 +152,7 @@ module DrawingUtils
       #OpenStudio::Plugin.log(OpenStudio::Info, "old_entity.nil? or old_entity.deleted? is true")
       return(false)
     end
-    
+
     # the new entity has the same id as the old entity
     if entity.entityID == old_entity.entityID
       raise("entity.entityID == old_entity.entityID is true")
@@ -161,23 +161,23 @@ module DrawingUtils
       #OpenStudio::Plugin.log(OpenStudio::Info, "drawing_interface.model_object = #{drawing_interface.model_object}")
       return(false)
     end
-    
+
     new_face_points = entity.full_polygon.reduce.points
     old_face_points = old_entity.full_polygon.reduce.points
-    
+
     OpenStudio::Plugin.log(OpenStudio::Info, "new_face = #{entity}, entityID = #{entity.entityID}")
     OpenStudio::Plugin.log(OpenStudio::Info, "new_face_points = [#{new_face_points.join(',')}]")
     OpenStudio::Plugin.log(OpenStudio::Info, "old_face = #{old_entity}, entityID = #{old_entity.entityID}")
     OpenStudio::Plugin.log(OpenStudio::Info, "old_face_points = [#{old_face_points.join(',')}]")
-    
+
     # in the no swap case, old_entity is the base surface and new_entity is the sub surface
-    
+
     # in the swap case, new_entity is the base surface and old_entity is the sub surface
-    
+
     swap = old_face_points.is_subset_of?(new_face_points)
 
     OpenStudio::Plugin.log(OpenStudio::Info, "swap = #{swap}")
-    
+
     if (swap)
       puts "swap"
       return(true)  # swapped

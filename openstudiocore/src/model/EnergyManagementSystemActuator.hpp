@@ -34,7 +34,7 @@
 
 namespace openstudio {
 
-namespace energyplus { 
+namespace energyplus {
   class ReverseTranslator;
 }
 

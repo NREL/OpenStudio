@@ -44,7 +44,7 @@ namespace detail {
 
 } // detail
 
-/** CoilWaterHeatingAirToWaterHeatPump is a ModelObject that wraps the OpenStudio IDD object 'OS:Coil:WaterHeating:AirToWaterHeatPump'. 
+/** CoilWaterHeatingAirToWaterHeatPump is a ModelObject that wraps the OpenStudio IDD object 'OS:Coil:WaterHeating:AirToWaterHeatPump'.
  *  As of EnergyPlus version 8.4.0 this object maps to Coil:WaterHeating:AirToWaterHeatPump:Pumped in idf format.
  */
 class MODEL_API CoilWaterHeatingAirToWaterHeatPump : public HVACComponent {

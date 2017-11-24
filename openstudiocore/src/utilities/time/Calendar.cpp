@@ -36,7 +36,7 @@ namespace openstudio{
 
   /// default constructor, uses assumed year
   Calendar::Calendar()
-    :  m_startDate(Date(MonthOfYear::Jan, 1, YearDescription().assumedYear())), 
+    :  m_startDate(Date(MonthOfYear::Jan, 1, YearDescription().assumedYear())),
     m_endDate(Date(MonthOfYear::Dec, 31, YearDescription().assumedYear()))
   {}
 
@@ -75,9 +75,9 @@ namespace openstudio{
   /// standard daylight savings time, [2nd Sunday in March, 1st Sunday in November)
   void Calendar::standardDaylightSavings()
   {
-    m_daylightSavingsStart = Date::fromNthDayOfMonth(NthDayOfWeekInMonth::second, 
+    m_daylightSavingsStart = Date::fromNthDayOfMonth(NthDayOfWeekInMonth::second,
         DayOfWeek::Sunday, MonthOfYear::Mar, m_startDate.year());
-    m_daylightSavingsEnd = Date::fromNthDayOfMonth(NthDayOfWeekInMonth::first, 
+    m_daylightSavingsEnd = Date::fromNthDayOfMonth(NthDayOfWeekInMonth::first,
         DayOfWeek::Sunday, MonthOfYear::Nov, m_startDate.year());
   }
 
@@ -92,19 +92,19 @@ namespace openstudio{
     addHoliday(Date(MonthOfYear::Dec, 25, m_startDate.year()), "Christmas");
 
     // holidays expressed as nth day of month
-    addHoliday(Date::fromNthDayOfMonth(NthDayOfWeekInMonth::third, 
+    addHoliday(Date::fromNthDayOfMonth(NthDayOfWeekInMonth::third,
           DayOfWeek::Monday, MonthOfYear::Jan, m_startDate.year()), "MLK Day");
-    addHoliday(Date::fromNthDayOfMonth(NthDayOfWeekInMonth::third, 
+    addHoliday(Date::fromNthDayOfMonth(NthDayOfWeekInMonth::third,
           DayOfWeek::Monday, MonthOfYear::Feb, m_startDate.year()), "Presidents Day");
-    addHoliday(Date::fromNthDayOfMonth(NthDayOfWeekInMonth::fifth, 
+    addHoliday(Date::fromNthDayOfMonth(NthDayOfWeekInMonth::fifth,
           DayOfWeek::Monday, MonthOfYear::May, m_startDate.year()), "Memorial Day");
-    addHoliday(Date::fromNthDayOfMonth(NthDayOfWeekInMonth::first, 
+    addHoliday(Date::fromNthDayOfMonth(NthDayOfWeekInMonth::first,
           DayOfWeek::Monday, MonthOfYear::Sep, m_startDate.year()), "Labor Day");
-    addHoliday(Date::fromNthDayOfMonth(NthDayOfWeekInMonth::second, 
+    addHoliday(Date::fromNthDayOfMonth(NthDayOfWeekInMonth::second,
           DayOfWeek::Monday, MonthOfYear::Oct, m_startDate.year()), "Columbus Day");
 
     // Thanksgiving is kind of weird, should we include Friday afterwards (e.g. office) or not (e.g. retail)
-    Date thanksgiving = Date::fromNthDayOfMonth(NthDayOfWeekInMonth::fourth, DayOfWeek::Thursday, 
+    Date thanksgiving = Date::fromNthDayOfMonth(NthDayOfWeekInMonth::fourth, DayOfWeek::Thursday,
         MonthOfYear::Nov, m_startDate.year());
     addHoliday(thanksgiving, "Thanksgiving");
     addHoliday(DateTime(thanksgiving, Time(1,0,0,0)).date(), "Day After Thanksgiving");

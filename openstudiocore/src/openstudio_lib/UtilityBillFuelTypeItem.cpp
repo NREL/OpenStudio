@@ -44,7 +44,7 @@
 namespace openstudio {
 
 UtilityBillFuelTypeItem::UtilityBillFuelTypeItem(OSCollapsibleItemHeader* collapsibleItemHeader,
-                                         UtilityBillFuelTypeListView* utilityBillFuelTypeListView, 
+                                         UtilityBillFuelTypeListView* utilityBillFuelTypeListView,
                                          QWidget * parent )
   : OSCollapsibleItem(collapsibleItemHeader, utilityBillFuelTypeListView, parent)
 {

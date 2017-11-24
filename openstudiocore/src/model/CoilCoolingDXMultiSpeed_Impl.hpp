@@ -129,7 +129,7 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-    
+
     unsigned inletPort() override;
 
     unsigned outletPort() override;

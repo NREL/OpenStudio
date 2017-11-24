@@ -56,19 +56,19 @@ boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerWarmest( S
   s = modelObject.controlVariable();
   idfObject.setString(SetpointManager_WarmestFields::ControlVariable,s);
 
-  // MinimumSetpointTemperature 
+  // MinimumSetpointTemperature
   value = modelObject.minimumSetpointTemperature();
   if( value )
   {
     idfObject.setDouble(SetpointManager_WarmestFields::MinimumSetpointTemperature,value.get());
-  } 
+  }
 
-  // MaximumSetpointTemperature 
+  // MaximumSetpointTemperature
   value = modelObject.maximumSetpointTemperature();
   if( value )
   {
     idfObject.setDouble(SetpointManager_WarmestFields::MaximumSetpointTemperature,value.get());
-  } 
+  }
 
   // Strategy
   s = modelObject.strategy();

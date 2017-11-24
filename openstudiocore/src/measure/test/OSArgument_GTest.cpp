@@ -155,7 +155,7 @@ TEST_F(MeasureFixture, OSArgument_ClearValue) {
   EXPECT_FALSE(doubleArgument.hasValue());
   EXPECT_FALSE(integerArgument.hasValue());
   EXPECT_FALSE(stringArgument.hasValue());
-  EXPECT_FALSE(choiceArgument.hasValue());  
+  EXPECT_FALSE(choiceArgument.hasValue());
 
   EXPECT_ANY_THROW(boolArgument.valueAsBool());
   EXPECT_ANY_THROW(doubleArgument.valueAsDouble());
@@ -165,7 +165,7 @@ TEST_F(MeasureFixture, OSArgument_ClearValue) {
 }
 
 TEST_F(MeasureFixture, OSArgument_Domain) {
-  
+
   OSArgument doubleArg = OSArgument::makeDoubleArgument("double", true);
   OSArgument integerArg = OSArgument::makeIntegerArgument("integer", true);
   OSArgument stringArg = OSArgument::makeStringArgument("string", true);

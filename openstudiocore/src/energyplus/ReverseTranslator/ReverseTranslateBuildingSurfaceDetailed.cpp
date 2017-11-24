@@ -54,7 +54,7 @@ OptionalModelObject ReverseTranslator::translateBuildingSurfaceDetailed( const W
   }
 
   openstudio::Point3dVector vertices = getVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, workspaceObject);
- 
+
   boost::optional<Surface> surface;
   try{
     surface = Surface(vertices, m_model);
@@ -123,7 +123,7 @@ OptionalModelObject ReverseTranslator::translateBuildingSurfaceDetailed( const W
         Space adjacentSpace = modelObject->cast<Space>();
 
         if (surface->space()){
-          // insert this surface in the map so subsurface translation can find it  
+          // insert this surface in the map so subsurface translation can find it
           m_workspaceToModelMap.insert(std::make_pair(workspaceObject.handle(), surface.get()));
 
           // need to translate all sub surfaces here so they will be in adjacent space
@@ -157,7 +157,7 @@ OptionalModelObject ReverseTranslator::translateBuildingSurfaceDetailed( const W
         }
       }
 
-    }else{  
+    }else{
       LOG(Error, "OutsideBoundaryConditionObject not yet mapped for object of type " << target->iddObject().name());
     }
   }

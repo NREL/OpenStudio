@@ -256,7 +256,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"FanZoneExhaust","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"FanZoneExhaust","Flow Fraction","flowFractionSchedule",true,"Dimensionless",0.0,1.0},
     {"FanZoneExhaust","Minimum Zone Temperature Limit","minimumZoneTemperatureLimitSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
-    {"FanZoneExhaust","Balanced Exhaust Fraction","balancedExhaustFractionSchedule",true,"Dimensionless",0.0,1.0},    
+    {"FanZoneExhaust","Balanced Exhaust Fraction","balancedExhaustFractionSchedule",true,"Dimensionless",0.0,1.0},
     {"GasEquipment","Gas Equipment","schedule",true,"",0.0,1.0},
     {"GeneratorFuelSupply", "Fuel Temperature", "fuelTemperatureScheduleName", true,"Temperature", 0.0, 100.0},
     {"GeneratorFuelCellWaterSupply", "Water Temperature", "waterTemperatureScheduleName", true, "Temperature", 0.0, 100.0},

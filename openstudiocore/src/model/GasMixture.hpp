@@ -181,7 +181,7 @@ class MODEL_API GasMixture : public GasLayer {
   bool setGas1Fraction(const Quantity& gas1Fraction);
 
   void resetGas1Fraction();
-  
+
   bool setGas2Type(std::string gas2Type);
 
   void resetGas2Type();

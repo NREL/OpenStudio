@@ -49,7 +49,7 @@ TEST_F(BCLFixture, BCLFileReference)
 
   EXPECT_EQ("BCLFileReference.txt", ref.fileName());
   EXPECT_EQ("txt", ref.fileType());
-  
+
   openstudio::filesystem::ofstream file(path);
   ASSERT_TRUE(file.is_open());
   file << "Hi";

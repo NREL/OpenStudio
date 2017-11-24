@@ -593,7 +593,7 @@ namespace openstudio {
             {
               retval.push_back(boost::optional<model::ModelObject>(std::move(l)));
             }
-            else 
+            else
             {
               retval.emplace_back();
             }

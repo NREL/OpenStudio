@@ -66,7 +66,7 @@ class MODEL_API DefaultSubSurfaceConstructions : public ResourceObject {
   boost::optional<ConstructionBase> fixedWindowConstruction() const;
 
   boost::optional<ConstructionBase> operableWindowConstruction() const;
-  
+
   boost::optional<ConstructionBase> doorConstruction() const;
 
   boost::optional<ConstructionBase> glassDoorConstruction() const;

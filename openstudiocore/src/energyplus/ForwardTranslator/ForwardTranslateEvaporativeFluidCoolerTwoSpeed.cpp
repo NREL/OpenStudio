@@ -48,7 +48,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerTwo
   OptionalString s;
   OptionalDouble d;
   OptionalModelObject temp;
- 
+
   //Name
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::EvaporativeFluidCooler_TwoSpeed, modelObject);
 
@@ -68,7 +68,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerTwo
   if( modelObject.isHighFanSpeedAirFlowRateAutosized() )
   {
     idfObject.setString(openstudio::EvaporativeFluidCooler_TwoSpeedFields::HighFanSpeedAirFlowRate,"Autosize");
-  } 
+  }
   else if( (d = modelObject.highFanSpeedAirFlowRate()) )
   {
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_TwoSpeedFields::HighFanSpeedAirFlowRate,d.get());
@@ -78,7 +78,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerTwo
   if( modelObject.isHighFanSpeedFanPowerAutosized() )
   {
     idfObject.setString(openstudio::EvaporativeFluidCooler_TwoSpeedFields::HighFanSpeedFanPower,"Autosize");
-  } 
+  }
   else if( (d = modelObject.highFanSpeedFanPower()) )
   {
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_TwoSpeedFields::HighFanSpeedFanPower,d.get());
@@ -88,7 +88,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerTwo
   if( modelObject.isLowFanSpeedAirFlowRateAutosized() )
   {
     idfObject.setString(openstudio::EvaporativeFluidCooler_TwoSpeedFields::LowFanSpeedAirFlowRate,"Autocalculate");
-  } 
+  }
   else if( (d = modelObject.lowFanSpeedAirFlowRate()) )
   {
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_TwoSpeedFields::LowFanSpeedAirFlowRate,d.get());
@@ -104,7 +104,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerTwo
   if( modelObject.isLowFanSpeedFanPowerAutosized() )
   {
     idfObject.setString(openstudio::EvaporativeFluidCooler_TwoSpeedFields::LowFanSpeedFanPower,"Autocalculate");
-  } 
+  }
   else if( (d = modelObject.lowFanSpeedFanPower()) )
   {
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_TwoSpeedFields::LowFanSpeedFanPower,d.get());
@@ -147,7 +147,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerTwo
   if( modelObject.isLowSpeedStandardDesignCapacityAutosized() )
   {
     idfObject.setString(openstudio::EvaporativeFluidCooler_TwoSpeedFields::LowSpeedStandardDesignCapacity,"Autosize");
-  } 
+  }
   else if( (d = modelObject.lowSpeedStandardDesignCapacity()) )
   {
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_TwoSpeedFields::LowSpeedStandardDesignCapacity,d.get());
@@ -163,7 +163,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerTwo
   if( modelObject.isHighFanSpeedUfactorTimesAreaValueAutosized() )
   {
     idfObject.setString(openstudio::EvaporativeFluidCooler_TwoSpeedFields::HighFanSpeedUfactorTimesAreaValue,"Autosize");
-  } 
+  }
   else if( (d = modelObject.highFanSpeedUfactorTimesAreaValue()) )
   {
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_TwoSpeedFields::HighFanSpeedUfactorTimesAreaValue,d.get());
@@ -173,7 +173,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerTwo
   if( modelObject.isLowFanSpeedUfactorTimesAreaValueAutosized() )
   {
     idfObject.setString(openstudio::EvaporativeFluidCooler_TwoSpeedFields::LowFanSpeedUfactorTimesAreaValue,"Autocalculate");
-  } 
+  }
   else if( (d = modelObject.lowFanSpeedUfactorTimesAreaValue()) )
   {
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_TwoSpeedFields::LowFanSpeedUfactorTimesAreaValue,d.get());
@@ -189,7 +189,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerTwo
   if( modelObject.isDesignWaterFlowRateAutosized() )
   {
     idfObject.setString(openstudio::EvaporativeFluidCooler_TwoSpeedFields::DesignWaterFlowRate,"Autosize");
-  } 
+  }
   else if( (d = modelObject.designWaterFlowRate()) )
   {
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_TwoSpeedFields::DesignWaterFlowRate,d.get());
@@ -205,7 +205,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerTwo
   if( modelObject.isLowSpeedUserSpecifiedDesignCapacityAutosized() )
   {
     idfObject.setString(openstudio::EvaporativeFluidCooler_TwoSpeedFields::LowSpeedUserSpecifiedDesignCapacity,"Autocalculate");
-  } 
+  }
   else if( (d = modelObject.lowSpeedUserSpecifiedDesignCapacity()) )
   {
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_TwoSpeedFields::LowSpeedUserSpecifiedDesignCapacity,d.get());

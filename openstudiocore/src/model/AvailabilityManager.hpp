@@ -53,7 +53,7 @@ class MODEL_API AvailabilityManager : public ModelObject {
 
   boost::optional<Loop> loop() const;
 
-  /// @cond 
+  /// @cond
 
   typedef detail::AvailabilityManager_Impl ImplType;
 
@@ -63,7 +63,7 @@ class MODEL_API AvailabilityManager : public ModelObject {
 
   REGISTER_LOGGER("openstudio.model.AvailabilityManager");
 
-  /// @endcond 
+  /// @endcond
 
 };
 

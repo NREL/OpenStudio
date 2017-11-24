@@ -121,7 +121,7 @@ OptionalModelObject ReverseTranslator::translateAirTerminalSingleDuctConstantVol
         airTerminal->autosizeMaximumAirFlowRate();
       }
     }
-  
+
     // MaximumHotWaterorSteamFlowRate
     value = workspaceObject.getDouble(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumHotWaterorSteamFlowRate);
     if( value )

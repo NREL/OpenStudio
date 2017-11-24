@@ -64,7 +64,7 @@ class MODEL_API MeterCustomDecrement : public ModelObject {
   //@{
 
   boost::optional<std::string> fuelType() const;
-  
+
   std::string sourceMeterName() const;
 
   // Return a vector of (Key, Var) pairs
@@ -88,7 +88,7 @@ class MODEL_API MeterCustomDecrement : public ModelObject {
   bool setFuelType(const std::string& fuelType);
 
   void resetFuelType();
-  
+
   bool setSourceMeterName(const std::string& sourceMeterName);
 
   // Add a new (Key, Var) group

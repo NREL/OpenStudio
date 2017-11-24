@@ -45,7 +45,7 @@ namespace openstudio {
 class Unit;
 
 namespace detail {
-    
+
   // implementation of IddField
   class UTILITIES_API IddField_Impl {
    public:
@@ -70,12 +70,12 @@ namespace detail {
     const IddFieldProperties& properties() const;
 
     /** Returns the SI or IP units associated with this field, if they exist. All IDF data is stored
-     *  in  SI. The return value with returnIP == true can be used to convert underlying data to 
-     *  the default IP units. If there are no particular IP units specified in the IDD, this 
+     *  in  SI. The return value with returnIP == true can be used to convert underlying data to
+     *  the default IP units. If there are no particular IP units specified in the IDD, this
      *  method attempts to choose appropriate units to which one can convert. */
     boost::optional<Unit> getUnits(bool returnIP = false) const;
 
-    /** Returns true if the units markup for this field specifies that the units are dependent on 
+    /** Returns true if the units markup for this field specifies that the units are dependent on
      *  the value of another field. Such units are not handled at the IdfFile/Workspace level. They
      *  should be explicitly handled by individual ModelObject classes. */
     bool unitsBasedOnOtherField() const;
@@ -83,7 +83,7 @@ namespace detail {
     /** Get the IddKey object by keyName (case insensitive). */
     boost::optional<IddKey> getKey(const std::string& keyName) const;
 
-    /** Get all of the IddKeys for this field. Only expected to be non-empty if this is a choice 
+    /** Get all of the IddKeys for this field. Only expected to be non-empty if this is a choice
      *  field (properties().type() == IddFieldType::ChoiceType). */
     std::vector<IddKey> keys() const;
 
@@ -103,15 +103,15 @@ namespace detail {
     //@{
 
     /** Returns true if this field defines a reference name in IDF, or can be otherwise distinguised
-     *  as an IdfObject name. Returns true if the field has a \\reference property and does not have 
-     *  an \\object-list property (if it has both, it is an example of a forwarded reference), or if 
+     *  as an IdfObject name. Returns true if the field has a \\reference property and does not have
+     *  an \\object-list property (if it has both, it is an example of a forwarded reference), or if
      *  the field is a plain AlphaType field named 'Name'. */
     bool isNameField() const;
 
     /** Returns true if this field is of object-list type and calls out one or more object-lists. */
     bool isObjectListField() const;
 
-    /** Equality operator. Returns true if this IddField and other share an impl or if all 
+    /** Equality operator. Returns true if this IddField and other share an impl or if all
      *  underlying data is exactly equal. */
     bool operator==(const IddField_Impl& other) const;
 
@@ -122,22 +122,22 @@ namespace detail {
     /** @name Serialization */
     //@{
 
-    /** Load the IddField, that is, parse its text. Whitespace is not preserved. The string 
-     *  following the \\field slash code, or, if that is absent, the 'A' or 'N' identifier, 
-     *  should be sent in as name. objectName is the IddObject.name() to which this field 
+    /** Load the IddField, that is, parse its text. Whitespace is not preserved. The string
+     *  following the \\field slash code, or, if that is absent, the 'A' or 'N' identifier,
+     *  should be sent in as name. objectName is the IddObject.name() to which this field
      *  belongs. */
-    static std::shared_ptr<IddField_Impl> load(const std::string& name, 
-                                                 const std::string& text, 
+    static std::shared_ptr<IddField_Impl> load(const std::string& name,
+                                                 const std::string& text,
                                                  const std::string& objectName);
 
-    /** Print the IddField to an output stream. Field slash codes are indented to produce pretty 
-     *  output. If lastField, then the field id will be followed by a semi-colon; otherwise, a 
+    /** Print the IddField to an output stream. Field slash codes are indented to produce pretty
+     *  output. If lastField, then the field id will be followed by a semi-colon; otherwise, a
      *  comma will be used (consistent with IDD formatting). */
     std::ostream& print(std::ostream& os, bool lastField) const;
 
     //@}
    private:
-    std::string m_name;              
+    std::string m_name;
     std::string m_fieldId;           // e.g. A1, N1
     std::string m_objectName;        // name of IddObject to which this field belongs
     IddFieldProperties m_properties; // IDD markup information

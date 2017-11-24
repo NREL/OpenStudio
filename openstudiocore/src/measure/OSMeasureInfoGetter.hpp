@@ -65,7 +65,7 @@ public:
                 const std::string& description,
                 const std::string& taxonomy,
                 const std::string& modelerDescription,
-                const std::vector<OSArgument>& arguments, 
+                const std::vector<OSArgument>& arguments,
                 const std::vector<OSOutput>& outputs);
 
   /// will be empty if information was successfully extracted from the script, otherwise includes error information
@@ -114,9 +114,9 @@ private:
 };
 
 /** Interface class for using embedded Ruby to extract arguments from an OSMeasure.
- *  See src/measure/test/EmbeddedRuby_GTest.cpp for this use case. If your application is written in 
- *  Ruby, this functionality is available through non-member helper function 
- *  Opudio::Measure::infoExtractorRubyFunction(BCLMeasure), see 
+ *  See src/measure/test/EmbeddedRuby_GTest.cpp for this use case. If your application is written in
+ *  Ruby, this functionality is available through non-member helper function
+ *  Opudio::Measure::infoExtractorRubyFunction(BCLMeasure), see
  *  ruby/openstudio/measure/test/OSMeasureInfoGetter_Test.rb for an example. */
 class MEASURE_API OSMeasureInfoGetter {
  public:
@@ -137,7 +137,7 @@ class MEASURE_API OSMeasureInfoGetter {
 };
 
 /** Non-member function that returns Ruby code text for retrieving info from a BCLMeasure. This
- *  function is used by both the embedded Ruby OSMeasureInfoGetter and native Ruby 
+ *  function is used by both the embedded Ruby OSMeasureInfoGetter and native Ruby
  *  (OpenStudio::Measure::getInfo) implementations of the functionality, such that either usage
  *  pathway should produce identical results. \relates OSMeasureInfoGetter */
 MEASURE_API std::string infoExtractorRubyFunction();

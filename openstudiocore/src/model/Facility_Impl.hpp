@@ -37,7 +37,7 @@
 #include "../utilities/data/EndUses.hpp"
 #include "../utilities/data/DataEnums.hpp"
 
-namespace openstudio {  
+namespace openstudio {
 
 namespace model {
 
@@ -49,133 +49,133 @@ namespace detail {
 
   /** Facility_Impl is a ParentObject_Impl that is the implementation class for Facility.*/
   class MODEL_API Facility_Impl : public ParentObject_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
-    
 
-    
 
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
 
     /** @name Constructors and Destructors */
@@ -194,7 +194,7 @@ namespace detail {
     virtual ~Facility_Impl() {}
 
     //@}
-    
+
     // return the parent object in the hierarchy
     virtual boost::optional<ParentObject> parent() const override;
 
@@ -219,13 +219,13 @@ namespace detail {
     //@}
     /** @name Children */
     //@{
-   
+
     /// get the building
     boost::optional<Building> building() const;
 
     // get meter requests for the facility
     std::vector<OutputMeter> meters() const;
-    
+
     boost::optional<OutputMeter> getMeterByFuelType(
       const FuelType& fuelType,
       const std::string& reportingFrequency,
@@ -373,7 +373,7 @@ namespace detail {
 
     //@}
    protected:
-   
+
     boost::optional<double> elecUse() const;
     boost::optional<double> elecCost() const;
     boost::optional<double> gasUse() const;

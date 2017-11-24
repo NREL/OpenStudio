@@ -38,16 +38,16 @@ namespace openstudio {
 
 // CONSTRUCTORS
 
-IddFileAndFactoryWrapper::IddFileAndFactoryWrapper() 
-  : m_iddFileType(IddFileType(IddFileType::OpenStudio)) 
+IddFileAndFactoryWrapper::IddFileAndFactoryWrapper()
+  : m_iddFileType(IddFileType(IddFileType::OpenStudio))
 {}
 
-IddFileAndFactoryWrapper::IddFileAndFactoryWrapper(const IddFile& iddFile) 
-  : m_iddFile(iddFile) 
+IddFileAndFactoryWrapper::IddFileAndFactoryWrapper(const IddFile& iddFile)
+  : m_iddFile(iddFile)
 {}
 
-IddFileAndFactoryWrapper::IddFileAndFactoryWrapper(IddFileType iddFileType) 
-  : m_iddFileType(iddFileType) 
+IddFileAndFactoryWrapper::IddFileAndFactoryWrapper(IddFileType iddFileType)
+  : m_iddFileType(iddFileType)
 {
   if (iddFileType == IddFileType::UserCustom) {
     LOG(Warn,"IddFileType set to UserCustom without an actual IddFile being specified. Please "
@@ -302,7 +302,7 @@ bool IddFileAndFactoryWrapper::isInFile(IddObjectType objectType) const {
   else if (m_iddFileType) {
     return IddFactory::instance().isInFile(objectType,*m_iddFileType);
   }
-  
+
   LOG_AND_THROW("Invalid IddFactoryWrapper has no IddFile set.");
   return false;
 }

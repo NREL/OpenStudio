@@ -63,7 +63,7 @@ namespace contam{
  *
  *  www.bfrl.nist.gov/IAQanalysis/CONTAM/manual/Content/html/IDH_UsingControls_CVF.htm
  *
- *  Data is input as TimeSeries that should cover the entire time period to 
+ *  Data is input as TimeSeries that should cover the entire time period to
  *  be simulated. TimeSeries with Celcius units will be converted to Kelvin
  *  on output. All other TimeSeries should be in the units CONTAM expects.
  *
@@ -122,7 +122,7 @@ public:
 
   /** Translates an OpenStudio thermal model into a CONTAM airflow model. */
   boost::optional<contam::IndexModel> translateModel(model::Model model);
-  
+
   /** Static translation function to translate an OpenStudio into a CONTAM airflow model and write it to a path. */
   static bool modelToPrj(const openstudio::model::Model& model, const openstudio::path& path,
     bool translateHVAC=true, std::string leakageDescriptor="Average", ProgressBar* progressBar=nullptr);

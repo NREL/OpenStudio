@@ -308,7 +308,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoSpeedWith
 boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoSpeed( CoilCoolingDXTwoSpeed& modelObject )
 {
   IdfObject coilSystemCoolingDXIdf(IddObjectType::CoilSystem_Cooling_DX);
-    
+
   m_idfObjects.push_back(coilSystemCoolingDXIdf);
 
   boost::optional<IdfObject> oIdfObject = translateCoilCoolingDXTwoSpeedWithoutUnitary(modelObject);

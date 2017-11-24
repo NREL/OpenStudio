@@ -38,7 +38,7 @@ using namespace openstudio::model;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateWindowMaterialGlazing( 
+boost::optional<ModelObject> ReverseTranslator::translateWindowMaterialGlazing(
     const WorkspaceObject& workspaceObject)
 {
   OptionalModelObject result;
@@ -116,7 +116,7 @@ boost::optional<ModelObject> ReverseTranslator::translateWindowMaterialGlazing(
   d = workspaceObject.getDouble(WindowMaterial_GlazingFields::DirtCorrectionFactorforSolarandVisibleTransmittance);
   if (d) {
     standardGlazing.setDirtCorrectionFactorforSolarandVisibleTransmittance(*d);
-  }  
+  }
 
   optS = workspaceObject.getString(WindowMaterial_GlazingFields::SolarDiffusing);
   if (optS) {

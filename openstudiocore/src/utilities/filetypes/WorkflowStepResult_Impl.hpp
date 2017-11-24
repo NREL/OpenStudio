@@ -185,10 +185,10 @@ class UTILITIES_API WorkflowStepResult_Impl {
 
   bool setMeasureXmlChecksum(const std::string& checksum);
   void resetMeasureXmlChecksum();
-  
+
   bool setMeasureClassName(const std::string& className);
   void resetMeasureClassName();
-    
+
   bool setMeasureDisplayName(const std::string& displayName);
   void resetMeasureDisplayName();
 

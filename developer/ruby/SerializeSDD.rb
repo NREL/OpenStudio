@@ -35,27 +35,27 @@ require File.dirname(__FILE__) + '/SDDWriters/SDDWriter.rb'
 # define the input parameters
 options = Hash.new
 optparse = OptionParser.new do |opts|
-  
+
   opts.on( '-i', '--inputPath INPUTPATH', String, "Path to IDF or OSM file to be written as SDD.") do |inputPath|
     options[:inputPath] = inputPath
   end
-  
+
   opts.on( '-o', '--outputPath OUTPUTPATH', String, "Output file path.") do |outputPath|
     options[:outputPath] = outputPath
   end
-  
+
   opts.on( '-f', '--[no-]flatFormat', "Flat format." ) do |flatFormat|
     options[:flatFormat] = flatFormat
   end
-  
+
   opts.on( '-a', '--[no-]printAttributesAndRelationships', "Print attributes and relationships in flat format.") do |printAttributes|
     options[:printAttributes] = printAttributes
   end
-  
+
   opts.on( '-s', '--startType STARTTYPE', String, "Top-level type for the hierarchical XML.") do |startType|
     options[:startType] = startType
-  end  
-  
+  end
+
 end
 
 # parse the input parameters
@@ -99,7 +99,7 @@ else
 end
 
 
-# CREATE XML 
+# CREATE XML
 
 sddWriter = SDDWriter.new(flatFormat,printAttributes)
 
@@ -109,13 +109,13 @@ if flatFormat
   model.objects(true).each { |object|
     sddWriter.addToDocument(sddWriter.root,object.to_ModelObject.get)
   }
-  
+
 else
 
   model.sort(model.getObjectsByType(startType.to_IddObjectType)).each { |object|
     sddWriter.addToDocument(sddWriter.root,object.to_ModelObject.get)
   }
-  
+
 end
 
 # model.getLoops.each { |loop|

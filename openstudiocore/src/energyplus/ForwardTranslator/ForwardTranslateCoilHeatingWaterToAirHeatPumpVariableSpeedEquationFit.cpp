@@ -104,7 +104,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWaterToAirHeat
   }
 
   // EnergyPartLoadFractionCurveName
-  { 
+  {
     auto curve = modelObject.energyPartLoadFractionCurve();
     if( auto _curve = translateAndMapModelObject(curve) ) {
       idfObject.setString(Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitFields::EnergyPartLoadFractionCurveName,_curve->name().get());
@@ -142,7 +142,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWaterToAirHeat
     }
 
     // SpeedHeatingCapacityFunctionofTemperatureCurveName
-    { 
+    {
       auto curve = speed.heatingCapacityFunctionofTemperatureCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitExtensibleFields::SpeedHeatingCapacityFunctionofTemperatureCurveName,_curve->name().get());
@@ -150,7 +150,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWaterToAirHeat
     }
 
     // SpeedTotalHeatingCapacityFunctionofAirFlowFractionCurveName
-    { 
+    {
       auto curve = speed.totalHeatingCapacityFunctionofAirFlowFractionCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitExtensibleFields::SpeedTotalHeatingCapacityFunctionofAirFlowFractionCurveName,_curve->name().get());
@@ -158,7 +158,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWaterToAirHeat
     }
 
     // SpeedHeatingCapacityFunctionofWaterFlowFractionCurveName
-    { 
+    {
       auto curve = speed.heatingCapacityFunctionofWaterFlowFractionCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitExtensibleFields::SpeedHeatingCapacityFunctionofWaterFlowFractionCurveName,_curve->name().get());
@@ -166,7 +166,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWaterToAirHeat
     }
 
     // SpeedEnergyInputRatioFunctionofTemperatureCurveName
-    { 
+    {
       auto curve = speed.energyInputRatioFunctionofTemperatureCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitExtensibleFields::SpeedEnergyInputRatioFunctionofTemperatureCurveName,_curve->name().get());
@@ -174,7 +174,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWaterToAirHeat
     }
 
     // SpeedEnergyInputRatioFunctionofAirFlowFractionCurveName
-    { 
+    {
       auto curve = speed.energyInputRatioFunctionofAirFlowFractionCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitExtensibleFields::SpeedEnergyInputRatioFunctionofAirFlowFractionCurveName,_curve->name().get());
@@ -182,7 +182,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWaterToAirHeat
     }
 
     // SpeedEnergyInputRatioFunctionofWaterFlowFractionCurveName
-    { 
+    {
       auto curve = speed.energyInputRatioFunctionofWaterFlowFractionCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitExtensibleFields::SpeedEnergyInputRatioFunctionofWaterFlowFractionCurveName,_curve->name().get());
@@ -195,15 +195,15 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWaterToAirHeat
     }
 
     // SpeedWasteHeatFunctionofTemperatureCurveName
-    { 
+    {
       auto curve = speed.wasteHeatFunctionofTemperatureCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitExtensibleFields::SpeedWasteHeatFunctionofTemperatureCurveName,_curve->name().get());
       }
     }
-  
+
   }
- 
+
   return idfObject;
 }
 

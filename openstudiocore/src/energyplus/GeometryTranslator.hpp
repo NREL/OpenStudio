@@ -40,7 +40,7 @@
 namespace openstudio {
 namespace energyplus {
 
-/** \class StartingVertexPosition 
+/** \class StartingVertexPosition
  *
  *  \relates GeometryTranslator */
 OPENSTUDIO_ENUM(StartingVertexPosition,
@@ -49,14 +49,14 @@ OPENSTUDIO_ENUM(StartingVertexPosition,
   ((UpperRightCorner))
   ((LowerRightCorner)));
 
-/** \class VertexEntryDirection 
+/** \class VertexEntryDirection
  *
  *  \relates GeometryTranslator */
 OPENSTUDIO_ENUM(VertexEntryDirection,
   ((Counterclockwise))
   ((Clockwise)));
 
-/** \class CoordinateSystem 
+/** \class CoordinateSystem
  *
  *  \relates GeometryTranslator */
 OPENSTUDIO_ENUM(CoordinateSystem,
@@ -64,7 +64,7 @@ OPENSTUDIO_ENUM(CoordinateSystem,
   ((World))
   ((Absolute)));
 
-/** \class CoordinateChange 
+/** \class CoordinateChange
  *
  *  \relates GeometryTranslator */
 OPENSTUDIO_ENUM(CoordinateChange,

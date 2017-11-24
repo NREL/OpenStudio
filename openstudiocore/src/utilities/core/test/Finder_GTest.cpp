@@ -52,7 +52,7 @@ public:
   const string& name() const {return m_name;}
   unsigned number() const {return m_number;}
 private:
-  
+
   string m_name;
   unsigned m_number;
 };
@@ -205,7 +205,7 @@ TEST(Finder, findByName_Ptr)
   // not found
   obj = findByName(haystack, "Sally");
   EXPECT_FALSE(obj);
-  
+
   // insert
   Object::Ptr needle = Object::create("Billy",1);
   Object::Ptr hay = Object::create("Mary",1);
@@ -223,7 +223,7 @@ TEST(Finder, findByName_Ptr)
   ASSERT_TRUE(obj.get());
   EXPECT_TRUE("Mary" == obj->name());
   EXPECT_EQ(static_cast<unsigned int>(1), obj->number());
- 
+
   // not found
   obj = findByName(haystack, "Sally");
   EXPECT_FALSE(obj);
@@ -237,7 +237,7 @@ TEST(Finder, findByName_Ptr)
   ASSERT_TRUE(obj.get());
   EXPECT_TRUE("Billy" == obj->name());
   EXPECT_EQ(static_cast<unsigned int>(1), obj->number());
-  
+
   // check that we found the first one
   EXPECT_TRUE(needle == obj);
   EXPECT_TRUE(needle != needle2);
@@ -266,7 +266,7 @@ TEST(Finder, findByName_POD)
   // not found
   obj = findByName(haystack, "Sally");
   EXPECT_FALSE(obj);
-  
+
   // insert
   Object needle("Billy",1);
   Object hay("Mary",1);
@@ -284,7 +284,7 @@ TEST(Finder, findByName_POD)
   ASSERT_TRUE(obj);
   EXPECT_TRUE("Mary" == obj->name());
   EXPECT_EQ(static_cast<unsigned int>(1), obj->number());
- 
+
   // not found
   obj = findByName(haystack, "Sally");
   EXPECT_FALSE(obj);
@@ -319,7 +319,7 @@ TEST(Finder, findIndexByName_POD)
   // not found
   index = findIndexByName(haystack, "Sally");
   EXPECT_FALSE(index);
-  
+
   // insert
   Object needle("Billy",1);
   Object hay("Mary",1);
@@ -330,12 +330,12 @@ TEST(Finder, findIndexByName_POD)
   index = findIndexByName(haystack, "Billy");
   ASSERT_TRUE(index);
   EXPECT_EQ(0,*index);
-  
+
   // found
   index = findIndexByName(haystack, "Mary");
   ASSERT_TRUE(index);
   EXPECT_EQ(1,*index);
- 
+
   // not found
   index = findIndexByName(haystack, "Sally");
   EXPECT_FALSE(index);

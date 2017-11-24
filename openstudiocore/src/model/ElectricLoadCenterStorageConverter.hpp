@@ -62,10 +62,10 @@ class MODEL_API ElectricLoadCenterStorageConverter : public ParentObject {
   static IddObjectType iddObjectType();
 
   static std::vector<std::string> powerConversionEfficiencyMethodValues();
-  
+
   /** @name Getters */
   //@{
-    
+
   boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
   Schedule availabilitySchedule() const;

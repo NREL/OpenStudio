@@ -81,7 +81,7 @@ GeometryEditorView::GeometryEditorView(bool isIP,
 : QWidget(parent)
 {
   QVBoxLayout *layout = new QVBoxLayout;
-  
+
   EditorWebView* webView = new EditorWebView(isIP, model, this);
   layout->addWidget(webView);
 
@@ -256,7 +256,7 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
     } else{
       m_view->load(QUrl("qrc:///library/geometry_editor_start.html"));
     }
-    
+
   }
 }
 
@@ -361,7 +361,7 @@ void EditorWebView::translateExport()
   if (!errorsAndWarnings.isEmpty()){
     QMessageBox::warning(this, "Creating Model From Floorplan", errorsAndWarnings);
   }
-  
+
   if (model){
     m_exportModel = *model;
     m_exportModelHandleMapping = rt.handleMapping();
@@ -407,7 +407,7 @@ void EditorWebView::startEditor()
       config["units"] = "m";
       config["initialGridSize"] = 1;
     }
-    
+
     boost::optional<model::Site> site = m_model.getOptionalUniqueModelObject<model::Site>();
     if (site){
       double latitude = site->latitude();
@@ -554,7 +554,7 @@ void EditorWebView::saveExport()
 
 void EditorWebView::previewExport()
 {
-  // do the export 
+  // do the export
   doExport();
 
   // translate the exported floorplan
@@ -605,7 +605,7 @@ void EditorWebView::previewExport()
 
 void EditorWebView::mergeExport()
 {
-  // do the export 
+  // do the export
   doExport();
 
   // translate the exported floorplan
@@ -656,7 +656,7 @@ void EditorWebView::checkForUpdate()
 {
   if (!m_javascriptRunning){
     m_javascriptRunning = true;
-    
+
     // DLM: don't disable and enable the tabs, too distracting
     //m_document->disable();
 
@@ -664,7 +664,7 @@ void EditorWebView::checkForUpdate()
 
     QString javascript = QString("window.versionNumber;");
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_versionNumber = v.toUInt();  m_javascriptRunning = false; });
-    
+
     // DLM: the javascript engine appears to stop when a file dialog is launched by the editor (e.g. to import an image)
     int processEventsTime = 200;
     boost::posix_time::ptime start = boost::posix_time::microsec_clock::universal_time();
@@ -698,7 +698,7 @@ void EditorWebView::onChanged()
   m_document->markAsModified();
 }
 
-void EditorWebView::onUnitSystemChange(bool t_isIP) 
+void EditorWebView::onUnitSystemChange(bool t_isIP)
 {
   if (m_geometryEditorStarted){
     QMessageBox::warning(this, "Units Change", "Changing unit system for existing floorplan is not currently supported.  Reload tab to change units.");

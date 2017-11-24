@@ -31,16 +31,16 @@ require 'openstudio'
 require 'minitest/autorun'
 
 class Surface_Test < MiniTest::Unit::TestCase
-  
+
   def test_Surfaces
     model = OpenStudio::Model::exampleModel
 
     surfaces = model.getSurfaces
     planarSurfaces = model.getPlanarSurfaces
-    
+
     assert(surfaces.size > 0)
     assert(planarSurfaces.size > surfaces.size)
-    
+
     assert(surfaces[0].is_a? OpenStudio::Model::Surface)
     assert(surfaces[0].is_a? OpenStudio::Model::PlanarSurface)
     assert(planarSurfaces[0].is_a? OpenStudio::Model::PlanarSurface)

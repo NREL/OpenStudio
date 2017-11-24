@@ -96,10 +96,10 @@ namespace radiance {
 
     /// get daylighting control reference point
     static openstudio::Point3d getReferencePoint(const openstudio::model::DaylightingControl& control);
-    
+
     /// get sensor vector
     static openstudio::Vector3d getSensorVector(const openstudio::model::DaylightingControl& control);
-    
+
     /// get view vectors, number is determined by the Number of Daylighting Views parameter
     static openstudio::Vector3dVector getViewVectors(const openstudio::model::DaylightingControl& control);
 
@@ -108,7 +108,7 @@ namespace radiance {
 
    /// get sensor vector
     static openstudio::Vector3d getSensorVector(const openstudio::model::GlareSensor& sensor);
-    
+
      /// get glare sensor reference point
     static openstudio::Point3d getReferencePoint(const openstudio::model::GlareSensor& sensor);
 
@@ -155,21 +155,21 @@ namespace radiance {
       std::string shadeBSDF;
 
       // get window group
-      WindowGroup getWindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space, 
-                                 const model::ConstructionBase& construction, 
+      WindowGroup getWindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space,
+                                 const model::ConstructionBase& construction,
                                  const boost::optional<model::ShadingControl>& shadingControl,
                                  const openstudio::Point3dVector& polygon);
       std::vector<WindowGroup> m_windowGroups;
 
-      void siteShadingSurfaceGroups(const openstudio::path &t_radDir, 
+      void siteShadingSurfaceGroups(const openstudio::path &t_radDir,
           const std::vector<openstudio::model::ShadingSurfaceGroup> &t_radShadingSurfaceGroups,
           std::vector<openstudio::path> &t_outpaths);
 
-      void buildingShadingSurfaceGroups(const openstudio::path &t_radDir, 
+      void buildingShadingSurfaceGroups(const openstudio::path &t_radDir,
           const std::vector<openstudio::model::ShadingSurfaceGroup> &t_radShadingSurfaceGroups,
           std::vector<openstudio::path> &t_outpaths);
 
-      void buildingSpaces(const openstudio::path &t_radDir, 
+      void buildingSpaces(const openstudio::path &t_radDir,
           const std::vector<openstudio::model::Space> &t_spaces,
           std::vector<openstudio::path> &t_outpaths);
 

@@ -333,8 +333,8 @@ void QwtWeedingCurveFitter::setChunkSize( uint numPoints )
 }
 
 /*!
-  
-  \return Maximum for the number of points passed to a run 
+
+  \return Maximum for the number of points passed to a run
           of the algorithm - or 0, when unlimited
   \sa setChunkSize()
 */

@@ -177,14 +177,14 @@ const boost::regex& regexDirectScaledUnit() {
 const boost::regex& regexEmbeddedDirectScaledUnit() {
   std::stringstream regexComposer;
   regexComposer << "(?:(?:^| )(" << regexDirectScaledUnit().str() << ")(?:$| |\\.$|\\. |,|;)|"
-                       << "\\((" << regexDirectScaledUnit().str() << ")\\)|" 
+                       << "\\((" << regexDirectScaledUnit().str() << ")\\)|"
                        << "\\{(" << regexDirectScaledUnit().str() << ")\\}|"
                        << "\\[(" << regexDirectScaledUnit().str() << ")\\])";
   static boost::regex rgx(regexComposer.str());
   return rgx;
 }
 
-std::pair<std::string,std::pair<unsigned,std::string> > 
+std::pair<std::string,std::pair<unsigned,std::string> >
 decomposeDirectScaledUnit(const std::string& s) {
   if (!isDirectScaledUnit(s)) {
     LOG_FREE_AND_THROW("openstudio.QuantityRegex","Cannot decompose " << s
@@ -221,7 +221,7 @@ const boost::regex& regexUnit() {
 const boost::regex& regexEmbeddedUnit() {
   std::stringstream regexComposer;
   regexComposer << "(?:(?:^| )" << regexUnit().str() << "(?:$| |\\.$|\\. |,|;)|"
-                       << "\\(" << regexUnit().str() << "\\)|" 
+                       << "\\(" << regexUnit().str() << "\\)|"
                        << "\\{" << regexUnit().str() << "\\}|"
                        << "\\[" << regexUnit().str() << "\\])";
   static boost::regex rgx(regexComposer.str());

@@ -63,19 +63,19 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantComponentTemperature
 
   // DesignVolumeFlowRate
   if( modelObject.isDesignVolumeFlowRateAutosized() ) {
-    idfObject.setString(PlantComponent_TemperatureSourceFields::DesignVolumeFlowRate,"Autosize"); 
+    idfObject.setString(PlantComponent_TemperatureSourceFields::DesignVolumeFlowRate,"Autosize");
   } else if( (value = modelObject.designVolumeFlowRate()) ) {
-    idfObject.setDouble(PlantComponent_TemperatureSourceFields::DesignVolumeFlowRate,value.get()); 
+    idfObject.setDouble(PlantComponent_TemperatureSourceFields::DesignVolumeFlowRate,value.get());
   }
 
   // TemperatureSpecificationType
   if( (s = modelObject.temperatureSpecificationType()) ) {
-    idfObject.setString(PlantComponent_TemperatureSourceFields::TemperatureSpecificationType,s.get()); 
+    idfObject.setString(PlantComponent_TemperatureSourceFields::TemperatureSpecificationType,s.get());
   }
 
   // SourceTemperature
   if( (value = modelObject.sourceTemperature()) ) {
-    idfObject.setDouble(PlantComponent_TemperatureSourceFields::SourceTemperature,value.get()); 
+    idfObject.setDouble(PlantComponent_TemperatureSourceFields::SourceTemperature,value.get());
   }
 
   // SourceTemperatureScheduleName

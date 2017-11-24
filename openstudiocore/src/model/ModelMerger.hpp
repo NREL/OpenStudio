@@ -41,7 +41,7 @@ namespace openstudio
 {
   namespace model
   {
-    
+
     class Space;
     class ThermalZone;
     class SpaceType;

@@ -39,7 +39,7 @@ namespace detail{
   class CFactorUndergroundWallConstruction_Impl;
 }
 
-/** CFactorUndergroundWallConstruction is a ConstructionBase object that wraps EnergyPlus IDD 
+/** CFactorUndergroundWallConstruction is a ConstructionBase object that wraps EnergyPlus IDD
  *  object 'Construction:CfactorUndergroundWall'. */
 class MODEL_API CFactorUndergroundWallConstruction : public ConstructionBase {
  public:
@@ -81,7 +81,7 @@ class MODEL_API CFactorUndergroundWallConstruction : public ConstructionBase {
   friend class detail::CFactorUndergroundWallConstruction_Impl;
 
   explicit CFactorUndergroundWallConstruction(
-      std::shared_ptr<detail::CFactorUndergroundWallConstruction_Impl> impl);  
+      std::shared_ptr<detail::CFactorUndergroundWallConstruction_Impl> impl);
 
   /// @endcond
  private:

@@ -73,7 +73,7 @@ CollapsibleComponent::CollapsibleComponent(CollapsibleComponentHeader * collapsi
 
   // component list
   m_mainLayout->addWidget(m_componentList);
-  
+
   connect(componentList, &ComponentList::componentClicked, this, &CollapsibleComponent::componentClicked);
 
   connect(componentList, &ComponentList::componentClicked, this, &CollapsibleComponent::on_componentClicked);

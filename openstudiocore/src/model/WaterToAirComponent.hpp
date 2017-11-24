@@ -44,8 +44,8 @@ class AirLoopHVAC;
 
 class PlantLoop;
 
-/** WaterToAirComponent is the base class for model objects which interact with 
- *  an air stream and a water stream.  
+/** WaterToAirComponent is the base class for model objects which interact with
+ *  an air stream and a water stream.
  *
  *  These objects are typically water coils such as the EnergyPlus IDD objects
  *  named Coil:Heating:Water and Coil:Cooling:Water.
@@ -55,7 +55,7 @@ class MODEL_API WaterToAirComponent : public HVACComponent
   public:
   virtual ~WaterToAirComponent() {}
 
-  /** Returns the air inlet port. **/ 
+  /** Returns the air inlet port. **/
   virtual unsigned airInletPort();
 
   /** Returns the air outlet port. **/
@@ -113,7 +113,7 @@ class MODEL_API WaterToAirComponent : public HVACComponent
 
   friend class openstudio::IdfObject;
 
-  /// @cond 
+  /// @cond
 
   typedef detail::WaterToAirComponent_Impl ImplType;
 

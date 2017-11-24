@@ -49,14 +49,14 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellExhaustG
   boost::optional<double> d;
   boost::optional<Connection> connection;
   boost::optional<Node> node;
-  
+
   IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_ExhaustGasToWaterHeatExchanger, modelObject);
   //Name
   s = modelObject.name();
   if (s) {
     pcm.setName(*s);
   }
- 
+
   // HeatRecoveryWaterInletNodeName
 
   if (boost::optional<ModelObject> mo = modelObject.inletModelObject()) {
@@ -79,7 +79,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellExhaustG
     pcm.setDouble(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterMaximumFlowRate, d.get());
   }
 
-  //ExhaustOutletAirNodeName 
+  //ExhaustOutletAirNodeName
   node = modelObject.exhaustOutletAirNode();
   if (node) {
     pcm.setString(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::ExhaustOutletAirNodeName, node.get().nameString());
@@ -152,7 +152,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellExhaustG
   if (d) {
     pcm.setDouble(Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method3GasArea, d.get());
   }
-  
+
   //Method3h0WaterCoefficient
   d = modelObject.method3h0WaterCoefficient();
   if (d) {
@@ -202,7 +202,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellExhaustG
   }
 
   return pcm;
-  
+
 }
 
 } // energyplus

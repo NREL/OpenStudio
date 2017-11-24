@@ -553,7 +553,7 @@ build-aux/config.h: build-aux/stamp-h1
 build-aux/stamp-h1: $(top_srcdir)/build-aux/config.h.in $(top_builddir)/config.status
 	@rm -f build-aux/stamp-h1
 	cd $(top_builddir) && $(SHELL) ./config.status build-aux/config.h
-$(top_srcdir)/build-aux/config.h.in:  $(am__configure_deps) 
+$(top_srcdir)/build-aux/config.h.in:  $(am__configure_deps)
 	($(am__cd) $(top_srcdir) && $(AUTOHEADER))
 	rm -f build-aux/stamp-h1
 	touch $@

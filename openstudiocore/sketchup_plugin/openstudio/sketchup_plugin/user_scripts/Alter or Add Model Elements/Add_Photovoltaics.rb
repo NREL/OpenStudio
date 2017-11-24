@@ -33,7 +33,7 @@ class AddPhotovoltaics < OpenStudio::Ruleset::ModelUserScript
   def name
     return "Add Photovoltaics"
   end
-  
+
   # returns a vector of arguments, the runner will present these arguments to the user
   # then pass in the results on run
   def arguments(model)
@@ -46,25 +46,25 @@ class AddPhotovoltaics < OpenStudio::Ruleset::ModelUserScript
 
     elcd_handles = OpenStudio::StringVector.new
     elcd_names = OpenStudio::StringVector.new
-    
+
     elcd_handles << OpenStudio::toUUID("").to_s
     elcd_names << "*New Electric Load Center Distribution*"
-    
+
     elcd_hash.sort.map do |elcd_name, elcd|
       elcd_handles << elcd.handle.to_s
       elcd_names << elcd_name
     end
-    
+
     elcd = OpenStudio::Ruleset::OSArgument::makeChoiceArgument("elcd", elcd_handles, elcd_names, true)
     elcd.setDisplayName("Choose Electric Load Center Distribution.")
     elcd.setDefaultValue("*New Electric Load Center Distribution*")
     result << elcd
-    
+
     fraction_area = OpenStudio::Ruleset::OSArgument::makeDoubleArgument("fraction_area", true)
     fraction_area.setDisplayName("Fraction of Surface Area with Active Solar Cells.")
     fraction_area.setDefaultValue(1.0)
     result << fraction_area
-    
+
     efficiency = OpenStudio::Ruleset::OSArgument::makeDoubleArgument("efficiency", true)
     efficiency.setDisplayName("Fixed Cell Efficiency.")
     efficiency.setDefaultValue(0.2)
@@ -72,7 +72,7 @@ class AddPhotovoltaics < OpenStudio::Ruleset::ModelUserScript
 
     return result
   end
-  
+
 
   # override run to implement the functionality of your script
   # model is an OpenStudio::Model::Model, runner is a OpenStudio::Ruleset::UserScriptRunner
@@ -82,13 +82,13 @@ class AddPhotovoltaics < OpenStudio::Ruleset::ModelUserScript
     if not runner.validateUserArguments(arguments(model),user_arguments)
       return false
     end
-    
+
     elcd = runner.getOptionalWorkspaceObjectChoiceValue("elcd",user_arguments,model) #model is passed in because of argument type
-    
+
     # Flags to handle deletion of potentially empty ELCD and inverter
     create_elcd = false
     panel_fail = false
-    
+
     if not elcd.empty? and not elcd.get.to_ElectricLoadCenterDistribution.empty?
       elcd = elcd.get.to_ElectricLoadCenterDistribution.get
     else
@@ -98,30 +98,30 @@ class AddPhotovoltaics < OpenStudio::Ruleset::ModelUserScript
       inverter.setInverterEfficiency(0.98)
       elcd.setInverter(inverter)
     end
-    
+
     fraction_area = runner.getDoubleArgumentValue("fraction_area",user_arguments)
     efficiency = runner.getDoubleArgumentValue("efficiency",user_arguments)
-    
+
     any_in_selection = false
-    
+
     model.getPlanarSurfaces.each do |s|
 
       next if !runner.inSelection(s)
-    
+
       next if !s.to_SubSurface.empty?
-      
+
       next if !s.to_InteriorPartitionSurface.empty?
-      
+
       next if !s.generatorPhotovoltaics.empty?
-      
+
       any_in_selection = true
-      
+
       panel = OpenStudio::Model::GeneratorPhotovoltaic::simple(model)
       performance = panel.photovoltaicPerformance.to_PhotovoltaicPerformanceSimple.get
       performance.setFractionOfSurfaceAreaWithActiveSolarCells(fraction_area)
       performance.setFixedEfficiency(efficiency)
       test = panel.setSurface(s)
-      
+
       if test
         runner.registerInfo("Added GeneratorPhotovoltaic '" + panel.name.to_s + "' for PlanarSurface '" + s.name.to_s + "'")
         elcd.addGenerator(panel)
@@ -131,9 +131,9 @@ class AddPhotovoltaics < OpenStudio::Ruleset::ModelUserScript
         runner.registerWarning("Could not add GeneratorPhotovoltaic for PlanarSurface '" + s.name.to_s + "'")
         panel.remove
       end
-    
+
     end
-    
+
     # If one panel assignment failed, check if the elcd and inverter are still used
     if panel_fail
       # If no generators, remove newly created inverter and ElectricLoadCenterDistribution
@@ -145,11 +145,11 @@ class AddPhotovoltaics < OpenStudio::Ruleset::ModelUserScript
         elcd.remove
       end
     end
-    
+
     if not any_in_selection
       runner.registerAsNotApplicable("No allowable surfaces in the current selection. Please select surfaces or shading surfaces to apply photovoltaics to.")
     end
-    
+
     return(true)
   end
 end

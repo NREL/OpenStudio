@@ -47,24 +47,24 @@
 
 namespace openstudio {
 
-UtilityBillAllFuelTypesListView::UtilityBillAllFuelTypesListView(const model::Model& model, 
-                                                 bool addScrollArea, 
+UtilityBillAllFuelTypesListView::UtilityBillAllFuelTypesListView(const model::Model& model,
+                                                 bool addScrollArea,
                                                  OSItemType headerType,
                                                  QWidget * parent )
   : OSCollapsibleItemList(addScrollArea, parent), m_model(model), m_headerType(headerType)
-{ 
+{
 }
 
 UtilityBillAllFuelTypesListView::UtilityBillAllFuelTypesListView(const std::vector<std::pair<FuelType, std::string> >& utilityBillFuelTypesAndNames,
                                                  const model::Model& model,
-                                                 bool addScrollArea, 
+                                                 bool addScrollArea,
                                                  OSItemType headerType,
                                                  QWidget * parent )
-  : OSCollapsibleItemList(addScrollArea, parent), 
-    m_utilityBillFuelTypesAndNames(utilityBillFuelTypesAndNames), 
+  : OSCollapsibleItemList(addScrollArea, parent),
+    m_utilityBillFuelTypesAndNames(utilityBillFuelTypesAndNames),
     m_model(model),
     m_headerType(headerType)
-{ 
+{
   for(auto utilityBillFuelTypesAndName = m_utilityBillFuelTypesAndNames.rbegin();
       utilityBillFuelTypesAndName != m_utilityBillFuelTypesAndNames.rend();
       ++utilityBillFuelTypesAndName)

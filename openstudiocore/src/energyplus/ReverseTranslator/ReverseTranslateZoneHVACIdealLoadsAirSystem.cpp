@@ -56,13 +56,13 @@ OptionalModelObject ReverseTranslator::translateZoneHVACIdealLoadsAirSystem( con
   }
 
   ZoneHVACIdealLoadsAirSystem zoneHVACIdealLoadsAirSystem(m_model);
-  
+
   // name
   boost::optional<std::string> s = workspaceObject.name();
   if(s){
     zoneHVACIdealLoadsAirSystem.setName(*s);
   }
-  
+
   // availability schedule
   OptionalWorkspaceObject target = workspaceObject.getTarget(ZoneHVAC_IdealLoadsAirSystemFields::AvailabilityScheduleName);
   if (target){

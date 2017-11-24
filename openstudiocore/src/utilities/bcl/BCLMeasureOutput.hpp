@@ -43,14 +43,14 @@ namespace openstudio{
   *  value of any output, it simply declares that the BCLMeasure has this output.**/
   class UTILITIES_API BCLMeasureOutput {
   public:
-    
+
     // constructor from xml, throws if required arguments are missing
     BCLMeasureOutput(const QDomElement& element);
 
     // constructor from xml, throws if required arguments are missing
     BCLMeasureOutput(const std::string& name, const std::string& displayName,
                      const boost::optional<std::string>& shortName,
-                     const boost::optional<std::string>& description,   
+                     const boost::optional<std::string>& description,
                      const std::string& type, const boost::optional<std::string>& units,
                      bool modelDependent);
 

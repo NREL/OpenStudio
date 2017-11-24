@@ -43,7 +43,7 @@ class SetpointManager_Impl;
 }
 
  /** SetpointManager is the base class for setpoint managers.
- *  
+ *
  */
 class MODEL_API SetpointManager : public HVACComponent {
  public:

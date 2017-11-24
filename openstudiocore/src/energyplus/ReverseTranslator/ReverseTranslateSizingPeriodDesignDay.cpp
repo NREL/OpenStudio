@@ -102,7 +102,7 @@ OptionalModelObject ReverseTranslator::translateSizingPeriodDesignDay( const Wor
   if (!istringEqual(dryBulbTemperatureRangeModifierType, "DifferenceSchedule")){
     value = workspaceObject.getDouble(SizingPeriod_DesignDayFields::DailyDryBulbTemperatureRange);
     if( value ){
-      designDay.setDailyDryBulbTemperatureRange(value.get()); 
+      designDay.setDailyDryBulbTemperatureRange(value.get());
     }
   }
 
@@ -153,7 +153,7 @@ OptionalModelObject ReverseTranslator::translateSizingPeriodDesignDay( const Wor
       istringEqual(humidityIndicatingType, "WetBulbProfileMultiplierSchedule") ||
       istringEqual(humidityIndicatingType, "WetBulbProfileDifferenceSchedule") ||
       istringEqual(humidityIndicatingType, "RelativeHumiditySchedule")){
-    
+
     boost::optional<WorkspaceObject> wo = workspaceObject.getTarget(SizingPeriod_DesignDayFields::HumidityConditionDayScheduleName);
     if( wo ){
       boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(wo.get());

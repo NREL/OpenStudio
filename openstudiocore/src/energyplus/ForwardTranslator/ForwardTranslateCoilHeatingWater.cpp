@@ -187,7 +187,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWater( CoilHea
   {
     idfObject.setDouble(Coil_Heating_WaterFields::RatedRatioforAirandWaterConvection,value.get());
   }
-  
+
   return boost::optional<IdfObject>(idfObject);
 }
 

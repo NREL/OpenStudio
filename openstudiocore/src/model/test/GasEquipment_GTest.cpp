@@ -62,7 +62,7 @@ TEST_F(ModelFixture, GasEquipment_Cost)
 
   boost::optional<LifeCycleCost> cost = LifeCycleCost::createLifeCycleCost("Gas Hookup", definition, 10.0, "CostPerEach", "Construction");
   ASSERT_TRUE(cost);
-  
+
   EXPECT_DOUBLE_EQ(0, cost->totalCost());
 
   Space space(model);

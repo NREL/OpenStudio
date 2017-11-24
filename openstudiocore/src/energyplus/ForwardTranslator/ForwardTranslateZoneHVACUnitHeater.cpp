@@ -61,36 +61,36 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
   // Also sets the idfObjects name
 
   IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneHVAC_UnitHeater,modelObject);
-  
-  
+
+
   boost::optional<std::string> s;
   boost::optional<double> value;
   boost::optional<Node> node;
-  
+
   // Get model object name and define node names for future use
-  
+
   // Model Name
   std::string baseName = modelObject.name().get();
-  
+
   // Node Names
   std::string fanOutletNodeName = baseName + " Fan Outlet Node";
-  
+
   // Field: Availability Schedule Name
 
   Schedule availabilitySchedule = modelObject.availabilitySchedule();
   translateAndMapModelObject(availabilitySchedule);
-  
+
   s = availabilitySchedule.name();
-  
+
   if(s)
   {
     idfObject.setString(ZoneHVAC_UnitHeaterFields::AvailabilityScheduleName,*s);
   }
 
   // Field: Air Inlet Node Name
-  
+
   node = modelObject.inletNode();
-  
+
   if(node)
   {
     s = node->name();
@@ -102,7 +102,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
   }
 
   // Field: Air Outlet Node Name
-  
+
   node = modelObject.outletNode();
 
   if(node)
@@ -119,15 +119,15 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
 
   HVACComponent supplyAirFan = modelObject.supplyAirFan();
 
-  if(boost::optional<IdfObject> _supplyAirFan = translateAndMapModelObject(supplyAirFan)) 
+  if(boost::optional<IdfObject> _supplyAirFan = translateAndMapModelObject(supplyAirFan))
   {
     idfObject.setString(ZoneHVAC_UnitHeaterFields::SupplyAirFanObjectType,_supplyAirFan->iddObject().name());
   }
 
   // Field: Supply Air Fan Name
-  
+
   s = modelObject.supplyAirFan().name();
-   
+
 
   if(s)
 
@@ -136,12 +136,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
   }
 
   // Supply Air Fan Inlet and Outlet Nodes
-  
+
   node = modelObject.inletNode();
-  
+
   if(boost::optional<IdfObject> _supplyAirFan = translateAndMapModelObject(supplyAirFan))
   {
-  
+
     if(node)
     {
       s = node->name();
@@ -192,7 +192,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
    // Field: Heating Coil Name
 
   s = modelObject.heatingCoil().name();
-   
+
   if(s)
   {
     idfObject.setString(ZoneHVAC_UnitHeaterFields::HeatingCoilName,*s);
@@ -201,7 +201,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
   // Heating coil inlet and outlet node names
 
   node = modelObject.outletNode();
-  
+
   if(boost::optional<IdfObject> _heatingCoil = translateAndMapModelObject(heatingCoil))
   {
     if(node)
@@ -229,7 +229,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
   // Field Maximum Hot Water [or Steam] Flow Rate
 
   if( modelObject.isMaximumHotWaterFlowRateAutosized())
-  
+
   {
     idfObject.setString(ZoneHVAC_UnitHeaterFields::MaximumHotWaterorSteamFlowRate,"Autosize");
   }

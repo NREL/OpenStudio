@@ -61,7 +61,7 @@ void OSLoadNamePixmapLineEdit::createWidgets()
   m_label = new QLabel();
   m_label->setFixedSize(MINI_ICON_SIZE, MINI_ICON_SIZE);
   m_label->setPixmap(m_pixmap);
-  
+
   m_lineEdit = new OSLineEdit2();
 
   bool isConnected = connect(m_lineEdit, SIGNAL(itemClicked(OSItem*)), this, SIGNAL(itemClicked(OSItem*)));
@@ -102,7 +102,7 @@ void OSLoadNamePixmapLineEdit::bind(model::ModelObject& modelObject,
   completeBind();
 }
 
-void OSLoadNamePixmapLineEdit::bind(model::ModelObject& modelObject, 
+void OSLoadNamePixmapLineEdit::bind(model::ModelObject& modelObject,
                        OptionalStringGetter get,
                        boost::optional<StringSetter> set,
                        boost::optional<NoFailAction> reset,

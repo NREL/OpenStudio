@@ -554,7 +554,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
   // Translate each thermal zone and generate a lookup table by name.
   std::vector<model::ThermalZone> thermalZones = model.getConcreteModelObjects<model::ThermalZone>();
   initProgress(thermalZones.size(), "Translating Zones");
- 
+
   nr=0;
   for (model::ThermalZone thermalZone : thermalZones) {
     nr++;
@@ -735,7 +735,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
       //{
       //  std::cout << '\t' << var << std::endl;
       //}
-      std::string envPeriod; 
+      std::string envPeriod;
       for (std::string t : sqlFile->availableEnvPeriods()) {
         envPeriod = t; // should only ever be one
         break;
@@ -751,7 +751,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
           }
           std::string keyValue = name.get();
           keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"),"\\u$1");
-          boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly", 
+          boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly",
             "Zone Mean Air Temperature", keyValue);
           if(timeSeries) {
             int nr =  m_zoneMap[thermalZone.handle()];
@@ -840,7 +840,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
             if (returnAirNode) {
               std::string keyValue = returnAirNode->name().get();
               keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"),"\\u$1");
-              boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly", 
+              boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly",
                 "System Node MassFlowRate", keyValue);
               if (timeSeries) {
                 //std::cout << "Found time series for return from zone " << thermalZone.name().get() << std::endl;
@@ -944,7 +944,7 @@ int ForwardTranslator::addNewAirflowElement(contam::IndexModel model,std::string
 {
   // flow - volume flow rate in m^3/h
   // deltaP - pressure difference in Pa
-  // n - exponent  
+  // n - exponent
 
   double RHOAIR = 1.20410;    // density of standard air
   double SRHO = 1.097315;     // sqrt( RHOAIR )

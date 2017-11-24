@@ -35,7 +35,7 @@
 namespace openstudio {
 
 namespace model {
-  
+
 class SolarCollectorFlatPlatePhotovoltaicThermal;
 class Schedule;
 

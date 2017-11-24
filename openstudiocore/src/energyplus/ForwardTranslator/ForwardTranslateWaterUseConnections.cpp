@@ -49,7 +49,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateWaterUseConnections( 
+boost::optional<IdfObject> ForwardTranslator::translateWaterUseConnections(
     WaterUseConnections& modelObject)
 {
   boost::optional<std::string> s;
@@ -89,7 +89,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterUseConnections(
   }
 
   // Hot Water Supply Temperature Schedule Name
-  
+
   if( boost::optional<Schedule> s = modelObject.hotWaterSupplyTemperatureSchedule() )
   {
     translateAndMapModelObject(s.get());
@@ -112,7 +112,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterUseConnections(
 
   for( auto & elem : equipment )
   {
-    boost::optional<IdfObject> _equipment = translateAndMapModelObject(elem); 
+    boost::optional<IdfObject> _equipment = translateAndMapModelObject(elem);
 
     if( _equipment )
     {

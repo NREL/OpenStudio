@@ -54,7 +54,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightVentilation( 
+boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightVentilation(
     AvailabilityManagerNightVentilation & modelObject)
 {
   IdfObject idfObject(IddObjectType::AvailabilityManager_NightVentilation);
@@ -109,7 +109,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightV
     idfObject.setString(AvailabilityManager_NightVentilationFields::ControlZoneName,zone->name().get());
   } else {
     if( airLoopHVAC ) {
-      auto zones = airLoopHVAC->thermalZones(); 
+      auto zones = airLoopHVAC->thermalZones();
       if( ! zones.empty() ) {
         auto default_zone = zones.front();
         LOG(Info,modelObject.briefDescription() << " is missing Control Zone Name, defaulting to " << default_zone.briefDescription() << ".");

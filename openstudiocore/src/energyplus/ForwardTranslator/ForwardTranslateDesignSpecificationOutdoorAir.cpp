@@ -80,7 +80,7 @@ boost::optional<IdfObject> ForwardTranslator::translateDesignSpecificationOutdoo
   }
 
   m_idfObjects.push_back(idfObject);
-  
+
   return idfObject;
 }
 

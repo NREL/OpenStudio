@@ -1,4 +1,4 @@
-set(PAT_SHA 1ac3fa87a52020f095309f2a2732512fbb3dec87) 
+set(PAT_SHA 1ac3fa87a52020f095309f2a2732512fbb3dec87)
 
 find_program(NPM_COMMAND npm)
 
@@ -32,19 +32,19 @@ else()
   )
 endif()
 
-add_custom_target(PAT ALL 
-  "${CMAKE_COMMAND}" "-E" echo "Building PAT" 
+add_custom_target(PAT ALL
+  "${CMAKE_COMMAND}" "-E" echo "Building PAT"
   DEPENDS "${PAT_PRODUCT_FILE}"
 )
 
 if( APPLE )
   install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT/tmp/ParametricAnalysisTool.app" DESTINATION .
-    USE_SOURCE_PERMISSIONS 
+    USE_SOURCE_PERMISSIONS
     COMPONENT PAT
   )
 else()
   install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT/tmp/pat" DESTINATION .
-    USE_SOURCE_PERMISSIONS 
+    USE_SOURCE_PERMISSIONS
     COMPONENT PAT
   )
 endif()

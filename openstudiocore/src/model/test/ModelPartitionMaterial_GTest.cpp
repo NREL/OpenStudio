@@ -130,7 +130,7 @@ TEST_F(ModelFixture, ModelPartitionMaterial_InfraredTransparentMaterial_Construc
 TEST_F(ModelFixture, ModelPartitionMaterial_InfraredTransparentMaterial_Attributes)
 {
   // Removed due to removal of attributes
-  
+
   // construct
   // Model model;
   // InfraredTransparentMaterial infraredTransparentMaterial (model);

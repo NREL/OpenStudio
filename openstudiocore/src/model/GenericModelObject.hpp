@@ -38,7 +38,7 @@ namespace detail {
   class GenericModelObject_Impl;
 } // detail
 
-/** GenericModelObject is a generic interface for \link ModelObject ModelObjects\endlink 
+/** GenericModelObject is a generic interface for \link ModelObject ModelObjects\endlink
  *  that do not yet have a customized interface. */
 
 /** GenericModelObject derives from ModelObject and is a generic interface to any OpenStudio IDD object..
@@ -47,19 +47,19 @@ namespace detail {
  *  it does not wrap a specific OpenStudio IDD object.  Instead it is a generic wrapper that can hold
  *  OpenStudio IDD objects of any type.  When objects are added to Model, a large switch statement is
  *  used to construct wrappers of the correct type for each new object.  If the type of a newly added
- *  object has not yet been wrapped by a specific ModelObject then a GenericModelObject is used to hold 
+ *  object has not yet been wrapped by a specific ModelObject then a GenericModelObject is used to hold
  *  a reference to the data.  GenericModelObject is planned to be deprecated once all OpenStudio IDD types
  *  are wrapped by specific \link ModelObject ModelObjects \endlink, this class only exists in the interim
  *  so translation to and from EnergyPlus via the implicit translator does not lose data objects.
- *   
+ *
  */
-class MODEL_API GenericModelObject : public ModelObject { 
+class MODEL_API GenericModelObject : public ModelObject {
  public:
   virtual ~GenericModelObject() {}
 
  protected:
 
-  /// @cond 
+  /// @cond
 
   typedef detail::GenericModelObject_Impl ImplType;
 
@@ -73,7 +73,7 @@ class MODEL_API GenericModelObject : public ModelObject {
 
   REGISTER_LOGGER("openstudio.model.GenericModelObject");
 
-  /// @endcond 
+  /// @endcond
 
 };
 

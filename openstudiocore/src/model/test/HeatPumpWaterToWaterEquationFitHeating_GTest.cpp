@@ -40,12 +40,12 @@ TEST_F(ModelFixture,HeatPumpWaterToWaterEquationFitHeating)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
-     HeatPumpWaterToWaterEquationFitHeating hp(m); 
+  ASSERT_EXIT (
+  {
+     Model m;
+     HeatPumpWaterToWaterEquationFitHeating hp(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }

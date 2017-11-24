@@ -80,7 +80,7 @@ bool WorkspaceExtensibleGroup::isSource() const {
     result = getImpl<detail::WorkspaceObject_Impl>()->isSource(mf_toIndex(fieldIndex));
     if (result) { break; }
   }
-  return result; 
+  return result;
 }
 
 bool WorkspaceExtensibleGroup::canBeSource() const {
@@ -90,12 +90,12 @@ bool WorkspaceExtensibleGroup::canBeSource() const {
     result = getImpl<detail::WorkspaceObject_Impl>()->canBeSource(mf_toIndex(fieldIndex));
     if (result) { break; }
   }
-  return result; 
+  return result;
 }
 
 // PROTECTED
 WorkspaceExtensibleGroup::WorkspaceExtensibleGroup(
-    std::shared_ptr<detail::WorkspaceObject_Impl> impl,unsigned index) 
+    std::shared_ptr<detail::WorkspaceObject_Impl> impl,unsigned index)
   : IdfExtensibleGroup(impl,index) {}
 
 } // openstudio

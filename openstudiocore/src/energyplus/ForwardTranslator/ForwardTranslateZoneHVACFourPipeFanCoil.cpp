@@ -134,7 +134,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACFourPipeFanCoil(
         }
         else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_OnOff )
         {
-          
+
           _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName,fanInletNodeName );
           _supplyAirFan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName );
         }

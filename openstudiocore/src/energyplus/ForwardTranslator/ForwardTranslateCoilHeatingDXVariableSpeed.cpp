@@ -57,7 +57,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXVariableSpee
   // IndoorAirInletNodeName
   if( auto node = modelObject.inletModelObject() ) {
     idfObject.setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName,node->name().get());
-  }  
+  }
 
   // IndoorAirOutletNodeName
   if( auto node = modelObject.outletModelObject() ) {
@@ -84,7 +84,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXVariableSpee
   }
 
   // EnergyPartLoadFractionCurveName
-  { 
+  {
     auto curve = modelObject.energyPartLoadFractionCurve();
     if( auto _curve = translateAndMapModelObject(curve) ) {
       idfObject.setString(Coil_Heating_DX_VariableSpeedFields::EnergyPartLoadFractionCurveName,_curve->name().get());
@@ -144,9 +144,9 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXVariableSpee
   } else if( (value = modelObject.resistiveDefrostHeaterCapacity()) ) {
     idfObject.setDouble(Coil_Heating_DX_VariableSpeedFields::ResistiveDefrostHeaterCapacity,value.get());
   }
-  
+
   auto const speeds = modelObject.speeds();
-  
+
   // NumberofSpeeds
   if( auto num = speeds.size() ) {
     idfObject.setInt(Coil_Heating_DX_VariableSpeedFields::NumberofSpeeds,num);
@@ -171,7 +171,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXVariableSpee
     }
 
     // SpeedHeatingCapacityFunctionofTemperatureCurveName
-    { 
+    {
       auto curve = speed.heatingCapacityFunctionofTemperatureCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Heating_DX_VariableSpeedExtensibleFields::SpeedHeatingCapacityFunctionofTemperatureCurveName,_curve->name().get());
@@ -179,7 +179,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXVariableSpee
     }
 
     // SpeedTotalHeatingCapacityFunctionofAirFlowFractionCurveName
-    { 
+    {
       auto curve = speed.totalHeatingCapacityFunctionofAirFlowFractionCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Heating_DX_VariableSpeedExtensibleFields::SpeedTotalHeatingCapacityFunctionofAirFlowFractionCurveName,_curve->name().get());
@@ -187,7 +187,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXVariableSpee
     }
 
     // SpeedEnergyInputRatioFunctionofTemperatureCurveName
-    { 
+    {
       auto curve = speed.energyInputRatioFunctionofTemperatureCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Heating_DX_VariableSpeedExtensibleFields::SpeedEnergyInputRatioFunctionofTemperatureCurveName,_curve->name().get());
@@ -195,13 +195,13 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXVariableSpee
     }
 
     // SpeedEnergyInputRatioFunctionofAirFlowFractionCurveName
-    { 
+    {
       auto curve = speed.energyInputRatioFunctionofAirFlowFractionCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Heating_DX_VariableSpeedExtensibleFields::SpeedEnergyInputRatioFunctionofAirFlowFractionCurveName,_curve->name().get());
       }
     }
-  
+
   }
 
   return idfObject;
@@ -210,7 +210,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXVariableSpee
 boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXVariableSpeed( CoilHeatingDXVariableSpeed& modelObject )
 {
   IdfObject coilSystemHeatingDXIdf(IddObjectType::CoilSystem_Heating_DX);
-    
+
   m_idfObjects.push_back(coilSystemHeatingDXIdf);
 
   boost::optional<IdfObject> idfObject = translateCoilHeatingDXVariableSpeedWithoutUnitary(modelObject);

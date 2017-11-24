@@ -30,37 +30,37 @@ require 'json'
 require 'openstudio'
 
 class MeasureManager
-  
+
   attr_reader :osms, :measures, :measure_info
-  
+
   def initialize(logger=nil)
     @logger = logger
     @osms = {} # osm_path => {:checksum, :model, :workspace}
     @idfs = {} # idf_path => {:checksum, :workspace}
     @measures = {} # measure_dir => BCLMeasure
     @measure_info = {} # measure_dir => {osm_path => RubyUserScriptInfo}
-    
+
     eval(OpenStudio::Ruleset::infoExtractorRubyFunction)
   end
-  
+
   def force_encoding(object, encoding = 'utf-8')
     if object.frozen?
       return object
     end
-    
+
     type = object.class
     if type == Hash
       object.keys.each do |key|
         force_encoding(object[key], encoding)
-      end 
+      end
     elsif type == Array
       object.each do |val|
         force_encoding(val, encoding)
-      end 
+      end
     elsif type == String
       object.force_encoding(encoding)
     end
-    
+
     return object
   end
 
@@ -71,14 +71,14 @@ class MeasureManager
       puts message
     end
   end
-  
+
   def reset
     @osms = {}
     @idfs = {}
-    @measures = {} 
+    @measures = {}
     @measure_info = {}
   end
-  
+
   # returns nil or [OpenStudio::Model::Model, OpenStudio::Workspace]
   # force_reload forces the model to be read from disk, should never be needed
   def get_model(osm_path, force_reload)
@@ -87,10 +87,10 @@ class MeasureManager
     if !File.exist?(osm_path)
       print_message("Model '#{osm_path}' does not exist")
       @osms[osm_path] = nil
-      @measure_info.each_value {|value| value[osm_path] = nil} 
+      @measure_info.each_value {|value| value[osm_path] = nil}
       force_reload = true
-    end    
-    
+    end
+
     current_checksum = OpenStudio::checksum(OpenStudio::toPath(osm_path))
 
     result = nil
@@ -111,13 +111,13 @@ class MeasureManager
         end
       end
     end
-    
+
     if !result
       # load from disk
       print_message("Attempting to load model '#{osm_path}'")
       vt = OpenStudio::OSVersion::VersionTranslator.new
       model = vt.loadModel(osm_path)
-        
+
       if model.empty?
         print_message("Failed to load model '#{osm_path}'")
         @osms[osm_path] = nil
@@ -129,10 +129,10 @@ class MeasureManager
         @osms[osm_path] = {:checksum => current_checksum, :model => model, :workspace => workspace}
         result = [model, workspace]
       end
-      
-      @measure_info.each_value {|value| value[osm_path] = nil} 
+
+      @measure_info.each_value {|value| value[osm_path] = nil}
     end
-    
+
     return result
   end
 
@@ -144,10 +144,10 @@ class MeasureManager
     if !File.exist?(idf_path)
       print_message("Idf '#{idf_path}' does not exist")
       @idfs[idf_path] = nil
-      @measure_info.each_value {|value| value[idf_path] = nil} 
+      @measure_info.each_value {|value| value[idf_path] = nil}
       force_reload = true
-    end    
-    
+    end
+
     current_checksum = OpenStudio::checksum(OpenStudio::toPath(idf_path))
 
     result = nil
@@ -167,19 +167,19 @@ class MeasureManager
         end
       end
     end
-    
+
     if !result
       # load from disk
       print_message("Attempting to load idf '#{idf_path}'")
       workspace = OpenStudio::Workspace.load(idf_path, "EnergyPlus".to_IddFileType)
-        
+
       if workspace.empty?
         print_message("Failed to load idf '#{idf_path}'")
         @idfs[idf_path] = nil
       else
         print_message("Successfully loaded idf '#{idf_path}'")
         workspace = workspace.get
-        
+
         if !workspace.isValid('Draft'.to_StrictnessLevel)
           print_message("Workspace loaded from '#{idf_path}' is not valid")
           @idfs[idf_path] = nil
@@ -188,17 +188,17 @@ class MeasureManager
           result = workspace
         end
       end
-      
-      @measure_info.each_value {|value| value[idf_path] = nil} 
+
+      @measure_info.each_value {|value| value[idf_path] = nil}
     end
-    
+
     return result
   end
-  
+
   # returns nil or OpenStudio::BCLMeasure from path
   # force_reload forces the measure.xml to be read from disk, should only be needed if user has edited the xml
   def get_measure(measure_dir, force_reload)
-    
+
     # check if measure exists on disk
     if !File.exist?(measure_dir) || !File.exist?(File.join(measure_dir, 'measure.xml'))
       print_message("Measure '#{measure_dir}' does not exist")
@@ -206,7 +206,7 @@ class MeasureManager
       @measure_info[measure_dir] = {}
       force_reload = true
     end
-  
+
     result = nil
     if !force_reload
       # load from cache
@@ -219,7 +219,7 @@ class MeasureManager
     if !result
       # load from disk
       print_message("Attempting to load measure '#{measure_dir}'")
-      
+
       measure = OpenStudio::BCLMeasure.load(measure_dir)
       if measure.empty?
         print_message("Failed to load measure '#{measure_dir}'")
@@ -229,27 +229,27 @@ class MeasureManager
         result = measure.get
         @measures[measure_dir] = result
       end
-      
+
       @measure_info[measure_dir] = {}
     end
-    
+
     if result
       # see if there are updates, want to make sure to perform both checks so do outside of conditional
       file_updates = result.checkForUpdatesFiles # checks if any files have been updated
       xml_updates = result.checkForUpdatesXML # only checks if xml as loaded has been changed since last save
-      
+
       missing_fields = false
       begin
         missing_fields = result.missingRequiredFields
       rescue
       end
-      
+
       if file_updates || xml_updates || missing_fields
         print_message("Changes detected, updating '#{measure_dir}'")
 
         # clear cache before calling get_measure_info
         @measure_info[measure_dir] = {}
-        
+
         # try to load the ruby measure
         info = get_measure_info(measure_dir, result, "", OpenStudio::Model::OptionalModel.new, OpenStudio::OptionalWorkspace.new)
         info.update(result)
@@ -258,15 +258,15 @@ class MeasureManager
         @measures[measure_dir] = result
       end
     end
-    
+
     return result
   end
-  
-  # returns OpenStudio::Ruleset::RubyUserScriptInfo 
+
+  # returns OpenStudio::Ruleset::RubyUserScriptInfo
   def get_measure_info(measure_dir, measure, osm_path, model, workspace)
-    
+
     result = nil
-    
+
     # load from cache
     temp = @measure_info[measure_dir]
     if temp
@@ -275,34 +275,34 @@ class MeasureManager
         print_message("Using cached measure info for '#{measure_dir}', '#{osm_path}'")
       end
     end
-      
+
     # try to load the ruby measure
     if !result
-    
+
       # DLM: this is where we are executing user's arbitrary Ruby code
       # might need some timeouts or additional protection
       print_message("Loading measure info for '#{measure_dir}', '#{osm_path}'")
       begin
         result = OpenStudio::Ruleset.getInfo(measure, model, workspace)
-      rescue Exception => e  
+      rescue Exception => e
         result = OpenStudio::Ruleset::RubyUserScriptInfo.new(e.message)
       end
-      
+
       @measure_info[measure_dir] = {} if @measure_info[measure_dir].nil?
       @measure_info[measure_dir][osm_path] = result
     end
-    
+
     return result
   end
-  
+
   def get_arguments_from_measure(measure_dir, measure)
     result = []
-    
+
     begin
       # this type was not wrapped with SWIG until OS 1.11.2
       measure.arguments.each do |argument|
         type = argument.type
-        
+
         arg = {}
         arg[:name] = argument.name
         arg[:display_name] = argument.displayName
@@ -317,27 +317,27 @@ class MeasureManager
             default_value = argument.defaultValue.get
             arg[:default_value] = (default_value.downcase == "true")
           end
-        
+
         when 'Double'
           arg[:units] = argument.units.get if argument.units.is_initialized
           arg[:default_value] = argument.defaultValue.get.to_f if argument.defaultValue.is_initialized
           arg[:min_value] = argument.minValue.get.to_f if argument.minValue.is_initialized
           arg[:max_value] = argument.maxValue.get.to_f if argument.maxValue.is_initialized
-        
+
         when 'Integer'
           arg[:units] = argument.units.get if argument.units.is_initialized
           arg[:default_value] = argument.defaultValue.get.to_i if argument.defaultValue.is_initialized
-        
+
         when 'String'
           arg[:default_value] = argument.defaultValue.get if argument.defaultValue.is_initialized
-        
+
         when 'Choice'
           arg[:default_value] = argument.defaultValue.get if argument.defaultValue.is_initialized
           arg[:choice_values] = []
           argument.choiceValues.each {|value| arg[:choice_values] << value}
           arg[:choice_display_names] = []
           argument.choiceDisplayNames.each {|value| arg[:choice_display_names] << value}
-        
+
         when 'Path'
           arg[:default_value] = argument.defaultValue.get if argument.defaultValue.is_initialized
         end
@@ -348,16 +348,16 @@ class MeasureManager
       info = get_measure_info(measure_dir, measure, "", OpenStudio::Model::OptionalModel.new, OpenStudio::OptionalWorkspace.new)
       return get_arguments_from_measure_info(info)
     end
-    
+
     return force_encoding(result, 'utf-8')
   end
-  
+
   def get_arguments_from_measure_info(measure_info)
     result = []
-    
+
     measure_info.arguments.each do |argument|
       type = argument.type
-      
+
       arg = {}
       arg[:name] = argument.name
       arg[:display_name] = argument.displayName
@@ -365,43 +365,43 @@ class MeasureManager
       arg[:type] = argument.type.valueName
       arg[:required] = argument.required
       arg[:model_dependent] = argument.modelDependent
-      
+
       if type == "Boolean".to_OSArgumentType
         arg[:default_value] = argument.defaultValueAsBool if argument.hasDefaultValue
-      
+
       elsif type == "Double".to_OSArgumentType
         arg[:units] = argument.units.get if argument.units.is_initialized
         arg[:default_value] = argument.defaultValueAsDouble if argument.hasDefaultValue
-        
+
       elsif type == "Quantity".to_OSArgumentType
         arg[:units] = argument.units.get if argument.units.is_initialized
         arg[:default_value] = argument.defaultValueAsQuantity.value if argument.hasDefaultValue
-        
+
       elsif type == "Integer".to_OSArgumentType
         arg[:units] = argument.units.get if argument.units.is_initialized
         arg[:default_value] = argument.defaultValueAsInteger if argument.hasDefaultValue
-        
+
       elsif type == "String".to_OSArgumentType
         arg[:default_value] = argument.defaultValueAsString if argument.hasDefaultValue
-      
+
       elsif type == "Choice".to_OSArgumentType
         arg[:default_value] = argument.defaultValueAsString if argument.hasDefaultValue
           arg[:choice_values] = []
           argument.choiceValues.each {|value| arg[:choice_values] << value}
           arg[:choice_display_names] = []
           argument.choiceValueDisplayNames.each {|value| arg[:choice_display_names] << value}
-          
+
       elsif type == "Path".to_OSArgumentType
         arg[:default_value] = argument.defaultValueAsPath.to_s if argument.hasDefaultValue
-        
+
       end
-      
+
       result << arg
     end
-    
+
     return force_encoding(result, 'utf-8')
   end
-  
+
   def measure_hash(measure_dir, measure, measure_info = nil)
     result = {}
     result[:measure_dir] = measure_dir
@@ -428,11 +428,11 @@ class MeasureManager
     result[:modeler_description] = measure.modelerDescription
     result[:tags] = []
     measure.tags.each {|tag| result[:tags] << tag}
-    
+
     result[:outputs] = []
     begin
       # this is an OS 2.0 only method
-      measure.outputs.each do |output| 
+      measure.outputs.each do |output|
         out = {}
         out[:name] = output.name
         out[:display_name] = output.displayName
@@ -445,9 +445,9 @@ class MeasureManager
       end
     rescue
     end
-    
+
     attributes = []
-    measure.attributes.each do |a| 
+    measure.attributes.each do |a|
       value_type = a.valueType
       if value_type == "Boolean".to_AttributeValueType
         attributes << {:name => a.name, :display_name => a.displayName(true).get, :value => a.valueAsBoolean}
@@ -462,14 +462,14 @@ class MeasureManager
       end
     end
     result[:attributes] = attributes
-    
+
     if measure_info
       result[:arguments] = get_arguments_from_measure_info(measure_info)
     else
       result[:arguments] = get_arguments_from_measure(measure_dir, measure)
     end
-    
+
     return force_encoding(result, 'utf-8')
   end
-  
+
 end

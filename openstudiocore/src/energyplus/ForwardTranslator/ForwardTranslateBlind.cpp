@@ -168,7 +168,7 @@ boost::optional<IdfObject> ForwardTranslator::translateBlind( model::Blind & mod
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::BlindBottomOpeningMultiplier, *d);
   }
-  
+
   d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BlindLeftSideOpeningMultiplier, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::BlindLeftSideOpeningMultiplier, *d);

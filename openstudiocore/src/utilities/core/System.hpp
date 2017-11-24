@@ -43,7 +43,7 @@ namespace openstudio {
     static boost::optional<Time> systemIdleTime();
 
     /// Sleep for number of milliseconds
-    static void msleep(int msecs); 
+    static void msleep(int msecs);
 
     /// Returns the number of processors on this computer
     static unsigned numberOfProcessors();

@@ -71,7 +71,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemPro
   if (s) {
     pcm.setString(EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, s.get());
   }
- 
+
   //program names
   for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
     pcm.pushExtensibleGroup(eg.fields());

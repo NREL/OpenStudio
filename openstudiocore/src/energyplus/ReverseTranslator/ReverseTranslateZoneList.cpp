@@ -61,7 +61,7 @@ OptionalModelObject ReverseTranslator::translateZoneList( const WorkspaceObject 
 
   for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
     WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
-    
+
     OptionalWorkspaceObject target = workspaceGroup.getTarget(0);
     if (target){
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);

@@ -59,7 +59,7 @@ using openstudio::decomposeAtomicUnitString;
 TEST_F(UnitsFixture,QuantityRegex_Values) {
 
   // strings that should be FixedPrecisionValues
-  std::string fixedValue("0.321"); 
+  std::string fixedValue("0.321");
   EXPECT_TRUE(isFixedPrecisionValue(fixedValue));
   fixedValue = "20"; EXPECT_TRUE(isFixedPrecisionValue(fixedValue));
   fixedValue = ".3120"; EXPECT_TRUE(isFixedPrecisionValue(fixedValue));
@@ -91,7 +91,7 @@ TEST_F(UnitsFixture,QuantityRegex_Values) {
   containsFixedValue = "The number of elements is 532."; EXPECT_TRUE(containsFixedPrecisionValue(containsFixedValue));
   containsFixedValue = "321.225;-32.2896"; EXPECT_TRUE(containsFixedPrecisionValue(containsFixedValue));
   containsFixedValue = "Some text 321.25."; EXPECT_TRUE(containsFixedPrecisionValue(containsFixedValue));
- 
+
   // strings that should not contain FixedPrecisionValues
   std::string doesNotContainFixedValue("5.0E32");
   EXPECT_FALSE(containsFixedPrecisionValue(doesNotContainFixedValue));
@@ -133,7 +133,7 @@ TEST_F(UnitsFixture,QuantityRegex_Values) {
   containsSciValue = " 12657.0E+0001 kBtu/ft^2"; EXPECT_TRUE(containsScientificNotationValue(containsSciValue));
   containsSciValue = ".1E-2 text"; EXPECT_TRUE(containsScientificNotationValue(containsSciValue));
   containsSciValue = "1.0E-3; 2.1D+001"; EXPECT_TRUE(containsScientificNotationValue(containsSciValue));
- 
+
   // should not contain ScientificNotationValues
   std::string doesNotContainSciValue("some text");
   EXPECT_FALSE(containsScientificNotationValue(doesNotContainSciValue));
@@ -273,7 +273,7 @@ TEST_F(UnitsFixture,QuantityRegex_Units) {
   notAUnit = "cm^-2"; EXPECT_FALSE(isUnit(notAUnit));
   notAUnit = "2 m/s"; EXPECT_FALSE(isUnit(notAUnit));
   notAUnit = "kg*2"; EXPECT_FALSE(isUnit(notAUnit));
-  
+
   // contains a unit
   std::string includesAUnit("2 m");
   EXPECT_TRUE(containsUnit(includesAUnit));
@@ -338,7 +338,7 @@ TEST_F(UnitsFixture,QuantityRegex_Quantities) {
 TEST_F(UnitsFixture,QuantityRegex_DecomposeQuantities) {
   std::string qStr("3 m");
   std::pair<std::string,std::string> result;
-  
+
   result = decomposeQuantityString(qStr);
   EXPECT_EQ("3",result.first); EXPECT_EQ("m",result.second);
 
@@ -373,7 +373,7 @@ TEST_F(UnitsFixture,QuantityRegex_DecomposeQuantities) {
 TEST_F(UnitsFixture,QuantityRegex_DecomposeScaledUnits) {
   std::string uStr("k(m/s)");
   std::pair<std::string,std::string> result;
-  
+
   result = decomposeScaledUnitString(uStr);
   EXPECT_EQ("k",result.first); EXPECT_EQ("m/s",result.second);
 
@@ -399,29 +399,29 @@ TEST_F(UnitsFixture,QuantityRegex_DecomposeCompoundUnits) {
   std::string uStr("1/s");
   std::pair< std::vector<std::string>,std::vector<std::string> > result;
   result = decomposeCompoundUnitString(uStr);
-  ASSERT_EQ(static_cast<size_t>(0),result.first.size()); 
+  ASSERT_EQ(static_cast<size_t>(0),result.first.size());
   ASSERT_EQ(static_cast<size_t>(1),result.second.size());
   EXPECT_EQ("s",result.second[0]);
 
   uStr = "kg*m/s^2"; result = decomposeCompoundUnitString(uStr);
-  ASSERT_EQ(static_cast<size_t>(2),result.first.size()); 
+  ASSERT_EQ(static_cast<size_t>(2),result.first.size());
   ASSERT_EQ(static_cast<size_t>(1),result.second.size());
   EXPECT_EQ("kg",result.first[0]); EXPECT_EQ("m",result.first[1]);
   EXPECT_EQ("s^2",result.second[0]);
 
   uStr = "s^{-1}/ft^{-1}"; result = decomposeCompoundUnitString(uStr);
-  ASSERT_EQ(static_cast<size_t>(1),result.first.size()); 
+  ASSERT_EQ(static_cast<size_t>(1),result.first.size());
   ASSERT_EQ(static_cast<size_t>(1),result.second.size());
   EXPECT_EQ("s^{-1}",result.first[0]);
   EXPECT_EQ("ft^{-1}",result.second[0]);
 
   uStr = "kg"; result = decomposeCompoundUnitString(uStr);
-  ASSERT_EQ(static_cast<size_t>(1),result.first.size()); 
+  ASSERT_EQ(static_cast<size_t>(1),result.first.size());
   ASSERT_EQ(static_cast<size_t>(0),result.second.size());
   EXPECT_EQ("kg",result.first[0]);
 
   uStr = "1/s^2*K"; result = decomposeCompoundUnitString(uStr);
-  ASSERT_EQ(static_cast<size_t>(0),result.first.size()); 
+  ASSERT_EQ(static_cast<size_t>(0),result.first.size());
   ASSERT_EQ(static_cast<size_t>(2),result.second.size());
   EXPECT_EQ("s^2",result.second[0]); EXPECT_EQ("K",result.second[1]);
 
@@ -470,7 +470,7 @@ TEST_F(UnitsFixture,QuantityRegex_DirectScaledUnit) {
   EXPECT_EQ("people/",result.first);
   EXPECT_EQ(static_cast<unsigned>(2),result.second.first);
   EXPECT_EQ("m^2",result.second.second);
-  
+
   includesMatch = "Occupancy (people/1000*ft^2)";
   EXPECT_TRUE(containsDirectScaledUnit(includesMatch));
   boost::regex_search(includesMatch,m,regexEmbeddedDirectScaledUnit());

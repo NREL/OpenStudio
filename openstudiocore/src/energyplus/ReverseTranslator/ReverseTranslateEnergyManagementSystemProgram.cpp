@@ -60,7 +60,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemProgram(co
 
   //make sure all other objects are translated first
   for (const WorkspaceObject& workspaceObject : m_workspace.objects()) {
-    if ((workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_Program) 
+    if ((workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_Program)
       && (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_Subroutine)
       && (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_ProgramCallingManager)
       && (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_MeteredOutputVariable)

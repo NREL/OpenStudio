@@ -59,7 +59,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateConvergenceLimit
   if ((i = workspaceObject.getInt(ConvergenceLimitsFields::MaximumHVACIterations))) {
     convergenceLimits.setMaximumHVACIterations(*i);
   }
-  
+
   if ((i = workspaceObject.getInt(ConvergenceLimitsFields::MinimumPlantIterations))) {
     convergenceLimits.setMinimumPlantIterations(*i);
   }

@@ -52,9 +52,9 @@ ScriptFolderListView::ScriptFolderListView(const openstudio::path &folder,
                                            QWidget * parent)
   : OSCollapsibleItemList(addScrollArea, parent), m_rootPath(folder), m_headerType(headerType),
     m_draggable(draggable),
-    m_removeable(removeable), 
+    m_removeable(removeable),
     m_fswatcher(std::make_shared<QFileSystemWatcher>())
-{ 
+{
   setItemsDraggable(draggable);
   setItemsRemoveable(removeable);
   addScriptFolder(openstudio::toPath("post_energyplus"), "Post EnergyPlus Scripts");
@@ -94,7 +94,7 @@ void ScriptFolderListView::addScriptToFolder(const openstudio::path &t_path, con
   openstudio::path filename = folder / t_path.filename();
   filename = iterateFileName(filename);
   openstudio::filesystem::copy_file(t_path, filename, openstudio::filesystem::copy_option::overwrite_if_exists);
-  
+
 
   ScriptsListView *lv = m_scriptsListViews[folder];
   if (lv)
@@ -122,7 +122,7 @@ void ScriptFolderListView::createEmptyScript(const openstudio::path &t_folder_na
   {
     openstudio::filesystem::create_directories(m_rootPath / t_folder_name);
     std::ofstream ofs(openstudio::toString(filename).c_str());
-    ofs << "# Empty Script" << std::endl; 
+    ofs << "# Empty Script" << std::endl;
   }
 
   ScriptsListView *lv = m_scriptsListViews[m_rootPath / t_folder_name];
@@ -223,7 +223,7 @@ openstudio::path ScriptFolderListView::iterateFileName(const openstudio::path &t
         if (iteration < 10)
         {
           numportion << "0";
-        } 
+        }
         numportion << iteration;
       }
       return t_root / openstudio::toPath(t_stem + numportion.str() + t_extension);

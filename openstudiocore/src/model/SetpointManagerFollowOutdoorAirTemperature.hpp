@@ -53,7 +53,7 @@ class SetpointManagerFollowOutdoorAirTemperature_Impl;
 class MODEL_API SetpointManagerFollowOutdoorAirTemperature : public SetpointManager {
  public:
   /** @name Constructors and Destructors */
-  //@{  
+  //@{
 
   /** Constructs a new SetpointManagerFollowOutdoorAirTemperature object and places it inside the
    *  model. */

@@ -51,7 +51,7 @@ TEST_F(ModelFixture,DistrictHeating_DistrictHeating)
     Model m;
     DistrictHeating districtHeating(m);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -88,7 +88,7 @@ TEST_F(ModelFixture,DistrictHeating_connections)
   ASSERT_FALSE(districtHeating.loop() );
   ASSERT_FALSE(districtHeating.inletModelObject() );
   ASSERT_FALSE(districtHeating.outletModelObject() );
- 
+
   //make an airloop
   AirLoopHVAC airLoop(m);
 

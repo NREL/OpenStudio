@@ -83,7 +83,7 @@ namespace openstudio{
 
       return m_logLevel;
     }
-      
+
     void LogSink_Impl::setLogLevel(LogLevel logLevel)
     {
       QWriteLocker l(m_mutex);
@@ -108,7 +108,7 @@ namespace openstudio{
 
       return m_channelRegex;
     }
-   
+
     void LogSink_Impl::setChannelRegex(const boost::regex& channelRegex)
     {
       QWriteLocker l(m_mutex);
@@ -139,7 +139,7 @@ namespace openstudio{
 
       return m_autoFlush;
     }
-    
+
     void LogSink_Impl::setAutoFlush(bool autoFlush)
     {
       QWriteLocker l(m_mutex);
@@ -148,7 +148,7 @@ namespace openstudio{
 
       m_sink->locked_backend()->auto_flush(autoFlush);
     }
-  
+
     QThread* LogSink_Impl::threadId() const
     {
       QWriteLocker l(m_mutex);
@@ -199,9 +199,9 @@ namespace openstudio{
       // avoid deadlock
       l.unlock();
 
-      this->setAutoFlush(true);  
+      this->setAutoFlush(true);
     }
-      
+
     boost::shared_ptr<LogSinkBackend> LogSink_Impl::sink() const
     {
       QReadLocker l(m_mutex);
@@ -231,7 +231,7 @@ namespace openstudio{
         m_sink->set_filter(expr::attr< LogLevel >("Severity") >= filterLogLevel &&
                            expr::matches(expr::attr< LogChannel >("Channel"), filterChannelRegex));
       }
-     
+
     }
 
   } // detail
@@ -263,7 +263,7 @@ namespace openstudio{
   {
     return m_impl->logLevel();
   }
-    
+
   void LogSink::setLogLevel(LogLevel logLevel)
   {
     m_impl->setLogLevel(logLevel);
@@ -278,7 +278,7 @@ namespace openstudio{
   {
     return m_impl->channelRegex();
   }
- 
+
   void LogSink::setChannelRegex(const boost::regex& channelRegex)
   {
     m_impl->setChannelRegex(channelRegex);
@@ -298,7 +298,7 @@ namespace openstudio{
   {
     return m_impl->autoFlush();
   }
-  
+
   void LogSink::setAutoFlush(bool autoFlush)
   {
     m_impl->setAutoFlush(autoFlush);
@@ -323,7 +323,7 @@ namespace openstudio{
   {
     m_impl->setStream(os);
   }
-    
+
   boost::shared_ptr<LogSinkBackend> LogSink::sink() const
   {
     return m_impl->sink();

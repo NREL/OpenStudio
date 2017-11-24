@@ -123,7 +123,7 @@ namespace openstudio{
     return opensslloaded;
   }
 
-  
+
   ///////////////////////////////////////////////////////////////////////////
   /// Inherited members
   ///////////////////////////////////////////////////////////////////////////
@@ -311,7 +311,7 @@ namespace openstudio{
 
     return m_measuresWithUpdates.size();
   }
-    
+
   std::vector<BCLSearchResult> RemoteBCL::componentsWithUpdates() const
   {
     return m_componentsWithUpdates;
@@ -538,7 +538,7 @@ namespace openstudio{
       }else{
         useRemoteProductionUrl();
       }
-      
+
       if (remoteUrl == remoteDevelopmentUrl()){
         return validDevAuthKey;
       }else{
@@ -612,7 +612,7 @@ namespace openstudio{
       m_mutex->unlock();
       return false;
     }
-    
+
     m_downloadUid = uid;
 
     QString url = toQString(remoteUrl() + "/api/component/download?uids=" + uid);
@@ -639,7 +639,7 @@ namespace openstudio{
       m_downloadReply = nullptr;
       return false;
     }
-        
+
     connect(m_downloadReply, &QNetworkReply::readyRead, this, &RemoteBCL::downloadData);
 
     return true;
@@ -848,7 +848,7 @@ namespace openstudio{
     int current = 0;
     while (true)
     {
-  
+
       // if we can get the lock then the download is complete
       if (m_mutex->tryLock()){
         m_mutex->unlock();

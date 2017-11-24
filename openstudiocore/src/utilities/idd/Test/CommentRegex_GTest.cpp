@@ -39,7 +39,7 @@ using openstudio::makeIdfEditorComment;
 TEST_F(IddFixture,CommentRegex_Lines) {
   std::string line;
   boost::smatch matches;
-  
+
   // whitespaceOnlyLine
   EXPECT_TRUE(boost::regex_match(line,matches,whitespaceOnlyLine()));
   EXPECT_FALSE(matches.empty());

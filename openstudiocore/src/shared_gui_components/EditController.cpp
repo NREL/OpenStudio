@@ -141,10 +141,10 @@ class EditMeasureMessageBox : public QMessageBox
   // Returns true if the user chooses to edit anyway.
   static bool warning(BaseApp *t_app)
   {
-    int result = QMessageBox::warning(t_app->mainWidget(), 
-                 "Clear Results?", 
-                 "Editing this measure will clear all results and save your project. Do you want to proceed?", 
-                 QMessageBox::Ok, 
+    int result = QMessageBox::warning(t_app->mainWidget(),
+                 "Clear Results?",
+                 "Editing this measure will clear all results and save your project. Do you want to proceed?",
+                 QMessageBox::Ok,
                  QMessageBox::Cancel);
 
     return (result == QMessageBox::Ok);

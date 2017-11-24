@@ -33,7 +33,7 @@ require 'minitest/autorun'
 class TestPathWatcher < OpenStudio::PathWatcher
 
   attr_accessor :changed
-  
+
   def initialize(path)
     super
     @changed = false
@@ -42,95 +42,95 @@ class TestPathWatcher < OpenStudio::PathWatcher
   def onPathChanged
     @changed = true
   end
-  
+
   def onPathRemoved
     @changed = true
   end
-  
+
 end
 
 class PathWatcher_Test < MiniTest::Unit::TestCase
-  
+
   # def setup
   # end
 
   # def teardown
   # end
-  
+
   def test_watchFile
     p = OpenStudio::Path.new("./path_watcher_file")
     if OpenStudio::exists(p)
       OpenStudio::remove(p)
     end
     assert((not OpenStudio::exists(p)))
-    
+
     File.open(p.to_s, 'w') do |f|
       f << "test 1"
     end
     assert(OpenStudio::exists(p))
-    
+
     watcher = TestPathWatcher.new(p)
     assert((not watcher.changed))
-    
+
     # write to the file
     system("echo 'test 2' > #{p.to_s}")
-    
+
     # calls processEvents
     OpenStudio::System::msleep(1000)
-    
+
     assert(watcher.changed)
     watcher.changed = false
     assert((not watcher.changed))
-    
+
     OpenStudio::remove(p)
     assert((not OpenStudio::exists(p)))
-    
+
     # calls processEvents
     OpenStudio::System::msleep(1000)
-    
+
     assert(watcher.changed)
-    
-    
+
+
   end
 
   def test_watchDir
     p = OpenStudio::Path.new("./")
     assert(OpenStudio::exists(p))
-    
+
     filePath = OpenStudio::Path.new("./path_watcher_dir")
     if OpenStudio::exists(filePath)
       OpenStudio::remove(filePath)
     end
     assert((not OpenStudio::exists(filePath)))
-    
+
     watcher = TestPathWatcher.new(p)
     assert((not watcher.changed))
-    
+
     filePath = OpenStudio::Path.new("./path_watcher_dir")
     File.open(filePath.to_s, 'w') do |f|
       f << "test 1"
     end
     assert(OpenStudio::exists(filePath))
-    
+
     # calls processEvents
     OpenStudio::System::msleep(1000)
-    
+
     assert(watcher.changed)
     watcher.changed = false
     assert((not watcher.changed))
 
     OpenStudio::remove(filePath)
     assert((not OpenStudio::exists(filePath)))
-    
+
     # calls processEvents
     OpenStudio::System::msleep(1000)
-    
+
     assert(watcher.changed)
-    
+
     # try non-existent dir
     assert_raises(RuntimeError){TestPathWatcher.new(OpenStudio::Path.new("./I do not exist/"))}
   end
-  
+
 end
 
 

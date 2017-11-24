@@ -128,7 +128,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Space)
 
   WorkspaceObject lightsObject = workspace.getObjectsByType(IddObjectType::Lights)[0];
   WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
-  
+
   ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListName));
   EXPECT_EQ(zoneObject.handle(), lightsObject.getTarget(LightsFields::ZoneorZoneListName)->handle());
 }
@@ -158,7 +158,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_SpaceType)
   WorkspaceObject lightsObject = workspace.getObjectsByType(IddObjectType::Lights)[0];
   WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
   WorkspaceObject zoneListObject = workspace.getObjectsByType(IddObjectType::ZoneList)[0];
-  
+
   ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListName));
   EXPECT_EQ(zoneListObject.handle(), lightsObject.getTarget(LightsFields::ZoneorZoneListName)->handle());
 
@@ -213,7 +213,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_OneSpaceType_OneThermalZone)
   WorkspaceObject lightsObject = workspace.getObjectsByType(IddObjectType::Lights)[0];
   WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
   WorkspaceObject zoneListObject = workspace.getObjectsByType(IddObjectType::ZoneList)[0];
-     
+
   ASSERT_TRUE(lightsObject.getString(LightsFields::DesignLevelCalculationMethod, false));
   EXPECT_EQ("Watts/Area", lightsObject.getString(LightsFields::DesignLevelCalculationMethod, false).get());
 
@@ -293,7 +293,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone)
       foundLightingPower200 = true;
     }
   }
-  
+
   EXPECT_TRUE(foundLightingPower100);
   EXPECT_TRUE(foundLightingPower200);
 }
@@ -366,7 +366,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone_B
       foundLightingPower200 = true;
     }
   }
-  
+
   EXPECT_TRUE(foundLightingPower100);
   EXPECT_TRUE(foundLightingPower200);
 }
@@ -432,7 +432,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Building_Schedule)
   lights.setSchedule(schedule2);
   ASSERT_TRUE(lights.schedule());
   EXPECT_EQ(schedule2.handle(), lights.schedule()->handle());
-  
+
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -501,12 +501,12 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Bug983)
   ASSERT_TRUE(idfLights[0].getString(LightsFields::DesignLevelCalculationMethod));
   EXPECT_EQ("LightingLevel", idfLights[0].getString(LightsFields::DesignLevelCalculationMethod).get());
   ASSERT_TRUE(idfLights[0].getDouble(LightsFields::LightingLevel));
-  EXPECT_DOUBLE_EQ(1000.0, idfLights[0].getDouble(LightsFields::LightingLevel).get()); 
+  EXPECT_DOUBLE_EQ(1000.0, idfLights[0].getDouble(LightsFields::LightingLevel).get());
 
   ASSERT_TRUE(idfLights[1].getString(LightsFields::DesignLevelCalculationMethod));
   EXPECT_EQ("LightingLevel", idfLights[1].getString(LightsFields::DesignLevelCalculationMethod).get());
   ASSERT_TRUE(idfLights[1].getDouble(LightsFields::LightingLevel));
-  EXPECT_DOUBLE_EQ(1000.0, idfLights[1].getDouble(LightsFields::LightingLevel).get()); 
+  EXPECT_DOUBLE_EQ(1000.0, idfLights[1].getDouble(LightsFields::LightingLevel).get());
 
 }
 
@@ -530,7 +530,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Costs)
   space2->setThermalZone(zone2);
 
   LightsDefinition definition(model);
-    
+
   boost::optional<LifeCycleCost> cost1 = LifeCycleCost::createLifeCycleCost("Installation", definition, 3.0, "CostPerArea", "Construction");
   ASSERT_TRUE(cost1);
   boost::optional<LifeCycleCost> cost2 = LifeCycleCost::createLifeCycleCost("Light Bulbs", definition, 5.0, "CostPerArea", "Maintenance", 1);

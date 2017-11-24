@@ -45,19 +45,19 @@ namespace detail {
 
   /** WeatherFile_Impl is a ModelObject_Impl that is the implementation class for WeatherFile.*/
   class MODEL_API WeatherFile_Impl : public ModelObject_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -159,8 +159,8 @@ namespace detail {
 
     /** Load and return the EpwFile, if it can be located. */
     boost::optional<EpwFile> file(const openstudio::path& dir=openstudio::path()) const;
-    
-    /** Save the url as relative to basePath, or just keep the file name and extension if 
+
+    /** Save the url as relative to basePath, or just keep the file name and extension if
     *  basePath.empty(). */
     bool makeUrlRelative(const openstudio::path& basePath=openstudio::path());
 
@@ -170,7 +170,7 @@ namespace detail {
     // get environment name as reported in the sql file
     // environment name = "City StateProvinceRegion Country DataSource WMO#=WMONumber"
     boost::optional<std::string> environmentName() const;
-   
+
 protected:
    private:
     REGISTER_LOGGER("openstudio.model.WeatherFile");

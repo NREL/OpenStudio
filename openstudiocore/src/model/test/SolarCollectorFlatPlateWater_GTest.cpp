@@ -51,13 +51,13 @@ TEST_F(ModelFixture, SolarCollectorFlatPlateWater_SolarCollectorFlatPlateWater)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model m;
     SolarCollectorFlatPlateWater testObject(m);
     SolarCollectorPerformanceFlatPlate performance = testObject.solarCollectorPerformance();
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }

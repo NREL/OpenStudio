@@ -35,7 +35,7 @@ module OpenStudio
 
     def initialize
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       super
       @container_class = InteriorPartitionSurfaceGroup
     end
@@ -44,7 +44,7 @@ module OpenStudio
 
     def self.model_object_from_handle(handle)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       model_object = Plugin.model_manager.model_interface.openstudio_model.getInteriorPartitionSurface(handle)
       if not model_object.empty?
         model_object = model_object.get
@@ -54,10 +54,10 @@ module OpenStudio
       end
       return model_object
     end
-    
+
     def self.new_from_handle(handle)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       drawing_interface = InteriorPartitionSurface.new
       model_object = model_object_from_handle(handle)
       drawing_interface.model_object = model_object
@@ -68,10 +68,10 @@ module OpenStudio
 
     def create_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       # need to get parents transformation
       update_parent_from_entity
-      
+
       model_watcher_enabled = @model_interface.model_watcher.disable
       vertices = vertices_from_polygon(face_polygon)
 
@@ -82,13 +82,13 @@ module OpenStudio
         Plugin.log(Error, "Could not create InteriorPartitionSurface for vertices #{vertices}")
         return nil
       end
-      
+
       super
     end
 
     def check_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       if (super)
         # Check for coincident surfaces (check other surfaces in group)
         return(true)
@@ -101,7 +101,7 @@ module OpenStudio
     def update_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       super  # PlanarSurface superclass updates the vertices
-      
+
       if (valid_entity?)
         if (@parent.class == InteriorPartitionSurfaceGroup)
           watcher_enabled = disable_watcher
@@ -117,7 +117,7 @@ module OpenStudio
     # Returns the parent drawing interface according to the input object.
     def parent_from_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       parent = nil
       if (@model_object)
         interiorPartitionSurfaceGroup = @model_object.interiorPartitionSurfaceGroup
@@ -138,20 +138,20 @@ module OpenStudio
 
     def in_selection?(selection)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       return (selection.contains?(@entity) or selection.contains?(@parent.entity) or selection.contains?(@parent.parent.entity))
     end
 
     def paint_surface_type(info=nil)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       @entity.material = @model_interface.materials_interface.interior_partition_surface
       @entity.back_material = @model_interface.materials_interface.interior_partition_surface_back
     end
 
 
 ##### Begin new methods for the interface #####
-    
+
   end
 
 end

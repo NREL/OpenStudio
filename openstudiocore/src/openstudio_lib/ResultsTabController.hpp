@@ -57,7 +57,7 @@ class ResultsTabController : public MainTabController
     void onUnitSystemChange(bool t_isIP);
 
   private:
-  
+
   ResultsTabView * m_resultsTabView;
 
   REGISTER_LOGGER("openstudio::ResultsTabController");

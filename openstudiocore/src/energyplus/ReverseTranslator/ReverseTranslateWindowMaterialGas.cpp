@@ -38,7 +38,7 @@ using namespace openstudio::model;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateWindowMaterialGas( 
+boost::optional<ModelObject> ReverseTranslator::translateWindowMaterialGas(
     const WorkspaceObject& workspaceObject)
 {
   OptionalModelObject result;
@@ -57,7 +57,7 @@ boost::optional<ModelObject> ReverseTranslator::translateWindowMaterialGas(
   if (d1) {
     gas.setThickness(*d1);
   }
- 
+
   d1 = workspaceObject.getDouble(WindowMaterial_GasFields::ConductivityCoefficientA);
   OptionalDouble d2 = workspaceObject.getDouble(WindowMaterial_GasFields::ConductivityCoefficientB);
   OptionalDouble d3 = workspaceObject.getDouble(WindowMaterial_GasFields::ConductivityCoefficientC);

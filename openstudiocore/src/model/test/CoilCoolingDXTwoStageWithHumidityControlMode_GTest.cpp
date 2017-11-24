@@ -39,12 +39,12 @@ TEST_F(ModelFixture,CoilCoolingDXTwoStageWithHumidityControlMode)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
-     CoilCoolingDXTwoStageWithHumidityControlMode valve(m); 
+  ASSERT_EXIT (
+  {
+     Model m;
+     CoilCoolingDXTwoStageWithHumidityControlMode valve(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }

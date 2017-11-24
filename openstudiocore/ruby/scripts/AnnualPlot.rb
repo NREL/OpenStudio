@@ -49,26 +49,26 @@ optparse = OptionParser.new do|opts|
   # Set a banner, displayed at the top
   # of the help screen.
   opts.banner = "Usage: AnnualPlot.rb [options] datafile"
-   
+
   opts.separator ""
   opts.separator "Options:"
-  
+
   options[:setpoint] = "300"
   opts.on( '-s', '--setpoint <value>', "Dimming setpoint" ) do|f|
     options[:setpoint] = f
   end
-  
+
   options[:yMax] = "4000"
   opts.on( '-y', '--ymax <value>', "Y axis scale max" ) do|f|
     options[:yMax] = f
   end
-  
+
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts
     exit
   end
 
-end  
+end
 
 # after all that, parse the options for crying out loud.
 optparse.parse!
@@ -78,7 +78,7 @@ CSV.open(ARGV[0], 'r') do |row|
   next if row.nil?
   next if row.empty?
   next if /^\#\#/.match(row[0])
-  
+
   if not read_header1
     ## OpenStudio Daylight Simulation Results file
     read_header1 = true
@@ -86,14 +86,14 @@ CSV.open(ARGV[0], 'r') do |row|
     ## Header: xmin ymin z xmax ymin z xmax ymax z xspacing yspacing
     read_header2 = true
   else
-    
+
     if row[0].nil?
       raise "Null data in illuminance map file"
     end
-  
+
     ## Data: month,day,time,directNormalIllumimance(external),diffuseHorizontalIlluminance(external),pointIlluminance [lux]
     date = OpenStudio::Date.new(OpenStudio::MonthOfYear.new(row[0].to_i), row[1].to_i)
-    
+
     time = nil
     if /\d+/.match(row[2])
       # from int
@@ -102,10 +102,10 @@ CSV.open(ARGV[0], 'r') do |row|
       # from string
       time = OpenStudio::Time.new(row[2])
     end
-    
+
     dayOfYear = date.dayOfYear
     dateTime = OpenStudio::DateTime.new(date, time)
-    
+
     # sometimes midnight is reported as 23:59 other times as 00:00
     if time.totalHours == 0
       if dayOfYear == 1
@@ -117,36 +117,36 @@ CSV.open(ARGV[0], 'r') do |row|
 
     if dayOfYear != last_day_of_year
       last_day_of_year = dayOfYear
-      
+
       dayOfYears << dayOfYear
       dateTimes << Array.new
       directNormalIllumimances << Array.new
       diffuseHorizontalIlluminances << Array.new
       averageIlluminances << Array.new
     end
-    
+
     dateTimes[-1] << dateTime
     directNormalIllumimances[-1] << row[3].to_f
     diffuseHorizontalIlluminances[-1] << row[4].to_f
-    
+
     sum = 0
     had_zero = false
     illuminances = Array.new
     row[5..-1].each do |illuminance|
-          
+
       if illuminance.to_f < 0
         puts "Warning illuminance #{illuminance} less than zero at #{dateTime}, will be reset to 0"
         illuminance = 0
       end
-      
+
       sum += illuminance.to_f
       illuminances << illuminance.to_f
     end
-    
+
     averageIlluminances[-1] << sum/illuminances.size.to_f
 
   end
-  
+
 end
 
 def rotate(array)
@@ -174,7 +174,7 @@ for i in (0..n-1)
     directNormalIllumimanceMatrix[i,j] = directNormalIllumimances[i][j]
     diffuseHorizontalIlluminanceMatrix[i,j] = diffuseHorizontalIlluminances[i][j]
     averageIlluminanceMatrix[i,j] = averageIlluminances[i][j]
-    
+
     if averageIlluminances[i][j] > options[:setpoint].to_f
       aboveSetpointMatrix[i,j] = 1
     else
@@ -192,7 +192,7 @@ puts "#{OpenStudio::sum(aboveSetpointMatrix)} hours above setpoint of #{options[
 
 # fp = OpenStudio::FloodPlot::create(directNormalIllumimanceMatrix).get
 # fp.generateImage(OpenStudio::Path.new("./directNormalIllumimance.png"))
-# 
+#
 # fp = OpenStudio::FloodPlot::create(diffuseHorizontalIlluminanceMatrix).get
 # fp.generateImage(OpenStudio::Path.new("./diffuseHorizontalIlluminance.png"))
 

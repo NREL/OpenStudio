@@ -45,7 +45,7 @@ namespace detail{
  *  UtilityCost_Charge_Simple is used to compute flat charges such as taxes and fees related to a utility bill.
  */
 class MODEL_API UtilityCost_Charge_Simple : public ParentObject{
- 
+
 public:
 
   /** @name Constructors and Destructors */

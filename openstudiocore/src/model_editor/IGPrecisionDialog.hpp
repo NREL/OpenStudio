@@ -35,7 +35,7 @@
 #include "ModelEditorAPI.hpp"
 
 class MODELEDITOR_API IGPrecisionDialog:
-  public QDialog, 
+  public QDialog,
   public Ui::PrecisionDialog
 {
 Q_OBJECT

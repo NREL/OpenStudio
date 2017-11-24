@@ -55,9 +55,9 @@ boost::optional<IdfObject> ForwardTranslator::translateSurfacePropertyOtherSideC
 {
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SurfaceProperty_OtherSideCoefficients,
                                                        modelObject);
-  
+
   boost::optional<double> combinedConvectiveRadiativeFilmCoefficient = modelObject.combinedConvectiveRadiativeFilmCoefficient();
-  
+
   double constantTemperature = modelObject.constantTemperature();
   double constantTemperatureCoefficient = modelObject.constantTemperatureCoefficient();
   double externalDryBulbTemperatureCoefficient = modelObject.externalDryBulbTemperatureCoefficient();

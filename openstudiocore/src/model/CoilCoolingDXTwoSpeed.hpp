@@ -302,7 +302,7 @@ class MODEL_API CoilCoolingDXTwoSpeed : public StraightComponent {
   bool setTotalCoolingCapacityFunctionOfTemperatureCurve( const Curve& curve );
 
   /** Sets the Curve referred to by the TotalCoolingCapacityFunctionOfFlowFractionCurnveName field. **/
-  bool setTotalCoolingCapacityFunctionOfFlowFractionCurve( const Curve& curve );  
+  bool setTotalCoolingCapacityFunctionOfFlowFractionCurve( const Curve& curve );
 
   /** Sets the Curve referred to by the EnergyInputRatioFunctionOfTemperatureCurveName field. **/
   bool setEnergyInputRatioFunctionOfTemperatureCurve( const Curve& curve );

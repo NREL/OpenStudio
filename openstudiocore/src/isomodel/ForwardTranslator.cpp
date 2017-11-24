@@ -196,18 +196,18 @@ namespace isomodel {
     bool OSM_extract_dhw = true;            // extract dhw info
     bool OSM_extract_vent_rate = true;      // extract the ventilation rate
     bool OSM_extract_infil_rate = true;     // extract infiltration rate info
-    bool OSM_extract_HVAC = true;           // extract HVAC info like cooling COP, heating efficiencies, fuel type. 
-    /// \todo unused 
-    //bool OSM_extract_glazing_info = true;   // extract glazing info (U & SHGC) 
-    //bool OSM_extract_wallroof_info = true;  // extract the wall and roof U and other info 
+    bool OSM_extract_HVAC = true;           // extract HVAC info like cooling COP, heating efficiencies, fuel type.
+    /// \todo unused
+    //bool OSM_extract_glazing_info = true;   // extract glazing info (U & SHGC)
+    //bool OSM_extract_wallroof_info = true;  // extract the wall and roof U and other info
 
 
 
     // NOTE  YOU *MUST* SET HVAC SYSTEM TYPE and IPLV/COP ratio below
 
-    // set fan and pump control factors;  (1.0 = no energy saving features)   
+    // set fan and pump control factors;  (1.0 = no energy saving features)
     // start the strings with a floating point as that's what is stripped off to set the falue
-    // fan control  1 = no control, 0.75 = inlet blade adjuct, 0.65= variable speed  see NEN 2916 7.3.3.4  
+    // fan control  1 = no control, 0.75 = inlet blade adjuct, 0.65= variable speed  see NEN 2916 7.3.3.4
     double fan_flow_control_factor_default = 1.0;        // set default fan flow control factor to 1.0 (no energy savings)
     // pump control 0 = no pump, 0.5 = auto pump controls for more 50% of pumps, 1.0 = all other cases.   See NEN 2914 9.4.3
     double heating_pump_control_factor_default = 1.0;   // set default heating pump control factor to 1.0 (no control or vfd)
@@ -216,7 +216,7 @@ namespace isomodel {
 
     // until we can extract HVAC inputs and guess at HVAC type, set these defaults
     // give the HVAC type number first and a descriptive string after
-    int hvac_type_default = 24;     // set default HVAC type to VAV 
+    int hvac_type_default = 24;     // set default HVAC type to VAV
     double cooling_IPLVToCop_ratio = 1.0;                       // set default system partial load ratio
     int ventilation_type_default= 1;          //set ventilation type (1 = mech only, 2 = natural, 3 = mixed)
     int bem_type_default = 1;  // set bem_type=1 (1 = none or minimal BEM, 2 = modern BEM, 3 = advanced BEM w/ FDD)
@@ -226,19 +226,19 @@ namespace isomodel {
     double heat_recovery_fraction = 0.0; // set ventilation heat recovery fraction to 0 since OS doesn't support heat recovery yet
 
     //these are items that aren't modeled in OS or are hard to extract so set default values
-    int occupancy_sensors_default = 1;     // occupancy sensors:  false = none or minimal true > if 60% of floor space has it 
-    int const_illum_ctrl_default = 1;   //constant illumination control: false = none, true              
+    int occupancy_sensors_default = 1;     // occupancy sensors:  false = none or minimal true > if 60% of floor space has it
+    int const_illum_ctrl_default = 1;   //constant illumination control: false = none, true
 
     // this can be changed within OS, but it is often not sent.
     double specific_fan_power = 1/0.7733;  // set default specific fan power (L/W) to match EnergyPlus default
 
-    // set default SCF and SDF for all windows.   
+    // set default SCF and SDF for all windows.
     double solar_control_factor = 1.0;
     double shading_device_factor = 1.0;
 
     // set fall through defaults in case extraction fails or we decide not to extract
 
-    // default occupancy info if we can't extract    
+    // default occupancy info if we can't extract
     int occupancy_day_start = 1;     // set default starting day of occupancy as monday (Su=0, Mon=1 Sa=6)
     int occupancy_day_end = 5;               // set the default ending day of occupancy
     int occupancy_hour_start = 8;    // set the default starting hour for occupancy for an occupied day
@@ -252,18 +252,18 @@ namespace isomodel {
 
     // HVAC defaults
     double cooling_COP_default = 3.2;
-    double heating_system_efficiency_default = 0.8;     
+    double heating_system_efficiency_default = 0.8;
     int heating_fuel_type_default = 2;               // set default fuel type to 2 = gas
 
     // Ventilation defaults
     double vent_rate_per_person_default = 10;   // set default ventilation rate (10 L/s/persoin ~ 20 cfm/person is good for offices)
 
     // DHW defaults
-    //set dhw distribution type 0, close to taps, 1 far from taps, 2 = circulation/other/ unknown) 
+    //set dhw distribution type 0, close to taps, 1 far from taps, 2 = circulation/other/ unknown)
     int dhw_dist_type_default = 2;
     double dhw_rate_per_person_default = 3.8;   // set default dhw rate at 3.8 L/person/day from ASHRAE HVAC Apps chapter 50
     int dhw_fuel_type_default = 2;                   // set default DHW fuel to gas (1 = electric, 2 = gas)
-    double dhw_system_efficiency_default = 0.8; 
+    double dhw_system_efficiency_default = 0.8;
 
     // Infiltration defaults
     double infil_rate_default = 7.0;    // set default infiltration rate to 7 m3/m2/hr@ 75 Pa by default to match normal EnergyPlus default values
@@ -284,7 +284,7 @@ namespace isomodel {
 
     double fan_flow_control_factor = fan_flow_control_factor_default;
     double heating_pump_control_factor = heating_pump_control_factor_default;
-    double cooling_pump_control_factor = cooling_pump_control_factor_default;      
+    double cooling_pump_control_factor = cooling_pump_control_factor_default;
     int dhw_dist_type = dhw_dist_type_default;
 
     int occupancy_sensors = occupancy_sensors_default;
@@ -642,7 +642,7 @@ namespace isomodel {
     std::vector<openstudio::Time> t(24);
 
     for (size_t i = 0; i <= 23; ++i)
-    {  
+    {
       t[i] = openstudio::Time(i / 24.0);
     }
 
@@ -664,7 +664,7 @@ namespace isomodel {
       int nscheds= 0;
       double space_area_total = 0.0;
 
-      // get an area weighted average over all the space types. 
+      // get an area weighted average over all the space types.
 
       for (const openstudio::model::SpaceType &space_type : space_types)
       {
@@ -695,7 +695,7 @@ namespace isomodel {
               for (size_t day = 0; day <=6; ++day) {
                 for (size_t hour = 0; hour <= 23; ++hour) {
                   double value = dayschedule[day].getValue(t[hour]);
-                  occupancy_schedules_ave[day][hour] += value*space_area;  // add in area weighted value                    
+                  occupancy_schedules_ave[day][hour] += value*space_area;  // add in area weighted value
                 }
               }
             }
@@ -814,7 +814,7 @@ namespace isomodel {
     double unoccupied_hours = 8760-occupied_hours;
 
     // gets all the schedule for each day of the year in one array
-    
+
     for (const openstudio::model::ScheduleRuleset &schedule : schedule_rulesets) {
       double occupied_sum=0;
       double unoccupied_sum=0;
@@ -846,7 +846,7 @@ namespace isomodel {
             } else { // if hour not occupied, add value to unoccupied and increment unoccupied counter
               unoccupied_sum+= value;
             }
-          } else {    // if day is not occupied, add the hour value to unoccupied 
+          } else {    // if day is not occupied, add the hour value to unoccupied
             unoccupied_sum+= value;
           }
         }
@@ -1063,7 +1063,7 @@ namespace isomodel {
 
     double cooling_setpoint_occ = 0;
     double cooling_setpoint_unocc = 0;
-    double heating_setpoint_occ = 0; 
+    double heating_setpoint_occ = 0;
     double heating_setpoint_unocc = 0;
 
     if (OSM_extract_temp_setpoint) {
@@ -1302,7 +1302,7 @@ namespace isomodel {
         wall_U[i] = wall_U_sum[i]/wall_U_area[i];
       } else {
         wall_U[i] = 0;
-      } 
+      }
       if (window_areas[i] > 0.0) {
         window_U[i] = window_U_sum[i]/window_areas[i];
         window_SHGC[i] = window_SHGC_sum[i] / window_areas[i];
@@ -1573,7 +1573,7 @@ namespace isomodel {
 
     size_t num_ideal_air_loads = 0;
     for (const openstudio::model::ThermalZone &z : thermal_zones) {
-      if (z.useIdealAirLoads()) ++num_ideal_air_loads; 
+      if (z.useIdealAirLoads()) ++num_ideal_air_loads;
     }
 
     bool uses_ideal_air_loads = false;
@@ -1745,7 +1745,7 @@ namespace isomodel {
       // go through the cooling coil array list and add up the COP*zone area and zone area to compute zonearea weighted COP;
       double cop_sum = 0.0;
       double cop_area_sum = 0.0;
-      
+
       for (size_t i = 0; i < cooling_coil_array.size(); ++i) {
         openstudio::model::HVACComponent coil = cooling_coil_array[i];
         double area = cooling_coil_area_array[i];
@@ -1844,7 +1844,7 @@ namespace isomodel {
             elec_area_sum += area;
           }
         }
-        //  else if (!coil) 
+        //  else if (!coil)
       }
 
 
@@ -1888,7 +1888,7 @@ namespace isomodel {
         LOG(Debug, "No heating elements found - using HVAC defaults");
         heating_system_efficiency = heating_system_efficiency_default;
         heating_fuel_type = heating_fuel_type_default;
-      } 
+      }
     } else if (uses_ideal_air_loads) {
       LOG(Warn, "Using ideal airloads, which should use district heating and cooling, but we don't have that option yet");
       cooling_COP = 1.0;
@@ -1944,7 +1944,7 @@ namespace isomodel {
     // calculate fresh air ventilation rates;
     double freshair_flow_rate = 0.0;
     if (OSM_extract_vent_rate) {
-      for (const openstudio::model::Space &s : spaces) 
+      for (const openstudio::model::Space &s : spaces)
       {
         double space_air_rate = 0;
         if (s.designSpecificationOutdoorAir()) {

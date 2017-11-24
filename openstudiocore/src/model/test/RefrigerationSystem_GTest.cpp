@@ -68,12 +68,12 @@ TEST_F(ModelFixture, RefrigerationSystem_DefaultConstructor)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model model;
     RefrigerationSystem testObject = RefrigerationSystem(model);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -539,7 +539,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCases)
 {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
-  
+
   ScheduleCompact s1(model);
   RefrigerationCase case1 = RefrigerationCase(model, s1);
   RefrigerationCase case2 = RefrigerationCase(model, s1);
@@ -617,7 +617,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllAirChillers)
 {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
-  
+
   ScheduleCompact s1(model);
   RefrigerationAirChiller airChiller1 = RefrigerationAirChiller(model, s1);
   RefrigerationAirChiller airChiller2 = RefrigerationAirChiller(model, s1);
@@ -891,7 +891,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllSecondarySystemLoads)
 {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
-  
+
   RefrigerationSecondarySystem secondarySystem1 = RefrigerationSecondarySystem(model);
   RefrigerationSecondarySystem secondarySystem2 = RefrigerationSecondarySystem(model);
 

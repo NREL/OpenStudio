@@ -43,7 +43,7 @@ class ModelObjectListController : public OSVectorController
 
 public:
 
-  ModelObjectListController(const openstudio::IddObjectType& iddObjectType, 
+  ModelObjectListController(const openstudio::IddObjectType& iddObjectType,
                             const model::Model& model,
                             bool showLocalBCL = false);
 
@@ -70,7 +70,7 @@ class ModelObjectListView : public OSItemList
 
 public:
 
-  ModelObjectListView(const openstudio::IddObjectType& iddObjectType, 
+  ModelObjectListView(const openstudio::IddObjectType& iddObjectType,
                       const model::Model& model,
                       bool addScrollArea,
                       bool showLocalBCL = false,

@@ -47,12 +47,12 @@ TEST_F(ModelFixture,WaterHeaterHeatPump)
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   // Create
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
-     WaterHeaterHeatPump hpwh(m); 
+  ASSERT_EXIT (
+  {
+     Model m;
+     WaterHeaterHeatPump hpwh(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -82,7 +82,7 @@ TEST_F(ModelFixture,WaterHeaterHeatPump_Remove)
   auto dxCoil = hpwh.dXCoil();
   auto fan = hpwh.fan();
   auto tank = hpwh.tank();
-  
+
   hpwh.remove();
 
   EXPECT_TRUE(hpwh.handle().isNull());

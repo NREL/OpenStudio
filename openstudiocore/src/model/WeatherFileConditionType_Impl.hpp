@@ -43,8 +43,8 @@ namespace detail {
     WeatherFileConditionType_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    WeatherFileConditionType_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                   Model_Impl* model, 
+    WeatherFileConditionType_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                   Model_Impl* model,
                    bool keepHandle);
 
     // clone copy constructor

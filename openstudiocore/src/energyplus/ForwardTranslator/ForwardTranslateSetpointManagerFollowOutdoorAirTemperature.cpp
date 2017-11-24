@@ -39,7 +39,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerFollowOutdoorAirTemperature( 
+boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerFollowOutdoorAirTemperature(
                               SetpointManagerFollowOutdoorAirTemperature & modelObject )
 {
   boost::optional<Node> node;
@@ -89,7 +89,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerFollowOutd
   {
     idfObject.setDouble(SetpointManager_FollowOutdoorAirTemperatureFields::MaximumSetpointTemperature,d.get());
   }
-  
+
   // MinimumSetpointTemperature
   d = modelObject.minimumSetpointTemperature();
   if( d )

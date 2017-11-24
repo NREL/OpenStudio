@@ -50,8 +50,8 @@ namespace detail{
 
 class VersionString;
 
-/** IddFile provides parsing and printing of text files in Input Data Definition (IDD) format. 
- *  IDD is a schema definition format defined by the EnergyPlus team, adopted with slight 
+/** IddFile provides parsing and printing of text files in Input Data Definition (IDD) format.
+ *  IDD is a schema definition format defined by the EnergyPlus team, adopted with slight
  *  modifications for the OpenStudio project. IddFile is a shared object. */
 class UTILITIES_API IddFile {
  public:
@@ -99,17 +99,17 @@ class UTILITIES_API IddFile {
    *  if there is no such object in the IddFile. */
   boost::optional<IddObject> getObject(const std::string& objectName) const;
 
-  /** Returns the object of type objectType, if possible. Return value will evaluate to false if 
+  /** Returns the object of type objectType, if possible. Return value will evaluate to false if
    *  there is no such object in the IddFile, or if IddObjectType == IddObjectType::UserCustom. */
   boost::optional<IddObject> getObject(IddObjectType objectType) const;
 
-  /** Returns all objects in the file that are required. An IdfFile or Workspace conforming to 
-   *  this IddFile must contain at least one object of each of these types to be valid at 
+  /** Returns all objects in the file that are required. An IdfFile or Workspace conforming to
+   *  this IddFile must contain at least one object of each of these types to be valid at
    *  StrictnessLevel::Final. */
   std::vector<IddObject> requiredObjects() const;
 
-  /** Returns all objects in the file that are marked as unique. An IdfFile or Workspace 
-   *  conforming to this IddFile must contain at most one object of each of these types to be 
+  /** Returns all objects in the file that are marked as unique. An IdfFile or Workspace
+   *  conforming to this IddFile must contain at most one object of each of these types to be
    *  valid at StrictnessLevel::Final. */
   std::vector<IddObject> uniqueObjects() const;
 
@@ -127,7 +127,7 @@ class UTILITIES_API IddFile {
   std::ostream& print(std::ostream& os) const;
 
   /** Saves file to path p. Will construct the parent folder if necessary and if its parent
-   *  folder already exists. Will only overwrite an existing file if overwrite==true. If no 
+   *  folder already exists. Will only overwrite an existing file if overwrite==true. If no
    *  extension is provided will use 'idd'. */
   bool save(const openstudio::path& p, bool overwrite=false);
 

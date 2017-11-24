@@ -400,7 +400,7 @@ namespace model {
 
     updateModelTempDir(model, modelTempDir);
     attachWorkflow(model, modelTempDir);
-      
+
     return modelTempDir;
   }
 
@@ -430,7 +430,7 @@ namespace model {
     model.getUniqueModelObject<openstudio::model::RunPeriod>();
 
     openstudio::model::LifeCycleCostParameters lifeCycleCostParameters = model.getUniqueModelObject<openstudio::model::LifeCycleCostParameters>();
-  
+
     for (auto& object : model.objects()){
       if (object.optionalCast<model::ConstructionBase>()){
         object.cast<model::ConstructionBase>().standardsInformation();
@@ -490,7 +490,7 @@ namespace model {
   }
 
   bool saveModel(openstudio::model::Model model, const openstudio::path& osmPath, const openstudio::path& modelTempDir)
-  { 
+  {
     // set the workflow's path
     openstudio::path oswPath = modelTempDir / openstudio::toPath("resources/workflow.osw");
     boost::optional<openstudio::path> currentOswPath = model.workflowJSON().oswPath();
@@ -517,9 +517,9 @@ namespace model {
     } else{
       LOG_FREE(Error, "saveModel", "Failed to save model to '" << toString(tempModelPath) << "'");
     }
-    
+
     bool tempDirSaved = saveModelTempDir(modelTempDir, osmPath);
-    
+
     return (modelSaved && tempDirSaved);
   }
 

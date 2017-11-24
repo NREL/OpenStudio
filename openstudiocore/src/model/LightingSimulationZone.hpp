@@ -44,7 +44,7 @@ namespace detail {
 
 } // detail
 
-// ETH@20120328 Should LightingSimulationZone be parented by Building, 
+// ETH@20120328 Should LightingSimulationZone be parented by Building,
 // similar to ThermalZone?
 
 /** LightingSimulationZone is a ModelObject that wraps the OpenStudio IDD object 'OS_LightingSimulationZone'. */

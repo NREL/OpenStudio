@@ -215,7 +215,7 @@ double DateTime::utcOffset() const
 {
   return m_utcOffset;
 }
-    
+
 /// convert to string
 std::string DateTime::toString() const
 {
@@ -283,7 +283,7 @@ boost::optional<DateTime> DateTime::fromISO8601(const std::string& str) {
     finalStr = std::string(m[1].first, m[1].second);
   }else if (boost::regex_match(finalStr, m, yyyymmddThhmmssRegex)) {
     timeZone = std::string(m[2].first, m[2].second); // pull out timeZone first because reassigning finalStr will invalidate iterators
-    finalStr = std::string(m[1].first, m[1].second); 
+    finalStr = std::string(m[1].first, m[1].second);
   } else if (boost::regex_match(finalStr, m, yyyymmddThhmmRegex)) {
     timeZone = std::string(m[2].first, m[2].second); // pull out timeZone first because reassigning finalStr will invalidate iterators
     finalStr = std::string(m[1].first, m[1].second) + "00";
@@ -329,7 +329,7 @@ DateTime DateTime::fromEpoch(const std::time_t& time) {
 // ensure that stored time is less than 24 hrs and adjust date accordingly
 void DateTime::normalize()
 {
-  // total number of whole days in the time 
+  // total number of whole days in the time
   int wholeDays = m_time.days();
 
   // if time is longer than a day (either positive or negative) normalize it to remainder less than 24 hrs
@@ -339,7 +339,7 @@ void DateTime::normalize()
     m_time -= adjustTime;
   }
 
-  // total number of fractional days in the time 
+  // total number of fractional days in the time
   double fracDays = m_time.totalDays();
 
   // if time is negative add a day to make it positive
@@ -370,11 +370,11 @@ DateTime toDateTime(const QDateTime &qdt)
 
 QDateTime toQDateTime(const DateTime& dt) {
   return QDateTime(
-      QDate(dt.date().year(), 
-            (dt.date().monthOfYear().value()) - openstudio::MonthOfYear::Jan + 1, 
+      QDate(dt.date().year(),
+            (dt.date().monthOfYear().value()) - openstudio::MonthOfYear::Jan + 1,
             dt.date().dayOfMonth()),
-      QTime(dt.time().hours(), 
-            dt.time().minutes(), 
+      QTime(dt.time().hours(),
+            dt.time().minutes(),
             dt.time().seconds()),
       Qt::OffsetFromUTC,
       dt.utcOffset() * SECONDS_PER_MINUTE * MINUTES_PER_HOUR

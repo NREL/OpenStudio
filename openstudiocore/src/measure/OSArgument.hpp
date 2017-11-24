@@ -114,7 +114,7 @@ class MEASURE_API OSArgument {
              const UUID& versionUUID,
              const std::string& name,
              const std::string& displayName,
-             const boost::optional<std::string>& description, 
+             const boost::optional<std::string>& description,
              const OSArgumentType& type,
              const boost::optional<std::string>& units,
              bool required,
@@ -190,7 +190,7 @@ class MEASURE_API OSArgument {
   static OSArgument makePathArgument(const std::string& name,
                                      bool isRead,
                                      const std::string& extension,
-                                     bool required = true, 
+                                     bool required = true,
                                      bool modelDependent = false);
 
   /** Creates a separator OSArgument, cannot be used to store a value, cannot be required. */
@@ -222,26 +222,26 @@ class MEASURE_API OSArgument {
    *  default value for the measure to run properly. */
   bool required() const;
 
-  /** Returns true if this argument's properties can changed based on the specific model used in the 
+  /** Returns true if this argument's properties can changed based on the specific model used in the
    *  measure.  A choice argument which lists objects in the model would be model dependent. */
   bool modelDependent() const;
 
   /** Returns true if this argument's value has been set. */
   bool hasValue() const;
 
-  /** Returns this argument's value as a bool. Throws if not hasValue() or if type() != 
+  /** Returns this argument's value as a bool. Throws if not hasValue() or if type() !=
    *  OSArgumentType::Boolean. */
   bool valueAsBool() const;
 
-  /** Returns this argument's value as a double. Throws if not hasValue() or if type() != 
+  /** Returns this argument's value as a double. Throws if not hasValue() or if type() !=
    *  OSArgumentType::Double. */
   double valueAsDouble() const;
 
-  /** Returns this argument's value as a Quantity. Throws if not hasValue() or if type() != 
+  /** Returns this argument's value as a Quantity. Throws if not hasValue() or if type() !=
    *  OSArgumentType::Quantity. \deprecated */
   Quantity valueAsQuantity() const;
 
-  /** Returns this argument's value as an int. Throws if not hasValue() or if type() != 
+  /** Returns this argument's value as an int. Throws if not hasValue() or if type() !=
    *  OSArgumentType::Integer. */
   int valueAsInteger() const;
 
@@ -249,26 +249,26 @@ class MEASURE_API OSArgument {
    *  this argument's value to produce the result. Throws if not hasValue(). */
   std::string valueAsString() const;
 
-  /** Returns this argument's value as an openstudio::path. Throws if not hasValue() or if 
+  /** Returns this argument's value as an openstudio::path. Throws if not hasValue() or if
    *  type() != OSArgumentType::Path. */
   openstudio::path valueAsPath() const;
 
   /** Returns true if this argument's default value has been set. */
   bool hasDefaultValue() const;
 
-  /** Returns this argument's default value as a bool. Throws if not hasDefaultValue() or if 
+  /** Returns this argument's default value as a bool. Throws if not hasDefaultValue() or if
    *  type() != OSArgumentType::Boolean. */
   bool defaultValueAsBool() const;
 
-  /** Returns this argument's default value as a double. Throws if not hasDefaultValue() or if 
+  /** Returns this argument's default value as a double. Throws if not hasDefaultValue() or if
    *  type() != OSArgumentType::Double. */
   double defaultValueAsDouble() const;
 
-  /** Returns this argument's default value as a Quantity. Throws if not hasDefaultValue() or if 
+  /** Returns this argument's default value as a Quantity. Throws if not hasDefaultValue() or if
    *  type() != OSArgumentType::Quantity. \deprecated */
   Quantity defaultValueAsQuantity() const;
 
-  /** Returns this argument's default value as an int. Throws if not hasDefaultValue() or if 
+  /** Returns this argument's default value as an int. Throws if not hasDefaultValue() or if
    *  type() != OSArgumentType::Integer. */
   int defaultValueAsInteger() const;
 
@@ -276,7 +276,7 @@ class MEASURE_API OSArgument {
    *  prints this argument's default value to produce the result. Throws if not hasDefaultValue(). */
   std::string defaultValueAsString() const;
 
-  /** Returns this argument's default value as an openstudio::path. Throws if not 
+  /** Returns this argument's default value as an openstudio::path. Throws if not
    *  hasDefaultValue() or if type() != OSArgumentType::Path. */
   openstudio::path defaultValueAsPath() const;
 
@@ -386,7 +386,7 @@ class MEASURE_API OSArgument {
   /** Set the default value of this argument by passing in data of a particular type. The method
    *  will do nothing and return false if the data is of an incorrect type. These methods do not
    *  check defaultValue against the domain (if set), as the domain is just a guideline for users.
-   *  The string setter will try to convert the string to the correct type for this argument. 
+   *  The string setter will try to convert the string to the correct type for this argument.
    *  Integers can be used to set the default values of arguments of type double. */
   bool setDefaultValue(bool defaultValue);
   /// \overload
@@ -407,7 +407,7 @@ class MEASURE_API OSArgument {
   bool setDomainType(const OSDomainType& domainType);
 
   /** Sets the domain of this argument by passing in data of a particular type. The method will do
-   *  nothing and return false if the data is of an incorrect type or size. A vector of size 2 is 
+   *  nothing and return false if the data is of an incorrect type or size. A vector of size 2 is
    *  expected for OSDomainType::Interval. */
   bool setDomain(const std::vector<bool>& domain);
   /// \overload
@@ -424,7 +424,7 @@ class MEASURE_API OSArgument {
   void clearDomain();
 
   /** Sets the domain type to OSDomainType::Interval and sets minimum value.
-   *  Preserves existing maximum value or sets it to infinity if it does not exist. 
+   *  Preserves existing maximum value or sets it to infinity if it does not exist.
    *  Does not check for compatibility with current value, default value, or that min < max. */
   bool setMinValue(double minValue);
   /// \overload
@@ -442,12 +442,12 @@ class MEASURE_API OSArgument {
   /** Prints argument data for debugging purposes. */
   std::string print() const;
 
-  /** Returns this argument's value printed to string. If printDefault, returns the default value if 
-   *  in the case of !hasValue() && hasDefaultValue(). If there is no value to print, the returned 
+  /** Returns this argument's value printed to string. If printDefault, returns the default value if
+   *  in the case of !hasValue() && hasDefaultValue(). If there is no value to print, the returned
    *  string will be .empty(). */
   std::string printValue(bool printDefault=true) const;
 
-  /** Returns this argument's default value printed to string, if possible. If there is no default 
+  /** Returns this argument's default value printed to string, if possible. If there is no default
    *  value, the string will be .empty(). */
   std::string printDefaultValue() const;
 
@@ -456,7 +456,7 @@ class MEASURE_API OSArgument {
   REGISTER_LOGGER("openstudio.measure.OSArgument");
 
   // ETH@20121211 - Why are these friend declarations here?!
-  // JMT@20130124 - Because all of the constructors are private and the SWIG wrapper for pair needs 
+  // JMT@20130124 - Because all of the constructors are private and the SWIG wrapper for pair needs
   // some constructors
 
   friend class std::map<std::string, OSArgument>;
@@ -487,9 +487,9 @@ class MEASURE_API OSArgument {
   openstudio::UUID m_versionUUID;
   std::string m_name;
   std::string m_displayName;
-  boost::optional<std::string> m_description; 
+  boost::optional<std::string> m_description;
   OSArgumentType m_type;
-  boost::optional<std::string> m_units; 
+  boost::optional<std::string> m_units;
   bool m_required;
   bool m_modelDependent;
   QVariant m_value;

@@ -46,7 +46,7 @@
 #include <QDragEnterEvent>
 
 namespace openstudio{
-  
+
 namespace measuretab {
 
 RectangularDropZone::RectangularDropZone()
@@ -130,7 +130,7 @@ WorkflowSectionContentView::WorkflowSectionContentView()
 
   newMeasureDropZone = new NewMeasureDropZone();
   mainVLayout->addWidget(newMeasureDropZone);
-} 
+}
 
 WorkflowStepView::WorkflowStepView()
   : QWidget()

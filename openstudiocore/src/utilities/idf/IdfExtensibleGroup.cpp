@@ -261,7 +261,7 @@ bool IdfExtensibleGroup::operator!=(const IdfExtensibleGroup& other) const {
 // PRIVATE
 
 IdfExtensibleGroup::IdfExtensibleGroup(std::shared_ptr<detail::IdfObject_Impl> impl,unsigned index)
-    : m_impl(impl), m_index(index) 
+    : m_impl(impl), m_index(index)
 {
   // impl is passed in as null in many cases
   //OS_ASSERT(m_impl);

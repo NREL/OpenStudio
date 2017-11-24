@@ -77,7 +77,7 @@ class MODEL_API ZoneHVACBaseboardConvectiveWater : public ZoneHVACComponent {
   bool setAvailabilitySchedule(Schedule& schedule);
 
   bool setHeatingCoil(const StraightComponent& heatingCoilBaseboard);
-  
+
    /** Returns the optional ThermalZone that this ZoneHVACBaseboardConvectiveWater is attached to
    **/
   boost::optional<ThermalZone> thermalZone();

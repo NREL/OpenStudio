@@ -61,11 +61,11 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemMet
   if (s) {
     idfObject.setName(*s);
   }
- 
+
   idfObject.setString(EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName, modelObject.emsVariableName());
 
   idfObject.setString(EnergyManagementSystem_MeteredOutputVariableFields::UpdateFrequency, modelObject.updateFrequency());
-  
+
   s = modelObject.emsProgramOrSubroutineName();
   if (s.is_initialized()) {
     idfObject.setString(EnergyManagementSystem_MeteredOutputVariableFields::EMSProgramorSubroutineName, s.get());
@@ -75,7 +75,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemMet
   idfObject.setString(EnergyManagementSystem_MeteredOutputVariableFields::GroupType, modelObject.groupType());
 
   idfObject.setString(EnergyManagementSystem_MeteredOutputVariableFields::EndUseCategory, modelObject.endUseCategory());
-  
+
   s = modelObject.endUseSubcategory();
   if (s.is_initialized()) {
     idfObject.setString(EnergyManagementSystem_MeteredOutputVariableFields::EndUseSubcategory, s.get());

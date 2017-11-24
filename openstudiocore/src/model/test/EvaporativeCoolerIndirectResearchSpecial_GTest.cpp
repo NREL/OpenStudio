@@ -43,19 +43,19 @@ using namespace openstudio::model;
 TEST_F(ModelFixture,EvaporativeCoolerIndirectResearchSpecial)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-  
-  ASSERT_EXIT ( 
-  {  
-    Model m; 
+
+  ASSERT_EXIT (
+  {
+    Model m;
     EvaporativeCoolerIndirectResearchSpecial idec(m);
-    
-    exit(0); 
+
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 
   {
     Model m;
-    AirLoopHVAC airLoopHVAC(m); 
+    AirLoopHVAC airLoopHVAC(m);
     EvaporativeCoolerIndirectResearchSpecial idec(m);
 
     Node supplyOutletNode = airLoopHVAC.supplyOutletNode();

@@ -42,10 +42,10 @@ namespace detail{
 
 /** UtilityCost_Tariff derives from ParentObject and is an interface to the OpenStudio IDD object named "OS:UtilityCost:Tariff".
  *
- *  UtilityCost_Tariff allows the modeling of utilities tariffs. 
+ *  UtilityCost_Tariff allows the modeling of utilities tariffs.
  */
 class MODEL_API UtilityCost_Tariff : public ParentObject{
- 
+
 public:
 
   /** @name Constructors and Destructors */
@@ -95,9 +95,9 @@ public:
   //@{
 
   void setEnergyConversionFactor(double energyConversionFactor);
-  
+
   void setDemandConversionFactor(double demandConversionFactor);
-  
+
   bool setName(const std::string& name);
 
   void setOutputMeterName(const std::string& outputMeterName);
@@ -105,21 +105,21 @@ public:
   void setConversionFactorChoice(const std::string& conversionFactorChoice);
 
   void setTimeOfUsePeriodScheduleName(const std::string& timeOfUsePeriodScheduleName);
-  
+
   void setSeasonScheduleName(const std::string& seasonScheduleName);
 
   void setMonthScheduleName(const std::string& monthScheduleName);
 
   void setDemandWindowLength(const std::string& demandWindowLength);
-  
+
   void setMonthlyChargeOrVariableName(const std::string& monthlyChargeOrVariableName);
-  
+
   void setMinimumMonthlyChargeOrVariableName(const std::string& minimumMonthlyChargeOrVariableName);
 
   void setRealTimePricingChargeScheduleName(const std::string& realTimePricingChargeScheduleName);
-  
+
   void setCustomerBaselineLoadScheduleName(const std::string& customerBaselineLoadScheduleName);
-  
+
   void setGroupName(const std::string& groupName);
 
   void setBuyOrSell(const std::string& buyOrSell);

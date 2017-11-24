@@ -57,9 +57,9 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateZoneHVACIdealLoadsAirSystem(ZoneHVACIdealLoadsAirSystem & modelObject)
 {
-  
+
   IdfObject zoneHVACIdealLoadsAirSystem = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_IdealLoadsAirSystem,modelObject);
-  
+
   // availability schedule name
   boost::optional<Schedule> schedule = modelObject.availabilitySchedule();
   if(schedule){
@@ -185,13 +185,13 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACIdealLoadsAirSyst
       boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAir;
       designSpecificationOutdoorAir = spaces[0].designSpecificationOutdoorAir();
       if (designSpecificationOutdoorAir){
-        // translate the design specification outdoor air to idf      
+        // translate the design specification outdoor air to idf
         boost::optional<IdfObject> designSpecificationOutdoorAirIdf;
         designSpecificationOutdoorAirIdf = translateAndMapModelObject(*designSpecificationOutdoorAir);
         // the translation should complete successfully
-        OS_ASSERT(designSpecificationOutdoorAirIdf);      
+        OS_ASSERT(designSpecificationOutdoorAirIdf);
         // set the field to reference the design specification outdoor air
-        zoneHVACIdealLoadsAirSystem.setString(ZoneHVAC_IdealLoadsAirSystemFields::DesignSpecificationOutdoorAirObjectName,designSpecificationOutdoorAirIdf->name().get()); 
+        zoneHVACIdealLoadsAirSystem.setString(ZoneHVAC_IdealLoadsAirSystemFields::DesignSpecificationOutdoorAirObjectName,designSpecificationOutdoorAirIdf->name().get());
       }
     }
   }

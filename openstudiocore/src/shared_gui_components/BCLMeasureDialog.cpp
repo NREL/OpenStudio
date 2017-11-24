@@ -45,7 +45,7 @@
 #include <QTextEdit>
 
 namespace openstudio {
-  
+
 
 BCLMeasureDialog::BCLMeasureDialog(QWidget* parent)
   : OSDialog(false, parent)
@@ -209,8 +209,8 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
       result->changeUID();
 
       // change the files on disk
-      result->updateMeasureScript(m_bclMeasureToCopy->measureType(), measureType, 
-                                  m_bclMeasureToCopy->className(), className, 
+      result->updateMeasureScript(m_bclMeasureToCopy->measureType(), measureType,
+                                  m_bclMeasureToCopy->className(), className,
                                   name, description, modelerDescription);
 
       result->updateMeasureTests(m_bclMeasureToCopy->className(), className);
@@ -428,7 +428,7 @@ void BCLMeasureDialog::init()
     m_intendedSoftwareToolListWidget->addItem(listItem);
   }
   tempHLayout->addLayout(tempVLayout);
-  
+
   tempVLayout = new QVBoxLayout;
 
   label = new QLabel;
@@ -460,7 +460,7 @@ void BCLMeasureDialog::init()
 
   connect(m_measureTypeComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
     this, &BCLMeasureDialog::measureTypeChanged);
-  
+
   connect(m_taxonomyFirstLevelComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
     this, &BCLMeasureDialog::firstLevelTaxonomyChanged);
 

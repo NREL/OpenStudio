@@ -333,7 +333,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Lights_Multiplier)
 
   Space space(model);
   space.setThermalZone(thermalZone);
-  
+
   LightsDefinition lightsDefinition(model);
   Lights lights(lightsDefinition);
   lights.setSpace(space);

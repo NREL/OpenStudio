@@ -45,17 +45,17 @@ namespace detail {
 
   /** ScheduleRule_Impl is a ParentObject_Impl that is the implementation class for ScheduleRule.*/
   class MODEL_API ScheduleRule_Impl : public ParentObject_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
     //
-    
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -81,8 +81,8 @@ namespace detail {
     virtual bool setParent(ParentObject& newParent) override;
 
     virtual std::vector<ResourceObject> resources() const override;
- 
-    virtual std::vector<ModelObject> children() const override;    
+
+    virtual std::vector<ModelObject> children() const override;
 
     virtual std::vector<IdfObject> remove() override;
 

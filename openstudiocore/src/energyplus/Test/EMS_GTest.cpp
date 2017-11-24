@@ -242,7 +242,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensorRename_EMS) {
   // add sensor
   EnergyManagementSystemSensor sensor(model, "Cooling Coil Runtime Fraction");
   sensor.setKeyName(toString(dx_coil.handle()));
- 
+
   //change name
   dx_coil.setName("New Coil Name");
 
@@ -882,7 +882,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorGlobalVariable_EMS) {
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  
+
   ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_GlobalVariable).size());
 
   WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_GlobalVariable)[0];

@@ -92,7 +92,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCondenserCas
   if (d) {
     cascade.setDouble(Refrigeration_Condenser_CascadeFields::CondensatePipingRefrigerantInventory,d.get());
   }
-  
+
   return cascade;
 
 }

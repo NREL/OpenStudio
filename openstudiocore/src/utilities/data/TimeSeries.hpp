@@ -141,11 +141,11 @@ private:
 } // detail
 
 /** TimeSeries is a series of values each reported at a single time.  We follow the EnergyPlus
- *   convention that the time reported for each value is at the end of the reporting interval.  For example, if a value 
+ *   convention that the time reported for each value is at the end of the reporting interval.  For example, if a value
  *   is measured over the interval from hour 1 (non-inclusive) to hour 2 (inclusive), that is 1 < t <= 2, and the reported
- *   value (either the average, median, min, max, etc) is determined to be 7, then the value 7 is reported at hour 2.  One 
- *   of the primary tasks of the TimeSeries class is to get the value of the series at an arbitrary time.  For the example above, 
- *   any time in the interval 1 < t <= 2 will return 7.  We refer to the beginning of the first reporting interval as the 
+ *   value (either the average, median, min, max, etc) is determined to be 7, then the value 7 is reported at hour 2.  One
+ *   of the primary tasks of the TimeSeries class is to get the value of the series at an arbitrary time.  For the example above,
+ *   any time in the interval 1 < t <= 2 will return 7.  We refer to the beginning of the first reporting interval as the
  *   startDateTime.  The end of the first interval is referred to as the firstReportDateTime.
  *
  *   Todo: add method to mark TimeSeries that represent point in time measurements rather than interval measurements
@@ -223,7 +223,7 @@ public:
   /// Returns the interval length if any
   openstudio::OptionalTime intervalLength() const;
 
-  /// Returns the date and times at which values are reported, these are the end of each reporting interval 
+  /// Returns the date and times at which values are reported, these are the end of each reporting interval
   openstudio::DateTimeVector dateTimes() const;
 
   /// Returns the date and time of first report value
@@ -319,7 +319,7 @@ typedef std::vector<TimeSeries> TimeSeriesVector;
 UTILITIES_API TimeSeries operator*(double d, const TimeSeries& series);
 
 // ETH@20100910 No implementation of double/TimeSeries yet because that would change the units.
-// We should be able to tackle double/TimeSeries after adding get/setQuantity to 
+// We should be able to tackle double/TimeSeries after adding get/setQuantity to
 // IdfObject.
 
 // Helper function to add up all the TimeSeries in timeSeriesVector.

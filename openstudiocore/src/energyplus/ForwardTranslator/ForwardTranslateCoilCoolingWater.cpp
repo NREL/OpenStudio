@@ -76,7 +76,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingWater( CoilCoo
 
   if( modelObject.isDesignWaterFlowRateAutosized() )
   {
-    idfObject.setString(Coil_Cooling_WaterFields::DesignWaterFlowRate,"Autosize"); 
+    idfObject.setString(Coil_Cooling_WaterFields::DesignWaterFlowRate,"Autosize");
   }
   else if( (value = modelObject.designWaterFlowRate()) )
   {

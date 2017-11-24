@@ -62,7 +62,7 @@ namespace openstudio{
 
     // create a QProgressBar
     m_impl = std::shared_ptr<QProgressBar>(new QProgressBar(parent));
-    
+
     // set visibility
     m_impl->setVisible(visible);
 

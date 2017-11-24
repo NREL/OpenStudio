@@ -51,7 +51,7 @@ namespace detail {
  *  of the EnergyPlus SetpointManager:SingleZone:Reheat object.
  */
 class MODEL_API SetpointManagerSingleZoneReheat : public SetpointManager {
-  
+
   public:
   virtual ~SetpointManagerSingleZoneReheat() {}
 

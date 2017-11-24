@@ -33,14 +33,14 @@ class SetupBCLKey < OpenStudio::Ruleset::ModelUserScript
   def name
     return "Setup BCL Key"
   end
-  
+
   # returns a vector of arguments, the runner will present these arguments to the user
   # then pass in the results on run
   def arguments(model)
     result = OpenStudio::Ruleset::OSArgumentVector.new
-    
+
     currentAuthKey = OpenStudio::LocalBCL::instance().prodAuthKey
-    
+
     authKey = OpenStudio::Ruleset::OSArgument::makeStringArgument("authKey")
     authKey.setDisplayName("BCL AuthKey")
     authKey.setDefaultValue(currentAuthKey)
@@ -52,15 +52,15 @@ class SetupBCLKey < OpenStudio::Ruleset::ModelUserScript
   # override run to implement the functionality of your script
   def run(model, runner, user_arguments)
     super(model, runner, user_arguments)
-    
+
     if not runner.validateUserArguments(arguments(model),user_arguments)
       return false
     end
-    
+
     authKey = runner.getStringArgumentValue("authKey",user_arguments)
-    
+
     good_key = OpenStudio::LocalBCL::instance().setProdAuthKey(authKey)
-    if not good_key 
+    if not good_key
       runner.registerError("BCL authentication failed, follow instructions at http://nrel.github.io/OpenStudio-user-documentation/getting_started/getting_started/#installation-instructions to get your auth key.")
       return false
     end

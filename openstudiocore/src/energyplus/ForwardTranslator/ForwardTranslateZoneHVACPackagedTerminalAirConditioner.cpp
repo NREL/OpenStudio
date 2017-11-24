@@ -60,7 +60,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalAirConditioner( 
+boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalAirConditioner(
     ZoneHVACPackagedTerminalAirConditioner & modelObject )
 {
   boost::optional<std::string> s;
@@ -143,8 +143,8 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalA
                         modelObject.outdoorAirMixerObjectType());
 
     // OutdoorAirMixerName
-    
-    std::string oaMixerName = modelObject.name().get() + " OA Mixer";  
+
+    std::string oaMixerName = modelObject.name().get() + " OA Mixer";
 
     idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirMixerName,oaMixerName);
 
@@ -191,14 +191,14 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalA
   if( modelObject.isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() )
   {
     idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::NoLoadSupplyAirFlowRate,"Autosize");
-  } 
+  }
   else if( (value = modelObject.supplyAirFlowRateWhenNoCoolingorHeatingisNeeded()) )
   {
     idfObject.setDouble(ZoneHVAC_PackagedTerminalAirConditionerFields::NoLoadSupplyAirFlowRate,value.get());
   }
 
   // OutdoorAirFlowRateDuringCoolingOperation
-  
+
   if( modelObject.isOutdoorAirFlowRateDuringCoolingOperationAutosized() )
   {
     idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingOutdoorAirFlowRate,"Autosize");
@@ -209,7 +209,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalA
   }
 
   // OutdoorAirFlowRateDuringHeatingOperation
-  
+
   if( modelObject.isOutdoorAirFlowRateDuringHeatingOperationAutosized() )
   {
     idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::HeatingOutdoorAirFlowRate,"Autosize");
@@ -220,7 +220,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalA
   }
 
   // OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded
-  
+
   if( modelObject.isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() )
   {
     idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::NoLoadOutdoorAirFlowRate,"Autosize");
@@ -282,14 +282,14 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalA
   }
 
   // HeatingCoilObjectType
-  
+
   HVACComponent heatingCoil = modelObject.heatingCoil();
 
   if( boost::optional<IdfObject> _heatingCoil = translateAndMapModelObject(heatingCoil) )
   {
     idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::HeatingCoilObjectType,_heatingCoil->iddObject().name() );
 
-    idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::HeatingCoilName,_heatingCoil->name().get() ); 
+    idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::HeatingCoilName,_heatingCoil->name().get() );
 
     if( istringEqual(modelObject.fanPlacement(),"BlowThrough") ) {
       if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
@@ -376,7 +376,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalA
   }
 
   // SupplyAirFanOperatingModeScheduleName
-  
+
   if( boost::optional<Schedule> schedule = modelObject.supplyAirFanOperatingModeSchedule() )
   {
     if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )

@@ -82,7 +82,7 @@ class MainRightColumnController : public OSQObjectController
   SystemItem * systemItem(const Handle & systemHandle) const;
 
   signals:
-  
+
   void toggleUnitsClicked(bool displayIP);
 
   void itemRemoveClicked(OSItem *);
@@ -143,7 +143,7 @@ class MainRightColumnController : public OSQObjectController
 
   void setEditView(QWidget * widget);
 
-  HorizontalTabWidget * m_horizontalTabWidget; 
+  HorizontalTabWidget * m_horizontalTabWidget;
 
   std::shared_ptr<InspectorController> m_inspectorController;
 

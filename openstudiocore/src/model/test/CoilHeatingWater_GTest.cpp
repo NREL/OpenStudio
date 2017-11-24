@@ -44,22 +44,22 @@ TEST_F(ModelFixture,CoilHeatingWater_CoilHeatingWater)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
+  ASSERT_EXIT (
+  {
+     Model m;
      ScheduleCompact s(m);
-     CoilHeatingWater coil(m,s); 
+     CoilHeatingWater coil(m,s);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
 TEST_F(ModelFixture,CoilHeatingWater_addToNode)
 {
-  Model m; 
+  Model m;
   ScheduleCompact s(m);
-  CoilHeatingWater coil(m,s); 
+  CoilHeatingWater coil(m,s);
 
   AirLoopHVAC airLoop(m);
   Node supplyOutletNode = airLoop.supplyOutletNode();
@@ -72,9 +72,9 @@ TEST_F(ModelFixture,CoilHeatingWater_addToNode)
 // Test CoilHeatingWater::remove and make sure that the loops are intact
 TEST_F(ModelFixture,CoilHeatingWater_remove)
 {
-  Model m; 
+  Model m;
   ScheduleCompact s(m);
-  CoilHeatingWater coil(m,s); 
+  CoilHeatingWater coil(m,s);
 
   AirLoopHVAC airLoop(m);
   Node supplyOutletNode = airLoop.supplyOutletNode();
@@ -85,7 +85,7 @@ TEST_F(ModelFixture,CoilHeatingWater_remove)
 
   ASSERT_TRUE( m.getModelObjects<CoilHeatingWater>().empty() );
 
-  CoilHeatingWater coil2(m,s); 
+  CoilHeatingWater coil2(m,s);
   coil2.addToNode(supplyOutletNode);
 
   PlantLoop plant(m);
@@ -102,9 +102,9 @@ TEST_F(ModelFixture,CoilHeatingWater_remove)
 // Test CoilHeatingWater::remove and make sure that the plant is intact
 TEST_F(ModelFixture,CoilHeatingWater_remove2)
 {
-  Model m; 
+  Model m;
   ScheduleCompact s(m);
-  CoilHeatingWater coil(m,s); 
+  CoilHeatingWater coil(m,s);
 
   PlantLoop plant(m);
   plant.addDemandBranchForComponent(coil);
@@ -119,9 +119,9 @@ TEST_F(ModelFixture,CoilHeatingWater_remove2)
 // This time use removeDemandBranchWithComponent
 TEST_F(ModelFixture,CoilHeatingWater_remove3)
 {
-  Model m; 
+  Model m;
   ScheduleCompact s(m);
-  CoilHeatingWater coil(m,s); 
+  CoilHeatingWater coil(m,s);
 
   PlantLoop plant(m);
   plant.addDemandBranchForComponent(coil);
@@ -139,9 +139,9 @@ TEST_F(ModelFixture,CoilHeatingWater_remove3)
 // Test that the coil is still in the model and hooked up to AirLoopHVAC
 TEST_F(ModelFixture,CoilHeatingWater_remove4)
 {
-  Model m; 
+  Model m;
   ScheduleCompact s(m);
-  CoilHeatingWater coil(m,s); 
+  CoilHeatingWater coil(m,s);
 
   AirLoopHVAC airLoop(m);
   Node supplyOutletNode = airLoop.supplyOutletNode();
@@ -163,9 +163,9 @@ TEST_F(ModelFixture,CoilHeatingWater_remove4)
 
 TEST_F(ModelFixture,CoilHeatingWater_controller)
 {
-  Model m; 
+  Model m;
   ScheduleCompact s(m);
-  CoilHeatingWater coil(m,s); 
+  CoilHeatingWater coil(m,s);
 
   ControllerWaterCoil controller(m);
   controller.getImpl<detail::ControllerWaterCoil_Impl>()->setWaterCoil(coil);

@@ -107,7 +107,7 @@ OptionalModelObject ReverseTranslator::translateZoneInfiltrationEffectiveLeakage
   {
     spaceInfiltrationEffectiveLeakageArea.setWindCoefficient(value.get());
   }
-  
+
   return spaceInfiltrationEffectiveLeakageArea;
 }
 

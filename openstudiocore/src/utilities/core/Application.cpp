@@ -106,7 +106,7 @@ QCoreApplication* ApplicationSingleton::application(bool gui)
         m_qApplication = new QCoreApplication(argc, argv);
       }
 
-      
+
       m_defaultInstance = true;
 
       // check if we are in a SketchUp process

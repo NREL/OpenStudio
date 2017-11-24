@@ -65,7 +65,7 @@ namespace detail {
     virtual IddObjectType iddObjectType() const override;
 
     virtual ModelObject clone(Model model) const override;
-    
+
     virtual unsigned inletPort() override;
 
     virtual unsigned outletPort() override;

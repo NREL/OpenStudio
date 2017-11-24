@@ -76,7 +76,7 @@ namespace detail {
     std::string sourceZoneInfiltrationTreatment() const;
 
     bool isSourceZoneInfiltrationTreatmentDefaulted() const;
-    
+
     std::string infiltrationBalancingMethod() const;
 
     bool isInfiltrationBalancingMethodDefaulted() const;

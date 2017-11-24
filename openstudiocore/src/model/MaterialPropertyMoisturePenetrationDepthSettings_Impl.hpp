@@ -40,7 +40,7 @@ namespace detail {
 
   /** MaterialPropertyMoisturePenetrationDepthSettings_Impl is a ModelObject_Impl that is the implementation class for MaterialPropertyMoisturePenetrationDepthSettings.*/
   class MODEL_API MaterialPropertyMoisturePenetrationDepthSettings_Impl : public ModelObject_Impl {
-  
+
   public:
 
     /** @name Constructors and Destructors */
@@ -83,7 +83,7 @@ namespace detail {
     double moistureEquationCoefficientC() const;
 
     double moistureEquationCoefficientD() const;
-    
+
     std::vector<double> moistureEquationCoefficients() const;
 
     boost::optional<double> surfaceLayerPenetrationDepth();
@@ -111,7 +111,7 @@ namespace detail {
     bool setMoistureEquationCoefficientC(double moistureEquationCoefficientC);
 
     bool setMoistureEquationCoefficientD(double moistureEquationCoefficientD);
-    
+
     bool setMoistureEquationCoefficients(double moistureEquationCoefficientA, double moistureEquationCoefficientB, double moistureEquationCoefficientC, double moistureEquationCoefficientD);
 
     bool setSurfaceLayerPenetrationDepth(double surfaceLayerPenetrationDepth);

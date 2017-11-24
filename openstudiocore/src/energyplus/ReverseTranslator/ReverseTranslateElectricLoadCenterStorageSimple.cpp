@@ -54,8 +54,8 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageSimple(
   OptionalDouble d;
   boost::optional<WorkspaceObject> owo;
   OptionalString optS;
-  
-  
+
+
   // TODO: The availability schedule is in the ElectricLoadCenter:Generators (list) in E+, here it's carried by the generator itself
   // Should also get the Rated Thermal To Electrical Power Ratio in the list
 
@@ -63,7 +63,7 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageSimple(
   //    Capstone C65,            !- Name
 
   openstudio::model::ElectricLoadCenterStorageSimple elcStorSimple( m_model );
-  
+
   // Name
   optS = workspaceObject.name();
   if(optS)
@@ -82,7 +82,7 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageSimple(
       }
     }
   }
-  
+
   // ZoneName
   if( (owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_SimpleFields::ZoneName)) )
   {
@@ -101,21 +101,21 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageSimple(
   {
     elcStorSimple.setRadiativeFractionforZoneHeatGains(*d);
   }
-     
+
   // nominalEnergeticEfficiencyforCharging, defaults
   d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::NominalEnergeticEfficiencyforCharging);
   if(d)
   {
     elcStorSimple.setNominalEnergeticEfficiencyforCharging(*d);
   }
-  
+
   // nominalEnergeticEfficiencyforDischarging, defaults
   d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::NominalDischargingEnergeticEfficiency);
   if(d)
   {
     elcStorSimple.setNominalDischargingEnergeticEfficiency(*d);
   }
-  
+
   // maximumStorageCapacity, required, assigned in ctor
   d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::MaximumStorageCapacity);
   if(d) {
@@ -123,7 +123,7 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageSimple(
   } else {
     LOG(Error, workspaceObject.briefDescription() << " does not have a required maximum Storage Capacity");
   }
-  
+
   // maximumPowerforDischarging, required, assigned in ctor
   d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::MaximumPowerforDischarging);
   if(d) {
@@ -131,7 +131,7 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageSimple(
   } else {
     LOG(Error, workspaceObject.briefDescription() << " does not have a required maximum power for discharging");
   }
-  
+
   // maximumPowerforCharging, required, assigned in ctor
   d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::MaximumPowerforCharging);
   if(d) {
@@ -139,14 +139,14 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageSimple(
   } else {
     LOG(Error, workspaceObject.briefDescription() << " does not have a required maximum power for charging");
   }
-  
-  // initialStateofCharge 
+
+  // initialStateofCharge
   d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::InitialStateofCharge);
   if(d)
   {
     elcStorSimple.setInitialStateofCharge(*d);
   }
-  
+
   result=elcStorSimple;
   return result;
 }

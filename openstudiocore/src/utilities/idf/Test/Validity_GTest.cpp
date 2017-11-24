@@ -47,7 +47,7 @@ using openstudio::IddObjectType;
 using openstudio::StrictnessLevel;
 using openstudio::DataError;
 
-TEST_F(IdfFixture,ValidityReport_WithCustomIdd) 
+TEST_F(IdfFixture,ValidityReport_WithCustomIdd)
 {
   Workspace workspace;
   EXPECT_EQ(IddFileType::OpenStudio, workspace.iddFileType().value());

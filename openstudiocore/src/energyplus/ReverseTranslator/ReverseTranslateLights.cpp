@@ -61,7 +61,7 @@ OptionalModelObject ReverseTranslator::translateLights( const WorkspaceObject & 
 
   // create the definition
   openstudio::model::LightsDefinition definition(m_model);
-  
+
   OptionalString s = workspaceObject.name();
   if(s){
     definition.setName(*s + " Definition");
@@ -170,7 +170,7 @@ OptionalModelObject ReverseTranslator::translateLights( const WorkspaceObject & 
   if(s){
     lights.setEndUseSubcategory(*s);
   }
-       
+
   return lights;
 }
 

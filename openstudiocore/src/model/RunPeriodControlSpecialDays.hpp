@@ -64,7 +64,7 @@ class MODEL_API RunPeriodControlSpecialDays : public ModelObject {
   RunPeriodControlSpecialDays(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek, const openstudio::MonthOfYear& monthOfYear, Model& model);
 
   virtual ~RunPeriodControlSpecialDays() {}
-  
+
   //@}
   /** @name Getters */
   //@{

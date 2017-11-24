@@ -140,7 +140,7 @@ class MODEL_API SurfacePropertyOtherSideCoefficients : public ResourceObject {
   bool setZoneAirTemperatureCoefficient(double zoneAirTemperatureCoefficient);
 
   void resetZoneAirTemperatureCoefficient();
-  
+
   bool setConstantTemperatureSchedule(Schedule& schedule);
 
   void resetConstantTemperatureSchedule();

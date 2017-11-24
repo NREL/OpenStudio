@@ -38,8 +38,8 @@
 #include <sstream>
 
 #include <ruby.h>
-// SWIGRubyRuntime.hxx includes ruby.h which includes ruby/win32.h, which has some brain damaged notions of 
-// what standard errno values should be. 
+// SWIGRubyRuntime.hxx includes ruby.h which includes ruby/win32.h, which has some brain damaged notions of
+// what standard errno values should be.
 
 #ifdef _MSC_VER
 #ifdef EWOULDBLOCK
@@ -754,8 +754,8 @@ class RubyInterpreter
       //delete[] m_argv;
     }
 
-    /// Register a type along with its vector versions so that it can be used 
-    /// from within the Ruby wrapper. These are necessary because there's no way to divine 
+    /// Register a type along with its vector versions so that it can be used
+    /// from within the Ruby wrapper. These are necessary because there's no way to divine
     /// the unmangled type name.
     template<typename Type>
       void registerType(const std::string &t_name)
@@ -791,7 +791,7 @@ class RubyInterpreter
         std::string loc(str);
 
         throw RubyException(err, loc);
-      } 
+      }
     }
 
     /// Execute a function by name with 0 parameters and no return value
@@ -806,7 +806,7 @@ class RubyInterpreter
     /// Execute a function by name with 1 parameter and no return value
     template<typename ReturnType, typename Param1>
       void exec(
-          const std::string &t_functionName, 
+          const std::string &t_functionName,
           Param1 t_param1)
       {
         std::vector<VALUE> params;
@@ -818,7 +818,7 @@ class RubyInterpreter
     /// Execute a function by name with 2 parameters and no return value
     template<typename ReturnType, typename Param1, typename Param2>
       ReturnType exec(
-          const std::string &t_functionName, 
+          const std::string &t_functionName,
           Param1 t_param1,
           Param2 t_param2)
       {
@@ -858,7 +858,7 @@ class RubyInterpreter
     /// Execute a function by name with 1 parameter and a return value
     template<typename ReturnType, typename Param1>
       ReturnType execWithReturn(
-          const std::string &t_functionName, 
+          const std::string &t_functionName,
           Param1 t_param1)
       {
         std::vector<VALUE> params;
@@ -871,7 +871,7 @@ class RubyInterpreter
     /// Execute a function by name with 2 parameters and a return value
     template<typename ReturnType, typename Param1, typename Param2>
       ReturnType execWithReturn(
-          const std::string &t_functionName, 
+          const std::string &t_functionName,
           Param1 t_param1,
           Param2 t_param2)
       {
@@ -917,7 +917,7 @@ class RubyInterpreter
     std::map<std::string, std::string> m_types;
 
     // Used for our rb_protect calls.
-    static VALUE evaluateSimpleImpl(VALUE arg) 
+    static VALUE evaluateSimpleImpl(VALUE arg)
     {
       return rb_eval_string(StringValuePtr(arg));
     }
@@ -970,7 +970,7 @@ class RubyInterpreter
 
       VALUE retval = rb_gv_get("$embedded_ruby_return");
       return retval;
-    } 
+    }
 
     template<typename Param>
       VALUE newPointerObj(Param t_param)

@@ -33,14 +33,14 @@
 #include "../utilities/core/Logger.hpp"
 #include <QObject>
 #include <QPointer>
-#include <QSharedPointer> 
+#include <QSharedPointer>
 
 class QWidget;
 
 namespace openstudio {
 
 class OSViewSwitcher;
-  
+
 class EditRubyMeasureView;
 class EditNullView;
 class InputController;

@@ -100,7 +100,7 @@ class ModelObjectTreeItem : public QObject, public QTreeWidgetItem, public Nano:
 
   protected:
 
-    // make all child items 
+    // make all child items
     void makeChildren();
 
     // get any non-model object children that this item should have
@@ -146,7 +146,7 @@ class SiteShadingTreeItem : public ModelObjectTreeItem
   Q_OBJECT
 
   public:
-    SiteShadingTreeItem(const openstudio::model::Model& model, 
+    SiteShadingTreeItem(const openstudio::model::Model& model,
                         QTreeWidgetItem* parent = nullptr );
     virtual ~SiteShadingTreeItem() {}
     static std::string itemName();
@@ -162,7 +162,7 @@ class ShadingSurfaceGroupTreeItem : public ModelObjectTreeItem
   Q_OBJECT
 
   public:
-    ShadingSurfaceGroupTreeItem(const openstudio::model::ShadingSurfaceGroup& shadingSurfaceGroup, 
+    ShadingSurfaceGroupTreeItem(const openstudio::model::ShadingSurfaceGroup& shadingSurfaceGroup,
                                 QTreeWidgetItem* parent = nullptr );
     virtual ~ShadingSurfaceGroupTreeItem() {}
   protected:
@@ -177,7 +177,7 @@ class BuildingTreeItem : public ModelObjectTreeItem
   Q_OBJECT
 
   public:
-    BuildingTreeItem(const openstudio::model::Building& building, 
+    BuildingTreeItem(const openstudio::model::Building& building,
                      const openstudio::IddObjectType& sortByType,
                      QTreeWidgetItem* parent = nullptr );
     virtual ~BuildingTreeItem() {}
@@ -197,7 +197,7 @@ class BuildingShadingTreeItem : public ModelObjectTreeItem
   Q_OBJECT
 
   public:
-    BuildingShadingTreeItem(const openstudio::model::Model& model, 
+    BuildingShadingTreeItem(const openstudio::model::Model& model,
                             QTreeWidgetItem* parent = nullptr );
     virtual ~BuildingShadingTreeItem() {}
     static std::string itemName();
@@ -213,7 +213,7 @@ class BuildingStoryTreeItem : public ModelObjectTreeItem
   Q_OBJECT
 
   public:
-    BuildingStoryTreeItem(const openstudio::model::BuildingStory& buildingStory, 
+    BuildingStoryTreeItem(const openstudio::model::BuildingStory& buildingStory,
                           QTreeWidgetItem* parent = nullptr );
     virtual ~BuildingStoryTreeItem() {}
   protected:
@@ -226,7 +226,7 @@ class NoBuildingStoryTreeItem : public ModelObjectTreeItem
   Q_OBJECT
 
   public:
-    NoBuildingStoryTreeItem(const openstudio::model::Model& model, 
+    NoBuildingStoryTreeItem(const openstudio::model::Model& model,
                             QTreeWidgetItem* parent = nullptr );
     virtual ~NoBuildingStoryTreeItem() {}
     static std::string itemName();
@@ -243,7 +243,7 @@ class ThermalZoneTreeItem : public ModelObjectTreeItem
   Q_OBJECT
 
   public:
-    ThermalZoneTreeItem(const openstudio::model::ThermalZone& thermalZone, 
+    ThermalZoneTreeItem(const openstudio::model::ThermalZone& thermalZone,
                         QTreeWidgetItem* parent = nullptr );
     virtual ~ThermalZoneTreeItem() {}
   protected:
@@ -256,7 +256,7 @@ class NoThermalZoneTreeItem : public ModelObjectTreeItem
   Q_OBJECT
 
   public:
-    NoThermalZoneTreeItem(const openstudio::model::Model& model, 
+    NoThermalZoneTreeItem(const openstudio::model::Model& model,
                           QTreeWidgetItem* parent = nullptr );
     virtual ~NoThermalZoneTreeItem() {}
     static std::string itemName();
@@ -273,7 +273,7 @@ class SpaceTypeTreeItem : public ModelObjectTreeItem
   Q_OBJECT
 
   public:
-    SpaceTypeTreeItem(const openstudio::model::SpaceType& spaceType, 
+    SpaceTypeTreeItem(const openstudio::model::SpaceType& spaceType,
                       QTreeWidgetItem* parent = nullptr );
     virtual ~SpaceTypeTreeItem() {}
   protected:
@@ -287,7 +287,7 @@ class NoSpaceTypeTreeItem : public ModelObjectTreeItem
   Q_OBJECT
 
   public:
-    NoSpaceTypeTreeItem(const openstudio::model::Model& model, 
+    NoSpaceTypeTreeItem(const openstudio::model::Model& model,
                         QTreeWidgetItem* parent = nullptr );
     virtual ~NoSpaceTypeTreeItem() {}
     static std::string itemName();
@@ -416,7 +416,7 @@ class InteriorPartitionSurfaceGroupTreeItem : public ModelObjectTreeItem
   Q_OBJECT
 
   public:
-    InteriorPartitionSurfaceGroupTreeItem(const openstudio::model::InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup, 
+    InteriorPartitionSurfaceGroupTreeItem(const openstudio::model::InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup,
                                           QTreeWidgetItem* parent = nullptr );
     virtual ~InteriorPartitionSurfaceGroupTreeItem() {}
   protected:
@@ -430,7 +430,7 @@ class DaylightingObjectsTreeItem : public ModelObjectTreeItem
   Q_OBJECT
 
   public:
-    DaylightingObjectsTreeItem(const openstudio::model::Space& space, 
+    DaylightingObjectsTreeItem(const openstudio::model::Space& space,
                                QTreeWidgetItem* parent = nullptr );
     virtual ~DaylightingObjectsTreeItem() {}
     static std::string itemName();

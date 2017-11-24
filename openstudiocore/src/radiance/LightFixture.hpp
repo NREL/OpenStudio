@@ -38,7 +38,7 @@ namespace openstudio{
 namespace radiance{
 
   /** LightFixture represents the physical location, orientation, and illuminance distribution of a light fixture.
-  */ 
+  */
   class RADIANCE_API LightFixture{
     public:
       openstudio::Vector location;

@@ -70,8 +70,8 @@ namespace openstudio{
                                          const boost::optional<std::string>& description,
                                          const std::string& type, const boost::optional<std::string>& units,
                                          bool modelDependent)
-                                         : m_name(name), m_displayName(displayName), 
-                                         m_shortName(shortName), m_description(description), 
+                                         : m_name(name), m_displayName(displayName),
+                                         m_shortName(shortName), m_description(description),
                                          m_type(type), m_units(units), m_modelDependent(modelDependent)
   {
   }

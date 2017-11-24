@@ -48,7 +48,7 @@ namespace detail {
 
 } // detail
 
-/** ZoneHVACIdealLoadsAirSystem is a ZoneHVACComponent that wraps the OpenStudio IDD 
+/** ZoneHVACIdealLoadsAirSystem is a ZoneHVACComponent that wraps the OpenStudio IDD
  *  object 'OS:ZoneHVAC:IdealLoadsAirSystem'. */
 class MODEL_API ZoneHVACIdealLoadsAirSystem : public ZoneHVACComponent {
  public:

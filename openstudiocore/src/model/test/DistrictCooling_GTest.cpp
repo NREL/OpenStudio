@@ -48,10 +48,10 @@ TEST_F(ModelFixture,DistrictCooling_DistrictCooling)
 
   ASSERT_EXIT (
   {
-    Model m; 
+    Model m;
     DistrictCooling testObject(m);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -117,7 +117,7 @@ TEST_F(ModelFixture,DistrictCooling_Clone){
   Model m;
   //make an object to clone, and edit some property to make sure the clone worked
   DistrictCooling testObject(m);
-  
+
   testObject.setNominalCapacity(1234);
 
   //clone into the same model

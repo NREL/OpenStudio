@@ -111,8 +111,8 @@ void BuildingComponentDialog::createLayout(bool isBclDlg)
   QLabel * categoryLabel = new QLabel("Categories");
   categoryLabel->setObjectName("H1");
   leftPanelayout->addWidget(categoryLabel);
-  
-  QDomDocument doc; 
+
+  QDomDocument doc;
 
   QString docString;
   QFile file;
@@ -305,7 +305,7 @@ void BuildingComponentDialog::on_searchButton()
   if(!index.isValid()) return;
 
   QVariant variant = m_tidTreeView->model()->data(index.sibling(index.row(),1));
- 
+
   requestComponents(m_filterType, variant.toInt(), m_centralWidget->pageIdx(), m_lineEdit->text());
 }
 

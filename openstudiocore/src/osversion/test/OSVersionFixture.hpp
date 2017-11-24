@@ -42,7 +42,7 @@ namespace openstudio {
 
 class OSVersionFixture : public ::testing::Test {
  protected:
- 
+
   /// initialize for each test
   virtual void SetUp() override;
 

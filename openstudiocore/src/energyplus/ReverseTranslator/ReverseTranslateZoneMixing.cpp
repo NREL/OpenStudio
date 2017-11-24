@@ -62,13 +62,13 @@ OptionalModelObject ReverseTranslator::translateZoneMixing( const WorkspaceObjec
       zone = modelObject->optionalCast<ThermalZone>();
     }
   }
-  
+
   if (!zone){
     return boost::none;
   }
 
   openstudio::model::ZoneMixing mixing(*zone);
-  
+
   OptionalString s = workspaceObject.name();
   if(s){
     mixing.setName(*s);

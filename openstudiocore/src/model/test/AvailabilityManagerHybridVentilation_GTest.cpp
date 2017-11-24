@@ -38,12 +38,12 @@ TEST_F(ModelFixture,AvailabilityManagerHybridVentilation)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
-     AvailabilityManagerHybridVentilation avm(m); 
+  ASSERT_EXIT (
+  {
+     Model m;
+     AvailabilityManagerHybridVentilation avm(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }

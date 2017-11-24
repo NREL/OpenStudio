@@ -45,8 +45,8 @@ namespace detail {
 
 } // detail
 
-/** DaylightRedirectionDevice is a ShadingMaterial that wraps the OpenStudio IDD object 'OS:WindowMaterial:DaylightRedirectionDevice'. 
- ** This object is not in EnergyPlus, this represents a film or louver which redirects daylighting. 
+/** DaylightRedirectionDevice is a ShadingMaterial that wraps the OpenStudio IDD object 'OS:WindowMaterial:DaylightRedirectionDevice'.
+ ** This object is not in EnergyPlus, this represents a film or louver which redirects daylighting.
  **/
 class MODEL_API DaylightRedirectionDevice : public ShadingMaterial {
  public:
@@ -67,7 +67,7 @@ class MODEL_API DaylightRedirectionDevice : public ShadingMaterial {
   //@{
 
   std::string daylightRedirectionDeviceType() const;
-  
+
   bool isDaylightRedirectionDeviceTypeDefaulted() const;
 
   //@}
@@ -77,15 +77,15 @@ class MODEL_API DaylightRedirectionDevice : public ShadingMaterial {
   bool setDaylightRedirectionDeviceType(const std::string& daylightRedirectionDeviceType);
 
   void resetDaylightRedirectionDeviceType();
-  
+
   //@}
   /** @name Other */
   //@{
 
   //@}
-  
+
  protected:
- 
+
   /// @cond
   typedef detail::DaylightRedirectionDevice_Impl ImplType;
 

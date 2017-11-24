@@ -51,22 +51,22 @@ class OSQuantityVector;
 //                but it may need to be re-added when we start converting more temperature data.
 struct TemperatureConversionRule
 {
-  /** Enum to allow user to communicate temperature conversion preferences. 
-   * 
-   *  In STND mode, convertToCelsiusUnits and convertToFahrenheit units assume that temperatures 
-   *  like 273 K and 480 R are absolute temperatures in need of offset, but that quantities with 
-   *  other exponents on K or R, or other base units mixed in, are relative temperature quantities 
-   *  whose values can be transferred directly. 
+  /** Enum to allow user to communicate temperature conversion preferences.
+   *
+   *  In STND mode, convertToCelsiusUnits and convertToFahrenheit units assume that temperatures
+   *  like 273 K and 480 R are absolute temperatures in need of offset, but that quantities with
+   *  other exponents on K or R, or other base units mixed in, are relative temperature quantities
+   *  whose values can be transferred directly.
    *
    *  In ABS mode, convertToCelsiusUnits and convertToFahrenheit units assume that all quantities
    *  were derived from absolute temperatures, and the offset should be applied accordingly, as in
-   *  280 K^3 = (pow(280,1.0/3.0) - 273.15)^3 C^3. 
+   *  280 K^3 = (pow(280,1.0/3.0) - 273.15)^3 C^3.
    *
    *  In REL mode, convertToCelsiusUnits and convertToFahrenheit units assume that all
-   *   temperatures are relative, such that values can be transferred directly, i.e., 2 K = 2 C. 
+   *   temperatures are relative, such that values can be transferred directly, i.e., 2 K = 2 C.
     *
-   *  When converting Celsius and Fahrenheit to other units, either ABS or REL mode is used, 
-   *  depending on the value of q.isAbsolute(). 
+   *  When converting Celsius and Fahrenheit to other units, either ABS or REL mode is used,
+   *  depending on the value of q.isAbsolute().
    */
   enum domain { STND, ABS, REL };
 };
@@ -123,14 +123,14 @@ UTILITIES_API boost::optional<double> convert(double original, const std::string
 /** Non-member function to simplify interface for users. \relates QuantityConverterSingleton */
 UTILITIES_API boost::optional<Quantity> convert(const Quantity& original, UnitSystem sys);
 
-/** Non-member function that uses just two calls to QuantityConverter to convert an entire 
+/** Non-member function that uses just two calls to QuantityConverter to convert an entire
  *  OSQuantityVector. \relates QuantityConverterSingleton \relates OSQuantityVector */
 UTILITIES_API OSQuantityVector convert(const OSQuantityVector& original, UnitSystem sys);
 
 /** Non-member function to simplify interface for users. \relates QuantityConverterSingleton */
 UTILITIES_API boost::optional<Quantity> convert(const Quantity& original, const Unit& targetUnits);
 
-/** Non-member function that uses just two calls to QuantityConverter to convert an entire 
+/** Non-member function that uses just two calls to QuantityConverter to convert an entire
  *  OSQuantityVector. \relates QuantityConverterSingleton \relates OSQuantityVector */
 UTILITIES_API OSQuantityVector convert(const OSQuantityVector& original, const Unit& targetUnits);
 

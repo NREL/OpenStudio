@@ -124,7 +124,7 @@ using openstudio::model::OptionalSurface;
 typedef openstudio::filesystem::basic_ofstream<char> OFSTREAM;
 
 struct RadianceResourceInitializer{
-  RadianceResourceInitializer() 
+  RadianceResourceInitializer()
   {
     Q_INIT_RESOURCE(radiance);
   }
@@ -1288,7 +1288,7 @@ namespace radiance {
               }
             }
 
-						// get optional switchable glazing material 
+						// get optional switchable glazing material
 						boost::optional<double> visibleTransmittanceTinted = 0.0;
 						double tnTinted = 0.0;
 						if (shadingControl){
@@ -1595,7 +1595,7 @@ namespace radiance {
 							if (shadingControl){
 								if (shadingControl->construction()){
 
-									// a construction means it's switchable glazing, so no shade needed,  
+									// a construction means it's switchable glazing, so no shade needed,
 									// but make special materials files for window group calcs.
 									m_radMaterialsSwitchableBase.insert("void plastic " + windowGroup_name + "\n0\n0\n5\n0 0 0 0 0\n");
 									m_radMaterialsWG0.insert("void plastic " + windowGroup_name + "\n0\n0\n5\n0 0 0 0 0\n");
@@ -1623,7 +1623,7 @@ namespace radiance {
 									// user is warned as files are written RPG 2015.12.03
 									std::string tempSkyDivs = "kf";
 									
-									m_radWindowGroupShades[windowGroup_name] += "#@rfluxmtx h=" + tempSkyDivs +  " u=" + winUpVector + " o=output/dc/" + windowGroup_name + ".vmx\n"; 
+									m_radWindowGroupShades[windowGroup_name] += "#@rfluxmtx h=" + tempSkyDivs +  " u=" + winUpVector + " o=output/dc/" + windowGroup_name + ".vmx\n";
 									m_radWindowGroupShades[windowGroup_name] += "\n# shade for SubSurface: " + subSurface_name + "\n";
 
 									// write the polygon
@@ -1961,7 +1961,7 @@ namespace radiance {
         m_radSensorViews[space_name] = "";
         m_radSensorViews[space_name] += \
         "rvu -vth -vp " + \
-        formatString(sensor_point.x(), 3) + " " + 
+        formatString(sensor_point.x(), 3) + " " +
         formatString(sensor_point.y(), 3) + " " + \
         formatString(sensor_point.z(), 3) + " -vd " + \
         formatString(sensor_aimVector.x(), 3) + " " + \
@@ -1990,7 +1990,7 @@ namespace radiance {
         m_radGlareSensors[space_name] = "";
         m_radGlareSensorViewsVTV[space_name] = "";
         m_radGlareSensorViewsVTA[space_name] = "";
-        
+
 				std::string sensor_name;
 				if (sensor.name()){
 					sensor_name = cleanName(sensor.name().get());
@@ -2001,7 +2001,7 @@ namespace radiance {
         //std::string sensor_name = sensor.name();
         openstudio::Vector3dVector viewVectors = openstudio::radiance::ForwardTranslator::getViewVectors(sensor);
         // reverse the order so primary view is listed last in the file
-        std::reverse(std::begin(viewVectors), std::end(viewVectors));        
+        std::reverse(std::begin(viewVectors), std::end(viewVectors));
         for (const Vector3d& viewVector : viewVectors){
 
           // glare sensor points
@@ -2012,11 +2012,11 @@ namespace radiance {
           formatString(viewVector.x(), 3) + " " + \
           formatString(viewVector.y(), 3) + " " + \
           formatString(viewVector.z(), 3) + "\n";
-                    
+
           // glare sensor views (perspective)
         	m_radGlareSensorViewsVTV[space_name] += \
         	"rvu -vtv -vp " + \
-        	formatString(sensor_point.x(), 3) + " " + 
+        	formatString(sensor_point.x(), 3) + " " +
         	formatString(sensor_point.y(), 3) + " " + \
         	formatString(sensor_point.z(), 3) + " -vd " + \
         	formatString(viewVector.x(), 3) + " " + \
@@ -2027,7 +2027,7 @@ namespace radiance {
           // glare sensor views (fisheye)
         	m_radGlareSensorViewsVTA[space_name] += \
         	"rvu -vth -vp " + \
-        	formatString(sensor_point.x(), 3) + " " + 
+        	formatString(sensor_point.x(), 3) + " " +
         	formatString(sensor_point.y(), 3) + " " + \
         	formatString(sensor_point.z(), 3) + " -vd " + \
         	formatString(viewVector.x(), 3) + " " + \
@@ -2061,7 +2061,7 @@ namespace radiance {
 
         LOG(Debug, "Wrote " << space_name << "_" << sensor_name << "_gs.vfv");
 
-        // write glare sensor views (fisheye)      
+        // write glare sensor views (fisheye)
         filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + "_" + sensor_name + "_gs.vfh");
         OFSTREAM file3(filename);
         if (file3.is_open()){
@@ -2073,7 +2073,7 @@ namespace radiance {
 
         LOG(Debug, "Wrote " << space_name << "_" << sensor_name << "_gs.vfh");
 
-        
+
       } // end glare sensor
 
 
@@ -2122,7 +2122,7 @@ namespace radiance {
         //write windows (and glazed doors)
         if (m_radWindowGroups.find(windowGroup_name) != m_radWindowGroups.end())
         {
-          
+
           // get the Radiance parameters... so we have them.
           openstudio::model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
           if(windowGroup_name != "WG0"){
@@ -2134,7 +2134,7 @@ namespace radiance {
 							LOG(Warn, "writing out window group '" + windowGroup_name + "', but sampling basis was reset to Klems (145).");
 						}
 					}
-          
+
           openstudio::path glazefilename = t_radDir / openstudio::toPath("scene/glazing") / openstudio::toPath(windowGroup_name + ".rad");
           OFSTREAM glazefile(glazefilename);
           if (glazefile.is_open()){
@@ -2406,7 +2406,7 @@ namespace radiance {
 
   openstudio::model::Model modelToRadPreProcess(const openstudio::model::Model & model)
   {
-    model::Model outmodel = model.clone().cast<model::Model>(); 
+    model::Model outmodel = model.clone().cast<model::Model>();
     outmodel.purgeUnusedResourceObjects();
     outmodel.getUniqueModelObject<openstudio::model::Building>(); // implicitly create building object
     outmodel.getUniqueModelObject<openstudio::model::Timestep>(); // implicitly create timestep object
@@ -2420,7 +2420,7 @@ namespace radiance {
       space.hardApplyConstructions();
       space.hardApplySpaceType(true);
       space.hardApplySpaceLoadSchedules();
-      
+
       // make all surfaces with surface boundary condition adiabatic
       std::vector<openstudio::model::Surface> surfaces = space.surfaces();
       for (auto & surf_it : surfaces){
@@ -2470,14 +2470,14 @@ namespace radiance {
         LOG_FREE(Warn, "radiance::modelToRadPreProcess", "Space discovered in un-named thermalZone, not translating");
       }
       }
- 
-    std::vector<openstudio::model::ShadingSurfaceGroup> shadingsurfacegroups = outmodel.getConcreteModelObjects<openstudio::model::ShadingSurfaceGroup>(); 
+
+    std::vector<openstudio::model::ShadingSurfaceGroup> shadingsurfacegroups = outmodel.getConcreteModelObjects<openstudio::model::ShadingSurfaceGroup>();
     for (auto & shadingSurfaceGroup : shadingsurfacegroups)
     {
       shadingSurfaceGroup.remove();
     }
-  
-    std::vector<openstudio::model::SpaceItem> spaceitems = outmodel.getModelObjects<openstudio::model::SpaceItem>(); 
+
+    std::vector<openstudio::model::SpaceItem> spaceitems = outmodel.getModelObjects<openstudio::model::SpaceItem>();
     for (auto & spaceItem : spaceitems)
     {
       if (spaceItem.optionalCast<openstudio::model::People>()){
@@ -2527,7 +2527,7 @@ namespace radiance {
     simulation_control.setRunSimulationforWeatherFileRunPeriods(true);
     simulation_control.setSolarDistribution("MinimalShadowing");
 
-    // purge unused 
+    // purge unused
     outmodel.purgeUnusedResourceObjects();
 
     return outmodel;

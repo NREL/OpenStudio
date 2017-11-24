@@ -174,7 +174,7 @@ bool FileReference::makePathAbsolute(const openstudio::path& searchDirectory) {
 
 bool FileReference::makePathRelative(const openstudio::path& basePath) {
   openstudio::path newPath;
-  if (basePath.empty()) { 
+  if (basePath.empty()) {
     newPath = path().filename();
   }
   else {

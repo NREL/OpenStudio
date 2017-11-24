@@ -44,24 +44,24 @@ namespace detail {
 
   /** DesignSpecificationZoneAirDistribution_Impl is a ModelObject_Impl that is the implementation class for DesignSpecificationZoneAirDistribution.*/
   class MODEL_API DesignSpecificationZoneAirDistribution_Impl : public ModelObject_Impl {
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{

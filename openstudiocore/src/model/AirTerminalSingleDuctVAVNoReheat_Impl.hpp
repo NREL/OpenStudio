@@ -41,20 +41,20 @@ namespace detail {
 
   /** AirTerminalSingleDuctVAVNoReheat_Impl is a StraightComponent_Impl that is the implementation class for AirTerminalSingleDuctVAVNoReheat.*/
   class MODEL_API AirTerminalSingleDuctVAVNoReheat_Impl : public StraightComponent_Impl {
-    
 
-    
-    
 
-    
-    
 
-    
 
-    
 
-    
-    
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{

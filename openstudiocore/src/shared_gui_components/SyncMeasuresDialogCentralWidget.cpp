@@ -133,7 +133,7 @@ void SyncMeasuresDialogCentralWidget::setMeasures(const std::vector<BCLMeasure> 
   m_collapsibleComponentList->setNumPages(numResultPages);
 
   m_collapsibleComponentList->firstPage();
-  
+
   m_pageIdx = 0;
 
   displayMeasures(m_pageIdx);
@@ -163,7 +163,7 @@ void SyncMeasuresDialogCentralWidget::displayMeasures(int pageIdx)
        ++i )
   {
     auto component = new Component(m_measures.at(i));
-    
+
     m_componentList->addComponent(component);
   }
 
@@ -217,7 +217,7 @@ void SyncMeasuresDialogCentralWidget::lowerPushButtonClicked()
     bool showMessage = true;
     m_measureManager->updateMeasures(newMeasures,showMessage);
 
-    // clear the internal state of measure manager 
+    // clear the internal state of measure manager
     // DLM: this could be more selective in the future
     m_measureManager->reset();
   }

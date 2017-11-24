@@ -137,7 +137,7 @@ namespace detail {
 
     // Design Storage Control Charge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
     boost::optional<double> designStorageControlChargePower() const;
-    
+
     // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
     // TODO: do I want to default that to daytime?
     boost::optional<Schedule> storageChargePowerFractionSchedule() const;

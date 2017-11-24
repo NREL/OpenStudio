@@ -32,13 +32,13 @@ require 'minitest/autorun'
 
 class ExteriorLights_Test < MiniTest::Unit::TestCase
 
-  def test_ExteriorLights  
+  def test_ExteriorLights
     model = OpenStudio::Model::Model.new
     exteriorLightsDefinition = OpenStudio::Model::ExteriorLightsDefinition.new(model)
     exteriorLightsDefinition.setDesignLevel(2303.0.to_f)
     # both constructors should work
     exteriorLights = OpenStudio::Model::ExteriorLights.new(exteriorLightsDefinition)
-    exteriorLights = OpenStudio::Model::ExteriorLights.new(exteriorLightsDefinition,true)  
+    exteriorLights = OpenStudio::Model::ExteriorLights.new(exteriorLightsDefinition,true)
   end
-  
+
 end

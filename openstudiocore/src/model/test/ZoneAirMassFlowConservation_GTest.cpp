@@ -37,7 +37,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, ZoneAirMassFlowConservation)
-{ 
+{
   Model model;
 
   EXPECT_FALSE(model.getOptionalUniqueModelObject<ZoneAirMassFlowConservation>());

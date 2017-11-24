@@ -39,11 +39,11 @@ namespace detail {
 
   /** LightingSimulationControl_Impl is a ModelObject_Impl that is the implementation class for LightingSimulationControl.*/
   class MODEL_API LightingSimulationControl_Impl : public ModelObject_Impl {
-    
-    
-    
-    
-    
+
+
+
+
+
    public:
 
     /** @name Constructors and Destructors */

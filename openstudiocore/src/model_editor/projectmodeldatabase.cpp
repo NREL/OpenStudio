@@ -396,7 +396,7 @@ void Project::update() {
     Updates updates;
     addUpdates(updates);
     if (id != oldKey) {
-        if (!typeIsCorrect()) 
+        if (!typeIsCorrect())
             upcastCopy()->addIDUpdates(updates);
     }
     litesql::Persistent::update(updates);
@@ -582,7 +582,7 @@ void Analysis::update() {
     Updates updates;
     addUpdates(updates);
     if (id != oldKey) {
-        if (!typeIsCorrect()) 
+        if (!typeIsCorrect())
             upcastCopy()->addIDUpdates(updates);
     }
     litesql::Persistent::update(updates);
@@ -777,7 +777,7 @@ void Model::update() {
     Updates updates;
     addUpdates(updates);
     if (id != oldKey) {
-        if (!typeIsCorrect()) 
+        if (!typeIsCorrect())
             upcastCopy()->addIDUpdates(updates);
     }
     litesql::Persistent::update(updates);
@@ -957,7 +957,7 @@ void Result::update() {
     Updates updates;
     addUpdates(updates);
     if (id != oldKey) {
-        if (!typeIsCorrect()) 
+        if (!typeIsCorrect())
             upcastCopy()->addIDUpdates(updates);
     }
     litesql::Persistent::update(updates);
@@ -1132,7 +1132,7 @@ void ResultQuery::update() {
     Updates updates;
     addUpdates(updates);
     if (id != oldKey) {
-        if (!typeIsCorrect()) 
+        if (!typeIsCorrect())
             upcastCopy()->addIDUpdates(updates);
     }
     litesql::Persistent::update(updates);
@@ -1285,7 +1285,7 @@ void RequestedResult::update() {
     Updates updates;
     addUpdates(updates);
     if (id != oldKey) {
-        if (!typeIsCorrect()) 
+        if (!typeIsCorrect())
             upcastCopy()->addIDUpdates(updates);
     }
     litesql::Persistent::update(updates);

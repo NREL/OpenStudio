@@ -78,7 +78,7 @@ class OSQuantityEdit2: public QWidget, public Nano::Observer {
   Q_OBJECT
  public:
 
-  OSQuantityEdit2(const std::string& modelUnits, const std::string& siUnits, 
+  OSQuantityEdit2(const std::string& modelUnits, const std::string& siUnits,
                   const std::string& ipUnits, bool isIP, QWidget * parent = nullptr);
 
   virtual ~OSQuantityEdit2();
@@ -199,7 +199,7 @@ class OSQuantityEdit2: public QWidget, public Nano::Observer {
 /** \deprecated Use OSQuantityEdit2. */
 // class OSQuantityEdit: public QWidget, public Nano::Observer {
 //   Q_OBJECT
-  
+
 //  public:
 
 //   OSQuantityEdit(bool isIP, QWidget * parent = nullptr);

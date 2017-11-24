@@ -115,7 +115,7 @@ OptionalModelObject ReverseTranslator::translateEvaporativeFluidCoolerSingleSpee
     {
       evapCooler->setStandardDesignCapacity(value.get());
     }
-  
+
     // UfactorTimesAreaValueatDesignAirFlowRate
     value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateUfactorTimesAreaValue);
     s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateUfactorTimesAreaValue);

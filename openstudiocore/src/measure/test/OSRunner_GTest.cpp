@@ -74,7 +74,7 @@ TEST_F(MeasureFixture, OSRunner_StdOut) {
   workflow.setWorkflowSteps(steps);
 
   OSRunner runner(workflow);
-  
+
   std::cout << "Hi Output" << std::endl;
   std::cerr << "Hi Error" << std::endl;
 

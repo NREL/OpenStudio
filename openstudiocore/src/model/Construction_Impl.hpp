@@ -27,7 +27,7 @@
  **********************************************************************************************************************/
 
 #ifndef MODEL_CONSTRUCTION_IMPL_HPP
-#define MODEL_CONSTRUCTION_IMPL_HPP 
+#define MODEL_CONSTRUCTION_IMPL_HPP
 
 #include "LayeredConstruction_Impl.hpp"
 
@@ -36,7 +36,7 @@ namespace model {
 
 namespace detail {
 
-  class MODEL_API Construction_Impl : public LayeredConstruction_Impl 
+  class MODEL_API Construction_Impl : public LayeredConstruction_Impl
   {
    public:
 
@@ -44,8 +44,8 @@ namespace detail {
     Construction_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    Construction_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                      Model_Impl* model, 
+    Construction_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                      Model_Impl* model,
                       bool keepHandle);
 
     Construction_Impl(const Construction_Impl& other,Model_Impl* model,bool keepHandle);
@@ -62,7 +62,7 @@ namespace detail {
 
     virtual int renderingColorIndex() const override;
 
-    /** Searches the model for a layered construction with layers which are the reverse of this one.  Returns that construction 
+    /** Searches the model for a layered construction with layers which are the reverse of this one.  Returns that construction
      *  if found, creates one if not. */
     Construction reverseConstruction() const;
 

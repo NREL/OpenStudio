@@ -101,7 +101,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 
   // Field A3 Cooled Beam Type
   idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::CooledBeamType, modelObject.cooledBeamType());
-  
+
   // Field A4 Supply Air Inlet Node Name
   temp = modelObject.inletModelObject();
   if(temp)

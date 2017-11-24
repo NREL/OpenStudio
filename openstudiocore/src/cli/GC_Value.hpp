@@ -71,11 +71,11 @@ namespace swig {
     GC_VALUE();
 
     GC_VALUE(const GC_VALUE& item);
-    
+
     GC_VALUE(VALUE obj);
-    
+
     ~GC_VALUE();
-    
+
     GC_VALUE & operator=(const GC_VALUE& item);
 
     operator VALUE() const;

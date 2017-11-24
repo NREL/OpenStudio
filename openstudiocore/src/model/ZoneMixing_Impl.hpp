@@ -76,7 +76,7 @@ namespace detail {
     //@{
 
     ThermalZone zone() const;
-    
+
     Schedule schedule() const;
 
     std::string designFlowRateCalculationMethod() const;

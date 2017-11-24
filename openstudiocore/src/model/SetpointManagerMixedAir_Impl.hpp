@@ -38,14 +38,14 @@ namespace model {
 namespace detail {
 
   class MODEL_API SetpointManagerMixedAir_Impl : public SetpointManager_Impl {
-    
-    
+
+
    public:
 
     SetpointManagerMixedAir_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerMixedAir_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                                 Model_Impl* model, 
+    SetpointManagerMixedAir_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                 Model_Impl* model,
                                  bool keepHandle);
 
     SetpointManagerMixedAir_Impl(const SetpointManagerMixedAir_Impl& other, Model_Impl* model,bool keepHandles);

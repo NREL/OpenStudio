@@ -1301,7 +1301,7 @@ std::vector<std::vector<int> > IndexModelImpl::zoneExteriorFlowPaths()
 std::vector<TimeSeries> IndexModelImpl::zoneInfiltration(SimFile *sim)
 {
   // This should probably include a lot more checks of things and is written in
-  // somewhat strange way to avoid taking too much advantage of the specifics 
+  // somewhat strange way to avoid taking too much advantage of the specifics
   // of the text form outputs.
   std::vector<TimeSeries> results;
   std::vector<std::vector<int> > paths = zoneExteriorFlowPaths();
@@ -1328,7 +1328,7 @@ std::vector<TimeSeries> IndexModelImpl::zoneInfiltration(SimFile *sim)
         }
         else
         {
-          // Perhaps a warning? This shouldn't really happen unless someone has excluded a path from the 
+          // Perhaps a warning? This shouldn't really happen unless someone has excluded a path from the
           // results file for some reason - which is unlikely to be accidental. So there must be a good reason
           // for getting here, and for now we won't issue a warning.
         }
@@ -1361,7 +1361,7 @@ std::vector<TimeSeries> IndexModelImpl::zoneInfiltration(SimFile *sim)
 std::vector<TimeSeries> IndexModelImpl::pathInfiltration(std::vector<int> pathNrs, SimFile *sim)
 {
   // This should probably include a lot more checks of things and is written in
-  // somewhat strange way to avoid taking too much advantage of the specifics 
+  // somewhat strange way to avoid taking too much advantage of the specifics
   // of the text form outputs.
   std::vector<TimeSeries> results;
   std::vector<std::vector<int> > paths = zoneExteriorFlowPaths();
@@ -1399,7 +1399,7 @@ std::vector<TimeSeries> IndexModelImpl::pathInfiltration(std::vector<int> pathNr
         }
         else
         {
-          // Perhaps a warning? This shouldn't really happen unless someone has excluded a path from the 
+          // Perhaps a warning? This shouldn't really happen unless someone has excluded a path from the
           // results file for some reason - which is unlikely to be accidental. So there must be a good reason
           // for getting here, and for now we won't issue a warning.
         }
@@ -1421,7 +1421,7 @@ std::vector<TimeSeries> IndexModelImpl::pathInfiltration(std::vector<int> pathNr
         }
         else
         {
-          // Perhaps a warning? This shouldn't really happen unless someone has excluded a path from the 
+          // Perhaps a warning? This shouldn't really happen unless someone has excluded a path from the
           // results file for some reason - which is unlikely to be accidental. So there must be a good reason
           // for getting here, and for now we won't issue a warning.
         }

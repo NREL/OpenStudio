@@ -78,11 +78,11 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
   }
   else if( (value = modelObject.referenceCapacity()) )
   {
-    idfObject.setDouble(Chiller_Electric_EIRFields::ReferenceCapacity,value.get()); 
+    idfObject.setDouble(Chiller_Electric_EIRFields::ReferenceCapacity,value.get());
   }
 
   // ReferenceCOP
-  
+
   if( (value = modelObject.referenceCOP()) )
   {
     idfObject.setDouble(Chiller_Electric_EIRFields::ReferenceCOP,value.get());
@@ -146,7 +146,7 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
   }
 
   // MinimumUnloadingRatio
-  
+
   if( (value = modelObject.minimumUnloadingRatio()) )
   {
     idfObject.setDouble(Chiller_Electric_EIRFields::MinimumUnloadingRatio,value.get());

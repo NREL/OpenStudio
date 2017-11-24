@@ -96,7 +96,7 @@ class MODEL_API ZoneAirMassFlowConservation : public ModelObject {
   void resetSourceZoneInfiltrationTreatment();
 
   bool setInfiltrationBalancingMethod(const std::string& infiltrationBalancingMethod);
-  
+
   void resetInfiltrationBalancingMethod();
 
   bool setInfiltrationBalancingZones(const std::string& infiltrationBalancingZones);

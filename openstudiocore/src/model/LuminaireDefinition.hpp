@@ -41,7 +41,7 @@ namespace detail {
 
 } // detail
 
-/** LuminaireDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object 
+/** LuminaireDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object
  *  'OS_Luminaire_Definition'. \sa Luminaire */
 class MODEL_API LuminaireDefinition : public SpaceLoadDefinition {
  public:

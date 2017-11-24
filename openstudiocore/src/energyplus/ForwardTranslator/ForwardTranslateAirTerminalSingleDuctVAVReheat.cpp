@@ -190,7 +190,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVR
 
   // MaximumHotWaterOrSteamFlowRate
   value = modelObject.maximumHotWaterOrSteamFlowRate();
-  
+
   if( value )
   {
     idfObject.setDouble(AirTerminal_SingleDuct_VAV_ReheatFields::MaximumHotWaterorSteamFlowRate,value.get());
@@ -214,7 +214,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVR
 
   // MaximumFlowPerZoneFloorAreaDuringReheat
   value = modelObject.maximumFlowPerZoneFloorAreaDuringReheat();
-  
+
   if( value )
   {
     idfObject.setDouble(AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowperZoneFloorAreaDuringReheat,value.get());
@@ -259,11 +259,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVR
           if( ! spaces.empty() ) {
             if( auto designSpecificationOutdoorAir = spaces.front().designSpecificationOutdoorAir() ) {
               idfObject.setString(AirTerminal_SingleDuct_VAV_ReheatFields::DesignSpecificationOutdoorAirObjectName,
-                designSpecificationOutdoorAir->name().get()); 
+                designSpecificationOutdoorAir->name().get());
             }
           }
         }
-      }  
+      }
     }
   }
 

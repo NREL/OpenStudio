@@ -55,7 +55,7 @@ using namespace openstudio;
 TEST_F(ModelEditorFixture, ModalDialogs_EmptyModel_Cancel)
 {
   Model model;
-  
+
   std::vector<IddObjectType> typesToDisplay;
   typesToDisplay.push_back(Space::iddObjectType());
 
@@ -77,7 +77,7 @@ TEST_F(ModelEditorFixture, ModalDialogs_EmptyModel_Cancel)
 TEST_F(ModelEditorFixture, ModalDialogs_EmptyModel_Ok)
 {
   Model model;
-  
+
   std::vector<IddObjectType> typesToDisplay;
   typesToDisplay.push_back(Space::iddObjectType());
 
@@ -101,7 +101,7 @@ TEST_F(ModelEditorFixture, ModalDialogs_Cancel)
   Model model;
   Space space1(model);
   Space space2(model);
-  
+
   std::vector<IddObjectType> typesToDisplay;
   typesToDisplay.push_back(Space::iddObjectType());
 
@@ -114,7 +114,7 @@ TEST_F(ModelEditorFixture, ModalDialogs_Cancel)
   std::shared_ptr<TestButton> button(new TestButton);
 
   QObject::connect(button.get(), &TestButton::clicked, modelObjectSelectorDialog.get(), &ModelObjectSelectorDialog::onPushButtonCancel);
-  
+
   button->doClick();
 
   EXPECT_FALSE(watcher.selectedModelObject());

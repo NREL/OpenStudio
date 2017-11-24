@@ -42,18 +42,18 @@ class Schedule;
 namespace detail {
 
   class MODEL_API OutputVariable_Impl : public ModelObject_Impl {
-    
 
-    
-    
 
-    
 
-    
-    
-    
 
-    
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -62,8 +62,8 @@ namespace detail {
     OutputVariable_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    OutputVariable_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                        Model_Impl* model, 
+    OutputVariable_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                        Model_Impl* model,
                         bool keepHandle);
 
     // copy constructor

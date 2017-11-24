@@ -130,11 +130,11 @@ TEST_F(ModelFixture,RadianceParameters_AmbientDivisionsVMX) {
   // TODO: Check constructor.
   RadianceParameters radianceParameters = model.getUniqueModelObject<RadianceParameters>();
 
-  int value = radianceParameters.ambientDivisionsVMX(); 
+  int value = radianceParameters.ambientDivisionsVMX();
   EXPECT_EQ(4050, value);
 
   EXPECT_TRUE(radianceParameters.setAmbientDivisionsVMX(2));
-  value = radianceParameters.ambientDivisionsVMX(); 
+  value = radianceParameters.ambientDivisionsVMX();
   EXPECT_EQ(2, value);
 }
 

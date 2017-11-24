@@ -49,7 +49,7 @@ namespace openstudio {
 
   class EndUses;
 
-namespace isomodel { 
+namespace isomodel {
 
   ISOMODEL_API Vector mult(const double* v1, const double s1, int size);
   ISOMODEL_API Vector mult(const Vector& v1, const double s1);
@@ -74,7 +74,7 @@ namespace isomodel {
   ISOMODEL_API Vector abs(const Vector& v1);
   ISOMODEL_API Vector pow(const Vector& v1, const double xp);
 
-  struct ISOMODEL_API ISOResults{    
+  struct ISOMODEL_API ISOResults{
     std::vector<EndUses> monthlyResults;
     double totalEnergyUse() const;
   };
@@ -97,7 +97,7 @@ namespace isomodel {
     ISOResults simulate() const;
     REGISTER_LOGGER("openstudio.isomodel.SimModel");
 
-  private:      
+  private:
     std::shared_ptr<Population> pop;
     std::shared_ptr<Location> location;
     std::shared_ptr<Lighting> lights;
@@ -105,20 +105,20 @@ namespace isomodel {
     std::shared_ptr<Structure> structure;
     std::shared_ptr<Heating> heating;
     std::shared_ptr<Cooling> cooling;
-    std::shared_ptr<Ventilation> ventilation;  
+    std::shared_ptr<Ventilation> ventilation;
 
-    void scheduleAndOccupancy(Vector& weekdayOccupiedMegaseconds, 
+    void scheduleAndOccupancy(Vector& weekdayOccupiedMegaseconds,
             Vector& weekdayUnoccupiedMegaseconds,
             Vector& weekendOccupiedMegaseconds,
             Vector& weekendUnoccupiedMegaseconds,
             Vector& clockHourOccupied,
             Vector& clockHourUnoccupied,
             double& frac_hrs_wk_day,
-            double& hoursUnoccupiedPerDay, 
+            double& hoursUnoccupiedPerDay,
             double& hoursOccupiedPerDay,
-            double& frac_hrs_wk_nt, 
+            double& frac_hrs_wk_nt,
             double& frac_hrs_wke_tot) const;
-    void solarRadiationBreakdown(const Vector& weekdayOccupiedMegaseconds, 
+    void solarRadiationBreakdown(const Vector& weekdayOccupiedMegaseconds,
             const Vector& weekdayUnoccupiedMegaseconds,
             const Vector& weekendOccupiedMegaseconds,
             const Vector& weekendUnoccupiedMegaseconds,
@@ -129,8 +129,8 @@ namespace isomodel {
             Vector& frac_Pgh_wke_day,
             Vector& frac_Pgh_wke_nt,
             Vector& v_Tdbt_nt) const;
-    void lightingEnergyUse(const Vector& v_hrs_sun_down_mo, 
-            double& Q_illum_occ, 
+    void lightingEnergyUse(const Vector& v_hrs_sun_down_mo,
+            double& Q_illum_occ,
             double& Q_illum_unocc,
             double& Q_illum_tot_yr,
             Vector& v_Q_illum_tot,
@@ -141,8 +141,8 @@ namespace isomodel {
             Vector& v_wall_U,
             Vector& v_wall_A,
             double& H_tr) const;
-    void windowSolarGain(const Vector& v_win_A, 
-            const Vector& v_wall_emiss, 
+    void windowSolarGain(const Vector& v_win_A,
+            const Vector& v_wall_emiss,
             const Vector& v_wall_alpha_sc,
             const Vector& v_wall_U,
             const Vector& v_wall_A,
@@ -157,22 +157,22 @@ namespace isomodel {
             const Vector& v_win_hr,
             const Vector& v_wall_A_sol,
             Vector& v_E_sol) const;
-    void heatGainsAndLosses(double frac_hrs_wk_day, 
-            double Q_illum_occ, 
+    void heatGainsAndLosses(double frac_hrs_wk_day,
+            double Q_illum_occ,
             double Q_illum_unocc,
             double Q_illum_tot_yr,
             double& phi_int_avg,
-            double& phi_plug_avg, 
+            double& phi_plug_avg,
             double& phi_illum_avg,
             double& phi_int_wke_nt,
             double& phi_int_wke_day,
             double& phi_int_wk_nt) const;
-    void internalHeatGain(double phi_int_avg, 
-            double phi_plug_avg, 
-            double phi_illum_avg, 
+    void internalHeatGain(double phi_int_avg,
+            double phi_plug_avg,
+            double phi_illum_avg,
             double& phi_I_tot) const;
-    void unoccupiedHeatGain(double phi_int_wk_nt, 
-            double phi_int_wke_day, 
+    void unoccupiedHeatGain(double phi_int_wk_nt,
+            double phi_int_wke_day,
             double phi_int_wke_nt,
             const Vector& weekdayUnoccupiedMegaseconds,
             const Vector& weekendOccupiedMegaseconds,
@@ -184,7 +184,7 @@ namespace isomodel {
             Vector& v_P_tot_wke_day,
             Vector& v_P_tot_wk_nt,
             Vector& v_P_tot_wke_nt) const;
-    void interiorTemp(const Vector& v_wall_A, 
+    void interiorTemp(const Vector& v_wall_A,
             const Vector& v_P_tot_wke_day,
             const Vector& v_P_tot_wk_nt,
             const Vector& v_P_tot_wke_nt,
@@ -219,7 +219,7 @@ namespace isomodel {
             double& Qneed_cl_yr) const;
     void hvac(const Vector& v_Qneed_ht,
             const Vector& v_Qneed_cl,
-            double Qneed_ht_yr, 
+            double Qneed_ht_yr,
             double Qneed_cl_yr,
             Vector& v_Qelec_ht,
             Vector& v_Qgas_ht,
@@ -227,7 +227,7 @@ namespace isomodel {
             Vector& v_Qcl_gas_tot) const;
     void pump(const Vector& v_Qneed_ht,
             const Vector& v_Qneed_cl,
-            double Qneed_ht_yr, 
+            double Qneed_ht_yr,
             double Qneed_cl_yr,
             Vector& v_Q_pump_tot) const;
     void energyGeneration() const;

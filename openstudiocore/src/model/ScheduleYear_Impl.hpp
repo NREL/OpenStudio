@@ -99,7 +99,7 @@ namespace detail {
     /// previous date marker or January 1st if no previous date marker exists.  Replaces existing scheduleWeek
     /// for same date if it exists.
     bool addScheduleWeek(const openstudio::Date& untilDate, const ScheduleWeek& scheduleWeek);
-  
+
     /// Clear all week schedules from this schedule.
     void clearScheduleWeeks();
 

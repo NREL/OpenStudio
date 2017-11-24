@@ -41,19 +41,19 @@ namespace openstudio {
   boost::optional<CalibrationBillingPeriod> CalibrationBillingPeriod::fromAttribute(const Attribute& attribute)
   {
     if (attribute.name() != CalibrationBillingPeriod::attributeName()) {
-      LOG(Warn,"Cannot create CalibrationBillingPeriod from Attribute because attribute name is '" 
+      LOG(Warn,"Cannot create CalibrationBillingPeriod from Attribute because attribute name is '"
           << attribute.name() << "'.");
       return boost::none;
     }
 
     if (attribute.valueType() != AttributeValueType::AttributeVector) {
-      LOG(Warn,"Cannot create CalibrationBillingPeriod from Attribute because attribute is a " 
+      LOG(Warn,"Cannot create CalibrationBillingPeriod from Attribute because attribute is a "
           << attribute.valueType().valueDescription() << ", not an AttributeVector.");
       return boost::none;
     }
 
     if (attribute.units()) {
-      LOG(Warn,"Cannot create CalibrationBillingPeriod from Attribute because attribute has units '" 
+      LOG(Warn,"Cannot create CalibrationBillingPeriod from Attribute because attribute has units '"
           << attribute.units().get() << "'.");
       return boost::none;
     }
@@ -115,7 +115,7 @@ namespace openstudio {
     if (totalCost){
       values.push_back(Attribute("totalCost", *totalCost));
     }
-   
+
     if (modelConsumption){
       values.push_back(Attribute("modelConsumption", *modelConsumption, consumptionUnit));
     }
@@ -130,7 +130,7 @@ namespace openstudio {
 
     m_attribute.setValue(values);
   }
-    
+
   CalibrationBillingPeriod::CalibrationBillingPeriod(const Attribute& attribute)
      : m_attribute(attribute)
   {
@@ -170,7 +170,7 @@ namespace openstudio {
     OS_ASSERT(attribute->valueType() == AttributeValueType::String);
     return attribute->valueAsString();
   }
-  
+
   boost::optional<std::string> CalibrationBillingPeriod::peakDemandUnit() const
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("peakDemandUnit");
@@ -249,19 +249,19 @@ namespace openstudio {
   boost::optional<CalibrationUtilityBill> CalibrationUtilityBill::fromAttribute(const Attribute& attribute)
   {
     if (attribute.name() != CalibrationUtilityBill::attributeName()) {
-      LOG(Warn,"Cannot create CalibrationUtilityBill from Attribute because attribute name is '" 
+      LOG(Warn,"Cannot create CalibrationUtilityBill from Attribute because attribute name is '"
           << attribute.name() << "'.");
       return boost::none;
     }
 
     if (attribute.valueType() != AttributeValueType::AttributeVector) {
-      LOG(Warn,"Cannot create CalibrationUtilityBill from Attribute because attribute is a " 
+      LOG(Warn,"Cannot create CalibrationUtilityBill from Attribute because attribute is a "
           << attribute.valueType().valueDescription() << ", not an AttributeVector.");
       return boost::none;
     }
 
     if (attribute.units()) {
-      LOG(Warn,"Cannot create CalibrationUtilityBill from Attribute because attribute has units '" 
+      LOG(Warn,"Cannot create CalibrationUtilityBill from Attribute because attribute has units '"
           << attribute.units().get() << "'.");
       return boost::none;
     }
@@ -315,7 +315,7 @@ namespace openstudio {
   }
 
   CalibrationUtilityBill::CalibrationUtilityBill(const std::string& name, const FuelType& fuelType, const InstallLocationType& meterInstallLocation,
-    boost::optional<std::string> meterSpecificInstallLocation, boost::optional<EndUseCategoryType> meterEndUseCategory, 
+    boost::optional<std::string> meterSpecificInstallLocation, boost::optional<EndUseCategoryType> meterEndUseCategory,
     boost::optional<std::string> meterSpecificEndUse, std::string consumptionUnit, double consumptionUnitConversionFactor,
     boost::optional<std::string> peakDemandUnit, boost::optional<double> peakDemandUnitConversionFactor,
     boost::optional<unsigned> timestepsInPeakDemandWindow, boost::optional<double> minutesInPeakDemandWindow,
@@ -408,7 +408,7 @@ namespace openstudio {
     }
     return boost::none;
   }
-  
+
   boost::optional<EndUseCategoryType> CalibrationUtilityBill::meterEndUseCategory() const
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("meterEndUseCategory");
@@ -444,7 +444,7 @@ namespace openstudio {
     OS_ASSERT(attribute->valueType() == AttributeValueType::Double);
     return attribute->valueAsDouble();
   }
-  
+
   boost::optional<std::string> CalibrationUtilityBill::peakDemandUnit() const
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("peakDemandUnit");
@@ -474,7 +474,7 @@ namespace openstudio {
     }
     return boost::none;
   }
-  
+
   boost::optional<double> CalibrationUtilityBill::minutesInPeakDemandWindow() const
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("minutesInPeakDemandWindow");
@@ -494,7 +494,7 @@ namespace openstudio {
     }
     return boost::none;
   }
-  
+
   boost::optional<double> CalibrationUtilityBill::CVRMSE() const
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("cvrmse");
@@ -504,7 +504,7 @@ namespace openstudio {
     }
     return boost::none;
   }
-  
+
   boost::optional<double> CalibrationUtilityBill::NMBE() const
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("nmbe");
@@ -560,19 +560,19 @@ namespace openstudio {
   boost::optional<CalibrationResult> CalibrationResult::fromAttribute(const Attribute& attribute)
   {
     if (attribute.name() != CalibrationResult::attributeName()) {
-      LOG(Warn,"Cannot create CalibrationResult from Attribute because attribute name is '" 
+      LOG(Warn,"Cannot create CalibrationResult from Attribute because attribute name is '"
           << attribute.name() << "'.");
       return boost::none;
     }
 
     if (attribute.valueType() != AttributeValueType::AttributeVector) {
-      LOG(Warn,"Cannot create CalibrationResult from Attribute because attribute is a " 
+      LOG(Warn,"Cannot create CalibrationResult from Attribute because attribute is a "
           << attribute.valueType().valueDescription() << ", not an AttributeVector.");
       return boost::none;
     }
 
     if (attribute.units()) {
-      LOG(Warn,"Cannot create CalibrationResult from Attribute because attribute has units '" 
+      LOG(Warn,"Cannot create CalibrationResult from Attribute because attribute has units '"
           << attribute.units().get() << "'.");
       return boost::none;
     }

@@ -35,7 +35,7 @@ module OpenStudio
 
      # This method is called by SketchUp to determine the description that
      # appears in the File > Import dialog's pulldown list of valid
-     # importers. 
+     # importers.
      def description
        return "Green Building XML (*.xml)"
      end
@@ -74,17 +74,17 @@ module OpenStudio
      # to import. This is where you do the real work of opening and
      # processing the file.
      def load_file(file_path, status)
-     
+
        file_path.gsub!(/\\/, '/')
-     
+
        Plugin.write_pref("Last gbXML Import Dir", File.dirname(file_path))  # Save the dir so we can start here next time
 
        openstudio_model, errors, warnings = Plugin.model_manager.model_from_gbXML_path(file_path)
        if not openstudio_model
          return(0)
        end
-       
-       if (Plugin.command_manager.prompt_to_continue_import("Green Building XML"))         
+
+       if (Plugin.command_manager.prompt_to_continue_import("Green Building XML"))
          Plugin.model_manager.attach_openstudio_model(openstudio_model, Sketchup.active_model, nil, false, true, errors, warnings)
        end
 

@@ -60,7 +60,7 @@ TEST_F(ModelFixture,RefractionExtinctionGlazing_SolarIndexofRefraction_Quantity)
   RefractionExtinctionGlazing refractionExtinctionGlazing(model);
 
   Unit units = refractionExtinctionGlazing.getSolarIndexofRefraction(true).units(); // Get IP units.
-  
+
   // Bounds: 1.0 < value
 
   double value(1.0);
@@ -153,7 +153,7 @@ TEST_F(ModelFixture,RefractionExtinctionGlazing_InfraredHemisphericalEmissivity_
   RefractionExtinctionGlazing refractionExtinctionGlazing(model);
 
   Unit units = refractionExtinctionGlazing.getInfraredHemisphericalEmissivity(true).units(); // Get IP units.
-  
+
   // Bounds: 0.0 < value < 1.0
 
   double value(1.0);

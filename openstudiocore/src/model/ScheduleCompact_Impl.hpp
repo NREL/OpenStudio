@@ -27,7 +27,7 @@
  **********************************************************************************************************************/
 
 #ifndef MODEL_SCHEDULECOMPACT_IMPL_HPP
-#define MODEL_SCHEDULECOMPACT_IMPL_HPP 
+#define MODEL_SCHEDULECOMPACT_IMPL_HPP
 
 #include "Schedule_Impl.hpp"
 
@@ -46,8 +46,8 @@ namespace detail {
     ScheduleCompact_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    ScheduleCompact_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                         Model_Impl* model, 
+    ScheduleCompact_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                         Model_Impl* model,
                          bool keepHandle);
 
     ScheduleCompact_Impl(const ScheduleCompact_Impl& other, Model_Impl* model,bool keepHandle);

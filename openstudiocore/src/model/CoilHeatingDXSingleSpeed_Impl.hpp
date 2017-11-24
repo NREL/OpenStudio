@@ -42,32 +42,32 @@ namespace detail {
 
 /** CoilHeatingDXSingleSpeed_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingDXSingleSpeed.*/
 class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
-  
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
 
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -222,7 +222,7 @@ class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
   // A6 , \field Total Heating Capacity Function of Flow Fraction Curve Name
   // \object-list QuadraticCubicCurves
   Curve totalHeatingCapacityFunctionofFlowFractionCurve() const;
-  bool setTotalHeatingCapacityFunctionofFlowFractionCurve( const Curve& curve );  
+  bool setTotalHeatingCapacityFunctionofFlowFractionCurve( const Curve& curve );
 
   // A7 ,  \field Energy Input Ratio Function of Temperature Curve Name
   // \object-list BiquadraticQuadraticCubicCurves
@@ -237,11 +237,11 @@ class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
   // A9 , \field Part Load Fraction Correlation Curve Name
   // \object-list QuadraticCubicCurves
   Curve partLoadFractionCorrelationCurve() const;
-  bool setPartLoadFractionCorrelationCurve( const Curve& curve );  
+  bool setPartLoadFractionCorrelationCurve( const Curve& curve );
 
   // A10, \field Defrost Energy Input Ratio Function of Temperature Curve Name
   // \object-list BiquadraticCurves
-  // not a required curve so it needs a reset 
+  // not a required curve so it needs a reset
   boost::optional<Curve> defrostEnergyInputRatioFunctionofTemperatureCurve() const;
   bool setDefrostEnergyInputRatioFunctionofTemperatureCurve( const boost::optional<Curve> curve );
 

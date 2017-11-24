@@ -39,7 +39,7 @@ namespace openstudio {
 namespace radiance {
 
   RADIANCE_API std::vector<double> parseGenDayMtxLine(const std::string &t_line);
-    
+
 }
 }
 

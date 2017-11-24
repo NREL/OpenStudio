@@ -38,7 +38,7 @@ namespace model {
 namespace detail {
 
 class MODEL_API UtilityCost_Ratchet_Impl : public ParentObject_Impl{
-  
+
  public:
   // constructor
   UtilityCost_Ratchet_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);

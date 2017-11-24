@@ -61,9 +61,9 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemCon
   if (s) {
     idfObject.setName(*s);
   }
- 
+
   idfObject.setString(EnergyManagementSystem_ConstructionIndexVariableFields::ConstructionObjectName, modelObject.constructionObject().nameString());
-  
+
   return idfObject;
 }
 

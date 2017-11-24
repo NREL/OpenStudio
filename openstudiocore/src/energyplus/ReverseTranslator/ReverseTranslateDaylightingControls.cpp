@@ -236,7 +236,7 @@ OptionalModelObject ReverseTranslator::translateDaylightingControls( const Works
       }
     }
   }
-    
+
   return result;
 }
 

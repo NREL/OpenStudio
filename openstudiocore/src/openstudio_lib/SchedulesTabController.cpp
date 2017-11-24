@@ -310,8 +310,8 @@ double SchedulesTabController::defaultStartingValue(const model::ScheduleDay& sc
       OptionalQuantity siQ;
       switch (firstLetter) {
       case 'a' :
-        { 
-          if (unitType == "activitylevel") {          
+        {
+          if (unitType == "activitylevel") {
             siQ = Quantity(100.0,*siU);
           }
           else if (unitType == "angle") {

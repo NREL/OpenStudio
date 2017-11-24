@@ -40,23 +40,23 @@ class Schedule;
 namespace detail {
 
 class MODEL_API SetpointManagerScheduled_Impl : public SetpointManager_Impl {
-  
 
-  
-  
 
-  
+
+
+
+
  public:
   /** @name Constructors and Destructors */
   //@{
 
   SetpointManagerScheduled_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  SetpointManagerScheduled_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                                       Model_Impl* model, 
+  SetpointManagerScheduled_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                       Model_Impl* model,
                                        bool keepHandle);
 
-  SetpointManagerScheduled_Impl(const SetpointManagerScheduled_Impl& other, 
+  SetpointManagerScheduled_Impl(const SetpointManagerScheduled_Impl& other,
                                        Model_Impl* model,
                                        bool keepHandles);
 

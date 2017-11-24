@@ -42,7 +42,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellElectric
 {
   boost::optional<std::string> s;
   boost::optional<double> d;
-  
+
   IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_ElectricalStorage, modelObject);
   //Name
   s = modelObject.name();
@@ -93,7 +93,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellElectric
   }
 
   return pcm;
-  
+
 }
 
 } // energyplus

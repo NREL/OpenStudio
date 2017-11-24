@@ -50,7 +50,7 @@ require("openstudio/sketchup_plugin/lib/tools/NewSpaceTool")
 module OpenStudio
 
   class MenuManager
-    
+
     attr_accessor :about_cmd, :prefs_cmd
     attr_accessor :online_help_cmd, :forum_cmd, :contact_cmd
     attr_accessor :new_cmd, :new_from_wizard_cmd, :open_cmd, :save_cmd, :save_as_cmd
@@ -64,7 +64,7 @@ module OpenStudio
     attr_accessor :openstudio_cmd
     attr_accessor :anim_settings_cmd, :rwd_to_start_cmd, :rwd_anim_cmd, :play_anim_cmd, :fwd_anim_cmd, :fwd_to_end_cmd
     attr_accessor :logging_cmd, :start_profile_cmd, :stop_profile_cmd, :mem_profile_cmd
-    
+
     attr_accessor :plugin_menu, :file_menu, :import_menu, :export_menu, :new_item_menu, :modify_model_menu, :inspect_model_menu, :rendering_menu, :animation_menu, :help_menu, :developer_menu
     attr_accessor :command_toolbar, :rendering_toolbar, :animation_toolbar
 
@@ -88,58 +88,58 @@ module OpenStudio
       @new_glare_tool = NewGlareSensorTool.new
       @info_tool = InfoTool.new
     end
-    
+
     def refresh
       # needed to force SU to run the validation procs on Mac
       if @command_toolbar and @command_toolbar.visible?
         @command_toolbar.hide
-        @command_toolbar.show 
+        @command_toolbar.show
       end
-      
+
       if @rendering_toolbar and @rendering_toolbar.visible?
         @rendering_toolbar.hide
-        @rendering_toolbar.show 
+        @rendering_toolbar.show
       end
-      
+
       if @animation_toolbar and @animation_toolbar.visible?
-        @animation_toolbar.hide 
-        @animation_toolbar.show 
+        @animation_toolbar.hide
+        @animation_toolbar.show
       end
     end
-    
+
     def enable_if_model_interface
-    
+
       result = MF_GRAYED
       if model_manager = Plugin.model_manager
         if model_manager.model_interface
           result = MF_ENABLED
         end
-      end   
-      
+      end
+
       result
     end
 
 
     def create_commands
-    
+
       # Create all the commands (They must still be added to menus and toolbars next)
       @new_cmd = UI::Command.new("New OpenStudio Model") { Plugin.command_manager.new_openstudio }
       @new_cmd.small_icon = Plugin.dir + "/lib/resources/icons/OSNew-16.png"
       @new_cmd.large_icon = Plugin.dir + "/lib/resources/icons/OSNew-24.png"
       @new_cmd.tooltip = "New OpenStudio Model"
       @new_cmd.status_bar_text = "Create a new OpenStudio model"
-      @new_cmd.set_validation_proc { 
+      @new_cmd.set_validation_proc {
 
         result = MF_GRAYED
         if model_manager = Plugin.model_manager
           if model_manager.model_interface
             result = MF_ENABLED
           end
-        end   
+        end
 
         result
       }
-        
+
       # Create all the commands (They must still be added to menus and toolbars next)
       @new_from_wizard_cmd = UI::Command.new("New OpenStudio Model From Wizard") { Plugin.command_manager.new_openstudio_from_wizard }
       @new_from_wizard_cmd.small_icon = Plugin.dir + "/lib/resources/icons/OSNew-16.png"
@@ -147,7 +147,7 @@ module OpenStudio
       @new_from_wizard_cmd.tooltip = "New OpenStudio Model From Wizard"
       @new_from_wizard_cmd.status_bar_text = "Create a new OpenStudio model from a wizard"
       @new_from_wizard_cmd.set_validation_proc { enable_if_model_interface }
-        
+
       @open_cmd = UI::Command.new("Open OpenStudio Model") { Plugin.command_manager.open_openstudio }
       @open_cmd.small_icon = Plugin.dir + "/lib/resources/icons/OSOpen-16.png"
       @open_cmd.large_icon = Plugin.dir + "/lib/resources/icons/OSOpen-24.png"
@@ -168,19 +168,19 @@ module OpenStudio
       @save_as_cmd.tooltip = "Save OpenStudio Model As"
       @save_as_cmd.status_bar_text = "Save the OpenStudio model as a new file"
       @save_as_cmd.set_validation_proc { enable_if_model_interface }
-      
+
       @import_openstudio_cmd = UI::Command.new("Import OpenStudio Model") { Plugin.command_manager.import_openstudio }
       @import_openstudio_cmd.set_validation_proc { enable_if_model_interface }
 
       @import_constructions_cmd = UI::Command.new("Import Constructions") { Plugin.command_manager.import_constructions }
       @import_constructions_cmd.set_validation_proc { enable_if_model_interface }
-      
+
       @import_schedules_cmd = UI::Command.new("Import Schedules") { Plugin.command_manager.import_schedules }
       @import_schedules_cmd.set_validation_proc { enable_if_model_interface }
-      
+
       @import_space_types_cmd = UI::Command.new("Import Space Loads") { Plugin.command_manager.import_space_types }
       @import_space_types_cmd.set_validation_proc { enable_if_model_interface }
-      
+
       @import_idf_cmd = UI::Command.new("Import EnergyPlus Idf") { Plugin.command_manager.import_idf }
       @import_idf_cmd.small_icon = Plugin.dir + "/lib/resources/icons/IDFImport-16.png"
       @import_idf_cmd.large_icon = Plugin.dir + "/lib/resources/icons/IDFImport-24.png"
@@ -193,43 +193,43 @@ module OpenStudio
 
       @import_idf_schedules_cmd = UI::Command.new("Import EnergyPlus Idf Schedules") { Plugin.command_manager.import_idf_schedules }
       @import_idf_schedules_cmd.set_validation_proc { enable_if_model_interface }
-      
+
       @import_gbxml_cmd = UI::Command.new("Import gbXML Model") { Plugin.command_manager.import_gbxml }
       @import_gbxml_cmd.set_validation_proc { enable_if_model_interface }
-      
+
       @import_sdd_cmd = UI::Command.new("Import SDD Model") { Plugin.command_manager.import_sdd }
       @import_sdd_cmd.set_validation_proc { enable_if_model_interface }
-      
+
       @export_openstudio_cmd = UI::Command.new("Export OpenStudio Model") { Plugin.command_manager.export_openstudio }
       @export_openstudio_cmd.set_validation_proc { enable_if_model_interface }
-      
+
       @export_untranslated_idf_cmd = UI::Command.new("Export Untranslated EnergyPlus Idf") { Plugin.command_manager.export_untranslated_idf }
       @export_untranslated_idf_cmd.tooltip = "Export Untranslated EnergyPlus Idf"
       @export_untranslated_idf_cmd.status_bar_text = "Export EnergyPlus Idf Objects Not Translated to OpenStudio"
-      @export_untranslated_idf_cmd.set_validation_proc { 
+      @export_untranslated_idf_cmd.set_validation_proc {
         result = MF_GRAYED
         if model_interface = Plugin.model_manager.model_interface
           if not model_interface.untranslated_idf_objects.empty?
             result = MF_ENABLED
           end
-        end   
+        end
 
         result
        }
-      
+
       @export_idf_cmd = UI::Command.new("Export EnergyPlus Idf") { Plugin.command_manager.export_idf }
       @export_idf_cmd.small_icon = Plugin.dir + "/lib/resources/icons/IDFExport-16.png"
       @export_idf_cmd.large_icon = Plugin.dir + "/lib/resources/icons/IDFExport-24.png"
       @export_idf_cmd.tooltip = "Export EnergyPlus Idf"
       @export_idf_cmd.status_bar_text = "Export an OpenStudio model as an EnergyPlus Idf"
       @export_idf_cmd.set_validation_proc { enable_if_model_interface }
-            
+
       @export_gbxml_cmd = UI::Command.new("Export gbXML Model") { Plugin.command_manager.export_gbxml }
       @export_gbxml_cmd.set_validation_proc { enable_if_model_interface }
-            
+
       @export_sdd_cmd = UI::Command.new("Export SDD Model") { Plugin.command_manager.export_sdd }
       @export_sdd_cmd.set_validation_proc { enable_if_model_interface }
-      
+
       @new_space_cmd = UI::Command.new("New Space") { Sketchup.active_model.select_tool(@new_space_tool) }
       @new_space_cmd.small_icon = Plugin.dir + "/lib/resources/icons/new_space_16.png"
       @new_space_cmd.large_icon = Plugin.dir + "/lib/resources/icons/new_space.png"
@@ -264,27 +264,27 @@ module OpenStudio
       @new_illuminance_cmd.tooltip = "New Illuminance Map"
       @new_illuminance_cmd.status_bar_text = "Create a new illuminance map"
       @new_illuminance_cmd.set_validation_proc { enable_if_model_interface }
-      
+
       @new_luminaire_cmd = UI::Command.new("New Luminaire") { Sketchup.active_model.select_tool(@new_luminaire_tool)  }
       @new_luminaire_cmd.small_icon = Plugin.dir + "/lib/resources/icons/NewLuminaire-16.png"
       @new_luminaire_cmd.large_icon = Plugin.dir + "/lib/resources/icons/NewLuminaire-24.png"
       @new_luminaire_cmd.tooltip = "New Luminaire"
       @new_luminaire_cmd.status_bar_text = "Create a new luminaire"
       @new_luminaire_cmd.set_validation_proc { enable_if_model_interface }
-      
+
       @new_glare_cmd = UI::Command.new("New Glare Sensor") { Sketchup.active_model.select_tool(@new_glare_tool)  }
       @new_glare_cmd.small_icon = Plugin.dir + "/lib/resources/icons/NewGlare-16.png"
       @new_glare_cmd.large_icon = Plugin.dir + "/lib/resources/icons/NewGlare-24.png"
       @new_glare_cmd.tooltip = "New Glare Sensor"
       @new_glare_cmd.status_bar_text = "Create a new glare sensor"
       @new_glare_cmd.set_validation_proc { enable_if_model_interface }
-      
+
       @surface_matching_cmd = UI::Command.new("Surface Matching") { Plugin.dialog_manager.show(SurfaceMatchingInterface) }
       @surface_matching_cmd.small_icon = Plugin.dir + "/lib/resources/icons/SurfaceMatchingSelected-16.png"
       @surface_matching_cmd.large_icon = Plugin.dir + "/lib/resources/icons/SurfaceMatchingSelected-24.png"
       @surface_matching_cmd.tooltip = "Surface Matching"
       @surface_matching_cmd.status_bar_text = "Match surfaces of selected objects across Spaces"
-      @surface_matching_cmd.set_validation_proc { Plugin.dialog_manager.validate(SurfaceMatchingInterface) if (Plugin.dialog_manager) } 
+      @surface_matching_cmd.set_validation_proc { Plugin.dialog_manager.validate(SurfaceMatchingInterface) if (Plugin.dialog_manager) }
 
       @space_attributes_cmd = UI::Command.new("Set Attributes for Selected Spaces") { load Plugin.dir + '/lib/dialogs/SpaceAttributesInterface.rb' }
       @space_attributes_cmd.small_icon = Plugin.dir + "/lib/resources/icons/edit_spaces_16.png"
@@ -306,7 +306,7 @@ module OpenStudio
       @loose_geometry_cmd.tooltip = "Project Loose Geometry"
       @loose_geometry_cmd.status_bar_text = "Project loose geometry onto OpenStudio surfaces"
       @loose_geometry_cmd.set_validation_proc { Plugin.dialog_manager.validate(LooseGeometryInterface) if (Plugin.dialog_manager) }
-      
+
       @space_loads_cmd = UI::Command.new("Space Loads") { } #Plugin.dialog_manager.show(SpaceLoadsInterface) }
       @space_loads_cmd.small_icon = Plugin.dir + "/lib/resources/icons/SpaceLoads-16.png"
       @space_loads_cmd.large_icon = Plugin.dir + "/lib/resources/icons/SpaceLoads-24.png"
@@ -314,9 +314,9 @@ module OpenStudio
       @space_loads_cmd.status_bar_text = "Add common loads to spaces"
       @space_loads_cmd.set_validation_proc { enable_if_model_interface }
 
-      @inspector_dialog_cmd = UI::Command.new("Inspector") { 
+      @inspector_dialog_cmd = UI::Command.new("Inspector") {
         Plugin.dialog_manager.inspector_dialog.restoreState
-        Plugin.dialog_manager.inspector_dialog.show 
+        Plugin.dialog_manager.inspector_dialog.show
       }
       @inspector_dialog_cmd.small_icon = Plugin.dir + "/lib/resources/icons/Inspector-16.png"
       @inspector_dialog_cmd.large_icon = Plugin.dir + "/lib/resources/icons/Inspector-24.png"
@@ -329,22 +329,22 @@ module OpenStudio
       @surface_search_cmd.large_icon = Plugin.dir + "/lib/resources/icons/SurfaceSearch-24.png"
       @surface_search_cmd.tooltip = "Search Surfaces"
       @surface_search_cmd.status_bar_text = "Search surfaces in the model"
-      @surface_search_cmd.set_validation_proc { Plugin.dialog_manager.validate(SurfaceSearchInterface) if (Plugin.dialog_manager) } 
-      
+      @surface_search_cmd.set_validation_proc { Plugin.dialog_manager.validate(SurfaceSearchInterface) if (Plugin.dialog_manager) }
+
       @info_tool_cmd = UI::Command.new("Info Tool") { Sketchup.active_model.tools.push_tool(@info_tool) }
       @info_tool_cmd.small_icon = Plugin.dir + "/lib/resources/icons/InfoTool-16.png"
       @info_tool_cmd.large_icon = Plugin.dir + "/lib/resources/icons/InfoTool-24.png"
       @info_tool_cmd.tooltip = "Info Tool"
       @info_tool_cmd.status_bar_text = "Show object data at a glance"
       @info_tool_cmd.set_validation_proc { enable_if_model_interface }
-      
+
       @show_errors_cmd = UI::Command.new("Show Errors And Warnings") { Plugin.model_manager.model_interface.show_errors }
       @show_errors_cmd.small_icon = Plugin.dir + "/lib/resources/icons/Warning-16.png"
       @show_errors_cmd.large_icon = Plugin.dir + "/lib/resources/icons/Warning-24.png"
       @show_errors_cmd.tooltip = "Show Errors And Warnings"
       @show_errors_cmd.status_bar_text = "Show errors and warnings"
       @show_errors_cmd.set_validation_proc { enable_if_model_interface }
-      
+
       #@render_defaults_cmd = UI::Command.new("Render Default Values") {
       #  Plugin.model_manager.model_interface.materials_interface.render_defaults = (not Plugin.model_manager.model_interface.materials_interface.render_defaults) }
       ##@render_defaults_cmd.small_icon = Plugin.dir + "/lib/resources/icons/tbRenderTransparentSmall.png"
@@ -355,7 +355,7 @@ module OpenStudio
       #  result = MF_GRAYED
       #  if model_manager = Plugin.model_manager
       #    if model_interface = model_manager.model_interface
-      #      rendering_mode = model_interface.materials_interface.rendering_mode 
+      #      rendering_mode = model_interface.materials_interface.rendering_mode
       #      if rendering_mode == RenderByConstruction
       #        if (model_interface.materials_interface.render_defaults)
       #          result = MF_CHECKED
@@ -369,8 +369,8 @@ module OpenStudio
       #  end
       #  result
       #}
-      
-      @render_by_class_cmd = UI::Command.new("Render By Surface Type") { 
+
+      @render_by_class_cmd = UI::Command.new("Render By Surface Type") {
         proc = Proc.new { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByClass }
         Plugin.add_event( proc )
       }
@@ -390,7 +390,7 @@ module OpenStudio
         result
       }
 
-      @render_by_data_value_cmd = UI::Command.new("Render By Data Value") { 
+      @render_by_data_value_cmd = UI::Command.new("Render By Data Value") {
         proc = Proc.new { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByDataValue }
         Plugin.add_event( proc )
       }
@@ -410,7 +410,7 @@ module OpenStudio
         result
       }
 
-      @render_by_boundary_cmd = UI::Command.new("Render By Boundary") { 
+      @render_by_boundary_cmd = UI::Command.new("Render By Boundary") {
         proc = Proc.new { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByBoundary }
         Plugin.add_event( proc )
       }
@@ -430,7 +430,7 @@ module OpenStudio
         result
       }
 
-      @render_by_layer_cmd = UI::Command.new("Render By Layer") { 
+      @render_by_layer_cmd = UI::Command.new("Render By Layer") {
         proc = Proc.new { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByLayer }
         Plugin.add_event( proc )
       }
@@ -449,8 +449,8 @@ module OpenStudio
         end
         result
       }
-      
-      @render_by_surface_normal_cmd = UI::Command.new("Render By Surface Normal") { 
+
+      @render_by_surface_normal_cmd = UI::Command.new("Render By Surface Normal") {
         proc = Proc.new { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderBySurfaceNormal }
         Plugin.add_event( proc )
       }
@@ -469,8 +469,8 @@ module OpenStudio
         end
         result
       }
-      
-      @render_by_construction_cmd = UI::Command.new("Render By Construction") { 
+
+      @render_by_construction_cmd = UI::Command.new("Render By Construction") {
         proc = Proc.new { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByConstruction }
         Plugin.add_event( proc )
       }
@@ -489,8 +489,8 @@ module OpenStudio
         end
         result
       }
-      
-      @render_by_space_type_cmd = UI::Command.new("Render By Space Type") { 
+
+      @render_by_space_type_cmd = UI::Command.new("Render By Space Type") {
         proc = Proc.new { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderBySpaceType }
         Plugin.add_event( proc )
       }
@@ -509,8 +509,8 @@ module OpenStudio
         end
         result
       }
-            
-      @render_by_thermal_zone_cmd = UI::Command.new("Render By Thermal Zone") { 
+
+      @render_by_thermal_zone_cmd = UI::Command.new("Render By Thermal Zone") {
         proc = Proc.new { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByThermalZone }
         Plugin.add_event( proc )
       }
@@ -529,8 +529,8 @@ module OpenStudio
         end
         result
       }
-      
-      @render_by_building_story_cmd = UI::Command.new("Render By Building Story") { 
+
+      @render_by_building_story_cmd = UI::Command.new("Render By Building Story") {
         proc = Proc.new { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByBuildingStory }
         Plugin.add_event( proc )
       }
@@ -549,7 +549,7 @@ module OpenStudio
         end
         result
       }
-      
+
       @color_scale_cmd = UI::Command.new("Color Scale") { Plugin.dialog_manager.show(ColorScaleInterface) }
       @color_scale_cmd.small_icon = Plugin.dir + "/lib/resources/icons/render_color_scale_16.png"
       @color_scale_cmd.large_icon = Plugin.dir + "/lib/resources/icons/render_color_scale.png"
@@ -578,16 +578,16 @@ module OpenStudio
       @openstudio_cmd.tooltip = "Launch Openstudio"
       @openstudio_cmd.status_bar_text = "Launch Openstudio"
       @openstudio_cmd.set_validation_proc { enable_if_model_interface }
-      
+
       @online_help_cmd = UI::Command.new("Online Help") { UI.openURL("http://nrel.github.io/OpenStudio-user-documentation/reference/sketchup_plugin_interface/")  }
       @online_help_cmd.small_icon = Plugin.dir + "/lib/resources/icons/Help-16.png"
       @online_help_cmd.large_icon = Plugin.dir + "/lib/resources/icons/Help-24.png"
       @online_help_cmd.tooltip = "Online OpenStudio Help"
       @online_help_cmd.status_bar_text = "View the Online OpenStudio Help"
-      @online_help_cmd.set_validation_proc { MF_ENABLED } 
-      
+      @online_help_cmd.set_validation_proc { MF_ENABLED }
+
       @forum_cmd = UI::Command.new("Forum") { UI.openURL("https://www.openstudio.net/forum") }
-      @forum_cmd.set_validation_proc { MF_ENABLED } 
+      @forum_cmd.set_validation_proc { MF_ENABLED }
 
       @contact_cmd = UI::Command.new("Contact Us") { UI.openURL("https://www.openstudio.net/contact") }
       @contact_cmd.set_validation_proc { MF_ENABLED }
@@ -599,9 +599,9 @@ module OpenStudio
 #      @outliner_cmd.large_icon = Plugin.dir + "/lib/resources/icons/Outliner-24.png"
 #      @outliner_cmd.tooltip = "Show Outliner Window"
 #      @outliner_cmd.status_bar_text = "Show hierarchical outline of all SketchUp groups and components"
-#      @outliner_cmd.set_validation_proc { MF_ENABLED } 
+#      @outliner_cmd.set_validation_proc { MF_ENABLED }
 
-      @hide_rest_cmd = UI::Command.new("Hide Rest of Model") { 
+      @hide_rest_cmd = UI::Command.new("Hide Rest of Model") {
         Sketchup.active_model.rendering_options["InactiveHidden"] = (not Sketchup.active_model.rendering_options["InactiveHidden"]) }
       @hide_rest_cmd.small_icon = Plugin.dir + "/lib/resources/icons/HideRest-16.png"
       @hide_rest_cmd.large_icon = Plugin.dir + "/lib/resources/icons/HideRest-24.png"
@@ -609,7 +609,7 @@ module OpenStudio
       @hide_rest_cmd.status_bar_text = "Hide all inactive SketchUp groups and components"
       @hide_rest_cmd.set_validation_proc {
         result = MF_GRAYED
-        if (Sketchup.active_model) 
+        if (Sketchup.active_model)
           if (Sketchup.active_model.rendering_options["InactiveHidden"])
             result = MF_CHECKED
           else
@@ -627,7 +627,7 @@ module OpenStudio
       @hidden_geom_cmd.status_bar_text = "View/hide hidden geometry"
       @hidden_geom_cmd.set_validation_proc {
         result = MF_GRAYED
-        if (Sketchup.active_model)  
+        if (Sketchup.active_model)
           if (Sketchup.active_model.rendering_options["DrawHidden"])
             result = MF_CHECKED
           else
@@ -645,7 +645,7 @@ module OpenStudio
       @xray_cmd.status_bar_text = "Turn transparent x-ray mode on and off"
       @xray_cmd.set_validation_proc {
         result = MF_GRAYED
-        if (Sketchup.active_model) 
+        if (Sketchup.active_model)
           if (Sketchup.active_model.rendering_options["ModelTransparency"])
             result = MF_CHECKED
           else
@@ -660,7 +660,7 @@ module OpenStudio
       @shadow_settings_cmd.large_icon = Plugin.dir + "/lib/resources/icons/SUShadows-24x24.png"
       @shadow_settings_cmd.tooltip = "Show Shadow Settings Dialog"
       @shadow_settings_cmd.status_bar_text = "Show time of day and day of year for shadow settings"
-      @shadow_settings_cmd.set_validation_proc { MF_ENABLED } 
+      @shadow_settings_cmd.set_validation_proc { MF_ENABLED }
 
       # Animation commands
 
@@ -707,12 +707,12 @@ module OpenStudio
       @fwd_to_end_cmd.set_validation_proc { Plugin.animation_manager.validate_forward if (Plugin.animation_manager) }
 
       # Commands that don't go on the toolbar
-  
+
       @prefs_cmd = UI::Command.new("Preferences") { Plugin.dialog_manager.show(PreferencesInterface) }
       @prefs_cmd.set_validation_proc { MF_ENABLED }
-      
+
       @update_cmd = UI::Command.new("Check For Update") { Plugin.update_manager = PluginUpdateManager.new("SketchUp Plug-in", true) }
-      @update_cmd.set_validation_proc { 
+      @update_cmd.set_validation_proc {
         if Plugin.update_manager.nil?
           MF_ENABLED
         else
@@ -721,47 +721,47 @@ module OpenStudio
       }
 
       @about_cmd = UI::Command.new("About OpenStudio") { Plugin.dialog_manager.show(AboutInterface) }
-      @about_cmd.set_validation_proc { MF_ENABLED } 
-      
+      @about_cmd.set_validation_proc { MF_ENABLED }
+
       @start_profile_cmd = UI::Command.new("Start Profile") { Plugin.start_profile }
-      @start_profile_cmd.set_validation_proc { 
-        if Plugin.profile_running 
-          MF_GRAYED 
+      @start_profile_cmd.set_validation_proc {
+        if Plugin.profile_running
+          MF_GRAYED
         else
           MF_ENABLED
         end
       }
-      
+
       @stop_profile_cmd = UI::Command.new("Stop Profile") { Plugin.stop_profile }
-      @stop_profile_cmd.set_validation_proc { 
-        if Plugin.profile_running 
-          MF_ENABLED 
+      @stop_profile_cmd.set_validation_proc {
+        if Plugin.profile_running
+          MF_ENABLED
         else
           MF_GRAYED
         end
       }
-      
+
       @mem_profile_cmd = UI::Command.new("Memory Profile") { Plugin.mem_profile }
-      @mem_profile_cmd.set_validation_proc { 
-          MF_ENABLED 
-      } 
-      
-      @logging_cmd = UI::Command.new("Logging") { 
+      @mem_profile_cmd.set_validation_proc {
+          MF_ENABLED
+      }
+
+      @logging_cmd = UI::Command.new("Logging") {
         if Plugin.logging_enabled
           Plugin.disable_logging
         else
           Plugin.enable_logging
-        end      
+        end
       }
-      @logging_cmd.set_validation_proc { 
-        if Plugin.logging_enabled 
+      @logging_cmd.set_validation_proc {
+        if Plugin.logging_enabled
           MF_CHECKED
         else
           MF_ENABLED
         end
       }
     end
-    
+
 
     def create_menus
 
@@ -770,30 +770,30 @@ module OpenStudio
 
       id = @plugin_menu.add_item(@about_cmd)
       @plugin_menu.set_validation_proc(id) { MF_ENABLED }
-      
+
       id = @plugin_menu.add_item(@prefs_cmd)
       @plugin_menu.set_validation_proc(id) { MF_ENABLED }
 
       # Add the Help menu
       @help_menu = @plugin_menu.add_submenu("Help")
-      
+
       id = @help_menu.add_item(@online_help_cmd)
       @help_menu.set_validation_proc(id) { MF_ENABLED }
-      
+
       id = @help_menu.add_item(@forum_cmd)
       @help_menu.set_validation_proc(id) { MF_ENABLED }
-      
+
       id = @help_menu.add_item(@contact_cmd)
       @help_menu.set_validation_proc(id) { MF_ENABLED }
-      
+
       id = @plugin_menu.add_item(@update_cmd)
       @plugin_menu.set_validation_proc(id) { MF_ENABLED }
-      
+
       @plugin_menu.add_separator
       @plugin_menu.add_item(@openstudio_cmd)
-      
+
       @plugin_menu.add_separator
-      
+
       # Add the file menu
       @file_menu = @plugin_menu.add_submenu("File")
       @file_menu.add_item(@new_cmd)
@@ -801,13 +801,13 @@ module OpenStudio
       @file_menu.add_item(@open_cmd)
       @file_menu.add_item(@save_cmd)
       @file_menu.add_item(@save_as_cmd)
-      
+
       # Add the Import menu
       @import_menu = @plugin_menu.add_submenu("Import")
       @import_menu.add_item(@import_openstudio_cmd)
       @import_menu.add_item(@import_constructions_cmd)
       @import_menu.add_item(@import_schedules_cmd)
-      @import_menu.add_item(@import_space_types_cmd)      
+      @import_menu.add_item(@import_space_types_cmd)
       @import_menu.add_separator
       @import_menu.add_item(@import_idf_cmd)
       @import_menu.add_item(@import_idf_constructions_cmd)
@@ -816,7 +816,7 @@ module OpenStudio
       @import_menu.add_item(@import_gbxml_cmd)
       @import_menu.add_separator
       @import_menu.add_item(@import_sdd_cmd)
-      
+
       # Add the Export menu
       @export_menu = @plugin_menu.add_submenu("Export")
       @export_menu.add_item(@export_openstudio_cmd)
@@ -827,9 +827,9 @@ module OpenStudio
       @export_menu.add_item(@export_gbxml_cmd)
       @export_menu.add_separator
       @export_menu.add_item(@export_sdd_cmd)
-      
+
       @plugin_menu.add_separator
-      
+
       # Add the make new item menu
       @new_item_menu = @plugin_menu.add_submenu("Make New Object")
       @new_item_menu.add_item(@new_space_cmd)
@@ -839,18 +839,18 @@ module OpenStudio
       @new_item_menu.add_item(@new_illuminance_cmd)
       @new_item_menu.add_item(@new_luminaire_cmd)
       @new_item_menu.add_item(@new_glare_cmd)
-      
+
       # Add the modify model menu
       @modify_model_menu = @plugin_menu.add_submenu("Modify Model")
       @modify_model_menu.add_item(@surface_matching_cmd)
       @modify_model_menu.add_item(@space_attributes_cmd)
       @modify_model_menu.add_item(@space_diagram_cmd)
       @modify_model_menu.add_item(@loose_geometry_cmd)
-      
+
       # Add the inspect model menu
       @inspect_model_menu = @plugin_menu.add_submenu("Inspect Model")
       @inspect_model_menu.add_item(@inspector_dialog_cmd)
-      @inspect_model_menu.add_item(@surface_search_cmd) 
+      @inspect_model_menu.add_item(@surface_search_cmd)
       @inspect_model_menu.add_item(@info_tool_cmd)
       @inspect_model_menu.add_item(@show_errors_cmd)
 
@@ -867,9 +867,9 @@ module OpenStudio
       @rendering_menu.add_item(@render_by_layer_cmd)
       @rendering_menu.add_item(@render_by_surface_normal_cmd)
       #@rendering_menu.add_item(@color_scale_cmd)
-      
+
       #@plugin_menu.add_separator
-      
+
       # Add the Animation menu
       #@animation_menu = @plugin_menu.add_submenu("Animation")
       #@animation_menu.add_item(@rwd_to_start_cmd)
@@ -879,7 +879,7 @@ module OpenStudio
       #@animation_menu.add_item(@fwd_to_end_cmd)
       #@animation_menu.add_separator
       #@animation_menu.add_item(@anim_settings_cmd)
-      
+
       @plugin_menu.add_separator
 
       # Add the SketchUp Tools Menu
@@ -894,20 +894,20 @@ module OpenStudio
 
         # Loop through User Scripts to create commands and menus
         @user_scripts_menu = UI.menu("Plugins").add_submenu(Plugin.name + " User Scripts")
-        
+
         # command to reload user scripts
         load_user_script_cmd = UI::Command.new("Load User Scripts")  { Plugin.user_script_runner.load_user_scripts }
         load_user_script_cmd.set_validation_proc { enable_if_model_interface }
         @user_scripts_menu.add_item(load_user_script_cmd)
         @user_scripts_menu.add_separator
-        
+
         @user_script_cmds = Hash.new
-        
+
         # add menu items for sub directories
-           
+
       end
-      
- 
+
+
       if $OPENSTUDIO_SKETCHUPPLUGIN_DEVELOPER_MENU
         # add developer menu
         @developer_menu = UI.menu("Plugins").add_submenu(Plugin.name + " Developer")
@@ -918,25 +918,25 @@ module OpenStudio
         @developer_menu.add_item(@logging_cmd)
         #@developer_menu.add_item(@start_new_dialog_cmd)
       end
-      
+
     end
-    
+
     def user_scripts_menu
       return @user_scripts_menu
     end
-    
+
     #def disable_user_scripts
     #  # can't remove them, just disable
     #  @user_script_cmds.each_value do |user_script_cmd|
     #    user_script_cmd.set_validation_proc { MF_GRAYED }
     #  end
     #end
-    
+
     def add_user_script(name, menu)
-      if not Plugin.read_pref("Disable OpenStudio User Scripts")        
+      if not Plugin.read_pref("Disable OpenStudio User Scripts")
 
         user_script_cmd = @user_script_cmds[name]
-        
+
         if user_script_cmd
           user_script_cmd.set_validation_proc { enable_if_model_interface }
         else
@@ -947,8 +947,8 @@ module OpenStudio
         end
       end
     end
-    
-    
+
+
     def create_toolbars
 
       # Add the OpenStudio command toolbar
@@ -1018,41 +1018,41 @@ module OpenStudio
       #@animation_toolbar.restore
 
     end
-    
-    
+
+
     def create_context_menu
       # This method could be cleaned up a bit
 
       floor_type_cmd = UI::Command.new('Floor') { change_surface_type_to('FLOOR') }
       floor_type_cmd.set_validation_proc { validate_surface_type('FLOOR') }
-      
+
       wall_type_cmd = UI::Command.new('Wall') { change_surface_type_to('WALL') }
       wall_type_cmd.set_validation_proc { validate_surface_type('WALL') }
-      
+
       roofceiling_type_cmd = UI::Command.new('RoofCeiling') { change_surface_type_to('ROOFCEILING') }
       roofceiling_type_cmd.set_validation_proc { validate_surface_type('ROOFCEILING') }
 
       fixed_window_type_cmd = UI::Command.new('FixedWindow') { change_subsurface_type_to('FIXEDWINDOW') }
       fixed_window_type_cmd.set_validation_proc { validate_subsurface_type('FIXEDWINDOW') }
-      
+
       operable_window_type_cmd = UI::Command.new('OperableWindow') { change_subsurface_type_to('OPERABLEWINDOW') }
       operable_window_type_cmd.set_validation_proc { validate_subsurface_type('OPERABLEWINDOW') }
-      
+
       door_type_cmd = UI::Command.new('Door') { change_subsurface_type_to('DOOR') }
       door_type_cmd.set_validation_proc { validate_subsurface_type('DOOR') }
-      
+
       overhead_door_type_cmd = UI::Command.new('OverheadDoor') { change_subsurface_type_to('OVERHEADDOOR') }
       overhead_door_type_cmd.set_validation_proc { validate_subsurface_type('OVERHEADDOOR') }
-      
+
       glassdoor_type_cmd = UI::Command.new('GlassDoor') { change_subsurface_type_to('GLASSDOOR') }
       glassdoor_type_cmd.set_validation_proc { validate_subsurface_type('GLASSDOOR') }
-      
+
       skylight_type_cmd = UI::Command.new('Skylight') { change_subsurface_type_to('SKYLIGHT') }
       skylight_type_cmd.set_validation_proc { validate_subsurface_type('SKYLIGHT') }
-      
+
       tdd_dome_type_cmd = UI::Command.new('TubularDaylightDome') { change_subsurface_type_to('TubularDaylightDome') }
       tdd_dome_type_cmd.set_validation_proc { validate_subsurface_type('TubularDaylightDome') }
-      
+
       tdd_diffuser_type_cmd = UI::Command.new('TubularDaylightDiffuser') { change_subsurface_type_to('TDD:DIFFUSER') }
       tdd_diffuser_type_cmd.set_validation_proc { validate_subsurface_type('TDD:DIFFUSER') }
 
@@ -1109,13 +1109,13 @@ module OpenStudio
         return(MF_UNCHECKED)
       end
     end
-    
+
     def change_subsurface_type_to(new_type)
       drawing_interface = Plugin.model_manager.model_interface.selection_interface.selected_drawing_interface
       drawing_interface.model_object.setSubSurfaceType(new_type)
       drawing_interface.paint_entity
     end
-    
+
     def validate_subsurface_type(this_type)
       drawing_interface = Plugin.model_manager.model_interface.selection_interface.selected_drawing_interface
       if (drawing_interface.model_object.subSurfaceType == this_type.upcase)
@@ -1124,9 +1124,9 @@ module OpenStudio
         return(MF_UNCHECKED)
       end
     end
-    
+
     # some validation procs
-    
+
     def validate_class(this_class)
       drawing_interface = Plugin.model_manager.model_interface.selection_interface.selected_drawing_interface
       if (drawing_interface.input_object.is_class_name?(this_class))
@@ -1137,5 +1137,5 @@ module OpenStudio
     end
 
   end
-  
+
 end

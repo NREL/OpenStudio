@@ -41,10 +41,10 @@ namespace detail {
 
 /** InsideSurfaceConvectionAlgorithm derives from ModelObject and is an interface to the OpenStudio IDD object named "SurfaceConvectionAlgorithm:Inside".
  *
- *  InsideSurfaceConvectionAlgorithm is a unique object that specifies the global model used for surface convection at the inside face of all the 
- *  heat transfer surfaces in the model.  This global algorithm may be overridden for specific Surface, SurfaceList, or Zone objects. 
- *  InsideSurfaceConvectionAlgorithm does not have a public constructor because it is a unique ModelObject.  
- *  To get the InsideSurfaceConvectionAlgorithm object for a Model or create one if it does not yet exist use model.getUniqueObject<InsideSurfaceConvectionAlgorithm>().  
+ *  InsideSurfaceConvectionAlgorithm is a unique object that specifies the global model used for surface convection at the inside face of all the
+ *  heat transfer surfaces in the model.  This global algorithm may be overridden for specific Surface, SurfaceList, or Zone objects.
+ *  InsideSurfaceConvectionAlgorithm does not have a public constructor because it is a unique ModelObject.
+ *  To get the InsideSurfaceConvectionAlgorithm object for a Model or create one if it does not yet exist use model.getUniqueObject<InsideSurfaceConvectionAlgorithm>().
  *  To get the InsideSurfaceConvectionAlgorithm object for a Model but not create one if it does not yet exist use model.getOptionalUniqueObject<InsideSurfaceConvectionAlgorithm>().
  */
 class MODEL_API InsideSurfaceConvectionAlgorithm : public ModelObject {

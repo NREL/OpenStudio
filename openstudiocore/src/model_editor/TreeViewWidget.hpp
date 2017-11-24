@@ -37,7 +37,7 @@
 
 namespace modeleditor
 {
-  
+
 class TreeModel;
 class TreeView;
 

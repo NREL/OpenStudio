@@ -93,7 +93,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXSingleSpeedW
                         cq.name().get());
   }
   catch (std::exception& e) {
-    LOG(Error,"Could not translate " << modelObject.briefDescription() << ", because " 
+    LOG(Error,"Could not translate " << modelObject.briefDescription() << ", because "
         << e.what() << ".");
     return boost::none;
   }
@@ -255,7 +255,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXSingleSpeedW
 boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXSingleSpeed( CoilCoolingDXSingleSpeed& modelObject )
 {
   IdfObject coilSystemCoolingDXIdf(IddObjectType::CoilSystem_Cooling_DX);
-    
+
   m_idfObjects.push_back(coilSystemCoolingDXIdf);
 
   boost::optional<IdfObject> oIdfObject = translateCoilCoolingDXSingleSpeedWithoutUnitary(modelObject);

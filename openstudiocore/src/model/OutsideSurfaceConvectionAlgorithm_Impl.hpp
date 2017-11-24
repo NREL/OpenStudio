@@ -37,9 +37,9 @@ namespace model {
 namespace detail {
 
   class MODEL_API OutsideSurfaceConvectionAlgorithm_Impl : public ModelObject_Impl {
-    
-    
-    
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -48,8 +48,8 @@ namespace detail {
     OutsideSurfaceConvectionAlgorithm_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    OutsideSurfaceConvectionAlgorithm_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                                           Model_Impl* model, 
+    OutsideSurfaceConvectionAlgorithm_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                           Model_Impl* model,
                                            bool keepHandle);
 
     // clone copy constructor

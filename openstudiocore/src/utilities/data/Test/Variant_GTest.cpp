@@ -56,7 +56,7 @@ TEST_F(DataFixture, Variant)
   EXPECT_THROW(boolVariant.valueAsString(), boost::bad_get);
 
   EXPECT_THROW(intVariant.valueAsBoolean(), boost::bad_get);
-  //EXPECT_THROW(intVariant.valueAsDouble(), boost::bad_get); // DLM: allowed this since double values in OSW might appear to be ints 
+  //EXPECT_THROW(intVariant.valueAsDouble(), boost::bad_get); // DLM: allowed this since double values in OSW might appear to be ints
   EXPECT_THROW(intVariant.valueAsString(), boost::bad_get);
 
   EXPECT_THROW(doubleVariant.valueAsBoolean(), boost::bad_get);

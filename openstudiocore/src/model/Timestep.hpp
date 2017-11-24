@@ -42,8 +42,8 @@ namespace detail {
 /** Timestep derives from ModelObject and is an interface to the OpenStudio IDD object named "Timestep".
  *
  *  Timestep allows the user to set the zone timestep for EnergyPlus simulations.
- *  Timestep does not have a public constructor because it is a unique ModelObject.  
- *  To get the Timestep object for a Model or create one if it does not yet exist use model.getUniqueObject<Timestep>().  
+ *  Timestep does not have a public constructor because it is a unique ModelObject.
+ *  To get the Timestep object for a Model or create one if it does not yet exist use model.getUniqueObject<Timestep>().
  *  To get the Timestep object for a Model but not create one if it does not yet exist use model.getOptionalUniqueObject<Timestep>().
  */
 class MODEL_API Timestep : public ModelObject {

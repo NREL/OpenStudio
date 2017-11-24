@@ -72,7 +72,7 @@ class MODEL_API ScheduleRule : public ParentObject {
 
   /** @name Getters */
   //@{
-  
+
   ScheduleRuleset scheduleRuleset() const;
 
   int ruleIndex() const;
@@ -151,7 +151,7 @@ class MODEL_API ScheduleRule : public ParentObject {
 
   /// Returns whether or not this rule covers each given date.
   std::vector<bool> containsDates(const std::vector<openstudio::Date>& dates);
-  
+
   //@}
  protected:
 

@@ -39,7 +39,7 @@ namespace detail{
   class FFactorGroundFloorConstruction_Impl;
 }
 
-/** FFactorGroundFloorConstruction is a ConstructionBase that wraps EnergyPlus IDD object 
+/** FFactorGroundFloorConstruction is a ConstructionBase that wraps EnergyPlus IDD object
  *  'Construction:FfactorGroundFloor'. This is a simple, unlayered construction object that may
  *  be applied to a Surface (typically a ground floor). */
 class MODEL_API FFactorGroundFloorConstruction : public ConstructionBase {
@@ -88,7 +88,7 @@ class MODEL_API FFactorGroundFloorConstruction : public ConstructionBase {
   friend class detail::FFactorGroundFloorConstruction_Impl;
 
   explicit FFactorGroundFloorConstruction(
-      std::shared_ptr<detail::FFactorGroundFloorConstruction_Impl> impl);  
+      std::shared_ptr<detail::FFactorGroundFloorConstruction_Impl> impl);
 
   /// @endcond
  private:

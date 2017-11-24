@@ -40,11 +40,11 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateZoneControlHumidistat( ZoneControlHumidistat& modelObject )
 {
-  boost::optional<IdfObject> result; 
+  boost::optional<IdfObject> result;
 
   auto humidifyingSchedule = modelObject.humidifyingRelativeHumiditySetpointSchedule();
   auto dehumidifyingSchedule = modelObject.dehumidifyingRelativeHumiditySetpointSchedule();
-  
+
   if( humidifyingSchedule || dehumidifyingSchedule ) {
     // Name
     result = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneControl_Humidistat, modelObject);

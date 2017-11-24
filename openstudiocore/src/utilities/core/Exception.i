@@ -6,10 +6,10 @@
 
 %{
   #include <utilities/core/Exception.hpp>
-  
+
   /// test method
   void throwException(){throw std::runtime_error(std::string("test exception"));}
-  
+
 %}
 
 #if defined(SWIGRUBY)
@@ -61,7 +61,7 @@
     }
   }
 
-#else 
+#else
   #warning Exception handler not available for current target language
 #endif
 
@@ -70,4 +70,4 @@ void throwException();
 
 %include <utilities/core/Exception.hpp>
 
-#endif //UTILITIES_CORE_EXCEPTION_I 
+#endif //UTILITIES_CORE_EXCEPTION_I

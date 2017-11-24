@@ -47,7 +47,7 @@ namespace detail{
  *  objects.
  *
  *  \todo The IDD object "OS:ComponentCost:Adjustments" should be marked as unique
- *   
+ *
  */
 class MODEL_API ComponentCostAdjustments : public ParentObject {
 public:
@@ -60,19 +60,19 @@ public:
   //@}
   /** @name Getters */
   //@{
- 
+
   boost::optional<double> miscellaneousCostPerConditionedArea() const;
-  
+
   boost::optional<double> designAndEngineeringFees() const;
 
   boost::optional<double> contractorFee() const;
 
   boost::optional<double> contingency() const;
-  
+
   boost::optional<double> permitsBondingAndInsurance() const;
 
   boost::optional<double> commissioningFee() const;
-  
+
   boost::optional<double> regionalAdjustmentFactor() const;
 
   //@}
@@ -106,10 +106,10 @@ protected:
 
   friend class Model;
   friend class IdfObject;
-  
+
   /// Constructs a new ComponentCostAdjustments object in the model.
   explicit ComponentCostAdjustments(const Model& model);
-  
+
   // constructor
   explicit ComponentCostAdjustments(std::shared_ptr<detail::ComponentCostAdjustments_Impl> impl);
 

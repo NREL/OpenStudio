@@ -47,7 +47,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translatePumpConstantSpeed( 
+boost::optional<IdfObject> ForwardTranslator::translatePumpConstantSpeed(
     PumpConstantSpeed& modelObject)
 {
   boost::optional<std::string> s;
@@ -122,12 +122,12 @@ boost::optional<IdfObject> ForwardTranslator::translatePumpConstantSpeed(
     idfObject.setDouble(Pump_ConstantSpeedFields::MotorEfficiency,value.get());
   }
 
-  // FractionofMotorInefficienciestoFluidStream  
+  // FractionofMotorInefficienciestoFluidStream
 
   if( (value = modelObject.fractionofMotorInefficienciestoFluidStream()) )
   {
     idfObject.setDouble(Pump_ConstantSpeedFields::FractionofMotorInefficienciestoFluidStream,value.get());
-  } 
+  }
 
   // PumpControlType
 

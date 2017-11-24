@@ -36,7 +36,7 @@ module OpenStudio
 
     def initialize
       super
-      
+
       @dialog = ColorScaleDialog.new(nil, self, @hash)
     end
 

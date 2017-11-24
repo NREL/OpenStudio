@@ -90,7 +90,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
   }
 
   // PreheatDesignTemperature
-  
+
   value = modelObject.preheatDesignTemperature();
   if( value )
   {
@@ -99,7 +99,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
 
   // PreheatDesignHumidityRatio
 
-  value = modelObject.preheatDesignHumidityRatio(); 
+  value = modelObject.preheatDesignHumidityRatio();
   if( value )
   {
     idfObject.setDouble(Sizing_SystemFields::PreheatDesignHumidityRatio,value.get());
@@ -146,8 +146,8 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
   }
 
   // AllOutdoorAirinCooling
-  
-  bool b = modelObject.allOutdoorAirinCooling(); 
+
+  bool b = modelObject.allOutdoorAirinCooling();
   if( b )
   {
     idfObject.setString(Sizing_SystemFields::AllOutdoorAirinCooling,"Yes");
@@ -158,8 +158,8 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
   }
 
   // AllOutdoorAirinHeating
-  
-  b = modelObject.allOutdoorAirinHeating(); 
+
+  b = modelObject.allOutdoorAirinHeating();
   if( b )
   {
     idfObject.setString(Sizing_SystemFields::AllOutdoorAirinHeating,"Yes");
@@ -170,20 +170,20 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
   }
 
   // CentralCoolingDesignSupplyAirHumidityRatio
-  
+
   value = modelObject.centralCoolingDesignSupplyAirHumidityRatio();
   if( value )
   {
     idfObject.setDouble(Sizing_SystemFields::CentralCoolingDesignSupplyAirHumidityRatio,value.get());
-  } 
+  }
 
   // CentralHeatingDesignSupplyAirHumidityRatio
-  
+
   value = modelObject.centralHeatingDesignSupplyAirHumidityRatio();
   if( value )
   {
     idfObject.setDouble(Sizing_SystemFields::CentralHeatingDesignSupplyAirHumidityRatio,value.get());
-  } 
+  }
 
   // CoolingDesignAirFlowMethod
 
@@ -218,7 +218,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
   }
 
   // SystemOutdoorAirMethod
-  
+
   s = modelObject.systemOutdoorAirMethod();
   if( s )
   {
@@ -236,7 +236,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
   if( value ) {
     idfObject.setDouble(Sizing_SystemFields::CoolingSupplyAirFlowRatePerFloorArea,value.get());
   }
-  
+
   // CoolingFractionofAutosizedCoolingSupplyAirFlowRate
   value = modelObject.coolingFractionofAutosizedCoolingSupplyAirFlowRate();
   if( value ) {
@@ -254,13 +254,13 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
   if( value ) {
     idfObject.setDouble(Sizing_SystemFields::HeatingSupplyAirFlowRatePerFloorArea,value.get());
   }
-  
+
   // HeatingFractionofAutosizedHeatingSupplyAirFlowRate
   value = modelObject.heatingFractionofAutosizedHeatingSupplyAirFlowRate();
   if( value ) {
     idfObject.setDouble(Sizing_SystemFields::HeatingFractionofAutosizedHeatingSupplyAirFlowRate,value.get());
   }
-  
+
   // HeatingFractionofAutosizedCoolingSupplyAirFlowRate
   value = modelObject.heatingFractionofAutosizedCoolingSupplyAirFlowRate();
   if( value ) {
@@ -286,8 +286,8 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
   } else if( value ) {
     idfObject.setDouble(Sizing_SystemFields::CoolingDesignCapacity,value.get());
   }
-  
-  
+
+
   // CoolingDesignCapacityPerFloorArea
   value = modelObject.coolingDesignCapacityPerFloorArea();
   if( value ) {
@@ -295,7 +295,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
   }
 
   // FractionofAutosizedCoolingDesignCapacity
-  value = modelObject.fractionofAutosizedCoolingDesignCapacity(); 
+  value = modelObject.fractionofAutosizedCoolingDesignCapacity();
   if( value ) {
     idfObject.setDouble(Sizing_SystemFields::FractionofAutosizedCoolingDesignCapacity,value.get());
   }
@@ -313,7 +313,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
   } else if( value ) {
     idfObject.setDouble(Sizing_SystemFields::HeatingDesignCapacity,value.get());
   }
-  
+
   // HeatingDesignCapacityPerFloorArea
   value = modelObject.heatingDesignCapacityPerFloorArea();
   if( value ) {
@@ -321,7 +321,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
   }
 
   // FractionofAutosizedHeatingDesignCapacity
-  value = modelObject.fractionofAutosizedHeatingDesignCapacity(); 
+  value = modelObject.fractionofAutosizedHeatingDesignCapacity();
   if( value ) {
     idfObject.setDouble(Sizing_SystemFields::FractionofAutosizedHeatingDesignCapacity,value.get());
   }

@@ -60,7 +60,7 @@ OptionalModelObject ReverseTranslator::translateElectricEquipment( const Workspa
 
   // create the definition
   openstudio::model::ElectricEquipmentDefinition definition(m_model);
-  
+
   OptionalString s = workspaceObject.name();
   if(s){
     definition.setName(*s + " Definition");
@@ -145,7 +145,7 @@ OptionalModelObject ReverseTranslator::translateElectricEquipment( const Workspa
   if(s){
     electricEquipment.setEndUseSubcategory(*s);
   }
-       
+
   return electricEquipment;
 }
 

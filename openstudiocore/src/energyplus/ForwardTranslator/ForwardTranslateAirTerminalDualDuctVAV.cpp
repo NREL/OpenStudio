@@ -99,7 +99,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalDualDuctVAV( A
     if( auto idf = translateAndMapModelObject(designOA.get()) ) {
       idfObject.setString(AirTerminal_DualDuct_VAVFields::DesignSpecificationOutdoorAirObjectName,idf->name().get());
     }
-  } 
+  }
 
   // Populate fields for AirDistributionUnit
   if( boost::optional<ModelObject> outletNode = modelObject.outletModelObject() )

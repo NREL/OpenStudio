@@ -40,7 +40,7 @@
 namespace openstudio {
 
 ModelObjectTypeItem::ModelObjectTypeItem(OSCollapsibleItemHeader* collapsibleItemHeader,
-                                         ModelObjectListView* modelObjectListView, 
+                                         ModelObjectListView* modelObjectListView,
                                          QWidget * parent )
   : OSCollapsibleItem(collapsibleItemHeader, modelObjectListView, parent)
 {

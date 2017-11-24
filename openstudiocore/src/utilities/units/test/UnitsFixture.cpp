@@ -54,12 +54,12 @@ void UnitsFixture::TearDown() {
 }
 
 // initialize static members
-void UnitsFixture::SetUpTestCase() 
+void UnitsFixture::SetUpTestCase()
 {
   logFile = FileLogSink(toPath("./UnitsFixture.log"));
   logFile->setLogLevel(Debug);
   Logger::instance().standardOutLogger().disable();
-  
+
   tol = 1.0E-8;
 
   openstudio::DoubleVector vals = openstudio::toStandardVector(openstudio::randVector(0.0,1000.0,8760u));

@@ -41,7 +41,7 @@ namespace radiance{
 
   /** Photosensor represents the physical location, orientation, and sensitivity pattern of a photocell. As well as
    *   output from simulation.
-   */ 
+   */
   class RADIANCE_API Photosensor{
     public:
       openstudio::Vector location;

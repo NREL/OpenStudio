@@ -57,12 +57,12 @@ TEST(ZoneHVACPackagedTerminalAirConditioner,ZoneHVACPackagedTerminalAirCondition
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     model::Model m; 
+  ASSERT_EXIT (
+  {
+     model::Model m;
 
      model::ScheduleCompact availabilitySchedule(m);
-  
+
      model::FanConstantVolume fan(m,availabilitySchedule);
 
      model::CoilHeatingWater heatingCoil(m,availabilitySchedule);
@@ -122,7 +122,7 @@ TEST(ZoneHVACPackagedTerminalAirConditioner,ZoneHVACPackagedTerminalAirCondition
 
 
      model::ZoneHVACPackagedTerminalAirConditioner ptac( m,
-                                                         availabilitySchedule, 
+                                                         availabilitySchedule,
                                                          fan,
                                                          heatingCoil,
                                                          coolingCoil );
@@ -135,7 +135,7 @@ TEST(ZoneHVACPackagedTerminalAirConditioner,ZoneHVACPackagedTerminalAirCondition
 
      ptac.coolingCoil();
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -144,12 +144,12 @@ TEST(ZoneHVACPackagedTerminalAirConditioner,ZoneHVACPackagedTerminalAirCondition
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     model::Model m; 
+  ASSERT_EXIT (
+  {
+     model::Model m;
 
      model::ScheduleCompact availabilitySchedule(m);
-  
+
      model::FanConstantVolume fan(m,availabilitySchedule);
 
      model::CoilHeatingWater heatingCoil(m,availabilitySchedule);
@@ -209,12 +209,12 @@ TEST(ZoneHVACPackagedTerminalAirConditioner,ZoneHVACPackagedTerminalAirCondition
 
 
      model::ZoneHVACPackagedTerminalAirConditioner ptac( m,
-                                                         availabilitySchedule, 
+                                                         availabilitySchedule,
                                                          fan,
                                                          heatingCoil,
                                                          coolingCoil );
 
-     model::Model m2; 
+     model::Model m2;
 
      model::ZoneHVACPackagedTerminalAirConditioner ptac2 = ptac.clone(m2).cast<model::ZoneHVACPackagedTerminalAirConditioner>();
 
@@ -226,12 +226,12 @@ TEST(ZoneHVACPackagedTerminalAirConditioner,ZoneHVACPackagedTerminalAirCondition
 
      ptac2.coolingCoil();
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 
   {
-    model::Model m; 
+    model::Model m;
     model::CoilHeatingWater heatingCoil(m);
     model::CoilCoolingDXSingleSpeed coolingCoil(m);
     model::FanConstantVolume fan(m);

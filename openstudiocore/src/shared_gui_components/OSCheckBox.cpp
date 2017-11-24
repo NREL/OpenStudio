@@ -144,7 +144,7 @@ OSCheckBox2::OSCheckBox2( QWidget * parent )
   this->setAcceptDrops(false);
 
   this->setCheckable(true);
-  
+
   setEnabled(false);
 }
 
@@ -214,7 +214,7 @@ void OSCheckBox2::onModelObjectRemove(const Handle& handle)
 //   this->setAcceptDrops(false);
 
 //   this->setCheckable(true);
-  
+
 //   setEnabled(false);
 // }
 

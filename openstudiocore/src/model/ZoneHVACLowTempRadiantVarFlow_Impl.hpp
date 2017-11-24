@@ -68,15 +68,15 @@ namespace detail {
     //@{
 
     virtual ModelObject clone(Model model) const override;
-    
+
     virtual std::vector<IdfObject> remove() override;
-    
+
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
-    
+
     virtual std::vector<ModelObject> children() const override;
 
     virtual unsigned inletPort() const override;
@@ -88,7 +88,7 @@ namespace detail {
     //@{
 
     Schedule availabilitySchedule() const;
-    
+
     HVACComponent heatingCoil() const;
 
     HVACComponent coolingCoil() const;
@@ -120,7 +120,7 @@ namespace detail {
     //@{
 
     bool setAvailabilitySchedule(Schedule& schedule);
-    
+
     bool setHeatingCoil(HVACComponent& heatingCoil);
 
     bool setCoolingCoil(HVACComponent& coolingCoil);
@@ -146,7 +146,7 @@ namespace detail {
     bool setNumberofCircuits(std::string numberofCircuits);
 
     void setCircuitLength(double circuitLength);
-    
+
     boost::optional<ThermalZone> thermalZone() const;
 
     bool addToThermalZone(ThermalZone & thermalZone) override;
@@ -165,7 +165,7 @@ namespace detail {
     boost::optional<Schedule> optionalAvailabilitySchedule() const;
     boost::optional<HVACComponent> optionalHeatingCoil() const;
     boost::optional<HVACComponent> optionalCoolingCoil() const;
-    
+
     std::vector<std::string> radiantSurfaceTypeValues() const;
     std::vector<std::string> temperatureControlTypeValues() const;
 

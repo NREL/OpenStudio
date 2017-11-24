@@ -32,11 +32,11 @@ require("openstudio/sketchup_plugin/lib/interfaces/IlluminanceMap")
 module OpenStudio
 
   class NewIlluminanceMapTool < Tool
-  
+
     def initialize
       @cursor = UI.create_cursor(Plugin.dir + "/lib/resources/icons/OriginToolCursor-14x20.tiff", 3, 3)
     end
-    
+
     def onMouseMove(flags, x, y, view)
       super
       # Should apply user's precision setting here   --automatically done, I think
@@ -48,7 +48,7 @@ module OpenStudio
 
     def onLButtonUp(flags, x, y, view)
       super
-      
+
       model_interface = Plugin.model_manager.model_interface
 
       # look for this group in the spaces
@@ -70,9 +70,9 @@ module OpenStudio
       end
 
       had_observers = this_space.remove_observers
-      
+
       begin
-      
+
         model_interface.start_operation("New Illuminance Map", true)
 
         initial_position = @ip.position
@@ -98,20 +98,20 @@ module OpenStudio
         illuminance_map.draw_entity
         illuminance_map.add_observers
         illuminance_map.add_watcher
-      
+
       ensure
-        
+
         model_interface.commit_operation
-      
+
       end
-      
+
       this_space.add_observers if had_observers
-      
+
       # selection observers will ignore signals because selection tool is not yet active
       model_interface.skp_model.selection.clear
       model_interface.skp_model.selection.add(illuminance_map.entity)
       Plugin.dialog_manager.selection_changed
-      
+
       # pick selection tool after changing selection
       Sketchup.send_action("selectSelectionTool:")
 

@@ -120,7 +120,7 @@ namespace openstudio
     {
       m_logSink.setLogLevel(Warn);
       //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSReverseTranslator"));
-      m_logSink.setThreadId(QThread::currentThread());    
+      m_logSink.setThreadId(QThread::currentThread());
     }
 
     std::vector<LogMessage> ThreeJSReverseTranslator::warnings() const
@@ -153,7 +153,7 @@ namespace openstudio
     {
       return m_handleMapping;
     }
-    
+
     boost::optional<Model> ThreeJSReverseTranslator::modelFromThreeJS(const ThreeScene& scene)
     {
       m_logSink.setThreadId(QThread::currentThread());
@@ -170,7 +170,7 @@ namespace openstudio
         std::string iddObjectType = m.iddObjectType();
         UUID handle = toUUID(m.handle());
         std::string name = m.name();
-        
+
         boost::optional<ModelObject> modelObject;
 
         if (istringEqual(iddObjectType, "OS:ThermalZone")){
@@ -365,6 +365,6 @@ namespace openstudio
       return model;
     }
 
-    
+
   }//model
 }//openstudio

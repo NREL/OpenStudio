@@ -77,7 +77,7 @@ namespace openstudio
     {
       m_logSink.setLogLevel(Warn);
       //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.FloorplanJSForwardTranslator"));
-      m_logSink.setThreadId(QThread::currentThread());    
+      m_logSink.setThreadId(QThread::currentThread());
     }
 
     std::vector<LogMessage> FloorplanJSForwardTranslator::warnings() const
@@ -156,7 +156,7 @@ namespace openstudio
       for (const auto& set : model.getConcreteModelObjects<DefaultConstructionSet>())
       {
         FloorplanObject setObject("", set.nameString(), set.handle());
-        
+
         //boost::optional<RenderingColor> color = set.renderingColor();
         //if (color){
         // setObject.setDataString("color", color->colorString());
@@ -166,12 +166,12 @@ namespace openstudio
       }
       result.updateConstructionSets(setObjects, removeMissingObjects);
 
-      // do stories and spaces after resources 
+      // do stories and spaces after resources
       std::vector<FloorplanObject> storyObjects;
       for (const auto& story : model.getConcreteModelObjects<BuildingStory>())
       {
         FloorplanObject storyObject("", story.nameString(), story.handle());
-        
+
         boost::optional<RenderingColor> color = story.renderingColor();
         if (color){
           storyObject.setDataString("color", color->colorString());

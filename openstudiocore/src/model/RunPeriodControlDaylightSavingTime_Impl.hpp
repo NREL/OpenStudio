@@ -33,7 +33,7 @@
 #include "ModelObject_Impl.hpp"
 
 namespace openstudio {
-  
+
 class Date;
 class MonthOfYear;
 class NthDayOfWeekInMonth;
@@ -94,7 +94,7 @@ namespace detail {
     bool setEndDate(const std::string& endDate);
     bool setEndDate(const openstudio::MonthOfYear& monthOfYear, unsigned day);
     bool setEndDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek, const openstudio::MonthOfYear& monthOfYear);
-  
+
     // ensure that this object does not contain the date 2/29
     void ensureNoLeapDays();
 

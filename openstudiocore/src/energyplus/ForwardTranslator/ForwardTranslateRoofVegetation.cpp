@@ -62,7 +62,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRoofVegetation( RoofVeget
   if (d){
     idfObject.setDouble(Material_RoofVegetationFields::LeafReflectivity, *d);
   }
-    
+
   d = modelObject.getDouble(OS_Material_RoofVegetationFields::LeafEmissivity, false);
   if (d){
     idfObject.setDouble(Material_RoofVegetationFields::LeafEmissivity, *d);

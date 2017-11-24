@@ -45,13 +45,13 @@ TEST_F(ModelFixture,FanConstantVolume_FanConstantVolume)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model m;
     Schedule s = m.alwaysOnDiscreteSchedule();
     FanConstantVolume testObject(m,s);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }

@@ -43,14 +43,14 @@ TEST_F(ModelFixture, SetpointManagerScheduled_DefaultConstructor)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model m;
     ScheduleConstant tempSch(m);
     tempSch.setValue(50);
     SetpointManagerScheduled testObject(m,tempSch);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }

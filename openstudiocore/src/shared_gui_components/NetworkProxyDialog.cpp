@@ -53,7 +53,7 @@
 namespace openstudio
 {
   NetworkProxyDialog::NetworkProxyDialog(QSettings &t_settings, QWidget *t_parent = nullptr)
-    : QDialog(t_parent), 
+    : QDialog(t_parent),
       m_settings(t_settings)
   {
     auto layout = new QGridLayout(this);
@@ -82,13 +82,13 @@ namespace openstudio
     layout->addWidget(m_port, 2, 1);
     layout->addWidget(new QLabel("User Name"), 3, 0);
     layout->addWidget(m_user, 3, 1);
-    
+
     auto buttonBox = new QHBoxLayout();
 
     QPushButton *saveButton = new QPushButton("Save");
     QPushButton *cancelButton = new QPushButton("Cancel");
     QPushButton *testButton = new QPushButton("Test");
-   
+
     buttonBox->addWidget(saveButton);
     buttonBox->addWidget(cancelButton);
     buttonBox->addWidget(testButton);
@@ -181,7 +181,7 @@ namespace openstudio
 
     head->deleteLater();
 
-    if (!head->isFinished()) 
+    if (!head->isFinished())
     {
       head->abort();
       return std::make_pair(QNetworkReply::TimeoutError, QString("Timed out while attempting to verify proxy connection"));
@@ -197,7 +197,7 @@ namespace openstudio
     if (t_proxy.type() == QNetworkProxy::NoProxy) return true;
 
     t_parent->setEnabled(false);
-    
+
     bool retval = false;
     bool cont = true;
     while (cont)

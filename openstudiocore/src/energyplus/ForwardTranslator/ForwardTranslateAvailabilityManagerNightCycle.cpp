@@ -53,7 +53,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightCycle( 
+boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightCycle(
     AvailabilityManagerNightCycle & modelObject)
 {
   IdfObject idfObject(IddObjectType::AvailabilityManager_NightCycle);
@@ -98,7 +98,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
   }
 
   idfObject.setString(AvailabilityManager_NightCycleFields::CyclingRunTimeControlType,"FixedRunTime");
-  
+
   return idfObject;
 }
 

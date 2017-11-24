@@ -56,9 +56,9 @@ namespace detail {
  *  Facility is a unique object which parents the Building in the model.  Conceptually,
  *  the Facility object includes the Building as well as exterior equipment,
  *  parking lot lighting, water systems for grounds, etc.  The Facility object currently does not
- *  have any fields, it is simply used to access \link OutputMeter OutputMeters \endlink and high level results 
- *  which include exterior end uses. Facility does not have a public constructor because it is a unique ModelObject.  
- *  To get the Facility object for a Model or create one if it does not yet exist use model.getUniqueObject<Facility>().  
+ *  have any fields, it is simply used to access \link OutputMeter OutputMeters \endlink and high level results
+ *  which include exterior end uses. Facility does not have a public constructor because it is a unique ModelObject.
+ *  To get the Facility object for a Model or create one if it does not yet exist use model.getUniqueObject<Facility>().
  *  To get the Facility object for a Model but not create one if it does not yet exist use model.getOptionalUniqueObject<Facility>().
  */
 class MODEL_API Facility : public ParentObject {
@@ -66,7 +66,7 @@ class MODEL_API Facility : public ParentObject {
   virtual ~Facility() {}
 
   static IddObjectType iddObjectType();
-  
+
   /// Returns all FuelTypes which are fossil fuels.
   static std::vector<FuelType> fossilFuels();
 
@@ -86,7 +86,7 @@ class MODEL_API Facility : public ParentObject {
 
   /// Returns all \link OutputMeter OutputMeters \endlink at the Facility level.
   std::vector<OutputMeter> meters() const;
-  
+
   boost::optional<OutputMeter> getMeterByFuelType(
       const FuelType& fuelType,
       const std::string& reportingFrequency="Hourly",
@@ -127,7 +127,7 @@ class MODEL_API Facility : public ParentObject {
   /// Returns the annual total cost per net conditioned building area associated with the given fuel type in dollars per square meter.
   /// Requires EnergyPlus simulation output to calculate.
   boost::optional<double> annualTotalCostPerNetConditionedBldgArea(const FuelType& fuel) const;
-  
+
   /// Returns the annual total cost for all fuel types in dollars. Requires EnergyPlus simulation output to calculate.
   /// Attribute name: annualTotalUtilityCost
   boost::optional<double> annualTotalUtilityCost() const;
@@ -152,7 +152,7 @@ class MODEL_API Facility : public ParentObject {
   /// Attribute name: annualWaterTotalCost
   boost::optional<double> annualWaterTotalCost() const;
 
-  /// Returns the total capital cost associated with the building in dollars by summing all costs from all 
+  /// Returns the total capital cost associated with the building in dollars by summing all costs from all
   /// ComponentCost_LineItem objects.  Requires EnergyPlus simulation output and LifeCycleCost_Parameters input object to calculate.
   /// \todo: only ComponentCost_LineItem of line item type "Construction" are currently handled
   /// \todo: this should not require life cycle parameters to calculate
@@ -682,7 +682,7 @@ class MODEL_API Facility : public ParentObject {
 
 
   explicit Facility(Model& model);
-   
+
   //@}
 
   /// @cond

@@ -692,7 +692,7 @@ std::string extractUnitString(const std::string& text) {
     // main match at 1, 5, 9, or 13
     for (unsigned i = 1; i < 14; i += 4) {
       result = std::string(m[i].first,m[i].second);
-      if (!result.empty()) { 
+      if (!result.empty()) {
         return result;
       }
     }
@@ -720,7 +720,7 @@ std::string extractUnitString(const std::string& text) {
 std::string convertToStandardForm(const std::string& unitString) {
   std::string result(unitString);
   if (isDirectScaledUnit(unitString)) {
-    std::pair<std::string,std::pair<unsigned,std::string> > fragments = 
+    std::pair<std::string,std::pair<unsigned,std::string> > fragments =
         decomposeDirectScaledUnit(unitString);
     ScaleConstant s;
     s = ScaleFactory::instance().createScale(-static_cast<int>(fragments.second.first));

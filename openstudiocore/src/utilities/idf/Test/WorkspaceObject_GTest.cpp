@@ -63,11 +63,11 @@ TEST_F(IdfFixture,WorkspaceObject_Construction) {
   OptionalWorkspaceObject object = ws.getObject(w->handle());
   ASSERT_TRUE(object);
   EXPECT_TRUE(object->iddObject().type() == openstudio::IddObjectType::Building);
-  
+
   // add object with pointer, and do not include pointed to object. should be successful, but
   // pointer should be null. object.canBeSource() should be true.
 
-  // add object with pointer, and do include pointed to object. should be successful, and 
+  // add object with pointer, and do include pointed to object. should be successful, and
   // following pointer should yield target object. source should be source, target should be
   // target.
 
@@ -83,7 +83,7 @@ TEST_F(IdfFixture, WorkspaceObject_GetStringAfterSetStringAddsFields)
   OptionalWorkspaceObject w;
   IdfObject idfObj(IddObjectType::SurfaceProperty_ConvectionCoefficients);
   w = ws.addObject(idfObj);
-  
+
   EXPECT_TRUE(w->numNonextensibleFields()==3);
   EXPECT_TRUE(w->setString(w->iddObject().numFields()-1,""));
   EXPECT_TRUE(w->numNonextensibleFields()==11);
@@ -110,7 +110,7 @@ TEST_F(IdfFixture, WorkspaceObject_Building) {
     FullExterior,            !- Solar Distribution
     25;                      !- Maximum Number of Warmup Days
   */
-  
+
   OptionalString buildingName = building.getString(BuildingFields::Name);
   ASSERT_TRUE(buildingName);
   EXPECT_EQ("Building", *buildingName);
@@ -322,7 +322,7 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
   OptionalDouble dValue = object.getDouble(19);
   ASSERT_TRUE(dValue);
   EXPECT_NEAR(0.5,*dValue,tol);
-  
+
   // SHOULD NOT BE VALID
   scratch = Workspace(StrictnessLevel::Draft, IddFileType::EnergyPlus); // Non-null data must be valid
   text.str("");
@@ -394,7 +394,7 @@ TEST_F(IdfFixture,WorkspaceObject_ClearGroups) {
 }
 
 
-TEST_F(IdfFixture, WorkspaceObject_OS_DaylightingDevice_Shelf) 
+TEST_F(IdfFixture, WorkspaceObject_OS_DaylightingDevice_Shelf)
 {
   // defaults to IddFileType::OpenStudio
   Workspace ws;
@@ -407,14 +407,14 @@ TEST_F(IdfFixture, WorkspaceObject_OS_DaylightingDevice_Shelf)
   EXPECT_TRUE(obj1->setPointer(OS_DaylightingDevice_ShelfFields::InsideShelfName, w2->handle()));
 }
 
-//TEST_F(IdfFixture, WorkspaceObject_OS_AirLoopHVAC_ZoneSplitter) 
+//TEST_F(IdfFixture, WorkspaceObject_OS_AirLoopHVAC_ZoneSplitter)
 //{
 //  //Workspace ws();
 //  //OptionalHandle h1 = ws.addObject(IdfObject(IddObjectType::OS_AirLoopHVAC_ZoneSplitter));
 //  //OptionalHandle h2 = ws.addObject(IdfObject(IddObjectType::OS_Connection));
 //}
 
-TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects) 
+TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects)
 {
   // defaults to IddFileType::OpenStudio
   Workspace ws1;
@@ -438,7 +438,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects)
   EXPECT_EQ(h2, w2.handle());
 }
 
-TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2) 
+TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
 {
   // defaults to IddFileType::OpenStudio
   Workspace ws1;

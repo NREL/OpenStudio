@@ -56,7 +56,7 @@ namespace openstudio{
 
   /// Time is a relative unit of time, resolution to the second
   /// Time is simple wrapper around boost::posix_time::time_duration
-  /// Internally totalSeconds is the primary definition of time 
+  /// Internally totalSeconds is the primary definition of time
   /// (i.e. it does not matter how time is divided into hours, minutes, seconds)
   class UTILITIES_API Time
   {
@@ -80,7 +80,7 @@ namespace openstudio{
       /// default constructor
       Time();
 
-      /// from impl 
+      /// from impl
       Time(const ImplType& implType);
 
       /// Time from number of days, fractional values ok

@@ -43,9 +43,9 @@ module OpenStudio
 
     def onLButtonUp(flags, x, y, view)
       super
-      
+
       model_interface = Plugin.model_manager.model_interface
-      
+
       # look for this group in the spaces
       this_space = nil
       if model_interface.skp_model.active_path
@@ -62,12 +62,12 @@ module OpenStudio
         UI.messagebox "You need to be in a Space to add an Interior Partition Surface Group"
         Sketchup.send_action("selectSelectionTool:")
         return false
-      end      
-      
+      end
+
       had_observers = this_space.remove_observers
-      
+
       begin
-      
+
         model_interface.start_operation("New Interior Partition Surface Group", true)
 
         # input point is in absolute coordinates
@@ -79,30 +79,30 @@ module OpenStudio
         partition_group.model_object.setSpace(this_space.model_object)
         partition_group.model_object.setXOrigin(initial_position.x.to_m)
         partition_group.model_object.setYOrigin(initial_position.y.to_m)
-        partition_group.model_object.setZOrigin(initial_position.z.to_m)      
+        partition_group.model_object.setZOrigin(initial_position.z.to_m)
         partition_group.draw_entity
         partition_group.create_initial_box("#{$OPENSTUDIO_SKETCHUPPLUGIN_DIR}/resources/components/OpenStudio_NewInteriorPartitionSurfaceGroup.skp")
         partition_group.add_observers
         partition_group.add_watcher
-      
+
       ensure
-      
+
         model_interface.commit_operation
-      
+
       end
-      
+
       this_space.add_observers if had_observers
-      
+
       # selection observers will ignore signals because selection tool is not yet active
       model_interface.skp_model.selection.clear
       model_interface.skp_model.selection.add(partition_group.entity)
       Plugin.dialog_manager.selection_changed
-      
+
       # pick selection tool after changing selection
       Sketchup.send_action("selectSelectionTool:")
-      
+
     end
-    
+
   end
 
 end

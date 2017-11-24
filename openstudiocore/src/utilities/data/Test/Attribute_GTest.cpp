@@ -61,7 +61,7 @@ TEST_F(DataFixture, Attribute_BoolTrue)
   // save to xml
   ASSERT_TRUE(attribute.saveToXml(xmlPath));
 
-  // load 
+  // load
   boost::optional<Attribute> testAttribute = Attribute::loadFromXml(xmlPath);
   ASSERT_TRUE(testAttribute);
   EXPECT_EQ("bool", testAttribute->name());
@@ -87,7 +87,7 @@ TEST_F(DataFixture, Attribute_Integer)
   // save to xml
   attribute.saveToXml(xmlPath);
 
-  // load 
+  // load
   boost::optional<Attribute> testAttribute = Attribute::loadFromXml(xmlPath);
   ASSERT_TRUE(testAttribute);
   EXPECT_EQ("int", testAttribute->name());
@@ -112,7 +112,7 @@ TEST_F(DataFixture, Attribute_Unsigned)
   // save to xml
   attribute.saveToXml(xmlPath);
 
-  // load 
+  // load
   boost::optional<Attribute> testAttribute = Attribute::loadFromXml(xmlPath);
   ASSERT_TRUE(testAttribute);
   EXPECT_EQ("unsigned", testAttribute->name());
@@ -133,11 +133,11 @@ TEST_F(DataFixture, Attribute_Double_Small)
   EXPECT_EQ(AttributeValueType::Double, attribute.valueType().value());
   EXPECT_EQ(1.5, attribute.valueAsDouble());
   EXPECT_FALSE(attribute.units());
-  
+
   // save to xml
   attribute.saveToXml(xmlPath);
 
-  // load 
+  // load
   boost::optional<Attribute> testAttribute = Attribute::loadFromXml(xmlPath);
   ASSERT_TRUE(testAttribute);
   EXPECT_EQ("double", testAttribute->name());
@@ -158,11 +158,11 @@ TEST_F(DataFixture, Attribute_Double_Big)
   EXPECT_EQ(AttributeValueType::Double, attribute.valueType().value());
   EXPECT_DOUBLE_EQ(1.189679819371987395175049501E32, attribute.valueAsDouble());
   EXPECT_FALSE(attribute.units());
-  
+
   // save to xml
   attribute.saveToXml(xmlPath);
 
-  // load 
+  // load
   boost::optional<Attribute> testAttribute = Attribute::loadFromXml(xmlPath);
   ASSERT_TRUE(testAttribute);
   EXPECT_EQ("double", testAttribute->name());
@@ -189,7 +189,7 @@ TEST_F(DataFixture, Attribute_String)
   // save to xml
   attribute.saveToXml(xmlPath);
 
-  // load 
+  // load
   boost::optional<Attribute> testAttribute = Attribute::loadFromXml(xmlPath);
   ASSERT_TRUE(testAttribute);
   EXPECT_EQ("string", testAttribute->name());
@@ -221,7 +221,7 @@ TEST_F(DataFixture, Attribute_AttributeVector)
   // save to xml
   attribute.saveToXml(xmlPath);
 
-  // load 
+  // load
   boost::optional<Attribute> testAttribute = Attribute::loadFromXml(xmlPath);
   ASSERT_TRUE(testAttribute);
   EXPECT_EQ("vector", testAttribute->name());
@@ -371,8 +371,8 @@ TEST_F(DataFixture, Attribute_NotEqual)
 
 TEST_F(DataFixture, Attribute_NumberFormatting) {
   double value(3.14159e52);
-  
-  QString str = QString::number(value);  
+
+  QString str = QString::number(value);
   EXPECT_EQ("3.14159e+52",toString(str)); // original behavior, bad for http
 
   str = QString::number(value,'G',std::numeric_limits<double>::digits10);

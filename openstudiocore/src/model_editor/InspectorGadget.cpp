@@ -84,7 +84,7 @@ const char* InspectorGadget::s_indexSlotName="indexSlot";
 //const char* FIELDS_MATCH = "fields match";
 
 struct ModelEditorLibResourceInitializer{
-  ModelEditorLibResourceInitializer() 
+  ModelEditorLibResourceInitializer()
   {
     Q_INIT_RESOURCE(modeleditorlib);
   }
@@ -195,7 +195,7 @@ void InspectorGadget::layoutModelObj(openstudio::WorkspaceObject& workspaceObj,
                                      bool recursive,
                                      bool locked,
                                      bool hideChildren)
-{ 
+{
   disconnectWorkspaceObjectSignals();
 
   if (m_lastLocked != locked){
@@ -208,12 +208,12 @@ void InspectorGadget::layoutModelObj(openstudio::WorkspaceObject& workspaceObj,
     m_lastHideChildren = hideChildren;
   }
 
-  if(m_workspaceObj){ 
+  if(m_workspaceObj){
     if( workspaceObj.handle() == m_workspaceObj->handle() ){
       if(!force){
         //DUH! we are already displaying it!
         connectWorkspaceObjectSignals();
-        return; 
+        return;
       }else{
         //we have the same object, we are forcing a rebuild.... obey the recursive flag
         clear(recursive);
@@ -247,14 +247,14 @@ void InspectorGadget::layoutModelObj(openstudio::WorkspaceObject& workspaceObj,
   m_deleteHandle->setLayout( layout );
   m_locked=locked;
   layoutItems(layout,m_deleteHandle,hideChildren);
-  
+
   if(m_scroll){
     m_scroll->setWidget(m_deleteHandle);
   }else{
     m_layout->addWidget(m_deleteHandle);
   }
   m_deleteHandle->show();
-  
+
   connectWorkspaceObjectSignals();
 }
 
@@ -280,7 +280,7 @@ void InspectorGadget::clear(bool recursive)
         m_childMap.clear();
       }
     }
-    
+
     // delete widgets before resetting m_workspaceObj so can handle editingFinished signals from any text boxes
     delete m_deleteHandle;
     m_deleteHandle=nullptr;
@@ -383,7 +383,7 @@ void InspectorGadget::layoutItems(QVBoxLayout* masterLayout,
   }else{
     createExtensibleToolBar( layout, parent, props );
   }
-  
+
 
   if( m_showAllFields )
   {
@@ -418,7 +418,7 @@ void InspectorGadget::layoutItems(QVBoxLayout* masterLayout,
         auto igChild = new InspectorGadget(elem,
                                            m_indent,
                                            m_comboBridge,
-                                           m_precision, 
+                                           m_precision,
                                            m_floatDisplayType,
                                            comment,
                                            fields,
@@ -539,7 +539,7 @@ void InspectorGadget::parseItem(QVBoxLayout* layout,
     {
       LOG(Error, "InspectorGadget::parseItem has failed, unknown IddFieldType " << prop.type.valueDescription());
     }
-    
+
   }
 }
 
@@ -558,10 +558,10 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
   hbox->setSpacing(0);
   hbox->setMargin(0);
 
-  if( level == AccessPolicy::LOCKED ) 
-  { 
-    string stripped(val); 
-    //stripchar(stripped,'_'); 
+  if( level == AccessPolicy::LOCKED )
+  {
+    string stripped(val);
+    //stripchar(stripped,'_');
     QLabel* label = new QLabel( QString(stripped.c_str()), parent  );
     label->setObjectName("IGHeader");
     label->setStyleSheet("font : bold");
@@ -576,9 +576,9 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
     IGLineEdit* text = new IGLineEdit( QString(val.c_str()), this, parent  );
     hbox->addWidget( text );
     text->setProperty(s_indexSlotName,index);
-    
+
     //connect(text, &IGLineEdit::textEdited, this, &InspectorGadget::IGvalueChanged, Qt::QueuedConnection);
-    
+
     connect(text, &IGLineEdit::editingFinished, text, &IGLineEdit::editDone);
     connect(text, &IGLineEdit::newValue, this, &InspectorGadget::IGvalueChanged);
   }
@@ -632,7 +632,7 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
   else
   {
     //connect(text, &IGLineEdit::textEdited, this, &InspectorGadget::IGvalueChanged, Qt::QueuedConnection);
-    
+
     connect(text, &IGLineEdit::editingFinished, text, &IGLineEdit::editDone);
     connect(text, &IGLineEdit::newValue, this, &InspectorGadget::IGvalueChanged);
 
@@ -685,7 +685,7 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
         }
       }
       if(prop.maxBoundType != IddFieldProperties::Unbounded)
-      { 
+      {
         double d = *(prop.maxBoundValue);
         if (m_unitSystem == IP) {
           OptionalQuantity maxQ = convert(Quantity(d,u_si),u);
@@ -828,7 +828,7 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
     frame->setObjectName("IGRow");
   }
   else
-  { 
+  {
     frame->setEnabled(false);
     frame->setObjectName("IGRowDisabled");
   }
@@ -872,7 +872,7 @@ void InspectorGadget::layoutComboBox( QVBoxLayout* layout,
     }
 
     for (const std::string& name : names){
-      combo->addItem(name.c_str());   
+      combo->addItem(name.c_str());
     }
   }
   else
@@ -901,7 +901,7 @@ void InspectorGadget::layoutComboBox( QVBoxLayout* layout,
     //return;
   }
   combo->setProperty(s_indexSlotName,index);
-  
+
   if( m_comboBridge)
   {
     connect(combo, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::highlighted), m_comboBridge, &ComboHighlightBridge::highlighted);
@@ -1011,7 +1011,7 @@ void InspectorGadget::IGdefaultRemoved(const QString&)
   QWidget* w = dynamic_cast<QWidget*>(source);
   w->setStyleSheet("color:black");
   disconnect(source,nullptr,this,SLOT(IGdefaultRemoved(const QString&)));
-  
+
 }
 
 void InspectorGadget::IGvalueChanged( const QString& value )
@@ -1102,7 +1102,7 @@ void InspectorGadget::IGcommentChanged( const QString& value )
 
 void InspectorGadget::IGautosize(bool toggled)
 {
-  if(!toggled) 
+  if(!toggled)
     return;
 
   QObject* source = sender();
@@ -1125,7 +1125,7 @@ void InspectorGadget::commentConfig(bool showComments)
 }
 
 void InspectorGadget::setPrec()
-{ 
+{
   IGPrecisionDialog* source = dynamic_cast<IGPrecisionDialog*>(sender());
   OS_ASSERT(source);
 
@@ -1201,7 +1201,7 @@ void InspectorGadget::createAllFields()
     {
       elem.second->createAllFields();
     }
-  } 
+  }
 }
 
 void InspectorGadget::showAllFields( bool state )
@@ -1286,7 +1286,7 @@ void InspectorGadget::disconnectWorkspaceObjectSignals() const
 
       disconnect(this, &InspectorGadget::workspaceObjectRemoved, this, &InspectorGadget::onWorkspaceObjectRemoved);
 
-      // impl->disconnect(); 
+      // impl->disconnect();
     }
   }
 }

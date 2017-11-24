@@ -195,7 +195,7 @@ void ConstructionFfactorGroundFloorInspectorView::attach(openstudio::model::FFac
     DoubleGetter(std::bind(&model::FFactorGroundFloorConstruction::perimeterExposed, m_fFactorGroundFloorConstruction.get_ptr())),
     boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::FFactorGroundFloorConstruction::*)(double)>(&model::FFactorGroundFloorConstruction::setPerimeterExposed), m_fFactorGroundFloorConstruction.get_ptr(), std::placeholders::_1))
   );
-  
+
   m_standardsInformationWidget->attach(m_fFactorGroundFloorConstruction.get());
 }
 

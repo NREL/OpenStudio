@@ -253,15 +253,15 @@ bool TreeModel::insertRows(const QModelIndex row, const QModelIndexList rowList,
         {
           mTreeViewWidget->loadModel();
           parentObjects.push_back(*optModelObj);
-        } 
+        }
       }
     }
   }
-  
+
   return success; // not updating Qt model
-  
+
   if(!success) return success; // Nothing to add to the Qt model;
-  
+
   ///! Qt model update...
   beginInsertRows(parent, position+1, position+rows);
   // get the idd object type
@@ -307,7 +307,7 @@ bool TreeModel::pasteRows(const QModelIndex& parentRow, std::vector<openstudio::
 
   for(const auto & elem : modelObjectsToPaste)
   {
-   
+
     iddObjectToPaste = elem.iddObject();
     iddObjectToPasteType = iddObjectToPaste.type();
     if(iddObjectToPasteType == openstudio::IddObjectType::UserCustom) return success;
@@ -428,8 +428,8 @@ bool TreeModel::setHeaderData(int section, Qt::Orientation orientation, const QV
 
 void TreeModel::getObjectNames(const openstudio::model::ModelObject& object, QList<QVariant>& objectNames)
 {
- 
-  
+
+
   IddObject iddObject = object.iddObject();
   QString objectName(iddObject.name().c_str());
   // object might have a name
@@ -498,7 +498,7 @@ bool TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int r
     QStringList strings = string.split(",");
     openstudio::IddFile iddFile = mTreeViewWidget->getIddFile();
     boost::optional<openstudio::IddObject> optionalIddObject;
-    
+
     openstudio::OptionalWorkspaceObject optionalWorkspaceObject;
     openstudio::model::OptionalModelObject optionalModelObject;
     openstudio::model::OptionalParentObject optionalParentObject;
@@ -523,7 +523,7 @@ bool TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int r
             if(success)
             {
               success = mTreeViewWidget->getModel().order().insert(optionalWorkspaceObject->handle(), this->modelAtIndex(parent)->handle());
-            } 
+            }
           }
         }
       }

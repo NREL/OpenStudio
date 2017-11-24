@@ -37,7 +37,7 @@ namespace openstudio {
 class Transformation;
 
 namespace model {
-  
+
 class Space;
 class ShadingSurface;
 class Surface;

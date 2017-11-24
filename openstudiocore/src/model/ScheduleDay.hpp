@@ -107,8 +107,8 @@ class MODEL_API ScheduleDay : public ScheduleBase {
    *  for same time. */
   bool addValue(const openstudio::Time& untilTime, double value);
 
-  /** Returns false if time is less than 0 days or greater than 1 day, or if there are no 
-   *  scheduleTypeLimits() set, or if value cannot be converted to the 'SI' units implied by 
+  /** Returns false if time is less than 0 days or greater than 1 day, or if there are no
+   *  scheduleTypeLimits() set, or if value cannot be converted to the 'SI' units implied by
    *  scheduleTypeLimits(). Otherwise, converts value appropriately and then sets the value. */
   bool addValue(const openstudio::Time& untilTime, const Quantity& value);
 

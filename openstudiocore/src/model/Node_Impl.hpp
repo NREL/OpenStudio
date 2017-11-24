@@ -53,8 +53,8 @@ namespace detail {
     Node_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    Node_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-              Model_Impl* model, 
+    Node_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+              Model_Impl* model,
               bool keepHandle);
 
     // copy constructor

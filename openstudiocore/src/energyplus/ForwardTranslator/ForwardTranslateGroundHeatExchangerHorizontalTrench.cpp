@@ -44,7 +44,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateGroundHeatExchangerHorizontalTrench( 
+boost::optional<IdfObject> ForwardTranslator::translateGroundHeatExchangerHorizontalTrench(
     GroundHeatExchangerHorizontalTrench & modelObject)
 {
   IdfObject idfObject(IddObjectType::GroundHeatExchanger_HorizontalTrench);

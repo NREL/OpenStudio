@@ -44,7 +44,7 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture,SpaceInfiltrationEffectiveLeakageArea_Quantity) {
   Model model;
-  
+
   SpaceInfiltrationEffectiveLeakageArea spaceInfiltrationEffectiveLeakageArea(model);
   EXPECT_EQ(1u, model.numObjects());
 

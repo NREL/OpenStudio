@@ -492,7 +492,7 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     {
       modelObject = translateElectricLoadCenterStorageConverter(workspaceObject);
       break;
-    }  
+    }
   case openstudio::IddObjectType::EnergyManagementSystem_Actuator:
   {
     modelObject = translateEnergyManagementSystemActuator(workspaceObject);
@@ -942,7 +942,7 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
   case openstudio::IddObjectType::ZoneHVAC_EquipmentList :
     {
       //modelObject = translateZoneHVACEquipmentList(workspaceObject);
-      break; 
+      break;
     }
   case openstudio::IddObjectType::ZoneHVAC_IdealLoadsAirSystem :
     {

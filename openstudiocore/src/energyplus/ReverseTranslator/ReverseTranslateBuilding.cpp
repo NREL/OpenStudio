@@ -63,7 +63,7 @@ OptionalModelObject ReverseTranslator::translateBuilding( const WorkspaceObject 
 
   // create the building
   openstudio::model::Building building = m_model.getUniqueModelObject<Building>();
-  
+
   OptionalString s = workspaceObject.name();
   if(s){
     building.setName(*s);

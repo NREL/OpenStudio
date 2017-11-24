@@ -215,7 +215,7 @@ TEST_F(EnergyPlusFixture,GeometryTranslator_RelativeTest)
     zone_rotation = Geom::Transformation::rotation([0,0,0], [0,0,1], -30.degrees)
     zone_translation = Geom::Transformation::translation([10.m,5.m,1.m])
     zone.transform! zone_translation*zone_rotation
-    
+
     face.vertices.each do |vertex|
       puts "#{vertex.position[0].to_m}, #{vertex.position[1].to_m}, #{vertex.position[2].to_m}"
     end
@@ -231,7 +231,7 @@ TEST_F(EnergyPlusFixture,GeometryTranslator_RelativeTest)
   // now create a model and check everthing is as expected
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(workspace);
-  
+
   Building building = model.getUniqueModelObject<Building>();
   Transformation buildingTransformation = building.transformation();
 
@@ -329,7 +329,7 @@ TEST_F(EnergyPlusFixture,GeometryTranslator_AbsoluteTest)
   // now create a model and check everthing is as expected
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(workspace);
-  
+
   Building building = model.getUniqueModelObject<Building>();
   Transformation buildingTransformation = building.transformation();
 
@@ -401,13 +401,13 @@ void compareSurfaces(const WorkspaceObject& refObject, const WorkspaceObject& te
     case IddObjectType::BuildingSurface_Detailed:
       ASSERT_TRUE(refObject.getTarget(BuildingSurface_DetailedFields::ZoneName));
       ASSERT_TRUE(testObject.getTarget(BuildingSurface_DetailedFields::ZoneName));
-      EXPECT_TRUE(refObject.getTarget(BuildingSurface_DetailedFields::ZoneName)->name().get() == 
+      EXPECT_TRUE(refObject.getTarget(BuildingSurface_DetailedFields::ZoneName)->name().get() ==
                   testObject.getTarget(BuildingSurface_DetailedFields::ZoneName)->name().get());
       break;
     case IddObjectType::FenestrationSurface_Detailed:
       ASSERT_TRUE(refObject.getTarget(FenestrationSurface_DetailedFields::BuildingSurfaceName));
       ASSERT_TRUE(testObject.getTarget(FenestrationSurface_DetailedFields::BuildingSurfaceName));
-      EXPECT_TRUE(refObject.getTarget(FenestrationSurface_DetailedFields::BuildingSurfaceName)->name().get() == 
+      EXPECT_TRUE(refObject.getTarget(FenestrationSurface_DetailedFields::BuildingSurfaceName)->name().get() ==
                   testObject.getTarget(FenestrationSurface_DetailedFields::BuildingSurfaceName)->name().get());
       break;
     case IddObjectType::Shading_Site_Detailed:
@@ -418,7 +418,7 @@ void compareSurfaces(const WorkspaceObject& refObject, const WorkspaceObject& te
       ASSERT_TRUE(refObject.getTarget(Shading_Zone_DetailedFields::BaseSurfaceName));
       ASSERT_TRUE(testObject.getTarget(Shading_Zone_DetailedFields::BaseSurfaceName));
       // might not be the same since we have to look for surface, would be good to fix eventually
-      //EXPECT_TRUE(refObject.getTarget(Shading_Zone_DetailedFields::BaseSurfaceName)->name().get() == 
+      //EXPECT_TRUE(refObject.getTarget(Shading_Zone_DetailedFields::BaseSurfaceName)->name().get() ==
       //  testObject.getTarget(Shading_Zone_DetailedFields::BaseSurfaceName)->name().get());
       break;
     default:
@@ -457,9 +457,9 @@ void compareSurfaces(const WorkspaceObject& refObject, const WorkspaceObject& te
   }
   EXPECT_TRUE(compare);
   if (!compare){
-    std::cout << "ref = " << refObject.iddObject().type().valueName() << ", " 
+    std::cout << "ref = " << refObject.iddObject().type().valueName() << ", "
               << refObject.name().get() << ", " << refVerts << std::endl;
-    std::cout << "test = " << testObject.iddObject().type().valueName() << ", " 
+    std::cout << "test = " << testObject.iddObject().type().valueName() << ", "
               << testObject.name().get() << ", " << testVerts <<  std::endl;
   }
 }
@@ -508,7 +508,7 @@ TEST_F(EnergyPlusFixture,GeometryTranslator_SimpleRelativeTest)
   EXPECT_TRUE(relWorkspace.getObjectsByType(IddObjectType::Shading_Fin).empty());
   EXPECT_TRUE(relWorkspace.getObjectsByType(IddObjectType::Shading_Fin_Projection).empty());
 
-  // types to check 
+  // types to check
   std::vector<unsigned> iddTypes;
   iddTypes.push_back(IddObjectType::BuildingSurface_Detailed);
   iddTypes.push_back(IddObjectType::FenestrationSurface_Detailed);
@@ -536,7 +536,7 @@ TEST_F(EnergyPlusFixture,GeometryTranslator_SimpleRelativeTest)
 TEST_F(EnergyPlusFixture,GeometryTranslator_VerticesForAzimuthTiltXYZLengthWidthOrHeight)
 {
   Point3dVector vertices;
- 
+
   // a dummy floor
   vertices = verticesForAzimuthTiltXYZLengthWidthOrHeight(0, 180, 73, 14, 0, 25, 20);
   ASSERT_EQ(static_cast<unsigned>(4), vertices.size());

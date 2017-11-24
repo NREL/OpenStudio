@@ -67,12 +67,12 @@ bool IdfObjectWatcher::dirty() const
   return m_dirty;
 }
 
-bool IdfObjectWatcher::dataChanged() const 
+bool IdfObjectWatcher::dataChanged() const
 {
   return m_dataChanged;
 }
 
-bool IdfObjectWatcher::nameChanged() const 
+bool IdfObjectWatcher::nameChanged() const
 {
   return m_nameChanged;
 }
@@ -83,10 +83,10 @@ void IdfObjectWatcher::clearState()
   m_dirty = false;
   m_dataChanged = false;
   m_nameChanged = false;
-  
+
   if (enabled()){
-    if (wasDirty){ 
-      onBecomeClean(); 
+    if (wasDirty){
+      onBecomeClean();
     }
   }
 }
@@ -95,7 +95,7 @@ void IdfObjectWatcher::onChangeIdfObject()
 {
 }
 
-void IdfObjectWatcher::onDataFieldChange() 
+void IdfObjectWatcher::onDataFieldChange()
 {
 }
 
@@ -111,20 +111,20 @@ void IdfObjectWatcher::onBecomeClean()
 {
 }
 
-void IdfObjectWatcher::change() 
+void IdfObjectWatcher::change()
 {
   bool wasDirty = m_dirty;
   m_dirty = true;
 
   if (enabled()){
-    if (!wasDirty){ 
-      onBecomeDirty(); 
+    if (!wasDirty){
+      onBecomeDirty();
     }
     onChangeIdfObject();
   }
 }
 
-void IdfObjectWatcher::dataChange() 
+void IdfObjectWatcher::dataChange()
 {
   m_dataChanged = true;
 
@@ -133,7 +133,7 @@ void IdfObjectWatcher::dataChange()
   }
 }
 
-void IdfObjectWatcher::nameChange() 
+void IdfObjectWatcher::nameChange()
 {
   m_nameChanged = true;
 
@@ -141,5 +141,5 @@ void IdfObjectWatcher::nameChange()
     onNameChange();
   }
 }
-  
+
 } // openstudio

@@ -67,7 +67,7 @@ TEST_F(ModelFixture,CoilHeatingLowTempRadiantConstFlow_SetGetFields) {
   EXPECT_TRUE(testHC.setHeatingHighControlTemperatureSchedule(heatingHighControlTempSched));
   boost::optional<Schedule> sch3 = testHC.heatingHighControlTemperatureSchedule();
   EXPECT_EQ(*sch3,heatingHighControlTempSched);
-  
+
   heatingLowControlTempSched.setValue(15.0);
   EXPECT_TRUE(testHC.setHeatingLowControlTemperatureSchedule(heatingLowControlTempSched));
   boost::optional<Schedule> sch4 = testHC.heatingLowControlTemperatureSchedule();

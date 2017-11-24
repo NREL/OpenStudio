@@ -50,7 +50,7 @@
 
 namespace openstudio {
 
-  VariableListItem::VariableListItem(const std::string &t_name, 
+  VariableListItem::VariableListItem(const std::string &t_name,
       const std::string& t_keyValue,
       const boost::optional<openstudio::model::OutputVariable> &t_variable,
       const openstudio::model::Model &t_model)
@@ -99,7 +99,7 @@ namespace openstudio {
           itr != m_variables.end();
           ++itr)
     {
-      //(*itr)->setParent(0); 
+      //(*itr)->setParent(0);
       //(*itr)->setStyleSheet("");
       m_listLayout->removeWidget(*itr);
       delete (*itr);
@@ -137,7 +137,7 @@ namespace openstudio {
         outputVariable.setReportingFrequency("Hourly");
         outputVariable.setKeyValue(m_keyValue);
         m_variable = outputVariable;
-        
+
         // m_combobox->bind(*m_variable, "reportingFrequency");
         m_combobox->bind<std::string>(
           *m_variable,
@@ -260,7 +260,7 @@ namespace openstudio {
       delete qli;
     }
 
-    
+
     // map of variable name + keyValue to PotentialOutputVariable
     std::map<std::string, PotentialOutputVariable> potentialOutputVariableMap;
 
@@ -280,7 +280,7 @@ namespace openstudio {
       }
     }
 
-    // add all variables to map, allow only one variable per variable name + keyValue in this application 
+    // add all variables to map, allow only one variable per variable name + keyValue in this application
     for (openstudio::model::OutputVariable outputVariable : m_model.getConcreteModelObjects<openstudio::model::OutputVariable>())
     {
       std::string variableName = outputVariable.variableName();
@@ -306,7 +306,7 @@ namespace openstudio {
           // already have output variable for this name + keyName, then remove this object
           outputVariable.remove();
         } else {
-          // this is a predefined variable 
+          // this is a predefined variable
 
           // make sure that key value is set to '*'
           // DLM: we know this is already '*' because all predefined variables are set to '*'
@@ -317,7 +317,7 @@ namespace openstudio {
       }
     }
 
-    
+
     for (std::map<std::string, PotentialOutputVariable>::const_iterator itr = potentialOutputVariableMap.begin();
          itr != potentialOutputVariableMap.end();
          ++itr)

@@ -54,7 +54,7 @@ ZoneChooserView::ZoneChooserView(QWidget* parent)
   this->setLayout(mainLayout);
 
   auto scrollArea = new QScrollArea();
-  
+
   scrollArea->setWidgetResizable(true);
 
   scrollArea->setFrameStyle(QFrame::NoFrame);
@@ -96,7 +96,7 @@ void ZoneChooserView::layoutView()
   this->setUpdatesEnabled(false);
 
   QLayoutItem * child;
-  while((child = m_vLayout->takeAt(0)) != nullptr) 
+  while((child = m_vLayout->takeAt(0)) != nullptr)
   {
       delete child->widget();
       delete child;
@@ -160,8 +160,8 @@ void ZoneChooserView::layoutView()
   {
     zoneChooserItemForZone(it->name().get())->setChecked(true);
   }
-  
-  for(int i = 0; i < m_vLayout->count(); i++) 
+
+  for(int i = 0; i < m_vLayout->count(); i++)
   {
     if( QWidget * widget = m_vLayout->itemAt(i)->widget() )
     {
@@ -203,7 +203,7 @@ ZoneChooserItem::ZoneChooserItem(model::ThermalZone & zone, ZoneChooserView * pa
   auto hLayout = new QHBoxLayout();
 
   m_checkBox = new QCheckBox();
-  
+
   m_checkBox->setText(toQString(zone.name().get()));
 
   connect(m_checkBox, &QCheckBox::clicked, this, &ZoneChooserItem::sendClickedSignal);

@@ -151,7 +151,7 @@ private:
   bool m_showPeak;
 
   QWidget * m_billingPeriodHeaderWidget;
-  
+
   QButtonGroup * m_buttonGroup;
 
   OSLineEdit2 * m_name;
@@ -179,7 +179,7 @@ private:
 
   int m_hiddenWidgetIndex;
   int m_visibleWidgetIndex;
-  
+
 signals:
   void showSubTabView(bool showSubTabView);
   void enableAddNewObjectButton(bool enable);

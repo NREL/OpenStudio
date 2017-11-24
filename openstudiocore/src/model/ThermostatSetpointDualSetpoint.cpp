@@ -43,7 +43,7 @@ namespace model {
 namespace detail {
 
   ThermostatSetpointDualSetpoint_Impl::ThermostatSetpointDualSetpoint_Impl(const IdfObject& idfObject,
-                                                                           Model_Impl* model, 
+                                                                           Model_Impl* model,
                                                                            bool keepHandle):
     Thermostat_Impl(idfObject,model,keepHandle)
   {

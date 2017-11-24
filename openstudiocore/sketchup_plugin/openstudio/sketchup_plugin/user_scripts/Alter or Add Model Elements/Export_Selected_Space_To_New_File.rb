@@ -33,22 +33,22 @@ class ExportSpaces < OpenStudio::Ruleset::ModelUserScript
   def name
     return "Export Selected Spaces to a new External Model"
   end
-  
+
   # returns a vector of arguments, the runner will present these arguments to the user
   # then pass in the results on run
   def arguments(model)
     result = OpenStudio::Ruleset::OSArgumentVector.new
-    
+
     save_path = OpenStudio::Ruleset::OSArgument::makePathArgument("save_path", false, "osm", false)
     save_path.setDisplayName("Save Export Spaces As ")
     save_path.setDefaultValue("ExportedSpaces.osm")
     result << save_path
-    
+
     begin
       SKETCHUP_CONSOLE.show
     rescue => e
     end
-    
+
     return result
   end
 
@@ -56,13 +56,13 @@ class ExportSpaces < OpenStudio::Ruleset::ModelUserScript
   # model is an OpenStudio::Model::Model, runner is a OpenStudio::Ruleset::UserScriptRunner
   def run(model, runner, user_arguments)
     super(model, runner, user_arguments)
-  
+
     if not runner.validateUserArguments(arguments(model),user_arguments)
       return false
     end
-    
+
     osmPath_2 = runner.getStringArgumentValue("save_path",user_arguments)
-    
+
     # stop script if no spaces are selected.
     anyInSelection = false
     model.getSpaces.each do |space|
@@ -71,7 +71,7 @@ class ExportSpaces < OpenStudio::Ruleset::ModelUserScript
         break
       end
     end
-    
+
     if not anyInSelection
       runner.registerAsNotApplicable("No spaces selected.")
       return true
@@ -79,7 +79,7 @@ class ExportSpaces < OpenStudio::Ruleset::ModelUserScript
 
     # create a new empty model
     model_2 = OpenStudio::Model::Model.new
-    
+
     # loop through and clone spaces
     count = 0
     model.getSpaces.each do |space|
@@ -89,12 +89,12 @@ class ExportSpaces < OpenStudio::Ruleset::ModelUserScript
         count += 1
       end
     end
-    
+
     # save as osm
     model_2.save(OpenStudio::Path.new(osmPath_2),true)
     runner.registerFinalCondition("File named '"+ osmPath_2 + "' created with " + count.to_s + " spaces.")
     puts 'File named "'+ osmPath_2 + '" has been generated'
-    
+
   end
 
 end

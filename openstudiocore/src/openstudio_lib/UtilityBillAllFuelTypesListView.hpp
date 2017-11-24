@@ -47,8 +47,8 @@ class UtilityBillAllFuelTypesListView : public OSCollapsibleItemList
   Q_OBJECT
 
   public:
-    UtilityBillAllFuelTypesListView(const model::Model& model, 
-                            bool addScrollArea, 
+    UtilityBillAllFuelTypesListView(const model::Model& model,
+                            bool addScrollArea,
                             OSItemType headerType,
                             QWidget * parent = nullptr);
 

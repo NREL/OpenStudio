@@ -107,7 +107,7 @@ TEST_F(ModelFixture, PhotovoltaicPerformanceEquivalentOneDiode_Instantiate) {
   EXPECT_EQ(photovoltaicPerformanceEquivalentOneDiode.openCircuitVoltage(), value);
   photovoltaicPerformanceEquivalentOneDiode.resetOpenCircuitVoltage();
   EXPECT_EQ(photovoltaicPerformanceEquivalentOneDiode.openCircuitVoltage(), 21.6);
-  
+
   EXPECT_EQ(photovoltaicPerformanceEquivalentOneDiode.referenceTemperature(), 25);
   EXPECT_TRUE(photovoltaicPerformanceEquivalentOneDiode.isReferenceTemperatureDefaulted());
   result = photovoltaicPerformanceEquivalentOneDiode.setReferenceTemperature(value);
@@ -179,7 +179,7 @@ TEST_F(ModelFixture, PhotovoltaicPerformanceEquivalentOneDiode_Instantiate) {
   EXPECT_EQ(photovoltaicPerformanceEquivalentOneDiode.totalHeatCapacity(), value);
   photovoltaicPerformanceEquivalentOneDiode.resetTotalHeatCapacity();
   EXPECT_EQ(photovoltaicPerformanceEquivalentOneDiode.totalHeatCapacity(), 50000);
- 
+
   EXPECT_EQ(photovoltaicPerformanceEquivalentOneDiode.temperatureCoefficientofShortCircuitCurrent(), 0.02);
   EXPECT_TRUE(photovoltaicPerformanceEquivalentOneDiode.isTemperatureCoefficientofShortCircuitCurrentDefaulted());
   photovoltaicPerformanceEquivalentOneDiode.setTemperatureCoefficientofShortCircuitCurrent(value);

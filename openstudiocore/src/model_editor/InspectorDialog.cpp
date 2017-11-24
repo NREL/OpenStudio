@@ -597,7 +597,7 @@ void InspectorDialog::init(InspectorDialogClient client)
       //m_typesToDisplay.insert(IddObjectType::OS_WindowMaterial_Screen);
       //m_typesToDisplay.insert(IddObjectType::OS_WindowMaterial_Shade);
       //m_typesToDisplay.insert(IddObjectType::OS_WindowMaterial_SimpleGlazingSystem);
-      
+
       //m_typesToDisplay.insert(IddObjectType::OS_Construction);
       //m_typesToDisplay.insert(IddObjectType::OS_Construction_CfactorUndergroundWall);
       //m_typesToDisplay.insert(IddObjectType::OS_Construction_FfactorGroundFloor);
@@ -660,7 +660,7 @@ void InspectorDialog::init(InspectorDialogClient client)
       //m_typesToDisplay.insert(IddObjectType::OS_Output_Variable);
 
       // DISABLE ADD
-      
+
       m_disableAddTypes.insert(IddObjectType::OS_RunPeriod);
       m_disableAddTypes.insert(IddObjectType::OS_Site);
       m_disableAddTypes.insert(IddObjectType::OS_WeatherFile);

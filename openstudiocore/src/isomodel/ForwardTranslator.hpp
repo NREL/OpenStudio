@@ -47,7 +47,7 @@ namespace isomodel {
 
   class ISOMODEL_API ForwardTranslator {
   public:
-    
+
     ForwardTranslator();
 
     virtual ~ForwardTranslator();

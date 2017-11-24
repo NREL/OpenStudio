@@ -57,7 +57,7 @@ OptionalModelObject ReverseTranslator::translateZoneInfiltrationDesignFlowRate( 
   }
 
   openstudio::model::SpaceInfiltrationDesignFlowRate infiltration(m_model);
-  
+
   OptionalString s = workspaceObject.name();
   if(s){
     infiltration.setName(*s);

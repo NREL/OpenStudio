@@ -72,12 +72,12 @@ TEST_F(EnergyPlusFixture,ErrorFile_SevereErrors)
   ErrorFile errorFile(path);
   EXPECT_EQ(static_cast<unsigned>(0), errorFile.warnings().size());
   ASSERT_EQ(static_cast<unsigned>(26), errorFile.severeErrors().size());
-  EXPECT_EQ("Out of range value Numeric Field#1 (Lighting Level), value=-1527598.22490, range={>=0}, in LIGHTS=ZN_1_FLR_1_SEC_1_LIGHTS", 
+  EXPECT_EQ("Out of range value Numeric Field#1 (Lighting Level), value=-1527598.22490, range={>=0}, in LIGHTS=ZN_1_FLR_1_SEC_1_LIGHTS",
             errorFile.severeErrors()[0]);
-  EXPECT_EQ("IP: Out of \"range\" values and/or blank required fields found in input", 
+  EXPECT_EQ("IP: Out of \"range\" values and/or blank required fields found in input",
             errorFile.severeErrors()[25]);
   ASSERT_EQ(static_cast<unsigned>(1), errorFile.fatalErrors().size());
-  EXPECT_EQ("IP: Errors occurred on processing IDF file. Preceding condition(s) cause termination.", 
+  EXPECT_EQ("IP: Errors occurred on processing IDF file. Preceding condition(s) cause termination.",
             errorFile.fatalErrors()[0]);
   EXPECT_TRUE(errorFile.completed());
   EXPECT_FALSE(errorFile.completedSuccessfully());
@@ -89,7 +89,7 @@ TEST_F(EnergyPlusFixture,ErrorFile_WarningsAndSevere)
 
   ErrorFile errorFile(path);
   ASSERT_EQ(static_cast<unsigned>(46), errorFile.warnings().size());
-  EXPECT_EQ("Output:PreprocessorMessage=\"EPXMLPreProc2\" has the following Warning conditions:\n Requested glazing exceeds available area for\n B6CCD5_window_1.  Reducing sill height to fit.", 
+  EXPECT_EQ("Output:PreprocessorMessage=\"EPXMLPreProc2\" has the following Warning conditions:\n Requested glazing exceeds available area for\n B6CCD5_window_1.  Reducing sill height to fit.",
             errorFile.warnings()[0]);
   EXPECT_EQ(static_cast<unsigned>(8), errorFile.severeErrors().size());
   EXPECT_EQ(static_cast<unsigned>(1), errorFile.fatalErrors().size());
@@ -103,9 +103,9 @@ TEST_F(EnergyPlusFixture,ErrorFile_WarningsAndCrash)
 
   ErrorFile errorFile(path);
   ASSERT_EQ(static_cast<unsigned>(9), errorFile.warnings().size());
-  EXPECT_EQ("Output:PreprocessorMessage=\"EPXMLPreProc2\" has the following Warning condition:\n Reordered Verts for ULC convention", 
+  EXPECT_EQ("Output:PreprocessorMessage=\"EPXMLPreProc2\" has the following Warning condition:\n Reordered Verts for ULC convention",
             errorFile.warnings()[0]);
-  EXPECT_EQ("In AirLoopHVAC RTU9_CAV there is unbalanced exhaust air flow.\n  During Warmup, Environment=FORT_WORTH TX USA TMY2-03927 WMO#=722596, at Simulation time=01/01 11:00 - 11:15\n   Unless there is balancing infiltration / ventilation air flow, this will result in\n   load due to induced outdoor air being neglected in the simulation.", 
+  EXPECT_EQ("In AirLoopHVAC RTU9_CAV there is unbalanced exhaust air flow.\n  During Warmup, Environment=FORT_WORTH TX USA TMY2-03927 WMO#=722596, at Simulation time=01/01 11:00 - 11:15\n   Unless there is balancing infiltration / ventilation air flow, this will result in\n   load due to induced outdoor air being neglected in the simulation.",
             errorFile.warnings()[8]);
   EXPECT_EQ(static_cast<unsigned>(0), errorFile.severeErrors().size());
   EXPECT_EQ(static_cast<unsigned>(0), errorFile.fatalErrors().size());

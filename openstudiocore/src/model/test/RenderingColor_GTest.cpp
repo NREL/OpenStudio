@@ -173,14 +173,14 @@ TEST_F(ModelFixture, RenderingColor_Initializer2)
   Model model;
   RenderingColorWorkspaceWatcher watcher(model);
   EXPECT_FALSE(watcher.objectAdded());
-  
+
   IdfObject idfObject(IddObjectType::OS_Rendering_Color);
   model.addObject(idfObject);
   EXPECT_TRUE(watcher.objectAdded());
-  
+
   std::vector<RenderingColor> colors = model.getModelObjects<RenderingColor>();
   ASSERT_EQ(1u, colors.size());
-  
+
   RenderingColor color = colors[0];
   EXPECT_GE(color.renderingRedValue(), 0);
   EXPECT_LE(color.renderingRedValue(), 255);

@@ -40,13 +40,13 @@ module OpenStudio
     end
 
 
-    def populate_hash 
+    def populate_hash
       @hash['CHECK_FOR_UPDATE'] = Plugin.read_pref("Check For Update #{Plugin.version}")
       @hash['NEW_ZONE_FOR_SPACE'] = Plugin.read_pref("New Zone for Space")
       @hash['DISABLE_USER_SCRIPTS'] = Plugin.read_pref("Disable OpenStudio User Scripts")
       @hash['UNIT_SYSTEM'] = Plugin.read_pref("Unit System")
       @hash['TEXT_EDITOR_PATH'] = Plugin.read_pref("Text Editor Path")
-      
+
       @hash['SHOW_ERRORS_ON_IDF_TRANSLATION'] = Plugin.read_pref("Show Errors on Idf Translation")
       @hash['SHOW_WARNINGS_ON_IDF_TRANSLATION'] = Plugin.read_pref("Show Warnings on Idf Translation")
       @hash['ENERGYPLUS_PATH'] = Plugin.read_pref("EnergyPlus Path")
@@ -54,13 +54,13 @@ module OpenStudio
 
 
     def report
-      
+
       path = @hash['TEXT_EDITOR_PATH']
       # Should filter out any arguments that get passed for line number, etc.
       # For example:  textpad.exe -l%1 -p
       if (path.nil? or path.empty?)
         # do nothing
-      elsif (not File.exists?(path))  
+      elsif (not File.exists?(path))
         UI.messagebox("WARNING:  Bad file path for the text editor.")
       end
 
@@ -68,7 +68,7 @@ module OpenStudio
       #path = @hash['ENERGYPLUS_PATH']
       #if (path.nil? or path.empty?)
       #  # do nothing
-      #elsif (not File.exists?(path))  
+      #elsif (not File.exists?(path))
       #  UI.messagebox("WARNING:  Bad file path for the EnergyPlus engine.")
       #else
       #  idd_path = File.dirname(path) + "/Energy+.idd"
@@ -78,7 +78,7 @@ module OpenStudio
       #    #@dialog.update
       #    #return(false)
       #  else
-      #  
+      #
       #    # check idd version
       #    user_version = "Unknown"
       #    File.open(idd_path, 'r') do |file|
@@ -94,7 +94,7 @@ module OpenStudio
       #    end
       #  end
       #end
-      
+
       need_update = false
       if @hash['SHOW_WARNINGS_ON_IDF_EXPORT'] and not @hash['SHOW_ERRORS_ON_IDF_EXPORT']
         @hash['SHOW_ERRORS_ON_IDF_EXPORT'] = true
@@ -110,11 +110,11 @@ module OpenStudio
       Plugin.write_pref("Show Errors on Idf Translation", @hash['SHOW_ERRORS_ON_IDF_TRANSLATION'])
       Plugin.write_pref("Show Warnings on Idf Translation", @hash['SHOW_WARNINGS_ON_IDF_TRANSLATION'])
       Plugin.write_pref("EnergyPlus Path", @hash['ENERGYPLUS_PATH'])
-      
+
       if (@hash['UNIT_SYSTEM'] != Plugin.dialog_manager.units_system)
         Plugin.dialog_manager.update_units
       end
-      
+
       update if need_update
 
       return(true)

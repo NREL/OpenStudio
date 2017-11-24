@@ -38,14 +38,14 @@ using namespace openstudio::model;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateCurveDoubleExponentialDecay( 
+boost::optional<ModelObject> ReverseTranslator::translateCurveDoubleExponentialDecay(
     const WorkspaceObject& workspaceObject )
 {
   CurveDoubleExponentialDecay curve(m_model);
 
   OptionalString s;
   OptionalDouble d;
-  
+
   if ((s = workspaceObject.name())) {
     curve.setName(*s);
   }

@@ -41,8 +41,8 @@ namespace detail {
 
     Connection_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    Connection_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                    Model_Impl* model, 
+    Connection_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                    Model_Impl* model,
                     bool keepHandle);
 
     Connection_Impl(const Connection_Impl& other, Model_Impl* model, bool keepHandle);

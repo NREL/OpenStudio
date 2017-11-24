@@ -174,13 +174,13 @@ class MODEL_API ZoneHVACPackagedTerminalAirConditioner : public ZoneHVACComponen
 
   void resetFanPlacement();
 
-  /** Sets the supply air fan operating mode schedule. Values of zero indicate that the fan 
-   *  cycles on and off with the active (heating or cooling) coil. Other values operate the 
+  /** Sets the supply air fan operating mode schedule. Values of zero indicate that the fan
+   *  cycles on and off with the active (heating or cooling) coil. Other values operate the
    *  fan continuously. */
   bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
   void resetSupplyAirFanOperatingModeSchedule();
-  
+
   //@}
   /** @name Other */
   //@{

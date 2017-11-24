@@ -27,7 +27,7 @@
 ########################################################################################################################
 
 ######################################################################
-# == Synopsis 
+# == Synopsis
 #
 #   Base class for sub-project method generators.
 #
@@ -35,65 +35,65 @@
 
 class SubProjectClassGenerator
   attr_accessor :className, :baseClassName, :pImpl, :qobject
-  
+
   def initialize(className, baseClassName, pImpl, qobject)
     @className = className
     @baseClassName = baseClassName
     @pImpl = pImpl
     @qobject = qobject
   end
-  
+
   # INCLUDES
-  
+
   def hppIncludes()
     result = String.new
     return result
   end
-  
+
   def implHppIncludes()
     result = String.new
     return result
   end
-  
+
   def cppIncludes()
     result = String.new
     return result
   end
-  
+
   # FORWARD DECLARATIONS
-  
+
   def hppExternalForwardDeclarations
     result = String.new
     return result
   end
-  
+
   def implHppExternalForwardDeclarations
     result = String.new
     return result
   end
-  
+
   def hppOSForwardDeclarations
     result = String.new
     return result
   end
-  
+
   def implHppOSForwardDeclarations
     result = String.new
     return result
-  end  
-  
+  end
+
   def hppSubProjectForwardDeclarations
     result = String.new
     return result
   end
-  
+
   def implHppSubProjectForwardDeclarations
     result = String.new
     return result
-  end    
-  
+  end
+
   # PRE-CLASS
-  
+
   def hppPreClass()
     result = String.new
     if not baseClassName.empty?
@@ -101,7 +101,7 @@ class SubProjectClassGenerator
     end
     return result
   end
-  
+
   def implHppPreClass()
     result = String.new
     if @pImpl
@@ -113,107 +113,107 @@ class SubProjectClassGenerator
     end
     return result
   end
-  
+
   def cppPreClass()
     result = String.new
     return result
   end
-  
+
   def cppPublicClassPreClass()
     result = String.new
     return result
   end
-  
+
   # QMACROS
-  
+
   def hppQMacros()
     result = String.new
     return result
   end
-  
+
   def implHppQMacros()
     result = String.new
     return result
   end
-  
+
   # PUBLIC TYPEDEFS
-  
-  def hppPublicTypedefs() 
+
+  def hppPublicTypedefs()
     result = String.new
     return result
   end
-  
-  def implHppPublicTypedefs() 
+
+  def implHppPublicTypedefs()
     result = String.new
     return result
-  end    
-  
+  end
+
   # CLASS CONSTRUCTORS
-  
+
   def hppConstructors()
     result = String.new
     return result
   end
-  
+
   def implHppConstructors()
     result = String.new
     return result
   end
-  
+
   def cppConstructors()
     result = String.new
     return result
   end
-  
+
   def cppPublicClassConstructors()
     result = String.new
     return result
   end
-  
+
   # CLASS PUBLIC METHODS
-  
+
   def hppPublicMethods()
     result = String.new
     return result
   end
-  
+
   def implHppPublicMethods()
     result = String.new
     return result
   end
-  
+
   def cppPublicMethods()
     result = String.new
     return result
   end
-  
+
   def cppPublicClassPublicMethods()
     result = String.new
     return result
   end
-  
+
   # PROTECTED IMPLEMENTATION AND FRIENDS
-  
+
   def hppProtectedImpl()
     result = String.new
-    
-    if pImpl  
+
+    if pImpl
       result << "  typedef detail::" << className << "_Impl ImplType;\n\n"
       result << "  explicit " << className << "(std::shared_ptr<detail::" << className << "_Impl> impl);\n\n"
       result << "  friend class detail::" << @className << "_Impl;\n"
     end
-      
+
     return result
   end
-  
+
   def hppProtectedFriends()
     result = String.new
     return result
   end
-  
+
   def cppPublicClassProtectedImpl()
     result = String.new
-  
+
     if @pImpl
       result << className << "::" << className << "(std::shared_ptr<detail::" << className << "_Impl> impl)\n"
       if @baseClassName.empty?
@@ -223,56 +223,56 @@ class SubProjectClassGenerator
       end
       result << "{}\n"
     end
-    
-    return result      
+
+    return result
   end
-  
+
   # CLASS PROTECTED METHODS
-  
+
   def hppProtectedMethods()
     result = String.new
     return result
   end
-  
+
   def implHppProtectedMethods()
     result = String.new
     return result
   end
-  
+
   def cppProtectedMethods()
     result = String.new
     return result
   end
-  
+
   def cppPublicClassProtectedMethods()
     result = String.new
     return result
-  end  
-  
+  end
+
   # CLASS PRIVATE METHODS
-  
+
   def hppPrivateMethods()
     result = String.new
     return result
   end
-  
+
   def implHppPrivateMethods()
     result = String.new
     return result
   end
-  
+
   def cppPrivateMethods()
     result = String.new
     return result
   end
-  
+
   def cppPublicClassPrivateMethods()
     result = String.new
     return result
-  end  
-  
+  end
+
   # POST-CLASS
-  
+
   def hppPostClass()
     result = String.new
     result << "/** \\relates " << className << "*/\n"
@@ -281,30 +281,30 @@ class SubProjectClassGenerator
     result << "typedef std::vector<" << className << "> " << className << "Vector;\n\n"
     return result
   end
-  
+
   def implHppPostClass()
     result = String.new
     return result
   end
-  
+
   def cppPostClass()
     result = String.new
     return result
   end
-  
+
   def cppPublicClassPostClass()
     result = String.new
     return result
   end
-  
+
   def gtest()
     result = String.new
     return result
   end
-  
+
   def aux()
     result = String.new
     return result
   end
-  
+
 end

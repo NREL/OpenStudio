@@ -65,8 +65,8 @@ OptionalModelObject ReverseTranslator::translateGeneratorMicroTurbine( const Wor
   OptionalDouble d;
   boost::optional<WorkspaceObject> owo;
   OptionalString optS;
-  
-  
+
+
   // TODO: The availability schedule is in the ElectricLoadCenter:Generators (list) in E+, here it's carried by the generator itself
   // Should also get the Rated Thermal To Electrical Power Ratio in the list
 
@@ -74,7 +74,7 @@ OptionalModelObject ReverseTranslator::translateGeneratorMicroTurbine( const Wor
   //    Capstone C65,            !- Name
 
   openstudio::model::GeneratorMicroTurbine mchp( m_model );
-  
+
   // Name
   optS = workspaceObject.name();
   if(optS)
@@ -82,8 +82,8 @@ OptionalModelObject ReverseTranslator::translateGeneratorMicroTurbine( const Wor
     mchp.setName(*optS);
   }
 
-  
-    
+
+
   //    65000,                   !- Reference Electrical Power Output {W}
   d = workspaceObject.getDouble(Generator_MicroTurbineFields::ReferenceElectricalPowerOutput);
   if(d)
@@ -168,7 +168,7 @@ OptionalModelObject ReverseTranslator::translateGeneratorMicroTurbine( const Wor
         }
       }
     }
-  
+
 
   //    Capstone C65 Efficiency_vs_PLR,  !- Electrical Efficiency Function of Part Load Ratio Curve Name
   // QuadraticCubicCurves
@@ -198,7 +198,7 @@ OptionalModelObject ReverseTranslator::translateGeneratorMicroTurbine( const Wor
   {
     mchp.setFuelType(*optS);
   }
-    
+
   //    50000,                   !- Fuel Higher Heating Value {kJ/kg}
   d = workspaceObject.getDouble(Generator_MicroTurbineFields::FuelHigherHeatingValue);
   if(d)
@@ -245,7 +245,7 @@ OptionalModelObject ReverseTranslator::translateGeneratorMicroTurbine( const Wor
       }
     }
 
-  
+
   // Fields in between (in E+.idd) are moved at the end in the Heat Recovery section
 
   //    Capstone C65 Combustion Air Inlet Node,  !- Combustion Air Inlet Node Name
@@ -353,34 +353,34 @@ OptionalModelObject ReverseTranslator::translateGeneratorMicroTurbine( const Wor
         }
       }
     }
-    
-    
+
+
   /// HEAT RECOVERY PORTION
-  
+
   // Would need to add that to the plantLoop reverse translator
   //    Capstone C65 Heat Recovery Water Inlet Node,  !- Heat Recovery Water Inlet Node Name
   //    Capstone C65 Heat Recovery Water Outlet Node,  !- Heat Recovery Water Outlet Node Name
-  
 
-  
-  
+
+
+
   // TODO: For now, I trigger the creation is the 'Reference Thermal Efficiency Using Lower Heat Value' is filled.
   // TODO: I should trigger it based on the `Rated Thermal To Electrical Power Ratio in the list`  in the ElectricLoadCenter:Generators (list)
   // TODO: But in order to do that, the ElectricLoadCenter:Distribution & ElectricLoadCenter:Generators need to have a reverse translator
-  
+
   //    0.4975,                  !- Reference Thermal Efficiency Using Lower Heat Value
   d = workspaceObject.getDouble(Generator_MicroTurbineFields::ReferenceThermalEfficiencyUsingLowerHeatValue);
-  
+
   if(d)
   {
-   
+
     // Create a GeneratorMicroTurbineHeatRecovery module, and assign it to the MicroTurbine
     // I've Set the Name in the constructor
     openstudio::model::GeneratorMicroTurbineHeatRecovery mchpHR (m_model, mchp);
-    
+
     // Assign the Reference Thermal Efficiency Using Lower Heat Value
     mchpHR.setReferenceThermalEfficiencyUsingLowerHeatValue(*d);
-    
+
 
     //    60.0,                    !- Reference Inlet Water Temperature {C}
     d = workspaceObject.getDouble(Generator_MicroTurbineFields::ReferenceInletWaterTemperature);
@@ -388,21 +388,21 @@ OptionalModelObject ReverseTranslator::translateGeneratorMicroTurbine( const Wor
     {
       mchpHR.setReferenceInletWaterTemperature(*d);
     }
-    
+
     //    PlantControl,            !- Heat Recovery Water Flow Operating Mode
     optS = workspaceObject.getString(Generator_MicroTurbineFields::HeatRecoveryWaterFlowOperatingMode);
     if(optS)
     {
       mchpHR.setHeatRecoveryWaterFlowOperatingMode(*optS);
     }
-    
+
     //    0.00252362,              !- Reference Heat Recovery Water Flow Rate {m3/s}
     d = workspaceObject.getDouble(Generator_MicroTurbineFields::ReferenceHeatRecoveryWaterFlowRate);
     if(d)
     {
       mchpHR.setReferenceHeatRecoveryWaterFlowRate(*d);
     }
- 
+
     //    ,                        !- Heat Recovery Water Flow Rate Function of Temperature and Power Curve Name
     // BiquadraticCurves
     // mchpHR.setHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve();
@@ -521,11 +521,11 @@ OptionalModelObject ReverseTranslator::translateGeneratorMicroTurbine( const Wor
     {
       mchpHR.setMaximumHeatRecoveryWaterTemperature(*d);
     }
-    
-    
+
+
   }
-    
-    
+
+
   result=mchp;
   return result;
 }

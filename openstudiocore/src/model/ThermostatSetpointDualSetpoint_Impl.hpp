@@ -38,10 +38,10 @@ class Schedule;
 
 namespace detail {
   class MODEL_API ThermostatSetpointDualSetpoint_Impl : public Thermostat_Impl {
-    
 
-    
-    
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{

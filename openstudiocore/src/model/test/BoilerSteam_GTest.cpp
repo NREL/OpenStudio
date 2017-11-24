@@ -45,12 +45,12 @@ TEST_F(ModelFixture,BoilerSteam_BoilerSteam)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
-     BoilerSteam boiler(m); 
+  ASSERT_EXIT (
+  {
+     Model m;
+     BoilerSteam boiler(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }

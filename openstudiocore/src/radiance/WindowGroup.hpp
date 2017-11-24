@@ -49,10 +49,10 @@ namespace radiance{
   };
 
   /** A WindowGroup represents a group of windows which are simulated together in the single or three phase method.
-  */ 
+  */
   class RADIANCE_API WindowGroup{
     public:
-      WindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space, 
+      WindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space,
                   const model::ConstructionBase& construction,
                   const boost::optional<model::ShadingControl>& shadingControl);
 
@@ -65,7 +65,7 @@ namespace radiance{
       openstudio::Vector3d outwardNormal() const;
 
       model::Space space() const;
-      
+
       model::ConstructionBase construction() const;
 
       boost::optional<model::ShadingControl> shadingControl() const;

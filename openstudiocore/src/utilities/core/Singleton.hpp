@@ -32,7 +32,7 @@
 // Warning: If T's constructor throws, instance() will return a null reference.
 
 namespace openstudio{
-  
+
   // Ripped from boost http://www.boost.org/doc/libs/1_42_0/libs/pool/doc/implementation/singleton.html
   // T must be: no-throw default constructible and no-throw destructible
   template <typename T>
@@ -92,7 +92,7 @@ myclass.hpp
 
 #include "singleton.hpp"
 
-class MyClassSingleton 
+class MyClassSingleton
 {
 
 friend class Singleton<MyClass>;

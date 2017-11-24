@@ -35,7 +35,7 @@
 #include <QFile>
 
 struct ContamResourceInitializer{
-  ContamResourceInitializer() 
+  ContamResourceInitializer()
   {
     Q_INIT_RESOURCE(contam);
   }

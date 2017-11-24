@@ -191,10 +191,10 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.StandardsInformationConstruction");
   };
-  
+
 } // detail
 
 } // model
-} // openstudio 
+} // openstudio
 
 #endif // MODEL_STANDARDSINFORMATIONCONSTRUCTION_IMPL_HPP

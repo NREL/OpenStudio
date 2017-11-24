@@ -37,9 +37,9 @@ namespace model {
 namespace detail {
 
   class MODEL_API AirTerminalSingleDuctUncontrolled_Impl : public StraightComponent_Impl {
-    
 
-    
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -48,13 +48,13 @@ namespace detail {
     AirTerminalSingleDuctUncontrolled_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    AirTerminalSingleDuctUncontrolled_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                                           Model_Impl* model, 
+    AirTerminalSingleDuctUncontrolled_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                           Model_Impl* model,
                                            bool keepHandle);
 
     // copy constructor
-    AirTerminalSingleDuctUncontrolled_Impl(const AirTerminalSingleDuctUncontrolled_Impl& other, 
-                                           Model_Impl* model, 
+    AirTerminalSingleDuctUncontrolled_Impl(const AirTerminalSingleDuctUncontrolled_Impl& other,
+                                           Model_Impl* model,
                                            bool keepHandle);
 
     // virtual destructor
@@ -82,7 +82,7 @@ namespace detail {
     virtual bool addToNode(Node & node) override;
 
     //@}
-    
+
     /** Returns the Schedule referred to by the AvailabilityScheduleName field. **/
     Schedule availabilitySchedule() const;
 

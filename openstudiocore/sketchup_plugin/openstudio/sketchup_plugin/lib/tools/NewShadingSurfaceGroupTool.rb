@@ -43,9 +43,9 @@ module OpenStudio
 
     def onLButtonUp(flags, x, y, view)
       super
-      
+
       model_interface = Plugin.model_manager.model_interface
-      
+
       this_space = nil
       if model_interface.skp_model.active_path
         model_interface.spaces.each do |space|
@@ -56,15 +56,15 @@ module OpenStudio
           end
         end
       end
-      
+
       if not model_interface.skp_model.active_path.nil? and not this_space
         UI.messagebox("Shading Surface Group should be added at the top level of a SketchUp model or directly under a Space")
         Sketchup.send_action("selectSelectionTool:")
         return false
       end
-      
+
       begin
-      
+
         model_interface.start_operation("New Shading Surface Group", true)
 
         # input point is in absolute coordinates
@@ -93,13 +93,13 @@ module OpenStudio
         shading_group.create_initial_box("#{$OPENSTUDIO_SKETCHUPPLUGIN_DIR}/resources/components/OpenStudio_NewShadingSurfaceGroup.skp")
         shading_group.add_observers
         shading_group.add_watcher
-      
+
       ensure
-      
+
         model_interface.commit_operation
-      
+
       end
-      
+
       if had_observers
         if this_space
           this_space.add_observers
@@ -107,17 +107,17 @@ module OpenStudio
           model_interface.building.add_observers
         end
       end
-      
+
       # selection observers will ignore signals because selection tool is not yet active
       model_interface.skp_model.selection.clear
       model_interface.skp_model.selection.add(shading_group.entity)
       Plugin.dialog_manager.selection_changed
-      
+
       # pick selection tool after changing selection
       Sketchup.send_action("selectSelectionTool:")
 
     end
-    
+
   end
 
 end

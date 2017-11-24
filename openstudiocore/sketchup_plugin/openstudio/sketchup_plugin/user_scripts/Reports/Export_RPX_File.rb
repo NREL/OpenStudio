@@ -33,12 +33,12 @@ class ExportRPXFile < OpenStudio::Ruleset::ModelUserScript
   def name
     return "Export RPX File"
   end
-  
+
   # returns a vector of arguments, the runner will present these arguments to the user
   # then pass in the results on run
   def arguments(model)
     result = OpenStudio::Ruleset::OSArgumentVector.new
-    
+
     #make an argument for thermal_zone
     thermal_zone_handles = OpenStudio::StringVector.new
     thermal_zone_display_names = OpenStudio::StringVector.new
@@ -49,24 +49,24 @@ class ExportRPXFile < OpenStudio::Ruleset::ModelUserScript
     thermal_zone = OpenStudio::Ruleset::OSArgument::makeChoiceArgument("thermal_zone", thermal_zone_handles, thermal_zone_display_names, true)
     thermal_zone.setDisplayName("Thermal Zone to Export")
     result << thermal_zone
-    
+
     save_path = OpenStudio::Ruleset::OSArgument::makePathArgument("save_path", false, "rpx", true)
     save_path.setDisplayName("Output Path")
     save_path.setDefaultValue("#{OpenStudio::Plugin.model_manager.model_interface.openstudio_name}.rpx")
     result << save_path
-    
+
     return result
   end
-  
+
   # override run to implement the functionality of your script
   # model is an OpenStudio::Model::Model, runner is a OpenStudio::Ruleset::UserScriptRunner
   def run(model, runner, user_arguments)
     super(model, runner, user_arguments)
-        
-    if not runner.validateUserArguments(arguments(model),user_arguments)  
+
+    if not runner.validateUserArguments(arguments(model),user_arguments)
       return false
     end
-    
+
     thermal_zone = runner.getOptionalWorkspaceObjectChoiceValue("thermal_zone",user_arguments,model) #model is passed in because of argument type
     save_path = runner.getStringArgumentValue("save_path",user_arguments)
 
@@ -85,22 +85,22 @@ class ExportRPXFile < OpenStudio::Ruleset::ModelUserScript
         runner.registerError("Script Error - argument not showing up as thermal zone.")
         return false
       end
-    end  
-    
+    end
+
     site = model.getSite
-    
+
     report_string = ""
     report_string << "ROOM, #{thermal_zone.name}, SI\n"
     report_string << "SITE, #{site.latitude}, #{site.longitude}, #{site.timeZone}, #{model.getSite.elevation}\n"
 
     # loop over spaces in thermal zone
     thermal_zone.spaces.each do |space|
-      
+
       # loop over surfaces
       space.surfaces.each do |surface|
-      
+
         # skip surfaces internal to this thermal zone
-        
+
         # write surface
         # TODO: get real emittance value
         emittance = 0.9
@@ -113,10 +113,10 @@ class ExportRPXFile < OpenStudio::Ruleset::ModelUserScript
           all_vertices << vertex.z
         end
         report_string << "S, #{surface.name}, #{emittance}, #{vertices.size}, #{all_vertices.join(', ')}\n"
-        
+
         # loop over sub surfaces
         surface.subSurfaces.each do |sub_surface|
-        
+
           # write sub surface
           # TODO: get real emittance value
           sub_surface_type = "P"
@@ -126,7 +126,7 @@ class ExportRPXFile < OpenStudio::Ruleset::ModelUserScript
             sub_surface_type = "W"
             emittance = 0.84
           end
-  
+
           vertices = sub_surface.vertices
           all_vertices = []
           vertices.each do |vertex|
@@ -136,11 +136,11 @@ class ExportRPXFile < OpenStudio::Ruleset::ModelUserScript
           end
 
           report_string << "#{sub_surface_type}, #{sub_surface.name}, #{emittance}, #{vertices.size}, #{all_vertices.join(', ')}\n"
-        
+
         end
       end
     end
-    
+
     # TODO: see if there is output data available to get surface temperatures, etc
     # CASE, <CaseDesc> ;
     # RC, <RoomAirTemp (C)>,<RoomHumidity (0-1)>,<RoomPressure (Pa)>, <Surf1T>, <SurfT>, etc
@@ -148,8 +148,8 @@ class ExportRPXFile < OpenStudio::Ruleset::ModelUserScript
     # write file
     File.open(save_path, 'w') do |file|
       file << report_string
-    end    
-    
+    end
+
     return(true)
   end
 

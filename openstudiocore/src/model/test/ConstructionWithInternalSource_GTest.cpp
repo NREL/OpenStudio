@@ -69,7 +69,7 @@ TEST(ConstructionWithInternalSource, FromLayers)
   EXPECT_THROW((ConstructionWithInternalSource(layers)), std::exception);
 
   EXPECT_EQ(0, model.getModelObjects<ConstructionWithInternalSource>().size());
-  
+
   layers.push_back(exterior);
 
   EXPECT_EQ(1u, layers.size());

@@ -41,7 +41,7 @@ class RadianceDialog : public OSDialog
 
 public:
 
-  RadianceDialog(bool isIP, 
+  RadianceDialog(bool isIP,
                  QWidget * radianceInspector,
                  QWidget * parent = nullptr);
 

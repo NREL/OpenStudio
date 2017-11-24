@@ -74,7 +74,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_DaylightingControl_OneControl)
   space.setThermalZone(thermalZone);
   DaylightingControl daylightingControl(model);
   daylightingControl.setSpace(space);
-  
+
   EXPECT_TRUE(thermalZone.setPrimaryDaylightingControl(daylightingControl));
 
   ForwardTranslator forwardTranslator;

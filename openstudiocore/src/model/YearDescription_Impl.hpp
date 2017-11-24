@@ -45,12 +45,12 @@ namespace detail {
 
   /** YearDescription_Impl is a ParentObject_Impl that is the implementation class for YearDescription.*/
   class MODEL_API YearDescription_Impl : public ParentObject_Impl {
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
    public:
 
     /** @name Constructors and Destructors */
@@ -115,10 +115,10 @@ namespace detail {
     /// Will throw if dayOfMonth is not appropriate for monthOfYear.
     openstudio::Date makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth);
     openstudio::Date makeDate(unsigned monthOfYear, unsigned dayOfMonth);
-  
+
     /// nth weekday of month generators
     openstudio::Date makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear);
-  
+
     /// day of year
     openstudio::Date makeDate(unsigned dayOfYear);
 

@@ -62,7 +62,7 @@ if (_scheduleDay){ \
   } else { \
     test = false; \
   } \
-} 
+}
 
 
 boost::optional<IdfObject> ForwardTranslator::translateScheduleWeek( ScheduleWeek & modelObject )

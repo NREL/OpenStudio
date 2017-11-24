@@ -103,9 +103,9 @@ namespace detail {
     bool setSolarCollectorPerformance(const SolarCollectorPerformanceFlatPlate& solarCollectorPerformanceFlatPlate);
 
     void resetSolarCollectorPerformance();
-    
+
     bool setSurface(const PlanarSurface& surface);
-    
+
     void resetSurface();
 
     //bool setInletNode(const Connection& connection);
@@ -124,9 +124,9 @@ namespace detail {
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.SolarCollectorFlatPlateWater");
-    
+
     bool setSolarCollectorPerformanceNoClone(const SolarCollectorPerformanceFlatPlate& parameters);
-    
+
     friend class openstudio::model::SolarCollectorFlatPlateWater;
   };
 

@@ -43,8 +43,8 @@ namespace detail {
     WeatherFileDays_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    WeatherFileDays_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                   Model_Impl* model, 
+    WeatherFileDays_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                   Model_Impl* model,
                    bool keepHandle);
 
     // clone copy constructor

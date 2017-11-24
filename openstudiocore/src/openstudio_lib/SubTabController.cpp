@@ -54,7 +54,7 @@ SubTabController::SubTabController(SubTabView* subTabView)
   connect(subTabView, &SubTabView::itemSelected, this, &SubTabController::selectItem);
 
   connect(subTabView, &SubTabView::itemRemoveClicked, this, &SubTabController::removeItem);
-  
+
   connect(subTabView, &SubTabView::itemReplacementDropped, this, &SubTabController::replaceItem);
 
   connect(subTabView, &SubTabView::selectionCleared, this, &SubTabController::clearSelection);

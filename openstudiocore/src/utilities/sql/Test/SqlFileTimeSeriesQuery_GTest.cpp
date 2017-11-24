@@ -87,7 +87,7 @@ void keyValuesGeneralTests(SqlFile& file, const SqlFileTimeSeriesQueryVector& al
   for (const SqlFileTimeSeriesQuery& q : allQueries) {
     EXPECT_FALSE(q.keyValues());
   }
-} 
+}
 
 void sqlFileTimeSeriesQueryGeneralTests(SqlFile& file) {
   SqlFileTimeSeriesQuery everythingQuery;

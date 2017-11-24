@@ -50,7 +50,7 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
 
   public:
 
-  explicit AirTerminalSingleDuctVAVReheat( const Model& model, 
+  explicit AirTerminalSingleDuctVAVReheat( const Model& model,
                                            Schedule & availabilitySchedule,
                                            HVACComponent & coil );
 
@@ -161,7 +161,7 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
   boost::optional<double> maximumFlowFractionDuringReheat();
 
   /** Sets the value of the MaximumFlowFractionDuringReheat field. */
-  void setMaximumFlowFractionDuringReheat( double value );  
+  void setMaximumFlowFractionDuringReheat( double value );
 
   /** Sets the value of the MaximumFlowFractionDuringReheat field to AutoSize */
   void autosizeMaximumFlowFractionDuringReheat();
@@ -193,7 +193,7 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
 
   friend class openstudio::detail::IdfObject_Impl;
 
-  /// @cond 
+  /// @cond
 
   typedef detail::AirTerminalSingleDuctVAVReheat_Impl ImplType;
 
@@ -203,7 +203,7 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
 
   REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctVAVReheat");
 
-  /// @endcond 
+  /// @endcond
 
 };
 

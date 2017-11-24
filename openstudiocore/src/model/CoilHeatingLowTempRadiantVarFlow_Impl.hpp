@@ -71,13 +71,13 @@ namespace detail {
     virtual IddObjectType iddObjectType() const override;
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
-    
+
     virtual unsigned inletPort() override;
 
-    virtual unsigned outletPort() override;    
-    
+    virtual unsigned outletPort() override;
+
     virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
-    
+
     //virtual ModelObject clone(Model model) const;
 
     //@}
@@ -155,12 +155,12 @@ namespace detail {
 
     //boost::optional<ModelObject> heatingWaterInletNodeAsModelObject() const;
     //boost::optional<ModelObject> heatingWaterOutletNodeAsModelObject() const;
-    
+
     boost::optional<ModelObject> heatingControlTemperatureScheduleAsModelObject() const;
 
     //bool setHeatingWaterInletNodeAsModelObject(const boost::optional<ModelObject>& modelObject);
     //bool setHeatingWaterOutletNodeAsModelObject(const boost::optional<ModelObject>& modelObject);
-    
+
     bool setHeatingControlTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
   };
 

@@ -60,10 +60,10 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_DefaultConstructor)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model model;
-    
+
     EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
 
     EXPECT_TRUE(testObject.isDesignAirFlowRateAutosized());
@@ -85,7 +85,7 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_DefaultConstructor)
     EXPECT_DOUBLE_EQ(3.0, testObject.blowdownConcentrationRatio());
     EXPECT_FALSE(testObject.blowdownMakeupWaterUsageSchedule());
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -127,21 +127,21 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_AddObjectByPlantLoopAddSu
 {
   Model model;
   PlantLoop plantLoop(model);
-  
+
   EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
 
   EXPECT_TRUE(plantLoop.addSupplyBranchForComponent(testObject));
   EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_AddToNodeTwoSameObjects)
 {
   Model model;
   PlantLoop plantLoop(model);
-  
+
   EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
 
   Node inletNode = plantLoop.supplySplitter().lastOutletModelObject()->cast<Node>();
@@ -149,31 +149,31 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_AddToNodeTwoSameObjects)
   inletNode = plantLoop.supplySplitter().lastOutletModelObject()->cast<Node>();
   EXPECT_FALSE(testObject.addToNode(inletNode));
   EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_AddToNodeTwoUniqueObjects)
 {
   Model model;
   PlantLoop plantLoop(model);
-  
+
   EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
   EvaporativeFluidCoolerSingleSpeed testObject2 = EvaporativeFluidCoolerSingleSpeed(model);
 
   Node inletNode = plantLoop.supplySplitter().lastOutletModelObject()->cast<Node>();
   EXPECT_TRUE(testObject.addToNode(inletNode));
-  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size()); 
+  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
   inletNode = plantLoop.supplySplitter().lastOutletModelObject()->cast<Node>();
-  EXPECT_TRUE(testObject2.addToNode(inletNode)); 
-  EXPECT_EQ((unsigned)9, plantLoop.supplyComponents().size()); 
+  EXPECT_TRUE(testObject2.addToNode(inletNode));
+  EXPECT_EQ((unsigned)9, plantLoop.supplyComponents().size());
 }
 
 TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_IsRemovable)
 {
   Model model;
-  
+
   EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
 
   EXPECT_TRUE(testObject.isRemovable());
@@ -183,7 +183,7 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_Remove)
 {
   Model model;
   PlantLoop plantLoop(model);
-  
+
   EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
 
   Node inletNode = plantLoop.supplySplitter().lastOutletModelObject()->cast<Node>();
@@ -199,7 +199,7 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_RemoveByPlantLoopRemoveSu
 {
   Model model;
   PlantLoop plantLoop(model);
-  
+
   EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
 
   plantLoop.addSupplyBranchForComponent(testObject);
@@ -287,7 +287,7 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_CloneTwoModelsWithDefault
   EXPECT_NE(testObjectClone2, testObjectClone);
 }
 
-TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_DesignAirFlowRate) 
+TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_DesignAirFlowRate)
 {
   Model model;
   EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
@@ -306,7 +306,7 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_DesignAirFlowRate)
   EXPECT_TRUE(testObject.isDesignAirFlowRateAutosized());
 }
 
-TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_FanPoweratDesignAirFlowRate) 
+TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_FanPoweratDesignAirFlowRate)
 {
   Model model;
   EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
@@ -325,7 +325,7 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_FanPoweratDesignAirFlowRa
   EXPECT_TRUE(testObject.isFanPoweratDesignAirFlowRateAutosized());
 }
 
-TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_DesignSprayWaterFlowRate) 
+TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_DesignSprayWaterFlowRate)
 {
   Model model;
   EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
@@ -341,7 +341,7 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_DesignSprayWaterFlowRate)
   EXPECT_FALSE(testObject.setDesignSprayWaterFlowRate(-1.0));
 }
 
-TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_PerformanceInputMethod) 
+TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_PerformanceInputMethod)
 {
   Model model;
   EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
@@ -357,7 +357,7 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_PerformanceInputMethod)
   EXPECT_FALSE(testObject.setPerformanceInputMethod("Not Valid Entry"));
 }
 
-TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_CapacityControl) 
+TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_CapacityControl)
 {
   Model model;
   EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
@@ -370,7 +370,7 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_CapacityControl)
   EXPECT_FALSE(testObject.setCapacityControl("Not Valid Entry"));
 }
 
-TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_EvaporationLossMode) 
+TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_EvaporationLossMode)
 {
   Model model;
   EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
@@ -383,7 +383,7 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_EvaporationLossMode)
   EXPECT_FALSE(testObject.setEvaporationLossMode("Not Valid Entry"));
 }
 
-TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_BlowdownCalculationMode) 
+TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_BlowdownCalculationMode)
 {
   Model model;
   EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
@@ -396,7 +396,7 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_BlowdownCalculationMode)
   EXPECT_FALSE(testObject.setBlowdownCalculationMode("Not Valid Entry"));
 }
 
-TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_BlowdownMakeupWaterUsageSchedule) 
+TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_BlowdownMakeupWaterUsageSchedule)
 {
   Model model;
   EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);

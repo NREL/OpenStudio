@@ -360,14 +360,14 @@ TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_addToThermalZone) {
 
 TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_AddRemoveAirLoopHVAC)
 {
-  model::Model m; 
+  model::Model m;
   model::Schedule availabilitySchedule = m.alwaysOnDiscreteSchedule();
   model::FanConstantVolume fan(m,availabilitySchedule);
   model::CoilHeatingWater heatingCoil(m,availabilitySchedule);
   CoilCoolingWater coolingCoil(m,availabilitySchedule);
-  
+
   model::ZoneHVACFourPipeFanCoil fpfc( m,
-                                       availabilitySchedule, 
+                                       availabilitySchedule,
                                        fan,
                                        heatingCoil,
                                        coolingCoil );

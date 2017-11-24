@@ -41,7 +41,7 @@ set(${target_name}_src
   ThreeJSReverseTranslator.cpp
   ModelMerger.hpp
   ModelMerger.cpp
-  
+
   ConcreteModelObjects.hpp
   AirConditionerVariableRefrigerantFlow.hpp
   AirConditionerVariableRefrigerantFlow_Impl.hpp
@@ -734,7 +734,7 @@ set(${target_name}_src
   MaterialPropertyGlazingSpectralData.cpp
   MaterialPropertyMoisturePenetrationDepthSettings.hpp
   MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp
-  MaterialPropertyMoisturePenetrationDepthSettings.cpp  
+  MaterialPropertyMoisturePenetrationDepthSettings.cpp
   MeterCustom.hpp
   MeterCustom_Impl.hpp
   MeterCustom.cpp

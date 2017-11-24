@@ -68,12 +68,12 @@ namespace detail {
    *  should provide an implementation class that derives from ModelObject_Impl. */
   class MODEL_API ModelObject_Impl : public openstudio::detail::WorkspaceObject_Impl {
 
-    // 
-    // 
-    // 
+    //
+    //
+    //
 
-    // 
-    // 
+    //
+    //
    public:
 
     /** @name Constructors and Destructors */
@@ -223,7 +223,7 @@ namespace detail {
     //@{
 
     /** Return the ScheduleTypeKeys indicating how schedule is used in this object. If schedule is not directly
-     *  used by this object, return value will be .empty(). 
+     *  used by this object, return value will be .empty().
      *
      *  REIMPLEMENT IN ALL CONCRETE MODELOBJECTS THAT CAN POINT TO SCHEDULES. */
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
@@ -241,7 +241,7 @@ namespace detail {
     //@{
 
     // Nano::Signal<void(const QVariantMap&)> reportProperties;
-    
+
     //@}
 
     // void requestProperties(const QStringList& names);
@@ -267,8 +267,8 @@ namespace detail {
     template <class T>
     void setBooleanFieldValue(unsigned index, const T& value);
 
-    /** Sets index to point to schedule if schedule's ScheduleTypeLimits are compatible with the 
-     *  ScheduleType in the ScheduleTypeRegistry for (className,scheduleDisplayName), or if 
+    /** Sets index to point to schedule if schedule's ScheduleTypeLimits are compatible with the
+     *  ScheduleType in the ScheduleTypeRegistry for (className,scheduleDisplayName), or if
      *  schedule's ScheduleTypeLimits have not yet been set (in which case the ScheduleTypeRegistry
      *  is used to retrieve or create an appropriate one). */
     bool setSchedule(unsigned index,

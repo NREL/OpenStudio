@@ -103,7 +103,7 @@ void ConstructionInspectorView::createLayout()
   m_standardsInformationWidget = new StandardsInformationConstructionWidget(m_isIP, mainGridLayout, row);
   m_standardsInformationWidget->showFenestration();
   m_standardsInformationWidget->disableFenestration();
-  
+
   ++row;
 
   // Layer

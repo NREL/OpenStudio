@@ -42,11 +42,11 @@ namespace detail {
 
   /** DefaultSurfaceConstructions_Impl is a ResourceObject_Impl that is the implementation class for DefaultSurfaceConstructions.*/
   class MODEL_API DefaultSurfaceConstructions_Impl : public ResourceObject_Impl {
-    
 
-    
-    
-    
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -64,7 +64,7 @@ namespace detail {
     virtual ~DefaultSurfaceConstructions_Impl() {}
 
     //@}
-   
+
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;

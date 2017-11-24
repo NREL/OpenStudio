@@ -109,7 +109,7 @@ TEST_F(ModelFixture,MasslessOpaqueMaterial_VisibleAbsorptance_Quantity) {
   EXPECT_EQ(units.standardString(),q.units().standardString());
 }
 
-TEST_F(ModelFixture, MasslessOpaqueMaterial_StandardsInformation) 
+TEST_F(ModelFixture, MasslessOpaqueMaterial_StandardsInformation)
 {
   Model model;
 

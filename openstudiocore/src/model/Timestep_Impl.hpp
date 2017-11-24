@@ -37,17 +37,17 @@ namespace model {
 namespace detail {
 
   class MODEL_API Timestep_Impl : public ModelObject_Impl {
-    
-    
-    
+
+
+
    public:
 
     // constructor
     Timestep_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    Timestep_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                  Model_Impl* model, 
+    Timestep_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                  Model_Impl* model,
                   bool keepHandle);
 
     // clone copy constructor

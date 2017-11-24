@@ -52,7 +52,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCoilSystemCoolingWaterHeatExchangerAssisted( 
+boost::optional<IdfObject> ForwardTranslator::translateCoilSystemCoolingWaterHeatExchangerAssisted(
     CoilSystemCoolingWaterHeatExchangerAssisted & modelObject)
 {
   IdfObject idfObject(IddObjectType::CoilSystem_Cooling_Water_HeatExchangerAssisted);

@@ -53,7 +53,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerOptimumStart( 
+boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerOptimumStart(
     AvailabilityManagerOptimumStart & modelObject)
 {
   IdfObject idfObject(IddObjectType::AvailabilityManager_OptimumStart);
@@ -150,7 +150,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerOptimu
     auto value = modelObject.numberofPreviousDays();
     idfObject.setUnsigned(AvailabilityManager_OptimumStartFields::NumberofPreviousDays,value);
   }
-  
+
   return idfObject;
 }
 

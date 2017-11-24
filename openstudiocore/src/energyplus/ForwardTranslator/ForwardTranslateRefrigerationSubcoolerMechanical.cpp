@@ -53,7 +53,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSubcoolerMec
   IdfObject subcoolerMechanical = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_Subcooler, modelObject);
 
   subcoolerMechanical.setString(Refrigeration_SubcoolerFields::SubcoolerType, "Mechanical");
-  
+
   // Capacity-Providing System
   boost::optional<RefrigerationSystem> capacityProvidingSystem = modelObject.capacityProvidingSystem();
 
@@ -66,13 +66,13 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSubcoolerMec
       subcoolerMechanical.setString(Refrigeration_SubcoolerFields::CapacityProvidingSystem,_capacityProvidingSystem->name().get());
     }
   }
-   
+
   // Outlet Control Temperature
   d = modelObject.outletControlTemperature();
   if (d) {
     subcoolerMechanical.setDouble(Refrigeration_SubcoolerFields::OutletControlTemperature,d.get());
   }
-  
+
   return subcoolerMechanical;
 }
 }

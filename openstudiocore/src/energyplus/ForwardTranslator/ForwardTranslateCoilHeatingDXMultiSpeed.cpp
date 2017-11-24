@@ -63,13 +63,13 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXMultiSpeed( 
   // AirInletNodeName
   if( auto node = modelObject.inletModelObject() ) {
     idfObject.setString(Coil_Heating_DX_MultiSpeedFields::AirInletNodeName,node->name().get());
-  }  
+  }
 
   // AirOutletNodeName
   if( auto node = modelObject.outletModelObject() ) {
     idfObject.setString(Coil_Heating_DX_MultiSpeedFields::AirOutletNodeName,node->name().get());
   }
-  
+
   // MinimumOutdoorDryBulbTemperatureforCompressorOperation
   if( (value = modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation()) ) {
     idfObject.setDouble(Coil_Heating_DX_MultiSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,value.get());
@@ -96,7 +96,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXMultiSpeed( 
       idfObject.setString(Coil_Heating_DX_MultiSpeedFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName,_curve->name().get());
     }
   }
-  
+
   // MaximumOutdoorDryBulbTemperatureforDefrostOperation
   if( (value = modelObject.maximumOutdoorDryBulbTemperatureforDefrostOperation()) ) {
     idfObject.setDouble(Coil_Heating_DX_MultiSpeedFields::MaximumOutdoorDryBulbTemperatureforDefrostOperation,value.get());
@@ -146,7 +146,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXMultiSpeed( 
   }
 
   auto const stages = modelObject.stages();
-  
+
   // NumberofSpeeds
   if( auto num = stages.size() ) {
     idfObject.setInt(Coil_Heating_DX_MultiSpeedFields::NumberofSpeeds,num);
@@ -154,65 +154,65 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXMultiSpeed( 
 
   for( auto const & stage : stages ) {
     auto eg = idfObject.pushExtensibleGroup();
-  
+
     // GrossRatedHeatingCapacity
     if( stage.isGrossRatedHeatingCapacityAutosized() ) {
       eg.setString(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedGrossRatedHeatingCapacity,"AutoSize");
     } else if( (value = stage.grossRatedHeatingCapacity()) ) {
       eg.setDouble(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedGrossRatedHeatingCapacity,value.get());
     }
-  
+
     // GrossRatedHeatingCOP
     if( (value = stage.grossRatedHeatingCOP()) ) {
       eg.setDouble(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedGrossRatedHeatingCOP,value.get());
     }
-  
+
     // RatedAirFlowRate
     if( stage.isRatedAirFlowRateAutosized() ) {
       eg.setString(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedRatedAirFlowRate,"AutoSize");
     } else if( (value = stage.ratedAirFlowRate()) ) {
       eg.setDouble(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedRatedAirFlowRate,value.get());
     }
-  
+
     // RatedSupplyAirFanPowerPerVolumeFlowRate
     if( (value = stage.ratedSupplyAirFanPowerPerVolumeFlowRate()) ) {
       eg.setDouble(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedRatedSupplyAirFanPowerPerVolumeFlowRate,value.get());
     }
-  
+
     // HeatingCapacityFunctionofTemperatureCurveName
-    { 
+    {
       auto curve = stage.heatingCapacityFunctionofTemperatureCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedHeatingCapacityFunctionofTemperatureCurveName,_curve->name().get());
       }
     }
-  
+
     // HeatingCapacityFunctionofFlowFractionCurveName
-    { 
+    {
       auto curve = stage.heatingCapacityFunctionofFlowFractionCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedHeatingCapacityFunctionofFlowFractionCurveName,_curve->name().get());
       }
     }
-  
+
     // SpeedEnergyInputRatioFunctionofTemperatureCurveName
-    { 
+    {
       auto curve = stage.energyInputRatioFunctionofTemperatureCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedEnergyInputRatioFunctionofTemperatureCurveName,_curve->name().get());
       }
     }
-  
+
     // SpeedEnergyInputRatioFunctionofFlowFractionCurveName
-    { 
+    {
       auto curve = stage.energyInputRatioFunctionofFlowFractionCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedEnergyInputRatioFunctionofFlowFractionCurveName,_curve->name().get());
       }
     }
-  
+
     // SpeedPartLoadFractionCorrelationCurveName
-    { 
+    {
       auto curve = stage.partLoadFractionCorrelationCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedPartLoadFractionCorrelationCurveName,_curve->name().get());
@@ -225,7 +225,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXMultiSpeed( 
     }
 
     // SpeedWasteHeatFunctionofTemperatureCurveName
-    { 
+    {
       auto curve = stage.wasteHeatFunctionofTemperatureCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedWasteHeatFunctionofTemperatureCurveName,_curve->name().get());

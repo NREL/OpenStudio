@@ -145,7 +145,7 @@ namespace sdd {
         }
       }
     }else{
-      result = root.firstChildElement(tagName); 
+      result = root.firstChildElement(tagName);
     }
     return result;
   }
@@ -157,9 +157,9 @@ namespace sdd {
     QDomElement nameElement = element.firstChildElement("Name");
 
     // http://code.google.com/p/cbecc/issues/detail?id=378
-    // The angle between the model Y-Axis and True North, measured clockwise from the model Y-Axis in Degrees. 
+    // The angle between the model Y-Axis and True North, measured clockwise from the model Y-Axis in Degrees.
     QDomElement northAngleElement = element.firstChildElement("NAng");
-    // The angle between True North and the the model Y-Axis, measured clockwise from True North in Degrees.  
+    // The angle between True North and the the model Y-Axis, measured clockwise from True North in Degrees.
     QDomElement buildingAzimuthElement = element.firstChildElement("BldgAz"); // this corresponds to Building::North Axis
 
     QDomNodeList spaceElements = element.elementsByTagName("Spc");
@@ -284,7 +284,7 @@ namespace sdd {
     if (nameElement.isNull()){
       LOG(Error, "Story element 'Name' is empty.");
     } else{
-      name = escapeName(nameElement.text()); 
+      name = escapeName(nameElement.text());
     }
     buildingStory.setName(name);
 
@@ -304,13 +304,13 @@ namespace sdd {
     QDomElement nameElement = element.firstChildElement("Name");
 
     model::Space space(model);
-    
+
     if (nameElement.isNull()){
       LOG(Error, "Spc element 'Name' is empty.")
     } else{
       space.setName(escapeName(nameElement.text()));
     }
-    
+
     return space;
   }
 
@@ -611,7 +611,7 @@ namespace sdd {
       //InfMthd = {AirChangesPerHour, FlowArea, FlowExteriorArea, FlowExteriorWallArea, FlowSpace}
       QDomNodeList infMthdNodes = element.elementsByTagName("InfMthd");
       for (int i = 0; i < infMthdNodes.count(); i++){
-        
+
         QDomElement infMthdElement = infMthdNodes.at(i).toElement();
 
         bool hasIndex;
@@ -620,9 +620,9 @@ namespace sdd {
         QDomElement dsgnInfRtElement = elementByTagNameAndIndex(element,"DsgnInfRt",hasIndex,infIndex);
 
         if ((!infMthdElement.isNull()) && (!dsgnInfRtElement.isNull())){
-          
 
-          if ((infMthdElement.text() == "AirChangesPerHour") || 
+
+          if ((infMthdElement.text() == "AirChangesPerHour") ||
               (infMthdElement.text() == "FlowArea") ||
               (infMthdElement.text() == "FlowExteriorArea") ||
               (infMthdElement.text() == "FlowExteriorWallArea") ||
@@ -765,7 +765,7 @@ namespace sdd {
           double spaceFraction = intLtgRegHtGnSpcFracSimElement.text().toDouble();
           double returnAirFraction = 1.0 - spaceFraction;
           lightsDefinition.setReturnAirFraction(returnAirFraction);
-        
+
           if (!intLtgRegHtGnRadFracSimElement.isNull()){
             double fractionRadiant = intLtgRegHtGnRadFracSimElement.text().toDouble() * spaceFraction;
             lightsDefinition.setFractionRadiant(fractionRadiant);
@@ -1034,7 +1034,7 @@ namespace sdd {
 
     //***** Elevator Loads *****
     {
-      //<ElevPwr>20000</ElevPwr> 
+      //<ElevPwr>20000</ElevPwr>
       //<ElevSchRef>OfficeElevator</ElevSchRef>
       //<ElevRadFrac>0</ElevRadFrac>
       //<ElevLatFrac>0</ElevLatFrac>
@@ -1049,7 +1049,7 @@ namespace sdd {
 
         openstudio::model::ElectricEquipmentDefinition electricEquipmentDefinition(model);
         electricEquipmentDefinition.setName(name + " Elevator Definition");
-        electricEquipmentDefinition.setDesignLevel(elevPwrElement.text().toDouble()); 
+        electricEquipmentDefinition.setDesignLevel(elevPwrElement.text().toDouble());
 
         if (!elevRadFracElement.isNull()){
           electricEquipmentDefinition.setFractionRadiant(elevRadFracElement.text().toDouble());
@@ -1095,7 +1095,7 @@ namespace sdd {
 
         openstudio::model::ElectricEquipmentDefinition electricEquipmentDefinition(model);
         electricEquipmentDefinition.setName(name + " Escalator Definition");
-        electricEquipmentDefinition.setDesignLevel(escalPwrElement.text().toDouble()); 
+        electricEquipmentDefinition.setDesignLevel(escalPwrElement.text().toDouble());
 
         if (!escalRadFracElement.isNull()){
           electricEquipmentDefinition.setFractionRadiant(escalRadFracElement.text().toDouble());
@@ -1190,7 +1190,7 @@ namespace sdd {
     QDomElement insideConvCoefElement = element.firstChildElement("InsideConvCoef");
     if (!insideConvCoefElement.isNull()){
 
-      // sdd IP units (Btu/h-ft2-F), os SI units (W/m2-K) 
+      // sdd IP units (Btu/h-ft2-F), os SI units (W/m2-K)
       Quantity coefIP(insideConvCoefElement.text().toDouble(), BTUUnit(BTUExpnt(1, -2, -1, -1)));
       OptionalQuantity coefSI = QuantityConverter::instance().convert(coefIP, UnitSystem(UnitSystem::Wh));
       OS_ASSERT(coefSI);
@@ -1203,7 +1203,7 @@ namespace sdd {
     QDomElement outsideConvCoefElement = element.firstChildElement("OutsideConvCoef");
     if (!outsideConvCoefElement.isNull()){
 
-      // sdd IP units (Btu/h-ft2-F), os SI units (W/m2-K) 
+      // sdd IP units (Btu/h-ft2-F), os SI units (W/m2-K)
       Quantity coefIP(outsideConvCoefElement.text().toDouble(), BTUUnit(BTUExpnt(1, -2, -1, -1)));
       OptionalQuantity coefSI = QuantityConverter::instance().convert(coefIP, UnitSystem(UnitSystem::Wh));
       OS_ASSERT(coefSI);
@@ -1293,7 +1293,7 @@ namespace sdd {
 
     openstudio::model::Surface surface(vertices, space.model());
     surface.setSpace(space);
-    
+
     QDomElement nameElement = element.firstChildElement("Name");
     std::string name;
     if (nameElement.isNull()){
@@ -1302,7 +1302,7 @@ namespace sdd {
       name = escapeName(nameElement.text());
     }
     surface.setName(name);
-    
+
     result = surface;
 
     QDomElement constructionReferenceElement = element.firstChildElement("ConsAssmRef");
@@ -1366,14 +1366,14 @@ namespace sdd {
 
       double perimeterExposedIP = perimExposedElement.text().toDouble();
       double perimeterExposedSI = footToMeter*perimeterExposedIP;
-    
+
       boost::optional<model::ConstructionBase> construction = surface.construction();
       if (construction && construction->optionalCast<model::FFactorGroundFloorConstruction>()){
         // clone the existing FFactor construction, set perimeter, and assign to this surface
         model::FFactorGroundFloorConstruction fFactorConstruction = construction->cast<model::FFactorGroundFloorConstruction>();
         model::Model model = fFactorConstruction.model();
         model::FFactorGroundFloorConstruction clone = fFactorConstruction.clone(model).cast<model::FFactorGroundFloorConstruction>();
-        
+
         std::string cloneName = name + " " + fFactorConstruction.name().get();
         clone.setName(cloneName);
         clone.setPerimeterExposed(perimeterExposedSI);
@@ -1390,14 +1390,14 @@ namespace sdd {
 
       double heightIP = heightElement.text().toDouble();
       double heightSI = footToMeter*heightIP;
-    
+
       boost::optional<model::ConstructionBase> construction = surface.construction();
       if (construction && construction->optionalCast<model::CFactorUndergroundWallConstruction>()){
         // clone the existing CFactorUndergroundWallConstruction, set height, and assign to this surface
         model::CFactorUndergroundWallConstruction cFactorConstruction = construction->cast<model::CFactorUndergroundWallConstruction>();
         model::Model model = cFactorConstruction.model();
         model::CFactorUndergroundWallConstruction clone = cFactorConstruction.clone(model).cast<model::CFactorUndergroundWallConstruction>();
-        
+
         std::string cloneName = name + " " + cFactorConstruction.name().get();
         clone.setName(cloneName);
         clone.setHeight(heightSI);
@@ -1440,7 +1440,7 @@ namespace sdd {
 
       if (!otherSpace){
         LOG(Error, "Cannot retrieve adjacent Space '" << adjacentSpaceName << "' for Surface named '" << name << "'");
-      
+
         // DLM: make adiabatic per David Reddy, 6/5/2015
         //surface.remove();
         //return boost::none;
@@ -1459,7 +1459,7 @@ namespace sdd {
         boost::optional<model::Surface> otherSurface = surface.createAdjacentSurface(*otherSpace);
         if (!otherSurface){
           LOG(Error, "Failed to create surface in adjacent Space '" << adjacentSpaceName << "' for Surface named '" << name << "'.  Removing surface.");
-        
+
           // DLM: make adiabatic per David Reddy, 6/5/2015
           //surface.remove();
           //return boost::none;
@@ -1549,7 +1549,7 @@ namespace sdd {
 
       // Convert surface convection coefficients
       translateConvectionCoefficients(element, doc, subSurface);
-        
+
     }else if (tagName == "Dr"){
 
       subSurface.setSubSurfaceType("Door");
@@ -1586,7 +1586,7 @@ namespace sdd {
       // Convert surface convection coefficients
       translateConvectionCoefficients(element, doc, subSurface);
 
-    }else{  
+    }else{
       LOG(Error, "Unknown subsurface type '" << toString(tagName) << "'");
     }
 
@@ -1725,7 +1725,7 @@ namespace sdd {
 
       }
 
-    }else{  
+    }else{
       LOG(Error, "Unknown shading surface type '" << toString(tagName) << "'");
     }
 
@@ -1802,7 +1802,7 @@ namespace sdd {
     nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
     // SDD:
-    // FuncClassMthd - optional, ignore 
+    // FuncClassMthd - optional, ignore
     // RelocPubSchoolBldg - optional, in progress
     // WholeBldgModeled - required, need to add
     // BldgAz - required, done
@@ -1818,10 +1818,10 @@ namespace sdd {
     // LivingUnitCntNew - optional, need to add?
     // LivingUnitCntExisting - optional, need to add?
     // LivingUnitCntAltered - optional, need to add?
-    // TotFlrArea - defaulted, ignore 
-    // NonResFlrArea - defaulted, ignore 
-    // ResFlrArea - defaulted, ignore 
-    // TotCondVol - defaulted, ignore 
+    // TotFlrArea - defaulted, ignore
+    // NonResFlrArea - defaulted, ignore
+    // ResFlrArea - defaulted, ignore
+    // TotCondVol - defaulted, ignore
     // PlantClgCap - defaulted, ignore
     // PlantHtgCap - defaulted, ignore
     // CoilClgCap - defaulted, ignore
@@ -2211,7 +2211,7 @@ namespace sdd {
 
     // translate floorPrint
     Transformation transformation = space.siteTransformation();
-   
+
     Point3dVector vertices = transformation*space.floorPrint();
     boost::optional<double> floorPrintArea = openstudio::getArea(vertices);
     if (vertices.empty() || !floorPrintArea){
@@ -2330,7 +2330,7 @@ namespace sdd {
         result = doc.createElement("ExtWall");
       }else if (surface.isGroundSurface()){
         result = doc.createElement("UndgrWall");
-      }else if (istringEqual("Surface", outsideBoundaryCondition) || 
+      }else if (istringEqual("Surface", outsideBoundaryCondition) ||
                 istringEqual("Adiabatic", outsideBoundaryCondition)){
         result = doc.createElement("IntWall");
       }
@@ -2339,18 +2339,18 @@ namespace sdd {
         result = doc.createElement("Roof");
       }else if (surface.isGroundSurface()){
         // DLM: what to do here?
-      }else if (istringEqual("Surface", outsideBoundaryCondition) || 
+      }else if (istringEqual("Surface", outsideBoundaryCondition) ||
                 istringEqual("Adiabatic", outsideBoundaryCondition)){
         // DLM: we are not translating interior ceiling surfaces, the paired interior floor will be written instead
-        //result = doc.createElement("Ceiling"); 
+        //result = doc.createElement("Ceiling");
         return boost::none;
       }
     }else if (istringEqual("Floor", surfaceType)){
       if (surface.isGroundSurface()){
         result = doc.createElement("UndgrFlr");
-      }else if (istringEqual("Surface", outsideBoundaryCondition) || 
+      }else if (istringEqual("Surface", outsideBoundaryCondition) ||
                 istringEqual("Adiabatic", outsideBoundaryCondition)){
-        result = doc.createElement("IntFlr"); 
+        result = doc.createElement("IntFlr");
       }else if (istringEqual("Outdoors", outsideBoundaryCondition)){
         result = doc.createElement("ExtFlr");
       }
@@ -2429,7 +2429,7 @@ namespace sdd {
     // if underground floor try to write out perimeter exposed
     if (istringEqual("Floor", surfaceType) && surface.isGroundSurface()){
       // DLM: for now we will get the exposed perimeter from the FFactor construction
-      // this assumes one construction per surface, I don't really like this, maybe we can do better later 
+      // this assumes one construction per surface, I don't really like this, maybe we can do better later
       if (construction && construction->optionalCast<model::FFactorGroundFloorConstruction>()){
         model::FFactorGroundFloorConstruction fFactorConstruction = construction->cast<model::FFactorGroundFloorConstruction>();
         // check assumption of one surface per FFactor construction
@@ -2452,7 +2452,7 @@ namespace sdd {
     // if underground wall try to write out height
     if (istringEqual("Wall", surfaceType) && surface.isGroundSurface()){
       // DLM: for now we will get the height from the CFactor construction
-      // this assumes one construction per surface, I don't really like this, maybe we can do better later 
+      // this assumes one construction per surface, I don't really like this, maybe we can do better later
       if (construction && construction->optionalCast<model::CFactorUndergroundWallConstruction>()){
         model::CFactorUndergroundWallConstruction cFactorConstruction = construction->cast<model::CFactorUndergroundWallConstruction>();
         // check assumption of one surface per CFactor construction
@@ -2563,12 +2563,12 @@ namespace sdd {
 
     std::string subSurfaceType = subSurface.subSurfaceType();
     QString consRefElementName;
-    if (istringEqual("FixedWindow", subSurfaceType) || 
+    if (istringEqual("FixedWindow", subSurfaceType) ||
         istringEqual("OperableWindow", subSurfaceType) ||
         istringEqual("GlassDoor", subSurfaceType)){
       consRefElementName = "FenConsRef";
       result = doc.createElement("Win");
-    }else if (istringEqual("Door", subSurfaceType) || 
+    }else if (istringEqual("Door", subSurfaceType) ||
               istringEqual("OverheadDoor", subSurfaceType)){
       consRefElementName = "DrConsRef";
       result = doc.createElement("Dr");
@@ -2735,7 +2735,7 @@ namespace sdd {
 
         std::vector<model::Material> layers = construction->layers();
         if (!layers.empty()){
-          
+
           if (layers[0].optionalCast<model::StandardOpaqueMaterial>()){
             model::StandardOpaqueMaterial outerMaterial = layers[0].cast<model::StandardOpaqueMaterial>();
             if (!outerMaterial.isSolarAbsorptanceDefaulted()){

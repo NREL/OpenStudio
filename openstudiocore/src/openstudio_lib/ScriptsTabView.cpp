@@ -109,7 +109,7 @@ void ScriptsTabView::openUpdateMeasuresDlg()
   openstudio::OSAppBase * app = OSAppBase::instance();
 
   app->currentDocument()->disable();
- 
+
   WorkflowJSON workflow = app->currentDocument()->model().workflowJSON();
 
   m_syncMeasuresDialog = boost::shared_ptr<SyncMeasuresDialog>(new SyncMeasuresDialog(workflow,&(app->measureManager())));

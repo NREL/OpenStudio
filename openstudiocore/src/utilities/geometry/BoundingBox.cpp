@@ -74,7 +74,7 @@ namespace openstudio{
     if (isEmpty() || other.isEmpty()){
       return false;
     }
-    
+
 
     bool test = ((*m_minX > other.maxX().get() + tol) ||
                  (*m_minY > other.maxY().get() + tol) ||

@@ -45,33 +45,33 @@ namespace detail {
   /** DesignSpecificationOutdoorAir_Impl is a ModelObject_Impl that is the
    *  implementation class for DesignSpecificationOutdoorAir.*/
   class MODEL_API DesignSpecificationOutdoorAir_Impl : public ResourceObject_Impl {
-    
 
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{

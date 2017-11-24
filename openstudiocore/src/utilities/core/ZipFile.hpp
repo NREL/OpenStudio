@@ -35,7 +35,7 @@
 #include <vector>
 
 namespace openstudio {
-  class UTILITIES_API ZipFile 
+  class UTILITIES_API ZipFile
   {
     public:
       /// Constructs a ZipFile object, opening the given file name. Throws if file could not be opened

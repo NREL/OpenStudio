@@ -36,7 +36,7 @@
 #include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
-  
+
 class FuelType;
 class InstallLocationType;
 class EndUseCategoryType;

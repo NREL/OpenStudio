@@ -76,8 +76,8 @@ class MODEL_API PlanarSurface : public ParentObject {
 
   /** @name Constructors and Destructors */
   //@{
-  
-  virtual ~PlanarSurface() {} 
+
+  virtual ~PlanarSurface() {}
 
   //@}
   /** @name Getters */
@@ -194,7 +194,7 @@ class MODEL_API PlanarSurface : public ParentObject {
   /// Attribute name: interiorVisibleAbsorptance
   boost::optional<double> interiorVisibleAbsorptance() const;
 
-  /** \deprecated 
+  /** \deprecated
    *   This will be removed after 1.4.0 */
   boost::optional<double> interiorVisibleAbsorbtance() const;
 
@@ -202,7 +202,7 @@ class MODEL_API PlanarSurface : public ParentObject {
   /// Attribute name: exteriorVisibleAbsorptance
   boost::optional<double> exteriorVisibleAbsorptance() const;
 
-  /** \deprecated 
+  /** \deprecated
    *   This will be removed after 1.4.0 */
   boost::optional<double> exteriorVisibleAbsorbtance() const;
 

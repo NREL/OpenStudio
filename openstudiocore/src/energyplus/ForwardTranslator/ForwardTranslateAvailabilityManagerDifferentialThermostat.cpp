@@ -44,7 +44,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerDifferentialThermostat( 
+boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerDifferentialThermostat(
     AvailabilityManagerDifferentialThermostat & modelObject)
 {
   IdfObject idfObject(IddObjectType::AvailabilityManager_DifferentialThermostat);

@@ -1863,7 +1863,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::MaterialPropertyMoisturePenetrationDepthSettings empd = modelObject.cast<MaterialPropertyMoisturePenetrationDepthSettings>();
       retVal = translateMaterialPropertyMoisturePenetrationDepthSettings(empd);
       break;
-    }    
+    }
   case openstudio::IddObjectType::OS_Material_RoofVegetation :
     {
       model::RoofVegetation material = modelObject.cast<RoofVegetation>();

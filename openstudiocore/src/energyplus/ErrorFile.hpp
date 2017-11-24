@@ -42,11 +42,11 @@
 namespace openstudio {
 namespace energyplus {
 
-  /** \class ErrorLevel 
+  /** \class ErrorLevel
    *  \brief EnergyPlus warning/error levels */
-  OPENSTUDIO_ENUM(ErrorLevel, 
-      ((Warning)) 
-      ((Severe)) 
+  OPENSTUDIO_ENUM(ErrorLevel,
+      ((Warning))
+      ((Severe))
       ((Fatal)) );
 
   class ENERGYPLUS_API ErrorFile {

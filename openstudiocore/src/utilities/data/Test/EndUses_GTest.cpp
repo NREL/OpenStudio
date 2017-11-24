@@ -69,7 +69,7 @@ TEST_F(DataFixture, EndUses)
   // save to xml
   endUses.attribute().saveToXml(xmlPath);
 
-  // load 
+  // load
   boost::optional<Attribute> testAttribute = Attribute::loadFromXml(xmlPath);
   ASSERT_TRUE(testAttribute);
   boost::optional<EndUses> testEndUses = EndUses::fromAttribute(*testAttribute);
@@ -177,7 +177,7 @@ TEST_F(DataFixture, EndUses2)
   EXPECT_EQ(10.0, endUses.getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating, "General"));
   EXPECT_EQ(0.0, endUses.getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating, "Outdoor"));
   EXPECT_EQ(0.0, endUses.getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating, "Not a sub category"));
-  
+
   endUses.addEndUse(5.0, EndUseFuelType::Gas, EndUseCategoryType::Heating, "Outdoor");
 
   EXPECT_EQ(15.0, endUses.getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating));

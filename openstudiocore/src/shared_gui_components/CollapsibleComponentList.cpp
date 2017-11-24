@@ -65,7 +65,7 @@ CollapsibleComponentList::CollapsibleComponentList(const std::vector<Collapsible
 
 void CollapsibleComponentList::createLayout()
 {
-  this->setObjectName("GrayWidget"); 
+  this->setObjectName("GrayWidget");
 
   auto outerVLayout = new QVBoxLayout();
   outerVLayout->setContentsMargins(0,0,0,0);

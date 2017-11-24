@@ -70,12 +70,12 @@ int main(int argc, char *argv[])
     openstudio::filesystem::path outPath = openstudio::getApplicationOutputDirectory(outdir);
 
     // get the idd file information, if possible (otherwise throws)
-    openstudio::IddFileFactoryDataVector iddFiles = 
+    openstudio::IddFileFactoryDataVector iddFiles =
         openstudio::constructIddFileObjects(vm["idd"].as< std::vector<std::string> >());
 
     // data common to the start of each file
     std::stringstream fileHeader;
-    fileHeader 
+    fileHeader
       << "/***********************************************************************************************************************" << std::endl
       << " *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved." << std::endl
       << " *" << std::endl

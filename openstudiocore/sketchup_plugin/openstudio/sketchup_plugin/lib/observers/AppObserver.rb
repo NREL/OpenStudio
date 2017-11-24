@@ -29,9 +29,9 @@
 module OpenStudio
 
   class AppObserver < Sketchup::AppObserver
-    
+
     # cannot enable/disable this class
-    
+
     # onNewModel get called when the 'New' menu item is clicked, even though the user clicks cancel!  Very strange.
     # The active_model object reference is even changed as well, although none of the content of the model changes...
     # onOpenModel has the same behavior.
@@ -39,7 +39,7 @@ module OpenStudio
 
     def onNewModel(model)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       if Plugin.model_manager.model_interface and
          Plugin.model_manager.model_interface.skp_model_guid == model.guid
 
@@ -48,9 +48,9 @@ module OpenStudio
       else
 
         Plugin.model_manager.new_from_skp_model(model)
-        
+
         Plugin.menu_manager.refresh
-        
+
         Plugin.model_manager.purge_invalid_model_interfaces
       end
 
@@ -60,24 +60,24 @@ module OpenStudio
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
 
       Plugin.model_manager.new_from_skp_model(model)
-      
+
       Plugin.menu_manager.refresh
-      
+
       Plugin.model_manager.purge_invalid_model_interfaces
     end
 
     # Note:  Sketchup.active_model is already nil at this point
     def onQuit
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       Plugin.model_manager.shutdown
     end
-    
-    
+
+
     #def onUnloadExtension
     #  Plugin.log(OpenStudio::Trace, "#{current_method_name}")
     #end
-    
+
   end
 
 end

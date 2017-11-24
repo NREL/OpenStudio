@@ -45,7 +45,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCoilPerformanceDXCooling( 
+boost::optional<IdfObject> ForwardTranslator::translateCoilPerformanceDXCooling(
     CoilPerformanceDXCooling & modelObject)
 {
   IdfObject idfObject(IddObjectType::CoilPerformance_DX_Cooling);
@@ -152,7 +152,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilPerformanceDXCooling(
     auto value = modelObject.latentCapacityTimeConstant();
     idfObject.setDouble(CoilPerformance_DX_CoolingFields::LatentCapacityTimeConstant,value);
   }
-  
+
   // CondenserAirInletNode
   if( auto node = modelObject.condenserAirInletNode() ) {
     idfObject.setString(CoilPerformance_DX_CoolingFields::CondenserAirInletNodeName,node->name().get());

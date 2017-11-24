@@ -53,7 +53,7 @@ struct UTILITIES_API IPExpnt {
           int deg=0,
           int sr=0,
           int people=0,
-          int cycle=0, 
+          int cycle=0,
           int dollar=0)
     : m_lbm(lbm),
       m_ft(ft),

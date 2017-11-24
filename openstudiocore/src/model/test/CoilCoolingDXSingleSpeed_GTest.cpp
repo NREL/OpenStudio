@@ -75,7 +75,7 @@ TEST_F(ModelFixture,CoilCoolingDXSingleSpeed_RatedTotalCoolingCapacity_Quantity)
   coil.setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(1.4);
   coil.setBasinHeaterCapacity(1.5);
   coil.setBasinHeaterSetpointTemperature(2.5);
-  
+
   EXPECT_EQ(coil.ratedTotalCoolingCapacity(),1.0);
   EXPECT_EQ(coil.ratedSensibleHeatRatio(),0.6);
   EXPECT_EQ(coil.ratedCOP(),3.6);
@@ -91,7 +91,7 @@ TEST_F(ModelFixture,CoilCoolingDXSingleSpeed_RatedTotalCoolingCapacity_Quantity)
   EXPECT_EQ(coil.maximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(),1.4);
   EXPECT_EQ(coil.basinHeaterCapacity(),1.5);
   EXPECT_EQ(coil.basinHeaterSetpointTemperature(),2.5);
-  
+
 }
 
 TEST_F(ModelFixture,CoilCoolingDXSingleSpeed_addToNode) {

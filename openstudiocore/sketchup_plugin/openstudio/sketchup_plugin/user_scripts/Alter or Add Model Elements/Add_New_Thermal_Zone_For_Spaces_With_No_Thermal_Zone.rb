@@ -33,22 +33,22 @@ class AssignUniqueZonesToUntaggedSpaces < OpenStudio::Ruleset::ModelUserScript
   def name
     return "Add New Thermal Zone For Spaces With No Thermal Zone"
   end
-  
+
   # returns a vector of arguments, the runner will present these arguments to the user
   # then pass in the results on run
   def arguments(model)
     result = OpenStudio::Ruleset::OSArgumentVector.new
     return result
   end
-    
+
   # override run to implement the functionality of your script
   # model is an OpenStudio::Model::Model, runner is a OpenStudio::Ruleset::UserScriptRunner
   def run(model, runner, user_arguments)
     super(model, runner, user_arguments) # initializes runner for new script
-  
+
     # get all spaces
     spaces = model.getSpaces
-    
+
     runner.createProgressBar("Creating Zones for Untagged Spaces")
     num_total = spaces.size
     num_complete = 0
@@ -66,7 +66,7 @@ class AssignUniqueZonesToUntaggedSpaces < OpenStudio::Ruleset::ModelUserScript
     end
 
     runner.destroyProgressBar
-    
+
   end
 
 end

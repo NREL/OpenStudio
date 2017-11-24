@@ -38,7 +38,7 @@ namespace model {
 namespace detail {
 
 class MODEL_API UtilityCost_Variable_Impl : public ParentObject_Impl{
-  
+
  public:
   // constructor
   UtilityCost_Variable_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);

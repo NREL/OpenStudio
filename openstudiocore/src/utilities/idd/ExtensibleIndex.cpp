@@ -30,7 +30,7 @@
 
 namespace openstudio {
 
-ExtensibleIndex::ExtensibleIndex(unsigned groupIndex, unsigned fieldIndex) 
+ExtensibleIndex::ExtensibleIndex(unsigned groupIndex, unsigned fieldIndex)
     : group(groupIndex), field(fieldIndex) {}
 
 } // openstudio

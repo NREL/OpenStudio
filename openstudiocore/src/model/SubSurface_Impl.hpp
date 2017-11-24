@@ -50,27 +50,27 @@ namespace detail {
 
   /** SubSurface_Impl is a PlanarSurface_Impl that is the implementation class for SubSurface.*/
   class MODEL_API SubSurface_Impl : public PlanarSurface_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
 
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    SubSurface_Impl(const IdfObject& idfObject, 
+    SubSurface_Impl(const IdfObject& idfObject,
                     Model_Impl* model,
                     bool keepHandle);
 
@@ -99,7 +99,7 @@ namespace detail {
     virtual std::vector<IdfObject> remove() override;
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
-    
+
     virtual IddObjectType iddObjectType() const override;
 
     /// should subtract this surface from parent's gross area for net area
@@ -214,7 +214,7 @@ namespace detail {
     /// get the surface
     boost::optional<Surface> surface() const;
 
-    /// set the surface 
+    /// set the surface
     bool setSurface(const Surface& surface);
 
     /// get the adjacent subsurface
@@ -224,7 +224,7 @@ namespace detail {
     /// which are adjacent
     bool setAdjacentSubSurface(SubSurface& subSurface);
 
-    /// reset the adjacent subsurface, will clear references on both this and adjacent sub surface 
+    /// reset the adjacent subsurface, will clear references on both this and adjacent sub surface
     void resetAdjacentSubSurface();
 
     /** Returns the surface property convection coefficients */
@@ -260,20 +260,20 @@ namespace detail {
     /** Add an overhang to the sub surface, only valid for fixed windows, operable windows, and glass doors. */
     boost::optional<ShadingSurface> addOverhang(double depth, double offset);
 
-    /** Add an overhang to the sub surface, only valid for fixed windows, operable windows, and glass doors. 
+    /** Add an overhang to the sub surface, only valid for fixed windows, operable windows, and glass doors.
      *  Offset is a fraction of the total window height, projection factor is based on height and offset. */
     boost::optional<ShadingSurface> addOverhangByProjectionFactor(double projectionFactor, double offsetFraction);
 
     /** Returns any shading surface groups associated with this sub surface. */
     std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
-  
+
     /** Returns true if this sub surface allows the addition of a daylighting light shelf. */
     bool allowDaylightingDeviceShelf() const;
 
     /** Get the daylighting light shelf associated with this sub surface if there is one. */
     boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
 
-    /** Add a daylighting light shelf associated with this sub surface.  Only succeeds if this is a fixed window, 
+    /** Add a daylighting light shelf associated with this sub surface.  Only succeeds if this is a fixed window,
      * operable window, or glass door. Will return existing daylighting light shelf if there already is one. */
     boost::optional<DaylightingDeviceShelf> addDaylightingDeviceShelf() const;
 

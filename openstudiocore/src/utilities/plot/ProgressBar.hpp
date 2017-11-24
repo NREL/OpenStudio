@@ -41,14 +41,14 @@
 namespace openstudio{
 
   /** ProgressBar wraps a QProgressBar and provides virtual methods setRange, setValue, and setWindowTitle(QString)
-   *  which may be overridden. 
+   *  which may be overridden.
    *
-   *  ProgressBar an atypical QObject because it is designed to be stack allocated.  In many cases it 
+   *  ProgressBar an atypical QObject because it is designed to be stack allocated.  In many cases it
    *  would be preferred to connect your own heap allocated QObject to the signals directly rather
    *  than using this convenience class.
    **/
   class UTILITIES_API ProgressBar {
-  
+
   public:
 
     /// constructor

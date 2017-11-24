@@ -45,7 +45,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCoilWaterHeatingAirToWaterHeatPump( 
+boost::optional<IdfObject> ForwardTranslator::translateCoilWaterHeatingAirToWaterHeatPump(
     CoilWaterHeatingAirToWaterHeatPump & modelObject)
 {
   IdfObject idfObject(IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_Pumped);
@@ -99,7 +99,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilWaterHeatingAirToWate
   }
 
   if( modelObject.evaporatorFanPowerIncludedinRatedCOP() ) {
-    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::EvaporatorFanPowerIncludedinRatedCOP,"Yes"); 
+    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::EvaporatorFanPowerIncludedinRatedCOP,"Yes");
   } else {
     idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::EvaporatorFanPowerIncludedinRatedCOP,"No");
   }

@@ -29,27 +29,27 @@
 require("openstudio/sketchup_plugin/lib/interfaces/DrawingInterface")
 require("openstudio/sketchup_plugin/lib/watchers/RenderableModelObjectWatcher")
 
-      
+
 module OpenStudio
 
   class BuildingStory < DrawingInterface
-  
+
     def self.model_object_from_handle(handle)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       model_object = Plugin.model_manager.model_interface.openstudio_model.getBuildingStory(handle)
       if not model_object.empty? and (handle.to_s == model_object.get.handle.to_s)
         model_object = model_object.get
       else
-        puts "BuildingStory: model_object is empty for #{handle.class}, #{handle.to_s}, #{Plugin.model_manager.model_interface.openstudio_model}"                    
+        puts "BuildingStory: model_object is empty for #{handle.class}, #{handle.to_s}, #{Plugin.model_manager.model_interface.openstudio_model}"
         model_object = nil
       end
       return model_object
     end
-    
+
     def self.new_from_handle(handle)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       drawing_interface = BuildingStory.new
       model_object = model_object_from_handle(handle)
       drawing_interface.model_object = model_object
@@ -57,15 +57,15 @@ module OpenStudio
       drawing_interface.add_watcher
       return(drawing_interface)
     end
-    
-    
+
+
     def create_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       model_watcher_enabled = @model_interface.model_watcher.disable
       @model_object = OpenStudio::Model::BuildingStory.new(@model_interface.openstudio_model)
       @model_interface.model_watcher.enable if model_watcher_enabled
-      
+
       # no entity, nothing to do
       #super
     end
@@ -73,33 +73,33 @@ module OpenStudio
 
     def check_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       if (super)
         if @model_object.renderingColor.empty?
           watcher_enabled = disable_watcher
           model_watcher_enabled = @model_interface.model_watcher.disable
           had_observers = @model_interface.materials_interface.remove_observers
-          
+
           rendering_color = OpenStudio::Model::RenderingColor.new(@model_interface.openstudio_model)
           @model_object.setRenderingColor(rendering_color)
           @model_interface.model_watcher.onObjectAdd(rendering_color)
-          
+
           @model_interface.materials_interface.add_observers if had_observers
           @model_interface.model_watcher.enable if model_watcher_enabled
           enable_watcher if watcher_enabled
-        end  
-        
+        end
+
         return(true)
       else
         return(false)
       end
     end
-    
-    
+
+
     # Updates the ModelObject with new information from the SketchUp entity.
     def update_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       # should never be called, class does not have an entity
       #super
     end
@@ -107,7 +107,7 @@ module OpenStudio
 
     def parent_from_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       return @model_interface.building
     end
 
@@ -115,31 +115,31 @@ module OpenStudio
     # There is no entity to create
     def create_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       @entity = nil
     end
 
     def check_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
-      return(false) 
+
+      return(false)
     end
-    
+
     def confirm_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       return(false)
     end
 
     # Updates the SketchUp entity with new information from the ModelObject.
     def update_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       # model_object changed, call paint here
       if @model_interface.materials_interface.rendering_mode == RenderByBuildingStory
         @model_interface.request_paint
       end
-      
+
     end
 
 
@@ -150,11 +150,11 @@ module OpenStudio
 
     def parent_from_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       return @model_interface.building
     end
-    
-    
+
+
     def add_watcher
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
 
@@ -162,8 +162,8 @@ module OpenStudio
         @watcher = RenderableModelObjectWatcher.new(self, @model_interface, [4], [RenderByConstruction])
       end
     end
-    
-    
+
+
   end
 
 end

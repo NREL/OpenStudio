@@ -41,7 +41,7 @@ namespace openstudio
     class Problem;
   }
 
-  //void getRadiancePreRunWarningsAndErrors(std::vector<std::string> &t_warnings, 
+  //void getRadiancePreRunWarningsAndErrors(std::vector<std::string> &t_warnings,
   //    std::vector<std::string> &t_errors,
   //    openstudio::runmanager::RunManager &t_runManager,
   //    boost::optional<openstudio::model::Model> &t_model);

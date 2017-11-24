@@ -35,7 +35,7 @@ module OpenStudio
 
      # This method is called by SketchUp to determine the description that
      # appears in the File > Import dialog's pulldown list of valid
-     # importers. 
+     # importers.
      def description
        return "OpenStudio Models (*.osm)"
      end
@@ -74,20 +74,20 @@ module OpenStudio
      # to import. This is where you do the real work of opening and
      # processing the file.
      def load_file(file_path, status)
-        
+
        file_path.gsub!(/\\/, '/')
-     
+
        Plugin.write_pref("Last OpenStudio Import Dir", File.dirname(file_path))  # Save the dir so we can start here next time
-       
+
        openstudio_model = Plugin.model_manager.model_from_openstudio_path(file_path)
-       if not openstudio_model 
+       if not openstudio_model
          return(0)
        end
-       
+
        if not @options
         @options = ["Entire Model"]
        end
-       
+
        case @options[0]
        when "Entire Model"
          if (Plugin.command_manager.prompt_to_continue_import("OpenStudio Model"))
@@ -95,13 +95,13 @@ module OpenStudio
            Plugin.model_manager.attach_openstudio_model(openstudio_model, Sketchup.active_model, nil, false, true)
          end
        when "Constructions"
-         Plugin.model_manager.model_interface.import_constructions(openstudio_model)      
+         Plugin.model_manager.model_interface.import_constructions(openstudio_model)
        when "Schedules"
-         Plugin.model_manager.model_interface.import_schedules(openstudio_model)         
+         Plugin.model_manager.model_interface.import_schedules(openstudio_model)
        when "SpaceTypes"
          Plugin.model_manager.model_interface.import_space_types(openstudio_model)
        end
-        
+
        return 0 # 0 is the code for a successful import
      end
    end

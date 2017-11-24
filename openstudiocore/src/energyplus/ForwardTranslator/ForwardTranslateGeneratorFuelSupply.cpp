@@ -60,7 +60,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelSupply(Gener
   boost::optional<Schedule> schedule;
   boost::optional<CurveCubic> curve;
   std::vector< std::pair<std::string, double> > constituents;
-  
+
   IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelSupply, modelObject);
   //Name
   s = modelObject.name();
@@ -145,7 +145,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelSupply(Gener
   }
 
   return pcm;
- 
+
 }
 
 } // energyplus

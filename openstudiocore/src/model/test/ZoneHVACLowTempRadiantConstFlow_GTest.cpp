@@ -63,7 +63,7 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
   ScheduleConstant heatingLowWaterTempSched(model);
   ScheduleConstant heatingHighControlTempSched(model);
   ScheduleConstant heatingLowControlTempSched(model);
-  
+
   availabilitySched.setValue(1.0);
   coolingHighWaterTempSched.setValue(15.0);
   coolingLowWaterTempSched.setValue(10.0);
@@ -76,7 +76,7 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
 
   CoilCoolingLowTempRadiantConstFlow testCC(model,coolingHighWaterTempSched,coolingLowWaterTempSched,coolingHighControlTempSched,coolingLowControlTempSched);
   CoilHeatingLowTempRadiantConstFlow testHC(model,heatingHighWaterTempSched,heatingLowWaterTempSched,heatingHighControlTempSched,heatingLowControlTempSched);
-  
+
   HVACComponent testCC1 = testCC.cast<HVACComponent>();
   HVACComponent testHC1 = testHC.cast<HVACComponent>();
 
@@ -157,9 +157,9 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
   EXPECT_EQ(0u,thermalZone.equipment().size());
 
   EXPECT_TRUE(testRad.addToThermalZone(thermalZone));
-  
+
   EXPECT_EQ(1u,thermalZone.equipment().size());
- 
+
   EXPECT_TRUE(testHC1.containingZoneHVACComponent());
 
   EXPECT_TRUE(testCC1.containingZoneHVACComponent());

@@ -42,14 +42,14 @@ namespace detail{
 
 /** UtilityCost_Charge_Block derives from ParentObject and is an interface to the OpenStudio IDD object named "OS:UtilityCost:Charge:Block".
  *
- *  UtilityCost_Charge_Block is used to compute energy and demand charges that are structured in blocks of charges. 
- *  It may also be used for taxes, surcharges and any other charges that occur on a utility bill but those are more commonly simple flat charges 
- *  so UtilityCost_Charge_Simple is more commonly used for those functions. As many UtilityCost_Charge_Block objects as needed may be defined for 
- *  a single tariff and they will be added together. Blocks are a structure used by almost all utilities for calculating energy and demand charges 
+ *  UtilityCost_Charge_Block is used to compute energy and demand charges that are structured in blocks of charges.
+ *  It may also be used for taxes, surcharges and any other charges that occur on a utility bill but those are more commonly simple flat charges
+ *  so UtilityCost_Charge_Simple is more commonly used for those functions. As many UtilityCost_Charge_Block objects as needed may be defined for
+ *  a single tariff and they will be added together. Blocks are a structure used by almost all utilities for calculating energy and demand charges
  *  and they allow the utility to charge more or less per unit of energy or demand if more units are used.
  */
 class MODEL_API UtilityCost_Charge_Block : public ParentObject{
- 
+
 public:
 
   /** @name Constructors and Destructors */

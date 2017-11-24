@@ -50,8 +50,8 @@ class ServiceWaterItem : public GridItem
 
   protected:
 
-  void paint(QPainter *painter, 
-             const QStyleOptionGraphicsItem *option, 
+  void paint(QPainter *painter,
+             const QStyleOptionGraphicsItem *option,
              QWidget *widget = nullptr) override;
 };
 
@@ -63,8 +63,8 @@ class WaterUseConnectionsDetailItem : public GridItem
 
   protected:
 
-  void paint(QPainter *painter, 
-             const QStyleOptionGraphicsItem *option, 
+  void paint(QPainter *painter,
+             const QStyleOptionGraphicsItem *option,
              QWidget *widget = nullptr) override;
 };
 
@@ -92,8 +92,8 @@ class SewerItem : public GridItem
 
   protected:
 
-  void paint(QPainter *painter, 
-             const QStyleOptionGraphicsItem *option, 
+  void paint(QPainter *painter,
+             const QStyleOptionGraphicsItem *option,
              QWidget *widget = nullptr) override;
 
   ButtonItem * m_sewerButton;
@@ -109,8 +109,8 @@ class MainsSupplyItem : public GridItem
 
   protected:
 
-  void paint(QPainter *painter, 
-             const QStyleOptionGraphicsItem *option, 
+  void paint(QPainter *painter,
+             const QStyleOptionGraphicsItem *option,
              QWidget *widget = nullptr) override;
 
   ButtonItem * m_mainsSupplyButton;
@@ -128,8 +128,8 @@ class HotWaterSupplyItem : public GridItem
 
   protected:
 
-  void paint(QPainter *painter, 
-             const QStyleOptionGraphicsItem *option, 
+  void paint(QPainter *painter,
+             const QStyleOptionGraphicsItem *option,
              QWidget *widget = nullptr) override;
 
   ButtonItem * m_hotWaterSupplyButton;
@@ -147,8 +147,8 @@ class DoubleOneThreeStraightItem : public GridItem
 
   protected:
 
-  void paint(QPainter *painter, 
-             const QStyleOptionGraphicsItem *option, 
+  void paint(QPainter *painter,
+             const QStyleOptionGraphicsItem *option,
              QWidget *widget = nullptr) override;
 };
 
@@ -160,8 +160,8 @@ class DoubleThreeFourStraightItem : public GridItem
 
   protected:
 
-  void paint(QPainter *painter, 
-             const QStyleOptionGraphicsItem *option, 
+  void paint(QPainter *painter,
+             const QStyleOptionGraphicsItem *option,
              QWidget *widget = nullptr) override;
 };
 
@@ -173,8 +173,8 @@ class DoubleTwoFourStraightItem : public GridItem
 
   protected:
 
-  void paint(QPainter *painter, 
-             const QStyleOptionGraphicsItem *option, 
+  void paint(QPainter *painter,
+             const QStyleOptionGraphicsItem *option,
              QWidget *widget = nullptr) override;
 };
 
@@ -186,8 +186,8 @@ class DoubleTwoThreeStraightItem : public GridItem
 
   protected:
 
-  void paint(QPainter *painter, 
-             const QStyleOptionGraphicsItem *option, 
+  void paint(QPainter *painter,
+             const QStyleOptionGraphicsItem *option,
              QWidget *widget = nullptr) override;
 };
 
@@ -199,8 +199,8 @@ class DoubleTwoThreeFourStraightItem : public GridItem
 
   protected:
 
-  void paint(QPainter *painter, 
-             const QStyleOptionGraphicsItem *option, 
+  void paint(QPainter *painter,
+             const QStyleOptionGraphicsItem *option,
              QWidget *widget = nullptr) override;
 };
 
@@ -212,8 +212,8 @@ class HotWaterJunctionItem : public DoubleTwoFourStraightItem
 
   protected:
 
-  void paint(QPainter *painter, 
-             const QStyleOptionGraphicsItem *option, 
+  void paint(QPainter *painter,
+             const QStyleOptionGraphicsItem *option,
              QWidget *widget = nullptr) override;
 };
 
@@ -225,8 +225,8 @@ class ColdWaterJunctionItem : public GridItem
 
   protected:
 
-  void paint(QPainter *painter, 
-             const QStyleOptionGraphicsItem *option, 
+  void paint(QPainter *painter,
+             const QStyleOptionGraphicsItem *option,
              QWidget *widget = nullptr) override;
 
   private:
@@ -242,8 +242,8 @@ class WaterUseConnectionsItem : public GridItem
 
   protected:
 
-  void paint(QPainter *painter, 
-             const QStyleOptionGraphicsItem *option, 
+  void paint(QPainter *painter,
+             const QStyleOptionGraphicsItem *option,
              QWidget *widget = nullptr) override;
 };
 
@@ -257,8 +257,8 @@ class WaterUseEquipmentItem : public GridItem
 
   protected:
 
-  void paint(QPainter *painter, 
-             const QStyleOptionGraphicsItem *option, 
+  void paint(QPainter *painter,
+             const QStyleOptionGraphicsItem *option,
              QWidget *widget = nullptr) override;
 };
 
@@ -276,8 +276,8 @@ class MakeupWaterItem : public GridItem
 
   protected:
 
-  void paint(QPainter *painter, 
-             const QStyleOptionGraphicsItem *option, 
+  void paint(QPainter *painter,
+             const QStyleOptionGraphicsItem *option,
              QWidget *widget = nullptr) override;
 
   private slots:

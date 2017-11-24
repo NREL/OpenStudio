@@ -36,22 +36,22 @@ module OpenStudio
       @drawing_interface = drawing_interface
       @enabled = false
     end
-    
+
     def disable
       was_enabled = @enabled
       @enabled = false
       return was_enabled
     end
-    
+
     def enable
       @enabled = true
     end
-    
+
     def destroy
       @drawing_interface = nil
       @enabled = false
-    end    
-    
+    end
+
     #def onElementAdded(entities, entity)
     #
     #  Plugin.log(OpenStudio::Trace, "#{current_method_name}, @enabled = #{@enabled}")
@@ -61,11 +61,11 @@ module OpenStudio
     #end
 
     def onElementModified(entities, entity)
-      
+
       Plugin.log(OpenStudio::Trace, "#{current_method_name}, @enabled = #{@enabled}")
-      
+
       return if not @enabled
-      
+
       proc = Proc.new {
         @drawing_interface.on_change_entity
       }
@@ -79,7 +79,7 @@ module OpenStudio
     #  return if not @enabled
     #
     #end
-    
+
     #def onEraseEntities(entities)
     #
     #  Plugin.log(OpenStudio::Trace, "#{current_method_name}, @enabled = #{@enabled}")

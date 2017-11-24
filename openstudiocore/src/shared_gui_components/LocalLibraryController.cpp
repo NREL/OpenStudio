@@ -65,7 +65,7 @@
 #include <map>
 
 namespace openstudio{
-  
+
 LocalLibraryController::LocalLibraryController(BaseApp *t_app, bool onlyShowModelMeasures)
   : QObject(),
     m_app(t_app),
@@ -84,7 +84,7 @@ LocalLibraryController::LocalLibraryController(BaseApp *t_app, bool onlyShowMode
   libraryView->setContentsMargins(0,0,0,0);
   libraryView->setSpacing(0);
   libraryView->setDelegate(QSharedPointer<LibraryTypeItemDelegate>(new LibraryTypeItemDelegate(m_app)));
-  libraryView->setListController(libraryListController); 
+  libraryView->setListController(libraryListController);
 
   QString organizationName = QCoreApplication::organizationName();
   QString applicationName = QCoreApplication::applicationName();
@@ -142,7 +142,7 @@ QPointer<LibraryItem> LocalLibraryController::selectedItem() const
 
   if( items.size() > 0 )
   {
-    return qobject_cast<LibraryItem *>(items.front());    
+    return qobject_cast<LibraryItem *>(items.front());
   }
 
   return QPointer<LibraryItem>();
@@ -170,7 +170,7 @@ void LocalLibraryController::showMyMeasuresFolder()
 
 QSharedPointer<LibraryTypeListController> LocalLibraryController::createLibraryListController(const QDomDocument & taxonomy, LocalLibrary::LibrarySource source)
 {
-  QSharedPointer<LibraryTypeListController> libraryTypeListController = QSharedPointer<LibraryTypeListController>(new LibraryTypeListController());  
+  QSharedPointer<LibraryTypeListController> libraryTypeListController = QSharedPointer<LibraryTypeListController>(new LibraryTypeListController());
 
   QSharedPointer<LibraryTypeItem> libraryTypeItem = QSharedPointer<LibraryTypeItem>(new LibraryTypeItem("Measures"));
 
@@ -205,7 +205,7 @@ QSharedPointer<LibraryTypeListController> LocalLibraryController::createLibraryL
       QString taxonomyTag = groupName + "." + subGroupName;
 
       QSharedPointer<LibrarySubGroupItem> item = QSharedPointer<LibrarySubGroupItem>(new LibrarySubGroupItem(subGroupName,taxonomyTag,source, m_app, m_onlyShowModelMeasures));
-  
+
       subGroupListController->addItem(item);
 
       QSharedPointer<LibraryListController> libraryListController = item->libraryListController();
@@ -229,13 +229,13 @@ LibraryTypeItemDelegate::LibraryTypeItemDelegate(BaseApp *t_app)
 {
 }
 
-QWidget * LibraryTypeItemDelegate::view(QSharedPointer<OSListItem> dataSource) 
-{ 
+QWidget * LibraryTypeItemDelegate::view(QSharedPointer<OSListItem> dataSource)
+{
   if(QSharedPointer<LibraryTypeItem> item = dataSource.dynamicCast<LibraryTypeItem>())
   {
     auto groupCollapsibleView = new OSCollapsibleView();
 
-    auto header = new DarkGradientHeader(); 
+    auto header = new DarkGradientHeader();
     header->label->setText(item->name());
     groupCollapsibleView->setHeader(header);
 
@@ -302,18 +302,18 @@ LibraryGroupItemDelegate::LibraryGroupItemDelegate(BaseApp *t_app)
 {
 }
 
-QWidget * LibraryGroupItemDelegate::view(QSharedPointer<OSListItem> dataSource) 
-{ 
+QWidget * LibraryGroupItemDelegate::view(QSharedPointer<OSListItem> dataSource)
+{
   if(QSharedPointer<LibraryGroupItem> item = dataSource.dynamicCast<LibraryGroupItem>())
   {
     auto groupCollapsibleView = new OSCollapsibleView();
 
-    auto header = new LibraryGroupItemHeader(); 
+    auto header = new LibraryGroupItemHeader();
     header->label->setText(item->name());
 
     connect(item->librarySubGroupListController().data(), &LibrarySubGroupListController::libraryItemCountChanged,
       header, &LibraryGroupItemHeader::setCount);
-    
+
     groupCollapsibleView->setHeader(header);
 
     QSharedPointer<LibrarySubGroupListController> subGroupListController = item->librarySubGroupListController();
@@ -359,11 +359,11 @@ void LibraryGroupListController::reset()
 {
   for( const auto & libraryGroupItem : m_items)
   {
-    libraryGroupItem->librarySubGroupListController()->reset();    
+    libraryGroupItem->librarySubGroupListController()->reset();
   }
 }
 
-LibrarySubGroupItem::LibrarySubGroupItem(const QString & name, const QString & taxonomyTag, 
+LibrarySubGroupItem::LibrarySubGroupItem(const QString & name, const QString & taxonomyTag,
                                          LocalLibrary::LibrarySource source,
                                          BaseApp *t_app,
                                          bool onlyShowModelMeasures)
@@ -380,18 +380,18 @@ LibrarySubGroupItemDelegate::LibrarySubGroupItemDelegate(BaseApp *t_app)
 {
 }
 
-QWidget * LibrarySubGroupItemDelegate::view(QSharedPointer<OSListItem> dataSource) 
-{ 
+QWidget * LibrarySubGroupItemDelegate::view(QSharedPointer<OSListItem> dataSource)
+{
   if(QSharedPointer<LibrarySubGroupItem> item = dataSource.dynamicCast<LibrarySubGroupItem>())
   {
     auto subGroupCollapsibleView = new OSCollapsibleView();
 
-    auto header = new LibrarySubGroupItemHeader(); 
+    auto header = new LibrarySubGroupItemHeader();
 
     header->label->setText(item->name());
 
     connect(item->libraryListController().data(), &LibraryListController::countChanged, header, &LibrarySubGroupItemHeader::setCount);
-    
+
     subGroupCollapsibleView->setHeader(header);
 
     QSharedPointer<LibraryListController> libraryListController = item->libraryListController();
@@ -402,7 +402,7 @@ QWidget * LibrarySubGroupItemDelegate::view(QSharedPointer<OSListItem> dataSourc
     measureListView->setSpacing(5);
     measureListView->setListController(libraryListController);
     measureListView->setDelegate(measureLibraryItemDelegate);
-    
+
     subGroupCollapsibleView->setContent(measureListView);
 
     return subGroupCollapsibleView;
@@ -492,9 +492,9 @@ bool LibraryItem::hasError() const
   return m_bclMeasure.error();
 }
 
-QString LibraryItem::name() const 
-{ 
-  return QString::fromStdString(m_bclMeasure.name()); 
+QString LibraryItem::name() const
+{
+  return QString::fromStdString(m_bclMeasure.name());
 }
 
 QString LibraryItem::displayName() const
@@ -526,19 +526,19 @@ QString LibraryItem::error() const
   return result;
 }
 
-UUID LibraryItem::uuid() const 
-{ 
-  return m_bclMeasure.uuid(); 
+UUID LibraryItem::uuid() const
+{
+  return m_bclMeasure.uuid();
 }
 
-bool LibraryItem::isAvailable() const 
-{ 
-  return m_available; 
+bool LibraryItem::isAvailable() const
+{
+  return m_available;
 }
 
 void LibraryItem::dragItem(const OSDragPixmapData & dragPixmapData)
 {
-  // DLM: I think we want to allow user to drag in measure with error because that is the best 
+  // DLM: I think we want to allow user to drag in measure with error because that is the best
   // way currently to allow them to inspect the error
   //if (!m_bclMeasure.error()){
     MeasureDragData measureDragData(m_bclMeasure.uuid());
@@ -561,8 +561,8 @@ LibraryItemDelegate::LibraryItemDelegate(BaseApp *t_app)
 {
 }
 
-QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource) 
-{ 
+QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
+{
 
   if( QSharedPointer<LibraryItem> libraryItem = dataSource.objectCast<LibraryItem>() )
   {
@@ -609,7 +609,7 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     }
 
     // Drag
-    
+
     connect(widget, &LibraryItemView::dragRequested, libraryItem.data(), &LibraryItem::dragItem);
 
     // Selection
@@ -624,7 +624,7 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     return widget;
   }
-  
+
   return new QWidget();
 }
 
@@ -633,8 +633,8 @@ void LibraryItemDelegate::selectedChanged()
   m_app->updateSelectedMeasureState();
 }
 
-LibraryListController::LibraryListController(const QString & taxonomyTag, 
-                                             LocalLibrary::LibrarySource source, 
+LibraryListController::LibraryListController(const QString & taxonomyTag,
+                                             LocalLibrary::LibrarySource source,
                                              BaseApp *t_app,
                                              bool onlyShowModelMeasures)
   : OSListController(),
@@ -703,9 +703,9 @@ void LibraryListController::createItems()
 
   // filter measures
   if(m_onlyShowModelMeasures){
-    measures.erase( std::remove_if( measures.begin(), measures.end(), nonModelMeasureToRemove ), measures.end() ); 
+    measures.erase( std::remove_if( measures.begin(), measures.end(), nonModelMeasureToRemove ), measures.end() );
   }
-  
+
   // sort measures
   std::sort(measures.begin(), measures.end(), MeasureSorter());
 

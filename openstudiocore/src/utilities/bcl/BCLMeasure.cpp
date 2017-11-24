@@ -91,7 +91,7 @@ namespace openstudio{
   }
 
   BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, const openstudio::path& dir,
-                         const std::string& taxonomyTag, MeasureType measureType, 
+                         const std::string& taxonomyTag, MeasureType measureType,
                          const std::string& description, const std::string& modelerDescription)
     : m_directory(openstudio::filesystem::system_complete(dir)),
       m_bclXML(BCLXMLType::MeasureXML)
@@ -148,8 +148,8 @@ namespace openstudio{
       std::string argDisplayName("New zone name");
       std::string argDescription("This name will be used as the name of the new zone.");
       std::string argType("String");
-      BCLMeasureArgument arg(argName, argDisplayName, argDescription, argType, 
-                             boost::none, true, false, boost::none, 
+      BCLMeasureArgument arg(argName, argDisplayName, argDescription, argType,
+                             boost::none, true, false, boost::none,
                              std::vector<std::string>(), std::vector<std::string>(),
                              boost::none, boost::none);
       arguments.push_back(arg);
@@ -243,7 +243,7 @@ namespace openstudio{
     }
 
     // write test osm
-    { 
+    {
       if (!testOSMString.isEmpty()){
         openstudio::filesystem::ofstream file(testOSMPath, std::ios_base::binary);
         if (!file.is_open()){
@@ -259,7 +259,7 @@ namespace openstudio{
     }
 
     // write test epw
-    { 
+    {
       if (!testEPWString.isEmpty()){
         QFile file(toQString(testEPWPath));
         bool opened = file.open(QIODevice::WriteOnly);
@@ -842,9 +842,9 @@ namespace openstudio{
     m_bclXML.incrementVersionId();
   }
 
-  bool BCLMeasure::updateMeasureScript(const MeasureType& oldMeasureType, const MeasureType& newMeasureType, 
-                                       const std::string& oldClassName, const std::string& newClassName, 
-                                       const std::string& name, const std::string& description, 
+  bool BCLMeasure::updateMeasureScript(const MeasureType& oldMeasureType, const MeasureType& newMeasureType,
+                                       const std::string& oldClassName, const std::string& newClassName,
+                                       const std::string& name, const std::string& description,
                                        const std::string& modelerDescription)
   {
     boost::optional<openstudio::path> path = primaryRubyScriptPath();
@@ -887,7 +887,7 @@ namespace openstudio{
 
     return false;
   }
-  
+
   bool BCLMeasure::updateMeasureTests(const std::string& oldClassName, const std::string& newClassName)
   {
     bool result = true;
@@ -958,7 +958,7 @@ namespace openstudio{
   {
     m_bclXML.clearFiles();
   }
-  
+
   void BCLMeasure::addAttribute(const Attribute& attribute)
   {
     m_bclXML.addAttribute(attribute);
@@ -973,7 +973,7 @@ namespace openstudio{
   {
     return m_bclXML.removeAttributes(name);
   }
- 
+
   void BCLMeasure::clearAttributes()
   {
     m_bclXML.clearAttributes();

@@ -95,34 +95,34 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatCoo
   } else if( (d = modelObject.systemAirFlowRateDuringHeatingOperation()) ) {
     unitarySystem.setDouble(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::HeatingSupplyAirFlowRate,d.get());
   }
-  
+
   //  SystemAirFlowRateWhenNoCoolingorHeatingisNeeded
   if( modelObject.isSystemAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() ) {
     unitarySystem.setString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::NoLoadSupplyAirFlowRate,"AutoSize");
   } else if( (d = modelObject.systemAirFlowRateWhenNoCoolingorHeatingisNeeded()) ) {
     unitarySystem.setDouble(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::NoLoadSupplyAirFlowRate,d.get());
-  } 
-  
+  }
+
   //  OutdoorAirFlowRateDuringCoolingOperation
   if( modelObject.isOutdoorAirFlowRateDuringCoolingOperationAutosized() ) {
     unitarySystem.setString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::CoolingOutdoorAirFlowRate,"AutoSize");
   } else if( (d = modelObject.outdoorAirFlowRateDuringCoolingOperation()) ) {
     unitarySystem.setDouble(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::CoolingOutdoorAirFlowRate,d.get());
   }
-  
+
   //  OutdoorAirFlowRateDuringHeatingOperation
   if( modelObject.isOutdoorAirFlowRateDuringHeatingOperationAutosized() ) {
     unitarySystem.setString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::HeatingOutdoorAirFlowRate,"AutoSize");
   } else if( (d = modelObject.outdoorAirFlowRateDuringHeatingOperation()) ) {
     unitarySystem.setDouble(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::HeatingOutdoorAirFlowRate,d.get());
   }
-  
+
   //  OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded
   if( modelObject.isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() ) {
     unitarySystem.setString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::NoLoadOutdoorAirFlowRate,"AutoSize");
   } else if( (d = modelObject.outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded()) ) {
     unitarySystem.setDouble(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::NoLoadOutdoorAirFlowRate,d.get());
-  } 
+  }
 
   //  OutdoorAirFlowRateMultiplierScheduleName
   if( boost::optional<Schedule> schedule = modelObject.outdoorAirFlowRateMultiplierSchedule() ) {
@@ -159,14 +159,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatCoo
   //  BypassDuctMixerNodeName
   std::string bypassDuctMixerNodeName = baseName + " Bypass Duct Mixer Node";
   unitarySystem.setString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::BypassDuctMixerNodeName,bypassDuctMixerNodeName);
-  
+
   //  BypassDuctSplitterNodeName
   std::string bypassDuctSplitterNodeName = baseName + " Bypass Duct Splitter Node";
   unitarySystem.setString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::BypassDuctSplitterNodeName,bypassDuctSplitterNodeName);
-  
+
   //  OutdoorAirMixerObjectType
   unitarySystem.setString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::OutdoorAirMixerObjectType,"OutdoorAir:Mixer");
-  
+
   //  OutdoorAirMixerName
   std::string outdoorAirMixerName = baseName + " Outdoor Air Mixer";
   unitarySystem.setString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::OutdoorAirMixerName,outdoorAirMixerName);
@@ -179,7 +179,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatCoo
       unitarySystem.setString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::SupplyAirFanName,_fan->name().get());
     }
   }
-  
+
   bool blowThroughFan = false;
   //  SupplyAirFanPlacement
   if( (s = modelObject.supplyAirFanPlacement()) ) {
@@ -188,11 +188,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatCoo
       blowThroughFan = true;
     }
   }
-  
+
   //  SupplyAirFanOperatingModeScheduleName
   if( boost::optional<Schedule> schedule = modelObject.supplyAirFanOperatingModeSchedule() ) {
     if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) ) {
-      unitarySystem.setString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::SupplyAirFanOperatingModeScheduleName,_schedule->name().get()); 
+      unitarySystem.setString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::SupplyAirFanOperatingModeScheduleName,_schedule->name().get());
     }
   }
 
@@ -233,17 +233,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatCoo
   if( (s = modelObject.priorityControlMode()) ) {
     unitarySystem.setString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::PriorityControlMode,s.get());
   }
-  
+
   //  MinimumOutletAirTemperatureDuringCoolingOperation
   if( (d = modelObject.minimumOutletAirTemperatureDuringCoolingOperation()) ) {
     unitarySystem.setDouble(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::MinimumOutletAirTemperatureDuringCoolingOperation,d.get());
   }
-  
+
   //  MaximumOutletAirTemperatureDuringHeatingOperation)(Maximum Outlet Air Temperature During Heating Operation))
   if( (d = modelObject.maximumOutletAirTemperatureDuringHeatingOperation()) ) {
     unitarySystem.setDouble(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::MaximumOutletAirTemperatureDuringHeatingOperation,d.get());
-  } 
-  
+  }
+
   // DehumidificationControlType
   if( (s = modelObject.dehumidificationControlType()) ) {
     unitarySystem.setString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::DehumidificationControlType,s.get());

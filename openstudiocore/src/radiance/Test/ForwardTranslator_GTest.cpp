@@ -187,7 +187,7 @@ TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnXZ)
 TEST(Radiance, ForwardTranslator_ExampleModel)
 {
   Model model = exampleModel();
-  
+
   openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel");
   openstudio::filesystem::remove_all(outpath);
   ASSERT_FALSE(openstudio::filesystem::exists(outpath));
@@ -206,7 +206,7 @@ TEST(Radiance, ForwardTranslator_ExampleModelWithShadingControl)
   Model model = exampleModel();
   Construction shadedConstruction(model);
 
-  model::ShadingControl shadingControl(shadedConstruction); 
+  model::ShadingControl shadingControl(shadedConstruction);
   for (auto & subSurface : model.getConcreteModelObjects<model::SubSurface>()){
     if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") ||
         istringEqual(subSurface.subSurfaceType(), "OperableWindow")){
@@ -233,8 +233,8 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoIllumMaps)
 
   for (IlluminanceMap illuminanceMap : model.getModelObjects<IlluminanceMap>()){
     illuminanceMap.remove();
-  } 
-  
+  }
+
   openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel_NoIllumMaps");
   openstudio::filesystem::remove_all(outpath);
   ASSERT_FALSE(openstudio::filesystem::exists(outpath));
@@ -253,8 +253,8 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoDaylightingControls)
 
   for (DaylightingControl daylightingControl : model.getModelObjects<DaylightingControl>()){
     daylightingControl.remove();
-  } 
-  
+  }
+
   openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel_NoDaylightingControls");
   openstudio::filesystem::remove_all(outpath);
   ASSERT_FALSE(openstudio::filesystem::exists(outpath));
@@ -273,8 +273,8 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoGlareSensors)
 
   for (GlareSensor glareSensor : model.getModelObjects<GlareSensor>()){
     glareSensor.remove();
-  } 
-  
+  }
+
   openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel_NoGlareSensors");
   openstudio::filesystem::remove_all(outpath);
   ASSERT_FALSE(openstudio::filesystem::exists(outpath));
@@ -295,8 +295,8 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoThermalZoneLinks)
     thermalZone.resetSecondaryDaylightingControl();
     thermalZone.resetPrimaryDaylightingControl();
     thermalZone.resetIlluminanceMap();
-  } 
-  
+  }
+
   openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel_NoThermalZoneLinks");
   openstudio::filesystem::remove_all(outpath);
   ASSERT_FALSE(openstudio::filesystem::exists(outpath));

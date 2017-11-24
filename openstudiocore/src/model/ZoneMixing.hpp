@@ -77,7 +77,7 @@ class MODEL_API ZoneMixing : public ModelObject {
   boost::optional<double> flowRateperPerson() const;
 
   boost::optional<double> airChangesperHour() const;
-  
+
   /// Returns the ThermalZone which supplies air to this mixing object.
   boost::optional<ThermalZone> sourceZone() const;
 

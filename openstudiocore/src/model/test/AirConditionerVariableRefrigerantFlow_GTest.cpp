@@ -48,17 +48,17 @@ TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
-     AirConditionerVariableRefrigerantFlow vrf(m); 
+  ASSERT_EXIT (
+  {
+     Model m;
+     AirConditionerVariableRefrigerantFlow vrf(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 
-   Model m; 
-   AirConditionerVariableRefrigerantFlow vrf(m); 
+   Model m;
+   AirConditionerVariableRefrigerantFlow vrf(m);
 
   for( int i = 0; i != 5; i++ )
   {
@@ -75,7 +75,7 @@ TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow)
 
   Model m2;
 
-  boost::optional<AirConditionerVariableRefrigerantFlow> vrfClone = vrf.clone(m2).optionalCast<AirConditionerVariableRefrigerantFlow>(); 
+  boost::optional<AirConditionerVariableRefrigerantFlow> vrfClone = vrf.clone(m2).optionalCast<AirConditionerVariableRefrigerantFlow>();
   ASSERT_TRUE(vrfClone);
 
   ASSERT_TRUE(vrfClone->coolingCapacityRatioModifierFunctionofLowTemperatureCurve());
@@ -101,9 +101,9 @@ TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow)
   ASSERT_TRUE(vrfClone->pipingCorrectionFactorforLengthinCoolingModeCurve());
 
 
-  ASSERT_TRUE(vrfClone->terminals().empty()); 
+  ASSERT_TRUE(vrfClone->terminals().empty());
 
-  ASSERT_TRUE(! vrfClone->remove().empty()); 
+  ASSERT_TRUE(! vrfClone->remove().empty());
 }
 
 TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow_addToNode) {

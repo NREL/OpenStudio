@@ -54,7 +54,7 @@ class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow : public ZoneHVACCom
 
   explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model);
 
-  explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model, 
+  explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model,
     const CoilCoolingDXVariableRefrigerantFlow & coolingCoil,
     const CoilHeatingDXVariableRefrigerantFlow & heatingCoil,
     const HVACComponent & fan);

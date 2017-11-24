@@ -27,7 +27,7 @@
  **********************************************************************************************************************/
 
 #ifndef MODEL_WINDOWDATAFILE_IMPL_HPP
-#define MODEL_WINDOWDATAFILE_IMPL_HPP 
+#define MODEL_WINDOWDATAFILE_IMPL_HPP
 
 #include "ConstructionBase_Impl.hpp"
 
@@ -35,7 +35,7 @@ namespace openstudio {
 namespace model {
 namespace detail {
 
-  class MODEL_API WindowDataFile_Impl : public ConstructionBase_Impl 
+  class MODEL_API WindowDataFile_Impl : public ConstructionBase_Impl
   {
    public:
 
@@ -46,8 +46,8 @@ namespace detail {
     WindowDataFile_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    WindowDataFile_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                        Model_Impl* model, 
+    WindowDataFile_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                        Model_Impl* model,
                         bool keepHandle);
 
     WindowDataFile_Impl(const WindowDataFile_Impl& other,Model_Impl* model,bool keepHandle);

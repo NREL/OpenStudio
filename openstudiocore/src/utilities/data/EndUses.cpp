@@ -99,19 +99,19 @@ namespace openstudio {
   boost::optional<EndUses> EndUses::fromAttribute(const Attribute& attribute)
   {
     if (attribute.name() != EndUses::attributeName()) {
-      LOG(Warn,"Cannot create EndUses from Attribute because attribute name is '" 
+      LOG(Warn,"Cannot create EndUses from Attribute because attribute name is '"
           << attribute.name() << "'.");
       return boost::none;
     }
 
     if (attribute.valueType() != AttributeValueType::AttributeVector) {
-      LOG(Warn,"Cannot create EndUses from Attribute because attribute is a " 
+      LOG(Warn,"Cannot create EndUses from Attribute because attribute is a "
           << attribute.valueType().valueDescription() << ", not an AttributeVector.");
       return boost::none;
     }
 
     if (attribute.units()) {
-      LOG(Warn,"Cannot create EndUses from Attribute because attribute has units '" 
+      LOG(Warn,"Cannot create EndUses from Attribute because attribute has units '"
           << attribute.units().get() << "'.");
       return boost::none;
     }
@@ -120,8 +120,8 @@ namespace openstudio {
 
       EndUseFuelType endUseFuelType(fuelTypeAttribute.name());
       if (fuelTypeAttribute.valueType() != AttributeValueType::AttributeVector) {
-        LOG(Warn,"Cannot create EndUses from Attribute because fuel type attribute '" 
-            << fuelTypeAttribute.name() << "' is a " << fuelTypeAttribute.valueType() 
+        LOG(Warn,"Cannot create EndUses from Attribute because fuel type attribute '"
+            << fuelTypeAttribute.name() << "' is a " << fuelTypeAttribute.valueType()
             << ", not an AttributeVector.");
         return boost::none;
       }
@@ -130,29 +130,29 @@ namespace openstudio {
 
         EndUseCategoryType endUseCategoryType(categoryAttribute.name());
         if (categoryAttribute.valueType() != AttributeValueType::AttributeVector){
-          LOG(Warn,"Cannot create EndUses from Attribute because category attribute '" 
-              << categoryAttribute.name() << "' is a " << categoryAttribute.valueType() 
+          LOG(Warn,"Cannot create EndUses from Attribute because category attribute '"
+              << categoryAttribute.name() << "' is a " << categoryAttribute.valueType()
               << ", not an AttributeVector.");
           return boost::none;
         }
 
         for (const Attribute& subCategoryAttribute : categoryAttribute.valueAsAttributeVector()) {
           if (subCategoryAttribute.valueType() != AttributeValueType::Double){
-            LOG(Warn,"Cannot create EndUses from Attribute because sub-category attribute '" 
-                << categoryAttribute.name() << "' is a " << subCategoryAttribute.valueType() 
+            LOG(Warn,"Cannot create EndUses from Attribute because sub-category attribute '"
+                << categoryAttribute.name() << "' is a " << subCategoryAttribute.valueType()
                 << ", not a Double.");
             return boost::none;
           }
           if (!subCategoryAttribute.units()) {
-            LOG(Warn,"Cannot create EndUses from Attribute because sub-category attribute '" 
+            LOG(Warn,"Cannot create EndUses from Attribute because sub-category attribute '"
                 << categoryAttribute.name() << "' does not have units.");
             return boost::none;
           }
           if (subCategoryAttribute.units().get() != getUnitsForFuelType(endUseFuelType)){
-            LOG(Warn,"Cannot create EndUses from Attribute because sub-category attribute '" 
-                << categoryAttribute.name() << "' has units '" 
-                << subCategoryAttribute.units().get() << "', not '" 
-                << getUnitsForFuelType(endUseFuelType)<< "', as expected for fuel type " 
+            LOG(Warn,"Cannot create EndUses from Attribute because sub-category attribute '"
+                << categoryAttribute.name() << "' has units '"
+                << subCategoryAttribute.units().get() << "', not '"
+                << getUnitsForFuelType(endUseFuelType)<< "', as expected for fuel type "
                 << endUseFuelType.valueDescription() << ".");
             return boost::none;
           }

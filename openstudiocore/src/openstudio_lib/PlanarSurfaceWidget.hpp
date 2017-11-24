@@ -59,7 +59,7 @@ class PlanarSurfaceWidget : public QWidget, public Nano::Observer
   private:
 
     void setUnits(bool displayIP);
-  
+
     boost::optional<openstudio::model::PlanarSurface> m_planarSurface;
 
     QString m_units;

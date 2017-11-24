@@ -41,10 +41,10 @@
 namespace openstudio {
 namespace model {
 
-/** ModelExtensibleGroup is a WorkspaceExtensibleGroup with additional methods added to support 
+/** ModelExtensibleGroup is a WorkspaceExtensibleGroup with additional methods added to support
  *  extensible \link ModelObject ModelObjects\endlink. The ExtensibleGroup inheritance hierarchy
  *  roughly follows the IdfObject <- WorkspaceObject <- ModelObject <- etc. hierarchy, except that
- *  all concrete \link ModelObject ModelObjects \endlink with ExtensibleGroup derived classes 
+ *  all concrete \link ModelObject ModelObjects \endlink with ExtensibleGroup derived classes
  *  derive directly from ModelExtensibleGroup--there are no extensions of ModelExtensibleGroup for
  *  intermediate abstract classes. */
 class MODEL_API ModelExtensibleGroup : public WorkspaceExtensibleGroup {
@@ -54,7 +54,7 @@ class MODEL_API ModelExtensibleGroup : public WorkspaceExtensibleGroup {
   /** @name Template Methods */
   //@{
 
-  /** Get the ModelObject of type T pointed to from fieldIndex of this extensible group, if 
+  /** Get the ModelObject of type T pointed to from fieldIndex of this extensible group, if
    *  possible. */
   template <typename T>
   boost::optional<T> getModelObjectTarget(unsigned fieldIndex) const {
@@ -62,7 +62,7 @@ class MODEL_API ModelExtensibleGroup : public WorkspaceExtensibleGroup {
     return ModelObject(getImpl<detail::ModelObject_Impl>()).getModelObjectTarget<T>(mf_toIndex(fieldIndex));
   }
 
-  /** Get all the \link ModelObject ModelObjects \endlink of type T pointed to from this 
+  /** Get all the \link ModelObject ModelObjects \endlink of type T pointed to from this
    *  extensible group. Return value will always be .empty() if this extensible group object is
    *  .empty(). */
   template <typename T>

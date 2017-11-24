@@ -43,12 +43,12 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_DefaultConstructor)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model m;
     SetpointManagerMultiZoneHumidityMinimum testObject(m);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -173,7 +173,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_multipleSPMs)
   SetpointManagerMultiZoneHumidityMinimum spmHumidity(m);
   spmHumidity.addToNode(outletNode);
   ASSERT_EQ(1u,outletNode.setpointManagers().size());
-  
+
   SetpointManagerSingleZoneReheat spmTemp(m);
   spmTemp.addToNode(outletNode);
   ASSERT_EQ(2u,outletNode.setpointManagers().size());

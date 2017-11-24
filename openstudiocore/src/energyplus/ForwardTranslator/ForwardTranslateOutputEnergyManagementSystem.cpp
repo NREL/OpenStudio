@@ -74,7 +74,7 @@ boost::optional<IdfObject> ForwardTranslator::translateOutputEnergyManagementSys
   if (s.is_initialized()) {
     idfObject.setString(Output_EnergyManagementSystemFields::EMSRuntimeLanguageDebugOutputLevel, s.get());
   }
- 
+
   return idfObject;
 }
 

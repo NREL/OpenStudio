@@ -87,7 +87,7 @@ boost::optional<IdfObject> ForwardTranslator::translateBoilerHotWater( BoilerHot
   }
 
   // NominalThermalEfficiency
-  
+
   if( (value = modelObject.nominalThermalEfficiency()) )
   {
     idfObject.setDouble(Boiler_HotWaterFields::NominalThermalEfficiency,value.get());
@@ -183,7 +183,7 @@ boost::optional<IdfObject> ForwardTranslator::translateBoilerHotWater( BoilerHot
   if( (s = modelObject.boilerFlowMode()) )
   {
     idfObject.setString(Boiler_HotWaterFields::BoilerFlowMode,s.get());
-  } 
+  }
 
   // ParasiticElectricLoad
 

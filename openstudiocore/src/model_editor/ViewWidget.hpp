@@ -77,8 +77,8 @@ public:
   virtual void showPrecisionDlg(const bool showPrecisionDlg = true);
   virtual void showAllFields(bool state);
   virtual void createAllFields();
-  virtual void setRecursive(bool state);                                  
-                                                                   
+  virtual void setRecursive(bool state);
+
 
 public slots:
   virtual void viewSelection(const QModelIndex& modelIndex) = 0;

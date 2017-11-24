@@ -45,12 +45,12 @@ TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_DefaultConstructor)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model model;
     RefrigerationCondenserEvaporativeCooled testObject = RefrigerationCondenserEvaporativeCooled(model);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -494,7 +494,7 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_CondensatePipingRefr
 //Test clone of Evaporative Cooled Condenser with default data
 TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_CloneOneModelWithDefaultData)
 {
-  Model model; 
+  Model model;
   RefrigerationCondenserEvaporativeCooled testObject = RefrigerationCondenserEvaporativeCooled(model);
 
   RefrigerationCondenserEvaporativeCooled testObjectClone = testObject.clone(model).cast<RefrigerationCondenserEvaporativeCooled>();

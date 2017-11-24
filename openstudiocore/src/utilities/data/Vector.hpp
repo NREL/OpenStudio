@@ -43,10 +43,10 @@ struct UTILITIES_API VectorStruct
   typedef boost::numeric::ublas::scalar_vector<double> ScalarVectorType;
 };
 
-/// Vector 
+/// Vector
 typedef VectorStruct::VectorType Vector;
 
-/// ScalarVector 
+/// ScalarVector
 typedef VectorStruct::ScalarVectorType ScalarVector;
 
 /// Helper function to construct Vector from std::vector<double>.
@@ -87,20 +87,20 @@ struct UTILITIES_API InterpInfo{
   double wa, wb; // weights of two nearest points
 };
 
-/** Linear interpolation of the function y = f(x) at point xi. Assumes that x is strictly 
+/** Linear interpolation of the function y = f(x) at point xi. Assumes that x is strictly
  *  increasing. */
 UTILITIES_API InterpInfo interpInfo(const Vector& x, double xi);
 
-/** Linear interpolation of the function y = f(x) at point xi. Assumes that x is strictly 
+/** Linear interpolation of the function y = f(x) at point xi. Assumes that x is strictly
  *  increasing */
-UTILITIES_API double interp(const Vector& x, const Vector& y, double xi, 
-                            InterpMethod interpMethod = LinearInterp, 
+UTILITIES_API double interp(const Vector& x, const Vector& y, double xi,
+                            InterpMethod interpMethod = LinearInterp,
                             ExtrapMethod extrapMethod = NoneExtrap);
 
-/** Linear interpolation of the function y = f(x) at points xi. Assumes that x is strictly 
+/** Linear interpolation of the function y = f(x) at points xi. Assumes that x is strictly
  *  increasing. */
-UTILITIES_API Vector interp(const Vector& x, const Vector& y, const Vector& xi, 
-                            InterpMethod interpMethod = LinearInterp, 
+UTILITIES_API Vector interp(const Vector& x, const Vector& y, const Vector& xi,
+                            InterpMethod interpMethod = LinearInterp,
                             ExtrapMethod extrapMethod = NoneExtrap);
 
 //@}
@@ -113,11 +113,11 @@ UTILITIES_API Vector randVector(double a, double b, unsigned N);
 /** Generates a Vector of N points linearly spaced between and including a and b. */
 UTILITIES_API Vector linspace(double a, double b, unsigned N);
 
-/** Generates a Vector linearly spaced points starting at a and ending before or at b with 
+/** Generates a Vector linearly spaced points starting at a and ending before or at b with
  *  interval delta. */
 UTILITIES_API Vector deltaSpace(double a, double b, double delta);
 
-/** Generates a Vector of N points logarithmically spaced between and including base^a and 
+/** Generates a Vector of N points logarithmically spaced between and including base^a and
  *  base^b. */
 UTILITIES_API Vector logspace(double a, double b, unsigned N, double base = 10.0);
 

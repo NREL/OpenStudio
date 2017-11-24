@@ -33,14 +33,14 @@ class SetWindowPropertyFrameAndDivider < OpenStudio::Ruleset::ModelUserScript
   def name
     return "Set Window Property Frame and Divider"
   end
-  
+
   # returns a vector of arguments, the runner will present these arguments to the user
   # then pass in the results on run
   def arguments(model)
     result = OpenStudio::Ruleset::OSArgumentVector.new
 
     choices = OpenStudio::StringVector.new
-    
+
     model.getWindowPropertyFrameAndDividers.each do |c|
       choices << c.name.get
     end
@@ -51,10 +51,10 @@ class SetWindowPropertyFrameAndDivider < OpenStudio::Ruleset::ModelUserScript
     name.setDefaultValue(choices[0])
 
     result << name
-    
+
     return result
   end
-  
+
 
   # override run to implement the functionality of your script
   # model is an OpenStudio::Model::Model, runner is a OpenStudio::Ruleset::UserScriptRunner
@@ -64,45 +64,45 @@ class SetWindowPropertyFrameAndDivider < OpenStudio::Ruleset::ModelUserScript
     if not runner.validateUserArguments(arguments(model),user_arguments)
       return false
     end
-    
+
     name = runner.getStringArgumentValue("name",user_arguments)
-    
+
     remove = true
     frameAndDivider = nil
     if name != "<None>"
       remove = false
-    
+
       model.getWindowPropertyFrameAndDividers.each do |c|
         if name == c.name.get
           frameAndDivider = c
           break
         end
       end
-      
+
       if not frameAndDivider
-        runner.registerError("Could not find WindowPropertyFrameAndDivider '" + name + "'.")     
+        runner.registerError("Could not find WindowPropertyFrameAndDivider '" + name + "'.")
         return(false)
-      end      
-      
+      end
+
     end
-    
+
     model.getSubSurfaces.each do |s|
 
       next if not runner.inSelection(s)
-      
+
       if remove
         s.resetWindowPropertyFrameAndDivider
       else
         if !s.setWindowPropertyFrameAndDivider(frameAndDivider)
           # could be an opaque door
-          runner.registerWarning("Could not set WindowPropertyFrameAndDivider '" + name + "' for SubSurface '" + s.name.to_s + "'.")    
+          runner.registerWarning("Could not set WindowPropertyFrameAndDivider '" + name + "' for SubSurface '" + s.name.to_s + "'.")
         end
       end
-      
+
     end
-    
+
   end
-    
+
 end
 
 # this call registers your script with the OpenStudio SketchUp plug-in

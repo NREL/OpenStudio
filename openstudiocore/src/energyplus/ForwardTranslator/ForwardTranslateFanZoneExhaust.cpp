@@ -53,12 +53,12 @@ boost::optional<IdfObject> ForwardTranslator::translateFanZoneExhaust( FanZoneEx
   //setup boost optionals to use to store get method returns
   boost::optional<std::string> s;
   boost::optional<double> value;
-  
+
   // Make sure the modelObject gets ut into the map, and the new idfObject gets put into the final file.
   // Also sets the idfObjects name
 
   IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::Fan_ZoneExhaust,modelObject);
-  
+
   // Model Name (A2)
   //std::string baseName = modelObject.name().get();
 
@@ -74,25 +74,25 @@ boost::optional<IdfObject> ForwardTranslator::translateFanZoneExhaust( FanZoneEx
       idfObject.setString(Fan_ZoneExhaustFields::AvailabilityScheduleName, _availabilitySchedule->name().get());
     }
   }
-  
+
   // N1, Field Fan Efficiency
-  
+
   value = modelObject.fanEfficiency();
-  
+
   if( value )
   {
     idfObject.setDouble(Fan_ZoneExhaustFields::FanTotalEfficiency, *value);
   }
-  
+
   // N2, Field Pressure Rise
-  
+
   value = modelObject.pressureRise();
-  
+
   if( value )
   {
     idfObject.setDouble(Fan_ZoneExhaustFields::PressureRise, *value);
   }
-  
+
   // N3, Field Maximum Flow Rate
 
   value = modelObject.maximumFlowRate();
@@ -103,11 +103,11 @@ boost::optional<IdfObject> ForwardTranslator::translateFanZoneExhaust( FanZoneEx
 
   // A4, Field Air Inlet Node Name
   boost::optional<Node> inletNode = modelObject.inletNode();
-  
+
   if( inletNode )
   {
     boost::optional<Node> _inletNode = modelObject.inletNode();
-    
+
     if( _inletNode && _inletNode->name() )
     {
       idfObject.setString(Fan_ZoneExhaustFields::AirInletNodeName, _inletNode->name().get());
@@ -116,17 +116,17 @@ boost::optional<IdfObject> ForwardTranslator::translateFanZoneExhaust( FanZoneEx
 
   // A5, Field Air Outlet Node Name
   boost::optional<Node> outletNode = modelObject.outletNode();
-  
+
   if( outletNode )
   {
     boost::optional<Node> _outletNode = modelObject.outletNode();
-    
+
     if( _outletNode && _outletNode->name() )
     {
       idfObject.setString(Fan_ZoneExhaustFields::AirOutletNodeName, _outletNode->name().get());
     }
   }
-  
+
   // A6 , Field End-Use Subcategory
   s = modelObject.endUseSubcategory();
   if( s )
@@ -146,15 +146,15 @@ boost::optional<IdfObject> ForwardTranslator::translateFanZoneExhaust( FanZoneEx
       idfObject.setString(Fan_ZoneExhaustFields::FlowFractionScheduleName, _flowFractionSchedule->name().get());
     }
   }
-  
+
   // A8 , Field System Availability Manager Coupling Mode
   s = modelObject.systemAvailabilityManagerCouplingMode();
-  
+
   if( s )
   {
     idfObject.setString(Fan_ZoneExhaustFields::SystemAvailabilityManagerCouplingMode, *s);
-  }  
-  
+  }
+
   // A9, Field Minimum Zone Temperature Limit Schedule Name
   boost::optional<Schedule> minimumZoneTemperatureLimitSchedule = modelObject.minimumZoneTemperatureLimitSchedule();
 
@@ -166,8 +166,8 @@ boost::optional<IdfObject> ForwardTranslator::translateFanZoneExhaust( FanZoneEx
     {
       idfObject.setString(Fan_ZoneExhaustFields::MinimumZoneTemperatureLimitScheduleName, _minimumZoneTemperatureLimitSchedule->name().get());
     }
-  }  
-  
+  }
+
   // A10, Field Balanced Exhaust Fraction Schedule Name
   boost::optional<Schedule> balancedExhaustFractionSchedule = modelObject.balancedExhaustFractionSchedule();
 
@@ -179,7 +179,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFanZoneExhaust( FanZoneEx
     {
       idfObject.setString(Fan_ZoneExhaustFields::BalancedExhaustFractionScheduleName, _balancedExhaustFractionSchedule->name().get());
     }
-  }  
+  }
 
   return idfObject;
 }

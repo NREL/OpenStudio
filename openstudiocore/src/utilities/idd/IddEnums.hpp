@@ -50,21 +50,21 @@ namespace openstudio {
  *  rest of the enumeration values designate subsets of the \link openstudio::IddFactorySingleton
  *  IddFactory\endlink (the current versions of the EnergyPlus and OpenStudio IDDs, and all
  *  objects in the factory). */
-#ifdef SWIG 
+#ifdef SWIG
   OPENSTUDIO_ENUM(IddFileType, )
 #else
 struct UTILITIES_API IddFileType: public ::EnumBase<IddFileType> {
- public: 
+ public:
   enum domain : int;
 
   IddFileType()
-   : EnumBase<IddFileType>(0) {} 
-  IddFileType(const std::string &t_name) 
-   : EnumBase<IddFileType>(t_name) {} 
-  IddFileType(int t_value) 
-   : EnumBase<IddFileType>(t_value) {} 
+   : EnumBase<IddFileType>(0) {}
+  IddFileType(const std::string &t_name)
+   : EnumBase<IddFileType>(t_name) {}
+  IddFileType(int t_value)
+   : EnumBase<IddFileType>(t_value) {}
 
-  static std::string enumName() 
+  static std::string enumName()
   { return "IddFileType"; }
 
   domain value() const { return static_cast<domain>(EnumBase<IddFileType>::value()); }
@@ -97,7 +97,7 @@ typedef boost::optional<std::set<IddFileType> > OptionalIddFileTypeSet;
 
 /** \class IddObjectType
  *  \brief Enumeration of the \link openstudio::IddObject IddObject\endlink types available
- *  through the \link openstudio::IddFactorySingleton IddFactory\endlink. 
+ *  through the \link openstudio::IddFactorySingleton IddFactory\endlink.
  *  \details Catchall is the default constructed \link openstudio::IddObject IddObject\endlink
  *  type. UserCustom is the default type for \link openstudio::IddObject IddObjects\endlink
  *  constructed by \link openstudio::IddObject::load IddObject::load\endlink. UserCustom objects
@@ -108,21 +108,21 @@ typedef boost::optional<std::set<IddFileType> > OptionalIddFileTypeSet;
  *  types are derived from the IDD files used to create \link openstudio::IddFactorySingleton
  *  IddFactory\endlink. See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp.
  * */
-#ifdef SWIG 
+#ifdef SWIG
   OPENSTUDIO_ENUM(IddObjectType, )
 #else
 struct UTILITIES_API IddObjectType: public ::EnumBase<IddObjectType> {
- public: 
+ public:
   enum domain : int;
 
   IddObjectType()
-   : EnumBase<IddObjectType>(0) {} 
-  IddObjectType(const std::string &t_name) 
-   : EnumBase<IddObjectType>(t_name) {} 
-  IddObjectType(int t_value) 
-   : EnumBase<IddObjectType>(t_value) {} 
+   : EnumBase<IddObjectType>(0) {}
+  IddObjectType(const std::string &t_name)
+   : EnumBase<IddObjectType>(t_name) {}
+  IddObjectType(int t_value)
+   : EnumBase<IddObjectType>(t_value) {}
 
-  static std::string enumName() 
+  static std::string enumName()
   { return "IddObjectType"; }
 
   domain value() const { return static_cast<domain>(EnumBase<IddObjectType>::value()); }

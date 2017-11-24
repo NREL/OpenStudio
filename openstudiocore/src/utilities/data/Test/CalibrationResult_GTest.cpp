@@ -52,7 +52,7 @@ TEST_F(DataFixture, CalibrationResult)
   EXPECT_EQ(InstallLocationType::Facility, electricBill.meterInstallLocation().value());
   EXPECT_FALSE(electricBill.meterSpecificInstallLocation());
   EXPECT_FALSE(electricBill.meterEndUseCategory());
-  EXPECT_FALSE(electricBill.meterSpecificEndUse());   
+  EXPECT_FALSE(electricBill.meterSpecificEndUse());
   EXPECT_EQ("kWh", electricBill.consumptionUnit());
   EXPECT_EQ(5.0, electricBill.consumptionUnitConversionFactor());
   ASSERT_TRUE(electricBill.peakDemandUnit());
@@ -98,7 +98,7 @@ TEST_F(DataFixture, CalibrationResult)
 
   CalibrationUtilityBill gasBill("Gas Bill", FuelType::Gas, InstallLocationType::Facility,
     boost::none, boost::none, boost::none, std::string("Therms"), 5.0, boost::none, boost::none, boost::none, boost::none, 3, 1.0, 1.0);
-  
+
   CalibrationBillingPeriod gasJan(Date(1,1,1999), 30, std::string("Therms"), boost::none,
     10.0, boost::none, boost::none, 11.0, boost::none, boost::none);
   EXPECT_TRUE(gasBill.addBillingPeriod(gasJan));
@@ -123,7 +123,7 @@ TEST_F(DataFixture, CalibrationResult)
   // save to xml
   calibrationResult.attribute().saveToXml(xmlPath);
 
-  // load 
+  // load
   boost::optional<Attribute> testAttribute = Attribute::loadFromXml(xmlPath);
   ASSERT_TRUE(testAttribute);
   boost::optional<CalibrationResult> testCalibrationResult = CalibrationResult::fromAttribute(*testAttribute);

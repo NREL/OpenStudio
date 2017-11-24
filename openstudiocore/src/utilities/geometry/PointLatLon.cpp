@@ -120,7 +120,7 @@ namespace openstudio{
     m_localCartesianConverter->Reverse(point.x(), point.y(), point.z(), lat, lon, h);
     return PointLatLon(lat, lon, h);
   }
-  
+
   std::vector<PointLatLon> PointLatLon::fromLocalCartesian(const std::vector<Point3d>& points) const
   {
     std::vector<PointLatLon> result;

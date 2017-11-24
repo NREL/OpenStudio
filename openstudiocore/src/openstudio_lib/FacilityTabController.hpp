@@ -62,7 +62,7 @@ class FacilityTabController : public MainTabController
   int m_currentIndex = -1;
 
   public slots:
-  
+
   void toggleUnits(bool displayIP);
 
   virtual void setSubTab(int index) override;

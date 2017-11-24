@@ -77,7 +77,7 @@ namespace sdd {
 
     model::ScheduleDay scheduleDay(model);
     scheduleDay.setName(name);
-   
+
     boost::optional<model::ScheduleTypeLimits> scheduleTypeLimits = model.getModelObjectByName<model::ScheduleTypeLimits>(type);
     bool isTemperature = false;
     if (type == "Temperature"){
@@ -224,7 +224,7 @@ namespace sdd {
         LOG(Error, "No Saturday schedule found for week schedule '" << name << "'");
       }
     }
-   
+
     if (!schDayHolRefElement.isNull()){
       boost::optional<model::ScheduleDay> scheduleDay = model.getModelObjectByName<model::ScheduleDay>(escapeName(schDayHolRefElement.text()));
       if (scheduleDay){
@@ -291,7 +291,7 @@ namespace sdd {
 
     model::ScheduleYear scheduleYear(model);
     scheduleYear.setName(name);
-    
+
     boost::optional<model::ScheduleTypeLimits> scheduleTypeLimits = model.getModelObjectByName<model::ScheduleTypeLimits>(type);
     if (scheduleTypeLimits){
       scheduleYear.setScheduleTypeLimits(*scheduleTypeLimits);

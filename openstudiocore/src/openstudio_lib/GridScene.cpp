@@ -30,7 +30,7 @@
 
 namespace openstudio {
 
-GridScene::GridScene( QObject * parent ) 
+GridScene::GridScene( QObject * parent )
   : QGraphicsScene(parent)
 {
 }
@@ -38,7 +38,7 @@ GridScene::GridScene( QObject * parent )
 QRectF GridScene::getCell(int xindex, int yindex)
 {
   int xcord;
-  int ycord; 
+  int ycord;
   int width;
   int height;
 
@@ -53,7 +53,7 @@ QRectF GridScene::getCell(int xindex, int yindex)
 QRectF GridScene::getCell(QPointF point)
 {
   float xcord;
-  float ycord; 
+  float ycord;
   int width;
   int height;
 

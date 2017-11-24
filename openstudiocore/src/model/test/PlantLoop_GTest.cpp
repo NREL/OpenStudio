@@ -68,21 +68,21 @@ TEST_F(ModelFixture,PlantLoop_PlantLoop)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
-     PlantLoop plantLoop(m); 
+  ASSERT_EXIT (
+  {
+     Model m;
+     PlantLoop plantLoop(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
 TEST_F(ModelFixture,PlantLoop_Remove)
 {
-  Model m; 
+  Model m;
   auto size = m.modelObjects().size();
-  PlantLoop plantLoop(m); 
+  PlantLoop plantLoop(m);
 
   EXPECT_FALSE(plantLoop.remove().empty());
 
@@ -91,11 +91,11 @@ TEST_F(ModelFixture,PlantLoop_Remove)
 
 TEST_F(ModelFixture,PlantLoop_supplyComponents)
 {
-  Model m; 
+  Model m;
 
   // Empty Plant Loop
-  
-  PlantLoop plantLoop(m); 
+
+  PlantLoop plantLoop(m);
   ASSERT_EQ( 5u,plantLoop.supplyComponents().size() );
 
   EXPECT_EQ("Optimal",plantLoop.loadDistributionScheme());
@@ -126,7 +126,7 @@ TEST_F(ModelFixture,PlantLoop_supplyComponents)
   CurveBiquadratic ccFofT(m);
   CurveBiquadratic eirToCorfOfT(m);
   CurveQuadratic eiToCorfOfPlr(m);
-  
+
   ChillerElectricEIR chiller(m,ccFofT,eirToCorfOfT,eiToCorfOfPlr);
   ASSERT_TRUE(chiller.addToNode(supplyOutletNode));
   ASSERT_EQ( 7u,plantLoop.supplyComponents().size() );
@@ -151,8 +151,8 @@ TEST_F(ModelFixture,PlantLoop_supplyComponents)
 
 TEST_F(ModelFixture,PlantLoop_demandComponent)
 {
-  Model m; 
-  PlantLoop plantLoop(m); 
+  Model m;
+  PlantLoop plantLoop(m);
 
   ASSERT_EQ( 1u,plantLoop.demandInletNodes().size() );
 
@@ -164,8 +164,8 @@ TEST_F(ModelFixture,PlantLoop_demandComponent)
 
 TEST_F(ModelFixture,PlantLoop_demandComponents)
 {
-  Model m; 
-  PlantLoop plantLoop(m); 
+  Model m;
+  PlantLoop plantLoop(m);
   ASSERT_EQ( 5u,plantLoop.demandComponents().size() );
 
   Schedule s = m.alwaysOnDiscreteSchedule();
@@ -189,9 +189,9 @@ TEST_F(ModelFixture,PlantLoop_demandComponents)
 
 TEST_F(ModelFixture,PlantLoop_addDemandBranchForComponent)
 {
-  Model m; 
+  Model m;
   ScheduleCompact s(m);
-  PlantLoop plantLoop(m); 
+  PlantLoop plantLoop(m);
   CoilHeatingWater heatingCoil(m,s);
   CoilHeatingWater heatingCoil2(m,s);
   CoilCoolingWater coolingCoil(m,s);
@@ -224,8 +224,8 @@ TEST_F(ModelFixture,PlantLoop_addDemandBranchForComponent)
 
 TEST_F(ModelFixture,PlantLoop_removeDemandBranchWithComponent)
 {
-  Model m; 
-  PlantLoop plantLoop(m); 
+  Model m;
+  PlantLoop plantLoop(m);
   ScheduleCompact s(m);
   CoilHeatingWater heatingCoil(m,s);
 
@@ -249,8 +249,8 @@ TEST_F(ModelFixture,PlantLoop_removeDemandBranchWithComponent)
 
 TEST_F(ModelFixture,PlantLoop_Cost)
 {
-  Model m; 
-  PlantLoop plantLoop(m); 
+  Model m;
+  PlantLoop plantLoop(m);
 
   boost::optional<LifeCycleCost> cost = LifeCycleCost::createLifeCycleCost("Install", plantLoop, 1000.0, "CostPerEach", "Construction");
   ASSERT_TRUE(cost);
@@ -432,7 +432,7 @@ TEST_F(ModelFixture, PlantLoop_OperationSchemes)
   if( dryBulb ) {
     EXPECT_EQ(plantEquipmentOperationOutdoorDryBulb,dryBulb.get());
   }
-  
+
 }
 
 TEST_F(ModelFixture, PlantLoop_GlycolConcentration) {

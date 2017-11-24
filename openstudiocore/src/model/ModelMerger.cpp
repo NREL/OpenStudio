@@ -79,7 +79,7 @@ namespace openstudio
     {
       m_logSink.setLogLevel(Warn);
       //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSReverseTranslator"));
-      m_logSink.setThreadId(QThread::currentThread());    
+      m_logSink.setThreadId(QThread::currentThread());
     }
 
     std::vector<LogMessage> ModelMerger::warnings() const
@@ -116,7 +116,7 @@ namespace openstudio
       }
       return boost::none;
     }
-    
+
     boost::optional<UUID> ModelMerger::getCurrentModelHandle(const UUID& newHandle)
     {
       auto it = m_newToCurrentHandleMapping.find(newHandle);
@@ -254,7 +254,7 @@ namespace openstudio
       // DLM: TODO zoneControlContaminantController
       // DLM: TODO sizingZone
     }
-  
+
     void ModelMerger::mergeSpaceType(SpaceType& currentSpaceType, const SpaceType& newSpaceType)
     {
       if (m_newMergedHandles.find(newSpaceType.handle()) != m_newMergedHandles.end()){
@@ -277,7 +277,7 @@ namespace openstudio
       } else{
         currentSpaceType.resetDefaultConstructionSet();
       }
-        
+
       // DLM: TODO default schedule set
 
       // DLM: TODO rendering color
@@ -404,12 +404,12 @@ namespace openstudio
         default:
           LOG(Error, "No constructor registered for IddObjectType " << iddObjectType.valueName());
         }
-            
+
         OS_ASSERT(currentObject);
         m_currentToNewHandleMapping[currentObject->handle()] = newObject.handle();
         m_newToCurrentHandleMapping[newObject.handle()] = currentObject->handle();
       }
-          
+
       // merge objects
       switch (iddObjectType.value()){
       case IddObjectType::OS_Space:
@@ -502,6 +502,6 @@ namespace openstudio
         }
       }
     }
-    
+
   }//model
 }//openstudio

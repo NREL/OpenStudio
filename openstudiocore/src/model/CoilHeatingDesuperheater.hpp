@@ -46,11 +46,11 @@ namespace detail {
 
 } // detail
 
-/** CoilHeatingDesuperheater is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:Desuperheater'. 
+/** CoilHeatingDesuperheater is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:Desuperheater'.
 
-  This coil can be used in air loop simulations but can’t be used by certain compound objects 
-  (e.g., AirLoopHVACUnitaryHeatPumpAirToAir, AirLoopHVACUnitaryHeatPumpWaterToAir, or DehumidifierDesiccantNoFans) 
-  or any air distribution equipment (e.g., AirTerminalSingleDuctConstantVolumeReheat, AirTerminalSingleDuctVAVReheat, 
+  This coil can be used in air loop simulations but can’t be used by certain compound objects
+  (e.g., AirLoopHVACUnitaryHeatPumpAirToAir, AirLoopHVACUnitaryHeatPumpWaterToAir, or DehumidifierDesiccantNoFans)
+  or any air distribution equipment (e.g., AirTerminalSingleDuctConstantVolumeReheat, AirTerminalSingleDuctVAVReheat,
   or AirTerminalSingleDuctSeriesPIUReheat).
 */
 class MODEL_API CoilHeatingDesuperheater : public StraightComponent {

@@ -106,7 +106,7 @@ class MODEL_API InteriorPartitionSurface : public PlanarSurface {
 
   /// get the interior partition surface group
   boost::optional<InteriorPartitionSurfaceGroup> interiorPartitionSurfaceGroup() const;
-  
+
   /// set the interior partition surface group
   bool setInteriorPartitionSurfaceGroup(const InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup);
 

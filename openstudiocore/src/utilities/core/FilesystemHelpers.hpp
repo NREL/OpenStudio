@@ -54,11 +54,11 @@ namespace openstudio {
     /// and returns as std::string
     UTILITIES_API std::string read_as_string(const openstudio::path &t_path);
 
-    /// Returns all file paths (non recursively) in the directory t_path. 
+    /// Returns all file paths (non recursively) in the directory t_path.
     /// Result values are relative to t_path
     UTILITIES_API std::vector<openstudio::path> directory_files(const openstudio::path &t_path);
 
-    /// Returns all file paths (recursively) in the directory t_path. 
+    /// Returns all file paths (recursively) in the directory t_path.
     /// Result values are relative to t_path
     UTILITIES_API std::vector<openstudio::path> recursive_directory_files(const openstudio::path &t_path);
 

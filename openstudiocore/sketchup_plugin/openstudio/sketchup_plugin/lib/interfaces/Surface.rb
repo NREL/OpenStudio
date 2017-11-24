@@ -43,20 +43,20 @@ module OpenStudio
 
     def self.model_object_from_handle(handle)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       model_object = Plugin.model_manager.model_interface.openstudio_model.getSurface(handle)
       if not model_object.empty?
         model_object = model_object.get
       else
-        puts "Surface: model_object is empty for #{handle.class}, #{handle.to_s}, #{Plugin.model_manager.model_interface.openstudio_model}"                    
+        puts "Surface: model_object is empty for #{handle.class}, #{handle.to_s}, #{Plugin.model_manager.model_interface.openstudio_model}"
         model_object = nil
       end
       return model_object
     end
-    
+
     def self.new_from_handle(handle)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       drawing_interface = Surface.new
       model_object = model_object_from_handle(handle)
       drawing_interface.model_object = model_object
@@ -64,13 +64,13 @@ module OpenStudio
       drawing_interface.add_watcher
       return(drawing_interface)
     end
-    
+
     def create_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       # need to get parents transformation
       update_parent_from_entity
-      
+
       model_watcher_enabled = @model_interface.model_watcher.disable
       vertices = vertices_from_polygon(face_polygon)
 
@@ -87,19 +87,19 @@ module OpenStudio
 
     def check_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       if (super)
         surfaceType = @model_object.surfaceType.upcase
         outsideBoundaryCondition = @model_object.outsideBoundaryCondition.upcase
-        
+
         # Check problems with boundary conditions
         adjacentSurface = @model_object.adjacentSurface
         if adjacentSurface.empty?
           if outsideBoundaryCondition == "SURFACE"
             @model_interface.add_error("Warning:  " + @model_object.name.to_s + "\n")
-            @model_interface.add_error("This Surface specifies 'Surface' boundary condition but does not reference another Surface.\n")   
-            @model_interface.add_error("It has been automatically fixed.\n\n")   
-            
+            @model_interface.add_error("This Surface specifies 'Surface' boundary condition but does not reference another Surface.\n")
+            @model_interface.add_error("It has been automatically fixed.\n\n")
+
             watcher_enabled = @watcher.disable
             @model_object.assignDefaultBoundaryCondition
             @model_object.assignDefaultSunExposure
@@ -107,9 +107,9 @@ module OpenStudio
             @watcher.enable if watcher_enabled
           elsif outsideBoundaryCondition.empty?
             @model_interface.add_error("Warning:  " + @model_object.name.to_s + "\n")
-            @model_interface.add_error("This Surface specifies '' boundary condition.\n")   
-            @model_interface.add_error("It has been automatically fixed.\n\n")   
-            
+            @model_interface.add_error("This Surface specifies '' boundary condition.\n")
+            @model_interface.add_error("It has been automatically fixed.\n\n")
+
             watcher_enabled = @watcher.disable
             @model_object.assignDefaultBoundaryCondition
             @model_object.assignDefaultSunExposure
@@ -120,51 +120,51 @@ module OpenStudio
           testSurface = adjacentSurface.get.adjacentSurface
           if (adjacentSurface.get.handle.to_s == @model_object.handle.to_s)
             # this surface points to itself, this is allowable for stories with multipliers
-            
+
             #@model_interface.add_error("Warning:  " + @model_object.name.to_s + "\n")
-            #@model_interface.add_error("This Surface specifies itself as an adjacent surface.\n")   
-            #@model_interface.add_error("It has been automatically fixed.\n\n")   
-            
+            #@model_interface.add_error("This Surface specifies itself as an adjacent surface.\n")
+            #@model_interface.add_error("It has been automatically fixed.\n\n")
+
             #watcher_enabled = @watcher.disable
             #@model_object.resetAdjacentSurface
-            #@watcher.enable if watcher_enabled  
-            
+            #@watcher.enable if watcher_enabled
+
             if outsideBoundaryCondition != "SURFACE"
               @model_interface.add_error("Warning:  " + @model_object.name.to_s + "\n")
-              @model_interface.add_error("This Surface specifies an adjacent surface and that surface specifies this surface, but this boundary condition is not given as 'Surface'.\n")   
-              @model_interface.add_error("It has been automatically fixed.\n\n")   
-              
+              @model_interface.add_error("This Surface specifies an adjacent surface and that surface specifies this surface, but this boundary condition is not given as 'Surface'.\n")
+              @model_interface.add_error("It has been automatically fixed.\n\n")
+
               watcher_enabled = @watcher.disable
               @model_object.setOutsideBoundaryCondition("Surface")
-              @watcher.enable if watcher_enabled  
+              @watcher.enable if watcher_enabled
             end
-            
+
           elsif testSurface.empty? or (testSurface.get.handle.to_s != @model_object.handle.to_s)
             # this surface points to other surface which does not point to this surface
-            
+
             @model_interface.add_error("Warning:  " + @model_object.name.to_s + "\n")
-            @model_interface.add_error("This Surface specifies an adjacent surface but that surface does not specify this surface.\n")   
-            @model_interface.add_error("It has been automatically fixed.\n\n")   
-            
+            @model_interface.add_error("This Surface specifies an adjacent surface but that surface does not specify this surface.\n")
+            @model_interface.add_error("It has been automatically fixed.\n\n")
+
             watcher_enabled = @watcher.disable
             if not @model_object.setAdjacentSurface(adjacentSurface.get)
               @model_object.resetAdjacentSurface
             end
-            @watcher.enable if watcher_enabled  
-            
+            @watcher.enable if watcher_enabled
+
           elsif outsideBoundaryCondition != "SURFACE"
             # this surface points to other surface which does point to this surface
-            
+
             @model_interface.add_error("Warning:  " + @model_object.name.to_s + "\n")
-            @model_interface.add_error("This Surface specifies an adjacent surface and that surface specifies this surface, but this boundary condition is not given as 'Surface'.\n")   
-            @model_interface.add_error("It has been automatically fixed.\n\n")   
-            
+            @model_interface.add_error("This Surface specifies an adjacent surface and that surface specifies this surface, but this boundary condition is not given as 'Surface'.\n")
+            @model_interface.add_error("It has been automatically fixed.\n\n")
+
             watcher_enabled = @watcher.disable
             @model_object.setOutsideBoundaryCondition("Surface")
-            @watcher.enable if watcher_enabled  
+            @watcher.enable if watcher_enabled
           end
         end
-        
+
         # Check for upside-down floors, roofs, or ceilings
         dot_product = model_object_polygon.normal % Geom::Vector3d.new(0, 0, 1)
         if (surfaceType == "FLOOR")
@@ -207,7 +207,7 @@ module OpenStudio
 
 
     # Updates the ModelObject with new information from the SketchUp entity.
-    def update_model_object 
+    def update_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       super  # PlanarSurface superclass updates the vertices
 
@@ -227,7 +227,7 @@ module OpenStudio
     # Returns the parent drawing interface according to the input object.
     def parent_from_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       parent = nil
       if (@model_object)
         #puts "#{@model_object}, #{@model_object}"
@@ -240,23 +240,23 @@ module OpenStudio
       else
         #puts "@model_object is nil"
       end
-      
+
       return(parent)
     end
 
     # Deletes the model object and marks the drawing interface when the SketchUp entity is erased.
     def delete_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       # duplicates code in Surface::remove
       if not @model_object.adjacentSurface.empty?
         @model_object.resetAdjacentSurface
       end
-      
+
       super
     end
-    
-    
+
+
 ##### Begin override methods for the entity #####
 
 
@@ -265,12 +265,12 @@ module OpenStudio
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       super
     end
-    
+
     # Undelete happens when an entity is restored after an Undo event.
-    def on_undelete_entity(entity)  
+    def on_undelete_entity(entity)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       super
-      
+
       # there may be subsurfaces that need to be re-parented to this
       if parent
         parent.update_model_object
@@ -282,10 +282,10 @@ module OpenStudio
 
     def paint_surface_type(info=nil)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       if @model_object.isAirWall
         @entity.material = @model_interface.materials_interface.air_wall
-        @entity.back_material = @model_interface.materials_interface.air_wall      
+        @entity.back_material = @model_interface.materials_interface.air_wall
       else
         surfaceType = @model_object.surfaceType.upcase
         if (surfaceType == "FLOOR")
@@ -299,13 +299,13 @@ module OpenStudio
           @entity.back_material = @model_interface.materials_interface.wall_int
         end
       end
-      
-      if @model_object.solarCollectors.size > 0 
+
+      if @model_object.solarCollectors.size > 0
         @entity.material = @model_interface.materials_interface.solar_collector
-      elsif @model_object.generatorPhotovoltaics.size > 0 
+      elsif @model_object.generatorPhotovoltaics.size > 0
         @entity.material = @model_interface.materials_interface.photovoltaic
-      end      
-      
+      end
+
     end
 
     def paint_boundary(info=nil)
@@ -379,16 +379,16 @@ module OpenStudio
     # Purpose is to remove collinear points and vertices of sub surfaces (overridden in Surface)
     def face_polygon
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       if (valid_entity?)
         # Get list of children based on actual faces that share vertices with the base face.
         # This is more dynamic than looking at @children which may not be up-to-date yet.
         child_faces = []
-        
+
         #puts "face_polygon = #{self}, #{@entity}"
-        
+
         # DLM: detect_base_face can be expensive, do we have to search all_connected?  is there a way to cache the result of detect_base_face?
-        for face in @entity.all_connected 
+        for face in @entity.all_connected
           if face.class == Sketchup::Face
             face_normal = face.normal
             face_points = face.full_polygon.reduce.points
@@ -398,7 +398,7 @@ module OpenStudio
             end
           end
         end
-        
+
         #puts "child_faces = #{child_faces}"
 
         reduced_polygon = Geom::Polygon.new(@entity.full_polygon.outer_loop.reduce)  # Removes collinear points
@@ -435,23 +435,23 @@ module OpenStudio
 
 
 ##### Begin new methods for the interface #####
-    
+
     def exterior?
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       return (@model_object.outsideBoundaryCondition == "OUTDOORS" or @model_object.isGroundSurface)
     end
 
     def in_selection?(selection)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       return (selection.contains?(@entity) or selection.contains?(@parent.entity))
     end
-    
+
 =begin TODO put in model
     # area in in^2
     def glazing_area
-      area = 0.0 
+      area = 0.0
       for child in @children
         if (child.class == SubSurface and (child.surface_type.upcase == "WINDOW" or child.surface_type.upcase == "GLASSDOOR"))
           area += child.area # includes multiplier
@@ -480,7 +480,7 @@ module OpenStudio
         @model_object.setString(6, "")
         @model_object.setString(7, "SunExposed")
         @model_object.setString(8, "WindExposed")
- 
+
         #if render set to by boundary then change materials to surface
         if (Plugin.model_manager.model_interface.materials_interface.rendering_mode == 2)
             #apply material to front and back face

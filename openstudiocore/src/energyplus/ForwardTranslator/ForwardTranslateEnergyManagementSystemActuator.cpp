@@ -72,11 +72,11 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemAct
   else {
     idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, m.nameString());
     idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
-    
+
   }
-  
+
   idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
-  
+
   return idfObject;
 }
 

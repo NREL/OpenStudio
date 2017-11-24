@@ -77,7 +77,7 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
- 
+
     //@}
    private:
 

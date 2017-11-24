@@ -35,7 +35,7 @@ module OpenStudio
 
     def initialize
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       super
       @container_class = ShadingSurfaceGroup
     end
@@ -44,7 +44,7 @@ module OpenStudio
 
     def self.model_object_from_handle(handle)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       model_object = Plugin.model_manager.model_interface.openstudio_model.getShadingSurface(handle)
       if not model_object.empty?
         model_object = model_object.get
@@ -54,10 +54,10 @@ module OpenStudio
       end
       return model_object
     end
-    
+
     def self.new_from_handle(handle)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       drawing_interface = ShadingSurface.new
       model_object = model_object_from_handle(handle)
       drawing_interface.model_object = model_object
@@ -68,10 +68,10 @@ module OpenStudio
 
     def create_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       # need to get parents transformation
       update_parent_from_entity
-      
+
       model_watcher_enabled = @model_interface.model_watcher.disable
       vertices = vertices_from_polygon(face_polygon)
 
@@ -82,13 +82,13 @@ module OpenStudio
         Plugin.log(Error, "Could not create ShadingSurface for vertices #{vertices}")
         return nil
       end
-      
+
       super
     end
 
     def check_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       if (super)
         # Check for coincident surfaces (check other surfaces in group)
         return(true)
@@ -101,7 +101,7 @@ module OpenStudio
     def update_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       super  # PlanarSurface superclass updates the vertices
-      
+
       if (valid_entity?)
         if (@parent.class == ShadingSurfaceGroup)
           watcher_enabled = disable_watcher
@@ -117,7 +117,7 @@ module OpenStudio
     # Returns the parent drawing interface according to the input object.
     def parent_from_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       parent = nil
       if (@model_object)
         shadingGroup = @model_object.shadingSurfaceGroup
@@ -139,7 +139,7 @@ module OpenStudio
 
     def in_selection?(selection)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       if @parent.parent
         return (selection.contains?(@entity) or selection.contains?(@parent.entity) or selection.contains?(@parent.parent.entity))
       else
@@ -149,7 +149,7 @@ module OpenStudio
 
     def paint_surface_type(info=nil)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       shading_surface_type = @parent.shading_surface_type.upcase
       if (shading_surface_type == "SITE")
         @entity.material = @model_interface.materials_interface.site_shading
@@ -159,14 +159,14 @@ module OpenStudio
         @entity.back_material = @model_interface.materials_interface.building_shading_back
       elsif (shading_surface_type == "SPACE")
         @entity.material = @model_interface.materials_interface.space_shading
-        @entity.back_material = @model_interface.materials_interface.space_shading_back          
+        @entity.back_material = @model_interface.materials_interface.space_shading_back
       end
-      
-      if @model_object.solarCollectors.size > 0 
+
+      if @model_object.solarCollectors.size > 0
         @entity.material = @model_interface.materials_interface.solar_collector
-      elsif @model_object.generatorPhotovoltaics.size > 0 
+      elsif @model_object.generatorPhotovoltaics.size > 0
         @entity.material = @model_interface.materials_interface.photovoltaic
-      end      
+      end
     end
 
 

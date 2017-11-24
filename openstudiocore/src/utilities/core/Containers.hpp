@@ -59,7 +59,7 @@ typedef std::pair<std::string,std::string> StringPair;
 UTILITIES_API std::vector<std::string> eraseEmptyElements(const std::vector<std::string>& sv);
 
 /** Helper function to cast a whole vector of objects. \relates IdfObject */
-template<typename T, typename U> 
+template<typename T, typename U>
 std::vector<T> castVector(const std::vector<U>& objects) {
   std::vector<T> result;
   for (auto & object : objects) {

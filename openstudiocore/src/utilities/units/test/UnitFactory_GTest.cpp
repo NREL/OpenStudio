@@ -106,7 +106,7 @@ TEST_F(UnitsFixture,UnitFactory_ParseStandardUnits)
   OptionalFahrenheitUnit TF = T->optionalCast<FahrenheitUnit>();
   ASSERT_TRUE(TC);
   ASSERT_FALSE(TF);
-  
+
   T = UnitFactory::instance().createUnit("F");
   TC = T->optionalCast<CelsiusUnit>();
   TF = T->optionalCast<FahrenheitUnit>();
@@ -122,7 +122,7 @@ TEST_F(UnitsFixture,UnitFactory_TestForAndReturnUnitObjects) {
   ASSERT_TRUE(openstudio::createUnit("s",UnitSystem::IP)->system() == UnitSystem::IP);
   ASSERT_TRUE(openstudio::getSystem("kg*m/s^2") == UnitSystem::SI);
   ASSERT_TRUE(openstudio::getSystem("ft") == UnitSystem::IP);
-  
+
   OptionalUnit f1 = openstudio::createUnit("kg*m/s^2");
   ASSERT_TRUE(f1);
   ASSERT_NO_THROW(f1->cast<SIUnit>());
@@ -207,7 +207,7 @@ TEST_F(UnitsFixture,UnitFactory_KitchenSink) {
   EXPECT_EQ(-3,u.baseUnitExponent("s"));
   EXPECT_EQ(-1,u.baseUnitExponent("K"));
 
-  // odd bug observed. test added so can fix it. 
+  // odd bug observed. test added so can fix it.
   std::string unitString = openstudio::extractUnitString("J/J");
   u = openstudio::createUnit(unitString,UnitSystem::SI)->cast<SIUnit>();
   EXPECT_EQ("",u.standardString(false));

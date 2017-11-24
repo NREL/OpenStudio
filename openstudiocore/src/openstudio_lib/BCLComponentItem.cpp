@@ -46,7 +46,7 @@ OSItemId bclComponentToItemId(const openstudio::BCLComponent & component)
   return itemId;
 }
 
-BCLComponentItem::BCLComponentItem( const BCLComponent & component, 
+BCLComponentItem::BCLComponentItem( const BCLComponent & component,
                                     OSItemType type,
                                     QWidget * parent )
   : OSItem(bclComponentToItemId(component),type,parent),

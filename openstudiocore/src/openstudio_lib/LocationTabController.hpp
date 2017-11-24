@@ -82,7 +82,7 @@ private:
 private slots:
 
   virtual void setSubTab(int index) override;
- 
+
 };
 
 } // openstudio

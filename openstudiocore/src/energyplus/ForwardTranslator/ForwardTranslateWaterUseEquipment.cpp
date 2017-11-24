@@ -53,7 +53,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateWaterUseEquipment( 
+boost::optional<IdfObject> ForwardTranslator::translateWaterUseEquipment(
     WaterUseEquipment & modelObject)
 {
   boost::optional<std::string> s;
@@ -78,15 +78,15 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterUseEquipment(
   }
 
   // EndUseSubcategory
-  
-  s = definition.endUseSubcategory(); 
+
+  s = definition.endUseSubcategory();
   if( s )
   {
     idfObject.setString(WaterUse_EquipmentFields::EndUseSubcategory,s.get());
   }
 
   // PeakFlowRate
-  
+
   value = definition.peakFlowRate();
   if( value )
   {
@@ -94,7 +94,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterUseEquipment(
   }
 
   // FlowRateFractionScheduleName
-  
+
   if( boost::optional<Schedule> s = modelObject.flowRateFractionSchedule() )
   {
     translateAndMapModelObject(s.get());
@@ -103,7 +103,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterUseEquipment(
   }
 
   // TargetTemperatureScheduleName
-  
+
   if( boost::optional<Schedule> s = definition.targetTemperatureSchedule() )
   {
     translateAndMapModelObject(s.get());
@@ -124,7 +124,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterUseEquipment(
   }
 
   // SensibleFractionScheduleName
-  
+
   if( boost::optional<Schedule> s = definition.sensibleFractionSchedule() )
   {
     translateAndMapModelObject(s.get());
@@ -133,7 +133,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterUseEquipment(
   }
 
   // LatentFractionScheduleName
-  
+
   if( boost::optional<Schedule> s = definition.latentFractionSchedule() )
   {
     translateAndMapModelObject(s.get());

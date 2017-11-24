@@ -41,20 +41,20 @@
 #include "../AirLoopHVACZoneSplitter.hpp"
 #include "../ThermalZone.hpp"
 
-using namespace openstudio::model; 
+using namespace openstudio::model;
 
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_DefaultConstructorWithCoilHeatingElectric)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model model;
     Schedule schedule = model.alwaysOnDiscreteSchedule();
     CoilHeatingElectric coil = CoilHeatingElectric(model,schedule);
     AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -63,14 +63,14 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_DefaultConstructo
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model model;
     Schedule schedule = model.alwaysOnDiscreteSchedule();
     CoilHeatingGas coil = CoilHeatingGas(model,schedule);
     AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -79,20 +79,20 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_DefaultConstructo
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model model;
     Schedule schedule = model.alwaysOnDiscreteSchedule();
     CoilHeatingWater coil = CoilHeatingWater(model,schedule);
     AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
 TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeReheat_addToNode) {
-  Model m; 
+  Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   CoilHeatingElectric coil(m,s);
   AirTerminalSingleDuctConstantVolumeReheat testObject(m,s,coil);
@@ -141,9 +141,9 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddToNodeWithTher
 
   EXPECT_TRUE(testObject.addToNode(inletNode));
   EXPECT_EQ((unsigned)9, airLoop.demandComponents().size());
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddAirTerminalWaterHeatingCoilToPlant)
@@ -167,9 +167,9 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddAirTerminalWat
   EXPECT_NE((unsigned)7, airLoop.demandComponents().size());
   EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
   EXPECT_NE((unsigned)5, plantLoop.demandComponents().size());
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_RemoveAirTerminalWaterHeatingCoilFromPlant)
@@ -194,9 +194,9 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_RemoveAirTerminal
   EXPECT_NE((unsigned)7, airLoop.demandComponents().size());
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
   EXPECT_NE((unsigned)7, plantLoop.demandComponents().size());
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddObjectByAirLoopAddBranchForZoneWithThermalZone)
@@ -212,9 +212,9 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddObjectByAirLoo
   EXPECT_TRUE(airLoop.addBranchForZone(thermalZone, testObject));
   EXPECT_EQ((unsigned)9, airLoop.demandComponents().size());
   EXPECT_NE((unsigned)7, airLoop.demandComponents().size());
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddObjectByAirLoopAddBranchForHVACComponent)
@@ -229,9 +229,9 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddObjectByAirLoo
   EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObject));
   EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());
   EXPECT_NE((unsigned)9, airLoop.demandComponents().size());
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddObjectByAirLoopAddBranchForHVACComponentWithThermalZone)
@@ -248,9 +248,9 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddObjectByAirLoo
 
   EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObject));
   EXPECT_EQ((unsigned)10, airLoop.demandComponents().size());
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddToNodeTwoSameObjects)
@@ -266,9 +266,9 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddToNodeTwoSameO
   testObject.addToNode(inletNode);
   inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
   EXPECT_FALSE(testObject.addToNode(inletNode));
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_IsRemovable)
@@ -391,7 +391,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_SetNewReheatCoil)
   EXPECT_TRUE(testObject.setReheatCoil(coilWater));
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MaximumAirFlowRate) 
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MaximumAirFlowRate)
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
@@ -415,7 +415,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MaximumAirFlowRat
   EXPECT_TRUE(testObject.isMaximumAirFlowRateAutosized());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MaximumHotWaterorSteamFlowRate) 
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MaximumHotWaterorSteamFlowRate)
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
@@ -439,7 +439,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MaximumHotWateror
   EXPECT_TRUE(testObject.isMaximumHotWaterorSteamFlowRateAutosized());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MinimumHotWaterorSteamFlowRate) 
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MinimumHotWaterorSteamFlowRate)
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
@@ -459,7 +459,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MinimumHotWateror
   EXPECT_DOUBLE_EQ(0.0, testObject.minimumHotWaterorSteamFlowRate());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_ConvergenceTolerance) 
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_ConvergenceTolerance)
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
@@ -481,7 +481,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_ConvergenceTolera
   EXPECT_DOUBLE_EQ(0.001, testObject.convergenceTolerance());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MaximumReheatAirTemperature) 
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MaximumReheatAirTemperature)
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
@@ -492,7 +492,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MaximumReheatAirT
   EXPECT_DOUBLE_EQ(999.0, testObject.maximumReheatAirTemperature());
 
   EXPECT_FALSE(testObject.setMaximumReheatAirTemperature(0.0));
-  
+
   EXPECT_TRUE(testObject.setMaximumReheatAirTemperature(35.0));
   EXPECT_DOUBLE_EQ(35.0, testObject.maximumReheatAirTemperature());
 

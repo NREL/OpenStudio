@@ -44,13 +44,13 @@ namespace detail{
 
 /** LifeCycleCost derives from ModelObject and is an interface to the OpenStudio IDD object named "OS:LifeCycleCost".
  *
- *  LifeCycleCost objects are used to add costs related to building construction and operation. 
+ *  LifeCycleCost objects are used to add costs related to building construction and operation.
  *  The LifeCycleCost's lineItemType will be set based on the type of ModelObject.
  */
 class MODEL_API LifeCycleCost : public ModelObject {
 
 public:
-    
+
   /** @name Constructors and Destructors */
   //@{
 
@@ -102,7 +102,7 @@ public:
   int monthsFromStart() const;
   bool isMonthsFromStartDefaulted() const;
 
-  /// Repeat period years is added to repeat period months to give the interval at which this cost reccurs. 
+  /// Repeat period years is added to repeat period months to give the interval at which this cost reccurs.
   /// If both repeat period years and repeat period months are zero (default), this cost does not recurr.
   int repeatPeriodYears() const;
   bool isRepeatPeriodYearsDefaulted() const;

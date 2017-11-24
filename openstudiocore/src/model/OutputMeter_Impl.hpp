@@ -36,7 +36,7 @@
 #include "../utilities/core/StaticInitializer.hpp"
 
 namespace openstudio {
-  
+
 class EndUseType;
 class FuelType;
 class InstallLocationType;

@@ -71,7 +71,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemInt
   if (s) {
     idfObject.setString(EnergyManagementSystem_InternalVariableFields::InternalDataType, s.get());
   }
- 
+
   return idfObject;
 }
 

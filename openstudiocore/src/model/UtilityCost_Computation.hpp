@@ -42,11 +42,11 @@ namespace detail{
 
 /** UtilityCost_Computation derives from ParentObject and is an interface to the OpenStudio IDD object named "OS:UtilityCost:Computation".
  *
- *  UtilityCost_Computation lists a series of computations that are used to perform the bill calculation. 
+ *  UtilityCost_Computation lists a series of computations that are used to perform the bill calculation.
  *  This object is only used for complex tariffs that cannot be modeled any other way.
  */
 class MODEL_API UtilityCost_Computation : public ParentObject{
- 
+
  public:
 
   /** @name Constructors and Destructors */

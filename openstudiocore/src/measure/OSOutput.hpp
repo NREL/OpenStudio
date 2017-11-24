@@ -106,7 +106,7 @@ class MEASURE_API OSOutput {
   /** Returns the units of this output. */
   boost::optional<std::string> units() const;
 
-  /** Returns true if this output's properties can changed based on the specific model used in the 
+  /** Returns true if this output's properties can changed based on the specific model used in the
    *  measure. */
   bool modelDependent() const;
 
@@ -140,9 +140,9 @@ class MEASURE_API OSOutput {
   std::string m_name;
   std::string m_displayName;
   std::string m_shortName;
-  boost::optional<std::string> m_description; 
+  boost::optional<std::string> m_description;
   OSOutputType m_type;
-  boost::optional<std::string> m_units; 
+  boost::optional<std::string> m_units;
   bool m_modelDependent;
 };
 

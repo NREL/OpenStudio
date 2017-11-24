@@ -62,7 +62,7 @@ class MODEL_API CoilCoolingCooledBeam : public StraightComponent {
   //unsigned inletPort();
 
   //unsigned outletPort();
-  
+
   double coilSurfaceAreaperCoilLength() const;
 
   bool isCoilSurfaceAreaperCoilLengthDefaulted() const;

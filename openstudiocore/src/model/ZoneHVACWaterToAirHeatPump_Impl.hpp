@@ -68,7 +68,7 @@ namespace detail {
     //@{
 
     virtual ModelObject clone(Model model) const override;
-   
+
     virtual std::vector<IdfObject> remove() override;
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
@@ -161,7 +161,7 @@ namespace detail {
     bool setSupplyAirFlowRateDuringCoolingOperation(boost::optional<double> supplyAirFlowRateDuringCoolingOperation);
 
     bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
-    
+
     void resetSupplyAirFlowRateDuringCoolingOperation();
 
     void autosizeSupplyAirFlowRateDuringCoolingOperation();
@@ -185,9 +185,9 @@ namespace detail {
     bool setOutdoorAirFlowRateDuringCoolingOperation(boost::optional<double> outdoorAirFlowRateDuringCoolingOperation);
 
     bool setOutdoorAirFlowRateDuringCoolingOperation(double outdoorAirFlowRateDuringCoolingOperation);
-    
+
     void resetOutdoorAirFlowRateDuringCoolingOperation();
-    
+
     void autosizeOutdoorAirFlowRateDuringCoolingOperation();
 
     bool setOutdoorAirFlowRateDuringHeatingOperation(boost::optional<double> outdoorAirFlowRateDuringHeatingOperation);
@@ -243,7 +243,7 @@ namespace detail {
     bool setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
 
     void resetMaximumSupplyAirTemperaturefromSupplementalHeater();
-    
+
     void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 
     bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(boost::optional<double> maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);

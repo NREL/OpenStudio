@@ -43,8 +43,8 @@ namespace detail {
     SkyTemperature_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    SkyTemperature_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                        Model_Impl* model, 
+    SkyTemperature_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                        Model_Impl* model,
                         bool keepHandle);
 
     // clone copy constructor
@@ -63,7 +63,7 @@ namespace detail {
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
-  
+
    private:
 
     REGISTER_LOGGER("openstudio.model.SkyTemperature");

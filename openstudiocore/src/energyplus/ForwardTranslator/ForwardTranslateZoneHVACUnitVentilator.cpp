@@ -163,7 +163,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitVentilator( Z
       }
       else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_OnOff )
       {
-        
+
         _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName,mixedAirNodeName );
         _supplyAirFan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName );
       }

@@ -46,7 +46,7 @@ namespace detail{
  *  This is commonly used for utilities which separate customers into groups such as "low demand", "medium demand", and "high demand".
  */
 class MODEL_API UtilityCost_Qualify : public ParentObject{
- 
+
 public:
 
   /** @name Constructors and Destructors */
@@ -84,17 +84,17 @@ public:
   void setName(const std::string& name);
 
   void setTariffName(const std::string& tariffName);
-  
+
   void setVariableName(const std::string& variableName);
 
   void setQualifyType(const std::string& qualifyType);
 
   void setThresholdValueOrVariableName(const std::string& thresholdValueOrVariableName);
-  
+
   void setSeason(const std::string& season);
 
   void setThresholdTest(const std::string& thresholdTest);
-  
+
   void setNumberOfMonths(int numberOfMonths);
 
   //@}

@@ -61,7 +61,7 @@ class HorizontalTabWidget : public QWidget
   void setCurrentId(int id);
 
   void setCurrentWidget(QWidget * widget);
-  
+
   protected:
 
   void paintEvent( QPaintEvent * event ) override;
@@ -86,7 +86,7 @@ class HorizontalTabWidget : public QWidget
 
   std::vector<QString> m_unSelectedPixmaps;
 
-  std::vector<QPushButton *> m_tabButtons; 
+  std::vector<QPushButton *> m_tabButtons;
 
   std::vector<int> m_ids;
 

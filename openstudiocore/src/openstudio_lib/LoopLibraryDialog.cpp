@@ -179,7 +179,7 @@ void LoopLibraryDialog::newItem( const AddToModelEnum & addToModelEnum,
 LoopItemView::LoopItemView( const AddToModelEnum & addToModelEnum,
                             const QString & detailedText,
                             const QPixmap & pixmap,
-                            QWidget * parent ) 
+                            QWidget * parent )
   : QWidget( parent ),
     m_addToModelEnum( addToModelEnum ),
     m_detailedText( detailedText ),

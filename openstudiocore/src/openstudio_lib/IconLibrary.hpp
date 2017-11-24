@@ -62,15 +62,15 @@ public:
   const QPixmap* findMiniIcon( unsigned int val ) const;
 
 protected:
-  
+
 private:
-  
+
   IconLibrary();
   IconLibrary(const IconLibrary&);
   IconLibrary& operator=(const IconLibrary&);
-  
+
   static IconLibrary* s_instance;
-  
+
   std::map<unsigned int, QPixmap*> m_icons;
   std::map<unsigned int, QPixmap*> m_miniIcons;
 };

@@ -106,7 +106,7 @@ void ConstructionObjectVectorController::onDrop(const OSItemId& itemId)
   if(m_modelObject){
     boost::optional<model::Material> material = this->addToModel<model::Material>(itemId);
     if(!material) return;
-    
+
     model::LayeredConstruction construction = m_modelObject->cast<model::LayeredConstruction>();
     std::vector<model::Material> layers =  construction.layers();
     if(layers.size()){
@@ -122,7 +122,7 @@ void ConstructionObjectVectorController::onDrop(const OSItemId& itemId)
 
       if(existingLayerType == ConstructionObjectVectorController::AIRWALL){
         // Only 1 layer allowed for AirWall
-        QMessageBox::warning(this->parentWidget(), 
+        QMessageBox::warning(this->parentWidget(),
           "Error Adding Layer",
           "Only 1 layer allowed for an AirWall.",
           QMessageBox::Ok);
@@ -130,7 +130,7 @@ void ConstructionObjectVectorController::onDrop(const OSItemId& itemId)
       }
       else if(newLayerType != existingLayerType){
         // New layer type must match existing layer type
-        QMessageBox::warning(this->parentWidget(), 
+        QMessageBox::warning(this->parentWidget(),
           "Error Adding Layer",
           "New layer type must match existing layer type.",
           QMessageBox::Ok);

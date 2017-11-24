@@ -58,7 +58,7 @@ TEST_F(IdfFixture,WorkspaceWatcher_ObjectChanges)
   EXPECT_FALSE(watcher.objectRemoved());
   watcher.clearState();
   EXPECT_FALSE(watcher.dirty());
-  
+
   EXPECT_TRUE(eg.setDouble(0,4.3));
   EXPECT_TRUE(watcher.dirty());
   EXPECT_FALSE(watcher.objectAdded());

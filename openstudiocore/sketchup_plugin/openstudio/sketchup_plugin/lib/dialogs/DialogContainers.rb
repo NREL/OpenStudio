@@ -30,7 +30,7 @@ module OpenStudio
 
   # Abstract superclass for WindowContainer and FrameContainer
   # Basically a wrapper for UI::WebDialog, but enables dialog objects to be inserted into HTML frames.
-  class DialogContainer  
+  class DialogContainer
 
     attr_accessor :dialog, :web_dialog, :width, :height
 
@@ -43,7 +43,7 @@ module OpenStudio
     def set_file(path)
       @web_dialog.set_file(path, nil)
     end
-    
+
 
 # change name to execute_script for consistency...
     def execute_function(function_call)
@@ -54,22 +54,22 @@ module OpenStudio
     def update
       @dialog.update
     end
-  
-  
+
+
     def show
       # Not sure what FrameContainers can do with this.
     end
-    
-    
+
+
     def close
       # Not sure what FrameContainers can do with this.
     end
-  
+
   end
-  
-  
+
+
   class WindowContainer < DialogContainer
-  
+
     def initialize(title, width, height, left, top, resizable = true, scrollable = true)
       @width = width
       @height = height
@@ -112,7 +112,7 @@ module OpenStudio
       end
     end
 
-  
+
     def show_modal
       @web_dialog.show_modal
     end
@@ -121,13 +121,13 @@ module OpenStudio
     def close
       @web_dialog.close
     end
-  
+
   end
-  
-  
+
+
   class FrameContainer < DialogContainer
 
-    def initialize(parent_container, name)      
+    def initialize(parent_container, name)
       @dialog = nil
       @web_dialog = parent_container.web_dialog
       @name = name
@@ -136,14 +136,14 @@ module OpenStudio
 
     def set_file(path)
       # This method is nearly identical to the method 'set_element_source' in the Dialog class
-      
+
       if (@name.nil?)
         puts "FrameContainer:  @name is nil in set_file"
       else
         if (path.nil?)
           path = ""
         end
-        
+
         @web_dialog.execute_script("setElementSource('" + @name + "', '" + path + "')")
       end
     end
@@ -153,8 +153,8 @@ module OpenStudio
       # The function is called in the context of the enclosing frame.
       @web_dialog.execute_script(@name + "." + function_call)
     end
-  
+
   end
 
-  
+
 end

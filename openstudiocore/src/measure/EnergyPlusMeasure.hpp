@@ -77,7 +77,7 @@ class MEASURE_API EnergyPlusMeasure : public OSMeasure {
                    const std::map<std::string, OSArgument>& user_arguments) const;
 
   //@}
- 
+
  protected:
    EnergyPlusMeasure() {}
 

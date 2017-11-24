@@ -40,13 +40,13 @@ namespace model {
 namespace detail {
 
   class MODEL_API ComponentData_Impl : public ModelObject_Impl {
-    
 
-    
-    
 
-    
-    
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{

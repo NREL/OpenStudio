@@ -43,7 +43,7 @@ namespace openstudio{
   *  value of any argument, it simply declares that the BCLMeasure has this argument.**/
   class UTILITIES_API BCLMeasureArgument {
   public:
-    
+
     // constructor from xml, throws if required arguments are missing
     BCLMeasureArgument(const QDomElement& element);
 

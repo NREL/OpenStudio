@@ -104,7 +104,7 @@ public:
 class RemoveButton : public QPushButton
 {
   Q_OBJECT
-  
+
   public:
 
   RemoveButton(QWidget * parent = nullptr);
@@ -114,7 +114,7 @@ class RemoveButton : public QPushButton
 class SofterRemoveButton : public QPushButton
 {
   Q_OBJECT
-  
+
   public:
 
   SofterRemoveButton(QWidget * parent = nullptr);
@@ -125,7 +125,7 @@ class SofterRemoveButton : public QPushButton
 class AddScriptButton : public QPushButton
 {
   Q_OBJECT
-  
+
   public:
 
   AddScriptButton(QWidget * parent = nullptr);
@@ -145,9 +145,9 @@ class DuplicateButton : public QPushButton
 class SofterDuplicateButton : public QPushButton
 {
   Q_OBJECT
- 
+
  public:
-  
+
   SofterDuplicateButton(QWidget * parent = nullptr);
   virtual ~SofterDuplicateButton() {}
 };

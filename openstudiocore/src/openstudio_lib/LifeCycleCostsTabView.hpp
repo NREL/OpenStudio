@@ -77,7 +77,7 @@ private:
   boost::optional<model::LifeCycleCostParameters> m_lifeCycleCostParameters;
 
   OSIntegerEdit2 * m_analysisLengthIntegerEdit;
-  
+
   OSDoubleEdit2 * m_realDiscountRateDoubleEdit;
 
   OSDoubleEdit2 * m_electricityDoubleEdit;

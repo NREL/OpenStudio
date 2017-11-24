@@ -1506,7 +1506,7 @@ void HVACLayoutController::updateLater()
   QTimer::singleShot(0,this,SLOT(update()));
 }
 
-SystemAvailabilityVectorController::SystemAvailabilityVectorController() 
+SystemAvailabilityVectorController::SystemAvailabilityVectorController()
   : ModelObjectVectorController()
 {
   m_reportItemsMutex = new QMutex();

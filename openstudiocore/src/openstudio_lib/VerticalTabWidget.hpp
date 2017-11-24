@@ -93,7 +93,7 @@ class VerticalTabWidget : public QWidget
 
   std::vector<QString> m_disabledPixmaps;
 
-  std::vector<QPushButton *> m_tabButtons; 
+  std::vector<QPushButton *> m_tabButtons;
 
   std::vector<int> m_ids;
 

@@ -68,7 +68,7 @@ boost::optional<IdfObject> ForwardTranslator::translateDaylightingDeviceShelf( m
     return boost::none;
   }
 
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::DaylightingDevice_Shelf, 
+  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::DaylightingDevice_Shelf,
                                                        modelObject);
 
   idfObject.setString(DaylightingDevice_ShelfFields::WindowName, window.name().get());
@@ -96,7 +96,7 @@ boost::optional<IdfObject> ForwardTranslator::translateDaylightingDeviceShelf( m
     }
     OS_ASSERT(construction);
     newSurface.setConstruction(*construction);
-    
+
     boost::optional<IdfObject> newSurfaceObject = translateAndMapModelObject(newSurface);
     if (newSurfaceObject){
       idfObject.setString(DaylightingDevice_ShelfFields::InsideShelfName, newSurfaceObject->name().get());
@@ -106,7 +106,7 @@ boost::optional<IdfObject> ForwardTranslator::translateDaylightingDeviceShelf( m
   if (outsideShelf){
 
     idfObject.setString(DaylightingDevice_ShelfFields::OutsideShelfName, outsideShelf->name().get());
-    
+
     boost::optional<ConstructionBase> construction = outsideShelf->construction();
     if (!construction){
       Model t_model = modelObject.model();

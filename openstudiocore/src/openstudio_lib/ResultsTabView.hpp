@@ -85,7 +85,7 @@ namespace openstudio {
       QProgressBar * m_progressBar;
       QPushButton * m_refreshBtn;
       QPushButton * m_openDViewBtn;
-      
+
       openstudio::path m_sqlFilePath;
       openstudio::path m_radianceResultsPath;
 

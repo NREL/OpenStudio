@@ -45,7 +45,7 @@ TEST_F(ModelFixture, PhotovoltaicPerformanceSimple_Instantiate) {
 
   PhotovoltaicPerformanceSimple photovoltaicPerformanceSimple(model);
 
-  EXPECT_EQ("Fixed", photovoltaicPerformanceSimple.conversionEfficiencyInputMode());  
+  EXPECT_EQ("Fixed", photovoltaicPerformanceSimple.conversionEfficiencyInputMode());
   EXPECT_TRUE(photovoltaicPerformanceSimple.fixedEfficiency());
   EXPECT_EQ(0.12, photovoltaicPerformanceSimple.fixedEfficiency().get());
   EXPECT_EQ(photovoltaicPerformanceSimple.fractionOfSurfaceAreaWithActiveSolarCells(),0.89);

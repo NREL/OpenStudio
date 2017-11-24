@@ -42,13 +42,13 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateWindowPropertyFrameAndDivider( 
+boost::optional<IdfObject> ForwardTranslator::translateWindowPropertyFrameAndDivider(
   WindowPropertyFrameAndDivider & modelObject)
 {
   IdfObject idfObject(IddObjectType::WindowProperty_FrameAndDivider);
   m_idfObjects.push_back(idfObject);
 
-  // DLM: do we need to make sure this is unique? not empty?  
+  // DLM: do we need to make sure this is unique? not empty?
   boost::optional<std::string> s = modelObject.name();
   if (s){
     idfObject.setName(*s);

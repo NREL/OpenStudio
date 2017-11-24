@@ -63,7 +63,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRunPeriod( RunPeriod& mod
   model::YearDescription yd = modelObject.model().getUniqueModelObject<model::YearDescription>();
   Date jan1 = yd.makeDate(1,1);
 
-  // ETH@20121219 - This always hard codes a day of the week to start on, even if the user 
+  // ETH@20121219 - This always hard codes a day of the week to start on, even if the user
   // specified "UseWeatherFile". It is important to keep it this way for now, since we are
   // not parsing the start day out of the weather file, and we are hard-setting the day schedules
   // based on the settings/assumptions of YearDescription (assumes 2009 if 'UseWeatherFile').
@@ -93,7 +93,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRunPeriod( RunPeriod& mod
       ;
   }
 
-  // ETH@20121219 - We don't currently support holidays. This makes sure that default day schedules 
+  // ETH@20121219 - We don't currently support holidays. This makes sure that default day schedules
   // do not get used unintentionally.
   // if( modelObject.getUseWeatherFileHolidays() )
   // {
@@ -105,7 +105,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRunPeriod( RunPeriod& mod
   // }
 
   // ETH@20121219 - We also do not support pulling the daylight savings period in from the weather
-  // file. Explicit RunPeriodControl:DaylightSavingTime objects already override this field, so 
+  // file. Explicit RunPeriodControl:DaylightSavingTime objects already override this field, so
   // making this change only affects files without such objects (and likely doesn't change results
   // for those since weather files from the E+ website have no such designations).
   // if( modelObject.getUseWeatherFileDaylightSavings() )

@@ -44,14 +44,14 @@ namespace detail {
 
   class MODEL_API ConstructionBase_Impl : public ResourceObject_Impl
   {
-    
-    
+
+
     // may require simulation results.
-    
+
     // may require simulation results.
-    
+
     // may require simulation results.
-    
+
   public:
 
     /** @name Constructors and Destructors */
@@ -148,7 +148,7 @@ namespace detail {
 
     /// get visible transmittance (unitless)
     virtual boost::optional<double> visibleTransmittance() const;
-    
+
     /// Returns the rendering color.
     virtual boost::optional<RenderingColor> renderingColor() const;
 

@@ -202,9 +202,9 @@ void OSDoubleEdit2::bind(model::ModelExtensibleGroup& modelExtensibleGroup,
 void OSDoubleEdit2::completeBind() {
 
   // only let one of autosize/autocalculate
-  if ((m_isAutosized && m_isAutocalculated) || 
-      (m_isAutosized && m_autocalculate) || 
-      (m_isAutocalculated && m_autosize)) 
+  if ((m_isAutosized && m_isAutocalculated) ||
+      (m_isAutosized && m_autocalculate) ||
+      (m_isAutocalculated && m_autosize))
   {
     LOG_AND_THROW("A field can only be autosized or autocalculated, it cannot be both.");
   }
@@ -225,7 +225,7 @@ void OSDoubleEdit2::unbind() {
 
     m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<OSDoubleEdit2, &OSDoubleEdit2::onModelObjectChange>(this);
     m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.disconnect<OSDoubleEdit2, &OSDoubleEdit2::onModelObjectRemove>(this);
-    
+
     m_modelObject.reset();
     m_modelExtensibleGroup.reset();
     m_get.reset();
@@ -315,7 +315,7 @@ void OSDoubleEdit2::onEditingFinished() {
           (*m_setVoidReturn)(value);
         }
       }
-      catch (...) 
+      catch (...)
       {
         //restore
         refreshTextAndLabel();
@@ -365,7 +365,7 @@ void OSDoubleEdit2::refreshTextAndLabel() {
       OS_ASSERT(m_getOptional);
       od = (*m_getOptional)();
     }
-  
+
     if (od) {
       double value = *od;
       if (m_isScientific) {
@@ -612,13 +612,13 @@ void OSDoubleEdit2::focusOutEvent(QFocusEvent * e)
 //         ss << std::fixed;
 //       }
 //       if (m_precision) {
-        
+
 //         // check if precision is too small to display value
 //         int precision = *m_precision;
 //         double minValue = std::pow(10.0, -precision);
 //         if (value < minValue){
 //           m_precision.reset();
-//         }  
+//         }
 
 //         if (m_precision){
 //           ss << std::setprecision(*m_precision);

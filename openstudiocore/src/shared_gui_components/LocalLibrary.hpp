@@ -53,7 +53,7 @@ namespace openstudio{
     ((ListItem))              // regular item
     ((LibraryItem))           // library or my model item
     ((DropzoneSquare))        // in scrolling drop zone
-    ((DropzoneRectangle))     // for fixed drop zone 
+    ((DropzoneRectangle))     // for fixed drop zone
   );
 
 

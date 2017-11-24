@@ -137,7 +137,7 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
          it != compressors.end();
          ++it )
     {
-      auto detailView = new RefrigerationCompressorDetailView(); 
+      auto detailView = new RefrigerationCompressorDetailView();
 
       detailView->setId(OSItemId(toQString(it->handle()), QString(),false));
 
@@ -281,7 +281,7 @@ void RefrigerationController::zoomInOnSystem(const Handle & handle)
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
   model::Model t_model = doc->model();
-  
+
   if( boost::optional<model::RefrigerationSystem> system = t_model.getModelObject<model::RefrigerationSystem>(handle) )
   {
     zoomInOnSystem(system.get());
@@ -375,9 +375,9 @@ void RefrigerationController::onCondenserViewDrop(const OSItemId & itemid)
   {
     boost::optional<model::ModelObject> mo = doc->getModelObject(itemid);
 
-    OS_ASSERT(mo); 
+    OS_ASSERT(mo);
 
-    if( boost::optional<model::RefrigerationCondenserAirCooled> condenser 
+    if( boost::optional<model::RefrigerationCondenserAirCooled> condenser
           = mo->optionalCast<model::RefrigerationCondenserAirCooled>() )
     {
       if( boost::optional<model::ModelObject> currentCondenser = m_currentSystem->refrigerationCondenser() )
@@ -385,14 +385,14 @@ void RefrigerationController::onCondenserViewDrop(const OSItemId & itemid)
         currentCondenser->remove();
       }
 
-      model::RefrigerationCondenserAirCooled condenserClone = 
+      model::RefrigerationCondenserAirCooled condenserClone =
         condenser->clone(m_currentSystem->model()).cast<model::RefrigerationCondenserAirCooled>();
 
       m_currentSystem->setRefrigerationCondenser(condenserClone);
 
       refresh();
     }
-    else if( boost::optional<model::RefrigerationCondenserCascade> condenser 
+    else if( boost::optional<model::RefrigerationCondenserCascade> condenser
           = mo->optionalCast<model::RefrigerationCondenserCascade>() )
     {
       if( boost::optional<model::ModelObject> currentCondenser = m_currentSystem->refrigerationCondenser() )
@@ -400,14 +400,14 @@ void RefrigerationController::onCondenserViewDrop(const OSItemId & itemid)
         currentCondenser->remove();
       }
 
-      model::RefrigerationCondenserCascade condenserClone = 
+      model::RefrigerationCondenserCascade condenserClone =
         condenser->clone(m_currentSystem->model()).cast<model::RefrigerationCondenserCascade>();
 
       m_currentSystem->setRefrigerationCondenser(condenserClone);
 
       refresh();
     }
-    else if( boost::optional<model::RefrigerationCondenserEvaporativeCooled> condenser 
+    else if( boost::optional<model::RefrigerationCondenserEvaporativeCooled> condenser
           = mo->optionalCast<model::RefrigerationCondenserEvaporativeCooled>() )
     {
       if( boost::optional<model::ModelObject> currentCondenser = m_currentSystem->refrigerationCondenser() )
@@ -415,14 +415,14 @@ void RefrigerationController::onCondenserViewDrop(const OSItemId & itemid)
         currentCondenser->remove();
       }
 
-      model::RefrigerationCondenserEvaporativeCooled condenserClone = 
+      model::RefrigerationCondenserEvaporativeCooled condenserClone =
         condenser->clone(m_currentSystem->model()).cast<model::RefrigerationCondenserEvaporativeCooled>();
 
       m_currentSystem->setRefrigerationCondenser(condenserClone);
 
       refresh();
     }
-    else if( boost::optional<model::RefrigerationCondenserWaterCooled> condenser 
+    else if( boost::optional<model::RefrigerationCondenserWaterCooled> condenser
           = mo->optionalCast<model::RefrigerationCondenserWaterCooled>() )
     {
       if( boost::optional<model::ModelObject> currentCondenser = m_currentSystem->refrigerationCondenser() )
@@ -430,7 +430,7 @@ void RefrigerationController::onCondenserViewDrop(const OSItemId & itemid)
         currentCondenser->remove();
       }
 
-      model::RefrigerationCondenserWaterCooled condenserClone = 
+      model::RefrigerationCondenserWaterCooled condenserClone =
         condenser->clone(m_currentSystem->model()).cast<model::RefrigerationCondenserWaterCooled>();
 
       m_currentSystem->setRefrigerationCondenser(condenserClone);
@@ -450,12 +450,12 @@ void RefrigerationController::onCompressorViewDrop(const OSItemId & itemid)
   {
     boost::optional<model::ModelObject> mo = doc->getModelObject(itemid);
 
-    OS_ASSERT(mo); 
+    OS_ASSERT(mo);
 
-    if( boost::optional<model::RefrigerationCompressor> compressor 
+    if( boost::optional<model::RefrigerationCompressor> compressor
           = mo->optionalCast<model::RefrigerationCompressor>() )
     {
-      model::RefrigerationCompressor compressorClone = 
+      model::RefrigerationCompressor compressorClone =
         compressor->clone(m_currentSystem->model()).cast<model::RefrigerationCompressor>();
 
       m_currentSystem->addCompressor(compressorClone);
@@ -474,9 +474,9 @@ void RefrigerationController::onSecondaryViewDrop(const OSItemId & itemid)
   if( doc->fromComponentLibrary(itemid) )
   {
     boost::optional<model::ModelObject> mo = doc->getModelObject(itemid);
-    OS_ASSERT(mo); 
+    OS_ASSERT(mo);
 
-    if( boost::optional<model::RefrigerationSystem> system 
+    if( boost::optional<model::RefrigerationSystem> system
           = mo->optionalCast<model::RefrigerationSystem>() )
     {
       if( boost::optional<model::ModelObject> condenserModelObject = system->refrigerationCondenser() )
@@ -486,7 +486,7 @@ void RefrigerationController::onSecondaryViewDrop(const OSItemId & itemid)
           // If condenser is not already a load on another system
           if( ! supplySystem(cascadeCondenser.get()) )
           {
-            model::RefrigerationSystem systemClone = 
+            model::RefrigerationSystem systemClone =
               system->clone(t_model).cast<model::RefrigerationSystem>();
             boost::optional<model::RefrigerationCondenserCascade> cascadeCondenserClone =
               systemClone.refrigerationCondenser()->optionalCast<model::RefrigerationCondenserCascade>();
@@ -499,7 +499,7 @@ void RefrigerationController::onSecondaryViewDrop(const OSItemId & itemid)
       }
       else
       {
-        model::RefrigerationSystem systemClone = 
+        model::RefrigerationSystem systemClone =
           system->clone(t_model).cast<model::RefrigerationSystem>();
 
         model::RefrigerationCondenserCascade newCascadeCondenser(t_model);
@@ -513,9 +513,9 @@ void RefrigerationController::onSecondaryViewDrop(const OSItemId & itemid)
   else if( doc->fromModel(itemid) )
   {
     boost::optional<model::ModelObject> mo = doc->getModelObject(itemid);
-    OS_ASSERT(mo); 
+    OS_ASSERT(mo);
 
-    if( boost::optional<model::RefrigerationSystem> system 
+    if( boost::optional<model::RefrigerationSystem> system
           = mo->optionalCast<model::RefrigerationSystem>() )
     {
       if( boost::optional<model::ModelObject> condenserModelObject = system->refrigerationCondenser() )
@@ -551,22 +551,22 @@ void RefrigerationController::onCasesViewDrop(const OSItemId & itemid)
   {
     boost::optional<model::ModelObject> mo = doc->getModelObject(itemid);
 
-    OS_ASSERT(mo); 
+    OS_ASSERT(mo);
 
-    if( boost::optional<model::RefrigerationCase> _case 
+    if( boost::optional<model::RefrigerationCase> _case
           = mo->optionalCast<model::RefrigerationCase>() )
     {
-      model::RefrigerationCase caseClone = 
+      model::RefrigerationCase caseClone =
         _case->clone(m_currentSystem->model()).cast<model::RefrigerationCase>();
 
       m_currentSystem->addCase(caseClone);
 
       refresh();
     }
-    else if( boost::optional<model::RefrigerationWalkIn> _walkin 
+    else if( boost::optional<model::RefrigerationWalkIn> _walkin
               = mo->optionalCast<model::RefrigerationWalkIn>())
     {
-      model::RefrigerationWalkIn walkinClone = 
+      model::RefrigerationWalkIn walkinClone =
         _walkin->clone(m_currentSystem->model()).cast<model::RefrigerationWalkIn>();
       m_currentSystem->addWalkin(walkinClone);
       refresh();
@@ -587,12 +587,12 @@ void RefrigerationController::onSubCoolerViewDrop(const OSItemId & itemid)
   {
     boost::optional<model::ModelObject> mo = doc->getModelObject(itemid);
 
-    OS_ASSERT(mo); 
+    OS_ASSERT(mo);
 
-    if( boost::optional<model::RefrigerationSubcoolerMechanical> _subcooler 
+    if( boost::optional<model::RefrigerationSubcoolerMechanical> _subcooler
           = mo->optionalCast<model::RefrigerationSubcoolerMechanical>() )
     {
-      model::RefrigerationSubcoolerMechanical subcoolerClone = 
+      model::RefrigerationSubcoolerMechanical subcoolerClone =
         _subcooler->clone(m_currentSystem->model()).cast<model::RefrigerationSubcoolerMechanical>();
 
       m_currentSystem->setMechanicalSubcooler(subcoolerClone);
@@ -649,12 +649,12 @@ void RefrigerationController::onSHXViewDrop(const OSItemId & itemid)
   {
     boost::optional<model::ModelObject> mo = doc->getModelObject(itemid);
 
-    OS_ASSERT(mo); 
+    OS_ASSERT(mo);
 
-    if( boost::optional<model::RefrigerationSubcoolerLiquidSuction> _subcooler 
+    if( boost::optional<model::RefrigerationSubcoolerLiquidSuction> _subcooler
           = mo->optionalCast<model::RefrigerationSubcoolerLiquidSuction>() )
     {
-      model::RefrigerationSubcoolerLiquidSuction subcoolerClone = 
+      model::RefrigerationSubcoolerLiquidSuction subcoolerClone =
         _subcooler->clone(m_currentSystem->model()).cast<model::RefrigerationSubcoolerLiquidSuction>();
 
       m_currentSystem->setLiquidSuctionHeatExchangerSubcooler(subcoolerClone);
@@ -692,7 +692,7 @@ void RefrigerationController::refreshNow()
   {
     refreshRefrigerationSystemView(m_detailView,m_currentSystem);
   }
-  
+
   m_dirty = false;
 }
 
@@ -852,7 +852,7 @@ void RefrigerationSystemListController::addSystem(const OSItemId & itemid)
     {
       if( boost::optional<model::RefrigerationSystem> system = mo->optionalCast<model::RefrigerationSystem>() )
       {
-        model::RefrigerationSystem systemClone = 
+        model::RefrigerationSystem systemClone =
           system->clone(model.get()).cast<model::RefrigerationSystem>();
       }
     }

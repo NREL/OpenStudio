@@ -144,15 +144,15 @@ class MODEL_API People : public SpaceLoadInstance {
   /** @name Other */
   //@{
 
-  /** Returns the numberOfPeople if possible based on the underlying data of 
+  /** Returns the numberOfPeople if possible based on the underlying data of
    *  peopleDefinition(). */
   boost::optional<double> numberOfPeople() const;
 
-  /** Returns the peoplePerFloorArea if possible based on the underlying data of 
+  /** Returns the peoplePerFloorArea if possible based on the underlying data of
    *  peopleDefinition(). */
   boost::optional<double> peoplePerFloorArea() const;
 
-  /** Returns the spaceFloorAreaPerPerson if possible based on the underlying data of 
+  /** Returns the spaceFloorAreaPerPerson if possible based on the underlying data of
    *  peopleDefinition(). */
   boost::optional<double> spaceFloorAreaPerPerson() const;
 

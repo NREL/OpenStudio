@@ -60,21 +60,21 @@ TEST_F(ModelFixture,CoilCoolingLowTempRadiantConstFlow_SetGetFields) {
                                             coolingLowWaterTempSched,
                                             coolingHighControlTempSched,
                                             coolingLowControlTempSched);
- 
+
   EXPECT_TRUE(testCC.setCoolingHighWaterTemperatureSchedule(coolingHighWaterTempSched));
   boost::optional<Schedule> sch1 = testCC.coolingHighWaterTemperatureSchedule();
   EXPECT_EQ(*sch1,coolingHighWaterTempSched);
 
-  
+
   EXPECT_TRUE(testCC.setCoolingLowWaterTemperatureSchedule(coolingLowWaterTempSched));
   boost::optional<Schedule> sch2 = testCC.coolingLowWaterTemperatureSchedule();
   EXPECT_EQ(*sch2,coolingLowWaterTempSched);
 
-  
+
   EXPECT_TRUE(testCC.setCoolingHighControlTemperatureSchedule(coolingHighControlTempSched));
   boost::optional<Schedule> sch3 = testCC.coolingHighControlTemperatureSchedule();
   EXPECT_EQ(*sch3,coolingHighControlTempSched);
-  
+
 
   EXPECT_TRUE(testCC.setCoolingLowControlTemperatureSchedule(coolingLowControlTempSched));
   boost::optional<Schedule> sch4 = testCC.coolingLowControlTemperatureSchedule();

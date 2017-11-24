@@ -37,10 +37,10 @@ namespace model {
 namespace detail {
 
   class MODEL_API AirTerminalSingleDuctVAVReheat_Impl : public StraightComponent_Impl {
-    
 
-    
-    
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{

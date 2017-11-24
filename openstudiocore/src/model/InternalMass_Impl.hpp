@@ -43,11 +43,11 @@ namespace detail {
 
   /** InternalMass_Impl is a SpaceLoadInstance_Impl that is the implementation class for InternalMass.*/
   class MODEL_API InternalMass_Impl : public SpaceLoadInstance_Impl {
-    
-    
-    
 
-    
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -120,11 +120,11 @@ namespace detail {
      *  and numPeople. */
     double getSurfaceArea(double floorArea, double numPeople) const;
 
-    /** Returns the m^2/m^2 of construction surface area per floor area represented by this 
+    /** Returns the m^2/m^2 of construction surface area per floor area represented by this
      *  instance, assuming floorArea (m^2) and numPeople. */
     double getSurfaceAreaPerFloorArea(double floorArea, double numPeople) const;
 
-    /** Returns the m^2/person of construction surface area represented by this instance, assuming 
+    /** Returns the m^2/person of construction surface area represented by this instance, assuming
      *  floorArea (m^2) and numPeople. */
     double getSurfaceAreaPerPerson(double floorArea, double numPeople) const;
 

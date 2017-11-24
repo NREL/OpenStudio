@@ -56,7 +56,7 @@ OptionalModelObject ReverseTranslator::translateZoneVentilationDesignFlowRate( c
 
 /*
   openstudio::model::SpaceVentilationDesignFlowRate ventilation(m_model);
-  
+
   OptionalString s = workspaceObject.name();
   if(s){
     ventilation.setName(*s);
@@ -129,7 +129,7 @@ OptionalModelObject ReverseTranslator::translateZoneVentilationDesignFlowRate( c
   if (d){
     ventilation.setFanPressureRise(*d);
   }
-    
+
   d = workspaceObject.getDouble(openstudio::ZoneVentilation_DesignFlowRateFields::FanTotalEfficiency);
   if (d){
     ventilation.setFanTotalEfficiency(*d);

@@ -46,11 +46,11 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture,CoilCoolingCooledBeam_Test) {
-  
+
   // test constructor
   Model model;
   CoilCoolingCooledBeam coilCoolingCooledBeam(model);
-  
+
   // Field N1 Coil Surface Area per Coil Length
   coilCoolingCooledBeam.setCoilSurfaceAreaperCoilLength(5.0);
   boost::optional<double> testCoilSurfaceAreaperCoilLength = coilCoolingCooledBeam.coilSurfaceAreaperCoilLength();
@@ -61,7 +61,7 @@ TEST_F(ModelFixture,CoilCoolingCooledBeam_Test) {
   // check Default
   testCoilSurfaceAreaperCoilLength = coilCoolingCooledBeam.coilSurfaceAreaperCoilLength();
   EXPECT_EQ(*testCoilSurfaceAreaperCoilLength, 5.422);
-  
+
   // Field N2 Model Parameter a
   coilCoolingCooledBeam.setModelParametera(10.0);
   boost::optional<double> testModelParametera = coilCoolingCooledBeam.modelParametera();
@@ -72,7 +72,7 @@ TEST_F(ModelFixture,CoilCoolingCooledBeam_Test) {
   // check Default
   testModelParametera = coilCoolingCooledBeam.modelParametera();
   EXPECT_EQ(*testModelParametera, 15.3);
-  
+
   // Field N3 Model Parameter n1
   coilCoolingCooledBeam.setModelParametern1(1.0);
   boost::optional<double> testModelParametern1 = coilCoolingCooledBeam.modelParametern1();
@@ -83,7 +83,7 @@ TEST_F(ModelFixture,CoilCoolingCooledBeam_Test) {
   // check Default
   testModelParametern1 = coilCoolingCooledBeam.modelParametern1();
   EXPECT_EQ(*testModelParametern1, 0);
-  
+
   // Field N4 Model Parameter n2
   coilCoolingCooledBeam.setModelParametern2(1.0);
   boost::optional<double> testModelParametern2 = coilCoolingCooledBeam.modelParametern2();
@@ -94,7 +94,7 @@ TEST_F(ModelFixture,CoilCoolingCooledBeam_Test) {
   // check Default
   testModelParametern2 = coilCoolingCooledBeam.modelParametern2();
   EXPECT_EQ(*testModelParametern2, 0.84);
-  
+
   // Field N5 Model Parameter n3
   coilCoolingCooledBeam.setModelParametern3(1.0);
   boost::optional<double> testModelParametern3 = coilCoolingCooledBeam.modelParametern3();
@@ -105,7 +105,7 @@ TEST_F(ModelFixture,CoilCoolingCooledBeam_Test) {
   // check Default
   testModelParametern3 = coilCoolingCooledBeam.modelParametern3();
   EXPECT_EQ(*testModelParametern3, 0.12);
-  
+
   // Field N6 Model Parameter a0
   coilCoolingCooledBeam.setModelParametera0(1.0);
   boost::optional<double> testModelParametera0 = coilCoolingCooledBeam.modelParametera0();
@@ -116,7 +116,7 @@ TEST_F(ModelFixture,CoilCoolingCooledBeam_Test) {
   // check Default
   testModelParametera0 = coilCoolingCooledBeam.modelParametera0();
   EXPECT_EQ(*testModelParametera0, 0.171);
-  
+
   // Field N7 Model Parameter K1
   coilCoolingCooledBeam.setModelParameterK1(1.0);
   boost::optional<double> testModelParameterK1 = coilCoolingCooledBeam.modelParameterK1();
@@ -127,7 +127,7 @@ TEST_F(ModelFixture,CoilCoolingCooledBeam_Test) {
   // check Default
   testModelParameterK1 = coilCoolingCooledBeam.modelParameterK1();
   EXPECT_EQ(*testModelParameterK1, 0.0057);
-  
+
   // Field N8 Model Parameter n
   coilCoolingCooledBeam.setModelParametern(1.0);
   boost::optional<double> testModelParametern = coilCoolingCooledBeam.modelParametern();
@@ -138,7 +138,7 @@ TEST_F(ModelFixture,CoilCoolingCooledBeam_Test) {
   // check Default
   testModelParametern = coilCoolingCooledBeam.modelParametern();
   EXPECT_EQ(*testModelParametern, 0.4);
-  
+
   // Field N8 Leaving Pipe Inside Diameter
   coilCoolingCooledBeam.setLeavingPipeInsideDiameter(1.0);
   boost::optional<double> testLeavingPipeInsideDiameter = coilCoolingCooledBeam.leavingPipeInsideDiameter();
@@ -149,7 +149,7 @@ TEST_F(ModelFixture,CoilCoolingCooledBeam_Test) {
   // check Default
   testLeavingPipeInsideDiameter = coilCoolingCooledBeam.leavingPipeInsideDiameter();
   EXPECT_EQ(*testLeavingPipeInsideDiameter, 0.0145);
-  
+
   // test inlet and outlet ports
 
   AirLoopHVAC airLoop(model);
@@ -161,7 +161,7 @@ TEST_F(ModelFixture,CoilCoolingCooledBeam_Test) {
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
   EXPECT_FALSE(coilCoolingCooledBeam.addToNode(inletNode));
   EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
-  
+
   // make a plant loop
   PlantLoop hotWaterPlant(model);
 
@@ -181,16 +181,16 @@ TEST_F(ModelFixture,CoilCoolingCooledBeam_Test) {
 
   EXPECT_TRUE(testObjectClone.addToNode(node));
   EXPECT_EQ( (unsigned)9, hotWaterPlant.demandComponents().size() );
-   
+
   // disconnect the coil and check if it works
   coilCoolingCooledBeam.disconnect();
   /* get a vector of demand equipment on the plantloop called hotwaterPlant,
      we know that plantloop.demandcomponents() returns a variable type std::vector<ModelObject>
      and we want to make sure that the vector is empty, because we have removed the coil */
-  
+
   // variable type variable name = plant loop class object function(), no argument goes back to default
   std::vector<ModelObject> hotWaterDemandComponents = hotWaterPlant.demandComponents();
   EXPECT_EQ(hotWaterDemandComponents.size(),0);
-    
+
   }
 

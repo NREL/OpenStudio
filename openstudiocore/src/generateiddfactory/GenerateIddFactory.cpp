@@ -39,7 +39,7 @@ namespace openstudio {
 
 IddFileFactoryDataVector constructIddFileObjects(const std::vector<std::string>& iddArgs) {
   IddFileFactoryDataVector result;
-  // Construct one IddFileFactoryData object per Idd file input by the user. Constructor will 
+  // Construct one IddFileFactoryData object per Idd file input by the user. Constructor will
   // throw if it is unable to parse iddArg or is unable to validate the path or name.
   for (const std::string& iddArg : iddArgs) {
     result.push_back(IddFileFactoryData(iddArg));
@@ -48,7 +48,7 @@ IddFileFactoryDataVector constructIddFileObjects(const std::vector<std::string>&
 }
 
 void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
-                        const std::vector<IddFileFactoryData>& iddFiles) 
+                        const std::vector<IddFileFactoryData>& iddFiles)
 {
   // start IddEnums.hxx
   outFiles.iddEnumsHxx.tempFile
@@ -181,7 +181,7 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
     << "  std::vector<IddObject> uniqueObjects() const;" << std::endl
     << std::endl
     << "  /** Return all objects in IddFile fileType that are unique. */" << std::endl
-    << "  std::vector<IddObject> getUniqueObjects(IddFileType fileType) const;" << std::endl    
+    << "  std::vector<IddObject> getUniqueObjects(IddFileType fileType) const;" << std::endl
     << std::endl
     << "  /** Return the (current) IddFile corresponding to type. */" << std::endl
     << "  IddFile getIddFile(IddFileType fileType) const;" << std::endl
@@ -332,7 +332,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     << "}\n"
     << "#endif // UTILITIES_IDD_IDDENUMS_HXX" << std::endl;
   tempSS.str("");
-  
+
   // complete and close IddFieldEnums.hxx
   outFiles.iddFieldEnumsHxx.tempFile
     << std::endl
@@ -399,7 +399,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     // register local objects
     for (const StringPair& objectName : idd.objectNames()) {
       outFiles.iddFactoryCxx.tempFile
-        << "  m_sourceFileMap.insert(IddObjectSourceFileMap::value_type(IddObjectType::" 
+        << "  m_sourceFileMap.insert(IddObjectSourceFileMap::value_type(IddObjectType::"
         << objectName.first << ",IddFileType::" << fileName << "));" << std::endl;
     }
 
@@ -415,16 +415,16 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
       for (const StringPair& objectName : includedFile.objectNames()) {
 
         // If objectName is in list of removed objects, do not add it to m_sourceFileMap,
-        if (std::find(includedFileData.second.begin(),includedFileData.second.end(),objectName.first) 
+        if (std::find(includedFileData.second.begin(),includedFileData.second.end(),objectName.first)
             != includedFileData.second.end()) {
           // and keep its name in case we need to write a warning.
-          excludedObjects.push_back(objectName.first);  
+          excludedObjects.push_back(objectName.first);
           continue;
         }
 
         // objectName is not to be removed, so add it to the composite file.
         outFiles.iddFactoryCxx.tempFile
-          << "  m_sourceFileMap.insert(IddObjectSourceFileMap::value_type(IddObjectType::" 
+          << "  m_sourceFileMap.insert(IddObjectSourceFileMap::value_type(IddObjectType::"
           << objectName.first << ",IddFileType::" << fileName << "));" << std::endl;
 
       } // foreach

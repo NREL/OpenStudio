@@ -38,5 +38,5 @@ class ScheduleConstant_Test < MiniTest::Unit::TestCase
     schedule.setValue(1.0)
     assert_equal(1.0,schedule.value)
   end
-  
+
 end

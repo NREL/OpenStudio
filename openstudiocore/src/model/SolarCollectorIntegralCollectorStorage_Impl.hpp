@@ -42,7 +42,7 @@ namespace detail {
 
   /** SolarCollectorIntegralCollectorStorage_Impl is a StraightComponent_Impl that is the implementation class for SolarCollectorIntegralCollectorStorage.*/
   class MODEL_API SolarCollectorIntegralCollectorStorage_Impl : public StraightComponent_Impl {
-  
+
    public:
     /** @name Constructors and Destructors */
     //@{

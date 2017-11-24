@@ -126,7 +126,7 @@ TEST_F(ModelFixture, ElectricLoadCenterInverterLookUpTable_Instantiate) {
   EXPECT_EQ(electricLoadCenterInverterLookUpTable.efficiencyAt75PowerAndNominalVoltage().get(), value);
   electricLoadCenterInverterLookUpTable.resetEfficiencyAt75PowerAndNominalVoltage();
   EXPECT_FALSE(electricLoadCenterInverterLookUpTable.efficiencyAt75PowerAndNominalVoltage());
- 
+
   EXPECT_FALSE(electricLoadCenterInverterLookUpTable.efficiencyAt100PowerAndNominalVoltage());
   result = electricLoadCenterInverterLookUpTable.setEfficiencyAt100PowerAndNominalVoltage(value);
   EXPECT_TRUE(result);

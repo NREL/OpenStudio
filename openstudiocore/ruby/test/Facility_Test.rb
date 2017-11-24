@@ -33,7 +33,7 @@ require 'minitest/autorun'
 class Facility_Test < MiniTest::Unit::TestCase
 
   def test_facility_attributes
-  
+
     model = OpenStudio::Model::Model.new()
 
     facility = model.getFacility
@@ -45,4 +45,4 @@ class Facility_Test < MiniTest::Unit::TestCase
     assert(facility.getAttribute("endUses").empty?)
   end
 
-end 
+end

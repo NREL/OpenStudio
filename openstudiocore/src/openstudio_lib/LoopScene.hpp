@@ -42,7 +42,7 @@ namespace model {
   class Splitter;
 
   class Mixer;
-  
+
   class Node;
 
   class HVACComponent;
@@ -68,7 +68,7 @@ class LoopScene : public GridScene
   Q_OBJECT
 
   public:
-  
+
   LoopScene( model::Loop loop,
              QObject *parent = nullptr );
 
@@ -81,7 +81,7 @@ class LoopScene : public GridScene
   void addedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
   void removedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
-  
+
   void layout();
 
   //signals:

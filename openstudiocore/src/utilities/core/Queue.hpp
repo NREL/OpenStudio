@@ -61,7 +61,7 @@ namespace openstudio
     }
   };
 
-  /** 
+  /**
    * Thread safe Queue for message processing.
    *
    * Queue allows the user to push messages in a thread-safe non-blocking way
@@ -70,10 +70,10 @@ namespace openstudio
    * being in a busy loop and be notified when the new message is received.
    */
   template <typename T>
-    class Queue 
+    class Queue
     {
       public:
-        Queue() 
+        Queue()
           : m_canceled(false)
         {
         }
@@ -88,7 +88,7 @@ namespace openstudio
         //! \return true if item is populated false if not,
         //!         if the read was canceled before an item was
         //!         made available.
-        T get_next() 
+        T get_next()
         {
           boost::unique_lock<boost::shared_mutex> l(m_mutex);
 
@@ -134,7 +134,7 @@ namespace openstudio
           return !m_canceled && !m_deque.empty();
         }
 
-        //! Cancel the current read operation. 
+        //! Cancel the current read operation.
         //! Pending readers will be woken and with throw an exception.
         void cancel_get()
         {
@@ -173,7 +173,7 @@ namespace openstudio
 
       private:
         //! Variable to wait on when waiting for more items
-        boost::condition m_condition; 
+        boost::condition m_condition;
 
         //! Protection mutex for local data
         boost::shared_mutex m_mutex;
