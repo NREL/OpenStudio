@@ -102,7 +102,7 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   /** @name Setters */
   //@{
 
-  void setPartofTotalFloorArea(bool partofTotalFloorArea);
+  bool setPartofTotalFloorArea(bool partofTotalFloorArea);
 
   void resetPartofTotalFloorArea();
 
