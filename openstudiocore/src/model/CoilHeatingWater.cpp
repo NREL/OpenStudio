@@ -233,9 +233,9 @@ namespace detail{
     return getString( openstudio::OS_Coil_Heating_WaterFields::PerformanceInputMethod,true ).get();
   }
 
-  void CoilHeatingWater_Impl::setPerformanceInputMethod( std::string value )
+  bool CoilHeatingWater_Impl::setPerformanceInputMethod( std::string value )
   {
-    setString( openstudio::OS_Coil_Heating_WaterFields::PerformanceInputMethod, value );
+    return setString( openstudio::OS_Coil_Heating_WaterFields::PerformanceInputMethod, value );;
   }
 
   boost::optional<double> CoilHeatingWater_Impl::ratedCapacity()
@@ -631,7 +631,7 @@ std::string CoilHeatingWater::performanceInputMethod()
   return getImpl<detail::CoilHeatingWater_Impl>()->performanceInputMethod();
 }
 
-void CoilHeatingWater::setPerformanceInputMethod( std::string value )
+bool CoilHeatingWater::setPerformanceInputMethod( std::string value )
 {
   return getImpl<detail::CoilHeatingWater_Impl>()->setPerformanceInputMethod( value );
 }

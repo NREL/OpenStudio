@@ -116,7 +116,7 @@ class MODEL_API CoilHeatingWater : public WaterToAirComponent {
   /** Sets the value of the PerformanceInputMethod field.
    *  Options are UFactorTimesAreaAndDesignWaterFlowRate and NominalCapacity.
    */
-  void setPerformanceInputMethod( std::string value );
+  bool setPerformanceInputMethod( std::string value );
 
   /** Returns the value of the RatedCapacity field. **/
   boost::optional<double> ratedCapacity();

@@ -148,11 +148,11 @@ namespace detail {
 
     std::string typeOfAnalysis();
 
-    void setTypeOfAnalysis( std::string value );
+    bool setTypeOfAnalysis( std::string value );
 
     std::string heatExchangerConfiguration();
 
-    void setHeatExchangerConfiguration( std::string value );
+    bool setHeatExchangerConfiguration( std::string value );
 
   private:
     REGISTER_LOGGER("openstudio.model.CoilCoolingWater");

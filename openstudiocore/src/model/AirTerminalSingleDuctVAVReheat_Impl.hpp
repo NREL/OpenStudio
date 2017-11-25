@@ -135,7 +135,7 @@ namespace detail {
 
     std::string damperHeatingAction();
 
-    void setDamperHeatingAction( std::string value );
+    bool setDamperHeatingAction( std::string value );
 
     boost::optional<double> maximumFlowPerZoneFloorAreaDuringReheat();
 

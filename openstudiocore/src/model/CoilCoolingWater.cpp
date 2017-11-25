@@ -293,9 +293,9 @@ namespace detail {
     return getString( openstudio::OS_Coil_Cooling_WaterFields::TypeofAnalysis,true ).get();
   }
 
-  void CoilCoolingWater_Impl::setTypeOfAnalysis( std::string value )
+  bool CoilCoolingWater_Impl::setTypeOfAnalysis( std::string value )
   {
-    setString( openstudio::OS_Coil_Cooling_WaterFields::TypeofAnalysis, value );
+    return setString( openstudio::OS_Coil_Cooling_WaterFields::TypeofAnalysis, value );;
   }
 
   std::string CoilCoolingWater_Impl::heatExchangerConfiguration()
@@ -303,9 +303,9 @@ namespace detail {
     return getString( openstudio::OS_Coil_Cooling_WaterFields::HeatExchangerConfiguration,true ).get();
   }
 
-  void CoilCoolingWater_Impl::setHeatExchangerConfiguration( std::string value )
+  bool CoilCoolingWater_Impl::setHeatExchangerConfiguration( std::string value )
   {
-    setString( openstudio::OS_Coil_Cooling_WaterFields::HeatExchangerConfiguration, value );
+    return setString( openstudio::OS_Coil_Cooling_WaterFields::HeatExchangerConfiguration, value );;
   }
 
   bool CoilCoolingWater_Impl::addToNode(Node & node)
@@ -632,9 +632,9 @@ std::string CoilCoolingWater::typeOfAnalysis()
   return getImpl<detail::CoilCoolingWater_Impl>()->typeOfAnalysis();
 }
 
-void CoilCoolingWater::setTypeOfAnalysis( std::string value )
+bool CoilCoolingWater::setTypeOfAnalysis( std::string value )
 {
-  getImpl<detail::CoilCoolingWater_Impl>()->setTypeOfAnalysis( value );
+  return getImpl<detail::CoilCoolingWater_Impl>()->setTypeOfAnalysis( value );
 }
 
 std::string CoilCoolingWater::heatExchangerConfiguration()
@@ -642,9 +642,9 @@ std::string CoilCoolingWater::heatExchangerConfiguration()
   return getImpl<detail::CoilCoolingWater_Impl>()->heatExchangerConfiguration();
 }
 
-void CoilCoolingWater::setHeatExchangerConfiguration( std::string value )
+bool CoilCoolingWater::setHeatExchangerConfiguration( std::string value )
 {
-  getImpl<detail::CoilCoolingWater_Impl>()->setHeatExchangerConfiguration( value );
+  return getImpl<detail::CoilCoolingWater_Impl>()->setHeatExchangerConfiguration( value );
 }
 
 IddObjectType CoilCoolingWater::iddObjectType() {

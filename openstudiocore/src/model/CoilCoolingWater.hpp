@@ -181,7 +181,7 @@ class MODEL_API CoilCoolingWater : public WaterToAirComponent {
   /** Sets the value of the TypeOfAnalysis field.
    *  Options are SimpleAnalysis and DetailedAnalysis
    */
-  void setTypeOfAnalysis( std::string value );
+  bool setTypeOfAnalysis( std::string value );
 
   /** Returns the value of the HeatExchangerConfiguration field. **/
   std::string heatExchangerConfiguration();
@@ -189,7 +189,7 @@ class MODEL_API CoilCoolingWater : public WaterToAirComponent {
   /** Sets the value of the HeatExchangerConfiguration field.
    *  Options are CrossFlow and CounterFlow.
    */
-  void setHeatExchangerConfiguration( std::string value );
+  bool setHeatExchangerConfiguration( std::string value );
 
   /** Returns the optional ControllerWaterCoil associated with this coil.
    */

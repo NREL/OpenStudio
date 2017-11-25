@@ -440,9 +440,9 @@ namespace detail{
     return this->getString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::DamperHeatingAction).get();
   }
 
-  void AirTerminalSingleDuctVAVReheat_Impl::setDamperHeatingAction( std::string value )
+  bool AirTerminalSingleDuctVAVReheat_Impl::setDamperHeatingAction( std::string value )
   {
-    setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::DamperHeatingAction,value);
+    return setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::DamperHeatingAction,value);;
   }
 
   boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::maximumFlowPerZoneFloorAreaDuringReheat()
@@ -811,7 +811,7 @@ std::string AirTerminalSingleDuctVAVReheat::damperHeatingAction()
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->damperHeatingAction();
 }
 
-void AirTerminalSingleDuctVAVReheat::setDamperHeatingAction( std::string value )
+bool AirTerminalSingleDuctVAVReheat::setDamperHeatingAction( std::string value )
 {
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setDamperHeatingAction(value);
 }
@@ -899,4 +899,3 @@ void AirTerminalSingleDuctVAVReheat::setControlForOutdoorAir(bool controlForOutd
 } // model
 
 } // openstudio
-

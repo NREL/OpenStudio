@@ -112,7 +112,7 @@ namespace detail {
 
     std::string performanceInputMethod();
 
-    void setPerformanceInputMethod( std::string value );
+    bool setPerformanceInputMethod( std::string value );
 
     boost::optional<double> ratedCapacity();
 

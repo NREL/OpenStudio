@@ -140,7 +140,7 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
   /** Sets the value of the DamperHeatingAction field.
    *  Options are Normal and Reverse.
    */
-  void setDamperHeatingAction( std::string value );
+  bool setDamperHeatingAction( std::string value );
 
   /** Returns the value of the MaximumFlowPerZoneFloorAreaDuringReheat field. */
   boost::optional<double> maximumFlowPerZoneFloorAreaDuringReheat();
@@ -213,4 +213,3 @@ typedef boost::optional<AirTerminalSingleDuctVAVReheat> OptionalAirTerminalSingl
 } // openstudio
 
 #endif // MODEL_AIRTERMINALSINGLEDUCTVAVREHEAT_HPP
-
