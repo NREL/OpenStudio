@@ -165,8 +165,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilHeatingElectric_Impl::setTemperatureSetpointNode(Node & temperatureSetpointNode) {
-    setPointer(OS_Coil_Heating_ElectricFields::TemperatureSetpointNodeName, temperatureSetpointNode.handle());
+  bool CoilHeatingElectric_Impl::setTemperatureSetpointNode(Node & temperatureSetpointNode) {
+    return setPointer(OS_Coil_Heating_ElectricFields::TemperatureSetpointNodeName, temperatureSetpointNode.handle());;
   }
 
   void CoilHeatingElectric_Impl::resetTemperatureSetpointNode() {
@@ -458,8 +458,8 @@ void CoilHeatingElectric::autosizeNominalCapacity() {
   getImpl<detail::CoilHeatingElectric_Impl>()->autosizeNominalCapacity();
 }
 
-void CoilHeatingElectric::setTemperatureSetpointNode(Node & temperatureSetpointNode) {
-  getImpl<detail::CoilHeatingElectric_Impl>()->setTemperatureSetpointNode(temperatureSetpointNode);
+bool CoilHeatingElectric::setTemperatureSetpointNode(Node & temperatureSetpointNode) {
+  return getImpl<detail::CoilHeatingElectric_Impl>()->setTemperatureSetpointNode(temperatureSetpointNode);
 }
 
 void CoilHeatingElectric::resetTemperatureSetpointNode() {

@@ -61,13 +61,13 @@ namespace detail {
 
     boost::optional<unsigned> targetObjectPort();
 
-    void setSourceObject(ModelObject object);
+    bool setSourceObject(ModelObject object);
 
-    void setSourceObjectPort(unsigned port);
+    bool setSourceObjectPort(unsigned port);
 
-    void setTargetObject(ModelObject object);
+    bool setTargetObject(ModelObject object);
 
-    void setTargetObjectPort(unsigned port);
+    bool setTargetObjectPort(unsigned port);
 
    private:
 
@@ -80,4 +80,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_CONNECTION_IMPL_HPP
-

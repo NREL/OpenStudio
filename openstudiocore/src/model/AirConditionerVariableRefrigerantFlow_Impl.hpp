@@ -349,7 +349,7 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   void resetThermostatPrioritySchedule();
 
-  void setHeatPumpWasteHeatRecovery(bool heatPumpWasteHeatRecovery);
+  bool setHeatPumpWasteHeatRecovery(bool heatPumpWasteHeatRecovery);
 
   bool setEquivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode(double equivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode);
 

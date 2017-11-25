@@ -207,7 +207,7 @@ class MODEL_API ZoneHVACPackagedTerminalHeatPump : public ZoneHVACComponent
 
   void resetCoolingConvergenceTolerance();
 
-  void setSupplementalHeatingCoil( HVACComponent & hvacComponent );
+  bool setSupplementalHeatingCoil( HVACComponent & hvacComponent );
 
   bool setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
 

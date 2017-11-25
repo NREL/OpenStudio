@@ -148,11 +148,11 @@ class MODEL_API CoilWaterHeatingAirToWaterHeatPump : public HVACComponent {
 
   void autosizeRatedCondenserWaterFlowRate();
 
-  void setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP);
+  bool setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP);
 
-  void setCondenserPumpPowerIncludedinRatedCOP(bool condenserPumpPowerIncludedinRatedCOP);
+  bool setCondenserPumpPowerIncludedinRatedCOP(bool condenserPumpPowerIncludedinRatedCOP);
 
-  void setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(bool condenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP);
+  bool setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(bool condenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP);
 
   bool setCondenserWaterPumpPower(double condenserWaterPumpPower);
 
@@ -208,4 +208,3 @@ typedef std::vector<CoilWaterHeatingAirToWaterHeatPump> CoilWaterHeatingAirToWat
 } // openstudio
 
 #endif // MODEL_COILWATERHEATINGAIRTOWATERHEATPUMP_HPP
-

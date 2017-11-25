@@ -389,7 +389,7 @@ namespace detail {
 
     void resetDesignZoneAirDistributionEffectivenessinHeatingMode();
 
-    void setAccountforDedicatedOutdoorAirSystem(bool accountforDedicatedOutdoorAirSystem);
+    bool setAccountforDedicatedOutdoorAirSystem(bool accountforDedicatedOutdoorAirSystem);
 
     bool setDedicatedOutdoorAirSystemControlStrategy(std::string dedicatedOutdoorAirSystemControlStrategy);
 

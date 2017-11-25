@@ -291,7 +291,7 @@ class MODEL_API SizingZone : public ModelObject {
 
   void resetDesignZoneAirDistributionEffectivenessinHeatingMode();
 
-  void setAccountforDedicatedOutdoorAirSystem(bool accountforDedicatedOutdoorAirSystem);
+  bool setAccountforDedicatedOutdoorAirSystem(bool accountforDedicatedOutdoorAirSystem);
 
   bool setDedicatedOutdoorAirSystemControlStrategy(std::string dedicatedOutdoorAirSystemControlStrategy);
 

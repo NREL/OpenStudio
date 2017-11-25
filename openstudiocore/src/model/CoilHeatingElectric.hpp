@@ -94,7 +94,7 @@ class MODEL_API CoilHeatingElectric : public StraightComponent {
 
   void autosizeNominalCapacity();
 
-  void setTemperatureSetpointNode(Node & temperatureSetpointNode);
+  bool setTemperatureSetpointNode(Node & temperatureSetpointNode);
 
   void resetTemperatureSetpointNode();
 

@@ -144,17 +144,17 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAir : public StraightComponent
 
   void autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
-  void setControllingZone( ThermalZone & zone );
+  bool setControllingZone( ThermalZone & zone );
 
   void resetControllingZone();
 
-  void setSupplyAirFan( HVACComponent & hvacComponent );
+  bool setSupplyAirFan( HVACComponent & hvacComponent );
 
-  void setHeatingCoil( HVACComponent & hvacComponent );
+  bool setHeatingCoil( HVACComponent & hvacComponent );
 
-  void setCoolingCoil( HVACComponent & hvacComponent );
+  bool setCoolingCoil( HVACComponent & hvacComponent );
 
-  void setSupplementalHeatingCoil( HVACComponent & hvacComponent );
+  bool setSupplementalHeatingCoil( HVACComponent & hvacComponent );
 
   bool setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
 
@@ -168,7 +168,7 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAir : public StraightComponent
 
   void resetFanPlacement();
 
-  void setSupplyAirFanOperatingModeSchedule(Schedule & schedule);
+  bool setSupplyAirFanOperatingModeSchedule(Schedule & schedule);
 
   void resetSupplyAirFanOperatingModeSchedule();
 

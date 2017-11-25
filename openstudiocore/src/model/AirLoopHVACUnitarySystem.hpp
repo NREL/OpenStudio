@@ -268,7 +268,7 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
 
   void resetCoolingCoil();
 
-  void setUseDOASDXCoolingCoil(bool useDOASDXCoolingCoil);
+  bool setUseDOASDXCoolingCoil(bool useDOASDXCoolingCoil);
 
   void resetUseDOASDXCoolingCoil();
 

@@ -173,50 +173,49 @@ namespace detail {
     return setInt(OS_RunPeriodFields::EndDayofMonth,day);;
   }
 
-  void RunPeriod_Impl::setUseWeatherFileHolidays(bool use)
+  bool RunPeriod_Impl::setUseWeatherFileHolidays(bool use)
   {
     if(use)
     {
-      setString(OS_RunPeriodFields::UseWeatherFileHolidaysandSpecialDays,"Yes");
-      return;
+      return setString(OS_RunPeriodFields::UseWeatherFileHolidaysandSpecialDays,"Yes");
     }
-    setString(OS_RunPeriodFields::UseWeatherFileHolidaysandSpecialDays,"No");
+    return setString(OS_RunPeriodFields::UseWeatherFileHolidaysandSpecialDays,"No");
   }
-  void RunPeriod_Impl::setUseWeatherFileDaylightSavings(bool use)
+
+  bool RunPeriod_Impl::setUseWeatherFileDaylightSavings(bool use)
   {
     if(use)
     {
-      setString(OS_RunPeriodFields::UseWeatherFileDaylightSavingPeriod,"Yes");
-      return;
+      return setString(OS_RunPeriodFields::UseWeatherFileDaylightSavingPeriod,"Yes");
     }
-    setString(OS_RunPeriodFields::UseWeatherFileDaylightSavingPeriod,"No");
+    return setString(OS_RunPeriodFields::UseWeatherFileDaylightSavingPeriod,"No");
   }
-  void RunPeriod_Impl::setApplyWeekendHolidayRule(bool apply)
+
+  bool RunPeriod_Impl::setApplyWeekendHolidayRule(bool apply)
   {
     if(apply)
     {
-      setString(OS_RunPeriodFields::ApplyWeekendHolidayRule,"Yes");
-      return;
+      return setString(OS_RunPeriodFields::ApplyWeekendHolidayRule,"Yes");
     }
-    setString(OS_RunPeriodFields::ApplyWeekendHolidayRule,"No");
+    return setString(OS_RunPeriodFields::ApplyWeekendHolidayRule,"No");
   }
-  void RunPeriod_Impl::setUseWeatherFileRainInd(bool rainInd)
+
+  bool RunPeriod_Impl::setUseWeatherFileRainInd(bool rainInd)
   {
     if(rainInd)
     {
-      setString(OS_RunPeriodFields::UseWeatherFileRainIndicators,"Yes");
-      return;
+      return setString(OS_RunPeriodFields::UseWeatherFileRainIndicators,"Yes");
     }
-    setString(OS_RunPeriodFields::UseWeatherFileRainIndicators,"No");
+    return setString(OS_RunPeriodFields::UseWeatherFileRainIndicators,"No");
   }
-  void RunPeriod_Impl::setUseWeatherFileSnowInd(bool snowInd)
+
+  bool RunPeriod_Impl::setUseWeatherFileSnowInd(bool snowInd)
   {
     if(snowInd)
     {
-      setString(OS_RunPeriodFields::UseWeatherFileSnowIndicators,"Yes");
-      return;
+      return setString(OS_RunPeriodFields::UseWeatherFileSnowIndicators,"Yes");
     }
-    setString(OS_RunPeriodFields::UseWeatherFileSnowIndicators,"No");
+    return setString(OS_RunPeriodFields::UseWeatherFileSnowIndicators,"No");
   }
 
   bool RunPeriod_Impl::setNumTimePeriodRepeats(int numRepeats)

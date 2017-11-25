@@ -105,7 +105,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setCarbonDioxideConcentration(bool carbonDioxideConcentration);
+    bool setCarbonDioxideConcentration(bool carbonDioxideConcentration);
 
     void resetCarbonDioxideConcentration();
 
@@ -136,4 +136,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_ZONEAIRCONTAMINANTBALANCE_IMPL_HPP
-

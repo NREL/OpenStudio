@@ -99,7 +99,7 @@ class MODEL_API ScheduleDay : public ScheduleBase {
   /** @name Setters */
   //@{
 
-  void setInterpolatetoTimestep(bool interpolatetoTimestep);
+  bool setInterpolatetoTimestep(bool interpolatetoTimestep);
 
   void resetInterpolatetoTimestep();
 
@@ -147,4 +147,3 @@ typedef std::vector<ScheduleDay> ScheduleDayVector;
 } // openstudio
 
 #endif // MODEL_SCHEDULEDAY_HPP
-

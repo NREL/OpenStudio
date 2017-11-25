@@ -104,9 +104,9 @@ namespace detail {
     return this->getUnsigned(openstudio::OS_ConnectionFields::InletPort).get();
   }
 
-  void Connection_Impl::setSourceObject(ModelObject object)
+  bool Connection_Impl::setSourceObject(ModelObject object)
   {
-    setPointer(openstudio::OS_ConnectionFields::SourceObject,object.handle());
+    return setPointer(openstudio::OS_ConnectionFields::SourceObject,object.handle());;
   }
 
   void Connection_Impl::setSourceObjectPort(unsigned port)
@@ -114,9 +114,9 @@ namespace detail {
     this->setUnsigned(openstudio::OS_ConnectionFields::OutletPort,port);
   }
 
-  void Connection_Impl::setTargetObject(ModelObject object)
+  bool Connection_Impl::setTargetObject(ModelObject object)
   {
-    setPointer(openstudio::OS_ConnectionFields::TargetObject,object.handle());
+    return setPointer(openstudio::OS_ConnectionFields::TargetObject,object.handle());;
   }
 
   void Connection_Impl::setTargetObjectPort(unsigned port)
@@ -156,22 +156,22 @@ OptionalUnsigned Connection::targetObjectPort()
   return getImpl<detail::Connection_Impl>()->targetObjectPort();
 }
 
-void Connection::setSourceObject(ModelObject object)
+bool Connection::setSourceObject(ModelObject object)
 {
   return getImpl<detail::Connection_Impl>()->setSourceObject(object);
 }
 
-void Connection::setSourceObjectPort(unsigned port)
+bool Connection::setSourceObjectPort(unsigned port)
 {
   return getImpl<detail::Connection_Impl>()->setSourceObjectPort(port);
 }
 
-void Connection::setTargetObject(ModelObject object)
+bool Connection::setTargetObject(ModelObject object)
 {
   return getImpl<detail::Connection_Impl>()->setTargetObject(object);
 }
 
-void Connection::setTargetObjectPort(unsigned port)
+bool Connection::setTargetObjectPort(unsigned port)
 {
   return getImpl<detail::Connection_Impl>()->setTargetObjectPort(port);
 }

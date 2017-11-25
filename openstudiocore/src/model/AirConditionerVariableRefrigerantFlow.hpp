@@ -298,7 +298,7 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
 
   bool heatPumpWasteHeatRecovery() const;
 
-  void setHeatPumpWasteHeatRecovery(bool heatPumpWasteHeatRecovery);
+  bool setHeatPumpWasteHeatRecovery(bool heatPumpWasteHeatRecovery);
 
 
   double equivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode() const;

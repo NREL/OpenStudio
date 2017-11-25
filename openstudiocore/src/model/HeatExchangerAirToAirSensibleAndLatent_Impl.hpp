@@ -266,7 +266,7 @@ namespace detail {
 
     bool setNominalElectricPower(const Quantity& nominalElectricPower);
 
-    void setSupplyAirOutletTemperatureControl(bool supplyAirOutletTemperatureControl);
+    bool setSupplyAirOutletTemperatureControl(bool supplyAirOutletTemperatureControl);
 
     bool setHeatExchangerType(std::string heatExchangerType);
 
@@ -290,7 +290,7 @@ namespace detail {
 
     void resetRateofDefrostTimeFractionIncrease();
 
-    void setEconomizerLockout(bool economizerLockout);
+    bool setEconomizerLockout(bool economizerLockout);
 
     //@}
     /** @name Other */

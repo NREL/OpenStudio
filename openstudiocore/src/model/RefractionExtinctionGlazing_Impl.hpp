@@ -245,7 +245,7 @@ namespace detail {
 
     virtual void resetDirtCorrectionFactorforSolarandVisibleTransmittance();
 
-    void setSolarDiffusing(bool solarDiffusing);
+    bool setSolarDiffusing(bool solarDiffusing);
 
     void resetSolarDiffusing();
 
@@ -284,4 +284,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_REFRACTIONEXTINCTIONGLAZING_IMPL_HPP
-

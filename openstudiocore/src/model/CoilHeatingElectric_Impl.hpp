@@ -123,7 +123,7 @@ namespace detail {
 
     void autosizeNominalCapacity();
 
-    void setTemperatureSetpointNode(Node & temperatureSetpointNode);
+    bool setTemperatureSetpointNode(Node & temperatureSetpointNode);
 
     void resetTemperatureSetpointNode();
 

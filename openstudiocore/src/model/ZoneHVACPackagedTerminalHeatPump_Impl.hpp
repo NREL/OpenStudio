@@ -237,7 +237,7 @@ namespace detail {
 
     void resetCoolingConvergenceTolerance();
 
-    void setSupplementalHeatingCoil( HVACComponent & hvacComponent );
+    bool setSupplementalHeatingCoil( HVACComponent & hvacComponent );
 
     bool setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater);
 

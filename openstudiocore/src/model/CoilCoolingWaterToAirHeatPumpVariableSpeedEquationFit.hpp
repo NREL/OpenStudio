@@ -108,7 +108,7 @@ class MODEL_API CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit : public W
 
   bool setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(double initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity);
 
-  void setUseHotGasReheat(bool useHotGasReheat);
+  bool setUseHotGasReheat(bool useHotGasReheat);
 
   bool setEnergyPartLoadFractionCurve(const Curve& curve);
 

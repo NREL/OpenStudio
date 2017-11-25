@@ -163,7 +163,7 @@ namespace detail {
 
     bool controlForOutdoorAir() const;
 
-    void setControlForOutdoorAir(bool controlForOutdoorAir);
+    bool setControlForOutdoorAir(bool controlForOutdoorAir);
 
    private:
 

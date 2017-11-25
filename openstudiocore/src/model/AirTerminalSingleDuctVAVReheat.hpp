@@ -183,7 +183,7 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
     * This field replaces the functionality of the EnergyPlus field: Design Specification Outdoor Air Object Name.*/
   bool controlForOutdoorAir() const;
 
-  void setControlForOutdoorAir(bool controlForOutdoorAir);
+  bool setControlForOutdoorAir(bool controlForOutdoorAir);
 
  protected:
 

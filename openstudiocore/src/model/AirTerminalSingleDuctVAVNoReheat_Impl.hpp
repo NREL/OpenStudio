@@ -149,7 +149,7 @@ namespace detail {
 
     bool controlForOutdoorAir() const;
 
-    void setControlForOutdoorAir(bool controlForOutdoorAir);
+    bool setControlForOutdoorAir(bool controlForOutdoorAir);
 
     //@}
     /** @name Other */
@@ -180,4 +180,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_AIRTERMINALSINGLEDUCTVAVNOREHEAT_IMPL_HPP
-

@@ -634,9 +634,9 @@ namespace detail{
     return getBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ControlForOutdoorAir);
   }
 
-  void AirTerminalSingleDuctVAVReheat_Impl::setControlForOutdoorAir(bool controlForOutdoorAir)
+  bool AirTerminalSingleDuctVAVReheat_Impl::setControlForOutdoorAir(bool controlForOutdoorAir)
   {
-    setBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ControlForOutdoorAir,controlForOutdoorAir);
+    return setBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ControlForOutdoorAir,controlForOutdoorAir);;
   }
 
 } // detail
@@ -891,9 +891,9 @@ bool AirTerminalSingleDuctVAVReheat::controlForOutdoorAir() const
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->controlForOutdoorAir();
 }
 
-void AirTerminalSingleDuctVAVReheat::setControlForOutdoorAir(bool controlForOutdoorAir)
+bool AirTerminalSingleDuctVAVReheat::setControlForOutdoorAir(bool controlForOutdoorAir)
 {
-  getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setControlForOutdoorAir(controlForOutdoorAir);
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setControlForOutdoorAir(controlForOutdoorAir);
 }
 
 } // model

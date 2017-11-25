@@ -115,7 +115,7 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
     * This field replaces the functionality of the EnergyPlus field: Design Specification Outdoor Air Object Name.*/
   bool controlForOutdoorAir() const;
 
-  void setControlForOutdoorAir(bool controlForOutdoorAir);
+  bool setControlForOutdoorAir(bool controlForOutdoorAir);
 
   //@}
   /** @name Other */
@@ -147,4 +147,3 @@ typedef std::vector<AirTerminalSingleDuctVAVNoReheat> AirTerminalSingleDuctVAVNo
 } // openstudio
 
 #endif // MODEL_AIRTERMINALSINGLEDUCTVAVNOREHEAT_HPP
-

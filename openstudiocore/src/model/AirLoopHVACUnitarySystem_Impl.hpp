@@ -263,7 +263,7 @@ namespace detail {
 
     void resetCoolingCoil();
 
-    void setUseDOASDXCoolingCoil(bool useDOASDXCoolingCoil);
+    bool setUseDOASDXCoolingCoil(bool useDOASDXCoolingCoil);
 
     void resetUseDOASDXCoolingCoil();
 

@@ -49,29 +49,6 @@ namespace detail {
   class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAir_Impl : public StraightComponent_Impl
   {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -174,17 +151,18 @@ namespace detail {
 
     void autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
-    void setControllingZone( ThermalZone & zone );
+    bool setControllingZone( ThermalZone & zone );
 
     void resetControllingZone();
 
-    void setSupplyAirFan( HVACComponent & hvacComponent );
+    bool setSupplyAirFan( HVACComponent & hvacComponent );
 
-    void setHeatingCoil( HVACComponent & hvacComponent );
+    bool setHeatingCoil( HVACComponent & hvacComponent );
 
-    void setCoolingCoil( HVACComponent & hvacComponent );
+    bool setCoolingCoil( HVACComponent & hvacComponent );
 
-    void setSupplementalHeatingCoil( HVACComponent & hvacComponent );
+    bool setSupplementalHeatingCoil( HVACComponent & hvacComponent );
+
     bool setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater);
 
     void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();

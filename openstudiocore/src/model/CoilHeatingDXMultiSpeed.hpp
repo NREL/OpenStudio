@@ -133,7 +133,7 @@ class MODEL_API CoilHeatingDXMultiSpeed : public StraightComponent {
 
   void autosizeResistiveDefrostHeaterCapacity();
 
-  void setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
+  bool setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
 
   bool setFuelType(std::string fuelType);
 

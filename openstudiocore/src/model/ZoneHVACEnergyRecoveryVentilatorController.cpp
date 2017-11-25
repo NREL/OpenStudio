@@ -263,8 +263,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ZoneHVACEnergyRecoveryVentilatorController_Impl::setHighHumidityControlFlag(bool highHumidityControlFlag) {
-    setBooleanFieldValue(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::HighHumidityControlFlag, highHumidityControlFlag);
+  bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setHighHumidityControlFlag(bool highHumidityControlFlag) {
+    return setBooleanFieldValue(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::HighHumidityControlFlag, highHumidityControlFlag);;
   }
 
   bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setHighHumidityOutdoorAirFlowRatio(double highHumidityOutdoorAirFlowRatio) {
@@ -272,8 +272,8 @@ namespace detail {
     return result;
   }
 
-  void ZoneHVACEnergyRecoveryVentilatorController_Impl::setControlHighIndoorHumidityBasedonOutdoorHumidityRatio(bool controlHighIndoorHumidityBasedonOutdoorHumidityRatio) {
-    setBooleanFieldValue(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, controlHighIndoorHumidityBasedonOutdoorHumidityRatio);
+  bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setControlHighIndoorHumidityBasedonOutdoorHumidityRatio(bool controlHighIndoorHumidityBasedonOutdoorHumidityRatio) {
+    return setBooleanFieldValue(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, controlHighIndoorHumidityBasedonOutdoorHumidityRatio);;
   }
 
 } // detail
@@ -408,16 +408,16 @@ void ZoneHVACEnergyRecoveryVentilatorController::resetTimeofDayEconomizerFlowCon
   getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->resetTimeofDayEconomizerFlowControlSchedule();
 }
 
-void ZoneHVACEnergyRecoveryVentilatorController::setHighHumidityControlFlag(bool highHumidityControlFlag) {
-  getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setHighHumidityControlFlag(highHumidityControlFlag);
+bool ZoneHVACEnergyRecoveryVentilatorController::setHighHumidityControlFlag(bool highHumidityControlFlag) {
+  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setHighHumidityControlFlag(highHumidityControlFlag);
 }
 
 bool ZoneHVACEnergyRecoveryVentilatorController::setHighHumidityOutdoorAirFlowRatio(double highHumidityOutdoorAirFlowRatio) {
   return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setHighHumidityOutdoorAirFlowRatio(highHumidityOutdoorAirFlowRatio);
 }
 
-void ZoneHVACEnergyRecoveryVentilatorController::setControlHighIndoorHumidityBasedonOutdoorHumidityRatio(bool controlHighIndoorHumidityBasedonOutdoorHumidityRatio) {
-  getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setControlHighIndoorHumidityBasedonOutdoorHumidityRatio(controlHighIndoorHumidityBasedonOutdoorHumidityRatio);
+bool ZoneHVACEnergyRecoveryVentilatorController::setControlHighIndoorHumidityBasedonOutdoorHumidityRatio(bool controlHighIndoorHumidityBasedonOutdoorHumidityRatio) {
+  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setControlHighIndoorHumidityBasedonOutdoorHumidityRatio(controlHighIndoorHumidityBasedonOutdoorHumidityRatio);
 }
 
 /// @cond

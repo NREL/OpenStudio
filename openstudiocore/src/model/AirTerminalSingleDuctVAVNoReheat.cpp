@@ -444,9 +444,9 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
     return getBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ControlForOutdoorAir);
   }
 
-  void AirTerminalSingleDuctVAVNoReheat_Impl::setControlForOutdoorAir(bool controlForOutdoorAir)
+  bool AirTerminalSingleDuctVAVNoReheat_Impl::setControlForOutdoorAir(bool controlForOutdoorAir)
   {
-    setBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ControlForOutdoorAir,controlForOutdoorAir);
+    return setBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ControlForOutdoorAir,controlForOutdoorAir);;
   }
 
 } // detail
@@ -566,9 +566,9 @@ bool AirTerminalSingleDuctVAVNoReheat::controlForOutdoorAir() const
   return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->controlForOutdoorAir();
 }
 
-void AirTerminalSingleDuctVAVNoReheat::setControlForOutdoorAir(bool controlForOutdoorAir)
+bool AirTerminalSingleDuctVAVNoReheat::setControlForOutdoorAir(bool controlForOutdoorAir)
 {
-  getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->setControlForOutdoorAir(controlForOutdoorAir);
+  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->setControlForOutdoorAir(controlForOutdoorAir);
 }
 
 /// @cond
@@ -579,4 +579,3 @@ AirTerminalSingleDuctVAVNoReheat::AirTerminalSingleDuctVAVNoReheat(std::shared_p
 
 } // model
 } // openstudio
-

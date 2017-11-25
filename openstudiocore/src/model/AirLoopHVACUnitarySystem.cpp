@@ -675,8 +675,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void AirLoopHVACUnitarySystem_Impl::setUseDOASDXCoolingCoil(bool useDOASDXCoolingCoil) {
-    setBooleanFieldValue(OS_AirLoopHVAC_UnitarySystemFields::UseDOASDXCoolingCoil, useDOASDXCoolingCoil);
+  bool AirLoopHVACUnitarySystem_Impl::setUseDOASDXCoolingCoil(bool useDOASDXCoolingCoil) {
+    return setBooleanFieldValue(OS_AirLoopHVAC_UnitarySystemFields::UseDOASDXCoolingCoil, useDOASDXCoolingCoil);;
   }
 
   void AirLoopHVACUnitarySystem_Impl::resetUseDOASDXCoolingCoil() {
@@ -1583,8 +1583,8 @@ void AirLoopHVACUnitarySystem::resetCoolingCoil() {
   getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetCoolingCoil();
 }
 
-void AirLoopHVACUnitarySystem::setUseDOASDXCoolingCoil(bool useDOASDXCoolingCoil) {
-  getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setUseDOASDXCoolingCoil(useDOASDXCoolingCoil);
+bool AirLoopHVACUnitarySystem::setUseDOASDXCoolingCoil(bool useDOASDXCoolingCoil) {
+  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setUseDOASDXCoolingCoil(useDOASDXCoolingCoil);
 }
 
 void AirLoopHVACUnitarySystem::resetUseDOASDXCoolingCoil() {

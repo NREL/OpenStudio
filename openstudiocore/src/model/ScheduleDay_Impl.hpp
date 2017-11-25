@@ -110,7 +110,7 @@ namespace detail {
 
     virtual bool resetScheduleTypeLimits() override;
 
-    void setInterpolatetoTimestep(bool interpolatetoTimestep);
+    bool setInterpolatetoTimestep(bool interpolatetoTimestep);
 
     void resetInterpolatetoTimestep();
 
@@ -153,4 +153,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SCHEDULEDAY_IMPL_HPP
-

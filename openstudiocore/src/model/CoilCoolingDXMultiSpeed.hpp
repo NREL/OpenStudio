@@ -99,9 +99,9 @@ class MODEL_API CoilCoolingDXMultiSpeed : public StraightComponent {
 
   bool setCondenserType(std::string condenserType);
 
-  void setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
+  bool setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
 
-  void setApplyLatentDegradationtoSpeedsGreaterthan1(bool applyLatentDegradationtoSpeedsGreaterthan1);
+  bool setApplyLatentDegradationtoSpeedsGreaterthan1(bool applyLatentDegradationtoSpeedsGreaterthan1);
 
   void resetApplyLatentDegradationtoSpeedsGreaterthan1();
 
@@ -155,4 +155,3 @@ typedef std::vector<CoilCoolingDXMultiSpeed> CoilCoolingDXMultiSpeedVector;
 } // openstudio
 
 #endif // MODEL_COILCOOLINGDXMULTISPEED_HPP
-

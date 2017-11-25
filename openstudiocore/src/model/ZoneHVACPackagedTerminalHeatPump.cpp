@@ -571,9 +571,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ZoneHVACPackagedTerminalHeatPump_Impl::setSupplementalHeatingCoil( HVACComponent & hvacComponent )
+  bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplementalHeatingCoil( HVACComponent & hvacComponent )
   {
-    setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplementalHeatingCoilName,hvacComponent.handle());
+    return setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplementalHeatingCoilName,hvacComponent.handle());;
   }
 
   bool ZoneHVACPackagedTerminalHeatPump_Impl::setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater) {
@@ -1042,9 +1042,9 @@ void ZoneHVACPackagedTerminalHeatPump::setHeatingCoil( HVACComponent & hvacCompo
   getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setHeatingCoil( hvacComponent );
 }
 
-void ZoneHVACPackagedTerminalHeatPump::setSupplementalHeatingCoil( HVACComponent & hvacComponent )
+bool ZoneHVACPackagedTerminalHeatPump::setSupplementalHeatingCoil( HVACComponent & hvacComponent )
 {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setSupplementalHeatingCoil( hvacComponent );
+  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setSupplementalHeatingCoil( hvacComponent );
 }
 
 void ZoneHVACPackagedTerminalHeatPump::setCoolingCoil( HVACComponent & hvacComponent )

@@ -923,7 +923,7 @@ namespace detail {
     return false;
   }
 
-  void ModelObject_Impl::setBooleanFieldValue(unsigned index, bool value) {
+  bool ModelObject_Impl::setBooleanFieldValue(unsigned index, bool value) {
     bool ok(true);
     if (value) {
       ok = setString(index,"Yes");
@@ -934,6 +934,7 @@ namespace detail {
     if (!ok) {
       LOG_AND_THROW("Unable to set boolean field " << index << " in " << briefDescription() << ".");
     }
+    return true;
   }
 
   bool ModelObject_Impl::setSchedule(unsigned index,

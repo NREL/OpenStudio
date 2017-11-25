@@ -69,11 +69,11 @@ namespace detail {
     bool setBeginDayOfMonth(int day);
     bool setEndMonth(int month);
     bool setEndDayOfMonth(int day);
-    void setUseWeatherFileHolidays(bool use);
-    void setUseWeatherFileDaylightSavings(bool use);
-    void setApplyWeekendHolidayRule(bool apply);
-    void setUseWeatherFileRainInd(bool rainInd);
-    void setUseWeatherFileSnowInd(bool snowInd);
+    bool setUseWeatherFileHolidays(bool use);
+    bool setUseWeatherFileDaylightSavings(bool use);
+    bool setApplyWeekendHolidayRule(bool apply);
+    bool setUseWeatherFileRainInd(bool rainInd);
+    bool setUseWeatherFileSnowInd(bool snowInd);
     bool setNumTimePeriodRepeats(int numRepeats);
 
     // ensure that this object does not contain the date 2/29

@@ -152,7 +152,7 @@ class MODEL_API HeatExchangerAirToAirSensibleAndLatent : public AirToAirComponen
 
   bool supplyAirOutletTemperatureControl() const;
 
-  void setSupplyAirOutletTemperatureControl(bool supplyAirOutletTemperatureControl);
+  bool setSupplyAirOutletTemperatureControl(bool supplyAirOutletTemperatureControl);
 
   std::string heatExchangerType() const;
 
@@ -196,7 +196,7 @@ class MODEL_API HeatExchangerAirToAirSensibleAndLatent : public AirToAirComponen
 
   bool economizerLockout() const;
 
-  void setEconomizerLockout(bool economizerLockout);
+  bool setEconomizerLockout(bool economizerLockout);
 
  protected:
 

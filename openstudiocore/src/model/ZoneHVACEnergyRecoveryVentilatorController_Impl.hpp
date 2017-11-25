@@ -130,11 +130,11 @@ namespace detail {
 
     void resetTimeofDayEconomizerFlowControlSchedule();
 
-    void setHighHumidityControlFlag(bool highHumidityControlFlag);
+    bool setHighHumidityControlFlag(bool highHumidityControlFlag);
 
     bool setHighHumidityOutdoorAirFlowRatio(double highHumidityOutdoorAirFlowRatio);
 
-    void setControlHighIndoorHumidityBasedonOutdoorHumidityRatio(bool controlHighIndoorHumidityBasedonOutdoorHumidityRatio);
+    bool setControlHighIndoorHumidityBasedonOutdoorHumidityRatio(bool controlHighIndoorHumidityBasedonOutdoorHumidityRatio);
 
     //@}
     /** @name Other */
