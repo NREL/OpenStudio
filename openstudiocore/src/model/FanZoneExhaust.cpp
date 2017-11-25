@@ -270,9 +270,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanZoneExhaust_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool FanZoneExhaust_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Fan_ZoneExhaustFields::EndUseSubcategory, endUseSubcategory);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool FanZoneExhaust_Impl::setFlowFractionSchedule(Schedule& schedule) {
@@ -401,8 +401,8 @@ void FanZoneExhaust::resetMaximumFlowRate() {
   getImpl<detail::FanZoneExhaust_Impl>()->resetMaximumFlowRate();
 }
 
-void FanZoneExhaust::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::FanZoneExhaust_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool FanZoneExhaust::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::FanZoneExhaust_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 bool FanZoneExhaust::setFlowFractionSchedule(Schedule& schedule) {

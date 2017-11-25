@@ -331,9 +331,9 @@ namespace detail {
   //   OS_ASSERT(result);
   // }
 
-  void RefrigerationGasCoolerAirCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationGasCoolerAirCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_GasCooler_AirCooledFields::EndUseSubcategory, endUseSubcategory);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationGasCoolerAirCooled_Impl::resetEndUseSubcategory() {
@@ -570,8 +570,8 @@ void RefrigerationGasCoolerAirCooled::resetMinimumCondensingTemperature() {
 //   getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->resetAirInletNode();
 // }
 
-void RefrigerationGasCoolerAirCooled::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool RefrigerationGasCoolerAirCooled::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void RefrigerationGasCoolerAirCooled::resetEndUseSubcategory() {

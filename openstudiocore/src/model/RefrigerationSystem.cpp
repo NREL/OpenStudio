@@ -605,9 +605,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationSystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationSystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_SystemFields::EndUseSubcategory, endUseSubcategory);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSystem_Impl::resetEndUseSubcategory() {
@@ -949,8 +949,8 @@ void RefrigerationSystem::resetSuctionPipingZone() {
   getImpl<detail::RefrigerationSystem_Impl>()->resetSuctionPipingZone();
 }
 
-void RefrigerationSystem::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::RefrigerationSystem_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool RefrigerationSystem::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::RefrigerationSystem_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void RefrigerationSystem::resetEndUseSubcategory() {

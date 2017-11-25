@@ -420,7 +420,7 @@ namespace detail {
     return result;
   }
 
-  void EvaporativeFluidCoolerTwoSpeed_Impl::setOutdoorAirInletNodeName(boost::optional<std::string> outdoorAirInletNodeName) {
+  bool EvaporativeFluidCoolerTwoSpeed_Impl::setOutdoorAirInletNodeName(boost::optional<std::string> outdoorAirInletNodeName) {
     bool result(false);
     if (outdoorAirInletNodeName) {
       result = setString(OS_EvaporativeFluidCooler_TwoSpeedFields::OutdoorAirInletNodeName, outdoorAirInletNodeName.get());
@@ -429,7 +429,7 @@ namespace detail {
       resetOutdoorAirInletNodeName();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void EvaporativeFluidCoolerTwoSpeed_Impl::resetOutdoorAirInletNodeName() {
@@ -989,8 +989,8 @@ bool EvaporativeFluidCoolerTwoSpeed::setPerformanceInputMethod(std::string perfo
   return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setPerformanceInputMethod(performanceInputMethod);
 }
 
-void EvaporativeFluidCoolerTwoSpeed::setOutdoorAirInletNodeName(std::string outdoorAirInletNodeName) {
-  getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setOutdoorAirInletNodeName(outdoorAirInletNodeName);
+bool EvaporativeFluidCoolerTwoSpeed::setOutdoorAirInletNodeName(std::string outdoorAirInletNodeName) {
+  return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setOutdoorAirInletNodeName(outdoorAirInletNodeName);
 }
 
 void EvaporativeFluidCoolerTwoSpeed::resetOutdoorAirInletNodeName() {

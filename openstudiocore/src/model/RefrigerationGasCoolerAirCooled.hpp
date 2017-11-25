@@ -152,7 +152,7 @@ class MODEL_API RefrigerationGasCoolerAirCooled : public ParentObject {
 
   // void resetAirInletNode();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 

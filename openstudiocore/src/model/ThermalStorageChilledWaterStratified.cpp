@@ -500,7 +500,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ThermalStorageChilledWaterStratified_Impl::setAmbientTemperatureOutdoorAirNodeName(boost::optional<std::string> ambientTemperatureOutdoorAirNodeName) {
+  bool ThermalStorageChilledWaterStratified_Impl::setAmbientTemperatureOutdoorAirNodeName(boost::optional<std::string> ambientTemperatureOutdoorAirNodeName) {
     bool result(false);
     if (ambientTemperatureOutdoorAirNodeName) {
       result = setString(OS_ThermalStorage_ChilledWater_StratifiedFields::AmbientTemperatureOutdoorAirNodeName, ambientTemperatureOutdoorAirNodeName.get());
@@ -509,7 +509,7 @@ namespace detail {
       resetAmbientTemperatureOutdoorAirNodeName();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void ThermalStorageChilledWaterStratified_Impl::resetAmbientTemperatureOutdoorAirNodeName() {
@@ -1020,8 +1020,8 @@ void ThermalStorageChilledWaterStratified::resetAmbientTemperatureThermalZone() 
   getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->resetAmbientTemperatureThermalZone();
 }
 
-void ThermalStorageChilledWaterStratified::setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName) {
-  getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setAmbientTemperatureOutdoorAirNodeName(ambientTemperatureOutdoorAirNodeName);
+bool ThermalStorageChilledWaterStratified::setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName) {
+  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setAmbientTemperatureOutdoorAirNodeName(ambientTemperatureOutdoorAirNodeName);
 }
 
 void ThermalStorageChilledWaterStratified::resetAmbientTemperatureOutdoorAirNodeName() {

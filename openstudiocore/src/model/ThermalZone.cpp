@@ -535,9 +535,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ThermalZone_Impl::setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName) {
+  bool ThermalZone_Impl::setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName) {
     bool result = setString(OS_ThermalZoneFields::ZoneConditioningEquipmentListName, zoneConditioningEquipmentListName);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool ThermalZone_Impl::setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl) {
@@ -2665,8 +2665,8 @@ void ThermalZone::resetZoneOutsideConvectionAlgorithm() {
   getImpl<detail::ThermalZone_Impl>()->resetZoneOutsideConvectionAlgorithm();
 }
 
-void ThermalZone::setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName) {
-  getImpl<detail::ThermalZone_Impl>()->setZoneConditioningEquipmentListName(zoneConditioningEquipmentListName);
+bool ThermalZone::setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName) {
+  return getImpl<detail::ThermalZone_Impl>()->setZoneConditioningEquipmentListName(zoneConditioningEquipmentListName);
 }
 
 bool ThermalZone::setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl) {

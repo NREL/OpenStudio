@@ -118,7 +118,7 @@ class MODEL_API FanOnOff : public StraightComponent {
 
   void resetMotorInAirstreamFraction();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 

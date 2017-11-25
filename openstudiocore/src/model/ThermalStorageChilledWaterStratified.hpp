@@ -194,7 +194,7 @@ class MODEL_API ThermalStorageChilledWaterStratified : public WaterToWaterCompon
 
   void resetAmbientTemperatureThermalZone();
 
-  void setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName);
+  bool setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName);
 
   void resetAmbientTemperatureOutdoorAirNodeName();
 

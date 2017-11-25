@@ -239,7 +239,7 @@ namespace detail {
 
     void resetZoneOutsideConvectionAlgorithm();
 
-    void setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName);
+    bool setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName);
 
     bool setThermostatSetpointDualSetpoint(const ThermostatSetpointDualSetpoint& thermostat);
 

@@ -209,7 +209,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   void resetSuctionPipingZone();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 

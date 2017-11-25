@@ -387,9 +387,9 @@ namespace detail {
     return result;
   }
 
-  void ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+  bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
     bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerName, outdoorAirMixerName);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplyAirFlowRateDuringCoolingOperation(boost::optional<double> supplyAirFlowRateDuringCoolingOperation) {
@@ -910,8 +910,8 @@ bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirMixerObjectType(std::string 
   return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setOutdoorAirMixerObjectType(outdoorAirMixerObjectType);
 }
 
-void ZoneHVACPackagedTerminalHeatPump::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setOutdoorAirMixerName(outdoorAirMixerName);
+bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setOutdoorAirMixerName(outdoorAirMixerName);
 }
 
 bool ZoneHVACPackagedTerminalHeatPump::setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation) {

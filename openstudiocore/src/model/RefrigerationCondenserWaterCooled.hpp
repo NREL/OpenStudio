@@ -141,7 +141,7 @@ class MODEL_API RefrigerationCondenserWaterCooled : public StraightComponent {
 
   void resetWaterMinimumWaterInletTemperature();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 

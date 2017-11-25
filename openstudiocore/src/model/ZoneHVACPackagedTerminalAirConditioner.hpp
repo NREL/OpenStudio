@@ -134,7 +134,7 @@ class MODEL_API ZoneHVACPackagedTerminalAirConditioner : public ZoneHVACComponen
 
   bool setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType);
 
-  void setOutdoorAirMixerName(std::string outdoorAirMixerName);
+  bool setOutdoorAirMixerName(std::string outdoorAirMixerName);
 
   bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
 
@@ -213,4 +213,3 @@ typedef std::vector<ZoneHVACPackagedTerminalAirConditioner> ZoneHVACPackagedTerm
 } // openstudio
 
 #endif // MODEL_ZONEHVACPACKAGEDTERMINALAIRCONDITIONER_HPP
-

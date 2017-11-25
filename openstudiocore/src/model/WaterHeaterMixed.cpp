@@ -909,14 +909,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void WaterHeaterMixed_Impl::setAmbientTemperatureOutdoorAirNodeName(boost::optional<std::string> ambientTemperatureOutdoorAirNodeName) {
+  bool WaterHeaterMixed_Impl::setAmbientTemperatureOutdoorAirNodeName(boost::optional<std::string> ambientTemperatureOutdoorAirNodeName) {
     bool result = false;
     if (ambientTemperatureOutdoorAirNodeName) {
       result = setString(OS_WaterHeater_MixedFields::AmbientTemperatureOutdoorAirNodeName, ambientTemperatureOutdoorAirNodeName.get());
     } else {
       result = setString(OS_WaterHeater_MixedFields::AmbientTemperatureOutdoorAirNodeName, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void WaterHeaterMixed_Impl::resetAmbientTemperatureOutdoorAirNodeName() {
@@ -2168,8 +2168,8 @@ void WaterHeaterMixed::resetAmbientTemperatureThermalZone() {
   getImpl<detail::WaterHeaterMixed_Impl>()->resetAmbientTemperatureThermalZone();
 }
 
-void WaterHeaterMixed::setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName) {
-  getImpl<detail::WaterHeaterMixed_Impl>()->setAmbientTemperatureOutdoorAirNodeName(ambientTemperatureOutdoorAirNodeName);
+bool WaterHeaterMixed::setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName) {
+  return getImpl<detail::WaterHeaterMixed_Impl>()->setAmbientTemperatureOutdoorAirNodeName(ambientTemperatureOutdoorAirNodeName);
 }
 
 void WaterHeaterMixed::resetAmbientTemperatureOutdoorAirNodeName() {

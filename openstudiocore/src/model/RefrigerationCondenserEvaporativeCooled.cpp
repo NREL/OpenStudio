@@ -522,9 +522,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserEvaporativeCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationCondenserEvaporativeCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_Condenser_EvaporativeCooledFields::EndUseSubcategory, endUseSubcategory);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserEvaporativeCooled_Impl::resetEndUseSubcategory() {
@@ -914,8 +914,8 @@ void RefrigerationCondenserEvaporativeCooled::resetEvaporativeCondenserAvailabil
   getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetEvaporativeCondenserAvailabilitySchedule();
 }
 
-void RefrigerationCondenserEvaporativeCooled::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool RefrigerationCondenserEvaporativeCooled::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void RefrigerationCondenserEvaporativeCooled::resetEndUseSubcategory() {

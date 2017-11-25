@@ -179,7 +179,7 @@ class MODEL_API RefrigerationTranscriticalSystem : public ModelObject {
 
   void resetLowTemperatureSuctionPipingZone();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 

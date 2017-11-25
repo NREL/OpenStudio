@@ -111,7 +111,7 @@ class MODEL_API RefrigerationCompressor : public ParentObject {
 
   void resetRatedSubcooling();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 

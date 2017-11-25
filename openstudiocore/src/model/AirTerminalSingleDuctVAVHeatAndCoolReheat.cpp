@@ -216,9 +216,9 @@ namespace detail {
     return result;
   }
 
-  void AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::setAirOutlet(std::string airOutlet) {
+  bool AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::setAirOutlet(std::string airOutlet) {
     bool result = setString(OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::AirOutlet, airOutlet);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::setConvergenceTolerance(double convergenceTolerance) {
@@ -510,4 +510,3 @@ AirTerminalSingleDuctVAVHeatAndCoolReheat::AirTerminalSingleDuctVAVHeatAndCoolRe
 
 } // model
 } // openstudio
-

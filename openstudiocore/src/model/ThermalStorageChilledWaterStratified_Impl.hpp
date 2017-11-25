@@ -208,7 +208,7 @@ namespace detail {
 
     void resetAmbientTemperatureThermalZone();
 
-    void setAmbientTemperatureOutdoorAirNodeName(boost::optional<std::string> ambientTemperatureOutdoorAirNodeName);
+    bool setAmbientTemperatureOutdoorAirNodeName(boost::optional<std::string> ambientTemperatureOutdoorAirNodeName);
 
     void resetAmbientTemperatureOutdoorAirNodeName();
 

@@ -97,7 +97,7 @@ class MODEL_API FanZoneExhaust : public ZoneHVACComponent {
 
   void resetMaximumFlowRate();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   bool setFlowFractionSchedule(Schedule& schedule);
 

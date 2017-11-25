@@ -369,7 +369,7 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
 
   void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
 
-  void setOutdoorDryBulbTemperatureSensorNodeName(std::string outdoorDryBulbTemperatureSensorNodeName);
+  bool setOutdoorDryBulbTemperatureSensorNodeName(std::string outdoorDryBulbTemperatureSensorNodeName);
 
   void resetOutdoorDryBulbTemperatureSensorNodeName();
 

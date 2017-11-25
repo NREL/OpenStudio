@@ -223,7 +223,7 @@ class MODEL_API RefrigerationCondenserEvaporativeCooled : public ParentObject {
 
   void resetEvaporativeCondenserAvailabilitySchedule();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 

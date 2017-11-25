@@ -115,7 +115,7 @@ namespace detail {
 
     void resetMaximumFlowRate();
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     bool setFlowFractionSchedule(Schedule& schedule);
 

@@ -230,19 +230,19 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
 
   void resetMinimumUnloadingRatio();
 
-  void setChilledWaterInletNodeName(std::string chilledWaterInletNodeName);
+  bool setChilledWaterInletNodeName(std::string chilledWaterInletNodeName);
 
-  void setChilledWaterOutletNodeName(std::string chilledWaterOutletNodeName);
+  bool setChilledWaterOutletNodeName(std::string chilledWaterOutletNodeName);
 
-  void setCondenserInletNodeName(boost::optional<std::string> condenserInletNodeName);
+  bool setCondenserInletNodeName(boost::optional<std::string> condenserInletNodeName);
 
-  void setCondenserInletNodeName(std::string condenserInletNodeName);
+  bool setCondenserInletNodeName(std::string condenserInletNodeName);
 
   void resetCondenserInletNodeName();
 
-  void setCondenserOutletNodeName(boost::optional<std::string> condenserOutletNodeName);
+  bool setCondenserOutletNodeName(boost::optional<std::string> condenserOutletNodeName);
 
-  void setCondenserOutletNodeName(std::string condenserOutletNodeName);
+  bool setCondenserOutletNodeName(std::string condenserOutletNodeName);
 
   void resetCondenserOutletNodeName();
 
@@ -270,15 +270,15 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
 
   void resetDesignHeatRecoveryWaterFlowRate();
 
-  void setHeatRecoveryInletNodeName(boost::optional<std::string> heatRecoveryInletNodeName);
+  bool setHeatRecoveryInletNodeName(boost::optional<std::string> heatRecoveryInletNodeName);
 
-  void setHeatRecoveryInletNodeName(std::string heatRecoveryInletNodeName);
+  bool setHeatRecoveryInletNodeName(std::string heatRecoveryInletNodeName);
 
   void resetHeatRecoveryInletNodeName();
 
-  void setHeatRecoveryOutletNodeName(boost::optional<std::string> heatRecoveryOutletNodeName);
+  bool setHeatRecoveryOutletNodeName(boost::optional<std::string> heatRecoveryOutletNodeName);
 
-  void setHeatRecoveryOutletNodeName(std::string heatRecoveryOutletNodeName);
+  bool setHeatRecoveryOutletNodeName(std::string heatRecoveryOutletNodeName);
 
   void resetHeatRecoveryOutletNodeName();
 

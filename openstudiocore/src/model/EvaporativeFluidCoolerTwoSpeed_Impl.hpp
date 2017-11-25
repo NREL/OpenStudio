@@ -188,7 +188,7 @@ namespace detail {
 
     bool setPerformanceInputMethod(std::string performanceInputMethod);
 
-    void setOutdoorAirInletNodeName(boost::optional<std::string> outdoorAirInletNodeName);
+    bool setOutdoorAirInletNodeName(boost::optional<std::string> outdoorAirInletNodeName);
 
     void resetOutdoorAirInletNodeName();
 

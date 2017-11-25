@@ -535,9 +535,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationTranscriticalSystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationTranscriticalSystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_TranscriticalSystemFields::EndUseSubcategory, endUseSubcategory);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationTranscriticalSystem_Impl::resetEndUseSubcategory() {
@@ -802,8 +802,8 @@ void RefrigerationTranscriticalSystem::resetLowTemperatureSuctionPipingZone() {
   getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->resetLowTemperatureSuctionPipingZone();
 }
 
-void RefrigerationTranscriticalSystem::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool RefrigerationTranscriticalSystem::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void RefrigerationTranscriticalSystem::resetEndUseSubcategory() {

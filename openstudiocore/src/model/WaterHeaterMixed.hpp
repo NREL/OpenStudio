@@ -341,7 +341,7 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   void resetAmbientTemperatureThermalZone();
 
-  void setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName);
+  bool setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName);
 
   void resetAmbientTemperatureOutdoorAirNodeName();
 

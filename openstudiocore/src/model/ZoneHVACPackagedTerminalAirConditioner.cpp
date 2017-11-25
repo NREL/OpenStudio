@@ -332,9 +332,9 @@ namespace detail {
     return result;
   }
 
-  void ZoneHVACPackagedTerminalAirConditioner_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+  bool ZoneHVACPackagedTerminalAirConditioner_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
     bool result = setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirMixerName, outdoorAirMixerName);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool ZoneHVACPackagedTerminalAirConditioner_Impl::setSupplyAirFlowRateDuringCoolingOperation(boost::optional<double> supplyAirFlowRateDuringCoolingOperation) {
@@ -743,8 +743,8 @@ bool ZoneHVACPackagedTerminalAirConditioner::setOutdoorAirMixerObjectType(std::s
   return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setOutdoorAirMixerObjectType(outdoorAirMixerObjectType);
 }
 
-void ZoneHVACPackagedTerminalAirConditioner::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
-  getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setOutdoorAirMixerName(outdoorAirMixerName);
+bool ZoneHVACPackagedTerminalAirConditioner::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+  return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setOutdoorAirMixerName(outdoorAirMixerName);
 }
 
 bool ZoneHVACPackagedTerminalAirConditioner::setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation) {
@@ -872,4 +872,3 @@ void ZoneHVACPackagedTerminalAirConditioner::setCoolingCoil( HVACComponent & coo
 
 } // model
 } // openstudio
-

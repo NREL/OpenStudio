@@ -1057,7 +1057,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void AirLoopHVACUnitarySystem_Impl::setOutdoorDryBulbTemperatureSensorNodeName(boost::optional<std::string> outdoorDryBulbTemperatureSensorNodeName) {
+  bool AirLoopHVACUnitarySystem_Impl::setOutdoorDryBulbTemperatureSensorNodeName(boost::optional<std::string> outdoorDryBulbTemperatureSensorNodeName) {
     bool result(false);
     if (outdoorDryBulbTemperatureSensorNodeName) {
       result = setString(OS_AirLoopHVAC_UnitarySystemFields::OutdoorDryBulbTemperatureSensorNodeName, outdoorDryBulbTemperatureSensorNodeName.get());
@@ -1066,7 +1066,7 @@ namespace detail {
       resetOutdoorDryBulbTemperatureSensorNodeName();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void AirLoopHVACUnitarySystem_Impl::resetOutdoorDryBulbTemperatureSensorNodeName() {
@@ -1783,8 +1783,8 @@ void AirLoopHVACUnitarySystem::resetMaximumOutdoorDryBulbTemperatureforSupplemen
   getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
 }
 
-void AirLoopHVACUnitarySystem::setOutdoorDryBulbTemperatureSensorNodeName(std::string outdoorDryBulbTemperatureSensorNodeName) {
-  getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setOutdoorDryBulbTemperatureSensorNodeName(outdoorDryBulbTemperatureSensorNodeName);
+bool AirLoopHVACUnitarySystem::setOutdoorDryBulbTemperatureSensorNodeName(std::string outdoorDryBulbTemperatureSensorNodeName) {
+  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setOutdoorDryBulbTemperatureSensorNodeName(outdoorDryBulbTemperatureSensorNodeName);
 }
 
 void AirLoopHVACUnitarySystem::resetOutdoorDryBulbTemperatureSensorNodeName() {

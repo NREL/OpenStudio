@@ -363,7 +363,7 @@ namespace detail {
 
     void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
 
-    void setOutdoorDryBulbTemperatureSensorNodeName(boost::optional<std::string> outdoorDryBulbTemperatureSensorNodeName);
+    bool setOutdoorDryBulbTemperatureSensorNodeName(boost::optional<std::string> outdoorDryBulbTemperatureSensorNodeName);
 
     void resetOutdoorDryBulbTemperatureSensorNodeName();
 

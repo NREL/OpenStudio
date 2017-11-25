@@ -322,9 +322,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserWaterCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationCondenserWaterCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::EndUseSubcategory, endUseSubcategory);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserWaterCooled_Impl::resetEndUseSubcategory() {
@@ -575,8 +575,8 @@ void RefrigerationCondenserWaterCooled::resetWaterMinimumWaterInletTemperature()
   getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetWaterMinimumWaterInletTemperature();
 }
 
-void RefrigerationCondenserWaterCooled::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool RefrigerationCondenserWaterCooled::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void RefrigerationCondenserWaterCooled::resetEndUseSubcategory() {

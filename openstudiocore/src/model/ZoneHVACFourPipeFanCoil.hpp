@@ -206,7 +206,7 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   bool setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType);
 
-  void setOutdoorAirMixerName(std::string outdoorAirMixerName);
+  bool setOutdoorAirMixerName(std::string outdoorAirMixerName);
 
   bool setSupplyAirFan( HVACComponent & fan );
 

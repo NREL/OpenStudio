@@ -664,9 +664,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationSecondarySystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationSecondarySystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_SecondarySystemFields::EndUseSubcategory, endUseSubcategory);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSecondarySystem_Impl::resetEndUseSubcategory() {
@@ -1035,8 +1035,8 @@ void RefrigerationSecondarySystem::resetEvaporatorRefrigerantInventory() {
   getImpl<detail::RefrigerationSecondarySystem_Impl>()->resetEvaporatorRefrigerantInventory();
 }
 
-void RefrigerationSecondarySystem::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::RefrigerationSecondarySystem_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool RefrigerationSecondarySystem::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void RefrigerationSecondarySystem::resetEndUseSubcategory() {

@@ -317,10 +317,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanOnOff_Impl::setEndUseSubcategory(std::string endUseSubcategory)
+  bool FanOnOff_Impl::setEndUseSubcategory(std::string endUseSubcategory)
   {
     bool result = setString(OS_Fan_OnOffFields::EndUseSubcategory, endUseSubcategory);
-    OS_ASSERT(result);
+    return result;
   }
 
   void FanOnOff_Impl::resetEndUseSubcategory()
@@ -753,9 +753,9 @@ bool FanOnOff::isEndUseSubcategoryDefaulted() const
 
 // Field End-Use Subcategory
 
-void FanOnOff::setEndUseSubcategory(std::string endUseSubcategory)
+bool FanOnOff::setEndUseSubcategory(std::string endUseSubcategory)
 {
-  getImpl<detail::FanOnOff_Impl>()->setEndUseSubcategory(endUseSubcategory);
+  return getImpl<detail::FanOnOff_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void FanOnOff::resetEndUseSubcategory()

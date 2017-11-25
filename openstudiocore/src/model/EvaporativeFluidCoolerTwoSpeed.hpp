@@ -176,7 +176,7 @@ class MODEL_API EvaporativeFluidCoolerTwoSpeed : public StraightComponent {
 
   bool setPerformanceInputMethod(std::string performanceInputMethod);
 
-  void setOutdoorAirInletNodeName(std::string outdoorAirInletNodeName);
+  bool setOutdoorAirInletNodeName(std::string outdoorAirInletNodeName);
 
   void resetOutdoorAirInletNodeName();
 

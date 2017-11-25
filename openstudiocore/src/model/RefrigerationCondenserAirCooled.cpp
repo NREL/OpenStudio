@@ -271,9 +271,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserAirCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationCondenserAirCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_Condenser_AirCooledFields::EndUseSubcategory, endUseSubcategory);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserAirCooled_Impl::resetEndUseSubcategory() {
@@ -465,8 +465,8 @@ void RefrigerationCondenserAirCooled::resetAirInletZone() {
   getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->resetAirInletZone();
 }
 
-void RefrigerationCondenserAirCooled::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool RefrigerationCondenserAirCooled::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void RefrigerationCondenserAirCooled::resetEndUseSubcategory() {

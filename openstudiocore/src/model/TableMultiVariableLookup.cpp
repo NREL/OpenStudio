@@ -329,7 +329,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void TableMultiVariableLookup_Impl::setExternalFileName(boost::optional<std::string> externalFileName) {
+  bool TableMultiVariableLookup_Impl::setExternalFileName(boost::optional<std::string> externalFileName) {
     bool result(false);
     if (externalFileName) {
       result = setString(OS_Table_MultiVariableLookupFields::ExternalFileName, externalFileName.get());
@@ -338,7 +338,7 @@ namespace detail {
       resetExternalFileName();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void TableMultiVariableLookup_Impl::resetExternalFileName() {

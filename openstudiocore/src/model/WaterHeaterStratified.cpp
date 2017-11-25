@@ -544,9 +544,9 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterHeater_StratifiedFields::IndirectAlternateSetpointTemperatureScheduleName);
   }
 
-  void WaterHeaterStratified_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool WaterHeaterStratified_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_WaterHeater_StratifiedFields::EndUseSubcategory, endUseSubcategory);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool WaterHeaterStratified_Impl::setTankVolume(boost::optional<double> tankVolume) {
@@ -746,7 +746,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void WaterHeaterStratified_Impl::setAmbientTemperatureOutdoorAirNodeName(boost::optional<std::string> ambientTemperatureOutdoorAirNodeName) {
+  bool WaterHeaterStratified_Impl::setAmbientTemperatureOutdoorAirNodeName(boost::optional<std::string> ambientTemperatureOutdoorAirNodeName) {
     bool result(false);
     if (ambientTemperatureOutdoorAirNodeName) {
       result = setString(OS_WaterHeater_StratifiedFields::AmbientTemperatureOutdoorAirNodeName, ambientTemperatureOutdoorAirNodeName.get());
@@ -755,7 +755,7 @@ namespace detail {
       resetAmbientTemperatureOutdoorAirNodeName();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void WaterHeaterStratified_Impl::resetAmbientTemperatureOutdoorAirNodeName() {
@@ -1458,8 +1458,8 @@ boost::optional<Schedule> WaterHeaterStratified::indirectAlternateSetpointTemper
   return getImpl<detail::WaterHeaterStratified_Impl>()->indirectAlternateSetpointTemperatureSchedule();
 }
 
-void WaterHeaterStratified::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::WaterHeaterStratified_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool WaterHeaterStratified::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::WaterHeaterStratified_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 bool WaterHeaterStratified::setTankVolume(double tankVolume) {
@@ -1594,8 +1594,8 @@ void WaterHeaterStratified::resetAmbientTemperatureThermalZone() {
   getImpl<detail::WaterHeaterStratified_Impl>()->resetAmbientTemperatureThermalZone();
 }
 
-void WaterHeaterStratified::setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName) {
-  getImpl<detail::WaterHeaterStratified_Impl>()->setAmbientTemperatureOutdoorAirNodeName(ambientTemperatureOutdoorAirNodeName);
+bool WaterHeaterStratified::setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName) {
+  return getImpl<detail::WaterHeaterStratified_Impl>()->setAmbientTemperatureOutdoorAirNodeName(ambientTemperatureOutdoorAirNodeName);
 }
 
 void WaterHeaterStratified::resetAmbientTemperatureOutdoorAirNodeName() {

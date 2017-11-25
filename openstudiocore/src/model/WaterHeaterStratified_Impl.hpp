@@ -224,7 +224,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     bool setTankVolume(boost::optional<double> tankVolume);
 
@@ -292,7 +292,7 @@ namespace detail {
 
     void resetAmbientTemperatureThermalZone();
 
-    void setAmbientTemperatureOutdoorAirNodeName(boost::optional<std::string> ambientTemperatureOutdoorAirNodeName);
+    bool setAmbientTemperatureOutdoorAirNodeName(boost::optional<std::string> ambientTemperatureOutdoorAirNodeName);
 
     void resetAmbientTemperatureOutdoorAirNodeName();
 

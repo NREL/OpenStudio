@@ -167,7 +167,7 @@ namespace detail {
 
     // void resetAirInletNode();
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
 

@@ -551,9 +551,9 @@ namespace detail {
     return result;
   }
 
-  void ZoneHVACFourPipeFanCoil_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+  bool ZoneHVACFourPipeFanCoil_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
     bool result = setString(OS_ZoneHVAC_FourPipeFanCoilFields::OutdoorAirMixerName, outdoorAirMixerName);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool ZoneHVACFourPipeFanCoil_Impl::setSupplyAirFan( HVACComponent & fan )
@@ -1284,8 +1284,8 @@ bool ZoneHVACFourPipeFanCoil::setOutdoorAirMixerObjectType(std::string outdoorAi
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setOutdoorAirMixerObjectType(outdoorAirMixerObjectType);
 }
 
-void ZoneHVACFourPipeFanCoil::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
-  getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setOutdoorAirMixerName(outdoorAirMixerName);
+bool ZoneHVACFourPipeFanCoil::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setOutdoorAirMixerName(outdoorAirMixerName);
 }
 
 bool ZoneHVACFourPipeFanCoil::setSupplyAirFan( HVACComponent & fan )

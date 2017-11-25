@@ -120,15 +120,15 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setCity(std::string city);
+    bool setCity(std::string city);
 
-    void setStateProvinceRegion(std::string stateProvinceRegion);
+    bool setStateProvinceRegion(std::string stateProvinceRegion);
 
-    void setCountry(std::string country);
+    bool setCountry(std::string country);
 
-    void setDataSource(std::string dataSource);
+    bool setDataSource(std::string dataSource);
 
-    void setWMONumber(std::string wMONumber);
+    bool setWMONumber(std::string wMONumber);
 
     bool setLatitude(double latitude);
 
@@ -140,15 +140,15 @@ namespace detail {
 
     void resetElevation();
 
-    //void setUrl(boost::optional<std::string> url);
+    //bool setUrl(boost::optional<std::string> url);
 
-    //void setUrl(std::string url);
+    //bool setUrl(std::string url);
 
     //void resetUrl();
 
-    //void setChecksum(boost::optional<std::string> checksum);
+    //bool setChecksum(boost::optional<std::string> checksum);
 
-    //void setChecksum(std::string checksum);
+    //bool setChecksum(std::string checksum);
 
     //void resetChecksum();
 
@@ -182,4 +182,3 @@ protected:
 } // openstudio
 
 #endif // MODEL_WEATHERFILE_IMPL_HPP
-

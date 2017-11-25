@@ -220,7 +220,7 @@ class MODEL_API WaterHeaterStratified : public WaterToWaterComponent {
   /** @name Setters */
   //@{
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   bool setTankVolume(double tankVolume);
 
@@ -288,7 +288,7 @@ class MODEL_API WaterHeaterStratified : public WaterToWaterComponent {
 
   void resetAmbientTemperatureThermalZone();
 
-  void setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName);
+  bool setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName);
 
   void resetAmbientTemperatureOutdoorAirNodeName();
 

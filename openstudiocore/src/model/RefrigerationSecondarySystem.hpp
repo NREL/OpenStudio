@@ -231,7 +231,7 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
 
   void resetEvaporatorRefrigerantInventory();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 

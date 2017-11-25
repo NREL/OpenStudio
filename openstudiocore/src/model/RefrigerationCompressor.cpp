@@ -263,9 +263,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCompressor_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationCompressor_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_CompressorFields::EndUseSubcategory, endUseSubcategory);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCompressor_Impl::resetEndUseSubcategory() {
@@ -479,8 +479,8 @@ void RefrigerationCompressor::resetRatedSubcooling() {
   getImpl<detail::RefrigerationCompressor_Impl>()->resetRatedSubcooling();
 }
 
-void RefrigerationCompressor::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::RefrigerationCompressor_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool RefrigerationCompressor::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::RefrigerationCompressor_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void RefrigerationCompressor::resetEndUseSubcategory() {

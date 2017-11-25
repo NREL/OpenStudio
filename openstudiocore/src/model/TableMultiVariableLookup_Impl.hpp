@@ -168,7 +168,7 @@ namespace detail {
 
     void resetTableDataFormat();
 
-    void setExternalFileName(boost::optional<std::string> externalFileName);
+    bool setExternalFileName(boost::optional<std::string> externalFileName);
 
     void resetExternalFileName();
 

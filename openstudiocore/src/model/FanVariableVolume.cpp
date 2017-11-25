@@ -630,9 +630,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanVariableVolume_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool FanVariableVolume_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Fan_VariableVolumeFields::EndUseSubcategory, endUseSubcategory);
-    OS_ASSERT(result);
+    return result;
   }
 
   void FanVariableVolume_Impl::resetEndUseSubcategory() {
@@ -1209,8 +1209,8 @@ void FanVariableVolume::resetFanPowerCoefficient5() {
   getImpl<detail::FanVariableVolume_Impl>()->resetFanPowerCoefficient5();
 }
 
-void FanVariableVolume::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::FanVariableVolume_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool FanVariableVolume::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::FanVariableVolume_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void FanVariableVolume::resetEndUseSubcategory() {

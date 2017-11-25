@@ -166,7 +166,7 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   void resetZoneOutsideConvectionAlgorithm();
 
-  void setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName);
+  bool setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName);
 
   /** \deprecated */
   bool setThermostatSetpointDualSetpoint(const ThermostatSetpointDualSetpoint & thermostat);
