@@ -671,8 +671,8 @@ int PlantLoop_Impl::glycolConcentration() const {
   return getInt(OS_PlantLoopFields::GlycolConcentration,true).get();
 }
 
-void PlantLoop_Impl::setGlycolConcentration(int glycolConcentration) {
-  setInt(OS_PlantLoopFields::GlycolConcentration, glycolConcentration);
+bool PlantLoop_Impl::setGlycolConcentration(int glycolConcentration) {
+  return setInt(OS_PlantLoopFields::GlycolConcentration, glycolConcentration);;
 }
 
 Node PlantLoop_Impl::loopTemperatureSetpointNode()
@@ -1173,8 +1173,8 @@ int PlantLoop::glycolConcentration() const {
   return getImpl<detail::PlantLoop_Impl>()->glycolConcentration();
 }
 
-void PlantLoop::setGlycolConcentration(int glycolConcentration) {
-  getImpl<detail::PlantLoop_Impl>()->setGlycolConcentration(glycolConcentration);
+bool PlantLoop::setGlycolConcentration(int glycolConcentration) {
+  return getImpl<detail::PlantLoop_Impl>()->setGlycolConcentration(glycolConcentration);
 }
 
 Node PlantLoop::loopTemperatureSetpointNode()

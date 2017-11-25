@@ -60,7 +60,7 @@ class MODEL_API LifeCycleCostUsePriceEscalation_Impl : public ParentObject_Impl{
   void setEscalationStartMonth(const std::string& str);
 
   OptionalInt escalationStartYear() const;
-  void setEscalationStartYear(int num);
+  bool setEscalationStartYear(int num);
 
   boost::optional<double> yearEscalation(unsigned index) const;
   bool setYearEscalation(unsigned index, double num);

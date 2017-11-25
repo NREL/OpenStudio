@@ -79,7 +79,7 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   bool setFluidType( const std::string & value );
 
-  void setGlycolConcentration(int glycolConcentration);
+  bool setGlycolConcentration(int glycolConcentration);
 
   int glycolConcentration() const;
 

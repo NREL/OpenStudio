@@ -95,7 +95,7 @@ public:
 
   void setThresholdTest(const std::string& thresholdTest);
 
-  void setNumberOfMonths(int numberOfMonths);
+  bool setNumberOfMonths(int numberOfMonths);
 
   //@}
 

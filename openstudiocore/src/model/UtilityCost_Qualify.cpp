@@ -66,9 +66,9 @@ OptionalInt UtilityCost_Qualify_Impl::numberOfMonths() const
   return getInt(OS_UtilityCost_QualifyFields::NumberofMonths);
 }
 
-void UtilityCost_Qualify_Impl::setNumberOfMonths(int num)
+bool UtilityCost_Qualify_Impl::setNumberOfMonths(int num)
 {
-  setInt(OS_UtilityCost_QualifyFields::NumberofMonths,num);
+  return setInt(OS_UtilityCost_QualifyFields::NumberofMonths,num);;
 }
 
 OptionalString UtilityCost_Qualify_Impl::tariffName() const
@@ -186,9 +186,9 @@ OptionalInt UtilityCost_Qualify::numberOfMonths() const
   return getImpl<detail::UtilityCost_Qualify_Impl>()->numberOfMonths();
 }
 
-void UtilityCost_Qualify::setNumberOfMonths(int num)
+bool UtilityCost_Qualify::setNumberOfMonths(int num)
 {
-  getImpl<detail::UtilityCost_Qualify_Impl>()->setNumberOfMonths(num);
+  return getImpl<detail::UtilityCost_Qualify_Impl>()->setNumberOfMonths(num);
 }
 
 OptionalString UtilityCost_Qualify::name() const

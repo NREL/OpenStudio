@@ -67,9 +67,9 @@ OptionalInt LifeCycleCostUsePriceEscalation_Impl::escalationStartYear() const
   return getInt(OS_LifeCycleCost_UsePriceEscalationFields::EscalationStartYear);
 }
 
-void LifeCycleCostUsePriceEscalation_Impl::setEscalationStartYear(int num)
+bool LifeCycleCostUsePriceEscalation_Impl::setEscalationStartYear(int num)
 {
-  setInt(OS_LifeCycleCost_UsePriceEscalationFields::EscalationStartYear,num);
+  return setInt(OS_LifeCycleCost_UsePriceEscalationFields::EscalationStartYear,num);;
 }
 
 boost::optional<double> LifeCycleCostUsePriceEscalation_Impl::yearEscalation(unsigned index) const
@@ -175,9 +175,9 @@ OptionalInt LifeCycleCostUsePriceEscalation::escalationStartYear() const
   return getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>()->escalationStartYear();
 }
 
-void LifeCycleCostUsePriceEscalation::setEscalationStartYear(int num)
+bool LifeCycleCostUsePriceEscalation::setEscalationStartYear(int num)
 {
-  getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>()->setEscalationStartYear(num);
+  return getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>()->setEscalationStartYear(num);
 }
 
 boost::optional<double> LifeCycleCostUsePriceEscalation::yearEscalation(unsigned index) const {

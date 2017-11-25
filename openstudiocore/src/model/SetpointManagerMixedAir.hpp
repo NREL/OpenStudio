@@ -71,19 +71,19 @@ class MODEL_API SetpointManagerMixedAir : public SetpointManager
   boost::optional<Node> referenceSetpointNode();
 
   /** Sets the Node referred to by the referenceSetpointNodeName. **/
-  void setReferenceSetpointNode( Node & node );
+  bool setReferenceSetpointNode( Node & node );
 
   /** Returns the Node referred to by the fanInletNodeName. **/
   boost::optional<Node> fanInletNode();
 
   /** Sets the Node referred to by the fanInletNodeName. **/
-  void setFanInletNode( Node & node );
+  bool setFanInletNode( Node & node );
 
   /** Returns the Node referred to by the fanOutletNodeName. **/
   boost::optional<Node> fanOutletNode();
 
   /** Sets the Node referred to by the fanOutletNodeName. **/
-  void setFanOutletNode( Node & node );
+  bool setFanOutletNode( Node & node );
 
   /** Returns the Node this setpoint manager is acting on. **/
   boost::optional<Node> setpointNode() const;

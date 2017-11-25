@@ -77,7 +77,7 @@ public:
   void setEscalationStartMonth(const std::string& str);
 
   /** Set the escalation for the year at index. Indexing starts at 0. */
-  void setEscalationStartYear(int num);
+  bool setEscalationStartYear(int num);
 
   bool setYearEscalation(unsigned index, double num);
 

@@ -153,24 +153,24 @@ namespace detail {
     return getInt(OS_RunPeriodFields::NumberofTimesRunperiodtobeRepeated, true).get();
   }
 
-  void RunPeriod_Impl::setBeginMonth(int month)
+  bool RunPeriod_Impl::setBeginMonth(int month)
   {
-    setInt(OS_RunPeriodFields::BeginMonth,month);
+    return setInt(OS_RunPeriodFields::BeginMonth,month);;
   }
 
-  void RunPeriod_Impl::setBeginDayOfMonth(int day)
+  bool RunPeriod_Impl::setBeginDayOfMonth(int day)
   {
-    setInt(OS_RunPeriodFields::BeginDayofMonth,day);
+    return setInt(OS_RunPeriodFields::BeginDayofMonth,day);;
   }
 
-  void RunPeriod_Impl::setEndMonth(int month)
+  bool RunPeriod_Impl::setEndMonth(int month)
   {
-    setInt(OS_RunPeriodFields::EndMonth,month);
+    return setInt(OS_RunPeriodFields::EndMonth,month);;
   }
 
-  void RunPeriod_Impl::setEndDayOfMonth(int day)
+  bool RunPeriod_Impl::setEndDayOfMonth(int day)
   {
-    setInt(OS_RunPeriodFields::EndDayofMonth,day);
+    return setInt(OS_RunPeriodFields::EndDayofMonth,day);;
   }
 
   void RunPeriod_Impl::setUseWeatherFileHolidays(bool use)
@@ -219,9 +219,9 @@ namespace detail {
     setString(OS_RunPeriodFields::UseWeatherFileSnowIndicators,"No");
   }
 
-  void RunPeriod_Impl::setNumTimePeriodRepeats(int numRepeats)
+  bool RunPeriod_Impl::setNumTimePeriodRepeats(int numRepeats)
   {
-    setInt(OS_RunPeriodFields::NumberofTimesRunperiodtobeRepeated,numRepeats);
+    return setInt(OS_RunPeriodFields::NumberofTimesRunperiodtobeRepeated,numRepeats);;
   }
 
   void RunPeriod_Impl::ensureNoLeapDays()
@@ -370,24 +370,24 @@ int RunPeriod::getNumTimePeriodRepeats() const
   return getImpl<detail::RunPeriod_Impl>()->getNumTimePeriodRepeats();
 }
 
-void RunPeriod::setBeginMonth(int month)
+bool RunPeriod::setBeginMonth(int month)
 {
-  getImpl<detail::RunPeriod_Impl>()->setBeginMonth(month);
+  return getImpl<detail::RunPeriod_Impl>()->setBeginMonth(month);
 }
 
-void RunPeriod::setBeginDayOfMonth(int day)
+bool RunPeriod::setBeginDayOfMonth(int day)
 {
-  getImpl<detail::RunPeriod_Impl>()->setBeginDayOfMonth(day);
+  return getImpl<detail::RunPeriod_Impl>()->setBeginDayOfMonth(day);
 }
 
-void RunPeriod::setEndMonth(int month)
+bool RunPeriod::setEndMonth(int month)
 {
-  getImpl<detail::RunPeriod_Impl>()->setEndMonth(month);
+  return getImpl<detail::RunPeriod_Impl>()->setEndMonth(month);
 }
 
-void RunPeriod::setEndDayOfMonth(int day)
+bool RunPeriod::setEndDayOfMonth(int day)
 {
-  getImpl<detail::RunPeriod_Impl>()->setEndDayOfMonth(day);
+  return getImpl<detail::RunPeriod_Impl>()->setEndDayOfMonth(day);
 }
 
 void RunPeriod::setUseWeatherFileHolidays(bool use)
@@ -415,9 +415,9 @@ void RunPeriod::setUseWeatherFileSnowInd(bool snowInd)
   getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileSnowInd(snowInd);
 }
 
-void RunPeriod::setNumTimePeriodRepeats(int numRepeats)
+bool RunPeriod::setNumTimePeriodRepeats(int numRepeats)
 {
-  getImpl<detail::RunPeriod_Impl>()->setNumTimePeriodRepeats(numRepeats);
+  return getImpl<detail::RunPeriod_Impl>()->setNumTimePeriodRepeats(numRepeats);
 }
 
 void RunPeriod::ensureNoLeapDays()

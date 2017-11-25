@@ -77,16 +77,16 @@ class MODEL_API RunPeriod : public ParentObject {
 
   // DLM@20110607: should all these sets return bool?
 
-  void setBeginMonth(int month);
-  void setBeginDayOfMonth(int day);
-  void setEndMonth(int month);
-  void setEndDayOfMonth(int day);
+  bool setBeginMonth(int month);
+  bool setBeginDayOfMonth(int day);
+  bool setEndMonth(int month);
+  bool setEndDayOfMonth(int day);
   void setUseWeatherFileHolidays(bool use);
   void setUseWeatherFileDaylightSavings(bool use);
   void setApplyWeekendHolidayRule(bool apply);
   void setUseWeatherFileRainInd(bool rainInd);
   void setUseWeatherFileSnowInd(bool snowInd);
-  void setNumTimePeriodRepeats(int numRepeats);
+  bool setNumTimePeriodRepeats(int numRepeats);
 
   // ensure that this object does not contain the date 2/29
   void ensureNoLeapDays();

@@ -73,7 +73,7 @@ public:
   void setThresholdTest(const std::string& str);
 
   OptionalInt numberOfMonths() const;
-  void setNumberOfMonths(int num);
+  bool setNumberOfMonths(int num);
 
   // return the parent object in the hierarchy
   virtual boost::optional<ParentObject> parent() const override;
