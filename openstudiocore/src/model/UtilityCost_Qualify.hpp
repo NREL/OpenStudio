@@ -83,17 +83,17 @@ public:
 
   void setName(const std::string& name);
 
-  void setTariffName(const std::string& tariffName);
+  bool setTariffName(const std::string& tariffName);
 
-  void setVariableName(const std::string& variableName);
+  bool setVariableName(const std::string& variableName);
 
-  void setQualifyType(const std::string& qualifyType);
+  bool setQualifyType(const std::string& qualifyType);
 
-  void setThresholdValueOrVariableName(const std::string& thresholdValueOrVariableName);
+  bool setThresholdValueOrVariableName(const std::string& thresholdValueOrVariableName);
 
-  void setSeason(const std::string& season);
+  bool setSeason(const std::string& season);
 
-  void setThresholdTest(const std::string& thresholdTest);
+  bool setThresholdTest(const std::string& thresholdTest);
 
   bool setNumberOfMonths(int numberOfMonths);
 

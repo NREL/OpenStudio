@@ -54,10 +54,10 @@ class MODEL_API LifeCycleCostUsePriceEscalation_Impl : public ParentObject_Impl{
   virtual ~LifeCycleCostUsePriceEscalation_Impl(){}
 
   OptionalString resource() const;
-  void setResource(const std::string& str);
+  bool setResource(const std::string& str);
 
   OptionalString escalationStartMonth() const;
-  void setEscalationStartMonth(const std::string& str);
+  bool setEscalationStartMonth(const std::string& str);
 
   OptionalInt escalationStartYear() const;
   bool setEscalationStartYear(int num);

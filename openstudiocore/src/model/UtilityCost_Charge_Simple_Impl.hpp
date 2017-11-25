@@ -55,19 +55,19 @@ public:
   virtual ~UtilityCost_Charge_Simple_Impl(){}
 
   OptionalString tariffName() const;
-  void setTariffName(const std::string& str);
+  bool setTariffName(const std::string& str);
 
   OptionalString sourceVariable() const;
-  void setSourceVariable(const std::string& str);
+  bool setSourceVariable(const std::string& str);
 
   OptionalString season() const;
-  void setSeason(const std::string& str);
+  bool setSeason(const std::string& str);
 
   OptionalString categoryVariableName() const;
-  void setCategoryVariableName(const std::string& str);
+  bool setCategoryVariableName(const std::string& str);
 
   OptionalString costPerUnitValueOrVariableName() const;
-  void setCostPerUnitValueOrVariableName(const std::string& str);
+  bool setCostPerUnitValueOrVariableName(const std::string& str);
 
   // return the parent object in the hierarchy
   virtual boost::optional<ParentObject> parent() const override;

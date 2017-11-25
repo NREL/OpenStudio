@@ -86,7 +86,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setVersionIdentifier(const std::string& s);
+    bool setVersionIdentifier(const std::string& s);
 
     //@}
    private:
@@ -100,4 +100,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_VERSION_IMPL_HPP
-

@@ -72,9 +72,9 @@ public:
   /** @name Setters */
   //@{
 
-  void setResource(const std::string& str);
+  bool setResource(const std::string& str);
 
-  void setEscalationStartMonth(const std::string& str);
+  bool setEscalationStartMonth(const std::string& str);
 
   /** Set the escalation for the year at index. Indexing starts at 0. */
   bool setEscalationStartYear(int num);

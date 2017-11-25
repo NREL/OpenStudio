@@ -59,7 +59,7 @@ public:
   /** @name Setters */
   //@{
 
-  void setMonetaryUnit(const std::string& monetaryUnit);
+  bool setMonetaryUnit(const std::string& monetaryUnit);
 
   //@}
 

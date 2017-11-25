@@ -55,25 +55,25 @@ class MODEL_API UtilityCost_Ratchet_Impl : public ParentObject_Impl{
   virtual ~UtilityCost_Ratchet_Impl(){}
 
   OptionalString tariffName() const;
-  void setTariffName(const std::string& str);
+  bool setTariffName(const std::string& str);
 
   OptionalString baselineSourceVariable() const;
-  void setBaselineSourceVariable(const std::string& str);
+  bool setBaselineSourceVariable(const std::string& str);
 
   OptionalString adjustmentSourceVariable() const;
-  void setAdjustmentSourceVariable(const std::string& str);
+  bool setAdjustmentSourceVariable(const std::string& str);
 
   OptionalString seasonFrom() const;
-  void setSeasonFrom(const std::string& str);
+  bool setSeasonFrom(const std::string& str);
 
   OptionalString seasonTo() const;
-  void setSeasonTo(const std::string& str);
+  bool setSeasonTo(const std::string& str);
 
   OptionalString multiplierValueOrVariableName() const;
-  void setMultiplierValueOrVariableName(const std::string& str);
+  bool setMultiplierValueOrVariableName(const std::string& str);
 
   OptionalString offsetValueOrVariableName() const;
-  void setOffsetValueOrVariableName(const std::string& str);
+  bool setOffsetValueOrVariableName(const std::string& str);
 
   // return the parent object in the hierarchy
   virtual boost::optional<ParentObject> parent() const override;

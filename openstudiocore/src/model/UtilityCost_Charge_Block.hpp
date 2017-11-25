@@ -84,15 +84,15 @@ public:
   /** @name Setters */
   //@{
 
-  void setTariffName(const std::string& tariffName);
+  bool setTariffName(const std::string& tariffName);
 
-  void setSourceVariable(const std::string& sourceVariable);
+  bool setSourceVariable(const std::string& sourceVariable);
 
-  void setSeason(const std::string& season);
+  bool setSeason(const std::string& season);
 
-  void setCategoryVariableName(const std::string& categoryVariableName);
+  bool setCategoryVariableName(const std::string& categoryVariableName);
 
-  void setRemainingIntoVariable(const std::string& remainingIntoVariable);
+  bool setRemainingIntoVariable(const std::string& remainingIntoVariable);
 
   /** Set the block size value or variable name at index. Indexing starts at 0. */
   bool setBlockSizeValueOrVariableName(unsigned index, const std::string& blockSizeValueOrVariableName);

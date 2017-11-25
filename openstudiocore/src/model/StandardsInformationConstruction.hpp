@@ -184,14 +184,14 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
   void setPerturbableLayerType(const std::string& type);
   void resetPerturbableLayerType();
 
-  void setOtherPerturbableLayerType(const std::string& otherPerturbableLayerType);
+  bool setOtherPerturbableLayerType(const std::string& otherPerturbableLayerType);
   void resetOtherPerturbableLayerType();
 
-  void setConstructionStandard(const std::string& constructionStandard);
+  bool setConstructionStandard(const std::string& constructionStandard);
 
   void resetConstructionStandard();
 
-  void setConstructionStandardSource(const std::string& constructionStandardSource);
+  bool setConstructionStandardSource(const std::string& constructionStandardSource);
 
   void resetConstructionStandardSource();
 
@@ -258,4 +258,3 @@ typedef std::vector<StandardsInformationConstruction> StandardsInformationConstr
 } // openstudio
 
 #endif // MODEL_STANDARDSINFORMATIONCONSTRUCTION_HPP
-

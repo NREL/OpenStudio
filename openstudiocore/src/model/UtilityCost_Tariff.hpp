@@ -100,29 +100,29 @@ public:
 
   bool setName(const std::string& name);
 
-  void setOutputMeterName(const std::string& outputMeterName);
+  bool setOutputMeterName(const std::string& outputMeterName);
 
-  void setConversionFactorChoice(const std::string& conversionFactorChoice);
+  bool setConversionFactorChoice(const std::string& conversionFactorChoice);
 
-  void setTimeOfUsePeriodScheduleName(const std::string& timeOfUsePeriodScheduleName);
+  bool setTimeOfUsePeriodScheduleName(const std::string& timeOfUsePeriodScheduleName);
 
-  void setSeasonScheduleName(const std::string& seasonScheduleName);
+  bool setSeasonScheduleName(const std::string& seasonScheduleName);
 
-  void setMonthScheduleName(const std::string& monthScheduleName);
+  bool setMonthScheduleName(const std::string& monthScheduleName);
 
-  void setDemandWindowLength(const std::string& demandWindowLength);
+  bool setDemandWindowLength(const std::string& demandWindowLength);
 
-  void setMonthlyChargeOrVariableName(const std::string& monthlyChargeOrVariableName);
+  bool setMonthlyChargeOrVariableName(const std::string& monthlyChargeOrVariableName);
 
-  void setMinimumMonthlyChargeOrVariableName(const std::string& minimumMonthlyChargeOrVariableName);
+  bool setMinimumMonthlyChargeOrVariableName(const std::string& minimumMonthlyChargeOrVariableName);
 
-  void setRealTimePricingChargeScheduleName(const std::string& realTimePricingChargeScheduleName);
+  bool setRealTimePricingChargeScheduleName(const std::string& realTimePricingChargeScheduleName);
 
-  void setCustomerBaselineLoadScheduleName(const std::string& customerBaselineLoadScheduleName);
+  bool setCustomerBaselineLoadScheduleName(const std::string& customerBaselineLoadScheduleName);
 
-  void setGroupName(const std::string& groupName);
+  bool setGroupName(const std::string& groupName);
 
-  void setBuyOrSell(const std::string& buyOrSell);
+  bool setBuyOrSell(const std::string& buyOrSell);
 
   //@}
 

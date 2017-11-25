@@ -105,9 +105,9 @@ OptionalString LifeCycleCostUsePriceEscalation_Impl::resource() const
   return getString(OS_LifeCycleCost_UsePriceEscalationFields::Resource);
 }
 
-void LifeCycleCostUsePriceEscalation_Impl::setResource(const std::string& str)
+bool LifeCycleCostUsePriceEscalation_Impl::setResource(const std::string& str)
 {
-  setString(OS_LifeCycleCost_UsePriceEscalationFields::Resource,str);
+  return setString(OS_LifeCycleCost_UsePriceEscalationFields::Resource,str);;
 }
 
 OptionalString LifeCycleCostUsePriceEscalation_Impl::escalationStartMonth() const
@@ -115,9 +115,9 @@ OptionalString LifeCycleCostUsePriceEscalation_Impl::escalationStartMonth() cons
   return getString(OS_LifeCycleCost_UsePriceEscalationFields::EscalationStartMonth);
 }
 
-void LifeCycleCostUsePriceEscalation_Impl::setEscalationStartMonth(const std::string& str)
+bool LifeCycleCostUsePriceEscalation_Impl::setEscalationStartMonth(const std::string& str)
 {
-  setString(OS_LifeCycleCost_UsePriceEscalationFields::EscalationStartMonth,str);
+  return setString(OS_LifeCycleCost_UsePriceEscalationFields::EscalationStartMonth,str);;
 }
 
 // return the parent object in the hierarchy
@@ -197,9 +197,9 @@ OptionalString LifeCycleCostUsePriceEscalation::resource() const
   return getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>()->resource();
 }
 
-void LifeCycleCostUsePriceEscalation::setResource(const std::string& str)
+bool LifeCycleCostUsePriceEscalation::setResource(const std::string& str)
 {
-  getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>()->setResource(str);
+  return getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>()->setResource(str);
 }
 
 OptionalString LifeCycleCostUsePriceEscalation::escalationStartMonth() const
@@ -207,9 +207,9 @@ OptionalString LifeCycleCostUsePriceEscalation::escalationStartMonth() const
   return getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>()->escalationStartMonth();
 }
 
-void LifeCycleCostUsePriceEscalation::setEscalationStartMonth(const std::string& str)
+bool LifeCycleCostUsePriceEscalation::setEscalationStartMonth(const std::string& str)
 {
-  getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>()->setEscalationStartMonth(str);
+  return getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>()->setEscalationStartMonth(str);
 }
 
 IddObjectType LifeCycleCostUsePriceEscalation::iddObjectType()

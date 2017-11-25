@@ -55,7 +55,7 @@ public:
   virtual ~UtilityCost_Computation_Impl(){}
 
   OptionalString tariffName() const;
-  void setTariffName(const std::string& str);
+  bool setTariffName(const std::string& str);
 
   /** Compute step index. Index starts at 0. */
   boost::optional<std::string> computeStep(unsigned index) const;

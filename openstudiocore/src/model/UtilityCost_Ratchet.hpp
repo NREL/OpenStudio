@@ -80,19 +80,19 @@ public:
   /** @name Setters */
   //@{
 
-  void setTariffName(const std::string& tariffName);
+  bool setTariffName(const std::string& tariffName);
 
-  void setBaselineSourceVariable(const std::string& baselineSourceVariable);
+  bool setBaselineSourceVariable(const std::string& baselineSourceVariable);
 
-  void setAdjustmentSourceVariable(const std::string& adjustmentSourceVariable);
+  bool setAdjustmentSourceVariable(const std::string& adjustmentSourceVariable);
 
-  void setSeasonFrom(const std::string& seasonFrom);
+  bool setSeasonFrom(const std::string& seasonFrom);
 
-  void setSeasonTo(const std::string& seasonTo);
+  bool setSeasonTo(const std::string& seasonTo);
 
-  void setMultiplierValueOrVariableName(const std::string& multiplierValueOrVariableName);
+  bool setMultiplierValueOrVariableName(const std::string& multiplierValueOrVariableName);
 
-  void setOffsetValueOrVariableName(const std::string& offsetValueOrVariableName);
+  bool setOffsetValueOrVariableName(const std::string& offsetValueOrVariableName);
 
   //@}
 

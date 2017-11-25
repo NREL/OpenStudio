@@ -186,9 +186,9 @@ OptionalString UtilityCost_Variable_Impl::tariffName() const
   return getString(OS_UtilityCost_VariableFields::TariffName);
 }
 
-void UtilityCost_Variable_Impl::setTariffName(const std::string& str)
+bool UtilityCost_Variable_Impl::setTariffName(const std::string& str)
 {
-  setString(OS_UtilityCost_VariableFields::TariffName,str);
+  return setString(OS_UtilityCost_VariableFields::TariffName,str);;
 }
 
 OptionalString UtilityCost_Variable_Impl::variableType() const
@@ -196,9 +196,9 @@ OptionalString UtilityCost_Variable_Impl::variableType() const
   return getString(OS_UtilityCost_VariableFields::VariableType);
 }
 
-void UtilityCost_Variable_Impl::setVariableType(const std::string& str)
+bool UtilityCost_Variable_Impl::setVariableType(const std::string& str)
 {
-  setString(OS_UtilityCost_VariableFields::VariableType,str);
+  return setString(OS_UtilityCost_VariableFields::VariableType,str);;
 }
 
 // return the parent object in the hierarchy
@@ -386,9 +386,9 @@ OptionalString UtilityCost_Variable::tariffName() const
   return getImpl<detail::UtilityCost_Variable_Impl>()->tariffName();
 }
 
-void UtilityCost_Variable::setTariffName(const std::string& str)
+bool UtilityCost_Variable::setTariffName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Variable_Impl>()->setTariffName(str);
+  return getImpl<detail::UtilityCost_Variable_Impl>()->setTariffName(str);
 }
 
 OptionalString UtilityCost_Variable::variableType() const
@@ -396,9 +396,9 @@ OptionalString UtilityCost_Variable::variableType() const
   return getImpl<detail::UtilityCost_Variable_Impl>()->variableType();
 }
 
-void UtilityCost_Variable::setVariableType(const std::string& str)
+bool UtilityCost_Variable::setVariableType(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Variable_Impl>()->setVariableType(str);
+  return getImpl<detail::UtilityCost_Variable_Impl>()->setVariableType(str);
 }
 
 IddObjectType UtilityCost_Variable::iddObjectType()

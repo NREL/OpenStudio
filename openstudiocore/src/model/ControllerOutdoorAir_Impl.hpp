@@ -76,10 +76,10 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
   ModelObject clone(Model model) const override;
 
   std::string getEconomizerControlType() const;
-  void setEconomizerControlType( const std::string& value );
+  bool setEconomizerControlType( const std::string& value );
 
   std::string getEconomizerControlActionType() const;
-  void setEconomizerControlActionType( const std::string& value );
+  bool setEconomizerControlActionType( const std::string& value );
 
   //get needs to return a boost optional double since "" is a valid input
   boost::optional<double> getEconomizerMaximumLimitDryBulbTemperature() const;
@@ -101,10 +101,10 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
   bool setEconomizerMinimumLimitDryBulbTemperature(boost::optional<double> value);
 
   std::string getLockoutType()const;
-  void setLockoutType( const std::string& value );
+  bool setLockoutType( const std::string& value );
 
   std::string getMinimumLimitType()const;
-  void setMinimumLimitType( const std::string& value );
+  bool setMinimumLimitType( const std::string& value );
 
   boost::optional<bool> getHighHumidityControl() const;
   void setHighHumidityControl(bool val);
@@ -119,7 +119,7 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
   void setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(bool v);
 
   OptionalString getHeatRecoveryBypassControlType() const;
-  void setHeatRecoveryBypassControlType(const std::string& v);
+  bool setHeatRecoveryBypassControlType(const std::string& v);
 
   CurveQuadratic getElectronicEnthalpyLimitCurve() const;
 

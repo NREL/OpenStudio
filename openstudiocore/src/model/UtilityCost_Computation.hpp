@@ -74,7 +74,7 @@ class MODEL_API UtilityCost_Computation : public ParentObject{
 
   void setName(const std::string& name);
 
-  void setTariffName(const std::string& tariffName);
+  bool setTariffName(const std::string& tariffName);
 
   /** Set compute step at index. Index starts at 0. */
   bool setComputeStep(unsigned index, const std::string& computeStep);

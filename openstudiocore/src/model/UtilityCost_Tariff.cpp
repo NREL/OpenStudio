@@ -86,9 +86,9 @@ OptionalString UtilityCost_Tariff_Impl::outputMeterName() const
   return getString(OS_UtilityCost_TariffFields::OutputMeterName);
 }
 
-void UtilityCost_Tariff_Impl::setOutputMeterName(const std::string& str)
+bool UtilityCost_Tariff_Impl::setOutputMeterName(const std::string& str)
 {
-  setString(OS_UtilityCost_TariffFields::OutputMeterName,str);
+  return setString(OS_UtilityCost_TariffFields::OutputMeterName,str);;
 }
 
 OptionalString UtilityCost_Tariff_Impl::conversionFactorChoice() const
@@ -96,9 +96,9 @@ OptionalString UtilityCost_Tariff_Impl::conversionFactorChoice() const
   return getString(OS_UtilityCost_TariffFields::ConversionFactorChoice);
 }
 
-void UtilityCost_Tariff_Impl::setConversionFactorChoice(const std::string& str)
+bool UtilityCost_Tariff_Impl::setConversionFactorChoice(const std::string& str)
 {
-  setString(OS_UtilityCost_TariffFields::ConversionFactorChoice,str);
+  return setString(OS_UtilityCost_TariffFields::ConversionFactorChoice,str);;
 }
 
 OptionalString UtilityCost_Tariff_Impl::timeOfUsePeriodScheduleName() const
@@ -106,9 +106,9 @@ OptionalString UtilityCost_Tariff_Impl::timeOfUsePeriodScheduleName() const
   return getString(OS_UtilityCost_TariffFields::TimeofUsePeriodScheduleName);
 }
 
-void UtilityCost_Tariff_Impl::setTimeOfUsePeriodScheduleName(const std::string& str)
+bool UtilityCost_Tariff_Impl::setTimeOfUsePeriodScheduleName(const std::string& str)
 {
-  setString(OS_UtilityCost_TariffFields::TimeofUsePeriodScheduleName,str);
+  return setString(OS_UtilityCost_TariffFields::TimeofUsePeriodScheduleName,str);;
 }
 
 OptionalString UtilityCost_Tariff_Impl::seasonScheduleName() const
@@ -116,9 +116,9 @@ OptionalString UtilityCost_Tariff_Impl::seasonScheduleName() const
   return getString(OS_UtilityCost_TariffFields::SeasonScheduleName);
 }
 
-void UtilityCost_Tariff_Impl::setSeasonScheduleName(const std::string& str)
+bool UtilityCost_Tariff_Impl::setSeasonScheduleName(const std::string& str)
 {
-  setString(OS_UtilityCost_TariffFields::SeasonScheduleName,str);
+  return setString(OS_UtilityCost_TariffFields::SeasonScheduleName,str);;
 }
 
 OptionalString UtilityCost_Tariff_Impl::monthScheduleName() const
@@ -126,9 +126,9 @@ OptionalString UtilityCost_Tariff_Impl::monthScheduleName() const
   return getString(OS_UtilityCost_TariffFields::MonthScheduleName);
 }
 
-void UtilityCost_Tariff_Impl::setMonthScheduleName(const std::string& str)
+bool UtilityCost_Tariff_Impl::setMonthScheduleName(const std::string& str)
 {
-  setString(OS_UtilityCost_TariffFields::MonthScheduleName,str);
+  return setString(OS_UtilityCost_TariffFields::MonthScheduleName,str);;
 }
 
 OptionalString UtilityCost_Tariff_Impl::demandWindowLength() const
@@ -136,9 +136,9 @@ OptionalString UtilityCost_Tariff_Impl::demandWindowLength() const
   return getString(OS_UtilityCost_TariffFields::DemandWindowLength);
 }
 
-void UtilityCost_Tariff_Impl::setDemandWindowLength(const std::string& str)
+bool UtilityCost_Tariff_Impl::setDemandWindowLength(const std::string& str)
 {
-  setString(OS_UtilityCost_TariffFields::DemandWindowLength,str);
+  return setString(OS_UtilityCost_TariffFields::DemandWindowLength,str);;
 }
 
 OptionalString UtilityCost_Tariff_Impl::monthlyChargeOrVariableName() const
@@ -146,9 +146,9 @@ OptionalString UtilityCost_Tariff_Impl::monthlyChargeOrVariableName() const
   return getString(OS_UtilityCost_TariffFields::MonthlyChargeorVariableName);
 }
 
-void UtilityCost_Tariff_Impl::setMonthlyChargeOrVariableName(const std::string& str)
+bool UtilityCost_Tariff_Impl::setMonthlyChargeOrVariableName(const std::string& str)
 {
-  setString(OS_UtilityCost_TariffFields::MonthlyChargeorVariableName,str);
+  return setString(OS_UtilityCost_TariffFields::MonthlyChargeorVariableName,str);;
 }
 
 OptionalString UtilityCost_Tariff_Impl::minimumMonthlyChargeOrVariableName() const
@@ -156,9 +156,9 @@ OptionalString UtilityCost_Tariff_Impl::minimumMonthlyChargeOrVariableName() con
   return getString(OS_UtilityCost_TariffFields::MinimumMonthlyChargeorVariableName);
 }
 
-void UtilityCost_Tariff_Impl::setMinimumMonthlyChargeOrVariableName(const std::string& str)
+bool UtilityCost_Tariff_Impl::setMinimumMonthlyChargeOrVariableName(const std::string& str)
 {
-  setString(OS_UtilityCost_TariffFields::MinimumMonthlyChargeorVariableName,str);
+  return setString(OS_UtilityCost_TariffFields::MinimumMonthlyChargeorVariableName,str);;
 }
 
 OptionalString UtilityCost_Tariff_Impl::realTimePricingChargeScheduleName() const
@@ -166,9 +166,9 @@ OptionalString UtilityCost_Tariff_Impl::realTimePricingChargeScheduleName() cons
   return getString(OS_UtilityCost_TariffFields::RealTimePricingChargeScheduleName);
 }
 
-void UtilityCost_Tariff_Impl::setRealTimePricingChargeScheduleName(const std::string& str)
+bool UtilityCost_Tariff_Impl::setRealTimePricingChargeScheduleName(const std::string& str)
 {
-  setString(OS_UtilityCost_TariffFields::RealTimePricingChargeScheduleName,str);
+  return setString(OS_UtilityCost_TariffFields::RealTimePricingChargeScheduleName,str);;
 }
 
 OptionalString UtilityCost_Tariff_Impl::customerBaselineLoadScheduleName() const
@@ -176,9 +176,9 @@ OptionalString UtilityCost_Tariff_Impl::customerBaselineLoadScheduleName() const
   return getString(OS_UtilityCost_TariffFields::CustomerBaselineLoadScheduleName);
 }
 
-void UtilityCost_Tariff_Impl::setCustomerBaselineLoadScheduleName(const std::string& str)
+bool UtilityCost_Tariff_Impl::setCustomerBaselineLoadScheduleName(const std::string& str)
 {
-  setString(OS_UtilityCost_TariffFields::CustomerBaselineLoadScheduleName,str);
+  return setString(OS_UtilityCost_TariffFields::CustomerBaselineLoadScheduleName,str);;
 }
 
 OptionalString UtilityCost_Tariff_Impl::groupName() const
@@ -186,9 +186,9 @@ OptionalString UtilityCost_Tariff_Impl::groupName() const
   return getString(OS_UtilityCost_TariffFields::GroupName);
 }
 
-void UtilityCost_Tariff_Impl::setGroupName(const std::string& str)
+bool UtilityCost_Tariff_Impl::setGroupName(const std::string& str)
 {
-  setString(OS_UtilityCost_TariffFields::GroupName,str);
+  return setString(OS_UtilityCost_TariffFields::GroupName,str);;
 }
 
 OptionalString UtilityCost_Tariff_Impl::buyOrSell() const
@@ -196,9 +196,9 @@ OptionalString UtilityCost_Tariff_Impl::buyOrSell() const
   return getString(OS_UtilityCost_TariffFields::BuyOrSell);
 }
 
-void UtilityCost_Tariff_Impl::setBuyOrSell(const std::string& str)
+bool UtilityCost_Tariff_Impl::setBuyOrSell(const std::string& str)
 {
-  setString(OS_UtilityCost_TariffFields::BuyOrSell,str);
+  return setString(OS_UtilityCost_TariffFields::BuyOrSell,str);;
 }
 
 // return the parent object in the hierarchy
@@ -287,9 +287,9 @@ OptionalString UtilityCost_Tariff::outputMeterName() const
   return getImpl<detail::UtilityCost_Tariff_Impl>()->outputMeterName();
 }
 
-void UtilityCost_Tariff::setOutputMeterName(const std::string& str)
+bool UtilityCost_Tariff::setOutputMeterName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Tariff_Impl>()->setOutputMeterName(str);
+  return getImpl<detail::UtilityCost_Tariff_Impl>()->setOutputMeterName(str);
 }
 
 OptionalString UtilityCost_Tariff::conversionFactorChoice() const
@@ -297,9 +297,9 @@ OptionalString UtilityCost_Tariff::conversionFactorChoice() const
   return getImpl<detail::UtilityCost_Tariff_Impl>()->conversionFactorChoice();
 }
 
-void UtilityCost_Tariff::setConversionFactorChoice(const std::string& str)
+bool UtilityCost_Tariff::setConversionFactorChoice(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Tariff_Impl>()->setConversionFactorChoice(str);
+  return getImpl<detail::UtilityCost_Tariff_Impl>()->setConversionFactorChoice(str);
 }
 
 OptionalString UtilityCost_Tariff::timeOfUsePeriodScheduleName() const
@@ -307,9 +307,9 @@ OptionalString UtilityCost_Tariff::timeOfUsePeriodScheduleName() const
   return getImpl<detail::UtilityCost_Tariff_Impl>()->timeOfUsePeriodScheduleName();
 }
 
-void UtilityCost_Tariff::setTimeOfUsePeriodScheduleName(const std::string& str)
+bool UtilityCost_Tariff::setTimeOfUsePeriodScheduleName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Tariff_Impl>()->setTimeOfUsePeriodScheduleName(str);
+  return getImpl<detail::UtilityCost_Tariff_Impl>()->setTimeOfUsePeriodScheduleName(str);
 }
 
 OptionalString UtilityCost_Tariff::seasonScheduleName() const
@@ -317,9 +317,9 @@ OptionalString UtilityCost_Tariff::seasonScheduleName() const
   return getImpl<detail::UtilityCost_Tariff_Impl>()->seasonScheduleName();
 }
 
-void UtilityCost_Tariff::setSeasonScheduleName(const std::string& str)
+bool UtilityCost_Tariff::setSeasonScheduleName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Tariff_Impl>()->setSeasonScheduleName(str);
+  return getImpl<detail::UtilityCost_Tariff_Impl>()->setSeasonScheduleName(str);
 }
 
 OptionalString UtilityCost_Tariff::monthScheduleName() const
@@ -327,9 +327,9 @@ OptionalString UtilityCost_Tariff::monthScheduleName() const
   return getImpl<detail::UtilityCost_Tariff_Impl>()->monthScheduleName();
 }
 
-void UtilityCost_Tariff::setMonthScheduleName(const std::string& str)
+bool UtilityCost_Tariff::setMonthScheduleName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Tariff_Impl>()->setMonthScheduleName(str);
+  return getImpl<detail::UtilityCost_Tariff_Impl>()->setMonthScheduleName(str);
 }
 
 OptionalString UtilityCost_Tariff::demandWindowLength() const
@@ -337,9 +337,9 @@ OptionalString UtilityCost_Tariff::demandWindowLength() const
   return getImpl<detail::UtilityCost_Tariff_Impl>()->demandWindowLength();
 }
 
-void UtilityCost_Tariff::setDemandWindowLength(const std::string& str)
+bool UtilityCost_Tariff::setDemandWindowLength(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Tariff_Impl>()->setDemandWindowLength(str);
+  return getImpl<detail::UtilityCost_Tariff_Impl>()->setDemandWindowLength(str);
 }
 
 OptionalString UtilityCost_Tariff::monthlyChargeOrVariableName() const
@@ -347,9 +347,9 @@ OptionalString UtilityCost_Tariff::monthlyChargeOrVariableName() const
   return getImpl<detail::UtilityCost_Tariff_Impl>()->monthlyChargeOrVariableName();
 }
 
-void UtilityCost_Tariff::setMonthlyChargeOrVariableName(const std::string& str)
+bool UtilityCost_Tariff::setMonthlyChargeOrVariableName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Tariff_Impl>()->setMonthlyChargeOrVariableName(str);
+  return getImpl<detail::UtilityCost_Tariff_Impl>()->setMonthlyChargeOrVariableName(str);
 }
 
 OptionalString UtilityCost_Tariff::minimumMonthlyChargeOrVariableName() const
@@ -357,9 +357,9 @@ OptionalString UtilityCost_Tariff::minimumMonthlyChargeOrVariableName() const
   return getImpl<detail::UtilityCost_Tariff_Impl>()->minimumMonthlyChargeOrVariableName();
 }
 
-void UtilityCost_Tariff::setMinimumMonthlyChargeOrVariableName(const std::string& str)
+bool UtilityCost_Tariff::setMinimumMonthlyChargeOrVariableName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Tariff_Impl>()->setMinimumMonthlyChargeOrVariableName(str);
+  return getImpl<detail::UtilityCost_Tariff_Impl>()->setMinimumMonthlyChargeOrVariableName(str);
 }
 
 OptionalString UtilityCost_Tariff::realTimePricingChargeScheduleName() const
@@ -367,9 +367,9 @@ OptionalString UtilityCost_Tariff::realTimePricingChargeScheduleName() const
   return getImpl<detail::UtilityCost_Tariff_Impl>()->realTimePricingChargeScheduleName();
 }
 
-void UtilityCost_Tariff::setRealTimePricingChargeScheduleName(const std::string& str)
+bool UtilityCost_Tariff::setRealTimePricingChargeScheduleName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Tariff_Impl>()->setRealTimePricingChargeScheduleName(str);
+  return getImpl<detail::UtilityCost_Tariff_Impl>()->setRealTimePricingChargeScheduleName(str);
 }
 
 OptionalString UtilityCost_Tariff::customerBaselineLoadScheduleName() const
@@ -377,9 +377,9 @@ OptionalString UtilityCost_Tariff::customerBaselineLoadScheduleName() const
   return getImpl<detail::UtilityCost_Tariff_Impl>()->customerBaselineLoadScheduleName();
 }
 
-void UtilityCost_Tariff::setCustomerBaselineLoadScheduleName(const std::string& str)
+bool UtilityCost_Tariff::setCustomerBaselineLoadScheduleName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Tariff_Impl>()->setCustomerBaselineLoadScheduleName(str);
+  return getImpl<detail::UtilityCost_Tariff_Impl>()->setCustomerBaselineLoadScheduleName(str);
 }
 
 OptionalString UtilityCost_Tariff::groupName() const
@@ -387,9 +387,9 @@ OptionalString UtilityCost_Tariff::groupName() const
   return getImpl<detail::UtilityCost_Tariff_Impl>()->groupName();
 }
 
-void UtilityCost_Tariff::setGroupName(const std::string& str)
+bool UtilityCost_Tariff::setGroupName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Tariff_Impl>()->setGroupName(str);
+  return getImpl<detail::UtilityCost_Tariff_Impl>()->setGroupName(str);
 }
 
 OptionalString UtilityCost_Tariff::buyOrSell() const
@@ -397,9 +397,9 @@ OptionalString UtilityCost_Tariff::buyOrSell() const
   return getImpl<detail::UtilityCost_Tariff_Impl>()->buyOrSell();
 }
 
-void UtilityCost_Tariff::setBuyOrSell(const std::string& str)
+bool UtilityCost_Tariff::setBuyOrSell(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Tariff_Impl>()->setBuyOrSell(str);
+  return getImpl<detail::UtilityCost_Tariff_Impl>()->setBuyOrSell(str);
 }
 
 IddObjectType UtilityCost_Tariff::iddObjectType()

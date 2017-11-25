@@ -74,15 +74,15 @@ public:
   /** @name Setters */
   //@{
 
-  void setTariffName(const std::string& tariffName);
+  bool setTariffName(const std::string& tariffName);
 
-  void setSourceVariable(const std::string& sourceVariable);
+  bool setSourceVariable(const std::string& sourceVariable);
 
-  void setSeason(const std::string& season);
+  bool setSeason(const std::string& season);
 
-  void setCategoryVariableName(const std::string& categoryVariableName);
+  bool setCategoryVariableName(const std::string& categoryVariableName);
 
-  void setCostPerUnitValueOrVariableName(const std::string& costPerUnitValueOrVariableName);
+  bool setCostPerUnitValueOrVariableName(const std::string& costPerUnitValueOrVariableName);
 
   //@}
 

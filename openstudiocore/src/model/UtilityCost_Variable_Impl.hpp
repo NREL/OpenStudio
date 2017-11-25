@@ -91,10 +91,10 @@ class MODEL_API UtilityCost_Variable_Impl : public ParentObject_Impl{
   bool setDecemberValue(double num);
 
   OptionalString tariffName() const;
-  void setTariffName(const std::string& str);
+  bool setTariffName(const std::string& str);
 
   OptionalString variableType() const;
-  void setVariableType(const std::string& str);
+  bool setVariableType(const std::string& str);
 
   // return the parent object in the hierarchy
   virtual boost::optional<ParentObject> parent() const override;

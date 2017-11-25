@@ -121,9 +121,9 @@ public:
 
   void setName(const std::string& name);
 
-  void setTariffName(const std::string& tariffName);
+  bool setTariffName(const std::string& tariffName);
 
-  void setVariableType(const std::string& variableType);
+  bool setVariableType(const std::string& variableType);
 
   //@}
 

@@ -55,22 +55,22 @@ public:
   virtual ~UtilityCost_Qualify_Impl(){}
 
   OptionalString tariffName() const;
-  void setTariffName(const std::string& str);
+  bool setTariffName(const std::string& str);
 
   OptionalString variableName() const;
-  void setVariableName(const std::string& str);
+  bool setVariableName(const std::string& str);
 
   OptionalString qualifyType() const;
-  void setQualifyType(const std::string& str);
+  bool setQualifyType(const std::string& str);
 
   OptionalString thresholdValueOrVariableName() const;
-  void setThresholdValueOrVariableName(const std::string& str);
+  bool setThresholdValueOrVariableName(const std::string& str);
 
   OptionalString season() const;
-  void setSeason(const std::string& str);
+  bool setSeason(const std::string& str);
 
   OptionalString thresholdTest() const;
-  void setThresholdTest(const std::string& str);
+  bool setThresholdTest(const std::string& str);
 
   OptionalInt numberOfMonths() const;
   bool setNumberOfMonths(int num);
