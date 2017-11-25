@@ -170,7 +170,7 @@ namespace detail {
 
     //void resetReturnAirFraction();
 
-    void setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature);
+    bool setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature);
 
     void resetReturnAirFractionCalculatedfromPlenumTemperature();
 
@@ -194,4 +194,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_LUMINAIREDEFINITION_IMPL_HPP
-

@@ -189,19 +189,19 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   Mixer supplyMixer() const;
 
-  void setSupplyMixer(Mixer const & mixer);
+  bool setSupplyMixer(Mixer const & mixer);
 
   Splitter supplySplitter() const;
 
-  void setSupplySplitter(Splitter const & splitter);
+  bool setSupplySplitter(Splitter const & splitter);
 
   Mixer demandMixer() override;
 
-  void setDemandMixer(Mixer const & mixer);
+  bool setDemandMixer(Mixer const & mixer);
 
   Splitter demandSplitter() override;
 
-  void setDemandSplitter(Splitter const & splitter);
+  bool setDemandSplitter(Splitter const & splitter);
 
   bool addSupplyBranchForComponent( HVACComponent component );
 

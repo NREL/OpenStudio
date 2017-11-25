@@ -92,7 +92,7 @@ class MODEL_API OtherEquipmentDefinition : public SpaceLoadDefinition {
 
   /// Sets designLevelCalculationMethod to 'EquipmentLevel', clears wattsperSpaceFloorArea
   /// and wattsperPerson, and sets designLevel.
-  void setDesignLevel(double designLevel);
+  bool setDesignLevel(double designLevel);
 
   /// Sets designLevelCalculationMethod to 'Watts/Area', clears designLevel
   /// and wattsperPerson, and sets wattsperSpaceFloorArea.

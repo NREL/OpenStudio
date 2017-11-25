@@ -123,7 +123,7 @@ class MODEL_API LightsDefinition : public SpaceLoadDefinition {
 
   void resetReturnAirFraction();
 
-  void setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature);
+  bool setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature);
 
   void resetReturnAirFractionCalculatedfromPlenumTemperature();
 
@@ -184,4 +184,3 @@ typedef std::vector<LightsDefinition> LightsDefinitionVector;
 } // openstudio
 
 #endif // MODEL_LIGHTSDEFINITION_HPP
-

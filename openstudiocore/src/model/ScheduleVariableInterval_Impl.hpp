@@ -101,7 +101,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod = true);
+    bool setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod = true);
 
     void resetInterpolatetoTimestep(bool driverMethod = true);
 

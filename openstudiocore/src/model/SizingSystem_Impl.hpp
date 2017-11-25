@@ -226,11 +226,11 @@ class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 
   void resetSizingOption();
 
-  void setAllOutdoorAirinCooling(bool allOutdoorAirinCooling);
+  bool setAllOutdoorAirinCooling(bool allOutdoorAirinCooling);
 
   void resetAllOutdoorAirinCooling();
 
-  void setAllOutdoorAirinHeating(bool allOutdoorAirinHeating);
+  bool setAllOutdoorAirinHeating(bool allOutdoorAirinHeating);
 
   void resetAllOutdoorAirinHeating();
 

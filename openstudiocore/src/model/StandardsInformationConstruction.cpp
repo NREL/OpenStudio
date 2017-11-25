@@ -633,14 +633,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void StandardsInformationConstruction_Impl::setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating) {
+  bool StandardsInformationConstruction_Impl::setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating) {
     bool result;
     if (fenestrationLowEmissivityCoating) {
       result = setString(OS_StandardsInformation_ConstructionFields::FenestrationLowEmissivityCoating, "True");
     } else {
       result = setString(OS_StandardsInformation_ConstructionFields::FenestrationLowEmissivityCoating, "False");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void StandardsInformationConstruction_Impl::resetFenestrationLowEmissivityCoating() {
@@ -911,8 +911,8 @@ void StandardsInformationConstruction::resetFenestrationGasFill() {
   getImpl<detail::StandardsInformationConstruction_Impl>()->resetFenestrationGasFill();
 }
 
-void StandardsInformationConstruction::setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating) {
-  getImpl<detail::StandardsInformationConstruction_Impl>()->setFenestrationLowEmissivityCoating(fenestrationLowEmissivityCoating);
+bool StandardsInformationConstruction::setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setFenestrationLowEmissivityCoating(fenestrationLowEmissivityCoating);
 }
 
 void StandardsInformationConstruction::resetFenestrationLowEmissivityCoating() {

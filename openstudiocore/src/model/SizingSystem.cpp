@@ -436,14 +436,14 @@ void SizingSystem_Impl::resetSizingOption() {
   OS_ASSERT(result);
 }
 
-void SizingSystem_Impl::setAllOutdoorAirinCooling(bool allOutdoorAirinCooling) {
+bool SizingSystem_Impl::setAllOutdoorAirinCooling(bool allOutdoorAirinCooling) {
   bool result = false;
   if (allOutdoorAirinCooling) {
     result = setString(OS_Sizing_SystemFields::AllOutdoorAirinCooling, "Yes");
   } else {
     result = setString(OS_Sizing_SystemFields::AllOutdoorAirinCooling, "No");
   }
-  OS_ASSERT(result);
+  return result;
 }
 
 void SizingSystem_Impl::resetAllOutdoorAirinCooling() {
@@ -451,14 +451,14 @@ void SizingSystem_Impl::resetAllOutdoorAirinCooling() {
   OS_ASSERT(result);
 }
 
-void SizingSystem_Impl::setAllOutdoorAirinHeating(bool allOutdoorAirinHeating) {
+bool SizingSystem_Impl::setAllOutdoorAirinHeating(bool allOutdoorAirinHeating) {
   bool result = false;
   if (allOutdoorAirinHeating) {
     result = setString(OS_Sizing_SystemFields::AllOutdoorAirinHeating, "Yes");
   } else {
     result = setString(OS_Sizing_SystemFields::AllOutdoorAirinHeating, "No");
   }
-  OS_ASSERT(result);
+  return result;
 }
 
 void SizingSystem_Impl::resetAllOutdoorAirinHeating() {
@@ -991,16 +991,16 @@ void SizingSystem::resetSizingOption() {
   getImpl<detail::SizingSystem_Impl>()->resetSizingOption();
 }
 
-void SizingSystem::setAllOutdoorAirinCooling(bool allOutdoorAirinCooling) {
-  getImpl<detail::SizingSystem_Impl>()->setAllOutdoorAirinCooling(allOutdoorAirinCooling);
+bool SizingSystem::setAllOutdoorAirinCooling(bool allOutdoorAirinCooling) {
+  return getImpl<detail::SizingSystem_Impl>()->setAllOutdoorAirinCooling(allOutdoorAirinCooling);
 }
 
 void SizingSystem::resetAllOutdoorAirinCooling() {
   getImpl<detail::SizingSystem_Impl>()->resetAllOutdoorAirinCooling();
 }
 
-void SizingSystem::setAllOutdoorAirinHeating(bool allOutdoorAirinHeating) {
-  getImpl<detail::SizingSystem_Impl>()->setAllOutdoorAirinHeating(allOutdoorAirinHeating);
+bool SizingSystem::setAllOutdoorAirinHeating(bool allOutdoorAirinHeating) {
+  return getImpl<detail::SizingSystem_Impl>()->setAllOutdoorAirinHeating(allOutdoorAirinHeating);
 }
 
 void SizingSystem::resetAllOutdoorAirinHeating() {

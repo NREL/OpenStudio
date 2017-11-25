@@ -119,11 +119,11 @@ namespace detail {
 
     void resetReportingFrequency();
 
-    void setMeterFileOnly(bool meterFileOnly);
+    bool setMeterFileOnly(bool meterFileOnly);
 
     void resetMeterFileOnly();
 
-    void setCumulative(bool cumulative);
+    bool setCumulative(bool cumulative);
 
     void resetCumulative();
 
@@ -182,4 +182,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_OUTPUTMETER_IMPL_HPP
-

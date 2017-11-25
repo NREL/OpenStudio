@@ -81,11 +81,11 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setRunSimulationforDesignDays(bool runSimulationforDesignDays);
+    bool setRunSimulationforDesignDays(bool runSimulationforDesignDays);
 
     void resetRunSimulationforDesignDays();
 
-    void setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods);
+    bool setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods);
 
     void resetRunSimulationforWeatherFileRunPeriods();
 
@@ -101,4 +101,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_LIGHTINGSIMULATIONCONTROL_IMPL_HPP
-

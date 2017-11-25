@@ -165,9 +165,9 @@ namespace detail {
     setDefaultFixedEfficiency();
   }
 
-  void PhotovoltaicPerformanceSimple_Impl::setDefaultFixedEfficiency() {
+  bool PhotovoltaicPerformanceSimple_Impl::setDefaultFixedEfficiency() {
     bool result = setFixedEfficiency(0.12);
-    OS_ASSERT(result);
+    return result;
   }
 
 } // detail
@@ -235,4 +235,3 @@ PhotovoltaicPerformanceSimple::PhotovoltaicPerformanceSimple(std::shared_ptr<det
 
 } // model
 } // openstudio
-

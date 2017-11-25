@@ -85,7 +85,7 @@ class MODEL_API ZoneAirMassFlowConservation : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance);
+  bool setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance);
 
   void resetAdjustZoneMixingForZoneAirMassFlowBalance();
 
@@ -135,4 +135,3 @@ typedef std::vector<ZoneAirMassFlowConservation> ZoneAirMassFlowConservationVect
 } // openstudio
 
 #endif // MODEL_ZONEAIRMASSFLOWCONSERVATION_HPP
-

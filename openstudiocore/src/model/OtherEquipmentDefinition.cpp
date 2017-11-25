@@ -371,8 +371,8 @@ bool OtherEquipmentDefinition::isFractionLostDefaulted() const {
   return getImpl<detail::OtherEquipmentDefinition_Impl>()->isFractionLostDefaulted();
 }
 
-void OtherEquipmentDefinition::setDesignLevel(double designLevel) {
-  getImpl<detail::OtherEquipmentDefinition_Impl>()->setDesignLevel(designLevel);
+bool OtherEquipmentDefinition::setDesignLevel(double designLevel) {
+  return getImpl<detail::OtherEquipmentDefinition_Impl>()->setDesignLevel(designLevel);
 }
 
 bool OtherEquipmentDefinition::setWattsperSpaceFloorArea(double wattsperSpaceFloorArea) {

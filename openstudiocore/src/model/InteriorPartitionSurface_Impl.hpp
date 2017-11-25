@@ -127,7 +127,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setConverttoInternalMass(bool converttoInternalMass);
+    bool setConverttoInternalMass(bool converttoInternalMass);
 
     void resetConverttoInternalMass();
 
@@ -174,4 +174,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_INTERIORPARTITIONSURFACE_IMPL_HPP
-

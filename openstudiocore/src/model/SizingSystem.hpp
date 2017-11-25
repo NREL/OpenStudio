@@ -201,11 +201,11 @@ class MODEL_API SizingSystem : public ModelObject
 
   void resetSizingOption();
 
-  void setAllOutdoorAirinCooling(bool allOutdoorAirinCooling);
+  bool setAllOutdoorAirinCooling(bool allOutdoorAirinCooling);
 
   void resetAllOutdoorAirinCooling();
 
-  void setAllOutdoorAirinHeating(bool allOutdoorAirinHeating);
+  bool setAllOutdoorAirinHeating(bool allOutdoorAirinHeating);
 
   void resetAllOutdoorAirinHeating();
 

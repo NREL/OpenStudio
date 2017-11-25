@@ -77,7 +77,7 @@ class MODEL_API ScheduleFixedInterval : public ScheduleInterval {
   /** @name Setters */
   //@{
 
-  void setInterpolatetoTimestep(bool interpolatetoTimestep);
+  bool setInterpolatetoTimestep(bool interpolatetoTimestep);
 
   void resetInterpolatetoTimestep();
 

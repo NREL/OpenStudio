@@ -223,7 +223,7 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
 
   void resetFenestrationGasFill();
 
-  void setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating);
+  bool setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating);
 
   void resetFenestrationLowEmissivityCoating();
 

@@ -182,7 +182,7 @@ namespace detail {
 
     void resetFenestrationGasFill();
 
-    void setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating);
+    bool setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating);
 
     void resetFenestrationLowEmissivityCoating();
 

@@ -250,14 +250,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void OutputMeter_Impl::setMeterFileOnly(bool meterFileOnly) {
+  bool OutputMeter_Impl::setMeterFileOnly(bool meterFileOnly) {
     bool result = false;
     if (meterFileOnly) {
       result = setString(OS_Output_MeterFields::MeterFileOnly, "True");
     } else {
       result = setString(OS_Output_MeterFields::MeterFileOnly, "False");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void OutputMeter_Impl::resetMeterFileOnly() {
@@ -265,14 +265,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void OutputMeter_Impl::setCumulative(bool cumulative) {
+  bool OutputMeter_Impl::setCumulative(bool cumulative) {
     bool result = false;
     if (cumulative) {
       result = setString(OS_Output_MeterFields::Cumulative, "True");
     } else {
       result = setString(OS_Output_MeterFields::Cumulative, "False");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void OutputMeter_Impl::resetCumulative() {
@@ -576,16 +576,16 @@ void OutputMeter::resetReportingFrequency() {
   getImpl<detail::OutputMeter_Impl>()->resetReportingFrequency();
 }
 
-void OutputMeter::setMeterFileOnly(bool meterFileOnly) {
-  getImpl<detail::OutputMeter_Impl>()->setMeterFileOnly(meterFileOnly);
+bool OutputMeter::setMeterFileOnly(bool meterFileOnly) {
+  return getImpl<detail::OutputMeter_Impl>()->setMeterFileOnly(meterFileOnly);
 }
 
 void OutputMeter::resetMeterFileOnly() {
   getImpl<detail::OutputMeter_Impl>()->resetMeterFileOnly();
 }
 
-void OutputMeter::setCumulative(bool cumulative) {
-  getImpl<detail::OutputMeter_Impl>()->setCumulative(cumulative);
+bool OutputMeter::setCumulative(bool cumulative) {
+  return getImpl<detail::OutputMeter_Impl>()->setCumulative(cumulative);
 }
 
 void OutputMeter::resetCumulative() {
@@ -671,4 +671,3 @@ OutputMeter::OutputMeter(std::shared_ptr<detail::OutputMeter_Impl> impl)
 
 } // model
 } // openstudio
-

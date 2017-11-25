@@ -112,19 +112,19 @@ class MODEL_API ScheduleRule : public ParentObject {
   /** @name Setters */
   //@{
 
-  void setApplySunday(bool applySunday);
+  bool setApplySunday(bool applySunday);
 
-  void setApplyMonday(bool applyMonday);
+  bool setApplyMonday(bool applyMonday);
 
-  void setApplyTuesday(bool applyTuesday);
+  bool setApplyTuesday(bool applyTuesday);
 
-  void setApplyWednesday(bool applyWednesday);
+  bool setApplyWednesday(bool applyWednesday);
 
-  void setApplyThursday(bool applyThursday);
+  bool setApplyThursday(bool applyThursday);
 
-  void setApplyFriday(bool applyFriday);
+  bool setApplyFriday(bool applyFriday);
 
-  void setApplySaturday(bool applySaturday);
+  bool setApplySaturday(bool applySaturday);
 
   //void setApplyHoliday(bool applyHoliday);
 
@@ -184,4 +184,3 @@ typedef std::vector<ScheduleRule> ScheduleRuleVector;
 } // openstudio
 
 #endif // MODEL_SCHEDULERULE_HPP
-

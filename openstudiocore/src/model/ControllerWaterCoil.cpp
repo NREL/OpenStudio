@@ -241,10 +241,10 @@ void ControllerWaterCoil_Impl::setActuatorNode( Node & node )
   this->setPointer(OS_Controller_WaterCoilFields::ActuatorNodeName,node.handle());
 }
 
-void ControllerWaterCoil_Impl::setWaterCoil( const HVACComponent & comp )
+bool ControllerWaterCoil_Impl::setWaterCoil( const HVACComponent & comp )
 {
   auto result = setPointer(OS_Controller_WaterCoilFields::WaterCoilName,comp.handle());
-  OS_ASSERT(result);
+  return result;
 }
 
 boost::optional<HVACComponent> ControllerWaterCoil_Impl::waterCoil() const

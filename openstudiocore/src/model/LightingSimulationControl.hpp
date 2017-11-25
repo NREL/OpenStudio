@@ -72,11 +72,11 @@ class MODEL_API LightingSimulationControl : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setRunSimulationforDesignDays(bool runSimulationforDesignDays);
+  bool setRunSimulationforDesignDays(bool runSimulationforDesignDays);
 
   void resetRunSimulationforDesignDays();
 
-  void setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods);
+  bool setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods);
 
   void resetRunSimulationforWeatherFileRunPeriods();
 
@@ -109,4 +109,3 @@ typedef std::vector<LightingSimulationControl> LightingSimulationControlVector;
 } // openstudio
 
 #endif // MODEL_LIGHTINGSIMULATIONCONTROL_HPP
-

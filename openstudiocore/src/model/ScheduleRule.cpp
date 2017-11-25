@@ -271,84 +271,84 @@ namespace detail {
     return result;
   }
 
-  void ScheduleRule_Impl::setApplySunday(bool applySunday) {
+  bool ScheduleRule_Impl::setApplySunday(bool applySunday) {
     bool result = false;
     if (applySunday) {
       result = setString(OS_Schedule_RuleFields::ApplySunday, "Yes");
     } else {
       result = setString(OS_Schedule_RuleFields::ApplySunday, "No");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ScheduleRule_Impl::setApplyMonday(bool applyMonday) {
+  bool ScheduleRule_Impl::setApplyMonday(bool applyMonday) {
     bool result = false;
     if (applyMonday) {
       result = setString(OS_Schedule_RuleFields::ApplyMonday, "Yes");
     } else {
       result = setString(OS_Schedule_RuleFields::ApplyMonday, "No");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ScheduleRule_Impl::setApplyTuesday(bool applyTuesday) {
+  bool ScheduleRule_Impl::setApplyTuesday(bool applyTuesday) {
     bool result = false;
     if (applyTuesday) {
       result = setString(OS_Schedule_RuleFields::ApplyTuesday, "Yes");
     } else {
       result = setString(OS_Schedule_RuleFields::ApplyTuesday, "No");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ScheduleRule_Impl::setApplyWednesday(bool applyWednesday) {
+  bool ScheduleRule_Impl::setApplyWednesday(bool applyWednesday) {
     bool result = false;
     if (applyWednesday) {
       result = setString(OS_Schedule_RuleFields::ApplyWednesday, "Yes");
     } else {
       result = setString(OS_Schedule_RuleFields::ApplyWednesday, "No");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ScheduleRule_Impl::setApplyThursday(bool applyThursday) {
+  bool ScheduleRule_Impl::setApplyThursday(bool applyThursday) {
     bool result = false;
     if (applyThursday) {
       result = setString(OS_Schedule_RuleFields::ApplyThursday, "Yes");
     } else {
       result = setString(OS_Schedule_RuleFields::ApplyThursday, "No");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ScheduleRule_Impl::setApplyFriday(bool applyFriday) {
+  bool ScheduleRule_Impl::setApplyFriday(bool applyFriday) {
     bool result = false;
     if (applyFriday) {
       result = setString(OS_Schedule_RuleFields::ApplyFriday, "Yes");
     } else {
       result = setString(OS_Schedule_RuleFields::ApplyFriday, "No");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ScheduleRule_Impl::setApplySaturday(bool applySaturday) {
+  bool ScheduleRule_Impl::setApplySaturday(bool applySaturday) {
     bool result = false;
     if (applySaturday) {
       result = setString(OS_Schedule_RuleFields::ApplySaturday, "Yes");
     } else {
       result = setString(OS_Schedule_RuleFields::ApplySaturday, "No");
     }
-    OS_ASSERT(result);
+    return result;
   }
 /*
-  void ScheduleRule_Impl::setApplyHoliday(bool applyHoliday) {
+  bool ScheduleRule_Impl::setApplyHoliday(bool applyHoliday) {
     bool result = false;
     if (applyHoliday) {
       result = setString(OS_Schedule_RuleFields::ApplyHoliday, "Yes");
     } else {
       result = setString(OS_Schedule_RuleFields::ApplyHoliday, "No");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool ScheduleRule_Impl::setDateSpecificationType(std::string dateSpecificationType) {
@@ -711,37 +711,37 @@ bool ScheduleRule::setRuleIndex(int index) {
   return getImpl<detail::ScheduleRule_Impl>()->setRuleIndex(index);
 }
 
-void ScheduleRule::setApplySunday(bool applySunday) {
-  getImpl<detail::ScheduleRule_Impl>()->setApplySunday(applySunday);
+bool ScheduleRule::setApplySunday(bool applySunday) {
+  return getImpl<detail::ScheduleRule_Impl>()->setApplySunday(applySunday);
 }
 
-void ScheduleRule::setApplyMonday(bool applyMonday) {
-  getImpl<detail::ScheduleRule_Impl>()->setApplyMonday(applyMonday);
+bool ScheduleRule::setApplyMonday(bool applyMonday) {
+  return getImpl<detail::ScheduleRule_Impl>()->setApplyMonday(applyMonday);
 }
 
-void ScheduleRule::setApplyTuesday(bool applyTuesday) {
-  getImpl<detail::ScheduleRule_Impl>()->setApplyTuesday(applyTuesday);
+bool ScheduleRule::setApplyTuesday(bool applyTuesday) {
+  return getImpl<detail::ScheduleRule_Impl>()->setApplyTuesday(applyTuesday);
 }
 
-void ScheduleRule::setApplyWednesday(bool applyWednesday) {
-  getImpl<detail::ScheduleRule_Impl>()->setApplyWednesday(applyWednesday);
+bool ScheduleRule::setApplyWednesday(bool applyWednesday) {
+  return getImpl<detail::ScheduleRule_Impl>()->setApplyWednesday(applyWednesday);
 }
 
-void ScheduleRule::setApplyThursday(bool applyThursday) {
-  getImpl<detail::ScheduleRule_Impl>()->setApplyThursday(applyThursday);
+bool ScheduleRule::setApplyThursday(bool applyThursday) {
+  return getImpl<detail::ScheduleRule_Impl>()->setApplyThursday(applyThursday);
 }
 
-void ScheduleRule::setApplyFriday(bool applyFriday) {
-  getImpl<detail::ScheduleRule_Impl>()->setApplyFriday(applyFriday);
+bool ScheduleRule::setApplyFriday(bool applyFriday) {
+  return getImpl<detail::ScheduleRule_Impl>()->setApplyFriday(applyFriday);
 }
 
-void ScheduleRule::setApplySaturday(bool applySaturday) {
-  getImpl<detail::ScheduleRule_Impl>()->setApplySaturday(applySaturday);
+bool ScheduleRule::setApplySaturday(bool applySaturday) {
+  return getImpl<detail::ScheduleRule_Impl>()->setApplySaturday(applySaturday);
 }
 
 /*
-void ScheduleRule::setApplyHoliday(bool applyHoliday) {
-  getImpl<detail::ScheduleRule_Impl>()->setApplyHoliday(applyHoliday);
+bool ScheduleRule::setApplyHoliday(bool applyHoliday) {
+  return getImpl<detail::ScheduleRule_Impl>()->setApplyHoliday(applyHoliday);
 }
 */
 
@@ -780,4 +780,3 @@ ScheduleRule::ScheduleRule(std::shared_ptr<detail::ScheduleRule_Impl> impl)
 
 } // model
 } // openstudio
-

@@ -127,7 +127,7 @@ class MODEL_API PeopleDefinition : public SpaceLoadDefinition {
 
   void resetCarbonDioxideGenerationRate();
 
-  void setEnableASHRAE55ComfortWarnings(bool enableASHRAE55ComfortWarnings);
+  bool setEnableASHRAE55ComfortWarnings(bool enableASHRAE55ComfortWarnings);
 
   void resetEnableASHRAE55ComfortWarnings();
 
@@ -185,4 +185,3 @@ typedef std::vector<PeopleDefinition> PeopleDefinitionVector;
 } // openstudio
 
 #endif // MODEL_PEOPLEDEFINITION_HPP
-

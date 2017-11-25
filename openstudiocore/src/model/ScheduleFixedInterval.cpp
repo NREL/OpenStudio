@@ -233,14 +233,14 @@ namespace detail {
     return isEmpty(OS_Schedule_FixedIntervalFields::OutOfRangeValue);
   }
 
-  void ScheduleFixedInterval_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod) {
+  bool ScheduleFixedInterval_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod) {
     bool result = false;
     if (interpolatetoTimestep) {
       result = setString(OS_Schedule_FixedIntervalFields::InterpolatetoTimestep, "Yes", driverMethod);
     } else {
       result = setString(OS_Schedule_FixedIntervalFields::InterpolatetoTimestep, "No", driverMethod);
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void ScheduleFixedInterval_Impl::resetInterpolatetoTimestep(bool driverMethod) {
@@ -329,8 +329,8 @@ bool ScheduleFixedInterval::isOutOfRangeValueDefaulted() const {
   return getImpl<detail::ScheduleFixedInterval_Impl>()->isOutOfRangeValueDefaulted();
 }
 
-void ScheduleFixedInterval::setInterpolatetoTimestep(bool interpolatetoTimestep) {
-  getImpl<detail::ScheduleFixedInterval_Impl>()->setInterpolatetoTimestep(interpolatetoTimestep);
+bool ScheduleFixedInterval::setInterpolatetoTimestep(bool interpolatetoTimestep) {
+  return getImpl<detail::ScheduleFixedInterval_Impl>()->setInterpolatetoTimestep(interpolatetoTimestep);
 }
 
 void ScheduleFixedInterval::resetInterpolatetoTimestep() {
