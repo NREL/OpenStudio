@@ -567,9 +567,9 @@ double PlantLoop_Impl::maximumLoopTemperature()
   return getDouble(OS_PlantLoopFields::MaximumLoopTemperature,true).get();
 }
 
-void PlantLoop_Impl::setMaximumLoopTemperature( double value )
+bool PlantLoop_Impl::setMaximumLoopTemperature( double value )
 {
-  setDouble(OS_PlantLoopFields::MaximumLoopTemperature,value);
+  return setDouble(OS_PlantLoopFields::MaximumLoopTemperature,value);;
 }
 
 double PlantLoop_Impl::minimumLoopTemperature()
@@ -577,9 +577,9 @@ double PlantLoop_Impl::minimumLoopTemperature()
   return getDouble(OS_PlantLoopFields::MinimumLoopTemperature,true).get();
 }
 
-void PlantLoop_Impl::setMinimumLoopTemperature( double value )
+bool PlantLoop_Impl::setMinimumLoopTemperature( double value )
 {
-  setDouble(OS_PlantLoopFields::MinimumLoopTemperature,value);
+  return setDouble(OS_PlantLoopFields::MinimumLoopTemperature,value);;
 }
 
 boost::optional<double> PlantLoop_Impl::maximumLoopFlowRate()
@@ -587,9 +587,9 @@ boost::optional<double> PlantLoop_Impl::maximumLoopFlowRate()
   return getDouble(OS_PlantLoopFields::MaximumLoopFlowRate,true);
 }
 
-void PlantLoop_Impl::setMaximumLoopFlowRate( double value )
+bool PlantLoop_Impl::setMaximumLoopFlowRate( double value )
 {
-  setDouble(OS_PlantLoopFields::MaximumLoopFlowRate,value);
+  return setDouble(OS_PlantLoopFields::MaximumLoopFlowRate,value);;
 }
 
 bool PlantLoop_Impl::isMaximumLoopFlowRateAutosized()
@@ -612,9 +612,9 @@ boost::optional<double> PlantLoop_Impl::minimumLoopFlowRate()
   return getDouble(OS_PlantLoopFields::MinimumLoopFlowRate,true);
 }
 
-void PlantLoop_Impl::setMinimumLoopFlowRate( double value )
+bool PlantLoop_Impl::setMinimumLoopFlowRate( double value )
 {
-  setDouble(OS_PlantLoopFields::MinimumLoopFlowRate,value);
+  return setDouble(OS_PlantLoopFields::MinimumLoopFlowRate,value);;
 }
 
 bool PlantLoop_Impl::isMinimumLoopFlowRateAutosized()
@@ -637,9 +637,9 @@ boost::optional<double> PlantLoop_Impl::plantLoopVolume()
   return getDouble(OS_PlantLoopFields::PlantLoopVolume,true);
 }
 
-void PlantLoop_Impl::setPlantLoopVolume( double value )
+bool PlantLoop_Impl::setPlantLoopVolume( double value )
 {
-  setDouble(OS_PlantLoopFields::PlantLoopVolume,value);
+  return setDouble(OS_PlantLoopFields::PlantLoopVolume,value);;
 }
 
 bool PlantLoop_Impl::isPlantLoopVolumeAutocalculated()
@@ -1078,9 +1078,9 @@ double PlantLoop::maximumLoopTemperature()
   return getImpl<detail::PlantLoop_Impl>()->maximumLoopTemperature();
 }
 
-void PlantLoop::setMaximumLoopTemperature( double value )
+bool PlantLoop::setMaximumLoopTemperature( double value )
 {
-  getImpl<detail::PlantLoop_Impl>()->setMaximumLoopTemperature( value );
+  return getImpl<detail::PlantLoop_Impl>()->setMaximumLoopTemperature( value );
 }
 
 double PlantLoop::minimumLoopTemperature()
@@ -1088,9 +1088,9 @@ double PlantLoop::minimumLoopTemperature()
   return getImpl<detail::PlantLoop_Impl>()->minimumLoopTemperature();
 }
 
-void PlantLoop::setMinimumLoopTemperature( double value )
+bool PlantLoop::setMinimumLoopTemperature( double value )
 {
-  getImpl<detail::PlantLoop_Impl>()->setMinimumLoopTemperature( value );
+  return getImpl<detail::PlantLoop_Impl>()->setMinimumLoopTemperature( value );
 }
 
 boost::optional<double> PlantLoop::maximumLoopFlowRate()
@@ -1098,9 +1098,9 @@ boost::optional<double> PlantLoop::maximumLoopFlowRate()
   return getImpl<detail::PlantLoop_Impl>()->maximumLoopFlowRate();
 }
 
-void PlantLoop::setMaximumLoopFlowRate( double value )
+bool PlantLoop::setMaximumLoopFlowRate( double value )
 {
-  getImpl<detail::PlantLoop_Impl>()->setMaximumLoopFlowRate( value );
+  return getImpl<detail::PlantLoop_Impl>()->setMaximumLoopFlowRate( value );
 }
 
 bool PlantLoop::isMaximumLoopFlowRateAutosized()
@@ -1118,9 +1118,9 @@ boost::optional<double> PlantLoop::minimumLoopFlowRate()
   return getImpl<detail::PlantLoop_Impl>()->minimumLoopFlowRate();
 }
 
-void PlantLoop::setMinimumLoopFlowRate( double value )
+bool PlantLoop::setMinimumLoopFlowRate( double value )
 {
-  getImpl<detail::PlantLoop_Impl>()->setMinimumLoopFlowRate( value );
+  return getImpl<detail::PlantLoop_Impl>()->setMinimumLoopFlowRate( value );
 }
 
 bool PlantLoop::isMinimumLoopFlowRateAutosized()
@@ -1138,9 +1138,9 @@ boost::optional<double> PlantLoop::plantLoopVolume()
   return getImpl<detail::PlantLoop_Impl>()->plantLoopVolume();
 }
 
-void PlantLoop::setPlantLoopVolume( double value )
+bool PlantLoop::setPlantLoopVolume( double value )
 {
-  getImpl<detail::PlantLoop_Impl>()->setPlantLoopVolume( value );
+  return getImpl<detail::PlantLoop_Impl>()->setPlantLoopVolume( value );
 }
 
 bool PlantLoop::isPlantLoopVolumeAutocalculated()
@@ -1308,4 +1308,3 @@ void PlantLoop::resetComponentSetpointOperationSchemeSchedule() {
 
 } // model
 } // openstudio
-

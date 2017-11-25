@@ -94,9 +94,9 @@ public:
   /** @name Setters */
   //@{
 
-  void setEnergyConversionFactor(double energyConversionFactor);
+  bool setEnergyConversionFactor(double energyConversionFactor);
 
-  void setDemandConversionFactor(double demandConversionFactor);
+  bool setDemandConversionFactor(double demandConversionFactor);
 
   bool setName(const std::string& name);
 

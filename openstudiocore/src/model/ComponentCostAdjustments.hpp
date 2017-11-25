@@ -79,19 +79,19 @@ public:
   /** @name Setters */
   //@{
 
-  void setMiscellaneousCostPerConditionedArea(double miscellaneousCostPerConditionedArea);
+  bool setMiscellaneousCostPerConditionedArea(double miscellaneousCostPerConditionedArea);
 
-  void setDesignAndEngineeringFees(double designAndEngineeringFees);
+  bool setDesignAndEngineeringFees(double designAndEngineeringFees);
 
-  void setContractorFee(double contractorFee);
+  bool setContractorFee(double contractorFee);
 
-  void setContingency(double contingency);
+  bool setContingency(double contingency);
 
-  void setPermitsBondingAndInsurance(double permitsBondingAndInsurance);
+  bool setPermitsBondingAndInsurance(double permitsBondingAndInsurance);
 
-  void setCommissioningFee(double commissioningFee);
+  bool setCommissioningFee(double commissioningFee);
 
-  void setRegionalAdjustmentFactor(double regionalAdjustmentFactor);
+  bool setRegionalAdjustmentFactor(double regionalAdjustmentFactor);
 
   //@}
 

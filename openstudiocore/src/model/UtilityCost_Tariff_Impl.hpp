@@ -55,10 +55,10 @@ class MODEL_API UtilityCost_Tariff_Impl : public ParentObject_Impl{
   virtual ~UtilityCost_Tariff_Impl(){}
 
   boost::optional<double> energyConversionFactor() const;
-  void setEnergyConversionFactor(double num);
+  bool setEnergyConversionFactor(double num);
 
   boost::optional<double> demandConversionFactor() const;
-  void setDemandConversionFactor(double num);
+  bool setDemandConversionFactor(double num);
 
   OptionalString outputMeterName() const;
   void setOutputMeterName(const std::string& str);

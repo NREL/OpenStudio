@@ -117,9 +117,9 @@ namespace detail{
     return getDouble(OS_SetpointManager_SingleZone_ReheatFields::MinimumSupplyAirTemperature).get();
   }
 
-  void SetpointManagerSingleZoneReheat_Impl::setMinimumSupplyAirTemperature( double value )
+  bool SetpointManagerSingleZoneReheat_Impl::setMinimumSupplyAirTemperature( double value )
   {
-    setDouble(OS_SetpointManager_SingleZone_ReheatFields::MinimumSupplyAirTemperature,value);
+    return setDouble(OS_SetpointManager_SingleZone_ReheatFields::MinimumSupplyAirTemperature,value);;
   }
 
   double SetpointManagerSingleZoneReheat_Impl::maximumSupplyAirTemperature()
@@ -127,9 +127,9 @@ namespace detail{
     return getDouble(OS_SetpointManager_SingleZone_ReheatFields::MaximumSupplyAirTemperature).get();
   }
 
-  void SetpointManagerSingleZoneReheat_Impl::setMaximumSupplyAirTemperature( double value )
+  bool SetpointManagerSingleZoneReheat_Impl::setMaximumSupplyAirTemperature( double value )
   {
-    setDouble(OS_SetpointManager_SingleZone_ReheatFields::MaximumSupplyAirTemperature,value);
+    return setDouble(OS_SetpointManager_SingleZone_ReheatFields::MaximumSupplyAirTemperature,value);;
   }
 
   boost::optional<Node> SetpointManagerSingleZoneReheat_Impl::setpointNode() const
@@ -223,9 +223,9 @@ double SetpointManagerSingleZoneReheat::minimumSupplyAirTemperature()
   return getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->minimumSupplyAirTemperature();
 }
 
-void SetpointManagerSingleZoneReheat::setMinimumSupplyAirTemperature( double value )
+bool SetpointManagerSingleZoneReheat::setMinimumSupplyAirTemperature( double value )
 {
-  getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->setMinimumSupplyAirTemperature(value);
+  return getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->setMinimumSupplyAirTemperature(value);
 }
 
 double SetpointManagerSingleZoneReheat::maximumSupplyAirTemperature()
@@ -233,9 +233,9 @@ double SetpointManagerSingleZoneReheat::maximumSupplyAirTemperature()
   return getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->maximumSupplyAirTemperature();
 }
 
-void SetpointManagerSingleZoneReheat::setMaximumSupplyAirTemperature( double value )
+bool SetpointManagerSingleZoneReheat::setMaximumSupplyAirTemperature( double value )
 {
-  getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->setMaximumSupplyAirTemperature(value);
+  return getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->setMaximumSupplyAirTemperature(value);
 }
 
 boost::optional<Node> SetpointManagerSingleZoneReheat::setpointNode() const

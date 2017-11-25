@@ -129,7 +129,7 @@ class MODEL_API ZoneHVACLowTempRadiantVarFlow : public ZoneHVACComponent {
 
   bool setNumberofCircuits(std::string numberofCircuits);
 
-  void setCircuitLength(double circuitLength);
+  bool setCircuitLength(double circuitLength);
 
   boost::optional<ThermalZone> thermalZone() const;
 
@@ -167,4 +167,3 @@ typedef std::vector<ZoneHVACLowTempRadiantVarFlow> ZoneHVACLowTempRadiantVarFlow
 } // openstudio
 
 #endif // MODEL_ZONEHVACLOWTEMPRADIANTVARFLOW_HPP
-

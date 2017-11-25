@@ -95,29 +95,29 @@ public:
   /** @name Setters */
   //@{
 
-  void setJanuaryValue(double januaryValue);
+  bool setJanuaryValue(double januaryValue);
 
-  void setFebruaryValue(double februaryValue);
+  bool setFebruaryValue(double februaryValue);
 
-  void setMarchValue(double marchValue);
+  bool setMarchValue(double marchValue);
 
-  void setAprilValue(double aprilValue);
+  bool setAprilValue(double aprilValue);
 
-  void setMayValue(double mayValue);
+  bool setMayValue(double mayValue);
 
-  void setJuneValue(double juneValue);
+  bool setJuneValue(double juneValue);
 
-  void setJulyValue(double julyValue);
+  bool setJulyValue(double julyValue);
 
-  void setAugustValue(double augustValue);
+  bool setAugustValue(double augustValue);
 
-  void setSeptemberValue(double septemberValue);
+  bool setSeptemberValue(double septemberValue);
 
-  void setOctoberValue(double octoberValue);
+  bool setOctoberValue(double octoberValue);
 
-  void setNovemberValue(double novemberValue);
+  bool setNovemberValue(double novemberValue);
 
-  void setDecemberValue(double decemberValue);
+  bool setDecemberValue(double decemberValue);
 
   void setName(const std::string& name);
 

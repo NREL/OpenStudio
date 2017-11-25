@@ -39,9 +39,9 @@ class Schedule;
 namespace detail {
 
   class MODEL_API CoilHeatingWater_Impl : public WaterToAirComponent_Impl {
-    
 
-    
+
+
   public:
     /** @name Constructors and Destructors */
     //@{
@@ -96,7 +96,7 @@ namespace detail {
 
     boost::optional<double> uFactorTimesAreaValue();
 
-    void setUFactorTimesAreaValue( double value );
+    bool setUFactorTimesAreaValue( double value );
 
     bool isUFactorTimesAreaValueAutosized();
 
@@ -104,7 +104,7 @@ namespace detail {
 
     boost::optional<double> maximumWaterFlowRate();
 
-    void setMaximumWaterFlowRate( double value );
+    bool setMaximumWaterFlowRate( double value );
 
     bool isMaximumWaterFlowRateAutosized();
 
@@ -116,7 +116,7 @@ namespace detail {
 
     boost::optional<double> ratedCapacity();
 
-    void setRatedCapacity( double value );
+    bool setRatedCapacity( double value );
 
     bool isRatedCapacityAutosized();
 
@@ -124,23 +124,23 @@ namespace detail {
 
     double ratedInletWaterTemperature();
 
-    void setRatedInletWaterTemperature( double value );
+    bool setRatedInletWaterTemperature( double value );
 
     double ratedInletAirTemperature();
 
-    void setRatedInletAirTemperature( double value );
+    bool setRatedInletAirTemperature( double value );
 
     double ratedOutletWaterTemperature();
 
-    void setRatedOutletWaterTemperature( double value );
+    bool setRatedOutletWaterTemperature( double value );
 
     double ratedOutletAirTemperature();
 
-    void setRatedOutletAirTemperature( double value );
+    bool setRatedOutletAirTemperature( double value );
 
     double ratedRatioForAirAndWaterConvection();
 
-    void setRatedRatioForAirAndWaterConvection( double value );
+    bool setRatedRatioForAirAndWaterConvection( double value );
 
     //@}
   private:

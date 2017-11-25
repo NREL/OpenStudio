@@ -66,9 +66,9 @@ OptionalDouble UtilityCost_Tariff_Impl::energyConversionFactor() const
   return getDouble(OS_UtilityCost_TariffFields::EnergyConversionFactor);
 }
 
-void UtilityCost_Tariff_Impl::setEnergyConversionFactor(double num)
+bool UtilityCost_Tariff_Impl::setEnergyConversionFactor(double num)
 {
-  setDouble(OS_UtilityCost_TariffFields::EnergyConversionFactor,num);
+  return setDouble(OS_UtilityCost_TariffFields::EnergyConversionFactor,num);;
 }
 
 OptionalDouble UtilityCost_Tariff_Impl::demandConversionFactor() const
@@ -76,9 +76,9 @@ OptionalDouble UtilityCost_Tariff_Impl::demandConversionFactor() const
   return getDouble(OS_UtilityCost_TariffFields::DemandConversionFactor);
 }
 
-void UtilityCost_Tariff_Impl::setDemandConversionFactor(double num)
+bool UtilityCost_Tariff_Impl::setDemandConversionFactor(double num)
 {
-  setDouble(OS_UtilityCost_TariffFields::DemandConversionFactor,num);
+  return setDouble(OS_UtilityCost_TariffFields::DemandConversionFactor,num);;
 }
 
 OptionalString UtilityCost_Tariff_Impl::outputMeterName() const
@@ -256,9 +256,9 @@ OptionalDouble UtilityCost_Tariff::energyConversionFactor() const
   return getImpl<detail::UtilityCost_Tariff_Impl>()->energyConversionFactor();
 }
 
-void UtilityCost_Tariff::setEnergyConversionFactor(double num)
+bool UtilityCost_Tariff::setEnergyConversionFactor(double num)
 {
-  getImpl<detail::UtilityCost_Tariff_Impl>()->setEnergyConversionFactor(num);
+  return getImpl<detail::UtilityCost_Tariff_Impl>()->setEnergyConversionFactor(num);
 }
 
 OptionalDouble UtilityCost_Tariff::demandConversionFactor() const
@@ -266,9 +266,9 @@ OptionalDouble UtilityCost_Tariff::demandConversionFactor() const
   return getImpl<detail::UtilityCost_Tariff_Impl>()->demandConversionFactor();
 }
 
-void UtilityCost_Tariff::setDemandConversionFactor(double num)
+bool UtilityCost_Tariff::setDemandConversionFactor(double num)
 {
-  getImpl<detail::UtilityCost_Tariff_Impl>()->setDemandConversionFactor(num);
+  return getImpl<detail::UtilityCost_Tariff_Impl>()->setDemandConversionFactor(num);
 }
 
 OptionalString UtilityCost_Tariff::name() const

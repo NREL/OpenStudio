@@ -95,7 +95,7 @@ class MODEL_API CoilCoolingWater : public WaterToAirComponent {
   boost::optional<double> designWaterFlowRate();
 
   /** Sets the value of the DesignWaterFlowRate field. **/
-  void setDesignWaterFlowRate( double value );
+  bool setDesignWaterFlowRate( double value );
 
   /** Returns true if the DesignWaterFlowRate field is set to autosize **/
   bool isDesignWaterFlowRateAutosized();
@@ -107,7 +107,7 @@ class MODEL_API CoilCoolingWater : public WaterToAirComponent {
   boost::optional<double> designAirFlowRate();
 
   /** Sets the value of the DesignAirFlowRate field. **/
-  void setDesignAirFlowRate( double value );
+  bool setDesignAirFlowRate( double value );
 
   /** Returns true if the DesignAirFlowRate field is set to autosize **/
   bool isDesignAirFlowRateAutosized();
@@ -119,7 +119,7 @@ class MODEL_API CoilCoolingWater : public WaterToAirComponent {
   boost::optional<double> designInletWaterTemperature();
 
   /** Sets the value of the DesignInletWaterTemperature field. **/
-  void setDesignInletWaterTemperature( double value );
+  bool setDesignInletWaterTemperature( double value );
 
   /** Returns true if the DesignInletWaterTemperature field is set to autosize **/
   bool isDesignInletWaterTemperatureAutosized();
@@ -131,7 +131,7 @@ class MODEL_API CoilCoolingWater : public WaterToAirComponent {
   boost::optional<double> designInletAirTemperature();
 
   /** Sets the value of the DesignInletAirTemperature field. **/
-  void setDesignInletAirTemperature( double value );
+  bool setDesignInletAirTemperature( double value );
 
   /** Returns true if the DesignInletAirTemperature field is set to autosize **/
   bool isDesignInletAirTemperatureAutosized();
@@ -143,7 +143,7 @@ class MODEL_API CoilCoolingWater : public WaterToAirComponent {
   boost::optional<double> designOutletAirTemperature();
 
   /** Sets the value of the DesignOutletAirTemperature field. **/
-  void setDesignOutletAirTemperature( double value );
+  bool setDesignOutletAirTemperature( double value );
 
   /** Returns true if the DesignOutletAirTemperature field is set to autosize **/
   bool isDesignOutletAirTemperatureAutosized();
@@ -155,7 +155,7 @@ class MODEL_API CoilCoolingWater : public WaterToAirComponent {
   boost::optional<double> designInletAirHumidityRatio();
 
   /** Sets the value of the DesignInletAirHumidityRatio field. **/
-  void setDesignInletAirHumidityRatio( double value );
+  bool setDesignInletAirHumidityRatio( double value );
 
   /** Returns true if the DesignInletAirHumidityRatio field is set to autosize **/
   bool isDesignInletAirHumidityRatioAutosized();
@@ -167,7 +167,7 @@ class MODEL_API CoilCoolingWater : public WaterToAirComponent {
   boost::optional<double> designOutletAirHumidityRatio();
 
   /** Sets the value of the DesignOutletAirHumidityRatio field. **/
-  void setDesignOutletAirHumidityRatio( double value );
+  bool setDesignOutletAirHumidityRatio( double value );
 
   /** Returns true if the DesignOutletAirHumidityRatio field is set to autosize **/
   bool isDesignOutletAirHumidityRatioAutosized();

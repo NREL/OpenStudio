@@ -64,13 +64,13 @@ class MODEL_API SetpointManagerSingleZoneReheat : public SetpointManager {
   double minimumSupplyAirTemperature();
 
   /** Sets the value of the MinimumSupplyAirTemperature field. **/
-  void setMinimumSupplyAirTemperature( double value );
+  bool setMinimumSupplyAirTemperature( double value );
 
   /** Returns the value of the MaximumSupplyAirTemperature field. **/
   double maximumSupplyAirTemperature();
 
   /** Sets the value of the MaximumSupplyAirTemperature field. **/
-  void setMaximumSupplyAirTemperature( double value );
+  bool setMaximumSupplyAirTemperature( double value );
 
   /** Returns the Node referred to by the SetpointNodeName field. **/
   boost::optional<Node> setpointNode() const;
@@ -122,4 +122,3 @@ typedef std::vector<SetpointManagerSingleZoneReheat> SetpointManagerSingleZoneRe
 } // openstudio
 
 #endif // MODEL_SETPOINTMANAGERSINGLEZONEREHEAT_HPP
-

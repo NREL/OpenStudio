@@ -39,9 +39,9 @@ class Schedule;
 namespace detail {
 
   class MODEL_API CoilCoolingWater_Impl : public WaterToAirComponent_Impl {
-    
 
-    
+
+
   public:
     /** @name Constructors and Destructors */
     //@{
@@ -92,7 +92,7 @@ namespace detail {
 
     boost::optional<double> designWaterFlowRate();
 
-    void setDesignWaterFlowRate( double value );
+    bool setDesignWaterFlowRate( double value );
 
     bool isDesignWaterFlowRateAutosized();
 
@@ -100,7 +100,7 @@ namespace detail {
 
     boost::optional<double> designAirFlowRate();
 
-    void setDesignAirFlowRate( double value );
+    bool setDesignAirFlowRate( double value );
 
     bool isDesignAirFlowRateAutosized();
 
@@ -108,7 +108,7 @@ namespace detail {
 
     boost::optional<double> designInletWaterTemperature();
 
-    void setDesignInletWaterTemperature( double value );
+    bool setDesignInletWaterTemperature( double value );
 
     bool isDesignInletWaterTemperatureAutosized();
 
@@ -116,7 +116,7 @@ namespace detail {
 
     boost::optional<double> designInletAirTemperature();
 
-    void setDesignInletAirTemperature( double value );
+    bool setDesignInletAirTemperature( double value );
 
     bool isDesignInletAirTemperatureAutosized();
 
@@ -124,7 +124,7 @@ namespace detail {
 
     boost::optional<double> designOutletAirTemperature();
 
-    void setDesignOutletAirTemperature( double value );
+    bool setDesignOutletAirTemperature( double value );
 
     bool isDesignOutletAirTemperatureAutosized();
 
@@ -132,7 +132,7 @@ namespace detail {
 
     boost::optional<double> designInletAirHumidityRatio();
 
-    void setDesignInletAirHumidityRatio( double value );
+    bool setDesignInletAirHumidityRatio( double value );
 
     bool isDesignInletAirHumidityRatioAutosized();
 
@@ -140,7 +140,7 @@ namespace detail {
 
     boost::optional<double> designOutletAirHumidityRatio();
 
-    void setDesignOutletAirHumidityRatio( double value );
+    bool setDesignOutletAirHumidityRatio( double value );
 
     bool isDesignOutletAirHumidityRatioAutosized();
 
@@ -154,7 +154,7 @@ namespace detail {
 
     void setHeatExchangerConfiguration( std::string value );
 
-  private:    
+  private:
     REGISTER_LOGGER("openstudio.model.CoilCoolingWater");
 
     boost::optional<ModelObject> availabilityScheduleAsModelObject() const;

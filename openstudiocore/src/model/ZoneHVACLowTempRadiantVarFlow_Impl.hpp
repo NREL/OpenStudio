@@ -145,7 +145,7 @@ namespace detail {
 
     bool setNumberofCircuits(std::string numberofCircuits);
 
-    void setCircuitLength(double circuitLength);
+    bool setCircuitLength(double circuitLength);
 
     boost::optional<ThermalZone> thermalZone() const;
 
@@ -177,4 +177,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_ZONEHVACLOWTEMPRADIANTVARFLOW_IMPL_HPP
-

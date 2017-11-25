@@ -113,7 +113,7 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
   //void setHumidistatControlZone(Zone z)
 
   OptionalDouble getHighHumidityOutdoorAirFlowRatio() const;
-  void setHighHumidityOutdoorAirFlowRatio(double v);
+  bool setHighHumidityOutdoorAirFlowRatio(double v);
 
   boost::optional<bool> getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const;
   void setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(bool v);

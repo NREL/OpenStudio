@@ -112,15 +112,15 @@ class MODEL_API PlantLoop : public Loop {
 
   double maximumLoopTemperature();
 
-  void setMaximumLoopTemperature( double value );
+  bool setMaximumLoopTemperature( double value );
 
   double minimumLoopTemperature();
 
-  void setMinimumLoopTemperature( double value );
+  bool setMinimumLoopTemperature( double value );
 
   boost::optional<double> maximumLoopFlowRate();
 
-  void setMaximumLoopFlowRate( double value );
+  bool setMaximumLoopFlowRate( double value );
 
   bool isMaximumLoopFlowRateAutosized();
 
@@ -128,7 +128,7 @@ class MODEL_API PlantLoop : public Loop {
 
   boost::optional<double> minimumLoopFlowRate();
 
-  void setMinimumLoopFlowRate( double value );
+  bool setMinimumLoopFlowRate( double value );
 
   bool isMinimumLoopFlowRateAutosized();
 
@@ -136,7 +136,7 @@ class MODEL_API PlantLoop : public Loop {
 
   boost::optional<double> plantLoopVolume();
 
-  void setPlantLoopVolume( double value );
+  bool setPlantLoopVolume( double value );
 
   bool isPlantLoopVolumeAutocalculated();
 

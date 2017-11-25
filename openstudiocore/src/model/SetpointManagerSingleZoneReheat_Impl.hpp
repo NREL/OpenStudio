@@ -69,11 +69,11 @@ namespace detail {
 
     double minimumSupplyAirTemperature();
 
-    void setMinimumSupplyAirTemperature( double value );
+    bool setMinimumSupplyAirTemperature( double value );
 
     double maximumSupplyAirTemperature();
 
-    void setMaximumSupplyAirTemperature( double value );
+    bool setMaximumSupplyAirTemperature( double value );
 
     virtual boost::optional<Node> setpointNode() const override;
 
@@ -104,4 +104,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SETPOINTMANAGERSINGLEZONEREHEAT_IMPL_HPP
-

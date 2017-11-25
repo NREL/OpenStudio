@@ -467,9 +467,9 @@ namespace detail {
   {
     return getDouble(openstudio::OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio);
   }
-  void ControllerOutdoorAir_Impl::setHighHumidityOutdoorAirFlowRatio(double v)
+  bool ControllerOutdoorAir_Impl::setHighHumidityOutdoorAirFlowRatio(double v)
   {
-    setDouble(openstudio::OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio,v);
+    return setDouble(openstudio::OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio,v);;
   }
 
   boost::optional<bool> ControllerOutdoorAir_Impl::getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const
@@ -845,9 +845,9 @@ OptionalDouble ControllerOutdoorAir::getHighHumidityOutdoorAirFlowRatio() const
 {
   return getImpl<detail::ControllerOutdoorAir_Impl>()->getHighHumidityOutdoorAirFlowRatio();
 }
-void ControllerOutdoorAir::setHighHumidityOutdoorAirFlowRatio(double v)
+bool ControllerOutdoorAir::setHighHumidityOutdoorAirFlowRatio(double v)
 {
-  getImpl<detail::ControllerOutdoorAir_Impl>()->setHighHumidityOutdoorAirFlowRatio(v);
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->setHighHumidityOutdoorAirFlowRatio(v);
 }
 
 boost::optional<bool> ControllerOutdoorAir::getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const
