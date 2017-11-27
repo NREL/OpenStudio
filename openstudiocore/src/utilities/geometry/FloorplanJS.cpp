@@ -714,9 +714,15 @@ namespace openstudio{
     double result = 0;
     Json::Value project = m_value.get("project", Json::objectValue);
     if (!project.isNull()){
-      Json::Value config = project.get("config", Json::objectValue);
-      if (!config.isNull()){
-        result = config.get("north_axis", result).asDouble();
+      if (project.isMember("north_axis")){
+        // current location
+        result = project.get("north_axis", result).asDouble();
+      } else{
+        // previous location
+        Json::Value config = project.get("config", Json::objectValue);
+        if (!config.isNull()){
+          result = config.get("north_axis", result).asDouble();
+        }
       }
     }
     return result;
