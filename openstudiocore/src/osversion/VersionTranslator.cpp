@@ -3518,20 +3518,23 @@ std::string VersionTranslator::update_2_1_1_to_2_1_2(const IdfFile& idf_2_1_1, c
 std::string VersionTranslator::update_2_1_2_to_2_3_0(const IdfFile& idf_2_1_2, const IddFileAndFactoryWrapper& idd_2_3_0) {
   std::stringstream ss;
 
-  ss << idf_2_1_1.header() << std::endl << std::endl;
-  IdfFile targetIdf(idd_2_1_2.iddFile());
+  ss << idf_2_1_2.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_2_3_0.iddFile());
   ss << targetIdf.versionObject().get();
+
+  boost::optional<std::string> value;
 
   for (const IdfObject& object : idf_2_1_2.objects()) {
     auto iddname = object.iddObject().name();
 
-    if (iddname == "OS:PumpConstantSpeed") {
-      auto iddObject = idd_2_3_0.getObject("OS:PumpConstantSpeed");
+    if (iddname == "OS:Pump:ConstantSpeed") {
+      auto iddObject = idd_2_3_0.getObject("OS:Pump:ConstantSpeed");
       IdfObject newObject(iddObject.get());
 
       for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
-        auto value = object.getString(i);
-        newObject.setString(i,value);
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
       }
 
       newObject.setString(16,"PowerPerFlowPerPressure");
@@ -3540,13 +3543,14 @@ std::string VersionTranslator::update_2_1_2_to_2_3_0(const IdfFile& idf_2_1_2, c
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
-    else if (iddname == "OS:PumpVariableSpeed") {
-      auto iddObject = idd_2_3_0.getObject("OS:PumpVariableSpeed");
+    } else if (iddname == "OS:Pump:VariableSpeed") {
+      auto iddObject = idd_2_3_0.getObject("OS:Pump:VariableSpeed");
       IdfObject newObject(iddObject.get());
 
       for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
-        auto value = object.getString(i);
-        newObject.setString(i,value);
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
       }
 
       newObject.setString(25,"0.5");
@@ -3554,6 +3558,28 @@ std::string VersionTranslator::update_2_1_2_to_2_3_0(const IdfFile& idf_2_1_2, c
       newObject.setString(27,"348701.1");
       newObject.setString(28,"1.282051282");
       newObject.setString(29,"0.0");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else if (iddname == "OS:CoolingTower:SingleSpeed") {
+      auto iddObject = idd_2_3_0.getObject("OS:CoolingTower::SingleSpeed");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      newObject.setString(29,"0.1");
+      newObject.setString(30,"0.1");
+      newObject.setString(31,"1.25");
+      newObject.setString(32,"0.1");
+      newObject.setString(33,"35.0");
+      newObject.setString(34,"25.6");
+      newObject.setString(35,"Autosize");
+      newObject.setString(36,"Autosize");
+      newObject.setString(37,"General");
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
