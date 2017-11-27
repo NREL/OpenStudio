@@ -198,7 +198,7 @@ TEST_F(ModelFixture, Space_FloorArea)
 
   EXPECT_EQ(0, space.floorArea());
 
-  // roof 
+  // roof
   points.clear();
   points.push_back(Point3d(1, 1, 1));
   points.push_back(Point3d(0, 1, 1));
@@ -210,7 +210,7 @@ TEST_F(ModelFixture, Space_FloorArea)
 
   EXPECT_EQ(0, space.floorArea());
 
-  // floor 
+  // floor
   points.clear();
   points.push_back(Point3d(0, 1, 0));
   points.push_back(Point3d(1, 1, 0));
@@ -255,7 +255,7 @@ TEST_F(ModelFixture, Space_FloorArea)
   EXPECT_NEAR(6, space.floorArea(), 0.0001);
 }
 
-TEST_F(ModelFixture, Space_Attributes) 
+TEST_F(ModelFixture, Space_Attributes)
 {
   Model model;
   Space space(model);
@@ -316,7 +316,7 @@ TEST_F(ModelFixture, Space_Lights)
   EXPECT_EQ(0, space.lightingPower());
   EXPECT_EQ(0, space.lightingPowerPerFloorArea());
 
-  // floor 
+  // floor
   Point3dVector points;
   points.push_back(Point3d(0, 10, 0));
   points.push_back(Point3d(10, 10, 0));
@@ -1027,7 +1027,7 @@ TEST_F(ModelFixture, Space_FloorPrint1)
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[1], Point3d(1, 0, 0))) << floorPrint;
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[2], Point3d(0, 0, 0))) << floorPrint;
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[3], Point3d(0, 1, 0))) << floorPrint;
-  
+
   points.clear();
   points.push_back(Point3d(1, 2, 0));
   points.push_back(Point3d(1, 1, 0));
@@ -1043,7 +1043,7 @@ TEST_F(ModelFixture, Space_FloorPrint1)
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[1], Point3d(1, 0, 0))) << floorPrint;
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[2], Point3d(0, 0, 0))) << floorPrint;
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[3], Point3d(0, 2, 0))) << floorPrint;
-  
+
   points.clear();
   points.push_back(Point3d(2, 2, 0));
   points.push_back(Point3d(2, 1, 0));
@@ -1364,8 +1364,15 @@ TEST_F(ModelFixture,Space_Plenum)
   ASSERT_EQ(2u, plenumSpaces.size());
 
   EXPECT_EQ("Plenum Space Type", plenumSpaceType.nameString());
-  plenumSpaceType.setName("Some Other Name");
+  plenumSpaceType.setNameProtected("Some Other Name");
   EXPECT_EQ("Plenum Space Type", plenumSpaceType.nameString());
+
+  EXPECT_EQ("Plenum Space Type", plenumSpaceType.nameString());
+  plenumSpaceType.setName("Some Other Name");
+  EXPECT_EQ("Some Other Name", plenumSpaceType.nameString());
+
+  plenumSpaceType = model.plenumSpaceType();
+  EXPECT_EQ(3u, model.getConcreteModelObjects<model::SpaceType>().size());
 
   ASSERT_TRUE(supplySpace.spaceType());
   EXPECT_EQ(plenumSpaceType.handle(), supplySpace.spaceType()->handle());
@@ -1509,4 +1516,47 @@ TEST_F(ModelFixture, Space_LifeCycleCost)
   space.remove();
   EXPECT_TRUE(lifeCycleCost->handle().isNull());
   EXPECT_EQ(0, model.getConcreteModelObjects<LifeCycleCost>().size());
+}
+
+TEST_F(ModelFixture, Space_hardApplySpaceType_Plenum)
+{
+  Model m;
+  Space s(m);
+  ThermalZone z(m);
+  s.setThermalZone(z);
+
+  AirLoopHVACSupplyPlenum a(m);
+  a.setThermalZone(z);
+
+  ASSERT_EQ(m.plenumSpaceType().handle(), s.spaceType().get().handle());
+
+  // This should not do anything, space type should change
+  s.hardApplySpaceType(true);
+
+  ASSERT_NE(m.plenumSpaceType().handle(), s.spaceType().get().handle());
+
+}
+
+TEST_F(ModelFixture, Space_hardApplySpaceType_Plenum2)
+{
+  Model m;
+  Space s1(m);
+  Space s2(m);
+  ThermalZone z(m);
+  s1.setThermalZone(z);
+  s2.setThermalZone(z);
+
+  AirLoopHVACSupplyPlenum a(m);
+  a.setThermalZone(z);
+
+  ASSERT_EQ(m.plenumSpaceType().handle(), s1.spaceType().get().handle());
+  ASSERT_EQ(m.plenumSpaceType().handle(), s2.spaceType().get().handle());
+
+  // This should not do anything, space type should change
+  s1.hardApplySpaceType(true);
+  s2.hardApplySpaceType(true);
+
+  ASSERT_NE(m.plenumSpaceType().handle(), s1.spaceType().get().handle());
+  ASSERT_NE(m.plenumSpaceType().handle(), s2.spaceType().get().handle());
+  ASSERT_NE(s1.spaceType().get().handle(), s2.spaceType().get().handle());
 }

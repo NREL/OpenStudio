@@ -105,7 +105,7 @@ void SpaceTypesController::onAddObject(const openstudio::model::ModelObject& mod
     openstudio::model::SpaceType(this->model());
     return;
   }
-  
+
   boost::optional<model::ParentObject> parent = modelObject.parent();
   OS_ASSERT(parent);
 

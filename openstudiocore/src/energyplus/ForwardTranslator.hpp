@@ -218,6 +218,7 @@ class LifeCycleCostParameters;
 class Lights;
 class Luminaire;
 class MaterialPropertyGlazingSpectralData;
+class MaterialPropertyMoisturePenetrationDepthSettings;
 class MasslessOpaqueMaterial;
 class MeterCustom;
 class MeterCustomDecrement;
@@ -805,6 +806,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateLuminaire( model::Luminaire & modelObject );
 
   boost::optional<IdfObject> translateMaterialPropertyGlazingSpectralData( model::MaterialPropertyGlazingSpectralData & modelObject );
+  
+  boost::optional<IdfObject> translateMaterialPropertyMoisturePenetrationDepthSettings( model::MaterialPropertyMoisturePenetrationDepthSettings & modelObject );
 
   boost::optional<IdfObject> translateMasslessOpaqueMaterial( model::MasslessOpaqueMaterial & modelObject );
 

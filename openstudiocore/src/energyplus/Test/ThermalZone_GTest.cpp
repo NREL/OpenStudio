@@ -49,10 +49,15 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/ScheduleConstant.hpp"
 #include "../../model/DefaultScheduleSet.hpp"
+#include "../../model/DaylightingControl.hpp"
 
 #include <utilities/idd/Lights_FieldEnums.hxx>
+#include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
 #include <utilities/idd/Zone_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <resources.hxx>
 
@@ -705,3 +710,66 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ThermalZone_1Zone_2Spaces_InheritSche
     EXPECT_TRUE(workspaceObject.getTarget(LightsFields::ScheduleName)) << workspaceObject;
   }
 }
+
+/* Tests that the illuminance setpoint is set even if it is defaulted (ref #2849) */
+
+TEST_F(EnergyPlusFixture,ForwardTranslator_ThermalZone_Daylighting)
+{
+  Model m;
+
+  ThermalZone z(m);
+  Space space1(m);
+  space1.setThermalZone(z);
+
+
+  Point3dVector points;
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(1, 1, 0));
+  points.push_back(Point3d(1, 0, 0));
+
+  Surface surface1(points, m);
+  surface1.setSpace(space1);
+
+  LightsDefinition lightsDef1(m);
+  lightsDef1.setLightingLevel(1.0);
+
+  Lights lights1(lightsDef1);
+  lights1.setSpace(space1);
+
+  DaylightingControl d_pri(m);
+  ASSERT_TRUE(d_pri.isIlluminanceSetpointDefaulted());
+  z.setPrimaryDaylightingControl(d_pri);
+
+  DaylightingControl d_sec(m);
+  ASSERT_TRUE(d_sec.isIlluminanceSetpointDefaulted());
+  z.setSecondaryDaylightingControl(d_sec);
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Daylighting_Controls);
+  ASSERT_EQ(1u, idfObjs.size());
+  WorkspaceObject idf_d(idfObjs[0]);
+
+  // Should have two extensible groups
+  boost::optional<double> sp;
+
+  ASSERT_EQ(2u, idf_d.extensibleGroups().size());
+
+  // Check that there is a value for primary, and that it's right
+  WorkspaceExtensibleGroup w_eg = idf_d.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  sp =  w_eg.getDouble(Daylighting_ControlsExtensibleFields::IlluminanceSetpointatReferencePoint);
+  ASSERT_TRUE(sp);
+  ASSERT_EQ(d_pri.illuminanceSetpoint(), sp.get());
+
+  // same for secondary
+  w_eg = idf_d.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+  sp =  w_eg.getDouble(Daylighting_ControlsExtensibleFields::IlluminanceSetpointatReferencePoint);
+  ASSERT_TRUE(sp);
+  ASSERT_EQ(d_sec.illuminanceSetpoint(), sp.get());
+
+}
+
+
+

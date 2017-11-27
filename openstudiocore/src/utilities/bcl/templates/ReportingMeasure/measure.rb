@@ -4,7 +4,7 @@
 require 'erb'
 
 #start the measure
-class ReportingMeasureName < OpenStudio::Ruleset::ReportingUserScript
+class ReportingMeasureName < OpenStudio::Measure::ReportingMeasure
 
   # human readable name
   def name
@@ -23,7 +23,7 @@ class ReportingMeasureName < OpenStudio::Ruleset::ReportingUserScript
 
   # define the arguments that the user will input
   def arguments()
-    args = OpenStudio::Ruleset::OSArgumentVector.new
+    args = OpenStudio::Measure::OSArgumentVector.new
 
     # this measure does not require any user arguments, return an empty list
 

@@ -73,12 +73,12 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_DefaultConstructors)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model m;
     AirLoopHVACUnitarySystem testObject = AirLoopHVACUnitarySystem(m);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -141,7 +141,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithDefaultData)
   testObject.setSupplementalHeatingCoil(suppHeatingCoil);
 
   AirLoopHVACUnitarySystem testObjectClone = testObject.clone(m).cast<AirLoopHVACUnitarySystem>();
-  
+
   // EXPECT_EQ("Load", testObjectClone.controlType());
   EXPECT_EQ("None", testObjectClone.dehumidificationControlType());
   EXPECT_DOUBLE_EQ(1.0, testObjectClone.dXHeatingCoilSizingRatio());
@@ -330,9 +330,9 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodeTwoSameObjects)
   testObject.addToNode(supplyOutletNode);
   supplyOutletNode = airLoop.supplyOutletNode();
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  
+
   EXPECT_TRUE(testObject.airInletPort());
-  EXPECT_TRUE(testObject.airOutletPort());   
+  EXPECT_TRUE(testObject.airOutletPort());
 }
 
 TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodeAirLoopDemandSide)
@@ -345,7 +345,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodeAirLoopDemandSide)
 
   EXPECT_FALSE(testObject.addToNode(inletNode));
 
-  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size()); 
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
 }
 
 TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodePlantLoop)
@@ -360,7 +360,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodePlantLoop)
 
   EXPECT_FALSE(testObject.addToNode(demandInletNode));
   EXPECT_FALSE(plantLoop.addDemandBranchForComponent(testObject));
-  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());  
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
   Node supplyInletNode = plantLoop.supplySplitter().lastOutletModelObject()->cast<Node>();
 
@@ -418,7 +418,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_RemoveWaterHeatingCoilFromPlant)
   EXPECT_TRUE(plantLoop.removeDemandBranchWithComponent(heatingCoil));
   EXPECT_TRUE(plantLoop.removeDemandBranchWithComponent(suppHeatingCoil));
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
-  EXPECT_NE((unsigned)7, plantLoop.demandComponents().size());  
+  EXPECT_NE((unsigned)7, plantLoop.demandComponents().size());
 }
 
 TEST_F(ModelFixture,AirLoopHVACUnitarySystem_containingHVACComponent)
@@ -545,3 +545,22 @@ TEST_F(ModelFixture,AirLoopHVACUnitarySystem_containingHVACComponent)
   ASSERT_TRUE(component);
   EXPECT_EQ(*component, testObject);
 }
+
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_ControlType)
+{
+  Model m;
+  AirLoopHVACUnitarySystem a = AirLoopHVACUnitarySystem(m);
+
+  // Tests constructor
+  EXPECT_EQ("Load", a.controlType());
+  EXPECT_FALSE(a.isControlTypeDefaulted());
+
+  ASSERT_TRUE(a.setControlType("Setpoint"));
+  ASSERT_FALSE(a.isControlTypeDefaulted());
+
+  a.resetControlType();
+  ASSERT_TRUE(a.isControlTypeDefaulted());
+  ASSERT_EQ("Load", a.controlType());
+
+}
+
