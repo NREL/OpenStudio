@@ -118,7 +118,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.12.4")] = &VersionTranslator::update_1_12_3_to_1_12_4;
   m_updateMethods[VersionString("2.1.1")] = &VersionTranslator::update_2_1_0_to_2_1_1;
   m_updateMethods[VersionString("2.1.2")] = &VersionTranslator::update_2_1_1_to_2_1_2;
-  m_updateMethods[VersionString("2.3.0")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("2.3.0")] = &VersionTranslator::update_2_1_2_to_2_3_0;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -3504,6 +3504,56 @@ std::string VersionTranslator::update_2_1_1_to_2_1_2(const IdfFile& idf_2_1_1, c
       }
       newObject.setString(23,"Autosize");
       newObject.setString(24,"Autosize");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_2_1_2_to_2_3_0(const IdfFile& idf_2_1_2, const IddFileAndFactoryWrapper& idd_2_3_0) {
+  std::stringstream ss;
+
+  ss << idf_2_1_1.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_2_1_2.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_2_1_2.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:PumpConstantSpeed") {
+      auto iddObject = idd_2_3_0.getObject("OS:PumpConstantSpeed");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        auto value = object.getString(i);
+        newObject.setString(i,value);
+      }
+
+      newObject.setString(16,"PowerPerFlowPerPressure");
+      newObject.setString(17,"348701.1");
+      newObject.setString(18,"1.282051282");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    else if (iddname == "OS:PumpVariableSpeed") {
+      auto iddObject = idd_2_3_0.getObject("OS:PumpVariableSpeed");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        auto value = object.getString(i);
+        newObject.setString(i,value);
+      }
+
+      newObject.setString(25,"0.5");
+      newObject.setString(26,"PowerPerFlowPerPressure");
+      newObject.setString(27,"348701.1");
+      newObject.setString(28,"1.282051282");
+      newObject.setString(29,"0.0");
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;

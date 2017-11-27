@@ -241,6 +241,18 @@ namespace detail {
 
     bool addToNode(Node & node) override;
 
+    std::string designPowerSizingMethod() const;
+
+    bool setDesignPowerSizingMethod(const std::string & designPowerSizingMethod);
+
+    double designElectricPowerPerUnitFlowRate() const;
+
+    bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
+
+    double designShaftPowerPerUnitFlowRatePerUnitHead() const;
+
+    bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
+
    protected:
 
    private:

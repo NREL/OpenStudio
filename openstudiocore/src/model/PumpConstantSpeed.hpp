@@ -61,6 +61,8 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   static std::vector<std::string> pumpControlTypeValues();
 
+  static std::vector<std::string> designPowerSizingMethodValues();
+
   /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Flow Rate" **/
   boost::optional<double> ratedFlowRate() const;
 
@@ -183,6 +185,18 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
   bool setSkinLossRadiativeFraction(const Quantity& skinLossRadiativeFraction);
 
   void resetSkinLossRadiativeFraction();
+
+  std::string designPowerSizingMethod() const;
+
+  bool setDesignPowerSizingMethod(const std::string & designPowerSizingMethod);
+
+  double designElectricPowerPerUnitFlowRate() const;
+
+  bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
+
+  double designShaftPowerPerUnitFlowRatePerUnitHead() const;
+
+  bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
 
  protected:
 

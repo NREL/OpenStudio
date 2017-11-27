@@ -19480,7 +19480,6 @@ OS:LoadProfile:Plant,
 
 OS:Pump:ConstantSpeed,
        \memo This pump model is described in the ASHRAE secondary HVAC toolkit.
-       \min-fields 10
   A1, \field Handle
        \type handle
        \required-field
@@ -19553,16 +19552,32 @@ OS:Pump:ConstantSpeed,
         \note optional, if used pump losses transfered to zone as internal gains
         \type Object-list
         \object-list ThermalZoneNames
-  N8;   \field Skin Loss Radiative Fraction
-        \note optional. If zone identified in previous field then this determines
-        \note the split between convection and radiation for the skin losses
+  N8,   \field Skin Loss Radiative Fraction
+       \required-field
         \type real
         \minimum 0.0
         \maximum 1.0
+  A9,  \field Design Power Sizing Method
+       \required-field
+       \type choice
+       \key PowerPerFlow
+       \key PowerPerFlowPerPressure
+  N9,  \field Design Electric Power per Unit Flow Rate
+       \required-field
+       \type real
+       \units W/(m3/s)
+       \ip-units W/(gal/min)
+       \minimum> 0
+  N10; \field Design Shaft Power per Unit Flow Rate per Unit Head
+       \required-field
+       \type real
+       \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
+       \units W/((m3/s)-Pa)
+       \ip-units W/((gal/min)-ftH20)
+       \minimum> 0
 
 OS:Pump:VariableSpeed,
        \memo This pump model is described in the ASHRAE secondary HVAC toolkit.
-       \min-fields 15
   A1, \field Handle
        \type handle
        \required-field
@@ -19673,10 +19688,44 @@ OS:Pump:VariableSpeed,
        \type object-list
        \units Rotations Per Minute
        \object-list ScheduleNames
-  A13; \field Maximum RPM Schedule
+  A13, \field Maximum RPM Schedule
        \type object-list
        \units Rotations Per Minute
        \object-list ScheduleNames
+  A14,  \field Zone Name
+        \note optional, if used pump losses transfered to zone as internal gains
+        \type object-list
+        \object-list ThermalZoneNames
+  N12,  \field Skin Loss Radiative Fraction
+        \required-field
+        \type real
+        \minimum 0.0
+        \maximum 1.0
+  A15,  \field Design Power Sizing Method
+       \required-field
+        \type choice
+        \key PowerPerFlow
+        \key PowerPerFlowPerPressure
+  N13,  \field Design Electric Power per Unit Flow Rate
+       \required-field
+        \type real
+        \note Used to size Design Power Consumption from design flow rate
+        \units W/(m3/s)
+        \ip-units W/(gal/min)
+        \minimum> 0
+  N14,  \field Design Shaft Power per Unit Flow Rate per Unit Head
+       \required-field
+        \type real
+        \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
+        \units W/((m3/s)-Pa)
+        \ip-units W/((gal/min)-ftH20)
+        \minimum> 0
+  N15;  \field Design Minimum Flow Rate Fraction
+       \required-field
+        \type real
+        \note Used to size Design Minimum Flow Rate
+        \minimum 0
+        \maximum 1.0
 
 OS:HeaderedPumps:ConstantSpeed,
        \memo This Headered pump object describes a pump bank with more than 1 pump in parallel
@@ -19748,13 +19797,30 @@ OS:HeaderedPumps:ConstantSpeed,
         \note optional, if used pump losses transfered to zone as internal gains
         \type Object-list
         \object-list ThermalZoneNames
-  N7 ;  \field Skin Loss Radiative Fraction
+  N7 ,  \field Skin Loss Radiative Fraction
         \note optional. If zone identified in previous field then this determines
         \note the split between convection and radiation for the skin losses
         \type real
         \minimum 0.0
         \maximum 1.0
         \required-field
+  A9,  \field Design Power Sizing Method
+       \type choice
+        \required-field
+       \key PowerPerFlow
+       \key PowerPerFlowPerPressure
+  N8,  \field Design Electric Power per Unit Flow Rate
+       \type real
+        \required-field
+       \units W/(m3/s)
+       \ip-units W/(gal/min)
+       \minimum> 0
+  N9; \field Design Shaft Power per Unit Flow Rate per Unit Head
+       \type real
+        \required-field
+       \units W/((m3/s)-Pa)
+       \ip-units W/((gal/min)-ftH20)
+       \minimum> 0
 
 OS:HeaderedPumps:VariableSpeed,
        \memo This Headered pump object describes a pump bank with more than 1 pump in parallel
@@ -19840,13 +19906,28 @@ OS:HeaderedPumps:VariableSpeed,
         \note optional, if used pump losses transfered to zone as internal gains
         \type object-list
         \object-list ThermalZoneNames
-  N12;  \field Skin Loss Radiative Fraction
-        \note optional. If zone identified in previous field then this determines
-        \note the split between convection and radiation for the skin losses
+  N12,  \field Skin Loss Radiative Fraction
         \type real
         \minimum 0.0
         \maximum 1.0
        \required-field
+  A9,  \field Design Power Sizing Method
+       \required-field
+       \type choice
+       \key PowerPerFlow
+       \key PowerPerFlowPerPressure
+  N13, \field Design Electric Power per Unit Flow Rate
+       \required-field
+       \type real
+       \units W/(m3/s)
+       \ip-units W/(gal/min)
+       \minimum> 0
+  N14; \field Design Shaft Power per Unit Flow Rate per Unit Head
+       \required-field
+       \type real
+       \units W/((m3/s)-Pa)
+       \ip-units W/((gal/min)-ftH20)
+       \minimum> 0
 
 OS:TemperingValve,
       \memo Temperature-controlled diversion valve used to divert flow around one or more plant
