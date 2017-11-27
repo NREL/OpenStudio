@@ -732,6 +732,9 @@ set(${target_name}_src
   MaterialPropertyGlazingSpectralData.hpp
   MaterialPropertyGlazingSpectralData_Impl.hpp
   MaterialPropertyGlazingSpectralData.cpp
+  MaterialPropertyMoisturePenetrationDepthSettings.hpp
+  MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp
+  MaterialPropertyMoisturePenetrationDepthSettings.cpp  
   MeterCustom.hpp
   MeterCustom_Impl.hpp
   MeterCustom.cpp
@@ -1603,6 +1606,7 @@ set(${target_name}_test_src
   test/MasslessOpaqueMaterial_GTest.cpp
   test/Material_GTest.cpp
   test/MaterialPropertyGlazingSpectralData_GTest.cpp
+  test/MaterialPropertyMoisturePenetrationDepthSettings_GTest.cpp
   test/MeterCustom_GTest.cpp
   test/MeterCustomDecrement_GTest.cpp
   test/ModelFixture.cpp

@@ -44,7 +44,7 @@ namespace detail {
 
 } // detail
 
-/** ElectricEquipment is a SpaceLoadInstance that wraps the OpenStudio IDD object 
+/** ElectricEquipment is a SpaceLoadInstance that wraps the OpenStudio IDD object
  *  'OS:ElectricEquipment'. Its fields are derived from the EnergyPlus IDD object
  *  'ElectricEquipment'. \sa ElectricEquipmentDefinition */
 class MODEL_API ElectricEquipment : public SpaceLoadInstance {
@@ -94,7 +94,7 @@ class MODEL_API ElectricEquipment : public SpaceLoadInstance {
 
   void resetMultiplier();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 
@@ -102,27 +102,27 @@ class MODEL_API ElectricEquipment : public SpaceLoadInstance {
   /** @name Other */
   //@{
 
-  /** Returns the designLevel if possible based on the underlying data of 
+  /** Returns the designLevel if possible based on the underlying data of
    *  electricEquipmentDefinition(). */
   boost::optional<double> designLevel() const;
 
-  /** Returns the powerPerFloorArea if possible based on the underlying data of 
+  /** Returns the powerPerFloorArea if possible based on the underlying data of
    *  electricEquipmentDefinition(). */
   boost::optional<double> powerPerFloorArea() const;
 
-  /** Returns the powerPerPerson if possible based on the underlying data of 
+  /** Returns the powerPerPerson if possible based on the underlying data of
    *  electricEquipmentDefinition(). */
   boost::optional<double> powerPerPerson() const;
 
-  /** Returns the design level represented by this instance, assuming floorArea (m^2) and 
+  /** Returns the design level represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
   double getDesignLevel(double floorArea, double numPeople) const;
 
-  /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and 
+  /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
   double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-  /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and 
+  /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
   double getPowerPerPerson(double floorArea, double numPeople) const;
 

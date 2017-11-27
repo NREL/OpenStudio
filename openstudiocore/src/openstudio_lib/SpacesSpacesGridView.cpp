@@ -114,7 +114,7 @@ namespace openstudio {
     //m_itemSelectorButtons->enableAddButton();
     //m_itemSelectorButtons->enableCopyButton();
     m_itemSelectorButtons->enableRemoveButton();
-    m_itemSelectorButtons->enablePurgeButton();
+    // m_itemSelectorButtons->enablePurgeButton();
   }
 
   void SpacesSpacesGridView::onClearSelection()
@@ -122,7 +122,7 @@ namespace openstudio {
     //m_itemSelectorButtons->disableAddButton();
     //m_itemSelectorButtons->disableCopyButton();
     m_itemSelectorButtons->disableRemoveButton();
-    m_itemSelectorButtons->disablePurgeButton();
+    // m_itemSelectorButtons->disablePurgeButton();
   }
 
   SpacesSpacesGridController::SpacesSpacesGridController(bool isIP,

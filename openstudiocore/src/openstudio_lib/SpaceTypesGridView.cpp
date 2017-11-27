@@ -501,7 +501,7 @@ namespace openstudio {
 
       if (field == NAME) {
         auto getter = CastNullAdapter<model::SpaceType>(&model::SpaceType::name);
-        auto setter = CastNullAdapter<model::SpaceType>(&model::SpaceType::setName);
+        auto setter = CastNullAdapter<model::SpaceType>(&model::SpaceType::setNameProtected);
 
         addNameLineEditColumn(Heading(QString(NAME), false, false),
           false,

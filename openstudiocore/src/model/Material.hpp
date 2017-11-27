@@ -32,10 +32,14 @@
 #include "ModelAPI.hpp"
 #include "ResourceObject.hpp"
 
+#include "MaterialPropertyMoisturePenetrationDepthSettings.hpp"
+#include "MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
+
 namespace openstudio {
 namespace model {
 
   class StandardsInformationMaterial;
+  class MaterialPropertyMoisturePenetrationDepthSettings;
 
 namespace detail{
   class Material_Impl;
@@ -89,6 +93,21 @@ class MODEL_API Material : public ResourceObject {
    *  Attribute Name: 'thickness' */
   bool setThickness(double value);
 
+  // if material property moisture penetration depth settings already exists, do nothing and return nil; creates the material property moisture penetration depth settings if it does not already exist and return it
+  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> createMaterialPropertyMoisturePenetrationDepthSettings(double waterVaporDiffusionResistanceFactor,
+                                                                                                                           double moistureEquationCoefficientA,
+                                                                                                                           double moistureEquationCoefficientB,
+                                                                                                                           double moistureEquationCoefficientC,
+                                                                                                                           double moistureEquationCoefficientD,
+                                                                                                                           double coatingLayerThickness,
+                                                                                                                           double coatingLayerWaterVaporDiffusionResistanceFactor);
+
+  // returns the material property moisture penetration depth settings if set
+  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> materialPropertyMoisturePenetrationDepthSettings() const;
+
+  // resets the material property moisture penetration depth settings
+  void resetMaterialPropertyMoisturePenetrationDepthSettings();
+  
   //@}
  protected:
   /// @cond

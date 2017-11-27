@@ -1,5 +1,5 @@
 require 'openstudio'
-require 'openstudio/ruleset/ShowRunnerOutput'
+require 'openstudio/measure/ShowRunnerOutput'
 require 'minitest/autorun'
 require_relative '../measure.rb'
 require 'fileutils'
@@ -29,15 +29,16 @@ class ModelMeasureName_Test < MiniTest::Unit::TestCase
     # create an instance of the measure
     measure = ModelMeasureName.new
 
-    # create an instance of a runner
-    runner = OpenStudio::Ruleset::OSRunner.new
+    # create runner with empty OSW
+    osw = OpenStudio::WorkflowJSON.new
+    runner = OpenStudio::Measure::OSRunner.new(osw)
 
     # make an empty model
     model = OpenStudio::Model::Model.new
 
     # get arguments
     arguments = measure.arguments(model)
-    argument_map = OpenStudio::Ruleset.convertOSArgumentVectorToMap(arguments)
+    argument_map = OpenStudio::Measure.convertOSArgumentVectorToMap(arguments)
 
     # create hash of argument values
     args_hash = {}
@@ -67,8 +68,9 @@ class ModelMeasureName_Test < MiniTest::Unit::TestCase
     # create an instance of the measure
     measure = ModelMeasureName.new
 
-    # create an instance of a runner
-    runner = OpenStudio::Ruleset::OSRunner.new
+    # create runner with empty OSW
+    osw = OpenStudio::WorkflowJSON.new
+    runner = OpenStudio::Measure::OSRunner.new(osw)
 
     # load the test model
     translator = OpenStudio::OSVersion::VersionTranslator.new
@@ -82,7 +84,7 @@ class ModelMeasureName_Test < MiniTest::Unit::TestCase
 
     # get arguments
     arguments = measure.arguments(model)
-    argument_map = OpenStudio::Ruleset.convertOSArgumentVectorToMap(arguments)
+    argument_map = OpenStudio::Measure.convertOSArgumentVectorToMap(arguments)
 
     # create hash of argument values.
     # If the argument has a default that you want to use, you don't need it in the hash
