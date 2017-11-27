@@ -366,16 +366,6 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
   std::string endUseSubcategory() const;
   bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
-  //free Convection Air Flow Rate Sizing Factor
-  //free Convection U-Factor Times Area Value Sizing Factor
-  //heat Rejection Capacity and Nominal Capacity Sizing Ratio
-  //free Convection Nominal Capacity Sizing Factor
-  //design Inlet Air Dry-Bulb Temperature
-  //design Inlet Air Wet-Bulb Temperature
-  //design Approach Temperature
-  //design Range Temperature
-  //end-Use Subcategory
-
   //@}
  protected:
 

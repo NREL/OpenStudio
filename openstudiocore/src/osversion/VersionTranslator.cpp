@@ -3562,7 +3562,7 @@ std::string VersionTranslator::update_2_1_2_to_2_3_0(const IdfFile& idf_2_1_2, c
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
     } else if (iddname == "OS:CoolingTower:SingleSpeed") {
-      auto iddObject = idd_2_3_0.getObject("OS:CoolingTower::SingleSpeed");
+      auto iddObject = idd_2_3_0.getObject("OS:CoolingTower:SingleSpeed");
       IdfObject newObject(iddObject.get());
 
       for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
@@ -3583,6 +3583,24 @@ std::string VersionTranslator::update_2_1_2_to_2_3_0(const IdfFile& idf_2_1_2, c
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
+    } else if (iddname == "OS:CoolingTower:TwoSpeed") {
+      auto iddObject = idd_2_3_0.getObject("OS:CoolingTower:TwoSpeed");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      newObject.setString(41,"35.0");
+      newObject.setString(42,"25.6");
+      newObject.setString(43,"Autosize");
+      newObject.setString(44,"Autosize");
+      newObject.setString(45,"General");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
     } else {
       ss << object;
     }
@@ -3590,7 +3608,6 @@ std::string VersionTranslator::update_2_1_2_to_2_3_0(const IdfFile& idf_2_1_2, c
 
   return ss.str();
 }
-
 
 } // osversion
 } // openstudio

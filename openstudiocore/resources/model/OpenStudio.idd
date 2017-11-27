@@ -12429,11 +12429,32 @@ OS:CoolingTower:TwoSpeed,
        \minimum 1
        \default 2.5
        \note The allowable maximal fraction of the nominal flow rate per cell
-  N29; \field Sizing Factor
+  N29, \field Sizing Factor
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
        \default 1.0
+  N30, \field Design Inlet Air Dry-Bulb Temperature
+       \type real
+       \units C
+       \minimum 20.0
+  N31, \field Design Inlet Air Wet-Bulb Temperature
+       \type real
+       \units C
+       \minimum 20.0
+  N32, \field Design Approach Temperature
+       \type real
+       \units deltaC
+       \autosizable
+       \minimum> 0
+  N33, \field Design Range Temperature
+       \type real
+       \units deltaC
+       \autosizable
+       \minimum> 0
+  A13; \field End-Use Subcategory
+       \type alpha
+       \retaincase
 
 OS:CoolingTower:VariableSpeed,
        \min-fields 16
