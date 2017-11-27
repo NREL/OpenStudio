@@ -12631,10 +12631,13 @@ OS:CoolingTower:VariableSpeed,
        \type real
        \minimum 1
        \note The allowable maximal fraction of the nominal flow rate per cell
-  N17; \field Sizing Factor
+  N17, \field Sizing Factor
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
+  A14; \field End-Use Subcategory
+       \type alpha
+       \retaincase
 
 OS:CoolingTowerPerformance:CoolTools,
        \min-fields 45

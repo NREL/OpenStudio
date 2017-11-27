@@ -691,6 +691,16 @@ namespace detail {
 
     return false;
   }
+  
+  std::string CoolingTowerVariableSpeed_Impl::endUseSubcategory() const {
+    auto value = getString(OS_CoolingTower_VariableSpeedFields::EndUseSubcategory,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool CoolingTowerVariableSpeed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
+    return setString(OS_CoolingTower_VariableSpeedFields::EndUseSubcategory,endUseSubcategory);
+  }
 
 } // detail
 
@@ -1067,6 +1077,14 @@ bool CoolingTowerVariableSpeed::setSizingFactor(double sizingFactor) {
 
 void CoolingTowerVariableSpeed::resetSizingFactor() {
   getImpl<detail::CoolingTowerVariableSpeed_Impl>()->resetSizingFactor();
+}
+
+std::string CoolingTowerVariableSpeed::endUseSubcategory() const {
+  return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->endUseSubcategory();
+}
+
+bool CoolingTowerVariableSpeed::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 /// @cond
