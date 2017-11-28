@@ -61,8 +61,6 @@ public:
   /** @name Getters */
   //@{
 
-  boost::optional<std::string> name() const;
-
   boost::optional<std::string> tariffName() const;
 
   boost::optional<std::string> variableName() const;
@@ -80,8 +78,6 @@ public:
   //@}
   /** @name Setters */
   //@{
-
-  void setName(const std::string& name);
 
   bool setTariffName(const std::string& tariffName);
 

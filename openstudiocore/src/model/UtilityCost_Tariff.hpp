@@ -64,8 +64,6 @@ public:
 
   boost::optional<double> demandConversionFactor() const;
 
-  boost::optional<std::string> name() const;
-
   boost::optional<std::string> outputMeterName() const;
 
   boost::optional<std::string> conversionFactorChoice() const;
@@ -97,8 +95,6 @@ public:
   bool setEnergyConversionFactor(double energyConversionFactor);
 
   bool setDemandConversionFactor(double demandConversionFactor);
-
-  bool setName(const std::string& name);
 
   bool setOutputMeterName(const std::string& outputMeterName);
 

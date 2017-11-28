@@ -271,17 +271,6 @@ bool UtilityCost_Tariff::setDemandConversionFactor(double num)
   return getImpl<detail::UtilityCost_Tariff_Impl>()->setDemandConversionFactor(num);
 }
 
-OptionalString UtilityCost_Tariff::name() const
-{
-  return getImpl<detail::UtilityCost_Tariff_Impl>()->name();
-}
-
-bool UtilityCost_Tariff::setName(const std::string& str)
-{
-  getImpl<detail::UtilityCost_Tariff_Impl>()->setName(str);
-  return true; // TODO hack
-}
-
 OptionalString UtilityCost_Tariff::outputMeterName() const
 {
   return getImpl<detail::UtilityCost_Tariff_Impl>()->outputMeterName();

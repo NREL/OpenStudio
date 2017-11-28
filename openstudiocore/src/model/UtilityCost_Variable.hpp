@@ -85,8 +85,6 @@ public:
 
   boost::optional<double> decemberValue() const;
 
-  boost::optional<std::string> name() const;
-
   boost::optional<std::string> tariffName() const;
 
   boost::optional<std::string> variableType() const;
@@ -118,8 +116,6 @@ public:
   bool setNovemberValue(double novemberValue);
 
   bool setDecemberValue(double decemberValue);
-
-  void setName(const std::string& name);
 
   bool setTariffName(const std::string& tariffName);
 

@@ -150,16 +150,6 @@ UtilityCost_Computation::UtilityCost_Computation(std::shared_ptr<detail::Utility
   : ParentObject(std::move(impl))
 {}
 
-OptionalString UtilityCost_Computation::name() const
-{
-  return getImpl<detail::UtilityCost_Computation_Impl>()->name();
-}
-
-void UtilityCost_Computation::setName(const std::string& str)
-{
-  getImpl<detail::UtilityCost_Computation_Impl>()->setName(str);
-}
-
 OptionalString UtilityCost_Computation::tariffName() const
 {
   return getImpl<detail::UtilityCost_Computation_Impl>()->tariffName();

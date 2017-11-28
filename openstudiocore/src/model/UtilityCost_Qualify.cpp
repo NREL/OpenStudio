@@ -191,16 +191,6 @@ bool UtilityCost_Qualify::setNumberOfMonths(int num)
   return getImpl<detail::UtilityCost_Qualify_Impl>()->setNumberOfMonths(num);
 }
 
-OptionalString UtilityCost_Qualify::name() const
-{
-  return getImpl<detail::UtilityCost_Qualify_Impl>()->name();
-}
-
-void UtilityCost_Qualify::setName(const std::string& str)
-{
-  getImpl<detail::UtilityCost_Qualify_Impl>()->setName(str);
-}
-
 OptionalString UtilityCost_Qualify::tariffName() const
 {
   return getImpl<detail::UtilityCost_Qualify_Impl>()->tariffName();

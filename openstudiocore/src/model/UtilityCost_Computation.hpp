@@ -61,8 +61,6 @@ class MODEL_API UtilityCost_Computation : public ParentObject{
   /** @name Getters */
   //@{
 
-  boost::optional<std::string> name() const;
-
   boost::optional<std::string> tariffName() const;
 
   /** Get compute step at index. Index starts at 0. */
@@ -71,8 +69,6 @@ class MODEL_API UtilityCost_Computation : public ParentObject{
   //@}
   /** @name Setters */
   //@{
-
-  void setName(const std::string& name);
 
   bool setTariffName(const std::string& tariffName);
 

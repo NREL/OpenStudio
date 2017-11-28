@@ -371,16 +371,6 @@ bool UtilityCost_Variable::setDecemberValue(double num)
   return getImpl<detail::UtilityCost_Variable_Impl>()->setDecemberValue(num);
 }
 
-OptionalString UtilityCost_Variable::name() const
-{
-  return getImpl<detail::UtilityCost_Variable_Impl>()->name();
-}
-
-void UtilityCost_Variable::setName(const std::string& str)
-{
-  getImpl<detail::UtilityCost_Variable_Impl>()->setName(str);
-}
-
 OptionalString UtilityCost_Variable::tariffName() const
 {
   return getImpl<detail::UtilityCost_Variable_Impl>()->tariffName();
