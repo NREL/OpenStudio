@@ -4,11 +4,13 @@
 !- Supported By : To-Be-One Technology Co, Ltd.
 !- Craated Date : 22/05/2015
 !- Modified By  : Narongsak Mala (narongsak.mala@gmail.com)
-!- Modified Date : 20/10/2016
+!- Modified Date : 28/11/2017
+!- Remark       : This version was provided by AJ. Mok.
 !-----------------------------------------------------------------
 
 
 !- Revision         Details
+!- 1.0.5-000        Add new material libraries and rename some libraries.
 !- 1.0.4-000        Removed duplicate library
 !- 1.0.3-000        Added Construction set
 !- 1.0.2-000        Changed Solar Absorptance value from 5.0 to 3.0
@@ -2273,7 +2275,7 @@ OS:DefaultSurfaceConstructions,
 OS:DefaultSurfaceConstructions,
   {8ca495ac-3933-47cc-be8a-ca802056012d}, !- Handle
   Default Surface Constructions 3,        !- Name
-  {f029b75a-347a-4c7a-a6a2-bca5d9a3c2eb}, !- Floor Construction Name
+  ,                                       !- Floor Construction Name
   ,                                       !- Wall Construction Name
   ;                                       !- Roof Ceiling Construction Name
 
@@ -3587,7 +3589,7 @@ OS:Schedule:Day,
   
 OS:Material,
   {17a9a9f8-84bb-4fde-b5e1-38ee17df3097}, !- Handle
-  001 กระดาษอัด หนา 4 มม., !- Name
+  002 กระดาษอัด หนา 4 มม., !- Name
   Smooth,                                 !- Roughness
   0.004,                                  !- Thickness {m}
   0.086,                                  !- Conductivity {W/m-K}
@@ -3599,7 +3601,7 @@ OS:Material,
 
 OS:Material,
   {6843698b-52c2-40e6-89d6-929ed3a3b360}, !- Handle
-  002 กระเบื้องคอนกรีต ซีแพคโมเนีย สีแดง, !- Name
+  003 กระเบื้องคอนกรีต ซีแพคโมเนีย สีแดง, !- Name
   Smooth,                                 !- Roughness
   0.03,                                   !- Thickness {m}
   0.993,                                  !- Conductivity {W/m-K}
@@ -3611,7 +3613,7 @@ OS:Material,
 
 OS:Material,
   {41bb79c9-a58c-475e-b0c9-b631de3600bd}, !- Handle
-  012 กระเบื้องซีเมนต์ใยหินแผ่นเรียบ หนา 4 มม., !- Name
+  013 กระเบื้องซีเมนต์ใยหินแผ่นเรียบ หนา 4 มม., !- Name
   Smooth,                                 !- Roughness
   0.004,                                  !- Thickness {m}
   0.397,                                  !- Conductivity {W/m-K}
@@ -3623,7 +3625,7 @@ OS:Material,
 
 OS:Material,
   {505b72ac-f0e4-4114-a916-7ddb2a0df5cd}, !- Handle
-  013 กระเบื้องซีเมนต์ใยหินแผ่นเรียบ หนา 6 มม., !- Name
+  014 กระเบื้องซีเมนต์ใยหินแผ่นเรียบ หนา 6 มม., !- Name
   Smooth,                                 !- Roughness
   0.006,                                  !- Thickness {m}
   0.507,                                  !- Conductivity {W/m-K}
@@ -3635,7 +3637,7 @@ OS:Material,
 
 OS:Material,
   {57f96456-dd73-4907-b6a1-c916d7520db1}, !- Handle
-  014 กระเบื้องซีเมนต์ใยหินแผ่นเรียบ หนา 8 มม., !- Name
+  015 กระเบื้องซีเมนต์ใยหินแผ่นเรียบ หนา 8 มม., !- Name
   Smooth,                                 !- Roughness
   0.008,                                  !- Thickness {m}
   0.511,                                  !- Conductivity {W/m-K}
@@ -3647,7 +3649,7 @@ OS:Material,
 
 OS:Material,
   {0138ab85-d038-4bd3-aed6-2c70094bc79e}, !- Handle
-  003 กระเบื้องซีเมนต์ใยหินลอนคู่, !- Name
+  004 กระเบื้องซีเมนต์ใยหินลอนคู่, !- Name
   Smooth,                                 !- Roughness
   0.004,                                  !- Thickness {m}
   0.395,                                  !- Conductivity {W/m-K}
@@ -3659,7 +3661,7 @@ OS:Material,
 
 OS:Material,
   {65786f79-b0e4-4f50-abbf-f31694e05a3c}, !- Handle
-  005 กระเบื้องซีเมนต์ใยหินลอนคู่สีเขียวเข้ม, !- Name
+  006 กระเบื้องซีเมนต์ใยหินลอนคู่สีเขียวเข้ม, !- Name
   Smooth,                                 !- Roughness
   0.004,                                  !- Thickness {m}
   0.395,                                  !- Conductivity {W/m-K}
@@ -3671,7 +3673,7 @@ OS:Material,
 
 OS:Material,
   {9da8d86a-8bf0-49e0-9ecf-7f824856e42d}, !- Handle
-  004 กระเบื้องซีเมนต์ใยหินลอนคู่สีหมากสุก, !- Name
+  005 กระเบื้องซีเมนต์ใยหินลอนคู่สีหมากสุก, !- Name
   Smooth,                                 !- Roughness
   0.004,                                  !- Thickness {m}
   0.382,                                  !- Conductivity {W/m-K}
@@ -3683,7 +3685,7 @@ OS:Material,
 
 OS:Material,
   {c783699b-79fe-45b3-8080-0b724e041aa4}, !- Handle
-  006 กระเบื้องซีเมนต์ใยหินลอนเล็ก, !- Name
+  007 กระเบื้องซีเมนต์ใยหินลอนเล็ก, !- Name
   Smooth,                                 !- Roughness
   0.004,                                  !- Thickness {m}
   0.384,                                  !- Conductivity {W/m-K}
@@ -3695,7 +3697,7 @@ OS:Material,
 
 OS:Material,
   {9d2f64d4-8989-4471-bb5d-a85258181d67}, !- Handle
-  009 กระเบื้องซีเมนต์ใยหินลอนเล็กไม่มีสี, !- Name
+  010 กระเบื้องซีเมนต์ใยหินลอนเล็กไม่มีสี, !- Name
   Smooth,                                 !- Roughness
   0.004,                                  !- Thickness {m}
   0.384,                                  !- Conductivity {W/m-K}
@@ -3707,7 +3709,7 @@ OS:Material,
 
 OS:Material,
   {b77a8353-1e0c-4f8f-b5f4-ea1a097b10de}, !- Handle
-  007 กระเบื้องซีเมนต์ใยหินลอนเล็กสีเขียว, !- Name
+  008 กระเบื้องซีเมนต์ใยหินลอนเล็กสีเขียว, !- Name
   Smooth,                                 !- Roughness
   0.004,                                  !- Thickness {m}
   0.389,                                  !- Conductivity {W/m-K}
@@ -3719,7 +3721,7 @@ OS:Material,
 
 OS:Material,
   {6d09739c-d56f-4ad4-a245-ad5dd410e08e}, !- Handle
-  008 กระเบื้องซีเมนต์ใยหินลอนเล็กสีเหลือง, !- Name
+  009 กระเบื้องซีเมนต์ใยหินลอนเล็กสีเหลือง, !- Name
   Smooth,                                 !- Roughness
   0.004,                                  !- Thickness {m}
   0.239,                                  !- Conductivity {W/m-K}
@@ -3731,7 +3733,7 @@ OS:Material,
 
 OS:Material,
   {92de02f2-7bf3-421d-8c80-cafcdbe3ee4d}, !- Handle
-  010 กระเบื้องซีเมนต์ใยหินลอนใหญ่, !- Name
+  011 กระเบื้องซีเมนต์ใยหินลอนใหญ่, !- Name
   Smooth,                                 !- Roughness
   0.004,                                  !- Thickness {m}
   0.441,                                  !- Conductivity {W/m-K}
@@ -3743,7 +3745,7 @@ OS:Material,
 
 OS:Material,
   {bd65d898-bc3c-4035-bf14-016a592a030a}, !- Handle
-  011 กระเบื้องซีเมนต์ใยหินลอนใหญ่ไม่มีสี, !- Name
+  012 กระเบื้องซีเมนต์ใยหินลอนใหญ่ไม่มีสี, !- Name
   Smooth,                                 !- Roughness
   0.004,                                  !- Thickness {m}
   0.441,                                  !- Conductivity {W/m-K}
@@ -3755,7 +3757,7 @@ OS:Material,
 
 OS:Material,
   {b9d46957-292a-4b2b-90c6-0270f74dac2b}, !- Handle
-  022 กระเบื้องเซรามิค, !- Name
+  023 กระเบื้องเซรามิค, !- Name
   Smooth,                                 !- Roughness
   0.02,                                   !- Thickness {m}
   0.338,                                  !- Conductivity {W/m-K}
@@ -3767,7 +3769,7 @@ OS:Material,
 
 OS:Material,
   {519c199a-6f14-477f-a0c6-53cc66e70899}, !- Handle
-  015 กระเบื้องปูดาดฟ้ามวลเบา, !- Name
+  016 กระเบื้องปูดาดฟ้ามวลเบา, !- Name
   Smooth,                                 !- Roughness
   0.03,                                   !- Thickness {m}
   0.341,                                  !- Conductivity {W/m-K}
@@ -3779,7 +3781,7 @@ OS:Material,
 
 OS:Material,
   {2e6396ae-e6d1-4536-8eff-a10c698022c2}, !- Handle
-  016 กระเบื้องปูพื้น คัมพานา, !- Name
+  017 กระเบื้องปูพื้น คัมพานา, !- Name
   Smooth,                                 !- Roughness
   0.005,                                  !- Thickness {m}
   0.368,                                  !- Conductivity {W/m-K}
@@ -3791,7 +3793,7 @@ OS:Material,
 
 OS:Material,
   {ec281eef-0554-43fd-ad69-448c02d698fe}, !- Handle
-  017 กระเบื้องปูพื้น โซซูโก้, !- Name
+  018 กระเบื้องปูพื้น โซซูโก้, !- Name
   Smooth,                                 !- Roughness
   0.005,                                  !- Thickness {m}
   0.362,                                  !- Conductivity {W/m-K}
@@ -3803,7 +3805,7 @@ OS:Material,
 
 OS:Material,
   {081367cb-cf90-4be1-bd73-c858da258089}, !- Handle
-  018 กระเบื้องยาง หนา 2 มม., !- Name
+  019 กระเบื้องยาง หนา 2 มม., !- Name
   Smooth,                                 !- Roughness
   0.002,                                  !- Thickness {m}
   0.573,                                  !- Conductivity {W/m-K}
@@ -3815,7 +3817,7 @@ OS:Material,
 
 OS:Material,
   {c8b55219-02bc-449f-91ce-05fb1c2f4c5c}, !- Handle
-  026 กระเบื้องใยแก้วโปร่งแสงแผ่นเรียบสีขาวขุ่น, !- Name
+  027กระเบื้องใยแก้วโปร่งแสงแผ่นเรียบสีขาวขุ่น, !- Name
   Smooth,                                 !- Roughness
   0.005,                                  !- Thickness {m}
   0.137,                                  !- Conductivity {W/m-K}
@@ -3827,7 +3829,7 @@ OS:Material,
 
 OS:Material,
   {59ee01a8-4e30-42ff-a3d7-14c7550cb439}, !- Handle
-  027 กระเบื้องใยแก้วโปร่งแสงแผ่นเรียบสีขาวใส, !- Name
+  028 กระเบื้องใยแก้วโปร่งแสงแผ่นเรียบสีขาวใส, !- Name
   Smooth,                                 !- Roughness
   0.005,                                  !- Thickness {m}
   0.201,                                  !- Conductivity {W/m-K}
@@ -3839,7 +3841,7 @@ OS:Material,
 
 OS:Material,
   {e23d7b22-efab-4a85-a66a-3b6d3635f84f}, !- Handle
-  025 กระเบื้องใยแก้วโปร่งแสงเรียบ, !- Name
+  026 กระเบื้องใยแก้วโปร่งแสงเรียบ, !- Name
   Smooth,                                 !- Roughness
   0.005,                                  !- Thickness {m}
   0.213,                                  !- Conductivity {W/m-K}
@@ -3851,7 +3853,7 @@ OS:Material,
 
 OS:Material,
   {75f2f157-133b-4ac0-86da-e8b339b1bf80}, !- Handle
-  024 กระเบื้องใยแก้วโปร่งแสงลอนใหญ่, !- Name
+  025 กระเบื้องใยแก้วโปร่งแสงลอนใหญ่, !- Name
   Smooth,                                 !- Roughness
   0.005,                                  !- Thickness {m}
   0.181,                                  !- Conductivity {W/m-K}
@@ -3863,7 +3865,7 @@ OS:Material,
 
 OS:Material,
   {e4606444-6dd6-4c31-b0e7-27cdc761046e}, !- Handle
-  023 กระเบื้องใยแก้วลอนคู่สีขาวขุ่น, !- Name
+  024 กระเบื้องใยแก้วลอนคู่สีขาวขุ่น, !- Name
   Smooth,                                 !- Roughness
   0.005,                                  !- Thickness {m}
   0.202,                                  !- Conductivity {W/m-K}
@@ -3875,7 +3877,7 @@ OS:Material,
 
 OS:Material,
   {4751acd9-bd51-42a3-8658-1f5838d37927}, !- Handle
-  019 กระเบื้องลูกฟูกโปร่งแสง, !- Name
+  020 กระเบื้องลูกฟูกโปร่งแสง, !- Name
   Smooth,                                 !- Roughness
   0.01,                                   !- Thickness {m}
   0.16,                                   !- Conductivity {W/m-K}
@@ -3887,7 +3889,7 @@ OS:Material,
 
 OS:Material,
   {5e722cb8-069f-447f-b16b-81ec414c649a}, !- Handle
-  020 กระเบื้องลูกฟูกโปร่งแสง ซีแพคโมเนีย, !- Name
+  021 กระเบื้องลูกฟูกโปร่งแสง ซีแพคโมเนีย, !- Name
   Smooth,                                 !- Roughness
   0.03,                                   !- Thickness {m}
   0.16,                                   !- Conductivity {W/m-K}
@@ -3899,7 +3901,7 @@ OS:Material,
 
 OS:Material,
   {b9880f23-2d61-441b-9368-889b844b1b12}, !- Handle
-  021 กระเบื้องหลังคาคอนกรีต, !- Name
+  022 กระเบื้องหลังคาคอนกรีต, !- Name
   Smooth,                                 !- Roughness
   0.03,                                   !- Thickness {m}
   0.993,                                  !- Conductivity {W/m-K}
@@ -3911,7 +3913,7 @@ OS:Material,
 
 OS:Material,
   {9128b6e7-f71b-4f97-8209-6f95a5104f01}, !- Handle
-  035 คอนกรีต หนา 10 ซม., !- Name
+  037 คอนกรีต หนา 10 ซม., !- Name
   Smooth,                                 !- Roughness
   0.1,                                    !- Thickness {m}
   1.442,                                  !- Conductivity {W/m-K}
@@ -3923,7 +3925,7 @@ OS:Material,
 
 OS:Material,
   {b93f4ec5-c2ee-4ee1-92c1-9af29ae7c268}, !- Handle
-  028 คอนกรีตบล็อกกลวง 80 มม. ไม่ฉาบ, !- Name
+  029 คอนกรีตบล็อกกลวง 80 มม. ไม่ฉาบ, !- Name
   Smooth,                                 !- Roughness
   0.08,                                   !- Thickness {m}
   0.546,                                  !- Conductivity {W/m-K}
@@ -3935,7 +3937,7 @@ OS:Material,
 
 OS:Material,
   {106704ec-96f4-4d8f-bae8-b15c6031c4fd}, !- Handle
-  029 คอนกรีตมวลเบา 80 มม., !- Name
+  035 คอนกรีตมวลเบา 80 มม., !- Name
   Smooth,                                 !- Roughness
   0.08,                                   !- Thickness {m}
   0.476,                                  !- Conductivity {W/m-K}
@@ -3959,7 +3961,7 @@ OS:Material,
 
 OS:Material,
   {b60d4385-0d12-46a2-b432-4c3811e8848c}, !- Handle
-  030 คอนกรีตมวลเบา ความหนาแน่น 1280 กก./ลบ.ม., !- Name
+  031 คอนกรีตมวลเบา ความหนาแน่น 1280 กก./ลบ.ม., !- Name
   Smooth,                                 !- Roughness
   0.08,                                   !- Thickness {m}
   0.476,                                  !- Conductivity {W/m-K}
@@ -3971,7 +3973,7 @@ OS:Material,
 
 OS:Material,
   {62a552bc-2fd9-455e-b380-64584bf41d47}, !- Handle
-  031 คอนกรีตมวลเบา ความหนาแน่น 620 กก./ลบ.ม., !- Name
+  032 คอนกรีตมวลเบา ความหนาแน่น 620 กก./ลบ.ม., !- Name
   Smooth,                                 !- Roughness
   0.08,                                   !- Thickness {m}
   0.18,                                   !- Conductivity {W/m-K}
@@ -3983,7 +3985,7 @@ OS:Material,
 
 OS:Material,
   {f576e343-1be8-4c25-ad13-60a61adb0b20}, !- Handle
-  032 คอนกรีตมวลเบา ความหนาแน่น 700 กก./ลบ.ม., !- Name
+  033 คอนกรีตมวลเบา ความหนาแน่น 700 กก./ลบ.ม., !- Name
   Smooth,                                 !- Roughness
   0.08,                                   !- Thickness {m}
   0.21,                                   !- Conductivity {W/m-K}
@@ -3995,7 +3997,7 @@ OS:Material,
 
 OS:Material,
   {b5b04f6f-95ef-4dc3-84de-e578c21f1d27}, !- Handle
-  033 คอนกรีตมวลเบา ความหนาแน่น 960 กก./ลบ.ม., !- Name
+  034 คอนกรีตมวลเบา ความหนาแน่น 960 กก./ลบ.ม., !- Name
   Smooth,                                 !- Roughness
   0.08,                                   !- Thickness {m}
   0.303,                                  !- Conductivity {W/m-K}
@@ -4007,7 +4009,7 @@ OS:Material,
 
 OS:Material,
   {f9e72095-c478-440f-a111-3a2d732d2b87}, !- Handle
-  034 คอนกรีตสแลบ,   !- Name
+  036 คอนกรีตสแลบ,  !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   1.442,                                  !- Conductivity {W/m-K}
@@ -4019,7 +4021,7 @@ OS:Material,
 
 OS:Material,
   {c4f2cf63-d809-4fae-9984-4919b9d9e22e}, !- Handle
-  036 ฉนวนกันความร้อนใต้หลังคา ตราช้าง FSO-G-CRB-G 1625 -25mm, !- Name
+  039 ฉนวนกันความร้อนใต้หลังคา ตราช้าง FSO-G-CRB-G 1625 -25mm, !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.038,                                  !- Conductivity {W/m-K}
@@ -4031,7 +4033,7 @@ OS:Material,
 
 OS:Material,
   {cf6d650f-751c-4b66-9dcd-e9ee5514571d}, !- Handle
-  037 ฉนวนกันความร้อนใต้หลังคา ตราช้าง FSO-G-CRB-G 1650 -50mm, !- Name
+  040 ฉนวนกันความร้อนใต้หลังคา ตราช้าง FSO-G-CRB-G 1650 -50mm, !- Name
   Smooth,                                 !- Roughness
   0.05,                                   !- Thickness {m}
   0.038,                                  !- Conductivity {W/m-K}
@@ -4043,7 +4045,7 @@ OS:Material,
 
 OS:Material,
   {61be5653-6c5e-483d-8561-633c7b9e4d57}, !- Handle
-  038 ฉนวนกันความร้อนใต้หลังคา ตราช้าง FSO-G-CRB-G 2425 -25mm, !- Name
+  041 ฉนวนกันความร้อนใต้หลังคา ตราช้าง FSO-G-CRB-G 2425 -25mm, !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.035,                                  !- Conductivity {W/m-K}
@@ -4055,7 +4057,7 @@ OS:Material,
 
 OS:Material,
   {1c5a275e-efa7-4d1a-adca-e6807efc5cb0}, !- Handle
-  039 ฉนวนกันความร้อนใต้หลังคา ตราช้าง FSO-G-CRB-G 2450 -50mm, !- Name
+  042 ฉนวนกันความร้อนใต้หลังคา ตราช้าง FSO-G-CRB-G 2450 -50mm, !- Name
   Smooth,                                 !- Roughness
   0.05,                                   !- Thickness {m}
   0.035,                                  !- Conductivity {W/m-K}
@@ -4067,7 +4069,7 @@ OS:Material,
 
 OS:Material,
   {eb5997e0-5e48-4ce7-81eb-21c73a05e7ae}, !- Handle
-  040 ฉนวนกันความร้อนใต้หลังคา ตราช้าง FSO-G-CRB-G 3225 -25mm, !- Name
+  043 ฉนวนกันความร้อนใต้หลังคา ตราช้าง FSO-G-CRB-G 3225 -25mm, !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4079,7 +4081,7 @@ OS:Material,
 
 OS:Material,
   {1a037b4b-0c88-43d6-b40e-786ea3a400ef}, !- Handle
-  041 ฉนวนกันความร้อนใต้หลังคา ตราช้าง FSO-G-CRB-G 3250 -50mm, !- Name
+  044 ฉนวนกันความร้อนใต้หลังคา ตราช้าง FSO-G-CRB-G 3250 -50mm, !- Name
   Smooth,                                 !- Roughness
   0.05,                                   !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4091,7 +4093,7 @@ OS:Material,
 
 OS:Material,
   {019cd67a-12ce-4dc6-8098-3939ebfbecbf}, !- Handle
-  042 ฉนวนกันความร้อนใต้หลังคา ตราช้าง FSO-G-CRB-G 4825 -25mm, !- Name
+  045 ฉนวนกันความร้อนใต้หลังคา ตราช้าง FSO-G-CRB-G 4825 -25mm, !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.032,                                  !- Conductivity {W/m-K}
@@ -4103,7 +4105,7 @@ OS:Material,
 
 OS:Material,
   {c7763f95-a1ef-475a-9f1e-9b685a1143c5}, !- Handle
-  043 ฉนวนกันความร้อนใต้หลังคา ตราช้าง FSO-G-CRB-G 4850 -50mm, !- Name
+  046 ฉนวนกันความร้อนใต้หลังคา ตราช้าง FSO-G-CRB-G 4850 -50mm, !- Name
   Smooth,                                 !- Roughness
   0.05,                                   !- Thickness {m}
   0.032,                                  !- Conductivity {W/m-K}
@@ -4115,7 +4117,7 @@ OS:Material,
 
 OS:Material,
   {c6417f6c-525d-4621-b4c3-a18631e91fe1}, !- Handle
-  044 ฉนวนกันความร้อนใต้หลังคา ตราช้าง SUPER COOL-G 1250 -50mm, !- Name
+  047 ฉนวนกันความร้อนใต้หลังคา ตราช้าง SUPER COOL-G 1250 -50mm, !- Name
   Smooth,                                 !- Roughness
   0.05,                                   !- Thickness {m}
   0.042,                                  !- Conductivity {W/m-K}
@@ -4127,7 +4129,7 @@ OS:Material,
 
 OS:Material,
   {b3fc2824-7c0c-45ef-8f8e-dc72bfdd6b08}, !- Handle
-  045 ฉนวนกันความร้อนใต้หลังคา ตราช้าง SUPER COOL-G 1275 -75mm, !- Name
+  048 ฉนวนกันความร้อนใต้หลังคา ตราช้าง SUPER COOL-G 1275 -75mm, !- Name
   Smooth,                                 !- Roughness
   0.075,                                  !- Thickness {m}
   0.042,                                  !- Conductivity {W/m-K}
@@ -4139,7 +4141,7 @@ OS:Material,
 
 OS:Material,
   {26b25d35-fe2f-4269-a016-a5984e78b709}, !- Handle
-  046 ฉนวนกันความร้อนใต้หลังคา ตราช้าง SUPER COOL-G 1625 -25mm, !- Name
+  049 ฉนวนกันความร้อนใต้หลังคา ตราช้าง SUPER COOL-G 1625 -25mm, !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.038,                                  !- Conductivity {W/m-K}
@@ -4151,7 +4153,7 @@ OS:Material,
 
 OS:Material,
   {b855d36d-6740-4416-97c5-b1868fd11eef}, !- Handle
-  047 ฉนวนกันความร้อนใต้หลังคา ตราช้าง SUPER COOL-G 1650 -50mm, !- Name
+  050 ฉนวนกันความร้อนใต้หลังคา ตราช้าง SUPER COOL-G 1650 -50mm, !- Name
   Smooth,                                 !- Roughness
   0.05,                                   !- Thickness {m}
   0.038,                                  !- Conductivity {W/m-K}
@@ -4163,7 +4165,7 @@ OS:Material,
 
 OS:Material,
   {3610d15c-fc20-4024-8066-5a017cb9be76}, !- Handle
-  048 ฉนวนกันความร้อนใต้หลังคา ตราช้าง SUPER COOL-G 2425 -25mm, !- Name
+  051 ฉนวนกันความร้อนใต้หลังคา ตราช้าง SUPER COOL-G 2425 -25mm, !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.035,                                  !- Conductivity {W/m-K}
@@ -4175,7 +4177,7 @@ OS:Material,
 
 OS:Material,
   {7aeb96ba-875d-41bb-905d-a335651eaf4d}, !- Handle
-  049 ฉนวนกันความร้อนใต้หลังคา ตราช้าง SUPER COOL-G 2450 -50mm, !- Name
+  052 ฉนวนกันความร้อนใต้หลังคา ตราช้าง SUPER COOL-G 2450 -50mm, !- Name
   Smooth,                                 !- Roughness
   0.05,                                   !- Thickness {m}
   0.035,                                  !- Conductivity {W/m-K}
@@ -4187,7 +4189,7 @@ OS:Material,
 
 OS:Material,
   {f07de9e7-06c3-463e-8b2c-578435d92259}, !- Handle
-  050 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 16 กก./ลบ.ม. หนา 25 มม., !- Name
+  053 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 16 กก./ลบ.ม. หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.037,                                  !- Conductivity {W/m-K}
@@ -4199,7 +4201,7 @@ OS:Material,
 
 OS:Material,
   {c4708cc0-1e9d-489e-a534-82c58fd558ff}, !- Handle
-  051 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 20 กก./ลบ.ม. หนา 25 มม., !- Name
+  054 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 20 กก./ลบ.ม. หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.036,                                  !- Conductivity {W/m-K}
@@ -4211,7 +4213,7 @@ OS:Material,
 
 OS:Material,
   {21b940bc-b5e0-414c-91fb-af245a300908}, !- Handle
-  052 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 24 กก./ลบ.ม.หนา 25 มม., !- Name
+  055 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 24 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.035,                                  !- Conductivity {W/m-K}
@@ -4223,7 +4225,7 @@ OS:Material,
 
 OS:Material,
   {eb8c777d-11e3-43ef-b1d7-372af77af3a9}, !- Handle
-  053 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 25 กก./ลบ.ม.หนา 25 มม., !- Name
+  056 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 25 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.035,                                  !- Conductivity {W/m-K}
@@ -4235,7 +4237,7 @@ OS:Material,
 
 OS:Material,
   {0ce2a9b3-d5a2-4ae5-a83b-6256bb84751c}, !- Handle
-  054 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 26 กก./ลบ.ม. หนา 25 มม., !- Name
+  057 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 26 กก./ลบ.ม. หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.035,                                  !- Conductivity {W/m-K}
@@ -4247,7 +4249,7 @@ OS:Material,
 
 OS:Material,
   {a5888b2d-599f-41d3-919a-932824e79841}, !- Handle
-  055 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 27 กก./ลบ.ม.หนา 25 มม., !- Name
+  058 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 27 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.035,                                  !- Conductivity {W/m-K}
@@ -4259,7 +4261,7 @@ OS:Material,
 
 OS:Material,
   {18b914c4-3db5-46b1-a744-a26950fa2919}, !- Handle
-  056 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 28 กก./ลบ.ม.หนา 25 มม., !- Name
+  059 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 28 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.035,                                  !- Conductivity {W/m-K}
@@ -4271,7 +4273,7 @@ OS:Material,
 
 OS:Material,
   {d6e61b7b-4e87-4047-aac6-3096bdaf0056}, !- Handle
-  057 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 29 กก./ลบ.ม.หนา 25 มม., !- Name
+  060 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 29 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.035,                                  !- Conductivity {W/m-K}
@@ -4283,7 +4285,7 @@ OS:Material,
 
 OS:Material,
   {9ec86330-ec79-423c-b433-27b13333d910}, !- Handle
-  058 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 30 กก./ลบ.ม.หนา 25 มม., !- Name
+  061 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 30 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.035,                                  !- Conductivity {W/m-K}
@@ -4295,7 +4297,7 @@ OS:Material,
 
 OS:Material,
   {b909de08-8b77-4f5b-a409-63fc189ccb5b}, !- Handle
-  059 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 31 กก./ลบ.ม.หนา 25 มม., !- Name
+  062 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 31 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.035,                                  !- Conductivity {W/m-K}
@@ -4307,7 +4309,7 @@ OS:Material,
 
 OS:Material,
   {46ac02d0-1494-4ffa-8c27-8c06d16b55fa}, !- Handle
-  060 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 32 กก./ลบ.ม.หนา 25 มม., !- Name
+  063 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 32 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.035,                                  !- Conductivity {W/m-K}
@@ -4319,7 +4321,7 @@ OS:Material,
 
 OS:Material,
   {815d27e1-6e75-43b2-a1a7-dd7b5788edfc}, !- Handle
-  061 ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 9 กก./ลบ.ม.หนา 25 มม., !- Name
+  064ฉนวนชนิดโฟมโพลีสไตรีน ความหนาแน่น 9 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.047,                                  !- Conductivity {W/m-K}
@@ -4331,7 +4333,7 @@ OS:Material,
 
 OS:Material,
   {77400bbc-0902-4e76-97c5-82dd11491267}, !- Handle
-  105 ฉนวนใยแก้ว หนา 25 มม., !- Name
+  115 ฉนวนใยแก้ว หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4343,7 +4345,7 @@ OS:Material,
 
 OS:Material,
   {1c58f77c-2955-4d32-8b18-59a24d2cc600}, !- Handle
-  070 ฉนวนใยแก้ว ความหนาแน่น 10 กก./ลบ.ม.หนา 25 มม., !- Name
+  079 ฉนวนใยแก้ว ความหนาแน่น 10 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.046,                                  !- Conductivity {W/m-K}
@@ -4355,7 +4357,7 @@ OS:Material,
 
 OS:Material,
   {91dc4e38-2192-41ad-af8c-ef1b049282b2}, !- Handle
-  071 ฉนวนใยแก้ว ความหนาแน่น 12 กก./ลบ.ม.หนา 25 มม., !- Name
+  080 ฉนวนใยแก้ว ความหนาแน่น 12 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.042,                                  !- Conductivity {W/m-K}
@@ -4367,7 +4369,7 @@ OS:Material,
 
 OS:Material,
   {71316d87-4299-4e66-8ef0-c811c0cce908}, !- Handle
-  072 ฉนวนใยแก้ว ความหนาแน่น 16 กก./ลบ.ม.หนา 25 มม., !- Name
+  081 ฉนวนใยแก้ว ความหนาแน่น 16 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.038,                                  !- Conductivity {W/m-K}
@@ -4379,7 +4381,7 @@ OS:Material,
 
 OS:Material,
   {a76b7aca-b01c-48b9-bf3d-e88289163655}, !- Handle
-  073 ฉนวนใยแก้ว ความหนาแน่น 24 กก./ลบ.ม.หนา 25 มม., !- Name
+  082 ฉนวนใยแก้ว ความหนาแน่น 24 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.035,                                  !- Conductivity {W/m-K}
@@ -4391,7 +4393,7 @@ OS:Material,
 
 OS:Material,
   {dba3000b-5e7b-421e-8d9a-963d4749dbb2}, !- Handle
-  074 ฉนวนใยแก้ว ความหนาแน่น 32 กก./ลบ.ม.หนา 25 มม., !- Name
+  083 ฉนวนใยแก้ว ความหนาแน่น 32 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4403,7 +4405,7 @@ OS:Material,
 
 OS:Material,
   {0068f01a-6498-4d47-8947-a1b7ee4ec8ce}, !- Handle
-  075 ฉนวนใยแก้ว ความหนาแน่น 33 กก./ลบ.ม.หนา 25 มม., !- Name
+  084 ฉนวนใยแก้ว ความหนาแน่น 33 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4415,7 +4417,7 @@ OS:Material,
 
 OS:Material,
   {f179d0d3-0138-49c7-8fb7-e1338e1651cb}, !- Handle
-  076 ฉนวนใยแก้ว ความหนาแน่น 34 กก./ลบ.ม.หนา 25 มม., !- Name
+  085 ฉนวนใยแก้ว ความหนาแน่น 34 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4427,7 +4429,7 @@ OS:Material,
 
 OS:Material,
   {a77c052c-78ff-4fe0-9f29-972100d3079b}, !- Handle
-  077 ฉนวนใยแก้ว ความหนาแน่น 35 กก./ลบ.ม.หนา 25 มม., !- Name
+  086 ฉนวนใยแก้ว ความหนาแน่น 35 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4439,7 +4441,7 @@ OS:Material,
 
 OS:Material,
   {8000c3d6-4647-467c-b4ae-6a8b68e4ab74}, !- Handle
-  078 ฉนวนใยแก้ว ความหนาแน่น 36 กก./ลบ.ม.หนา 25 มม., !- Name
+  087 ฉนวนใยแก้ว ความหนาแน่น 36 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4451,7 +4453,7 @@ OS:Material,
 
 OS:Material,
   {0356eed5-62cf-479c-983e-6185b356c138}, !- Handle
-  079 ฉนวนใยแก้ว ความหนาแน่น 37 กก./ลบ.ม.หนา 25 มม., !- Name
+  088 ฉนวนใยแก้ว ความหนาแน่น 37 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4463,7 +4465,7 @@ OS:Material,
 
 OS:Material,
   {6058ad3a-526d-438f-9eb0-a22ddbc1423e}, !- Handle
-  080 ฉนวนใยแก้ว ความหนาแน่น 38 กก./ลบ.ม.หนา 25 มม., !- Name
+  089 ฉนวนใยแก้ว ความหนาแน่น 38 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4475,7 +4477,7 @@ OS:Material,
 
 OS:Material,
   {894f2bb1-cb61-4902-954a-b087e02ea4c2}, !- Handle
-  081 ฉนวนใยแก้ว ความหนาแน่น 39 กก./ลบ.ม.หนา 25 มม., !- Name
+  090 ฉนวนใยแก้ว ความหนาแน่น 39 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4487,7 +4489,7 @@ OS:Material,
 
 OS:Material,
   {9541341b-0421-41c3-b6e5-c98df1f50455}, !- Handle
-  082 ฉนวนใยแก้ว ความหนาแน่น 40 กก./ลบ.ม.หนา 25 มม., !- Name
+  091 ฉนวนใยแก้ว ความหนาแน่น 40 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4499,7 +4501,7 @@ OS:Material,
 
 OS:Material,
   {a8b1d9e4-af2d-4b05-9bcf-5808a07f6325}, !- Handle
-  083 ฉนวนใยแก้ว ความหนาแน่น 41 กก./ลบ.ม.หนา 25 มม., !- Name
+  092 ฉนวนใยแก้ว ความหนาแน่น 41 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4511,7 +4513,7 @@ OS:Material,
 
 OS:Material,
   {f13a4258-0547-4219-9dbf-1dad48bcc1f7}, !- Handle
-  084 ฉนวนใยแก้ว ความหนาแน่น 42 กก./ลบ.ม.หนา 25 มม., !- Name
+  093 ฉนวนใยแก้ว ความหนาแน่น 42 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4523,7 +4525,7 @@ OS:Material,
 
 OS:Material,
   {afd41f04-9abf-4928-82cd-4ae1d114e24b}, !- Handle
-  085 ฉนวนใยแก้ว ความหนาแน่น 43 กก./ลบ.ม.หนา 25 มม., !- Name
+  094 ฉนวนใยแก้ว ความหนาแน่น 43 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4535,7 +4537,7 @@ OS:Material,
 
 OS:Material,
   {f1f4d2ee-f7dd-4e15-b9bc-a09c3cba70c1}, !- Handle
-  086 ฉนวนใยแก้ว ความหนาแน่น 44 กก./ลบ.ม.หนา 25 มม., !- Name
+  095 ฉนวนใยแก้ว ความหนาแน่น 44 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4547,7 +4549,7 @@ OS:Material,
 
 OS:Material,
   {d869c6e6-47c2-436a-9423-5d89fe8aea54}, !- Handle
-  087 ฉนวนใยแก้ว ความหนาแน่น 45 กก./ลบ.ม.หนา 25 มม., !- Name
+  096ฉนวนใยแก้ว ความหนาแน่น 45 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4559,7 +4561,7 @@ OS:Material,
 
 OS:Material,
   {a98de7e3-df43-4c25-a8ac-135be76a96e6}, !- Handle
-  088 ฉนวนใยแก้ว ความหนาแน่น 46 กก./ลบ.ม.หนา 25 มม., !- Name
+  097 ฉนวนใยแก้ว ความหนาแน่น 46 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4571,7 +4573,7 @@ OS:Material,
 
 OS:Material,
   {f39aaae0-2958-4e31-b8ea-db475adea39d}, !- Handle
-  089 ฉนวนใยแก้ว ความหนาแน่น 47 กก./ลบ.ม.หนา 25 มม., !- Name
+  098 ฉนวนใยแก้ว ความหนาแน่น 47 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4583,7 +4585,7 @@ OS:Material,
 
 OS:Material,
   {56577938-652c-4774-a9b1-2c0546876d00}, !- Handle
-  090 ฉนวนใยแก้ว ความหนาแน่น 48 กก./ลบ.ม.หนา 25 มม., !- Name
+  099 ฉนวนใยแก้ว ความหนาแน่น 48 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.033,                                  !- Conductivity {W/m-K}
@@ -4595,7 +4597,7 @@ OS:Material,
 
 OS:Material,
   {53462c3f-0d41-483e-974e-5b4eacbc4112}, !- Handle
-  091 ฉนวนใยแก้ว ความหนาแน่น 56 กก./ลบ.ม.หนา 25 มม., !- Name
+  100 ฉนวนใยแก้ว ความหนาแน่น 56 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.031,                                  !- Conductivity {W/m-K}
@@ -4607,7 +4609,7 @@ OS:Material,
 
 OS:Material,
   {2e9a5819-4b40-485f-ad6c-5c2cd02f9fa7}, !- Handle
-  092 ฉนวนใยแก้ว ความหนาแน่น 57 กก./ลบ.ม.หนา 25 มม., !- Name
+  101 ฉนวนใยแก้ว ความหนาแน่น 57 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.031,                                  !- Conductivity {W/m-K}
@@ -4619,7 +4621,7 @@ OS:Material,
 
 OS:Material,
   {63c598fc-9f6d-4698-ab50-42612c84599f}, !- Handle
-  093 ฉนวนใยแก้ว ความหนาแน่น 58 กก./ลบ.ม.หนา 25 มม., !- Name
+  102 ฉนวนใยแก้ว ความหนาแน่น 58 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.031,                                  !- Conductivity {W/m-K}
@@ -4631,7 +4633,7 @@ OS:Material,
 
 OS:Material,
   {d33a1e9b-c512-4214-81ca-17e907d1787d}, !- Handle
-  094 ฉนวนใยแก้ว ความหนาแน่น 59 กก./ลบ.ม.หนา 25 มม., !- Name
+  103 ฉนวนใยแก้ว ความหนาแน่น 59 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.031,                                  !- Conductivity {W/m-K}
@@ -4643,7 +4645,7 @@ OS:Material,
 
 OS:Material,
   {719c52b4-05da-4363-be1d-e790e9f22e56}, !- Handle
-  095 ฉนวนใยแก้ว ความหนาแน่น 60 กก./ลบ.ม.หนา 25 มม., !- Name
+  104 ฉนวนใยแก้ว ความหนาแน่น 60 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.031,                                  !- Conductivity {W/m-K}
@@ -4655,7 +4657,7 @@ OS:Material,
 
 OS:Material,
   {c093d5a6-7f97-445a-8e8e-d457c4e70c1c}, !- Handle
-  096 ฉนวนใยแก้ว ความหนาแน่น 61 กก./ลบ.ม.หนา 25 มม., !- Name
+  106 ฉนวนใยแก้ว ความหนาแน่น 61 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.031,                                  !- Conductivity {W/m-K}
@@ -4667,7 +4669,7 @@ OS:Material,
 
 OS:Material,
   {e9b68d9a-9f6a-4a1c-806f-dc5417b58965}, !- Handle
-  097 ฉนวนใยแก้ว ความหนาแน่น 62 กก./ลบ.ม.หนา 25 มม., !- Name
+  107 ฉนวนใยแก้ว ความหนาแน่น 62 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.031,                                  !- Conductivity {W/m-K}
@@ -4679,7 +4681,7 @@ OS:Material,
 
 OS:Material,
   {db6031c9-af47-4787-ad0e-156dc1471354}, !- Handle
-  098 ฉนวนใยแก้ว ความหนาแน่น 63 กก./ลบ.ม.หนา 25 มม., !- Name
+  108 ฉนวนใยแก้ว ความหนาแน่น 63 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.031,                                  !- Conductivity {W/m-K}
@@ -4691,7 +4693,7 @@ OS:Material,
 
 OS:Material,
   {de841a95-9f2e-43f4-8ba8-b4ec7d268b87}, !- Handle
-  099 ฉนวนใยแก้ว ความหนาแน่น 64 กก./ลบ.ม.หนา 25 มม., !- Name
+  109 ฉนวนใยแก้ว ความหนาแน่น 64 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.031,                                  !- Conductivity {W/m-K}
@@ -4703,7 +4705,7 @@ OS:Material,
 
 OS:Material,
   {0bdbfd15-95f2-4882-84f9-cad9549c38c2}, !- Handle
-  100 ฉนวนใยแก้ว ความหนาแน่น 65 กก./ลบ.ม.หนา 25 มม., !- Name
+  110 ฉนวนใยแก้ว ความหนาแน่น 65 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.031,                                  !- Conductivity {W/m-K}
@@ -4715,7 +4717,7 @@ OS:Material,
 
 OS:Material,
   {b1f673e8-2d32-4af4-b34f-83a51437e573}, !- Handle
-  101 ฉนวนใยแก้ว ความหนาแน่น 66 กก./ลบ.ม.หนา 25 มม., !- Name
+  111 ฉนวนใยแก้ว ความหนาแน่น 66 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.031,                                  !- Conductivity {W/m-K}
@@ -4727,7 +4729,7 @@ OS:Material,
 
 OS:Material,
   {155325e4-da14-4784-8a9b-202df6990543}, !- Handle
-  102 ฉนวนใยแก้ว ความหนาแน่น 67 กก./ลบ.ม.หนา 25 มม., !- Name
+  112 ฉนวนใยแก้ว ความหนาแน่น 67 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.031,                                  !- Conductivity {W/m-K}
@@ -4739,7 +4741,7 @@ OS:Material,
 
 OS:Material,
   {0edeabff-218d-4608-8bb2-a3270b33f3d5}, !- Handle
-  103 ฉนวนใยแก้ว ความหนาแน่น 68 กก./ลบ.ม.หนา 25 มม., !- Name
+  113 ฉนวนใยแก้ว ความหนาแน่น 68 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.031,                                  !- Conductivity {W/m-K}
@@ -4751,7 +4753,7 @@ OS:Material,
 
 OS:Material,
   {cfec68ae-19cb-444e-99a8-18a71fa2807e}, !- Handle
-  104 ฉนวนใยแก้ว ความหนาแน่น 69 กก./ลบ.ม.หนา 25 มม., !- Name
+  114 ฉนวนใยแก้ว ความหนาแน่น 69 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.031,                                  !- Conductivity {W/m-K}
@@ -4763,7 +4765,7 @@ OS:Material,
 
 OS:Material,
   {1275b73e-0452-4fb2-a103-6c67db414dc8}, !- Handle
-  067 ฉนวนใยแก้วที่ได้รับฉลากประสิทธิภาพสูง Stay Cool 3" Premium, !- Name
+  076 ฉนวนใยแก้วที่ได้รับฉลากประสิทธิภาพสูง Stay Cool 3" Premium, !- Name
   Smooth,                                 !- Roughness
   0.075,                                  !- Thickness {m}
   0.036,                                  !- Conductivity {W/m-K}
@@ -4775,7 +4777,7 @@ OS:Material,
 
 OS:Material,
   {8abb579a-d914-42b3-a5f1-0511e7ac5ae5}, !- Handle
-  068 ฉนวนใยแก้วที่ได้รับฉลากประสิทธิภาพสูง Stay Cool 3" Super Save, !- Name
+  077 ฉนวนใยแก้วที่ได้รับฉลากประสิทธิภาพสูง Stay Cool 3" Super Save, !- Name
   Smooth,                                 !- Roughness
   0.075,                                  !- Thickness {m}
   0.039,                                  !- Conductivity {W/m-K}
@@ -4787,7 +4789,7 @@ OS:Material,
 
 OS:Material,
   {2011db10-12c5-4d47-845e-476fc8b19173}, !- Handle
-  069 ฉนวนใยแก้วที่ได้รับฉลากประสิทธิภาพสูง Stay Cool 6" Premium, !- Name
+  078 ฉนวนใยแก้วที่ได้รับฉลากประสิทธิภาพสูง Stay Cool 6" Premium, !- Name
   Smooth,                                 !- Roughness
   0.15,                                   !- Thickness {m}
   0.038,                                  !- Conductivity {W/m-K}
@@ -4799,7 +4801,7 @@ OS:Material,
 
 OS:Material,
   {5d5cdded-bf8a-4352-930b-27b097b4c268}, !- Handle
-  062 ฉนวนใยหิน ความหนาแน่น 16 กก./ลบ.ม.หนา 25 มม., !- Name
+  071 ฉนวนใยหิน ความหนาแน่น 16 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.039,                                  !- Conductivity {W/m-K}
@@ -4811,7 +4813,7 @@ OS:Material,
 
 OS:Material,
   {8488f607-cf58-447c-b716-1d68945b79ea}, !- Handle
-  063 ฉนวนใยหิน ความหนาแน่น 24 กก./ลบ.ม.หนา 25 มม., !- Name
+  072 ฉนวนใยหิน ความหนาแน่น 24 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.039,                                  !- Conductivity {W/m-K}
@@ -4823,7 +4825,7 @@ OS:Material,
 
 OS:Material,
   {358bb29c-2ecd-4c18-8a3b-01302e304092}, !- Handle
-  064 ฉนวนใยหิน ความหนาแน่น 32 กก./ลบ.ม.หนา 25 มม., !- Name
+  073 ฉนวนใยหิน ความหนาแน่น 32 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.039,                                  !- Conductivity {W/m-K}
@@ -4835,7 +4837,7 @@ OS:Material,
 
 OS:Material,
   {25f3c80e-3a6f-4334-88d4-d2df1ad4959a}, !- Handle
-  065 ฉนวนใยหิน ความหนาแน่น 6.4 กก./ลบ.ม.หนา 25 มม., !- Name
+  074 ฉนวนใยหิน ความหนาแน่น 6.4 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.039,                                  !- Conductivity {W/m-K}
@@ -4847,7 +4849,7 @@ OS:Material,
 
 OS:Material,
   {2eb0b5b0-43ab-4cc9-930f-c664d8d71197}, !- Handle
-  066 ฉนวนใยหิน ความหนาแน่น 8 กก./ลบ.ม.หนา 25 มม., !- Name
+  075 ฉนวนใยหิน ความหนาแน่น 8 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.039,                                  !- Conductivity {W/m-K}
@@ -4859,7 +4861,7 @@ OS:Material,
 
 OS:Material,
   {b6d13ab1-9d9a-4e9f-a31d-2930b3af6a60}, !- Handle
-  106 ซุปเปอร์บล็อค หนา 31 มม., !- Name
+  116 ซุปเปอร์บล็อค หนา 31 มม., !- Name
   Smooth,                                 !- Roughness
   0.031,                                  !- Thickness {m}
   0.34,                                   !- Conductivity {W/m-K}
@@ -4871,7 +4873,7 @@ OS:Material,
 
 OS:Material,
   {e623a62b-2e64-48af-82d5-0eb8dcf81056}, !- Handle
-  107 ซุปเปอร์บล็อค หนา 50 มม., !- Name
+  117 ซุปเปอร์บล็อค หนา 50 มม., !- Name
   Smooth,                                 !- Roughness
   0.05,                                   !- Thickness {m}
   0.233,                                  !- Conductivity {W/m-K}
@@ -4883,7 +4885,7 @@ OS:Material,
 
 OS:Material,
   {fcbb0396-fbe4-4639-942d-c4d575b6d8f2}, !- Handle
-  108 ซุปเปอร์บล็อค หนา 74.2 มม., !- Name
+  118 ซุปเปอร์บล็อค หนา 74.2 มม., !- Name
   Smooth,                                 !- Roughness
   0.0742,                                 !- Thickness {m}
   0.208,                                  !- Conductivity {W/m-K}
@@ -4895,7 +4897,7 @@ OS:Material,
 
 OS:Material,
   {446ae58d-f146-4c1a-adc3-c1c8431adb35}, !- Handle
-  135 เซลโลกรีตชนิดธรรมดา หนา 1", !- Name
+  147 เซลโลกรีตชนิดธรรมดา หนา 1", !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.106,                                  !- Conductivity {W/m-K}
@@ -4907,7 +4909,7 @@ OS:Material,
 
 OS:Material,
   {a079529b-5000-4235-9dd2-c0ae9ed47113}, !- Handle
-  134 เซลโลกรีตชนิดธรรมดา หนา 1 1/2”, !- Name
+  146 เซลโลกรีตชนิดธรรมดา หนา 1 1/2”, !- Name
   Smooth,                                 !- Roughness
   0.0375,                                 !- Thickness {m}
   0.12,                                   !- Conductivity {W/m-K}
@@ -4919,7 +4921,7 @@ OS:Material,
 
 OS:Material,
   {5dc40248-4e7b-4111-9350-af0ce5dc2e82}, !- Handle
-  136 เซลโลกรีตชนิดธรรมดา หนา 1/2”, !- Name
+  148 เซลโลกรีตชนิดธรรมดา หนา 1/2”, !- Name
   Smooth,                                 !- Roughness
   0.012,                                  !- Thickness {m}
   0.118,                                  !- Conductivity {W/m-K}
@@ -4931,7 +4933,7 @@ OS:Material,
 
 OS:Material,
   {b1044489-c82e-4587-a0e0-c207c5e5e754}, !- Handle
-  133 เซลโลกรีตชนิดธรรมดา หนา 1”, !- Name
+  145เซลโลกรีตชนิดธรรมดา หนา 1”, !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.108,                                  !- Conductivity {W/m-K}
@@ -4943,7 +4945,7 @@ OS:Material,
 
 OS:Material,
   {fd384165-db63-499c-bca0-4da085a7178c}, !- Handle
-  137 เซลโลกรีตชนิดธรรมดา หนา 2”, !- Name
+  149 เซลโลกรีตชนิดธรรมดา หนา 2”, !- Name
   Smooth,                                 !- Roughness
   0.05,                                   !- Thickness {m}
   0.124,                                  !- Conductivity {W/m-K}
@@ -4955,7 +4957,7 @@ OS:Material,
 
 OS:Material,
   {84e87a27-f3df-4f33-b11d-86cd834f66b8}, !- Handle
-  138 เซลโลกรีตชนิดธรรมดา หนา 4”, !- Name
+  150 เซลโลกรีตชนิดธรรมดา หนา 4”, !- Name
   Smooth,                                 !- Roughness
   0.1,                                    !- Thickness {m}
   0.117,                                  !- Conductivity {W/m-K}
@@ -4967,7 +4969,7 @@ OS:Material,
 
 OS:Material,
   {17fbca37-628e-40d2-9009-f84b1f0dbefd}, !- Handle
-  140 เซลโลกรีตชนิดโฟม หนา 1", !- Name
+  152 เซลโลกรีตชนิดโฟม หนา 1", !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.068,                                  !- Conductivity {W/m-K}
@@ -4979,7 +4981,7 @@ OS:Material,
 
 OS:Material,
   {68c15692-cd5c-4134-b513-6a4faf783299}, !- Handle
-  141 เซลโลกรีตชนิดโฟม หนา 2”, !- Name
+  153 เซลโลกรีตชนิดโฟม หนา 2”, !- Name
   Smooth,                                 !- Roughness
   0.05,                                   !- Thickness {m}
   0.076,                                  !- Conductivity {W/m-K}
@@ -4991,7 +4993,7 @@ OS:Material,
 
 OS:Material,
   {74571f11-9ccd-4e46-ba47-9dddc84b67c9}, !- Handle
-  139 เซลโลกรีตชนิดโฟม หนา 1”, !- Name
+  151 เซลโลกรีตชนิดโฟม หนา 1”, !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.083,                                  !- Conductivity {W/m-K}
@@ -5003,7 +5005,7 @@ OS:Material,
 
 OS:Material,
   {bf693f10-efa7-474d-8c19-231def5e82b7}, !- Handle
-  142 เซลโลกรีตชนิดโฟม หนา 4”, !- Name
+  154 เซลโลกรีตชนิดโฟม หนา 4”, !- Name
   Smooth,                                 !- Roughness
   0.1,                                    !- Thickness {m}
   0.085,                                  !- Conductivity {W/m-K}
@@ -5015,7 +5017,7 @@ OS:Material,
 
 OS:Material,
   {e6aaac48-7ea0-4b38-ad26-b6b0e50f77d8}, !- Handle
-  109 ทราย หนา 10 ซม.,  !- Name
+  119 ทราย หนา 10 ซม.,  !- Name
   Smooth,                                 !- Roughness
   0.1,                                    !- Thickness {m}
   0.21,                                   !- Conductivity {W/m-K}
@@ -5027,7 +5029,7 @@ OS:Material,
 
 OS:Material,
   {d45de691-c854-4e98-a5ae-9be273a44571}, !- Handle
-  110 ทองแดง หนา 0.4 มม., !- Name
+  120 ทองแดง หนา 0.4 มม., !- Name
   Smooth,                                 !- Roughness
   0.0004,                                 !- Thickness {m}
   388,                                    !- Conductivity {W/m-K}
@@ -5039,7 +5041,7 @@ OS:Material,
 
 OS:Material,
   {5c7d99a7-21eb-41f5-99f3-26f1bef47b27}, !- Handle
-  113 ปูนฉาบ (ซีเมนต์ผสมทราย), !- Name
+  123 ปูนฉาบ (ซีเมนต์ผสมทราย), !- Name
   Smooth,                                 !- Roughness
   0.015,                                  !- Thickness {m}
   0.72,                                   !- Conductivity {W/m-K}
@@ -5051,7 +5053,7 @@ OS:Material,
 
 OS:Material,
   {56d8905a-9c59-451d-bb35-1e0177527b3e}, !- Handle
-  111 ปูนฉาบผสมเสร็จสำหรับคอนกรีตมวลเบา, !- Name
+  121 ปูนฉาบผสมเสร็จสำหรับคอนกรีตมวลเบา, !- Name
   Smooth,                                 !- Roughness
   0.01,                                   !- Thickness {m}
   0.333,                                  !- Conductivity {W/m-K}
@@ -5063,7 +5065,7 @@ OS:Material,
 
 OS:Material,
   {bac984f9-2b67-4925-9b7a-147d74e5b855}, !- Handle
-  112 ปูนฉาบสำหรับคอนกรีตมวลเบา, !- Name
+  122 ปูนฉาบสำหรับคอนกรีตมวลเบา, !- Name
   Smooth,                                 !- Roughness
   0.01,                                   !- Thickness {m}
   0.326,                                  !- Conductivity {W/m-K}
@@ -5075,7 +5077,7 @@ OS:Material,
 
 OS:Material,
   {4df36f9b-995e-4e2e-b70f-9b2fcae100ab}, !- Handle
-  114 ปูนซีเมนต์ หนา 5 ซม., !- Name
+  124 ปูนซีเมนต์ หนา 5 ซม., !- Name
   Smooth,                                 !- Roughness
   0.05,                                   !- Thickness {m}
   0.533,                                  !- Conductivity {W/m-K}
@@ -5087,7 +5089,7 @@ OS:Material,
 
 OS:Material,
   {20f394fc-6b18-477c-b50f-2c41b56dee79}, !- Handle
-  155 แผ่นไฟเบอร์ (fiber board) หนา 1 ซม., !- Name
+  168 แผ่นไฟเบอร์ (fiber board) หนา 1 ซม., !- Name
   Smooth,                                 !- Roughness
   0.01,                                   !- Thickness {m}
   0.052,                                  !- Conductivity {W/m-K}
@@ -5099,7 +5101,7 @@ OS:Material,
 
 OS:Material,
   {42d9a050-7103-4f56-a301-7e541de8e60f}, !- Handle
-  154 แผ่นไฟเบอร์ชานอ้อย หนา 1 ซม., !- Name
+  167 แผ่นไฟเบอร์ชานอ้อย หนา 1 ซม., !- Name
   Smooth,                                 !- Roughness
   0.01,                                   !- Thickness {m}
   0.052,                                  !- Conductivity {W/m-K}
@@ -5111,7 +5113,7 @@ OS:Material,
 
 OS:Material,
   {a04ff86f-6c94-456b-aace-ee5f550365db}, !- Handle
-  156 แผ่นไม้ก๊อก หนา 0.5 ซม., !- Name
+  167 แผ่นไม้ก๊อก หนา 0.5 ซม., !- Name
   Smooth,                                 !- Roughness
   0.005,                                  !- Thickness {m}
   0.042,                                  !- Conductivity {W/m-K}
@@ -5123,7 +5125,7 @@ OS:Material,
 
 OS:Material,
   {c50d18d6-e5b4-4b3c-bd40-8b628a40fc3a}, !- Handle
-  144 แผ่นยิบซัมตราช้างชนิดทนความชื้น หนา 9 มม., !- Name
+  156 แผ่นยิบซัมตราช้างชนิดทนความชื้น หนา 9 มม., !- Name
   Smooth,                                 !- Roughness
   0.009,                                  !- Thickness {m}
   0.297,                                  !- Conductivity {W/m-K}
@@ -5135,7 +5137,7 @@ OS:Material,
 
 OS:Material,
   {43cd01e1-b10c-428d-94f7-3684d70c9f8c}, !- Handle
-  145 แผ่นยิบซัมตราช้างชนิดทนไฟ หนา 9 มม., !- Name
+  157 แผ่นยิบซัมตราช้างชนิดทนไฟ หนา 9 มม., !- Name
   Smooth,                                 !- Roughness
   0.009,                                  !- Thickness {m}
   0.353,                                  !- Conductivity {W/m-K}
@@ -5147,7 +5149,7 @@ OS:Material,
 
 OS:Material,
   {46ee1a35-986b-432d-9148-9a6339f2f048}, !- Handle
-  146 แผ่นยิบซัมตราช้างชนิดธรรมดา หนา 12 มม., !- Name
+  158 แผ่นยิบซัมตราช้างชนิดธรรมดา หนา 12 มม., !- Name
   Smooth,                                 !- Roughness
   0.012,                                  !- Thickness {m}
   0.318,                                  !- Conductivity {W/m-K}
@@ -5159,7 +5161,7 @@ OS:Material,
 
 OS:Material,
   {96fd29bb-a17d-4beb-a9f1-a76718594334}, !- Handle
-  147 แผ่นยิบซัมตราช้างชนิดธรรมดา หนา 9 มม., !- Name
+  159 แผ่นยิบซัมตราช้างชนิดธรรมดา หนา 9 มม., !- Name
   Smooth,                                 !- Roughness
   0.009,                                  !- Thickness {m}
   0.306,                                  !- Conductivity {W/m-K}
@@ -5171,7 +5173,7 @@ OS:Material,
 
 OS:Material,
   {f03c1d32-b809-4bfb-a933-b52388bbb33c}, !- Handle
-  148 แผ่นยิบซัมตราช้างชนิดปรุลายรุ่นพินโฮล หนา 12 มม., !- Name
+  160 แผ่นยิบซัมตราช้างชนิดปรุลายรุ่นพินโฮล หนา 12 มม., !- Name
   Smooth,                                 !- Roughness
   0.012,                                  !- Thickness {m}
   0.288,                                  !- Conductivity {W/m-K}
@@ -5183,7 +5185,7 @@ OS:Material,
 
 OS:Material,
   {94c8cf78-53a8-4aba-b0ca-9b0fca43f39d}, !- Handle
-  149 แผ่นยิบซัมตราช้างชนิดพีวีซี หนา 12 มม., !- Name
+  161 แผ่นยิบซัมตราช้างชนิดพีวีซี หนา 12 มม., !- Name
   Smooth,                                 !- Roughness
   0.012,                                  !- Thickness {m}
   0.211,                                  !- Conductivity {W/m-K}
@@ -5195,7 +5197,7 @@ OS:Material,
 
 OS:Material,
   {c996a836-788a-4e8b-ad22-2670adf892cf}, !- Handle
-  150 แผ่นยิบซัมตราช้างชนิดอลูมิเนียมฟอยล์ หนา 12 มม., !- Name
+  162 แผ่นยิบซัมตราช้างชนิดอลูมิเนียมฟอยล์ หนา 12 มม., !- Name
   Smooth,                                 !- Roughness
   0.012,                                  !- Thickness {m}
   0.322,                                  !- Conductivity {W/m-K}
@@ -5207,7 +5209,7 @@ OS:Material,
 
 OS:Material,
   {e207c8ab-15ef-4b60-88bd-66ef6041c3d8}, !- Handle
-  152 แผ่นยิปซั่ม หนา 9 มม., !- Name
+  165 แผ่นยิปซั่ม หนา 9 มม., !- Name
   Smooth,                                 !- Roughness
   0.009,                                  !- Thickness {m}
   0.282,                                  !- Conductivity {W/m-K}
@@ -5219,7 +5221,7 @@ OS:Material,
 
 OS:Material,
   {abc74710-066f-4760-b2d3-e76b2e71133e}, !- Handle
-  151 แผ่นยิปซั่มบอร์ด หนา 9 มม., !- Name
+  163 แผ่นยิปซั่มบอร์ด หนา 9 มม., !- Name
   Smooth,                                 !- Roughness
   0.009,                                  !- Thickness {m}
   0.191,                                  !- Conductivity {W/m-K}
@@ -5231,7 +5233,7 @@ OS:Material,
 
 OS:Material,
   {2a3aa085-9b70-4125-bc12-d9de8f5ec584}, !- Handle
-  153 แผ่นอลูคาร์บอน หนา 0.4 มม., !- Name
+  166 แผ่นอลูคาร์บอน หนา 0.4 มม., !- Name
   Smooth,                                 !- Roughness
   0.0004,                                 !- Thickness {m}
   5.54,                                   !- Conductivity {W/m-K}
@@ -5243,7 +5245,7 @@ OS:Material,
 
 OS:Material,
   {053b4de6-f50a-434f-8e60-3ffd1123ce51}, !- Handle
-  115 พลาสเตอร์ฉาบยิบซั่ม, !- Name
+  125 พลาสเตอร์ฉาบยิบซั่ม, !- Name
   Smooth,                                 !- Roughness
   0.002,                                  !- Thickness {m}
   0.23,                                   !- Conductivity {W/m-K}
@@ -5255,7 +5257,7 @@ OS:Material,
 
 OS:Material,
   {34d4428e-1011-436d-97b5-293298e95e7b}, !- Handle
-  157 พลียูรีเทนโฟม หนา 25 มม., !- Name
+  126 พลียูรีเทนโฟม หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.03,                                   !- Conductivity {W/m-K}
@@ -5267,7 +5269,7 @@ OS:Material,
 
 OS:Material,
   {03c65d20-cc93-4f72-be5a-7d4950d9d73f}, !- Handle
-  161 โฟม (ความหนาแน่น 20 kg/m3) หนา 25 มม., !- Name
+  175 โฟม (ความหนาแน่น 20 kg/m3) หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.041,                                  !- Conductivity {W/m-K}
@@ -5279,7 +5281,7 @@ OS:Material,
 
 OS:Material,
   {abda0db7-3eab-488c-8624-01cadbe4ed16}, !- Handle
-  162 โฟม (ความหนาแน่น 200 kg/m3) หนา 25 มม., !- Name
+  176 โฟม (ความหนาแน่น 200 kg/m3) หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.047,                                  !- Conductivity {W/m-K}
@@ -5291,7 +5293,7 @@ OS:Material,
 
 OS:Material,
   {fdb7931a-d1e2-4f66-922a-00c223051005}, !- Handle
-  163 โฟม (ความหนาแน่น 9 kg/m3) หนา 25 มม., !- Name
+  177 โฟม (ความหนาแน่น 9 kg/m3) หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.053,                                  !- Conductivity {W/m-K}
@@ -5303,7 +5305,7 @@ OS:Material,
 
 OS:Material,
   {970bf0c8-6a34-4f34-9e0f-60c7998bcf56}, !- Handle
-  158 โฟมโพลียูรีเทน ความหนาแน่น 24 กก./ลบ.ม.หนา 25 มม., !- Name
+  169 โฟมโพลียูรีเทน ความหนาแน่น 24 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.023,                                  !- Conductivity {W/m-K}
@@ -5315,7 +5317,7 @@ OS:Material,
 
 OS:Material,
   {a3c1192a-e2c0-400e-9b3e-8933af072c58}, !- Handle
-  159 โฟมโพลียูรีเทน ความหนาแน่น 40 กก./ลบ.ม.หนา 25 มม., !- Name
+  170 โฟมโพลียูรีเทน ความหนาแน่น 40 กก./ลบ.ม.หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.026,                                  !- Conductivity {W/m-K}
@@ -5327,7 +5329,7 @@ OS:Material,
 
 OS:Material,
   {5d701857-938b-477f-8d32-c15d863954dd}, !- Handle
-  160 โฟมโพลีเอทิลีน หนา 25 มม., !- Name
+  171 โฟมโพลีเอทิลีน หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.029,                                  !- Conductivity {W/m-K}
@@ -5339,7 +5341,7 @@ OS:Material,
 
 OS:Material,
   {3dba9be4-71ba-4f64-bfc6-fb861588f904}, !- Handle
-  167 ไม้จำปา หนา 1", !- Name
+  181 ไม้จำปา หนา 1", !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.139,                                  !- Conductivity {W/m-K}
@@ -5351,7 +5353,7 @@ OS:Material,
 
 OS:Material,
   {6477b611-01d0-40ed-bf41-405e2893875f}, !- Handle
-  181 ไม้แดง หนา 1",    !- Name
+  195 ไม้แดง หนา 1",    !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.259,                                  !- Conductivity {W/m-K}
@@ -5363,7 +5365,7 @@ OS:Material,
 
 OS:Material,
   {6f0503d0-b8b9-4f5b-b3d9-bfcee779e55f}, !- Handle
-  176 ไม้เต็ง หนา 1", !- Name
+  190 ไม้เต็ง หนา 1", !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.224,                                  !- Conductivity {W/m-K}
@@ -5375,7 +5377,7 @@ OS:Material,
 
 OS:Material,
   {45aafcff-d0c8-4ee2-bec8-1bc3fd90fbd2}, !- Handle
-  168 ไม้ทุเรียน หนา 1", !- Name
+  182 ไม้ทุเรียน หนา 1", !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.134,                                  !- Conductivity {W/m-K}
@@ -5387,7 +5389,7 @@ OS:Material,
 
 OS:Material,
   {ce1e1b02-56c0-478e-9e05-0a4f8f64553b}, !- Handle
-  179 ไม้เนื้อแข็ง หนา 1", !- Name
+  193 ไม้เนื้อแข็ง หนา 1", !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.217,                                  !- Conductivity {W/m-K}
@@ -5399,7 +5401,7 @@ OS:Material,
 
 OS:Material,
   {4ffeea4b-e4c9-4803-9326-e07a49c03bc5}, !- Handle
-  178 ไม้เนื้อแข็งปานกลาง หนา 1", !- Name
+  192 ไม้เนื้อแข็งปานกลาง หนา 1", !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.176,                                  !- Conductivity {W/m-K}
@@ -5411,7 +5413,7 @@ OS:Material,
 
 OS:Material,
   {0daf8e7a-82ba-4547-b6cf-81d97488ae60}, !- Handle
-  177 ไม้เนื้ออ่อน หนา 1", !- Name
+  191 ไม้เนื้ออ่อน หนา 1", !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.131,                                  !- Conductivity {W/m-K}
@@ -5423,7 +5425,7 @@ OS:Material,
 
 OS:Material,
   {4012111f-60df-404f-93f4-71bfdbca35fe}, !- Handle
-  170 ไม้ป๊อปปลา หนา 1", !- Name
+  184 ไม้ป๊อปปลา หนา 1", !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.137,                                  !- Conductivity {W/m-K}
@@ -5435,7 +5437,7 @@ OS:Material,
 
 OS:Material,
   {f3ed6b94-ea75-4ff7-a45c-ec593e981bf9}, !- Handle
-  169 ไม้ปาร์เก้ หนา 1.5 ซม., !- Name
+  183 ไม้ปาร์เก้ หนา 1.5 ซม., !- Name
   Smooth,                                 !- Roughness
   0.015,                                  !- Thickness {m}
   0.167,                                  !- Conductivity {W/m-K}
@@ -5447,7 +5449,7 @@ OS:Material,
 
 OS:Material,
   {df115680-3601-4c34-8b62-a5ecda447bcc}, !- Handle
-  171 ไม้มะค่า หนา 1", !- Name
+  185 ไม้มะค่า หนา 1", !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.23,                                   !- Conductivity {W/m-K}
@@ -5459,7 +5461,7 @@ OS:Material,
 
 OS:Material,
   {2a20a04e-d2f4-4b31-9a39-e6f3e818456a}, !- Handle
-  180 ไม้เมเปิ้ล หนา 1", !- Name
+  194 ไม้เมเปิ้ล หนา 1", !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.207,                                  !- Conductivity {W/m-K}
@@ -5471,7 +5473,7 @@ OS:Material,
 
 OS:Material,
   {b4b5a87c-de49-4940-a3c3-61f423d4dee3}, !- Handle
-  172 ไม้สน หนา 1",       !- Name
+  186 ไม้สน หนา 1",       !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.176,                                  !- Conductivity {W/m-K}
@@ -5483,7 +5485,7 @@ OS:Material,
 
 OS:Material,
   {78d93317-c0a3-4abf-9e90-49af97925c3c}, !- Handle
-  173 ไม้สัก หนา 1",    !- Name
+  187 ไม้สัก หนา 1",    !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.209,                                  !- Conductivity {W/m-K}
@@ -5495,7 +5497,7 @@ OS:Material,
 
 OS:Material,
   {e62c1a21-a70a-4a0d-8371-d87cff4ec8bb}, !- Handle
-  175 ไม้อัด หนา 10 มม., !- Name
+  189 ไม้อัด หนา 10 มม., !- Name
   Smooth,                                 !- Roughness
   0.01,                                   !- Thickness {m}
   0.213,                                  !- Conductivity {W/m-K}
@@ -5507,7 +5509,7 @@ OS:Material,
 
 OS:Material,
   {4e9b9ee5-f517-4df6-8d8f-6c0098435770}, !- Handle
-  174 ไม้อัดชิพบอร์ด หนา 10 มม., !- Name
+  188 ไม้อัดชิพบอร์ด หนา 10 มม., !- Name
   Smooth,                                 !- Roughness
   0.01,                                   !- Thickness {m}
   0.144,                                  !- Conductivity {W/m-K}
@@ -5519,7 +5521,7 @@ OS:Material,
 
 OS:Material,
   {5fa00c58-4fc2-4836-ad2c-2bc4b0c06b55}, !- Handle
-  182 ไม้แอช หนา 1",    !- Name
+  196 ไม้แอช หนา 1",    !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.191,                                  !- Conductivity {W/m-K}
@@ -5531,7 +5533,7 @@ OS:Material,
 
 OS:Material,
   {4a40548b-9295-49ad-885c-2987bafd6fda}, !- Handle
-  166 ใยแก้ว  หนา 25 มม., !- Name
+  180 ใยแก้ว  หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.041,                                  !- Conductivity {W/m-K}
@@ -5543,7 +5545,7 @@ OS:Material,
 
 OS:Material,
   {d28a7dbd-9e2a-4f1b-b3cd-67162012f8f9}, !- Handle
-  165 ใยแก้วติดอลูมิเนียมฟอยล์ 1 ด้าน  หนา 25 มม., !- Name
+  179 ใยแก้วติดอลูมิเนียมฟอยล์ 1 ด้าน  หนา 25 มม., !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.046,                                  !- Conductivity {W/m-K}
@@ -5555,7 +5557,7 @@ OS:Material,
 
 OS:Material,
   {7db8eb44-491b-4a5a-8d93-145f821cf3a8}, !- Handle
-  116 ลิโนเลียม หนา 3 มม., !- Name
+  128 ลิโนเลียม หนา 3 มม., !- Name
   Smooth,                                 !- Roughness
   0.003,                                  !- Thickness {m}
   0.244,                                  !- Conductivity {W/m-K}
@@ -5567,7 +5569,7 @@ OS:Material,
 
 OS:Material,
   {0ec0855a-b7e9-462a-9cd2-c624177e112f}, !- Handle
-  164 โลหะผสมของอลูมิเนียม แบบธรรมดา  หนา 1 มม., !- Name
+  178 โลหะผสมของอลูมิเนียม แบบธรรมดา  หนา 1 มม., !- Name
   Smooth,                                 !- Roughness
   0.001,                                  !- Thickness {m}
   211,                                    !- Conductivity {W/m-K}
@@ -5579,7 +5581,7 @@ OS:Material,
 
 OS:Material,
   {7bf14561-34bb-4f81-9c35-b2cf21089a8b}, !- Handle
-  183 ไลโนเลียม (พรมน้ำมัน) หนา 3 มม., !- Name
+  197 ไลโนเลียม (พรมน้ำมัน) หนา 3 มม., !- Name
   Smooth,                                 !- Roughness
   0.003,                                  !- Thickness {m}
   0.227,                                  !- Conductivity {W/m-K}
@@ -5591,7 +5593,7 @@ OS:Material,
 
 OS:Material,
   {6c1bc3ff-d77c-4e02-8a0e-9a2432c7f436}, !- Handle
-  117 วัสดุมุงหลังคาแอสฟัลต์, !- Name
+  129 วัสดุมุงหลังคาแอสฟัลต์, !- Name
   Smooth,                                 !- Roughness
   0.005,                                  !- Thickness {m}
   0.421,                                  !- Conductivity {W/m-K}
@@ -5603,7 +5605,7 @@ OS:Material,
 
 OS:Material,
   {3dde63b1-d64a-43de-aeaf-fea239b702b8}, !- Handle
-  118 หินกาบ หนา  20 มม., !- Name
+  130 หินกาบ หนา  20 มม., !- Name
   Smooth,                                 !- Roughness
   0.02,                                   !- Thickness {m}
   0.29,                                   !- Conductivity {W/m-K}
@@ -5615,7 +5617,7 @@ OS:Material,
 
 OS:Material,
   {0b46a3ff-0e78-4a63-b8da-1d0b57e2cd2c}, !- Handle
-  125 หินแกรนิต หนา  20 มม., !- Name
+  137 หินแกรนิต หนา  20 มม., !- Name
   Smooth,                                 !- Roughness
   0.02,                                   !- Thickness {m}
   1.276,                                  !- Conductivity {W/m-K}
@@ -5627,7 +5629,7 @@ OS:Material,
 
 OS:Material,
   {59e90ebd-efb6-4853-a70f-6220024fbc3a}, !- Handle
-  124 หินแกรนิตสีแดง หนา  20 มม., !- Name
+  136 หินแกรนิตสีแดง หนา  20 มม., !- Name
   Smooth,                                 !- Roughness
   0.02,                                   !- Thickness {m}
   1.773,                                  !- Conductivity {W/m-K}
@@ -5639,7 +5641,7 @@ OS:Material,
 
 OS:Material,
   {5783139a-0559-4516-ad1d-08be4aa8af85}, !- Handle
-  123 หินแกรนิตสีเทา หนา  20 มม., !- Name
+  135 หินแกรนิตสีเทา หนา  20 มม., !- Name
   Smooth,                                 !- Roughness
   0.02,                                   !- Thickness {m}
   1.351,                                  !- Conductivity {W/m-K}
@@ -5651,7 +5653,7 @@ OS:Material,
 
 OS:Material,
   {1b64f0fc-4a31-4b78-b695-d595e29ecae4}, !- Handle
-  119 หินทราย หนา  20 มม., !- Name
+  131 หินทราย หนา  20 มม., !- Name
   Smooth,                                 !- Roughness
   0.02,                                   !- Thickness {m}
   0.721,                                  !- Conductivity {W/m-K}
@@ -5663,7 +5665,7 @@ OS:Material,
 
 OS:Material,
   {bdb41f10-fd19-4b43-bed3-46d7b125d79c}, !- Handle
-  122 หินอ่อน หนา  20 มม., !- Name
+  134 หินอ่อน หนา  20 มม., !- Name
   Smooth,                                 !- Roughness
   0.02,                                   !- Thickness {m}
   1.25,                                   !- Conductivity {W/m-K}
@@ -5675,7 +5677,7 @@ OS:Material,
 
 OS:Material,
   {7c911b66-54e1-420d-a486-81755a89f95f}, !- Handle
-  120 หินอ่อนสีขาว หนา  20 มม., !- Name
+  132 หินอ่อนสีขาว หนา  20 มม., !- Name
   Smooth,                                 !- Roughness
   0.02,                                   !- Thickness {m}
   2.35,                                   !- Conductivity {W/m-K}
@@ -5687,7 +5689,7 @@ OS:Material,
 
 OS:Material,
   {114d0182-33ea-4ba5-a5d4-b6bf4a421d31}, !- Handle
-  121 หินอ่อนสีแดง หนา  20 มม., !- Name
+  133 หินอ่อนสีแดง หนา  20 มม., !- Name
   Smooth,                                 !- Roughness
   0.02,                                   !- Thickness {m}
   1.382,                                  !- Conductivity {W/m-K}
@@ -5699,7 +5701,7 @@ OS:Material,
 
 OS:Material,
   {fc7073ec-da11-46b6-9fa0-cb0a7e5ae845}, !- Handle
-  143 เหล็กกล้า หนา 2 มม., !- Name
+  155 เหล็กกล้า หนา 2 มม., !- Name
   Smooth,                                 !- Roughness
   0.002,                                  !- Thickness {m}
   47.6,                                   !- Conductivity {W/m-K}
@@ -5711,7 +5713,7 @@ OS:Material,
 
 OS:Material,
   {b6af8abc-d748-4d15-9d61-c23130d8aa5c}, !- Handle
-  126 อิฐฉาบปูนปิดด้วยกระเบื้องหน้าเดียว, !- Name
+  138 อิฐฉาบปูนปิดด้วยกระเบื้องหน้าเดียว, !- Name
   Smooth,                                 !- Roughness
   0.1,                                    !- Thickness {m}
   0.807,                                  !- Conductivity {W/m-K}
@@ -5723,7 +5725,7 @@ OS:Material,
 
 OS:Material,
   {d6947867-7f2d-4dbd-8be8-061012258349}, !- Handle
-  127 อิฐฉาบปูนปิดด้วยแผ่นโมเสด, !- Name
+  139 อิฐฉาบปูนปิดด้วยแผ่นโมเสด, !- Name
   Smooth,                                 !- Roughness
   0.1,                                    !- Thickness {m}
   0.807,                                  !- Conductivity {W/m-K}
@@ -5735,7 +5737,7 @@ OS:Material,
 
 OS:Material,
   {a4730f25-632b-4634-99cb-ace187c7b7ea}, !- Handle
-  128 อิฐมอญ,                 !- Name
+  140 อิฐมอญ,                 !- Name
   Smooth,                                 !- Roughness
   0.08,                                   !- Thickness {m}
   0.498,                                  !- Conductivity {W/m-K}
@@ -5747,7 +5749,7 @@ OS:Material,
 
 OS:Material,
   {b758faa0-aa74-494b-a7a2-642e766d00b7}, !- Handle
-  129 อิฐมอญฉาบปูนสองหน้า, !- Name
+  141 อิฐมอญฉาบปูนสองหน้า, !- Name
   Smooth,                                 !- Roughness
   0.1,                                    !- Thickness {m}
   1.102,                                  !- Conductivity {W/m-K}
@@ -5759,7 +5761,7 @@ OS:Material,
 
 OS:Material,
   {a732e4da-f945-4630-b833-2cebc386c853}, !- Handle
-  130 อิฐมอญฉาบสองหน้า, !- Name
+  142 อิฐมอญฉาบสองหน้า, !- Name
   Smooth,                                 !- Roughness
   0.1,                                    !- Thickness {m}
   1.069,                                  !- Conductivity {W/m-K}
@@ -5771,7 +5773,7 @@ OS:Material,
 
 OS:Material,
   {05ed33ca-ace7-44bd-8e03-0a97139d4adf}, !- Handle
-  132 อิฐมอญไม่ฉาบ, !- Name
+  144 อิฐมอญไม่ฉาบ, !- Name
   Smooth,                                 !- Roughness
   0.08,                                   !- Thickness {m}
   0.473,                                  !- Conductivity {W/m-K}
@@ -5783,7 +5785,7 @@ OS:Material,
 
 OS:Material,
   {d31d147b-e2c2-4ff7-acd7-faa1019e9283}, !- Handle
-  131 อิฐมอญแห้ง,     !- Name
+  143 อิฐมอญแห้ง,     !- Name
   Smooth,                                 !- Roughness
   0.08,                                   !- Thickness {m}
   0.807,                                  !- Conductivity {W/m-K}
@@ -5793,9 +5795,888 @@ OS:Material,
   0.5,                                    !- Solar Absorptance
   0.9;                                    !- Visible Absorptance
 
+OS:Material,
+  {c6fbb0a9-f8e9-43e7-a702-e239b5ed787d}, !- Handle
+  Th-Brick fired clay
+ความหนาแน่น 2400 กก./ลบ.ม.หนา 8 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.008,                                  !- Thickness {m}
+  1.47,                                   !- Conductivity {W/m-K}
+  2400,                                   !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {0b902fda-d1d1-4f80-8520-2700c67af9af}, !- Handle
+  Th-Brick fired clay
+ความหนาแน่น 2240 กก./ลบ.ม.หนา 8 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.008,                                  !- Thickness {m}
+  1.3,                                    !- Conductivity {W/m-K}
+  2240,                                   !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {5fc27636-792e-4663-8d5d-b6d3b5bee0ee}, !- Handle
+  Th-Brick fired clay
+ความหนาแน่น 2080 กก./ลบ.ม.หนา 8 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.008,                                  !- Thickness {m}
+  1.12,                                   !- Conductivity {W/m-K}
+  2080,                                   !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {2d9426fc-9848-4f75-9177-6124ee26c598}, !- Handle
+  Th-Brick fired clay
+ความหนาแน่น 1920 กก./ลบ.ม.หนา 8 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.008,                                  !- Thickness {m}
+  0.98,                                   !- Conductivity {W/m-K}
+  1920,                                   !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {415dd884-5edc-4115-9747-559b43ab7783}, !- Handle
+  Th-Brick fired clay
+ความหนาแน่น 1760 กก./ลบ.ม.หนา 8 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.008,                                  !- Thickness {m}
+  0.85,                                   !- Conductivity {W/m-K}
+  1760,                                   !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {6e6e95b4-d6d8-42a1-92ec-972a90ea0c1a}, !- Handle
+  Th-Brick fired clay
+ความหนาแน่น 1600 กก./ลบ.ม.หนา 8 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.008,                                  !- Thickness {m}
+  0.74,                                   !- Conductivity {W/m-K}
+  1600,                                   !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {3ed24f8c-3b7a-4a7c-b8f6-f593a3b60991}, !- Handle
+  Th-Brick fired clay
+ความหนาแน่น 1440 กก./ลบ.ม.หนา 8 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.008,                                  !- Thickness {m}
+  0.62,                                   !- Conductivity {W/m-K}
+  1440,                                   !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {fa3c75b0-d05f-40be-b1b6-c157f1abcda4}, !- Handle
+  Th-Brick fired clay
+ความหนาแน่น 1280 กก./ลบ.ม.หนา 8 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.008,                                  !- Thickness {m}
+  0.53,                                   !- Conductivity {W/m-K}
+  1280,                                   !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {51736737-de90-4279-90b0-a20af1078f7f}, !- Handle
+  Th-Brick fired clay
+ความหนาแน่น 1120 กก./ลบ.ม.หนา 8 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.008,                                  !- Thickness {m}
+  0.45,                                   !- Conductivity {W/m-K}
+  1120,                                   !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {e0d10410-60fc-4f67-a3bd-2ef641544fb5}, !- Handle
+  Th-Fiber/cement board ความหนาแน่น 1400 กก./ลบ.ม.หนา 8 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.008,                                  !- Thickness {m}
+  0.25,                                   !- Conductivity {W/m-K}
+  1400,                                   !- Density {kg/m3}
+  840,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {dc0f8573-3fa8-4065-a8c5-802d08fd9c3a}, !- Handle
+  Th-Fiber/cement board ความหนาแน่น 1000 กก./ลบ.ม.หนา 8 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.008,                                  !- Thickness {m}
+  0.19,                                   !- Conductivity {W/m-K}
+  1000,                                   !- Density {kg/m3}
+  1880,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {f44cad9c-7e73-4c7e-8e24-35c7518add86}, !- Handle
+  Th-Fiber/cement board ความหนาแน่น 400 กก./ลบ.ม.หนา 8 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.008,                                  !- Thickness {m}
+  0.07,                                   !- Conductivity {W/m-K}
+  400,                                    !- Density {kg/m3}
+  1880,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {0641c5da-dd96-464b-a34c-a76dc1bf4958}, !- Handle
+  Th-Fiber/cement board ความหนาแน่น 300 กก./ลบ.ม.หนา 8 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.008,                                  !- Thickness {m}
+  0.06,                                   !- Conductivity {W/m-K}
+  300,                                    !- Density {kg/m3}
+  1150,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {f418bc8a-bd6b-47db-960a-620664278da1}, !- Handle
+  Th-Particleboard high density ความหนาแน่น 1000 กก./ลบ.ม.หนา 8 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.008,                                  !- Thickness {m}
+  1.18,                                   !- Conductivity {W/m-K}
+  1000,                                   !- Density {kg/m3}
+  1300,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {5e40f411-443c-42af-9ed2-c74628648671}, !- Handle
+  Th-Expanded polystyrene- molded beads ความหนาแน่น 24 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.037,                                  !- Conductivity {W/m-K}
+  24,                                     !- Density {kg/m3}
+  0.1,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {c31f7375-b967-45a2-a2c2-cf17a21927a6}, !- Handle
+  Th-Expanded polystyrene- molded beads ความหนาแน่น 16 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.035,                                  !- Conductivity {W/m-K}
+  16,                                     !- Density {kg/m3}
+  1210,                                   !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {6a982cbb-8809-49a0-8f98-9633b41aec34}, !- Handle
+  Th-Expanded polystyrene- molded beads ความหนาแน่น 29 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.033,                                  !- Conductivity {W/m-K}
+  29,                                     !- Density {kg/m3}
+  1210,                                   !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {23bbe22f-f96b-4f78-95dd-7a458f47723a}, !- Handle
+  Th-Expanded polystyrene- smooth skin ความหนาแน่น 22 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.026,                                  !- Conductivity {W/m-K}
+  22,                                     !- Density {kg/m3}
+  1210,                                   !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {d7f8ede0-6aec-48ff-8c54-1f7509c01920}, !- Handle
+  Th-Expanded polystyrene- smooth skin ความหนาแน่น 28 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.029,                                  !- Conductivity {W/m-K}
+  28,                                     !- Density {kg/m3}
+  1210,                                   !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {9c9936c1-6856-4dc6-b53a-3d1860b6e0af}, !- Handle
+  105 ฉนวนใยแก้ว ความหนาแน่น 60 กก./ลบ.ม.หนา 25 มม. 1, !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.036,                                  !- Conductivity {W/m-K}
+  60,                                     !- Density {kg/m3}
+  960,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {6b3d3714-a59d-4280-867f-9158006e6080}, !- Handle
+  Th-Glass fiber board ความหนาแน่น 24 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.033,                                  !- Conductivity {W/m-K}
+  24,                                     !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {ff825a18-84fe-448e-8103-96f9ba1bd4df}, !- Handle
+  Th-Glass fiber board ความหนาแน่น 96 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.035,                                  !- Conductivity {W/m-K}
+  96,                                     !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {dabff622-800f-4524-b6c1-b9cf6eb21962}, !- Handle
+  Th-Glass fiber batts ความหนาแน่น 7.5 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.046,                                  !- Conductivity {W/m-K}
+  7.5,                                    !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {a2450898-b38e-4bad-bfff-f7307413d715}, !- Handle
+  Th-Glass fiber batts ความหนาแน่น 8.2 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.048,                                  !- Conductivity {W/m-K}
+  8.2,                                    !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {36ae9866-09b4-48f6-8395-a494689825f8}, !- Handle
+  Th-Glass fiber batts ความหนาแน่น 9.8 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.04,                                   !- Conductivity {W/m-K}
+  9.8,                                    !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {314a12cb-9a04-451d-989e-151ad9ff873b}, !- Handle
+  Th-Glass fiber batts ความหนาแน่น 12 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.043,                                  !- Conductivity {W/m-K}
+  12,                                     !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {8acb400f-4da2-4f86-8668-2cbdd7ccd2cf}, !- Handle
+  Th-Glass fiber batts ความหนาแน่น 13 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.037,                                  !- Conductivity {W/m-K}
+  13,                                     !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {e5c1f4fe-d340-41a5-8483-317bb39d25a3}, !- Handle
+  Th-Glass fiber batts ความหนาแน่น 14 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.039,                                  !- Conductivity {W/m-K}
+  14,                                     !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {fde5a949-bb3b-408b-b4e0-f5e4fe1d87c6}, !- Handle
+  Th-Glass fiber batts ความหนาแน่น 22 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.033,                                  !- Conductivity {W/m-K}
+  22,                                     !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {10914564-552a-450c-bf9a-49d322b5c666}, !- Handle
+  Th-Mineral fiberboard- wet felted ความหนาแน่น 160 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.037,                                  !- Conductivity {W/m-K}
+  160,                                    !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {74154d5d-531e-461c-9110-4fb998a8b2a9}, !- Handle
+  168 โฟมโพลิยูรีเทน ความหนาแน่น 60 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.024,                                  !- Conductivity {W/m-K}
+  60,                                     !- Density {kg/m3}
+  1590,                                   !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {46710388-90ae-4611-a5b7-b11300a662e7}, !- Handle
+  070 ฉนวนใยหินแบบม้วน (blanket) และแบบแผ่น (rigid board) ความหนาแน่น 6 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.39,                                   !- Conductivity {W/m-K}
+  6,                                      !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {4a6ee40a-1d34-4ddd-83e9-300a25494049}, !- Handle
+  065ฉนวนใยหินแบบม้วน (blanket) และแบบแผ่น (rigid board) ความหนาแน่น 12 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.39,                                   !- Conductivity {W/m-K}
+  12,                                     !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {53486084-dc12-4b7c-9757-ebd1b7a10671}, !- Handle
+  066 ฉนวนใยหินแบบม้วน (blanket) และแบบแผ่น (rigid board) ความหนาแน่น 18 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.39,                                   !- Conductivity {W/m-K}
+  18,                                     !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {a412d52e-0666-4a1d-bd64-04ab4af9332f}, !- Handle
+  067 ฉนวนใยหินแบบม้วน (blanket) และแบบแผ่น (rigid board) ความหนาแน่น 24 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.39,                                   !- Conductivity {W/m-K}
+  24,                                     !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {84e25d04-b373-4869-9006-2502f5283dad}, !- Handle
+  068 ฉนวนใยหินแบบม้วน (blanket) และแบบแผ่น (rigid board) ความหนาแน่น 30 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.39,                                   !- Conductivity {W/m-K}
+  30,                                     !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {eab0a911-b986-48ad-871b-da4ab8118789}, !- Handle
+  069 ฉนวนใยหินแบบม้วน (blanket) และแบบแผ่น (rigid board) ความหนาแน่น 32 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.39,                                   !- Conductivity {W/m-K}
+  32,                                     !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {4c2d5802-fd0c-474e-9a36-dc93cd683f27}, !- Handle
+  Th-Rock and slag wool batts ความหนาแน่น 32 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.036,                                  !- Conductivity {W/m-K}
+  32,                                     !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {83661903-b3a5-4cec-b485-4efbb0cf6a60}, !- Handle
+  Th-Rock and slag wool batts ความหนาแน่น 37 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.037,                                  !- Conductivity {W/m-K}
+  37,                                     !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {c155b6d3-c429-4ddf-8711-899de2c275d1}, !- Handle
+  Th-Rock and slag wool batts ความหนาแน่น 45 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.034,                                  !- Conductivity {W/m-K}
+  45,                                     !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {d367ca6f-eb49-4957-9f01-eb76b1bd4368}, !- Handle
+  Th-Rock wool board (Floor and Walls) ความหนาแน่น 64 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.033,                                  !- Conductivity {W/m-K}
+  64,                                     !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {ac92c9ef-f83e-4a3b-aba3-a2f8dd0d2944}, !- Handle
+  Th-Rock wool board (Floor and Walls) ความหนาแน่น 130 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.036,                                  !- Conductivity {W/m-K}
+  130,                                    !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {a03edfe4-9f72-4705-8e15-b668d1fd2b27}, !- Handle
+  Th-Rock wool board (Roofing) ความหนาแน่น 160 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.039,                                  !- Conductivity {W/m-K}
+  160,                                    !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {994505d1-30b5-4704-83ec-c745b173c457}, !- Handle
+  Th-Rock wool board (Roofing) ความหนาแน่น 180 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.042,                                  !- Conductivity {W/m-K}
+  180,                                    !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {a0cbdac0-8719-499a-869f-2031cae4af47}, !- Handle
+  Th-Acoustical Tile ความหนาแน่น 340 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.052,                                  !- Conductivity {W/m-K}
+  340,                                    !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {202a4dc3-8d71-45ef-a5cb-bc9715fa3bc0}, !- Handle
+  Th-Cellular glass ความหนาแน่น 120 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.042,                                  !- Conductivity {W/m-K}
+  120,                                    !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {bff8fec6-6e53-450c-b690-dab73e619d26}, !- Handle
+  Th-Cellulose Fiber- Loose fill up to 100 mm ความหนาแน่น 18 กก./ลบ.ม.หนา 100 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.1,                                    !- Thickness {m}
+  0.045,                                  !- Conductivity {W/m-K}
+  18,                                     !- Density {kg/m3}
+  1400,                                   !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {83cec5dc-f09e-44ba-8c63-9d1c43f84348}, !- Handle
+  Th-Cement fiber slabs-shredded wood with Portland ce ความหนาแน่น 400 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.072,                                  !- Conductivity {W/m-K}
+  400,                                    !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {47c74a94-e280-4c37-8e0a-7dfbb1e14bd0}, !- Handle
+  Th-Cement fiber slabs-shredded wood with Portland ce ความหนาแน่น 430 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.076,                                  !- Conductivity {W/m-K}
+  430,                                    !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  ,                                       !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {dfde7510-b52f-44ca-a54c-762345e66c3c}, !- Handle
+  Th-Expanded rubber (rigid) beads ความหนาแน่น 64 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.029,                                  !- Conductivity {W/m-K}
+  64,                                     !- Density {kg/m3}
+  1700,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {ad02219b-fe7b-42bf-9138-ef51714acb46}, !- Handle
+  174 โฟม ความหนาแน่น 9 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.029,                                  !- Conductivity {W/m-K}
+  9,                                      !- Density {kg/m3}
+  1700,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {a982b9bd-a0df-4f85-9399-22aa8f2057b6}, !- Handle
+  172 โฟม ความหนาแน่น 20 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.029,                                  !- Conductivity {W/m-K}
+  20,                                     !- Density {kg/m3}
+  1700,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {0a1800b6-930a-44bb-ae49-ddbaa6693ed0}, !- Handle
+  173 โฟม ความหนาแน่น 200 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.029,                                  !- Conductivity {W/m-K}
+  200,                                    !- Density {kg/m3}
+  1700,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {822bf09d-bd02-464a-898e-5889efac97cf}, !- Handle
+  Th-Mineral wool-felted ความหนาแน่น 48 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.04,                                   !- Conductivity {W/m-K}
+  48,                                     !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {d3a81875-1905-4ff4-9c5a-e50cb5d74269}, !- Handle
+  Th-Mineral wool-felted ความหนาแน่น 130กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.035,                                  !- Conductivity {W/m-K}
+  130,                                    !- Density {kg/m3}
+  800,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {f415f70d-a96c-4da8-9a27-e846ea3a7ea2}, !- Handle
+  Th-Perlite board ความหนาแน่น 140 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.052,                                  !- Conductivity {W/m-K}
+  140,                                    !- Density {kg/m3}
+  0.1,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {4c0a6efc-7eb6-41f0-8667-73e1b9b504f9}, !- Handle
+  Th-Polyisocyanurate ความหนาแน่น 26 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.023,                                  !- Conductivity {W/m-K}
+  26,                                     !- Density {kg/m3}
+  0.1,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {7b8dcfe8-546e-435c-bf83-f2f6a5c1c3e8}, !- Handle
+  Th-Polyisocyanurate ความหนาแน่น 37 กก./ลบ.ม.หนา 25 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.025,                                  !- Thickness {m}
+  0.025,                                  !- Conductivity {W/m-K}
+  37,                                     !- Density {kg/m3}
+  0.1,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {7effd679-7781-46b1-a041-1ff551d0d00a}, !- Handle
+  127 ยูนิไฟเบอร์ ความหนาแน่น 12 กก./ลบ.ม.หนา 50 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.05,                                   !- Thickness {m}
+  0.042,                                  !- Conductivity {W/m-K}
+  12,                                     !- Density {kg/m3}
+  0.1,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {20beb007-7a7a-4b91-bef6-398fefb8e381}, !- Handle
+  Th-Particleboard low density ความหนาแน่น 590 กก./ลบ.ม.หนา 8 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.008,                                  !- Thickness {m}
+  0.102,                                  !- Conductivity {W/m-K}
+  590,                                    !- Density {kg/m3}
+  1300,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {cae03d31-d3dd-4d37-92c5-2025d06267bc}, !- Handle
+  Th-Particleboard medium density ความหนาแน่น 800 กก./ลบ.ม.หนา 8 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.008,                                  !- Thickness {m}
+  0.135,                                  !- Conductivity {W/m-K}
+  800,                                    !- Density {kg/m3}
+  1300,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Material,
+  {af6c141a-5ae2-4975-b926-ef03d5ba1190}, !- Handle
+  Th-Cement board ความหนาแน่น 1150 กก./ลบ.ม.หนา 8 มม., !- Name
+  Smooth,                                 !- Roughness
+  0.008,                                  !- Thickness {m}
+  0.25,                                   !- Conductivity {W/m-K}
+  1150,                                   !- Density {kg/m3}
+  840,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
 !-------------------------End Materails---------------------------
 
 !------------ Glazing System Window Materails -----------
+OS:WindowMaterial:SimpleGlazingSystem,
+  {dc1fd878-7e0e-47cb-8284-f3d17033ca21}, !- Handle
+  Th-Glass titanium steel coating 30 % 6 mm 1, !- Name
+  2,                                      !- U-Factor {W/m2-K}
+  0.25,                                   !- Solar Heat Gain Coefficient
+  0.27;                                   !- Visible Transmittance
+
+OS:WindowMaterial:SimpleGlazingSystem,
+  {91d8ce76-7292-4e66-977b-20d6f1e919aa}, !- Handle
+  Th-Low-e double glazing e=0.1 on surface 2, !- Name
+  2,                                      !- U-Factor {W/m2-K}
+  0.44,                                   !- Solar Heat Gain Coefficient
+  0.72;                                   !- Visible Transmittance
+
+OS:WindowMaterial:SimpleGlazingSystem,
+  {6885a3fb-3258-4d8b-8f0a-0eb3f351239d}, !- Handle
+  Th-Low-e double glazing e=0.2 on surface 2, !- Name
+  2,                                      !- U-Factor {W/m2-K}
+  0.53,                                   !- Solar Heat Gain Coefficient
+  0.73;                                   !- Visible Transmittance
+
+OS:WindowMaterial:SimpleGlazingSystem,
+  {02aa2e7a-b023-4b00-b0bb-93013e54a0ea}, !- Handle
+  Th-Blue Green Glass กระจกสีฟ้าอมเขียว 6 mm, !- Name
+  5.74,                                   !- U-Factor {W/m2-K}
+  0.55,                                   !- Solar Heat Gain Coefficient
+  0.75;                                   !- Visible Transmittance
+
+OS:WindowMaterial:SimpleGlazingSystem,
+  {9aba8daa-fc1f-44a5-bebc-913fa053d886}, !- Handle
+  Th-Blue Green Glass กระจกสีฟ้าอมเขียว-กระจกใส 6 mm, !- Name
+  5.74,                                   !- U-Factor {W/m2-K}
+  0.43,                                   !- Solar Heat Gain Coefficient
+  0.67;                                   !- Visible Transmittance
+
+OS:WindowMaterial:SimpleGlazingSystem,
+  {c05e75ce-e21d-4f50-acf1-d0c7b7136e76}, !- Handle
+  Th-Blue Green Glass กระจกสีบรอนซ์ 6 mm, !- Name
+  5.74,                                   !- U-Factor {W/m2-K}
+  0.54,                                   !- Solar Heat Gain Coefficient
+  0.54;                                   !- Visible Transmittance
+
+OS:WindowMaterial:SimpleGlazingSystem,
+  {80023ee1-7a39-4d59-a47b-363e906899bd}, !- Handle
+  Th-Blue Green Glass กระจกสีบรอนซ์-กระจกใส 6 mm, !- Name
+  5.74,                                   !- U-Factor {W/m2-K}
+  0.41,                                   !- Solar Heat Gain Coefficient
+  0.47;                                   !- Visible Transmittance
+
+OS:WindowMaterial:SimpleGlazingSystem,
+  {49afc206-1010-4a55-a052-cfc2ffdba83e}, !- Handle
+  Th-Clear Glass 6 mm 1,                  !- Name
+  5.74,                                   !- U-Factor {W/m2-K}
+  0.73,                                   !- Solar Heat Gain Coefficient
+  0.88;                                   !- Visible Transmittance
+
+OS:WindowMaterial:SimpleGlazingSystem,
+  {23cb0836-64bc-48d5-b3ab-999260d406d5}, !- Handle
+  Th-Clear Glass 6 mm 2,                  !- Name
+  5.74,                                   !- U-Factor {W/m2-K}
+  0.6,                                    !- Solar Heat Gain Coefficient
+  0.78;                                   !- Visible Transmittance
+
+OS:WindowMaterial:SimpleGlazingSystem,
+  {96987dd1-2159-4940-bb4d-9a8bdc096570}, !- Handle
+  Th-Glass stainless steel coatings 6 mm, !- Name
+  5.74,                                   !- U-Factor {W/m2-K}
+  0.28,                                   !- Solar Heat Gain Coefficient
+  0.2;                                    !- Visible Transmittance
+
+OS:WindowMaterial:SimpleGlazingSystem,
+  {9588d6be-9509-4bbd-9f22-fdaba0343876}, !- Handle
+  Th-Glass titanium steel coating 20 % 6 mm, !- Name
+  5.74,                                   !- U-Factor {W/m2-K}
+  0.27,                                   !- Solar Heat Gain Coefficient
+  0.2;                                    !- Visible Transmittance
+
+OS:WindowMaterial:SimpleGlazingSystem,
+  {8b9b8a94-e89a-48f9-bce2-2ab7134820c3}, !- Handle
+  Th-Glass titanium steel coating 30 % 6 mm, !- Name
+  5.74,                                   !- U-Factor {W/m2-K}
+  0.35,                                   !- Solar Heat Gain Coefficient
+  0.3;                                    !- Visible Transmittance
+
+OS:WindowMaterial:SimpleGlazingSystem,
+  {5c7b97ad-edb7-45e6-b32d-e964faba6b38}, !- Handle
+  Th-Gray Glass กระจกสีเทา 6 mm, !- Name
+  5.74,                                   !- U-Factor {W/m2-K}
+  0.52,                                   !- Solar Heat Gain Coefficient
+  0.46;                                   !- Visible Transmittance
+
+OS:WindowMaterial:SimpleGlazingSystem,
+  {18ea9877-d120-46b0-b4ec-279b82200a09}, !- Handle
+  Th-Gray Glass กระจกสีเทา-กระจกใส 6 mm, !- Name
+  5.74,                                   !- U-Factor {W/m2-K}
+  0.39,                                   !- Solar Heat Gain Coefficient
+  0.41;                                   !- Visible Transmittance
+
+OS:WindowMaterial:SimpleGlazingSystem,
+  {a2437c0d-b09a-4df8-b806-2bb3ba841c02}, !- Handle
+  Th-Green Glass กระจกสีเขียว 6 mm, !- Name
+  5.74,                                   !- U-Factor {W/m2-K}
+  0.54,                                   !- Solar Heat Gain Coefficient
+  0.76;                                   !- Visible Transmittance
+
+OS:WindowMaterial:SimpleGlazingSystem,
+  {31dd74b6-28fa-498f-87b4-984312e006b8}, !- Handle
+  Th-Green Glass กระจกสีเขียว-กระจกใส 6 mm, !- Name
+  5.74,                                   !- U-Factor {W/m2-K}
+  0.4154,                                 !- Solar Heat Gain Coefficient
+  0.68;                                   !- Visible Transmittance
+
+OS:WindowMaterial:SimpleGlazingSystem,
+  {8d52cad4-2539-422a-bed4-0412d292f151}, !- Handle
+  Th-Green Glass high quality กระจกสีเขียวคุณภาพสูง-กระจกใส 6 mm, !- Name
+  5.74,                                   !- U-Factor {W/m2-K}
+  0.33,                                   !- Solar Heat Gain Coefficient
+  0.59;                                   !- Visible Transmittance
+
+OS:WindowMaterial:SimpleGlazingSystem,
+  {7c8e86d6-4d77-45e6-a1e5-c62db7348f16}, !- Handle
+  Th-Green Glass high quality กระจกสีเขียวคุณภาพสูง และกระจกเคลือบสารที่มีสัมประสิทธิ์การแผ่รังสีต่ำ 6 mm, !- Name
+  5.74,                                   !- U-Factor {W/m2-K}
+  0.27,                                   !- Solar Heat Gain Coefficient
+  0.57;                                   !- Visible Transmittance
+
 OS:WindowMaterial:SimpleGlazingSystem,
   {939db906-70a4-4d81-9c41-4b6230077a6a}, !- Handle
   Th-Arctic Snow 3 mm (3-0.38-0.38-3),    !- Name
@@ -17253,7 +18134,7 @@ OS:Construction,
 
 OS:Material,
   {d81e1b78-e03c-40ae-b706-25daca0bb8f9}, !- Handle
-  184 กระจก,                    !- Name
+  001 กระจก,                    !- Name
   Smooth,                                 !- Roughness
   0.006,                                  !- Thickness {m}
   0.96,                                   !- Conductivity {W/m-K}
@@ -17366,23 +18247,10 @@ OS:StandardsInformation:Construction,
   ,                                       !- Fenestration Divider Type
   ,                                       !- Fenestration Tint
   ;                                       !- Fenestration Gas Fill
-OS:Material,
-  {bfbfb346-2b47-4c21-9d47-c67d51e2d027}, !- Handle
-  114 ปูนซีเมนต์ หนา 5 ซม. 1, !- Name
-  Smooth,                                 !- Roughness
-  0.05,                                   !- Thickness {m}
-  0.533,                                  !- Conductivity {W/m-K}
-  1568,                                   !- Density {kg/m3}
-  840,                                    !- Specific Heat {J/kg-K}
-  0.9,                                    !- Thermal Absorptance
-  0.5,                                    !- Solar Absorptance
-  0.5;                                    !- Visible Absorptance
-OS:StandardsInformation:Material,
-  {976d5162-1756-4d69-92d6-aa4e5152bc8b}, !- Handle
-  {bfbfb346-2b47-4c21-9d47-c67d51e2d027}; !- Material Name
+
 OS:Material,
   {7094af00-c14d-4cb8-ab38-d2237326176c}, !- Handle
-  35 คอนกรีต หนา 10 ซม. 2, !- Name
+  038 คอนกรีต หนา 10 ซม. 2, !- Name
   Smooth,                                 !- Roughness
   0.1,                                    !- Thickness {m}
   1.442,                                  !- Conductivity {W/m-K}
@@ -17403,7 +18271,7 @@ OS:StandardsInformation:Material,
   {18380dc3-e44a-427a-ba27-f76cef83ed2b}; !- Material Name
 OS:Material,
   {5d29fd10-1f2e-4fc8-bdb0-cccd522e4b09}, !- Handle
-  151 แผ่นยิปซั่มบอร์ด หนา 9 มม. 1, !- Name
+  164 แผ่นยิปซั่มบอร์ด หนา 9 มม. 1, !- Name
   Smooth,                                 !- Roughness
   0.009,                                  !- Thickness {m}
   0.191,                                  !- Conductivity {W/m-K}
