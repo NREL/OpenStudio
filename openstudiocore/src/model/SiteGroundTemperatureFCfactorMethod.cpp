@@ -384,25 +384,25 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureFCfactorMethod_Impl::setTemperatureByMonth(int month, double temperature) {
+  bool SiteGroundTemperatureFCfactorMethod_Impl::setTemperatureByMonth(int month, double temperature) {
     switch(month) {
-      case 1 : setJanuaryGroundTemperature(temperature); break;
-      case 2 : setFebruaryGroundTemperature(temperature); break;
-      case 3 : setMarchGroundTemperature(temperature); break;
-      case 4 : setAprilGroundTemperature(temperature); break;
-      case 5 : setMayGroundTemperature(temperature); break;
-      case 6 : setJuneGroundTemperature(temperature); break;
-      case 7 : setJulyGroundTemperature(temperature); break;
-      case 8 : setAugustGroundTemperature(temperature); break;
-      case 9 : setSeptemberGroundTemperature(temperature); break;
-      case 10 : setOctoberGroundTemperature(temperature); break;
-      case 11 : setNovemberGroundTemperature(temperature); break;
-      case 12 : setDecemberGroundTemperature(temperature); break;
-      default : LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month)); break;
+      case 1 : return setJanuaryGroundTemperature(temperature); break;
+      case 2 : return setFebruaryGroundTemperature(temperature); break;
+      case 3 : return setMarchGroundTemperature(temperature); break;
+      case 4 : return setAprilGroundTemperature(temperature); break;
+      case 5 : return setMayGroundTemperature(temperature); break;
+      case 6 : return setJuneGroundTemperature(temperature); break;
+      case 7 : return setJulyGroundTemperature(temperature); break;
+      case 8 : return setAugustGroundTemperature(temperature); break;
+      case 9 : return setSeptemberGroundTemperature(temperature); break;
+      case 10 : return setOctoberGroundTemperature(temperature); break;
+      case 11 : return setNovemberGroundTemperature(temperature); break;
+      case 12 : return setDecemberGroundTemperature(temperature); break;
+      default : LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month)); return false; break;
     }
   }
 
-  void SiteGroundTemperatureFCfactorMethod_Impl::setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature) {
+  bool SiteGroundTemperatureFCfactorMethod_Impl::setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature) {
     return setTemperatureByMonth(month.value(), temperature);
   }
 
@@ -664,12 +664,12 @@ void SiteGroundTemperatureFCfactorMethod::resetDecemberGroundTemperature() {
   getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetDecemberGroundTemperature();
 }
 
-void SiteGroundTemperatureFCfactorMethod::setTemperatureByMonth(int month, double temperature) {
-  getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setTemperatureByMonth(month, temperature);
+bool SiteGroundTemperatureFCfactorMethod::setTemperatureByMonth(int month, double temperature) {
+  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setTemperatureByMonth(month, temperature);
 }
 
-void SiteGroundTemperatureFCfactorMethod::setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature) {
-  getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setTemperatureByMonth(month, temperature);
+bool SiteGroundTemperatureFCfactorMethod::setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature) {
+  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setTemperatureByMonth(month, temperature);
 }
 
 void SiteGroundTemperatureFCfactorMethod::resetTemperatureByMonth(int month) {

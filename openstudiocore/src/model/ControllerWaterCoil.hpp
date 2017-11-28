@@ -113,9 +113,9 @@ class MODEL_API ControllerWaterCoil : public HVACComponent
 
   void resetActuatorVariable();
 
-  void setSensorNode( Node & node );
+  bool setSensorNode( Node & node );
 
-  void setActuatorNode( Node & node );
+  bool setActuatorNode( Node & node );
 
   bool setControllerConvergenceTolerance(double controllerConvergenceTolerance);
 

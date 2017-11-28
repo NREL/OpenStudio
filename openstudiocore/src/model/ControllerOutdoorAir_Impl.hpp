@@ -94,7 +94,7 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
   bool setEconomizerMaximumLimitDewpointTemperature(boost::optional<double> value);
 
   //QuadraticCurve getElectronicEnthalpyLimitCurve() const;
-  //void setElectronicEnthalpyLimitCurve(QuadraticCurve c);
+  //bool setElectronicEnthalpyLimitCurve(QuadraticCurve c);
 
   //get needs to return a boost optional double since "" is a valid input
   boost::optional<double> getEconomizerMinimumLimitDryBulbTemperature() const;
@@ -107,16 +107,16 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
   bool setMinimumLimitType( const std::string& value );
 
   boost::optional<bool> getHighHumidityControl() const;
-  void setHighHumidityControl(bool val);
+  bool setHighHumidityControl(bool val);
 
   //Zone getHumidistatControlZone() const;
-  //void setHumidistatControlZone(Zone z)
+  //bool setHumidistatControlZone(Zone z)
 
   OptionalDouble getHighHumidityOutdoorAirFlowRatio() const;
   bool setHighHumidityOutdoorAirFlowRatio(double v);
 
   boost::optional<bool> getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const;
-  void setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(bool v);
+  bool setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(bool v);
 
   OptionalString getHeatRecoveryBypassControlType() const;
   bool setHeatRecoveryBypassControlType(const std::string& v);

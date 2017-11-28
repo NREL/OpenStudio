@@ -108,7 +108,7 @@ class MODEL_API PlantLoop : public Loop {
 
   Node loopTemperatureSetpointNode();
 
-  void setLoopTemperatureSetpointNode( Node & node );
+  bool setLoopTemperatureSetpointNode( Node & node );
 
   double maximumLoopTemperature();
 

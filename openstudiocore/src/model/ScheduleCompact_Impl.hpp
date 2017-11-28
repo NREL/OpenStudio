@@ -83,7 +83,7 @@ namespace detail {
 
     virtual bool resetScheduleTypeLimits() override;
 
-    void setToConstantValue(double value);
+    bool setToConstantValue(double value);
 
     bool setToConstantValue(const Quantity& value);
 

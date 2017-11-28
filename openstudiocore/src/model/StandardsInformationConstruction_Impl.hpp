@@ -128,7 +128,7 @@ namespace detail {
     bool setIntendedSurfaceType(const std::string& type);
     void resetIntendedSurfaceType();
 
-    void setStandardsConstructionType(const std::string& type);
+    bool setStandardsConstructionType(const std::string& type);
     void resetStandardsConstructionType();
 
     bool setPerturbableLayer(unsigned layerIndex);

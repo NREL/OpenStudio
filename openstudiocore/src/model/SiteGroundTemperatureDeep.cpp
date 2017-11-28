@@ -384,25 +384,25 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::setTemperatureByMonth(int month, double temperature) {
+  bool SiteGroundTemperatureDeep_Impl::setTemperatureByMonth(int month, double temperature) {
     switch(month) {
-      case 1 : setJanuaryDeepGroundTemperature(temperature); break;
-      case 2 : setFebruaryDeepGroundTemperature(temperature); break;
-      case 3 : setMarchDeepGroundTemperature(temperature); break;
-      case 4 : setAprilDeepGroundTemperature(temperature); break;
-      case 5 : setMayDeepGroundTemperature(temperature); break;
-      case 6 : setJuneDeepGroundTemperature(temperature); break;
-      case 7 : setJulyDeepGroundTemperature(temperature); break;
-      case 8 : setAugustDeepGroundTemperature(temperature); break;
-      case 9 : setSeptemberDeepGroundTemperature(temperature); break;
-      case 10 : setOctoberDeepGroundTemperature(temperature); break;
-      case 11 : setNovemberDeepGroundTemperature(temperature); break;
-      case 12 : setDecemberDeepGroundTemperature(temperature); break;
-      default : LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month)); break;
+      case 1 : return setJanuaryDeepGroundTemperature(temperature); break;
+      case 2 : return setFebruaryDeepGroundTemperature(temperature); break;
+      case 3 : return setMarchDeepGroundTemperature(temperature); break;
+      case 4 : return setAprilDeepGroundTemperature(temperature); break;
+      case 5 : return setMayDeepGroundTemperature(temperature); break;
+      case 6 : return setJuneDeepGroundTemperature(temperature); break;
+      case 7 : return setJulyDeepGroundTemperature(temperature); break;
+      case 8 : return setAugustDeepGroundTemperature(temperature); break;
+      case 9 : return setSeptemberDeepGroundTemperature(temperature); break;
+      case 10 : return setOctoberDeepGroundTemperature(temperature); break;
+      case 11 : return setNovemberDeepGroundTemperature(temperature); break;
+      case 12 : return setDecemberDeepGroundTemperature(temperature); break;
+      default : LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month)); return false; break;
     }
   }
 
-  void SiteGroundTemperatureDeep_Impl::setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature) {
+  bool SiteGroundTemperatureDeep_Impl::setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature) {
     return setTemperatureByMonth(month.value(), temperature);
   }
 
@@ -664,12 +664,12 @@ void SiteGroundTemperatureDeep::resetDecemberDeepGroundTemperature() {
   getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetDecemberDeepGroundTemperature();
 }
 
-void SiteGroundTemperatureDeep::setTemperatureByMonth(int month, double temperature) {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setTemperatureByMonth(month, temperature);
+bool SiteGroundTemperatureDeep::setTemperatureByMonth(int month, double temperature) {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setTemperatureByMonth(month, temperature);
 }
 
-void SiteGroundTemperatureDeep::setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature) {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setTemperatureByMonth(month, temperature);
+bool SiteGroundTemperatureDeep::setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature) {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setTemperatureByMonth(month, temperature);
 }
 
 void SiteGroundTemperatureDeep::resetTemperatureByMonth(int month) {

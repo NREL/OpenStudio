@@ -125,7 +125,7 @@ namespace detail {
 
     void resetSourceZone();
 
-    void setDeltaTemperature(double deltaTemperature);
+    bool setDeltaTemperature(double deltaTemperature);
 
     void resetDeltaTemperature();
 

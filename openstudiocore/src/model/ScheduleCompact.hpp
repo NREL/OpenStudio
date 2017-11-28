@@ -67,7 +67,7 @@ class MODEL_API ScheduleCompact : public Schedule {
 
   /** Clears all existing data and sets the data so that value will be applied to the entire
    *  year. */
-  void setToConstantValue(double value);
+  bool setToConstantValue(double value);
 
   /** If value can be converted to scheduleTypeLimit()'s units, then all existing data is cleared
    *  and value is set (after unit conversion, if necessary). */

@@ -454,7 +454,7 @@ namespace detail {
     return boost::none;
   }
 
-  void AirLoopHVAC_Impl::setPlantForAirTerminal( HVACComponent & airTerminal, PlantLoop & plantLoop )
+  bool AirLoopHVAC_Impl::setPlantForAirTerminal( HVACComponent & airTerminal, PlantLoop & plantLoop )
   {
     std::vector<WaterToAirComponent> comps = airTerminal.model().getModelObjects<WaterToAirComponent>();
 
@@ -464,12 +464,11 @@ namespace detail {
       {
         if( comp.get() == airTerminal )
         {
-          plantLoop.addDemandBranchForComponent(elem);
-
-          return;
+          return plantLoop.addDemandBranchForComponent(elem);
         }
       }
     }
+    return false;
   }
 
   bool AirLoopHVAC_Impl::removeBranchForZone(ThermalZone & thermalZone)
@@ -1011,20 +1010,22 @@ namespace detail {
     return result.get();
   }
 
-  void AirLoopHVAC_Impl::setAvailabilitySchedule(Schedule & schedule)
+  bool AirLoopHVAC_Impl::setAvailabilitySchedule(Schedule & schedule)
   {
-    auto result = setPointer(OS_AirLoopHVACFields::AvailabilitySchedule,schedule.handle());
+    bool result = setPointer(OS_AirLoopHVACFields::AvailabilitySchedule,schedule.handle());
     OS_ASSERT(result);
 
     auto seriesPIUs = subsetCastVector<AirTerminalSingleDuctSeriesPIUReheat>(demandComponents(AirTerminalSingleDuctSeriesPIUReheat::iddObjectType()));
     for( auto & piu : seriesPIUs ) {
-      piu.getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setFanAvailabilitySchedule(schedule);
+      result &= piu.getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setFanAvailabilitySchedule(schedule);
     }
 
     auto parallelPIUs = subsetCastVector<AirTerminalSingleDuctParallelPIUReheat>(demandComponents(AirTerminalSingleDuctParallelPIUReheat::iddObjectType()));
     for( auto & piu : parallelPIUs ) {
-      piu.getImpl<detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->setFanAvailabilitySchedule(schedule);
+      result &= piu.getImpl<detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->setFanAvailabilitySchedule(schedule);
     }
+
+    return result;
   }
 
   bool AirLoopHVAC_Impl::setNightCycleControlType(std::string const & controlType)
@@ -1866,9 +1867,9 @@ Schedule AirLoopHVAC::availabilitySchedule() const
   return getImpl<detail::AirLoopHVAC_Impl>()->availabilitySchedule();
 }
 
-void AirLoopHVAC::setAvailabilitySchedule(Schedule & schedule)
+bool AirLoopHVAC::setAvailabilitySchedule(Schedule & schedule)
 {
-  getImpl<detail::AirLoopHVAC_Impl>()->setAvailabilitySchedule(schedule);
+  return getImpl<detail::AirLoopHVAC_Impl>()->setAvailabilitySchedule(schedule);
 }
 
 bool AirLoopHVAC::setNightCycleControlType(std::string const & controlType)

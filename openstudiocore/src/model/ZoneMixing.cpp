@@ -308,10 +308,11 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ZoneMixing_Impl::setDeltaTemperature(double deltaTemperature) {
+  bool ZoneMixing_Impl::setDeltaTemperature(double deltaTemperature) {
     bool result = setDouble(OS_ZoneMixingFields::DeltaTemperature, deltaTemperature);
     OS_ASSERT(result);
     resetDeltaTemperatureSchedule();
+    return result;
   }
 
   void ZoneMixing_Impl::resetDeltaTemperature() {
@@ -526,8 +527,8 @@ void ZoneMixing::resetSourceZone() {
   getImpl<detail::ZoneMixing_Impl>()->resetSourceZone();
 }
 
-void ZoneMixing::setDeltaTemperature(double deltaTemperature) {
-  getImpl<detail::ZoneMixing_Impl>()->setDeltaTemperature(deltaTemperature);
+bool ZoneMixing::setDeltaTemperature(double deltaTemperature) {
+  return getImpl<detail::ZoneMixing_Impl>()->setDeltaTemperature(deltaTemperature);
 }
 
 void ZoneMixing::resetDeltaTemperature() {

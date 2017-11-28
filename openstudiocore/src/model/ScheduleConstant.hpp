@@ -66,7 +66,7 @@ class MODEL_API ScheduleConstant : public Schedule {
   /** @name Setters */
   //@{
 
-  void setValue(double value);
+  bool setValue(double value);
 
   /** Sets this ScheduleConstant's value if scheduleTypeLimits() is set and value can be properly
    *  converted to the 'SI' units so implied. */

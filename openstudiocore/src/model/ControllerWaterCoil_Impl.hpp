@@ -41,17 +41,6 @@ namespace detail {
 /** ControllerWaterCoil_Impl is a HVACComponent_Impl that is the implementation class for ControllerWaterCoil.*/
 class MODEL_API ControllerWaterCoil_Impl : public HVACComponent_Impl {
 
-
-
-
-
-
-
-
-
-
-
-
  public:
 
   /** @name Constructors and Destructors */
@@ -135,9 +124,9 @@ class MODEL_API ControllerWaterCoil_Impl : public HVACComponent_Impl {
 
   boost::optional<Node> actuatorNode() const;
 
-  void setSensorNode( Node & node );
+  bool setSensorNode( Node & node );
 
-  void setActuatorNode( Node & node );
+  bool setActuatorNode( Node & node );
 
   bool setWaterCoil( const HVACComponent & comp );
 

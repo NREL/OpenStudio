@@ -130,8 +130,8 @@ namespace detail {
     return result;
   }
 
-  void ControllerMechanicalVentilation_Impl::setDemandControlledVentilation(bool demandControlledVentilation) {
-    setBooleanFieldValue(OS_Controller_MechanicalVentilationFields::DemandControlledVentilation, demandControlledVentilation);
+  bool ControllerMechanicalVentilation_Impl::setDemandControlledVentilation(bool demandControlledVentilation) {
+    return setBooleanFieldValue(OS_Controller_MechanicalVentilationFields::DemandControlledVentilation, demandControlledVentilation);
     //if (demandControlledVentilation) {
     //  setBooleanFieldValue(OS_Controller_MechanicalVentilationFields::DemandControlledVentilation, true);
     //} else {
@@ -247,8 +247,8 @@ bool ControllerMechanicalVentilation::setAvailabilitySchedule(Schedule& schedule
   return getImpl<detail::ControllerMechanicalVentilation_Impl>()->setAvailabilitySchedule(schedule);
 }
 
-void ControllerMechanicalVentilation::setDemandControlledVentilation(bool demandControlledVentilation) {
-  getImpl<detail::ControllerMechanicalVentilation_Impl>()->setDemandControlledVentilation(demandControlledVentilation);
+bool ControllerMechanicalVentilation::setDemandControlledVentilation(bool demandControlledVentilation) {
+  return getImpl<detail::ControllerMechanicalVentilation_Impl>()->setDemandControlledVentilation(demandControlledVentilation);
 }
 
 void ControllerMechanicalVentilation::resetDemandControlledVentilation() {

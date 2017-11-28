@@ -188,9 +188,9 @@ class MODEL_API ZoneHVACPackagedTerminalHeatPump : public ZoneHVACComponent
 
   void autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
-  void setSupplyAirFan( HVACComponent & hvacComponent );
+  bool setSupplyAirFan( HVACComponent & hvacComponent );
 
-  void setHeatingCoil( HVACComponent & hvacComponent );
+  bool setHeatingCoil( HVACComponent & hvacComponent );
 
   bool setHeatingConvergenceTolerance(double heatingConvergenceTolerance);
 
@@ -201,7 +201,7 @@ class MODEL_API ZoneHVACPackagedTerminalHeatPump : public ZoneHVACComponent
 
   void resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
 
-  void setCoolingCoil( HVACComponent & hvacComponent );
+  bool setCoolingCoil( HVACComponent & hvacComponent );
 
   bool setCoolingConvergenceTolerance(double coolingConvergenceTolerance);
 

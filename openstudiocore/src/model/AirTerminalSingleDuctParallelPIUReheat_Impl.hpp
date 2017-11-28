@@ -42,23 +42,6 @@ namespace detail {
   /** AirTerminalSingleDuctParallelPIUReheat_Impl is a StraightComponent_Impl that is the implementation class for AirTerminalSingleDuctParallelPIUReheat.*/
   class MODEL_API AirTerminalSingleDuctParallelPIUReheat_Impl : public StraightComponent_Impl {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -161,9 +144,9 @@ namespace detail {
 
     void autosizeFanOnFlowFraction();
 
-    void setFan( HVACComponent & hvacComponent );
+    bool setFan( HVACComponent & hvacComponent );
 
-    void setReheatCoil( HVACComponent & hvacComponent );
+    bool setReheatCoil( HVACComponent & hvacComponent );
 
     bool setMaximumHotWaterorSteamFlowRate(boost::optional<double> maximumHotWaterorSteamFlowRate);
 
@@ -183,7 +166,7 @@ namespace detail {
     // Use carefully.  Removing (or moving) plenum will leave model in invalid state
     bool setInducedAirPlenumZone(ThermalZone & thermalZone);
 
-    void setFanAvailabilitySchedule(Schedule & schedule);
+    bool setFanAvailabilitySchedule(Schedule & schedule);
 
     //@}
    protected:

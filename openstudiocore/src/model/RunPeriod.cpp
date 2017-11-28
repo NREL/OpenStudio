@@ -389,29 +389,29 @@ bool RunPeriod::setEndDayOfMonth(int day)
   return getImpl<detail::RunPeriod_Impl>()->setEndDayOfMonth(day);
 }
 
-void RunPeriod::setUseWeatherFileHolidays(bool use)
+bool RunPeriod::setUseWeatherFileHolidays(bool use)
 {
-  getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileHolidays(use);
+  return getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileHolidays(use);
 }
 
-void RunPeriod::setUseWeatherFileDaylightSavings(bool use)
+bool RunPeriod::setUseWeatherFileDaylightSavings(bool use)
 {
-  getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileDaylightSavings(use);
+  return getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileDaylightSavings(use);
 }
 
-void RunPeriod::setApplyWeekendHolidayRule(bool apply)
+bool RunPeriod::setApplyWeekendHolidayRule(bool apply)
 {
-  getImpl<detail::RunPeriod_Impl>()->setApplyWeekendHolidayRule(apply);
+  return getImpl<detail::RunPeriod_Impl>()->setApplyWeekendHolidayRule(apply);
 }
 
-void RunPeriod::setUseWeatherFileRainInd(bool rainInd)
+bool RunPeriod::setUseWeatherFileRainInd(bool rainInd)
 {
-  getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileRainInd(rainInd);
+  return getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileRainInd(rainInd);
 }
 
-void RunPeriod::setUseWeatherFileSnowInd(bool snowInd)
+bool RunPeriod::setUseWeatherFileSnowInd(bool snowInd)
 {
-  getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileSnowInd(snowInd);
+  return getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileSnowInd(snowInd);
 }
 
 bool RunPeriod::setNumTimePeriodRepeats(int numRepeats)

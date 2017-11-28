@@ -213,7 +213,7 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   Node loopTemperatureSetpointNode();
 
-  void setLoopTemperatureSetpointNode( Node & node );
+  bool setLoopTemperatureSetpointNode( Node & node );
 
   std::vector<ModelObject> children() const override;
 

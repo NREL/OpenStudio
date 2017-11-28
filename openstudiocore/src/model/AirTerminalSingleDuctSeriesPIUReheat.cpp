@@ -483,14 +483,18 @@ namespace detail {
     return result;
   }
 
-  void AirTerminalSingleDuctSeriesPIUReheat_Impl::setFanAvailabilitySchedule(Schedule & schedule) {
+  bool AirTerminalSingleDuctSeriesPIUReheat_Impl::setFanAvailabilitySchedule(Schedule & schedule) {
     auto component = fan();
     if( auto constantFan = component.optionalCast<FanConstantVolume>() ) {
-      constantFan->setAvailabilitySchedule(schedule);
+      return constantFan->setAvailabilitySchedule(schedule);
     } else if(  auto onOffFan = component.optionalCast<FanOnOff>() ) {
-      onOffFan->setAvailabilitySchedule(schedule);
+      return onOffFan->setAvailabilitySchedule(schedule);
     } else if( auto variableFan = component.optionalCast<FanVariableVolume>() ) {
-      variableFan->setAvailabilitySchedule(schedule);
+      return variableFan->setAvailabilitySchedule(schedule);
+    } else {
+      // Should never get here!
+      LOG(Error, "Unknown assigned Fan Type ('" << component.iddObjectType().valueName() << "') for " << briefDescription());
+      return false;
     }
   }
 

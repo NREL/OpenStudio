@@ -686,12 +686,13 @@ Node PlantLoop_Impl::loopTemperatureSetpointNode()
   return node.get();
 }
 
-void PlantLoop_Impl::setLoopTemperatureSetpointNode( Node & node )
+bool PlantLoop_Impl::setLoopTemperatureSetpointNode( Node & node )
 {
   if( node.model() == this->model() )
   {
-    setPointer(OS_PlantLoopFields::LoopTemperatureSetpointNodeName,node.handle());
+    return setPointer(OS_PlantLoopFields::LoopTemperatureSetpointNodeName,node.handle());
   }
+  return false;
 }
 
 std::vector<ModelObject> PlantLoop_Impl::children() const
@@ -1182,9 +1183,9 @@ Node PlantLoop::loopTemperatureSetpointNode()
   return getImpl<detail::PlantLoop_Impl>()->loopTemperatureSetpointNode();
 }
 
-void PlantLoop::setLoopTemperatureSetpointNode( Node & node )
+bool PlantLoop::setLoopTemperatureSetpointNode( Node & node )
 {
-  getImpl<detail::PlantLoop_Impl>()->setLoopTemperatureSetpointNode( node );
+  return getImpl<detail::PlantLoop_Impl>()->setLoopTemperatureSetpointNode( node );
 }
 
 SizingPlant PlantLoop::sizingPlant() const

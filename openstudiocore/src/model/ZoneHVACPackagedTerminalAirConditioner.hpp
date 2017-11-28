@@ -164,11 +164,11 @@ class MODEL_API ZoneHVACPackagedTerminalAirConditioner : public ZoneHVACComponen
 
   void autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
-  void setSupplyAirFan( HVACComponent & fan );
+  bool setSupplyAirFan( HVACComponent & fan );
 
-  void setHeatingCoil( HVACComponent & heatingCoil );
+  bool setHeatingCoil( HVACComponent & heatingCoil );
 
-  void setCoolingCoil( HVACComponent & coolingCoil );
+  bool setCoolingCoil( HVACComponent & coolingCoil );
 
   bool setFanPlacement(std::string fanPlacement);
 

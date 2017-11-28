@@ -437,7 +437,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ZoneHVACPackagedTerminalAirConditioner_Impl::setSupplyAirFan( HVACComponent & fan )
+  bool ZoneHVACPackagedTerminalAirConditioner_Impl::setSupplyAirFan( HVACComponent & fan )
   {
     bool isAllowedType = false;
 
@@ -450,13 +450,16 @@ namespace detail {
       isAllowedType = true;
     }
 
-    if( isAllowedType )
-    {
-      setPointer(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFanName,fan.handle());
+    if( isAllowedType ) {
+      return setPointer(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFanName,fan.handle());
+    } else {
+      LOG(Warn, "Invalid Fan Type (expected FanConstantVolume or FanOnOff, not '" << fan.iddObjectType().valueName()
+             << "') for " << briefDescription());
+      return false;
     }
   }
 
-  void ZoneHVACPackagedTerminalAirConditioner_Impl::setHeatingCoil( HVACComponent & heatingCoil )
+  bool ZoneHVACPackagedTerminalAirConditioner_Impl::setHeatingCoil( HVACComponent & heatingCoil )
   {
     bool isAllowedType = false;
 
@@ -473,13 +476,17 @@ namespace detail {
       isAllowedType = true;
     }
 
-    if( isAllowedType )
-    {
-      setPointer(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::HeatingCoilName,heatingCoil.handle());
+    if( isAllowedType ) {
+      return setPointer(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::HeatingCoilName,heatingCoil.handle());
+    } else {
+      LOG(Warn, "Invalid Heating Coil Type (expected CoilHeatingGas, CoilHeatingElectric, or CoilHeatingWater, not '"
+                << heatingCoil.iddObjectType().valueName() << "')  for " << briefDescription());
+      return false;
     }
+
   }
 
-  void ZoneHVACPackagedTerminalAirConditioner_Impl::setCoolingCoil( HVACComponent & coolingCoil )
+  bool ZoneHVACPackagedTerminalAirConditioner_Impl::setCoolingCoil( HVACComponent & coolingCoil )
   {
     bool isAllowedType = false;
 
@@ -488,9 +495,12 @@ namespace detail {
       isAllowedType = true;
     }
 
-    if( isAllowedType )
-    {
-      setPointer(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilName,coolingCoil.handle());
+    if( isAllowedType ) {
+      return setPointer(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilName,coolingCoil.handle());
+    } else {
+      LOG(Warn, "Invalid Cooling Coil Type (expected CoilCoolingDXSingleSpeed, not '" << coolingCoil.iddObjectType().valueName()
+             << "') for " << briefDescription());
+      return false;
     }
   }
 
@@ -845,9 +855,9 @@ HVACComponent ZoneHVACPackagedTerminalAirConditioner::supplyAirFan() const
   return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->supplyAirFan();
 }
 
-void ZoneHVACPackagedTerminalAirConditioner::setSupplyAirFan( HVACComponent & fan )
+bool ZoneHVACPackagedTerminalAirConditioner::setSupplyAirFan( HVACComponent & fan )
 {
-  getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setSupplyAirFan(fan);
+  return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setSupplyAirFan(fan);
 }
 
 HVACComponent ZoneHVACPackagedTerminalAirConditioner::heatingCoil() const
@@ -855,9 +865,9 @@ HVACComponent ZoneHVACPackagedTerminalAirConditioner::heatingCoil() const
   return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->heatingCoil();
 }
 
-void ZoneHVACPackagedTerminalAirConditioner::setHeatingCoil( HVACComponent & heatingCoil )
+bool ZoneHVACPackagedTerminalAirConditioner::setHeatingCoil( HVACComponent & heatingCoil )
 {
-  getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setHeatingCoil(heatingCoil);
+  return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setHeatingCoil(heatingCoil);
 }
 
 HVACComponent ZoneHVACPackagedTerminalAirConditioner::coolingCoil() const
@@ -865,9 +875,9 @@ HVACComponent ZoneHVACPackagedTerminalAirConditioner::coolingCoil() const
   return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->coolingCoil();
 }
 
-void ZoneHVACPackagedTerminalAirConditioner::setCoolingCoil( HVACComponent & coolingCoil )
+bool ZoneHVACPackagedTerminalAirConditioner::setCoolingCoil( HVACComponent & coolingCoil )
 {
-  getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setCoolingCoil(coolingCoil);
+  return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setCoolingCoil(coolingCoil);
 }
 
 } // model

@@ -44,40 +44,6 @@ namespace detail {
 class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   public:
 
   SizingSystem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
@@ -302,7 +268,7 @@ class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 
   AirLoopHVAC airLoopHVAC() const;
 
-  void setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC);
+  bool setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC);
 
   protected:
 

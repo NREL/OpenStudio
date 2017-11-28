@@ -130,7 +130,7 @@ class MODEL_API Building : public ParentObject {
   bool setStandardsBuildingType(const std::string& standardsBuildingType);
   void resetStandardsBuildingType();
 
-  void setRelocatable(bool isRelocatable);
+  bool setRelocatable(bool isRelocatable);
   void resetRelocatable();
 
 

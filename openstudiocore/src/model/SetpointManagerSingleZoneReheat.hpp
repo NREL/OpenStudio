@@ -81,7 +81,7 @@ class MODEL_API SetpointManagerSingleZoneReheat : public SetpointManager {
 
   boost::optional<ThermalZone> controlZone();
 
-  void setControlZone(ThermalZone & thermalZone);
+  bool setControlZone(ThermalZone & thermalZone);
 
   void resetControlZone();
 

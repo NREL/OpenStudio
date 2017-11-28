@@ -137,7 +137,7 @@ class MODEL_API AirLoopHVACOutdoorAirSystem : public HVACComponent {
   ControllerOutdoorAir getControllerOutdoorAir() const;
 
   /** Sets the ControllerOutdoorAir object associated with the AirLoopHVACOutdoorAirSystem. **/
-  void setControllerOutdoorAir(const ControllerOutdoorAir & controllerOutdoorAir );
+  bool setControllerOutdoorAir(const ControllerOutdoorAir & controllerOutdoorAir );
 
   /** Reimplemented from HVACComponent. **/
   boost::optional<AirLoopHVAC> airLoop() const;

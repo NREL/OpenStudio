@@ -281,7 +281,7 @@ class MODEL_API SizingSystem : public ModelObject
 
   /// @cond
 
-  void setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC);
+  bool setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC);
 
   typedef detail::SizingSystem_Impl ImplType;
 

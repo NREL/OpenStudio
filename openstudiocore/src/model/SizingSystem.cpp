@@ -644,14 +644,16 @@ AirLoopHVAC SizingSystem_Impl::airLoopHVAC() const
   return wo.cast<AirLoopHVAC>();
 }
 
-void SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
+bool SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
 {
   if( model() != airLoopHVAC.model() )
   {
-    return;
+    LOG(Error, "Cannot set an AirLoopHVAC that isn't part of the same model for " << briefDescription());
+    return false;
   }
-
-  OS_ASSERT(this->setPointer(OS_Sizing_SystemFields::AirLoopName, airLoopHVAC.handle()));
+  bool result = this->setPointer(OS_Sizing_SystemFields::AirLoopName, airLoopHVAC.handle());
+  OS_ASSERT(result);
+  return result;
 }
 
 } // detail
@@ -1144,9 +1146,9 @@ AirLoopHVAC SizingSystem::airLoopHVAC() const
   return getImpl<detail::SizingSystem_Impl>()->airLoopHVAC();
 }
 
-void SizingSystem::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
+bool SizingSystem::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
 {
-  getImpl<detail::SizingSystem_Impl>()->setAirLoopHVAC(airLoopHVAC);
+  return getImpl<detail::SizingSystem_Impl>()->setAirLoopHVAC(airLoopHVAC);
 }
 
 /// @cond

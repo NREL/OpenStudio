@@ -355,7 +355,7 @@ namespace detail{
     if( model() != curve.model() )
     {
       LOG(Warn, "Cannot set curve that doesn't belong to the same model as " << briefDescription());
-      return;
+      return false;
     }
 
     bool accepted = false;

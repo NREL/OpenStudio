@@ -180,9 +180,9 @@ namespace detail {
 
     void resetDecemberDeepGroundTemperature();
 
-    void setTemperatureByMonth(int month, double temperature);
+    bool setTemperatureByMonth(int month, double temperature);
 
-    void setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature);
+    bool setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature);
 
     void resetTemperatureByMonth(int month);
 

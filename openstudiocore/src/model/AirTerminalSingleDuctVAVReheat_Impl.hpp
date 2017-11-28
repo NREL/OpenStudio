@@ -38,9 +38,6 @@ namespace detail {
 
   class MODEL_API AirTerminalSingleDuctVAVReheat_Impl : public StraightComponent_Impl {
 
-
-
-
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -93,7 +90,7 @@ namespace detail {
 
     boost::optional<double> maximumAirFlowRate() const ;
 
-    void setMaximumAirFlowRate( double value );
+    bool setMaximumAirFlowRate( double value );
 
     void autosizeMaximumAirFlowRate();
 
@@ -101,15 +98,15 @@ namespace detail {
 
     std::string zoneMinimumAirFlowMethod();
 
-    void setZoneMinimumAirFlowMethod( std::string value );
+    bool setZoneMinimumAirFlowMethod( std::string value );
 
     double constantMinimumAirFlowFraction();
 
-    void setConstantMinimumAirFlowFraction( double value );
+    bool setConstantMinimumAirFlowFraction( double value );
 
     double fixedMinimumAirFlowRate();
 
-    void setFixedMinimumAirFlowRate( double value );
+    bool setFixedMinimumAirFlowRate( double value );
 
     boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
 
@@ -119,7 +116,7 @@ namespace detail {
 
     boost::optional<double> maximumHotWaterOrSteamFlowRate();
 
-    void setMaximumHotWaterOrSteamFlowRate( double value );
+    bool setMaximumHotWaterOrSteamFlowRate( double value );
 
     void autosizeMaximumHotWaterOrSteamFlowRate();
 
@@ -127,11 +124,11 @@ namespace detail {
 
     double minimumHotWaterOrSteamFlowRate();
 
-    void setMinimumHotWaterOrStreamFlowRate( double value );
+    bool setMinimumHotWaterOrStreamFlowRate( double value );
 
     double convergenceTolerance();
 
-    void setConvergenceTolerance( double value );
+    bool setConvergenceTolerance( double value );
 
     std::string damperHeatingAction();
 
@@ -141,7 +138,7 @@ namespace detail {
 
     void resetMaximumFlowPerZoneFloorAreaDuringReheat();
 
-    void setMaximumFlowPerZoneFloorAreaDuringReheat( double value );
+    bool setMaximumFlowPerZoneFloorAreaDuringReheat( double value );
 
     void autosizeMaximumFlowPerZoneFloorAreaDuringReheat();
 
@@ -149,7 +146,7 @@ namespace detail {
 
     boost::optional<double> maximumFlowFractionDuringReheat();
 
-    void setMaximumFlowFractionDuringReheat( double value );
+    bool setMaximumFlowFractionDuringReheat( double value );
 
     void autosizeMaximumFlowFractionDuringReheat();
 
@@ -159,7 +156,7 @@ namespace detail {
 
     double maximumReheatAirTemperature();
 
-    void setMaximumReheatAirTemperature( double value );
+    bool setMaximumReheatAirTemperature( double value );
 
     bool controlForOutdoorAir() const;
 

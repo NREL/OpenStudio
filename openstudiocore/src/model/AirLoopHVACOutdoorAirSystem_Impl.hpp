@@ -93,7 +93,7 @@ namespace detail {
 
     ControllerOutdoorAir getControllerOutdoorAir() const;
 
-    void setControllerOutdoorAir(const ControllerOutdoorAir& controllerOutdoorAir );
+    bool setControllerOutdoorAir(const ControllerOutdoorAir& controllerOutdoorAir );
 
     virtual ModelObject clone(Model model) const override;
 

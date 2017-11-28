@@ -155,11 +155,11 @@ namespace detail{
     return thisModelObject.getModelObjectTarget<ThermalZone>(OS_SetpointManager_SingleZone_ReheatFields::ControlZoneName);
   }
 
-  void SetpointManagerSingleZoneReheat_Impl::setControlZone(ThermalZone & thermalZone)
+  bool SetpointManagerSingleZoneReheat_Impl::setControlZone(ThermalZone & thermalZone)
   {
     SetpointManagerSingleZoneReheat thisModelObject = this->getObject<SetpointManagerSingleZoneReheat>();
 
-    thisModelObject.setPointer(OS_SetpointManager_SingleZone_ReheatFields::ControlZoneName,thermalZone.handle());
+    return thisModelObject.setPointer(OS_SetpointManager_SingleZone_ReheatFields::ControlZoneName,thermalZone.handle());
   }
 
   bool SetpointManagerSingleZoneReheat_Impl::setControlVariable(const std::string& controlVariable) {
@@ -248,9 +248,9 @@ boost::optional<ThermalZone> SetpointManagerSingleZoneReheat::controlZone()
   return getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->controlZone();
 }
 
-void SetpointManagerSingleZoneReheat::setControlZone(ThermalZone & thermalZone)
+bool SetpointManagerSingleZoneReheat::setControlZone(ThermalZone & thermalZone)
 {
-  getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->setControlZone(thermalZone);
+  return getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->setControlZone(thermalZone);
 }
 
 void SetpointManagerSingleZoneReheat::resetControlZone()

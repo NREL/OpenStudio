@@ -166,9 +166,9 @@ namespace detail{
     return this->getDouble(OS_Coil_Heating_GasFields::GasBurnerEfficiency).get();
   }
 
-  void CoilHeatingGas_Impl::setGasBurnerEfficiency(double val)
+  bool CoilHeatingGas_Impl::setGasBurnerEfficiency(double val)
   {
-    this->setDouble(OS_Coil_Heating_GasFields::GasBurnerEfficiency,val);
+    return this->setDouble(OS_Coil_Heating_GasFields::GasBurnerEfficiency,val);
   }
 
   double CoilHeatingGas_Impl::parasiticElectricLoad() const
@@ -176,9 +176,9 @@ namespace detail{
     return this->getDouble(OS_Coil_Heating_GasFields::ParasiticElectricLoad).get();
   }
 
-  void CoilHeatingGas_Impl::setParasiticElectricLoad(double val)
+  bool CoilHeatingGas_Impl::setParasiticElectricLoad(double val)
   {
-    this->setDouble(OS_Coil_Heating_GasFields::ParasiticElectricLoad,val);
+    return this->setDouble(OS_Coil_Heating_GasFields::ParasiticElectricLoad,val);
   }
 
   double CoilHeatingGas_Impl::parasiticGasLoad() const
@@ -186,9 +186,9 @@ namespace detail{
     return this->getDouble(OS_Coil_Heating_GasFields::ParasiticGasLoad).get();
   }
 
-  void CoilHeatingGas_Impl::setParasiticGasLoad(double val)
+  bool CoilHeatingGas_Impl::setParasiticGasLoad(double val)
   {
-    this->setDouble(OS_Coil_Heating_GasFields::ParasiticGasLoad,val);
+    return this->setDouble(OS_Coil_Heating_GasFields::ParasiticGasLoad,val);
   }
 
   boost::optional<HVACComponent> CoilHeatingGas_Impl::containingHVACComponent() const
@@ -539,9 +539,9 @@ double CoilHeatingGas::gasBurnerEfficiency() const
   return getImpl<detail::CoilHeatingGas_Impl>()->gasBurnerEfficiency();
 }
 
-void CoilHeatingGas::setGasBurnerEfficiency(double val)
+bool CoilHeatingGas::setGasBurnerEfficiency(double val)
 {
-  getImpl<detail::CoilHeatingGas_Impl>()->setGasBurnerEfficiency(val);
+  return getImpl<detail::CoilHeatingGas_Impl>()->setGasBurnerEfficiency(val);
 }
 
 double CoilHeatingGas::parasiticElectricLoad() const
@@ -549,9 +549,9 @@ double CoilHeatingGas::parasiticElectricLoad() const
   return getImpl<detail::CoilHeatingGas_Impl>()->parasiticElectricLoad();
 }
 
-void CoilHeatingGas::setParasiticElectricLoad(double val)
+bool CoilHeatingGas::setParasiticElectricLoad(double val)
 {
-  getImpl<detail::CoilHeatingGas_Impl>()->setParasiticElectricLoad(val);
+  return getImpl<detail::CoilHeatingGas_Impl>()->setParasiticElectricLoad(val);
 }
 
 double CoilHeatingGas::parasiticGasLoad() const
@@ -559,9 +559,9 @@ double CoilHeatingGas::parasiticGasLoad() const
   return getImpl<detail::CoilHeatingGas_Impl>()->parasiticGasLoad();
 }
 
-void CoilHeatingGas::setParasiticGasLoad(double val)
+bool CoilHeatingGas::setParasiticGasLoad(double val)
 {
-  getImpl<detail::CoilHeatingGas_Impl>()->setParasiticGasLoad(val);
+  return getImpl<detail::CoilHeatingGas_Impl>()->setParasiticGasLoad(val);
 }
 
 boost::optional<double> CoilHeatingGas::nominalCapacity() const {

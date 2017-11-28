@@ -156,7 +156,7 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
   /** Set the constructionType to type. To be used with standardsinterface, this string should
    *  match an appropriate enumeration value in the standardsinterface::DataDictionary. The
    *  enumeration for which this should be a value generally varies by intendedSurfaceType(). */
-  void setStandardsConstructionType(const std::string& type);
+  bool setStandardsConstructionType(const std::string& type);
   void resetStandardsConstructionType();
 
   /** Set the perturbableLayer to the one at layerIndex. Returns false if construction() is not a

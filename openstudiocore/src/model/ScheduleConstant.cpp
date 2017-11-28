@@ -137,9 +137,10 @@ namespace detail {
     return false;
   }
 
-  void ScheduleConstant_Impl::setValue(double value) {
+  bool ScheduleConstant_Impl::setValue(double value) {
     bool ok = setDouble(OS_Schedule_ConstantFields::Value, value);
     OS_ASSERT(ok);
+    return ok;
   }
 
   bool ScheduleConstant_Impl::setValue(const Quantity& value) {
@@ -184,8 +185,8 @@ double ScheduleConstant::value() const {
   return getImpl<detail::ScheduleConstant_Impl>()->value();
 }
 
-void ScheduleConstant::setValue(double value) {
-  getImpl<detail::ScheduleConstant_Impl>()->setValue(value);
+bool ScheduleConstant::setValue(double value) {
+  return getImpl<detail::ScheduleConstant_Impl>()->setValue(value);
 }
 
 bool ScheduleConstant::setValue(const Quantity& value) {

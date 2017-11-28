@@ -231,14 +231,14 @@ boost::optional<Node> ControllerWaterCoil_Impl::actuatorNode() const
   return this->getObject<ModelObject>().getModelObjectTarget<Node>(OS_Controller_WaterCoilFields::ActuatorNodeName);
 }
 
-void ControllerWaterCoil_Impl::setSensorNode( Node & node )
+bool ControllerWaterCoil_Impl::setSensorNode( Node & node )
 {
-  this->setPointer(OS_Controller_WaterCoilFields::SensorNodeName,node.handle());
+  return this->setPointer(OS_Controller_WaterCoilFields::SensorNodeName,node.handle());
 }
 
-void ControllerWaterCoil_Impl::setActuatorNode( Node & node )
+bool ControllerWaterCoil_Impl::setActuatorNode( Node & node )
 {
-  this->setPointer(OS_Controller_WaterCoilFields::ActuatorNodeName,node.handle());
+  return this->setPointer(OS_Controller_WaterCoilFields::ActuatorNodeName,node.handle());
 }
 
 bool ControllerWaterCoil_Impl::setWaterCoil( const HVACComponent & comp )
@@ -387,14 +387,14 @@ boost::optional<Node> ControllerWaterCoil::actuatorNode() const
   return getImpl<detail::ControllerWaterCoil_Impl>()->actuatorNode();
 }
 
-void ControllerWaterCoil::setSensorNode( Node & node )
+bool ControllerWaterCoil::setSensorNode( Node & node )
 {
-  getImpl<detail::ControllerWaterCoil_Impl>()->setSensorNode( node );
+  return getImpl<detail::ControllerWaterCoil_Impl>()->setSensorNode( node );
 }
 
-void ControllerWaterCoil::setActuatorNode( Node & node )
+bool ControllerWaterCoil::setActuatorNode( Node & node )
 {
-  getImpl<detail::ControllerWaterCoil_Impl>()->setActuatorNode( node );
+  return getImpl<detail::ControllerWaterCoil_Impl>()->setActuatorNode( node );
 }
 
 /// @cond

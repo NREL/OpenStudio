@@ -41,10 +41,6 @@ namespace detail {
 
   class MODEL_API SetpointManagerSingleZoneReheat_Impl : public SetpointManager_Impl {
 
-
-
-
-
    public:
 
     SetpointManagerSingleZoneReheat_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
@@ -83,7 +79,7 @@ namespace detail {
 
     boost::optional<ThermalZone> controlZone();
 
-    void setControlZone(ThermalZone& thermalZone);
+    bool setControlZone(ThermalZone& thermalZone);
 
     void resetControlZone();
 

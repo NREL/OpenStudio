@@ -449,9 +449,10 @@ namespace detail {
     OS_ASSERT(ok);
   }
 
-  void StandardsInformationConstruction_Impl::setStandardsConstructionType(const std::string& type) {
+  bool StandardsInformationConstruction_Impl::setStandardsConstructionType(const std::string& type) {
     bool ok = setString(OS_StandardsInformation_ConstructionFields::StandardsConstructionType,type);
     OS_ASSERT(ok);
+    return ok;
   }
 
   void StandardsInformationConstruction_Impl::resetStandardsConstructionType() {

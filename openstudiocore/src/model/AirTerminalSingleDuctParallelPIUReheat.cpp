@@ -333,7 +333,7 @@ namespace detail {
     return value.get();
   }
 
-  void AirTerminalSingleDuctParallelPIUReheat_Impl::setReheatCoil( HVACComponent & hvacComponent )
+  bool AirTerminalSingleDuctParallelPIUReheat_Impl::setReheatCoil( HVACComponent & hvacComponent )
   {
     bool isTypeCorrect = false;
 
@@ -350,13 +350,16 @@ namespace detail {
       isTypeCorrect = true;
     }
 
-    if( isTypeCorrect )
-    {
-      setPointer(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::ReheatCoilName,hvacComponent.handle());
+    if( isTypeCorrect ) {
+      return setPointer(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::ReheatCoilName,hvacComponent.handle());
+    } else {
+       LOG(Warn, "Invalid Heating Coil Type (expected CoilHeatingGas, CoilHeatingElectric, or CoilHeatingWater, not '"
+                << hvacComponent.iddObjectType().valueName() << "')  for " << briefDescription());
+     return false;
     }
   }
 
-  void AirTerminalSingleDuctParallelPIUReheat_Impl::setFan( HVACComponent & hvacComponent )
+  bool AirTerminalSingleDuctParallelPIUReheat_Impl::setFan( HVACComponent & hvacComponent )
   {
     bool isTypeCorrect = false;
 
@@ -365,9 +368,12 @@ namespace detail {
       isTypeCorrect = true;
     }
 
-    if( isTypeCorrect )
-    {
-      setPointer(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::FanName,hvacComponent.handle());
+    if( isTypeCorrect ) {
+      return setPointer(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::FanName,hvacComponent.handle());
+    } else {
+      LOG(Warn, "Invalid Fan Type (expected FanConstantVolume, not '" << hvacComponent.iddObjectType().valueName()
+             << "') for " << briefDescription());
+      return false;
     }
   }
 
@@ -652,14 +658,18 @@ namespace detail {
     return result;
   }
 
-  void AirTerminalSingleDuctParallelPIUReheat_Impl::setFanAvailabilitySchedule(Schedule & schedule) {
+  bool AirTerminalSingleDuctParallelPIUReheat_Impl::setFanAvailabilitySchedule(Schedule & schedule) {
     auto component = fan();
     if( auto constantFan = component.optionalCast<FanConstantVolume>() ) {
-      constantFan->setAvailabilitySchedule(schedule);
+      return constantFan->setAvailabilitySchedule(schedule);
     } else if(  auto onOffFan = component.optionalCast<FanOnOff>() ) {
-      onOffFan->setAvailabilitySchedule(schedule);
+      return onOffFan->setAvailabilitySchedule(schedule);
     } else if( auto variableFan = component.optionalCast<FanVariableVolume>() ) {
-      variableFan->setAvailabilitySchedule(schedule);
+      return variableFan->setAvailabilitySchedule(schedule);
+    } else {
+      // Should never get here!
+      LOG(Error, "Unknown assigned Fan Type ('" << component.iddObjectType().valueName() << "') for " << briefDescription());
+      return false;
     }
   };
 
@@ -834,14 +844,14 @@ Schedule AirTerminalSingleDuctParallelPIUReheat::availabilitySchedule() const
   return getImpl<detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->availabilitySchedule();
 }
 
-void AirTerminalSingleDuctParallelPIUReheat::setReheatCoil( HVACComponent & hvacComponent )
+bool AirTerminalSingleDuctParallelPIUReheat::setReheatCoil( HVACComponent & hvacComponent )
 {
-  getImpl<detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->setReheatCoil(hvacComponent);
+  return getImpl<detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->setReheatCoil(hvacComponent);
 }
 
-void AirTerminalSingleDuctParallelPIUReheat::setFan( HVACComponent & hvacComponent )
+bool AirTerminalSingleDuctParallelPIUReheat::setFan( HVACComponent & hvacComponent )
 {
-  getImpl<detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->setFan(hvacComponent);
+  return getImpl<detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->setFan(hvacComponent);
 }
 
 bool AirTerminalSingleDuctParallelPIUReheat::setAvailabilitySchedule(Schedule& schedule )

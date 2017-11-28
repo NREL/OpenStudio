@@ -821,9 +821,9 @@ bool AirLoopHVACUnitaryHeatPumpAirToAir::setCoolingCoil( HVACComponent & hvacCom
   return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setCoolingCoil(hvacComponent);
 }
 
-void AirLoopHVACUnitaryHeatPumpAirToAir::setSupplementalHeatingCoil( HVACComponent & hvacComponent )
+bool AirLoopHVACUnitaryHeatPumpAirToAir::setSupplementalHeatingCoil( HVACComponent & hvacComponent )
 {
-  getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setSupplementalHeatingCoil(hvacComponent);
+  return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setSupplementalHeatingCoil(hvacComponent);
 }
 
 boost::optional<Schedule> AirLoopHVACUnitaryHeatPumpAirToAir::supplyAirFanOperatingModeSchedule() const

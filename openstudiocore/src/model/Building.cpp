@@ -1109,8 +1109,8 @@ void Building::resetStandardsBuildingType(){
   getImpl<detail::Building_Impl>()->resetStandardsBuildingType();
 }
 
-void Building::setRelocatable(bool isRelocatable){
-  getImpl<detail::Building_Impl>()->setRelocatable(isRelocatable);
+bool Building::setRelocatable(bool isRelocatable){
+  return getImpl<detail::Building_Impl>()->setRelocatable(isRelocatable);
 }
 
 void Building::resetRelocatable(){

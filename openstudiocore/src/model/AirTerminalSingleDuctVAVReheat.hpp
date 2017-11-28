@@ -74,7 +74,7 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
   boost::optional<double> maximumAirFlowRate() const ;
 
   /** Sets the value of the MaximumAirFlowRate field. */
-  void setMaximumAirFlowRate( double value );
+  bool setMaximumAirFlowRate( double value );
 
   /** Sets the value of the MaximumAirFlowRate field to AutoSize */
   void autosizeMaximumAirFlowRate();
@@ -88,19 +88,19 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
   /** Sets the value of the MaximumAirFlowRate field.
    *  Options are FixedFlowRate and Scheduled.
    */
-  void setZoneMinimumAirFlowMethod( std::string value );
+  bool setZoneMinimumAirFlowMethod( std::string value );
 
   /** Returns the value of the ConstantMinimumAirFlowFraction field. */
   double constantMinimumAirFlowFraction();
 
   /** Sets the value of the ConstantMinimumAirFlowFraction field. */
-  void setConstantMinimumAirFlowFraction( double value );
+  bool setConstantMinimumAirFlowFraction( double value );
 
   /** Returns the value of the FixedMinimumAirFlowRate field. */
   double fixedMinimumAirFlowRate();
 
   /** Sets the value of the FixedMinimumAirFlowRate field. */
-  void setFixedMinimumAirFlowRate( double value );
+  bool setFixedMinimumAirFlowRate( double value );
 
   /** Returns the Schedule referred to by the MinimumAirFlowFractionScheduleName field. */
   boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
@@ -114,7 +114,7 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
   boost::optional<double> maximumHotWaterOrSteamFlowRate();
 
   /** Sets the value of the MaximumHotWaterOrSteamFlowRate field. */
-  void setMaximumHotWaterOrSteamFlowRate( double value );
+  bool setMaximumHotWaterOrSteamFlowRate( double value );
 
   /** Sets the value of the MaximumHotWaterOrSteamFlowRate field to AutoSize */
   void autosizeMaximumHotWaterOrSteamFlowRate();
@@ -126,13 +126,13 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
   double minimumHotWaterOrSteamFlowRate();
 
   /** Sets the value of the MinimumHotWaterOrSteamFlowRate field. */
-  void setMinimumHotWaterOrStreamFlowRate( double value );
+  bool setMinimumHotWaterOrStreamFlowRate( double value );
 
   /** Returns the value of the ConvergenceTolerance field. */
   double convergenceTolerance();
 
   /** Sets the value of the ConvergenceTolerance field. */
-  void setConvergenceTolerance( double value );
+  bool setConvergenceTolerance( double value );
 
   /** Returns the value of the DamperHeatingAction field. */
   std::string damperHeatingAction();
@@ -146,7 +146,7 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
   boost::optional<double> maximumFlowPerZoneFloorAreaDuringReheat();
 
   /** Sets the value of the MaximumFlowPerZoneFloorAreaDuringReheat field. */
-  void setMaximumFlowPerZoneFloorAreaDuringReheat( double value );
+  bool setMaximumFlowPerZoneFloorAreaDuringReheat( double value );
 
   /** Sets the value of the MaximumFlowPerZoneFloorAreaDuringReheat field to AutoSize */
   void autosizeMaximumFlowPerZoneFloorAreaDuringReheat();
@@ -161,7 +161,7 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
   boost::optional<double> maximumFlowFractionDuringReheat();
 
   /** Sets the value of the MaximumFlowFractionDuringReheat field. */
-  void setMaximumFlowFractionDuringReheat( double value );
+  bool setMaximumFlowFractionDuringReheat( double value );
 
   /** Sets the value of the MaximumFlowFractionDuringReheat field to AutoSize */
   void autosizeMaximumFlowFractionDuringReheat();
@@ -176,7 +176,7 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
   double maximumReheatAirTemperature();
 
   /** Sets the value of the MaximumReheatAirTemperature field. */
-  void setMaximumReheatAirTemperature( double value );
+  bool setMaximumReheatAirTemperature( double value );
 
   /** If true, OpenStudio will attach the DesignSpecificationOutdoorAir object associated
     * with the terminal's zone on export to EnergyPlus idf format.

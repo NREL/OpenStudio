@@ -492,7 +492,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ZoneHVACPackagedTerminalHeatPump_Impl::setSupplyAirFan( HVACComponent & hvacComponent )
+  bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplyAirFan( HVACComponent & hvacComponent )
   {
     bool isAllowedType = false;
 
@@ -505,13 +505,16 @@ namespace detail {
       isAllowedType = true;
     }
 
-    if( isAllowedType )
-    {
-      setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanName,hvacComponent.handle());
+    if( isAllowedType ) {
+      return setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanName,hvacComponent.handle());
+    } else {
+      LOG(Warn, "Invalid Fan Type (expected FanConstantVolume or FanOnOff, not '" << hvacComponent.iddObjectType().valueName()
+             << "') for " << briefDescription());
+      return false;
     }
   }
 
-  void ZoneHVACPackagedTerminalHeatPump_Impl::setHeatingCoil( HVACComponent & hvacComponent )
+  bool ZoneHVACPackagedTerminalHeatPump_Impl::setHeatingCoil( HVACComponent & hvacComponent )
   {
     bool isAllowedType = false;
 
@@ -520,9 +523,12 @@ namespace detail {
       isAllowedType = true;
     }
 
-    if( isAllowedType )
-    {
-      setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingCoilName,hvacComponent.handle());
+    if( isAllowedType ) {
+      return setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingCoilName,hvacComponent.handle());
+    } else {
+      LOG(Warn, "Invalid Cooling Coil Type (expected CoilHeatingDXSingleSpeed, not '" << hvacComponent.iddObjectType().valueName()
+             << "') for " << briefDescription());
+      return false;
     }
   }
 
@@ -546,7 +552,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ZoneHVACPackagedTerminalHeatPump_Impl::setCoolingCoil( HVACComponent & hvacComponent )
+  bool ZoneHVACPackagedTerminalHeatPump_Impl::setCoolingCoil( HVACComponent & hvacComponent )
   {
     bool isAllowedType = false;
 
@@ -555,9 +561,12 @@ namespace detail {
       isAllowedType = true;
     }
 
-    if( isAllowedType )
-    {
-      setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingCoilName,hvacComponent.handle());
+    if( isAllowedType ) {
+      return setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingCoilName,hvacComponent.handle());
+    } else {
+      LOG(Warn, "Invalid Cooling Coil Type (expected CoilCoolingDXSingleSpeed, not '" << hvacComponent.iddObjectType().valueName()
+             << "') for " << briefDescription());
+      return false;
     }
   }
 
@@ -1032,14 +1041,14 @@ void ZoneHVACPackagedTerminalHeatPump::resetSupplyAirFanOperatingModeSchedule() 
   getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetSupplyAirFanOperatingModeSchedule();
 }
 
-void ZoneHVACPackagedTerminalHeatPump::setSupplyAirFan( HVACComponent & hvacComponent )
+bool ZoneHVACPackagedTerminalHeatPump::setSupplyAirFan( HVACComponent & hvacComponent )
 {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setSupplyAirFan( hvacComponent );
+  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setSupplyAirFan( hvacComponent );
 }
 
-void ZoneHVACPackagedTerminalHeatPump::setHeatingCoil( HVACComponent & hvacComponent )
+bool ZoneHVACPackagedTerminalHeatPump::setHeatingCoil( HVACComponent & hvacComponent )
 {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setHeatingCoil( hvacComponent );
+  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setHeatingCoil( hvacComponent );
 }
 
 bool ZoneHVACPackagedTerminalHeatPump::setSupplementalHeatingCoil( HVACComponent & hvacComponent )
@@ -1047,9 +1056,9 @@ bool ZoneHVACPackagedTerminalHeatPump::setSupplementalHeatingCoil( HVACComponent
   return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setSupplementalHeatingCoil( hvacComponent );
 }
 
-void ZoneHVACPackagedTerminalHeatPump::setCoolingCoil( HVACComponent & hvacComponent )
+bool ZoneHVACPackagedTerminalHeatPump::setCoolingCoil( HVACComponent & hvacComponent )
 {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setCoolingCoil( hvacComponent );
+  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setCoolingCoil( hvacComponent );
 }
 
 Schedule ZoneHVACPackagedTerminalHeatPump::availabilitySchedule() const

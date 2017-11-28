@@ -151,9 +151,9 @@ namespace detail {
     return this->getTarget(openstudio::OS_AirLoopHVAC_OutdoorAirSystemFields::ControllerName)->cast<ControllerOutdoorAir>();
   }
 
-  void AirLoopHVACOutdoorAirSystem_Impl::setControllerOutdoorAir(const ControllerOutdoorAir & controllerOutdoorAir )
+  bool AirLoopHVACOutdoorAirSystem_Impl::setControllerOutdoorAir(const ControllerOutdoorAir & controllerOutdoorAir )
   {
-    this->setPointer(openstudio::OS_AirLoopHVAC_OutdoorAirSystemFields::ControllerName,controllerOutdoorAir.handle());
+    return this->setPointer(openstudio::OS_AirLoopHVAC_OutdoorAirSystemFields::ControllerName,controllerOutdoorAir.handle());
   }
 
   ModelObject AirLoopHVACOutdoorAirSystem_Impl::clone(Model model) const
@@ -706,9 +706,9 @@ ControllerOutdoorAir AirLoopHVACOutdoorAirSystem::getControllerOutdoorAir() cons
   return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->getControllerOutdoorAir();
 }
 
-void AirLoopHVACOutdoorAirSystem::setControllerOutdoorAir(const ControllerOutdoorAir & controllerOutdoorAir )
+bool AirLoopHVACOutdoorAirSystem::setControllerOutdoorAir(const ControllerOutdoorAir & controllerOutdoorAir )
 {
-  getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->setControllerOutdoorAir(controllerOutdoorAir);
+  return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->setControllerOutdoorAir(controllerOutdoorAir);
 }
 
 ModelObject AirLoopHVACOutdoorAirSystem::clone(Model model) const
