@@ -94,7 +94,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -355,8 +354,43 @@ namespace detail {
   {
     auto newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXTwoStageWithHumidityControlMode>();
 
+    if (model != this->model()) {
+      // If there are CoilPerformanceDXCooling objects, clone them as well
+      if (boost::optional<CoilPerformanceDXCooling> coilPerf1 = normalModeStage1CoilPerformance())
+      {
+        CoilPerformanceDXCooling coilPerf1Clone = coilPerf1->clone(model).cast<CoilPerformanceDXCooling>();
+        newCoil.setNormalModeStage1CoilPerformance(coilPerf1Clone);
+      }
+
+      if (boost::optional<CoilPerformanceDXCooling> coilPerf2 = normalModeStage1Plus2CoilPerformance())
+      {
+        CoilPerformanceDXCooling coilPerf2Clone = coilPerf2->clone(model).cast<CoilPerformanceDXCooling>();
+        newCoil.setNormalModeStage1Plus2CoilPerformance(coilPerf2Clone);
+      }
+
+      if (boost::optional<CoilPerformanceDXCooling> coilPerf3 = dehumidificationMode1Stage1CoilPerformance())
+      {
+        CoilPerformanceDXCooling coilPerf3Clone = coilPerf3->clone(model).cast<CoilPerformanceDXCooling>();
+        newCoil.setDehumidificationMode1Stage1CoilPerformance(coilPerf3Clone);
+      }
+
+      if (boost::optional<CoilPerformanceDXCooling> coilPerf4 = dehumidificationMode1Stage1Plus2CoilPerformance())
+      {
+        CoilPerformanceDXCooling coilPerf4Clone = coilPerf4->clone(model).cast<CoilPerformanceDXCooling>();
+        newCoil.setDehumidificationMode1Stage1Plus2CoilPerformance(coilPerf4Clone);
+      }
+    }
+
     return newCoil;
   }
+
+  std::vector<IddObjectType> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::allowableChildTypes() const
+  {
+    std::vector<IddObjectType> result;
+    result.push_back(IddObjectType::OS_CoilPerformance_DX_Cooling);
+    return result;
+  }
+
 
   std::vector<ModelObject> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::children() const
   {
@@ -376,7 +410,6 @@ namespace detail {
     if( auto mo = dehumidificationMode1Stage1Plus2CoilPerformance() ) {
       result.push_back(mo.get());
     }
-
     return result;
   }
 

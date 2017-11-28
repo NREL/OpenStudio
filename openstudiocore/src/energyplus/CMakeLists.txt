@@ -553,6 +553,7 @@ set(${target_name}_test_src
   Test/Surface_GTest.cpp
   Test/SurfacePropertyConvectionCoefficients.cpp
   Test/TableMultiVariableLookup_GTest.cpp
+  Test/ThermalStorageChilledWaterStratified_GTest.cpp
   Test/ThermalZone_GTest.cpp
   Test/WindowPropertyFrameAndDivider_GTest.cpp
   Test/ZoneHVACLowTemperatureRadiantConstFlow_GTest.cpp

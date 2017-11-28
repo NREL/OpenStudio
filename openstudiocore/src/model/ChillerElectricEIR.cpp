@@ -529,11 +529,24 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-
-
   bool ChillerElectricEIR_Impl::setCondenserType(std::string condenserType)
   {
-    return setString(OS_Chiller_Electric_EIRFields::CondenserType, condenserType);
+    bool ok = false;
+    if( ( istringEqual("AirCooled", condenserType) || istringEqual("EvaporativelyCooled", condenserType) )
+        && (this->secondaryPlantLoop()) )
+    {
+      LOG(Warn, "Cannot set condenserType to AirCooled or EvaporativelyCooled, chiller '"  << this->name() << "' is connected to a secondaryPlantLoop");
+    }
+    else if ( istringEqual("WaterCooled", condenserType) && !(this->secondaryPlantLoop()) )
+    {
+      LOG(Warn, "Cannot set condenserType to 'WaterCooled', chiller '"<< this->name() << "' is not connected to a secondaryPlantLoop");
+    }
+    else
+    {
+      ok = setString(OS_Chiller_Electric_EIRFields::CondenserType, condenserType);
+    }
+
+    return ok;
   }
 
   void ChillerElectricEIR_Impl::resetCondenserType() {
@@ -737,7 +750,24 @@ namespace detail {
 
   bool ChillerElectricEIR_Impl::addToNode(Node & node)
   {
-    return WaterToWaterComponent_Impl::addToNode(node);
+    // Connect the component
+    bool ok = WaterToWaterComponent_Impl::addToNode(node);
+
+    // If there's a secondary plant loop, switch the condenser type to "WaterCooled"
+    if (this->secondaryPlantLoop()) {
+      this->setCondenserType("WaterCooled");
+    }
+    return ok;
+  }
+
+  bool ChillerElectricEIR_Impl::removeFromSecondaryPlantLoop()
+  {
+    // Disconnect the component
+    bool ok = WaterToWaterComponent_Impl::removeFromSecondaryPlantLoop();
+
+    // Switch the condenser type to "AirCooled"
+    this->setCondenserType("AirCooled");
+    return ok;
   }
 
   boost::optional<ModelObject> ChillerElectricEIR_Impl::basinHeaterScheduleAsModelObject() const {
