@@ -40,11 +40,19 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVHeatAndCoolNoReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVHeatAndCoolReheat.cpp
   ForwardTranslator/ForwardTranslateAirWallMaterial.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerAssignmentList.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerScheduled.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerScheduledOn.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerScheduledOff.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerHybridVentilation.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerOptimumStart.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerDifferentialThermostat.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerNightVentilation.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerNightCycle.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerHighTemperatureTurnOn.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerHighTemperatureTurnOff.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerLowTemperatureTurnOn.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerLowTemperatureTurnOff.cpp
   ForwardTranslator/ForwardTranslateBlind.cpp
   ForwardTranslator/ForwardTranslateBoilerHotWater.cpp
   ForwardTranslator/ForwardTranslateBoilerSteam.cpp
@@ -497,6 +505,18 @@ set(${target_name}_test_src
 
   Test/AirLoopHVACUnitarySystem_GTest.cpp
   Test/AirWallMaterial_GTest.cpp
+
+  Test/AirLoopHVAC_GTest.cpp
+  Test/PlantLoop_GTest.cpp
+
+  # Test/AvailabilityManagerAssignmentList_GTest.cpp
+  Test/AvailabilityManagerScheduled_GTest.cpp
+  Test/AvailabilityManagerScheduledOn_GTest.cpp
+  Test/AvailabilityManagerScheduledOff_GTest.cpp
+  Test/AvailabilityManagerHighTemperatureTurnOn_GTest.cpp
+  Test/AvailabilityManagerHighTemperatureTurnOff_GTest.cpp
+  Test/AvailabilityManagerLowTemperatureTurnOn_GTest.cpp
+  Test/AvailabilityManagerLowTemperatureTurnOff_GTest.cpp
   Test/AvailabilityManagerNightCycle_GTest.cpp
   Test/Building_GTest.cpp
   Test/CoilHeatingGas_GTest.cpp

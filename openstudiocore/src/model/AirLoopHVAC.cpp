@@ -70,7 +70,6 @@
 #include "AirTerminalSingleDuctVAVReheat.hpp"
 #include "AirTerminalSingleDuctVAVReheat_Impl.hpp"
 
-// Needed for addBranchForZone hacks
 #include "CoilHeatingWater.hpp"
 #include "CoilHeatingWater_Impl.hpp"
 #include "CoilCoolingWater.hpp"
@@ -79,9 +78,8 @@
 #include "AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp"
 #include "AirTerminalSingleDuctConstantVolumeFourPipeInduction.hpp"
 #include "AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl.hpp"
-//#include "ModelObject.hpp"
-//#include "ModelObject_Impl.hpp"
-
+#include "AvailabilityManagerAssignmentList.hpp"
+#include "AvailabilityManagerAssignmentList_Impl.hpp"
 #include "AvailabilityManager.hpp"
 #include "AvailabilityManager_Impl.hpp"
 #include "AvailabilityManagerNightCycle.hpp"
@@ -231,9 +229,7 @@ namespace detail {
 
     sizingSystem().remove();
 
-    if( auto t_availabilityManager = availabilityManager() ) {
-      t_availabilityManager->remove();
-    }
+    availabilityManagerAssignmentList().remove();
 
     modelObjects = supplyComponents();
     for(it = modelObjects.begin();
@@ -682,11 +678,11 @@ namespace detail {
       airLoopClone.setPointer(OS_AirLoopHVACFields::AvailabilitySchedule,clone.handle());
     }
 
-    if( auto mo = availabilityManager() ) {
-      auto clone = mo->clone(model).cast<AvailabilityManager>();
-      airLoopClone.setAvailabilityManager(clone);
-    } else {
-      airLoopClone.setString(OS_AirLoopHVACFields::AvailabilityManager,"");
+    {
+      // Perhaps call a clone(Loop loop) instead...
+      AvailabilityManagerAssignmentList avmListClone = availabilityManagerAssignmentList().clone(model).cast<AvailabilityManagerAssignmentList>();
+      avmListClone.setName(airLoopClone.name().get() + " AvailabilityManagerAssigmentList");
+      airLoopClone.setPointer(OS_AirLoopHVACFields::AvailabilityManagerListName, avmListClone.handle());
     }
 
     return airLoopClone;
@@ -1070,6 +1066,8 @@ namespace detail {
 
   void AirLoopHVAC_Impl::setAvailabilitySchedule(Schedule & schedule)
   {
+    // TODO: deal with this in regards to the new AvailabilityManagerAssignmentList
+    // Actually, no, this is going to end up in the Fan Schedule
     auto result = setPointer(OS_AirLoopHVACFields::AvailabilitySchedule,schedule.handle());
     OS_ASSERT(result);
 
@@ -1098,24 +1096,30 @@ namespace detail {
       return result;
     };
 
-    if( auto t_availabilityManager = availabilityManager() ) {
-      if( auto nightCycle = t_availabilityManager->optionalCast<AvailabilityManagerNightCycle>() ) {
+    // Loop through the current AVMs, if you find an AVM NightCycle, set its controlType
+    // TODO: @kbenne: Unless the controType is "StayOff" in which case perhaps remove? what do you think?
+    for (auto & t_availabilityManager: availabilityManagers()) {
+      if( auto nightCycle = t_availabilityManager.optionalCast<AvailabilityManagerNightCycle>() ) {
+        /*
+         *if ( openstudio::istringEqual(controlType, "StayOff") ) {
+         *  nightCycle->remove()
+         *  return true
+         *} else {
+         *  return nightCycle->setControlType(controlType);
+         *}
+         */
         return nightCycle->setControlType(controlType);
-      } else {
-        if( auto nightCycle = createNightCycleManager() ) {
-          t_availabilityManager->remove();
-          auto result = setAvailabilityManager(nightCycle.get());
-          OS_ASSERT(result);
-          return true;
-        }
-      }
-    } else {
-      if( auto nightCycle = createNightCycleManager() ) {
-        auto result = setAvailabilityManager(nightCycle.get());
-        OS_ASSERT(result);
-        return true;
+
       }
     }
+
+    // Else, add one
+    if( auto nightCycle = createNightCycleManager() ) {
+      auto result = addAvailabilityManager(nightCycle.get());
+      OS_ASSERT(result);
+      return true;
+    }
+
     return false;
   }
 
@@ -1141,11 +1145,13 @@ namespace detail {
 
   std::string AirLoopHVAC_Impl::nightCycleControlType() const
   {
-    if( auto t_availabilityManager = availabilityManager() ) {
-      if( auto nightCycle = t_availabilityManager->optionalCast<AvailabilityManagerNightCycle>() ) {
+    // Loop through the current AVMs, if you find an AVM NightCycle, get its controlType
+    for (auto & t_availabilityManager: availabilityManagers()) {
+      if( auto nightCycle = t_availabilityManager.optionalCast<AvailabilityManagerNightCycle>() ) {
         return nightCycle->controlType();
       }
     }
+    // Otherwise, return StayOff
     return "StayOff";
   }
 
@@ -1226,25 +1232,71 @@ namespace detail {
     return result;
   }
 
-  boost::optional<AvailabilityManager> AirLoopHVAC_Impl::availabilityManager() const {
-    return getObject<ModelObject>().getModelObjectTarget<AvailabilityManager>(OS_AirLoopHVACFields::AvailabilityManager);
-  }
 
-  bool AirLoopHVAC_Impl::setAvailabilityManager(const AvailabilityManager & availabilityManager) {
-    auto type = availabilityManager.iddObjectType();
-    if( type == IddObjectType::OS_AvailabilityManager_NightCycle ||
-        type == IddObjectType::OS_AvailabilityManager_HybridVentilation ||
-        type == IddObjectType::OS_AvailabilityManager_NightVentilation ||
-        type == IddObjectType::OS_AvailabilityManager_OptimumStart ) {
-      return setPointer(OS_AirLoopHVACFields::AvailabilityManager, availabilityManager.handle());
+
+  AvailabilityManagerAssignmentList AirLoopHVAC_Impl::availabilityManagerAssignmentList() const
+  {
+    boost::optional<AvailabilityManagerAssignmentList> avmList = getObject<ModelObject>().getModelObjectTarget<AvailabilityManagerAssignmentList>(OS_AirLoopHVACFields::AvailabilityManagerListName);
+    if (avmList) {
+      return avmList.get();
+    } else {
+      LOG_AND_THROW(briefDescription() << "doesn't have an AvailabilityManagerAssignementList assigned, which shouldn't happen");
     }
-    return false;
   }
 
-  void AirLoopHVAC_Impl::resetAvailabilityManager() {
-    bool result = setString(OS_AirLoopHVACFields::AvailabilityManager, "");
-    OS_ASSERT(result);
+
+  bool AirLoopHVAC_Impl::addAvailabilityManager(const AvailabilityManager & availabilityManager)
+  {
+
+    // All types should be allowed here except HybridVentilation (special, stand-alone)
+    // Except that OS diverged from E+ (where HybridVentilation is the one referencing the AirLoopHVAC)
+    // In OS, you can add it to the AVM list (forward translation handles it)
+    // TODO: perhaps should prevent the user from assigned twice an AVM:NightCycle? Or more generally twice the same
+    return availabilityManagerAssignmentList().addAvailabilityManager(availabilityManager);
   }
+
+  bool AirLoopHVAC_Impl::addAvailabilityManager(const AvailabilityManager & availabilityManager, unsigned priority)
+  {
+    return availabilityManagerAssignmentList().addAvailabilityManager(availabilityManager, priority);
+  }
+
+  std::vector<AvailabilityManager> AirLoopHVAC_Impl::availabilityManagers() const
+  {
+    // TODO: add the AVM Scheduled and NigthCycle?
+    return availabilityManagerAssignmentList().availabilityManagers();
+  }
+
+  bool AirLoopHVAC_Impl::setAvailabilityManagers(const std::vector<AvailabilityManager> & avms)
+  {
+    // TODO: should this affect the AVM Scheduled and NightCycle?
+    return availabilityManagerAssignmentList().setAvailabilityManagers(avms);
+  }
+
+    void AirLoopHVAC_Impl::resetAvailabilityManagers()
+  {
+    // TODO: should this affect the AVM Scheduled and NightCycle?
+    availabilityManagerAssignmentList().resetAvailabilityManagers();
+  }
+
+
+  bool AirLoopHVAC_Impl::setAvailabilityManagerPriority(const AvailabilityManager & availabilityManager, unsigned priority)
+  {
+    return availabilityManagerAssignmentList().setAvailabilityManagerPriority(availabilityManager, priority);
+  }
+
+  unsigned AirLoopHVAC_Impl::availabilityManagerPriority(const AvailabilityManager & availabilityManager) const
+  {
+    return availabilityManagerAssignmentList().availabilityManagerPriority(availabilityManager);
+  }
+
+  bool AirLoopHVAC_Impl::removeAvailabilityManager(const AvailabilityManager& avm) {
+    return availabilityManagerAssignmentList().removeAvailabilityManager(avm);
+  }
+  bool AirLoopHVAC_Impl::removeAvailabilityManager(unsigned priority) {
+    return availabilityManagerAssignmentList().removeAvailabilityManager(priority);
+  }
+
+
 
   unsigned AirLoopHVAC_Impl::supplyOutletPortA() const {
     return OS_AirLoopHVACFields::SupplySideOutletNodeA;
@@ -1739,6 +1791,10 @@ AirLoopHVAC::AirLoopHVAC(Model& model, bool dualDuct)
     setAvailabilitySchedule(schedule);
   }
 
+  // AvailabilityManagerAssignmentList
+  AvailabilityManagerAssignmentList avmList(*this);
+  setPointer(OS_AirLoopHVACFields::AvailabilityManagerListName, avmList.handle());
+
   if( dualDuct ) {
     ConnectorSplitter splitter(model);
     splitter.addToNode(supplyOutletNode);
@@ -1968,21 +2024,6 @@ boost::optional<HVACComponent> AirLoopHVAC::reliefFan() const
   return getImpl<detail::AirLoopHVAC_Impl>()->reliefFan();
 }
 
-boost::optional<AvailabilityManager> AirLoopHVAC::availabilityManager() const
-{
-  return getImpl<detail::AirLoopHVAC_Impl>()->availabilityManager();
-}
-
-bool AirLoopHVAC::setAvailabilityManager(const AvailabilityManager& availabilityManager)
-{
-  return getImpl<detail::AirLoopHVAC_Impl>()->setAvailabilityManager(availabilityManager);
-}
-
-void AirLoopHVAC::resetAvailabilityManager()
-{
-  return getImpl<detail::AirLoopHVAC_Impl>()->resetAvailabilityManager();
-}
-
 bool AirLoopHVAC::removeSupplySplitter()
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->removeSupplySplitter();
@@ -1996,6 +2037,80 @@ bool AirLoopHVAC::removeSupplySplitter(HVACComponent & hvacComponent)
 bool AirLoopHVAC::isDualDuct() const {
   return getImpl<detail::AirLoopHVAC_Impl>()->isDualDuct();
 }
+
+
+/* Prefered way to interact with the Availability Managers */
+std::vector<AvailabilityManager> AirLoopHVAC::availabilityManagers() const
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->availabilityManagers();
+}
+
+bool AirLoopHVAC::setAvailabilityManagers(const std::vector<AvailabilityManager> & avms)
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->setAvailabilityManagers(avms);
+}
+
+void AirLoopHVAC::resetAvailabilityManagers()
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->resetAvailabilityManagers();
+}
+
+bool AirLoopHVAC::addAvailabilityManager(const AvailabilityManager & availabilityManager)
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->addAvailabilityManager(availabilityManager);
+}
+// End prefered way
+
+
+bool AirLoopHVAC::addAvailabilityManager(const AvailabilityManager & availabilityManager, unsigned priority)
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->addAvailabilityManager(availabilityManager, priority);
+}
+
+
+unsigned AirLoopHVAC::availabilityManagerPriority(const AvailabilityManager & availabilityManager) const
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->availabilityManagerPriority(availabilityManager);
+}
+
+bool AirLoopHVAC::setAvailabilityManagerPriority(const AvailabilityManager & availabilityManager, unsigned priority)
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->setAvailabilityManagerPriority(availabilityManager, priority);
+}
+
+bool AirLoopHVAC::removeAvailabilityManager(const AvailabilityManager & availabilityManager)
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->removeAvailabilityManager(availabilityManager);
+}
+
+bool AirLoopHVAC::removeAvailabilityManager(unsigned priority)
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->removeAvailabilityManager(priority);
+}
+
+// TODO: START DEPRECATED SECTION
+
+  boost::optional<AvailabilityManager> AirLoopHVAC::availabilityManager() const {
+    boost::optional<AvailabilityManager> avm;
+    std::vector<AvailabilityManager> avmVector = availabilityManagers();
+    if (avmVector.size() > 0) {
+      avm = avmVector[0];
+    }
+    return avm;
+  }
+
+  bool AirLoopHVAC::setAvailabilityManager(const AvailabilityManager& availabilityManager) {
+    std::vector<AvailabilityManager> avmVector;
+    avmVector.push_back(availabilityManager);
+    return setAvailabilityManagers(avmVector);
+  }
+  void AirLoopHVAC::resetAvailabilityManager() {
+    resetAvailabilityManagers();
+  }
+
+
+// END DEPRECATED
+
 
 } // model
 

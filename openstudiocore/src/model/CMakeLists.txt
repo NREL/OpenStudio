@@ -41,7 +41,7 @@ set(${target_name}_src
   ThreeJSReverseTranslator.cpp
   ModelMerger.hpp
   ModelMerger.cpp
-  
+
   ConcreteModelObjects.hpp
   AirConditionerVariableRefrigerantFlow.hpp
   AirConditionerVariableRefrigerantFlow_Impl.hpp
@@ -124,6 +124,9 @@ set(${target_name}_src
   AvailabilityManager.hpp
   AvailabilityManager_Impl.hpp
   AvailabilityManager.cpp
+  AvailabilityManagerAssignmentList.hpp
+  AvailabilityManagerAssignmentList_Impl.hpp
+  AvailabilityManagerAssignmentList.cpp
   AvailabilityManagerOptimumStart.hpp
   AvailabilityManagerOptimumStart_Impl.hpp
   AvailabilityManagerOptimumStart.cpp
@@ -139,6 +142,28 @@ set(${target_name}_src
   AvailabilityManagerNightCycle.hpp
   AvailabilityManagerNightCycle_Impl.hpp
   AvailabilityManagerNightCycle.cpp
+  AvailabilityManagerHighTemperatureTurnOn.hpp
+  AvailabilityManagerHighTemperatureTurnOn_Impl.hpp
+  AvailabilityManagerHighTemperatureTurnOn.cpp
+  AvailabilityManagerHighTemperatureTurnOff.hpp
+  AvailabilityManagerHighTemperatureTurnOff_Impl.hpp
+  AvailabilityManagerHighTemperatureTurnOff.cpp
+  AvailabilityManagerLowTemperatureTurnOn.hpp
+  AvailabilityManagerLowTemperatureTurnOn_Impl.hpp
+  AvailabilityManagerLowTemperatureTurnOn.cpp
+  AvailabilityManagerLowTemperatureTurnOff.hpp
+  AvailabilityManagerLowTemperatureTurnOff_Impl.hpp
+  AvailabilityManagerLowTemperatureTurnOff.cpp
+  AvailabilityManagerScheduled.hpp
+  AvailabilityManagerScheduled_Impl.hpp
+  AvailabilityManagerScheduled.cpp
+  AvailabilityManagerScheduledOn.hpp
+  AvailabilityManagerScheduledOn_Impl.hpp
+  AvailabilityManagerScheduledOn.cpp
+  AvailabilityManagerScheduledOff.hpp
+  AvailabilityManagerScheduledOff_Impl.hpp
+  AvailabilityManagerScheduledOff.cpp
+
   Blind.hpp
   Blind_Impl.hpp
   Blind.cpp
@@ -1461,11 +1486,20 @@ set(${target_name}_test_src
   test/AirTerminalSingleDuctVAVHeatAndCoolReheat_GTest.cpp
   test/AirTerminalSingleDuctVAVHeatAndCoolNoReheat_GTest.cpp
   test/Alpha1_GTest.cpp
+  test/AvailabilityManagerAssignmentList_GTest.cpp
   test/AvailabilityManagerNightCycle_GTest.cpp
   test/AvailabilityManagerHybridVentilation_GTest.cpp
   test/AvailabilityManagerOptimumStart_GTest.cpp
   test/AvailabilityManagerDifferentialThermostat_GTest.cpp
   test/AvailabilityManagerNightVentilation_GTest.cpp
+  test/AvailabilityManagerHighTemperatureTurnOn_GTest.cpp
+  test/AvailabilityManagerHighTemperatureTurnOff_GTest.cpp
+  test/AvailabilityManagerLowTemperatureTurnOn_GTest.cpp
+  test/AvailabilityManagerLowTemperatureTurnOff_GTest.cpp
+  test/AvailabilityManagerScheduled_GTest.cpp
+  test/AvailabilityManagerScheduledOn_GTest.cpp
+  test/AvailabilityManagerScheduledOff_GTest.cpp
+
   test/Blind_GTest.cpp
   test/BoilerHotWater_GTest.cpp
   test/BoilerSteam_GTest.cpp
