@@ -65,6 +65,7 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
 #include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -545,12 +546,22 @@ void LocationView::clearSiteInfo()
   m_timeZoneLbl->setText(TIME_ZONE);
 }
 
+openstudio::path resourcesPath() {
+  if (applicationIsRunningFromBuildDirectory()) {
+    return getApplicationSourceDirectory() / openstudio::toPath("src/openstudio_app/Resources");
+  } else {
+    return getApplicationDirectory() / openstudio::toPath("../Resources");
+  }
+}
+
 // ***** SLOTS *****
 void LocationView::onWeatherFileBtnClicked()
 {
   QString fileTypes("Files (*.epw)");
+  
+  QString lastPath = QString::fromStdString(resourcesPath().string()+"/weather");
+  //QString lastPath = m_lastEpwPathOpened;
 
-  QString lastPath = m_lastEpwPathOpened;
   if (lastPath.isEmpty() && m_lastDdyPathOpened.isEmpty()){
     //openstudio::runmanager::ConfigOptions co(true);
     //lastPath = toQString(co.getDefaultEPWLocation().native());
