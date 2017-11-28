@@ -47,10 +47,11 @@ using openstudio::IddObjectType;
 using openstudio::StrictnessLevel;
 using openstudio::DataError;
 
-TEST_F(IdfFixture,ValidityReport_WithCustomIdd) 
+TEST_F(IdfFixture,ValidityReport_WithCustomIdd)
 {
-  Workspace workspace;
+  Workspace workspace(StrictnessLevel::Draft, IddFileType::OpenStudio);
   EXPECT_EQ(IddFileType::OpenStudio, workspace.iddFileType().value());
+
   EXPECT_TRUE(workspace.isValid(StrictnessLevel::Draft));
   workspace.addObject(IdfObject(IddObjectType::OS_Building));
   EXPECT_TRUE(workspace.isValid(StrictnessLevel::Draft));
