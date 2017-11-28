@@ -246,7 +246,7 @@ namespace detail {
 
     // void requestProperties(const QStringList& names);
 
-    // void setProperties(const QVariantMap& properties);
+    // bool setProperties(const QVariantMap& properties);
 
    protected:
 
