@@ -62,7 +62,7 @@ namespace detail {
   AirLoopHVACUnitarySystem_Impl::AirLoopHVACUnitarySystem_Impl(const IdfObject& idfObject,
                                                                Model_Impl* model,
                                                                bool keepHandle)
-    : WaterToAirComponent_Impl(idfObject,model,keepHandle)
+    : ZoneHVACComponent_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == AirLoopHVACUnitarySystem::iddObjectType());
   }
@@ -70,7 +70,7 @@ namespace detail {
   AirLoopHVACUnitarySystem_Impl::AirLoopHVACUnitarySystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                Model_Impl* model,
                                                                bool keepHandle)
-    : WaterToAirComponent_Impl(other,model,keepHandle)
+    : ZoneHVACComponent_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == AirLoopHVACUnitarySystem::iddObjectType());
   }
@@ -78,7 +78,7 @@ namespace detail {
   AirLoopHVACUnitarySystem_Impl::AirLoopHVACUnitarySystem_Impl(const AirLoopHVACUnitarySystem_Impl& other,
                                                                Model_Impl* model,
                                                                bool keepHandle)
-    : WaterToAirComponent_Impl(other,model,keepHandle)
+    : ZoneHVACComponent_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& AirLoopHVACUnitarySystem_Impl::outputVariableNames() const
@@ -197,7 +197,7 @@ namespace detail {
       result.insert(result.end(), removed.begin(), removed.end());
     }
 
-    std::vector<IdfObject> removedUnitarySystem = WaterToAirComponent_Impl::remove();
+    std::vector<IdfObject> removedUnitarySystem = ZoneHVACComponent_Impl::remove();
     result.insert(result.end(), removedUnitarySystem.begin(), removedUnitarySystem.end());
 
     return result;
@@ -205,31 +205,70 @@ namespace detail {
 
   bool AirLoopHVACUnitarySystem_Impl::addToNode(Node & node)
   {
-    // remove once heat recovery is re-enabled in future
-    if( node.plantLoop() ) {
-      return false;
+    bool result = ZoneHVACComponent_Impl::addToNode(node);
+
+    if( ! result ) {
+      auto _model = node.model();
+      auto thisModelObject = getObject<ModelObject>();
+      auto t_airLoop = node.airLoopHVAC();
+      auto t_oaSystem = node.airLoopHVACOutdoorAirSystem();
+
+      boost::optional<unsigned> componentInletPort;
+      boost::optional<unsigned> componentOutletPort;
+
+      boost::optional<HVACComponent> systemStartComponent;
+      boost::optional<HVACComponent> systemEndComponent;
+
+      if( node.getImpl<Node_Impl>()->isConnected(thisModelObject) ) return false;
+
+      if( t_airLoop && ! t_oaSystem )
+      {
+        if( t_airLoop->demandComponent( node.handle() ) ) return false;
+
+        systemStartComponent = t_airLoop->supplyInletNode();
+        auto nodes = t_airLoop->supplyOutletNodes();
+        OS_ASSERT( ! nodes.empty() );
+        if( (nodes.size() == 2u) && (! t_airLoop->supplyComponents(node,nodes[1]).empty()) ) {
+          systemEndComponent = nodes[1];
+        } else {
+          systemEndComponent = nodes[0];
+        }
+        OS_ASSERT(systemEndComponent);
+        componentInletPort = inletPort();
+        componentOutletPort = outletPort();
+
+        removeFromAirLoopHVAC();
+      } else if( t_oaSystem ) {
+        if( t_oaSystem->oaComponent(node.handle()) ) {
+          systemStartComponent = t_oaSystem->outboardOANode();
+          systemEndComponent = t_oaSystem.get();
+          componentInletPort = inletPort();
+          componentOutletPort = outletPort();
+        } else if( t_oaSystem->reliefComponent(node.handle()) ) {
+          systemStartComponent = t_oaSystem.get();
+          systemEndComponent = t_oaSystem->outboardReliefNode();
+          componentInletPort = inletPort();
+          componentOutletPort = outletPort();
+        }
+        removeFromAirLoopHVAC();
+      }
+
+      if( systemStartComponent && systemEndComponent && componentOutletPort && componentInletPort ) {
+        result = HVACComponent_Impl::addToNode(node,systemStartComponent.get(),systemEndComponent.get(),componentInletPort.get(),componentOutletPort.get());
+      }
     }
-    return WaterToAirComponent_Impl::addToNode(node);
+
+    return result;
   }
 
-  unsigned AirLoopHVACUnitarySystem_Impl::airInletPort()
+  unsigned AirLoopHVACUnitarySystem_Impl::inletPort() const
   {
     return OS_AirLoopHVAC_UnitarySystemFields::AirInletNodeName;
   }
 
-  unsigned AirLoopHVACUnitarySystem_Impl::airOutletPort()
+  unsigned AirLoopHVACUnitarySystem_Impl::outletPort() const
   {
     return OS_AirLoopHVAC_UnitarySystemFields::AirOutletNodeName;
-  }
-
-  unsigned AirLoopHVACUnitarySystem_Impl::waterInletPort()
-  {
-    return OS_AirLoopHVAC_UnitarySystemFields::HeatRecoveryWaterInletNodeName;
-  }
-
-  unsigned AirLoopHVACUnitarySystem_Impl::waterOutletPort()
-  {
-    return OS_AirLoopHVAC_UnitarySystemFields::HeatRecoveryWaterOutletNodeName;
   }
 
   std::string AirLoopHVACUnitarySystem_Impl::controlType() const {
@@ -1174,7 +1213,7 @@ namespace detail {
 } // detail
 
 AirLoopHVACUnitarySystem::AirLoopHVACUnitarySystem(const Model& model)
-  : WaterToAirComponent(AirLoopHVACUnitarySystem::iddObjectType(),model)
+  : ZoneHVACComponent(AirLoopHVACUnitarySystem::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirLoopHVACUnitarySystem_Impl>());
 
@@ -1865,7 +1904,7 @@ void AirLoopHVACUnitarySystem::resetDesignSpecificationMultispeedObject() {
 
 /// @cond
 AirLoopHVACUnitarySystem::AirLoopHVACUnitarySystem(std::shared_ptr<detail::AirLoopHVACUnitarySystem_Impl> impl)
-  : WaterToAirComponent(std::move(impl))
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 
