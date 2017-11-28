@@ -20,7 +20,7 @@
 #ifndef MODEL_AIRTERMINALDUALDUCTVAVOUTDOORAIR_HPP
 #define MODEL_AIRTERMINALDUALDUCTVAVOUTDOORAIR_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "Mixer.hpp"
 
 namespace openstudio {
@@ -58,15 +58,11 @@ class MODEL_API AirTerminalDualDuctVAVOutdoorAir : public Mixer {
   /** @name Getters */
   //@{
 
-  boost::optional<Schedule> availabilitySchedule() const;
+  Schedule availabilitySchedule() const;
 
   boost::optional<double> maximumTerminalAirFlowRate() const;
 
   bool isMaximumTerminalAirFlowRateAutosized() const;
-
-  /*// TODO: Check return type. From object lists, some candidates are: DesignSpecificationOutdoorAir.
-  DesignSpecificationOutdoorAir designSpecificationOutdoorAirObject() const;
-  */
 
   std::string perPersonVentilationRateMode() const;
 
@@ -74,22 +70,31 @@ class MODEL_API AirTerminalDualDuctVAVOutdoorAir : public Mixer {
   /** @name Setters */
   //@{
 
-  // Note Schedules are passed by reference, not const reference.
   bool setAvailabilitySchedule(Schedule& schedule);
-
-  void resetAvailabilitySchedule();
 
   bool setMaximumTerminalAirFlowRate(double maximumTerminalAirFlowRate);
 
   void autosizeMaximumTerminalAirFlowRate();
 
-  bool setDesignSpecificationOutdoorAirObject(const DesignSpecificationOutdoorAir& designSpecificationOutdoorAir);
+  /** If true, OpenStudio will attach the DesignSpecificationOutdoorAir object associated
+    * with the terminal's zone on export to EnergyPlus idf format.
+    * This field replaces the functionality of the EnergyPlus field: Design Specification Outdoor Air Object Name.*/
+  bool controlForOutdoorAir() const;
+  bool setControlForOutdoorAir(bool controlForOutdoorAir);
 
   bool setPerPersonVentilationRateMode(const std::string& perPersonVentilationRateMode);
 
-  boost::optional<Node> OutdoorAirInletNode() const;
+  /** This corresponds to Mixer::inletModelObject(0), as well as the system's branch 0
+    * (ie. AirLoopHVAC::demandInletNodes()[0] and AirLoopHVAC::supplyOutletNodes()[0])
+    * In OpenStudio we avoid using hot / cold nomenclature in the dual duct system api,
+    * but here in the terminal interface we use the language for transparency with the idf.
+    */
+  boost::optional<Node> outdoorAirInletNode() const;
 
-  boost::optional<Node> RecirculatedAirInletNode() const;
+  /** This corresponds to Mixer::inletModelObject(1), as well as the system's branch 1
+    * (ie. AirLoopHVAC::demandInletNodes()[1] and AirLoopHVAC::supplyOutletNodes()[1])
+    */
+  boost::optional<Node> recirculatedAirInletNode() const;
 
 
   //@}

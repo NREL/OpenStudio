@@ -20,7 +20,7 @@
 #ifndef MODEL_AIRTERMINALDUALDUCTVAVOUTDOORAIR_IMPL_HPP
 #define MODEL_AIRTERMINALDUALDUCTVAVOUTDOORAIR_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "Mixer_Impl.hpp"
 
 namespace openstudio {
@@ -56,23 +56,26 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
 
     //@}
     /** @name Getters */
     //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
     boost::optional<double> maximumTerminalAirFlowRate() const;
 
     bool isMaximumTerminalAirFlowRateAutosized() const;
 
     std::string perPersonVentilationRateMode() const;
+
+    bool controlForOutdoorAir() const;
 
     //@}
     /** @name Setters */
@@ -81,13 +84,11 @@ namespace detail {
   // Note Schedules are passed by reference, not const reference.
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
-
     bool setMaximumTerminalAirFlowRate(double maximumTerminalAirFlowRate);
 
     void autosizeMaximumTerminalAirFlowRate();
 
-    bool setDesignSpecificationOutdoorAirObject(const DesignSpecificationOutdoorAir& designSpecificationOutdoorAir);
+    bool setControlForOutdoorAir(bool controlForOutdoorAir);
 
     bool setPerPersonVentilationRateMode(const std::string& perPersonVentilationRateMode);
 
@@ -95,29 +96,28 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned outletPort() const;
+    virtual unsigned outletPort() const override;
 
-    unsigned inletPort(unsigned branchIndex) const;
+    virtual unsigned inletPort(unsigned branchIndex) const override;
 
-    unsigned nextInletPort() const;
+    virtual unsigned nextInletPort() const override;
 
-    unsigned newInletPortAfterBranch(unsigned branchIndex);
+    unsigned newInletPortAfterBranch(unsigned branchIndex) override;
 
-    void removePortForBranch(unsigned branchIndex);
-
-    boost::optional<Node> OutdoorAirInletNode() const;
-
-    boost::optional<Node> RecirculatedAirInletNode() const;
-
-    boost::optional<DesignSpecificationOutdoorAir> optionalDesignSpecificationOutdoorAirObject() const;
-
-    std::vector<IdfObject> remove() override;
+    void removePortForBranch(unsigned branchIndex) override;
 
     bool addToNode(Node & node) override;
+
+    std::vector<IdfObject> remove() override;
 
     virtual ModelObject clone(Model model) const override;
 
     bool isRemovable() const override;
+
+
+    boost::optional<Node> outdoorAirInletNode() const;
+
+    boost::optional<Node> recirculatedAirInletNode() const;
 
     //@}
    protected:
