@@ -52,8 +52,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalDualDuctConsta
   m_idfObjects.push_back(_airDistributionUnit);
   m_idfObjects.push_back(idfObject);
 
-  if( auto schedule = modelObject.availabilitySchedule() ) {
-    if( auto idf = translateAndMapModelObject(schedule.get()) ) {
+  {
+    auto schedule = modelObject.availabilitySchedule();
+    if( auto idf = translateAndMapModelObject(schedule) ) {
       idfObject.setString(AirTerminal_DualDuct_ConstantVolumeFields::AvailabilityScheduleName,idf->name().get());
     }
   }
