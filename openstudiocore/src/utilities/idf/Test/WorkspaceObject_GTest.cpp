@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
-*  All rights reserved.
-*  
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*  
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*  
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include <gtest/gtest.h>
 #include "IdfFixture.hpp"
@@ -278,7 +287,7 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
   OptionalWorkspaceObject tObject = scratch.getObject(w1->handle ());
   ASSERT_TRUE(tObject);
   WorkspaceObject object = *tObject;
-  EXPECT_EQ(static_cast<unsigned>(8),object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(14),object.numFields());
 
   // create schedule object to point to from non-extensible field
   text.str("");
@@ -337,15 +346,15 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
 
   // hidden pushing for setting nonextensible double
   EXPECT_FALSE(object.setDouble(9,1.5));
-  EXPECT_EQ(8u,object.numFields());
+  EXPECT_EQ(14u,object.numFields());
   EXPECT_TRUE(object.setDouble(9,0.6));
-  EXPECT_EQ(10u,object.numFields());
+  EXPECT_EQ(14u,object.numFields());
 
   // hidden pushing for setting nonextensible string
   EXPECT_FALSE(object.setString(12,"bad key"));
-  EXPECT_EQ(10u,object.numFields());
+  EXPECT_EQ(14u,object.numFields());
   EXPECT_TRUE(object.setString(12,"MeanAirTemperature"));
-  EXPECT_EQ(13u,object.numFields());
+  EXPECT_EQ(14u,object.numFields());
 
   // hidden pushing for setting nonextensible pointer
   EXPECT_TRUE(object.setString(14,""));
@@ -414,7 +423,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects)
   EXPECT_EQ(1u, ws1.objects().size());
   OptionalString h1String = w1->getString(0);
   ASSERT_TRUE(h1String);
-  Handle h1(toQString(*h1String));
+  Handle h1(toUUID(*h1String));
   EXPECT_FALSE(h1.isNull());
   EXPECT_EQ(h1, w1->handle());
 
@@ -424,7 +433,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects)
   WorkspaceObject w2 = ws2.objects()[0];
   OptionalString h2String = w2.getString(0);
   ASSERT_TRUE(h2String);
-  Handle h2(toQString(*h2String));
+  Handle h2(toUUID(*h2String));
   EXPECT_FALSE(h2.isNull());
   EXPECT_EQ(h2, w2.handle());
 }
@@ -438,7 +447,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
   EXPECT_EQ(1u, ws1.objects().size());
   OptionalString h1String = w1->getString(0);
   ASSERT_TRUE(h1String);
-  Handle h1(toQString(*h1String));
+  Handle h1(toUUID(*h1String));
   EXPECT_FALSE(h1.isNull());
   EXPECT_EQ(h1, w1->handle());
 
@@ -447,7 +456,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
   IdfObject i1 = idf1.objects()[0];
   OptionalString i1hString = i1.getString(0);
   ASSERT_TRUE(i1hString);
-  Handle ih(toQString(*i1hString));
+  Handle ih(toUUID(*i1hString));
   EXPECT_FALSE(ih.isNull());
   EXPECT_EQ(ih,i1.handle());
 
@@ -457,7 +466,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
   WorkspaceObject w2 = ws2.objects()[0];
   OptionalString h2String = w2.getString(0);
   ASSERT_TRUE(h2String);
-  Handle h2(toQString(*h2String));
+  Handle h2(toUUID(*h2String));
   EXPECT_FALSE(h2.isNull());
   EXPECT_EQ(h2, w2.handle());
 }
@@ -479,4 +488,57 @@ TEST_F(IdfFixture, WorkspaceObject_Filter_Sources)
   EXPECT_EQ(1, sourcesVector.size());
   sourcesVector = node->getSources(IddObjectType::OS_SetpointManager_MixedAir);
   EXPECT_EQ(1, sourcesVector.size());
+}
+
+
+TEST_F(IdfFixture, WorkspaceObject_SetDouble_NaN_and_Inf) {
+
+  // try with an WorkspaceObject
+  // WorkspaceObject does prevent Infinity and NaN
+  Workspace ws;
+  WorkspaceObject object = ws.addObject(IdfObject(IddObjectType::OS_People_Definition)).get();
+
+  // Set Number of People
+  // Check for nan
+  EXPECT_FALSE(object.setDouble(3, std::numeric_limits<double>::quiet_NaN()));
+
+  // Infinity
+  EXPECT_FALSE(object.setDouble(3, std::numeric_limits<double>::infinity()));
+  EXPECT_FALSE(object.setDouble(3, -std::numeric_limits<double>::infinity()));
+
+  // try with an IdfExtensibleGroup (Hour, Minute, Value)
+  WorkspaceObject object2 = ws.addObject(IdfObject(IddObjectType::OS_Schedule_Day)).get();
+  IdfExtensibleGroup eg = object2.pushExtensibleGroup();
+  // set the value field
+  // Check for nan
+  EXPECT_FALSE(eg.setDouble(2, std::numeric_limits<double>::quiet_NaN()));
+
+  // Infinity
+  EXPECT_FALSE(eg.setDouble(2, std::numeric_limits<double>::infinity()));
+  EXPECT_FALSE(eg.setDouble(2, -std::numeric_limits<double>::infinity()));
+
+  // new extensible group
+  std::vector<std::string> group;
+  group.push_back("1");
+  group.push_back("2");
+  group.push_back(toString(std::numeric_limits<double>::quiet_NaN()));
+  EXPECT_EQ(1u, object2.numExtensibleGroups());
+  EXPECT_TRUE(object2.pushExtensibleGroup(group).empty());
+  EXPECT_EQ(1u, object2.numExtensibleGroups());
+
+  group.clear();
+  group.push_back("1");
+  group.push_back("2");
+  group.push_back(toString(std::numeric_limits<double>::infinity()));
+  EXPECT_EQ(1u, object2.numExtensibleGroups());
+  EXPECT_TRUE(object2.pushExtensibleGroup(group).empty());
+  EXPECT_EQ(1u, object2.numExtensibleGroups());
+
+  group.clear();
+  group.push_back("1");
+  group.push_back("2");
+  group.push_back(toString(3.0));
+  EXPECT_EQ(1u, object2.numExtensibleGroups());
+  EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
+  EXPECT_EQ(2u, object2.numExtensibleGroups());
 }

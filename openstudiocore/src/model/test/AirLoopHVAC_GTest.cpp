@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
@@ -154,7 +163,7 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal =
                                                          AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
   EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
 
@@ -173,7 +182,7 @@ TEST_F(ModelFixture,AirLoopHVAC_demandComponents)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal =
                                                          AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
 
   ASSERT_EQ( unsigned(5),airLoopHVAC.demandComponents().size() );
@@ -186,7 +195,7 @@ TEST_F(ModelFixture,AirLoopHVAC_demandComponents)
 
   ASSERT_EQ( unsigned(12),airLoopHVAC.demandComponents().size() );
 
-  ASSERT_EQ( thermalZone,airLoopHVAC.demandComponents( airLoopHVAC.zoneSplitter().outletModelObject(0)->cast<HVACComponent>(), 
+  ASSERT_EQ( thermalZone,airLoopHVAC.demandComponents( airLoopHVAC.zoneSplitter().outletModelObject(0)->cast<HVACComponent>(),
                                                        airLoopHVAC.zoneMixer().inletModelObject(0)->cast<HVACComponent>(),
                                                        thermalZone.iddObjectType() ).front() );
 }
@@ -258,7 +267,7 @@ TEST_F(ModelFixture,ThermalZone_remove)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal =
                                                          AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
 
   ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
@@ -279,7 +288,7 @@ TEST_F(ModelFixture,AirLoopHVAC_remove)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal =
                                                          AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
 
   ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
@@ -344,7 +353,7 @@ TEST_F(ModelFixture,AirLoopHVAC_supplyComponents)
 
   ASSERT_EQ(fan,oaSystem.returnAirModelObject()->cast<Node>().inletModelObject().get());
 
-  std::vector<ModelObject> returnComponents = 
+  std::vector<ModelObject> returnComponents =
     airLoopHVAC.supplyComponents(supplyInletNode, oaSystem.returnAirModelObject()->cast<Node>());
   returnComponents.erase( returnComponents.begin() );
 
@@ -390,11 +399,11 @@ TEST_F(ModelFixture,AirLoopHVAC_remove2)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  Model m; 
+  Model m;
 
   ScheduleCompact s(m);
-  
-  PlantLoop plantLoop(m); 
+
+  PlantLoop plantLoop(m);
 
   AirLoopHVAC airLoop(m);
 
@@ -429,13 +438,13 @@ TEST_F(ModelFixture,AirLoopHVAC_remove2)
 
   EXPECT_EQ( 5u,plantLoop.demandComponents().size() );
 
-  EXPECT_EXIT ( 
-  {  
+  EXPECT_EXIT (
+  {
     plantLoop.demandInletNode();
 
     plantLoop.demandOutletNode();
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -443,7 +452,7 @@ TEST_F(ModelFixture,AirLoopHVAC_remove2)
 
 TEST_F(ModelFixture, AirLoopHVAC_remove3)
 {
-  Model m; 
+  Model m;
 
   EXPECT_EQ(0u, m.getModelObjects<AirLoopHVAC>().size());
   EXPECT_EQ(0u, m.getModelObjects<SizingSystem>().size());
@@ -461,13 +470,13 @@ TEST_F(ModelFixture, AirLoopHVAC_remove3)
 
 TEST_F(ModelFixture, AirLoopHVAC_Cost)
 {
-  Model model; 
+  Model model;
 
   AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal =
                                                          AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
   EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
 
@@ -506,13 +515,13 @@ TEST_F(ModelFixture, AirLoopHVAC_Cost)
 
 TEST_F(ModelFixture, AirLoopHVAC_AddBranchForZone_ReuseTerminal)
 {
-  Model model; 
+  Model model;
 
   AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal =
                                                          AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
   EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
 
@@ -525,7 +534,7 @@ TEST_F(ModelFixture, AirLoopHVAC_AddBranchForZone_ReuseTerminal)
 
   EXPECT_EQ(1u, airLoopHVAC.thermalZones().size());
 
-  AirTerminalSingleDuctUncontrolled term2 = 
+  AirTerminalSingleDuctUncontrolled term2 =
     singleDuctTerminal.clone(model).cast<AirTerminalSingleDuctUncontrolled>();
 
   EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,term2));
@@ -693,7 +702,7 @@ TEST_F(ModelFixture,AirLoopHVAC_fans)
     ASSERT_EQ(fan,supplyFan.get());
 
     auto returnFan = airSystem.returnFan();
-    ASSERT_FALSE(returnFan);    
+    ASSERT_FALSE(returnFan);
 
     ControllerOutdoorAir oaController(m);
     AirLoopHVACOutdoorAirSystem oaSystem(m,oaController);
@@ -723,7 +732,7 @@ TEST_F(ModelFixture,AirLoopHVAC_fans)
     ASSERT_TRUE(reliefFan);
     ASSERT_EQ(fan3,reliefFan.get());
   }
-   
+
 }
 
 // Not possible in OS currently, uncomment in future
@@ -745,7 +754,7 @@ TEST_F(ModelFixture,AirLoopHVAC_fans)
 //   airSystem.resetReturnAirBypassFlowTemperatureSetpointSchedule();
 
 //   EXPECT_FALSE( airSystem.returnAirBypassFlowTemperatureSetpointSchedule() );
-   
+
 // }
 
 TEST_F(ModelFixture,AirLoopHVAC_Availability)
@@ -755,13 +764,13 @@ TEST_F(ModelFixture,AirLoopHVAC_Availability)
 
   {
     auto schedule = m.alwaysOnDiscreteSchedule();
-    EXPECT_EQ(schedule,airLoopHVAC.availabilitySchedule()); 
-  } 
+    EXPECT_EQ(schedule,airLoopHVAC.availabilitySchedule());
+  }
 
   EXPECT_FALSE(airLoopHVAC.availabilityManager());
 
   {
-    airLoopHVAC.setNightCycleControlType("CycleOnAny");  
+    airLoopHVAC.setNightCycleControlType("CycleOnAny");
     auto availabilityManager = airLoopHVAC.availabilityManager();
     EXPECT_TRUE(availabilityManager);
     auto nightCycle = availabilityManager->optionalCast<AvailabilityManagerNightCycle>();
@@ -780,7 +789,7 @@ TEST_F(ModelFixture,AirLoopHVAC_Availability)
     EXPECT_TRUE(availabilityManager2);
     EXPECT_EQ(availabilityManager2.get(),availabilityManager);
 
-    airLoopHVAC.setNightCycleControlType("CycleOnAny");  
+    airLoopHVAC.setNightCycleControlType("CycleOnAny");
     auto availabilityManager3 = airLoopHVAC.availabilityManager();
     EXPECT_TRUE(availabilityManager3);
     auto nightCycle = availabilityManager3->optionalCast<AvailabilityManagerNightCycle>();
@@ -813,7 +822,7 @@ TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
     Model m;
     AirLoopHVAC airLoopHVAC(m);
 
-    EXPECT_EQ(1u,airLoopHVAC.supplyOutletNodes().size()); 
+    EXPECT_EQ(1u,airLoopHVAC.supplyOutletNodes().size());
 
     ConnectorSplitter splitter(m);
     auto supplyOutletNode = airLoopHVAC.supplyOutletNode();
@@ -821,7 +830,7 @@ TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
 
     EXPECT_TRUE(airLoopHVAC.isDualDuct());
 
-    EXPECT_EQ(2u,airLoopHVAC.supplyOutletNodes().size()); 
+    EXPECT_EQ(2u,airLoopHVAC.supplyOutletNodes().size());
     EXPECT_EQ(4u,airLoopHVAC.supplyComponents().size());
     EXPECT_TRUE(airLoopHVAC.supplySplitter());
     EXPECT_EQ(2u,airLoopHVAC.supplySplitterOutletNodes().size());

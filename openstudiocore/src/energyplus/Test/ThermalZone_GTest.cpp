@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include <gtest/gtest.h>
 #include "EnergyPlusFixture.hpp"
@@ -40,10 +49,15 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/ScheduleConstant.hpp"
 #include "../../model/DefaultScheduleSet.hpp"
+#include "../../model/DaylightingControl.hpp"
 
 #include <utilities/idd/Lights_FieldEnums.hxx>
+#include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
 #include <utilities/idd/Zone_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <resources.hxx>
 
@@ -696,3 +710,66 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ThermalZone_1Zone_2Spaces_InheritSche
     EXPECT_TRUE(workspaceObject.getTarget(LightsFields::ScheduleName)) << workspaceObject;
   }
 }
+
+/* Tests that the illuminance setpoint is set even if it is defaulted (ref #2849) */
+
+TEST_F(EnergyPlusFixture,ForwardTranslator_ThermalZone_Daylighting)
+{
+  Model m;
+
+  ThermalZone z(m);
+  Space space1(m);
+  space1.setThermalZone(z);
+
+
+  Point3dVector points;
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(1, 1, 0));
+  points.push_back(Point3d(1, 0, 0));
+
+  Surface surface1(points, m);
+  surface1.setSpace(space1);
+
+  LightsDefinition lightsDef1(m);
+  lightsDef1.setLightingLevel(1.0);
+
+  Lights lights1(lightsDef1);
+  lights1.setSpace(space1);
+
+  DaylightingControl d_pri(m);
+  ASSERT_TRUE(d_pri.isIlluminanceSetpointDefaulted());
+  z.setPrimaryDaylightingControl(d_pri);
+
+  DaylightingControl d_sec(m);
+  ASSERT_TRUE(d_sec.isIlluminanceSetpointDefaulted());
+  z.setSecondaryDaylightingControl(d_sec);
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Daylighting_Controls);
+  ASSERT_EQ(1u, idfObjs.size());
+  WorkspaceObject idf_d(idfObjs[0]);
+
+  // Should have two extensible groups
+  boost::optional<double> sp;
+
+  ASSERT_EQ(2u, idf_d.extensibleGroups().size());
+
+  // Check that there is a value for primary, and that it's right
+  WorkspaceExtensibleGroup w_eg = idf_d.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  sp =  w_eg.getDouble(Daylighting_ControlsExtensibleFields::IlluminanceSetpointatReferencePoint);
+  ASSERT_TRUE(sp);
+  ASSERT_EQ(d_pri.illuminanceSetpoint(), sp.get());
+
+  // same for secondary
+  w_eg = idf_d.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+  sp =  w_eg.getDouble(Daylighting_ControlsExtensibleFields::IlluminanceSetpointatReferencePoint);
+  ASSERT_TRUE(sp);
+  ASSERT_EQ(d_sec.illuminanceSetpoint(), sp.get());
+
+}
+
+
+

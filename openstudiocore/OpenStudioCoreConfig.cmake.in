@@ -6,9 +6,9 @@ set(OpenStudioCore_FOUND 1)
 # Get all directories relative to the location of OpenStudioConfig.cmake
 get_filename_component(OpenStudioCore_INSTALL_PREFIX "${OpenStudioCore_DIR}" ABSOLUTE)
 
-set(OpenStudioCore_VERSION_MAJOR "@CMAKE_VERSION_MAJOR@")
-set(OpenStudioCore_VERSION_MINOR "@CMAKE_VERSION_MINOR@")
-set(OpenStudioCore_VERSION_PATCH "@CMAKE_VERSION_PATCH@")
+set(OpenStudioCore_VERSION_MAJOR "@PROJECT_VERSION_MAJOR@")
+set(OpenStudioCore_VERSION_MINOR "@PROJECT_VERSION_MINOR@")
+set(OpenStudioCore_VERSION_PATCH "@PROJECT_VERSION_PATCH@")
 set(OpenStudioCore_VERSION "${OpenStudioCore_VERSION_MAJOR}.${OpenStudioCore_VERSION_MINOR}.${OpenStudioCore_VERSION_PATCH}")
 
 set(OpenStudioCore_INCLUDE_DIRS "${OpenStudioCore_INSTALL_PREFIX}/../src"

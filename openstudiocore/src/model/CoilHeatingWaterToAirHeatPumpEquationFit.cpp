@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "CoilHeatingWaterToAirHeatPumpEquationFit.hpp"
 #include "CoilHeatingWaterToAirHeatPumpEquationFit_Impl.hpp"
@@ -73,7 +82,7 @@ namespace detail {
   IddObjectType CoilHeatingWaterToAirHeatPumpEquationFit_Impl::iddObjectType() const {
     return CoilHeatingWaterToAirHeatPumpEquationFit::iddObjectType();
   }
-  
+
   unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::airInletPort()
   {
     return OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirInletNodeName;
@@ -83,7 +92,7 @@ namespace detail {
   {
     return OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName;
   }
-  
+
   unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::waterInletPort()
   {
     return OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::WaterInletNodeName;
@@ -94,7 +103,7 @@ namespace detail {
     return OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::WaterOutletNodeName;
   }
 
- 
+
   boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::ratedAirFlowRate() const {
     return getDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedAirFlowRate,true);
   }
@@ -228,6 +237,11 @@ namespace detail {
     return result;
   }
 
+  bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setRatedAirFlowRate(double ratedAirFlowRate) {
+    return setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedAirFlowRate, ratedAirFlowRate);
+  }
+
+
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::resetRatedAirFlowRate() {
     bool result = setString(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedAirFlowRate, "");
     OS_ASSERT(result);
@@ -250,6 +264,11 @@ namespace detail {
     return result;
   }
 
+   bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setRatedWaterFlowRate(double ratedWaterFlowRate) {
+    return setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedWaterFlowRate, ratedWaterFlowRate);
+  }
+
+
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::resetRatedWaterFlowRate() {
     bool result = setString(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedWaterFlowRate, "");
     OS_ASSERT(result);
@@ -271,6 +290,11 @@ namespace detail {
     }
     return result;
   }
+
+  bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setRatedHeatingCapacity(double ratedHeatingCapacity) {
+    return setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedHeatingCapacity, ratedHeatingCapacity);
+  }
+
 
  void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::resetRatedHeatingCapacity() {
     bool result = setString(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedHeatingCapacity, "");
@@ -302,7 +326,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
- 
+
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient3, heatingCapacityCoefficient3);
     OS_ASSERT(result);
@@ -498,6 +522,10 @@ bool CoilHeatingWaterToAirHeatPumpEquationFit::setRatedAirFlowRate(OptionalDoubl
   return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->setRatedAirFlowRate(ratedAirFlowRate);
 }
 
+bool CoilHeatingWaterToAirHeatPumpEquationFit::setRatedAirFlowRate(double ratedAirFlowRate) {
+  return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->setRatedAirFlowRate(ratedAirFlowRate);
+}
+
 void CoilHeatingWaterToAirHeatPumpEquationFit::resetRatedAirFlowRate() {
   getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->resetRatedAirFlowRate();
 }
@@ -507,6 +535,10 @@ void CoilHeatingWaterToAirHeatPumpEquationFit::autosizeRatedAirFlowRate() {
 }
 
 bool CoilHeatingWaterToAirHeatPumpEquationFit::setRatedWaterFlowRate(OptionalDouble ratedWaterFlowRate) {
+  return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->setRatedWaterFlowRate(ratedWaterFlowRate);
+}
+
+bool CoilHeatingWaterToAirHeatPumpEquationFit::setRatedWaterFlowRate(double ratedWaterFlowRate) {
   return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->setRatedWaterFlowRate(ratedWaterFlowRate);
 }
 
@@ -521,6 +553,11 @@ void CoilHeatingWaterToAirHeatPumpEquationFit::autosizeRatedWaterFlowRate() {
 bool CoilHeatingWaterToAirHeatPumpEquationFit::setRatedHeatingCapacity(OptionalDouble ratedHeatingCapacity) {
   return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->setRatedHeatingCapacity(ratedHeatingCapacity);
 }
+
+bool CoilHeatingWaterToAirHeatPumpEquationFit::setRatedHeatingCapacity(double ratedHeatingCapacity) {
+  return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->setRatedHeatingCapacity(ratedHeatingCapacity);
+}
+
 
 void CoilHeatingWaterToAirHeatPumpEquationFit::resetRatedHeatingCapacity() {
   getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->resetRatedHeatingCapacity();
@@ -580,7 +617,7 @@ void CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingPowerConsumptionCoeffic
 
 /// @cond
 CoilHeatingWaterToAirHeatPumpEquationFit::CoilHeatingWaterToAirHeatPumpEquationFit(std::shared_ptr<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl> impl)
-  : WaterToAirComponent(impl)
+  : WaterToAirComponent(std::move(impl))
 {}
 /// @endcond
 

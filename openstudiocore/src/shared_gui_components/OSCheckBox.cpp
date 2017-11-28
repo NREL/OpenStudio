@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "OSCheckBox.hpp"
 #include "../model/ModelObject.hpp"
@@ -50,9 +59,8 @@ namespace openstudio {
 
     setEnabled(true);
 
-    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSCheckBox3::onModelObjectChange);
-
-    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSCheckBox3::onModelObjectRemove);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSCheckBox3, &OSCheckBox3::onModelObjectChange>(this);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSCheckBox3, &OSCheckBox3::onModelObjectRemove>(this);
 
     connect(this, &OSCheckBox3::toggled, this, &OSCheckBox3::onToggled);
     bool checked = (*m_get)();
@@ -74,9 +82,9 @@ namespace openstudio {
 
     setEnabled(true);
 
-    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSCheckBox3::onModelObjectChange);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<OSCheckBox3, &OSCheckBox3::onModelObjectChange>(this);
 
-    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSCheckBox3::onModelObjectRemove);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.connect<OSCheckBox3, &OSCheckBox3::onModelObjectRemove>(this);
 
     connect(this, &OSCheckBox3::toggled, this, &OSCheckBox3::onToggled);
     bool checked = (*m_get)();
@@ -87,7 +95,9 @@ namespace openstudio {
   void OSCheckBox3::unbind()
   {
     if (m_modelObject){
-      this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+      m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<OSCheckBox3, &OSCheckBox3::onModelObjectChange>(this);
+      m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.disconnect<OSCheckBox3, &OSCheckBox3::onModelObjectRemove>(this);
+
       m_get.reset();
       m_set.reset();
       m_setBoolReturn.reset();
@@ -122,7 +132,7 @@ namespace openstudio {
     }
   }
 
-  void OSCheckBox3::onModelObjectRemove(Handle handle)
+  void OSCheckBox3::onModelObjectRemove(const Handle& handle)
   {
     unbind();
   }
@@ -152,9 +162,9 @@ void OSCheckBox2::bind(model::ModelObject & modelObject,
 
   setEnabled(true);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSCheckBox2::onModelObjectChange);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<OSCheckBox2, &OSCheckBox2::onModelObjectChange>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSCheckBox2::onModelObjectRemove);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.connect<OSCheckBox2, &OSCheckBox2::onModelObjectRemove>(this);
 
   connect(this, &OSCheckBox2::toggled, this, &OSCheckBox2::onToggled);
   bool checked = (*m_get)();
@@ -165,7 +175,9 @@ void OSCheckBox2::bind(model::ModelObject & modelObject,
 void OSCheckBox2::unbind()
 {
   if (m_modelObject){
-    this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<OSCheckBox2, &OSCheckBox2::onModelObjectChange>(this);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.disconnect<OSCheckBox2, &OSCheckBox2::onModelObjectRemove>(this);
+
     m_get.reset();
     m_set.reset();
     m_reset.reset();
@@ -190,74 +202,74 @@ void OSCheckBox2::onModelObjectChange()
   }
 }
 
-void OSCheckBox2::onModelObjectRemove(Handle handle)
+void OSCheckBox2::onModelObjectRemove(const Handle& handle)
 {
   unbind();
 }
 
-OSCheckBox::OSCheckBox( QWidget * parent )
-  : QPushButton(parent)
-{
-  setObjectName("StandardGrayButton");
-  this->setAcceptDrops(false);
+// OSCheckBox::OSCheckBox( QWidget * parent )
+//   : QPushButton(parent)
+// {
+//   setObjectName("StandardGrayButton");
+//   this->setAcceptDrops(false);
 
-  this->setCheckable(true);
+//   this->setCheckable(true);
   
-  setEnabled(false);
-}
+//   setEnabled(false);
+// }
 
-void OSCheckBox::bind(model::ModelObject & modelObject, const char * property)
-{
-  m_modelObject = modelObject;
+// void OSCheckBox::bind(model::ModelObject & modelObject, const char * property)
+// {
+//   m_modelObject = modelObject;
 
-  m_property = property;
+//   m_property = property;
 
-  setEnabled(true);
+//   setEnabled(true);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSCheckBox::onModelObjectChange);
+//   m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSCheckBox, &OSCheckBox::onModelObjectChange>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSCheckBox::onModelObjectRemove);
+//   m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSCheckBox, &OSCheckBox::onModelObjectRemove>(this);
 
-  connect(this, &OSCheckBox::toggled, this, &OSCheckBox::onToggled);
-  bool checked = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str()).toBool();
+//   connect(this, &OSCheckBox::toggled, this, &OSCheckBox::onToggled);
+//   bool checked = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str()).toBool();
 
-  this->setChecked(checked);
-}
+//   this->setChecked(checked);
+// }
 
-void OSCheckBox::unbind()
-{
-  if (m_modelObject){
-    this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
-    m_modelObject.reset();
-    m_property = "";
-    setEnabled(false);
-  }
-}
+// void OSCheckBox::unbind()
+// {
+//   if (m_modelObject){
+//     this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+//     m_modelObject.reset();
+//     m_property = "";
+//     setEnabled(false);
+//   }
+// }
 
-void OSCheckBox::onToggled(bool checked)
-{
-  if( m_modelObject )
-  {
-    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(),checked);
-  }
-}
+// void OSCheckBox::onToggled(bool checked)
+// {
+//   if( m_modelObject )
+//   {
+//     m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(),checked);
+//   }
+// }
 
-void OSCheckBox::onModelObjectChange()
-{
-  if( m_modelObject )
-  {
-    bool checked = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str()).toBool();
+// void OSCheckBox::onModelObjectChange()
+// {
+//   if( m_modelObject )
+//   {
+//     bool checked = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str()).toBool();
 
-    this->setChecked(checked);
-  }
-}
+//     this->setChecked(checked);
+//   }
+// }
 
-void OSCheckBox::onModelObjectRemove(Handle handle)
-{
-  m_modelObject.reset();
-  m_property = "";
-  setEnabled(false);
-}
+// void OSCheckBox::onModelObjectRemove(const Handle& handle)
+// {
+//   m_modelObject.reset();
+//   m_property = "";
+//   setEnabled(false);
+// }
 
 } // openstudio
 

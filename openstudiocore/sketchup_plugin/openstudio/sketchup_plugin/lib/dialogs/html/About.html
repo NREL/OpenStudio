@@ -1,0 +1,39 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html" />
+<link href="Dialogs.css" rel="stylesheet" type="text/css" />
+<title>OpenStudio SketchUp Plug-in</title>
+<script language="javascript" src="Dialogs.js"></script>
+<script language="javascript">
+<!--
+function onLoad() {
+  window.location='skp:on_load';
+  document.getElementById('ok').focus();
+}
+function onOK() { window.location='skp:on_ok'; }
+-->
+</script>
+</head>
+<body onload="onLoad()" link="#0000FF" alink="#0000FF" vlink="#0000FF" class="label">
+
+<center>
+
+<a href="https://www.openstudio.net/" target="_blank"><img src="sp_png_256x256.png" border="0"></a>
+
+<br>
+
+<span style="font-size:x-large;">OpenStudio SketchUp Plug-in</span><br><br>
+<input id="OPENSTUDIO_SKETCHUPPLUGIN_VERSION" name="OPENSTUDIO_SKETCHUPPLUGIN_VERSION" type="text" size="50" class="static_text" style="text-align:center; border:0; border-style:solid;" readonly><br>
+<a href="https://www.openstudio.net/" target="_blank">https://www.openstudio.net</a><br><br>
+
+Developed by the National Renewable Energy Laboratory<br>
+For the United States Department of Energy<br><br>
+
+Copyright &copy; 2008-2017, Alliance for Sustainable Energy<br><br>
+
+<input id="ok" onclick="onOK()" type="button" class="button" value="     OK     ">
+
+</center>
+
+</body>
+</html>

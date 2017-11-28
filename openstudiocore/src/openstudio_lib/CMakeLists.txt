@@ -61,10 +61,20 @@ set(${target_name}_SRC
   FacilityTabController.hpp
   FacilityTabView.cpp
   FacilityTabView.hpp
-  FileOperations.cpp
-  FileOperations.hpp
   GasEquipmentInspectorView.cpp
   GasEquipmentInspectorView.hpp
+  GeometryEditorController.cpp
+  GeometryEditorController.hpp
+  GeometryEditorView.cpp
+  GeometryEditorView.hpp
+  GeometryPreviewController.cpp
+  GeometryPreviewController.hpp
+  GeometryPreviewView.cpp
+  GeometryPreviewView.hpp
+  GeometryTabController.cpp
+  GeometryTabController.hpp
+  GeometryTabView.cpp
+  GeometryTabView.hpp
   GridItem.cpp
   GridItem.hpp
   GridScene.cpp
@@ -232,12 +242,8 @@ set(${target_name}_SRC
   SchedulesTabView.hpp
   SchedulesView.cpp
   SchedulesView.hpp
-  ScriptFolderListView.cpp
-  ScriptFolderListView.hpp
   ScriptItem.cpp
   ScriptItem.hpp
-  ScriptsListView.cpp
-  ScriptsListView.hpp
   ScriptsTabController.cpp
   ScriptsTabController.hpp
   ScriptsTabView.cpp
@@ -452,10 +458,10 @@ set(${target_name}_SRC
   ../shared_gui_components/TextEditDialog.hpp 
   ../shared_gui_components/TIDItemModel.cpp
   ../shared_gui_components/TIDItemModel.hpp
-  ../shared_gui_components/VariableList.cpp
-  ../shared_gui_components/VariableList.hpp
-  ../shared_gui_components/VariableView.cpp
-  ../shared_gui_components/VariableView.hpp
+  ../shared_gui_components/WorkflowController.cpp
+  ../shared_gui_components/WorkflowController.hpp
+  ../shared_gui_components/WorkflowView.cpp
+  ../shared_gui_components/WorkflowView.hpp
   ../shared_gui_components/WaitDialog.cpp
   ../shared_gui_components/WaitDialog.hpp
   ../shared_gui_components/WorkflowTools.cpp
@@ -491,6 +497,12 @@ set(${target_name}_moc
   FacilityTabController.hpp
   FacilityTabView.hpp
   GasEquipmentInspectorView.hpp
+  GeometryEditorController.hpp
+  GeometryEditorView.hpp
+  GeometryPreviewController.hpp
+  GeometryPreviewView.hpp
+  GeometryTabController.hpp
+  GeometryTabView.hpp  
   GridItem.hpp
   GridScene.hpp
   GridViewSubTab.hpp
@@ -573,9 +585,7 @@ set(${target_name}_moc
   SchedulesTabController.hpp
   SchedulesTabView.hpp
   SchedulesView.hpp
-  ScriptFolderListView.hpp
   ScriptItem.hpp
-  ScriptsListView.hpp
   ScriptsTabController.hpp
   ScriptsTabView.hpp
   ServiceWaterGridItems.hpp
@@ -680,18 +690,18 @@ set(${target_name}_moc
   ../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp
   ../shared_gui_components/TextEditDialog.hpp 
   ../shared_gui_components/TIDItemModel.hpp
-  ../shared_gui_components/VariableList.hpp
-  ../shared_gui_components/VariableView.hpp
+  ../shared_gui_components/WorkflowController.hpp
+  ../shared_gui_components/WorkflowView.hpp
   ../shared_gui_components/WaitDialog.hpp
   ../shared_gui_components/NetworkProxyDialog.hpp
 
 )
 
-if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
-  list(APPEND ${target_name}_moc ResultsWebView.hpp)
-else()
-  list(APPEND ${target_name}_moc ResultsWebEngineView.hpp)
-endif()
+#if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
+#  list(APPEND ${target_name}_moc ResultsWebView.hpp)
+#else()
+#  list(APPEND ${target_name}_moc ResultsWebEngineView.hpp)
+#endif()
 
 # resource files
 set(${target_name}_qrc
@@ -704,7 +714,8 @@ qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 # generate rules for building source files from the resources
 qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
-add_library(${target_name} SHARED
+
+add_library(${target_name}
   ${${target_name}_SRC}
   ${${target_name}_moc_src}
   ${${target_name}_moc}
@@ -715,25 +726,15 @@ set(depends
   openstudio_model
   openstudio_energyplus
   openstudio_modeleditor
-  openstudio_runmanager
-  #openstudio_ruleset
-  openstudio_analysis
-  openstudio_analysisdriver
+  openstudio_measure
   openstudio_sdd
   openstudio_gbxml
-  ${QT_LIBS}
-  #${RUBY_LIBRARY}
+  ${QT_WEB_LIBS}
 )
 
 target_link_libraries(${target_name} ${depends})
-AddPCH(${target_name})
 
-if(NOT APPLE)
-  install(TARGETS ${target_name}
-    RUNTIME DESTINATION bin 
-    LIBRARY DESTINATION lib
-  )
-endif()
+AddPCH(${target_name})
 
 set(${target_name}_test_src
   test/OpenStudioLibFixture.hpp
@@ -748,15 +749,5 @@ set(${target_name}_test_depends
 CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
 CREATE_SRC_GROUPS("${${target_name}_test_src}")
 if(BUILD_TESTING)
-
-  #add_dependencies("${target_name}_tests" 
-  #  openstudio_lib_resources 
-  #)
   
 endif()
-
-set(${target_name}_swig_src
-  OpenStudioLib.i
-)
-
-MAKE_SWIG_TARGET(OpenStudioLib openstudiolib "${CMAKE_CURRENT_SOURCE_DIR}/OpenStudioLib.i" "${${target_name}_swig_src}" ${target_name} "OpenStudioEnergyPlus;OpenStudioModelEditor;OpenStudioRunManager;OpenStudioRuleset")

@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include <gtest/gtest.h>
 
@@ -45,7 +54,6 @@
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/Sizing_Zone_FieldEnums.hxx>
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
-#include <utilities/idd/Lights_FieldEnums.hxx>
 #include "../WorkspaceWatcher.hpp"
 #include "IdfTestQObjects.hpp"
 
@@ -60,8 +68,8 @@
 
 #include <resources.hxx>
 
-#include <boost/filesystem/fstream.hpp>
-#include <boost/filesystem.hpp>
+
+
 
 using namespace openstudio;
 
@@ -83,7 +91,7 @@ TEST_F(IdfFixture, IdfFile_Workspace_Roundtrip)
   IdfFile copyOfIdfFile = workspace.toIdfFile();
   // until == available, print out for diff
   openstudio::path outPath = outDir/toPath("passedThroughWorkspace.idf");
-  boost::filesystem::ofstream outFile(outPath); ASSERT_TRUE(outFile?true:false);
+  openstudio::filesystem::ofstream outFile(outPath); ASSERT_TRUE(outFile?true:false);
   copyOfIdfFile.print(outFile); outFile.close();
 }
 
@@ -482,23 +490,23 @@ TEST_F(IdfFixture, Workspace_SameNameNotReference)
 
   EXPECT_TRUE(w1->handle () != w2->handle ());
 
-  ASSERT_TRUE(object1->getString(Output_MeterFields::Name));
-  EXPECT_EQ("", object1->getString(Output_MeterFields::Name).get());
+  ASSERT_TRUE(object1->getString(Output_MeterFields::KeyName));
+  EXPECT_EQ("", object1->getString(Output_MeterFields::KeyName).get());
 
-  ASSERT_TRUE(object2->getString(Output_MeterFields::Name));
-  EXPECT_EQ("", object2->getString(Output_MeterFields::Name).get());
+  ASSERT_TRUE(object2->getString(Output_MeterFields::KeyName));
+  EXPECT_EQ("", object2->getString(Output_MeterFields::KeyName).get());
 
-  EXPECT_TRUE(object1->setString(Output_MeterFields::Name, "Gas:Facility"));
-  ASSERT_TRUE(object1->getString(Output_MeterFields::Name));
-  EXPECT_EQ("Gas:Facility", object1->getString(Output_MeterFields::Name).get());
+  EXPECT_TRUE(object1->setString(Output_MeterFields::KeyName, "Gas:Facility"));
+  ASSERT_TRUE(object1->getString(Output_MeterFields::KeyName));
+  EXPECT_EQ("Gas:Facility", object1->getString(Output_MeterFields::KeyName).get());
 
-  EXPECT_TRUE(object2->setString(Output_MeterFields::Name, "Gas:Building"));
-  ASSERT_TRUE(object2->getString(Output_MeterFields::Name));
-  EXPECT_EQ("Gas:Building", object2->getString(Output_MeterFields::Name).get());
+  EXPECT_TRUE(object2->setString(Output_MeterFields::KeyName, "Gas:Building"));
+  ASSERT_TRUE(object2->getString(Output_MeterFields::KeyName));
+  EXPECT_EQ("Gas:Building", object2->getString(Output_MeterFields::KeyName).get());
 
-  EXPECT_TRUE(object2->setString(Output_MeterFields::Name, "Gas:Facility"));
-  ASSERT_TRUE(object2->getString(Output_MeterFields::Name));
-  EXPECT_EQ("Gas:Facility", object2->getString(Output_MeterFields::Name).get());
+  EXPECT_TRUE(object2->setString(Output_MeterFields::KeyName, "Gas:Facility"));
+  ASSERT_TRUE(object2->getString(Output_MeterFields::KeyName));
+  EXPECT_EQ("Gas:Facility", object2->getString(Output_MeterFields::KeyName).get());
 
 }
 
@@ -1172,6 +1180,12 @@ TEST_F(IdfFixture,Workspace_ComplexNames) {
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
   zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone 1"));
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone 2", zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
   EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone            "));
   EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone            ",zone.name().get());
 
@@ -1180,6 +1194,12 @@ TEST_F(IdfFixture,Workspace_ComplexNames) {
   zone = *oObject;
   EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone            "));
   EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone             1",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone             1"));
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone             2", zone.name().get());
 
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
@@ -1229,7 +1249,7 @@ TEST_F(IdfFixture,Workspace_ComplexNames) {
   EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone "));
   EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone  1",zone.name().get());
 
-  EXPECT_EQ(static_cast<unsigned>(15),ws.numObjectsOfType(IddObjectType::Zone));
+  EXPECT_EQ(static_cast<unsigned>(17),ws.numObjectsOfType(IddObjectType::Zone));
 }
 
 TEST_F(IdfFixture, Workspace_SpecialNames) {
@@ -1269,7 +1289,7 @@ TEST_F(IdfFixture, Workspace_SpecialNames) {
   EXPECT_TRUE(lights2.setString(LightsFields::ZoneorZoneListName, "Office, Hallway, and Other Zone"));
   ASSERT_TRUE(lights2.getTarget(LightsFields::ZoneorZoneListName));
   EXPECT_EQ(zone.handle(), lights2.getTarget(LightsFields::ZoneorZoneListName).get().handle());
-} 
+}
 
 TEST_F(IdfFixture,Workspace_AvoidingNameClashes_IdfObject) {
   // create workspace with one object
@@ -1986,12 +2006,6 @@ TEST_F(IdfFixture, Workspace_Signals)
   WorkspaceObject object = workspace.addObject(IdfObject(IddObjectType::Zone)).get();
   Handle handle = object.handle();
 
-  EXPECT_FALSE(reciever->m_objectImpl);
-  EXPECT_FALSE(reciever->m_iddObjectType);
-  EXPECT_FALSE(reciever->m_handle);
-
-  openstudio::Application::instance().processEvents();
-
   ASSERT_TRUE(reciever->m_objectImpl.get());
   ASSERT_TRUE(reciever->m_iddObjectType);
   EXPECT_EQ(IddObjectType::Zone, reciever->m_iddObjectType->value());
@@ -2005,12 +2019,6 @@ TEST_F(IdfFixture, Workspace_Signals)
   EXPECT_FALSE(reciever->m_handle);
 
   object.remove();
-
-  EXPECT_FALSE(reciever->m_objectImpl);
-  EXPECT_FALSE(reciever->m_iddObjectType);
-  EXPECT_FALSE(reciever->m_handle);
-
-  Application::instance().processEvents();
 
   ASSERT_TRUE(reciever->m_objectImpl.get());
   ASSERT_TRUE(reciever->m_iddObjectType);
@@ -2047,21 +2055,21 @@ TEST_F(IdfFixture, Workspace_DaylightingControlsZoneName)
   ASSERT_TRUE(daylightingControl);
 
   zone->setName("Zone 1");
-  EXPECT_FALSE(daylightingControl->getString(0,false,true));
-  EXPECT_TRUE(daylightingControl->setPointer(0, zone->handle()));
-  ASSERT_TRUE(daylightingControl->getString(0,false,true));
-  EXPECT_EQ("Zone 1", daylightingControl->getString(0,false,true).get());
+  EXPECT_FALSE(daylightingControl->getString(1,false,true));
+  EXPECT_TRUE(daylightingControl->setPointer(1, zone->handle()));
+  ASSERT_TRUE(daylightingControl->getString(1,false,true));
+  EXPECT_EQ("Zone 1", daylightingControl->getString(1,false,true).get());
 
-  EXPECT_TRUE(daylightingControl->setString(0, ""));
-  EXPECT_FALSE(daylightingControl->getString(0,false,true));
+  EXPECT_TRUE(daylightingControl->setString(1, ""));
+  EXPECT_FALSE(daylightingControl->getString(1,false,true));
 
-  EXPECT_TRUE(daylightingControl->setString(0, "Zone 1"));
-  ASSERT_TRUE(daylightingControl->getString(0,false,true));
-  EXPECT_EQ("Zone 1", daylightingControl->getString(0,false,true).get());
+  EXPECT_TRUE(daylightingControl->setString(1, "Zone 1"));
+  ASSERT_TRUE(daylightingControl->getString(1,false,true));
+  EXPECT_EQ("Zone 1", daylightingControl->getString(1,false,true).get());
 
 }
 
-TEST_F(IdfFixture, Workspace_NextName) 
+TEST_F(IdfFixture, Workspace_NextName)
 {
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
@@ -2098,7 +2106,7 @@ TEST_F(IdfFixture, Workspace_NextName)
   EXPECT_EQ("Zone 2", ws.nextName(IddObjectType::Zone, true));
 }
 
-TEST_F(IdfFixture, Workspace_GetObjectsByNameUUID) 
+TEST_F(IdfFixture, Workspace_GetObjectsByNameUUID)
 {
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 

@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "FileReference.hpp"
 
@@ -23,9 +32,9 @@
 #include "Checksum.hpp"
 #include "PathHelpers.hpp"
 #include "../time/DateTime.hpp"
+#include "../core/FilesystemHelpers.hpp"
 
 #include <QDateTime>
-#include <QFileInfo>
 
 namespace openstudio {
 
@@ -35,8 +44,7 @@ FileReference::FileReference(const openstudio::path& p)
     m_name(toString(p)),
     m_displayName(toString(p.filename())),
     m_path(completeAndNormalize(p)),
-    m_timestampCreate(DateTime::now()),
-    m_timestampLast(m_timestampCreate),
+    m_timestampLast(),
     m_checksumCreate(checksum(m_path)),
     m_checksumLast(m_checksumCreate)
 {
@@ -46,7 +54,7 @@ FileReference::FileReference(const openstudio::path& p)
   catch (...) {
     m_fileType = FileReferenceType::Unknown;
   }
-  update(openstudio::path(),false);
+  update(openstudio::path());
 }
 
 /** De-serialization constructor. Not for general use. */
@@ -57,7 +65,6 @@ FileReference::FileReference(const openstudio::UUID& uuid,
                              const std::string& description,
                              const openstudio::path& p,
                              const FileReferenceType& fileType,
-                             const DateTime& timestampCreate,
                              const DateTime& timestampLast,
                              const std::string& checksumCreate,
                              const std::string& checksumLast)
@@ -68,7 +75,6 @@ FileReference::FileReference(const openstudio::UUID& uuid,
     m_description(description),
     m_path(p),
     m_fileType(fileType),
-    m_timestampCreate(timestampCreate),
     m_timestampLast(timestampLast),
     m_checksumCreate(checksumCreate),
     m_checksumLast(checksumLast)
@@ -109,10 +115,6 @@ FileReferenceType FileReference::fileType() const {
   return m_fileType;
 }
 
-DateTime FileReference::timestampCreate() const {
-  return m_timestampCreate;
-}
-
 DateTime FileReference::timestampLast() const {
   return m_timestampLast;
 }
@@ -150,7 +152,7 @@ void FileReference::setPath(const openstudio::path& newPath) {
 bool FileReference::makePathAbsolute(const openstudio::path& searchDirectory) {
   // trivial completion
   openstudio::path currentPath = path();
-  if (currentPath.is_complete() && boost::filesystem::exists(currentPath)) {
+  if (currentPath.is_complete() && openstudio::filesystem::exists(currentPath)) {
     return true;
   }
   openstudio::path workingPath(currentPath);
@@ -161,8 +163,8 @@ bool FileReference::makePathAbsolute(const openstudio::path& searchDirectory) {
   if (searchDirectory.empty()) {
     return false;
   }
-  openstudio::path newPath = boost::filesystem::complete(workingPath,searchDirectory);
-  if (newPath.empty() || !boost::filesystem::exists(newPath)) {
+  openstudio::path newPath = openstudio::filesystem::complete(workingPath,searchDirectory);
+  if (newPath.empty() || !openstudio::filesystem::exists(newPath)) {
     return false;
   }
   m_path = completeAndNormalize(newPath);
@@ -187,21 +189,10 @@ bool FileReference::makePathRelative(const openstudio::path& basePath) {
 }
 
 bool FileReference::update(const openstudio::path& searchDirectory) {
-  return update(searchDirectory,true);
-}
-
-bool FileReference::update(const openstudio::path& searchDirectory,bool lastOnly) {
   makePathAbsolute(searchDirectory);
   openstudio::path p = path();
-  if (boost::filesystem::exists(p)) {
-    QFileInfo fileInfo(toQString(p));
-    OS_ASSERT(fileInfo.exists());
-
-    if (!lastOnly) {
-      m_timestampCreate = toDateTime(fileInfo.created());
-    }
-
-    m_timestampLast = toDateTime(fileInfo.lastModified());
+  if (openstudio::filesystem::exists(p)) {
+    m_timestampLast = DateTime::fromEpoch(openstudio::filesystem::last_write_time_as_time_t(p));
     m_checksumLast = checksum(p);
     m_versionUUID = createUUID();
     return true;
@@ -230,7 +221,6 @@ namespace detail {
     }
     fileReferenceData["path"] = toQString(fileReference.path());
     fileReferenceData["file_type"] = toQString(fileReference.fileType().valueName());
-    fileReferenceData["timestamp_create"] = toQString(fileReference.timestampCreate().toISO8601());
     fileReferenceData["timestamp_last"] = toQString(fileReference.timestampLast().toISO8601());
     fileReferenceData["checksum_create"] = toQString(fileReference.checksumCreate());
     fileReferenceData["checksum_last"] = toQString(fileReference.checksumLast());
@@ -240,16 +230,13 @@ namespace detail {
 
   FileReference toFileReference(const QVariant& variant, const VersionString& version) {
     QVariantMap map = variant.toMap();
-    OptionalDateTime timestampCreate, timestampLast;
+    OptionalDateTime timestampLast;
     if (version < VersionString("1.0.4")) {
-      timestampCreate = DateTime(map["timestamp_create"].toString().toStdString());
       timestampLast = DateTime(map["timestamp_last"].toString().toStdString());
     }
     else {
-      timestampCreate = DateTime::fromISO8601(map["timestamp_create"].toString().toStdString());
       timestampLast = DateTime::fromISO8601(map["timestamp_last"].toString().toStdString());
     }
-    OS_ASSERT(timestampCreate);
     OS_ASSERT(timestampLast);
     return FileReference(toUUID(map["uuid"].toString().toStdString()),
                          toUUID(map["version_uuid"].toString().toStdString()),
@@ -258,7 +245,6 @@ namespace detail {
                          map.contains("description") ? map["description"].toString().toStdString() : std::string(),
                          toPath(map["path"].toString()),
                          FileReferenceType(map["file_type"].toString().toStdString()),
-                         timestampCreate.get(),
                          timestampLast.get(),
                          map["checksum_create"].toString().toStdString(),
                          map["checksum_last"].toString().toStdString());

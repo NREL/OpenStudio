@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "ModelObjectVectorController.hpp"
 #include "OSAppBase.hpp"
@@ -39,48 +48,39 @@ void ModelObjectVectorController::attach(const model::ModelObject& modelObject)
 
   attachModel(modelObject.model());
 
-  connect(m_model->getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &ModelObjectVectorController::objectAdded,
-    Qt::QueuedConnection);
-  
-  connect(m_model->getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-    this,
-    &ModelObjectVectorController::objectRemoved,
-    Qt::QueuedConnection);
-  
-  connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange,
-          this, &ModelObjectVectorController::changeRelationship);
+  // m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<ModelObjectVectorController, &ModelObjectVectorController::objectAdded>(this);
+  //connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectVectorController::objectAdded, Qt::QueuedConnection);
 
-  connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onDataChange,
-          this, &ModelObjectVectorController::dataChange);
+  //m_model->getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<ModelObjectVectorController, &ModelObjectVectorController::objectRemoved>(this);
+  //connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &ModelObjectVectorController::objectRemoved, Qt::QueuedConnection);
 
-  connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onChange,
-          this, &ModelObjectVectorController::change);
+  m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.connect<ModelObjectVectorController, &ModelObjectVectorController::changeRelationship>(this);
+
+  m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onDataChange.connect<ModelObjectVectorController, &ModelObjectVectorController::dataChange>(this);
+
+  m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onChange.connect<ModelObjectVectorController, &ModelObjectVectorController::change>(this);
 }
 
 void ModelObjectVectorController::attachModel(const model::Model& model)
 {
   if (m_model){
-    disconnect(m_model->getImpl<model::detail::Model_Impl>().get());
+
+    // m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.disconnect<ModelObjectVectorController, &ModelObjectVectorController::objectAdded>(this);
+    disconnect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectVectorController::objectAdded);
+
+     //m_model->getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.disconnect<ModelObjectVectorController, &ModelObjectVectorController::objectRemoved>(this);
+    disconnect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &ModelObjectVectorController::objectRemoved);
+
     m_model.reset();
   }
-  
+
   m_model = model;
 
-  connect(m_model->getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &ModelObjectVectorController::objectAdded,
-    Qt::QueuedConnection);
-  
-  connect(m_model->getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-    this,
-    &ModelObjectVectorController::objectRemoved,
-    Qt::QueuedConnection);
+  // m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<ModelObjectVectorController, &ModelObjectVectorController::objectAdded>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectVectorController::objectAdded, Qt::QueuedConnection);
+
+  //m_model->getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<ModelObjectVectorController, &ModelObjectVectorController::objectRemoved>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &ModelObjectVectorController::objectRemoved, Qt::QueuedConnection);
 }
 
 void ModelObjectVectorController::attachOtherModelObject(const model::ModelObject& modelObject)
@@ -94,19 +94,29 @@ void ModelObjectVectorController::attachOtherModelObject(const model::ModelObjec
 
   m_otherModelObjects.push_back(modelObject);
 
-  connect(modelObject.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange,
-          this, &ModelObjectVectorController::changeRelationship);
+  modelObject.getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.connect<ModelObjectVectorController, &ModelObjectVectorController::changeRelationship>(this);
 }
 
 void ModelObjectVectorController::detach()
 {
   if (m_modelObject){
-    disconnect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get());
+    m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.disconnect<ModelObjectVectorController, &ModelObjectVectorController::changeRelationship>(this);
+
+    m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onDataChange.disconnect<ModelObjectVectorController, &ModelObjectVectorController::dataChange>(this);
+
+    m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onChange.disconnect<ModelObjectVectorController, &ModelObjectVectorController::change>(this);
+
     m_modelObject.reset();
   }
 
+
   if (m_model){
-    disconnect(m_model->getImpl<model::detail::Model_Impl>().get());
+    // m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.disconnect<ModelObjectVectorController, &ModelObjectVectorController::objectAdded>(this);
+    disconnect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectVectorController::objectAdded);
+
+     //m_model->getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.disconnect<ModelObjectVectorController, &ModelObjectVectorController::objectRemoved>(this);
+    disconnect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &ModelObjectVectorController::objectRemoved);
+
     m_model.reset();
   }
 
@@ -120,7 +130,12 @@ void ModelObjectVectorController::detachOtherModelObject(const model::ModelObjec
   std::vector<model::ModelObject> newVector;
   for (; it != itend; ++it){
     if (it->handle() == modelObject.handle()){
-      disconnect(modelObject.getImpl<model::detail::ModelObject_Impl>().get());
+      m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.disconnect<ModelObjectVectorController, &ModelObjectVectorController::changeRelationship>(this);
+
+      //m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onDataChange.disconnect<ModelObjectVectorController, &ModelObjectVectorController::dataChange>(this);
+
+      //m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onChange.disconnect<ModelObjectVectorController, &ModelObjectVectorController::change>(this);
+
     }else{
       newVector.push_back(*it);
     }
@@ -131,36 +146,34 @@ void ModelObjectVectorController::detachOtherModelObject(const model::ModelObjec
 void ModelObjectVectorController::detachOtherModelObjects()
 {
   for (const model::ModelObject& modelObject : m_otherModelObjects){
-    disconnect(modelObject.getImpl<model::detail::ModelObject_Impl>().get());
+    // m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.disconnect<ModelObjectVectorController, &ModelObjectVectorController::objectAdded>(this);
+    disconnect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectVectorController::objectAdded);
+
+    // m_model->getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.disconnect<ModelObjectVectorController, &ModelObjectVectorController::objectRemoved>(this);
+    //connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &ModelObjectVectorController::objectRemoved, Qt::QueuedConnection);
+
   }
   m_otherModelObjects.clear();
 }
 
 void ModelObjectVectorController::changeRelationship(int index, Handle newHandle, Handle oldHandle)
 {
-  if (newHandle != oldHandle){
-    model::detail::ModelObject_Impl* impl = qobject_cast<model::detail::ModelObject_Impl*>(this->sender());
-    if (impl){
-      onChangeRelationship(impl->getObject<model::ModelObject>(), index, newHandle, oldHandle);
-    }
+  if (m_modelObject){
+    onChangeRelationship(m_modelObject.get(), index, newHandle, oldHandle);
   }
 }
 
 void ModelObjectVectorController::dataChange()
 {
-  QObject* sender = this->sender();
-  model::detail::ModelObject_Impl* impl = qobject_cast<model::detail::ModelObject_Impl*>(sender);
-  if (impl){
-    onDataChange(impl->getObject<model::ModelObject>());
+  if (m_modelObject){
+    onDataChange(m_modelObject.get());
   }
 }
 
 void ModelObjectVectorController::change()
 {
-  QObject* sender = this->sender();
-  model::detail::ModelObject_Impl* impl = qobject_cast<model::detail::ModelObject_Impl*>(sender);
-  if (impl){
-    onChange(impl->getObject<model::ModelObject>());
+  if (m_modelObject){
+    onChange(m_modelObject.get());
   }
 }
 

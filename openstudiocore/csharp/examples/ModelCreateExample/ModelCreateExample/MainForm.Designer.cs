@@ -1,4 +1,4 @@
-namespace RunManagerExample
+namespace ModelCreateExample
 {
     partial class MainForm
     {

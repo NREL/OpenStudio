@@ -1,38 +1,45 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "ScriptItem.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
-#include "ScriptFolderListView.hpp"
 
-#include "../runmanager/lib/RunManager.hpp"
-#include "../runmanager/lib/RubyJobUtils.hpp"
+//#include "../runmanager/lib/RunManager.hpp"
+//#include "../runmanager/lib/RubyJobUtils.hpp"
 
 #include "../utilities/core/Assert.hpp"
-#include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/Containers.hpp"
 
 #include <QDir>
 #include <QMessageBox>
 
-#include <boost/filesystem.hpp>
+
 
 namespace openstudio {
 
@@ -45,128 +52,116 @@ ScriptItem::ScriptItem(const openstudio::path& path,
                        OSItemType type,
                        QWidget * parent)
   : OSItem(scriptToItemId(path), type, parent),
-    m_removed(false),
-    m_scriptInfo(path, true, false)
+    m_removed(false)
+    //m_scriptInfo(path, true, false)
 {
   setText(openstudio::toQString(path.filename()));
   setLeftPixmap(QPixmap(":/images/icon_scripts.png"));
-  if (boost::regex_search(toString(itemId().sourceId()),boost::regex("resource"))) {
-    m_scriptInfo.isUserScript = false;
-  }
-  else {
-    try {
-      m_scriptInfo = runmanager::RubyJobBuilder::updateArgumentsFromDb(m_scriptInfo);
-    } catch (const runmanager::ScriptDetectionError &e) {
-      // Nothing to display here in the constructor
-      m_scriptInfo = e.scriptInfo;
-    }
-  }
+  //if (boost::regex_search(toString(itemId().sourceId()),boost::regex("resource"))) {
+  //  m_scriptInfo.isUserScript = false;
+  //}
+  //else {
+  //  try {
+  //    m_scriptInfo = runmanager::RubyJobBuilder::updateArgumentsFromDb(m_scriptInfo);
+  //  } catch (const runmanager::ScriptDetectionError &e) {
+  //    // Nothing to display here in the constructor
+  //    m_scriptInfo = e.scriptInfo;
+  //  }
+  //}
 
 
-  std::shared_ptr<OSDocument> osDoc = OSAppBase::instance()->currentDocument();
-  connect(this, &ScriptItem::argChanged, osDoc.get(), &OSDocument::markAsModified);
+  //std::shared_ptr<OSDocument> osDoc = OSAppBase::instance()->currentDocument();
+  //connect(this, &ScriptItem::argChanged, osDoc.get(), &OSDocument::markAsModified);
 }
 
 openstudio::path ScriptItem::path() const {
-  return m_scriptInfo.scriptPath;
+  //return m_scriptInfo.scriptPath;
+  return openstudio::path();
 }
 
 openstudio::path ScriptItem::argsDbPath() const {
-  return m_scriptInfo.dbPath;
+  //return m_scriptInfo.dbPath;
+  return openstudio::path();
 }
 
 bool ScriptItem::isUserScript() const {
-  return m_scriptInfo.isUserScript;
+  //return m_scriptInfo.isUserScript;
+  return false;
 }
 
 void ScriptItem::setIsUserScript(bool isUserScript) {
-  m_scriptInfo.isUserScript = isUserScript;
+  //m_scriptInfo.isUserScript = isUserScript;
 }
 
-void ScriptItem::refreshArgumentsFromScript(runmanager::RunManager t_rm)
-{
-  if (t_rm.getConfigOptions().getTools().getAllByName("ruby").tools().size() == 0)
-  {
-    QMessageBox::critical(this,
-        "Ruby Not Installed",
-        "Please install and locate ruby to use user scripts in OpenStudio.",
-        QMessageBox::Ok);
-  } else {
-    try {
-      m_scriptInfo = runmanager::RubyJobBuilder::refreshArgumentsFromScript(t_rm, m_scriptInfo);
-    } catch (const runmanager::ScriptDetectionError &e) {
-      m_scriptInfo = e.scriptInfo;
+//void ScriptItem::refreshArgumentsFromScript(runmanager::RunManager t_rm)
+//{
+//  if (t_rm.getConfigOptions().getTools().getAllByName("ruby").tools().size() == 0)
+//  {
+//    QMessageBox::critical(this,
+//        "Ruby Not Installed",
+//        "Please install and locate ruby to use user scripts in OpenStudio.",
+//        QMessageBox::Ok);
+//  } else {
+//    try {
+//      m_scriptInfo = runmanager::RubyJobBuilder::refreshArgumentsFromScript(t_rm, m_scriptInfo);
+//    } catch (const runmanager::ScriptDetectionError &e) {
+//      m_scriptInfo = e.scriptInfo;
+//
+//      QMessageBox::information(this,
+//          "Could not retrieve user script arguments",
+//          e.what(),
+//          QMessageBox::Ok);
+//    }
+//  }
+//}
 
-      QMessageBox::information(this,
-          "Could not retrieve user script arguments",
-          e.what(),
-          QMessageBox::Ok);
-    }
-  }
-}
 
-
-std::vector<ruleset::OSArgument> ScriptItem::osArguments() const {
-  ruleset::OSArgumentVector result;
-  for (const auto & elem : m_scriptInfo.arguments)
-  {
-    result.push_back(elem.second);
-  }
+std::vector<measure::OSArgument> ScriptItem::osArguments() const {
+  measure::OSArgumentVector result;
+  //for (const auto & elem : m_scriptInfo.arguments)
+  //{
+  //  result.push_back(elem.second);
+  //}
   return result;
 }
 
-boost::optional<ruleset::UserScriptInfo> ScriptItem::userScriptInfo() const {
+boost::optional<measure::OSMeasureInfo> ScriptItem::userScriptInfo() const {
   if (isUserScript()) {
-    return ruleset::UserScriptInfo(path(),osArguments());
+    OS_ASSERT(false);
+    //return measure::OSMeasureInfo(path(),osArguments());
   }
   return boost::none;
 }
 
 openstudio::path ScriptItem::resourcesPath() const {
-/*
-  const ScriptFolderListView* scriptFolders =
-      OSAppBase::instance()->currentDocument()->scriptFolderListView();
-  QString folderName = itemId().sourceId();
-  openstudio::path result;
-  if (folderName == "post_energyplus") {
-    result = scriptFolders->rootPath();
-  }
-  else if ((folderName == "idf_resources") || (folderName == "idf_scripts")) {
-    result = scriptFolders->rootPath() / toPath("idf_resources");
-  }
-  else {
-    result = scriptFolders->rootPath() / toPath("model_resources");
-  }
-  return result;
-*/
   return openstudio::path();
 }
 
-void ScriptItem::setOSArgument(const ruleset::OSArgument& arg)
+void ScriptItem::setOSArgument(const measure::OSArgument& arg)
 {
-  m_scriptInfo.arguments[arg.name()] = arg;
-  m_scriptInfo.argsChanged = true;
-  emit argChanged();
+  //m_scriptInfo.arguments[arg.name()] = arg;
+  //m_scriptInfo.argsChanged = true;
+  //emit argChanged();
 }
 
 void ScriptItem::saveArgumentsToDb() {
-  try {
-    m_scriptInfo = runmanager::RubyJobBuilder::saveArgumentsToDb(m_scriptInfo);
-  } catch (const runmanager::ScriptDetectionError &e) {
-    QMessageBox::information(this,
-        "User Script Argument Values not Saved",
-        e.what(),
-        QMessageBox::Ok);
-    m_scriptInfo = e.scriptInfo;
-  }
+  //try {
+  //  m_scriptInfo = runmanager::RubyJobBuilder::saveArgumentsToDb(m_scriptInfo);
+  //} catch (const runmanager::ScriptDetectionError &e) {
+  //  QMessageBox::information(this,
+  //      "User Script Argument Values not Saved",
+  //      e.what(),
+  //      QMessageBox::Ok);
+  //  m_scriptInfo = e.scriptInfo;
+  //}
 }
 
 
 void ScriptItem::deleteDb() {
   m_removed = true;
-  if (boost::filesystem::exists(argsDbPath())) {
-    boost::filesystem::remove(argsDbPath());
-    boost::filesystem::remove(toPath(toString((argsDbPath())) + "-journal"));
+  if (openstudio::filesystem::exists(argsDbPath())) {
+    openstudio::filesystem::remove(argsDbPath());
+    openstudio::filesystem::remove(toPath(toString((argsDbPath())) + "-journal"));
   }
 }
 
@@ -185,23 +180,24 @@ bool ScriptItem::equal(const openstudio::OSItem* otherItem) const
 
 void ScriptItem::onObjectChanged()
 {
-  this->setText(openstudio::toQString(m_scriptInfo.scriptPath.filename()));
+  //this->setText(openstudio::toQString(m_scriptInfo.scriptPath.filename()));
 }
 
 
 bool ScriptItem::updateArgumentsFromDb()
 {
-  try {
-    m_scriptInfo = runmanager::RubyJobBuilder::updateArgumentsFromDb(m_scriptInfo);
-  } catch (const runmanager::ScriptDetectionError &e) {
-    m_scriptInfo = e.scriptInfo;
+  //try {
+  //  m_scriptInfo = runmanager::RubyJobBuilder::updateArgumentsFromDb(m_scriptInfo);
+  //} catch (const runmanager::ScriptDetectionError &e) {
+  //  m_scriptInfo = e.scriptInfo;
 
-    QMessageBox::information(this,
-        "Could not retrieve user script arguments",
-        e.what(),
-        QMessageBox::Ok);
-  }
-  return m_scriptInfo.detectionSucceeded;
+  //  QMessageBox::information(this,
+  //      "Could not retrieve user script arguments",
+  //      e.what(),
+  //      QMessageBox::Ok);
+  //}
+  //return m_scriptInfo.detectionSucceeded;
+  return false;
 }
 
 

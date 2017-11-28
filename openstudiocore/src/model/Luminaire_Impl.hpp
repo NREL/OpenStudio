@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef MODEL_LUMINAIRE_IMPL_HPP
 #define MODEL_LUMINAIRE_IMPL_HPP
@@ -41,51 +50,51 @@ namespace detail {
 
   /** Luminaire_Impl is a SpaceLoadInstance_Impl that is the implementation class for Luminaire.*/
   class MODEL_API Luminaire_Impl : public SpaceLoadInstance_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(bool isScheduleDefaulted READ isScheduleDefaulted);
 
-    Q_PROPERTY(double positionXcoordinate READ positionXcoordinate WRITE setPositionXcoordinate);
-    Q_PROPERTY(openstudio::Quantity positionXcoordinate_SI READ positionXcoordinate_SI WRITE setPositionXcoordinate);
-    Q_PROPERTY(openstudio::Quantity positionXcoordinate_IP READ positionXcoordinate_IP WRITE setPositionXcoordinate);
 
-    Q_PROPERTY(double positionYcoordinate READ positionYcoordinate WRITE setPositionYcoordinate);
-    Q_PROPERTY(openstudio::Quantity positionYcoordinate_SI READ positionYcoordinate_SI WRITE setPositionYcoordinate);
-    Q_PROPERTY(openstudio::Quantity positionYcoordinate_IP READ positionYcoordinate_IP WRITE setPositionYcoordinate);
 
-    Q_PROPERTY(double positionZcoordinate READ positionZcoordinate WRITE setPositionZcoordinate);
-    Q_PROPERTY(openstudio::Quantity positionZcoordinate_SI READ positionZcoordinate_SI WRITE setPositionZcoordinate);
-    Q_PROPERTY(openstudio::Quantity positionZcoordinate_IP READ positionZcoordinate_IP WRITE setPositionZcoordinate);
 
-    Q_PROPERTY(double psiRotationAroundXaxis READ psiRotationAroundXaxis WRITE setPsiRotationAroundXaxis RESET resetPsiRotationAroundXaxis);
-    Q_PROPERTY(openstudio::Quantity psiRotationAroundXaxis_SI READ psiRotationAroundXaxis_SI WRITE setPsiRotationAroundXaxis RESET resetPsiRotationAroundXaxis);
-    Q_PROPERTY(openstudio::Quantity psiRotationAroundXaxis_IP READ psiRotationAroundXaxis_IP WRITE setPsiRotationAroundXaxis RESET resetPsiRotationAroundXaxis);
-    Q_PROPERTY(bool isPsiRotationAroundXaxisDefaulted READ isPsiRotationAroundXaxisDefaulted);
 
-    Q_PROPERTY(double thetaRotationAroundYaxis READ thetaRotationAroundYaxis WRITE setThetaRotationAroundYaxis RESET resetThetaRotationAroundYaxis);
-    Q_PROPERTY(openstudio::Quantity thetaRotationAroundYaxis_SI READ thetaRotationAroundYaxis_SI WRITE setThetaRotationAroundYaxis RESET resetThetaRotationAroundYaxis);
-    Q_PROPERTY(openstudio::Quantity thetaRotationAroundYaxis_IP READ thetaRotationAroundYaxis_IP WRITE setThetaRotationAroundYaxis RESET resetThetaRotationAroundYaxis);
-    Q_PROPERTY(bool isThetaRotationAroundYaxisDefaulted READ isThetaRotationAroundYaxisDefaulted);
 
-    Q_PROPERTY(double phiRotationAroundZaxis READ phiRotationAroundZaxis WRITE setPhiRotationAroundZaxis RESET resetPhiRotationAroundZaxis);
-    Q_PROPERTY(openstudio::Quantity phiRotationAroundZaxis_SI READ phiRotationAroundZaxis_SI WRITE setPhiRotationAroundZaxis RESET resetPhiRotationAroundZaxis);
-    Q_PROPERTY(openstudio::Quantity phiRotationAroundZaxis_IP READ phiRotationAroundZaxis_IP WRITE setPhiRotationAroundZaxis RESET resetPhiRotationAroundZaxis);
-    Q_PROPERTY(bool isPhiRotationAroundZaxisDefaulted READ isPhiRotationAroundZaxisDefaulted);
 
-    Q_PROPERTY(double fractionReplaceable READ fractionReplaceable WRITE setFractionReplaceable RESET resetFractionReplaceable);
-    Q_PROPERTY(openstudio::Quantity fractionReplaceable_SI READ fractionReplaceable_SI WRITE setFractionReplaceable RESET resetFractionReplaceable);
-    Q_PROPERTY(openstudio::Quantity fractionReplaceable_IP READ fractionReplaceable_IP WRITE setFractionReplaceable RESET resetFractionReplaceable);
-    Q_PROPERTY(bool isFractionReplaceableDefaulted READ isFractionReplaceableDefaulted);
 
-    Q_PROPERTY(double multiplier READ multiplier WRITE setMultiplier RESET resetMultiplier);
-    Q_PROPERTY(bool isMultiplierDefaulted READ isMultiplierDefaulted);
 
-    Q_PROPERTY(std::string endUseSubcategory READ endUseSubcategory WRITE setEndUseSubcategory RESET resetEndUseSubcategory);
-    Q_PROPERTY(bool isEndUseSubcategoryDefaulted READ isEndUseSubcategoryDefaulted);
 
-    Q_PROPERTY(double lightingPower READ lightingPower);
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> luminaireDefinition READ luminaireDefinitionAsModelObject WRITE setLuminaireDefinitionAsModelObject);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> schedule READ scheduleAsModelObject WRITE setScheduleAsModelObject RESET resetSchedule);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -105,9 +114,9 @@ namespace detail {
     //@}
     /** @name Virtual Methods */
     //@{
-    
+
     virtual const std::vector<std::string>& outputVariableNames() const override;
-    
+
     virtual IddObjectType iddObjectType() const override;
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
@@ -224,7 +233,7 @@ namespace detail {
 
     void resetMultiplier();
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
 

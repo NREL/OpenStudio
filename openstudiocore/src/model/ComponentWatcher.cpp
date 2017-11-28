@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "ComponentWatcher.hpp"
 #include "ComponentWatcher_Impl.hpp"
@@ -27,6 +36,7 @@
 #include "ModelObject_Impl.hpp"
 
 #include "ComponentData_Impl.hpp"
+#include "../nano/nano_signal_slot.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
@@ -55,24 +65,23 @@ namespace detail {
       // connect to object's signals
       implPtr = object.getImpl<ModelObject_Impl>();
       // data change
-      connect(implPtr.get(), &ModelObject_Impl::onDataChange, this, &ComponentWatcher_Impl::dataChange);
+      implPtr.get()->ModelObject_Impl::onDataChange.connect<ComponentWatcher_Impl, &ComponentWatcher_Impl::dataChange>(this);
       // name change
-      connect(implPtr.get(), &ModelObject_Impl::onNameChange, this, &ComponentWatcher_Impl::nameChange);
+      implPtr.get()->ModelObject_Impl::onNameChange.connect<ComponentWatcher_Impl, &ComponentWatcher_Impl::nameChange>(this);
       // relationship change
-      connect(implPtr.get(), &ModelObject_Impl::onRelationshipChange, this, &ComponentWatcher_Impl::relationshipChange);
+      implPtr.get()->ModelObject_Impl::onRelationshipChange.connect<ComponentWatcher_Impl, &ComponentWatcher_Impl::relationshipChange>(this);
       // remove
-      connect(implPtr.get(), &ModelObject_Impl::onRemoveFromWorkspace, this, &ComponentWatcher_Impl::objectRemove);
+      implPtr.get()->ModelObject_Impl::onRemoveFromWorkspace.connect<ComponentWatcher_Impl, &ComponentWatcher_Impl::objectRemove>(this);
     }
     // connect signals for ComponentData, ComponentDataTags, and ComponentDataAttributes
     implPtr = componentData.getImpl<ModelObject_Impl>();
     // component data change
-    connect(implPtr.get(), &ModelObject_Impl::onDataChange, this, &ComponentWatcher_Impl::componentDataChange);
+    implPtr.get()->ModelObject_Impl::onDataChange.connect<ComponentWatcher_Impl, &ComponentWatcher_Impl::componentDataChange>(this);
     // component data remove
-    connect(implPtr.get(), &ModelObject_Impl::onRemoveFromWorkspace, this, &ComponentWatcher_Impl::objectRemove);
+    implPtr.get()->ModelObject_Impl::onRemoveFromWorkspace.connect<ComponentWatcher_Impl, &ComponentWatcher_Impl::objectRemove>(this);
     // connect to addWorkspaceObject signal
     std::shared_ptr<Model_Impl> modelImplPtr = m_componentData.model().getImpl<Model_Impl>();
-    connect(modelImplPtr.get(), static_cast<void (Model_Impl::*)(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&) const>(&Model_Impl::addWorkspaceObject),
-      this, &ComponentWatcher_Impl::objectAdd);
+    modelImplPtr.get()->Model_Impl::addWorkspaceObject.connect<ComponentWatcher_Impl, &ComponentWatcher_Impl::objectAdd>(this);
   }
 
   ComponentWatcher ComponentWatcher_Impl::componentWatcher() const {
@@ -111,17 +120,20 @@ namespace detail {
   }
 
   void ComponentWatcher_Impl::objectRemove(const Handle& handleOfRemovedObject) {
+
     // no ComponentData means no Component to watch
     if (handleOfRemovedObject == m_componentData.handle()) {
-      emit obsolete(componentWatcher());
+      this->obsolete.nano_emit(componentWatcher());
       return;
     }
+
     // if removedObject is the primary componentObject, nullify the component.
     OS_ASSERT(m_componentObjects.size() > 0);
     if (handleOfRemovedObject == m_componentObjects[0].handle()) {
       mf_removeComponent();
       return;
     }
+
     // if removedObject is a componentObject, remove from the vector and refresh
     // component contents
     auto it = std::find_if(m_componentObjects.begin(),
@@ -135,7 +147,7 @@ namespace detail {
     return;
   }
 
-  void ComponentWatcher_Impl::objectAdd(const WorkspaceObject& addedObject) {
+  void ComponentWatcher_Impl::objectAdd(const WorkspaceObject& addedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid) {
     /*IddObjectType type =*/ addedObject.iddObject().type();
     return;
   }
@@ -143,19 +155,19 @@ namespace detail {
   void ComponentWatcher_Impl::mf_changeComponentVersion() {
     // disconnect componentDataChange slot to avoid endless loop
     std::shared_ptr<ModelObject_Impl> implPtr = m_componentData.getImpl<ModelObject_Impl>();
-    disconnect(implPtr.get(), &ModelObject_Impl::onDataChange, this, &ComponentWatcher_Impl::componentDataChange);
+    implPtr.get()->onDataChange.disconnect<ComponentWatcher_Impl, &ComponentWatcher_Impl::componentDataChange>(this);
 
     // change version UUID
     m_componentData.createVersionUUID();
 
     // reconnect componentDataChange
-    connect(implPtr.get(), &ModelObject_Impl::onDataChange, this, &ComponentWatcher_Impl::componentDataChange);
+    implPtr.get()->ModelObject_Impl::onDataChange.connect<ComponentWatcher_Impl, &ComponentWatcher_Impl::componentDataChange>(this);
   }
 
   void ComponentWatcher_Impl::mf_refreshComponentContents(bool logWarnings) {
     // disconnect componentDataChange slot to avoid endless loop
     std::shared_ptr<ModelObject_Impl> implPtr = m_componentData.getImpl<ModelObject_Impl>();
-    disconnect(implPtr.get(), &ModelObject_Impl::onDataChange, this, &ComponentWatcher_Impl::componentDataChange);
+    implPtr.get()->onDataChange.disconnect<ComponentWatcher_Impl, &ComponentWatcher_Impl::componentDataChange>(this);
 
     // \todo logWarnings
     m_componentData.clearExtensibleGroups();
@@ -164,7 +176,7 @@ namespace detail {
     }
 
     // reconnect componentDataChange
-    connect(implPtr.get(), &ModelObject_Impl::onDataChange, this, &ComponentWatcher_Impl::componentDataChange);
+    implPtr.get()->ModelObject_Impl::onDataChange.connect<ComponentWatcher_Impl, &ComponentWatcher_Impl::componentDataChange>(this);
   }
 
   void ComponentWatcher_Impl::mf_removeComponent() {
@@ -195,7 +207,7 @@ std::shared_ptr<detail::ComponentWatcher_Impl> ComponentWatcher::getImpl() const
 }
 
 ComponentWatcher::ComponentWatcher(std::shared_ptr<detail::ComponentWatcher_Impl> impl)
-  : m_impl(impl)
+  : m_impl(std::move(impl))
 {}
 /// @endcond
 

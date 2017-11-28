@@ -1,21 +1,31 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
-*  All rights reserved.
-*  
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*  
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*  
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
+
 #include "ReverseTranslator.hpp"
 #include "ForwardTranslator.hpp"
 
@@ -72,6 +82,8 @@
 #include "../model/ScheduleRuleset_Impl.hpp"
 #include "../model/ScheduleTypeLimits.hpp"
 #include "../model/ScheduleTypeLimits_Impl.hpp"
+#include "../model/SurfacePropertyConvectionCoefficients.hpp"
+#include "../model/SurfacePropertyConvectionCoefficients_Impl.hpp"
 #include "../model/PlantLoop.hpp"
 #include "../model/PlantLoop_Impl.hpp"
 #include "../model/WaterUseConnections.hpp"
@@ -83,6 +95,7 @@
 #include "../model/ThermostatSetpointDualSetpoint.hpp"
 #include "../model/AirLoopHVAC.hpp"
 #include "../model/AirLoopHVAC_Impl.hpp"
+#include "../model/SurfacePropertyConvectionCoefficients.hpp"
 
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
@@ -98,7 +111,6 @@
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Assert.hpp"
 
-#include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QStringList>
@@ -1166,6 +1178,68 @@ namespace sdd {
     return space;
   }
 
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateConvectionCoefficients(const QDomElement& element, const QDomDocument& doc, openstudio::model::PlanarSurface& surface)
+  {
+    boost::optional<std::string> convectionCoefficient1Location;
+    boost::optional<std::string> convectionCoefficient1Type;
+    boost::optional<double> convectionCoefficient1;
+    boost::optional<std::string> convectionCoefficient2Location;
+    boost::optional<std::string> convectionCoefficient2Type;
+    boost::optional<double> convectionCoefficient2;
+
+    QDomElement insideConvCoefElement = element.firstChildElement("InsideConvCoef");
+    if (!insideConvCoefElement.isNull()){
+
+      // sdd IP units (Btu/h-ft2-F), os SI units (W/m2-K) 
+      Quantity coefIP(insideConvCoefElement.text().toDouble(), BTUUnit(BTUExpnt(1, -2, -1, -1)));
+      OptionalQuantity coefSI = QuantityConverter::instance().convert(coefIP, UnitSystem(UnitSystem::Wh));
+      OS_ASSERT(coefSI);
+      OS_ASSERT(coefSI->units() == WhUnit(WhExpnt(1, 0, -2, -1)));
+
+      convectionCoefficient1Location = "Inside";
+      convectionCoefficient1 = coefSI->value();
+    }
+
+    QDomElement outsideConvCoefElement = element.firstChildElement("OutsideConvCoef");
+    if (!outsideConvCoefElement.isNull()){
+
+      // sdd IP units (Btu/h-ft2-F), os SI units (W/m2-K) 
+      Quantity coefIP(outsideConvCoefElement.text().toDouble(), BTUUnit(BTUExpnt(1, -2, -1, -1)));
+      OptionalQuantity coefSI = QuantityConverter::instance().convert(coefIP, UnitSystem(UnitSystem::Wh));
+      OS_ASSERT(coefSI);
+      OS_ASSERT(coefSI->units() == WhUnit(WhExpnt(1, 0, -2, -1)));
+
+      if (convectionCoefficient1Location){
+        convectionCoefficient2Location = "Outside";
+        convectionCoefficient2 = coefSI->value();
+      } else {
+        convectionCoefficient1Location = "Outside";
+        convectionCoefficient1 = coefSI->value();
+      }
+    }
+
+    if (convectionCoefficient1Location){
+
+      if( auto derivedSurface = surface.optionalCast<model::Surface>() ) {
+        model::SurfacePropertyConvectionCoefficients surfacePropertyConvectionCoefficients(derivedSurface.get());
+
+        surfacePropertyConvectionCoefficients.setConvectionCoefficient1Location(*convectionCoefficient1Location);
+        surfacePropertyConvectionCoefficients.setConvectionCoefficient1Type("Value");
+        surfacePropertyConvectionCoefficients.setConvectionCoefficient1(*convectionCoefficient1);
+
+        if (convectionCoefficient2Location){
+          surfacePropertyConvectionCoefficients.setConvectionCoefficient2Location(*convectionCoefficient2Location);
+          surfacePropertyConvectionCoefficients.setConvectionCoefficient2Type("Value");
+          surfacePropertyConvectionCoefficients.setConvectionCoefficient2(*convectionCoefficient2);
+        }
+
+        return surfacePropertyConvectionCoefficients;
+      }
+    }
+
+    return boost::none;
+  }
+
   boost::optional<model::ModelObject> ReverseTranslator::translateSurface(const QDomElement& element, const QDomDocument& doc, openstudio::model::Space& space)
   {
     boost::optional<model::ModelObject> result;
@@ -1473,6 +1547,9 @@ namespace sdd {
         }
       }
 
+      // Convert surface convection coefficients
+      translateConvectionCoefficients(element, doc, subSurface);
+        
     }else if (tagName == "Dr"){
 
       subSurface.setSubSurfaceType("Door");
@@ -1488,6 +1565,9 @@ namespace sdd {
         }
       }
 
+      // Convert surface convection coefficients
+      translateConvectionCoefficients(element, doc, subSurface);
+
     }else if (tagName == "Skylt"){
 
       subSurface.setSubSurfaceType("Skylight");
@@ -1502,6 +1582,9 @@ namespace sdd {
           LOG(Error, "Cannot find construction '" << constructionName << "'");
         }
       }
+
+      // Convert surface convection coefficients
+      translateConvectionCoefficients(element, doc, subSurface);
 
     }else{  
       LOG(Error, "Unknown subsurface type '" << toString(tagName) << "'");

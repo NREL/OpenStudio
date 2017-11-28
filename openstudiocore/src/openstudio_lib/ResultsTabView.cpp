@@ -1,34 +1,36 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "ResultsTabView.hpp"
-#if QT_VERSION >= 0x050400
-#include "ResultsWebEngineView.hpp"
-#else
-#include "ResultsWebView.hpp"
-#include <QWebInspector>
-#endif
-
 #include "OSDocument.hpp"
-
 #include "OSAppBase.hpp"
 
+#include <QFile>
 #include <QBoxLayout>
 #include <QComboBox>
 #include <QDesktopWidget>
@@ -39,15 +41,9 @@
 #include <QPushButton>
 #include <QString>
 #include <QRegExp>
-
-#include "../runmanager/lib/FileInfo.hpp"
-#include "../runmanager/lib/JobStatusWidget.hpp"
-#include "../runmanager/lib/RunManager.hpp"
-
-#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include <QWebEnginePage>
+#include <QWebEngineSettings>
 #include "../utilities/core/Assert.hpp"
-
-#include <boost/filesystem.hpp>
 
 namespace openstudio {
 
@@ -55,19 +51,17 @@ ResultsTabView::ResultsTabView(const QString & tabLabel,
   TabType tabType,
   QWidget * parent)
   : MainTabView(tabLabel, tabType, parent),
-  m_resultsView(new ResultsView())
+  m_resultsView(new ResultsView(parent))
 {
   addTabWidget(m_resultsView);
   m_resultsView->setAutoFillBackground(false);
 
-  connect(this, &ResultsTabView::treeChanged, m_resultsView, &ResultsView::treeChanged);
-
-}
-
-void ResultsTabView::searchForExistingResults(const openstudio::path &t_runDir)
-{
-  LOG(Debug, "searchForExistingResults " << openstudio::toString(t_runDir));
-  m_resultsView->searchForExistingResults(t_runDir);
+  auto savePath = OSAppBase::instance()->currentDocument()->savePath();
+  if( ! savePath.isEmpty() ) {
+    openstudio::path runPath = toPath(savePath).parent_path() / toPath(savePath).stem() / openstudio::toPath("run");
+    openstudio::path reportsPath = toPath(savePath).parent_path() / toPath(savePath).stem() / openstudio::toPath("reports");
+    m_resultsView->searchForExistingResults(runPath, reportsPath);
+  }
 }
 
 void ResultsTabView::onUnitSystemChange(bool t_isIP) 
@@ -76,24 +70,22 @@ void ResultsTabView::onUnitSystemChange(bool t_isIP)
   m_resultsView->onUnitSystemChange(t_isIP);
 }
 
-void ResultsTabView::resultsGenerated(const openstudio::path &t_sqlFilePath, const openstudio::path &t_radianceResultsPath)
-{
-  LOG(Debug, "resultsGenerated " << openstudio::toString(t_sqlFilePath) << " " << openstudio::toString(t_radianceResultsPath));
-  m_resultsView->resultsGenerated(t_sqlFilePath, t_radianceResultsPath);
-}
-
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ResultsView::ResultsView(QWidget *t_parent)
   : QWidget(t_parent),
     m_isIP(true),
-    m_openResultsViewerBtn(new QPushButton("Open ResultsViewer\nfor Detailed Reports"))
+    m_progressBar(new QProgressBar()),
+    m_refreshBtn(new QPushButton("Refresh")),
+    m_openDViewBtn(new QPushButton("Open DView for\nDetailed Reports"))
 {
 
   auto mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
 
-  connect(m_openResultsViewerBtn, &QPushButton::clicked, this, &ResultsView::openResultsViewerClicked);
+  connect(m_refreshBtn, &QPushButton::clicked, this, &ResultsView::refreshClicked);
+
+  connect(m_openDViewBtn, &QPushButton::clicked, this, &ResultsView::openDViewClicked);
   
   auto hLayout = new QHBoxLayout(this);
   mainLayout->addLayout(hLayout);
@@ -109,48 +101,60 @@ ResultsView::ResultsView(QWidget *t_parent)
 
   hLayout->addStretch();
 
-  hLayout->addWidget(m_openResultsViewerBtn, 0, Qt::AlignVCenter);
+  hLayout->addWidget(m_progressBar, 0, Qt::AlignVCenter);
+  m_progressBar->setMinimum(0);
+  m_progressBar->setMaximum(100);
+  m_progressBar->setValue(0);
+  m_progressBar->setVisible(false); // make visible when load first page
 
-  m_view = new ResultsWebView(this);
-  m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  mainLayout->addWidget(m_view, 0, Qt::AlignTop);
+  hLayout->addWidget(m_refreshBtn, 0, Qt::AlignVCenter);
+  m_refreshBtn->setVisible(true);
 
-  #if _DEBUG || (__GNUC__ && !NDEBUG)
-    #if QT_VERSION >= 0x050400
-      // QWebEngine debug stuff
-    #else
-      m_view->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
-    #endif
-  #else
-    m_view->setContextMenuPolicy(Qt::NoContextMenu);
-  #endif
+  hLayout->addWidget(m_openDViewBtn, 0, Qt::AlignVCenter);
+
+  m_view = new QWebEngineView(this);
+  m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::LocalContentCanAccessRemoteUrls, true);
+  m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::SpatialNavigationEnabled, true);
+
+  connect(m_view, &QWebEngineView::loadFinished, this, &ResultsView::onLoadFinished);
+  connect(m_view, &QWebEngineView::loadProgress, this, &ResultsView::onLoadProgress);
+  connect(m_view, &QWebEngineView::loadStarted, this, &ResultsView::onLoadStarted);
+  connect(m_view, &QWebEngineView::renderProcessTerminated, this, &ResultsView::onRenderProcessTerminated);
+  
+  // Qt 5.8 and higher
+  //m_view->setAttribute(QWebEngineSettings::WebAttribute::AllowRunningInsecureContent, true);
+
+  //m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  m_view->setContextMenuPolicy(Qt::NoContextMenu);
+
+  //mainLayout->addWidget(m_view, 10, Qt::AlignTop);
+  mainLayout->addWidget(m_view);
+  
 }
 
 ResultsView::~ResultsView()
 {
   delete m_view;
-#if QT_VERSION < 0x050400
-  QWebSettings::clearMemoryCaches();
-#endif
 }
 
-void ResultsView::openResultsViewerClicked()
+void ResultsView::refreshClicked()
 {
-  LOG(Debug, "openResultsViewerClicked");
+  m_view->triggerPageAction(QWebEnginePage::ReloadAndBypassCache);
+}
+
+void ResultsView::openDViewClicked()
+{
+  LOG(Debug, "openDViewClicked");
 
 #ifdef Q_OS_MAC
-  openstudio::path resultsviewer
-    = openstudio::getApplicationRunDirectory() / openstudio::toPath("../../../ResultsViewer.app/Contents/MacOS/ResultsViewer");
+  openstudio::path dview
+    = openstudio::toPath(QCoreApplication::applicationDirPath()) / openstudio::toPath("../../../DView.app/Contents/MacOS/DView");
 #else
-  openstudio::path resultsviewer
-    = openstudio::getApplicationRunDirectory() / openstudio::toPath("ResultsViewer");
+  openstudio::path dview
+    = openstudio::toPath(QCoreApplication::applicationDirPath()) / openstudio::toPath("DView");
 #endif
 
   QStringList args;
-
-  // instruct ResultsViewer to make its own copies of the sql files passed in and to clean them up
-  // when done
-  args.push_back("--maketempcopies"); 
 
   if (!m_sqlFilePath.empty())
   {
@@ -162,9 +166,9 @@ void ResultsView::openResultsViewerClicked()
     args.push_back(openstudio::toQString(m_radianceResultsPath));
   }
 
-  if (!QProcess::startDetached(openstudio::toQString(resultsviewer), args))
+  if (!QProcess::startDetached(openstudio::toQString(dview), args))
   {
-    QMessageBox::critical(this, "Unable to launch ResultsViewer", "ResultsViewer was not found in the expected location:\n" + openstudio::toQString(resultsviewer));
+    QMessageBox::critical(this, "Unable to launch DView", "DView was not found in the expected location:\n" + openstudio::toQString(dview));
   }
 }
 
@@ -210,7 +214,7 @@ struct ResultsPathSorter
   }
 };
 
-void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
+void ResultsView::searchForExistingResults(const openstudio::path &t_runDir, const openstudio::path &t_reportsDir)
 {
   LOG(Debug, "Looking for existing results in: " << openstudio::toString(t_runDir));
 
@@ -218,7 +222,7 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
   std::vector<openstudio::path> radout;
   std::vector<openstudio::path> reports;
 
-  for ( boost::filesystem::recursive_directory_iterator end, dir(t_runDir); 
+  for ( openstudio::filesystem::recursive_directory_iterator end, dir(t_runDir); 
         dir != end; 
         ++dir ) 
   {
@@ -228,9 +232,23 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
     } else if (openstudio::toString(p.filename()) == "radout.sql") {
       radout.push_back(p);
     } else if (openstudio::toString(p.filename()) == "report.html") {
-      reports.push_back(p);
+      //reports.push_back(p);
     } else if (openstudio::toString(p.filename()) == "eplustbl.htm") {
-      reports.push_back(p);
+      //reports.push_back(p);
+    }
+  }
+
+  LOG(Debug, "Looking for existing results in: " << openstudio::toString(t_reportsDir));
+
+  if( openstudio::filesystem::exists(t_reportsDir) ) {
+    for ( openstudio::filesystem::directory_iterator end, dir(t_reportsDir); 
+          dir != end; 
+          ++dir ) 
+    {
+      openstudio::path p = *dir;
+      if (openstudio::toString(p.extension()) == ".html" || openstudio::toString(p.extension()) == ".htm") {
+        reports.push_back(p);
+      }
     }
   }
 
@@ -255,53 +273,53 @@ void ResultsView::resultsGenerated(const openstudio::path &t_path, const openstu
   m_radianceResultsPath = t_radianceResultsPath;
 }
 
-openstudio::runmanager::RunManager ResultsView::runManager()
-{
-  return OSAppBase::instance()->project()->runManager();
-}
+//openstudio::runmanager::RunManager ResultsView::runManager()
+//{
+//  return OSAppBase::instance()->project()->runManager();
+//}
 
 void ResultsView::treeChanged(const openstudio::UUID &t_uuid)
 {
-  try {
-    openstudio::runmanager::Job j = runManager().getJob(t_uuid);
-    while (j.parent())
-    {
-      j = j.parent().get();
-    }
+  //try {
+  //  openstudio::runmanager::Job j = runManager().getJob(t_uuid);
+  //  while (j.parent())
+  //  {
+  //    j = j.parent().get();
+  //  }
 
-    openstudio::runmanager::TreeStatusEnum status = j.treeStatus();
+  //  openstudio::runmanager::TreeStatusEnum status = j.treeStatus();
 
-    QString fullPathString;
-    openstudio::path path;
+  //  QString fullPathString;
+  //  openstudio::path path;
 
-    if (status == openstudio::runmanager::TreeStatusEnum::Finished)
-    {
-      try {
-        openstudio::runmanager::Files f = j.treeAllFiles().getAllByFilename("report.html");
-        std::vector<openstudio::runmanager::FileInfo> t_files = f.files();
-        std::vector<openstudio::path> reports;
-        for (const openstudio::runmanager::FileInfo& file : t_files) {
-          reports.push_back(file.fullPath);
-        }
-        f = j.treeAllFiles().getAllByFilename("eplustbl.htm");
-        t_files = f.files();
-        for (const openstudio::runmanager::FileInfo& file : t_files) {
-          reports.push_back(file.fullPath);
-        }
-        populateComboBox(reports);
-      } catch (const std::exception &e) {
-        LOG(Debug, "Tree finished, error getting html file: " << e.what());
-      } catch (...) {
-        LOG(Debug, "Tree finished, error getting html file");
-        // no html file exists
-      }
-    } 
-  } catch (const std::exception &e) {
-    LOG(Debug, "Tree finished, error getting status: " << e.what());
-  } catch (...) {
-    LOG(Debug, "Tree finished, error getting status");
-    // no html file exists
-  }
+  //  if (status == openstudio::runmanager::TreeStatusEnum::Finished)
+  //  {
+  //    try {
+  //      openstudio::runmanager::Files f = j.treeAllFiles().getAllByFilename("report.html");
+  //      std::vector<openstudio::runmanager::FileInfo> t_files = f.files();
+  //      std::vector<openstudio::path> reports;
+  //      for (const openstudio::runmanager::FileInfo& file : t_files) {
+  //        reports.push_back(file.fullPath);
+  //      }
+  //      f = j.treeAllFiles().getAllByFilename("eplustbl.htm");
+  //      t_files = f.files();
+  //      for (const openstudio::runmanager::FileInfo& file : t_files) {
+  //        reports.push_back(file.fullPath);
+  //      }
+  //      populateComboBox(reports);
+  //    } catch (const std::exception &e) {
+  //      LOG(Debug, "Tree finished, error getting html file: " << e.what());
+  //    } catch (...) {
+  //      LOG(Debug, "Tree finished, error getting html file");
+  //      // no html file exists
+  //    }
+  //  } 
+  //} catch (const std::exception &e) {
+  //  LOG(Debug, "Tree finished, error getting status: " << e.what());
+  //} catch (...) {
+  //  LOG(Debug, "Tree finished, error getting status");
+  //  // no html file exists
+  //}
 }
 
 void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
@@ -317,7 +335,7 @@ void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
     QFile file(fullPathString);
     fullPathString.prepend("file:///");
 
-    if (openstudio::toString(report.filename()) == "eplustbl.htm"){
+    if (openstudio::toString(report.filename()) == "eplustbl.html" || openstudio::toString(report.filename()) == "eplustbl.htm"){
       
       m_comboBox->addItem("EnergyPlus Results",fullPathString);
 
@@ -358,30 +376,64 @@ void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
 void ResultsView::comboBoxChanged(int index)
 {
   QString filename = m_comboBox->itemData(index).toString();
+
+  // DLM: setting html here causes a flicker, wish there was a better way to clear the current page
+  //m_view->setHtml("");
+
+  // DLM: there is a 2MB limit on content set in setHtml
+  //QFile file(filename);
+  //QString content;
+  //if(file.open(QIODevice::ReadOnly)) {
+  //  QTextStream in(&file);
+  //  in.setCodec("UTF-8");
+  //  content = in.readAll();
+  //  file.close();
+  //}
+  //m_view->setHtml(content);
+
+  m_progressBar->setVisible(true);
+  m_progressBar->setStyleSheet("");
+  m_progressBar->setFormat("");
+  m_progressBar->setTextVisible(false);
+
   m_view->load(QUrl(filename));
 }
 
-ResultsWebView::ResultsWebView(QWidget * parent) :
-#if QT_VERSION >= 0x050400
-  QWebEngineView(parent)
-#else
-  QWebView(parent)
-#endif
+void 	ResultsView::onLoadFinished(bool ok)
 {
-  #if QT_VERSION >= 0x050400
-      // QWebEngine local storage
-  #else
-    this->page()->settings()->setAttribute(QWebSettings::LocalStorageEnabled, true);
-  #endif
+  QString title = m_view->title();
+  if (ok){
+    m_progressBar->setStyleSheet("");
+    m_progressBar->setFormat("");
+    m_progressBar->setTextVisible(false);
+  } else{
+    m_progressBar->setStyleSheet("QProgressBar::chunk {background-color: #FF0000;}");
+    m_progressBar->setFormat("Error");
+    m_progressBar->setTextVisible(true);
+  }
 }
 
-QSize ResultsWebView::sizeHint() const
+void 	ResultsView::onLoadProgress(int progress)
 {
-  QDesktopWidget widget;
-  QRect mainScreenSize = widget.availableGeometry(widget.primaryScreen());
-  int w = mainScreenSize.width();
-  int h = mainScreenSize.height();
-  return QSize(w,h);
+  m_progressBar->setStyleSheet("");
+  m_progressBar->setFormat("");
+  m_progressBar->setTextVisible(false);
+  m_progressBar->setValue(progress);
 }
+
+void 	ResultsView::onLoadStarted()
+{
+  m_progressBar->setStyleSheet("");
+  m_progressBar->setFormat("");
+  m_progressBar->setTextVisible(false);
+}
+
+void 	ResultsView::onRenderProcessTerminated(QWebEnginePage::RenderProcessTerminationStatus terminationStatus, int exitCode)
+{
+  m_progressBar->setStyleSheet("QProgressBar::chunk {background-color: #FF0000;}");
+  m_progressBar->setFormat("Error");
+  m_progressBar->setTextVisible(true);
+}
+
 
 } // openstudio

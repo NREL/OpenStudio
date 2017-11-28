@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef MODEL_ROOFVEGETATION_IMPL_HPP
 #define MODEL_ROOFVEGETATION_IMPL_HPP
@@ -33,93 +42,93 @@ namespace detail {
 
   /** RoofVegetation_Impl is a OpaqueMaterial_Impl that is the implementation class for RoofVegetation.*/
   class MODEL_API RoofVegetation_Impl : public OpaqueMaterial_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(double heightofPlants READ heightofPlants WRITE setHeightofPlants RESET resetHeightofPlants);
-    Q_PROPERTY(openstudio::Quantity heightofPlants_SI READ heightofPlants_SI WRITE setHeightofPlants RESET resetHeightofPlants);
-    Q_PROPERTY(openstudio::Quantity heightofPlants_IP READ heightofPlants_IP WRITE setHeightofPlants RESET resetHeightofPlants);
-    Q_PROPERTY(bool isHeightofPlantsDefaulted READ isHeightofPlantsDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double leafAreaIndex READ leafAreaIndex WRITE setLeafAreaIndex RESET resetLeafAreaIndex);
-    Q_PROPERTY(openstudio::Quantity leafAreaIndex_SI READ leafAreaIndex_SI WRITE setLeafAreaIndex RESET resetLeafAreaIndex);
-    Q_PROPERTY(openstudio::Quantity leafAreaIndex_IP READ leafAreaIndex_IP WRITE setLeafAreaIndex RESET resetLeafAreaIndex);
-    Q_PROPERTY(bool isLeafAreaIndexDefaulted READ isLeafAreaIndexDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double leafReflectivity READ leafReflectivity WRITE setLeafReflectivity RESET resetLeafReflectivity);
-    Q_PROPERTY(openstudio::Quantity leafReflectivity_SI READ leafReflectivity_SI WRITE setLeafReflectivity RESET resetLeafReflectivity);
-    Q_PROPERTY(openstudio::Quantity leafReflectivity_IP READ leafReflectivity_IP WRITE setLeafReflectivity RESET resetLeafReflectivity);
-    Q_PROPERTY(bool isLeafReflectivityDefaulted READ isLeafReflectivityDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double leafEmissivity READ leafEmissivity WRITE setLeafEmissivity RESET resetLeafEmissivity);
-    Q_PROPERTY(openstudio::Quantity leafEmissivity_SI READ leafEmissivity_SI WRITE setLeafEmissivity RESET resetLeafEmissivity);
-    Q_PROPERTY(openstudio::Quantity leafEmissivity_IP READ leafEmissivity_IP WRITE setLeafEmissivity RESET resetLeafEmissivity);
-    Q_PROPERTY(bool isLeafEmissivityDefaulted READ isLeafEmissivityDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double minimumStomatalResistance READ minimumStomatalResistance WRITE setMinimumStomatalResistance RESET resetMinimumStomatalResistance);
-    Q_PROPERTY(openstudio::Quantity minimumStomatalResistance_SI READ minimumStomatalResistance_SI WRITE setMinimumStomatalResistance RESET resetMinimumStomatalResistance);
-    Q_PROPERTY(openstudio::Quantity minimumStomatalResistance_IP READ minimumStomatalResistance_IP WRITE setMinimumStomatalResistance RESET resetMinimumStomatalResistance);
-    Q_PROPERTY(bool isMinimumStomatalResistanceDefaulted READ isMinimumStomatalResistanceDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(std::string soilLayerName READ soilLayerName WRITE setSoilLayerName RESET resetSoilLayerName);
-    Q_PROPERTY(bool isSoilLayerNameDefaulted READ isSoilLayerNameDefaulted);
+    
+    
 
-    Q_PROPERTY(std::string roughness READ roughness WRITE setRoughness RESET resetRoughness);
-    Q_PROPERTY(bool isRoughnessDefaulted READ isRoughnessDefaulted);
-    Q_PROPERTY(std::vector<std::string> roughnessValues READ roughnessValues);
+    
+    
+    
 
-    Q_PROPERTY(double thickness READ thickness WRITE setThickness RESET resetThickness);
-    Q_PROPERTY(openstudio::Quantity thickness_SI READ thickness_SI WRITE setThickness RESET resetThickness);
-    Q_PROPERTY(openstudio::Quantity thickness_IP READ thickness_IP WRITE setThickness RESET resetThickness);
-    Q_PROPERTY(bool isThicknessDefaulted READ isThicknessDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double conductivityofDrySoil READ conductivityofDrySoil WRITE setConductivityofDrySoil RESET resetConductivityofDrySoil);
-    Q_PROPERTY(openstudio::Quantity conductivityofDrySoil_SI READ conductivityofDrySoil_SI WRITE setConductivityofDrySoil RESET resetConductivityofDrySoil);
-    Q_PROPERTY(openstudio::Quantity conductivityofDrySoil_IP READ conductivityofDrySoil_IP WRITE setConductivityofDrySoil RESET resetConductivityofDrySoil);
-    Q_PROPERTY(bool isConductivityofDrySoilDefaulted READ isConductivityofDrySoilDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double densityofDrySoil READ densityofDrySoil WRITE setDensityofDrySoil RESET resetDensityofDrySoil);
-    Q_PROPERTY(openstudio::Quantity densityofDrySoil_SI READ densityofDrySoil_SI WRITE setDensityofDrySoil RESET resetDensityofDrySoil);
-    Q_PROPERTY(openstudio::Quantity densityofDrySoil_IP READ densityofDrySoil_IP WRITE setDensityofDrySoil RESET resetDensityofDrySoil);
-    Q_PROPERTY(bool isDensityofDrySoilDefaulted READ isDensityofDrySoilDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double specificHeatofDrySoil READ specificHeatofDrySoil WRITE setSpecificHeatofDrySoil RESET resetSpecificHeatofDrySoil);
-    Q_PROPERTY(openstudio::Quantity specificHeatofDrySoil_SI READ specificHeatofDrySoil_SI WRITE setSpecificHeatofDrySoil RESET resetSpecificHeatofDrySoil);
-    Q_PROPERTY(openstudio::Quantity specificHeatofDrySoil_IP READ specificHeatofDrySoil_IP WRITE setSpecificHeatofDrySoil RESET resetSpecificHeatofDrySoil);
-    Q_PROPERTY(bool isSpecificHeatofDrySoilDefaulted READ isSpecificHeatofDrySoilDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double thermalAbsorptance READ thermalAbsorptance WRITE setThermalAbsorptance RESET resetThermalAbsorptance);
-    Q_PROPERTY(openstudio::Quantity thermalAbsorptance_SI READ thermalAbsorptance_SI WRITE setThermalAbsorptance RESET resetThermalAbsorptance);
-    Q_PROPERTY(openstudio::Quantity thermalAbsorptance_IP READ thermalAbsorptance_IP WRITE setThermalAbsorptance RESET resetThermalAbsorptance);
-    Q_PROPERTY(bool isThermalAbsorptanceDefaulted READ isThermalAbsorptanceDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double solarAbsorptance READ solarAbsorptance WRITE setSolarAbsorptance RESET resetSolarAbsorptance);
-    Q_PROPERTY(openstudio::Quantity solarAbsorptance_SI READ solarAbsorptance_SI WRITE setSolarAbsorptance RESET resetSolarAbsorptance);
-    Q_PROPERTY(openstudio::Quantity solarAbsorptance_IP READ solarAbsorptance_IP WRITE setSolarAbsorptance RESET resetSolarAbsorptance);
-    Q_PROPERTY(bool isSolarAbsorptanceDefaulted READ isSolarAbsorptanceDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double visibleAbsorptance READ visibleAbsorptance WRITE setVisibleAbsorptance RESET resetVisibleAbsorptance);
-    Q_PROPERTY(openstudio::Quantity visibleAbsorptance_SI READ visibleAbsorptance_SI WRITE setVisibleAbsorptance RESET resetVisibleAbsorptance);
-    Q_PROPERTY(openstudio::Quantity visibleAbsorptance_IP READ visibleAbsorptance_IP WRITE setVisibleAbsorptance RESET resetVisibleAbsorptance);
-    Q_PROPERTY(bool isVisibleAbsorptanceDefaulted READ isVisibleAbsorptanceDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double saturationVolumetricMoistureContentoftheSoilLayer READ saturationVolumetricMoistureContentoftheSoilLayer WRITE setSaturationVolumetricMoistureContentoftheSoilLayer RESET resetSaturationVolumetricMoistureContentoftheSoilLayer);
-    Q_PROPERTY(openstudio::Quantity saturationVolumetricMoistureContentoftheSoilLayer_SI READ saturationVolumetricMoistureContentoftheSoilLayer_SI WRITE setSaturationVolumetricMoistureContentoftheSoilLayer RESET resetSaturationVolumetricMoistureContentoftheSoilLayer);
-    Q_PROPERTY(openstudio::Quantity saturationVolumetricMoistureContentoftheSoilLayer_IP READ saturationVolumetricMoistureContentoftheSoilLayer_IP WRITE setSaturationVolumetricMoistureContentoftheSoilLayer RESET resetSaturationVolumetricMoistureContentoftheSoilLayer);
-    Q_PROPERTY(bool isSaturationVolumetricMoistureContentoftheSoilLayerDefaulted READ isSaturationVolumetricMoistureContentoftheSoilLayerDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double residualVolumetricMoistureContentoftheSoilLayer READ residualVolumetricMoistureContentoftheSoilLayer WRITE setResidualVolumetricMoistureContentoftheSoilLayer RESET resetResidualVolumetricMoistureContentoftheSoilLayer);
-    Q_PROPERTY(openstudio::Quantity residualVolumetricMoistureContentoftheSoilLayer_SI READ residualVolumetricMoistureContentoftheSoilLayer_SI WRITE setResidualVolumetricMoistureContentoftheSoilLayer RESET resetResidualVolumetricMoistureContentoftheSoilLayer);
-    Q_PROPERTY(openstudio::Quantity residualVolumetricMoistureContentoftheSoilLayer_IP READ residualVolumetricMoistureContentoftheSoilLayer_IP WRITE setResidualVolumetricMoistureContentoftheSoilLayer RESET resetResidualVolumetricMoistureContentoftheSoilLayer);
-    Q_PROPERTY(bool isResidualVolumetricMoistureContentoftheSoilLayerDefaulted READ isResidualVolumetricMoistureContentoftheSoilLayerDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double initialVolumetricMoistureContentoftheSoilLayer READ initialVolumetricMoistureContentoftheSoilLayer WRITE setInitialVolumetricMoistureContentoftheSoilLayer RESET resetInitialVolumetricMoistureContentoftheSoilLayer);
-    Q_PROPERTY(openstudio::Quantity initialVolumetricMoistureContentoftheSoilLayer_SI READ initialVolumetricMoistureContentoftheSoilLayer_SI WRITE setInitialVolumetricMoistureContentoftheSoilLayer RESET resetInitialVolumetricMoistureContentoftheSoilLayer);
-    Q_PROPERTY(openstudio::Quantity initialVolumetricMoistureContentoftheSoilLayer_IP READ initialVolumetricMoistureContentoftheSoilLayer_IP WRITE setInitialVolumetricMoistureContentoftheSoilLayer RESET resetInitialVolumetricMoistureContentoftheSoilLayer);
-    Q_PROPERTY(bool isInitialVolumetricMoistureContentoftheSoilLayerDefaulted READ isInitialVolumetricMoistureContentoftheSoilLayerDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(std::string moistureDiffusionCalculationMethod READ moistureDiffusionCalculationMethod WRITE setMoistureDiffusionCalculationMethod RESET resetMoistureDiffusionCalculationMethod);
-    Q_PROPERTY(bool isMoistureDiffusionCalculationMethodDefaulted READ isMoistureDiffusionCalculationMethodDefaulted);
-    Q_PROPERTY(std::vector<std::string> moistureDiffusionCalculationMethodValues READ moistureDiffusionCalculationMethodValues);
+    
+    
+    
 
     // TODO: Add relationships for objects related to this one, but not pointed to by the underlying data.
     //       Such relationships can be generated by the GenerateRelationships.rb script.

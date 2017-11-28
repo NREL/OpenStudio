@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
-*  All rights reserved.
-*  
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*  
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*  
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "AirTerminalSingleDuctVAVReheat.hpp"
 #include "AirTerminalSingleDuctVAVReheat_Impl.hpp"
@@ -61,13 +70,13 @@ namespace detail{
   }
 
   AirTerminalSingleDuctVAVReheat_Impl::AirTerminalSingleDuctVAVReheat_Impl(
-      const AirTerminalSingleDuctVAVReheat_Impl& other, 
-      Model_Impl* model, 
-      bool keepHandle) 
+      const AirTerminalSingleDuctVAVReheat_Impl& other,
+      Model_Impl* model,
+      bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {}
 
-  // Get all output variable names that could be associated with this object. 
+  // Get all output variable names that could be associated with this object.
   const std::vector<std::string>& AirTerminalSingleDuctVAVReheat_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
@@ -120,12 +129,12 @@ namespace detail{
     return result;
   }
 
-  unsigned AirTerminalSingleDuctVAVReheat_Impl::inletPort() 
+  unsigned AirTerminalSingleDuctVAVReheat_Impl::inletPort()
   {
     return OS_AirTerminal_SingleDuct_VAV_ReheatFields::AirInletNodeName;
   }
 
-  unsigned AirTerminalSingleDuctVAVReheat_Impl::outletPort() 
+  unsigned AirTerminalSingleDuctVAVReheat_Impl::outletPort()
   {
     return OS_AirTerminal_SingleDuct_VAV_ReheatFields::AirOutletNodeName;
   }
@@ -160,7 +169,7 @@ namespace detail{
                               sourcePort.get(),
                               inletNode,
                               inletNode.inletPort() );
-              
+
               _model.connect( inletNode,
                               inletNode.outletPort(),
                               this->getObject<ModelObject>(),
@@ -178,7 +187,7 @@ namespace detail{
                 thermalZone->addEquipment(mo);
               }
 
-              return true; 
+              return true;
             }
           }
         }
@@ -197,7 +206,7 @@ namespace detail{
 
     boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
     boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
-    
+
     boost::optional<ModelObject> targetModelObject = this->outletModelObject();
     boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
 
@@ -274,7 +283,7 @@ namespace detail{
     HVACComponent coil = this->reheatCoil();
 
     HVACComponent coilClone = coil.clone(model).cast<HVACComponent>();
-    
+
     modelObjectClone.setReheatCoil(coilClone);
 
     return modelObjectClone;
@@ -433,14 +442,7 @@ namespace detail{
 
   void AirTerminalSingleDuctVAVReheat_Impl::setDamperHeatingAction( std::string value )
   {
-    if( istringEqual(value,"Normal") )
-    {
-      this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::DamperHeatingAction,"Normal");
-    }
-    else if( istringEqual(value,"Reverse") )
-    {
-      this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::DamperHeatingAction,"Reverse");
-    }
+    setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::DamperHeatingAction,value);
   }
 
   boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::maximumFlowPerZoneFloorAreaDuringReheat()
@@ -487,7 +489,7 @@ namespace detail{
     return this->getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowFractionDuringReheat);
   }
 
-  void AirTerminalSingleDuctVAVReheat_Impl::setMaximumFlowFractionDuringReheat( double value )  
+  void AirTerminalSingleDuctVAVReheat_Impl::setMaximumFlowFractionDuringReheat( double value )
   {
     this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowFractionDuringReheat,value);
   }
@@ -572,7 +574,7 @@ namespace detail{
     if( result )
     {
       result = this->setPointer(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ReheatCoilName,coil.handle());
-    } 
+    }
 
     return result;
   }
@@ -631,7 +633,7 @@ namespace detail{
   {
     return getBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ControlForOutdoorAir);
   }
-  
+
   void AirTerminalSingleDuctVAVReheat_Impl::setControlForOutdoorAir(bool controlForOutdoorAir)
   {
     setBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ControlForOutdoorAir,controlForOutdoorAir);
@@ -639,10 +641,10 @@ namespace detail{
 
 } // detail
 
-AirTerminalSingleDuctVAVReheat::AirTerminalSingleDuctVAVReheat( const Model& model, 
+AirTerminalSingleDuctVAVReheat::AirTerminalSingleDuctVAVReheat( const Model& model,
                                                                 Schedule & availabilitySchedule,
                                                                 HVACComponent & coil )
-  : StraightComponent(AirTerminalSingleDuctVAVReheat::iddObjectType(),model) 
+  : StraightComponent(AirTerminalSingleDuctVAVReheat::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>());
 
@@ -693,7 +695,7 @@ bool AirTerminalSingleDuctVAVReheat::setAvailabilitySchedule(Schedule& schedule)
 }
 
 AirTerminalSingleDuctVAVReheat::AirTerminalSingleDuctVAVReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVReheat_Impl> p)
-  : StraightComponent(p)
+  : StraightComponent(std::move(p))
 {}
 
 IddObjectType AirTerminalSingleDuctVAVReheat::iddObjectType() {
@@ -844,7 +846,7 @@ boost::optional<double> AirTerminalSingleDuctVAVReheat::maximumFlowFractionDurin
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->maximumFlowFractionDuringReheat();
 }
 
-void AirTerminalSingleDuctVAVReheat::setMaximumFlowFractionDuringReheat( double value )  
+void AirTerminalSingleDuctVAVReheat::setMaximumFlowFractionDuringReheat( double value )
 {
   getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setMaximumFlowFractionDuringReheat(value);
 }

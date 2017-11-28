@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef MODEL_PUMPVARIABLESPEED_IMPL_HPP
 #define MODEL_PUMPVARIABLESPEED_IMPL_HPP
@@ -37,77 +46,77 @@ namespace detail {
   /** PumpVariableSpeed_Impl is a StraightComponent_Impl that is the implementation class for 
    *  PumpVariableSpeed.*/
   class MODEL_API PumpVariableSpeed_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(boost::optional<double> ratedFlowRate READ ratedFlowRate WRITE setRatedFlowRate RESET resetRatedFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity ratedFlowRate_SI READ ratedFlowRate_SI WRITE setRatedFlowRate RESET resetRatedFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity ratedFlowRate_IP READ ratedFlowRate_IP WRITE setRatedFlowRate RESET resetRatedFlowRate);
-    Q_PROPERTY(bool isRatedFlowRateDefaulted READ isRatedFlowRateDefaulted);
-    Q_PROPERTY(bool isRatedFlowRateAutosized READ isRatedFlowRateAutosized);
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(double ratedPumpHead READ ratedPumpHead WRITE setRatedPumpHead RESET resetRatedPumpHead);
-    Q_PROPERTY(openstudio::Quantity ratedPumpHead_SI READ ratedPumpHead_SI WRITE setRatedPumpHead RESET resetRatedPumpHead);
-    Q_PROPERTY(openstudio::Quantity ratedPumpHead_IP READ ratedPumpHead_IP WRITE setRatedPumpHead RESET resetRatedPumpHead);
-    Q_PROPERTY(bool isRatedPumpHeadDefaulted READ isRatedPumpHeadDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> ratedPowerConsumption READ ratedPowerConsumption WRITE setRatedPowerConsumption RESET resetRatedPowerConsumption);
-    Q_PROPERTY(openstudio::OSOptionalQuantity ratedPowerConsumption_SI READ ratedPowerConsumption_SI WRITE setRatedPowerConsumption RESET resetRatedPowerConsumption);
-    Q_PROPERTY(openstudio::OSOptionalQuantity ratedPowerConsumption_IP READ ratedPowerConsumption_IP WRITE setRatedPowerConsumption RESET resetRatedPowerConsumption);
-    Q_PROPERTY(bool isRatedPowerConsumptionDefaulted READ isRatedPowerConsumptionDefaulted);
-    Q_PROPERTY(bool isRatedPowerConsumptionAutosized READ isRatedPowerConsumptionAutosized);
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(double motorEfficiency READ motorEfficiency WRITE setMotorEfficiency RESET resetMotorEfficiency);
-    Q_PROPERTY(openstudio::Quantity motorEfficiency_SI READ motorEfficiency_SI WRITE setMotorEfficiency RESET resetMotorEfficiency);
-    Q_PROPERTY(openstudio::Quantity motorEfficiency_IP READ motorEfficiency_IP WRITE setMotorEfficiency RESET resetMotorEfficiency);
-    Q_PROPERTY(bool isMotorEfficiencyDefaulted READ isMotorEfficiencyDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double fractionofMotorInefficienciestoFluidStream READ fractionofMotorInefficienciestoFluidStream WRITE setFractionofMotorInefficienciestoFluidStream RESET resetFractionofMotorInefficienciestoFluidStream);
-    Q_PROPERTY(openstudio::Quantity fractionofMotorInefficienciestoFluidStream_SI READ fractionofMotorInefficienciestoFluidStream_SI WRITE setFractionofMotorInefficienciestoFluidStream RESET resetFractionofMotorInefficienciestoFluidStream);
-    Q_PROPERTY(openstudio::Quantity fractionofMotorInefficienciestoFluidStream_IP READ fractionofMotorInefficienciestoFluidStream_IP WRITE setFractionofMotorInefficienciestoFluidStream RESET resetFractionofMotorInefficienciestoFluidStream);
-    Q_PROPERTY(bool isFractionofMotorInefficienciestoFluidStreamDefaulted READ isFractionofMotorInefficienciestoFluidStreamDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double coefficient1ofthePartLoadPerformanceCurve READ coefficient1ofthePartLoadPerformanceCurve WRITE setCoefficient1ofthePartLoadPerformanceCurve RESET resetCoefficient1ofthePartLoadPerformanceCurve);
-    Q_PROPERTY(openstudio::Quantity coefficient1ofthePartLoadPerformanceCurve_SI READ coefficient1ofthePartLoadPerformanceCurve_SI WRITE setCoefficient1ofthePartLoadPerformanceCurve RESET resetCoefficient1ofthePartLoadPerformanceCurve);
-    Q_PROPERTY(openstudio::Quantity coefficient1ofthePartLoadPerformanceCurve_IP READ coefficient1ofthePartLoadPerformanceCurve_IP WRITE setCoefficient1ofthePartLoadPerformanceCurve RESET resetCoefficient1ofthePartLoadPerformanceCurve);
-    Q_PROPERTY(bool isCoefficient1ofthePartLoadPerformanceCurveDefaulted READ isCoefficient1ofthePartLoadPerformanceCurveDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double coefficient2ofthePartLoadPerformanceCurve READ coefficient2ofthePartLoadPerformanceCurve WRITE setCoefficient2ofthePartLoadPerformanceCurve RESET resetCoefficient2ofthePartLoadPerformanceCurve);
-    Q_PROPERTY(openstudio::Quantity coefficient2ofthePartLoadPerformanceCurve_SI READ coefficient2ofthePartLoadPerformanceCurve_SI WRITE setCoefficient2ofthePartLoadPerformanceCurve RESET resetCoefficient2ofthePartLoadPerformanceCurve);
-    Q_PROPERTY(openstudio::Quantity coefficient2ofthePartLoadPerformanceCurve_IP READ coefficient2ofthePartLoadPerformanceCurve_IP WRITE setCoefficient2ofthePartLoadPerformanceCurve RESET resetCoefficient2ofthePartLoadPerformanceCurve);
-    Q_PROPERTY(bool isCoefficient2ofthePartLoadPerformanceCurveDefaulted READ isCoefficient2ofthePartLoadPerformanceCurveDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double coefficient3ofthePartLoadPerformanceCurve READ coefficient3ofthePartLoadPerformanceCurve WRITE setCoefficient3ofthePartLoadPerformanceCurve RESET resetCoefficient3ofthePartLoadPerformanceCurve);
-    Q_PROPERTY(openstudio::Quantity coefficient3ofthePartLoadPerformanceCurve_SI READ coefficient3ofthePartLoadPerformanceCurve_SI WRITE setCoefficient3ofthePartLoadPerformanceCurve RESET resetCoefficient3ofthePartLoadPerformanceCurve);
-    Q_PROPERTY(openstudio::Quantity coefficient3ofthePartLoadPerformanceCurve_IP READ coefficient3ofthePartLoadPerformanceCurve_IP WRITE setCoefficient3ofthePartLoadPerformanceCurve RESET resetCoefficient3ofthePartLoadPerformanceCurve);
-    Q_PROPERTY(bool isCoefficient3ofthePartLoadPerformanceCurveDefaulted READ isCoefficient3ofthePartLoadPerformanceCurveDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double coefficient4ofthePartLoadPerformanceCurve READ coefficient4ofthePartLoadPerformanceCurve WRITE setCoefficient4ofthePartLoadPerformanceCurve RESET resetCoefficient4ofthePartLoadPerformanceCurve);
-    Q_PROPERTY(openstudio::Quantity coefficient4ofthePartLoadPerformanceCurve_SI READ coefficient4ofthePartLoadPerformanceCurve_SI WRITE setCoefficient4ofthePartLoadPerformanceCurve RESET resetCoefficient4ofthePartLoadPerformanceCurve);
-    Q_PROPERTY(openstudio::Quantity coefficient4ofthePartLoadPerformanceCurve_IP READ coefficient4ofthePartLoadPerformanceCurve_IP WRITE setCoefficient4ofthePartLoadPerformanceCurve RESET resetCoefficient4ofthePartLoadPerformanceCurve);
-    Q_PROPERTY(bool isCoefficient4ofthePartLoadPerformanceCurveDefaulted READ isCoefficient4ofthePartLoadPerformanceCurveDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double minimumFlowRate READ minimumFlowRate WRITE setMinimumFlowRate RESET resetMinimumFlowRate);
-    Q_PROPERTY(openstudio::Quantity minimumFlowRate_SI READ minimumFlowRate_SI WRITE setMinimumFlowRate RESET resetMinimumFlowRate);
-    Q_PROPERTY(openstudio::Quantity minimumFlowRate_IP READ minimumFlowRate_IP WRITE setMinimumFlowRate RESET resetMinimumFlowRate);
-    Q_PROPERTY(bool isMinimumFlowRateDefaulted READ isMinimumFlowRateDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(std::string pumpControlType READ pumpControlType WRITE setPumpControlType RESET resetPumpControlType);
-    Q_PROPERTY(bool isPumpControlTypeDefaulted READ isPumpControlTypeDefaulted);
-    Q_PROPERTY(std::vector<std::string> pumpControlTypeValues READ pumpControlTypeValues);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> impellerDiameter READ impellerDiameter WRITE setImpellerDiameter RESET resetImpellerDiameter);
-    Q_PROPERTY(openstudio::OSOptionalQuantity impellerDiameter_SI READ impellerDiameter_SI WRITE setImpellerDiameter RESET resetImpellerDiameter);
-    Q_PROPERTY(openstudio::OSOptionalQuantity impellerDiameter_IP READ impellerDiameter_IP WRITE setImpellerDiameter RESET resetImpellerDiameter);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<std::string> vFDControlType READ vFDControlType WRITE setVFDControlType RESET resetVFDControlType);
-    Q_PROPERTY(std::vector<std::string> vfdControlTypeValues READ vfdControlTypeValues);
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> pumpFlowRateSchedule READ pumpFlowRateScheduleAsModelObject WRITE setPumpFlowRateScheduleAsModelObject RESET resetPumpFlowRateSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> pumpCurve READ pumpCurveAsModelObject WRITE setPumpCurveAsModelObject RESET resetPumpCurve);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> pumpRPMSchedule READ pumpRPMScheduleAsModelObject WRITE setPumpRPMScheduleAsModelObject RESET resetPumpRPMSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> minimumPressureSchedule READ minimumPressureScheduleAsModelObject WRITE setMinimumPressureScheduleAsModelObject RESET resetMinimumPressureSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> maximumPressureSchedule READ maximumPressureScheduleAsModelObject WRITE setMaximumPressureScheduleAsModelObject RESET resetMaximumPressureSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> minimumRPMSchedule READ minimumRPMScheduleAsModelObject WRITE setMinimumRPMScheduleAsModelObject RESET resetMinimumRPMSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> maximumRPMSchedule READ maximumRPMScheduleAsModelObject WRITE setMaximumRPMScheduleAsModelObject RESET resetMaximumRPMSchedule);
+    
+    
+    
+    
+    
+    
+    
    public:
 
     /** @name Constructors and Destructors */

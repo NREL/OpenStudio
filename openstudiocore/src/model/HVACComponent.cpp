@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
- *  All rights reserved.
- *  
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- *  
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- *  
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "HVACComponent.hpp"
 #include "HVACComponent_Impl.hpp"
@@ -165,14 +174,14 @@ namespace detail {
     return boost::none;
   }
 
-  bool HVACComponent_Impl::removeFromLoop( const HVACComponent & systemStartComponent, 
+  bool HVACComponent_Impl::removeFromLoop( const HVACComponent & systemStartComponent,
     const HVACComponent & systemEndComponent,
     unsigned componentInletPort,
     unsigned componentOutletPort )
   {
     auto _model = model();
     auto thisObject = getObject<HVACComponent>();
-    
+
     if( systemStartComponent.model() != _model ) return false;
     if( systemEndComponent.model() != _model ) return false;
 
@@ -202,17 +211,17 @@ namespace detail {
       }
     }
 
-    if( systemStartComponent.handle() == inletComponent->handle() 
+    if( systemStartComponent.handle() == inletComponent->handle()
         && systemEndComponent.handle() == outletComponent->handle() ) {
       // This component is between the systemStartComponent and the systemEndComponent
       // ie. the supply or demand inlet or outlet Nodes,
       // or the oa system end points on either the relief or inlet air streams.
-      _model.disconnect(thisObject,componentInletPort); 
-      _model.disconnect(thisObject,componentOutletPort); 
+      _model.disconnect(thisObject,componentInletPort);
+      _model.disconnect(thisObject,componentOutletPort);
 
-      _model.connect( inletComponent.get(), inletComponentOutletPort.get(), 
+      _model.connect( inletComponent.get(), inletComponentOutletPort.get(),
                        outletComponent.get(), outletComponentInletPort.get() );
-      
+
       return true;
     } else if( systemEndComponent.handle() == outletComponent->handle() ) {
       // Here the systemEndComponent is immediately downstream of this component,
@@ -231,15 +240,15 @@ namespace detail {
         newInletComponentOutletPort = inletComponentOutletPort;
       }
 
-      _model.disconnect(thisObject,componentInletPort); 
-      _model.disconnect(thisObject,componentOutletPort); 
+      _model.disconnect(thisObject,componentInletPort);
+      _model.disconnect(thisObject,componentOutletPort);
 
       // inletNode->remove() would have failed if we did it before the disconnect
       if( inletNode && outletNode ) {
         inletNode->remove();
       }
 
-      _model.connect( newInletComponent.get(), newInletComponentOutletPort.get(), 
+      _model.connect( newInletComponent.get(), newInletComponentOutletPort.get(),
                        outletComponent.get(), outletComponentInletPort.get() );
       return true;
     } else if( splitter && mixer ) {
@@ -255,8 +264,8 @@ namespace detail {
       splitter->removePortForBranch(i);
       mixer->removePortForBranch(i);
 
-      _model.disconnect(thisObject,componentInletPort); 
-      _model.disconnect(thisObject,componentOutletPort); 
+      _model.disconnect(thisObject,componentInletPort);
+      _model.disconnect(thisObject,componentOutletPort);
 
       inletNode->remove();
       outletNode->remove();
@@ -270,7 +279,7 @@ namespace detail {
 
       return true;
     } else {
-      boost::optional<ModelObject> newOutletComponent; 
+      boost::optional<ModelObject> newOutletComponent;
       boost::optional<unsigned> newOutletComponentInletPort;
 
       if( inletNode && outletNode ) {
@@ -281,15 +290,15 @@ namespace detail {
       if( ! newOutletComponent ) newOutletComponent = outletComponent;
       if( ! newOutletComponentInletPort ) newOutletComponentInletPort = outletComponentInletPort;
 
-      _model.disconnect(thisObject,componentInletPort); 
-      _model.disconnect(thisObject,componentOutletPort); 
+      _model.disconnect(thisObject,componentInletPort);
+      _model.disconnect(thisObject,componentOutletPort);
 
       // outletNode->remove() would have failed if we did it before the disconnect
       if( inletNode && outletNode ) {
         outletNode->remove();
       }
 
-      model().connect( inletComponent.get(), inletComponentOutletPort.get(), 
+      model().connect( inletComponent.get(), inletComponentOutletPort.get(),
                        newOutletComponent.get(), newOutletComponentInletPort.get() );
 
       return true;
@@ -298,8 +307,8 @@ namespace detail {
     return false;
   }
 
-  bool HVACComponent_Impl::addToNode(Node & node, 
-    const HVACComponent & systemStartComponent, 
+  bool HVACComponent_Impl::addToNode(Node & node,
+    const HVACComponent & systemStartComponent,
     const HVACComponent & systemEndComponent,
     unsigned componentInletPort,
     unsigned componentOutletPort)
@@ -365,7 +374,7 @@ namespace detail {
       _model.connect( oldSourceModelObject, oldOutletPort,
                       newNode, newNode.inletPort() );
       _model.connect( newNode, newNode.outletPort(),
-                      thisModelObject, componentInletPort );                        
+                      thisModelObject, componentInletPort );
       _model.connect( thisModelObject, componentOutletPort,
                       oldTargetModelObject, oldInletPort );
       return true;
@@ -374,7 +383,7 @@ namespace detail {
       unsigned oldInletPort = node.connectedObjectPort( node.outletPort() ).get();
       ModelObject oldSourceModelObject = node;
       ModelObject oldTargetModelObject = node.connectedObject( node.outletPort() ).get();
-    
+
       Node newNode( _model );
       _model.connect( oldSourceModelObject, oldOutletPort,
                       thisModelObject, componentInletPort );
@@ -434,7 +443,7 @@ namespace detail {
     else if( containingStraightComponent() )
     {
       return false;
-    }    
+    }
     else
     {
       return true;
@@ -493,7 +502,7 @@ namespace detail {
   {
     return boost::none;
   }
-  
+
   boost::optional<StraightComponent> HVACComponent_Impl::containingStraightComponent() const
   {
     return boost::none;
@@ -502,14 +511,14 @@ namespace detail {
 } // detail
 
 HVACComponent::HVACComponent(std::shared_ptr<detail::HVACComponent_Impl> p)
-  : ParentObject(p)
+  : ParentObject(std::move(p))
 {}
 
 HVACComponent::HVACComponent(IddObjectType type,const Model& model)
   : ParentObject(type,model)
 {
   OS_ASSERT(getImpl<detail::HVACComponent_Impl>());
-}     
+}
 
 boost::optional<Loop> HVACComponent::loop() const
 {

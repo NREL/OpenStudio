@@ -5,6 +5,53 @@ if(NOT USE_PCH)
   endmacro()
 endif()
 
+macro(FIND_QT_STATIC_LIB NAMES P)
+
+  unset(NAMES_D)
+  unset(FIRST_NAME)
+  foreach(N ${NAMES})
+    if (NOT FIRST_NAME)
+      set(FIRST_NAME ${N})
+    endif()
+    list(APPEND NAMES_D "${N}d")
+  endforeach()
+
+  if ("${P}" STREQUAL "*")
+    #message("LOOKING FOR ${NAMES} in default locations")
+    find_library(QT_STATIC_LIB NAMES ${NAMES})
+  else()
+    #message("LOOKING FOR ${NAMES} in ${P}")
+    find_library(QT_STATIC_LIB NAMES ${NAMES} PATHS ${P} NO_DEFAULT_PATH)
+  endif()
+
+  if(QT_STATIC_LIB)
+    list(APPEND QT_STATIC_LIBS ${QT_STATIC_LIB})
+  else()
+    #message("Cannot find ${NAMES}, using ${FIRST_NAME}")
+    list(APPEND QT_STATIC_LIBS ${FIRST_NAME})
+  endif()
+
+  if ("${P}" STREQUAL "*")
+    #message("LOOKING FOR ${NAMES_D} in default locations")
+    find_library(QT_STATIC_LIB_D NAMES ${NAMES_D})
+  else()
+    #message("LOOKING FOR ${NAMES_D} in ${P}")
+    find_library(QT_STATIC_LIB_D NAMES ${NAMES_D} PATHS ${P} NO_DEFAULT_PATH)
+  endif()
+
+  if(QT_STATIC_LIB_D)
+    list(APPEND QT_STATIC_LIBS_D ${QT_STATIC_LIB_D})
+  elseif(QT_STATIC_LIB)
+    list(APPEND QT_STATIC_LIBS_D ${QT_STATIC_LIB})
+  else()
+    #message("Cannot find ${NAMES_D} or ${NAMES}, using ${FIRST_NAME}")
+    list(APPEND QT_STATIC_LIBS_D ${FIRST_NAME})
+  endif()
+
+  unset(QT_STATIC_LIB CACHE )
+  unset(QT_STATIC_LIB_D CACHE )
+endmacro()
+
 # Add google tests macro
 macro(ADD_GOOGLE_TESTS executable)
   if(MSVC)
@@ -54,13 +101,18 @@ macro(CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES)
 
     CREATE_SRC_GROUPS("${SRC}")
 
-    get_target_property(BASE_NAME_TYPE ${BASE_NAME} TYPE)
-    if("${BASE_NAME_TYPE}" STREQUAL "EXECUTABLE")
+    if(TARGET ${BASE_NAME})
+      get_target_property(BASE_NAME_TYPE ${BASE_NAME} TYPE)
+      if("${BASE_NAME_TYPE}" STREQUAL "EXECUTABLE")
+        # don't link base name
+        set(ALL_DEPENDENCIES ${DEPENDENCIES})
+      else()
+        # also link base name
+        set(ALL_DEPENDENCIES ${BASE_NAME} ${DEPENDENCIES})
+      endif()
+    else()
       # don't link base name
       set(ALL_DEPENDENCIES ${DEPENDENCIES})
-    else()
-      # also link base name
-      set(ALL_DEPENDENCIES ${BASE_NAME} ${DEPENDENCIES})
     endif()
 
     target_link_libraries(${BASE_NAME}_tests
@@ -70,14 +122,8 @@ macro(CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES)
     )
 
     ADD_GOOGLE_TESTS(${BASE_NAME}_tests ${SRC})
-    add_dependencies("${BASE_NAME}_tests" "${BASE_NAME}_resources")
-
-    if(ENABLE_TEST_RUNNER_TARGETS)
-      add_custom_target(${target_name}_run_tests
-        COMMAND ${BASE_NAME}_tests
-        DEPENDS ${target_name}_tests
-        WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
-      )
+    if(TARGET "${BASE_NAME}_resources")
+      add_dependencies("${BASE_NAME}_tests" "${BASE_NAME}_resources")
     endif()
 
     AddPCH(${BASE_NAME}_tests)
@@ -230,7 +276,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
 
 
-
   include_directories(${RUBY_INCLUDE_DIRS})
 
   if(WIN32)
@@ -274,17 +319,18 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   set(${NAME}_SWIG_Depends "${this_depends}" PARENT_SCOPE)
 
   #message(STATUS "${${NAME}_SWIG_Depends}")
-  
-  set(RUBY_AUTODOC "")
-  if(BUILD_DOCUMENTATION)
-    set(RUBY_AUTODOC -features autodoc=1)
-  endif()
-  
+
+  #set(RUBY_AUTODOC "")
+  #if(BUILD_DOCUMENTATION)
+  #  set(RUBY_AUTODOC -features autodoc=1)
+  #endif()
+
   add_custom_command(
     OUTPUT "${SWIG_WRAPPER}"
     COMMAND "${SWIG_EXECUTABLE}"
             "-ruby" "-c++" "-fvirtual" "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src" "${extra_includes}" "${extra_includes2}" ${RUBY_AUTODOC}
             -module "${MODULE}" -initname "${LOWER_NAME}"
+            "-I${CMAKE_SOURCE_DIR}/ruby"
             -o "${SWIG_WRAPPER_FULL_PATH}"
             "${SWIG_DEFINES}" ${SWIG_COMMON} "${KEY_I_FILE}"
     DEPENDS ${this_depends}
@@ -297,19 +343,19 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
   endif()
 
+  include_directories(${CMAKE_SOURCE_DIR})
+
   add_library(
-    ${swig_target}
-    MODULE
+    ${swig_target} STATIC
     ${SWIG_WRAPPER}
   )
-
 
   AddPCH(${swig_target})
 
   # run rdoc
   if(BUILD_DOCUMENTATION)
     add_custom_target(${swig_target}_rdoc
-      ${CMAKE_COMMAND} -E chdir "${CMAKE_BINARY_DIR}/ruby/${CMAKE_CFG_INTDIR}" "${RUBY_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/../developer/ruby/SwigWrapToRDoc.rb" "${CMAKE_BINARY_DIR}/ruby/${CMAKE_CFG_INTDIR}/" "${SWIG_WRAPPER_FULL_PATH}" "${NAME}"
+      ${CMAKE_COMMAND} -E chdir "${CMAKE_BINARY_DIR}/ruby/${CMAKE_CFG_INTDIR}" "${RUBY_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/../developer/ruby/SwigWrapToRDoc.rb" "${CMAKE_BINARY_DIR}/" "${SWIG_WRAPPER_FULL_PATH}" "${NAME}"
       DEPENDS ${SWIG_WRAPPER}
     )
 
@@ -319,23 +365,18 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
   endif()
 
-  set_target_properties(${swig_target} PROPERTIES PREFIX "")
-  set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME "${LOWER_NAME}")
-  if(APPLE)
-    set_target_properties(${swig_target} PROPERTIES SUFFIX ".bundle" )
-    #set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
-    #set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-undefined suppress -flat_namespace")
-  endif()
+  #set_target_properties(${swig_target} PROPERTIES PREFIX "")
+  #set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME "${LOWER_NAME}")
+  #if(APPLE)
+  #  set_target_properties(${swig_target} PROPERTIES SUFFIX ".bundle" )
+  #  #set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
+  #  #set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-undefined suppress -flat_namespace")
+  #endif()
 
 
   if(MSVC)
-    # if visual studio 2010 or greater
-    if(NOT (${MSVC_VERSION} LESS 1600))
-      # trouble with macro redefinition in win32.h of Ruby
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4005 /wd4996") ## /wd4996 suppresses deprecated warning
-    else()
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996") ## /wd4996 suppresses deprecated warning
-    endif()
+    #set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DRUBY_EXTCONF_H=<osruby_config.h> -DRUBY_EMBEDDED /bigobj /wd4996") ## /wd4996 suppresses deprecated warning
+    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996") ## /wd4996 suppresses deprecated warning
   elseif(UNIX)
     if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
       # Prevent excessive warnings from generated swig files, suppress deprecated declarations
@@ -345,89 +386,94 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     endif()
   endif()
 
-  if(CMAKE_COMPILER_IS_GNUCXX)
-    if(GCC_VERSION VERSION_GREATER 4.6 OR GCC_VERSION VERSION_EQUAL 4.6)
-      set_source_files_properties(${SWIG_WRAPPER} PROPERTIES COMPILE_FLAGS "-Wno-uninitialized -Wno-unused-but-set-variable")
-    else()
-      set_source_files_properties(${SWIG_WRAPPER} PROPERTIES COMPILE_FLAGS "-Wno-uninitialized")
-    endif()
-  endif()
+  #if(CMAKE_COMPILER_IS_GNUCXX)
+  #  if(GCC_VERSION VERSION_GREATER 4.6 OR GCC_VERSION VERSION_EQUAL 4.6)
+  #    set_source_files_properties(${SWIG_WRAPPER} PROPERTIES COMPILE_FLAGS "-Wno-uninitialized -Wno-unused-but-set-variable")
+  #  else()
+  #    set_source_files_properties(${SWIG_WRAPPER} PROPERTIES COMPILE_FLAGS "-Wno-uninitialized")
+  #  endif()
+  #endif()
 
   set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/ruby/")
-  if(RUBY_VERSION_MAJOR EQUAL "2" AND MSVC)
-    # Ruby 2 requires modules to have a .so extension, even on windows
-    set_target_properties(${swig_target} PROPERTIES SUFFIX ".so")
-  endif()
+  #if(RUBY_VERSION_MAJOR EQUAL "2" AND MSVC)
+  #  # Ruby 2 requires modules to have a .so extension, even on windows
+  #  set_target_properties(${swig_target} PROPERTIES SUFFIX ".so")
+  #endif()
   set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ruby/")
   set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/")
-  target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS} ${RUBY_LIBRARY})
+  target_link_libraries(${swig_target} ${PARENT_TARGET})
+  add_dependencies(${swig_target} ${PARENT_TARGET} ${DEPENDS})
 
-  if(APPLE)
-    set(_NAME "${LOWER_NAME}.bundle")
-    # the following script will change the bindings to prefer the version of libruby included with SketchUp to the system library, preventing loading two different copies of libruby
-    add_custom_command(TARGET ${swig_target} POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/${_NAME}")
-  elseif(RUBY_VERSION_MAJOR EQUAL "2" AND MSVC)
-    set(_NAME "${LOWER_NAME}.so")
-  else()
-    set(_NAME "${LOWER_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
-  endif()
+  target_include_directories(${swig_target} PUBLIC ${QT_STATIC_INCLUDES})
+  target_compile_definitions(${swig_target} PUBLIC ${QT_DEFS})
 
-  if(WIN32 OR APPLE)
-    install(TARGETS ${swig_target} DESTINATION Ruby/openstudio/)
+  ####Remove binding install related stuff. At least for now. Might need some of this to support sketchup
+  ####if(APPLE)
+  ####  set(_NAME "${LOWER_NAME}.bundle")
+  ####  # the following script will change the bindings to prefer the version of libruby included with SketchUp to the system library, preventing loading two different copies of libruby
+  ####  add_custom_command(TARGET ${swig_target} POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/${_NAME}")
+  ####elseif(RUBY_VERSION_MAJOR EQUAL "2" AND MSVC)
+  ####  set(_NAME "${LOWER_NAME}.so")
+  ####else()
+  ####  set(_NAME "${LOWER_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+  ####endif()
 
-
-    install(CODE "
-      #message(\"INSTALLING SWIG_TARGET: ${swig_target}  with NAME = ${_NAME}\")
-      include(GetPrerequisites)
-      get_prerequisites(\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/${_NAME} PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\")
-      #message(\"PREREQUISITES = \${PREREQUISITES}\")
+  ####if(WIN32 OR APPLE)
+  ####  install(TARGETS ${swig_target} DESTINATION Ruby/openstudio/)
 
 
-      if(WIN32)
-        list(REVERSE PREREQUISITES)
-      endif()
+  ####  install(CODE "
+  ####    #message(\"INSTALLING SWIG_TARGET: ${swig_target}  with NAME = ${_NAME}\")
+  ####    include(GetPrerequisites)
+  ####    get_prerequisites(\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/${_NAME} PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\")
+  ####    #message(\"PREREQUISITES = \${PREREQUISITES}\")
 
-      foreach(PREREQ IN LISTS PREREQUISITES)
-      
-        if(APPLE AND PREREQ MATCHES \".*libruby.*\")  
-          # skip updating references to libruby, we do not install this with the bindings
-        else()   
-          gp_resolve_item(\"\" \${PREREQ} \"\" \"${Prereq_Dirs}\" resolved_item_var)
-          execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
-  
-          get_filename_component(PREREQNAME \${resolved_item_var} NAME)
-  
-          if(APPLE)
-            execute_process(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/${_NAME}\")
-            foreach(PR IN LISTS PREREQUISITES)
-              gp_resolve_item(\"\" \${PR} \"\" \"\" PRPATH)
-              get_filename_component( PRNAME \${PRPATH} NAME)
-              execute_process(COMMAND \"install_name_tool\" -change \"\${PR}\" \"@loader_path/\${PRNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\${PREREQNAME}\")
-            endforeach()
-          else()
-            if(EXISTS \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\")
-              file(READ \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" TEXT)
-            else()
-              set(TEXT \"\")
-            endif()
-            string(REGEX MATCH \${PREREQNAME} MATCHVAR \"\${TEXT}\")
-            if(NOT (\"\${MATCHVAR}\" STREQUAL \"\${PREREQNAME}\"))
-              file(APPEND \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" \"DL::dlopen \\\"\\\#{File.dirname(__FILE__)}/\${PREREQNAME}\\\"\n\")
-            endif()
-          endif()        
-        endif()
 
-      endforeach()
-    ")
-  else()
-    install(TARGETS ${swig_target} DESTINATION "${RUBY_MODULE_ARCH_DIR}")
-  endif()
-  if(UNIX)
-    # do not write file on unix, existence of file is checked before it is loaded
-    #install(CODE "
-    #  file(WRITE \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" \"# Nothing to see here\")
-    #")
-  endif()
+  ####    if(WIN32)
+  ####      list(REVERSE PREREQUISITES)
+  ####    endif()
+
+  ####    foreach(PREREQ IN LISTS PREREQUISITES)
+  ####
+  ####      if(APPLE AND PREREQ MATCHES \".*libruby.*\")
+  ####        # skip updating references to libruby, we do not install this with the bindings
+  ####      else()
+  ####        gp_resolve_item(\"\" \${PREREQ} \"\" \"${Prereq_Dirs}\" resolved_item_var)
+  ####        execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
+  ####
+  ####        get_filename_component(PREREQNAME \${resolved_item_var} NAME)
+  ####
+  ####        if(APPLE)
+  ####          execute_process(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/${_NAME}\")
+  ####          foreach(PR IN LISTS PREREQUISITES)
+  ####            gp_resolve_item(\"\" \${PR} \"\" \"\" PRPATH)
+  ####            get_filename_component( PRNAME \${PRPATH} NAME)
+  ####            execute_process(COMMAND \"install_name_tool\" -change \"\${PR}\" \"@loader_path/\${PRNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\${PREREQNAME}\")
+  ####          endforeach()
+  ####        else()
+  ####          if(EXISTS \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\")
+  ####            file(READ \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" TEXT)
+  ####          else()
+  ####            set(TEXT \"\")
+  ####          endif()
+  ####          string(REGEX MATCH \${PREREQNAME} MATCHVAR \"\${TEXT}\")
+  ####          if(NOT (\"\${MATCHVAR}\" STREQUAL \"\${PREREQNAME}\"))
+  ####            file(APPEND \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" \"DL::dlopen \\\"\\\#{File.dirname(__FILE__)}/\${PREREQNAME}\\\"\n\")
+  ####          endif()
+  ####        endif()
+  ####      endif()
+
+  ####    endforeach()
+  ####  ")
+  ####else()
+  ####  install(TARGETS ${swig_target} DESTINATION "${RUBY_MODULE_ARCH_DIR}")
+  ####endif()
+  ####if(UNIX)
+  ####  # do not write file on unix, existence of file is checked before it is loaded
+  ####  #install(CODE "
+  ####  #  file(WRITE \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" \"# Nothing to see here\")
+  ####  #")
+  ####endif()
 
   execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
 
@@ -461,36 +507,46 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     # http://docs.python.org/2/library/imp.html
 
     set(MODULE ${LOWER_NAME})
-    
+
+    set(SWIG_WRAPPER "python_${NAME}_wrap.cxx")
+    set(SWIG_WRAPPER_FULL_PATH "${CMAKE_CURRENT_BINARY_DIR}/${SWIG_WRAPPER}")
+
+    set(PYTHON_GENERATED_SRC_DIR "${CMAKE_BINARY_DIR}/python_wrapper/generated_sources/")
+    file(MAKE_DIRECTORY ${PYTHON_GENERATED_SRC_DIR})
+
+    set(PYTHON_GENERATED_SRC "${PYTHON_GENERATED_SRC_DIR}/${LOWER_NAME}.py")
+
     set(PYTHON_AUTODOC "")
     if(BUILD_DOCUMENTATION)
       set(PYTHON_AUTODOC -features autodoc=1)
     endif()
-    
+
     add_custom_command(
-      OUTPUT "python_${NAME}_wrap.cxx"
+      OUTPUT "${SWIG_WRAPPER_FULL_PATH}"
       COMMAND "${SWIG_EXECUTABLE}"
                "-python" "-c++" ${PYTHON_AUTODOC}
-               -outdir ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src"
+               -outdir ${PYTHON_GENERATED_SRC_DIR} "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src"
                -module "${MODULE}"
-               -o "${CMAKE_CURRENT_BINARY_DIR}/python_${NAME}_wrap.cxx"
+               -o "${SWIG_WRAPPER_FULL_PATH}"
                "${SWIG_DEFINES}" ${SWIG_COMMON} ${KEY_I_FILE}
       DEPENDS ${this_depends}
     )
 
-    if(MAXIMIZE_CPU_USAGE)
-      add_custom_target(${swig_target}_swig
-        SOURCES "${SWIG_WRAPPER}"
-        )
-      add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
-    endif()
+    set_source_files_properties(${SWIG_WRAPPER_FULL_PATH} PROPERTIES GENERATED TRUE)
+    set_source_files_properties(${PYTHON_GENERATED_SRC} PROPERTIES GENERATED TRUE)
 
+    #add_custom_target(${SWIG_TARGET}
+    #  DEPENDS ${SWIG_WRAPPER_FULL_PATH}
+    #)
 
     add_library(
       ${swig_target}
       MODULE
-      python_${NAME}_wrap.cxx
+      ${SWIG_WRAPPER}
     )
+
+    install(FILES "${PYTHON_GENERATED_SRC}" DESTINATION Python COMPONENT "Python")
+    install(TARGETS ${swig_target} DESTINATION Python COMPONENT "Python")
 
     set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME _${LOWER_NAME})
     set_target_properties(${swig_target} PROPERTIES PREFIX "")
@@ -498,7 +554,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/")
     set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/python/")
     if(MSVC)
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996") ## /wd4996 suppresses deprecated warning
+      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd4005") ## /wd4996 suppresses deprecated warning, /wd4005 suppresses macro redefinition warning
       set_target_properties(${swig_target} PROPERTIES SUFFIX ".pyd")
     elseif(UNIX)
       if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
@@ -508,88 +564,66 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       endif()
     endif()
 
-    target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS} ${PYTHON_LIBRARY})
+    target_link_libraries(${swig_target} ${PARENT_TARGET} ${PYTHON_LIBRARY})
 
-    add_dependencies("${swig_target}" "${PARENT_TARGET}_resources")
+    add_dependencies(${swig_target} ${PARENT_TARGET})
 
-    if(MSVC)
-      set(_NAME "_${LOWER_NAME}.pyd")
-    else()
-      set(_NAME "_${LOWER_NAME}.so")
-    endif()
-
-    if(WIN32 OR APPLE)
-      install(TARGETS ${swig_target} DESTINATION Python/openstudio/)
-
-
-      install(CODE "
-        include(GetPrerequisites)
-        get_prerequisites(\${CMAKE_INSTALL_PREFIX}/Python/openstudio/${_NAME} PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\")
-
-        if(WIN32)
-          list(REVERSE PREREQUISITES)
-        endif()
-
-        foreach(PREREQ IN LISTS PREREQUISITES)
-          gp_resolve_item( \"\" \${PREREQ} \"\" \"${Prereq_Dirs}\" resolved_item_var)
-         execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/\")
-
-         get_filename_component(PREREQNAME \${resolved_item_var} NAME)
-
-         if(APPLE)
-           execute_process(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/${_NAME}\")
-           foreach(PR IN LISTS PREREQUISITES)
-             gp_resolve_item(\"\" \${PR} \"\" \"\" PRPATH)
-             get_filename_component(PRNAME \${PRPATH} NAME)
-             execute_process(COMMAND \"install_name_tool\" -change \"\${PR}\" \"@loader_path/\${PRNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/\${PREREQNAME}\")
-           endforeach()
-         endif()
-       endforeach(PREREQ IN LISTS PREREQUISITES)
-
-       if(APPLE)
-         file(COPY \"${QT_LIBRARY_DIR}/QtGui.framework/Resources/qt_menu.nib\" 
-              DESTINATION \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/Resources/\")
-       endif()
-      ")
-    else()
-      install(TARGETS ${swig_target} DESTINATION "lib/openstudio/python")
-    endif()
-
-    install(FILES ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/${LOWER_NAME}.py DESTINATION Python/openstudio/)
-    
     # add this target to a "global" variable so python tests can require these
-    list(APPEND ALL_PYTHON_BINDING_TARGETS "${swig_target}")
+    list(APPEND ALL_PYTHON_BINDINGS "${swig_target}")
+    set(ALL_PYTHON_BINDINGS "${ALL_PYTHON_BINDINGS}" PARENT_SCOPE)
 
-    set(ALL_PYTHON_BINDING_TARGETS "${ALL_PYTHON_BINDING_TARGETS}" PARENT_SCOPE)
+    list(APPEND ALL_PYTHON_BINDING_DEPENDS "${PARENT_TARGET}")
+    set(ALL_PYTHON_BINDING_DEPENDS "${ALL_PYTHON_BINDING_DEPENDS}" PARENT_SCOPE)
+
+    list(APPEND ALL_PYTHON_WRAPPER_FILES "${SWIG_WRAPPER_FULL_PATH}")
+    set(ALL_PYTHON_WRAPPER_FILES "${ALL_PYTHON_WRAPPER_FILES}" PARENT_SCOPE)
+
+    list(APPEND ALL_PYTHON_WRAPPER_TARGETS "${SWIG_TARGET}")
+    set(ALL_PYTHON_WRAPPER_TARGETS "${ALL_PYTHON_WRAPPER_TARGETS}" PARENT_SCOPE)
   endif()
 
   # csharp
   if(BUILD_CSHARP_BINDINGS)
     set(swig_target "csharp_${NAME}")
 
+    set( translator_names
+      OpenStudioEnergyPlus
+      OpenStudioRadiance
+      OpenStudioGBXML
+      OpenStudioAirflow
+      OpenStudioISOModel
+      OpenStudioSDD
+    )
+
     if(IS_UTILTIES)
       set(NAMESPACE "OpenStudio")
       set(MODULE "${NAME}")
     else()
-      #set(NAMESPACE "OpenStudio.${NAME}")
       set(NAMESPACE "OpenStudio")
       set(MODULE "${NAME}")
     endif()
 
     set(SWIG_WRAPPER "csharp_${NAME}_wrap.cxx")
     set(SWIG_WRAPPER_FULL_PATH "${CMAKE_CURRENT_BINARY_DIR}/${SWIG_WRAPPER}")
+    set(SWIG_TARGET "generate_csharp_${NAME}_wrap")
 
-    set(CSHARP_OUTPUT_NAME "openstudio_${NAME}_csharp")
+    list(FIND translator_names ${NAME} name_found)
+    if( name_found GREATER -1 )
+      set(CSHARP_OUTPUT_NAME "openstudio_translators_csharp.dll")
+    else()
+      set(CSHARP_OUTPUT_NAME "openstudio_csharp.dll")
+    endif()
+
     set(CSHARP_GENERATED_SRC_DIR "${CMAKE_BINARY_DIR}/csharp_wrapper/generated_sources/${NAME}")
     file(MAKE_DIRECTORY ${CSHARP_GENERATED_SRC_DIR})
-    
+
     set(CSHARP_AUTODOC "")
     if(BUILD_DOCUMENTATION)
       set(CSHARP_AUTODOC -features autodoc=1)
     endif()
-    
+
     add_custom_command(
-      OUTPUT ${SWIG_WRAPPER}
+      OUTPUT ${SWIG_WRAPPER_FULL_PATH}
       COMMAND "${CMAKE_COMMAND}" -E remove_directory "${CSHARP_GENERATED_SRC_DIR}"
       COMMAND "${CMAKE_COMMAND}" -E make_directory "${CSHARP_GENERATED_SRC_DIR}"
       COMMAND "${SWIG_EXECUTABLE}"
@@ -603,56 +637,59 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
       )
 
-    if(MAXIMIZE_CPU_USAGE)
-      add_custom_target(${swig_target}_swig
-        SOURCES "${SWIG_WRAPPER}"
-        )
-      add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
-    endif()
+      add_custom_target(${SWIG_TARGET}
+        DEPENDS ${SWIG_WRAPPER_FULL_PATH}
+      )
 
-    add_library(
-      ${swig_target}
-      MODULE
-      ${SWIG_WRAPPER}
-    )
 
-    set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME "${CSHARP_OUTPUT_NAME}")
-    set_target_properties(${swig_target} PROPERTIES PREFIX "")
-    set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/csharp/")
-    set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/")
-    set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/csharp/")
-    if(MSVC)
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996")  ## /wd4996 suppresses deprecated warnings
-    endif()
-    target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS})
+    #add_library(
+    #  ${swig_target}
+    #  STATIC
+    #  ${SWIG_WRAPPER}
+    #)
+
+    #set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME "${CSHARP_OUTPUT_NAME}")
+    #set_target_properties(${swig_target} PROPERTIES PREFIX "")
+    #set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/csharp/")
+    #set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/")
+    #set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/csharp/")
+    #if(MSVC)
+    #  set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996")  ## /wd4996 suppresses deprecated warnings
+    #endif()
+    #target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS})
 
     #ADD_DEPENDENCIES("${swig_target}" "${PARENT_TARGET}_resources")
+    add_dependencies(${SWIG_TARGET} ${PARENT_TARGET})
 
     # add this target to a "global" variable so csharp tests can require these
-    list(APPEND ALL_CSHARP_BINDING_TARGETS "${swig_target}")
-    set(ALL_CSHARP_BINDING_TARGETS "${ALL_CSHARP_BINDING_TARGETS}" PARENT_SCOPE)
+    list(APPEND ALL_CSHARP_BINDING_DEPENDS "${PARENT_TARGET}")
+    set(ALL_CSHARP_BINDING_DEPENDS "${ALL_CSHARP_BINDING_DEPENDS}" PARENT_SCOPE)
 
+    list(APPEND ALL_CSHARP_WRAPPER_FILES "${SWIG_WRAPPER_FULL_PATH}")
+    set(ALL_CSHARP_WRAPPER_FILES "${ALL_CSHARP_WRAPPER_FILES}" PARENT_SCOPE)
 
+    list(APPEND ALL_CSHARP_WRAPPER_TARGETS "${SWIG_TARGET}")
+    set(ALL_CSHARP_WRAPPER_TARGETS "${ALL_CSHARP_WRAPPER_TARGETS}" PARENT_SCOPE)
 
-    if(WIN32)
-      install(TARGETS ${swig_target} DESTINATION CSharp/openstudio/)
-
-      install(CODE "
-        include(GetPrerequisites)
-        get_prerequisites(\${CMAKE_INSTALL_PREFIX}/CSharp/openstudio/openstudio_${NAME}_csharp.dll PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\")
-
-        if(WIN32)
-          list(REVERSE PREREQUISITES)
-        endif()
-
-        foreach(PREREQ IN LISTS PREREQUISITES)
-          gp_resolve_item(\"\" \${PREREQ} \"\" \"${Prereq_Dirs}\" resolved_item_var)
-          execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/CSharp/openstudio/\")
-
-          get_filename_component(PREREQNAME \${resolved_item_var} NAME)
-        endforeach()
-      ")
-    endif()
+    #if(WIN32)
+    #  install(TARGETS ${swig_target} DESTINATION CSharp/openstudio/)
+    #
+    #  install(CODE "
+    #    include(GetPrerequisites)
+    #    get_prerequisites(\${CMAKE_INSTALL_PREFIX}/CSharp/openstudio/openstudio_${NAME}_csharp.dll PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\")
+    #
+    #    if(WIN32)
+    #      list(REVERSE PREREQUISITES)
+    #    endif()
+    #
+    #    foreach(PREREQ IN LISTS PREREQUISITES)
+    #      gp_resolve_item(\"\" \${PREREQ} \"\" \"${Prereq_Dirs}\" resolved_item_var)
+    #      execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/CSharp/openstudio/\")
+    #
+    #      get_filename_component(PREREQNAME \${resolved_item_var} NAME)
+    #    endforeach()
+    #  ")
+    #endif()
   endif()
 
   # java
@@ -1031,7 +1068,7 @@ function(QT5_WRAP_CPP_MINIMALLY outfiles)
   foreach(it ${moc_files})
     get_filename_component(it ${it} ABSOLUTE)
     qt5_make_output_file(${it} moc_ cxx outfile)
-    qt5_create_moc_command(${it} ${outfile} "${moc_flags}" "${moc_options}" "${moc_target}")
+    qt5_create_moc_command(${it} ${outfile} "${moc_flags}" "${moc_options}" "${moc_target}" "")
     list(APPEND ${outfiles} ${outfile})
   endforeach()
   set(${outfiles} ${${outfiles}} PARENT_SCOPE)

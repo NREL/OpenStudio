@@ -1,9 +1,15 @@
 ! Youngstown Regional Airport_OH_USA Annual Cooling (WB=>MDB) 1%, MDB=27.8°C WB=23°C
 !  Version,
 !    7.2.0.002;              !- Version Identifier
-
 !  Version,
 !    8.5;                    !- Version Identifier
+!  Version,
+!    8.6;                    !- Version Identifier
+!  Version,
+!    8.7;                    !- Version Identifier
+
+!  Version,
+!    8.8;                    !- Version Identifier
 
   SizingPeriod:DesignDay,
     Youngstown Regional Airport Ann Clg 1% Condns WB=>MDB,  !- Name

@@ -1,0 +1,62 @@
+<measure>
+  <schema_version>3.0</schema_version>
+  <name>increase_insulation_r_value_for_roofs_by_percentage</name>
+  <uid>807d3ebf-c89b-4b93-b400-110ca060b2bb</uid>
+  <version_id>37c64835-408c-4ed9-9966-12667f2de25d</version_id>
+  <version_modified>20160426T215418Z</version_modified>
+  <xml_checksum>350B6836</xml_checksum>
+  <class_name>IncreaseInsulationRValueForRoofsByPercentage</class_name>
+  <display_name>Increase R-value of Insulation for Roofs by a Specified Percentage.</display_name>
+  <description>Increase the R value of the insulation layer in roof constructinons by a percentage.</description>
+  <modeler_description>Insulation later is inferred by finding the existing layer with the highest thermal resistance.</modeler_description>
+  <arguments>
+    <argument>
+      <name>r_value</name>
+      <display_name>Percentage Increase of R-value for Roof Insulation.</display_name>
+      <type>Double</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>30</default_value>
+    </argument>
+  </arguments>
+  <outputs/>
+  <provenances/>
+  <tags>
+    <tag>Envelope.Opaque</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Function</name>
+      <value>Measure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Requires EnergyPlus Results</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>0.11.5</identifier>
+        <min_compatible>0.11.5</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>DC927612</checksum>
+    </file>
+  </files>
+</measure>

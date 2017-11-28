@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef MODEL_CHILLERELECTRICEIR_IMPL_HPP
 #define MODEL_CHILLERELECTRICEIR_IMPL_HPP
@@ -34,35 +43,35 @@ namespace detail {
 
 class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 {
-  Q_OBJECT;
+  
 
-  Q_PROPERTY(boost::optional<double> referenceCapacity READ referenceCapacity WRITE setReferenceCapacity);
-  Q_PROPERTY(double referenceCOP READ referenceCOP WRITE setReferenceCOP);
-  Q_PROPERTY(double referenceLeavingChilledWaterTemperature READ referenceLeavingChilledWaterTemperature WRITE setReferenceLeavingChilledWaterTemperature RESET resetReferenceLeavingChilledWaterTemperature);
-  Q_PROPERTY(double referenceEnteringCondenserFluidTemperature READ referenceEnteringCondenserFluidTemperature WRITE setReferenceEnteringCondenserFluidTemperature RESET resetReferenceEnteringCondenserFluidTemperature);
-  Q_PROPERTY(boost::optional<double> referenceChilledWaterFlowRate READ referenceChilledWaterFlowRate WRITE setReferenceChilledWaterFlowRate RESET resetReferenceChilledWaterFlowRate);
-  Q_PROPERTY(boost::optional<double> referenceCondenserFluidFlowRate READ referenceCondenserFluidFlowRate WRITE setReferenceCondenserFluidFlowRate RESET resetReferenceCondenserFluidFlowRate);
-  Q_PROPERTY(double minimumPartLoadRatio READ minimumPartLoadRatio WRITE setMinimumPartLoadRatio RESET resetMinimumPartLoadRatio);
-  Q_PROPERTY(double maximumPartLoadRatio READ maximumPartLoadRatio WRITE setMaximumPartLoadRatio RESET resetMaximumPartLoadRatio);
-  Q_PROPERTY(double optimumPartLoadRatio READ optimumPartLoadRatio WRITE setOptimumPartLoadRatio RESET resetOptimumPartLoadRatio);
-  Q_PROPERTY(double minimumUnloadingRatio READ minimumUnloadingRatio WRITE setMinimumUnloadingRatio RESET resetMinimumUnloadingRatio);
-  Q_PROPERTY(std::string chilledWaterInletNodeName READ chilledWaterInletNodeName WRITE setChilledWaterInletNodeName);
-  Q_PROPERTY(std::string chilledWaterOutletNodeName READ chilledWaterOutletNodeName WRITE setChilledWaterOutletNodeName);
-  Q_PROPERTY(boost::optional<std::string> condenserInletNodeName READ condenserInletNodeName WRITE setCondenserInletNodeName RESET resetCondenserInletNodeName);
-  Q_PROPERTY(boost::optional<std::string> condenserOutletNodeName READ condenserOutletNodeName WRITE setCondenserOutletNodeName RESET resetCondenserOutletNodeName);
-  Q_PROPERTY(std::string condenserType READ condenserType WRITE setCondenserType RESET resetCondenserType);
-  Q_PROPERTY(double condenserFanPowerRatio READ condenserFanPowerRatio WRITE setCondenserFanPowerRatio RESET resetCondenserFanPowerRatio);
-  Q_PROPERTY(double compressorMotorEfficiency READ compressorMotorEfficiency WRITE setCompressorMotorEfficiency RESET resetCompressorMotorEfficiency);
-  Q_PROPERTY(double leavingChilledWaterLowerTemperatureLimit READ leavingChilledWaterLowerTemperatureLimit WRITE setLeavingChilledWaterLowerTemperatureLimit RESET resetLeavingChilledWaterLowerTemperatureLimit);
-  Q_PROPERTY(std::string chillerFlowMode READ chillerFlowMode WRITE setChillerFlowMode RESET resetChillerFlowMode);
-  Q_PROPERTY(double designHeatRecoveryWaterFlowRate READ designHeatRecoveryWaterFlowRate WRITE setDesignHeatRecoveryWaterFlowRate RESET resetDesignHeatRecoveryWaterFlowRate);
-  Q_PROPERTY(boost::optional<std::string> heatRecoveryInletNodeName READ heatRecoveryInletNodeName WRITE setHeatRecoveryInletNodeName RESET resetHeatRecoveryInletNodeName);
-  Q_PROPERTY(boost::optional<std::string> heatRecoveryOutletNodeName READ heatRecoveryOutletNodeName WRITE setHeatRecoveryOutletNodeName RESET resetHeatRecoveryOutletNodeName);
-  Q_PROPERTY(double sizingFactor READ sizingFactor WRITE setSizingFactor RESET resetSizingFactor);
-  Q_PROPERTY(double basinHeaterCapacity READ basinHeaterCapacity WRITE setBasinHeaterCapacity RESET resetBasinHeaterCapacity);
-  Q_PROPERTY(double basinHeaterSetpointTemperature READ basinHeaterSetpointTemperature WRITE setBasinHeaterSetpointTemperature RESET resetBasinHeaterSetpointTemperature);
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
-  Q_PROPERTY(boost::optional<openstudio::model::ModelObject> basinHeaterSchedule READ basinHeaterScheduleAsModelObject WRITE setBasinHeaterScheduleAsModelObject RESET resetBasinHeaterSchedule);
+  
  public:
 
 

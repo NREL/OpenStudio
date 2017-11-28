@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
-*  All rights reserved.
-*  
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*  
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*  
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "ParentObject.hpp"
 #include "ParentObject_Impl.hpp"
@@ -44,13 +53,13 @@ namespace detail {
     : ModelObject_Impl(type, model)
   {}
 
-  ParentObject_Impl::ParentObject_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                                       Model_Impl* model, 
+  ParentObject_Impl::ParentObject_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                       Model_Impl* model,
                                        bool keepHandle)
     : ModelObject_Impl(other, model,keepHandle)
   {}
-  
-  ParentObject_Impl::ParentObject_Impl(const ParentObject_Impl& other, 
+
+  ParentObject_Impl::ParentObject_Impl(const ParentObject_Impl& other,
                                        Model_Impl* model,
                                        bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
@@ -73,23 +82,23 @@ namespace detail {
     //  std::vector<IdfObject> removed = object.remove();
     //  result.insert(result.end(), removed.begin(), removed.end());
     //}
-      
-    // subTree includes this object, make sure to include costs as well 
+
+    // subTree includes this object, make sure to include costs as well
     auto subTree = getRecursiveChildren(getObject<ParentObject>(), true);
     // drop the Curve instances
-    // Perhaps this could be done in the getRecursiveChildren, but this way 
+    // Perhaps this could be done in the getRecursiveChildren, but this way
     // the getRecursiveChildren method might be less surprising
     // This is probably the unique situation where you want to get children minus curves
     auto isCurve = [](const ModelObject & modelObject) {
       return modelObject.optionalCast<Curve>();
     };
-    auto end = std::remove_if(subTree.begin(), subTree.end(), isCurve); 
+    auto end = std::remove_if(subTree.begin(), subTree.end(), isCurve);
     std::vector<ModelObject> noCurvesSubTree(subTree.begin(),end);
 
     for (const ModelObject& object : noCurvesSubTree) {
       result.push_back(object.idfObject());
     }
-      
+
     bool ok = model().removeObjects(getHandles<ModelObject>(noCurvesSubTree));
     if (!ok) { result.clear(); }
 
@@ -98,7 +107,7 @@ namespace detail {
 
   /// get a vector of allowable children types
   std::vector<IddObjectType> ParentObject_Impl::allowableChildTypes() const
-  { 
+  {
     IddObjectTypeVector result;
     return result;
   }
@@ -116,15 +125,15 @@ namespace detail {
   }
 
 } // detail
- 
+
 ParentObject::ParentObject(IddObjectType type,const Model& model)
   : ModelObject(type,model)
-{ 
+{
   OS_ASSERT(getImpl<detail::ParentObject_Impl>());
 }
 
 ParentObject::ParentObject(std::shared_ptr<detail::ParentObject_Impl> p)
-  : ModelObject(p)
+  : ModelObject(std::move(p))
 {  }
 
 /// return any children objects in the hierarchy
@@ -160,7 +169,7 @@ std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool i
     parents.pop_front();
 
     // parent's costs have already been added
-    
+
     for (const ModelObject& child : currentParent.children()) {
       insertResult = resultSet.insert(child.handle());
       if (insertResult.second) {
@@ -173,8 +182,8 @@ std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool i
         }
 
         OptionalParentObject opo = child.optionalCast<ParentObject>();
-        if (opo) { 
-          parents.push_back(*opo); 
+        if (opo) {
+          parents.push_back(*opo);
         }
       }
     }

@@ -67,7 +67,7 @@
 ! ExtWallConstruction=Mass
 ! End SimMetaData
 
-  Version,8.5;
+  Version,8.8;
 
   Timestep,6;
 
@@ -1775,7 +1775,7 @@
     Core_ZN Inlet Nodes,     !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Core_ZN Air Node,        !- Zone Air Node Name
-    Core_ZN Return Air Node Name;  !- Zone Return Air Node Name
+    Core_ZN Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Core_ZN Inlet Nodes,     !- Name
@@ -2263,7 +2263,7 @@
     Perimeter_ZN_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_ZN_1 Air Node, !- Zone Air Node Name
-    Perimeter_ZN_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_ZN_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Perimeter_ZN_1 Inlet Nodes,  !- Name
@@ -2648,7 +2648,7 @@
     Perimeter_ZN_2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_ZN_2 Air Node, !- Zone Air Node Name
-    Perimeter_ZN_2 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_ZN_2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Perimeter_ZN_2 Inlet Nodes,  !- Name
@@ -3065,7 +3065,7 @@
     Perimeter_ZN_3 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_ZN_3 Air Node, !- Zone Air Node Name
-    Perimeter_ZN_3 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_ZN_3 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Perimeter_ZN_3 Inlet Nodes,  !- Name
@@ -3450,7 +3450,7 @@
     Perimeter_ZN_4 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_ZN_4 Air Node, !- Zone Air Node Name
-    Perimeter_ZN_4 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_ZN_4 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Perimeter_ZN_4 Inlet Nodes,  !- Name
@@ -3809,6 +3809,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   BranchList,
@@ -3817,28 +3818,23 @@
 
   Branch,
     PSZ-AC:1 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     PSZ-AC:1_OA,             !- Component 1 Name
     PSZ-AC:1 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     PSZ-AC:1_OA-PSZ-AC:1_CoolCNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     PSZ-AC:1_CoolC,          !- Component 2 Name
     PSZ-AC:1_OA-PSZ-AC:1_CoolCNode,  !- Component 2 Inlet Node Name
     PSZ-AC:1_CoolC-PSZ-AC:1_HeatCNode,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
-    Coil:Heating:Gas,        !- Component 3 Object Type
+    Coil:Heating:Fuel,       !- Component 3 Object Type
     PSZ-AC:1_HeatC,          !- Component 3 Name
     PSZ-AC:1_CoolC-PSZ-AC:1_HeatCNode,  !- Component 3 Inlet Node Name
     PSZ-AC:1_HeatC-PSZ-AC:1_FanNode,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:ConstantVolume,      !- Component 4 Object Type
     PSZ-AC:1_Fan,            !- Component 4 Name
     PSZ-AC:1_HeatC-PSZ-AC:1_FanNode,  !- Component 4 Inlet Node Name
-    PSZ-AC:1 Supply Equipment Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    PSZ-AC:1 Supply Equipment Outlet Node;  !- Component 4 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     PSZ-AC:1_OA_Controllers, !- Name
@@ -3923,7 +3919,8 @@
     PSZ-AC:1_CoolCStandard10Ton_CapFF,  !- Total Cooling Capacity Function of Flow Fraction Curve Name
     PSZ-AC:1_CoolCStandard10Ton_EIRFT,  !- Energy Input Ratio Function of Temperature Curve Name
     PSZ-AC:1_CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
-    PSZ-AC:1_CoolCStandard10Ton_PLR;  !- Part Load Fraction Correlation Curve Name
+    PSZ-AC:1_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
+    ;                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
 
   Curve:Biquadratic,
     PSZ-AC:1_CoolCStandard10Ton_CapFT,  !- Name
@@ -3978,10 +3975,11 @@
   OutdoorAir:Node,
     PSZ-AC:1_CoolCOA Ref node;  !- Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     PSZ-AC:1_HeatC,          !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     PSZ-AC:1_CoolC-PSZ-AC:1_HeatCNode,  !- Air Inlet Node Name
     PSZ-AC:1_HeatC-PSZ-AC:1_FanNode,  !- Air Outlet Node Name
@@ -4101,6 +4099,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   BranchList,
@@ -4109,28 +4108,23 @@
 
   Branch,
     PSZ-AC:2 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     PSZ-AC:2_OA,             !- Component 1 Name
     PSZ-AC:2 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     PSZ-AC:2_OA-PSZ-AC:2_CoolCNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     PSZ-AC:2_CoolC,          !- Component 2 Name
     PSZ-AC:2_OA-PSZ-AC:2_CoolCNode,  !- Component 2 Inlet Node Name
     PSZ-AC:2_CoolC-PSZ-AC:2_HeatCNode,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
-    Coil:Heating:Gas,        !- Component 3 Object Type
+    Coil:Heating:Fuel,       !- Component 3 Object Type
     PSZ-AC:2_HeatC,          !- Component 3 Name
     PSZ-AC:2_CoolC-PSZ-AC:2_HeatCNode,  !- Component 3 Inlet Node Name
     PSZ-AC:2_HeatC-PSZ-AC:2_FanNode,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:ConstantVolume,      !- Component 4 Object Type
     PSZ-AC:2_Fan,            !- Component 4 Name
     PSZ-AC:2_HeatC-PSZ-AC:2_FanNode,  !- Component 4 Inlet Node Name
-    PSZ-AC:2 Supply Equipment Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    PSZ-AC:2 Supply Equipment Outlet Node;  !- Component 4 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     PSZ-AC:2_OA_Controllers, !- Name
@@ -4215,7 +4209,8 @@
     PSZ-AC:2_CoolCStandard10Ton_CapFF,  !- Total Cooling Capacity Function of Flow Fraction Curve Name
     PSZ-AC:2_CoolCStandard10Ton_EIRFT,  !- Energy Input Ratio Function of Temperature Curve Name
     PSZ-AC:2_CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
-    PSZ-AC:2_CoolCStandard10Ton_PLR;  !- Part Load Fraction Correlation Curve Name
+    PSZ-AC:2_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
+    ;                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
 
   Curve:Biquadratic,
     PSZ-AC:2_CoolCStandard10Ton_CapFT,  !- Name
@@ -4270,10 +4265,11 @@
   OutdoorAir:Node,
     PSZ-AC:2_CoolCOA Ref node;  !- Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     PSZ-AC:2_HeatC,          !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     PSZ-AC:2_CoolC-PSZ-AC:2_HeatCNode,  !- Air Inlet Node Name
     PSZ-AC:2_HeatC-PSZ-AC:2_FanNode,  !- Air Outlet Node Name
@@ -4393,6 +4389,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   BranchList,
@@ -4401,28 +4398,23 @@
 
   Branch,
     PSZ-AC:3 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     PSZ-AC:3_OA,             !- Component 1 Name
     PSZ-AC:3 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     PSZ-AC:3_OA-PSZ-AC:3_CoolCNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     PSZ-AC:3_CoolC,          !- Component 2 Name
     PSZ-AC:3_OA-PSZ-AC:3_CoolCNode,  !- Component 2 Inlet Node Name
     PSZ-AC:3_CoolC-PSZ-AC:3_HeatCNode,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
-    Coil:Heating:Gas,        !- Component 3 Object Type
+    Coil:Heating:Fuel,       !- Component 3 Object Type
     PSZ-AC:3_HeatC,          !- Component 3 Name
     PSZ-AC:3_CoolC-PSZ-AC:3_HeatCNode,  !- Component 3 Inlet Node Name
     PSZ-AC:3_HeatC-PSZ-AC:3_FanNode,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:ConstantVolume,      !- Component 4 Object Type
     PSZ-AC:3_Fan,            !- Component 4 Name
     PSZ-AC:3_HeatC-PSZ-AC:3_FanNode,  !- Component 4 Inlet Node Name
-    PSZ-AC:3 Supply Equipment Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    PSZ-AC:3 Supply Equipment Outlet Node;  !- Component 4 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     PSZ-AC:3_OA_Controllers, !- Name
@@ -4507,7 +4499,8 @@
     PSZ-AC:3_CoolCStandard10Ton_CapFF,  !- Total Cooling Capacity Function of Flow Fraction Curve Name
     PSZ-AC:3_CoolCStandard10Ton_EIRFT,  !- Energy Input Ratio Function of Temperature Curve Name
     PSZ-AC:3_CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
-    PSZ-AC:3_CoolCStandard10Ton_PLR;  !- Part Load Fraction Correlation Curve Name
+    PSZ-AC:3_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
+    ;                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
 
   Curve:Biquadratic,
     PSZ-AC:3_CoolCStandard10Ton_CapFT,  !- Name
@@ -4562,10 +4555,11 @@
   OutdoorAir:Node,
     PSZ-AC:3_CoolCOA Ref node;  !- Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     PSZ-AC:3_HeatC,          !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     PSZ-AC:3_CoolC-PSZ-AC:3_HeatCNode,  !- Air Inlet Node Name
     PSZ-AC:3_HeatC-PSZ-AC:3_FanNode,  !- Air Outlet Node Name
@@ -4685,6 +4679,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   BranchList,
@@ -4693,28 +4688,23 @@
 
   Branch,
     PSZ-AC:4 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     PSZ-AC:4_OA,             !- Component 1 Name
     PSZ-AC:4 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     PSZ-AC:4_OA-PSZ-AC:4_CoolCNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     PSZ-AC:4_CoolC,          !- Component 2 Name
     PSZ-AC:4_OA-PSZ-AC:4_CoolCNode,  !- Component 2 Inlet Node Name
     PSZ-AC:4_CoolC-PSZ-AC:4_HeatCNode,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
-    Coil:Heating:Gas,        !- Component 3 Object Type
+    Coil:Heating:Fuel,       !- Component 3 Object Type
     PSZ-AC:4_HeatC,          !- Component 3 Name
     PSZ-AC:4_CoolC-PSZ-AC:4_HeatCNode,  !- Component 3 Inlet Node Name
     PSZ-AC:4_HeatC-PSZ-AC:4_FanNode,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:ConstantVolume,      !- Component 4 Object Type
     PSZ-AC:4_Fan,            !- Component 4 Name
     PSZ-AC:4_HeatC-PSZ-AC:4_FanNode,  !- Component 4 Inlet Node Name
-    PSZ-AC:4 Supply Equipment Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    PSZ-AC:4 Supply Equipment Outlet Node;  !- Component 4 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     PSZ-AC:4_OA_Controllers, !- Name
@@ -4799,7 +4789,8 @@
     PSZ-AC:4_CoolCStandard10Ton_CapFF,  !- Total Cooling Capacity Function of Flow Fraction Curve Name
     PSZ-AC:4_CoolCStandard10Ton_EIRFT,  !- Energy Input Ratio Function of Temperature Curve Name
     PSZ-AC:4_CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
-    PSZ-AC:4_CoolCStandard10Ton_PLR;  !- Part Load Fraction Correlation Curve Name
+    PSZ-AC:4_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
+    ;                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
 
   Curve:Biquadratic,
     PSZ-AC:4_CoolCStandard10Ton_CapFT,  !- Name
@@ -4854,10 +4845,11 @@
   OutdoorAir:Node,
     PSZ-AC:4_CoolCOA Ref node;  !- Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     PSZ-AC:4_HeatC,          !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     PSZ-AC:4_CoolC-PSZ-AC:4_HeatCNode,  !- Air Inlet Node Name
     PSZ-AC:4_HeatC-PSZ-AC:4_FanNode,  !- Air Outlet Node Name
@@ -4977,6 +4969,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   BranchList,
@@ -4985,28 +4978,23 @@
 
   Branch,
     PSZ-AC:5 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     PSZ-AC:5_OA,             !- Component 1 Name
     PSZ-AC:5 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     PSZ-AC:5_OA-PSZ-AC:5_CoolCNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     PSZ-AC:5_CoolC,          !- Component 2 Name
     PSZ-AC:5_OA-PSZ-AC:5_CoolCNode,  !- Component 2 Inlet Node Name
     PSZ-AC:5_CoolC-PSZ-AC:5_HeatCNode,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
-    Coil:Heating:Gas,        !- Component 3 Object Type
+    Coil:Heating:Fuel,       !- Component 3 Object Type
     PSZ-AC:5_HeatC,          !- Component 3 Name
     PSZ-AC:5_CoolC-PSZ-AC:5_HeatCNode,  !- Component 3 Inlet Node Name
     PSZ-AC:5_HeatC-PSZ-AC:5_FanNode,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:ConstantVolume,      !- Component 4 Object Type
     PSZ-AC:5_Fan,            !- Component 4 Name
     PSZ-AC:5_HeatC-PSZ-AC:5_FanNode,  !- Component 4 Inlet Node Name
-    PSZ-AC:5 Supply Equipment Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    PSZ-AC:5 Supply Equipment Outlet Node;  !- Component 4 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     PSZ-AC:5_OA_Controllers, !- Name
@@ -5091,7 +5079,8 @@
     PSZ-AC:5_CoolCStandard10Ton_CapFF,  !- Total Cooling Capacity Function of Flow Fraction Curve Name
     PSZ-AC:5_CoolCStandard10Ton_EIRFT,  !- Energy Input Ratio Function of Temperature Curve Name
     PSZ-AC:5_CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
-    PSZ-AC:5_CoolCStandard10Ton_PLR;  !- Part Load Fraction Correlation Curve Name
+    PSZ-AC:5_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
+    ;                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
 
   Curve:Biquadratic,
     PSZ-AC:5_CoolCStandard10Ton_CapFT,  !- Name
@@ -5146,10 +5135,11 @@
   OutdoorAir:Node,
     PSZ-AC:5_CoolCOA Ref node;  !- Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     PSZ-AC:5_HeatC,          !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     PSZ-AC:5_CoolC-PSZ-AC:5_HeatCNode,  !- Air Inlet Node Name
     PSZ-AC:5_HeatC-PSZ-AC:5_FanNode,  !- Air Outlet Node Name
@@ -5276,23 +5266,19 @@
 
   Branch,
     SWHSys1 Supply Inlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:ConstantSpeed,      !- Component 1 Object Type
     SWHSys1 Pump,            !- Component 1 Name
     SWHSys1 Supply Inlet Node,  !- Component 1 Inlet Node Name
-    SWHSys1 Pump-SWHSys1 Water HeaterNodeviaConnector,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    SWHSys1 Pump-SWHSys1 Water HeaterNodeviaConnector;  !- Component 1 Outlet Node Name
 
   Branch,
     SWHSys1 Supply Equipment Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     WaterHeater:Mixed,       !- Component 1 Object Type
     SWHSys1 Water Heater,    !- Component 1 Name
     SWHSys1 Pump-SWHSys1 Water HeaterNode,  !- Component 1 Inlet Node Name
-    SWHSys1 Supply Equipment Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    SWHSys1 Supply Equipment Outlet Node;  !- Component 1 Outlet Node Name
 
   Pump:ConstantSpeed,
     SWHSys1 Pump,            !- Name
@@ -5363,13 +5349,11 @@
 
   Branch,
     SWHSys1 Supply Equipment Bypass Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SWHSys1 Supply Equipment Bypass Pipe,  !- Component 1 Name
     SWHSys1 Supply Equip Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    SWHSys1 Supply Equip Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    Bypass;                  !- Component 1 Branch Control Type
+    SWHSys1 Supply Equip Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     SWHSys1 Supply Equipment Bypass Pipe,  !- Name
@@ -5378,13 +5362,11 @@
 
   Branch,
     SWHSys1 Supply Outlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SWHSys1 Supply Outlet Pipe,  !- Component 1 Name
     SWHSys1 Supply Mixer-SWHSys1 Supply Outlet Pipe,  !- Component 1 Inlet Node Name
-    SWHSys1 Supply Outlet Node,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    SWHSys1 Supply Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     SWHSys1 Supply Outlet Pipe,  !- Name
@@ -5419,13 +5401,11 @@
 
   Branch,
     SWHSys1 Demand Inlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SWHSys1 Demand Inlet Pipe,  !- Component 1 Name
     SWHSys1 Demand Inlet Node,  !- Component 1 Inlet Node Name
-    SWHSys1 Demand Inlet Pipe-SWHSys1 Demand Mixer,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    SWHSys1 Demand Inlet Pipe-SWHSys1 Demand Mixer;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     SWHSys1 Demand Inlet Pipe,  !- Name
@@ -5434,23 +5414,19 @@
 
   Branch,
     SWHSys1 Demand Load Branch 1,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     WaterUse:Connections,    !- Component 1 Object Type
     Core_ZN Water Equipment, !- Component 1 Name
     Core_ZN Water Equipment Water Inlet Node,  !- Component 1 Inlet Node Name
-    Core_ZN Water Equipment Water Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Core_ZN Water Equipment Water Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     SWHSys1 Demand Bypass Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SWHSys1 Demand Bypass Pipe,  !- Component 1 Name
     SWHSys1 Demand Bypass Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    SWHSys1 Demand Bypass Pipe Outlet Node,  !- Component 1 Outlet Node Name
-    Bypass;                  !- Component 1 Branch Control Type
+    SWHSys1 Demand Bypass Pipe Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     SWHSys1 Demand Bypass Pipe,  !- Name
@@ -5459,13 +5435,11 @@
 
   Branch,
     SWHSys1 Demand Outlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SWHSys1 Demand Outlet Pipe,  !- Component 1 Name
     SWHSys1 Demand Mixer-SWHSys1 Demand Outlet Pipe,  !- Component 1 Inlet Node Name
-    SWHSys1 Demand Outlet Node,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    SWHSys1 Demand Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     SWHSys1 Demand Outlet Pipe,  !- Name
@@ -5540,7 +5514,7 @@
     Comm Elect;              !- Group Name
 
   UtilityCost:Charge:Block,
-    AnnualEnergyCharge,      !- Name
+    AnnualEnergyCharge,      !- Utility Cost Charge Block Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -5557,7 +5531,7 @@
     0.058320;                !- Block 4 Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Block,
-    AnnualDemandBaseCharge,  !- Name
+    AnnualDemandBaseCharge,  !- Utility Cost Charge Block Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -5572,7 +5546,7 @@
     0.046965;                !- Block 3 Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    FuelCostAdjustEnergyCharge,  !- Name
+    FuelCostAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -5580,7 +5554,7 @@
     0.002028;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    QualPollutionControlAdjustEnergyCharge,  !- Name
+    QualPollutionControlAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -5588,7 +5562,7 @@
     0.000536;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    SoxNoxRiderAdjustEnergyCharge,  !- Name
+    SoxNoxRiderAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -5596,7 +5570,7 @@
     0.001127;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    DSMRiderAdjustEnergyCharge,  !- Name
+    DSMRiderAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -5604,7 +5578,7 @@
     -0.000370;               !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    PurchPowerTrackerAdjustEnergyCharge,  !- Name
+    PurchPowerTrackerAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -5612,7 +5586,7 @@
     -0.000031;               !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    MidwestISOAdjustEnergyCharge,  !- Name
+    MidwestISOAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -5620,7 +5594,7 @@
     -0.000216;               !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    CleanCoalRiderEnergyCharge,  !- Name
+    CleanCoalRiderEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -5628,7 +5602,7 @@
     0.000833;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Qualify,
-    MinDemand75kw,           !- Name
+    MinDemand75kw,           !- Utility Cost Qualify Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     TotalDemand,             !- Variable Name
     Minimum,                 !- Qualify Type
@@ -5638,7 +5612,7 @@
     12;                      !- Number of Months
 
   UtilityCost:Charge:Simple,
-    TaxofeightPercent,       !- Name
+    TaxofeightPercent,       !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season
@@ -5664,7 +5638,7 @@
     Comm Elect;              !- Group Name
 
   UtilityCost:Charge:Block,
-    AnnualEnergyCharge,      !- Name
+    AnnualEnergyCharge,      !- Utility Cost Charge Block Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -5681,7 +5655,7 @@
     0.041179;                !- Block 4 Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    FuelCostAdjustEnergyCharge,  !- Name
+    FuelCostAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -5689,7 +5663,7 @@
     0.002028;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    QualPollutionControlAdjustEnergyCharge,  !- Name
+    QualPollutionControlAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -5697,7 +5671,7 @@
     0.000536;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    SoxNoxRiderAdjustEnergyCharge,  !- Name
+    SoxNoxRiderAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -5705,7 +5679,7 @@
     0.001127;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    DSMRiderAdjustEnergyCharge,  !- Name
+    DSMRiderAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -5713,7 +5687,7 @@
     0.000021;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    PurchPowerTrackerAdjustEnergyCharge,  !- Name
+    PurchPowerTrackerAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -5721,7 +5695,7 @@
     0.000034;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    MidwestISOAdjustEnergyCharge,  !- Name
+    MidwestISOAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -5729,7 +5703,7 @@
     -0.000203;               !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    CleanCoalRiderEnergyCharge,  !- Name
+    CleanCoalRiderEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -5737,7 +5711,7 @@
     0.000807;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Qualify,
-    MaxDemand75kw,           !- Name
+    MaxDemand75kw,           !- Utility Cost Qualify Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     TotalDemand,             !- Variable Name
     Maximum,                 !- Qualify Type
@@ -5747,7 +5721,7 @@
     1;                       !- Number of Months
 
   UtilityCost:Charge:Simple,
-    TaxofeightPercent,       !- Name
+    TaxofeightPercent,       !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season
@@ -5771,7 +5745,7 @@
     Comm Gas;                !- Group Name
 
   UtilityCost:Charge:Simple,
-    MonthlyRateGasCharge,    !- Name
+    MonthlyRateGasCharge,    !- Utility Cost Charge Simple Name
     IN_EIAMonthlyRateGas,    !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -5795,7 +5769,7 @@
     7.83;                    !- November Value
 
   UtilityCost:Charge:Simple,
-    TaxofEightPercent,       !- Name
+    TaxofEightPercent,       !- Utility Cost Charge Simple Name
     IN_EIAMonthlyRateGas,    !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season
@@ -6296,7 +6270,4 @@
 
   Output:SQLite,
     SimpleAndTabular;        !- Option Type
-
-  ProgramControl,
-    1;                       !- Number of Threads Allowed
 

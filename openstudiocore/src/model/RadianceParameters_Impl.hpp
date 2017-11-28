@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef MODEL_RADIANCEPARAMETERS_IMPL_HPP
 #define MODEL_RADIANCEPARAMETERS_IMPL_HPP
@@ -33,61 +42,61 @@ namespace detail {
 
   /** RadianceParameters_Impl is a ModelObject_Impl that is the implementation class for RadianceParameters.*/
   class MODEL_API RadianceParameters_Impl : public ModelObject_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(int accumulatedRaysperRecord READ accumulatedRaysperRecord WRITE setAccumulatedRaysperRecord RESET resetAccumulatedRaysperRecord);
-    Q_PROPERTY(bool isAccumulatedRaysperRecordDefaulted READ isAccumulatedRaysperRecordDefaulted);
+    
+    
 
-    Q_PROPERTY(double directThreshold READ directThreshold WRITE setDirectThreshold RESET resetDirectThreshold);
-    Q_PROPERTY(openstudio::Quantity directThreshold_SI READ directThreshold_SI WRITE setDirectThreshold RESET resetDirectThreshold);
-    Q_PROPERTY(openstudio::Quantity directThreshold_IP READ directThreshold_IP WRITE setDirectThreshold RESET resetDirectThreshold);
-    Q_PROPERTY(bool isDirectThresholdDefaulted READ isDirectThresholdDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double directCertainty READ directCertainty WRITE setDirectCertainty RESET resetDirectCertainty);
-    Q_PROPERTY(openstudio::Quantity directCertainty_SI READ directCertainty_SI WRITE setDirectCertainty RESET resetDirectCertainty);
-    Q_PROPERTY(openstudio::Quantity directCertainty_IP READ directCertainty_IP WRITE setDirectCertainty RESET resetDirectCertainty);
-    Q_PROPERTY(bool isDirectCertaintyDefaulted READ isDirectCertaintyDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double directJitter READ directJitter WRITE setDirectJitter RESET resetDirectJitter);
-    Q_PROPERTY(openstudio::Quantity directJitter_SI READ directJitter_SI WRITE setDirectJitter RESET resetDirectJitter);
-    Q_PROPERTY(openstudio::Quantity directJitter_IP READ directJitter_IP WRITE setDirectJitter RESET resetDirectJitter);
-    Q_PROPERTY(bool isDirectJitterDefaulted READ isDirectJitterDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double directPretest READ directPretest WRITE setDirectPretest RESET resetDirectPretest);
-    Q_PROPERTY(openstudio::Quantity directPretest_SI READ directPretest_SI WRITE setDirectPretest RESET resetDirectPretest);
-    Q_PROPERTY(openstudio::Quantity directPretest_IP READ directPretest_IP WRITE setDirectPretest RESET resetDirectPretest);
-    Q_PROPERTY(bool isDirectPretestDefaulted READ isDirectPretestDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(int ambientBouncesVMX READ ambientBouncesVMX WRITE setAmbientBouncesVMX RESET resetAmbientBouncesVMX);
-    Q_PROPERTY(bool isAmbientBouncesVMXDefaulted READ isAmbientBouncesVMXDefaulted);
+    
+    
 
-    Q_PROPERTY(int ambientBouncesDMX READ ambientBouncesDMX WRITE setAmbientBouncesDMX RESET resetAmbientBouncesDMX);
-    Q_PROPERTY(bool isAmbientBouncesDMXDefaulted READ isAmbientBouncesDMXDefaulted);
+    
+    
 
-    Q_PROPERTY(int ambientDivisionsVMX READ ambientDivisionsVMX WRITE setAmbientDivisionsVMX RESET resetAmbientDivisionsVMX);
-    Q_PROPERTY(bool isAmbientDivisionsVMXDefaulted READ isAmbientDivisionsVMXDefaulted);
+    
+    
 
-    Q_PROPERTY(int ambientDivisionsDMX READ ambientDivisionsDMX WRITE setAmbientDivisionsDMX RESET resetAmbientDivisionsDMX);
-    Q_PROPERTY(bool isAmbientDivisionsDMXDefaulted READ isAmbientDivisionsDMXDefaulted);
+    
+    
 
-    Q_PROPERTY(int ambientSupersamples READ ambientSupersamples WRITE setAmbientSupersamples RESET resetAmbientSupersamples);
-    Q_PROPERTY(bool isAmbientSupersamplesDefaulted READ isAmbientSupersamplesDefaulted);
+    
+    
 
-    Q_PROPERTY(double limitWeightVMX READ limitWeightVMX WRITE setLimitWeightVMX RESET resetLimitWeightVMX);
-    Q_PROPERTY(openstudio::Quantity limitWeightVMX_SI READ limitWeightVMX_SI WRITE setLimitWeightVMX RESET resetLimitWeightVMX);
-    Q_PROPERTY(openstudio::Quantity limitWeightVMX_IP READ limitWeightVMX_IP WRITE setLimitWeightVMX RESET resetLimitWeightVMX);
-    Q_PROPERTY(bool isLimitWeightVMXDefaulted READ isLimitWeightVMXDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double limitWeightDMX READ limitWeightDMX WRITE setLimitWeightDMX RESET resetLimitWeightDMX);
-    Q_PROPERTY(openstudio::Quantity limitWeightDMX_SI READ limitWeightDMX_SI WRITE setLimitWeightDMX RESET resetLimitWeightDMX);
-    Q_PROPERTY(openstudio::Quantity limitWeightDMX_IP READ limitWeightDMX_IP WRITE setLimitWeightDMX RESET resetLimitWeightDMX);
-    Q_PROPERTY(bool isLimitWeightDMXDefaulted READ isLimitWeightDMXDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(int klemsSamplingDensity READ klemsSamplingDensity WRITE setKlemsSamplingDensity RESET resetKlemsSamplingDensity);
-    Q_PROPERTY(bool isKlemsSamplingDensityDefaulted READ isKlemsSamplingDensityDefaulted);
+    
+    
 
-    Q_PROPERTY(std::string skyDiscretizationResolution READ skyDiscretizationResolution WRITE setSkyDiscretizationResolution RESET resetSkyDiscretizationResolution);
-    Q_PROPERTY(std::vector<std::string> skyDiscretizationResolutionValues READ skyDiscretizationResolutionValues);
+    
+    
 
     // TODO: Add relationships for objects related to this one, but not pointed to by the underlying data.
     //       Such relationships can be generated by the GenerateRelationships.rb script.
@@ -107,7 +116,7 @@ namespace detail {
                             Model_Impl* model,
                             bool keepHandle);
 
-    virtual ~RadianceParameters_Impl() {}
+    virtual ~RadianceParameters_Impl();
 
     //@}
 

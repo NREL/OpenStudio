@@ -4,7 +4,7 @@
 require 'erb'
 
 #start the measure
-class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
+class ReportingMeasureName < OpenStudio::Measure::ReportingMeasure
 
   # human readable name
   def name
@@ -23,7 +23,7 @@ class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
 
   # define the arguments that the user will input
   def arguments()
-    args = OpenStudio::Ruleset::OSArgumentVector.new
+    args = OpenStudio::Measure::OSArgumentVector.new
 
     # this measure does not require any user arguments, return an empty list
 
@@ -79,8 +79,6 @@ class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
     output << "Floor Area = " << model.getBuilding.floorArea.to_s << "<br>"                   # double variable
     output << "Floor to Floor Height = " << model.getBuilding.nominalFloortoFloorHeight.to_s << " (m)<br>" # double variable
     output << "Net Site Energy = " << sqlFile.netSiteEnergy.to_s << " (GJ)<br>" # double variable
-
-    web_asset_path = OpenStudio.getSharedResourcesPath() / OpenStudio::Path.new("web_assets")
 
     # read in template
     html_in_path = "#{File.dirname(__FILE__)}/resources/report.html.in"
@@ -150,4 +148,4 @@ class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
 end
 
 # register the measure to be used by the application
-ReportingMeasure.new.registerWithApplication
+ReportingMeasureName.new.registerWithApplication

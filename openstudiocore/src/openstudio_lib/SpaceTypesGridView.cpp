@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "SpaceTypesGridView.hpp"
 
@@ -365,7 +374,7 @@ namespace openstudio {
 
   void SpaceTypesGridController::filterChanged(const QString & text)
   {
-    LOG(Debug, "Load filter changed: " << text);
+    LOG(Debug, "Load filter changed: " << toString(text));
 
     auto objectSelector = getObjectSelector();
     if (text == SHOWALLLOADS)
@@ -492,7 +501,7 @@ namespace openstudio {
 
       if (field == NAME) {
         auto getter = CastNullAdapter<model::SpaceType>(&model::SpaceType::name);
-        auto setter = CastNullAdapter<model::SpaceType>(&model::SpaceType::setName);
+        auto setter = CastNullAdapter<model::SpaceType>(&model::SpaceType::setNameProtected);
 
         addNameLineEditColumn(Heading(QString(NAME), false, false),
           false,
@@ -580,7 +589,14 @@ namespace openstudio {
             // only people have activity schedules, so this effectively gives us only
             // the People objects while inserting blanks for those which are not people,
             // which is what we want
-            retval.push_back(boost::optional<model::ModelObject>(l.optionalCast<model::People>()));
+            if (l.optionalCast<model::People>())
+            {
+              retval.push_back(boost::optional<model::ModelObject>(std::move(l)));
+            }
+            else 
+            {
+              retval.emplace_back();
+            }
           }
           return retval;
         }
@@ -793,54 +809,63 @@ namespace openstudio {
           if (im)
           {
             im->resetMultiplier();
+            return;
           }
 
           boost::optional<model::People> p = t_modelObject->optionalCast<model::People>();
           if (p)
           {
             p->resetMultiplier();
+            return;
           }
 
           boost::optional<model::Lights> light = t_modelObject->optionalCast<model::Lights>();
           if (light)
           {
             light->resetMultiplier();
+            return;
           }
 
           boost::optional<model::Luminaire> lum = t_modelObject->optionalCast<model::Luminaire>();
           if (lum)
           {
             lum->resetMultiplier();
+            return;
           }
 
           boost::optional<model::ElectricEquipment> e = t_modelObject->optionalCast<model::ElectricEquipment>();
           if (e)
           {
             e->resetMultiplier();
+            return;
           }
 
           boost::optional<model::GasEquipment> g = t_modelObject->optionalCast<model::GasEquipment>();
           if (g)
           {
             g->resetMultiplier();
+            return;
           }
 
           boost::optional<model::HotWaterEquipment> h = t_modelObject->optionalCast<model::HotWaterEquipment>();
           if (h)
           {
             h->resetMultiplier();
+            return;
           }
 
           boost::optional<model::SteamEquipment> se = t_modelObject->optionalCast<model::SteamEquipment>();
           if (se)
           {
             se->resetMultiplier();
+            return;
           }
 
           boost::optional<model::OtherEquipment> o = t_modelObject->optionalCast<model::OtherEquipment>();
           if (o)
           {
             o->resetMultiplier();
+            return;
           }
 
           // Should never get here
@@ -1063,7 +1088,7 @@ namespace openstudio {
 
           if (boost::optional<model::People> p = l->optionalCast<model::People>())
           {
-            return  p->isActivityLevelScheduleDefaulted();
+            return  p->isNumberofPeopleScheduleDefaulted();
           }
           else if (boost::optional<model::Lights> light = l->optionalCast<model::Lights>())
           {

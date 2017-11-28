@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
- *  All rights reserved.
- *  
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- *  
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- *  
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "WaterToWaterComponent.hpp"
 #include "WaterToWaterComponent_Impl.hpp"
@@ -48,19 +57,19 @@ WaterToWaterComponent_Impl::WaterToWaterComponent_Impl(IddObjectType type, Model
 
 WaterToWaterComponent_Impl::WaterToWaterComponent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : HVACComponent_Impl(idfObject, model, keepHandle)
-{ 
+{
 }
 
 WaterToWaterComponent_Impl::WaterToWaterComponent_Impl(
-    const openstudio::detail::WorkspaceObject_Impl& other, 
-    Model_Impl* model, 
+    const openstudio::detail::WorkspaceObject_Impl& other,
+    Model_Impl* model,
     bool keepHandle)
   : HVACComponent_Impl(other,model,keepHandle)
 {
 }
 
-WaterToWaterComponent_Impl::WaterToWaterComponent_Impl(const WaterToWaterComponent_Impl& other, 
-                                               Model_Impl* model, 
+WaterToWaterComponent_Impl::WaterToWaterComponent_Impl(const WaterToWaterComponent_Impl& other,
+                                               Model_Impl* model,
                                                bool keepHandles)
   : HVACComponent_Impl(other,model,keepHandles)
 {
@@ -113,7 +122,7 @@ std::vector<HVACComponent> WaterToWaterComponent_Impl::edges(const boost::option
       edges.push_back(edgeHVACComponent.get());
     }
   };
-  
+
   if( prev) {
     if( auto inletModelObject = supplyInletModelObject() ) {
       if( prev.get() == inletModelObject.get() ) {
@@ -179,7 +188,7 @@ void WaterToWaterComponent_Impl::disconnect()
 
 bool WaterToWaterComponent_Impl::addToNode(Node & node)
 {
-  auto _model = node.model(); 
+  auto _model = node.model();
   auto thisModelObject = getObject<ModelObject>();
   auto t_plantLoop = node.plantLoop();
 
@@ -222,12 +231,12 @@ ModelObject WaterToWaterComponent_Impl::clone(Model model) const
 {
   WaterToWaterComponent mo =  HVACComponent_Impl::clone( model ).cast<WaterToWaterComponent>();
 
-  mo.setString(mo.supplyInletPort(),""); 
-  mo.setString(mo.supplyOutletPort(),""); 
-  mo.setString(mo.demandInletPort(),""); 
-  mo.setString(mo.demandOutletPort(),""); 
-  mo.setString(mo.getImpl<detail::WaterToWaterComponent_Impl>()->tertiaryInletPort(),""); 
-  mo.setString(mo.getImpl<detail::WaterToWaterComponent_Impl>()->tertiaryOutletPort(),""); 
+  mo.setString(mo.supplyInletPort(),"");
+  mo.setString(mo.supplyOutletPort(),"");
+  mo.setString(mo.demandInletPort(),"");
+  mo.setString(mo.demandOutletPort(),"");
+  mo.setString(mo.getImpl<detail::WaterToWaterComponent_Impl>()->tertiaryInletPort(),"");
+  mo.setString(mo.getImpl<detail::WaterToWaterComponent_Impl>()->tertiaryOutletPort(),"");
 
   return mo;
 }
@@ -312,12 +321,12 @@ bool WaterToWaterComponent_Impl::removeFromSecondaryPlantLoop()
   return false;
 }
 
-unsigned WaterToWaterComponent_Impl::tertiaryInletPort() const 
+unsigned WaterToWaterComponent_Impl::tertiaryInletPort() const
 {
   return std::numeric_limits<unsigned>::max();
 }
 
-unsigned WaterToWaterComponent_Impl::tertiaryOutletPort() const 
+unsigned WaterToWaterComponent_Impl::tertiaryOutletPort() const
 {
   return std::numeric_limits<unsigned>::max();
 }
@@ -371,7 +380,7 @@ bool WaterToWaterComponent_Impl::removeFromTertiaryPlantLoop()
 
 bool WaterToWaterComponent_Impl::addToTertiaryNode(Node & node)
 {
-  auto _model = node.model(); 
+  auto _model = node.model();
   auto thisModelObject = getObject<ModelObject>();
   auto t_plantLoop = node.plantLoop();
 
@@ -418,14 +427,14 @@ boost::optional<ModelObject> WaterToWaterComponent_Impl::tertiaryOutletModelObje
 
 } // detail
 
-WaterToWaterComponent::WaterToWaterComponent(IddObjectType type,const Model& model) 
+WaterToWaterComponent::WaterToWaterComponent(IddObjectType type,const Model& model)
   : HVACComponent(type,model)
 {
   OS_ASSERT(getImpl<detail::WaterToWaterComponent_Impl>());
-}     
+}
 
 WaterToWaterComponent::WaterToWaterComponent(std::shared_ptr<detail::WaterToWaterComponent_Impl> p)
-  : HVACComponent(p)
+  : HVACComponent(std::move(p))
 {}
 
 unsigned WaterToWaterComponent::supplyInletPort()

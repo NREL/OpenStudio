@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef MODEL_STANDARDOPAQUEMATERIAL_IMPL_HPP
 #define MODEL_STANDARDOPAQUEMATERIAL_IMPL_HPP
@@ -37,52 +46,52 @@ namespace detail {
 
   /** StandardOpaqueMaterial_Impl is a OpaqueMaterial_Impl that is the implementation class for StandardOpaqueMaterial.*/
   class MODEL_API StandardOpaqueMaterial_Impl : public OpaqueMaterial_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(double thermalConductivity READ thermalConductivity WRITE setThermalConductivity);
-    Q_PROPERTY(double thermalConductance READ thermalConductance WRITE setThermalConductance);
-    Q_PROPERTY(double thermalResistivity READ thermalResistivity WRITE setThermalResistivity);
-    Q_PROPERTY(double thermalResistance READ thermalResistance WRITE setThermalResistance);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> heatCapacity READ heatCapacity);
+    
 
-    Q_PROPERTY(boost::optional<double> thermalReflectance READ thermalReflectance WRITE setThermalReflectance);
-    Q_PROPERTY(boost::optional<double> solarReflectance READ solarReflectance WRITE setSolarReflectance);
-    Q_PROPERTY(boost::optional<double> visibleReflectance READ visibleReflectance WRITE setVisibleReflectance);
+    
+    
+    
 
-    Q_PROPERTY(std::string roughness READ roughness WRITE setRoughness);
-    Q_PROPERTY(std::vector<std::string> roughnessValues READ roughnessValues);
+    
+    
 
-    Q_PROPERTY(double thickness READ thickness WRITE setThickness);
-    Q_PROPERTY(openstudio::Quantity thickness_SI READ thickness_SI WRITE setThickness);
-    Q_PROPERTY(openstudio::Quantity thickness_IP READ thickness_IP WRITE setThickness);
+    
+    
+    
 
-    Q_PROPERTY(double conductivity READ conductivity WRITE setConductivity);
-    Q_PROPERTY(openstudio::Quantity conductivity_SI READ conductivity_SI WRITE setConductivity);
-    Q_PROPERTY(openstudio::Quantity conductivity_IP READ conductivity_IP WRITE setConductivity);
+    
+    
+    
 
-    Q_PROPERTY(double density READ density WRITE setDensity);
-    Q_PROPERTY(openstudio::Quantity density_SI READ density_SI WRITE setDensity);
-    Q_PROPERTY(openstudio::Quantity density_IP READ density_IP WRITE setDensity);
+    
+    
+    
 
-    Q_PROPERTY(double specificHeat READ specificHeat WRITE setSpecificHeat);
-    Q_PROPERTY(openstudio::Quantity specificHeat_SI READ specificHeat_SI WRITE setSpecificHeat);
-    Q_PROPERTY(openstudio::Quantity specificHeat_IP READ specificHeat_IP WRITE setSpecificHeat);
+    
+    
+    
 
-    Q_PROPERTY(double thermalAbsorptance READ thermalAbsorptance WRITE setThermalAbsorptance RESET resetThermalAbsorptance);
-    Q_PROPERTY(openstudio::Quantity thermalAbsorptance_SI READ thermalAbsorptance_SI WRITE setThermalAbsorptance RESET resetThermalAbsorptance);
-    Q_PROPERTY(openstudio::Quantity thermalAbsorptance_IP READ thermalAbsorptance_IP WRITE setThermalAbsorptance RESET resetThermalAbsorptance);
-    Q_PROPERTY(bool isThermalAbsorptanceDefaulted READ isThermalAbsorptanceDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double solarAbsorptance READ solarAbsorptance WRITE setSolarAbsorptance RESET resetSolarAbsorptance);
-    Q_PROPERTY(openstudio::Quantity solarAbsorptance_SI READ solarAbsorptance_SI WRITE setSolarAbsorptance RESET resetSolarAbsorptance);
-    Q_PROPERTY(openstudio::Quantity solarAbsorptance_IP READ solarAbsorptance_IP WRITE setSolarAbsorptance RESET resetSolarAbsorptance);
-    Q_PROPERTY(bool isSolarAbsorptanceDefaulted READ isSolarAbsorptanceDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double visibleAbsorptance READ visibleAbsorptance WRITE setVisibleAbsorptance RESET resetVisibleAbsorptance);
-    Q_PROPERTY(openstudio::Quantity visibleAbsorptance_SI READ visibleAbsorptance_SI WRITE setVisibleAbsorptance RESET resetVisibleAbsorptance);
-    Q_PROPERTY(openstudio::Quantity visibleAbsorptance_IP READ visibleAbsorptance_IP WRITE setVisibleAbsorptance RESET resetVisibleAbsorptance);
-    Q_PROPERTY(bool isVisibleAbsorptanceDefaulted READ isVisibleAbsorptanceDefaulted);
+    
+    
+    
+    
 
     // TODO: Add relationships for objects related to this one, but not pointed to by the underlying data.
     //       Such relationships can be generated by the GenerateRelationships.rb script.

@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "CoilCoolingDXTwoSpeed.hpp"
 #include "CoilCoolingDXTwoSpeed_Impl.hpp"
@@ -183,6 +192,12 @@ namespace detail{
     }
   }
 
+  void CoilCoolingDXTwoSpeed_Impl::setRatedHighSpeedTotalCoolingCapacity( double value )
+  {
+      setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedTotalCoolingCapacity,value);
+  }
+
+
   // N2 , \field Rated High Speed Sensible Heat Ratio
   OptionalDouble CoilCoolingDXTwoSpeed_Impl::ratedHighSpeedSensibleHeatRatio() const
   {
@@ -199,6 +214,12 @@ namespace detail{
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedSensibleHeatRatio,"Autosize");
     }
   }
+
+  void CoilCoolingDXTwoSpeed_Impl::setRatedHighSpeedSensibleHeatRatio( double value )
+  {
+    setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedSensibleHeatRatio,value);
+  }
+
 
   // N3 , \field Rated High Speed COP
   OptionalDouble CoilCoolingDXTwoSpeed_Impl::ratedHighSpeedCOP() const
@@ -226,6 +247,11 @@ namespace detail{
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedAirFlowRate,"Autosize");
     }
   }
+  void CoilCoolingDXTwoSpeed_Impl::setRatedHighSpeedAirFlowRate( double value )
+  {
+    setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedAirFlowRate,value);
+  }
+
 
   // A5 , \field Total Cooling Capacity Function of Temperature Curve Name
   //\object-list BiquadraticCurves
@@ -389,6 +415,11 @@ namespace detail{
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedTotalCoolingCapacity,"Autosize");
     }
   }
+  void CoilCoolingDXTwoSpeed_Impl::setRatedLowSpeedTotalCoolingCapacity( double value )
+  {
+    setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedTotalCoolingCapacity,value);
+  }
+
 
   // N6 , \field Rated Low Speed Sensible Heat Ratio
   OptionalDouble CoilCoolingDXTwoSpeed_Impl::ratedLowSpeedSensibleHeatRatio() const
@@ -406,6 +437,11 @@ namespace detail{
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedSensibleHeatRatio,"Autosize");
     }
   }
+  void CoilCoolingDXTwoSpeed_Impl::setRatedLowSpeedSensibleHeatRatio( double value )
+  {
+    setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedSensibleHeatRatio,value);
+  }
+
 
   // N7 , \field Rated Low Speed COP
   OptionalDouble CoilCoolingDXTwoSpeed_Impl::ratedLowSpeedCOP() const
@@ -433,6 +469,11 @@ namespace detail{
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedAirFlowRate,"Autosize");
     }
   }
+  void CoilCoolingDXTwoSpeed_Impl::setRatedLowSpeedAirFlowRate( double value )
+  {
+    setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedAirFlowRate,value);
+  }
+
 
   // A10, \field Low Speed Total Cooling Capacity Function of Temperature Curve Name
   //\object-list BiquadraticCurves
@@ -530,6 +571,11 @@ namespace detail{
     else
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserAirFlowRate,"Autosize");
   }
+  void CoilCoolingDXTwoSpeed_Impl::setHighSpeedEvaporativeCondenserAirFlowRate( double value )
+  {
+    setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserAirFlowRate,value);
+  }
+
 
   // N11, \field High Speed Evaporative Condenser Pump Rated Power Consumption
   OptionalDouble CoilCoolingDXTwoSpeed_Impl::highSpeedEvaporativeCondenserPumpRatedPowerConsumption()const
@@ -543,6 +589,11 @@ namespace detail{
     else
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserPumpRatedPowerConsumption,"Autosize");
   }
+  void CoilCoolingDXTwoSpeed_Impl::setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value )
+  {
+    setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserPumpRatedPowerConsumption,value);
+  }
+
 
   // N12, \field Low Speed Evaporative Condenser Effectiveness
   OptionalDouble CoilCoolingDXTwoSpeed_Impl::lowSpeedEvaporativeCondenserEffectiveness()const
@@ -566,6 +617,11 @@ namespace detail{
     else
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserAirFlowRate,"Autosize");
   }
+  void CoilCoolingDXTwoSpeed_Impl::setLowSpeedEvaporativeCondenserAirFlowRate( double value )
+  {
+    setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserAirFlowRate,value);
+  }
+
 
   // N14, \field Low Speed Evaporative Condenser Pump Rated Power Consumption
   OptionalDouble CoilCoolingDXTwoSpeed_Impl::lowSpeedEvaporativeCondenserPumpRatedPowerConsumption()const
@@ -579,6 +635,11 @@ namespace detail{
     else
       setString(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserPumpRatedPowerConsumption,"Autosize");
   }
+  void CoilCoolingDXTwoSpeed_Impl::setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value )
+  {
+    setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserPumpRatedPowerConsumption,value);
+  }
+
 
   //TODO
   // A14, \field Supply Water Storage Tank Name
@@ -801,7 +862,7 @@ CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(const Model& model,
   //  A7 , \field Energy Input Ratio Function of Temperature Curve Name
   setEnergyInputRatioFunctionOfTemperatureCurve(energyInputRatioFofTemp);
   //  A8 , \field Energy Input Ratio Function of Flow Fraction Curve Name
-  setEnergyInputRatioFunctionOfFlowFractionCurve(energyInputRatioFofFlow); 
+  setEnergyInputRatioFunctionOfFlowFractionCurve(energyInputRatioFofFlow);
   //  A9 , \field Part Load Fraction Correlation Curve Name
   setPartLoadFractionCorrelationCurve(partLoadFraction);
   //  N5 , \field Rated Low Speed Total Cooling Capacity
@@ -815,7 +876,7 @@ CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(const Model& model,
   //  A10, \field Low Speed Total Cooling Capacity Function of Temperature Curve Name
   setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(lowSpeedCoolingCurveFofTemp);
   //  A11, \field Low Speed Energy Input Ratio Function of Temperature Curve Name
-  setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(lowSpeedEnergyInputRatioFofTemp);  
+  setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(lowSpeedEnergyInputRatioFofTemp);
   //  A13, \field Condenser Type
   setCondenserType("AirCooled");
   //   N9, \field High Speed Evaporative Condenser Effectiveness
@@ -926,14 +987,14 @@ CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(const Model& model)
   setTotalCoolingCapacityFunctionOfTemperatureCurve(coolingCurveFofTemp);
   setTotalCoolingCapacityFunctionOfFlowFractionCurve(coolingCurveFofFlow);
   setEnergyInputRatioFunctionOfTemperatureCurve(energyInputRatioFofTemp);
-  setEnergyInputRatioFunctionOfFlowFractionCurve(energyInputRatioFofFlow); 
+  setEnergyInputRatioFunctionOfFlowFractionCurve(energyInputRatioFofFlow);
   setPartLoadFractionCorrelationCurve(partLoadFraction);
   setRatedLowSpeedTotalCoolingCapacity(OptionalDouble());//autosize
   setRatedLowSpeedSensibleHeatRatio(0.69);//autosize
   setRatedLowSpeedCOP(3.0);
   setRatedHighSpeedAirFlowRate(OptionalDouble());//autosize
   setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(coolingLowSpdCurveFofTemp);
-  setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(energyLowSpdInputRatioFofTemp);  
+  setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(energyLowSpdInputRatioFofTemp);
   setCondenserType("AirCooled");
   setHighSpeedEvaporativeCondenserEffectiveness(0.0);
   setHighSpeedEvaporativeCondenserAirFlowRate(boost::none);//autosize
@@ -947,7 +1008,7 @@ CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(const Model& model)
 }
 
 CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(std::shared_ptr<detail::CoilCoolingDXTwoSpeed_Impl> p)
-  : StraightComponent(p)
+  : StraightComponent(std::move(p))
 {}
 
 //  A2 , \field Availability Schedule Name
@@ -977,6 +1038,10 @@ void CoilCoolingDXTwoSpeed::setRatedHighSpeedTotalCoolingCapacity( OptionalDoubl
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedTotalCoolingCapacity( value );
 }
+void CoilCoolingDXTwoSpeed::setRatedHighSpeedTotalCoolingCapacity( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedTotalCoolingCapacity( value );
+}
 
 //  N2 , \field Rated High Speed Sensible Heat Ratio
 OptionalDouble CoilCoolingDXTwoSpeed::ratedHighSpeedSensibleHeatRatio() const
@@ -991,6 +1056,11 @@ void CoilCoolingDXTwoSpeed::setRatedHighSpeedSensibleHeatRatio( OptionalDouble v
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedSensibleHeatRatio( value );
 }
+void CoilCoolingDXTwoSpeed::setRatedHighSpeedSensibleHeatRatio( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedSensibleHeatRatio( value );
+}
+
 
 //  N3 , \field Rated High Speed COP
 OptionalDouble CoilCoolingDXTwoSpeed::ratedHighSpeedCOP() const
@@ -1019,6 +1089,11 @@ void CoilCoolingDXTwoSpeed::setRatedHighSpeedAirFlowRate( OptionalDouble value )
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedAirFlowRate( value );
 }
+void CoilCoolingDXTwoSpeed::setRatedHighSpeedAirFlowRate( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedHighSpeedAirFlowRate( value );
+}
+
 
 //  A5 , \field Total Cooling Capacity Function of Temperature Curve Name
 Curve CoilCoolingDXTwoSpeed::totalCoolingCapacityFunctionOfTemperatureCurve()const
@@ -1103,6 +1178,11 @@ void CoilCoolingDXTwoSpeed::setRatedLowSpeedTotalCoolingCapacity( OptionalDouble
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedTotalCoolingCapacity( value );
 }
+void CoilCoolingDXTwoSpeed::setRatedLowSpeedTotalCoolingCapacity( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedTotalCoolingCapacity( value );
+}
+
 
 //  N6 , \field Rated Low Speed Sensible Heat Ratio
 OptionalDouble CoilCoolingDXTwoSpeed::ratedLowSpeedSensibleHeatRatio() const
@@ -1117,6 +1197,11 @@ void CoilCoolingDXTwoSpeed::setRatedLowSpeedSensibleHeatRatio( OptionalDouble va
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedSensibleHeatRatio( value );
 }
+void CoilCoolingDXTwoSpeed::setRatedLowSpeedSensibleHeatRatio( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedSensibleHeatRatio( value );
+}
+
 
 //  N7 , \field Rated Low Speed COP
 OptionalDouble CoilCoolingDXTwoSpeed::ratedLowSpeedCOP() const
@@ -1145,6 +1230,11 @@ void CoilCoolingDXTwoSpeed::setRatedLowSpeedAirFlowRate( OptionalDouble value )
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedAirFlowRate( value );
 }
+void CoilCoolingDXTwoSpeed::setRatedLowSpeedAirFlowRate( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setRatedLowSpeedAirFlowRate( value );
+}
+
 
 //  A10, \field Low Speed Total Cooling Capacity Function of Temperature Curve Name
 Curve CoilCoolingDXTwoSpeed::lowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve()const
@@ -1229,6 +1319,11 @@ void CoilCoolingDXTwoSpeed::setHighSpeedEvaporativeCondenserAirFlowRate( Optiona
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setHighSpeedEvaporativeCondenserAirFlowRate( value );
 }
+void CoilCoolingDXTwoSpeed::setHighSpeedEvaporativeCondenserAirFlowRate( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setHighSpeedEvaporativeCondenserAirFlowRate( value );
+}
+
 
 //  N11, \field High Speed Evaporative Condenser Pump Rated Power Consumption
 OptionalDouble CoilCoolingDXTwoSpeed::highSpeedEvaporativeCondenserPumpRatedPowerConsumption()const
@@ -1243,6 +1338,11 @@ void CoilCoolingDXTwoSpeed::setHighSpeedEvaporativeCondenserPumpRatedPowerConsum
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( value );
 }
+void CoilCoolingDXTwoSpeed::setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( value );
+}
+
 
 //  N12, \field Low Speed Evaporative Condenser Effectiveness
 OptionalDouble CoilCoolingDXTwoSpeed::lowSpeedEvaporativeCondenserEffectiveness()const
@@ -1271,6 +1371,11 @@ void CoilCoolingDXTwoSpeed::setLowSpeedEvaporativeCondenserAirFlowRate( Optional
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setLowSpeedEvaporativeCondenserAirFlowRate( value );
 }
+void CoilCoolingDXTwoSpeed::setLowSpeedEvaporativeCondenserAirFlowRate( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setLowSpeedEvaporativeCondenserAirFlowRate( value );
+}
+
 
 //  N14, \field Low Speed Evaporative Condenser Pump Rated Power Consumption
 OptionalDouble CoilCoolingDXTwoSpeed::lowSpeedEvaporativeCondenserPumpRatedPowerConsumption()const
@@ -1285,6 +1390,11 @@ void CoilCoolingDXTwoSpeed::setLowSpeedEvaporativeCondenserPumpRatedPowerConsump
 {
   getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( value );
 }
+void CoilCoolingDXTwoSpeed::setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value )
+{
+  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( value );
+}
+
 
 //  A14, \field Supply Water Storage Tank Name
   //getSupplyWaterStorageTankName

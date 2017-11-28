@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "GeneratorMicroTurbine.hpp"
 #include "GeneratorMicroTurbine_Impl.hpp"
@@ -37,8 +46,6 @@
 
 #include "StraightComponent.hpp"
 #include "StraightComponent_Impl.hpp"
-#include "GeneratorMicroTurbineHeatRecovery.hpp"
-#include "GeneratorMicroTurbineHeatRecovery_Impl.hpp"
 
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
@@ -98,14 +105,14 @@ namespace detail {
       result.push_back("Generator Gas HHV Basis Rate");
       result.push_back("Generator Gas HHV Basis Energy");
       result.push_back("Generator Gas Mass Flow Rate");
-      
+
       result.push_back("Generator Propane HHV Basis Rate");
       result.push_back("Generator Propane HHV Basis Energy");
       result.push_back("Generator Propane Mass Flow Rate");
       // </FuelType>
       result.push_back("Generator Fuel HHV Basis Rate");
       result.push_back("Generator Fuel HHV Basis Energy");
-      
+
       // These are part of Generator:MicroTurbine:HeatRecovery
       // result.push_back("Generator Produced Thermal Rate");
       // result.push_back("Generator Produced Thermal Energy");
@@ -132,7 +139,7 @@ namespace detail {
     // translated to ElectricLoadCenter:Generators 'Generator Object Type'
     return "Generator:MicroTurbine";
   }
-  
+
   // This will clone the GeneratorMicroTurbine as well as the GeneratorMicroTurbineHeatRecovery if there is one
   // and will return a reference to the GeneratorMicroTurbine
   ModelObject GeneratorMicroTurbine_Impl::clone(Model model) const
@@ -152,7 +159,7 @@ namespace detail {
 
     return newCHP;
   }
-  
+
   // Return allowable child types: curves and Generator:MicroTurbine
   std::vector<IddObjectType> GeneratorMicroTurbine_Impl::allowableChildTypes() const
   {
@@ -163,7 +170,7 @@ namespace detail {
     result.push_back(IddObjectType::OS_Curve_Quadratic);
     return result;
   }
-  
+
   // Returns the children object: max of 7 curves and a the GeneratorMicroTurbineHeatRecovery if it exists
   std::vector<ModelObject> GeneratorMicroTurbine_Impl::children() const
   {
@@ -198,12 +205,12 @@ namespace detail {
     if (oCurve = exhaustAirTemperatureFunctionofPartLoadRatioCurve()) {
       result.push_back(oCurve.get());
     }
-    
+
 
 
     return result;
   }
-  
+
   std::vector<ScheduleTypeKey> GeneratorMicroTurbine_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
     // TODO: Check schedule display names.
@@ -235,7 +242,7 @@ namespace detail {
     // TODO: Use the GeneratorMicroTurbineHeatRecovery method
     boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = this->generatorMicroTurbineHeatRecovery();
     boost::optional<double> value;
-    
+
     if (mchpHR) {
         value = mchpHR->ratedThermaltoElectricalPowerRatio();
     }
@@ -267,17 +274,17 @@ namespace detail {
       // Get it and return
       return maximumFullLoadElectricalPowerOutput.get();
     }
-    else { 
+    else {
       boost::optional<double> referenceElectricalPowerOutput = getDouble(OS_Generator_MicroTurbineFields::ReferenceElectricalPowerOutput,true);
       OS_ASSERT(referenceElectricalPowerOutput);
       return referenceElectricalPowerOutput.get();
     }
   }
-  
+
   bool GeneratorMicroTurbine_Impl::isMaximumFullLoadElectricalPowerOutputDefaulted() const {
     return isEmpty(OS_Generator_MicroTurbineFields::MaximumFullLoadElectricalPowerOutput);
   }
-  
+
 
   double GeneratorMicroTurbine_Impl::referenceElectricalEfficiencyUsingLowerHeatingValue() const {
     boost::optional<double> value = getDouble(OS_Generator_MicroTurbineFields::ReferenceElectricalEfficiencyUsingLowerHeatingValue,true);
@@ -339,7 +346,7 @@ namespace detail {
     }
     return value.get();
   }*/
-  
+
 
   std::string GeneratorMicroTurbine_Impl::fuelType() const {
     boost::optional<std::string> value = getString(OS_Generator_MicroTurbineFields::FuelType,true);
@@ -431,8 +438,8 @@ namespace detail {
   boost::optional<Curve> GeneratorMicroTurbine_Impl::exhaustAirTemperatureFunctionofPartLoadRatioCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofPartLoadRatioCurveName);
   }
-  
-  
+
+
   bool GeneratorMicroTurbine_Impl::setAvailabilitySchedule(Schedule& schedule) {
     bool result = setSchedule(OS_Generator_MicroTurbineFields::AvailabilityScheduleName,
                               "GeneratorMicroTurbine",
@@ -440,7 +447,7 @@ namespace detail {
                               schedule);
     return result;
   }
-  
+
   void GeneratorMicroTurbine_Impl::resetAvailabilitySchedule() {
     bool result = setString(OS_Generator_MicroTurbineFields::AvailabilityScheduleName, "");
     OS_ASSERT(result);
@@ -505,7 +512,7 @@ namespace detail {
     bool result = setString(OS_Generator_MicroTurbineFields::ReferenceElevation, "");
     OS_ASSERT(result);
   }
-  
+
   bool GeneratorMicroTurbine_Impl::setElectricalPowerFunctionofTemperatureandElevationCurve(const Curve& curve)
   {
     if(model() != curve.model())
@@ -597,14 +604,14 @@ namespace detail {
     bool result = setString(OS_Generator_MicroTurbineFields::AncillaryPowerFunctionofFuelInputCurveName, "");
     OS_ASSERT(result);
   }
-  
-  
+
+
   // Private: Generator:MicroTurbine:HeatRecovery
   bool GeneratorMicroTurbine_Impl::setGeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& generatorMicroTurbineHeatRecovery) {
     bool result = setPointer(OS_Generator_MicroTurbineFields::GeneratorMicroTurbineHeatRecoveryName, generatorMicroTurbineHeatRecovery.handle());
     return result;
   }
-  
+
   /*
   void GeneratorMicroTurbine_Impl::resetGeneratorMicroTurbineHeatRecovery() {
     bool result = setString(OS_Generator_MicroTurbineFields::GeneratorMicroTurbineHeatRecoveryName, "");
@@ -1142,7 +1149,7 @@ void GeneratorMicroTurbine::resetExhaustAirTemperatureFunctionofPartLoadRatioCur
 
 /// @cond
 GeneratorMicroTurbine::GeneratorMicroTurbine(std::shared_ptr<detail::GeneratorMicroTurbine_Impl> impl)
-  : Generator(impl)
+  : Generator(std::move(impl))
 {}
 /// @endcond
 

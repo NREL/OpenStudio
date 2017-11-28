@@ -16,17 +16,15 @@ set(${target_name}_src
 
 set(${target_name}_depends
   user32
-  ${QT_LIBS}
 )
 
-include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
-
-add_library(${target_name} SHARED ${${target_name}_src})
+add_library(${target_name} STATIC ${${target_name}_src})
 target_link_libraries(${target_name} ${${target_name}_depends})
+target_include_directories(${target_name} PUBLIC ${Qt5Gui_PRIVATE_INCLUDE_DIRS})
+target_include_directories(${target_name} PUBLIC ${Qt5Gui_INCLUDE_DIRS})
+target_include_directories(${target_name} PUBLIC ${Qt5Widgets_INCLUDE_DIRS})
 
-if(NOT APPLE)
-  install(TARGETS ${target_name}
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-  )
-endif()
+add_library(${target_name}_static STATIC ${${target_name}_src})
+target_link_libraries(${target_name}_static ${${target_name}_depends})
+target_include_directories(${target_name}_static PUBLIC ${QT_STATIC_INCLUDES})
+target_compile_definitions(${target_name}_static PUBLIC ${QT_DEFS})

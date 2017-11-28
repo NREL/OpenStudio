@@ -1,5 +1,6 @@
 .idea
 .ruby-version
+.bundle
 test_fails.txt
 /build/
 /build_debug/
@@ -8,5 +9,15 @@ test_fails.txt
 /build-release/
 /build_64/
 /build-64/
+/build-relwithdebinfo/
+/build_relwithdebinfo//
 /build_profile/
 /build-profile/
+/core-build/
+/super-build/
+
+*.sublime-workspace
+
+*.sublime-project
+cmake-build-debug
+

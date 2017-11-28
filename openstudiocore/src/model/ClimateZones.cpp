@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "ClimateZones.hpp"
 #include "ClimateZones_Impl.hpp"
@@ -41,16 +50,16 @@ namespace detail {
     OS_ASSERT(idfObject.iddObject().type() == ClimateZones::iddObjectType());
   }
 
-  ClimateZones_Impl::ClimateZones_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                                       Model_Impl* model, 
+  ClimateZones_Impl::ClimateZones_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                       Model_Impl* model,
                                        bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == ClimateZones::iddObjectType());
   }
 
-  ClimateZones_Impl::ClimateZones_Impl(const ClimateZones_Impl& other, 
-                                       Model_Impl* model, 
+  ClimateZones_Impl::ClimateZones_Impl(const ClimateZones_Impl& other,
+                                       Model_Impl* model,
                                        bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {}
@@ -75,14 +84,14 @@ namespace detail {
       return ClimateZone(p,numFields());
     }
     return eg.cast<ClimateZone>();
-  }      
+  }
 
   ClimateZone ClimateZones_Impl::getClimateZone(const std::string& institution,unsigned year) const {
     std::shared_ptr<ClimateZones_Impl> p;
     ClimateZone result(p,numFields());
     ClimateZoneVector czs = climateZones();
     for (const ClimateZone& cz : czs) {
-      if ( istringEqual(cz.institution(),institution) && (cz.year() == year) ) 
+      if ( istringEqual(cz.institution(),institution) && (cz.year() == year) )
       {
         result = cz;
         break;
@@ -121,7 +130,7 @@ namespace detail {
     if (oSite) { result = oSite->optionalCast<ParentObject>(); }
     return result;
   }
-  
+
   const std::vector<std::string>& ClimateZones_Impl::outputVariableNames() const {
     static std::vector<std::string> result;
     if (result.empty()){
@@ -179,7 +188,7 @@ namespace detail {
 
     ClimateZoneVector candidates = getClimateZones(institution);
     if (candidates.size() > 1) {
-      LOG(Warn,"Cannot set climate zone value for institutuion '" << institution 
+      LOG(Warn,"Cannot set climate zone value for institutuion '" << institution
           << "', because there are " << candidates.size() << " such listings, not 1.");
       return result;
     }
@@ -192,8 +201,8 @@ namespace detail {
   }
 
   ClimateZone ClimateZones_Impl::setClimateZone(const std::string& institution,
-                                                unsigned year, 
-                                                const std::string& value) 
+                                                unsigned year,
+                                                const std::string& value)
   {
     std::shared_ptr<ClimateZones_Impl> p;
     ClimateZone result(p,numFields());
@@ -219,7 +228,7 @@ namespace detail {
   }
 
   ClimateZone ClimateZones_Impl::appendClimateZone(const std::string& institution,
-                                                   const std::string& value) 
+                                                   const std::string& value)
   {
     return appendClimateZone(institution,
                              ClimateZones::getDefaultDocumentName(institution),
@@ -228,7 +237,7 @@ namespace detail {
   }
 
   ClimateZone ClimateZones_Impl::appendClimateZone(const std::string& institution,
-                                                   unsigned year, 
+                                                   unsigned year,
                                                    const std::string& value)
   {
     return appendClimateZone(institution,
@@ -237,10 +246,10 @@ namespace detail {
                              value);
   }
 
-  ClimateZone ClimateZones_Impl::appendClimateZone(const std::string& institution, 
-                                                   const std::string documentName, 
-                                                   unsigned year, 
-                                                   const std::string& value) 
+  ClimateZone ClimateZones_Impl::appendClimateZone(const std::string& institution,
+                                                   const std::string documentName,
+                                                   unsigned year,
+                                                   const std::string& value)
   {
     StringVector values;
     values.push_back(institution);
@@ -292,8 +301,8 @@ std::string ClimateZone::documentName() const {
 unsigned ClimateZone::year() const {
   OS_ASSERT(!empty());
   OptionalUnsigned ou = getUnsigned(OS_ClimateZonesExtensibleFields::ClimateZoneDocumentYear,true);
-  if (!ou) { 
-    LOG_AND_THROW("Climate zone year is not yet set for the " << groupIndex() << "th ClimateZone."); 
+  if (!ou) {
+    LOG_AND_THROW("Climate zone year is not yet set for the " << groupIndex() << "th ClimateZone.");
   }
   return *ou;
 }
@@ -311,25 +320,25 @@ bool ClimateZone::setValue(const std::string& value) {
 }
 
 bool ClimateZone::setType(const std::string& institution,
-                          const std::string& documentName, 
-                          unsigned year) 
+                          const std::string& documentName,
+                          unsigned year)
 {
-  bool result = setString(OS_ClimateZonesExtensibleFields::ClimateZoneInstitutionName,institution); 
+  bool result = setString(OS_ClimateZonesExtensibleFields::ClimateZoneInstitutionName,institution);
   result = result && setString(OS_ClimateZonesExtensibleFields::ClimateZoneDocumentName,documentName);
   result = result && setUnsigned(OS_ClimateZonesExtensibleFields::ClimateZoneDocumentYear,year);
 
-  return result; 
+  return result;
 }
 
 bool ClimateZone::setTypeAndValue(const std::string& institution,
-                                  const std::string& documentName, 
-                                  unsigned year, 
-                                  const std::string& value) 
+                                  const std::string& documentName,
+                                  unsigned year,
+                                  const std::string& value)
 {
   bool result = setType(institution,documentName,year);
   result = result && setString(OS_ClimateZonesExtensibleFields::ClimateZoneValue,value);
 
-  return result; 
+  return result;
 }
 
 ClimateZone::ClimateZone(std::shared_ptr<detail::ClimateZones_Impl> impl,unsigned index)
@@ -379,7 +388,7 @@ std::string ClimateZones::getDefaultDocumentName(const std::string& institution)
   }
   return result;
 }
-  
+
 unsigned ClimateZones::getDefaultYear(const std::string& institution) {
   unsigned result(0);
   if (istringEqual(institution,ClimateZones::ashraeInstitutionName())) {
@@ -391,8 +400,8 @@ unsigned ClimateZones::getDefaultYear(const std::string& institution) {
   return result;
 }
 
-std::vector<std::string> ClimateZones::validClimateZoneValues(const std::string& institution, 
-                                                              unsigned year) 
+std::vector<std::string> ClimateZones::validClimateZoneValues(const std::string& institution,
+                                                              unsigned year)
 {
   StringVector result;
   if (istringEqual(institution,ashraeInstitutionName())) {
@@ -485,13 +494,13 @@ ClimateZone ClimateZones::setActiveClimateZone(const std::string& institution,un
 }
 */
 ClimateZone ClimateZones::setClimateZone(const std::string& institution,
-                                         const std::string& value) 
+                                         const std::string& value)
 {
   return getImpl<detail::ClimateZones_Impl>()->setClimateZone(institution,value);
 }
 
 ClimateZone ClimateZones::setClimateZone(const std::string& institution,
-                                         unsigned year, 
+                                         unsigned year,
                                          const std::string& value)
 {
   return getImpl<detail::ClimateZones_Impl>()->setClimateZone(institution,year,value);
@@ -514,9 +523,9 @@ ClimateZone ClimateZones::appendClimateZone(const std::string& institution,
   return getImpl<detail::ClimateZones_Impl>()->appendClimateZone(institution,year,value);
 }
 
-ClimateZone ClimateZones::appendClimateZone(const std::string& institution, 
-                                            const std::string documentName, 
-                                            unsigned year, 
+ClimateZone ClimateZones::appendClimateZone(const std::string& institution,
+                                            const std::string documentName,
+                                            unsigned year,
                                             const std::string& value)
 {
   return getImpl<detail::ClimateZones_Impl>()->appendClimateZone(institution,documentName,year,value);
@@ -532,12 +541,12 @@ ClimateZones::ClimateZones(Model& model)
 {
   // add empty climate zone to define default institution
   pushExtensibleGroup(StringVector());
-  // Programming note: This line of code cannot be in the _Impl constructor because 
+  // Programming note: This line of code cannot be in the _Impl constructor because
   // pushExtensibleGroup constructs an IdfExtensibleGroup from the _Impl.
 }
 
 ClimateZones::ClimateZones(std::shared_ptr<detail::ClimateZones_Impl> impl)
-  : ModelObject(impl) 
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

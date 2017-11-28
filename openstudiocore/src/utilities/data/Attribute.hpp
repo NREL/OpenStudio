@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef UTILITIES_DATA_ATTRIBUTE_HPP
 #define UTILITIES_DATA_ATTRIBUTE_HPP
@@ -48,9 +57,9 @@ namespace detail{
 }
 
 /** \class AttributeValueType
- *  \brief A listing of data types that can be held in an Attribute. 
- *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro 
- *  call is: 
+ *  \brief A listing of data types that can be held in an Attribute.
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
+ *  call is:
  *  \code
 OPENSTUDIO_ENUM( AttributeValueType,
   ((Boolean)(Boolean)(0))
@@ -74,9 +83,9 @@ OPENSTUDIO_ENUM( AttributeValueType,
   ((AttributeVector)(AttributeVector)(7))
 );
 
-/** AttributeDescription describes what an acceptable Attribute is in a given context. At this 
+/** AttributeDescription describes what an acceptable Attribute is in a given context. At this
  *  time, it is primarily used in openstudio::analysis::GenericUncertaintyDescription. Note
- *  that AttributeDescription was designed to provide the information needed by a UI developer 
+ *  that AttributeDescription was designed to provide the information needed by a UI developer
  *  to properly prompt a user for the data needed to create a new Attribute. */
 struct UTILITIES_API AttributeDescription {
   std::string name;
@@ -249,7 +258,7 @@ class UTILITIES_API Attribute {
   /// get the name
   std::string name() const;
 
-  /// get the display name. if returnName and the display name is empty, will return 
+  /// get the display name. if returnName and the display name is empty, will return
   /// name() instead.
   boost::optional<std::string> displayName(bool returnName=false) const;
 
@@ -337,8 +346,8 @@ class UTILITIES_API Attribute {
   /// set the units
   bool setUnits(const std::string& units);
 
-  /** If attribute is a simple type (non-vector), prints attribute's value to std::string as 
-  *  simply as possible. Numeric types print in high precision. Attribute vectors are printed 
+  /** If attribute is a simple type (non-vector), prints attribute's value to std::string as
+  *  simply as possible. Numeric types print in high precision. Attribute vectors are printed
   *  as XML. */
   std::string toString() const;
 
@@ -358,7 +367,7 @@ class UTILITIES_API Attribute {
     if (!impl){
       throw(std::bad_cast());
     }
-    return T(impl);
+    return T(std::move(impl));
   }
 
   /// cast to optional of type T
@@ -367,7 +376,7 @@ class UTILITIES_API Attribute {
     boost::optional<T> result;
     std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl){
-      result = T(impl);
+      result = T(std::move(impl));
     }
     return result;
   }

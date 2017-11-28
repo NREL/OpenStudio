@@ -1,0 +1,35 @@
+{
+  "root": "../../",
+  "weather_file": "./USA_CO_Golden-NREL.724666_TMY3.epw",
+  "seed_file": "1_9_0/example.osm",
+  "file_paths": ["./utilities/Filetypes", "osversion"],
+  "measure_paths": ["./utilities/BCL/Measures/v2", "./utilities/BCL/Measures/v3"],
+  "steps": [
+    {
+      "measure_dir_name": "IncreaseWallRValue",
+      "arguments": {
+        "r_value": 30.1
+      }
+    },
+    {
+      "measure_dir_name": "IncreaseRoofRValue",
+      "arguments": {
+        "r_value": 30
+      }
+    },
+    {
+      "measure_dir_name": "SetEplusInfiltration",
+      "arguments": {
+        "flowPerZoneFloorArea": 10.76
+      }
+    }
+  ],
+  "file_format_version": "0.1",
+  "osa_id": "92e4ff34-a531-4c6f-9be4-b96ad2c4ec18",
+  "osa_checksum": "72345978234",
+  "osd_id": "e7c2d3e7-7d9b-4a90-837c-44b44f77a89a",
+  "osd_checksum": "978234",
+  "created_at": "2015-12-31T14:49:24Z",
+  "updated_at": "2016-02-01T10:38:12Z",
+  "id": "5c545de1-a7db-4089-92a3-80b29a16fa12"
+}

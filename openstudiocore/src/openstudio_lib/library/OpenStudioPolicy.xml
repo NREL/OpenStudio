@@ -93,7 +93,6 @@
     <rule IddField="Heating Coil Name" Access="HIDDEN"/>
     <rule IddField="Cooling Coil Name" Access="HIDDEN"/>
     <rule IddField="Supplemental Heating Coil Name" Access="HIDDEN"/>
-    <rule IddField="Fan Placement" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_ZoneHVAC_PackagedTerminalAirConditioner">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
@@ -103,7 +102,6 @@
     <rule IddField="Supply Air Fan Name" Access="HIDDEN"/>
     <rule IddField="Heating Coil Name" Access="HIDDEN"/>
     <rule IddField="Cooling Coil Name" Access="HIDDEN"/>
-    <rule IddField="Fan Placement" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_ZoneHVAC_WaterToAirHeatPump">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
@@ -114,7 +112,6 @@
     <rule IddField="Heating Coil Name" Access="HIDDEN"/>
     <rule IddField="Cooling Coil Name" Access="HIDDEN"/>
     <rule IddField="Supplemental Heating Coil Name" Access="HIDDEN"/>
-    <rule IddField="Fan Placement" Access="HIDDEN"/>
     <rule IddField="Outdoor Dry-Bulb Temperature Sensor Node Name" Access="HIDDEN"/>
     <rule IddField="Availability Manager List Name" Access="HIDDEN"/>
   </POLICY>
@@ -215,8 +212,8 @@
     <rule IddField="Cooling Coil Name" Access="HIDDEN"/>
     <rule IddField="Supplemental Heating Coil Name" Access="HIDDEN"/>
     <rule IddField="Design Specification Multispeed Heat Pump Object Name" Access="HIDDEN"/>
-    <rule IddField="Control Type" Access="HIDDEN"/>
     <rule IddField="Outdoor Dry-Bulb Temperature Sensor Node Name" Access="HIDDEN"/>
+    <rule IddField="Design Specification Multispeed Object Name" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Pipe_Adiabatic">
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
@@ -294,6 +291,12 @@
     <rule IddField="Outdoor Air Inlet Node" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_SetpointManager_SingleZone_Reheat">
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_SingleZone_Cooling">
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_SingleZone_Heating">
     <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_SetpointManager_Coldest">
@@ -762,6 +765,9 @@
   </POLICY>
   <POLICY IddObjectType="OS_PlantLoop">
     <rule IddField="Plant Equipment Operation Scheme Name" Access="HIDDEN"/>
+    <rule IddField="Plant Equipment Operation Heating Load" Access="HIDDEN"/>
+    <rule IddField="Plant Equipment Operation Cooling Load" Access="HIDDEN"/>
+    <rule IddField="Primary Plant Equipment Operation Scheme" Access="HIDDEN"/>
     <rule IddField="Plant Side Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Plant Side Outlet Node Name" Access="HIDDEN"/>
     <rule IddField="Plant Side Branch List Name" Access="HIDDEN"/>
@@ -772,6 +778,15 @@
     <rule IddField="Availability Manager List Name" Access="HIDDEN"/>
     <rule IddField="Plant Loop Demand Calculation Scheme" Access="HIDDEN"/>
     <rule IddField="Pressure Simulation Type" Access="HIDDEN"/>
+    <rule IddField="User Defined Fluid Type" Access="HIDDEN"/>
+    <rule IddField="Plant Equipment Operation Heating Load Schedule" Access="HIDDEN"/>
+    <rule IddField="Plant Equipment Operation Cooling Load Schedule" Access="HIDDEN"/>
+    <rule IddField="Primary Plant Equipment Operation Scheme Schedule" Access="HIDDEN"/>
+    <rule IddField="Component Setpoint Operation Scheme Schedule" Access="HIDDEN"/>
+    <rule IddField="Demand Mixer Name" Access="HIDDEN"/>
+    <rule IddField="Demand Splitter Name" Access="HIDDEN"/>
+    <rule IddField="Supply Mixer Name" Access="HIDDEN"/>
+    <rule IddField="Supply Splitter Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_InternalMass">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
@@ -913,6 +928,25 @@
     <rule IddField="Tank" Access="LOCKED"/>
     <rule IddField="DX Coil" Access="LOCKED"/>
     <rule IddField="Fan" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_WaterHeater_HeatPump_WrappedCondenser">
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outdoor Air Node Name" Access="HIDDEN"/>
+    <rule IddField="Tank Name" Access="LOCKED"/>
+    <rule IddField="DX Coil Name" Access="LOCKED"/>
+    <rule IddField="Fan Name" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Coil_WaterHeating_AirToWaterHeatPump_Wrapped">
+    <rule IddField="Evaporator Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Evaporator Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Heating Capacity Function of Temperature Curve Name" Access="LOCKED"/>
+    <rule IddField="Heating Capacity Function of Air Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Heating Capacity Function of Water Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Heating COP Function of Temperature Curve Name" Access="LOCKED"/>
+    <rule IddField="Heating COP Function of Air Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Heating COP Function of Water Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Part Load Fraction Correlation Curve Name" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Coil_WaterHeating_AirToWaterHeatPump">
     <rule IddField="Evaporator Air Inlet Node Name" Access="HIDDEN"/>
@@ -1522,7 +1556,7 @@
     <rule IddField="Minute" Access="LOCKED"/>
     <rule IddField="Value Until Time" Access="LOCKED"/>
   </POLICY>
-    <POLICY IddObjectType="OS_Schedule_Week">
+  <POLICY IddObjectType="OS_Schedule_Week">
     <rule IddField="Name" Access="LOCKED"/>
     <rule IddField="Schedule Rendering Name" Access="LOCKED"/>
     <rule IddField="Sunday Schedule:Day Name" Access="LOCKED"/>
@@ -1538,7 +1572,7 @@
     <rule IddField="CustomDay1 Schedule:Day Name" Access="LOCKED"/>
     <rule IddField="CustomDay2 Schedule:Day Name" Access="LOCKED"/>
   </POLICY>
-    <POLICY IddObjectType="OS_Schedule_Year">
+  <POLICY IddObjectType="OS_Schedule_Year">
     <rule IddField="Name" Access="LOCKED"/>
     <rule IddField="Schedule Type Limits Name" Access="LOCKED"/>
     <rule IddField="Month" Access="LOCKED"/>
@@ -1581,6 +1615,10 @@
     <rule IddField="Unit Type" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Generator_MicroTurbine_HeatRecovery">
+    <rule IddField="Heat Recovery Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Heat Recovery Water Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Generator_FuelCell_ExhaustGasToWaterHeatExchanger">
     <rule IddField="Heat Recovery Water Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Heat Recovery Water Outlet Node Name" Access="HIDDEN"/>
   </POLICY>

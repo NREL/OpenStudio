@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
- *  All rights reserved.
- *  
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- *  
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- *  
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef OPENSTUDIO_HVACSYSTEMSCONTROLLER_HPP
 #define OPENSTUDIO_HVACSYSTEMSCONTROLLER_HPP
@@ -33,6 +42,9 @@
 #include "../shared_gui_components/OSComboBox.hpp"
 #include <QAbstractListModel>
 #include <QPointer>
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
+
+class QMutex;
 
 namespace openstudio {
 
@@ -67,7 +79,7 @@ class RefrigerationGridController;
 class RefrigerationGridView;
 class VRFController;
 
-class HVACSystemsController : public QObject
+class HVACSystemsController : public QObject, public Nano::Observer
 {
   Q_OBJECT
 
@@ -118,9 +130,9 @@ class HVACSystemsController : public QObject
 
   void onShowGridClicked();
 
-  void onObjectAdded(const WorkspaceObject&);
+  void onObjectAdded(const WorkspaceObject&, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
-  void onObjectRemoved(const WorkspaceObject&);
+  void onObjectRemoved(const WorkspaceObject&, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
   void onObjectChanged();
 
@@ -148,6 +160,8 @@ class HVACSystemsController : public QObject
 
   bool m_dirty;
 
+  QMutex * m_updateMutex;
+
   model::Model m_model;
 
   bool m_isIP;
@@ -158,7 +172,7 @@ class HVACSystemsController : public QObject
 
 };
 
-class HVACControlsController : public QObject
+class HVACControlsController : public QObject, public Nano::Observer
 {
   Q_OBJECT;
 
@@ -223,7 +237,7 @@ class HVACControlsController : public QObject
   bool m_dirty;
 };
 
-class HVACLayoutController : public QObject
+class HVACLayoutController : public QObject, public Nano::Observer
 {
   Q_OBJECT;
 
@@ -276,7 +290,9 @@ class SystemAvailabilityVectorController : public ModelObjectVectorController
 
   public:
 
-  virtual ~SystemAvailabilityVectorController() {}
+  SystemAvailabilityVectorController();
+
+  virtual ~SystemAvailabilityVectorController() { delete m_reportItemsMutex; }
 
   boost::optional<model::AirLoopHVAC> airLoopHVAC();
 
@@ -301,6 +317,8 @@ class SystemAvailabilityVectorController : public ModelObjectVectorController
   private:
 
   bool m_reportScheduled;
+
+  QMutex * m_reportItemsMutex;
 };
 
 class SupplyAirTempScheduleVectorController : public ModelObjectVectorController
@@ -309,7 +327,9 @@ class SupplyAirTempScheduleVectorController : public ModelObjectVectorController
 
   public:
 
-  virtual ~SupplyAirTempScheduleVectorController() {}
+  SupplyAirTempScheduleVectorController();
+
+  virtual ~SupplyAirTempScheduleVectorController() { delete m_reportItemsMutex; }
 
   boost::optional<model::SetpointManagerScheduled> setpointManagerScheduled();
 
@@ -334,6 +354,8 @@ class SupplyAirTempScheduleVectorController : public ModelObjectVectorController
   private:
 
   bool m_reportScheduled;
+
+  QMutex * m_reportItemsMutex;
 };
 
 } // openstudio

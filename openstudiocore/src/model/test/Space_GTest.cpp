@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include <gtest/gtest.h>
 
@@ -189,7 +198,7 @@ TEST_F(ModelFixture, Space_FloorArea)
 
   EXPECT_EQ(0, space.floorArea());
 
-  // roof 
+  // roof
   points.clear();
   points.push_back(Point3d(1, 1, 1));
   points.push_back(Point3d(0, 1, 1));
@@ -201,7 +210,7 @@ TEST_F(ModelFixture, Space_FloorArea)
 
   EXPECT_EQ(0, space.floorArea());
 
-  // floor 
+  // floor
   points.clear();
   points.push_back(Point3d(0, 1, 0));
   points.push_back(Point3d(1, 1, 0));
@@ -246,33 +255,35 @@ TEST_F(ModelFixture, Space_FloorArea)
   EXPECT_NEAR(6, space.floorArea(), 0.0001);
 }
 
-TEST_F(ModelFixture, Space_Attributes) 
+TEST_F(ModelFixture, Space_Attributes)
 {
   Model model;
   Space space(model);
-  boost::optional<openstudio::Attribute> attribute;
-  std::vector<Attribute> attributes = space.attributes();
+
+  // Removed due to removal of attributes
+  // boost::optional<openstudio::Attribute> attribute;
+  // std::vector<Attribute> attributes = space.attributes();
 
   ASSERT_TRUE(space.name());
   std::string spaceName = space.name().get();
 
-  EXPECT_TRUE(space.isSettableAttribute("name"));
-  EXPECT_TRUE(space.isOptionalAttribute("name"));
-  attribute = space.getAttribute("name");
-  ASSERT_TRUE(attribute);
-  EXPECT_EQ("name", attribute->name()); // from ModelObject
-  EXPECT_EQ(spaceName, attribute->valueAsString());
-  EXPECT_TRUE(space.setAttribute("name", "Office Space"));
-  EXPECT_EQ("Office Space", space.name().get());
+  // EXPECT_TRUE(space.isSettableAttribute("name"));
+  // EXPECT_TRUE(space.isOptionalAttribute("name"));
+  // attribute = space.getAttribute("name");
+  // ASSERT_TRUE(attribute);
+  // EXPECT_EQ("name", attribute->name()); // from ModelObject
+  // EXPECT_EQ(spaceName, attribute->valueAsString());
+  // EXPECT_TRUE(space.setAttribute("name", "Office Space"));
+  // EXPECT_EQ("Office Space", space.name().get());
 
-  EXPECT_FALSE(space.isSettableAttribute("floorArea"));
-  EXPECT_FALSE(space.isOptionalAttribute("floorArea"));
-  attribute = space.getAttribute("floorArea");
-  ASSERT_TRUE(attribute);
-  ASSERT_EQ("floorArea", attribute->name());
-  EXPECT_NO_THROW(attribute->valueAsDouble());
-  EXPECT_THROW(attribute->valueAsBoolean(),std::exception);
-  EXPECT_FALSE(space.setAttribute("floorArea", 0.0));
+  // EXPECT_FALSE(space.isSettableAttribute("floorArea"));
+  // EXPECT_FALSE(space.isOptionalAttribute("floorArea"));
+  // attribute = space.getAttribute("floorArea");
+  // ASSERT_TRUE(attribute);
+  // ASSERT_EQ("floorArea", attribute->name());
+  // EXPECT_NO_THROW(attribute->valueAsDouble());
+  // EXPECT_THROW(attribute->valueAsBoolean(),std::exception);
+  // EXPECT_FALSE(space.setAttribute("floorArea", 0.0));
 }
 
 TEST_F(ModelFixture, Space_ThermalZone)
@@ -305,7 +316,7 @@ TEST_F(ModelFixture, Space_Lights)
   EXPECT_EQ(0, space.lightingPower());
   EXPECT_EQ(0, space.lightingPowerPerFloorArea());
 
-  // floor 
+  // floor
   Point3dVector points;
   points.push_back(Point3d(0, 10, 0));
   points.push_back(Point3d(10, 10, 0));
@@ -1016,7 +1027,7 @@ TEST_F(ModelFixture, Space_FloorPrint1)
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[1], Point3d(1, 0, 0))) << floorPrint;
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[2], Point3d(0, 0, 0))) << floorPrint;
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[3], Point3d(0, 1, 0))) << floorPrint;
-  
+
   points.clear();
   points.push_back(Point3d(1, 2, 0));
   points.push_back(Point3d(1, 1, 0));
@@ -1032,7 +1043,7 @@ TEST_F(ModelFixture, Space_FloorPrint1)
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[1], Point3d(1, 0, 0))) << floorPrint;
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[2], Point3d(0, 0, 0))) << floorPrint;
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[3], Point3d(0, 2, 0))) << floorPrint;
-  
+
   points.clear();
   points.push_back(Point3d(2, 2, 0));
   points.push_back(Point3d(2, 1, 0));
@@ -1349,6 +1360,32 @@ TEST_F(ModelFixture,Space_Plenum)
   EXPECT_EQ(plenumSpaceType.handle(), returnSpace.spaceType()->handle());
   EXPECT_FALSE(returnSpace.partofTotalFloorArea());
 
+  std::vector<Space> plenumSpaces = plenumSpaceType.spaces();
+  ASSERT_EQ(2u, plenumSpaces.size());
+
+  EXPECT_EQ("Plenum Space Type", plenumSpaceType.nameString());
+  plenumSpaceType.setNameProtected("Some Other Name");
+  EXPECT_EQ("Plenum Space Type", plenumSpaceType.nameString());
+
+  EXPECT_EQ("Plenum Space Type", plenumSpaceType.nameString());
+  plenumSpaceType.setName("Some Other Name");
+  EXPECT_EQ("Some Other Name", plenumSpaceType.nameString());
+
+  plenumSpaceType = model.plenumSpaceType();
+  EXPECT_EQ(3u, model.getConcreteModelObjects<model::SpaceType>().size());
+
+  ASSERT_TRUE(supplySpace.spaceType());
+  EXPECT_EQ(plenumSpaceType.handle(), supplySpace.spaceType()->handle());
+  EXPECT_FALSE(supplySpace.partofTotalFloorArea());
+  ASSERT_TRUE(space.spaceType());
+  EXPECT_EQ(spaceType.handle(), space.spaceType()->handle());
+  EXPECT_TRUE(space.partofTotalFloorArea());
+  ASSERT_TRUE(returnSpace.spaceType());
+  EXPECT_EQ(plenumSpaceType.handle(), returnSpace.spaceType()->handle());
+  EXPECT_FALSE(returnSpace.partofTotalFloorArea());
+
+  plenumSpaces = plenumSpaceType.spaces();
+  ASSERT_EQ(2u, plenumSpaces.size());
 }
 
 
@@ -1479,4 +1516,47 @@ TEST_F(ModelFixture, Space_LifeCycleCost)
   space.remove();
   EXPECT_TRUE(lifeCycleCost->handle().isNull());
   EXPECT_EQ(0, model.getConcreteModelObjects<LifeCycleCost>().size());
+}
+
+TEST_F(ModelFixture, Space_hardApplySpaceType_Plenum)
+{
+  Model m;
+  Space s(m);
+  ThermalZone z(m);
+  s.setThermalZone(z);
+
+  AirLoopHVACSupplyPlenum a(m);
+  a.setThermalZone(z);
+
+  ASSERT_EQ(m.plenumSpaceType().handle(), s.spaceType().get().handle());
+
+  // This should not do anything, space type should change
+  s.hardApplySpaceType(true);
+
+  ASSERT_NE(m.plenumSpaceType().handle(), s.spaceType().get().handle());
+
+}
+
+TEST_F(ModelFixture, Space_hardApplySpaceType_Plenum2)
+{
+  Model m;
+  Space s1(m);
+  Space s2(m);
+  ThermalZone z(m);
+  s1.setThermalZone(z);
+  s2.setThermalZone(z);
+
+  AirLoopHVACSupplyPlenum a(m);
+  a.setThermalZone(z);
+
+  ASSERT_EQ(m.plenumSpaceType().handle(), s1.spaceType().get().handle());
+  ASSERT_EQ(m.plenumSpaceType().handle(), s2.spaceType().get().handle());
+
+  // This should not do anything, space type should change
+  s1.hardApplySpaceType(true);
+  s2.hardApplySpaceType(true);
+
+  ASSERT_NE(m.plenumSpaceType().handle(), s1.spaceType().get().handle());
+  ASSERT_NE(m.plenumSpaceType().handle(), s2.spaceType().get().handle());
+  ASSERT_NE(s1.spaceType().get().handle(), s2.spaceType().get().handle());
 }

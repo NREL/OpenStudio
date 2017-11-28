@@ -88,7 +88,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,8.5;
+  Version,8.8;
 
   Timestep,4;
 
@@ -419,24 +419,26 @@
 
   OtherEquipment,
     Test 352a,               !- Name
+    None,                    !- Fuel Type
     ZONE ONE,                !- Zone or ZoneList Name
     AlwaysOn,                !- Schedule Name
     EquipmentLevel,          !- Design Level Calculation Method
     352,                     !- Design Level {W}
     ,                        !- Power per Zone Floor Area {W/m2}
-    ,                        !- Power per Person {W/Person}
+    ,                        !- Power per Person {W/person}
     0,                       !- Fraction Latent
     0,                       !- Fraction Radiant
     0;                       !- Fraction Lost
 
   OtherEquipment,
     Test 352 minus,          !- Name
+    None,                    !- Fuel Type
     ZONE ONE,                !- Zone or ZoneList Name
     AlwaysOn,                !- Schedule Name
     EquipmentLevel,          !- Design Level Calculation Method
     -352,                    !- Design Level {W}
     ,                        !- Power per Zone Floor Area {W/m2}
-    ,                        !- Power per Person {W/Person}
+    ,                        !- Power per Person {W/person}
     0,                       !- Fraction Latent
     0,                       !- Fraction Radiant
     0;                       !- Fraction Lost

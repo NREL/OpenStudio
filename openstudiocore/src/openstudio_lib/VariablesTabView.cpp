@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "VariablesTabView.hpp"
 
@@ -54,19 +63,27 @@ namespace openstudio {
     hbox->setContentsMargins(10,10,10,10);
     hbox->setSpacing(10);
 
-    m_onOffButton = new OSSwitch();
-    connect(m_onOffButton, &OSSwitch::clicked, this, &VariableListItem::onOffClicked);
+    m_onOffButton = new OSSwitch2();
+    connect(m_onOffButton, &OSSwitch2::clicked, this, &VariableListItem::onOffClicked);
     hbox->addWidget(m_onOffButton);
     m_onOffButton->setChecked(m_variable.is_initialized());
 
     hbox->addWidget(new QLabel(openstudio::toQString(m_name + ",")));
     hbox->addWidget(new QLabel(openstudio::toQString(m_keyValue)));
     hbox->addStretch();
-    m_combobox = new OSComboBox();
-    connect(m_combobox, static_cast<void (OSComboBox::*)(const QString &)>(&OSComboBox::currentIndexChanged), this, &VariableListItem::indexChanged);
+    m_combobox = new OSComboBox2();
+    connect(m_combobox, static_cast<void (OSComboBox2::*)(const QString &)>(&OSComboBox2::currentIndexChanged), this, &VariableListItem::indexChanged);
     if (m_variable)
     {
-      m_combobox->bind(*m_variable, "reportingFrequency");
+      // m_combobox->bind(*m_variable, "reportingFrequency");
+      m_combobox->bind<std::string>(
+        *m_variable,
+        static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+        std::bind(&model::OutputVariable::reportingFrequencyValues),
+        std::bind(&model::OutputVariable::reportingFrequency, m_variable.get_ptr()),
+        std::bind(&model::OutputVariable::setReportingFrequency, m_variable.get_ptr(), std::placeholders::_1),
+        boost::optional<NoFailAction>(std::bind(&model::OutputVariable::resetReportingFrequency, m_variable.get_ptr())),
+        boost::optional<BasicQuery>(std::bind(&model::OutputVariable::isReportingFrequencyDefaulted, m_variable.get_ptr())));
     }
 
     hbox->addWidget(m_combobox);
@@ -120,7 +137,16 @@ namespace openstudio {
         outputVariable.setReportingFrequency("Hourly");
         outputVariable.setKeyValue(m_keyValue);
         m_variable = outputVariable;
-        m_combobox->bind(*m_variable, "reportingFrequency");
+        
+        // m_combobox->bind(*m_variable, "reportingFrequency");
+        m_combobox->bind<std::string>(
+          *m_variable,
+          static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+          std::bind(&model::OutputVariable::reportingFrequencyValues),
+          std::bind(&model::OutputVariable::reportingFrequency, m_variable.get_ptr()),
+          std::bind(&model::OutputVariable::setReportingFrequency, m_variable.get_ptr(), std::placeholders::_1),
+          boost::none,
+          boost::none);
       }
     } else {
       if (m_variable)
@@ -135,15 +161,9 @@ namespace openstudio {
   VariablesList::VariablesList(openstudio::model::Model t_model)
     : m_model(t_model), m_dirty(true)
   {
-    connect(t_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-      static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-      this,
-      &VariablesList::onAdded);
+    t_model.getImpl<openstudio::model::detail::Model_Impl>().get()->addWorkspaceObject.connect<VariablesList, &VariablesList::onAdded>(this);
 
-    connect(t_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-      static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-      this,
-      &VariablesList::onRemoved);
+    t_model.getImpl<openstudio::model::detail::Model_Impl>().get()->removeWorkspaceObject.connect<VariablesList, &VariablesList::onRemoved>(this);
     auto vbox = new QVBoxLayout();
     vbox->setContentsMargins(10,10,10,10);
     vbox->setSpacing(10);

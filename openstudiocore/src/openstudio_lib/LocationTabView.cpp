@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
-*  All rights reserved.
-*  
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*  
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*  
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "LocationTabView.hpp"
 
@@ -51,7 +60,7 @@
 
 #include "../energyplus/ReverseTranslator.hpp"
 
-#include "../runmanager/lib/ConfigOptions.hpp"
+//#include "../runmanager/lib/ConfigOptions.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
@@ -263,7 +272,7 @@ LocationView::LocationView(bool isIP,
   if (ashraeClimateZone.empty()){
     ashraeClimateZone = climateZones.appendClimateZone(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDefaultYear(), "");
   }
-  ashraeClimateZone.setType(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDocumentName(), model::ClimateZones::ashraeDefaultYear());
+  //ashraeClimateZone.setType(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDocumentName(), model::ClimateZones::ashraeDefaultYear());
   
   std::string ashraeClimateZoneValue = ashraeClimateZone.value();
   auto idx = m_ashraeClimateZone->findText(toQString(ashraeClimateZoneValue));
@@ -291,7 +300,7 @@ LocationView::LocationView(bool isIP,
    if (cecClimateZone.empty()){
     cecClimateZone = climateZones.appendClimateZone(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDefaultYear(), "");
   }
-  cecClimateZone.setType(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDocumentName(), model::ClimateZones::cecDefaultYear());
+  //cecClimateZone.setType(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDocumentName(), model::ClimateZones::cecDefaultYear());
 
   std::string cecClimateZoneValue = cecClimateZone.value();
   idx = m_cecClimateZone->findText(toQString(cecClimateZoneValue));
@@ -475,12 +484,6 @@ void LocationView::update()
     }
 
     if (fileExists) {
-      m_site->setName(weatherFile->city().c_str());
-      m_site->setLatitude(weatherFile->latitude());
-      m_site->setLongitude(weatherFile->longitude());
-      m_site->setElevation(weatherFile->elevation());
-      m_site->setTimeZone(weatherFile->timeZone());
-
       m_weatherFileBtn->setText(CHANGEWEATHERFILE);
       setSiteInfo();
     }
@@ -549,8 +552,8 @@ void LocationView::onWeatherFileBtnClicked()
 
   QString lastPath = m_lastEpwPathOpened;
   if (lastPath.isEmpty() && m_lastDdyPathOpened.isEmpty()){
-    openstudio::runmanager::ConfigOptions co(true);
-    lastPath = toQString(co.getDefaultEPWLocation().native());
+    //openstudio::runmanager::ConfigOptions co(true);
+    //lastPath = toQString(co.getDefaultEPWLocation().native());
   } else if (lastPath.isEmpty()) {
     QString path = m_lastDdyPathOpened;
     lastPath = path.replace(".ddy", ".epw");
@@ -584,7 +587,7 @@ void LocationView::onWeatherFileBtnClicked()
       
       // duplicate code in OSDocument::fixWeatherFilePath
 
-      boost::filesystem::copy_file(epwPath, newPath, boost::filesystem::copy_option::overwrite_if_exists);
+      openstudio::filesystem::copy_file(epwPath, newPath, openstudio::filesystem::copy_option::overwrite_if_exists);
       
       // this can throw
       EpwFile epwFile(newPath);
@@ -597,12 +600,14 @@ void LocationView::onWeatherFileBtnClicked()
 
       weatherFile = openstudio::model::WeatherFile::setWeatherFile(m_model, epwFile);
       OS_ASSERT(weatherFile);
-      weatherFile->makeUrlRelative(toPath(m_modelTempDir) / toPath("resources"));
+      weatherFile->makeUrlRelative(toPath(m_modelTempDir) / toPath("resources/files"));
+
+      m_model.workflowJSON().setWeatherFile(newPath.filename());
 
       if (!previousEPWPath.empty()){
         if (previousEPWPath.filename() != newPath.filename()){
-          if (boost::filesystem::exists(previousEPWPath)){
-            boost::filesystem::remove_all(previousEPWPath);
+          if (openstudio::filesystem::exists(previousEPWPath)){
+            openstudio::filesystem::remove_all(previousEPWPath);
           }
         }
       }
@@ -620,10 +625,17 @@ void LocationView::onWeatherFileBtnClicked()
       if (startDateActualYear){
         yearDescription.resetDayofWeekforStartDay();
         yearDescription.setCalendarYear(*startDateActualYear);
-      }else{
+      } else{
         yearDescription.resetCalendarYear();
         yearDescription.setDayofWeekforStartDay(epwFile.startDayOfWeek().valueName());
       }
+
+      // update site info
+      m_site->setName(weatherFile->city().c_str());
+      m_site->setLatitude(weatherFile->latitude());
+      m_site->setLongitude(weatherFile->longitude());
+      m_site->setElevation(weatherFile->elevation());
+      m_site->setTimeZone(weatherFile->timeZone());
 
       m_lastEpwPathOpened = QFileInfo(fileName).absoluteFilePath();
 
@@ -631,7 +643,7 @@ void LocationView::onWeatherFileBtnClicked()
 
     }catch(...){
 
-      boost::filesystem::remove_all(newPath);
+      openstudio::filesystem::remove_all(newPath);
 
       QMessageBox box(QMessageBox::Warning, "Failed To Set Weather File", QString("Failed To Set Weather File To ") + fileName, QMessageBox::Ok);
       box.setDetailedText(toQString(ss.string())); 
@@ -644,7 +656,7 @@ void LocationView::onWeatherFileBtnClicked()
           if (!previousEPWPath.empty()){
             if (previousEPWPath.filename() != weatherFilePath->filename()){
               weatherFile->remove();
-            }else if (!boost::filesystem::exists(previousEPWPath)){
+            }else if (!openstudio::filesystem::exists(previousEPWPath)){
               weatherFile->remove();
             }
           }
@@ -662,8 +674,8 @@ void LocationView::onDesignDayBtnClicked()
 
   QString lastPath = m_lastDdyPathOpened;
   if (lastPath.isEmpty() && m_lastEpwPathOpened.isEmpty()){
-    openstudio::runmanager::ConfigOptions co(true);
-    lastPath = toQString(co.getDefaultEPWLocation().native());
+    //openstudio::runmanager::ConfigOptions co(true);
+    //lastPath = toQString(co.getDefaultEPWLocation().native());
   } else if (lastPath.isEmpty()) {
     QString path = m_lastEpwPathOpened;
     lastPath = path.replace(".epw", ".ddy");

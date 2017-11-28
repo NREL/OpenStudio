@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef MODEL_SETPOINTMANAGEROUTDOORAIRRESET_IMPL_HPP
 #define MODEL_SETPOINTMANAGEROUTDOORAIRRESET_IMPL_HPP
@@ -36,45 +45,45 @@ namespace detail {
 
   /** SetpointManagerOutdoorAirReset_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerOutdoorAirReset.*/
   class MODEL_API SetpointManagerOutdoorAirReset_Impl : public SetpointManager_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(std::string controlVariable READ controlVariable WRITE setControlVariable RESET resetControlVariable);
-    Q_PROPERTY(bool isControlVariableDefaulted READ isControlVariableDefaulted);
-    Q_PROPERTY(std::vector<std::string> controlVariableValues READ controlVariableValues);
+    
+    
+    
 
-    Q_PROPERTY(double setpointatOutdoorLowTemperature READ setpointatOutdoorLowTemperature WRITE setSetpointatOutdoorLowTemperature);
-    Q_PROPERTY(openstudio::Quantity setpointatOutdoorLowTemperature_SI READ setpointatOutdoorLowTemperature_SI WRITE setSetpointatOutdoorLowTemperature);
-    Q_PROPERTY(openstudio::Quantity setpointatOutdoorLowTemperature_IP READ setpointatOutdoorLowTemperature_IP WRITE setSetpointatOutdoorLowTemperature);
+    
+    
+    
 
-    Q_PROPERTY(double outdoorLowTemperature READ outdoorLowTemperature WRITE setOutdoorLowTemperature);
-    Q_PROPERTY(openstudio::Quantity outdoorLowTemperature_SI READ outdoorLowTemperature_SI WRITE setOutdoorLowTemperature);
-    Q_PROPERTY(openstudio::Quantity outdoorLowTemperature_IP READ outdoorLowTemperature_IP WRITE setOutdoorLowTemperature);
+    
+    
+    
 
-    Q_PROPERTY(double setpointatOutdoorHighTemperature READ setpointatOutdoorHighTemperature WRITE setSetpointatOutdoorHighTemperature);
-    Q_PROPERTY(openstudio::Quantity setpointatOutdoorHighTemperature_SI READ setpointatOutdoorHighTemperature_SI WRITE setSetpointatOutdoorHighTemperature);
-    Q_PROPERTY(openstudio::Quantity setpointatOutdoorHighTemperature_IP READ setpointatOutdoorHighTemperature_IP WRITE setSetpointatOutdoorHighTemperature);
+    
+    
+    
 
-    Q_PROPERTY(double outdoorHighTemperature READ outdoorHighTemperature WRITE setOutdoorHighTemperature);
-    Q_PROPERTY(openstudio::Quantity outdoorHighTemperature_SI READ outdoorHighTemperature_SI WRITE setOutdoorHighTemperature);
-    Q_PROPERTY(openstudio::Quantity outdoorHighTemperature_IP READ outdoorHighTemperature_IP WRITE setOutdoorHighTemperature);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> setpointatOutdoorLowTemperature2 READ setpointatOutdoorLowTemperature2 WRITE setSetpointatOutdoorLowTemperature2 RESET resetSetpointatOutdoorLowTemperature2);
-    Q_PROPERTY(openstudio::OSOptionalQuantity setpointatOutdoorLowTemperature2_SI READ setpointatOutdoorLowTemperature2_SI WRITE setSetpointatOutdoorLowTemperature2 RESET resetSetpointatOutdoorLowTemperature2);
-    Q_PROPERTY(openstudio::OSOptionalQuantity setpointatOutdoorLowTemperature2_IP READ setpointatOutdoorLowTemperature2_IP WRITE setSetpointatOutdoorLowTemperature2 RESET resetSetpointatOutdoorLowTemperature2);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> outdoorLowTemperature2 READ outdoorLowTemperature2 WRITE setOutdoorLowTemperature2 RESET resetOutdoorLowTemperature2);
-    Q_PROPERTY(openstudio::OSOptionalQuantity outdoorLowTemperature2_SI READ outdoorLowTemperature2_SI WRITE setOutdoorLowTemperature2 RESET resetOutdoorLowTemperature2);
-    Q_PROPERTY(openstudio::OSOptionalQuantity outdoorLowTemperature2_IP READ outdoorLowTemperature2_IP WRITE setOutdoorLowTemperature2 RESET resetOutdoorLowTemperature2);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> setpointatOutdoorHighTemperature2 READ setpointatOutdoorHighTemperature2 WRITE setSetpointatOutdoorHighTemperature2 RESET resetSetpointatOutdoorHighTemperature2);
-    Q_PROPERTY(openstudio::OSOptionalQuantity setpointatOutdoorHighTemperature2_SI READ setpointatOutdoorHighTemperature2_SI WRITE setSetpointatOutdoorHighTemperature2 RESET resetSetpointatOutdoorHighTemperature2);
-    Q_PROPERTY(openstudio::OSOptionalQuantity setpointatOutdoorHighTemperature2_IP READ setpointatOutdoorHighTemperature2_IP WRITE setSetpointatOutdoorHighTemperature2 RESET resetSetpointatOutdoorHighTemperature2);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> outdoorHighTemperature2 READ outdoorHighTemperature2 WRITE setOutdoorHighTemperature2 RESET resetOutdoorHighTemperature2);
-    Q_PROPERTY(openstudio::OSOptionalQuantity outdoorHighTemperature2_SI READ outdoorHighTemperature2_SI WRITE setOutdoorHighTemperature2 RESET resetOutdoorHighTemperature2);
-    Q_PROPERTY(openstudio::OSOptionalQuantity outdoorHighTemperature2_IP READ outdoorHighTemperature2_IP WRITE setOutdoorHighTemperature2 RESET resetOutdoorHighTemperature2);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> schedule READ scheduleAsModelObject WRITE setScheduleAsModelObject RESET resetSchedule);
+    
    public:
     /** @name Constructors and Destructors */
     //@{

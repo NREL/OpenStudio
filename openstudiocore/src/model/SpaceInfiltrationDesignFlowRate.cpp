@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "SpaceInfiltrationDesignFlowRate.hpp"
 #include "SpaceInfiltrationDesignFlowRate_Impl.hpp"
@@ -174,7 +183,7 @@ namespace detail {
     if (istringEqual("Flow/ExteriorArea", this->designFlowRateCalculationMethod())){
       result = getDouble(OS_SpaceInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea,true);
     }
-    return result;  
+    return result;
   }
 
   boost::optional<double> SpaceInfiltrationDesignFlowRate_Impl::flowperExteriorWallArea() const {
@@ -182,7 +191,7 @@ namespace detail {
     if (istringEqual("Flow/ExteriorWallArea", this->designFlowRateCalculationMethod())){
       result = getDouble(OS_SpaceInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea,true);
     }
-    return result;  
+    return result;
   }
 
   boost::optional<double> SpaceInfiltrationDesignFlowRate_Impl::airChangesperHour() const {
@@ -190,7 +199,7 @@ namespace detail {
     if (istringEqual("AirChanges/Hour", this->designFlowRateCalculationMethod())){
       result = getDouble(OS_SpaceInfiltration_DesignFlowRateFields::AirChangesperHour,true);
     }
-    return result;  
+    return result;
   }
 
   double SpaceInfiltrationDesignFlowRate_Impl::constantTermCoefficient() const {
@@ -239,16 +248,18 @@ namespace detail {
       if (*designFlowRate < 0){
         result = false;
       }else{
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Space");
-        OS_ASSERT(result);
+        // This one could return false for good reasons, if NaN of Infinity was passed
         result = setDouble(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRate, designFlowRate.get());
-        OS_ASSERT(result);
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::FlowperSpaceFloorArea, "");
-        OS_ASSERT(result);
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea, "");
-        OS_ASSERT(result);
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::AirChangesperHour, "");
-        OS_ASSERT(result);
+        if (result) {
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Space");
+          OS_ASSERT(result);
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::FlowperSpaceFloorArea, "");
+          OS_ASSERT(result);
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea, "");
+          OS_ASSERT(result);
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::AirChangesperHour, "");
+          OS_ASSERT(result);
+        }
       }
     } else {
       if (istringEqual("Flow/Space", this->designFlowRateCalculationMethod())){
@@ -264,16 +275,18 @@ namespace detail {
       if (*flowperSpaceFloorArea < 0){
         result = false;
       }else{
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Area");
-        OS_ASSERT(result);
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRate, "");
-        OS_ASSERT(result);
+        // This one could return false for good reasons, if NaN of Infinity was passed
         result = setDouble(OS_SpaceInfiltration_DesignFlowRateFields::FlowperSpaceFloorArea, flowperSpaceFloorArea.get());
-        OS_ASSERT(result);
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea, "");
-        OS_ASSERT(result);
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::AirChangesperHour, "");
-        OS_ASSERT(result);
+        if (result) {
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Area");
+          OS_ASSERT(result);
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRate, "");
+          OS_ASSERT(result);
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea, "");
+          OS_ASSERT(result);
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::AirChangesperHour, "");
+          OS_ASSERT(result);
+        }
       }
     } else {
       if (istringEqual("Flow/Area", this->designFlowRateCalculationMethod())){
@@ -289,16 +302,18 @@ namespace detail {
       if (*flowperExteriorSurfaceArea < 0){
         result = false;
       }else{
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/ExteriorArea");
-        OS_ASSERT(result);
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRate, "");
-        OS_ASSERT(result);
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::FlowperSpaceFloorArea, "");
-        OS_ASSERT(result);
+        // This one could return false for good reasons, if NaN of Infinity was passed
         result = setDouble(OS_SpaceInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea, flowperExteriorSurfaceArea.get());
-        OS_ASSERT(result);
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::AirChangesperHour, "");
-        OS_ASSERT(result);
+        if (result) {
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/ExteriorArea");
+          OS_ASSERT(result);
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRate, "");
+          OS_ASSERT(result);
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::FlowperSpaceFloorArea, "");
+          OS_ASSERT(result);
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::AirChangesperHour, "");
+          OS_ASSERT(result);
+        }
       }
     } else {
       if (istringEqual("Flow/ExteriorArea", this->designFlowRateCalculationMethod())){
@@ -314,16 +329,18 @@ namespace detail {
       if (*flowperExteriorWallArea < 0){
         result = false;
       }else{
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/ExteriorWallArea");
-        OS_ASSERT(result);
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRate, "");
-        OS_ASSERT(result);
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::FlowperSpaceFloorArea, "");
-        OS_ASSERT(result);
+        // This one could return false for good reasons, if NaN of Infinity was passed
         result = setDouble(OS_SpaceInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea, flowperExteriorWallArea.get());
-        OS_ASSERT(result);
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::AirChangesperHour, "");
-        OS_ASSERT(result);
+        if (result) {
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/ExteriorWallArea");
+          OS_ASSERT(result);
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRate, "");
+          OS_ASSERT(result);
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::FlowperSpaceFloorArea, "");
+          OS_ASSERT(result);
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::AirChangesperHour, "");
+          OS_ASSERT(result);
+        }
       }
     } else {
       if (istringEqual("Flow/ExteriorWallArea", this->designFlowRateCalculationMethod())){
@@ -339,16 +356,18 @@ namespace detail {
       if (*airChangesperHour < 0){
         result = false;
       }else{
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod, "AirChanges/Hour");
-        OS_ASSERT(result);
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRate, "");
-        OS_ASSERT(result);
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::FlowperSpaceFloorArea, "");
-        OS_ASSERT(result);
-        result = setString(OS_SpaceInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea, "");
-        OS_ASSERT(result);
+        // This one could return false for good reasons, if NaN of Infinity was passed
         result = setDouble(OS_SpaceInfiltration_DesignFlowRateFields::AirChangesperHour, airChangesperHour.get());
-        OS_ASSERT(result);
+        if (result) {
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod, "AirChanges/Hour");
+          OS_ASSERT(result);
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRate, "");
+          OS_ASSERT(result);
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::FlowperSpaceFloorArea, "");
+          OS_ASSERT(result);
+          result = setString(OS_SpaceInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea, "");
+          OS_ASSERT(result);
+        }
       }
     } else {
       if (istringEqual("AirChanges/Hour", this->designFlowRateCalculationMethod())){
@@ -806,7 +825,7 @@ double SpaceInfiltrationDesignFlowRate::getAirChangesPerHour(double floorArea,
 
 /// @cond
 SpaceInfiltrationDesignFlowRate::SpaceInfiltrationDesignFlowRate(std::shared_ptr<detail::SpaceInfiltrationDesignFlowRate_Impl> impl)
-  : SpaceLoad(impl)
+  : SpaceLoad(std::move(impl))
 {}
 /// @endcond
 

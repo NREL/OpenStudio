@@ -18,9 +18,11 @@
   #include <model/ModelObject.hpp>
   #include <model/ModelObject_Impl.hpp>
   #include <model/ModelExtensibleGroup.hpp>
-  #include <model/Relationship.hpp>
+//  #include <model/Relationship.hpp>
   #include <model/GenericModelObject.hpp>
   #include <model/GenericModelObject_Impl.hpp>
+  
+  #include <model/FileOperations.hpp>
 
   // central list of all concrete ModelObject header files (_Impl and non-_Impl)
   #include <model/ConcreteModelObjects.hpp>

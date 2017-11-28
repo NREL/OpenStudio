@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "ScheduleTypeRegistry.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -237,6 +246,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"ElectricLoadCenterInverterLookUpTable","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ElectricLoadCenterInverterSimple","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ElectricLoadCenterStorageSimple","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"ElectricLoadCenterStorageConverter","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"EvaporativeCoolerDirectResearchSpecial","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"EvaporativeCoolerIndirectResearchSpecial","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"EvaporativeFluidCoolerSingleSpeed","Blowdown Makeup Water Usage","blowdownMakeupWaterUsageSchedule",true,"VolumetricFlowRate",0.0,OptionalDouble()},
@@ -250,6 +260,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"FanZoneExhaust","Minimum Zone Temperature Limit","minimumZoneTemperatureLimitSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"FanZoneExhaust","Balanced Exhaust Fraction","balancedExhaustFractionSchedule",true,"Dimensionless",0.0,1.0},    
     {"GasEquipment","Gas Equipment","schedule",true,"",0.0,1.0},
+    {"GeneratorFuelSupply", "Fuel Temperature", "fuelTemperatureScheduleName", true,"Temperature", 0.0, 100.0},
+    {"GeneratorFuelCellWaterSupply", "Water Temperature", "waterTemperatureScheduleName", true, "Temperature", 0.0, 100.0},
     {"GeneratorMicroTurbine","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"GeneratorPhotovoltaic","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"HeatExchangerAirToAirSensibleAndLatent","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
@@ -271,6 +283,10 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"PlantComponentTemperatureSource","Source Temperature","sourceTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"PipeIndoor", "Ambient Temperature", "ambientTemperatureSchedule", true, "Temperature", OptionalDouble(), OptionalDouble() },
     {"PipeIndoor", "Ambient Air Velocity", "ambientAirVelocitySchedule", true, "Velocity", 0.0, OptionalDouble() },
+    {"PlantLoop","Plant Equipment Operation Heating Load Schedule","plantEquipmentOperationHeatingLoadSchedule",false,"Availability",0.0,1.0},
+    {"PlantLoop","Plant Equipment Operation Cooling Load Schedule","plantEquipmentOperationCoolingLoadSchedule",false,"Availability",0.0,1.0},
+    {"PlantLoop","Primary Plant Equipment Operation Scheme Schedule","primaryPlantEquipmentOperationSchemeSchedule",false,"Availability",0.0,1.0},
+    {"PlantLoop","Component Setpoint Operation Scheme Schedule","componentSetpointOperationSchemeSchedule",false,"Availability",0.0,1.0},
     {"PumpConstantSpeed","Pump Flow Rate","pumpFlowRateSchedule",true,"",0.0,1.0},
     {"PumpVariableSpeed","Pump Flow Rate","pumpFlowRateSchedule",true,"",0.0,1.0},
     {"PumpVariableSpeed","Pump RPM","pumpRPMSchedule",true,"RotationsPerMinute",OptionalDouble(),OptionalDouble()},
@@ -305,9 +321,15 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"ShadingSurface","Transmittance","transmittanceSchedule",true,"",0.0,1.0},
     {"SiteWaterMainsTemperature","Temperature","temperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     { "SolarCollectorPerformancePhotovoltaicThermalSimple", "Thermal Conversion Efficiency", "thermalConversionEfficiencySchedule", true, "", 0.0, 1.0 },
+    {"SurfacePropertyConvectionCoefficients", "Convection Coefficient 1", "convectionCoefficient1Schedule", true, "", 0.1, 1000},
+    {"SurfacePropertyConvectionCoefficients", "Convection Coefficient 2", "convectionCoefficient2Schedule", true, "", 0.1, 1000},
     {"SpaceInfiltrationDesignFlowRate","Infiltration","schedule",true,"",0.0,1.0},
     {"SpaceInfiltrationEffectiveLeakageArea","Infiltration","schedule",true,"",0.0,1.0},
     {"SteamEquipment","Steam Equipment","schedule",true,"",0.0,1.0},
+    {"SurfacePropertyConvectionCoefficients","Convection Coefficient 1","convectionCoefficient1Schedule",true,"",OptionalDouble(),OptionalDouble() },
+    {"SurfacePropertyConvectionCoefficients","Convection Coefficient 2","convectionCoefficient2Schedule",true,"",OptionalDouble(),OptionalDouble() },
+    {"SurfacePropertyConvectionCoefficientsMultipleSurface","Convection Coefficient 1","convectionCoefficient1Schedule",true,"",OptionalDouble(),OptionalDouble() },
+    {"SurfacePropertyConvectionCoefficientsMultipleSurface","Convection Coefficient 2","convectionCoefficient2Schedule",true,"",OptionalDouble(),OptionalDouble() },
     {"ThermalStorageIceDetailed","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ThermalStorageChilledWaterStratified","Setpoint Temperature","setpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"ThermalStorageChilledWaterStratified","Ambient Temperature","ambientTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
@@ -332,6 +354,12 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"WaterHeaterHeatPump","Inlet Air Humidity Schedule","inletAirHumiditySchedule",true,"",0.0,OptionalDouble()},
     {"WaterHeaterHeatPump","Compressor Ambient Temperature Schedule","compressorAmbientTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"WaterHeaterHeatPump","Inlet Air Mixer Schedule","inletAirMixerSchedule",true,"",0.0,1.0},
+    {"WaterHeaterHeatPumpWrappedCondenser","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"WaterHeaterHeatPumpWrappedCondenser","Compressor Setpoint Temperature","compressorSetpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
+    {"WaterHeaterHeatPumpWrappedCondenser","Inlet Air Temperature","inletAirTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
+    {"WaterHeaterHeatPumpWrappedCondenser","Inlet Air Humidity","inletAirHumiditySchedule",true,"",0.0,OptionalDouble()},
+    {"WaterHeaterHeatPumpWrappedCondenser","Compressor Ambient Temperature","compressorAmbientTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
+    {"WaterHeaterHeatPumpWrappedCondenser","Inlet Air Mixer","inletAirMixerSchedule",true,"",0.0,1.0},
     {"WaterHeaterStratified","Heater 1 Setpoint Temperature","heater1SetpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"WaterHeaterStratified","Heater 2 Setpoint Temperature","heater2SetpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"WaterHeaterStratified","Ambient Temperature","ambientTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
@@ -356,6 +384,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"ZoneHVACIdealLoadsAirSystem","Cooling Availability","coolingAvailabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACFourPipeFanCoil","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACFourPipeFanCoil","Outdoor Air","outdoorAirSchedule",true,"",0.0,1.0},
+    {"ZoneHVACFourPipeFanCoil","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"ZoneHVACLowTemperatureRadiantElectric","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACLowTemperatureRadiantElectric","Heating Setpoint Temperature","heatingSetpointTemperature",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"ZoneHVACLowTempRadiantConstFlow","Availability","availabilitySchedule",false,"Availability",0.0,1.0},

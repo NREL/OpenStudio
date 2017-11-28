@@ -1,5 +1,8 @@
 set(target_name openstudio_energyplus)
 
+include_directories(${CMAKE_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 set(${target_name}_src
   EnergyPlusAPI.hpp
   mainpage.hpp
@@ -48,12 +51,12 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateBoilerHotWater.cpp
   ForwardTranslator/ForwardTranslateBoilerSteam.cpp
   ForwardTranslator/ForwardTranslateBuilding.cpp
-##  ForwardTranslator/ForwardTranslateCentralHeatPumpSystem.cpp
+  ForwardTranslator/ForwardTranslateCentralHeatPumpSystem.cpp
   ForwardTranslator/ForwardTranslateCFactorUndergroundWallConstruction.cpp
   ForwardTranslator/ForwardTranslateChillerAbsorption.cpp
   ForwardTranslator/ForwardTranslateChillerAbsorptionIndirect.cpp
   ForwardTranslator/ForwardTranslateChillerElectricEIR.cpp
-##  ForwardTranslator/ForwardTranslateChillerHeaterPerformanceElectricEIR.cpp
+  ForwardTranslator/ForwardTranslateChillerHeaterPerformanceElectricEIR.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXMultiSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXTwoSpeed.cpp
@@ -79,6 +82,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoilSystemCoolingWaterHeatExchangerAssisted.cpp
   ForwardTranslator/ForwardTranslateCoilWaterHeatingDesuperheater.cpp
   ForwardTranslator/ForwardTranslateCoilWaterHeatingAirToWaterHeatPump.cpp
+  ForwardTranslator/ForwardTranslateCoilWaterHeatingAirToWaterHeatPumpWrapped.cpp
   ForwardTranslator/ForwardTranslateConstruction.cpp
   ForwardTranslator/ForwardTranslateConstructionWithInternalSource.cpp
   ForwardTranslator/ForwardTranslateConvergenceLimits.cpp
@@ -120,7 +124,20 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateElectricLoadCenterDistribution.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterLookUpTable.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterSimple.cpp
+  ForwardTranslator/ForwardTranslateElectricLoadCenterStorageConverter.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterStorageSimple.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemActuator.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemConstructionIndexVariable.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemCurveOrTableIndexVariable.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemGlobalVariable.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemInternalVariable.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemMeteredOutputVariable.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemOutputVariable.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemProgram.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemProgramCallingManager.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemSensor.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemSubroutine.cpp
+  ForwardTranslator/ForwardTranslateEnergyManagementSystemTrendVariable.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerDirectResearchSpecial.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerIndirectResearchSpecial.cpp
   ForwardTranslator/ForwardTranslateEvaporativeFluidCoolerSingleSpeed.cpp
@@ -138,6 +155,16 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateGasMixture.cpp
   ForwardTranslator/ForwardTranslateGeneratorPhotovoltaic.cpp
   ForwardTranslator/ForwardTranslateGeneratorMicroTurbine.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelCell.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelCellAirSupply.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelCellAuxiliaryHeater.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelCellElectricalStorage.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelCellExhaustGasToWaterHeatExchanger.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelCellInverter.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelCellPowerModule.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelCellStackCooler.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelCellWaterSupply.cpp
+  ForwardTranslator/ForwardTranslateGeneratorFuelSupply.cpp
   ForwardTranslator/ForwardTranslateGroundHeatExchangerHorizontalTrench.cpp
   ForwardTranslator/ForwardTranslateGroundHeatExchangerVertical.cpp
   ForwardTranslator/ForwardTranslateHeaderedPumpsConstantSpeed.cpp
@@ -161,6 +188,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateLights.cpp
   ForwardTranslator/ForwardTranslateLuminaire.cpp
   ForwardTranslator/ForwardTranslateMaterialPropertyGlazingSpectralData.cpp
+  ForwardTranslator/ForwardTranslateMaterialPropertyMoisturePenetrationDepthSettings.cpp
   ForwardTranslator/ForwardTranslateMasslessOpaqueMaterial.cpp
   ForwardTranslator/ForwardTranslateMeterCustom.cpp
   ForwardTranslator/ForwardTranslateMeterCustomDecrement.cpp
@@ -170,6 +198,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateOutputControlReportingTolerances.cpp
   ForwardTranslator/ForwardTranslateOutputMeter.cpp
   ForwardTranslator/ForwardTranslateOutputVariable.cpp
+  ForwardTranslator/ForwardTranslateOutputEnergyManagementSystem.cpp
   ForwardTranslator/ForwardTranslatePeople.cpp
   ForwardTranslator/ForwardTranslatePhotovoltaicPerformanceEquivalentOneDiode.cpp
   ForwardTranslator/ForwardTranslatePhotovoltaicPerformanceSimple.cpp
@@ -235,6 +264,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSetpointManagerOutdoorAirReset.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerScheduled.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerScheduledDualSetpoint.cpp
+  ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneCooling.cpp
+  ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneHeating.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneHumidityMaximum.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneHumidityMinimum.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneOneStageCooling.cpp
@@ -276,6 +307,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSteamEquipment.cpp
   ForwardTranslator/ForwardTranslateSubSurface.cpp
   ForwardTranslator/ForwardTranslateSurface.cpp
+  ForwardTranslator/ForwardTranslateSurfacePropertyConvectionCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyConvectionCoefficientsMultipleSurface.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideConditionsModel.cpp
@@ -286,9 +318,11 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateThermalZone.cpp
   ForwardTranslator/ForwardTranslateThermostatSetpointDualSetpoint.cpp
   ForwardTranslator/ForwardTranslateTimestep.cpp
+  ForwardTranslator/ForwardTranslateUnitarySystemPerformanceMultispeed.cpp
   ForwardTranslator/ForwardTranslateVersion.cpp
   ForwardTranslator/ForwardTranslateWaterHeaterMixed.cpp
   ForwardTranslator/ForwardTranslateWaterHeaterHeatPump.cpp
+  ForwardTranslator/ForwardTranslateWaterHeaterHeatPumpWrappedCondenser.cpp
   ForwardTranslator/ForwardTranslateWaterHeaterStratified.cpp
   ForwardTranslator/ForwardTranslateWaterUseConnections.cpp
   ForwardTranslator/ForwardTranslateWaterUseEquipment.cpp
@@ -296,6 +330,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateZoneAirContaminantBalance.cpp
   ForwardTranslator/ForwardTranslateZoneAirHeatBalanceAlgorithm.cpp
   ForwardTranslator/ForwardTranslateZoneAirMassFlowConservation.cpp
+  ForwardTranslator/ForwardTranslateZoneCapacitanceMultiplierResearchSpecial.cpp
   ForwardTranslator/ForwardTranslateZoneControlContaminantController.cpp
   ForwardTranslator/ForwardTranslateZoneControlHumidistat.cpp
   ForwardTranslator/ForwardTranslateZoneControlThermostatStagedDualSetpoint.cpp
@@ -361,6 +396,20 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateDesignSpecificationOutdoorAir.cpp
   ReverseTranslator/ReverseTranslateElectricEquipment.cpp
   ReverseTranslator/ReverseTranslateElectricLoadCenterStorageSimple.cpp
+  ReverseTranslator/ReverseTranslateElectricLoadCenterStorageConverter.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemActuator.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemActuator.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemConstructionIndexVariable.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemCurveOrTableIndexVariable.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemGlobalVariable.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemInternalVariable.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemMeteredOutputVariable.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemOutputVariable.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemProgram.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemProgramCallingManager.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemSensor.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemSubroutine.cpp
+  ReverseTranslator/ReverseTranslateEnergyManagementSystemTrendVariable.cpp
   ReverseTranslator/ReverseTranslateEvaporativeCoolerDirectResearchSpecial.cpp
   ReverseTranslator/ReverseTranslateEvaporativeFluidCoolerSingleSpeed.cpp
   ReverseTranslator/ReverseTranslateExteriorLights.cpp
@@ -379,6 +428,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateMeterCustom.cpp
   ReverseTranslator/ReverseTranslateMeterCustomDecrement.cpp
   ReverseTranslator/ReverseTranslateOtherEquipment.cpp
+  ReverseTranslator/ReverseTranslateOutputEnergyManagementSystem.cpp
   ReverseTranslator/ReverseTranslateOutputIlluminanceMap.cpp
   ReverseTranslator/ReverseTranslateOutputMeter.cpp
   ReverseTranslator/ReverseTranslateOutputMeterCumulative.cpp
@@ -447,13 +497,17 @@ set(${target_name}_test_src
   Test/ForwardTranslator_GTest.cpp
   Test/ReverseTranslator_GTest.cpp
 
+  Test/AirLoopHVACUnitarySystem_GTest.cpp
   Test/AirWallMaterial_GTest.cpp
   Test/Building_GTest.cpp
+  Test/CoilHeatingGas_GTest.cpp
   Test/Construction_GTest.cpp
   Test/DaylightingControl_GTest.cpp
   Test/DaylightingDeviceShelf_GTest.cpp
   Test/DesignSpecificationOutdoorAir_GTest.cpp
   Test/ElectricEquipment_GTest.cpp
+  Test/EMS_GTest.cpp
+  Test/FuelCell_GTest.cpp
   Test/ExteriorLights_GTest.cpp
   Test/GasEquipment_GTest.cpp
   Test/HotWaterEquipment_GTest.cpp
@@ -469,12 +523,14 @@ set(${target_name}_test_src
   Test/RunPeriodControlDaylightSavingTime_GTest.cpp
   Test/ScheduleInterval_GTest.cpp
   Test/ScheduleRuleset_GTest.cpp
+  Test/SetpointManagerFollowGroundTemperature_GTest.cpp
   Test/ShadingSurface_GTest.cpp
   Test/Space_GTest.cpp
   Test/SpaceInfiltrationDesignFlowRate_GTest.cpp
   Test/SpaceInfiltrationEffectiveLeakageArea_GTest.cpp
   Test/SubSurface_GTest.cpp
   Test/Surface_GTest.cpp
+  Test/SurfacePropertyConvectionCoefficients.cpp
   Test/TableMultiVariableLookup_GTest.cpp
   Test/ThermalZone_GTest.cpp
   Test/WindowPropertyFrameAndDivider_GTest.cpp
@@ -487,30 +543,71 @@ set(${target_name}_swig_src
   EnergyPlus.i
 )
 
-## resource files
-set(${target_name}_qrc
-  EnergyPlus.qrc
-)
-
-# generate rules for building source files from the resources
-qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
+### resource files
+#set(${target_name}_qrc
+#  EnergyPlus.qrc
+#)
+#
+## generate rules for building source files from the resources
+##qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
 set(${target_name}_depends
   openstudio_model
 )
 
+set(FILES 
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/LCCusePriceEscalationDataSet2011.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R11_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R12_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R22_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R123_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R134a_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R404a_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R407a_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R410a_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/NH3_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R507a_FluidPropertiesDataSet.idf"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R744_FluidPropertiesDataSet.idf"
+)
 
-add_library(${target_name} SHARED ${${target_name}_src} ${${target_name}_qrcs})
+set(EMBEDDED_PATHS 
+  Resources/LCCusePriceEscalationDataSet2011.idf
+  Resources/R11_FluidPropertiesDataSet.idf
+  Resources/R12_FluidPropertiesDataSet.idf
+  Resources/R22_FluidPropertiesDataSet.idf
+  Resources/R123_FluidPropertiesDataSet.idf
+  Resources/R134a_FluidPropertiesDataSet.idf
+  Resources/R404a_FluidPropertiesDataSet.idf
+  Resources/R407a_FluidPropertiesDataSet.idf
+  Resources/R410a_FluidPropertiesDataSet.idf
+  Resources/NH3_FluidPropertiesDataSet.idf
+  Resources/R507a_FluidPropertiesDataSet.idf
+  Resources/R744_FluidPropertiesDataSet.idf
+)
+
+include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
+embed_files("${FILES}" "${EMBEDDED_PATHS}" OUTPUT energyplus)
+
+add_library(${target_name} ${${target_name}_src} ${OUTPUT})
 target_link_libraries(${target_name} ${${target_name}_depends})
 
 AddPCH(${target_name})
 
-if(NOT APPLE)
-  install(TARGETS ${target_name}
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-  )
-endif()
+set(${target_name}_static_depends
+  openstudio_model_static
+)
+
+add_library(${target_name}_static ${${target_name}_src} ${OUTPUT})
+
+target_link_libraries(${target_name}_static ${${target_name}_static_depends})
+
+# No need to install static lib
+#if(NOT APPLE)
+#  install(TARGETS ${target_name}
+#    RUNTIME DESTINATION bin
+#    LIBRARY DESTINATION lib
+#  )
+#endif()
 
 CREATE_SRC_GROUPS("${${target_name}_src}")
 #CREATE_SRC_GROUPS("${${target_name}_test_src}")
@@ -526,4 +623,5 @@ if(BUILD_TESTING)
 
 endif()
 
-MAKE_SWIG_TARGET(OpenStudioEnergyPlus EnergyPlus "${CMAKE_CURRENT_SOURCE_DIR}/EnergyPlus.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModel)
+MAKE_SWIG_TARGET(OpenStudioEnergyPlus EnergyPlus "${CMAKE_CURRENT_SOURCE_DIR}/EnergyPlus.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioModel)
+

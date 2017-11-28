@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "WindowMaterialGlazingGroupThermochromicInspectorView.hpp"
 
@@ -69,7 +78,7 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -98,7 +107,7 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,0);
 
-  m_windowMaterialGlazingName = new OSLineEdit();
+  m_windowMaterialGlazingName = new OSLineEdit2();
   mainGridLayout->addWidget(m_windowMaterialGlazingName,row++,0,1,3);
 
   // Stretch
@@ -129,7 +138,13 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::onUpdate()
 
 void WindowMaterialGlazingGroupThermochromicInspectorView::attach(openstudio::model::ThermochromicGlazing & thermochromicGlazing)
 {
-  m_nameEdit->bind(thermochromicGlazing,"name");
+  // m_nameEdit->bind(thermochromicGlazing,"name");
+  m_thermochromicGlazing = thermochromicGlazing;
+  m_nameEdit->bind(
+    *m_thermochromicGlazing,
+    OptionalStringGetter(std::bind(&model::ThermochromicGlazing::name, m_thermochromicGlazing.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::ThermochromicGlazing::setName, m_thermochromicGlazing.get_ptr(),std::placeholders::_1))
+  );
 
   //m_opticalDataTemperature->bind( // TODO
   //  m_isIP,
@@ -137,7 +152,16 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::attach(openstudio::mo
   //  DoubleGetter(std::bind(&model::ThermochromicGlazing::opticalDataTemperature,thermochromicGlazing)),
   //  DoubleSetterVoidReturn(std::bind(&model::ThermochromicGlazing::setOpticalDataTemperature,thermochromicGlazing,_1)));
 
-  m_windowMaterialGlazingName->bind(thermochromicGlazing,"windowMaterialGlazingName");
+  // m_windowMaterialGlazingName->bind(thermochromicGlazing,"windowMaterialGlazingName");
+
+  // TODO: Reimplement when "windowMaterialGlazingName" is found
+  // m_windowMaterialGlazingName->bind(
+  //   *m_thermochromicGlazing,
+  //   StringGetter(std::bind(&model::ThermochromicGlazing::windowMaterialGlazingName, m_thermochromicGlazing.get_ptr())),
+  //   boost::optional<StringSetter>(std::bind(&model::ThermochromicGlazing::setWindowMaterialGlazingName, m_thermochromicGlazing.get_ptr(),std::placeholders::_1)),
+  //   boost::optional<NoFailAction>(std::bind(&model::ThermochromicGlazing::resetWindowMaterialGlazingName, m_thermochromicGlazing.get_ptr())),
+  //   boost::optional<BasicQuery>(std::bind(&model::ThermochromicGlazing::isWindowMaterialGlazingNameDefaulted, m_thermochromicGlazing.get_ptr()))
+  // );
 
   m_standardsInformationWidget->attach(thermochromicGlazing);
 
@@ -151,6 +175,8 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::detach()
   m_nameEdit->unbind();
   m_opticalDataTemperature->unbind();
   m_windowMaterialGlazingName->unbind();
+
+  m_thermochromicGlazing = boost::none;
 
   m_standardsInformationWidget->detach();
 }

@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "ScriptFolderListView.hpp"
 #include "ScriptsListView.hpp"
@@ -29,7 +38,7 @@
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
-#include <boost/filesystem.hpp>
+
 #include <iostream>
 #include <fstream>
 
@@ -81,10 +90,10 @@ void ScriptFolderListView::addScriptFolder(const openstudio::path &folder, const
 void ScriptFolderListView::addScriptToFolder(const openstudio::path &t_path, const openstudio::path& folder_name)
 {
   openstudio::path folder = m_rootPath / folder_name;
-  boost::filesystem::create_directories(folder);
+  openstudio::filesystem::create_directories(folder);
   openstudio::path filename = folder / t_path.filename();
   filename = iterateFileName(filename);
-  boost::filesystem::copy_file(t_path, filename, boost::filesystem::copy_option::overwrite_if_exists);
+  openstudio::filesystem::copy_file(t_path, filename, openstudio::filesystem::copy_option::overwrite_if_exists);
   
 
   ScriptsListView *lv = m_scriptsListViews[folder];
@@ -96,13 +105,13 @@ void ScriptFolderListView::addScriptToFolder(const openstudio::path &t_path, con
 
 void ScriptFolderListView::removeScript(const openstudio::path &t_path)
 {
-  boost::filesystem::remove(t_path);
+  openstudio::filesystem::remove(t_path);
 }
 
 void ScriptFolderListView::duplicateScript(const openstudio::path &t_path)
 {
   openstudio::path filename = iterateFileName(t_path);
-  boost::filesystem::copy_file(t_path, filename, boost::filesystem::copy_option::overwrite_if_exists);
+  openstudio::filesystem::copy_file(t_path, filename, openstudio::filesystem::copy_option::overwrite_if_exists);
 }
 
 void ScriptFolderListView::createEmptyScript(const openstudio::path &t_folder_name)
@@ -111,7 +120,7 @@ void ScriptFolderListView::createEmptyScript(const openstudio::path &t_folder_na
 
   // Scope for creating and closing file.
   {
-    boost::filesystem::create_directories(m_rootPath / t_folder_name);
+    openstudio::filesystem::create_directories(m_rootPath / t_folder_name);
     std::ofstream ofs(openstudio::toString(filename).c_str());
     ofs << "# Empty Script" << std::endl; 
   }
@@ -182,7 +191,7 @@ void ScriptFolderListView::saveOSArguments() {
   }
 }
 
-std::vector<ruleset::UserScriptInfo> ScriptFolderListView::folderUserScripts(
+std::vector<measure::OSMeasureInfo> ScriptFolderListView::folderUserScripts(
     const openstudio::path& folder) const
 {
   auto it = m_scriptsListViews.find(folder);
@@ -236,9 +245,9 @@ openstudio::path ScriptFolderListView::iterateFileName(const openstudio::path &t
     last = p;
     p = BuildFileName::doit(t_path.parent_path(), openstudio::toString(stem), openstudio::toString(t_path.extension()), num);
     --num;
-  } while (!boost::filesystem::exists(p) && num > -1);
+  } while (!openstudio::filesystem::exists(p) && num > -1);
 
-  if (!boost::filesystem::exists(p))
+  if (!openstudio::filesystem::exists(p))
   {
     return p;
   } else {

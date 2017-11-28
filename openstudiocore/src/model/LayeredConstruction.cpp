@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
-*  All rights reserved.
-*  
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*  
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*  
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "LayeredConstruction.hpp"
 #include "LayeredConstruction_Impl.hpp"
@@ -63,8 +72,8 @@ namespace detail {
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
     : ConstructionBase_Impl(other, model, keepHandle)
   {}
-  
-  LayeredConstruction_Impl::LayeredConstruction_Impl(const LayeredConstruction_Impl& other, 
+
+  LayeredConstruction_Impl::LayeredConstruction_Impl(const LayeredConstruction_Impl& other,
                                                      Model_Impl* model,
                                                      bool keepHandle)
     : ConstructionBase_Impl(other, model, keepHandle)
@@ -92,8 +101,8 @@ namespace detail {
   }
 
   Material LayeredConstruction_Impl::getLayer(unsigned layerIndex) const {
-    if (layerIndex >= numLayers()) { 
-      LOG_AND_THROW("Asked to get material layer indexed " << layerIndex << ", but " 
+    if (layerIndex >= numLayers()) {
+      LOG_AND_THROW("Asked to get material layer indexed " << layerIndex << ", but "
           << briefDescription() << " has just " << numLayers() << " layers.");
     }
 
@@ -102,14 +111,14 @@ namespace detail {
     ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
     OptionalMaterial oMaterial = group.getModelObjectTarget<Material>(0);
     if (!oMaterial) {
-      LOG_AND_THROW("There is no material at layerIndex " << layerIndex << " in " 
+      LOG_AND_THROW("There is no material at layerIndex " << layerIndex << " in "
           << briefDescription() << ".");
     }
     return *oMaterial;
   }
 
   bool LayeredConstruction_Impl::eraseLayer(unsigned layerIndex) {
-    
+
     layerIndex = mf_clearNullLayers(layerIndex);
 
     MaterialVector layers = this->layers();
@@ -119,7 +128,7 @@ namespace detail {
     while (static_cast<unsigned>(toEraseIt - layersBegin) < layerIndex) { ++toEraseIt; }
     layers.erase(toEraseIt);
 
-    if ((model().strictnessLevel() < StrictnessLevel::Final) || 
+    if ((model().strictnessLevel() < StrictnessLevel::Final) ||
         LayeredConstruction::layersAreValid(layers)) {
       return !eraseExtensibleGroup(layerIndex).empty();
     }
@@ -127,8 +136,8 @@ namespace detail {
     return false;
   }
 
-  bool LayeredConstruction_Impl::insertLayer(unsigned layerIndex, 
-                                             const Material& material) 
+  bool LayeredConstruction_Impl::insertLayer(unsigned layerIndex,
+                                             const Material& material)
   {
     if (material.model() != model()){
       return false;
@@ -150,12 +159,12 @@ namespace detail {
     auto layersEnd = layers.end();
     auto insertAtIt = layersBegin;
     while ((static_cast<unsigned>(insertAtIt - layersBegin) < layerIndex) &&
-           (insertAtIt != layersEnd)) 
+           (insertAtIt != layersEnd))
     { ++insertAtIt; }
     layers.insert(insertAtIt, material);
     OS_ASSERT(layers.size() == ++n);
-    if ((model().strictnessLevel() < StrictnessLevel::Final) || 
-        LayeredConstruction::layersAreValid(layers)) 
+    if ((model().strictnessLevel() < StrictnessLevel::Final) ||
+        LayeredConstruction::layersAreValid(layers))
     {
       IdfExtensibleGroup idfGroup = insertExtensibleGroup(layerIndex,StringVector());
       OS_ASSERT(!idfGroup.empty());
@@ -168,7 +177,7 @@ namespace detail {
     return false;
   }
 
-  bool LayeredConstruction_Impl::setLayer(unsigned layerIndex, 
+  bool LayeredConstruction_Impl::setLayer(unsigned layerIndex,
                                           const Material& material)
   {
     if (material.model() != model()){
@@ -183,7 +192,7 @@ namespace detail {
 
     MaterialVector layers = this->layers();
     layers[layerIndex] = material;
-    if ((model().strictnessLevel() < StrictnessLevel::Final) || 
+    if ((model().strictnessLevel() < StrictnessLevel::Final) ||
         LayeredConstruction::layersAreValid(layers)) {
       ModelExtensibleGroup group = getExtensibleGroup(layerIndex).cast<ModelExtensibleGroup>();
       OS_ASSERT(!group.empty());
@@ -196,7 +205,7 @@ namespace detail {
   }
 
   bool LayeredConstruction_Impl::setLayers(const std::vector<Material>& materials) {
-    
+
     // DLM: duplicates check in layersAreValid which is not called if strictness < Final
     if (materials.empty()){
       // ok
@@ -213,8 +222,8 @@ namespace detail {
       }
     }
 
-    if ((model().strictnessLevel() < StrictnessLevel::Final) || 
-        LayeredConstruction::layersAreValid(materials)) 
+    if ((model().strictnessLevel() < StrictnessLevel::Final) ||
+        LayeredConstruction::layersAreValid(materials))
     {
       clearExtensibleGroups();
       for (const Material& material : materials) {
@@ -247,7 +256,7 @@ namespace detail {
     if (isFenestration()) {
       FenestrationMaterialVector fenestrationLayers = castVector<FenestrationMaterial>(layers());
       // can only set if one layer == SimpleGlazing
-      if ((fenestrationLayers.size() == 1) && 
+      if ((fenestrationLayers.size() == 1) &&
           (fenestrationLayers[0].optionalCast<SimpleGlazing>()))
       {
         SimpleGlazing simpleGlazing = fenestrationLayers[0].cast<SimpleGlazing>();
@@ -267,8 +276,8 @@ namespace detail {
       FenestrationMaterialVector fenestrationLayers = castVector<FenestrationMaterial>(layers());
       if (fenestrationLayers.size() == 1) {
         if (fenestrationLayers[0].optionalCast<SimpleGlazing>()) { return setUFactor(value); }
-        if (fenestrationLayers[0].optionalCast<StandardGlazing>() || 
-            fenestrationLayers[0].optionalCast<RefractionExtinctionGlazing>()) 
+        if (fenestrationLayers[0].optionalCast<StandardGlazing>() ||
+            fenestrationLayers[0].optionalCast<RefractionExtinctionGlazing>())
         {
           // convert to conductance
           double thermalResistance = 1.0/value - filmResistance;
@@ -287,7 +296,7 @@ namespace detail {
       if (opaqueLayers.size() == 1) {
         LOG(Trace,"Single-layer construction, setting conductance of " << std::endl << opaqueLayers[0] << ".");
         return opaqueLayers[0].setThermalConductance(value);
-      }      
+      }
       // ... or if perturbable construction is called out
       StandardsInformationConstruction stdsInfo = standardsInformation();
       OptionalMaterial oMaterial = stdsInfo.perturbableLayer();
@@ -328,12 +337,12 @@ namespace detail {
     if (isFenestration()) {
       FenestrationMaterialVector fenestrationLayers = castVector<FenestrationMaterial>(layers());
       if (fenestrationLayers.size() == 1) {
-        if (fenestrationLayers[0].optionalCast<StandardGlazing>() || 
-            fenestrationLayers[0].optionalCast<RefractionExtinctionGlazing>()) 
+        if (fenestrationLayers[0].optionalCast<StandardGlazing>() ||
+            fenestrationLayers[0].optionalCast<RefractionExtinctionGlazing>())
         {
           return setThermalConductance(value);
         }
-        if (fenestrationLayers[0].optionalCast<SimpleGlazing>()) { 
+        if (fenestrationLayers[0].optionalCast<SimpleGlazing>()) {
           // convert to u-factor
           double thermalResistance = 1.0/value + filmResistance;
           return setUFactor(1.0/thermalResistance);
@@ -382,7 +391,7 @@ namespace detail {
 
     // return true if any layer is solar diffusing
     for (const Material& layer : layers) {
-      if (layer.optionalCast<StandardGlazing>()) { 
+      if (layer.optionalCast<StandardGlazing>()) {
         if (layer.cast<StandardGlazing>().solarDiffusing()){
           return true;
         }
@@ -486,11 +495,11 @@ namespace detail {
     return this->layers().size();
   }
 
-  std::vector<unsigned> LayeredConstruction_Impl::getLayerIndices(const Material& material) const 
+  std::vector<unsigned> LayeredConstruction_Impl::getLayerIndices(const Material& material) const
   {
     UnsignedVector result;
     for (const ModelExtensibleGroup& group :
-                  castVector<ModelExtensibleGroup>(extensibleGroups())) 
+                  castVector<ModelExtensibleGroup>(extensibleGroups()))
     {
       OptionalMaterial oMaterial = group.getModelObjectTarget<Material>(0);
       if (oMaterial && (material == *oMaterial)) {
@@ -505,8 +514,8 @@ namespace detail {
       FenestrationMaterialVector fenestrationLayers = castVector<FenestrationMaterial>(layers());
       if (fenestrationLayers.size() == 1) {
         OptionalSimpleGlazing oSimpleGlazing = fenestrationLayers[0].optionalCast<SimpleGlazing>();
-        if (oSimpleGlazing) { 
-          return oSimpleGlazing->uFactor(); 
+        if (oSimpleGlazing) {
+          return oSimpleGlazing->uFactor();
         }
       }
     }
@@ -536,7 +545,7 @@ namespace detail {
     return boost::none;
   }
 
-  boost::optional<double> LayeredConstruction_Impl::thermalConductance(double filmResistance) const 
+  boost::optional<double> LayeredConstruction_Impl::thermalConductance(double filmResistance) const
   {
     OptionalDouble result = thermalConductance();
     if (result) { return result; }
@@ -580,7 +589,7 @@ namespace detail {
     if (isOpaque()) { return 0.0; }
     MaterialVector layers = this->layers();
     OptionalDouble result;
-    if (layers.size() == 1) { 
+    if (layers.size() == 1) {
       try {
         result = layers[0].getVisibleTransmittance();
       }
@@ -617,7 +626,7 @@ RowName = '";
       }
     }
     */
-    
+
     return result;
   }
 
@@ -675,7 +684,7 @@ RowName = '";
         ModelObject newMaterial = oMaterial->clone();
         bool test = group.setPointer(0, newMaterial.handle());
         OS_ASSERT(test);
-      } 
+      }
     }
   }
 
@@ -718,13 +727,13 @@ RowName = '";
 } // detail
 
 LayeredConstruction::LayeredConstruction(IddObjectType type,const Model& model)
-  : ConstructionBase(type,model) 
+  : ConstructionBase(type,model)
 {
   OS_ASSERT(getImpl<detail::LayeredConstruction_Impl>());
 }
 
 LayeredConstruction::LayeredConstruction(std::shared_ptr<detail::LayeredConstruction_Impl> impl)
-  : ConstructionBase(impl)
+  : ConstructionBase(std::move(impl))
 {}
 
 std::vector<Material> LayeredConstruction::layers() const {

@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "ReverseTranslator.hpp"
 #include "ForwardTranslator.hpp"
@@ -55,7 +64,6 @@
 #include "../utilities/units/WhUnit.hpp"
 #include "../utilities/core/Assert.hpp"
 
-#include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
 
@@ -80,8 +88,7 @@ namespace sdd {
       return boost::none;
     }
 
-    if (specificationElement.text() == "Layers" ||
-        specificationElement.text() == "UFactor" ){ // temp code
+    if (specificationElement.text() == "Layers"){
 
       openstudio::model::Construction construction(model);
       construction.setName(name);
@@ -277,13 +284,13 @@ namespace sdd {
     UnitSystem whSys(UnitSystem::Wh);
 
     QDomElement nameElement = element.firstChildElement("Name");
-    QDomElement uFactorElement = element.firstChildElement("UFactor"); // Btu/h-ft2-F
+    QDomElement uFactorElement = element.firstChildElement("UFactorSim"); // Btu/h-ft2-F
 
     if (nameElement.isNull()){
       LOG(Error, "DrCons element 'Name' is empty.  Construction will not be created.");
     }
     if (uFactorElement.isNull()){
-      LOG(Error, "DrCons element 'UFactor' is empty.  Construction will not be created.");
+      LOG(Error, "DrCons element 'UFactorSim' is empty.  Construction will not be created.");
     }
 
     if (!nameElement.isNull() && !uFactorElement.isNull()){
@@ -296,6 +303,13 @@ namespace sdd {
 
       // m^2-K/W
       double rValueSI = 1.0 / uFactorWh->value();
+
+      // 5.6783 hr-ft2-F/Btu = 1 m^2-K/W
+      const double intFilmRValueSI = 0.170/5.6783; // 0.170 hr-ft2-F/Btu
+      const double extFilmRValueSI = 0.680/5.6783; // 0.680 hr-ft2-F/Btu
+
+      // if total rvalue is less than sum of interior and exterior film rvalue, surface coefficients will be added to door separately
+      rValueSI = std::max(rValueSI - intFilmRValueSI - extFilmRValueSI, 0.001);
 
       std::string name = escapeName(nameElement.text());
 
@@ -329,7 +343,7 @@ namespace sdd {
 
     QDomElement nameElement = element.firstChildElement("Name");
     QDomElement shgcElement = element.firstChildElement("SHGC"); // unitless
-    QDomElement uFactorElement = element.firstChildElement("UFactor"); // Btu/h-ft2-F
+    QDomElement uFactorElement = element.firstChildElement("UFactorSim"); // Btu/h-ft2-F
     QDomElement vtElement = element.firstChildElement("VT"); // unitless
 
     if (nameElement.isNull()){
@@ -339,7 +353,7 @@ namespace sdd {
       LOG(Error, "FenCons element 'SHGC' is empty.  Construction will not be created.");
     }
     if (uFactorElement.isNull()){
-      LOG(Error, "FenCons element 'UFactor' is empty.  Construction will not be created.");
+      LOG(Error, "FenCons element 'UFactorSim' is empty.  Construction will not be created.");
     }
     if (vtElement.isNull()){
       LOG(Error, "FenCons element 'VT' is empty.  Construction will not be created.");

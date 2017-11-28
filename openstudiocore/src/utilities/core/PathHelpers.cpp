@@ -1,30 +1,37 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "PathHelpers.hpp"
 #include "Logger.hpp"
 #include "Assert.hpp"
-#include <boost/filesystem.hpp>
+#include "FilesystemHelpers.hpp"
 
 #include <QDir>
-#include <QFile>
-#include <QFileInfo>
 #include <QRegularExpression>
 
 #ifdef Q_OS_WIN
@@ -66,8 +73,8 @@ path completePathToFile(const path& p,const path& base,const std::string& ext,bo
   // complete path
   if (!result.is_complete()) {
     try {
-      if (!base.empty()) { result = boost::filesystem::complete(result,base); }
-      else { result = boost::filesystem::complete(result); }
+      if (!base.empty()) { result = openstudio::filesystem::complete(result,base); }
+      else { result = openstudio::filesystem::complete(result); }
     }
     catch (...) {
       LOG_FREE(Info,"openstudio.completePathToFile","Unable to compete path '" << toString(p)
@@ -77,7 +84,7 @@ path completePathToFile(const path& p,const path& base,const std::string& ext,bo
   }
 
   // check that result is a file
-  if (!boost::filesystem::is_regular_file(result)) {
+  if (!openstudio::filesystem::is_regular_file(result)) {
     LOG_FREE(Info,"openstudio.completePathToFile","Path '" << toString(p)
              << "' could not be resolved to an existing file. Returning an empty path.");
     return path();
@@ -88,7 +95,7 @@ path completePathToFile(const path& p,const path& base,const std::string& ext,bo
 }
 
 std::string getFileExtension(const path& p) {
-  std::string pext = boost::filesystem::extension(p);
+  std::string pext = openstudio::filesystem::extension(p);
   if (!pext.empty()) {
     // remove '.'
     pext = std::string(++pext.begin(),pext.end());
@@ -103,7 +110,7 @@ path setFileExtension(const path& p,
 {
   path result(p);
   path wext = toPath(ext);
-  std::string pext = boost::filesystem::extension(p);
+  std::string pext = openstudio::filesystem::extension(p);
   if (!pext.empty()) {
     // remove '.' from pext
     pext = std::string(++pext.begin(),pext.end());
@@ -128,10 +135,10 @@ bool makeParentFolder(const path& p,const path& base,bool recursive) {
   // get path to last directory
   path wp(p);
   if (base.empty()) {
-    wp = boost::filesystem::complete(wp);
+    wp = openstudio::filesystem::complete(wp);
   }
   else {
-    wp = boost::filesystem::complete(wp,base);
+    wp = openstudio::filesystem::complete(wp,base);
   }
   if (wp.has_filename()) {
     wp = wp.parent_path();
@@ -139,7 +146,7 @@ bool makeParentFolder(const path& p,const path& base,bool recursive) {
 
   // make one or more directories as needed and as directed by recursive
   bool result = true;
-  if (boost::filesystem::is_directory(wp)) {
+  if (openstudio::filesystem::is_directory(wp)) {
     return result;
   }
   else if (recursive) {
@@ -176,8 +183,8 @@ path relativePath(const path& p,const path& base) {
   }
   // p is not an extension of base, try to complete, then return p
   if (!((wBaseIt == wBaseEnd) || (toString(*wBaseIt) == "."))) { 
-    path completeP = boost::filesystem::complete(p);
-    path completeBase = boost::filesystem::complete(base);
+    path completeP = openstudio::filesystem::complete(p);
+    path completeBase = openstudio::filesystem::complete(base);
     if ((completeP != wp) || (completeBase != wBase)) { 
       LOG_FREE(Debug,"openstudio.utilities.core","Path '" << toString(p) 
         << "' does not extend base '" << toString(base) 
@@ -201,7 +208,7 @@ path relativePath(const path& p,const path& base) {
 }
 
 path completeAndNormalize(const path& p) {
-  path temp = boost::filesystem::system_complete(p);
+  path temp = openstudio::filesystem::system_complete(p);
   if (temp.empty() && !p.empty()) {
     temp = p;
   }
@@ -209,7 +216,7 @@ path completeAndNormalize(const path& p) {
 
   for(openstudio::path::iterator it=temp.begin(); it!=temp.end(); ++it) {
     if (*it == toPath("..")) {
-      if (boost::filesystem::is_symlink(result) || (result.filename() == toPath(".."))) {
+      if (openstudio::filesystem::is_symlink(result) || (result.filename() == toPath(".."))) {
         result /= *it;
       }
       else {
@@ -255,68 +262,33 @@ std::ostream& printPathInformation(std::ostream& os,const path& p) {
   os << "p.empty() = " << std::boolalpha << p.empty() << std::endl;
   os << "p.is_complete() = " << p.is_complete() << std::endl;
 
-  os << "boost::filesystem::complete(p) = " << toString(boost::filesystem::complete(p)) << std::endl;
-  os << "boost::filesystem::system_complete(p) = " << toString(boost::filesystem::system_complete(p)) << std::endl;
+  os << "openstudio::filesystem::complete(p) = " << toString(openstudio::filesystem::complete(p)) << std::endl;
+  os << "openstudio::filesystem::system_complete(p) = " << toString(openstudio::filesystem::system_complete(p)) << std::endl;
 
   return os;
 }
 
 bool removeDirectory(const path& dirName) {
-
-  bool result = true;
-  QDir dir(toQString(dirName));
-
-  if (dir.exists()) 
-  {
-    for (const QFileInfo& info : dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst))
-    {
-      if (info.isDir()) 
-      {
-        result = removeDirectory(toPath(info.absoluteFilePath()));
-      }
-      else 
-      {
-        result = QFile::remove(info.absoluteFilePath());
-      }
-
-      if (!result) 
-      {
-        return result;
-      }
-    }
-    result = QDir().rmdir(toQString(dirName));
+  try {
+    openstudio::filesystem::remove_all(dirName);
+    return true;
+  } catch (const std::exception &) {
+    return false;
   }
-
-  return result;
 }
 
 bool copyDirectory(const path& source, const path& destination) {
-
-  if (!QDir().mkpath(toQString(destination)))
+  // note : we are not using openstudio::filesystem::copy to copy recursively
+  // because that copies the entire directory into the destination, not just the 
+  // contents of the directory
+  for (const auto &file : openstudio::filesystem::recursive_directory_files(source))
   {
-    return false;
-  }
-
-  QDir srcDir(toQString(source));
-
-  for (const QFileInfo &info : srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
-  {
-    QString srcItemPath = toQString(source) + "/" + info.fileName();
-    QString dstItemPath = toQString(destination) + "/" + info.fileName();
-    if (info.isDir()) 
-    {
-      if (!copyDirectory(toPath(srcItemPath), toPath(dstItemPath)))
-      {
-        return false;
-      }
-    } 
-    else if (info.isFile()) 
-    {
-      if (!QFile::copy(srcItemPath, dstItemPath))
-      {
-        return false;
-      }
-    } 
+    try {
+      openstudio::filesystem::create_directories( (destination / file).parent_path());
+      openstudio::filesystem::copy_file(source / file, destination / file);
+    } catch (const std::exception &) {
+      return false;
+    }
   }
 
   return true;
@@ -324,15 +296,15 @@ bool copyDirectory(const path& source, const path& destination) {
 
 bool isEmptyDirectory(const path& dirName)
 {
-  if (!QFile::exists(toQString(dirName))){
-    return false;
-  }
-  if (!QFileInfo(toQString(dirName)).isDir()){
+  if (!openstudio::filesystem::exists(dirName)) {
     return false;
   }
 
-  QDir dir(toQString(dirName));
-  return dir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot).empty();
+  if (!openstudio::filesystem::is_directory(dirName)) {
+    return false;
+  }
+
+  return openstudio::filesystem::is_empty(dirName);
 }
 
 

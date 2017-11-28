@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef MODEL_FACILITY_IMPL_HPP
 #define MODEL_FACILITY_IMPL_HPP
@@ -30,8 +39,6 @@
 
 namespace openstudio {  
 
-class Economics;
-
 namespace model {
 
 class Building;
@@ -42,133 +49,133 @@ namespace detail {
 
   /** Facility_Impl is a ParentObject_Impl that is the implementation class for Facility.*/
   class MODEL_API Facility_Impl : public ParentObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(boost::optional<double> totalSiteEnergy READ totalSiteEnergy STORED false);
-    Q_PROPERTY(boost::optional<double> netSiteEnergy READ netSiteEnergy STORED false);
-    Q_PROPERTY(boost::optional<double> totalSourceEnergy READ totalSourceEnergy STORED false);
-    Q_PROPERTY(boost::optional<double> netSourceEnergy READ netSourceEnergy STORED false);
-    Q_PROPERTY(boost::optional<double> annualTotalUtilityCost READ annualTotalUtilityCost STORED false);
-    Q_PROPERTY(boost::optional<double> annualElectricTotalCost READ annualElectricTotalCost STORED false);
-    Q_PROPERTY(boost::optional<double> annualGasTotalCost READ annualGasTotalCost STORED false);
-    Q_PROPERTY(boost::optional<double> annualDistrictCoolingTotalCost READ annualDistrictCoolingTotalCost STORED false);
-    Q_PROPERTY(boost::optional<double> annualDistrictHeatingTotalCost READ annualDistrictHeatingTotalCost STORED false);
-    Q_PROPERTY(boost::optional<double> annualWaterTotalCost READ annualWaterTotalCost STORED false);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> economicsCapitalCost READ economicsCapitalCost STORED false);
-    Q_PROPERTY(boost::optional<double> economicsEnergyCost READ economicsEnergyCost STORED false);
-    Q_PROPERTY(boost::optional<double> economicsTLCC READ economicsTLCC STORED false);
-    Q_PROPERTY(boost::optional<double> economicsVirtualRateGas READ economicsVirtualRateGas STORED false);
-    Q_PROPERTY(boost::optional<double> economicsVirtualRateElec READ economicsVirtualRateElec STORED false);
-    Q_PROPERTY(boost::optional<double> economicsVirtualRateCombined READ economicsVirtualRateCombined STORED false);
-    Q_PROPERTY(boost::optional<double> economicsSPB READ economicsSPB STORED false);
-    Q_PROPERTY(boost::optional<double> economicsDPB READ economicsDPB STORED false);
-    Q_PROPERTY(boost::optional<double> economicsNPV READ economicsNPV STORED false);
-    Q_PROPERTY(boost::optional<double> economicsIRR READ economicsIRR STORED false);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> electricityHeating READ electricityHeating STORED false);
-    Q_PROPERTY(boost::optional<double> electricityCooling READ electricityCooling STORED false);
-    Q_PROPERTY(boost::optional<double> electricityInteriorLighting READ electricityInteriorLighting STORED false);
-    Q_PROPERTY(boost::optional<double> electricityExteriorLighting READ electricityExteriorLighting STORED false);
-    Q_PROPERTY(boost::optional<double> electricityInteriorEquipment READ electricityInteriorEquipment STORED false);
-    Q_PROPERTY(boost::optional<double> electricityExteriorEquipment READ electricityExteriorEquipment STORED false);
-    Q_PROPERTY(boost::optional<double> electricityFans READ electricityFans STORED false);
-    Q_PROPERTY(boost::optional<double> electricityPumps READ electricityPumps STORED false);
-    Q_PROPERTY(boost::optional<double> electricityHeatRejection READ electricityHeatRejection STORED false);
-    Q_PROPERTY(boost::optional<double> electricityHumidification READ electricityHumidification STORED false);
-    Q_PROPERTY(boost::optional<double> electricityHeatRecovery READ electricityHeatRecovery STORED false);
-    Q_PROPERTY(boost::optional<double> electricityWaterSystems READ electricityWaterSystems STORED false);
-    Q_PROPERTY(boost::optional<double> electricityRefrigeration READ electricityRefrigeration STORED false);
-    Q_PROPERTY(boost::optional<double> electricityGenerators READ electricityGenerators STORED false);
-    Q_PROPERTY(boost::optional<double> electricityTotalEndUses READ electricityTotalEndUses STORED false);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> naturalGasHeating READ naturalGasHeating STORED false);
-    Q_PROPERTY(boost::optional<double> naturalGasCooling READ naturalGasCooling STORED false);
-    Q_PROPERTY(boost::optional<double> naturalGasInteriorLighting READ naturalGasInteriorLighting STORED false);
-    Q_PROPERTY(boost::optional<double> naturalGasExteriorLighting READ naturalGasExteriorLighting STORED false);
-    Q_PROPERTY(boost::optional<double> naturalGasInteriorEquipment READ naturalGasInteriorEquipment STORED false);
-    Q_PROPERTY(boost::optional<double> naturalGasExteriorEquipment READ naturalGasExteriorEquipment STORED false);
-    Q_PROPERTY(boost::optional<double> naturalGasFans READ naturalGasFans STORED false);
-    Q_PROPERTY(boost::optional<double> naturalGasPumps READ naturalGasPumps STORED false);
-    Q_PROPERTY(boost::optional<double> naturalGasHeatRejection READ naturalGasHeatRejection STORED false);
-    Q_PROPERTY(boost::optional<double> naturalGasHumidification READ naturalGasHumidification STORED false);
-    Q_PROPERTY(boost::optional<double> naturalGasHeatRecovery READ naturalGasHeatRecovery STORED false);
-    Q_PROPERTY(boost::optional<double> naturalGasWaterSystems READ naturalGasWaterSystems STORED false);
-    Q_PROPERTY(boost::optional<double> naturalGasRefrigeration READ naturalGasRefrigeration STORED false);
-    Q_PROPERTY(boost::optional<double> naturalGasGenerators READ naturalGasGenerators STORED false);
-    Q_PROPERTY(boost::optional<double> naturalGasTotalEndUses READ naturalGasTotalEndUses STORED false);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> otherFuelHeating READ otherFuelHeating STORED false);
-    Q_PROPERTY(boost::optional<double> otherFuelCooling READ otherFuelCooling STORED false);
-    Q_PROPERTY(boost::optional<double> otherFuelInteriorLighting READ otherFuelInteriorLighting STORED false);
-    Q_PROPERTY(boost::optional<double> otherFuelExteriorLighting READ otherFuelExteriorLighting STORED false);
-    Q_PROPERTY(boost::optional<double> otherFuelInteriorEquipment READ otherFuelInteriorEquipment STORED false);
-    Q_PROPERTY(boost::optional<double> otherFuelExteriorEquipment READ otherFuelExteriorEquipment STORED false);
-    Q_PROPERTY(boost::optional<double> otherFuelFans READ otherFuelFans STORED false);
-    Q_PROPERTY(boost::optional<double> otherFuelPumps READ otherFuelPumps STORED false);
-    Q_PROPERTY(boost::optional<double> otherFuelHeatRejection READ otherFuelHeatRejection STORED false);
-    Q_PROPERTY(boost::optional<double> otherFuelHumidification READ otherFuelHumidification STORED false);
-    Q_PROPERTY(boost::optional<double> otherFuelHeatRecovery READ otherFuelHeatRecovery STORED false);
-    Q_PROPERTY(boost::optional<double> otherFuelWaterSystems READ otherFuelWaterSystems STORED false);
-    Q_PROPERTY(boost::optional<double> otherFuelRefrigeration READ otherFuelRefrigeration STORED false);
-    Q_PROPERTY(boost::optional<double> otherFuelGenerators READ otherFuelGenerators STORED false);
-    Q_PROPERTY(boost::optional<double> otherFuelTotalEndUses READ otherFuelTotalEndUses STORED false);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> districtCoolingHeating READ districtCoolingHeating STORED false);
-    Q_PROPERTY(boost::optional<double> districtCoolingCooling READ districtCoolingCooling STORED false);
-    Q_PROPERTY(boost::optional<double> districtCoolingInteriorLighting READ districtCoolingInteriorLighting STORED false);
-    Q_PROPERTY(boost::optional<double> districtCoolingExteriorLighting READ districtCoolingExteriorLighting STORED false);
-    Q_PROPERTY(boost::optional<double> districtCoolingInteriorEquipment READ districtCoolingInteriorEquipment STORED false);
-    Q_PROPERTY(boost::optional<double> districtCoolingExteriorEquipment READ districtCoolingExteriorEquipment STORED false);
-    Q_PROPERTY(boost::optional<double> districtCoolingFans READ districtCoolingFans STORED false);
-    Q_PROPERTY(boost::optional<double> districtCoolingPumps READ districtCoolingPumps STORED false);
-    Q_PROPERTY(boost::optional<double> districtCoolingHeatRejection READ districtCoolingHeatRejection STORED false);
-    Q_PROPERTY(boost::optional<double> districtCoolingHumidification READ districtCoolingHumidification STORED false);
-    Q_PROPERTY(boost::optional<double> districtCoolingHeatRecovery READ districtCoolingHeatRecovery STORED false);
-    Q_PROPERTY(boost::optional<double> districtCoolingWaterSystems READ districtCoolingWaterSystems STORED false);
-    Q_PROPERTY(boost::optional<double> districtCoolingRefrigeration READ districtCoolingRefrigeration STORED false);
-    Q_PROPERTY(boost::optional<double> districtCoolingGenerators READ districtCoolingGenerators STORED false);
-    Q_PROPERTY(boost::optional<double> districtCoolingTotalEndUses READ districtCoolingTotalEndUses STORED false);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> districtHeatingHeating READ districtHeatingHeating STORED false);
-    Q_PROPERTY(boost::optional<double> districtHeatingCooling READ districtHeatingCooling STORED false);
-    Q_PROPERTY(boost::optional<double> districtHeatingInteriorLighting READ districtHeatingInteriorLighting STORED false);
-    Q_PROPERTY(boost::optional<double> districtHeatingExteriorLighting READ districtHeatingExteriorLighting STORED false);
-    Q_PROPERTY(boost::optional<double> districtHeatingInteriorEquipment READ districtHeatingInteriorEquipment STORED false);
-    Q_PROPERTY(boost::optional<double> districtHeatingExteriorEquipment READ districtHeatingExteriorEquipment STORED false);
-    Q_PROPERTY(boost::optional<double> districtHeatingFans READ districtHeatingFans STORED false);
-    Q_PROPERTY(boost::optional<double> districtHeatingPumps READ districtHeatingPumps STORED false);
-    Q_PROPERTY(boost::optional<double> districtHeatingHeatRejection READ districtHeatingHeatRejection STORED false);
-    Q_PROPERTY(boost::optional<double> districtHeatingHumidification READ districtHeatingHumidification STORED false);
-    Q_PROPERTY(boost::optional<double> districtHeatingHeatRecovery READ districtHeatingHeatRecovery STORED false);
-    Q_PROPERTY(boost::optional<double> districtHeatingWaterSystems READ districtHeatingWaterSystems STORED false);
-    Q_PROPERTY(boost::optional<double> districtHeatingRefrigeration READ districtHeatingRefrigeration STORED false);
-    Q_PROPERTY(boost::optional<double> districtHeatingGenerators READ districtHeatingGenerators STORED false);
-    Q_PROPERTY(boost::optional<double> districtHeatingTotalEndUses READ districtHeatingTotalEndUses STORED false);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> waterHeating READ waterHeating STORED false);
-    Q_PROPERTY(boost::optional<double> waterCooling READ waterCooling STORED false);
-    Q_PROPERTY(boost::optional<double> waterInteriorLighting READ waterInteriorLighting STORED false);
-    Q_PROPERTY(boost::optional<double> waterExteriorLighting READ waterExteriorLighting STORED false);
-    Q_PROPERTY(boost::optional<double> waterInteriorEquipment READ waterInteriorEquipment STORED false);
-    Q_PROPERTY(boost::optional<double> waterExteriorEquipment READ waterExteriorEquipment STORED false);
-    Q_PROPERTY(boost::optional<double> waterFans READ waterFans STORED false);
-    Q_PROPERTY(boost::optional<double> waterPumps READ waterPumps STORED false);
-    Q_PROPERTY(boost::optional<double> waterHeatRejection READ waterHeatRejection STORED false);
-    Q_PROPERTY(boost::optional<double> waterHumidification READ waterHumidification STORED false);
-    Q_PROPERTY(boost::optional<double> waterHeatRecovery READ waterHeatRecovery STORED false);
-    Q_PROPERTY(boost::optional<double> waterWaterSystems READ waterWaterSystems STORED false);
-    Q_PROPERTY(boost::optional<double> waterRefrigeration READ waterRefrigeration STORED false);
-    Q_PROPERTY(boost::optional<double> waterGenerators READ waterGenerators STORED false);
-    Q_PROPERTY(boost::optional<double> waterTotalEndUses READ waterTotalEndUses STORED false);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> hoursHeatingSetpointNotMet READ hoursHeatingSetpointNotMet STORED false);
-    Q_PROPERTY(boost::optional<double> hoursCoolingSetpointNotMet READ hoursCoolingSetpointNotMet STORED false);
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::Attribute> endUsesAttribute READ endUsesAttribute STORED false);
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> building READ buildingAsModelObject);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> meters READ metersAsModelObjects);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> exteriorLights READ exteriorLightsAsModelObjects);
+    
+    
+    
    public:
 
     /** @name Constructors and Destructors */
@@ -367,7 +374,6 @@ namespace detail {
     //@}
    protected:
    
-    bool initEconomics(Economics& economics) const;
     boost::optional<double> elecUse() const;
     boost::optional<double> elecCost() const;
     boost::optional<double> gasUse() const;

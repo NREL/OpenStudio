@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "ZoneHVACFourPipeFanCoil.hpp"
 #include "ZoneHVACFourPipeFanCoil_Impl.hpp"
@@ -149,6 +158,10 @@ namespace detail {
     if (std::find(b,e,OS_ZoneHVAC_FourPipeFanCoilFields::OutdoorAirScheduleName) != e)
     {
       result.push_back(ScheduleTypeKey("ZoneHVACFourPipeFanCoil","Outdoor Air"));
+    }
+    if (std::find(b,e,OS_ZoneHVAC_FourPipeFanCoilFields::SupplyAirFanOperatingModeScheduleName) != e)
+    {
+      result.push_back(ScheduleTypeKey("ZoneHVACFourPipeFanCoil","Supply Air Fan Operating Mode"));
     }
     return result;
   }
@@ -664,19 +677,7 @@ namespace detail {
 
   bool ZoneHVACFourPipeFanCoil_Impl::setHeatingCoil( HVACComponent & heatingCoil )
   {
-    bool isAllowedType = false;
-
-    if( heatingCoil.iddObjectType() == IddObjectType::OS_Coil_Heating_Water )
-    {
-      isAllowedType = true;
-    }
-
-    if( isAllowedType )
-    {
-      return setPointer(OS_ZoneHVAC_FourPipeFanCoilFields::HeatingCoilName,heatingCoil.handle());
-    }
-
-    return false;
+    return setPointer(OS_ZoneHVAC_FourPipeFanCoilFields::HeatingCoilName,heatingCoil.handle());
   }
 
   void ZoneHVACFourPipeFanCoil_Impl::setMaximumHotWaterFlowRate(boost::optional<double> maximumHotWaterFlowRate) {
@@ -937,6 +938,68 @@ namespace detail {
     return false;
   }
 
+  bool ZoneHVACFourPipeFanCoil_Impl::setSupplyAirFanOperatingModeSchedule(Schedule& schedule) {
+    bool result = setSchedule(OS_ZoneHVAC_FourPipeFanCoilFields::SupplyAirFanOperatingModeScheduleName,
+                              "ZoneHVACFourPipeFanCoil",
+                              "Supply Air Fan Operating Mode",
+                              schedule);
+    return result;
+  }
+
+  void ZoneHVACFourPipeFanCoil_Impl::resetSupplyAirFanOperatingModeSchedule() {
+    bool result = setString(OS_ZoneHVAC_FourPipeFanCoilFields::SupplyAirFanOperatingModeScheduleName, "");
+    OS_ASSERT(result);
+  }
+
+  boost::optional<Schedule> ZoneHVACFourPipeFanCoil_Impl::supplyAirFanOperatingModeSchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+             OS_ZoneHVAC_FourPipeFanCoilFields::SupplyAirFanOperatingModeScheduleName);
+  }
+
+  boost::optional<double> ZoneHVACFourPipeFanCoil_Impl::minimumSupplyAirTemperatureInCoolingMode() const {
+    return getDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumSupplyAirTemperatureinCoolingMode,true);
+  }
+
+  bool ZoneHVACFourPipeFanCoil_Impl::isMinimumSupplyAirTemperatureInCoolingModeAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumSupplyAirTemperatureinCoolingMode, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "autosize");
+    }
+    return result;
+  }
+
+  void ZoneHVACFourPipeFanCoil_Impl::autosizeMinimumSupplyAirTemperatureInCoolingMode() {
+    bool result = setString(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumSupplyAirTemperatureinCoolingMode, "autosize");
+    OS_ASSERT(result);
+  }
+
+  bool ZoneHVACFourPipeFanCoil_Impl::setMinimumSupplyAirTemperatureInCoolingMode(double minimumSupplyAirTemperatureInCoolingMode) {
+    return setDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumSupplyAirTemperatureinCoolingMode,minimumSupplyAirTemperatureInCoolingMode);
+  }
+
+  boost::optional<double> ZoneHVACFourPipeFanCoil_Impl::maximumSupplyAirTemperatureInHeatingMode() const {
+    return getDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirTemperatureinHeatingMode,true);
+  }
+
+  bool ZoneHVACFourPipeFanCoil_Impl::isMaximumSupplyAirTemperatureInHeatingModeAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirTemperatureinHeatingMode, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "autosize");
+    }
+    return result;
+  }
+
+  void ZoneHVACFourPipeFanCoil_Impl::autosizeMaximumSupplyAirTemperatureInHeatingMode() {
+    bool result = setString(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirTemperatureinHeatingMode, "autosize");
+    OS_ASSERT(result);
+  }
+
+  bool ZoneHVACFourPipeFanCoil_Impl::setMaximumSupplyAirTemperatureInHeatingMode(double maximumSupplyAirTemperatureInHeatingMode) {
+    return setDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirTemperatureinHeatingMode,maximumSupplyAirTemperatureInHeatingMode);
+  }
+
 } // detail
 
 ZoneHVACFourPipeFanCoil::ZoneHVACFourPipeFanCoil(const Model& model,
@@ -947,15 +1010,6 @@ ZoneHVACFourPipeFanCoil::ZoneHVACFourPipeFanCoil(const Model& model,
   : ZoneHVACComponent(ZoneHVACFourPipeFanCoil::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_ZoneHVAC_FourPipeFanCoilFields::AvailabilityScheduleName
-  //     OS_ZoneHVAC_FourPipeFanCoilFields::AirInletNodeName
-  //     OS_ZoneHVAC_FourPipeFanCoilFields::AirOutletNodeName
-  //     OS_ZoneHVAC_FourPipeFanCoilFields::OutdoorAirMixerName
-  //     OS_ZoneHVAC_FourPipeFanCoilFields::SupplyAirFanName
-  //     OS_ZoneHVAC_FourPipeFanCoilFields::CoolingCoilName
-  //     OS_ZoneHVAC_FourPipeFanCoilFields::HeatingCoilName
 
   bool ok = setAvailabilitySchedule(availabilitySchedule);
   if (!ok) {
@@ -989,6 +1043,8 @@ ZoneHVACFourPipeFanCoil::ZoneHVACFourPipeFanCoil(const Model& model,
   autosizeMaximumOutdoorAirFlowRate();
   autosizeMaximumColdWaterFlowRate();
   autosizeMaximumHotWaterFlowRate();
+  autosizeMinimumSupplyAirTemperatureInCoolingMode();
+  autosizeMaximumSupplyAirTemperatureInHeatingMode();
 }
 
 IddObjectType ZoneHVACFourPipeFanCoil::iddObjectType() {
@@ -1319,9 +1375,53 @@ void ZoneHVACFourPipeFanCoil::resetHeatingConvergenceTolerance() {
   getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->resetHeatingConvergenceTolerance();
 }
 
+bool ZoneHVACFourPipeFanCoil::setSupplyAirFanOperatingModeSchedule(Schedule& schedule) {
+  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setSupplyAirFanOperatingModeSchedule(schedule);
+}
+
+void ZoneHVACFourPipeFanCoil::resetSupplyAirFanOperatingModeSchedule() {
+  getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->resetSupplyAirFanOperatingModeSchedule();
+}
+
+boost::optional<Schedule> ZoneHVACFourPipeFanCoil::supplyAirFanOperatingModeSchedule() const {
+  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->supplyAirFanOperatingModeSchedule();
+}
+
+boost::optional<double> ZoneHVACFourPipeFanCoil::minimumSupplyAirTemperatureInCoolingMode() const {
+  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->minimumSupplyAirTemperatureInCoolingMode();
+}
+
+bool ZoneHVACFourPipeFanCoil::isMinimumSupplyAirTemperatureInCoolingModeAutosized() const {
+  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->isMinimumSupplyAirTemperatureInCoolingModeAutosized();
+}
+
+void ZoneHVACFourPipeFanCoil::autosizeMinimumSupplyAirTemperatureInCoolingMode() {
+  getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->autosizeMinimumSupplyAirTemperatureInCoolingMode();
+}
+
+bool ZoneHVACFourPipeFanCoil::setMinimumSupplyAirTemperatureInCoolingMode(double minimumSupplyAirTemperatureInCoolingMode) {
+  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMinimumSupplyAirTemperatureInCoolingMode(minimumSupplyAirTemperatureInCoolingMode);
+}
+
+boost::optional<double> ZoneHVACFourPipeFanCoil::maximumSupplyAirTemperatureInHeatingMode() const {
+  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->maximumSupplyAirTemperatureInHeatingMode();
+}
+
+bool ZoneHVACFourPipeFanCoil::isMaximumSupplyAirTemperatureInHeatingModeAutosized() const {
+  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->isMaximumSupplyAirTemperatureInHeatingModeAutosized();
+}
+
+void ZoneHVACFourPipeFanCoil::autosizeMaximumSupplyAirTemperatureInHeatingMode() {
+  getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->autosizeMaximumSupplyAirTemperatureInHeatingMode();
+}
+
+bool ZoneHVACFourPipeFanCoil::setMaximumSupplyAirTemperatureInHeatingMode(double maximumSupplyAirTemperatureInHeatingMode) {
+  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMaximumSupplyAirTemperatureInHeatingMode(maximumSupplyAirTemperatureInHeatingMode);
+}
+
 /// @cond
 ZoneHVACFourPipeFanCoil::ZoneHVACFourPipeFanCoil(std::shared_ptr<detail::ZoneHVACFourPipeFanCoil_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "EpwFile.hpp"
 #include "../idf/IdfObject.hpp"
@@ -23,11 +32,11 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../core/Checksum.hpp"
 #include "../core/StringHelpers.hpp"
+#include "../core/FilesystemHelpers.hpp"
 #include "../core/Assert.hpp"
 #include "../units/QuantityConverter.hpp"
 
 #include <QStringList>
-#include <QFile>
 #include <QTextStream>
 
 #include <cmath>
@@ -2030,9 +2039,26 @@ boost::optional<double> EpwDataPoint::wetbulb() const
 EpwFile::EpwFile(const openstudio::path& p, bool storeData)
     : m_path(p), m_latitude(0), m_longitude(0), m_timeZone(0), m_elevation(0), m_isActual(false), m_minutesMatch(true)
 {
-  if (!parse(storeData)){
+  if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)){
+    LOG_AND_THROW("Path '" << m_path << "' is not an EPW file");
+  }
+
+  // set checksum
+  m_checksum = openstudio::checksum(m_path);
+
+  // open file
+  std::ifstream ifs(openstudio::toString(m_path));
+
+  if (!parse(ifs, storeData)){
+    ifs.close();
     LOG_AND_THROW("EpwFile '" << toString(p) << "' cannot be processed");
   }
+  ifs.close();
+}
+
+EpwFile::EpwFile()
+    : m_latitude(0), m_longitude(0), m_timeZone(0), m_elevation(0), m_isActual(false), m_minutesMatch(true)
+{
 }
 
 boost::optional<EpwFile> EpwFile::load(const openstudio::path& p, bool storeData)
@@ -2044,6 +2070,19 @@ boost::optional<EpwFile> EpwFile::load(const openstudio::path& p, bool storeData
   }
   return result;
 }
+
+boost::optional<EpwFile> EpwFile::loadFromString(const std::string& str, bool storeData)
+{
+  EpwFile result;
+  std::stringstream ss(str);
+  if (result.parse(ss, storeData)){
+    result.m_checksum = openstudio::checksum(str);
+  }else{
+    return boost::none;
+  }
+  return result;
+}
+
 
 openstudio::path EpwFile::path() const
 {
@@ -2139,8 +2178,21 @@ boost::optional<int> EpwFile::endDateActualYear() const
 std::vector<EpwDataPoint> EpwFile::data()
 {
   if(m_data.size()==0){
-    if (!parse(true)){
+    if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)){
+      LOG_AND_THROW("Path '" << m_path << "' is not an EPW file");
+    }
+
+    // set checksum
+    m_checksum = openstudio::checksum(m_path);
+
+    // open file
+    std::ifstream ifs(openstudio::toString(m_path));
+
+    if (!parse(ifs, true)){
+      ifs.close();
       LOG(Error,"EpwFile '" << toString(m_path) << "' cannot be processed");
+    } else{
+      ifs.close();
     }
   }
   return m_data;
@@ -2149,10 +2201,22 @@ std::vector<EpwDataPoint> EpwFile::data()
 boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string &name)
 {
   if(m_data.size()==0) {
-    if (!parse(true)) {
+    if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)){
+      LOG_AND_THROW("Path '" << m_path << "' is not an EPW file");
+    }
+
+    // set checksum
+    m_checksum = openstudio::checksum(m_path);
+
+    // open file
+    std::ifstream ifs(openstudio::toString(m_path));
+
+    if (!parse(ifs, true)) {
+      ifs.close();
       LOG(Error,"EpwFile '" << toString(m_path) << "' cannot be processed");
       return boost::none;
     } 
+    ifs.close();
   }
   EpwDataField id;
   try {
@@ -2187,10 +2251,22 @@ boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string &name)
 boost::optional<TimeSeries> EpwFile::getComputedTimeSeries(const std::string &name)
 {
   if (m_data.size() == 0) {
-    if (!parse(true)) {
+    if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)){
+      LOG_AND_THROW("Path '" << m_path << "' is not an EPW file");
+    }
+
+    // set checksum
+    m_checksum = openstudio::checksum(m_path);
+
+    // open file
+    std::ifstream ifs(openstudio::toString(m_path));
+
+    if (!parse(ifs, true)) {
+      ifs.close();
       LOG(Error, "EpwFile '" << toString(m_path) << "' cannot be processed");
       return boost::none;
     }
+    ifs.close();
   }
   EpwComputedField id;
   try {
@@ -2248,10 +2324,22 @@ boost::optional<TimeSeries> EpwFile::getComputedTimeSeries(const std::string &na
 bool EpwFile::translateToWth(openstudio::path path, std::string description)
 {
   if(m_data.size()==0) {
-    if (!parse(true)) {
+    if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)){
+      LOG_AND_THROW("Path '" << m_path << "' is not an EPW file");
+    }
+
+    // set checksum
+    m_checksum = openstudio::checksum(m_path);
+
+    // open file
+    std::ifstream ifs(openstudio::toString(m_path));
+
+    if (!parse(ifs, true)) {
+      ifs.close();
       LOG(Error,"EpwFile '" << toString(m_path) << "' cannot be processed");
       return false;
     }
+    ifs.close();
   }
 
   if(description.empty()) {
@@ -2263,26 +2351,24 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
     return false;
   }
 
-  QFile fp(openstudio::toQString(path));
-  if(!fp.open(QFile::WriteOnly)) {
+  openstudio::filesystem::ofstream fp(path, std::ios_base::binary);
+  if(!fp.is_open()) {
     LOG(Error, "Failed to open file '" + openstudio::toString(path) + "'");
     return false;
   }
 
-  QTextStream stream(&fp);
-
-  stream << "WeatherFile ContamW 2.0\n";
-  stream << openstudio::toQString(description) << "\n";
-  stream << QString("%1/%2\t!start date\n").arg(openstudio::month(startDate().monthOfYear())).arg(startDate().dayOfMonth());
-  stream << QString("%1/%2\t!end date\n").arg(openstudio::month(endDate().monthOfYear())).arg(endDate().dayOfMonth());
-  stream << "!Date\tDofW\tDtype\tDST\tTgrnd [K]\n";
+  fp << "WeatherFile ContamW 2.0\n";
+  fp << description << "\n";
+  fp << toString(QString("%1/%2\t!start date\n").arg(openstudio::month(startDate().monthOfYear())).arg(startDate().dayOfMonth()));
+  fp << toString(QString("%1/%2\t!end date\n").arg(openstudio::month(endDate().monthOfYear())).arg(endDate().dayOfMonth()));
+  fp << "!Date\tDofW\tDtype\tDST\tTgrnd [K]\n";
   openstudio::Time delta(1,0);
   int dayofweek = startDayOfWeek().value()+1;
   for(openstudio::Date current=startDate();current<=endDate();current += delta) {
-    stream << QString("%1/%2\t%3\t%3\t0\t283.15\n")
+    fp << toString(QString("%1/%2\t%3\t%3\t0\t283.15\n")
       .arg(openstudio::month(current.monthOfYear()))
       .arg(current.dayOfMonth())
-      .arg(dayofweek);
+      .arg(dayofweek));
     dayofweek++;
     if(dayofweek > 7) {
       dayofweek=1;
@@ -2306,14 +2392,14 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
     return false;
   }
 
-  stream <<"!Date\tTime\tTa [K]\tPb [Pa]\tWs [m/s]\tWd [deg]\tHr [g/kg]\tIth [kJ/m^2]\tIdn [kJ/m^2]\tTs [K]\tRn [-]\tSn [-]\n";
+  fp <<"!Date\tTime\tTa [K]\tPb [Pa]\tWs [m/s]\tWd [deg]\tHr [g/kg]\tIth [kJ/m^2]\tIdn [kJ/m^2]\tTs [K]\tRn [-]\tSn [-]\n";
   boost::optional<std::string> output = firstPtOpt.get().toWthString();
   if(!output) {
     LOG(Error, "Translation to WTH has failed on starting data point");
     fp.close();
     return false;
   }
-  stream << output.get() << '\n';
+  fp << output.get() << '\n';
   for(unsigned int i=0;i<data().size();i++) {
     output = data()[i].toWthString();
     if(!output) {
@@ -2321,25 +2407,14 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
       fp.close();
       return false;
     }
-    stream << output.get() << '\n';
+    fp << output.get() << '\n';
   }
   fp.close();
   return true;
 }
 
-bool EpwFile::parse(bool storeData)
+bool EpwFile::parse(std::istream& ifs, bool storeData)
 {
-  if (!boost::filesystem::exists(m_path) || !boost::filesystem::is_regular_file(m_path)){
-    LOG(Error, "Path '" << m_path << "' is not an EPW file");
-    return false;
-  }
-
-  // set checksum
-  m_checksum = openstudio::checksum(m_path);
-
-  // open file
-  std::ifstream ifs(openstudio::toString(m_path));
-
   // read line by line
   std::string line;
 
@@ -2350,7 +2425,6 @@ bool EpwFile::parse(bool storeData)
 
     if(!std::getline(ifs, line)) {
       LOG(Error, "Could not read line " << i+1 << " of EPW file '" << m_path << "'");
-      ifs.close();
       return false;
     }
 
@@ -2379,7 +2453,6 @@ bool EpwFile::parse(bool storeData)
   }
 
   if (!result){
-    ifs.close();
     LOG(Error, "Failed to parse EPW file header '" << m_path << "'");
     return false;
   }
@@ -2450,25 +2523,19 @@ bool EpwFile::parse(bool storeData)
             m_data.push_back(pt.get());
           } else {
             LOG(Error, "Failed to parse line " << lineNumber << " of EPW file '" << m_path << "'");
-            ifs.close();
             return false;
           }
         }
 
       } catch(...) {
         LOG(Error, "Could not read line " << lineNumber << " of EPW file '" << m_path << "'");
-        ifs.close();
         return false;
       }
     } else {
       LOG(Error, "Insufficient weather data on line " << lineNumber << " of EPW file '" << m_path << "'");
-      ifs.close();
       return false;
     }
   }
-
-  // close file
-  ifs.close();
 
   if (!startDate) {
     LOG(Error, "Could not find start date in data section of EPW file '" << m_path << "'");

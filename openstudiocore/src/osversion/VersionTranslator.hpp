@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef OSVERSION_VERSIONTRANSLATOR_HPP
 #define OSVERSION_VERSIONTRANSLATOR_HPP
@@ -44,21 +53,21 @@ namespace model {
 }
 namespace osversion {
 
-/** This class updates OpenStudio Models and Components to the latest version of OpenStudio. It 
- *  must be maintained to keep everything working. The developer who is wrapping up the current 
+/** This class updates OpenStudio Models and Components to the latest version of OpenStudio. It
+ *  must be maintained to keep everything working. The developer who is wrapping up the current
  *  release and starting the next one should:
  *
  *  <ol>
  *  <li> Run openstudio_osversion_tests.exe and verify that all the tests pass. </li>
  *  <li> Create the release branch. </li>
- *  <li> Copy the latest resources/osversion folder from the build directory to the source 
+ *  <li> Copy the latest resources/osversion folder from the build directory to the source
  *       directory, add those files to the resources/CMakeLists.txt, and commit to trunk. </li>
  *  <li> Increment the OpenStudio version in CMakeLists.txt </li>
- *  <li> Increment the OpenStudio version in openstudiocore/resources/model/OpenStudio.idd (at the 
+ *  <li> Increment the OpenStudio version in openstudiocore/resources/model/OpenStudio.idd (at the
  *       top and in the \\default of OS:Version's Version Identifier field). </li>
- *  <li> Register a trivial update method for the new version in the constructor. Further 
+ *  <li> Register a trivial update method for the new version in the constructor. Further
  *       instructions are provided in the cpp code for VersionTranslator::VersionTranslator. </li>
- *  <li> Add the just-branched-for-release version number to m_startVersions, also in the 
+ *  <li> Add the just-branched-for-release version number to m_startVersions, also in the
  *       constructor. </li>
  *  </ol>
  *
@@ -67,9 +76,9 @@ namespace osversion {
  *  <ol>
  *  <li> Create a non-trivial update method upon the first IDD or other change that should result
  *       in data changes to models of the earlier vintages. </li>
- *  <li> Add to this non-trivial update method should any other such changes occur during the 
+ *  <li> Add to this non-trivial update method should any other such changes occur during the
  *       iteration. </li>
- *  <li> Feel free to just log warnings and errors if the desirable changes cannot be reliably 
+ *  <li> Feel free to just log warnings and errors if the desirable changes cannot be reliably
  *       completed at the data (IDF) level. Such messages could prompt the user to take specific
  *       actions in the OpenStudio Application once they have a nominally valid (updated) model. </li>
  *  </ol>
@@ -83,22 +92,26 @@ class OSVERSION_API VersionTranslator {
 
   //@}
   /** @name Actions
-   *  
+   *
    *  Update files on disk to the current version of OpenStudio. */
   //@{
 
   /** Returns a current-version OpenStudio Model, if possible. The file at pathToOldOsm must
-   *  be an osm of version 0.7.0 or later. */ 
-  boost::optional<model::Model> loadModel(const openstudio::path& pathToOldOsm, 
+   *  be an osm of version 0.7.0 or later. */
+  boost::optional<model::Model> loadModel(const openstudio::path& pathToOldOsm,
                                           ProgressBar* progressBar = nullptr);
 
   /** \overload */
   boost::optional<model::Model> loadModel(std::istream& is,
                                           ProgressBar* progressBar = nullptr);
 
-  /** Returns a current-version OpenStudio Component, if possible. The file at pathToOldOsc 
+  /** Load a model from string. Not overloading loadModel so paths passed as strings in bindings will work.*/
+  boost::optional<model::Model> loadModelFromString(const std::string& str,
+                                                    ProgressBar* progressBar = nullptr);
+
+  /** Returns a current-version OpenStudio Component, if possible. The file at pathToOldOsc
    *  must be an osc of version 0.7.0 or later. */
-  boost::optional<model::Component> loadComponent(const openstudio::path& pathToOldOsc, 
+  boost::optional<model::Component> loadComponent(const openstudio::path& pathToOldOsc,
                                                   ProgressBar* progressBar = nullptr);
 
   /** \overload */
@@ -106,13 +119,13 @@ class OSVERSION_API VersionTranslator {
                                                   ProgressBar* progressBar = nullptr);
 
   //@}
-  /** @name Queries 
+  /** @name Queries
    *
-   *  Access warnings, errors, and other information about the last translation process. All this 
+   *  Access warnings, errors, and other information about the last translation process. All this
    *  data is cleared by subsequent calls to loadModel or loadComponent. */
   //@{
 
-  /** Get the version of the loaded file. Is 0.0.0 before loadModel or loadComponent is called. 
+  /** Get the version of the loaded file. Is 0.0.0 before loadModel or loadComponent is called.
    *  0.7.0 is the default if no Version object is found in the file. */
   VersionString originalVersion() const;
 
@@ -126,15 +139,15 @@ class OSVERSION_API VersionTranslator {
    *  has been deprecated. */
   std::vector<IdfObject> deprecatedObjects() const;
 
-  /** Returns objects that were removed from the model because there is not a straightforward, 
+  /** Returns objects that were removed from the model because there is not a straightforward,
    *  unique way to upgrade them. */
   std::vector<IdfObject> untranslatedObjects() const;
 
-  /** Returns objects that were added to the model to make it work properly in the latest 
+  /** Returns objects that were added to the model to make it work properly in the latest
    *  version of OpenStudio. */
   std::vector<IdfObject> newObjects() const;
 
-  /** Returns an original object, new object pair for objects that have been significantly 
+  /** Returns an original object, new object pair for objects that have been significantly
    *  refactored. */
   std::vector< std::pair<IdfObject,IdfObject> > refactoredObjects() const;
 
@@ -144,7 +157,7 @@ class OSVERSION_API VersionTranslator {
   /** Set whether or not loading newer versions is allowed. */
   void setAllowNewerVersions(bool allowNewerVersions);
 
-  //@}  
+  //@}
  private:
   REGISTER_LOGGER("openstudio.osversion.VersionTranslator");
 
@@ -164,14 +177,14 @@ class OSVERSION_API VersionTranslator {
   bool m_isComponent;
   std::vector<IdfObject> m_cbeccSizingObjects;
 
-  boost::optional<model::Model> updateVersion(std::istream& is, 
+  boost::optional<model::Model> updateVersion(std::istream& is,
                                               bool isComponent,
                                               ProgressBar* progressBar = nullptr);
 
   void initializeMap(std::istream& is);
 
   IddFileAndFactoryWrapper getIddFile(const VersionString& version);
-  
+
   void update(const VersionString& startVersion);
 
   std::string defaultUpdate(const IdfFile& idf, const IddFileAndFactoryWrapper& targetIdd);
@@ -203,6 +216,9 @@ class OSVERSION_API VersionTranslator {
   std::string update_1_11_3_to_1_11_4(const IdfFile& idf_1_11_3, const IddFileAndFactoryWrapper& idd_1_11_4);
   std::string update_1_11_4_to_1_11_5(const IdfFile& idf_1_11_4, const IddFileAndFactoryWrapper& idd_1_11_5);
   std::string update_1_12_0_to_1_12_1(const IdfFile& idf_1_12_0, const IddFileAndFactoryWrapper& idd_1_12_1);
+  std::string update_1_12_3_to_1_12_4(const IdfFile& idf_1_12_3, const IddFileAndFactoryWrapper& idd_1_12_4);
+  std::string update_2_1_0_to_2_1_1(const IdfFile& idf_2_1_0, const IddFileAndFactoryWrapper& idd_2_1_1);
+  std::string update_2_1_1_to_2_1_2(const IdfFile& idf_2_1_1, const IddFileAndFactoryWrapper& idd_2_1_2);
 
   IdfObject updateUrlField_0_7_1_to_0_7_2(const IdfObject& object, unsigned index);
 

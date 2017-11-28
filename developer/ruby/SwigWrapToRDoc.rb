@@ -2,11 +2,13 @@
 # and calls rdoc.
 #
 # Inputs: 
-#   ARGV[0] - path to binary directory containing config file
+#   ARGV[0] - path to build dir
 #   ARGV[1] - path to swig generated file
 #   ARGV[2] - name of the module to be generated
 
-require ARGV[0] + 'config'
+rdocify_dir = ARGV[0] + "/rdoc/"
+rdoc = ARGV[0] + "/Ruby-install/release/bin/rdoc"
+
 require 'pathname'
 require 'fileutils'
 
@@ -19,12 +21,12 @@ if not ($0 == __FILE__)
 end
 
 # make sure parent doc folder is in place
-rdocify_dir = "#{$OpenStudio_RDocifyPath}"
+
 Dir.mkdir(rdocify_dir) if not File.exists?(rdocify_dir)
 
 wrapper_file = ARGV[1]
 name = ARGV[2]
-output_dir = "#{$OpenStudio_RDocifyPath}#{name}/"
+output_dir = "#{rdocify_dir}#{name}/"
 
 Dir.mkdir(output_dir) if not File.exists?(output_dir)
 
@@ -233,5 +235,5 @@ end
 # call rdoc
 Dir.chdir(output_dir)
 
-puts "Calling rdoc from #{output_dir}"
-system($OpenStudio_RDOC)
+puts "Calling #{rdoc} from #{output_dir}"
+system(rdoc)

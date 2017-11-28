@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
@@ -85,6 +94,10 @@
 #include "LifeCycleCost_Impl.hpp"
 #include "SetpointManagerSingleZoneReheat.hpp"
 #include "SetpointManagerSingleZoneReheat_Impl.hpp"
+#include "SetpointManagerSingleZoneCooling.hpp"
+#include "SetpointManagerSingleZoneCooling_Impl.hpp"
+#include "SetpointManagerSingleZoneHeating.hpp"
+#include "SetpointManagerSingleZoneHeating_Impl.hpp"
 #include "ZoneMixing.hpp"
 #include "ZoneMixing_Impl.hpp"
 
@@ -528,12 +541,28 @@ namespace detail {
   }
 
   bool ThermalZone_Impl::setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl) {
+
+    double secondaryFrac = fractionofZoneControlledbySecondaryDaylightingControl();
+    if ( (fractionofZoneControlledbyPrimaryDaylightingControl + secondaryFrac) > 1.0) {
+      LOG(Error, "Fraction of Zone Controlled by Secondary Daylight Control is " << secondaryFrac
+          << " and you supplied a Primary Fraction of " << fractionofZoneControlledbyPrimaryDaylightingControl
+          << " which would result in a sum greater than 1.0");
+      return false;
+    }
     bool result = setDouble(OS_ThermalZoneFields::FractionofZoneControlledbyPrimaryDaylightingControl, fractionofZoneControlledbyPrimaryDaylightingControl);
     return result;
   }
 
   bool ThermalZone_Impl::setFractionofZoneControlledbyPrimaryDaylightingControl(const Quantity& fractionofZoneControlledbyPrimaryDaylightingControl) {
-    return setQuantity(OS_ThermalZoneFields::FractionofZoneControlledbyPrimaryDaylightingControl,fractionofZoneControlledbyPrimaryDaylightingControl);
+    // Get double
+    OptionalDouble value = getDoubleFromQuantity(OS_ThermalZoneFields::FractionofZoneControlledbyPrimaryDaylightingControl,
+                                                 fractionofZoneControlledbyPrimaryDaylightingControl);
+    if (!value) {
+      return false;
+    } else {
+      // Call the method with the double, where the sanity check is
+      return setFractionofZoneControlledbyPrimaryDaylightingControl(value.get());
+    }
   }
 
   void ThermalZone_Impl::resetFractionofZoneControlledbyPrimaryDaylightingControl() {
@@ -542,12 +571,27 @@ namespace detail {
   }
 
   bool ThermalZone_Impl::setFractionofZoneControlledbySecondaryDaylightingControl(double fractionofZoneControlledbySecondaryDaylightingControl) {
+    double primaryFrac = fractionofZoneControlledbyPrimaryDaylightingControl();
+    if ( (fractionofZoneControlledbySecondaryDaylightingControl + primaryFrac) > 1.0) {
+      LOG(Error, "Fraction of Zone Controlled by Primary Daylight Control is " << primaryFrac
+          << " and you supplied a Secondary Fraction of " << fractionofZoneControlledbySecondaryDaylightingControl
+          << " which would result in a sum greater than 1.0");
+      return false;
+    }
     bool result = setDouble(OS_ThermalZoneFields::FractionofZoneControlledbySecondaryDaylightingControl, fractionofZoneControlledbySecondaryDaylightingControl);
     return result;
   }
 
   bool ThermalZone_Impl::setFractionofZoneControlledbySecondaryDaylightingControl(const Quantity& fractionofZoneControlledbySecondaryDaylightingControl) {
-    return setQuantity(OS_ThermalZoneFields::FractionofZoneControlledbySecondaryDaylightingControl,fractionofZoneControlledbySecondaryDaylightingControl);
+    // Get double
+    OptionalDouble value = getDoubleFromQuantity(OS_ThermalZoneFields::FractionofZoneControlledbySecondaryDaylightingControl,
+                                                 fractionofZoneControlledbySecondaryDaylightingControl);
+    if (!value) {
+      return false;
+    } else {
+      // Call the method with the double, where the sanity check is
+      return setFractionofZoneControlledbySecondaryDaylightingControl(value.get());
+    }
   }
 
   void ThermalZone_Impl::resetFractionofZoneControlledbySecondaryDaylightingControl() {
@@ -634,20 +678,14 @@ namespace detail {
 
     bool result = true;
     if (primaryDaylightingControl){
-      boost::optional<Space> space = primaryDaylightingControl->space();
-      if (space && (space->thermalZone()) && (space->thermalZone()->handle() == this->handle())){
-        result = setPointer(OS_ThermalZoneFields::PrimaryDaylightingControlName, primaryDaylightingControl->handle());
-      }
+      result = setPointer(OS_ThermalZoneFields::PrimaryDaylightingControlName, primaryDaylightingControl->handle());
     }
 
     if (secondaryDaylightingControl){
       if (isEmpty(OS_ThermalZoneFields::PrimaryDaylightingControlName)){
         result = false;
       }else{
-        boost::optional<Space> space = secondaryDaylightingControl->space();
-        if (space && (space->thermalZone()) && (space->thermalZone()->handle() == this->handle())){
-          result = result && setPointer(OS_ThermalZoneFields::SecondaryDaylightingControlName, secondaryDaylightingControl->handle());
-        }
+        result = result && setPointer(OS_ThermalZoneFields::SecondaryDaylightingControlName, secondaryDaylightingControl->handle());
       }
     }
 
@@ -1180,7 +1218,7 @@ namespace detail {
           if (surface.isAirWall()){
             needToSetFloorArea = true;
             break;
-          } 
+          }
 
           auto adjacentSurface = surface.adjacentSurface();
           if (adjacentSurface){
@@ -1190,7 +1228,7 @@ namespace detail {
               if (adjacentThermalZone){
                 if (adjacentThermalZone->handle() == this->handle())
                 {
-                  // this surface is completely inside the zone, need to set floor area since this surface will be removed 
+                  // this surface is completely inside the zone, need to set floor area since this surface will be removed
                   needToSetFloorArea = true;
                   break;
                 }
@@ -1277,7 +1315,7 @@ namespace detail {
     // set E+ floor area here if needed, this is only used for reporting total building area
     // loads are hard sized according to OpenStudio space floor area
     if (needToSetFloorArea){
-      
+
       // do not allow per area loads in the space type since we are overriding floor area
       spaceType.reset();
 
@@ -1496,11 +1534,11 @@ namespace detail {
 
   std::vector<IdfObject> ThermalZone_Impl::remove()
   {
-    this->blockSignals(true);
+    // this->blockSignals(true);
 
     Model m = model();
 
-    m.getImpl<QObject>()->blockSignals(true);
+    // m.getImpl<QObject>()->blockSignals(true);
 
     ThermalZone thermalZone = this->getObject<ThermalZone>();
 
@@ -1542,9 +1580,9 @@ namespace detail {
     }
 
     //turn the object back on and proceed
-    this->blockSignals(false);
+    // this->blockSignals(false);
 
-    m.getImpl<QObject>()->blockSignals(false);
+    // m.getImpl<QObject>()->blockSignals(false);
 
     return HVACComponent_Impl::remove();
   }
@@ -1901,12 +1939,36 @@ namespace detail {
 
           for( const auto & supplyNode : supplyNodes )
           {
-            std::vector<SetpointManagerSingleZoneReheat> setpointManagers = subsetCastVector<SetpointManagerSingleZoneReheat>(supplyNode.cast<Node>().setpointManagers());
-            if( ! setpointManagers.empty() ) {
-              SetpointManagerSingleZoneReheat spm = setpointManagers.front();
-              if( ! spm.controlZone() )
-              {
-                spm.setControlZone(thisobj);
+            {
+              std::vector<SetpointManagerSingleZoneReheat> setpointManagers = subsetCastVector<SetpointManagerSingleZoneReheat>(supplyNode.cast<Node>().setpointManagers());
+              if( ! setpointManagers.empty() ) {
+                SetpointManagerSingleZoneReheat spm = setpointManagers.front();
+                if( ! spm.controlZone() )
+                {
+                  spm.setControlZone(thisobj);
+                }
+              }
+            }
+
+            {
+              std::vector<SetpointManagerSingleZoneCooling> setpointManagers = subsetCastVector<SetpointManagerSingleZoneCooling>(supplyNode.cast<Node>().setpointManagers());
+              if( ! setpointManagers.empty() ) {
+                SetpointManagerSingleZoneCooling spm = setpointManagers.front();
+                if( ! spm.controlZone() )
+                {
+                  spm.setControlZone(thisobj);
+                }
+              }
+            }
+
+            {
+              std::vector<SetpointManagerSingleZoneHeating> setpointManagers = subsetCastVector<SetpointManagerSingleZoneHeating>(supplyNode.cast<Node>().setpointManagers());
+              if( ! setpointManagers.empty() ) {
+                SetpointManagerSingleZoneHeating spm = setpointManagers.front();
+                if( ! spm.controlZone() )
+                {
+                  spm.setControlZone(thisobj);
+                }
               }
             }
           }
@@ -3010,7 +3072,7 @@ void ThermalZone::resetZoneControlContaminantController()
 
 /// @cond
 ThermalZone::ThermalZone(std::shared_ptr<detail::ThermalZone_Impl> impl)
-  : HVACComponent(impl)
+  : HVACComponent(std::move(impl))
 {}
 /// @endcond
 

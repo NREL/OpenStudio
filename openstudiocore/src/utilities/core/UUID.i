@@ -17,31 +17,43 @@ namespace openstudio{
 
   class UUID {
   public:
-    bool operator!= ( const UUID & other ) const;
-    bool operator< ( const UUID & other ) const;
-    bool operator== ( const UUID & other ) const;
-    bool operator> ( const UUID & other ) const;
-    bool isNull () const;
+    bool isNull() const;
     ~UUID();
 
   protected:
      UUID();
   };
-  
+
   UUID toUUID(const std::string& str);
-  
+
   UUID createUUID();
-  
+
   std::string removeBraces(const UUID& uuid);
-  
+
   %extend UUID{
-  
+
     static UUID create(){
       return createUUID();
     }
-    
+
     std::string __str__() const{
-      return openstudio::toString(self->toString());
+      return openstudio::toString(*self);
+    }
+
+    bool operator!= ( const UUID & other ) const {
+      return *self != other;
+    }
+
+    bool operator< ( const UUID & other ) const {
+      return *self < other;
+    }
+
+    bool operator== ( const UUID & other ) const {
+      return *self == other;
+    }
+
+    bool operator> ( const UUID & other ) const {
+      return *self > other;
     }
   };
 

@@ -32,6 +32,7 @@ set(${target_name}_src
 )
 
 # resource files
+# DLM: TODO, replace with embed_files
 set(${target_name}_qrc
   contam.qrc
 )
@@ -57,14 +58,12 @@ set(${target_name}_swig_src
 set(${target_name}_depends
   ${Boost_LIBRARIES}
   ${CMAKE_THREAD_LIBS}
-  ${QT_LIBS}
   openstudio_utilities
   openstudio_model
   openstudio_osversion
-  zkexpat
 )
 
-add_library(${target_name} SHARED
+add_library(${target_name}
   ${${target_name}_src}
   ${${target_name}_qrcs}
 )
@@ -73,11 +72,12 @@ target_link_libraries(${target_name} ${${target_name}_depends})
 
 AddPCH(${target_name})
 
+# No need to install static library
 #if(NOT APPLE)
-install(TARGETS ${target_name}
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION lib
-)
+#install(TARGETS ${target_name}
+#  RUNTIME DESTINATION bin
+#  LIBRARY DESTINATION lib
+#)
 #endif()
 
 CREATE_SRC_GROUPS("${${target_name}_src}")
@@ -89,4 +89,18 @@ if(BUILD_TESTING)
   add_dependencies(${target_name}_tests openstudio_airflow_resources)
 endif()
 
-MAKE_SWIG_TARGET(OpenStudioAirflow Airflow "${CMAKE_CURRENT_SOURCE_DIR}/Airflow.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)
+set(${target_name}_static_depends
+  ${Boost_LIBRARIES}
+  ${CMAKE_THREAD_LIBS}
+  openstudio_utilities_static
+  openstudio_model_static
+  openstudio_osversion_static
+)
+
+add_library(${target_name}_static
+  ${${target_name}_src}
+  ${${target_name}_qrcs}
+)
+target_link_libraries(${target_name}_static ${${target_name}_static_depends})
+
+MAKE_SWIG_TARGET(OpenStudioAirflow Airflow "${CMAKE_CURRENT_SOURCE_DIR}/Airflow.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioEnergyPlus)

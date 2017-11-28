@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "ModelObject.hpp"
 #include "ModelObject_Impl.hpp"
@@ -23,7 +32,7 @@
 #include "Component.hpp"
 #include "LifeCycleCost.hpp"
 #include "LifeCycleCost_Impl.hpp"
-#include "Relationship.hpp"
+// #include "Relationship.hpp"
 #include "ParentObject.hpp"
 #include "ResourceObject.hpp"
 #include "ResourceObject_Impl.hpp"
@@ -64,8 +73,8 @@ using openstudio::Workspace;
 using std::vector;
 
 // calls to register the meta types
-int __metaType1__ = qRegisterMetaType<boost::optional<openstudio::model::ModelObject> >("boost::optional<openstudio::model::ModelObject>");
-int __metaType2__ = qRegisterMetaType<std::vector<openstudio::model::ModelObject> >("std::vector<openstudio::model::ModelObject>" );
+// int __metaType1__ = qRegisterMetaType<boost::optional<openstudio::model::ModelObject> >("boost::optional<openstudio::model::ModelObject>");
+// int __metaType2__ = qRegisterMetaType<std::vector<openstudio::model::ModelObject> >("std::vector<openstudio::model::ModelObject>" );
 
 namespace openstudio {
 namespace model {
@@ -105,392 +114,392 @@ namespace detail {
     return removedCosts;
   }
 
-  std::vector<std::string> ModelObject_Impl::attributeNames() const {
-    StringVector result;
-    const QMetaObject* metaobject = metaObject();
-    int n = metaobject->propertyCount();
-    for (int i = 0; i < n; ++i) {
-      QMetaProperty metaproperty = metaobject->property(i);
-      std::string typeName = metaproperty.typeName();
+  // std::vector<std::string> ModelObject_Impl::attributeNames() const {
+  //   StringVector result;
+  //   const QMetaObject* metaobject = metaObject();
+  //   int n = metaobject->propertyCount();
+  //   for (int i = 0; i < n; ++i) {
+  //     QMetaProperty metaproperty = metaobject->property(i);
+  //     std::string typeName = metaproperty.typeName();
 
-      // if it is a model object it should be a relationship rather than an attribute
-      // if it is a string vector, it is used as a Qt Property, not as an attribute
-      if ((typeName != "boost::optional<openstudio::model::ModelObject>") &&
-          (typeName != "std::vector<openstudio::model::ModelObject>") &&
-          (typeName != "std::vector<std::string>")){
-        std::string candidate(metaproperty.name());
-        if (candidate != "objectName") { // filter out QOBJECT property
-          result.push_back(candidate);
-        }
-      }
-    }
-    return result;
-  }
+  //     // if it is a model object it should be a relationship rather than an attribute
+  //     // if it is a string vector, it is used as a Qt Property, not as an attribute
+  //     if ((typeName != "boost::optional<openstudio::model::ModelObject>") &&
+  //         (typeName != "std::vector<openstudio::model::ModelObject>") &&
+  //         (typeName != "std::vector<std::string>")){
+  //       std::string candidate(metaproperty.name());
+  //       if (candidate != "objectName") { // filter out QOBJECT property
+  //         result.push_back(candidate);
+  //       }
+  //     }
+  //   }
+  //   return result;
+  // }
 
-  std::vector<openstudio::Attribute> ModelObject_Impl::attributes() const {
-    std::vector<openstudio::Attribute> result;
-    const QMetaObject* metaobject = metaObject();
-    int n = metaobject->propertyCount();
-    for (int i = 0; i < n; ++i) {
-      QMetaProperty metaproperty = metaobject->property(i);
-      std::string typeName = metaproperty.typeName();
+  // std::vector<openstudio::Attribute> ModelObject_Impl::attributes() const {
+  //   std::vector<openstudio::Attribute> result;
+  //   const QMetaObject* metaobject = metaObject();
+  //   int n = metaobject->propertyCount();
+  //   for (int i = 0; i < n; ++i) {
+  //     QMetaProperty metaproperty = metaobject->property(i);
+  //     std::string typeName = metaproperty.typeName();
 
-      // if it is a model object it should be a relationship rather than an attribute
-      if ((typeName != "boost::optional<openstudio::model::ModelObject>") &&
-          (typeName != "std::vector<openstudio::model::ModelObject>") &&
-          (typeName != "std::vector<std::string>")){
-        std::string candidate(metaproperty.name());
-        if (candidate != "objectName") { // filter out QOBJECT property
-          try {
-            QVariant value = metaproperty.read(this);
-            boost::optional<openstudio::Attribute> attribute = openstudio::Attribute::fromQVariant(candidate, value);
-            if(attribute){
-              result.push_back(*attribute);
-            }
-          }
-          catch (...) {}
-        }
-      }
-    }
-    return result;
-  }
+  //     // if it is a model object it should be a relationship rather than an attribute
+  //     if ((typeName != "boost::optional<openstudio::model::ModelObject>") &&
+  //         (typeName != "std::vector<openstudio::model::ModelObject>") &&
+  //         (typeName != "std::vector<std::string>")){
+  //       std::string candidate(metaproperty.name());
+  //       if (candidate != "objectName") { // filter out QOBJECT property
+  //         try {
+  //           QVariant value = metaproperty.read(this);
+  //           boost::optional<openstudio::Attribute> attribute = openstudio::Attribute::fromQVariant(candidate, value);
+  //           if(attribute){
+  //             result.push_back(*attribute);
+  //           }
+  //         }
+  //         catch (...) {}
+  //       }
+  //     }
+  //   }
+  //   return result;
+  // }
 
-  boost::optional<openstudio::Attribute> ModelObject_Impl::getAttribute(const std::string& name) const
-  {
-    boost::optional<openstudio::Attribute> result;
+  // boost::optional<openstudio::Attribute> ModelObject_Impl::getAttribute(const std::string& name) const
+  // {
+  //   boost::optional<openstudio::Attribute> result;
 
-    const QMetaObject* metaobject = this->metaObject();
-    int index = metaobject->indexOfProperty(name.c_str());
-    if (index < 0){
-      return result;
-    }
-    QMetaProperty metaproperty = metaobject->property(index);
-    OS_ASSERT(metaproperty.isValid());
-    std::string typeName = metaproperty.typeName();
+  //   const QMetaObject* metaobject = this->metaObject();
+  //   int index = metaobject->indexOfProperty(name.c_str());
+  //   if (index < 0){
+  //     return result;
+  //   }
+  //   QMetaProperty metaproperty = metaobject->property(index);
+  //   OS_ASSERT(metaproperty.isValid());
+  //   std::string typeName = metaproperty.typeName();
 
-    // if it is a model object it should be a relationship rather than an attribute
-    if ((typeName != "boost::optional<openstudio::model::ModelObject>") &&
-        (typeName != "std::vector<openstudio::model::ModelObject>") &&
-        (typeName != "std::vector<std::string>")){
-      if (name != "objectName") { // filter out QOBJECT property
-        try {
-          QVariant value = metaproperty.read(this);
-          result = openstudio::Attribute::fromQVariant(name, value);
-        }
-        catch(...) {}
-      }
-    }
+  //   // if it is a model object it should be a relationship rather than an attribute
+  //   if ((typeName != "boost::optional<openstudio::model::ModelObject>") &&
+  //       (typeName != "std::vector<openstudio::model::ModelObject>") &&
+  //       (typeName != "std::vector<std::string>")){
+  //     if (name != "objectName") { // filter out QOBJECT property
+  //       try {
+  //         QVariant value = metaproperty.read(this);
+  //         result = openstudio::Attribute::fromQVariant(name, value);
+  //       }
+  //       catch(...) {}
+  //     }
+  //   }
 
-    return result;
-  }
+  //   return result;
+  // }
 
-  bool ModelObject_Impl::isSettableAttribute(const std::string& name) const
-  {
-    bool result = false;
+  // bool ModelObject_Impl::isSettableAttribute(const std::string& name) const
+  // {
+  //   bool result = false;
 
-    const QMetaObject* metaobject = this->metaObject();
-    int index = metaobject->indexOfProperty(name.c_str());
-    if (index < 0){
-      return result;
-    }
-    QMetaProperty metaproperty = metaobject->property(index);
-    OS_ASSERT(metaproperty.isValid());
-    std::string typeName = metaproperty.typeName();
+  //   const QMetaObject* metaobject = this->metaObject();
+  //   int index = metaobject->indexOfProperty(name.c_str());
+  //   if (index < 0){
+  //     return result;
+  //   }
+  //   QMetaProperty metaproperty = metaobject->property(index);
+  //   OS_ASSERT(metaproperty.isValid());
+  //   std::string typeName = metaproperty.typeName();
 
-    // if it is a model object it should be a relationship rather than an attribute
-    if ((typeName != "boost::optional<openstudio::model::ModelObject>") &&
-        (typeName != "std::vector<openstudio::model::ModelObject>") &&
-        (typeName != "std::vector<std::string>")){
-      if (name != "objectName") { // filter out QOBJECT property
-        result = metaproperty.isWritable();
-      }
-    }
+  //   // if it is a model object it should be a relationship rather than an attribute
+  //   if ((typeName != "boost::optional<openstudio::model::ModelObject>") &&
+  //       (typeName != "std::vector<openstudio::model::ModelObject>") &&
+  //       (typeName != "std::vector<std::string>")){
+  //     if (name != "objectName") { // filter out QOBJECT property
+  //       result = metaproperty.isWritable();
+  //     }
+  //   }
 
-    return result;
-  }
+  //   return result;
+  // }
 
-  bool ModelObject_Impl::isOptionalAttribute(const std::string& name) const
-  {
-    bool result = false;
+  // bool ModelObject_Impl::isOptionalAttribute(const std::string& name) const
+  // {
+  //   bool result = false;
 
-    const QMetaObject* metaobject = this->metaObject();
-    int index = metaobject->indexOfProperty(name.c_str());
-    if (index < 0){
-      return result;
-    }
-    QMetaProperty metaproperty = metaobject->property(index);
-    OS_ASSERT(metaproperty.isValid());
+  //   const QMetaObject* metaobject = this->metaObject();
+  //   int index = metaobject->indexOfProperty(name.c_str());
+  //   if (index < 0){
+  //     return result;
+  //   }
+  //   QMetaProperty metaproperty = metaobject->property(index);
+  //   OS_ASSERT(metaproperty.isValid());
 
-    std::string typeName = metaproperty.typeName();
+  //   std::string typeName = metaproperty.typeName();
 
-    // may need to convert from type to optional type
-    if (typeName == "boost::optional<int>") {
-      result = true;
-    }else if (typeName == "boost::optional<unsigned>") {
-      result = true;
-    }else if (typeName == "boost::optional<double>") {
-      result = true;
-    }else if (typeName == "boost::optional<std::string>") {
-      result = true;
-    }else if (typeName == "openstudio::OSOptionalQuantity") {
-      result = true;
-    }else if (typeName == "boost::optional<openstudio::Attribute>") {
-      result = true;
-    }
+  //   // may need to convert from type to optional type
+  //   if (typeName == "boost::optional<int>") {
+  //     result = true;
+  //   }else if (typeName == "boost::optional<unsigned>") {
+  //     result = true;
+  //   }else if (typeName == "boost::optional<double>") {
+  //     result = true;
+  //   }else if (typeName == "boost::optional<std::string>") {
+  //     result = true;
+  //   }else if (typeName == "openstudio::OSOptionalQuantity") {
+  //     result = true;
+  //   }else if (typeName == "boost::optional<openstudio::Attribute>") {
+  //     result = true;
+  //   }
 
-    return result;
-  }
+  //   return result;
+  // }
 
-  bool ModelObject_Impl::setAttribute(const std::string& name, bool value) {
-    return setAttribute(name, QVariant::fromValue(value));
-  }
+  // bool ModelObject_Impl::setAttribute(const std::string& name, bool value) {
+  //   return setAttribute(name, QVariant::fromValue(value));
+  // }
 
-  bool ModelObject_Impl::setAttribute(const std::string& name, int value) {
-    return setAttribute(name, QVariant::fromValue(value));
-  }
+  // bool ModelObject_Impl::setAttribute(const std::string& name, int value) {
+  //   return setAttribute(name, QVariant::fromValue(value));
+  // }
 
-  bool ModelObject_Impl::setAttribute(const std::string& name, unsigned value) {
-    return setAttribute(name, QVariant::fromValue(value));
-  }
+  // bool ModelObject_Impl::setAttribute(const std::string& name, unsigned value) {
+  //   return setAttribute(name, QVariant::fromValue(value));
+  // }
 
-  bool ModelObject_Impl::setAttribute(const std::string& name, double value) {
-    return setAttribute(name, QVariant::fromValue(value));
-  }
+  // bool ModelObject_Impl::setAttribute(const std::string& name, double value) {
+  //   return setAttribute(name, QVariant::fromValue(value));
+  // }
 
-  bool ModelObject_Impl::setAttribute(const std::string& name, const Quantity& value) {
-    return setAttribute(name, QVariant::fromValue(value));
-  }
+  // bool ModelObject_Impl::setAttribute(const std::string& name, const Quantity& value) {
+  //   return setAttribute(name, QVariant::fromValue(value));
+  // }
 
-  bool ModelObject_Impl::setAttribute(const std::string& name, const std::string& value) {
-    return setAttribute(name, QVariant::fromValue(value));
-  }
+  // bool ModelObject_Impl::setAttribute(const std::string& name, const std::string& value) {
+  //   return setAttribute(name, QVariant::fromValue(value));
+  // }
 
-  bool ModelObject_Impl::setAttribute(const std::string& name, const char* value) {
-    return setAttribute(name, QVariant::fromValue(std::string(value)));
-  }
+  // bool ModelObject_Impl::setAttribute(const std::string& name, const char* value) {
+  //   return setAttribute(name, QVariant::fromValue(std::string(value)));
+  // }
 
-  bool ModelObject_Impl::setAttribute(const std::string& name, const QVariant& value)
-  {
-    bool result = false;
+  // bool ModelObject_Impl::setAttribute(const std::string& name, const QVariant& value)
+  // {
+  //   bool result = false;
 
-    const QMetaObject* metaobject = this->metaObject();
-    int index = metaobject->indexOfProperty(name.c_str());
-    if (index < 0){
-      return result;
-    }
-    QMetaProperty metaproperty = metaobject->property(index);
-    OS_ASSERT(metaproperty.isValid());
+  //   const QMetaObject* metaobject = this->metaObject();
+  //   int index = metaobject->indexOfProperty(name.c_str());
+  //   if (index < 0){
+  //     return result;
+  //   }
+  //   QMetaProperty metaproperty = metaobject->property(index);
+  //   OS_ASSERT(metaproperty.isValid());
 
-    if (!metaproperty.isWritable()){
-      return result;
-    }
+  //   if (!metaproperty.isWritable()){
+  //     return result;
+  //   }
 
-    std::string typeName = metaproperty.typeName();
+  //   std::string typeName = metaproperty.typeName();
 
-    QVariant finalValue = value;
+  //   QVariant finalValue = value;
 
-    // may need to convert from type to optional type
-    if (typeName == "boost::optional<int>") {
-      if (value.canConvert<int>()){
-        boost::optional<int> newValue = value.value<int>();
-        finalValue = QVariant::fromValue(newValue);
-      }
-    }else if (typeName == "boost::optional<unsigned>") {
-      if (value.canConvert<unsigned>()){
-        boost::optional<unsigned> newValue = value.value<unsigned>();
-        finalValue = QVariant::fromValue(newValue);
-      }
-    }else if (typeName == "boost::optional<double>") {
-      if (value.canConvert<double>()){
-        boost::optional<double> newValue = value.value<double>();
-        finalValue = QVariant::fromValue(newValue);
-      }
-    }else if (typeName == "boost::optional<std::string>") {
-      if (value.canConvert<std::string>()){
-        boost::optional<std::string> newValue = value.value<std::string>();
-        finalValue = QVariant::fromValue(newValue);
-      }
-    }else if (typeName == "openstudio::OSOptionalQuantity") {
-      if (value.canConvert<openstudio::Quantity>()) {
-        openstudio::OSOptionalQuantity newValue(value.value<openstudio::Quantity>());
-        finalValue = QVariant::fromValue(newValue);
-      }
-    }else if (typeName == "boost::optional<openstudio::Attribute>") {
-      LOG(Error, "openstudio::Attribute is not yet registered with QMetaType");
-      //if (value.canConvert<openstudio::Attribute>()){
-      //  boost::optional<openstudio::Attribute> newValue = value.value<openstudio::Attribute>();
-      //  finalValue = QVariant::fromValue(newValue);
-      //}
-    }
+  //   // may need to convert from type to optional type
+  //   if (typeName == "boost::optional<int>") {
+  //     if (value.canConvert<int>()){
+  //       boost::optional<int> newValue = value.value<int>();
+  //       finalValue = QVariant::fromValue(newValue);
+  //     }
+  //   }else if (typeName == "boost::optional<unsigned>") {
+  //     if (value.canConvert<unsigned>()){
+  //       boost::optional<unsigned> newValue = value.value<unsigned>();
+  //       finalValue = QVariant::fromValue(newValue);
+  //     }
+  //   }else if (typeName == "boost::optional<double>") {
+  //     if (value.canConvert<double>()){
+  //       boost::optional<double> newValue = value.value<double>();
+  //       finalValue = QVariant::fromValue(newValue);
+  //     }
+  //   }else if (typeName == "boost::optional<std::string>") {
+  //     if (value.canConvert<std::string>()){
+  //       boost::optional<std::string> newValue = value.value<std::string>();
+  //       finalValue = QVariant::fromValue(newValue);
+  //     }
+  //   }else if (typeName == "openstudio::OSOptionalQuantity") {
+  //     if (value.canConvert<openstudio::Quantity>()) {
+  //       openstudio::OSOptionalQuantity newValue(value.value<openstudio::Quantity>());
+  //       finalValue = QVariant::fromValue(newValue);
+  //     }
+  //   }else if (typeName == "boost::optional<openstudio::Attribute>") {
+  //     LOG(Error, "openstudio::Attribute is not yet registered with QMetaType");
+  //     //if (value.canConvert<openstudio::Attribute>()){
+  //     //  boost::optional<openstudio::Attribute> newValue = value.value<openstudio::Attribute>();
+  //     //  finalValue = QVariant::fromValue(newValue);
+  //     //}
+  //   }
 
-    // if it is a model object it should be a relationship rather than an attribute
-    if ((typeName != "boost::optional<openstudio::model::ModelObject>") &&
-        (typeName != "std::vector<openstudio::model::ModelObject>")){
-      if (name != "objectName") { // filter out QOBJECT property
-        result = metaproperty.write(this, finalValue);
+  //   // if it is a model object it should be a relationship rather than an attribute
+  //   if ((typeName != "boost::optional<openstudio::model::ModelObject>") &&
+  //       (typeName != "std::vector<openstudio::model::ModelObject>")){
+  //     if (name != "objectName") { // filter out QOBJECT property
+  //       result = metaproperty.write(this, finalValue);
 
-        if (result){
-          // test that change worked
-          QVariant newValue = metaproperty.read(this);
-          boost::optional<openstudio::Attribute> finalAttribute = openstudio::Attribute::fromQVariant(name, finalValue);
-          boost::optional<openstudio::Attribute> newAttribute = openstudio::Attribute::fromQVariant(name, newValue);
+  //       if (result){
+  //         // test that change worked
+  //         QVariant newValue = metaproperty.read(this);
+  //         boost::optional<openstudio::Attribute> finalAttribute = openstudio::Attribute::fromQVariant(name, finalValue);
+  //         boost::optional<openstudio::Attribute> newAttribute = openstudio::Attribute::fromQVariant(name, newValue);
 
-          if (finalAttribute){
-            result = newAttribute && (*finalAttribute == *newAttribute);
-          }else{
-            result = !newAttribute;
-          }
-        }
-      }
-    }
+  //         if (finalAttribute){
+  //           result = newAttribute && (*finalAttribute == *newAttribute);
+  //         }else{
+  //           result = !newAttribute;
+  //         }
+  //       }
+  //     }
+  //   }
 
-    return result;
-  }
+  //   return result;
+  // }
 
-  bool ModelObject_Impl::resetAttribute(const std::string& name)
-  {
-    bool result = false;
+  // bool ModelObject_Impl::resetAttribute(const std::string& name)
+  // {
+  //   bool result = false;
 
-    const QMetaObject* metaobject = this->metaObject();
-    int index = metaobject->indexOfProperty(name.c_str());
-    if (index < 0){
-      return result;
-    }
-    QMetaProperty metaproperty = metaobject->property(index);
-    OS_ASSERT(metaproperty.isValid());
+  //   const QMetaObject* metaobject = this->metaObject();
+  //   int index = metaobject->indexOfProperty(name.c_str());
+  //   if (index < 0){
+  //     return result;
+  //   }
+  //   QMetaProperty metaproperty = metaobject->property(index);
+  //   OS_ASSERT(metaproperty.isValid());
 
-    if (!metaproperty.isWritable()){
-      return result;
-    }
+  //   if (!metaproperty.isWritable()){
+  //     return result;
+  //   }
 
-    std::string typeName = metaproperty.typeName();
+  //   std::string typeName = metaproperty.typeName();
 
-    QVariant finalValue;
+  //   QVariant finalValue;
 
-    // may need to convert from type to optional type
-    if (typeName == "boost::optional<int>") {
-      finalValue = QVariant::fromValue(boost::optional<int>());
-    }else if (typeName == "boost::optional<unsigned>") {
-      finalValue = QVariant::fromValue(boost::optional<unsigned>());
-    }else if (typeName == "boost::optional<double>") {
-      finalValue = QVariant::fromValue(boost::optional<double>());
-    }else if (typeName == "boost::optional<std::string>") {
-      finalValue = QVariant::fromValue(boost::optional<std::string>());
-    }else if (typeName == "openstudio::OSOptionalQuantity") {
-      finalValue = QVariant::fromValue(openstudio::OSOptionalQuantity());
-    }else if (typeName == "boost::optional<openstudio::Attribute>") {
-      finalValue = QVariant::fromValue(boost::optional<openstudio::Attribute>());
-    }else{
-      return result;
-    }
+  //   // may need to convert from type to optional type
+  //   if (typeName == "boost::optional<int>") {
+  //     finalValue = QVariant::fromValue(boost::optional<int>());
+  //   }else if (typeName == "boost::optional<unsigned>") {
+  //     finalValue = QVariant::fromValue(boost::optional<unsigned>());
+  //   }else if (typeName == "boost::optional<double>") {
+  //     finalValue = QVariant::fromValue(boost::optional<double>());
+  //   }else if (typeName == "boost::optional<std::string>") {
+  //     finalValue = QVariant::fromValue(boost::optional<std::string>());
+  //   }else if (typeName == "openstudio::OSOptionalQuantity") {
+  //     finalValue = QVariant::fromValue(openstudio::OSOptionalQuantity());
+  //   }else if (typeName == "boost::optional<openstudio::Attribute>") {
+  //     finalValue = QVariant::fromValue(boost::optional<openstudio::Attribute>());
+  //   }else{
+  //     return result;
+  //   }
 
-    // if it is a model object it should be a relationship rather than an attribute
-    if ((typeName != "boost::optional<openstudio::model::ModelObject>") &&
-        (typeName != "std::vector<openstudio::model::ModelObject>") &&
-        (typeName != "std::vector<std::string>")){
-      if (name != "objectName") { // filter out QOBJECT property
-        result = metaproperty.write(this, finalValue);
+  //   // if it is a model object it should be a relationship rather than an attribute
+  //   if ((typeName != "boost::optional<openstudio::model::ModelObject>") &&
+  //       (typeName != "std::vector<openstudio::model::ModelObject>") &&
+  //       (typeName != "std::vector<std::string>")){
+  //     if (name != "objectName") { // filter out QOBJECT property
+  //       result = metaproperty.write(this, finalValue);
 
-        if (result){
-          // test that change worked
-          QVariant newValue = metaproperty.read(this);
-          boost::optional<openstudio::Attribute> finalAttribute = openstudio::Attribute::fromQVariant(name, finalValue);
-          boost::optional<openstudio::Attribute> newAttribute = openstudio::Attribute::fromQVariant(name, newValue);
+  //       if (result){
+  //         // test that change worked
+  //         QVariant newValue = metaproperty.read(this);
+  //         boost::optional<openstudio::Attribute> finalAttribute = openstudio::Attribute::fromQVariant(name, finalValue);
+  //         boost::optional<openstudio::Attribute> newAttribute = openstudio::Attribute::fromQVariant(name, newValue);
 
-          if (finalAttribute){
-            result = newAttribute && (*finalAttribute == *newAttribute);
-          }else{
-            result = !newAttribute;
-          }
-        }
-      }
-    }
+  //         if (finalAttribute){
+  //           result = newAttribute && (*finalAttribute == *newAttribute);
+  //         }else{
+  //           result = !newAttribute;
+  //         }
+  //       }
+  //     }
+  //   }
 
-    return result;
-  }
+  //   return result;
+  // }
 
-  std::vector<std::string> ModelObject_Impl::relationshipNames() const
-  {
-    StringVector result;
-    const QMetaObject* metaobject = metaObject();
-    int n = metaobject->propertyCount();
-    for (int i = 0; i < n; ++i) {
-      QMetaProperty metaproperty = metaobject->property(i);
-      std::string typeName = metaproperty.typeName();
+  // std::vector<std::string> ModelObject_Impl::relationshipNames() const
+  // {
+  //   StringVector result;
+  //   const QMetaObject* metaobject = metaObject();
+  //   int n = metaobject->propertyCount();
+  //   for (int i = 0; i < n; ++i) {
+  //     QMetaProperty metaproperty = metaobject->property(i);
+  //     std::string typeName = metaproperty.typeName();
 
-      // if it is a model object it should be a relationship rather than an attribute
-      if ((typeName == "boost::optional<openstudio::model::ModelObject>") ||
-          (typeName == "std::vector<openstudio::model::ModelObject>")){
-        std::string candidate(metaproperty.name());
-        if (candidate != "objectName") { // filter out QOBJECT property
-          result.push_back(candidate);
-        }
-      }
-    }
-    return result;
-  }
+  //     // if it is a model object it should be a relationship rather than an attribute
+  //     if ((typeName == "boost::optional<openstudio::model::ModelObject>") ||
+  //         (typeName == "std::vector<openstudio::model::ModelObject>")){
+  //       std::string candidate(metaproperty.name());
+  //       if (candidate != "objectName") { // filter out QOBJECT property
+  //         result.push_back(candidate);
+  //       }
+  //     }
+  //   }
+  //   return result;
+  // }
 
-  std::vector<Relationship> ModelObject_Impl::relationships() const
-  {
-    RelationshipVector result;
-    const QMetaObject* metaobject = metaObject();
-    int n = metaobject->propertyCount();
-    for (int i = 0; i < n; ++i) {
-      QMetaProperty metaproperty = metaobject->property(i);
-      std::string typeName = metaproperty.typeName();
+  // std::vector<Relationship> ModelObject_Impl::relationships() const
+  // {
+  //   RelationshipVector result;
+  //   const QMetaObject* metaobject = metaObject();
+  //   int n = metaobject->propertyCount();
+  //   for (int i = 0; i < n; ++i) {
+  //     QMetaProperty metaproperty = metaobject->property(i);
+  //     std::string typeName = metaproperty.typeName();
 
-      // if it is a model object it should be a relationship rather than an attribute
-      if ((typeName == "boost::optional<openstudio::model::ModelObject>") ||
-          (typeName == "std::vector<openstudio::model::ModelObject>")){
-        std::string candidate(metaproperty.name());
-        if (candidate != "objectName") { // filter out QOBJECT property
-          result.push_back(Relationship(getObject<ModelObject>(),candidate));
-        }
-      }
-    }
-    return result;
-  }
+  //     // if it is a model object it should be a relationship rather than an attribute
+  //     if ((typeName == "boost::optional<openstudio::model::ModelObject>") ||
+  //         (typeName == "std::vector<openstudio::model::ModelObject>")){
+  //       std::string candidate(metaproperty.name());
+  //       if (candidate != "objectName") { // filter out QOBJECT property
+  //         result.push_back(Relationship(getObject<ModelObject>(),candidate));
+  //       }
+  //     }
+  //   }
+  //   return result;
+  // }
 
-  boost::optional<Relationship> ModelObject_Impl::getRelationship(const std::string& name) const
-  {
-    boost::optional<Relationship> result;
+  // boost::optional<Relationship> ModelObject_Impl::getRelationship(const std::string& name) const
+  // {
+  //   boost::optional<Relationship> result;
 
-    const QMetaObject* metaobject = this->metaObject();
-    int index = metaobject->indexOfProperty(name.c_str());
-    if (index < 0){
-      return result;
-    }
-    QMetaProperty metaproperty = metaobject->property(index);
-    OS_ASSERT(metaproperty.isValid());
-    std::string typeName = metaproperty.typeName();
+  //   const QMetaObject* metaobject = this->metaObject();
+  //   int index = metaobject->indexOfProperty(name.c_str());
+  //   if (index < 0){
+  //     return result;
+  //   }
+  //   QMetaProperty metaproperty = metaobject->property(index);
+  //   OS_ASSERT(metaproperty.isValid());
+  //   std::string typeName = metaproperty.typeName();
 
-    // if it is a model object it should be a relationship rather than an attribute
-    if ((typeName == "boost::optional<openstudio::model::ModelObject>") ||
-        (typeName == "std::vector<openstudio::model::ModelObject>")){
-      if (name != "objectName") { // filter out QOBJECT property
-        result = Relationship(getObject<ModelObject>(), name);
-      }
-    }
-    return result;
-  }
+  //   // if it is a model object it should be a relationship rather than an attribute
+  //   if ((typeName == "boost::optional<openstudio::model::ModelObject>") ||
+  //       (typeName == "std::vector<openstudio::model::ModelObject>")){
+  //     if (name != "objectName") { // filter out QOBJECT property
+  //       result = Relationship(getObject<ModelObject>(), name);
+  //     }
+  //   }
+  //   return result;
+  // }
 
-  bool ModelObject_Impl::setRelationship(const std::string& name,
-                                         boost::optional<ModelObject> relatedModelObject)
-  {
-    OptionalRelationship relationship = getRelationship(name);
-    if (relationship) {
-      return relationship->setRelatedModelObject(relatedModelObject);
-    }
-    return false;
-  }
+  // bool ModelObject_Impl::setRelationship(const std::string& name,
+  //                                        boost::optional<ModelObject> relatedModelObject)
+  // {
+  //   OptionalRelationship relationship = getRelationship(name);
+  //   if (relationship) {
+  //     return relationship->setRelatedModelObject(relatedModelObject);
+  //   }
+  //   return false;
+  // }
 
-  bool ModelObject_Impl::setRelationship(const std::string& name, const Component& component) {
-    OptionalRelationship relationship = getRelationship(name);
-    if (relationship) {
-      return relationship->setRelatedModelObject(component);
-    }
-    return false;
-  }
+  // bool ModelObject_Impl::setRelationship(const std::string& name, const Component& component) {
+  //   OptionalRelationship relationship = getRelationship(name);
+  //   if (relationship) {
+  //     return relationship->setRelatedModelObject(component);
+  //   }
+  //   return false;
+  // }
 
   std::vector<ResourceObject> ModelObject_Impl::resources() const {
     // resources are ResourceObjects pointed to ...
@@ -787,40 +796,40 @@ namespace detail {
   }
 
 
-  void ModelObject_Impl::requestProperties(const QStringList& names)
-  {
-    QVariantMap properties;
+  // void ModelObject_Impl::requestProperties(const QStringList& names)
+  // {
+  //   QVariantMap properties;
 
-    QStringList::const_iterator it = names.begin();
-    QStringList::const_iterator itend = names.end();
-    for (; it != itend; ++it){
-      QVariant value = QObject::property(it->toStdString().c_str());
-      if (value.isNull() || !value.isValid()){
-        LOG(Warn, "ModelObject of type '" << this->iddObjectType().valueName() << "' does not have property '" << it->toStdString() << "'");
-      }
-      properties.insert(*it, value);
-    }
-    emit reportProperties(properties);
-  }
+  //   QStringList::const_iterator it = names.begin();
+  //   QStringList::const_iterator itend = names.end();
+  //   for (; it != itend; ++it){
+  //     QVariant value = QObject::property(it->toStdString().c_str());
+  //     if (value.isNull() || !value.isValid()){
+  //       LOG(Warn, "ModelObject of type '" << this->iddObjectType().valueName() << "' does not have property '" << it->toStdString() << "'");
+  //     }
+  //     properties.insert(*it, value);
+  //   }
+  //   this->reportProperties.nano_emit(properties);
+  // }
 
-  void ModelObject_Impl::setProperties(const QVariantMap& properties)
-  {
-    bool anyFailures = false;
+  // void ModelObject_Impl::setProperties(const QVariantMap& properties)
+  // {
+  //   bool anyFailures = false;
 
-    QVariantMap::const_iterator it = properties.begin();
-    QVariantMap::const_iterator itend = properties.end();
-    for (; it != itend; ++it){
-      bool test = QObject::setProperty(it.key().toStdString().c_str(), it.value());
-      if (!test){
-        anyFailures = true;
-        LOG(Warn, "Failed to set property '" << it.key().toStdString() << "' for ModelObject of type '" << this->iddObjectType().valueName() << "'");
-      }
-    }
+  //   QVariantMap::const_iterator it = properties.begin();
+  //   QVariantMap::const_iterator itend = properties.end();
+  //   for (; it != itend; ++it){
+  //     bool test = QObject::setProperty(it.key().toStdString().c_str(), it.value());
+  //     if (!test){
+  //       anyFailures = true;
+  //       LOG(Warn, "Failed to set property '" << it.key().toStdString() << "' for ModelObject of type '" << this->iddObjectType().valueName() << "'");
+  //     }
+  //   }
 
-    if (anyFailures){
-      emit onChange();
-    }
-  }
+  //   if (anyFailures){
+  //     this->onChange.nano_emit();
+  //   }
+  // }
 
   ModelObject ModelObject_Impl::clone(Model model) const
   {
@@ -999,82 +1008,82 @@ IddObjectType ModelObject::iddObjectType() const
   return getImpl<detail::ModelObject_Impl>()->iddObjectType();
 }
 
-std::vector<std::string> ModelObject::attributeNames() const {
-  return getImpl<detail::ModelObject_Impl>()->attributeNames();
-}
+// std::vector<std::string> ModelObject::attributeNames() const {
+//   return getImpl<detail::ModelObject_Impl>()->attributeNames();
+// }
 
-std::vector<openstudio::Attribute> ModelObject::attributes() const {
-  return getImpl<detail::ModelObject_Impl>()->attributes();
-}
+// std::vector<openstudio::Attribute> ModelObject::attributes() const {
+//   return getImpl<detail::ModelObject_Impl>()->attributes();
+// }
 
-boost::optional<openstudio::Attribute> ModelObject::getAttribute(const std::string& name) const {
-  return getImpl<detail::ModelObject_Impl>()->getAttribute(name);
-}
+// boost::optional<openstudio::Attribute> ModelObject::getAttribute(const std::string& name) const {
+//   return getImpl<detail::ModelObject_Impl>()->getAttribute(name);
+// }
 
-bool ModelObject::isSettableAttribute(const std::string& name) const
-{
-  return getImpl<detail::ModelObject_Impl>()->isSettableAttribute(name);
-}
+// bool ModelObject::isSettableAttribute(const std::string& name) const
+// {
+//   return getImpl<detail::ModelObject_Impl>()->isSettableAttribute(name);
+// }
 
-bool ModelObject::isOptionalAttribute(const std::string& name) const
-{
-  return getImpl<detail::ModelObject_Impl>()->isOptionalAttribute(name);
-}
+// bool ModelObject::isOptionalAttribute(const std::string& name) const
+// {
+//   return getImpl<detail::ModelObject_Impl>()->isOptionalAttribute(name);
+// }
 
-bool ModelObject::setAttribute(const std::string& name, bool value) {
-  return getImpl<detail::ModelObject_Impl>()->setAttribute(name, value);
-}
+// bool ModelObject::setAttribute(const std::string& name, bool value) {
+//   return getImpl<detail::ModelObject_Impl>()->setAttribute(name, value);
+// }
 
-bool ModelObject::setAttribute(const std::string& name, int value) {
-  return getImpl<detail::ModelObject_Impl>()->setAttribute(name, value);
-}
+// bool ModelObject::setAttribute(const std::string& name, int value) {
+//   return getImpl<detail::ModelObject_Impl>()->setAttribute(name, value);
+// }
 
-bool ModelObject::setAttribute(const std::string& name, double value) {
-  return getImpl<detail::ModelObject_Impl>()->setAttribute(name, value);
-}
+// bool ModelObject::setAttribute(const std::string& name, double value) {
+//   return getImpl<detail::ModelObject_Impl>()->setAttribute(name, value);
+// }
 
-bool ModelObject::setAttribute(const std::string& name, const Quantity& value) {
-  return getImpl<detail::ModelObject_Impl>()->setAttribute(name, value);
-}
+// bool ModelObject::setAttribute(const std::string& name, const Quantity& value) {
+//   return getImpl<detail::ModelObject_Impl>()->setAttribute(name, value);
+// }
 
-bool ModelObject::setAttribute(const std::string& name, unsigned value) {
-  return getImpl<detail::ModelObject_Impl>()->setAttribute(name, value);
-}
+// bool ModelObject::setAttribute(const std::string& name, unsigned value) {
+//   return getImpl<detail::ModelObject_Impl>()->setAttribute(name, value);
+// }
 
-bool ModelObject::setAttribute(const std::string& name, const char* value) {
-  return getImpl<detail::ModelObject_Impl>()->setAttribute(name, value);
-}
+// bool ModelObject::setAttribute(const std::string& name, const char* value) {
+//   return getImpl<detail::ModelObject_Impl>()->setAttribute(name, value);
+// }
 
-bool ModelObject::setAttribute(const std::string& name, const std::string& value) {
-  return getImpl<detail::ModelObject_Impl>()->setAttribute(name, value);
-}
+// bool ModelObject::setAttribute(const std::string& name, const std::string& value) {
+//   return getImpl<detail::ModelObject_Impl>()->setAttribute(name, value);
+// }
 
-bool ModelObject::resetAttribute(const std::string& name)
-{
-  return getImpl<detail::ModelObject_Impl>()->resetAttribute(name);
-}
+// bool ModelObject::resetAttribute(const std::string& name)
+// {
+//   return getImpl<detail::ModelObject_Impl>()->resetAttribute(name);
+// }
 
-std::vector<std::string> ModelObject::relationshipNames() const {
-  return getImpl<detail::ModelObject_Impl>()->relationshipNames();
-}
+// std::vector<std::string> ModelObject::relationshipNames() const {
+//   return getImpl<detail::ModelObject_Impl>()->relationshipNames();
+// }
 
-std::vector<Relationship> ModelObject::relationships() const {
-  return getImpl<detail::ModelObject_Impl>()->relationships();
-}
+// std::vector<Relationship> ModelObject::relationships() const {
+//   return getImpl<detail::ModelObject_Impl>()->relationships();
+// }
 
-boost::optional<Relationship> ModelObject::getRelationship(const std::string& name) const {
-  return getImpl<detail::ModelObject_Impl>()->getRelationship(name);
-}
+// boost::optional<Relationship> ModelObject::getRelationship(const std::string& name) const {
+//   return getImpl<detail::ModelObject_Impl>()->getRelationship(name);
+// }
 
-bool ModelObject::setRelationship(const std::string& name,
-                                  boost::optional<ModelObject> relatedModelObject)
-{
-  return getImpl<detail::ModelObject_Impl>()->setRelationship(name,relatedModelObject);
-}
+// bool ModelObject::setRelationship(const std::string& name,
+//                                   boost::optional<ModelObject> relatedModelObject)
+// {
+//   return getImpl<detail::ModelObject_Impl>()->setRelationship(name,relatedModelObject);
+// }
 
-bool ModelObject::setRelationship(const std::string& name, const Component& component) {
-  return getImpl<detail::ModelObject_Impl>()->setRelationship(name,component);
-}
+// bool ModelObject::setRelationship(const std::string& name, const Component& component) {
+//   return getImpl<detail::ModelObject_Impl>()->setRelationship(name,component);
+// }
 
 
 std::vector<ResourceObject> ModelObject::resources() const {
@@ -1159,7 +1168,7 @@ ModelObject::ModelObject(IddObjectType type, const Model& model, bool fastName)
   // add to Workspace
   openstudio::detail::WorkspaceObject_ImplPtrVector impls;
   impls.push_back(getImpl<openstudio::detail::WorkspaceObject_Impl>());
-  model.getImpl<detail::Model_Impl>()->addObjects(impls);
+  model.getImpl<detail::Model_Impl>()->addObjects(impls,false);
   // object should be initialized and ready to go
   if (!getImpl<detail::ModelObject_Impl>()->initialized()){
     LOG_AND_THROW("ModelObject not initialized: " << std::endl << getImpl<openstudio::detail::WorkspaceObject_Impl>()->idfObject());
@@ -1167,7 +1176,7 @@ ModelObject::ModelObject(IddObjectType type, const Model& model, bool fastName)
 }
 
 ModelObject::ModelObject(std::shared_ptr<detail::ModelObject_Impl> p)
-  : WorkspaceObject(p)
+  : WorkspaceObject(std::move(p))
 {}
 
 } // model

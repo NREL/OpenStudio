@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include <gtest/gtest.h>
 
@@ -44,9 +53,10 @@ TEST_F(ModelFixture, SpaceType_InternalGainAttributes_PeoplePerFloorArea) {
   Model model;
   SpaceType spaceType(model);
 
-  OptionalAttribute peoplePerFloorArea = spaceType.getAttribute("peoplePerFloorArea");
-  ASSERT_TRUE(peoplePerFloorArea);
-  EXPECT_TRUE(peoplePerFloorArea->valueType() == AttributeValueType::Double);
+  // Removed due to removal of attributes
+  // OptionalAttribute peoplePerFloorArea = spaceType.getAttribute("peoplePerFloorArea");
+  // ASSERT_TRUE(peoplePerFloorArea);
+  // EXPECT_TRUE(peoplePerFloorArea->valueType() == AttributeValueType::Double);
 
   PeopleDefinition defPerArea(model);
   People instPerArea(defPerArea);
@@ -199,11 +209,11 @@ TEST_F(ModelFixture, SpaceType_StandardsTypes) {
   ASSERT_EQ(2u, suggestedStandardsSpaceTypes.size());
   EXPECT_EQ("Attic", suggestedStandardsSpaceTypes[0]);
   EXPECT_EQ("Plenum", suggestedStandardsSpaceTypes[1]);
-} 
+}
 
 TEST_F(ModelFixture, SpaceType_Clone) {
   Model library;
-  Model model;  
+  Model model;
 
   SpaceType librarySpaceType(library);
 
@@ -251,4 +261,47 @@ TEST_F(ModelFixture, SpaceType_Clone) {
   EXPECT_EQ(1u,model.getModelObjects<ScheduleRuleset>().size());
 }
 
+TEST_F(ModelFixture, SpaceType_Name_Clone) {
+  Model m;
+
+  SpaceType st1(m);
+  EXPECT_TRUE(st1.setName("My Space Type"));
+
+  SpaceType st2 = st1.clone(m).cast<SpaceType>();
+  EXPECT_NE(st1.handle(), st2.handle());
+  EXPECT_NE(st1.nameString(), st2.nameString());
+
+  Model m2;
+  SpaceType st3 = st1.clone(m2).cast<SpaceType>();
+  EXPECT_NE(st1.handle(), st3.handle());
+  EXPECT_EQ(st1.nameString(), st3.nameString());
+}
+
+/* If the space type is the unique Plenum Space type, it should Log and Error and return itself */
+TEST_F(ModelFixture, SpaceType_Clone_Plenum) {
+
+  Model m;
+
+  SpaceType m1_st = m.plenumSpaceType();
+
+  // Does clone
+  SpaceType m1_stClone = m1_st.clone(m).cast<SpaceType>();
+  ASSERT_NE(m1_st.handle(), m1_stClone.handle());
+  ASSERT_NE(m1_st.nameString(), m1_stClone.nameString()) << m;
+
+  // Try in another model with no plenum space type, the clone should become the new plenum space type
+  Model m2;
+  SpaceType m2_stClone = m1_st.clone(m2).cast<SpaceType>();
+  ASSERT_NE(m1_st.handle(), m2_stClone.handle());
+  ASSERT_EQ(m1_st.nameString(), m2_stClone.nameString());
+  ASSERT_EQ(m2.plenumSpaceType().handle(), m2_stClone.handle());
+
+  // Try in another model with a plenum space type, the clone should not become the new plenum space type
+  Model m3;
+  m3.plenumSpaceType();
+  SpaceType m3_stClone = m1_st.clone(m3).cast<SpaceType>();
+  ASSERT_NE(m1_st.handle(), m3_stClone.handle());
+  ASSERT_NE(m1_st.nameString(), m3_stClone.nameString());
+  ASSERT_NE(m3.plenumSpaceType().handle(), m3_stClone.handle());
+}
 

@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include <gtest/gtest.h>
 #include "IdfFixture.hpp"
@@ -39,7 +48,6 @@
 
 #include <QVariant>
 
-#include <boost/filesystem/fstream.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <sstream>
@@ -54,8 +62,8 @@ TEST_F(IdfFixture,IdfObject_URL)
 {
 
   std::string text = "Schedule:File,Dan,,file:///home/ramey/schedule.csv,1;";
-    
-    
+
+
   OptionalIdfObject oObj = IdfObject::load(text);
   ASSERT_TRUE(oObj);
   boost::optional<QUrl> urlOpt  = oObj->getURL(2);
@@ -69,7 +77,7 @@ TEST_F(IdfFixture, IdfObject_ConstructDefaultsFromIddObjectType) {
 
   // loop through each IddObject, create a default object, and print to a file.
   // examine, then partition into "good" and candidate for refactor (us or E+)
-  boost::filesystem::ofstream outFile("defaultObjects.idf");
+  openstudio::filesystem::ofstream outFile("defaultObjects.idf");
   ASSERT_TRUE(outFile?true:false);
 
   IddObjectVector iddObjects = IddFactory::instance().objects();
@@ -143,7 +151,7 @@ TEST_F(IdfFixture, IdfObject_ConstructFromText_MultifieldLines)
   ASSERT_TRUE(oObj);
   IdfObject building = *oObj;
   EXPECT_EQ(8u,building.numFields());
-  ASSERT_TRUE(building.fieldComment(5,false)); 
+  ASSERT_TRUE(building.fieldComment(5,false));
   EXPECT_TRUE(building.fieldComment(5,false).get().empty()); // parser should strip !- comments
   ASSERT_TRUE(building.fieldComment(5,true));
   EXPECT_FALSE(building.fieldComment(5,true).get().empty());
@@ -243,7 +251,7 @@ TEST_F(IdfFixture, IdfObject_CommentGettersAndSetters) {
   ASSERT_TRUE(oObj);
   object = *oObj;
   // field comments setter properly extends field comments vector as needed
-  OptionalString optStr = object.fieldComment(0); 
+  OptionalString optStr = object.fieldComment(0);
   ASSERT_TRUE(optStr);
   EXPECT_EQ("",*optStr);
   optStr = object.fieldComment(1); ASSERT_TRUE(optStr);
@@ -378,7 +386,7 @@ TEST_F(IdfFixture, IdfObject_NameGetterWithReturnDefaultOption) {
 
 TEST_F(IdfFixture, IdfObject_IddObjectTypeInitialization) {
   IdfObject idfObject(IddObjectType::OS_Building);
-  
+
   // get string should not return empty, initialized optional string
   EXPECT_FALSE(idfObject.getString(OS_BuildingFields::BuildingSectorType, false, true));
   EXPECT_FALSE(idfObject.getDouble(OS_BuildingFields::NorthAxis));
@@ -454,7 +462,7 @@ TEST_F(IdfFixture, IdfObject_StringFieldGetterWithReturnDefaultOption) {
   oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   object = *oObj;
-  EXPECT_EQ(6u,object.numFields());
+  EXPECT_EQ(7u,object.numFields());
 
   // returns set values
   idfField = object.getString(0,true);
@@ -464,13 +472,13 @@ TEST_F(IdfFixture, IdfObject_StringFieldGetterWithReturnDefaultOption) {
   ASSERT_TRUE(idfField);
   EXPECT_EQ("2.0",*idfField);
 
-  // returns default for non-existent, non-extensible fields
+  // returns default for empty fields
   idfField = object.getString(6,true);
   ASSERT_TRUE(idfField);
   EXPECT_EQ("0.28",*idfField);
-  EXPECT_EQ(6u,object.numFields());
+  EXPECT_EQ(7u,object.numFields());
   idfField = object.getString(6);
-  EXPECT_FALSE(idfField);
+  EXPECT_TRUE(idfField);
 
   StringVector newGroup;
   newGroup.push_back("MyFirstTransistionZone");
@@ -547,22 +555,22 @@ TEST_F(IdfFixture, IdfObject_UnsignedFieldGetterWithReturnDefaultOption) {
 
 TEST_F(IdfFixture, IdfObject_IntFieldGetterWithReturnDefaultOption) {
   std::stringstream text;
-  text << "Daylighting:DELight:Controls," << std::endl
-       << "  MyControl," << std::endl
-       << "  MyZone," << std::endl
-       << "  ," << std::endl // default 1
-       << "  ," << std::endl // default 0.3
-       << "  ," << std::endl // default 0.2
-       << "  ," << std::endl // default 1 (any integer but 0)
+  text << "Building," << std::endl
+       << "  Building," << std::endl
        << "  ," << std::endl // default 0.0
-       << "  1.0;";
+       << "  ," << std::endl // default Suburbs
+       << "  ," << std::endl // default 0.04
+       << "  ," << std::endl // default 0.4
+       << "  ," << std::endl // default FullExterior
+       << "  ," << std::endl // default 25
+       << "  6;"; // default 25
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   IdfObject object = *oObj;
   // is able to cast default value
-  OptionalInt iIdfField = object.getInt(5,true);
+  OptionalInt iIdfField = object.getInt(6,true);
   ASSERT_TRUE(iIdfField);
-  EXPECT_EQ(1,*iIdfField);
+  EXPECT_EQ(25,*iIdfField);
   EXPECT_FALSE(object.getInt(5));
 
   // returns set values
@@ -574,46 +582,9 @@ TEST_F(IdfFixture, IdfObject_IntFieldGetterWithReturnDefaultOption) {
 }
 
 TEST_F(IdfFixture, IdfObject_FieldSettingWithHiddenPushes) {
-  // SHOULD BE VALID
   std::stringstream text;
-  text << "ZoneHVAC:HighTemperatureRadiant," << std::endl
-       << "  MyRadiantSystem," << std::endl
-       << "  MyHVACSchedule," << std::endl
-       << "  MyCoreZone," << std::endl
-       << "  HeatingDesignCapacity," << std::endl
-       << "  Autosize," << std::endl
-       << "  ," << std::endl
-       << "  ," << std::endl
-       << "  Electricity;";
-  OptionalIdfObject oObj = IdfObject::load(text.str());
-  ASSERT_TRUE(oObj);
-  IdfObject object = *oObj;
-  EXPECT_EQ(8u,object.numFields());
-  // hidden pushing for setting nonextensible string
-
-  // hidden pushing for setting nonextensible double
-
-  // hidden pushing for setting extensible string
-  bool result = object.setString(16,"MyCoreZoneSurface1");
-  EXPECT_TRUE(result);
-  // adds an extra field to keep groups together
-  EXPECT_EQ(18u,object.numFields());
-  OptionalString sValue = object.getString(16);
-  ASSERT_TRUE(sValue);
-  EXPECT_EQ("MyCoreZoneSurface1",*sValue);
-  sValue = object.getString(17);
-  ASSERT_TRUE(sValue);
-  EXPECT_EQ("",*sValue);
-
-  // hidden pushing for setting extensible double
-  result = object.setDouble(21,0.01);
-  EXPECT_TRUE(result);
-  EXPECT_EQ(static_cast<unsigned>(22),object.numFields());
-  OptionalDouble dValue = object.getDouble(21);
-  ASSERT_TRUE(dValue);
-  EXPECT_NEAR(0.01,*dValue,tol);
-  dValue = object.getDouble(19);
-  EXPECT_FALSE(dValue);
+  OptionalIdfObject oObj;
+  bool result;
 
   // SHOULD NOT BE VALID
   text.str("");
@@ -630,14 +601,14 @@ TEST_F(IdfFixture, IdfObject_FieldSettingWithHiddenPushes) {
        << "  0.8;";
   oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
-  object = *oObj;
+  IdfObject object = *oObj;
   // impossible field index
   result = object.setString(20,"not a field");
   EXPECT_FALSE(result);
-  EXPECT_EQ(static_cast<unsigned>(10),object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(11),object.numFields());
   result = object.setUnsigned(20,1);
   EXPECT_FALSE(result);
-  EXPECT_EQ(static_cast<unsigned>(10),object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(11),object.numFields());
 }
 
 TEST_F(IdfFixture, IdfObject_GetQuantity)
@@ -748,7 +719,7 @@ TEST_F(IdfFixture, Handle_QVariant)
 {
   Handle handle = createUUID();
   QVariant variant = QVariant::fromValue(handle);
-  EXPECT_EQ("QUuid", std::string(variant.typeName()));
+  EXPECT_EQ("openstudio::UUID", std::string(variant.typeName()));
   ASSERT_TRUE(variant.canConvert<Handle>());
   Handle handle2 = variant.value<Handle>();
   EXPECT_TRUE(handle == handle2);
@@ -769,10 +740,74 @@ TEST_F(IdfFixture, DoubleDisplayedAsString) {
   EXPECT_EQ("0.05",ss.str());
   ss >> roundTripValue;
   EXPECT_DOUBLE_EQ(value,roundTripValue);
+}
 
-  // QVariant
-  QVariant qvar(value);
-  EXPECT_EQ("0.05",qvar.toString().toStdString());
-  EXPECT_DOUBLE_EQ(value,qvar.toDouble());
+TEST_F(IdfFixture, IdfObject_SetDouble_NaN_and_Inf) {
+
+  // try with an IdfObject
+  // IdfObject does not prevent Infinity and NaN
+  IdfObject object(IddObjectType::OS_People_Definition);
+
+  // Set Number of People
+  // Check for nan
+  EXPECT_TRUE(object.setDouble(3, std::numeric_limits<double>::quiet_NaN()));
+  ASSERT_TRUE(object.getDouble(3));
+  EXPECT_TRUE(std::isnan(object.getDouble(3).get()));
+
+  // Infinity
+  EXPECT_TRUE(object.setDouble(3, std::numeric_limits<double>::infinity()));
+  ASSERT_TRUE(object.getDouble(3));
+  EXPECT_TRUE(std::isinf(object.getDouble(3).get()));
+  EXPECT_TRUE(object.getDouble(3).get() > 100);
+
+  EXPECT_TRUE(object.setDouble(3, -std::numeric_limits<double>::infinity()));
+  ASSERT_TRUE(object.getDouble(3));
+  EXPECT_TRUE(std::isinf(object.getDouble(3).get()));
+  EXPECT_TRUE(object.getDouble(3).get() < -100);
+
+  // try with an IdfExtensibleGroup (Hour, Minute, Value)
+  IdfObject object2(IddObjectType::OS_Schedule_Day);
+  IdfExtensibleGroup eg = object2.pushExtensibleGroup();
+  // set the value field
+  // Check for nan
+  EXPECT_TRUE(eg.setDouble(2, std::numeric_limits<double>::quiet_NaN()));
+  ASSERT_TRUE(eg.getDouble(2));
+  EXPECT_TRUE(std::isnan(eg.getDouble(2).get()));
+
+  // Infinity
+  EXPECT_TRUE(eg.setDouble(2, std::numeric_limits<double>::infinity()));
+  ASSERT_TRUE(eg.getDouble(2));
+  EXPECT_TRUE(std::isinf(eg.getDouble(2).get()));
+  EXPECT_TRUE(eg.getDouble(2).get() > 100);
+
+  EXPECT_TRUE(eg.setDouble(2, -std::numeric_limits<double>::infinity()));
+  ASSERT_TRUE(eg.getDouble(2));
+  EXPECT_TRUE(std::isinf(eg.getDouble(2).get()));
+  EXPECT_TRUE(eg.getDouble(2).get() < -100);
+
+  // new extensible group
+  std::vector<std::string> group;
+  group.push_back("1");
+  group.push_back("2");
+  group.push_back(toString(std::numeric_limits<double>::quiet_NaN()));
+  EXPECT_EQ(1u, object2.numExtensibleGroups());
+  EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
+  EXPECT_EQ(2u, object2.numExtensibleGroups());
+
+  group.clear();
+  group.push_back("1");
+  group.push_back("2");
+  group.push_back(toString(std::numeric_limits<double>::infinity()));
+  EXPECT_EQ(2u, object2.numExtensibleGroups());
+  EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
+  EXPECT_EQ(3u, object2.numExtensibleGroups());
+
+  group.clear();
+  group.push_back("1");
+  group.push_back("2");
+  group.push_back(toString(3.0));
+  EXPECT_EQ(3u, object2.numExtensibleGroups());
+  EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
+  EXPECT_EQ(4u, object2.numExtensibleGroups());
 }
 

@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "AirConditionerVariableRefrigerantFlow.hpp"
 #include "AirConditionerVariableRefrigerantFlow_Impl.hpp"
@@ -1401,49 +1410,49 @@ namespace detail {
     {
       result.push_back(curve.get());
     }
-    
+
     curve = coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
-    curve = coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(); 
+
+    curve = coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = coolingCombinationRatioCorrectionFactorCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = coolingPartLoadFractionCorrelationCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
-    curve = heatingCapacityRatioModifierFunctionofLowTemperatureCurve();      
+
+    curve = heatingCapacityRatioModifierFunctionofLowTemperatureCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatingCapacityRatioBoundaryCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatingCapacityRatioModifierFunctionofHighTemperatureCurve();
     if( curve )
     {
@@ -1455,43 +1464,43 @@ namespace detail {
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatingEnergyInputRatioBoundaryCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
-    curve = heatingCombinationRatioCorrectionFactorCurve(); 
+
+    curve = heatingCombinationRatioCorrectionFactorCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatingPartLoadFractionCorrelationCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = pipingCorrectionFactorforLengthinCoolingModeCurve();
     if( curve )
     {
@@ -1503,25 +1512,25 @@ namespace detail {
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatRecoveryCoolingCapacityModifierCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatRecoveryCoolingEnergyModifierCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatRecoveryHeatingCapacityModifierCurve();
     if( curve )
     {
       result.push_back(curve.get());
     }
-    
+
     curve = heatRecoveryHeatingEnergyModifierCurve();
     if( curve )
     {
@@ -1560,19 +1569,19 @@ namespace detail {
 
     if( auto curve = coolingEnergyInputRatioBoundaryCurve() ) {
       auto clone = curve->clone(model).cast<Curve>();
-      airConditionerClone.setCoolingEnergyInputRatioBoundaryCurve(clone); 
+      airConditionerClone.setCoolingEnergyInputRatioBoundaryCurve(clone);
     }
 
     if( auto curve = coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve() ) {
       auto clone = curve->clone(model).cast<Curve>();
       airConditionerClone.setCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve(clone);
     }
-    
+
     if( auto curve = coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve() ) {
       auto clone = curve->clone(model).cast<Curve>();
       airConditionerClone.setCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(clone);
     }
-    
+
     if( auto curve = coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve() ) {
       auto clone = curve->clone(model).cast<Curve>();
       airConditionerClone.setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(clone);
@@ -1646,7 +1655,7 @@ namespace detail {
     if( auto curve = pipingCorrectionFactorforLengthinHeatingModeCurve() ) {
       auto clone = curve->clone(model).cast<Curve>();
       airConditionerClone.setPipingCorrectionFactorforLengthinHeatingModeCurve(clone);
-    }    
+    }
 
     if( auto curve = heatRecoveryCoolingCapacityModifierCurve() ) {
       auto clone = curve->clone(model).cast<Curve>();
@@ -1706,49 +1715,49 @@ namespace detail {
     {
       curve->remove();
     }
-    
+
     curve = coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
     if( curve )
     {
       curve->remove();
     }
-    
-    curve = coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(); 
+
+    curve = coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = coolingCombinationRatioCorrectionFactorCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = coolingPartLoadFractionCorrelationCurve();
     if( curve )
     {
       curve->remove();
     }
-    
-    curve = heatingCapacityRatioModifierFunctionofLowTemperatureCurve();      
+
+    curve = heatingCapacityRatioModifierFunctionofLowTemperatureCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatingCapacityRatioBoundaryCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatingCapacityRatioModifierFunctionofHighTemperatureCurve();
     if( curve )
     {
@@ -1760,73 +1769,73 @@ namespace detail {
     {
       curve->remove();
     }
-    
+
     curve = heatingEnergyInputRatioBoundaryCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
     if( curve )
     {
       curve->remove();
     }
-    
-    curve = heatingCombinationRatioCorrectionFactorCurve(); 
+
+    curve = heatingCombinationRatioCorrectionFactorCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatingPartLoadFractionCorrelationCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = pipingCorrectionFactorforLengthinCoolingModeCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = pipingCorrectionFactorforLengthinCoolingModeCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatRecoveryCoolingCapacityModifierCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatRecoveryCoolingEnergyModifierCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatRecoveryHeatingCapacityModifierCurve();
     if( curve )
     {
       curve->remove();
     }
-    
+
     curve = heatRecoveryHeatingEnergyModifierCurve();
     if( curve )
     {
@@ -1911,7 +1920,7 @@ AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(con
   autosizeWaterCondenserVolumeFlowRate();
 
   setEvaporativeCondenserEffectiveness(0.9);
-  
+
   autosizeEvaporativeCondenserAirFlowRate();
 
   autosizeEvaporativeCondenserPumpRatedPowerConsumption();
@@ -1931,7 +1940,7 @@ AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(con
   setHeatRecoveryCoolingCapacityTimeConstant(0.083);
 
   setInitialHeatRecoveryCoolingEnergyFraction(1.0);
-  
+
   setHeatRecoveryCoolingEnergyTimeConstant(0.0);
 
   setInitialHeatRecoveryHeatingCapacityFraction(0.5);
@@ -2017,7 +2026,7 @@ AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(con
   vrfCoolEIRFTHi.setMinimumValueofy(16.8);
   vrfCoolEIRFTHi.setMaximumValueofy(43.3);
   setCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve(vrfCoolEIRFTHi);
-  
+
   CurveCubic coolingEIRLowPLR(model);
   coolingEIRLowPLR.setName(name().get() + " CoolingEIRLowPLR");
   coolingEIRLowPLR.setCoefficient1Constant(0.4541226192);
@@ -2036,7 +2045,7 @@ AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(con
   coolingEIRHiPLR.setCoefficient4xPOW3(0.0);
   coolingEIRHiPLR.setMinimumValueofx(1.0);
   coolingEIRHiPLR.setMaximumValueofx(1.5);
-  setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(coolingEIRHiPLR); 
+  setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(coolingEIRHiPLR);
 
   CurveCubic coolingCombRatio(model);
   coolingCombRatio.setName(name().get() + " CoolingCombRatio");
@@ -2057,7 +2066,7 @@ AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(con
   vrfCPLFFPLR.setMinimumValueofx(0.0);
   vrfCPLFFPLR.setMinimumValueofx(1.0);
   setCoolingPartLoadFractionCorrelationCurve(vrfCPLFFPLR);
-  
+
   CurveBiquadratic vrfHeatCapFT(model);
   vrfHeatCapFT.setName(name().get() + " VRFHeatCapFT");
   vrfHeatCapFT.setCoefficient1Constant(1.012090154);
@@ -3001,7 +3010,7 @@ std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> AirConditionerVariableR
 
 /// @cond
 AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(std::shared_ptr<detail::AirConditionerVariableRefrigerantFlow_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

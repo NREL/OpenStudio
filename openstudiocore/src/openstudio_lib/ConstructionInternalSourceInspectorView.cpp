@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "ConstructionInternalSourceInspectorView.hpp"
 #include "StandardsInformationConstructionWidget.hpp"
@@ -55,7 +64,8 @@ ConstructionInternalSourceInspectorView::ConstructionInternalSourceInspectorView
     m_sourcePresentAfterLayerNumberEdit(nullptr),
     m_temperatureCalculationRequestedAfterLayerNumberEdit(nullptr),
     m_dimensionsForTheCTFCalculationEdit(nullptr),
-    m_tubeSpacingEdit(nullptr)
+    m_tubeSpacingEdit(nullptr),
+    m_constructionVC(nullptr)
 {
   createLayout();
 }
@@ -85,7 +95,7 @@ void ConstructionInternalSourceInspectorView::createLayout()
 
   ++row;
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
 
   ++row;
@@ -136,7 +146,7 @@ void ConstructionInternalSourceInspectorView::createLayout()
 
   ++row;
 
-  m_sourcePresentAfterLayerNumberEdit = new OSIntegerEdit();
+  m_sourcePresentAfterLayerNumberEdit = new OSIntegerEdit2();
   mainGridLayout->addWidget(m_sourcePresentAfterLayerNumberEdit, row, 0);
 
   ++row;
@@ -149,7 +159,7 @@ void ConstructionInternalSourceInspectorView::createLayout()
 
   ++row;
 
-  m_temperatureCalculationRequestedAfterLayerNumberEdit = new OSIntegerEdit();
+  m_temperatureCalculationRequestedAfterLayerNumberEdit = new OSIntegerEdit2();
   mainGridLayout->addWidget(m_temperatureCalculationRequestedAfterLayerNumberEdit, row, 0);
 
   ++row;
@@ -162,7 +172,7 @@ void ConstructionInternalSourceInspectorView::createLayout()
 
   ++row;
 
-  m_dimensionsForTheCTFCalculationEdit = new OSIntegerEdit();
+  m_dimensionsForTheCTFCalculationEdit = new OSIntegerEdit2();
   mainGridLayout->addWidget(m_dimensionsForTheCTFCalculationEdit, row, 0);
 
   ++row;
@@ -175,8 +185,8 @@ void ConstructionInternalSourceInspectorView::createLayout()
 
   ++row;
 
-  m_tubeSpacingEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &ConstructionInternalSourceInspectorView::toggleUnitsClicked, m_tubeSpacingEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_tubeSpacingEdit = new OSQuantityEdit2("m","m","ft", m_isIP);
+  connect(this, &ConstructionInternalSourceInspectorView::toggleUnitsClicked, m_tubeSpacingEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_tubeSpacingEdit, row, 0);
 
   ++row;
@@ -206,34 +216,60 @@ void ConstructionInternalSourceInspectorView::onSelectModelObject(const openstud
 
 void ConstructionInternalSourceInspectorView::onUpdate()
 {
+  m_constructionVC->reportItems();
 }
 
 void ConstructionInternalSourceInspectorView::attach(openstudio::model::ConstructionWithInternalSource & constructionWithInternalSource)
 {
-  m_nameEdit->bind(constructionWithInternalSource,"name");
+  m_constructionWithInternalSource = constructionWithInternalSource;
 
-  m_sourcePresentAfterLayerNumberEdit->bind(constructionWithInternalSource,"sourcePresentAfterLayerNumber");
-  m_temperatureCalculationRequestedAfterLayerNumberEdit->bind(constructionWithInternalSource,"temperatureCalculationRequestedAfterLayerNumber");
-  m_dimensionsForTheCTFCalculationEdit->bind(constructionWithInternalSource,"dimensionsForTheCTFCalculation");
+  m_nameEdit->bind(
+    *m_constructionWithInternalSource,
+    OptionalStringGetter(std::bind(&model::ConstructionWithInternalSource::name, m_constructionWithInternalSource.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::ConstructionWithInternalSource::setName, m_constructionWithInternalSource.get_ptr(),std::placeholders::_1))
+  );
 
-  m_tubeSpacingEdit->bind(constructionWithInternalSource,"tubeSpacing",m_isIP);
+  m_sourcePresentAfterLayerNumberEdit->bind(
+    *m_constructionWithInternalSource,
+    OptionalIntGetter(std::bind(&model::ConstructionWithInternalSource::sourcePresentAfterLayerNumber, m_constructionWithInternalSource.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::ConstructionWithInternalSource::setSourcePresentAfterLayerNumber, m_constructionWithInternalSource.get_ptr(), std::placeholders::_1))
+  );
 
-  m_constructionVC->attach(constructionWithInternalSource);
+  m_temperatureCalculationRequestedAfterLayerNumberEdit->bind(
+    *m_constructionWithInternalSource,
+    OptionalIntGetter(std::bind(&model::ConstructionWithInternalSource::temperatureCalculationRequestedAfterLayerNumber,m_constructionWithInternalSource.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::ConstructionWithInternalSource::setTemperatureCalculationRequestedAfterLayerNumber,m_constructionWithInternalSource.get_ptr(),std::placeholders::_1))
+  );
+
+  m_dimensionsForTheCTFCalculationEdit->bind(
+    *m_constructionWithInternalSource,
+    OptionalIntGetter(std::bind(&model::ConstructionWithInternalSource::dimensionsForTheCTFCalculation,m_constructionWithInternalSource.get_ptr())),
+    boost::optional<IntSetter>(std::bind(&model::ConstructionWithInternalSource::setDimensionsForTheCTFCalculation,m_constructionWithInternalSource.get_ptr(),std::placeholders::_1))
+  );
+
+  m_tubeSpacingEdit->bind(
+    m_isIP,
+    *m_constructionWithInternalSource,
+    DoubleGetter(std::bind(&model::ConstructionWithInternalSource::tubeSpacing, m_constructionWithInternalSource.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::ConstructionWithInternalSource::*)(double)>(&model::ConstructionWithInternalSource::setTubeSpacing), m_constructionWithInternalSource.get_ptr(), std::placeholders::_1))
+  );
+
+  m_constructionVC->attach(m_constructionWithInternalSource.get());
   m_constructionVC->reportItems();
   
-  m_standardsInformationWidget->attach(constructionWithInternalSource);
+  m_standardsInformationWidget->attach(m_constructionWithInternalSource.get());
 }
 
 void ConstructionInternalSourceInspectorView::detach()
 {
-  m_constructionVC->detach();
-
   m_sourcePresentAfterLayerNumberEdit->unbind();
   m_temperatureCalculationRequestedAfterLayerNumberEdit->unbind();
   m_dimensionsForTheCTFCalculationEdit->unbind();
   m_tubeSpacingEdit->unbind();
 
   m_standardsInformationWidget->detach();
+
+  m_constructionWithInternalSource = boost::none;
 }
 
 } // openstudio

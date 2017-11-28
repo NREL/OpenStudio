@@ -1,28 +1,37 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "OSDocument.hpp"
 
 #include "ApplyMeasureNowDialog.hpp"
 #include "ConstructionsTabController.hpp"
+#include "GeometryTabController.hpp"
 #include "FacilityTabController.hpp"
-#include "FileOperations.hpp"
 #include "HorizontalTabWidget.hpp"
 #include "HVACSystemsTabController.hpp"
 #include "InspectorController.hpp"
@@ -41,7 +50,6 @@
 #include "RunTabController.hpp"
 #include "RunTabView.hpp"
 #include "SchedulesTabController.hpp"
-#include "ScriptFolderListView.hpp"
 #include "ScriptsTabController.hpp"
 #include "ScriptsTabView.hpp"
 #include "SimSettingsTabController.hpp"
@@ -61,30 +69,12 @@
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/WaitDialog.hpp"
 
-#include "../analysis/Analysis.hpp"
+//#include "../analysis/Analysis.hpp"
 
-#include "../model/Building.hpp"
-#include "../model/Building_Impl.hpp"
+#include "../model/FileOperations.hpp"
 #include "../model/Component.hpp"
-#include "../model/Facility.hpp"
-#include "../model/Facility_Impl.hpp"
-#include "../model/LifeCycleCostParameters.hpp"
-#include "../model/LifeCycleCostParameters_Impl.hpp"
-#include "../model/Model_Impl.hpp"
 #include "../model/WeatherFile.hpp"
 #include "../model/WeatherFile_Impl.hpp"
-#include "../model/SimulationControl.hpp"
-#include "../model/SimulationControl_Impl.hpp"
-#include "../model/SizingParameters.hpp"
-#include "../model/SizingParameters_Impl.hpp"
-#include "../model/Timestep.hpp"
-#include "../model/Timestep_Impl.hpp"
-#include "../model/ShadowCalculation.hpp"
-#include "../model/ShadowCalculation_Impl.hpp"
-#include "../model/HeatBalanceAlgorithm.hpp"
-#include "../model/HeatBalanceAlgorithm_Impl.hpp"
-#include "../model/RunPeriod.hpp"
-#include "../model/RunPeriod_Impl.hpp"
 
 #include "../utilities/bcl/BCLComponent.hpp"
 #include "../utilities/bcl/LocalBCL.hpp"
@@ -98,18 +88,20 @@
 #include "../utilities/idf/ValidityReport.hpp"
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
+#include "../utilities/filetypes/WorkflowJSON.hpp"
+#include "../utilities/filetypes/WorkflowJSON_Impl.hpp"
 
 #include "../osversion/VersionTranslator.hpp"
 
-#include "../analysis/DataPoint.hpp"
-#include "../analysis/MeasureGroup.hpp"
-#include "../analysis/MeasureGroup_Impl.hpp"
-#include "../analysis/NullMeasure.hpp"
-#include "../analysis/Problem.hpp"
-#include "../analysis/RubyMeasure.hpp"
-#include "../analysis/RubyMeasure_Impl.hpp"
+//#include "../analysis/DataPoint.hpp"
+//#include "../analysis/MeasureGroup.hpp"
+//#include "../analysis/MeasureGroup_Impl.hpp"
+//#include "../analysis/NullMeasure.hpp"
+//#include "../analysis/Problem.hpp"
+//#include "../analysis/RubyMeasure.hpp"
+//#include "../analysis/RubyMeasure_Impl.hpp"
 
-#include "../runmanager/lib/WorkItem.hpp"
+//#include "../runmanager/lib/WorkItem.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -117,8 +109,8 @@
 #include "../gbxml/ForwardTranslator.hpp"
 #include "../sdd/ForwardTranslator.hpp"
 
-#include <boost/filesystem/fstream.hpp>
-#include <boost/filesystem.hpp>
+
+
 
 #include <QDir>
 #include <QFileDialog>
@@ -174,206 +166,70 @@ namespace openstudio {
     m_mainWindow = new MainWindow(m_isPlugin);
     addQObject(m_mainWindow);
 
+    bool initalizeWorkflow = false;
     if (!model){
       model = openstudio::model::Model();
+      initalizeWorkflow = true;
     }
 
-    openstudio::path modelTempDir = createModelTempDir();
+    openstudio::path modelTempDir;
+    if (!m_savePath.isEmpty()){
+      modelTempDir = model::initializeModel(*model, toPath(m_savePath));
+    } else{
+      modelTempDir = model::initializeModel(*model);
+    }
     m_modelTempDir = toQString(modelTempDir);
 
-    if (!m_savePath.isEmpty()){
-      initializeModelTempDir(toPath(m_savePath), modelTempDir);
+    bool isConnected;
+
+    m_verticalId = 0;
+    m_subTabIds = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    // Make sure that the vector is the same size as the number of tabs
+    OS_ASSERT(m_subTabIds.size() == static_cast<unsigned>(RESULTS_SUMMARY + 1));
+
+    // set the model, this will create widgets
+    setModel(*model, false, false);
+
+    // connect signals to main window
+    connect(m_mainWindow, &MainWindow::downloadComponentsClicked, this, &OSDocument::openBclDlg);
+    connect(m_mainWindow, &MainWindow::openLibDlgClicked, this, &OSDocument::openLibDlg);
+    connect(m_mainWindow, &MainWindow::closeClicked, this, &OSDocument::closeClicked);
+    connect(m_mainWindow, &MainWindow::verticalTabSelected, this, &OSDocument::onVerticalTabSelected);
+    connect(m_mainWindow, &MainWindow::importClicked, this, &OSDocument::importClicked);
+    connect(m_mainWindow, &MainWindow::importgbXMLClicked, this, &OSDocument::importgbXMLClicked);
+    connect(m_mainWindow, &MainWindow::importSDDClicked, this, &OSDocument::importSDDClicked);
+    connect(m_mainWindow, &MainWindow::importIFCClicked, this, &OSDocument::importIFCClicked);
+    connect(m_mainWindow, &MainWindow::loadFileClicked, this, &OSDocument::loadFileClicked);
+    connect(m_mainWindow, &MainWindow::loadLibraryClicked, this, &OSDocument::loadLibraryClicked);
+    connect(m_mainWindow, &MainWindow::newClicked, this, &OSDocument::newClicked);
+    connect(m_mainWindow, &MainWindow::exitClicked, this, &OSDocument::exitClicked);
+    connect(m_mainWindow, &MainWindow::helpClicked, this, &OSDocument::helpClicked);
+    connect(m_mainWindow, &MainWindow::aboutClicked, this, &OSDocument::aboutClicked);
+    connect(m_mainWindow, &MainWindow::osmDropped, this, &OSDocument::osmDropped);
+    connect(m_mainWindow, &MainWindow::exportClicked, this, &OSDocument::exportIdf);
+    connect(m_mainWindow, &MainWindow::exportgbXMLClicked, this, &OSDocument::exportgbXML);
+    connect(m_mainWindow, &MainWindow::exportSDDClicked, this, &OSDocument::exportSDD);
+    connect(m_mainWindow, &MainWindow::saveAsFileClicked, this, &OSDocument::saveAs);
+    connect(m_mainWindow, &MainWindow::saveFileClicked, this, &OSDocument::save);
+    // Using old-style connect here to avoid including OpenStudioApp files
+    isConnected = connect(m_mainWindow, SIGNAL(revertFileClicked()), OSAppBase::instance(), SLOT(revertToSaved()));
+    OS_ASSERT(isConnected);
+    connect(m_mainWindow, &MainWindow::scanForToolsClicked, this, &OSDocument::scanForTools);
+    connect(m_mainWindow, &MainWindow::showRunManagerPreferencesClicked, this, &OSDocument::showRunManagerPreferences);
+    connect(m_mainWindow, &MainWindow::toggleUnitsClicked, this, &OSDocument::toggleUnitsClicked);
+    connect(m_mainWindow, &MainWindow::applyMeasureClicked, this, &OSDocument::openMeasuresDlg);
+    connect(m_mainWindow, &MainWindow::downloadMeasuresClicked, this, &OSDocument::openMeasuresBclDlg);
+    connect(m_mainWindow, &MainWindow::changeMyMeasuresDir, this, &OSDocument::openChangeMeasuresDirDlg);
+    connect(m_mainWindow, &MainWindow::changeBclLogin, this, &OSDocument::changeBclLogin);
+    connect(this, &OSDocument::downloadComponentsClicked, this, &OSDocument::openBclDlg);
+    connect(this, &OSDocument::openLibDlgClicked, this, &OSDocument::openLibDlg);
+
+    // update window path after the dialog is shown
+    QTimer::singleShot(0, this, SLOT(updateWindowFilePath()));
+
+    if (initalizeWorkflow){
+      QTimer::singleShot(0, this, SLOT(addStandardMeasures()));
     }
-
-    bool modifiedOnLoad = updateModelTempDir(*model, modelTempDir);
-
-    if (m_savePath.isEmpty()){
-      modifiedOnLoad = false;
-    }
-
-    openstudio::analysisdriver::SimpleProjectOptions options;
-    options.setPauseRunManagerQueue(true); // do not start running when opening
-    options.setInitializeRunManagerUI(true);
-    options.setLogLevel(Debug);
-
-    // initialize project object
-    if (boost::filesystem::exists(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources/project.osp")))
-    {
-      LOG(Debug, "project existed, opening");
-      m_simpleProject = openstudio::analysisdriver::SimpleProject::open(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources"), options);
-
-      if (m_simpleProject)
-      {
-        // DLM: this does not seem very robust?
-        // fix up workflow as needed
-        bool save = false;
-        openstudio::analysis::Problem problem = m_simpleProject->analysis().problem();
-        OptionalInt index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
-        if (!index) {
-          problem.push(runmanager::WorkItem(runmanager::JobType::ModelToIdf));
-          save = true;
-        }
-        index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ExpandObjects);
-        if (!index) {
-          problem.push(runmanager::WorkItem(runmanager::JobType::ExpandObjects));
-          save = true;
-        }
-        index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlusPreProcess);
-        if (!index) {
-          problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlusPreProcess));
-          save = true;
-        }
-        index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlus);
-        if (!index) {
-          problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlus));
-          save = true;
-        }
-        index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::OpenStudioPostProcess);
-        if (!index) {
-          problem.push(runmanager::WorkItem(runmanager::JobType::OpenStudioPostProcess));
-          save = true;
-        }
-
-        if (save)
-        {
-          m_simpleProject->save();
-        }
-
-        // check that all Ruby scripts exist, duplicates code in PatApp::openFile
-        std::stringstream ss;
-        for (const analysis::InputVariable& inputVariable : problem.variables()){
-          boost::optional<analysis::MeasureGroup> measureGroup = inputVariable.optionalCast<analysis::MeasureGroup>();
-          if (measureGroup){
-            for (const analysis::Measure& measure : measureGroup->measures(false)){
-              boost::optional<analysis::RubyMeasure> rubyMeasure = measure.optionalCast<analysis::RubyMeasure>();
-              if (rubyMeasure){
-                boost::optional<BCLMeasure> bclMeasure = rubyMeasure->bclMeasure();
-                if (!bclMeasure){
-                  ss << "Cannot find measure '" << rubyMeasure->name() << "' in scripts directory." << std::endl;
-                }
-              }
-            }
-          }
-        }
-        if (ss.str().size() > 0){
-          ss << std::endl << "Ensure that all measures are correctly located in the scripts directory.";
-          LOG(Warn, ss.str());
-          // DLM: which dialog should be parent?
-          QMessageBox::warning(0,
-            QString("Error opening measure and run data."),
-            toQString(ss.str()),
-            QMessageBox::Ok);
-        }
-
-      }
-      else {
-        // save copy of databases about to be overwritten
-        openstudio::path projectDir = openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources");
-        boost::filesystem::copy_file(projectDir / toPath("run.db"),
-          projectDir / toPath("bad-run.db"),
-          boost::filesystem::copy_option::overwrite_if_exists);
-        boost::filesystem::copy_file(projectDir / toPath("project.osp"),
-          projectDir / toPath("bad-project.osp"),
-          boost::filesystem::copy_option::overwrite_if_exists);
-        // throw up warning message
-        std::stringstream ss;
-        ss << "The project.osp and run.db associated with this model could not be opened. ";
-        ss << "Copies have been saved as bad-run.db and bad-project.osp. New, blank databases ";
-        ss << "will be created. Compared to the original, the model will no longer contain any ";
-        ss << "measures or run data. If that data was present and is critical, it can be mined ";
-        ss << "from the 'bad-' database copies, which are in SQLite format. If you would like ";
-        ss << "to help us diagnose and fix the underlying cause of this problem, please save ";
-        ss << "your model and send a zipped-up copy of the .osm file and its companion folder ";
-        ss << "to OpenStudio@NREL.gov, along with a description of this model's history. Thank ";
-        ss << "you, and sorry for the inconvenience.";
-        LOG(Warn, ss.str());
-        // DLM: which dialog should be parent?
-        QMessageBox::warning(nullptr, 
-                             QString("Error opening measure and run data."),
-                             toQString(ss.str()),
-                             QMessageBox::Ok);
-      }
-    }
-
-    if (!m_simpleProject) {
-      LOG(Debug, "Creating new project");
-      m_simpleProject = openstudio::analysisdriver::SimpleProject::create(
-        openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources"),
-        options,
-        true);
-
-      openstudio::analysis::Problem problem = m_simpleProject->analysis().problem();
-
-      // add swap variable
-      openstudio::analysis::MeasureGroup dvar("Alternative Model", openstudio::analysis::MeasureVector(1u, openstudio::analysis::NullMeasure()));
-      problem.push(dvar);
-
-      // set up simulation workflow
-      problem.push(runmanager::WorkItem(runmanager::JobType::ModelToIdf));
-      problem.push(runmanager::WorkItem(runmanager::JobType::ExpandObjects));
-      problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlusPreProcess));
-      problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlus));
-      problem.push(runmanager::WorkItem(runmanager::JobType::OpenStudioPostProcess));
-    }
-
-  OS_ASSERT(m_simpleProject);
-  
-  // make sure project has baseline stuff setup
-  analysis::DataPoint baselineDataPoint = m_simpleProject->baselineDataPoint();
-  openstudio::analysis::Analysis analysis = m_simpleProject->analysis();
-
-  // DLM: do we need to set seed model
-
-  openstudio::runmanager::ConfigOptions co(true);
-  m_simpleProject->runManager().setConfigOptions(co);
-
-  bool isConnected = analysis.connect(SIGNAL(changed(ChangeType)), this, SLOT(markAsModified()));
-  OS_ASSERT(isConnected);
-
-  m_verticalId = 0;
-  m_subTabIds = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-  // Make sure that the vector is the same size as the number of tabs
-  OS_ASSERT(m_subTabIds.size() == static_cast<unsigned>(RESULTS_SUMMARY + 1));
-
-  // set the model, this will create widgets
-  setModel(*model, modifiedOnLoad, false);
-
-  // connect signals to main window
-  connect(m_mainWindow, &MainWindow::downloadComponentsClicked, this, &OSDocument::openBclDlg);
-  connect(m_mainWindow, &MainWindow::openLibDlgClicked, this, &OSDocument::openLibDlg);
-  connect(m_mainWindow, &MainWindow::closeClicked, this, &OSDocument::closeClicked);
-  connect(m_mainWindow, &MainWindow::verticalTabSelected, this, &OSDocument::onVerticalTabSelected);
-  connect(m_mainWindow, &MainWindow::importClicked, this, &OSDocument::importClicked);
-  connect(m_mainWindow, &MainWindow::importgbXMLClicked, this, &OSDocument::importgbXMLClicked);
-  connect(m_mainWindow, &MainWindow::importSDDClicked, this, &OSDocument::importSDDClicked);
-  connect(m_mainWindow, &MainWindow::importIFCClicked, this, &OSDocument::importIFCClicked);
-  connect(m_mainWindow, &MainWindow::loadFileClicked, this, &OSDocument::loadFileClicked);
-  connect(m_mainWindow, &MainWindow::loadLibraryClicked, this, &OSDocument::loadLibraryClicked);
-  connect(m_mainWindow, &MainWindow::newClicked, this, &OSDocument::newClicked);
-  connect(m_mainWindow, &MainWindow::exitClicked, this, &OSDocument::exitClicked);
-  connect(m_mainWindow, &MainWindow::helpClicked, this, &OSDocument::helpClicked);
-  connect(m_mainWindow, &MainWindow::aboutClicked, this, &OSDocument::aboutClicked);
-  connect(m_mainWindow, &MainWindow::osmDropped, this, &OSDocument::osmDropped);
-  connect(m_mainWindow, &MainWindow::exportClicked, this, &OSDocument::exportIdf);
-  connect(m_mainWindow, &MainWindow::exportgbXMLClicked, this, &OSDocument::exportgbXML);
-  connect(m_mainWindow, &MainWindow::exportSDDClicked, this, &OSDocument::exportSDD);
-  connect(m_mainWindow, &MainWindow::saveAsFileClicked, this, &OSDocument::saveAs);
-  connect(m_mainWindow, &MainWindow::saveFileClicked, this, &OSDocument::save);
-  // Using old-style connect here to avoid including OpenStudioApp files
-  isConnected = connect(m_mainWindow, SIGNAL(revertFileClicked()), OSAppBase::instance(), SLOT(revertToSaved()));
-  OS_ASSERT(isConnected);
-  connect(m_mainWindow, &MainWindow::scanForToolsClicked, this, &OSDocument::scanForTools);
-  connect(m_mainWindow, &MainWindow::showRunManagerPreferencesClicked, this, &OSDocument::showRunManagerPreferences);
-  connect(m_mainWindow, &MainWindow::toggleUnitsClicked, this, &OSDocument::toggleUnitsClicked);
-  connect(m_mainWindow, &MainWindow::applyMeasureClicked, this, &OSDocument::openMeasuresDlg);
-  connect(m_mainWindow, &MainWindow::downloadMeasuresClicked, this, &OSDocument::openMeasuresBclDlg);
-  connect(m_mainWindow, &MainWindow::changeMyMeasuresDir, this, &OSDocument::openChangeMeasuresDirDlg);
-  connect(m_mainWindow, &MainWindow::changeBclLogin, this, &OSDocument::changeBclLogin);
-  connect(this, &OSDocument::downloadComponentsClicked, this, &OSDocument::openBclDlg);
-  connect(this, &OSDocument::openLibDlgClicked, this, &OSDocument::openLibDlg);
-
-  // update window path after the dialog is shown
-  QTimer::singleShot(0, this, SLOT(updateWindowFilePath())); 
   }
 
   //void OSDocument::showRubyConsole()
@@ -388,15 +244,13 @@ namespace openstudio {
 
   OSDocument::~OSDocument()
   {
-    m_model.getImpl<openstudio::model::detail::Model_Impl>()->blockSignals(true);
-
-    // close the project
-    m_simpleProject.reset();
+    // blockSignals wouldn't work now anyways because of nano signal slot implementation
+    // m_model.getImpl<openstudio::model::detail::Model_Impl>()->blockSignals(true);
 
     // release the file watchers so can remove model temp dir
     m_mainTabController.reset();
 
-    removeDir(m_modelTempDir);
+    model::removeModelTempDir(toPath(m_modelTempDir));
   }
 
   void OSDocument::showStartTabAndStartSubTab()
@@ -411,31 +265,7 @@ namespace openstudio {
 
   void OSDocument::initializeModel()
   {
-    // These objects used to be added to the model as you clicked through the App's tabs,
-    // resulting in a uncertain set of model changes.  With these changes, every model will
-    // always have the following objects after opening in the app.
-    openstudio::model::Building building = m_model.getUniqueModelObject<openstudio::model::Building>();
-    openstudio::model::Facility facility = m_model.getUniqueModelObject<openstudio::model::Facility>();
-
-    // from simulation tab
-    //m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
-    m_model.getUniqueModelObject<openstudio::model::SimulationControl>();
-    m_model.getUniqueModelObject<openstudio::model::SizingParameters>();
-    //m_model.getUniqueModelObject<openstudio::model::ProgramControl>();
-    m_model.getUniqueModelObject<openstudio::model::Timestep>();
-    //m_model.getUniqueModelObject<openstudio::model::ReportingTolerances>();
-    //m_model.getUniqueModelObject<openstudio::model::ConvergenceLimits>();
-    m_model.getUniqueModelObject<openstudio::model::ShadowCalculation>();
-    //m_model.getUniqueModelObject<openstudio::model::SurfaceConvectionAlgorithmInside>();
-    //m_model.getUniqueModelObject<openstudio::model::SurfaceConvectionAlgorithmOutside>();
-    m_model.getUniqueModelObject<openstudio::model::HeatBalanceAlgorithm>();
-    //m_model.getUniqueModelObject<openstudio::model::ZoneAirHeatBalanceAlgorithm>();
-    //m_model.getUniqueModelObject<openstudio::model::ZoneAirContaminantBalance>();
-    //m_model.getUniqueModelObject<openstudio::model::ZoneCapacitanceMultiplierResearchSpecial>();
-    m_model.getUniqueModelObject<openstudio::model::RunPeriod>();
-
-
-    openstudio::model::LifeCycleCostParameters lifeCycleCostParameters = m_model.getUniqueModelObject<openstudio::model::LifeCycleCostParameters>();
+    model::initializeModelObjects(m_model);
   }
 
   void OSDocument::inspectModelObject(model::OptionalModelObject & modelObject, bool readOnly)
@@ -453,15 +283,15 @@ namespace openstudio {
     return m_mainWindow;
   }
 
-  boost::optional<Workspace> OSDocument::workspace()
-  {
-    return m_workspace;
-  }
+  //boost::optional<Workspace> OSDocument::workspace()
+  //{
+  //  return m_workspace;
+  //}
 
-  void OSDocument::setWorkspace(const boost::optional<Workspace>& workspace)
-  {
-    m_workspace = workspace;
-  }
+  //void OSDocument::setWorkspace(const boost::optional<Workspace>& workspace)
+  //{
+  //  m_workspace = workspace;
+  //}
 
   model::Model OSDocument::model()
   {
@@ -490,7 +320,12 @@ namespace openstudio {
       QTimer::singleShot(0, this, SLOT(weatherFileReset()));
     }
 
-    connect(m_model.getImpl<model::detail::Model_Impl>().get(), &model::detail::Model_Impl::onChange, this, &OSDocument::markAsModified);
+    m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<OSAppBase, &OSAppBase::addWorkspaceObjectPtr>(OSAppBase::instance());
+    m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<OSAppBase, &OSAppBase::removeWorkspaceObjectPtr>(OSAppBase::instance());
+    m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObject.connect<OSAppBase, &OSAppBase::addWorkspaceObject>(OSAppBase::instance());
+    m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObject.connect<OSAppBase, &OSAppBase::removeWorkspaceObject>(OSAppBase::instance());
+    m_model.getImpl<model::detail::Model_Impl>().get()->onChange.connect<OSDocument, &OSDocument::markAsModified>(this);
+    m_model.workflowJSON().getImpl<detail::WorkflowJSON_Impl>().get()->onChange.connect<OSDocument, &OSDocument::markAsModified>(this);
 
     // Main Right Column
 
@@ -570,6 +405,13 @@ namespace openstudio {
       ":images/on_space_types_tab.png",
       ":images/off_space_types_tab.png",
       ":images/disabled_space_types_tab.png");
+        
+    // Geometry
+    m_mainWindow->addVerticalTabButton(GEOMETRY,
+      "Geometry",
+      ":images/on_geometry_tab.png",
+      ":images/off_geometry_tab.png",
+      ":images/disabled_geometry_tab.png");
 
     // Facility
     m_mainWindow->addVerticalTabButton(FACILITY,
@@ -585,7 +427,7 @@ namespace openstudio {
       ":images/off_spaces_tab.png",
       ":images/disabled_spaces_tab.png");
 
-    // Thermal Zones 
+    // Thermal Zones
     m_mainWindow->addVerticalTabButton(THERMAL_ZONES,
       "Thermal Zones",
       ":images/on_thermal_zone_tab.png",
@@ -708,6 +550,24 @@ namespace openstudio {
 
       break;
 
+    case GEOMETRY:
+      // Geometry
+
+      m_mainTabController = std::shared_ptr<MainTabController>(new GeometryTabController(isIP, m_model));
+      m_mainWindow->setView(m_mainTabController->mainContentWidget(), GEOMETRY);
+
+      connect(this, &OSDocument::toggleUnitsClicked, m_mainTabController.get(), &GeometryTabController::toggleUnitsClicked);
+
+      connect(m_mainTabController.get(), &GeometryTabController::downloadComponentsClicked, this, &OSDocument::downloadComponentsClicked);
+
+      connect(m_mainTabController.get(), &GeometryTabController::openLibDlgClicked, this, &OSDocument::openLibDlgClicked);
+
+      connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForGeometrySubTab);
+
+      connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
+
+      break;
+
     case LOADS:
       // Loads
 
@@ -797,7 +657,7 @@ namespace openstudio {
       break;
 
     case THERMAL_ZONES:
-      // Thermal Zones 
+      // Thermal Zones
 
       m_mainTabController = std::shared_ptr<MainTabController>(new ThermalZonesTabController(isIP, m_model));
       m_mainWindow->setView(m_mainTabController->mainContentWidget(), THERMAL_ZONES);
@@ -880,8 +740,6 @@ namespace openstudio {
 
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
 
-      //connect(m_scriptsTabController->scriptFolderListView(), SIGNAL(scriptListChanged()), this, SLOT(markAsModified()));
-
       //isConnected = QObject::connect(m_scriptsTabController.get(), SIGNAL(downloadComponentsClicked()), this, SIGNAL(downloadComponentsClicked()));
       //OS_ASSERT(isConnected);
 
@@ -893,12 +751,8 @@ namespace openstudio {
     case RUN_SIMULATION:
       // Run
 
-      m_mainTabController = std::shared_ptr<MainTabController>(new RunTabController(m_model, openstudio::toPath(m_savePath), openstudio::toPath(m_modelTempDir), m_simpleProject->runManager()));
+      m_mainTabController = std::shared_ptr<MainTabController>(new RunTabController(m_model, openstudio::toPath(m_savePath), openstudio::toPath(m_modelTempDir)));//, m_simpleProject->runManager()));
       m_mainWindow->setView(m_mainTabController->mainContentWidget(), RUN_SIMULATION);
-
-      //connect(qobject_cast<RunTabController *>(m_mainTabController.get()), &RunTabController::useRadianceStateChanged, this, &OSDocument::markAsModified);
-
-      connect(qobject_cast<RunTabController *>(m_mainTabController.get()), &RunTabController::resultsGenerated, this, &OSDocument::runComplete);
 
       connect(qobject_cast<RunTabController *>(m_mainTabController.get()), &RunTabController::toolsUpdated, this, &OSDocument::markAsModified);
 
@@ -915,8 +769,6 @@ namespace openstudio {
 
       m_mainTabController = std::shared_ptr<MainTabController>(new ResultsTabController());
       m_mainWindow->setView(m_mainTabController->mainContentWidget(), RESULTS_SUMMARY);
-
-      qobject_cast<ResultsTabController *>(m_mainTabController.get())->searchForExistingResults(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources") / openstudio::toPath("run"));
 
       connect(this, &OSDocument::toggleUnitsClicked, qobject_cast<ResultsTabController *>(m_mainTabController.get()), &ResultsTabController::onUnitSystemChange);
 
@@ -968,6 +820,7 @@ namespace openstudio {
     m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, m_enableTabsAfterRun);
+    m_mainWindow->verticalTabWidget()->enableTabButton(GEOMETRY, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACES, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(THERMAL_ZONES, m_enableTabsAfterRun);
@@ -997,6 +850,7 @@ namespace openstudio {
     m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, m_enableTabsAfterRun);
+    m_mainWindow->verticalTabWidget()->enableTabButton(GEOMETRY, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(SPACES, m_enableTabsAfterRun);
     m_mainWindow->verticalTabWidget()->enableTabButton(THERMAL_ZONES, m_enableTabsAfterRun);
@@ -1011,21 +865,52 @@ namespace openstudio {
     m_mainWindow->verticalTabWidget()->refreshTabButtons();
   }
 
-  void OSDocument::runComplete()
+  void OSDocument::disable()
   {
-    if (!m_savePath.isEmpty()){
-      // copy all the simulation output to the save location
-      // do not want to save the database or osm here
-      saveModelTempDir(toPath(m_modelTempDir), toPath(m_savePath));
+    m_mainWindow->setEnabled(false);
 
-      // search for E+ and Radiance results in the save directory
-      openstudio::path searchPath = toPath(m_savePath).parent_path() / toPath(m_savePath).stem() / openstudio::toPath("run");
-      if (boost::filesystem::exists(searchPath)) {
-        if (qobject_cast<ResultsTabController *>(m_mainTabController.get())){
-          qobject_cast<ResultsTabController *>(m_mainTabController.get())->searchForExistingResults(searchPath);
-        }
-      }
-    }
+    m_mainWindow->verticalTabWidget()->enableTabButton(SITE, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(SCHEDULES, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(GEOMETRY, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(SPACES, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(THERMAL_ZONES, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(HVAC_SYSTEMS, false);
+    //m_mainWindow->verticalTabWidget()->enableTabButton(BUILDING_SUMMARY, false); No Summary tab available
+    m_mainWindow->verticalTabWidget()->enableTabButton(OUTPUT_VARIABLES, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(SIMULATION_SETTINGS, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(RUBY_SCRIPTS, false);
+    m_mainWindow->verticalTabWidget()->enableTabButton(RUN_SIMULATION, false); 
+    m_mainWindow->verticalTabWidget()->enableTabButton(RESULTS_SUMMARY, false);
+
+    m_mainWindow->verticalTabWidget()->refreshTabButtons();
+  }
+
+  void OSDocument::enable()
+  {
+    m_mainWindow->setEnabled(true);
+
+    m_mainWindow->verticalTabWidget()->enableTabButton(SITE, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(SCHEDULES, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(GEOMETRY, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(SPACES, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(THERMAL_ZONES, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(HVAC_SYSTEMS, true);
+    //m_mainWindow->verticalTabWidget()->enableTabButton(BUILDING_SUMMARY, true); No Summary tab available
+    m_mainWindow->verticalTabWidget()->enableTabButton(OUTPUT_VARIABLES, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(SIMULATION_SETTINGS, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(RUBY_SCRIPTS, true);
+    m_mainWindow->verticalTabWidget()->enableTabButton(RUN_SIMULATION, true); 
+    m_mainWindow->verticalTabWidget()->enableTabButton(RESULTS_SUMMARY, true);
+
+    m_mainWindow->verticalTabWidget()->refreshTabButtons();
   }
 
   bool OSDocument::modified() const
@@ -1037,12 +922,6 @@ namespace openstudio {
   {
     return m_savePath;
   }
-
-  boost::optional<analysisdriver::SimpleProject> OSDocument::project() const
-  {
-    return m_simpleProject;
-  }
-
 
   QString OSDocument::modelTempDir() const
   {
@@ -1057,7 +936,7 @@ namespace openstudio {
 
   bool OSDocument::fixWeatherFileInTemp(bool opening)
   {
-    // look for existing weather file 
+    // look for existing weather file
     boost::optional<model::WeatherFile> weatherFile = m_model.getOptionalUniqueModelObject<model::WeatherFile>();
 
     // no weather file, nothing to do
@@ -1092,7 +971,7 @@ namespace openstudio {
 
     // check if weather file path is absolute
     if (weatherFilePath->is_complete()){
-        
+
       // absolute weather file path
       epwPathAbsolute = true;
 
@@ -1114,17 +993,28 @@ namespace openstudio {
 
       if (!m_savePath.isEmpty()){
         openstudio::path osmPath = toPath(m_savePath);
-        openstudio::path searchDir = osmPath.parent_path() / osmPath.stem();
+        openstudio::path searchResourcesDir = osmPath.parent_path() / osmPath.stem();
+        openstudio::path searchFilesDir = osmPath.parent_path() / toPath("files") / osmPath.stem();
 
-        epwInUserPath = searchDir / *weatherFilePath;
+        epwInUserPath = searchResourcesDir / *weatherFilePath;
         if (boost::filesystem::exists(epwInUserPath)){
           epwInUserPathChecksum = checksum(epwInUserPath);
+        } else{
+          epwInUserPath = searchFilesDir / *weatherFilePath;
+          if (boost::filesystem::exists(epwInUserPath)){
+            epwInUserPathChecksum = checksum(epwInUserPath);
+          } 
         }
       }
 
       epwInTempPath = tempResourcesDir / *weatherFilePath;
       if (boost::filesystem::exists(epwInTempPath)){
         epwInTempPathChecksum = checksum(epwInTempPath);
+      } else{
+        epwInTempPath = tempFilesDir / *weatherFilePath;
+        if (boost::filesystem::exists(epwInTempPath)){
+          epwInTempPathChecksum = checksum(epwInTempPath);
+        }
       }
 
     }
@@ -1172,7 +1062,7 @@ namespace openstudio {
 
       // file does not exist in user path
       doCopy = false;
-      
+
     } else if (!epwInTempPathChecksum){
 
       // file does not exist in temp path but does exist in user dir
@@ -1217,8 +1107,8 @@ namespace openstudio {
 
         return false;
       }
-    } 
-    
+    }
+
 
     try{
       EpwFile epwFile(epwInTempPath);
@@ -1288,6 +1178,9 @@ namespace openstudio {
       break;
     case SPACE_TYPES:
       m_mainRightColumnController->configureForSpaceTypesSubTab(m_subTabId);
+      break;
+    case GEOMETRY:
+      m_mainRightColumnController->configureForGeometrySubTab(m_subTabId);
       break;
     case FACILITY:
       m_mainRightColumnController->configureForFacilitySubTab(m_subTabId);
@@ -1361,7 +1254,7 @@ namespace openstudio {
       energyplus::ForwardTranslator trans;
       Workspace workspace = trans.translateModel(m);
       openstudio::path outDir = toPath(fileName);
-      boost::filesystem::ofstream ofs(outDir);
+      openstudio::filesystem::ofstream ofs(outDir);
       workspace.toIdfFile().print(ofs);
       ofs.close();
     }
@@ -1396,7 +1289,7 @@ namespace openstudio {
 
     QString defaultDir = savePath().isEmpty() ? mainWindow()->lastPath() : QFileInfo(savePath()).path();
 
-  
+
   QString fileName = QFileDialog::getSaveFileName( this->mainWindow(),
                                                   tr(text.toStdString().c_str()),
                                                   defaultDir,
@@ -1453,31 +1346,78 @@ namespace openstudio {
     }
   }
 
+  void OSDocument::addStandardMeasures()
+  {
+    disable();
+
+    // needed before we can compute arguments
+    OSAppBase::instance()->measureManager().saveTempModel(toPath(m_modelTempDir));
+
+    WorkflowJSON workflow = m_model.workflowJSON();
+    std::vector<WorkflowStep> steps;
+      
+    // standard report measure
+    bool srmAdded = false;
+    boost::optional<BCLMeasure> srm = standardReportMeasure();
+    if (srm){
+      try{
+        std::pair<bool, std::string> result = OSAppBase::instance()->measureManager().updateMeasure(*srm);
+        if (result.first){
+          // have to reload in case measure manager updated
+          srm = BCLMeasure::load(srm->directory());
+          OS_ASSERT(srm);
+
+          MeasureStep srmStep(result.second);
+          // DLM: moved to WorkflowStepResult
+          //srmStep.setMeasureId(srm->uid());
+          //srmStep.setVersionId(srm->versionId());
+          //std::vector<std::string> tags = srm->tags();
+          //if (!tags.empty()){
+          //  srmStep.setTaxonomy(tags[0]);
+          //}
+          srmStep.setName(srm->displayName());
+          srmStep.setDescription(srm->description());
+          srmStep.setModelerDescription(srm->modelerDescription());
+          steps.push_back(srmStep);
+          srmAdded = true;
+        }
+      } catch (const std::exception&){
+        QMessageBox::warning(mainWindow(), "Failed to Compute Arguments", "Could not compute arguments for OpenStudio Results Measure.");
+	enable();
+        return;
+      }
+    }
+       
+    if (!srmAdded){
+      QMessageBox::warning(mainWindow(), "OpenStudio Results Measure Not Found", "Could not find or download OpenStudio Results Measure.");
+      enable();
+      return;
+    }
+
+    workflow.setWorkflowSteps(steps);
+
+    enable();
+  }
+
+  boost::optional<BCLMeasure> OSDocument::standardReportMeasure()
+  {
+    std::string uid("a25386cd-60e4-46bc-8b11-c755f379d916");
+    boost::optional<BCLMeasure> result = LocalBCL::instance().getMeasure(uid);
+    if (result){
+      return result;
+    }
+
+    RemoteBCL remoteBCL;
+    if (remoteBCL.isOnline()){
+      result = remoteBCL.getMeasure(uid);
+    }
+
+    return result;
+  }
+
   bool OSDocument::save()
   {
     bool fileSaved = false;
-
-    // save the project file
-    analysis::Analysis analysis = m_simpleProject->analysis();
-
-    if (analysis.dataPointsAreInvalid()){
-      // DLM: Elaine, is there any way to just remove datapoints that are invalid
-      // or do we have to remove them all?
-      // ETH@20130319 - Currently, you have to remove them all. Same with results. The ability to do
-      // this more judiciously would be nice.
-      bool completeRemoval = m_simpleProject->removeAllDataPoints();
-      if (!completeRemoval) {
-        QMessageBox::critical(mainWindow(), "Incomplete File Removal", QString("Removed all design alternatives from this project, but could not remove all of the associated files. Close all files and clear results to clean up your file system."));
-      }
-    }
-    else if (analysis.resultsAreInvalid()){
-      bool completeRemoval = m_simpleProject->clearAllResults();
-      if (!completeRemoval) {
-        QMessageBox::critical(mainWindow(), "Incomplete File Removal", QString("Removed all results from this project, but could not remove all of the result files. Close all files and clear results again to clean up your file system."));
-      }
-    }
-
-    m_simpleProject->save();
 
     if (!m_savePath.isEmpty())
     {
@@ -1485,16 +1425,15 @@ namespace openstudio {
       // DLM: should not happen unless user sets an absolute path to epw file in a measure
       fixWeatherFileInTemp(false);
 
-      // saves the model to modelTempDir / in.osm
-      openstudio::path modelPath = saveModel(this->model(), toPath(m_savePath), toPath(m_modelTempDir));
+      openstudio::path modelPath = toPath(m_savePath);
 
-      this->setSavePath(toQString(modelPath));
-
-      // saves the run database, do before saveModelTempDir
       emit modelSaving(modelPath);
 
-      // copies modelTempDir/in.osm to modelPath, copies all resources including run database
-      saveModelTempDir(toPath(m_modelTempDir), modelPath);
+      // saves the model to modelTempDir / m_savePath.filename()
+      // also copies the temp files to user location
+      bool saved = saveModel(this->model(), modelPath, toPath(m_modelTempDir));
+
+      this->setSavePath(toQString(modelPath));
 
       this->markAsUnmodified();
 
@@ -1509,27 +1448,27 @@ namespace openstudio {
 
   void OSDocument::scanForTools()
   {
-    openstudio::runmanager::RunManager rm;
-    openstudio::runmanager::ConfigOptions co = rm.getConfigOptions();
+    //openstudio::runmanager::RunManager rm;
+    //openstudio::runmanager::ConfigOptions co = rm.getConfigOptions();
 
-    co.findTools(true, false, true, true);
-    rm.setConfigOptions(co);
-    rm.showConfigGui();
+    //co.findTools(true, false, true, true);
+    //rm.setConfigOptions(co);
+    //rm.showConfigGui();
 
-    rm.getConfigOptions().saveQSettings();
+    //rm.getConfigOptions().saveQSettings();
 
     emit toolsUpdated();
   }
 
   void OSDocument::showRunManagerPreferences()
   {
-    openstudio::runmanager::ConfigOptions co(true);
+    //openstudio::runmanager::ConfigOptions co(true);
 
-    openstudio::runmanager::RunManager rm;
-    rm.setConfigOptions(co);
-    rm.showConfigGui();
+    //openstudio::runmanager::RunManager rm;
+    //rm.setConfigOptions(co);
+    //rm.showConfigGui();
 
-    rm.getConfigOptions().saveQSettings();
+    //rm.getConfigOptions().saveQSettings();
 
     emit toolsUpdated();
   }
@@ -1547,18 +1486,26 @@ namespace openstudio {
 
     if (!filePath.isEmpty())
     {
-      //scriptFolderListView()->saveOSArguments();
+      // remove old model
+      if (!m_savePath.isEmpty()){
+        openstudio::path oldModelPath = toPath(m_modelTempDir) / toPath(m_savePath).filename();
+        if (boost::filesystem::exists(oldModelPath)){
+          boost::filesystem::remove(oldModelPath);
+        }
+      }
 
-      // saves the model to modelTempDir / in.osm
-      openstudio::path modelPath = saveModel(this->model(), toPath(filePath), toPath(m_modelTempDir));
+      openstudio::path modelPath = toPath(filePath);
+      if (getFileExtension(modelPath).empty()) {
+        modelPath = setFileExtension(modelPath, modelFileExtension(), false, true);
+      }
 
-      this->setSavePath(toQString(modelPath));
-
-      // saves the run database, do before saveModelTempDir
       emit modelSaving(modelPath);
 
-      // copies modelTempDir/in.osm to modelPath, copies all resources including run database
-      saveModelTempDir(toPath(m_modelTempDir), modelPath);
+      // saves the model to modelTempDir / filePath.filename()
+      // also copies the temp files to user location
+      bool saved = saveModel(this->model(), modelPath, toPath(m_modelTempDir));
+
+      this->setSavePath(toQString(modelPath));
 
       this->markAsUnmodified();
 
@@ -1652,20 +1599,20 @@ namespace openstudio {
   boost::optional<model::ModelObject> OSDocument::getModelObject(const OSItemId& itemId) const
   {
     if (fromModel(itemId)){
-      Handle handle(itemId.itemId());
+      Handle handle(toUUID(itemId.itemId()));
       return m_model.getModelObject<model::ModelObject>(handle);
     }
     else if (fromComponentLibrary(itemId)){
       if (itemId.sourceId() == modelToSourceId(m_compLibrary)){
-        Handle handle(itemId.itemId());
+        Handle handle(toUUID(itemId.itemId()));
         return m_compLibrary.getModelObject<model::ModelObject>(handle);
       }
       else if (itemId.sourceId() == modelToSourceId(m_hvacCompLibrary)){
-        Handle handle(itemId.itemId());
+        Handle handle(toUUID(itemId.itemId()));
         return m_hvacCompLibrary.getModelObject<model::ModelObject>(handle);
       }
       else if (itemId.sourceId() == modelToSourceId(m_combinedCompLibrary)){
-        Handle handle(itemId.itemId());
+        Handle handle(toUUID(itemId.itemId()));
         return m_combinedCompLibrary.getModelObject<model::ModelObject>(handle);
       }
     }
@@ -1701,7 +1648,7 @@ namespace openstudio {
 
 #endif
 
-          //OS_ASSERT(boost::filesystem::exists(oscPath));
+          //OS_ASSERT(openstudio::filesystem::exists(oscPath));
 
           osversion::VersionTranslator translator;
           //translator.setAllowNewerVersions(false); // DLM: allow to open newer versions?
@@ -1713,16 +1660,6 @@ namespace openstudio {
 
     return modelComponent;
   }
-
-  /*
-  const ScriptFolderListView* OSDocument::scriptFolderListView() const {
-  return m_scriptsTabController->scriptFolderListView();
-  }
-
-  ScriptFolderListView* OSDocument::scriptFolderListView() {
-  return m_scriptsTabController->scriptFolderListView();
-  }
-  */
 
   void OSDocument::toggleUnits(bool displayIP)
   {
@@ -1760,11 +1697,11 @@ namespace openstudio {
       }
     }
 
+    // save the temp model for the measure manager to use
+    OSAppBase::instance()->measureManager().saveTempModel(toPath(m_modelTempDir));
+
     // open modal dialog
     m_applyMeasureNowDialog = boost::shared_ptr<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
-
-    // connect signal before exec dialog
-    connect(m_applyMeasureNowDialog.get(), &ApplyMeasureNowDialog::toolsUpdated, this, &OSDocument::toolsUpdated);
 
     m_applyMeasureNowDialog->exec();
 
@@ -1798,7 +1735,9 @@ namespace openstudio {
 
     if (!userMeasuresDir.empty()){
       if (BCLMeasure::setUserMeasuresDir(userMeasuresDir)){
+        OSAppBase::instance()->currentDocument()->disable();
         OSAppBase::instance()->measureManager().updateMeasuresLists();
+        OSAppBase::instance()->currentDocument()->enable();
       }
     }
   }
@@ -1944,7 +1883,9 @@ namespace openstudio {
   void OSDocument::on_closeMeasuresBclDlg()
   {
     if (m_onlineMeasuresBclDialog->showNewComponents()){
+      OSAppBase::instance()->currentDocument()->disable();
       OSAppBase::instance()->measureManager().updateMeasuresLists();
+      OSAppBase::instance()->currentDocument()->enable();
       m_onlineMeasuresBclDialog->setShowNewComponents(false);
     }
   }

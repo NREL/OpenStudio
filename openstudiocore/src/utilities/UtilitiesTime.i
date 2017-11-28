@@ -12,7 +12,6 @@
 %include <utilities/core/CommonInclude.i>
 %import <utilities/core/CommonImport.i> 
 %import <utilities/UtilitiesCore.i>
-%import <utilities/UtilitiesEconomics.i>
 
 //Ignore common stream related functions
 //that will not be supported by SWIG

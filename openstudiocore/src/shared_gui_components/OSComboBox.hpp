@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
- *  All rights reserved.
- *  
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- *  
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- *  
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef SHAREDGUICOMPONENTS_OSCOMBOBOX_HPP
 #define SHAREDGUICOMPONENTS_OSCOMBOBOX_HPP
@@ -23,6 +32,7 @@
 #include "FieldMethodTypedefs.hpp"
 #include "OSConcepts.hpp"
 
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 
@@ -35,7 +45,7 @@
 
 namespace openstudio {
 
-class OSComboBoxDataSource : public QObject
+class OSComboBoxDataSource : public QObject, public Nano::Observer
 {
   Q_OBJECT
 
@@ -78,9 +88,9 @@ class OSObjectListCBDS : public OSComboBoxDataSource
 
   private slots:
 
-  void onObjectAdded(const WorkspaceObject&);
+  void onObjectAdded(const WorkspaceObject&, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
-  void onObjectWillBeRemoved(const WorkspaceObject&);
+  void onObjectWillBeRemoved(const WorkspaceObject&, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
   void onObjectChanged();
 
@@ -95,7 +105,7 @@ class OSObjectListCBDS : public OSComboBoxDataSource
   QList<WorkspaceObject> m_workspaceObjects;
 };
 
-class OSComboBox2 : public QComboBox {
+class OSComboBox2 : public QComboBox, public Nano::Observer {
   Q_OBJECT
  public:
   
@@ -176,7 +186,7 @@ class OSComboBox2 : public QComboBox {
 
   void onModelObjectChanged();
 
-  void onModelObjectRemoved(Handle handle);
+  void onModelObjectRemoved(const Handle& handle);
 
   void onCurrentIndexChanged(const QString & text);
 
@@ -206,49 +216,49 @@ class OSComboBox2 : public QComboBox {
  *
  * Alternatively, a OSComboBoxDataSource can be set to provide data to OSComoboBox.
  **/
-class OSComboBox : public QComboBox {
-  Q_OBJECT
+// class OSComboBox : public QComboBox, public Nano::Observer {
+//   Q_OBJECT
 
- public:
+//  public:
 
-  OSComboBox( QWidget * parent = nullptr );
+//   OSComboBox( QWidget * parent = nullptr );
 
-  virtual ~OSComboBox() {}
+//   virtual ~OSComboBox() {}
 
-  void bind(model::ModelObject & modelObject, const char * property);
+//   void bind(model::ModelObject & modelObject, const char * property);
 
-  void unbind();
+//   void unbind();
 
-  void setDataSource(std::shared_ptr<OSComboBoxDataSource> dataSource);
+//   void setDataSource(std::shared_ptr<OSComboBoxDataSource> dataSource);
 
- protected:
+//  protected:
 
-  bool event( QEvent * e ) override;
+//   bool event( QEvent * e ) override;
 
- private slots:
+//  private slots:
 
-  void onDataSourceChange(int);
+//   void onDataSourceChange(int);
 
-  void onDataSourceAdd(int);
+//   void onDataSourceAdd(int);
   
-  void onDataSourceRemove(int);
+//   void onDataSourceRemove(int);
 
-  void onModelObjectChanged();
+//   void onModelObjectChanged();
 
-  void onModelObjectRemoved(Handle handle);
+//   void onModelObjectRemoved(const Handle& handle);
 
-  void onCurrentIndexChanged(const QString & text);
+//   void onCurrentIndexChanged(const QString & text);
 
- private:
+//  private:
 
-  std::shared_ptr<OSComboBoxDataSource> m_dataSource;
+//   std::shared_ptr<OSComboBoxDataSource> m_dataSource;
 
-  boost::optional<model::ModelObject> m_modelObject;
+//   boost::optional<model::ModelObject> m_modelObject;
 
-  std::string m_property;
+//   std::string m_property;
 
-  std::vector<std::string> m_values;
-};
+//   std::vector<std::string> m_values;
+// };
 
 } // openstudio
 

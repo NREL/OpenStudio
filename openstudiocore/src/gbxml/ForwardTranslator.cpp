@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "ForwardTranslator.hpp"
 
@@ -46,6 +55,14 @@
 #include "../model/ShadingSurface_Impl.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
+#include "../model/ThermostatSetpointDualSetpoint.hpp"
+#include "../model/ThermostatSetpointDualSetpoint_Impl.hpp"
+#include "../model/ScheduleRuleset.hpp"
+#include "../model/ScheduleRuleset_Impl.hpp"
+#include "../model/ScheduleConstant.hpp"
+#include "../model/ScheduleConstant_Impl.hpp"
+#include "../model/ScheduleDay.hpp"
+#include "../model/ScheduleDay_Impl.hpp"
 
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/EulerAngles.hpp"
@@ -54,13 +71,14 @@
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/time/DateTime.hpp"
 #include "../utilities/time/Date.hpp"
+#include "../utilities/sql/SqlFile.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 
 #include <OpenStudio.hxx>
 
 #include <boost/math/constants/constants.hpp>
 
-#include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QThread>
@@ -94,11 +112,9 @@ namespace gbxml {
       return false;
     }
 
-    QFile file(toQString(path));
-    if (file.open(QFile::WriteOnly)){
-      QTextStream textStream(&file);
-      textStream.setCodec("UTF-8");
-      textStream << doc->toString(2);
+    openstudio::filesystem::ofstream file(path, std::ios_base::binary);
+    if (file.is_open()){
+      openstudio::filesystem::write(file, doc->toString(2));
       file.close();
       return true;
     }
@@ -151,7 +167,7 @@ namespace gbxml {
     result.replace("\\", "_");
     //result.replace("-", "_"); // ok
     //result.replace(".", "_"); // ok
-    //result.replace(":", "_"); // ok
+    result.replace(":", "_"); 
     result.replace(";", "_");
     return result;
   }
@@ -307,6 +323,128 @@ namespace gbxml {
     QDomElement lastNameElement = doc.createElement("LastName");
     personInfoElement.appendChild(lastNameElement);
     lastNameElement.appendChild(doc.createTextNode("Unknown"));
+
+    // translate results
+    boost::optional<SqlFile> sqlFile = model.sqlFile();
+    if (sqlFile){
+
+      // thermal zone results
+      if (m_progressBar){
+        m_progressBar->setWindowTitle(toString("Translating Thermal Zone Results"));
+        m_progressBar->setMinimum(0);
+        m_progressBar->setMaximum((int)thermalZones.size()); 
+        m_progressBar->setValue(0);
+      }
+
+      for (const model::ThermalZone& thermalZone : thermalZones){
+        std::string query;
+        boost::optional<double> heatLoad;
+        boost::optional<double> coolingLoad;
+        boost::optional<double> flow;
+        QString thermalZoneId = escapeName(thermalZone.name().get());
+        
+        // DLM: these queries are taken from the OpenStudio standards, should be ported to Model
+        query = "SELECT Value ";
+        query += "FROM tabulardatawithstrings ";
+        query += "WHERE ReportName='HVACSizingSummary' ";
+        query += "AND ReportForString='Entire Facility' ";
+        query += "AND TableName='Zone Sensible Heating' ";
+        query += "AND ColumnName='User Design Load' ";
+        query += "AND RowName='" + boost::to_upper_copy(thermalZone.name().get()) + "' ";
+        query += "AND Units='W'";         
+        heatLoad = sqlFile->execAndReturnFirstDouble(query);
+
+        query = "SELECT Value ";
+        query += "FROM tabulardatawithstrings ";
+        query += "WHERE ReportName='HVACSizingSummary' ";
+        query += "AND ReportForString='Entire Facility' ";
+        query += "AND TableName='Zone Sensible Cooling' ";
+        query += "AND ColumnName='User Design Load' ";
+        query += "AND RowName='" + boost::to_upper_copy(thermalZone.name().get()) + "' ";
+        query += "AND Units='W'";         
+        coolingLoad = sqlFile->execAndReturnFirstDouble(query);
+
+        query = "SELECT Value ";
+        query += "FROM tabulardatawithstrings ";
+        query += "WHERE ReportName='HVACSizingSummary' ";
+        query += "AND ReportForString='Entire Facility' ";
+        query += "AND TableName='Zone Sensible Cooling' ";
+        query += "AND ColumnName='User Design Air Flow' ";
+        query += "AND RowName='" + boost::to_upper_copy(thermalZone.name().get()) + "' ";
+        query += "AND Units='m3/s'";         
+        boost::optional<double> coolingFlow = sqlFile->execAndReturnFirstDouble(query);
+
+        query = "SELECT Value ";
+        query += "FROM tabulardatawithstrings ";
+        query += "WHERE ReportName='HVACSizingSummary' ";
+        query += "AND ReportForString='Entire Facility' ";
+        query += "AND TableName='Zone Sensible Heating' ";
+        query += "AND ColumnName='User Design Air Flow' ";
+        query += "AND RowName='" + boost::to_upper_copy(thermalZone.name().get()) + "' ";
+        query += "AND Units='m3/s'";         
+        boost::optional<double> heatingFlow = sqlFile->execAndReturnFirstDouble(query);
+
+        if (heatingFlow && coolingFlow){
+          flow = std::max(*heatingFlow, *coolingFlow);
+        } else if (heatingFlow){
+          flow = heatingFlow;
+        } else if (coolingFlow){
+          flow = coolingFlow;
+        }
+
+        if (heatLoad){
+          QDomElement resultsElement = doc.createElement("Results");
+          gbXMLElement.appendChild(resultsElement);
+          resultsElement.setAttribute("id", thermalZoneId + "HeatLoad");
+          resultsElement.setAttribute("resultsType", "HeatLoad");
+          resultsElement.setAttribute("unit", "Kilowatt");
+
+          QDomElement objectIdElement = doc.createElement("ObjectId");
+          resultsElement.appendChild(objectIdElement);
+          objectIdElement.appendChild(doc.createTextNode(thermalZoneId));
+
+          QDomElement valueElement = doc.createElement("Value");
+          resultsElement.appendChild(valueElement);
+          valueElement.appendChild(doc.createTextNode(QString::number(*heatLoad/1000.0, 'f')));
+        }
+
+        if (coolingLoad){
+          QDomElement resultsElement = doc.createElement("Results");
+          gbXMLElement.appendChild(resultsElement);
+          resultsElement.setAttribute("id", thermalZoneId + "CoolingLoad");
+          resultsElement.setAttribute("resultsType", "CoolingLoad");
+          resultsElement.setAttribute("unit", "Kilowatt");
+
+          QDomElement objectIdElement = doc.createElement("ObjectId");
+          resultsElement.appendChild(objectIdElement);
+          objectIdElement.appendChild(doc.createTextNode(thermalZoneId));
+
+          QDomElement valueElement = doc.createElement("Value");
+          resultsElement.appendChild(valueElement);
+          valueElement.appendChild(doc.createTextNode(QString::number(*coolingLoad/1000.0, 'f')));
+        }
+
+        if (flow){
+          QDomElement resultsElement = doc.createElement("Results");
+          gbXMLElement.appendChild(resultsElement);
+          resultsElement.setAttribute("id", thermalZoneId + "Flow");
+          resultsElement.setAttribute("resultsType", "Flow");
+          resultsElement.setAttribute("unit", "CubicMPerHr");
+
+          QDomElement objectIdElement = doc.createElement("ObjectId");
+          resultsElement.appendChild(objectIdElement);
+          objectIdElement.appendChild(doc.createTextNode(thermalZoneId));
+
+          QDomElement valueElement = doc.createElement("Value");
+          resultsElement.appendChild(valueElement);
+          valueElement.appendChild(doc.createTextNode(QString::number(*flow*3600, 'f')));
+        }
+
+        if (m_progressBar){
+          m_progressBar->setValue(m_progressBar->value() + 1);
+        }
+      }
+    }
 
     return doc;
   }
@@ -546,6 +684,47 @@ namespace gbxml {
     QDomElement volumeElement = doc.createElement("Volume");
     volumeElement.appendChild(doc.createTextNode(QString::number(volume, 'f')));
     result.appendChild(volumeElement);
+
+    // Lighting
+
+    // LightingControl
+
+    // InfiltrationFlow
+
+    // PeopleNumber
+    double numberOfPeople = space.numberOfPeople();
+    if (numberOfPeople > 0){
+      double floorAreaPerPerson = space.floorAreaPerPerson();
+      QDomElement peopleNumberElement = doc.createElement("PeopleNumber");
+      peopleNumberElement.setAttribute("unit", "SquareMPerPerson");
+      peopleNumberElement.appendChild(doc.createTextNode(QString::number(floorAreaPerPerson, 'f')));
+      result.appendChild(peopleNumberElement);
+    }
+
+    // PeopleHeatGain
+    // unit "WattPerPerson", BtuPerHourPerson"
+    // heatGainType "Total",  "Sensible", "Latent"
+
+    // LightPowerPerArea
+    double lightingPowerPerFloorArea = space.lightingPowerPerFloorArea();
+    if (lightingPowerPerFloorArea > 0){
+      QDomElement lightPowerPerAreaElement = doc.createElement("LightPowerPerArea");
+      lightPowerPerAreaElement.setAttribute("unit", "WattPerSquareMeter");
+      lightPowerPerAreaElement.appendChild(doc.createTextNode(QString::number(lightingPowerPerFloorArea, 'f')));
+      result.appendChild(lightPowerPerAreaElement);
+    }
+
+    // EquipPowerPerArea
+    double electricEquipmentPowerPerFloorArea = space.electricEquipmentPowerPerFloorArea();
+    if (electricEquipmentPowerPerFloorArea > 0){
+      QDomElement equipPowerPerAreaElement = doc.createElement("EquipPowerPerArea");
+      equipPowerPerAreaElement.setAttribute("unit", "WattPerSquareMeter");
+      equipPowerPerAreaElement.appendChild(doc.createTextNode(QString::number(electricEquipmentPowerPerFloorArea, 'f')));
+      result.appendChild(equipPowerPerAreaElement);
+    }
+
+    //  Temperature
+    // unit "F", "C", "K", "R"
 
     return result;
   }
@@ -1161,6 +1340,52 @@ namespace gbxml {
     QDomElement nameElement = doc.createElement("Name");
     result.appendChild(nameElement);
     nameElement.appendChild(doc.createTextNode(QString::fromStdString(name)));
+
+    // heating setpoint
+    boost::optional<double> designHeatT;
+    boost::optional<double> designCoolT;
+    boost::optional<model::Thermostat> thermostat = thermalZone.thermostat();
+    if (thermostat && thermostat->optionalCast<model::ThermostatSetpointDualSetpoint>()){
+      model::ThermostatSetpointDualSetpoint thermostatDualSetpoint = thermostat->cast<model::ThermostatSetpointDualSetpoint>();
+
+      boost::optional<model::Schedule> heatingSchedule = thermostatDualSetpoint.heatingSetpointTemperatureSchedule();
+      if (heatingSchedule){
+        if (heatingSchedule->optionalCast<model::ScheduleRuleset>()){
+          model::ScheduleRuleset scheduleRuleset = heatingSchedule->cast<model::ScheduleRuleset>();
+          model::ScheduleDay winterDesignDaySchedule = scheduleRuleset.winterDesignDaySchedule();
+          std::vector<double> values = winterDesignDaySchedule.values();
+          if (!values.empty()){
+            designHeatT = *std::max_element(values.begin(), values.end());
+          }
+        }
+      }
+
+      boost::optional<model::Schedule> coolingSchedule = thermostatDualSetpoint.coolingSetpointTemperatureSchedule();
+      if (coolingSchedule){
+        if (coolingSchedule->optionalCast<model::ScheduleRuleset>()){
+          model::ScheduleRuleset scheduleRuleset = coolingSchedule->cast<model::ScheduleRuleset>();
+          model::ScheduleDay summerDesignDaySchedule = scheduleRuleset.summerDesignDaySchedule();
+          std::vector<double> values = summerDesignDaySchedule.values();
+          if (!values.empty()){
+            designCoolT = *std::min_element(values.begin(), values.end());
+          }
+        }
+      }
+    }
+
+    if (designHeatT){
+      QDomElement designHeatTElement = doc.createElement("DesignHeatT");
+      designHeatTElement.setAttribute("unit", "C");
+      designHeatTElement.appendChild(doc.createTextNode(QString::number(*designHeatT, 'f')));
+      result.appendChild(designHeatTElement);
+    }
+
+    if (designCoolT){
+      QDomElement designCoolTElement = doc.createElement("DesignCoolT");
+      designCoolTElement.setAttribute("unit", "C");
+      designCoolTElement.appendChild(doc.createTextNode(QString::number(*designCoolT, 'f')));
+      result.appendChild(designCoolTElement);
+    }
 
     return result;
   }

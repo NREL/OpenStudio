@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
-*  All rights reserved.
-*  
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*  
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*  
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef UTILITIES_CORE_APPLICATIONPATHHELPERS_HPP
 #define UTILITIES_CORE_APPLICATIONPATHHELPERS_HPP
@@ -26,62 +35,44 @@
 
 namespace openstudio {
 
-  /** If possible, creates an openstudio::path to a system directory from outdir, otherwise throws 
-   *  a std::runtime_error. For use by auto-generation applications that are writing files for 
-   *  OpenStudio. Requires that the path represented by outdir exist up to the parent level of the
-   *  final directory. Outputs informative messages to std::cout. */
-  UTILITIES_API openstudio::path getApplicationOutputDirectory(const std::string& outdir);
-
   /// \returns The source directory the application was built from
   UTILITIES_API openstudio::path getApplicationSourceDirectory();
 
   /// \returns The directory the application was built in
   UTILITIES_API openstudio::path getApplicationBuildDirectory();
 
-  /// \returns The directory the application was configured to be installed in (install prefix)
-  UTILITIES_API openstudio::path getApplicationInstallDirectory();
+  /// \returns The path to the current executable application
+  UTILITIES_API openstudio::path getApplicationPath();
 
-  /// \returns The directory the application binary lives in
-  UTILITIES_API openstudio::path getApplicationRunDirectory();
+  /// \returns The directory of the current executable application
+  UTILITIES_API openstudio::path getApplicationDirectory();
 
   /// \returns True if the application is running from the build directory
   UTILITIES_API bool applicationIsRunningFromBuildDirectory();
 
-  /// \returns The bare paths of the openstudio ruby libraries, with no root specified
-  UTILITIES_API std::vector<openstudio::path> getOpenStudioBareRubyPaths();
-  
-  /// \returns The locations of the openstudio ruby libraries appropriate for this application instance can be found
-  UTILITIES_API std::vector<openstudio::path> getOpenStudioRubyPaths();
+  /// \returns Will return path to the binary containing OpenStudio Utilities, could be openstudio.exe, openstudio.so, etc.
+  UTILITIES_API openstudio::path getOpenStudioModule();
 
-  /// \returns The directory the openstudio ruby library appropriate for this application instance can be found
-  UTILITIES_API openstudio::path getOpenStudioRubyPath();
+  /// \returns Will return dir containing the binary containing OpenStudio Utilities, could be openstudio.exe, openstudio.so, etc.
+  UTILITIES_API openstudio::path getOpenStudioModuleDirectory();
 
-  /** \returns The directory that should be included when making calls to ruby scripts from a ruby
-   *  job (to make require 'openstudio' work). */
-  UTILITIES_API openstudio::path getOpenStudioRubyIncludePath();
+  /// \returns True if the OpenStudio Module is running from the build directory
+  UTILITIES_API bool moduleIsRunningFromBuildDirectory();
 
-  /// \returns The openstudio ruby scripts library appropriate for this application instance.
-  UTILITIES_API openstudio::path getOpenStudioRubyScriptsPath();
+  /// \returns The path to the OpenStudio Command Line Interface  if it exists.
+  UTILITIES_API openstudio::path getOpenStudioCLI();
 
-  /// \returns The location to load resources from
-  UTILITIES_API openstudio::path getSharedResourcesPath();
-
-  /// \returns The location of the ruby installation intended for aws-sdk use with aws-sdk
-  ///          gem already installed
-  UTILITIES_API openstudio::path getOpenStudioAWSRubyPath();
-
-  /// \returns The packaged ruby installation from the embedded ruby version.
-  ///          Returns nothing on non-windows platforms
-  UTILITIES_API openstudio::path getOpenStudioEmbeddedRubyPath();
-
-  /// \returns The packaged EnergyPlus installation.
+  /// \returns The packaged EnergyPlus installation if it exists.
   UTILITIES_API openstudio::path getEnergyPlusDirectory();
 
-  /// \returns The path to the packaged EnergyPlus executable.
+  /// \returns The path to the EnergyPlus executable if it exists.
   UTILITIES_API openstudio::path getEnergyPlusExecutable();
 
-  /// \returns The packaged Radiance installation if it exists.
-  UTILITIES_API boost::optional<openstudio::path> getRadianceDirectory();
+  /// \returns The path to the Radiance installation if it exists.
+  UTILITIES_API openstudio::path getRadianceDirectory();
+
+  /// \returns The path to the Perl executable if it exists.
+  UTILITIES_API openstudio::path getPerlExecutable();
 
 } // openstudio
 

@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef MODEL_SCREEN_IMPL_HPP
 #define MODEL_SCREEN_IMPL_HPP
@@ -33,66 +42,66 @@ namespace detail {
 
   /** Screen_Impl is a ShadingMaterial_Impl that is the implementation class for Screen.*/
   class MODEL_API Screen_Impl : public ShadingMaterial_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(std::string reflectedBeamTransmittanceAccountingMethod READ reflectedBeamTransmittanceAccountingMethod WRITE setReflectedBeamTransmittanceAccountingMethod RESET resetReflectedBeamTransmittanceAccountingMethod);
-    Q_PROPERTY(bool isReflectedBeamTransmittanceAccountingMethodDefaulted READ isReflectedBeamTransmittanceAccountingMethodDefaulted);
-    Q_PROPERTY(std::vector<std::string> reflectedBeamTransmittanceAccountingMethodValues READ reflectedBeamTransmittanceAccountingMethodValues);
+    
+    
+    
 
-    Q_PROPERTY(double diffuseSolarReflectance READ diffuseSolarReflectance WRITE setDiffuseSolarReflectance);
-    Q_PROPERTY(openstudio::Quantity diffuseSolarReflectance_SI READ diffuseSolarReflectance_SI WRITE setDiffuseSolarReflectance);
-    Q_PROPERTY(openstudio::Quantity diffuseSolarReflectance_IP READ diffuseSolarReflectance_IP WRITE setDiffuseSolarReflectance);
+    
+    
+    
 
-    Q_PROPERTY(double diffuseVisibleReflectance READ diffuseVisibleReflectance WRITE setDiffuseVisibleReflectance);
-    Q_PROPERTY(openstudio::Quantity diffuseVisibleReflectance_SI READ diffuseVisibleReflectance_SI WRITE setDiffuseVisibleReflectance);
-    Q_PROPERTY(openstudio::Quantity diffuseVisibleReflectance_IP READ diffuseVisibleReflectance_IP WRITE setDiffuseVisibleReflectance);
+    
+    
+    
 
-    Q_PROPERTY(double thermalHemisphericalEmissivity READ thermalHemisphericalEmissivity WRITE setThermalHemisphericalEmissivity RESET resetThermalHemisphericalEmissivity);
-    Q_PROPERTY(openstudio::Quantity thermalHemisphericalEmissivity_SI READ thermalHemisphericalEmissivity_SI WRITE setThermalHemisphericalEmissivity RESET resetThermalHemisphericalEmissivity);
-    Q_PROPERTY(openstudio::Quantity thermalHemisphericalEmissivity_IP READ thermalHemisphericalEmissivity_IP WRITE setThermalHemisphericalEmissivity RESET resetThermalHemisphericalEmissivity);
-    Q_PROPERTY(bool isThermalHemisphericalEmissivityDefaulted READ isThermalHemisphericalEmissivityDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double conductivity READ conductivity WRITE setConductivity RESET resetConductivity);
-    Q_PROPERTY(openstudio::Quantity conductivity_SI READ conductivity_SI WRITE setConductivity RESET resetConductivity);
-    Q_PROPERTY(openstudio::Quantity conductivity_IP READ conductivity_IP WRITE setConductivity RESET resetConductivity);
-    Q_PROPERTY(bool isConductivityDefaulted READ isConductivityDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double screenMaterialSpacing READ screenMaterialSpacing WRITE setScreenMaterialSpacing);
-    Q_PROPERTY(openstudio::Quantity screenMaterialSpacing_SI READ screenMaterialSpacing_SI WRITE setScreenMaterialSpacing);
-    Q_PROPERTY(openstudio::Quantity screenMaterialSpacing_IP READ screenMaterialSpacing_IP WRITE setScreenMaterialSpacing);
+    
+    
+    
 
-    Q_PROPERTY(double screenMaterialDiameter READ screenMaterialDiameter WRITE setScreenMaterialDiameter);
-    Q_PROPERTY(openstudio::Quantity screenMaterialDiameter_SI READ screenMaterialDiameter_SI WRITE setScreenMaterialDiameter);
-    Q_PROPERTY(openstudio::Quantity screenMaterialDiameter_IP READ screenMaterialDiameter_IP WRITE setScreenMaterialDiameter);
+    
+    
+    
 
-    Q_PROPERTY(double screentoGlassDistance READ screentoGlassDistance WRITE setScreentoGlassDistance RESET resetScreentoGlassDistance);
-    Q_PROPERTY(openstudio::Quantity screentoGlassDistance_SI READ screentoGlassDistance_SI WRITE setScreentoGlassDistance RESET resetScreentoGlassDistance);
-    Q_PROPERTY(openstudio::Quantity screentoGlassDistance_IP READ screentoGlassDistance_IP WRITE setScreentoGlassDistance RESET resetScreentoGlassDistance);
-    Q_PROPERTY(bool isScreentoGlassDistanceDefaulted READ isScreentoGlassDistanceDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double topOpeningMultiplier READ topOpeningMultiplier WRITE setTopOpeningMultiplier RESET resetTopOpeningMultiplier);
-    Q_PROPERTY(openstudio::Quantity topOpeningMultiplier_SI READ topOpeningMultiplier_SI WRITE setTopOpeningMultiplier RESET resetTopOpeningMultiplier);
-    Q_PROPERTY(openstudio::Quantity topOpeningMultiplier_IP READ topOpeningMultiplier_IP WRITE setTopOpeningMultiplier RESET resetTopOpeningMultiplier);
-    Q_PROPERTY(bool isTopOpeningMultiplierDefaulted READ isTopOpeningMultiplierDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double bottomOpeningMultiplier READ bottomOpeningMultiplier WRITE setBottomOpeningMultiplier RESET resetBottomOpeningMultiplier);
-    Q_PROPERTY(openstudio::Quantity bottomOpeningMultiplier_SI READ bottomOpeningMultiplier_SI WRITE setBottomOpeningMultiplier RESET resetBottomOpeningMultiplier);
-    Q_PROPERTY(openstudio::Quantity bottomOpeningMultiplier_IP READ bottomOpeningMultiplier_IP WRITE setBottomOpeningMultiplier RESET resetBottomOpeningMultiplier);
-    Q_PROPERTY(bool isBottomOpeningMultiplierDefaulted READ isBottomOpeningMultiplierDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double leftSideOpeningMultiplier READ leftSideOpeningMultiplier WRITE setLeftSideOpeningMultiplier RESET resetLeftSideOpeningMultiplier);
-    Q_PROPERTY(openstudio::Quantity leftSideOpeningMultiplier_SI READ leftSideOpeningMultiplier_SI WRITE setLeftSideOpeningMultiplier RESET resetLeftSideOpeningMultiplier);
-    Q_PROPERTY(openstudio::Quantity leftSideOpeningMultiplier_IP READ leftSideOpeningMultiplier_IP WRITE setLeftSideOpeningMultiplier RESET resetLeftSideOpeningMultiplier);
-    Q_PROPERTY(bool isLeftSideOpeningMultiplierDefaulted READ isLeftSideOpeningMultiplierDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double rightSideOpeningMultiplier READ rightSideOpeningMultiplier WRITE setRightSideOpeningMultiplier RESET resetRightSideOpeningMultiplier);
-    Q_PROPERTY(openstudio::Quantity rightSideOpeningMultiplier_SI READ rightSideOpeningMultiplier_SI WRITE setRightSideOpeningMultiplier RESET resetRightSideOpeningMultiplier);
-    Q_PROPERTY(openstudio::Quantity rightSideOpeningMultiplier_IP READ rightSideOpeningMultiplier_IP WRITE setRightSideOpeningMultiplier RESET resetRightSideOpeningMultiplier);
-    Q_PROPERTY(bool isRightSideOpeningMultiplierDefaulted READ isRightSideOpeningMultiplierDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(std::string angleofResolutionforScreenTransmittanceOutputMap READ angleofResolutionforScreenTransmittanceOutputMap WRITE setAngleofResolutionforScreenTransmittanceOutputMap RESET resetAngleofResolutionforScreenTransmittanceOutputMap);
-    Q_PROPERTY(bool isAngleofResolutionforScreenTransmittanceOutputMapDefaulted READ isAngleofResolutionforScreenTransmittanceOutputMapDefaulted);
-    Q_PROPERTY(std::vector<std::string> angleofResolutionforScreenTransmittanceOutputMapValues READ angleofResolutionforScreenTransmittanceOutputMapValues);
+    
+    
+    
 
     // TODO: Add relationships for objects related to this one, but not pointed to by the underlying data.
     //       Such relationships can be generated by the GenerateRelationships.rb script.

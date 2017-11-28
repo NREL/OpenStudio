@@ -1,0 +1,27 @@
+{
+	"steps": [
+		{
+			"measure_dir_name": "IncreaseWallRValue",
+			"arguments": {
+				"cost": 123.321,
+				"percent_increase": 5,
+				"operating_expenses": 0
+			}
+		},
+		{
+			"measure_dir_name": "IncreaseRoofRValue",
+			"arguments": {
+				"cost": 321.123,
+				"percent_increase": 15,
+				"space_type": "*All*"
+			}
+		},
+		{
+			"measure_dir_name": "DecreaseThermalMass",
+			"arguments": {
+				"has_bool": true,
+				"percent_decrease": 5
+			}
+		}
+	]
+}

@@ -1,21 +1,31 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
-*  All rights reserved.
-*  
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*  
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*  
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
+
 #include "BCLComponent.hpp"
 #include "BCLMeasure.hpp"
 #include "LocalBCL.hpp"
@@ -23,12 +33,12 @@
 #include "../core/Application.hpp"
 #include "../core/Assert.hpp"
 #include "../data/Attribute.hpp"
+#include "../time/DateTime.hpp"
 #include "../core/Path.hpp"
 #include "../core/PathHelpers.hpp"
 #include "../core/System.hpp"
 
 #include <QDir>
-#include <QFile>
 #include <QIcon>
 #include <QInputDialog>
 #include <QSettings>
@@ -63,7 +73,7 @@ namespace openstudio{
       QDir().mkpath(m_libraryPath);
     }
     //Check for local database
-    if (!QFile(m_libraryPath+m_dbName).exists())
+    if (!openstudio::filesystem::exists(openstudio::toPath(m_libraryPath+m_dbName)))
     {
       initializeLocalDb();
     }
@@ -257,9 +267,9 @@ namespace openstudio{
         while (query.next()) {
           path src = toPath(m_libraryPath + "/" + query.value(0).toString() + "/" + query.value(1).toString() + query.value(2).toString().mid(query.value(2).toString().lastIndexOf("/")));
           path dest = src.parent_path();
-          QFile::remove(toQString(dest / toPath("DISCLAIMER.txt")));
-          QFile::remove(toQString(dest / toPath("README.txt")));
-          QFile::remove(toQString(dest / toPath("output.xml")));
+          openstudio::filesystem::remove(dest / toPath("DISCLAIMER.txt"));
+          openstudio::filesystem::remove(dest / toPath("README.txt"));
+          openstudio::filesystem::remove(dest / toPath("output.xml"));
           copyDirectory(src, dest);
           removeDirectory(src);
         }
@@ -313,15 +323,30 @@ namespace openstudio{
     QSqlQuery query(database);
     if (versionId.empty())
     {
+
+      boost::optional<DateTime> mostRecentModified;
+      boost::optional<BCLMeasure> mostRecentMeasure;
       query.exec(QString("SELECT version_id FROM Measures WHERE uid='%1'").arg(escape(uid)));
-      if (query.next())
+      while (query.next())
       {
         try{
-          return boost::optional<BCLMeasure>(toPath(m_libraryPath) / toPath(uid) / toPath(toString(query.value(0).toString())));
+          BCLMeasure measure(toPath(m_libraryPath) / toPath(uid) / toPath(toString(query.value(0).toString())));
+
+          boost::optional<DateTime> versionModified = measure.versionModified();
+          if (mostRecentModified){
+            if (versionModified && versionModified.get() > mostRecentModified.get()){
+              mostRecentModified = versionModified;
+              mostRecentMeasure = measure;
+            }
+          } else {
+            mostRecentModified = versionModified;
+            mostRecentMeasure = measure;
+          }
         }catch(const std::exception&){
         }
       }
-      return boost::none;
+
+      return mostRecentMeasure;
     }
     query.exec(QString("SELECT version_id FROM Measures WHERE uid='%1' AND version_id='%2'").arg(escape(uid), escape(versionId)));
     if (query.next())
@@ -858,7 +883,7 @@ namespace openstudio{
     }
     m_libraryPath = path;
 
-    if (!QFile(path+m_dbName).exists())
+    if (!openstudio::filesystem::exists(openstudio::toPath(path+m_dbName)))
     {
       QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE", path+m_dbName);
       database.setDatabaseName(path+m_dbName);

@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "Space.hpp"
 #include "Space_Impl.hpp"
@@ -40,6 +49,8 @@
 #include "ThermalZone_Impl.hpp"
 #include "BuildingStory.hpp"
 #include "BuildingStory_Impl.hpp"
+#include "BuildingUnit.hpp"
+#include "BuildingUnit_Impl.hpp"
 #include "ShadingSurfaceGroup.hpp"
 #include "ShadingSurfaceGroup_Impl.hpp"
 #include "ShadingSurface.hpp"
@@ -176,7 +187,7 @@ namespace detail {
     // surfaces
     SurfaceVector surfaces = this->surfaces();
     result.insert(result.end(), surfaces.begin(), surfaces.end());
-    
+
     // internal mass
     InternalMassVector internalMass = this->internalMass();
     result.insert(result.end(), internalMass.begin(), internalMass.end());
@@ -215,8 +226,8 @@ namespace detail {
 
     // water use equipment
     WaterUseEquipmentVector waterUseEquipment = this->waterUseEquipment();
-    result.insert(result.end(), waterUseEquipment.begin(), waterUseEquipment.end());    
-   
+    result.insert(result.end(), waterUseEquipment.begin(), waterUseEquipment.end());
+
     // daylighting controls
     DaylightingControlVector daylightingControls = this->daylightingControls();
     result.insert(result.end(), daylightingControls.begin(), daylightingControls.end());
@@ -229,7 +240,7 @@ namespace detail {
     GlareSensorVector glareSensors = this->glareSensors();
     result.insert(result.end(), glareSensors.begin(), glareSensors.end());
 
-    
+
     // SpaceInfiltration_DesignFlowRate
     SpaceInfiltrationDesignFlowRateVector spaceInfiltrationDesignFlowRates = this->spaceInfiltrationDesignFlowRates();
     result.insert(result.end(), spaceInfiltrationDesignFlowRates.begin(), spaceInfiltrationDesignFlowRates.end());
@@ -274,14 +285,7 @@ namespace detail {
 
   Transformation Space_Impl::buildingTransformation() const
   {
-    Transformation transformation;
-    boost::optional<Building> building = this->model().building();
-    if (building){
-      transformation = building->transformation() * this->transformation();
-    }else{
-      transformation = this->transformation();
-    }
-    return transformation;
+    return this->transformation();
   }
 
   bool Space_Impl::changeTransformation(const openstudio::Transformation& transformation) {
@@ -367,8 +371,8 @@ namespace detail {
     for (GlareSensor glareSensor : this->glareSensors()){
       result.addPoint(glareSensor.position());
     }
-  
-    
+
+
     return result;
   }
 
@@ -725,6 +729,22 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<BuildingUnit> Space_Impl::buildingUnit() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<BuildingUnit>(OS_SpaceFields::BuildingUnitName);
+  }
+
+  bool Space_Impl::setBuildingUnit(const BuildingUnit &buildingUnit)
+  {
+    return this->setPointer(OS_SpaceFields::BuildingUnitName, buildingUnit.handle());
+  }
+
+  void Space_Impl::resetBuildingUnit()
+  {
+    bool result = this->setString(OS_SpaceFields::BuildingUnitName, "");
+    OS_ASSERT(result);
+  }
+
   ShadingSurfaceGroupVector Space_Impl::shadingSurfaceGroups() const
   {
     return getObject<ModelObject>().getModelObjectSources<ShadingSurfaceGroup>(
@@ -810,8 +830,8 @@ namespace detail {
    GlareSensorVector Space_Impl::glareSensors() const
   {
     return getObject<ModelObject>().getModelObjectSources<GlareSensor>(GlareSensor::iddObjectType());
-  } 
-  
+  }
+
   SpaceInfiltrationDesignFlowRateVector Space_Impl::spaceInfiltrationDesignFlowRates() const
   {
     return getObject<ModelObject>().getModelObjectSources<SpaceInfiltrationDesignFlowRate>(
@@ -969,11 +989,11 @@ namespace detail {
     return setNumberOfPeople(numberOfPeople,templatePeople);
   }
 
-  bool Space_Impl::setNumberOfPeople(double numberOfPeople, 
-                                     const boost::optional<People>& templatePeople) 
+  bool Space_Impl::setNumberOfPeople(double numberOfPeople,
+                                     const boost::optional<People>& templatePeople)
   {
     if (numberOfPeople < 0.0) {
-      LOG(Error,"Space cannot set numberOfPeople to " << numberOfPeople 
+      LOG(Error,"Space cannot set numberOfPeople to " << numberOfPeople
           << ", the value must be >= 0.0.");
       return false;
     }
@@ -995,11 +1015,11 @@ namespace detail {
     // remove all other people from space
     PeopleVector allMyPeople = people();
     removeAllButOneSpaceLoadInstance<People>(allMyPeople,*myPeople);
-    
+
     // handle space type
     if (OptionalSpaceType spaceType = this->spaceType()) {
       if (!spaceType->people().empty()) {
-        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes 
+        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes
         // SpaceLoadInstances), create and use clone instead of original
         if (spaceType->getModelObjectSources<ParentObject>().size() > 1u) {
           spaceType = spaceType->clone().cast<SpaceType>();
@@ -1047,11 +1067,11 @@ namespace detail {
     return setPeoplePerFloorArea(peoplePerFloorArea,templatePeople);
   }
 
-  bool Space_Impl::setPeoplePerFloorArea(double peoplePerFloorArea, 
-                                         const boost::optional<People>& templatePeople) 
+  bool Space_Impl::setPeoplePerFloorArea(double peoplePerFloorArea,
+                                         const boost::optional<People>& templatePeople)
   {
     if (peoplePerFloorArea < 0.0) {
-      LOG(Error,"Space cannot set peoplePerFloorArea to " << peoplePerFloorArea 
+      LOG(Error,"Space cannot set peoplePerFloorArea to " << peoplePerFloorArea
           << ", the value must be >= 0.0.");
       return false;
     }
@@ -1067,18 +1087,18 @@ namespace detail {
     bool ok(true);
     myPeople->makeUnique();
     ok = myPeople->setSpace(getObject<Space>()); OS_ASSERT(ok);
-    ok = myPeople->peopleDefinition().setPeopleperSpaceFloorArea(peoplePerFloorArea); 
+    ok = myPeople->peopleDefinition().setPeopleperSpaceFloorArea(peoplePerFloorArea);
     OS_ASSERT(ok);
     ok = myPeople->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other people from space
     PeopleVector allMyPeople = people();
     removeAllButOneSpaceLoadInstance<People>(allMyPeople,*myPeople);
-    
+
     // handle space type
     if (OptionalSpaceType spaceType = this->spaceType()) {
       if (!spaceType->people().empty()) {
-        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes 
+        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes
         // SpaceLoadInstances), create and use clone instead of original
         if (spaceType->getModelObjectSources<ParentObject>().size() > 1u) {
           spaceType = spaceType->clone().cast<SpaceType>();
@@ -1112,11 +1132,11 @@ namespace detail {
     return setFloorAreaPerPerson(floorAreaPerPerson,templatePeople);
   }
 
-  bool Space_Impl::setFloorAreaPerPerson(double floorAreaPerPerson, 
+  bool Space_Impl::setFloorAreaPerPerson(double floorAreaPerPerson,
                                          const boost::optional<People>& templatePeople)
   {
     if (floorAreaPerPerson < 0.0) {
-      LOG(Error,"Space cannot set floorAreaPerPerson to " << floorAreaPerPerson 
+      LOG(Error,"Space cannot set floorAreaPerPerson to " << floorAreaPerPerson
           << ", the value must be >= 0.0.");
       return false;
     }
@@ -1132,18 +1152,18 @@ namespace detail {
     bool ok(true);
     myPeople->makeUnique();
     ok = myPeople->setSpace(getObject<Space>()); OS_ASSERT(ok);
-    ok = myPeople->peopleDefinition().setSpaceFloorAreaperPerson(floorAreaPerPerson); 
+    ok = myPeople->peopleDefinition().setSpaceFloorAreaperPerson(floorAreaPerPerson);
     OS_ASSERT(ok);
     ok = myPeople->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other people from space
     PeopleVector allMyPeople = people();
     removeAllButOneSpaceLoadInstance<People>(allMyPeople,*myPeople);
-    
+
     // handle space type
     if (OptionalSpaceType spaceType = this->spaceType()) {
       if (!spaceType->people().empty()) {
-        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes 
+        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes
         // SpaceLoadInstances), create and use clone instead of original
         if (spaceType->getModelObjectSources<ParentObject>().size() > 1u) {
           spaceType = spaceType->clone().cast<SpaceType>();
@@ -1197,7 +1217,7 @@ namespace detail {
     return setLightingPower(lightingPower,templateLights);
   }
 
-  bool Space_Impl::setLightingPower(double lightingPower, 
+  bool Space_Impl::setLightingPower(double lightingPower,
                                     const boost::optional<Lights>& templateLights)
   {
     if (lightingPower < 0.0) {
@@ -1228,11 +1248,11 @@ namespace detail {
     for (Luminaire& luminaire : allMyLuminaires) {
       luminaire.remove();
     }
-    
+
     // handle space type
     if (OptionalSpaceType spaceType = this->spaceType()) {
       if (!spaceType->lights().empty() || !spaceType->luminaires().empty()) {
-        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes 
+        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes
         // SpaceLoadInstances), create and use clone instead of original
         if (spaceType->getModelObjectSources<ParentObject>().size() > 1u) {
           spaceType = spaceType->clone().cast<SpaceType>();
@@ -1290,7 +1310,7 @@ namespace detail {
     return setLightingPowerPerFloorArea(lightingPowerPerFloorArea,templateLights);
   }
 
-  bool Space_Impl::setLightingPowerPerFloorArea(double lightingPowerPerFloorArea, 
+  bool Space_Impl::setLightingPowerPerFloorArea(double lightingPowerPerFloorArea,
                                                 const boost::optional<Lights>& templateLights)
   {
     if (lightingPowerPerFloorArea < 0.0) {
@@ -1310,7 +1330,7 @@ namespace detail {
     bool ok(true);
     myLights->makeUnique();
     ok = myLights->setSpace(getObject<Space>()); OS_ASSERT(ok);
-    ok = myLights->lightsDefinition().setWattsperSpaceFloorArea(lightingPowerPerFloorArea); 
+    ok = myLights->lightsDefinition().setWattsperSpaceFloorArea(lightingPowerPerFloorArea);
     OS_ASSERT(ok);
     ok = myLights->setMultiplier(1); OS_ASSERT(ok);
 
@@ -1322,11 +1342,11 @@ namespace detail {
     for (Luminaire& luminaire : allMyLuminaires) {
       luminaire.remove();
     }
-    
+
     // handle space type
     if (OptionalSpaceType spaceType = this->spaceType()) {
       if (!spaceType->lights().empty() || !spaceType->luminaires().empty()) {
-        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes 
+        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes
         // SpaceLoadInstances), create and use clone instead of original
         if (spaceType->getModelObjectSources<ParentObject>().size() > 1u) {
           spaceType = spaceType->clone().cast<SpaceType>();
@@ -1384,7 +1404,7 @@ namespace detail {
     return setLightingPowerPerPerson(lightingPowerPerPerson,templateLights);
   }
 
-  bool Space_Impl::setLightingPowerPerPerson(double lightingPowerPerPerson, 
+  bool Space_Impl::setLightingPowerPerPerson(double lightingPowerPerPerson,
                                              const boost::optional<Lights>& templateLights)
   {
     if (lightingPowerPerPerson < 0.0) {
@@ -1404,7 +1424,7 @@ namespace detail {
     bool ok(true);
     myLights->makeUnique();
     ok = myLights->setSpace(getObject<Space>()); OS_ASSERT(ok);
-    ok = myLights->lightsDefinition().setWattsperPerson(lightingPowerPerPerson); 
+    ok = myLights->lightsDefinition().setWattsperPerson(lightingPowerPerPerson);
     OS_ASSERT(ok);
     ok = myLights->setMultiplier(1); OS_ASSERT(ok);
 
@@ -1416,11 +1436,11 @@ namespace detail {
     for (Luminaire& luminaire : allMyLuminaires) {
       luminaire.remove();
     }
-    
+
     // handle space type
     if (OptionalSpaceType spaceType = this->spaceType()) {
       if (!spaceType->lights().empty() || !spaceType->luminaires().empty()) {
-        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes 
+        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes
         // SpaceLoadInstances), create and use clone instead of original
         if (spaceType->getModelObjectSources<ParentObject>().size() > 1u) {
           spaceType = spaceType->clone().cast<SpaceType>();
@@ -1473,17 +1493,17 @@ namespace detail {
   }
 
   bool Space_Impl::setElectricEquipmentPower(
-      double electricEquipmentPower, 
+      double electricEquipmentPower,
       const boost::optional<ElectricEquipment>& templateElectricEquipment)
   {
     if (electricEquipmentPower < 0.0) {
-      LOG(Error,"Space cannot set electricEquipmentPower to " 
+      LOG(Error,"Space cannot set electricEquipmentPower to "
           << electricEquipmentPower << ", the value must be >= 0.0.");
       return false;
     }
 
     // create or modify Lights and LightsDefinition object
-    OptionalElectricEquipment myEquipment = 
+    OptionalElectricEquipment myEquipment =
         getMySpaceLoadInstance<ElectricEquipment,ElectricEquipmentDefinition>(templateElectricEquipment);
     if (!myEquipment) {
       LOG(Error,"The templateElectricEquipment object must be in the same Model as this Space.");
@@ -1494,18 +1514,18 @@ namespace detail {
     bool ok(true);
     myEquipment->makeUnique();
     ok = myEquipment->setSpace(getObject<Space>()); OS_ASSERT(ok);
-    ok = myEquipment->electricEquipmentDefinition().setDesignLevel(electricEquipmentPower); 
+    ok = myEquipment->electricEquipmentDefinition().setDesignLevel(electricEquipmentPower);
     OS_ASSERT(ok);
     ok = myEquipment->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other electric equipment from space
     ElectricEquipmentVector allMyEquipment = electricEquipment();
     removeAllButOneSpaceLoadInstance<ElectricEquipment>(allMyEquipment,*myEquipment);
-    
+
     // handle space type
     if (OptionalSpaceType spaceType = this->spaceType()) {
       if (!spaceType->electricEquipment().empty()) {
-        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes 
+        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes
         // SpaceLoadInstances), create and use clone instead of original
         if (spaceType->getModelObjectSources<ParentObject>().size() > 1u) {
           spaceType = spaceType->clone().cast<SpaceType>();
@@ -1555,17 +1575,17 @@ namespace detail {
   }
 
   bool Space_Impl::setElectricEquipmentPowerPerFloorArea(
-      double electricEquipmentPowerPerFloorArea, 
+      double electricEquipmentPowerPerFloorArea,
       const boost::optional<ElectricEquipment>& templateElectricEquipment)
   {
     if (electricEquipmentPowerPerFloorArea < 0.0) {
-      LOG(Error,"Space cannot set electricEquipmentPowerPerFloorArea to " 
+      LOG(Error,"Space cannot set electricEquipmentPowerPerFloorArea to "
           << electricEquipmentPowerPerFloorArea << ", the value must be >= 0.0.");
       return false;
     }
 
     // create or modify Lights and LightsDefinition object
-    OptionalElectricEquipment myEquipment = 
+    OptionalElectricEquipment myEquipment =
         getMySpaceLoadInstance<ElectricEquipment,ElectricEquipmentDefinition>(templateElectricEquipment);
     if (!myEquipment) {
       LOG(Error,"The templateElectricEquipment object must be in the same Model as this Space.");
@@ -1576,18 +1596,18 @@ namespace detail {
     bool ok(true);
     myEquipment->makeUnique();
     ok = myEquipment->setSpace(getObject<Space>()); OS_ASSERT(ok);
-    ok = myEquipment->electricEquipmentDefinition().setWattsperSpaceFloorArea(electricEquipmentPowerPerFloorArea); 
+    ok = myEquipment->electricEquipmentDefinition().setWattsperSpaceFloorArea(electricEquipmentPowerPerFloorArea);
     OS_ASSERT(ok);
     ok = myEquipment->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other electric equipment from space
     ElectricEquipmentVector allMyEquipment = electricEquipment();
     removeAllButOneSpaceLoadInstance<ElectricEquipment>(allMyEquipment,*myEquipment);
-    
+
     // handle space type
     if (OptionalSpaceType spaceType = this->spaceType()) {
       if (!spaceType->electricEquipment().empty()) {
-        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes 
+        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes
         // SpaceLoadInstances), create and use clone instead of original
         if (spaceType->getModelObjectSources<ParentObject>().size() > 1u) {
           spaceType = spaceType->clone().cast<SpaceType>();
@@ -1637,17 +1657,17 @@ namespace detail {
   }
 
   bool Space_Impl::setElectricEquipmentPowerPerPerson(
-      double electricEquipmentPowerPerPerson, 
+      double electricEquipmentPowerPerPerson,
       const boost::optional<ElectricEquipment>& templateElectricEquipment)
   {
     if (electricEquipmentPowerPerPerson < 0.0) {
-      LOG(Error,"Space cannot set electricEquipmentPowerPerPerson to " 
+      LOG(Error,"Space cannot set electricEquipmentPowerPerPerson to "
           << electricEquipmentPowerPerPerson << ", the value must be >= 0.0.");
       return false;
     }
 
     // create or modify Lights and LightsDefinition object
-    OptionalElectricEquipment myEquipment = 
+    OptionalElectricEquipment myEquipment =
         getMySpaceLoadInstance<ElectricEquipment,ElectricEquipmentDefinition>(templateElectricEquipment);
     if (!myEquipment) {
       LOG(Error,"The templateElectricEquipment object must be in the same Model as this Space.");
@@ -1658,18 +1678,18 @@ namespace detail {
     bool ok(true);
     myEquipment->makeUnique();
     ok = myEquipment->setSpace(getObject<Space>()); OS_ASSERT(ok);
-    ok = myEquipment->electricEquipmentDefinition().setWattsperPerson(electricEquipmentPowerPerPerson); 
+    ok = myEquipment->electricEquipmentDefinition().setWattsperPerson(electricEquipmentPowerPerPerson);
     OS_ASSERT(ok);
     ok = myEquipment->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other electric equipment from space
     ElectricEquipmentVector allMyEquipment = electricEquipment();
     removeAllButOneSpaceLoadInstance<ElectricEquipment>(allMyEquipment,*myEquipment);
-    
+
     // handle space type
     if (OptionalSpaceType spaceType = this->spaceType()) {
       if (!spaceType->electricEquipment().empty()) {
-        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes 
+        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes
         // SpaceLoadInstances), create and use clone instead of original
         if (spaceType->getModelObjectSources<ParentObject>().size() > 1u) {
           spaceType = spaceType->clone().cast<SpaceType>();
@@ -1718,17 +1738,17 @@ namespace detail {
   }
 
   bool Space_Impl::setGasEquipmentPower(
-      double gasEquipmentPower, 
+      double gasEquipmentPower,
       const boost::optional<GasEquipment>& templateGasEquipment)
   {
     if (gasEquipmentPower < 0.0) {
-      LOG(Error,"Space cannot set gasEquipmentPower to " 
+      LOG(Error,"Space cannot set gasEquipmentPower to "
           << gasEquipmentPower << ", the value must be >= 0.0.");
       return false;
     }
 
     // create or modify Lights and LightsDefinition object
-    OptionalGasEquipment myEquipment = 
+    OptionalGasEquipment myEquipment =
         getMySpaceLoadInstance<GasEquipment,GasEquipmentDefinition>(templateGasEquipment);
     if (!myEquipment) {
       LOG(Error,"The templateGasEquipment object must be in the same Model as this Space.");
@@ -1739,18 +1759,18 @@ namespace detail {
     bool ok(true);
     myEquipment->makeUnique();
     ok = myEquipment->setSpace(getObject<Space>()); OS_ASSERT(ok);
-    ok = myEquipment->gasEquipmentDefinition().setDesignLevel(gasEquipmentPower); 
+    ok = myEquipment->gasEquipmentDefinition().setDesignLevel(gasEquipmentPower);
     OS_ASSERT(ok);
     ok = myEquipment->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other gas equipment from space
     GasEquipmentVector allMyEquipment = gasEquipment();
     removeAllButOneSpaceLoadInstance<GasEquipment>(allMyEquipment,*myEquipment);
-    
+
     // handle space type
     if (OptionalSpaceType spaceType = this->spaceType()) {
       if (!spaceType->gasEquipment().empty()) {
-        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes 
+        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes
         // SpaceLoadInstances), create and use clone instead of original
         if (spaceType->getModelObjectSources<ParentObject>().size() > 1u) {
           spaceType = spaceType->clone().cast<SpaceType>();
@@ -1800,17 +1820,17 @@ namespace detail {
   }
 
   bool Space_Impl::setGasEquipmentPowerPerFloorArea(
-      double gasEquipmentPowerPerFloorArea, 
+      double gasEquipmentPowerPerFloorArea,
       const boost::optional<GasEquipment>& templateGasEquipment)
   {
     if (gasEquipmentPowerPerFloorArea < 0.0) {
-      LOG(Error,"Space cannot set gasEquipmentPowerPerFloorArea to " 
+      LOG(Error,"Space cannot set gasEquipmentPowerPerFloorArea to "
           << gasEquipmentPowerPerFloorArea << ", the value must be >= 0.0.");
       return false;
     }
 
     // create or modify Lights and LightsDefinition object
-    OptionalGasEquipment myEquipment = 
+    OptionalGasEquipment myEquipment =
         getMySpaceLoadInstance<GasEquipment,GasEquipmentDefinition>(templateGasEquipment);
     if (!myEquipment) {
       LOG(Error,"The templateGasEquipment object must be in the same Model as this Space.");
@@ -1821,18 +1841,18 @@ namespace detail {
     bool ok(true);
     myEquipment->makeUnique();
     ok = myEquipment->setSpace(getObject<Space>()); OS_ASSERT(ok);
-    ok = myEquipment->gasEquipmentDefinition().setWattsperSpaceFloorArea(gasEquipmentPowerPerFloorArea); 
+    ok = myEquipment->gasEquipmentDefinition().setWattsperSpaceFloorArea(gasEquipmentPowerPerFloorArea);
     OS_ASSERT(ok);
     ok = myEquipment->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other gas equipment from space
     GasEquipmentVector allMyEquipment = gasEquipment();
     removeAllButOneSpaceLoadInstance<GasEquipment>(allMyEquipment,*myEquipment);
-    
+
     // handle space type
     if (OptionalSpaceType spaceType = this->spaceType()) {
       if (!spaceType->gasEquipment().empty()) {
-        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes 
+        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes
         // SpaceLoadInstances), create and use clone instead of original
         if (spaceType->getModelObjectSources<ParentObject>().size() > 1u) {
           spaceType = spaceType->clone().cast<SpaceType>();
@@ -1882,17 +1902,17 @@ namespace detail {
   }
 
   bool Space_Impl::setGasEquipmentPowerPerPerson(
-      double gasEquipmentPowerPerPerson, 
+      double gasEquipmentPowerPerPerson,
       const boost::optional<GasEquipment>& templateGasEquipment)
   {
     if (gasEquipmentPowerPerPerson < 0.0) {
-      LOG(Error,"Space cannot set gasEquipmentPowerPerPerson to " 
+      LOG(Error,"Space cannot set gasEquipmentPowerPerPerson to "
           << gasEquipmentPowerPerPerson << ", the value must be >= 0.0.");
       return false;
     }
 
     // create or modify Lights and LightsDefinition object
-    OptionalGasEquipment myEquipment = 
+    OptionalGasEquipment myEquipment =
         getMySpaceLoadInstance<GasEquipment,GasEquipmentDefinition>(templateGasEquipment);
     if (!myEquipment) {
       LOG(Error,"The templateGasEquipment object must be in the same Model as this Space.");
@@ -1903,18 +1923,18 @@ namespace detail {
     bool ok(true);
     myEquipment->makeUnique();
     ok = myEquipment->setSpace(getObject<Space>()); OS_ASSERT(ok);
-    ok = myEquipment->gasEquipmentDefinition().setWattsperPerson(gasEquipmentPowerPerPerson); 
+    ok = myEquipment->gasEquipmentDefinition().setWattsperPerson(gasEquipmentPowerPerPerson);
     OS_ASSERT(ok);
     ok = myEquipment->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other gas equipment from space
     GasEquipmentVector allMyEquipment = gasEquipment();
     removeAllButOneSpaceLoadInstance<GasEquipment>(allMyEquipment,*myEquipment);
-    
+
     // handle space type
     if (OptionalSpaceType spaceType = this->spaceType()) {
       if (!spaceType->gasEquipment().empty()) {
-        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes 
+        // if spaceType is used by multiple ParentObjects (includes Space, Building, excludes
         // SpaceLoadInstances), create and use clone instead of original
         if (spaceType->getModelObjectSources<ParentObject>().size() > 1u) {
           spaceType = spaceType->clone().cast<SpaceType>();
@@ -2064,6 +2084,8 @@ namespace detail {
   {
     Model model = this->model();
     Space space = this->getObject<Space>();
+
+    std::string plenumSpaceTypeName = model.plenumSpaceTypeName();
 
     boost::optional<SpaceType> spaceType = this->spaceType();
     if (spaceType){
@@ -2272,7 +2294,7 @@ namespace detail {
 
     std::vector<Surface> surfaces = this->surfaces();
     std::vector<Surface> otherSurfaces = other.surfaces();
-    
+
     std::map<std::string, bool> hasSubSurfaceMap;
     std::map<std::string, bool> hasAdjacentSurfaceMap;
     std::set<std::string> completedIntersections;
@@ -2289,7 +2311,7 @@ namespace detail {
         if (hasSubSurfaceMap.find(surfaceHandle) == hasSubSurfaceMap.end()){
           hasSubSurfaceMap[surfaceHandle] = !surface.subSurfaces().empty();
           hasAdjacentSurfaceMap[surfaceHandle] = surface.adjacentSurface();
-        } 
+        }
 
         if (hasSubSurfaceMap[surfaceHandle] || hasAdjacentSurfaceMap[surfaceHandle]){
           continue;
@@ -2300,13 +2322,13 @@ namespace detail {
           if (hasSubSurfaceMap.find(otherSurfaceHandle) == hasSubSurfaceMap.end()){
             hasSubSurfaceMap[otherSurfaceHandle] = !otherSurface.subSurfaces().empty();
             hasAdjacentSurfaceMap[otherSurfaceHandle] = otherSurface.adjacentSurface();
-          } 
+          }
 
           if (hasSubSurfaceMap[otherSurfaceHandle] || hasAdjacentSurfaceMap[otherSurfaceHandle]){
             continue;
           }
 
-          // see if we have already tested these for intersection, 
+          // see if we have already tested these for intersection,
           // surfaces that previously did not intersect will not intersect if vertices change
           // surfaces that previously did intersect will intersect exactly
           std::string intersectionKey = surfaceHandle + otherSurfaceHandle;
@@ -2635,7 +2657,7 @@ namespace detail {
     return false;
   }
 
-  template <typename T, typename TDef> 
+  template <typename T, typename TDef>
   boost::optional<T> Space_Impl::getMySpaceLoadInstance(
       const boost::optional<T>& templateSpaceLoadInstance)
   {
@@ -2666,8 +2688,8 @@ namespace detail {
   }
 
   template <typename T>
-  void Space_Impl::removeAllButOneSpaceLoadInstance(std::vector<T>& instances, 
-                                                    const T& instanceToKeep) 
+  void Space_Impl::removeAllButOneSpaceLoadInstance(std::vector<T>& instances,
+                                                    const T& instanceToKeep)
   {
     int count(0);
     for (auto & instance : instances)
@@ -2724,9 +2746,9 @@ namespace detail {
       // remove collinear points
       result = removeCollinear(result);
 
-      // reorder the points 
+      // reorder the points
       result = reorderULC(result);
-      
+
       // remove additional collinear points that occur after reordering
       result = removeCollinear(result);
 
@@ -2772,9 +2794,9 @@ namespace detail {
       // remove collinear points
       result = removeCollinear(result);
 
-      // reorder the points 
+      // reorder the points
       result = reorderULC(result);
-      
+
       // remove additional collinear points that occur after reordering
       result = removeCollinear(result);
 
@@ -2799,9 +2821,9 @@ namespace detail {
         // remove collinear points
         innerLoop = removeCollinear(innerLoop);
 
-        // reorder the points 
+        // reorder the points
         innerLoop = reorderULC(innerLoop);
-        
+
         // remove additional collinear points that occur after reordering
         innerLoop = removeCollinear(innerLoop);
 
@@ -2827,9 +2849,9 @@ namespace detail {
     // remove collinear points
     result = removeCollinear(result);
 
-    // reorder the points 
+    // reorder the points
     result = reorderULC(result);
-    
+
     // remove additional collinear points that occur after reordering
     result = removeCollinear(result);
 
@@ -2850,7 +2872,7 @@ namespace detail {
     }
     return result;
   }
-  
+
   // helper function to get a boost polygon point from a Point3d
   boost::tuple<double, double> Space_Impl::point3dToTuple(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol) const
   {
@@ -3058,6 +3080,20 @@ void Space::resetBuildingStory()
   getImpl<detail::Space_Impl>()->resetBuildingStory();
 }
 
+boost::optional<BuildingUnit> Space::buildingUnit() const {
+  return getImpl<detail::Space_Impl>()->buildingUnit();
+}
+
+bool Space::setBuildingUnit(const BuildingUnit& buildingUnit)
+{
+  return getImpl<detail::Space_Impl>()->setBuildingUnit(buildingUnit);
+}
+
+void Space::resetBuildingUnit()
+{
+  getImpl<detail::Space_Impl>()->resetBuildingUnit();
+}
+
 std::vector<ShadingSurfaceGroup> Space::shadingSurfaceGroups() const {
   return getImpl<detail::Space_Impl>()->shadingSurfaceGroups();
 }
@@ -3104,7 +3140,7 @@ std::vector<SteamEquipment> Space::steamEquipment() const {
 
 std::vector<OtherEquipment> Space::otherEquipment() const {
   return getImpl<detail::Space_Impl>()->otherEquipment();
-} 
+}
 
 std::vector<WaterUseEquipment> Space::waterUseEquipment() const
 {
@@ -3251,7 +3287,7 @@ bool Space::setElectricEquipmentPower(double electricEquipmentPower) {
   return getImpl<detail::Space_Impl>()->setElectricEquipmentPower(electricEquipmentPower);
 }
 
-bool Space::setElectricEquipmentPower(double electricEquipmentPower, 
+bool Space::setElectricEquipmentPower(double electricEquipmentPower,
                                const ElectricEquipment& templateElectricEquipment)
 {
   return getImpl<detail::Space_Impl>()->setElectricEquipmentPower(electricEquipmentPower,templateElectricEquipment);
@@ -3265,7 +3301,7 @@ bool Space::setElectricEquipmentPowerPerFloorArea(double electricEquipmentPowerP
   return getImpl<detail::Space_Impl>()->setElectricEquipmentPowerPerFloorArea(electricEquipmentPowerPerFloorArea);
 }
 
-bool Space::setElectricEquipmentPowerPerFloorArea(double electricEquipmentPowerPerFloorArea, 
+bool Space::setElectricEquipmentPowerPerFloorArea(double electricEquipmentPowerPerFloorArea,
                                            const ElectricEquipment& templateElectricEquipment)
 {
   return getImpl<detail::Space_Impl>()->setElectricEquipmentPowerPerFloorArea(electricEquipmentPowerPerFloorArea,templateElectricEquipment);
@@ -3279,7 +3315,7 @@ bool Space::setElectricEquipmentPowerPerPerson(double electricEquipmentPowerPerP
   return getImpl<detail::Space_Impl>()->setElectricEquipmentPowerPerPerson(electricEquipmentPowerPerPerson);
 }
 
-bool Space::setElectricEquipmentPowerPerPerson(double electricEquipmentPowerPerPerson, 
+bool Space::setElectricEquipmentPowerPerPerson(double electricEquipmentPowerPerPerson,
                                         const ElectricEquipment& templateElectricEquipment)
 {
   return getImpl<detail::Space_Impl>()->setElectricEquipmentPowerPerPerson(electricEquipmentPowerPerPerson,templateElectricEquipment);
@@ -3293,7 +3329,7 @@ bool Space::setGasEquipmentPower(double gasEquipmentPower) {
   return getImpl<detail::Space_Impl>()->setGasEquipmentPower(gasEquipmentPower);
 }
 
-bool Space::setGasEquipmentPower(double gasEquipmentPower, 
+bool Space::setGasEquipmentPower(double gasEquipmentPower,
                           const GasEquipment& templateGasEquipment)
 {
   return getImpl<detail::Space_Impl>()->setGasEquipmentPower(gasEquipmentPower,templateGasEquipment);
@@ -3307,7 +3343,7 @@ bool Space::setGasEquipmentPowerPerFloorArea(double gasEquipmentPowerPerFloorAre
   return getImpl<detail::Space_Impl>()->setGasEquipmentPowerPerFloorArea(gasEquipmentPowerPerFloorArea);
 }
 
-bool Space::setGasEquipmentPowerPerFloorArea(double gasEquipmentPowerPerFloorArea, 
+bool Space::setGasEquipmentPowerPerFloorArea(double gasEquipmentPowerPerFloorArea,
                                       const GasEquipment& templateGasEquipment)
 {
   return getImpl<detail::Space_Impl>()->setGasEquipmentPowerPerFloorArea(gasEquipmentPowerPerFloorArea,templateGasEquipment);
@@ -3321,7 +3357,7 @@ bool Space::setGasEquipmentPowerPerPerson(double gasEquipmentPowerPerPerson) {
   return getImpl<detail::Space_Impl>()->setGasEquipmentPowerPerPerson(gasEquipmentPowerPerPerson);
 }
 
-bool Space::setGasEquipmentPowerPerPerson(double gasEquipmentPowerPerPerson, 
+bool Space::setGasEquipmentPowerPerPerson(double gasEquipmentPowerPerPerson,
                                    const GasEquipment& templateGasEquipment)
 {
   return getImpl<detail::Space_Impl>()->setGasEquipmentPowerPerPerson(gasEquipmentPowerPerPerson,templateGasEquipment);
@@ -3392,7 +3428,7 @@ bool Space::isPlenum() const
 
 /// @cond
 Space::Space(std::shared_ptr<detail::Space_Impl> impl)
-  : PlanarSurfaceGroup(impl)
+  : PlanarSurfaceGroup(std::move(impl))
 {}
 /// @endcond
 
@@ -3437,10 +3473,10 @@ void unmatchSurfaces(std::vector<Space>& spaces)
   }
 }
 
-std::vector<std::vector<Point3d> > generateSkylightPattern(const std::vector<Space>& spaces, 
+std::vector<std::vector<Point3d> > generateSkylightPattern(const std::vector<Space>& spaces,
                                                            double directionOfRelativeNorth,
-                                                           double skylightToProjectedFloorRatio, 
-                                                           double desiredWidth, double desiredHeight) 
+                                                           double skylightToProjectedFloorRatio,
+                                                           double desiredWidth, double desiredHeight)
 {
   std::vector<std::vector<Point3d> > result;
 
@@ -3468,7 +3504,7 @@ std::vector<std::vector<Point3d> > generateSkylightPattern(const std::vector<Spa
   // rotate positive amount around the z axis, EnergyPlus defines rotation clockwise
   Transformation gridToBuildingTransformation = buildingToGridTransformation.inverse();
 
-  // find extents in grid coordinate system 
+  // find extents in grid coordinate system
   double xmin = std::numeric_limits<double>::max();
   double xmax = std::numeric_limits<double>::min();
   double ymin = std::numeric_limits<double>::max();

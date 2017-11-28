@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
@@ -59,6 +68,14 @@ using openstudio::detail::WorkspaceObject_Impl;
 
 using std::dynamic_pointer_cast;
 
+struct ModelResourceInitializer{
+  ModelResourceInitializer()
+  {
+    Q_INIT_RESOURCE(Model);
+  }
+};
+static ModelResourceInitializer __modelResourceInitializer__;
+
 namespace openstudio {
 namespace model {
 
@@ -97,9 +114,10 @@ namespace detail {
   // copy constructor, used for clone
   Model_Impl::Model_Impl(const Model_Impl& other, bool keepHandles)
     : Workspace_Impl(other, keepHandles),
+      m_workflowJSON(WorkflowJSON(other.m_workflowJSON)),
       m_sqlFile((other.m_sqlFile)?(std::shared_ptr<SqlFile>(new SqlFile(*other.m_sqlFile))):(other.m_sqlFile))
   {
-    // notice we are cloning the sqlfile too, if necessary
+    // notice we are cloning the workflow and sqlfile too, if necessary
     // careful not to call anything that calls shared_from_this here, this is not yet constructed
   }
 
@@ -109,9 +127,10 @@ namespace detail {
                          bool keepHandles,
                          StrictnessLevel level)
     : Workspace_Impl(other,hs,keepHandles,level),
+      m_workflowJSON(WorkflowJSON(other.m_workflowJSON)),
       m_sqlFile((other.m_sqlFile)?(std::shared_ptr<SqlFile>(new SqlFile(*other.m_sqlFile))):(other.m_sqlFile))
   {
-    // notice we are cloning the sqlfile too, if necessary
+    // notice we are cloning the workflow and sqlfile too, if necessary
   }
   Workspace Model_Impl::clone(bool keepHandles) const {
     // copy everything but objects
@@ -146,6 +165,10 @@ namespace detail {
     // swap Model-level data
     std::shared_ptr<Model_Impl> otherImpl = other.getImpl<detail::Model_Impl>();
 
+    WorkflowJSON twf = m_workflowJSON;
+    setWorkflowJSON(otherImpl->workflowJSON());
+    otherImpl->setWorkflowJSON(twf);
+
     std::shared_ptr<SqlFile> tsf = m_sqlFile;
     m_sqlFile = otherImpl->m_sqlFile;
     otherImpl->m_sqlFile = tsf;
@@ -154,13 +177,8 @@ namespace detail {
     m_componentWatchers = otherImpl->m_componentWatchers;
     otherImpl->m_componentWatchers = tcw;
 
-    OptionalBuilding tcb = m_cachedBuilding;
-    m_cachedBuilding = otherImpl->m_cachedBuilding;
-    otherImpl->m_cachedBuilding = tcb;
-
-    OptionalLifeCycleCostParameters tclccp = m_cachedLifeCycleCostParameters;
-    m_cachedLifeCycleCostParameters = otherImpl->m_cachedLifeCycleCostParameters;
-    otherImpl->m_cachedLifeCycleCostParameters = tclccp;
+    clearCachedData();
+    otherImpl->clearCachedData();
   }
 
   void Model_Impl::createComponentWatchers() {
@@ -225,13 +243,14 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(BoilerSteam);
     REGISTER_CONSTRUCTOR(Building);
     REGISTER_CONSTRUCTOR(BuildingStory);
-    // REGISTER_CONSTRUCTOR(CentralHeatPumpSystem);
-    // REGISTER_CONSTRUCTOR(CentralHeatPumpSystemModule);
+    REGISTER_CONSTRUCTOR(BuildingUnit);
+    REGISTER_CONSTRUCTOR(CentralHeatPumpSystem);
+    REGISTER_CONSTRUCTOR(CentralHeatPumpSystemModule);
     REGISTER_CONSTRUCTOR(CFactorUndergroundWallConstruction);
     REGISTER_CONSTRUCTOR(ChillerAbsorption);
     REGISTER_CONSTRUCTOR(ChillerAbsorptionIndirect);
     REGISTER_CONSTRUCTOR(ChillerElectricEIR);
-    // REGISTER_CONSTRUCTOR(ChillerHeaterPerformanceElectricEIR);
+    REGISTER_CONSTRUCTOR(ChillerHeaterPerformanceElectricEIR);
     REGISTER_CONSTRUCTOR(ClimateZones);
     REGISTER_CONSTRUCTOR(CoilCoolingCooledBeam);
     REGISTER_CONSTRUCTOR(CoilCoolingDXMultiSpeed);
@@ -271,6 +290,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(CoilSystemCoolingWaterHeatExchangerAssisted);
     REGISTER_CONSTRUCTOR(CoilSystemCoolingDXHeatExchangerAssisted);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPump);
+    REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPumpWrapped);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingDesuperheater);
     REGISTER_CONSTRUCTOR(ComponentCostAdjustments);
     REGISTER_CONSTRUCTOR(ComponentData);
@@ -325,6 +345,19 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterLookUpTable);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterSimple);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageSimple);
+    REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageConverter);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemActuator);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemConstructionIndexVariable);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemCurveOrTableIndexVariable);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemGlobalVariable);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemInternalVariable);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemMeteredOutputVariable);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemOutputVariable);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemProgram);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemProgramCallingManager);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemSensor);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemSubroutine);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemTrendVariable);
     REGISTER_CONSTRUCTOR(EvaporativeCoolerDirectResearchSpecial);
     REGISTER_CONSTRUCTOR(EvaporativeCoolerIndirectResearchSpecial);
     REGISTER_CONSTRUCTOR(EvaporativeFluidCoolerSingleSpeed);
@@ -343,6 +376,16 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(GasEquipment);
     REGISTER_CONSTRUCTOR(GasEquipmentDefinition);
     REGISTER_CONSTRUCTOR(GasMixture);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCell);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellAirSupply);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellAuxiliaryHeater);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellElectricalStorage);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellExhaustGasToWaterHeatExchanger);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellInverter);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellPowerModule);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellStackCooler);
+    REGISTER_CONSTRUCTOR(GeneratorFuelCellWaterSupply);
+    REGISTER_CONSTRUCTOR(GeneratorFuelSupply);
     REGISTER_CONSTRUCTOR(GeneratorMicroTurbine);
     REGISTER_CONSTRUCTOR(GeneratorMicroTurbineHeatRecovery);
     REGISTER_CONSTRUCTOR(GeneratorPhotovoltaic);
@@ -378,6 +421,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(Luminaire);
     REGISTER_CONSTRUCTOR(LuminaireDefinition);
     REGISTER_CONSTRUCTOR(MaterialPropertyGlazingSpectralData);
+    REGISTER_CONSTRUCTOR(MaterialPropertyMoisturePenetrationDepthSettings);
     REGISTER_CONSTRUCTOR(MasslessOpaqueMaterial);
     REGISTER_CONSTRUCTOR(MeterCustom);
     REGISTER_CONSTRUCTOR(MeterCustomDecrement);
@@ -386,6 +430,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(OtherEquipment);
     REGISTER_CONSTRUCTOR(OtherEquipmentDefinition);
     REGISTER_CONSTRUCTOR(OutputControlReportingTolerances);
+    REGISTER_CONSTRUCTOR(OutputEnergyManagementSystem);
     REGISTER_CONSTRUCTOR(OutputMeter);
     REGISTER_CONSTRUCTOR(OutputVariable);
     REGISTER_CONSTRUCTOR(OutsideSurfaceConvectionAlgorithm);
@@ -460,6 +505,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(SetpointManagerOutdoorAirReset);
     REGISTER_CONSTRUCTOR(SetpointManagerScheduled);
     REGISTER_CONSTRUCTOR(SetpointManagerScheduledDualSetpoint);
+    REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneCooling);
+    REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneHeating);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneHumidityMaximum);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneHumidityMinimum);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneOneStageCooling);
@@ -504,6 +551,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(SteamEquipmentDefinition);
     REGISTER_CONSTRUCTOR(SubSurface);
     REGISTER_CONSTRUCTOR(Surface);
+    REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficients)
     REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficientsMultipleSurface);
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideCoefficients);
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideConditionsModel);
@@ -515,6 +563,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ThermalStorageChilledWaterStratified);
     REGISTER_CONSTRUCTOR(ThermalStorageIceDetailed);
     REGISTER_CONSTRUCTOR(Timestep);
+    REGISTER_CONSTRUCTOR(UnitarySystemPerformanceMultispeed);
     REGISTER_CONSTRUCTOR(UtilityBill);
     REGISTER_CONSTRUCTOR(UtilityCost_Charge_Block);
     REGISTER_CONSTRUCTOR(UtilityCost_Charge_Simple);
@@ -526,6 +575,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(Version);
     REGISTER_CONSTRUCTOR(WaterHeaterMixed);
     REGISTER_CONSTRUCTOR(WaterHeaterHeatPump);
+    REGISTER_CONSTRUCTOR(WaterHeaterHeatPumpWrappedCondenser);
     REGISTER_CONSTRUCTOR(WaterHeaterStratified);
     REGISTER_CONSTRUCTOR(WaterUseConnections);
     REGISTER_CONSTRUCTOR(WaterUseEquipment);
@@ -637,14 +687,15 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(BoilerSteam);
     REGISTER_COPYCONSTRUCTORS(Building);
     REGISTER_COPYCONSTRUCTORS(BuildingStory);
-    // REGISTER_COPYCONSTRUCTORS(CentralHeatPumpSystem);
-    // REGISTER_COPYCONSTRUCTORS(CentralHeatPumpSystemModule);
+    REGISTER_COPYCONSTRUCTORS(BuildingUnit);
+    REGISTER_COPYCONSTRUCTORS(CentralHeatPumpSystem);
+    REGISTER_COPYCONSTRUCTORS(CentralHeatPumpSystemModule);
     REGISTER_COPYCONSTRUCTORS(CFactorUndergroundWallConstruction);
     REGISTER_COPYCONSTRUCTORS(ClimateZones);
     REGISTER_COPYCONSTRUCTORS(ChillerAbsorption);
     REGISTER_COPYCONSTRUCTORS(ChillerAbsorptionIndirect);
     REGISTER_COPYCONSTRUCTORS(ChillerElectricEIR);
-    // REGISTER_COPYCONSTRUCTORS(ChillerHeaterPerformanceElectricEIR);
+    REGISTER_COPYCONSTRUCTORS(ChillerHeaterPerformanceElectricEIR);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingCooledBeam);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXMultiSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXMultiSpeedStageData);
@@ -683,6 +734,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingWaterHeatExchangerAssisted);
     REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingDXHeatExchangerAssisted);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPump);
+    REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPumpWrapped);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingDesuperheater);
     REGISTER_COPYCONSTRUCTORS(ComponentCostAdjustments);
     REGISTER_COPYCONSTRUCTORS(ComponentData);
@@ -737,6 +789,19 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterLookUpTable);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterSimple);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageSimple);
+    REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageConverter);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemActuator);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemConstructionIndexVariable);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemCurveOrTableIndexVariable);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemGlobalVariable);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemInternalVariable);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemMeteredOutputVariable);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemOutputVariable);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemProgram);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemProgramCallingManager);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemSensor);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemSubroutine);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemTrendVariable);
     REGISTER_COPYCONSTRUCTORS(EvaporativeCoolerDirectResearchSpecial);
     REGISTER_COPYCONSTRUCTORS(EvaporativeCoolerIndirectResearchSpecial);
     REGISTER_COPYCONSTRUCTORS(EvaporativeFluidCoolerSingleSpeed);
@@ -755,6 +820,16 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(GasEquipment);
     REGISTER_COPYCONSTRUCTORS(GasEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(GasMixture);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCell);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellAirSupply);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellAuxiliaryHeater);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellElectricalStorage);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellExhaustGasToWaterHeatExchanger);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellInverter);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellPowerModule);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellStackCooler);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelCellWaterSupply);
+    REGISTER_COPYCONSTRUCTORS(GeneratorFuelSupply);
     REGISTER_COPYCONSTRUCTORS(GeneratorMicroTurbine);
     REGISTER_COPYCONSTRUCTORS(GeneratorMicroTurbineHeatRecovery);
     REGISTER_COPYCONSTRUCTORS(GeneratorPhotovoltaic);
@@ -790,6 +865,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(Luminaire);
     REGISTER_COPYCONSTRUCTORS(LuminaireDefinition);
     REGISTER_COPYCONSTRUCTORS(MaterialPropertyGlazingSpectralData);
+    REGISTER_COPYCONSTRUCTORS(MaterialPropertyMoisturePenetrationDepthSettings);
     REGISTER_COPYCONSTRUCTORS(MasslessOpaqueMaterial);
     REGISTER_COPYCONSTRUCTORS(MeterCustom);
     REGISTER_COPYCONSTRUCTORS(MeterCustomDecrement);
@@ -798,6 +874,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(OtherEquipment);
     REGISTER_COPYCONSTRUCTORS(OtherEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(OutputControlReportingTolerances);
+    REGISTER_COPYCONSTRUCTORS(OutputEnergyManagementSystem);
     REGISTER_COPYCONSTRUCTORS(OutputMeter);
     REGISTER_COPYCONSTRUCTORS(OutputVariable);
     REGISTER_COPYCONSTRUCTORS(OutsideSurfaceConvectionAlgorithm);
@@ -872,6 +949,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(SetpointManagerOutdoorAirReset);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerScheduled);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerScheduledDualSetpoint);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneCooling);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneHeating);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneHumidityMaximum);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneHumidityMinimum);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneOneStageCooling);
@@ -916,6 +995,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(SteamEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(SubSurface);
     REGISTER_COPYCONSTRUCTORS(Surface);
+    REGISTER_COPYCONSTRUCTORS(SurfacePropertyConvectionCoefficients);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyConvectionCoefficientsMultipleSurface);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideCoefficients);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideConditionsModel);
@@ -927,6 +1007,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ThermalStorageChilledWaterStratified);
     REGISTER_COPYCONSTRUCTORS(ThermalStorageIceDetailed);
     REGISTER_COPYCONSTRUCTORS(Timestep);
+    REGISTER_COPYCONSTRUCTORS(UnitarySystemPerformanceMultispeed);
     REGISTER_COPYCONSTRUCTORS(UtilityBill);
     REGISTER_COPYCONSTRUCTORS(UtilityCost_Charge_Block);
     REGISTER_COPYCONSTRUCTORS(UtilityCost_Charge_Simple);
@@ -938,6 +1019,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(Version);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterMixed);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterHeatPump);
+    REGISTER_COPYCONSTRUCTORS(WaterHeaterHeatPumpWrappedCondenser);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterStratified);
     REGISTER_COPYCONSTRUCTORS(WaterUseConnections);
     REGISTER_COPYCONSTRUCTORS(WaterUseEquipment);
@@ -1022,7 +1104,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     boost::optional<Building> result = this->model().getOptionalUniqueModelObject<Building>();
     if (result){
       m_cachedBuilding = result;
-      QObject::connect(result->getImpl<Building_Impl>().get(), &Building_Impl::onRemoveFromWorkspace, this, &Model_Impl::clearCachedBuilding);
+      result->getImpl<Building_Impl>().get()->Building_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedBuilding>(const_cast<openstudio::model::detail::Model_Impl *>(this));
     }
 
     return m_cachedBuilding;
@@ -1037,8 +1119,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     boost::optional<LifeCycleCostParameters> result = this->model().getOptionalUniqueModelObject<LifeCycleCostParameters>();
     if (result){
       m_cachedLifeCycleCostParameters = result;
-      QObject::connect(result->getImpl<LifeCycleCostParameters_Impl>().get(), &LifeCycleCostParameters_Impl::onRemoveFromWorkspace,
-        this, &Model_Impl::clearCachedLifeCycleCostParameters);
+      result->getImpl<LifeCycleCostParameters_Impl>().get()->LifeCycleCostParameters_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedLifeCycleCostParameters>(const_cast<openstudio::model::detail::Model_Impl *>(this));
     }
 
     return m_cachedLifeCycleCostParameters;
@@ -1053,7 +1134,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     boost::optional<RunPeriod> result = this->model().getOptionalUniqueModelObject<RunPeriod>();
     if (result){
       m_cachedRunPeriod = result;
-      QObject::connect(result->getImpl<RunPeriod_Impl>().get(), &RunPeriod_Impl::onRemoveFromWorkspace, this, &Model_Impl::clearCachedRunPeriod);
+      result->getImpl<RunPeriod_Impl>().get()->RunPeriod_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedRunPeriod>(const_cast<openstudio::model::detail::Model_Impl *>(this));
     }
 
     return m_cachedRunPeriod;
@@ -1068,11 +1149,154 @@ if (_className::iddObjectType() == typeToCreate) { \
     boost::optional<YearDescription> result = this->model().getOptionalUniqueModelObject<YearDescription>();
     if (result){
       m_cachedYearDescription = result;
-      QObject::connect(result->getImpl<YearDescription_Impl>().get(), &YearDescription_Impl::onRemoveFromWorkspace,
-        this, &Model_Impl::clearCachedYearDescription);
+      result->getImpl<YearDescription_Impl>().get()->YearDescription_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedYearDescription>(const_cast<openstudio::model::detail::Model_Impl *>(this));
     }
 
     return m_cachedYearDescription;
+  }
+
+  boost::optional<int> Model_Impl::calendarYear() const
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->calendarYear();
+  }
+
+  std::string Model_Impl::dayofWeekforStartDay() const
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->dayofWeekforStartDay();
+  }
+
+  bool Model_Impl::isDayofWeekforStartDayDefaulted() const
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->isDayofWeekforStartDayDefaulted();
+  }
+
+  bool Model_Impl::isLeapYear() const
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->isLeapYear();
+  }
+
+  bool Model_Impl::isIsLeapYearDefaulted() const
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->isIsLeapYearDefaulted();
+  }
+
+  void Model_Impl::setCalendarYear(int calendarYear)
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    m_cachedYearDescription->setCalendarYear(calendarYear);
+  }
+
+  void Model_Impl::resetCalendarYear()
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    m_cachedYearDescription->resetCalendarYear();
+  }
+
+  bool Model_Impl::setDayofWeekforStartDay(std::string dayofWeekforStartDay)
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->setDayofWeekforStartDay(dayofWeekforStartDay);
+  }
+
+  void Model_Impl::resetDayofWeekforStartDay()
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    m_cachedYearDescription->resetDayofWeekforStartDay();
+  }
+
+  bool Model_Impl::setIsLeapYear(bool isLeapYear)
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->setIsLeapYear(isLeapYear);
+  }
+
+  void Model_Impl::resetIsLeapYear()
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    m_cachedYearDescription->resetIsLeapYear();
+  }
+
+  int Model_Impl::assumedYear()
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->assumedYear();
+  }
+
+  openstudio::Date Model_Impl::makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth)
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->makeDate(monthOfYear, dayOfMonth);
+  }
+
+  openstudio::Date Model_Impl::makeDate(unsigned monthOfYear, unsigned dayOfMonth)
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->makeDate(monthOfYear, dayOfMonth);
+  }
+
+  openstudio::Date Model_Impl::makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear)
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->makeDate(n, dayOfWeek, monthOfYear);
+  }
+
+  openstudio::Date Model_Impl::makeDate(unsigned dayOfYear)
+  {
+    if (!m_cachedYearDescription){
+      m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
+    }
+    OS_ASSERT(m_cachedYearDescription);
+    return m_cachedYearDescription->makeDate(dayOfYear);
   }
 
   boost::optional<WeatherFile> Model_Impl::weatherFile() const
@@ -1084,7 +1308,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     boost::optional<WeatherFile> result = this->model().getOptionalUniqueModelObject<WeatherFile>();
     if (result){
       m_cachedWeatherFile = result;
-      QObject::connect(result->getImpl<WeatherFile_Impl>().get(), &WeatherFile_Impl::onRemoveFromWorkspace, this, &Model_Impl::clearCachedWeatherFile);
+      result->getImpl<WeatherFile_Impl>().get()->WeatherFile_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedWeatherFile>(const_cast<openstudio::model::detail::Model_Impl *>(this));
     }
 
     return m_cachedWeatherFile;
@@ -1092,7 +1316,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 
   Schedule Model_Impl::alwaysOffDiscreteSchedule() const
   {
-    std::string alwaysOffName("Always Off Discrete");
+    std::string alwaysOffName = this->alwaysOffDiscreteScheduleName();
 
     std::vector<ScheduleConstant> schedules = model().getConcreteModelObjects<ScheduleConstant>();
 
@@ -1102,6 +1326,8 @@ if (_className::iddObjectType() == typeToCreate) { \
       {
         if( istringEqual(name.get(),alwaysOffName) )
         {
+          // DLM: if a schedule matches the name but not these other properties we should reclaim the name or at least warn
+
           if( equal<double>(schedule.value(),0.0) )
           {
             if( boost::optional<ScheduleTypeLimits> limits = schedule.scheduleTypeLimits() )
@@ -1142,9 +1368,14 @@ if (_className::iddObjectType() == typeToCreate) { \
     return schedule;
   }
 
+  std::string Model_Impl::alwaysOffDiscreteScheduleName() const
+  {
+    return "Always Off Discrete";
+  }
+
   Schedule Model_Impl::alwaysOnDiscreteSchedule() const
   {
-    std::string alwaysOnName("Always On Discrete");
+    std::string alwaysOnName = this->alwaysOffDiscreteScheduleName();
 
     std::vector<ScheduleConstant> schedules = model().getConcreteModelObjects<ScheduleConstant>();
 
@@ -1154,6 +1385,8 @@ if (_className::iddObjectType() == typeToCreate) { \
       {
         if( istringEqual(name.get(),alwaysOnName) )
         {
+          // DLM: if a schedule matches the name but not these other properties we should reclaim the name or at least warn
+
           if( equal<double>(schedule.value(),1.0) )
           {
             if( boost::optional<ScheduleTypeLimits> limits = schedule.scheduleTypeLimits() )
@@ -1194,9 +1427,14 @@ if (_className::iddObjectType() == typeToCreate) { \
     return schedule;
   }
 
+  std::string Model_Impl::alwaysOnDiscreteScheduleName() const
+  {
+    return "Always On Discrete";
+  }
+
   Schedule Model_Impl::alwaysOnContinuousSchedule() const
   {
-    std::string alwaysOnName("Always On Continuous");
+    std::string alwaysOnName = this->alwaysOnContinuousScheduleName();
 
     std::vector<ScheduleConstant> schedules = model().getConcreteModelObjects<ScheduleConstant>();
 
@@ -1206,6 +1444,8 @@ if (_className::iddObjectType() == typeToCreate) { \
       {
         if (istringEqual(name.get(), alwaysOnName))
         {
+          // DLM: if a schedule matches the name but not these other properties we should reclaim the name or at least warn
+
           if (equal<double>(schedule.value(), 1.0))
           {
             if (boost::optional<ScheduleTypeLimits> limits = schedule.scheduleTypeLimits())
@@ -1246,9 +1486,14 @@ if (_className::iddObjectType() == typeToCreate) { \
     return schedule;
   }
 
+  std::string Model_Impl::alwaysOnContinuousScheduleName() const
+  {
+    return "Always On Continuous";
+  }
+
   SpaceType Model_Impl::plenumSpaceType() const
   {
-    std::string plenumSpaceTypeName("Plenum Space Type");
+    std::string plenumSpaceTypeName = this->plenumSpaceTypeName();
 
     std::vector<SpaceType> spaceTypes = model().getConcreteModelObjects<SpaceType>();
 
@@ -1270,6 +1515,16 @@ if (_className::iddObjectType() == typeToCreate) { \
     return spaceType;
   }
 
+  std::string Model_Impl::plenumSpaceTypeName() const
+  {
+    return "Plenum Space Type";
+  }
+
+  WorkflowJSON Model_Impl::workflowJSON() const
+  {
+    return m_workflowJSON;
+  }
+
   /// get the sql file
   boost::optional<openstudio::SqlFile> Model_Impl::sqlFile() const
   {
@@ -1279,6 +1534,17 @@ if (_className::iddObjectType() == typeToCreate) { \
     } else {
       return boost::optional<openstudio::SqlFile>();
     }
+  }
+
+  bool Model_Impl::setWorkflowJSON(const openstudio::WorkflowJSON& workflowJSON)
+  {
+    m_workflowJSON = workflowJSON;
+    return true;
+  }
+
+  void Model_Impl::resetWorkflowJSON()
+  {
+    m_workflowJSON = WorkflowJSON();
   }
 
   /// set the sql file
@@ -1494,15 +1760,15 @@ if (_className::iddObjectType() == typeToCreate) { \
   void Model_Impl::reportInitialModelObjects()
   {
     for (const WorkspaceObject& workspaceObject : this->objects()) {
-      emit initialModelObject(workspaceObject.getImpl<detail::ModelObject_Impl>().get(), workspaceObject.iddObject().type(), workspaceObject.handle());
+      this->initialModelObject.nano_emit(workspaceObject.getImpl<detail::ModelObject_Impl>().get(), workspaceObject.iddObject().type(), workspaceObject.handle());
     }
-    emit initialReportComplete();
+    this->initialReportComplete.nano_emit();
   }
 
   void Model_Impl::mf_createComponentWatcher(ComponentData& componentData) {
     try {
       ComponentWatcher watcher(componentData);
-      QObject::connect(watcher.getImpl().get(), &ComponentWatcher_Impl::obsolete, this, &Model_Impl::obsoleteComponentWatcher);
+      watcher.getImpl().get()->ComponentWatcher_Impl::obsolete.connect<Model_Impl, &Model_Impl::obsoleteComponentWatcher>(this); // #HASHTAG Problem?
       m_componentWatchers.push_back(watcher);
     }
     catch (...) {
@@ -1511,27 +1777,37 @@ if (_className::iddObjectType() == typeToCreate) { \
     }
   }
 
-  void Model_Impl::clearCachedBuilding()
+  void Model_Impl::clearCachedData()
+  {
+    Handle dummy;
+    clearCachedBuilding(dummy);
+    clearCachedLifeCycleCostParameters(dummy);
+    clearCachedRunPeriod(dummy);
+    clearCachedYearDescription(dummy);
+    clearCachedWeatherFile(dummy);
+  }
+
+  void Model_Impl::clearCachedBuilding(const Handle &)
   {
     m_cachedBuilding.reset();
   }
 
-  void Model_Impl::clearCachedLifeCycleCostParameters()
+  void Model_Impl::clearCachedLifeCycleCostParameters(const Handle &handle)
   {
     m_cachedLifeCycleCostParameters.reset();
   }
 
-  void Model_Impl::clearCachedRunPeriod()
+  void Model_Impl::clearCachedRunPeriod(const Handle& handle)
   {
     m_cachedRunPeriod.reset();
   }
 
-  void Model_Impl::clearCachedYearDescription()
+  void Model_Impl::clearCachedYearDescription(const Handle& handle)
   {
     m_cachedYearDescription.reset();
   }
 
-  void Model_Impl::clearCachedWeatherFile()
+  void Model_Impl::clearCachedWeatherFile(const Handle& handle)
   {
     m_cachedWeatherFile.reset();
   }
@@ -1594,11 +1870,37 @@ boost::optional<Model> Model::load(const path& p) {
     }
     catch (...) {}
   }
+
+  if (result){
+    path workflowJSONPath = p.parent_path() / p.stem() / toPath("workflow.osw");
+    if (exists(workflowJSONPath)){
+      boost::optional<WorkflowJSON> workflowJSON = WorkflowJSON::load(workflowJSONPath);
+      if (workflowJSON){
+        result->setWorkflowJSON(*workflowJSON);
+      }
+    }
+  }
+
   return result;
 }
 
+boost::optional<Model> Model::load(const path& osmPath, const path& workflowJSONPath)
+{
+  OptionalModel result = load(osmPath);
+  if (result){
+    boost::optional<WorkflowJSON> workflowJSON = WorkflowJSON::load(workflowJSONPath);
+    if (workflowJSON){
+      result->setWorkflowJSON(*workflowJSON);
+    } else{
+      result.reset();
+    }
+  }
+  return result;
+}
+
+
 Model::Model(std::shared_ptr<detail::Model_Impl> p)
-  : Workspace(p)
+  : Workspace(std::move(p))
 {}
 
 boost::optional<Building> Model::building() const
@@ -1621,6 +1923,86 @@ boost::optional<YearDescription> Model::yearDescription() const
   return getImpl<detail::Model_Impl>()->yearDescription();
 }
 
+boost::optional<int> Model::calendarYear() const
+{
+  return getImpl<detail::Model_Impl>()->calendarYear();
+}
+
+std::string Model::dayofWeekforStartDay() const
+{
+  return getImpl<detail::Model_Impl>()->dayofWeekforStartDay();
+}
+
+bool Model::isDayofWeekforStartDayDefaulted() const
+{
+  return getImpl<detail::Model_Impl>()->isDayofWeekforStartDayDefaulted();
+}
+
+bool Model::isLeapYear() const
+{
+  return getImpl<detail::Model_Impl>()->isLeapYear();
+}
+
+bool Model::isIsLeapYearDefaulted() const
+{
+  return getImpl<detail::Model_Impl>()->isIsLeapYearDefaulted();
+}
+
+void Model::setCalendarYear(int calendarYear)
+{
+  getImpl<detail::Model_Impl>()->setCalendarYear(calendarYear);
+}
+
+void Model::resetCalendarYear()
+{
+  getImpl<detail::Model_Impl>()->resetCalendarYear();
+}
+
+bool Model::setDayofWeekforStartDay(std::string dayofWeekforStartDay)
+{
+  return getImpl<detail::Model_Impl>()->setDayofWeekforStartDay(dayofWeekforStartDay);
+}
+
+void Model::resetDayofWeekforStartDay()
+{
+  getImpl<detail::Model_Impl>()->resetDayofWeekforStartDay();
+}
+
+bool Model::setIsLeapYear(bool isLeapYear)
+{
+  return getImpl<detail::Model_Impl>()->setIsLeapYear(isLeapYear);
+}
+
+void Model::resetIsLeapYear()
+{
+  getImpl<detail::Model_Impl>()->resetIsLeapYear();
+}
+
+int Model::assumedYear()
+{
+  return getImpl<detail::Model_Impl>()->assumedYear();
+}
+
+openstudio::Date Model::makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth)
+{
+  return getImpl<detail::Model_Impl>()->makeDate(monthOfYear, dayOfMonth);
+}
+
+openstudio::Date Model::makeDate(unsigned monthOfYear, unsigned dayOfMonth)
+{
+  return getImpl<detail::Model_Impl>()->makeDate(monthOfYear, dayOfMonth);
+}
+
+openstudio::Date Model::makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear)
+{
+  return getImpl<detail::Model_Impl>()->makeDate(n, dayOfWeek, monthOfYear);
+}
+
+openstudio::Date Model::makeDate(unsigned dayOfYear)
+{
+  return getImpl<detail::Model_Impl>()->makeDate(dayOfYear);
+}
+
 boost::optional<WeatherFile> Model::weatherFile() const
 {
   return getImpl<detail::Model_Impl>()->weatherFile();
@@ -1631,9 +2013,19 @@ Schedule Model::alwaysOffDiscreteSchedule() const
   return getImpl<detail::Model_Impl>()->alwaysOffDiscreteSchedule();
 }
 
+std::string Model::alwaysOffDiscreteScheduleName() const
+{
+  return getImpl<detail::Model_Impl>()->alwaysOffDiscreteScheduleName();
+}
+
 Schedule Model::alwaysOnDiscreteSchedule() const
 {
   return getImpl<detail::Model_Impl>()->alwaysOnDiscreteSchedule();
+}
+
+std::string Model::alwaysOnDiscreteScheduleName() const
+{
+  return getImpl<detail::Model_Impl>()->alwaysOnDiscreteScheduleName();
 }
 
 Schedule Model::alwaysOnContinuousSchedule() const
@@ -1641,9 +2033,33 @@ Schedule Model::alwaysOnContinuousSchedule() const
   return getImpl<detail::Model_Impl>()->alwaysOnContinuousSchedule();
 }
 
+std::string Model::alwaysOnContinuousScheduleName() const
+{
+  return getImpl<detail::Model_Impl>()->alwaysOnContinuousScheduleName();
+}
+
 SpaceType Model::plenumSpaceType() const
 {
   return getImpl<detail::Model_Impl>()->plenumSpaceType();
+}
+
+std::string Model::plenumSpaceTypeName() const
+{
+  return getImpl<detail::Model_Impl>()->plenumSpaceTypeName();
+}
+openstudio::WorkflowJSON Model::workflowJSON() const
+{
+  return getImpl<detail::Model_Impl>()->workflowJSON();
+}
+
+bool Model::setWorkflowJSON(const openstudio::WorkflowJSON& setWorkflowJSON)
+{
+  return getImpl<detail::Model_Impl>()->setWorkflowJSON(setWorkflowJSON);
+}
+
+void Model::resetWorkflowJSON()
+{
+  return getImpl<detail::Model_Impl>()->resetWorkflowJSON();
 }
 
 openstudio::OptionalSqlFile Model::sqlFile() const

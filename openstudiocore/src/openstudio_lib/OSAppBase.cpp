@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "OSAppBase.hpp"
 
@@ -29,8 +38,6 @@
 #include "../shared_gui_components/LocalLibraryView.hpp"
 #include "../shared_gui_components/LocalLibraryController.hpp"
 #include "../shared_gui_components/WaitDialog.hpp"
-
-#include "../analysisdriver/SimpleProject.hpp"
 
 #include "../utilities/bcl/LocalBCL.hpp"
 #include "../utilities/core/PathHelpers.hpp"
@@ -57,7 +64,8 @@ OSAppBase::OSAppBase( int & argc, char ** argv, const QSharedPointer<MeasureMana
     }
   }
 
-  m_measureManager->updateMeasuresLists();
+  // DLM: todo rethink this
+  //m_measureManager->updateMeasuresLists();
 
   m_waitDialog = boost::shared_ptr<WaitDialog>(new WaitDialog("Loading Model","Loading Model"));
 }
@@ -91,16 +99,34 @@ void OSAppBase::showMeasureUpdateDlg()
   QMessageBox::information(this->mainWidget(), "Cannot Update User Measures", "Your My Measures Directory appears to be on a network drive that is not currently available.\nYou can change your specified My Measures Directory using 'Preferences->Change My Measures Directory'.", QMessageBox::Ok);
 }
 
-boost::optional<openstudio::analysisdriver::SimpleProject> OSAppBase::project()
-{
-  std::shared_ptr<OSDocument> document = currentDocument();
+//boost::optional<openstudio::analysisdriver::SimpleProject> OSAppBase::project()
+//{
+//  std::shared_ptr<OSDocument> document = currentDocument();
+//
+//  if (document)
+//  {
+//    return document->project();
+//  } else {
+//    return boost::optional<openstudio::analysisdriver::SimpleProject>();
+//  }
+//}
 
-  if (document)
-  {
-    return document->project();
-  } else {
-    return boost::optional<openstudio::analysisdriver::SimpleProject>();
-  }
+void OSAppBase::addWorkspaceObject(const WorkspaceObject& workspaceObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid) {
+  // Emit QT Signal
+  emit workspaceObjectAdded(workspaceObject, type, uuid);
+}
+
+void OSAppBase::addWorkspaceObjectPtr(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr, const openstudio::IddObjectType& type, const openstudio::UUID& uuid) {
+  // Emit QT Signal
+  emit workspaceObjectAddedPtr(wPtr, type, uuid);
+}
+
+void OSAppBase::removeWorkspaceObject(const WorkspaceObject& workspaceObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid) {
+  emit workspaceObjectRemoved(workspaceObject, type, uuid);
+}
+
+void OSAppBase::removeWorkspaceObjectPtr(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr, const openstudio::IddObjectType& type, const openstudio::UUID& uuid ) {
+  emit workspaceObjectRemovedPtr(wPtr, type, uuid);
 }
 
 QWidget *OSAppBase::mainWidget()
@@ -115,6 +141,17 @@ QWidget *OSAppBase::mainWidget()
   }
 }
 
+boost::optional<openstudio::path> OSAppBase::tempDir()
+{
+  std::shared_ptr<OSDocument> document = currentDocument();
+  if (document)
+  {
+    return toPath(document->modelTempDir());
+  }
+  return boost::none;
+}
+
+
 boost::optional<openstudio::model::Model> OSAppBase::currentModel()
 {
   std::shared_ptr<OSDocument> document = currentDocument();
@@ -126,16 +163,16 @@ boost::optional<openstudio::model::Model> OSAppBase::currentModel()
   }
 }
 
-boost::optional<openstudio::Workspace> OSAppBase::currentWorkspace()
-{
-  std::shared_ptr<OSDocument> document = currentDocument();
-  if (document)
-  {
-    return document->workspace();
-  } else {
-    return boost::none;
-  }
-}
+//boost::optional<openstudio::Workspace> OSAppBase::currentWorkspace()
+//{
+//  std::shared_ptr<OSDocument> document = currentDocument();
+//  if (document)
+//  {
+//    return document->workspace();
+//  } else {
+//    return boost::none;
+//  }
+//}
 
 MeasureManager &OSAppBase::measureManager()
 {
@@ -144,7 +181,7 @@ MeasureManager &OSAppBase::measureManager()
 
 void OSAppBase::updateSelectedMeasureState()
 {
-  // DLM: this slot seems out of place here, seems like the connection from the measure list to enabling duplicate buttons, etc 
+  // DLM: this slot seems out of place here, seems like the connection from the measure list to enabling duplicate buttons, etc
   // should be tighter
   std::shared_ptr<OSDocument> document = currentDocument();
 
@@ -189,16 +226,16 @@ void OSAppBase::updateMyMeasures()
 
   if (document)
   {
-    boost::optional<analysisdriver::SimpleProject> project = document->project();
-    if (project)
-    {
-      mainWidget()->setEnabled(false);
-      measureManager().updateMyMeasures(*project);
-      mainWidget()->setEnabled(true);
-    } else {
+    //boost::optional<analysisdriver::SimpleProject> project = document->project();
+    //if (project)
+    //{
+    //  mainWidget()->setEnabled(false);
+    //  measureManager().updateMyMeasures(*project);
+    //  mainWidget()->setEnabled(true);
+    //} else {
       LOG(Error, "Unable to update measures, there is no project set...");
-    }
-  } 
+    //}
+  }
 }
 
 void OSAppBase::updateBCLMeasures()
@@ -207,15 +244,15 @@ void OSAppBase::updateBCLMeasures()
 
   if (document)
   {
-    boost::optional<analysisdriver::SimpleProject> project = document->project();
-    if (project)
-    {
-      mainWidget()->setEnabled(false);
-      measureManager().updateBCLMeasures(*project);
-      mainWidget()->setEnabled(true);
-    } else {
+    //boost::optional<analysisdriver::SimpleProject> project = document->project();
+    //if (project)
+    //{
+    //  mainWidget()->setEnabled(false);
+    //  measureManager().updateBCLMeasures(*project);
+    //  mainWidget()->setEnabled(true);
+    //} else {
       LOG(Error, "Unable to update measures, there is no project set...");
-    }
+    //}
   }
 
 }

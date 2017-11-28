@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef MODEL_BLIND_IMPL_HPP
 #define MODEL_BLIND_IMPL_HPP
@@ -33,135 +42,135 @@ namespace detail {
 
   /** Blind_Impl is a ShadingMaterial_Impl that is the implementation class for Blind.*/
   class MODEL_API Blind_Impl : public ShadingMaterial_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(std::string slatOrientation READ slatOrientation WRITE setSlatOrientation RESET resetSlatOrientation);
-    Q_PROPERTY(bool isSlatOrientationDefaulted READ isSlatOrientationDefaulted);
-    Q_PROPERTY(std::vector<std::string> slatOrientationValues READ slatOrientationValues);
+    
+    
+    
 
-    Q_PROPERTY(double slatWidth READ slatWidth WRITE setSlatWidth);
-    Q_PROPERTY(openstudio::Quantity slatWidth_SI READ slatWidth_SI WRITE setSlatWidth);
-    Q_PROPERTY(openstudio::Quantity slatWidth_IP READ slatWidth_IP WRITE setSlatWidth);
+    
+    
+    
 
-    Q_PROPERTY(double slatSeparation READ slatSeparation WRITE setSlatSeparation);
-    Q_PROPERTY(openstudio::Quantity slatSeparation_SI READ slatSeparation_SI WRITE setSlatSeparation);
-    Q_PROPERTY(openstudio::Quantity slatSeparation_IP READ slatSeparation_IP WRITE setSlatSeparation);
+    
+    
+    
 
-    Q_PROPERTY(double slatThickness READ slatThickness WRITE setSlatThickness RESET resetSlatThickness);
-    Q_PROPERTY(openstudio::Quantity slatThickness_SI READ slatThickness_SI WRITE setSlatThickness RESET resetSlatThickness);
-    Q_PROPERTY(openstudio::Quantity slatThickness_IP READ slatThickness_IP WRITE setSlatThickness RESET resetSlatThickness);
-    Q_PROPERTY(bool isSlatThicknessDefaulted READ isSlatThicknessDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double slatAngle READ slatAngle WRITE setSlatAngle RESET resetSlatAngle);
-    Q_PROPERTY(openstudio::Quantity slatAngle_SI READ slatAngle_SI WRITE setSlatAngle RESET resetSlatAngle);
-    Q_PROPERTY(openstudio::Quantity slatAngle_IP READ slatAngle_IP WRITE setSlatAngle RESET resetSlatAngle);
-    Q_PROPERTY(bool isSlatAngleDefaulted READ isSlatAngleDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double slatConductivity READ slatConductivity WRITE setSlatConductivity RESET resetSlatConductivity);
-    Q_PROPERTY(openstudio::Quantity slatConductivity_SI READ slatConductivity_SI WRITE setSlatConductivity RESET resetSlatConductivity);
-    Q_PROPERTY(openstudio::Quantity slatConductivity_IP READ slatConductivity_IP WRITE setSlatConductivity RESET resetSlatConductivity);
-    Q_PROPERTY(bool isSlatConductivityDefaulted READ isSlatConductivityDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double slatBeamSolarTransmittance READ slatBeamSolarTransmittance WRITE setSlatBeamSolarTransmittance RESET resetSlatBeamSolarTransmittance);
-    Q_PROPERTY(openstudio::Quantity slatBeamSolarTransmittance_SI READ slatBeamSolarTransmittance_SI WRITE setSlatBeamSolarTransmittance RESET resetSlatBeamSolarTransmittance);
-    Q_PROPERTY(openstudio::Quantity slatBeamSolarTransmittance_IP READ slatBeamSolarTransmittance_IP WRITE setSlatBeamSolarTransmittance RESET resetSlatBeamSolarTransmittance);
-    Q_PROPERTY(bool isSlatBeamSolarTransmittanceDefaulted READ isSlatBeamSolarTransmittanceDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double frontSideSlatBeamSolarReflectance READ frontSideSlatBeamSolarReflectance WRITE setFrontSideSlatBeamSolarReflectance);
-    Q_PROPERTY(openstudio::Quantity frontSideSlatBeamSolarReflectance_SI READ frontSideSlatBeamSolarReflectance_SI WRITE setFrontSideSlatBeamSolarReflectance);
-    Q_PROPERTY(openstudio::Quantity frontSideSlatBeamSolarReflectance_IP READ frontSideSlatBeamSolarReflectance_IP WRITE setFrontSideSlatBeamSolarReflectance);
+    
+    
+    
 
-    Q_PROPERTY(double backSideSlatBeamSolarReflectance READ backSideSlatBeamSolarReflectance WRITE setBackSideSlatBeamSolarReflectance);
-    Q_PROPERTY(openstudio::Quantity backSideSlatBeamSolarReflectance_SI READ backSideSlatBeamSolarReflectance_SI WRITE setBackSideSlatBeamSolarReflectance);
-    Q_PROPERTY(openstudio::Quantity backSideSlatBeamSolarReflectance_IP READ backSideSlatBeamSolarReflectance_IP WRITE setBackSideSlatBeamSolarReflectance);
+    
+    
+    
 
-    Q_PROPERTY(double slatDiffuseSolarTransmittance READ slatDiffuseSolarTransmittance WRITE setSlatDiffuseSolarTransmittance RESET resetSlatDiffuseSolarTransmittance);
-    Q_PROPERTY(openstudio::Quantity slatDiffuseSolarTransmittance_SI READ slatDiffuseSolarTransmittance_SI WRITE setSlatDiffuseSolarTransmittance RESET resetSlatDiffuseSolarTransmittance);
-    Q_PROPERTY(openstudio::Quantity slatDiffuseSolarTransmittance_IP READ slatDiffuseSolarTransmittance_IP WRITE setSlatDiffuseSolarTransmittance RESET resetSlatDiffuseSolarTransmittance);
-    Q_PROPERTY(bool isSlatDiffuseSolarTransmittanceDefaulted READ isSlatDiffuseSolarTransmittanceDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double frontSideSlatDiffuseSolarReflectance READ frontSideSlatDiffuseSolarReflectance WRITE setFrontSideSlatDiffuseSolarReflectance);
-    Q_PROPERTY(openstudio::Quantity frontSideSlatDiffuseSolarReflectance_SI READ frontSideSlatDiffuseSolarReflectance_SI WRITE setFrontSideSlatDiffuseSolarReflectance);
-    Q_PROPERTY(openstudio::Quantity frontSideSlatDiffuseSolarReflectance_IP READ frontSideSlatDiffuseSolarReflectance_IP WRITE setFrontSideSlatDiffuseSolarReflectance);
+    
+    
+    
 
-    Q_PROPERTY(double backSideSlatDiffuseSolarReflectance READ backSideSlatDiffuseSolarReflectance WRITE setBackSideSlatDiffuseSolarReflectance);
-    Q_PROPERTY(openstudio::Quantity backSideSlatDiffuseSolarReflectance_SI READ backSideSlatDiffuseSolarReflectance_SI WRITE setBackSideSlatDiffuseSolarReflectance);
-    Q_PROPERTY(openstudio::Quantity backSideSlatDiffuseSolarReflectance_IP READ backSideSlatDiffuseSolarReflectance_IP WRITE setBackSideSlatDiffuseSolarReflectance);
+    
+    
+    
 
-    Q_PROPERTY(double slatBeamVisibleTransmittance READ slatBeamVisibleTransmittance WRITE setSlatBeamVisibleTransmittance);
-    Q_PROPERTY(openstudio::Quantity slatBeamVisibleTransmittance_SI READ slatBeamVisibleTransmittance_SI WRITE setSlatBeamVisibleTransmittance);
-    Q_PROPERTY(openstudio::Quantity slatBeamVisibleTransmittance_IP READ slatBeamVisibleTransmittance_IP WRITE setSlatBeamVisibleTransmittance);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> frontSideSlatBeamVisibleReflectance READ frontSideSlatBeamVisibleReflectance WRITE setFrontSideSlatBeamVisibleReflectance RESET resetFrontSideSlatBeamVisibleReflectance);
-    Q_PROPERTY(openstudio::OSOptionalQuantity frontSideSlatBeamVisibleReflectance_SI READ frontSideSlatBeamVisibleReflectance_SI WRITE setFrontSideSlatBeamVisibleReflectance RESET resetFrontSideSlatBeamVisibleReflectance);
-    Q_PROPERTY(openstudio::OSOptionalQuantity frontSideSlatBeamVisibleReflectance_IP READ frontSideSlatBeamVisibleReflectance_IP WRITE setFrontSideSlatBeamVisibleReflectance RESET resetFrontSideSlatBeamVisibleReflectance);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> backSideSlatBeamVisibleReflectance READ backSideSlatBeamVisibleReflectance WRITE setBackSideSlatBeamVisibleReflectance RESET resetBackSideSlatBeamVisibleReflectance);
-    Q_PROPERTY(openstudio::OSOptionalQuantity backSideSlatBeamVisibleReflectance_SI READ backSideSlatBeamVisibleReflectance_SI WRITE setBackSideSlatBeamVisibleReflectance RESET resetBackSideSlatBeamVisibleReflectance);
-    Q_PROPERTY(openstudio::OSOptionalQuantity backSideSlatBeamVisibleReflectance_IP READ backSideSlatBeamVisibleReflectance_IP WRITE setBackSideSlatBeamVisibleReflectance RESET resetBackSideSlatBeamVisibleReflectance);
+    
+    
+    
 
-    Q_PROPERTY(double slatDiffuseVisibleTransmittance READ slatDiffuseVisibleTransmittance WRITE setSlatDiffuseVisibleTransmittance RESET resetSlatDiffuseVisibleTransmittance);
-    Q_PROPERTY(openstudio::Quantity slatDiffuseVisibleTransmittance_SI READ slatDiffuseVisibleTransmittance_SI WRITE setSlatDiffuseVisibleTransmittance RESET resetSlatDiffuseVisibleTransmittance);
-    Q_PROPERTY(openstudio::Quantity slatDiffuseVisibleTransmittance_IP READ slatDiffuseVisibleTransmittance_IP WRITE setSlatDiffuseVisibleTransmittance RESET resetSlatDiffuseVisibleTransmittance);
-    Q_PROPERTY(bool isSlatDiffuseVisibleTransmittanceDefaulted READ isSlatDiffuseVisibleTransmittanceDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> frontSideSlatDiffuseVisibleReflectance READ frontSideSlatDiffuseVisibleReflectance WRITE setFrontSideSlatDiffuseVisibleReflectance RESET resetFrontSideSlatDiffuseVisibleReflectance);
-    Q_PROPERTY(openstudio::OSOptionalQuantity frontSideSlatDiffuseVisibleReflectance_SI READ frontSideSlatDiffuseVisibleReflectance_SI WRITE setFrontSideSlatDiffuseVisibleReflectance RESET resetFrontSideSlatDiffuseVisibleReflectance);
-    Q_PROPERTY(openstudio::OSOptionalQuantity frontSideSlatDiffuseVisibleReflectance_IP READ frontSideSlatDiffuseVisibleReflectance_IP WRITE setFrontSideSlatDiffuseVisibleReflectance RESET resetFrontSideSlatDiffuseVisibleReflectance);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> backSideSlatDiffuseVisibleReflectance READ backSideSlatDiffuseVisibleReflectance WRITE setBackSideSlatDiffuseVisibleReflectance RESET resetBackSideSlatDiffuseVisibleReflectance);
-    Q_PROPERTY(openstudio::OSOptionalQuantity backSideSlatDiffuseVisibleReflectance_SI READ backSideSlatDiffuseVisibleReflectance_SI WRITE setBackSideSlatDiffuseVisibleReflectance RESET resetBackSideSlatDiffuseVisibleReflectance);
-    Q_PROPERTY(openstudio::OSOptionalQuantity backSideSlatDiffuseVisibleReflectance_IP READ backSideSlatDiffuseVisibleReflectance_IP WRITE setBackSideSlatDiffuseVisibleReflectance RESET resetBackSideSlatDiffuseVisibleReflectance);
+    
+    
+    
 
-    Q_PROPERTY(double slatInfraredHemisphericalTransmittance READ slatInfraredHemisphericalTransmittance WRITE setSlatInfraredHemisphericalTransmittance RESET resetSlatInfraredHemisphericalTransmittance);
-    Q_PROPERTY(openstudio::Quantity slatInfraredHemisphericalTransmittance_SI READ slatInfraredHemisphericalTransmittance_SI WRITE setSlatInfraredHemisphericalTransmittance RESET resetSlatInfraredHemisphericalTransmittance);
-    Q_PROPERTY(openstudio::Quantity slatInfraredHemisphericalTransmittance_IP READ slatInfraredHemisphericalTransmittance_IP WRITE setSlatInfraredHemisphericalTransmittance RESET resetSlatInfraredHemisphericalTransmittance);
-    Q_PROPERTY(bool isSlatInfraredHemisphericalTransmittanceDefaulted READ isSlatInfraredHemisphericalTransmittanceDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double frontSideSlatInfraredHemisphericalEmissivity READ frontSideSlatInfraredHemisphericalEmissivity WRITE setFrontSideSlatInfraredHemisphericalEmissivity RESET resetFrontSideSlatInfraredHemisphericalEmissivity);
-    Q_PROPERTY(openstudio::Quantity frontSideSlatInfraredHemisphericalEmissivity_SI READ frontSideSlatInfraredHemisphericalEmissivity_SI WRITE setFrontSideSlatInfraredHemisphericalEmissivity RESET resetFrontSideSlatInfraredHemisphericalEmissivity);
-    Q_PROPERTY(openstudio::Quantity frontSideSlatInfraredHemisphericalEmissivity_IP READ frontSideSlatInfraredHemisphericalEmissivity_IP WRITE setFrontSideSlatInfraredHemisphericalEmissivity RESET resetFrontSideSlatInfraredHemisphericalEmissivity);
-    Q_PROPERTY(bool isFrontSideSlatInfraredHemisphericalEmissivityDefaulted READ isFrontSideSlatInfraredHemisphericalEmissivityDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double backSideSlatInfraredHemisphericalEmissivity READ backSideSlatInfraredHemisphericalEmissivity WRITE setBackSideSlatInfraredHemisphericalEmissivity RESET resetBackSideSlatInfraredHemisphericalEmissivity);
-    Q_PROPERTY(openstudio::Quantity backSideSlatInfraredHemisphericalEmissivity_SI READ backSideSlatInfraredHemisphericalEmissivity_SI WRITE setBackSideSlatInfraredHemisphericalEmissivity RESET resetBackSideSlatInfraredHemisphericalEmissivity);
-    Q_PROPERTY(openstudio::Quantity backSideSlatInfraredHemisphericalEmissivity_IP READ backSideSlatInfraredHemisphericalEmissivity_IP WRITE setBackSideSlatInfraredHemisphericalEmissivity RESET resetBackSideSlatInfraredHemisphericalEmissivity);
-    Q_PROPERTY(bool isBackSideSlatInfraredHemisphericalEmissivityDefaulted READ isBackSideSlatInfraredHemisphericalEmissivityDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double blindtoGlassDistance READ blindtoGlassDistance WRITE setBlindtoGlassDistance RESET resetBlindtoGlassDistance);
-    Q_PROPERTY(openstudio::Quantity blindtoGlassDistance_SI READ blindtoGlassDistance_SI WRITE setBlindtoGlassDistance RESET resetBlindtoGlassDistance);
-    Q_PROPERTY(openstudio::Quantity blindtoGlassDistance_IP READ blindtoGlassDistance_IP WRITE setBlindtoGlassDistance RESET resetBlindtoGlassDistance);
-    Q_PROPERTY(bool isBlindtoGlassDistanceDefaulted READ isBlindtoGlassDistanceDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double blindTopOpeningMultiplier READ blindTopOpeningMultiplier WRITE setBlindTopOpeningMultiplier RESET resetBlindTopOpeningMultiplier);
-    Q_PROPERTY(openstudio::Quantity blindTopOpeningMultiplier_SI READ blindTopOpeningMultiplier_SI WRITE setBlindTopOpeningMultiplier RESET resetBlindTopOpeningMultiplier);
-    Q_PROPERTY(openstudio::Quantity blindTopOpeningMultiplier_IP READ blindTopOpeningMultiplier_IP WRITE setBlindTopOpeningMultiplier RESET resetBlindTopOpeningMultiplier);
-    Q_PROPERTY(bool isBlindTopOpeningMultiplierDefaulted READ isBlindTopOpeningMultiplierDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double blindBottomOpeningMultiplier READ blindBottomOpeningMultiplier WRITE setBlindBottomOpeningMultiplier RESET resetBlindBottomOpeningMultiplier);
-    Q_PROPERTY(openstudio::Quantity blindBottomOpeningMultiplier_SI READ blindBottomOpeningMultiplier_SI WRITE setBlindBottomOpeningMultiplier RESET resetBlindBottomOpeningMultiplier);
-    Q_PROPERTY(openstudio::Quantity blindBottomOpeningMultiplier_IP READ blindBottomOpeningMultiplier_IP WRITE setBlindBottomOpeningMultiplier RESET resetBlindBottomOpeningMultiplier);
-    Q_PROPERTY(bool isBlindBottomOpeningMultiplierDefaulted READ isBlindBottomOpeningMultiplierDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double blindLeftSideOpeningMultiplier READ blindLeftSideOpeningMultiplier WRITE setBlindLeftSideOpeningMultiplier RESET resetBlindLeftSideOpeningMultiplier);
-    Q_PROPERTY(openstudio::Quantity blindLeftSideOpeningMultiplier_SI READ blindLeftSideOpeningMultiplier_SI WRITE setBlindLeftSideOpeningMultiplier RESET resetBlindLeftSideOpeningMultiplier);
-    Q_PROPERTY(openstudio::Quantity blindLeftSideOpeningMultiplier_IP READ blindLeftSideOpeningMultiplier_IP WRITE setBlindLeftSideOpeningMultiplier RESET resetBlindLeftSideOpeningMultiplier);
-    Q_PROPERTY(bool isBlindLeftSideOpeningMultiplierDefaulted READ isBlindLeftSideOpeningMultiplierDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double blindRightSideOpeningMultiplier READ blindRightSideOpeningMultiplier WRITE setBlindRightSideOpeningMultiplier RESET resetBlindRightSideOpeningMultiplier);
-    Q_PROPERTY(openstudio::Quantity blindRightSideOpeningMultiplier_SI READ blindRightSideOpeningMultiplier_SI WRITE setBlindRightSideOpeningMultiplier RESET resetBlindRightSideOpeningMultiplier);
-    Q_PROPERTY(openstudio::Quantity blindRightSideOpeningMultiplier_IP READ blindRightSideOpeningMultiplier_IP WRITE setBlindRightSideOpeningMultiplier RESET resetBlindRightSideOpeningMultiplier);
-    Q_PROPERTY(bool isBlindRightSideOpeningMultiplierDefaulted READ isBlindRightSideOpeningMultiplierDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double minimumSlatAngle READ minimumSlatAngle WRITE setMinimumSlatAngle RESET resetMinimumSlatAngle);
-    Q_PROPERTY(openstudio::Quantity minimumSlatAngle_SI READ minimumSlatAngle_SI WRITE setMinimumSlatAngle RESET resetMinimumSlatAngle);
-    Q_PROPERTY(openstudio::Quantity minimumSlatAngle_IP READ minimumSlatAngle_IP WRITE setMinimumSlatAngle RESET resetMinimumSlatAngle);
-    Q_PROPERTY(bool isMinimumSlatAngleDefaulted READ isMinimumSlatAngleDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double maximumSlatAngle READ maximumSlatAngle WRITE setMaximumSlatAngle RESET resetMaximumSlatAngle);
-    Q_PROPERTY(openstudio::Quantity maximumSlatAngle_SI READ maximumSlatAngle_SI WRITE setMaximumSlatAngle RESET resetMaximumSlatAngle);
-    Q_PROPERTY(openstudio::Quantity maximumSlatAngle_IP READ maximumSlatAngle_IP WRITE setMaximumSlatAngle RESET resetMaximumSlatAngle);
-    Q_PROPERTY(bool isMaximumSlatAngleDefaulted READ isMaximumSlatAngleDefaulted);
+    
+    
+    
+    
 
     // TODO: Add relationships for objects related to this one, but not pointed to by the underlying data.
     //       Such relationships can be generated by the GenerateRelationships.rb script.

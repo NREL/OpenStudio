@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
- *  All rights reserved.
- *  
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- *  
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- *  
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef OPENSTUDIO_SCHEDULESVIEW_HPP
 #define OPENSTUDIO_SCHEDULESVIEW_HPP
@@ -41,6 +50,7 @@
 #include <QDialog>
 #include <QGraphicsItem>
 #include <QGraphicsView>
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include <QWidget>
 
 class QPushButton;
@@ -97,7 +107,7 @@ class OSCheckBox;
 
 class OSCheckBox2;
 
-class OSLineEdit;
+class OSLineEdit2;
 
 class ScheduleDayView;
 
@@ -110,7 +120,7 @@ class MonthView;
 class ScheduleCalendarWidget;
 
 // Overall view for the schedules tab, includes left column selector
-class SchedulesView : public QWidget
+class SchedulesView : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -193,7 +203,7 @@ class SchedulesView : public QWidget
 
     void paintEvent ( QPaintEvent * event ) override;
 
-  private slots: 
+  private slots:
 
     void addSchedule( model::ScheduleRuleset & schedule);
 
@@ -203,7 +213,7 @@ class SchedulesView : public QWidget
 
     void onModelObjectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
 
-    void onScheduleRuleRemoved(Handle handle);
+    void onScheduleRuleRemoved(const Handle& handle);
 
   private:
 
@@ -224,7 +234,7 @@ class SchedulesView : public QWidget
 /******************************************************************************/
 
 // Overall item in left column selector, includes collapsible header and content
-class ScheduleTab : public QWidget
+class ScheduleTab : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -297,7 +307,7 @@ private:
 };
 
 // Collapsible header for each schedule ruleset in left column selector
-class ScheduleTabHeader : public QWidget
+class ScheduleTabHeader : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -320,7 +330,7 @@ class ScheduleTabHeader : public QWidget
   void toggle();
 
   signals:
-  
+
   void scheduleClicked(const model::ScheduleRuleset & schedule);
 
   void toggleHeaderClicked( bool close );
@@ -357,7 +367,7 @@ class ScheduleTabHeader : public QWidget
 };
 
 // Content under collapsible header, includes a button for each rule and default schedule
-class ScheduleTabContent : public QWidget
+class ScheduleTabContent : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -379,7 +389,7 @@ signals:
 
   public slots:
 
-  void scheduleRefresh();
+  void scheduleRefresh(const Handle& handle);
 
   private slots:
 
@@ -403,14 +413,14 @@ private:
 };
 
 // Inner item in ScheduleTabContent, represents a ScheduleRule
-class ScheduleTabRule : public QWidget
+class ScheduleTabRule : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
   public:
 
-  ScheduleTabRule( ScheduleTab * scheduleTab, 
-                   const model::ScheduleRule & scheduleRule, 
+  ScheduleTabRule( ScheduleTab * scheduleTab,
+                   const model::ScheduleRule & scheduleRule,
                    QWidget * parent = nullptr );
 
   virtual ~ScheduleTabRule() {}
@@ -453,7 +463,7 @@ class ScheduleTabRule : public QWidget
 };
 
 // Inner item in ScheduleTabContent, represents a default schedule such as design day or the default schedule
-class ScheduleTabDefault : public QWidget
+class ScheduleTabDefault : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -490,7 +500,7 @@ class ScheduleTabDefault : public QWidget
   bool m_mouseDown;
 
   QLabel * m_label;
-  
+
   ScheduleTab * m_scheduleTab;
 
   ScheduleTabDefaultType m_type;
@@ -504,7 +514,7 @@ class ScheduleTabDefault : public QWidget
 /******************************************************************************/
 
 // View presented when need to make a new profile (either schedule rule or design day)
-class NewProfileView : public QWidget
+class NewProfileView : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -524,7 +534,7 @@ class NewProfileView : public QWidget
 
     void addWinterProfileClicked(model::ScheduleRuleset & scheduleRuleset, UUID dayScheduleHandle);
 
-  private slots: 
+  private slots:
 
     void onAddClicked();
 
@@ -543,7 +553,7 @@ class NewProfileView : public QWidget
 
 
 // View presented only showing schedule name widget
-class ScheduleRulesetNameView : public QWidget
+class ScheduleRulesetNameView : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -568,7 +578,7 @@ class DefaultScheduleDayView : public QWidget
   public:
 
     DefaultScheduleDayView( bool isIP,
-                            const model::ScheduleRuleset & scheduleRuleset, 
+                            const model::ScheduleRuleset & scheduleRuleset,
                             SchedulesView * schedulesView );
 
     virtual ~DefaultScheduleDayView() {}
@@ -605,7 +615,7 @@ private:
 };
 
 // View a schedule rule of a schedule ruleset
-class ScheduleRuleView : public QWidget
+class ScheduleRuleView : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -665,7 +675,7 @@ private:
 
   OSCheckBox2 * m_saturdayButton;
 
-  OSLineEdit * m_nameEditField;
+  OSLineEdit2 * m_nameEditField;
 
   QDateTimeEdit * m_startDateEdit;
 
@@ -678,7 +688,7 @@ private:
 
 
 // Widget which shows the name and schedule type limits of a schedule ruleset
-class ScheduleRulesetNameWidget : public QWidget
+class ScheduleRulesetNameWidget : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -691,10 +701,12 @@ class ScheduleRulesetNameWidget : public QWidget
   private:
 
     model::ScheduleRuleset m_scheduleRuleset;
+
+    boost::optional<model::ScheduleRuleset> opt_scheduleRuleset;
 };
 
 // Overview of the year, held by ScheduleRuleView
-class YearOverview : public QWidget
+class YearOverview : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -720,29 +732,29 @@ class YearOverview : public QWidget
 
   void refreshActiveRuleIndices();
 
-  MonthView * m_januaryView; 
+  MonthView * m_januaryView;
 
-  MonthView * m_februaryView; 
+  MonthView * m_februaryView;
 
-  MonthView * m_marchView; 
+  MonthView * m_marchView;
 
-  MonthView * m_aprilView; 
+  MonthView * m_aprilView;
 
-  MonthView * m_mayView; 
+  MonthView * m_mayView;
 
-  MonthView * m_juneView; 
+  MonthView * m_juneView;
 
-  MonthView * m_julyView; 
+  MonthView * m_julyView;
 
-  MonthView * m_augustView; 
+  MonthView * m_augustView;
 
-  MonthView * m_septemberView; 
+  MonthView * m_septemberView;
 
-  MonthView * m_octoberView; 
+  MonthView * m_octoberView;
 
-  MonthView * m_novemberView; 
+  MonthView * m_novemberView;
 
-  MonthView * m_decemberView; 
+  MonthView * m_decemberView;
 
   model::ScheduleRuleset m_scheduleRuleset;
 
@@ -752,7 +764,7 @@ class YearOverview : public QWidget
 };
 
 // Overview of the month, held by YearOverview
-class MonthView : public QWidget
+class MonthView : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 

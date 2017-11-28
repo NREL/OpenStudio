@@ -1,0 +1,16 @@
+
+function(gp_resolved_file_type_override file type)
+  if( file MATCHES ".*BluetoothApis.*" )
+    set(type "system" PARENT_SCOPE)
+  endif()
+  if( file MATCHES ".*GPSVC.*" )
+    set(type "system" PARENT_SCOPE)
+  endif()
+  if( file MATCHES ".*api-ms-win-core-winrt.*" )
+    set(type "system" PARENT_SCOPE)
+  endif()
+  if( file MATCHES ".*gdiplus.*" )
+    set(type "system" PARENT_SCOPE)
+  endif()
+endfunction()
+

@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "OSSwitch.hpp"
 #include "../model/ModelObject.hpp"
@@ -66,10 +75,9 @@ void OSSwitch2::bind(model::ModelObject & modelObject,
   m_reset = reset;
   m_isDefaulted = isDefaulted;
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSSwitch2::onModelObjectChange);
-
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSSwitch2::onModelObjectRemove);
-
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<OSSwitch2, &OSSwitch2::onModelObjectChange>(this);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.connect<OSSwitch2, &OSSwitch2::onModelObjectRemove>(this);
+  
   connect(this, &OSSwitch2::clicked, this, &OSSwitch2::onClicked);
 
   onModelObjectChange();
@@ -78,7 +86,8 @@ void OSSwitch2::bind(model::ModelObject & modelObject,
 void OSSwitch2::unbind()
 {
   if (m_modelObject){
-    this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<OSSwitch2, &OSSwitch2::onModelObjectChange>(this);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.disconnect<OSSwitch2, &OSSwitch2::onModelObjectRemove>(this);
     m_modelObject.reset();
     m_get.reset();
     m_set.reset();
@@ -107,72 +116,73 @@ void OSSwitch2::onModelObjectChange()
   }
 }
 
-void OSSwitch2::onModelObjectRemove(Handle handle) {
+void OSSwitch2::onModelObjectRemove(const Handle& handle) {
   unbind();
 }
 
-OSSwitch::OSSwitch( QWidget * parent )
-  : QPushButton(parent)
-{
-  this->setAcceptDrops(false);
-  setFlat(true);
-  setFixedSize(63,21);
+// OSSwitch::OSSwitch( QWidget * parent )
+//   : QPushButton(parent)
+// {
+//   this->setAcceptDrops(false);
+//   setFlat(true);
+//   setFixedSize(63,21);
 
-  setObjectName("OnOffSliderButton");
+//   setObjectName("OnOffSliderButton");
 
-  this->setCheckable(true);
-}
+//   this->setCheckable(true);
+// }
 
-void OSSwitch::bind(model::ModelObject & modelObject, const char * property)
-{
-  m_modelObject = modelObject;
+// void OSSwitch::bind(model::ModelObject & modelObject, const char * property)
+// {
+//   m_modelObject = modelObject;
 
-  m_property = property;
+//   m_property = property;
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSSwitch::onModelObjectChange);
+//   m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<OSSwitch, &OSSwitch::onModelObjectChange>(this);
+//   m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.connect<OSSwitch, &OSSwitch::onModelObjectRemove>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSSwitch::onModelObjectRemove);
+//   connect(this, &OSSwitch::clicked, this, &OSSwitch::onClicked);
 
-  connect(this, &OSSwitch::clicked, this, &OSSwitch::onClicked);
+//   onModelObjectChange();
+// }
 
-  onModelObjectChange();
-}
+// void OSSwitch::unbind()
+// {
+//   if (m_modelObject){
+//     m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.disconnect<OSSwitch, &OSSwitch::onModelObjectChange>(this);
+//     m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.disconnect<OSSwitch, &OSSwitch::onModelObjectRemove>(this);
 
-void OSSwitch::unbind()
-{
-  if (m_modelObject){
-    this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
-    m_modelObject.reset();
-    m_property = "";
-  }
-}
+//     m_modelObject.reset();
+//     m_property = "";
+//   }
+// }
 
-void OSSwitch::onClicked(bool checked)
-{
-  if( m_modelObject )
-  {
-    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(),checked);
-  }
-}
+// void OSSwitch::onClicked(bool checked)
+// {
+//   if( m_modelObject )
+//   {
+//     m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(),checked);
+//   }
+// }
 
-void OSSwitch::onModelObjectChange()
-{
-  if( m_modelObject )
-  {
-    QVariant variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str());
+// void OSSwitch::onModelObjectChange()
+// {
+//   if( m_modelObject )
+//   {
+//     QVariant variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str());
 
-    if( variant.canConvert<bool>() )
-    {
-      this->setChecked(variant.value<bool>());
-    }
-  }
-}
+//     if( variant.canConvert<bool>() )
+//     {
+//       this->setChecked(variant.value<bool>());
+//     }
+//   }
+// }
 
-void OSSwitch::onModelObjectRemove(Handle handle)
-{
-  m_modelObject.reset();
-  m_property = "";
-}
+// void OSSwitch::onModelObjectRemove(const Handle& handle)
+// {
+//   m_modelObject.reset();
+//   m_property = "";
+// }
 
 } // openstudio
 

@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
- *  All rights reserved.
- *  
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- *  
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- *  
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "Loop.hpp"
 #include "Loop_Impl.hpp"
@@ -57,19 +66,19 @@ namespace detail {
 
   Loop_Impl::Loop_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ParentObject_Impl(idfObject, model, keepHandle)
-  { 
+  {
   }
 
   Loop_Impl::Loop_Impl(
-      const openstudio::detail::WorkspaceObject_Impl& other, 
-      Model_Impl* model, 
+      const openstudio::detail::WorkspaceObject_Impl& other,
+      Model_Impl* model,
       bool keepHandle)
     : ParentObject_Impl(other,model,keepHandle)
   {
   }
 
-  Loop_Impl::Loop_Impl(const Loop_Impl& other, 
-      Model_Impl* model, 
+  Loop_Impl::Loop_Impl(const Loop_Impl& other,
+      Model_Impl* model,
       bool keepHandles)
     : ParentObject_Impl(other,model,keepHandles)
   {
@@ -112,7 +121,7 @@ namespace detail {
   boost::optional<ModelObject> findModelObject(const openstudio::Handle & handle, const HVACComponent & sink, std::vector<HVACComponent> & visited, bool isDemandComponents)
   {
     HVACComponent hvacComponent = visited.back();
-    if( handle == hvacComponent.handle() ) { 
+    if( handle == hvacComponent.handle() ) {
       return hvacComponent;
     }
 
@@ -129,7 +138,7 @@ namespace detail {
       if( std::find(visited.begin(), visited.end(), *it) != visited.end() ||
           *it == sink )
       {
-        continue; 
+        continue;
       }
       visited.push_back(*it);
       boost::optional<ModelObject> foundHandle = findModelObject(handle, sink, visited, isDemandComponents);
@@ -193,7 +202,7 @@ namespace detail {
     return std::vector<ModelObject>();
   }
 
-  std::vector<ModelObject> Loop_Impl::supplyComponents(std::vector<HVACComponent> inletComps, 
+  std::vector<ModelObject> Loop_Impl::supplyComponents(std::vector<HVACComponent> inletComps,
       std::vector<HVACComponent> outletComps,
       openstudio::IddObjectType type
     ) const
@@ -202,7 +211,7 @@ namespace detail {
     return std::vector<ModelObject>();
   }
 
-  std::vector<ModelObject> Loop_Impl::demandComponents(std::vector<HVACComponent> inletComps, 
+  std::vector<ModelObject> Loop_Impl::demandComponents(std::vector<HVACComponent> inletComps,
       std::vector<HVACComponent> outletComps,
       openstudio::IddObjectType type
     ) const
@@ -245,7 +254,7 @@ namespace detail {
       // if it node has already been visited then continue
       if( std::find(visited.begin(),visited.end(),node) != visited.end() )
       {
-        continue; 
+        continue;
       }
       if( node == sink )
       {
@@ -304,7 +313,7 @@ namespace detail {
       return _demandComponents;
     }
     std::vector<ModelObject> reducedModelObjects;
-    
+
     for(const auto & demandComponent : _demandComponents)
     {
       if( type == demandComponent.iddObject().type() )
@@ -406,7 +415,7 @@ namespace detail {
       return _supplyComponents;
     }
     std::vector<ModelObject> reducedModelObjects;
-    
+
     for(const auto & supplyComponent : _supplyComponents)
     {
       if( type == supplyComponent.iddObject().type() )
@@ -440,10 +449,10 @@ Loop::Loop(IddObjectType type,const Model& model)
   : ParentObject(type,model)
 {
   OS_ASSERT(getImpl<detail::Loop_Impl>());
-}     
+}
 
 Loop::Loop(std::shared_ptr<detail::Loop_Impl> p)
-  : ParentObject(p)
+  : ParentObject(std::move(p))
 {}
 
 std::vector<IdfObject> Loop::remove()
@@ -456,8 +465,8 @@ std::vector<ModelObject> Loop::components(openstudio::IddObjectType type)
   return getImpl<detail::Loop_Impl>()->components( type );
 }
 
-std::vector<ModelObject> Loop::components(HVACComponent inletComp, 
-                                          HVACComponent outletComp, 
+std::vector<ModelObject> Loop::components(HVACComponent inletComp,
+                                          HVACComponent outletComp,
                                           openstudio::IddObjectType type)
 {
   return getImpl<detail::Loop_Impl>()->components( inletComp, outletComp, type);
@@ -468,7 +477,7 @@ boost::optional<ModelObject> Loop::component(openstudio::Handle handle)
   return getImpl<detail::Loop_Impl>()->component( handle );
 }
 
-std::vector<ModelObject> Loop::supplyComponents(std::vector<HVACComponent> inletComps, 
+std::vector<ModelObject> Loop::supplyComponents(std::vector<HVACComponent> inletComps,
     std::vector<HVACComponent> outletComps,
     openstudio::IddObjectType type
   ) const
@@ -476,19 +485,19 @@ std::vector<ModelObject> Loop::supplyComponents(std::vector<HVACComponent> inlet
   return getImpl<detail::Loop_Impl>()->supplyComponents( inletComps, outletComps, type);
 }
 
-std::vector<ModelObject> Loop::supplyComponents(HVACComponent inletComp, 
-                                                HVACComponent outletComp, 
+std::vector<ModelObject> Loop::supplyComponents(HVACComponent inletComp,
+                                                HVACComponent outletComp,
                                                 openstudio::IddObjectType type) const
 {
   return getImpl<detail::Loop_Impl>()->supplyComponents( inletComp, outletComp, type);
 }
-  
+
 std::vector<ModelObject> Loop::supplyComponents(openstudio::IddObjectType type) const
 {
   return getImpl<detail::Loop_Impl>()->supplyComponents(type);
 }
 
-std::vector<ModelObject> Loop::demandComponents(std::vector<HVACComponent> inletComps, 
+std::vector<ModelObject> Loop::demandComponents(std::vector<HVACComponent> inletComps,
     std::vector<HVACComponent> outletComps,
     openstudio::IddObjectType type
   ) const
@@ -496,13 +505,13 @@ std::vector<ModelObject> Loop::demandComponents(std::vector<HVACComponent> inlet
   return getImpl<detail::Loop_Impl>()->demandComponents( inletComps, outletComps, type);
 }
 
-std::vector<ModelObject> Loop::demandComponents( HVACComponent inletComp, 
-                                                 HVACComponent outletComp, 
+std::vector<ModelObject> Loop::demandComponents( HVACComponent inletComp,
+                                                 HVACComponent outletComp,
                                                  openstudio::IddObjectType type ) const
 {
   return getImpl<detail::Loop_Impl>()->demandComponents( inletComp, outletComp, type);
 }
-  
+
 std::vector<ModelObject> Loop::demandComponents(openstudio::IddObjectType type) const
 {
   return getImpl<detail::Loop_Impl>()->demandComponents(type);

@@ -1,31 +1,39 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef UTILITIES_IDF_WORKSPACEOBJECT_IMPL_HPP
 #define UTILITIES_IDF_WORKSPACEOBJECT_IMPL_HPP
 
 #include <utilities/UtilitiesAPI.hpp>
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include <utilities/idf/IdfObject_Impl.hpp>
 #include <utilities/idf/ObjectPointer.hpp>
-
-#include <QObject>
 
 namespace openstudio {
 
@@ -104,7 +112,6 @@ namespace detail {
   }
 
   class UTILITIES_API WorkspaceObject_Impl : public IdfObject_Impl {
-    Q_OBJECT;
    public:
 
     /** @name Constructors */
@@ -278,14 +285,19 @@ namespace detail {
 
     //@}
 
-   signals:
+   //@}
+    /** @name Nano Signal */
+    //@{
 
     /** Emitted when a pointer field is changed. */
-    void onRelationshipChange(int index, Handle newHandle, Handle oldHandle) const;
+    Nano::Signal<void(int, Handle, Handle)> onRelationshipChange;
 
     /** Emitted when this object is disconnected from the workspace.  Do not
      *  access any methods of this object as it is invalid. */
-    void onRemoveFromWorkspace(Handle handle) const;
+    Nano::Signal<void(const Handle &)> onRemoveFromWorkspace;
+    // Nano::Signal<void(Handle&)> onRemoveFromWorkspaceRef;
+
+    Nano::Signal<void(const openstudio::Handle &)> workspaceObjectRemovedSignal;
 
    protected:
 

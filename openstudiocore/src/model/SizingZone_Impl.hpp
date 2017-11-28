@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef MODEL_SIZINGZONE_IMPL_HPP
 #define MODEL_SIZINGZONE_IMPL_HPP
@@ -36,93 +45,93 @@ namespace detail {
 
   /** SizingZone_Impl is a ModelObject_Impl that is the implementation class for SizingZone.*/
   class MODEL_API SizingZone_Impl : public ModelObject_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(double zoneCoolingDesignSupplyAirTemperature READ zoneCoolingDesignSupplyAirTemperature WRITE setZoneCoolingDesignSupplyAirTemperature);
-    Q_PROPERTY(openstudio::Quantity zoneCoolingDesignSupplyAirTemperature_SI READ zoneCoolingDesignSupplyAirTemperature_SI WRITE setZoneCoolingDesignSupplyAirTemperature);
-    Q_PROPERTY(openstudio::Quantity zoneCoolingDesignSupplyAirTemperature_IP READ zoneCoolingDesignSupplyAirTemperature_IP WRITE setZoneCoolingDesignSupplyAirTemperature);
+    
+    
+    
 
-    Q_PROPERTY(double zoneHeatingDesignSupplyAirTemperature READ zoneHeatingDesignSupplyAirTemperature WRITE setZoneHeatingDesignSupplyAirTemperature);
-    Q_PROPERTY(openstudio::Quantity zoneHeatingDesignSupplyAirTemperature_SI READ zoneHeatingDesignSupplyAirTemperature_SI WRITE setZoneHeatingDesignSupplyAirTemperature);
-    Q_PROPERTY(openstudio::Quantity zoneHeatingDesignSupplyAirTemperature_IP READ zoneHeatingDesignSupplyAirTemperature_IP WRITE setZoneHeatingDesignSupplyAirTemperature);
+    
+    
+    
 
-    Q_PROPERTY(double zoneCoolingDesignSupplyAirHumidityRatio READ zoneCoolingDesignSupplyAirHumidityRatio WRITE setZoneCoolingDesignSupplyAirHumidityRatio);
-    Q_PROPERTY(openstudio::Quantity zoneCoolingDesignSupplyAirHumidityRatio_SI READ zoneCoolingDesignSupplyAirHumidityRatio_SI WRITE setZoneCoolingDesignSupplyAirHumidityRatio);
-    Q_PROPERTY(openstudio::Quantity zoneCoolingDesignSupplyAirHumidityRatio_IP READ zoneCoolingDesignSupplyAirHumidityRatio_IP WRITE setZoneCoolingDesignSupplyAirHumidityRatio);
+    
+    
+    
 
-    Q_PROPERTY(double zoneHeatingDesignSupplyAirHumidityRatio READ zoneHeatingDesignSupplyAirHumidityRatio WRITE setZoneHeatingDesignSupplyAirHumidityRatio);
-    Q_PROPERTY(openstudio::Quantity zoneHeatingDesignSupplyAirHumidityRatio_SI READ zoneHeatingDesignSupplyAirHumidityRatio_SI WRITE setZoneHeatingDesignSupplyAirHumidityRatio);
-    Q_PROPERTY(openstudio::Quantity zoneHeatingDesignSupplyAirHumidityRatio_IP READ zoneHeatingDesignSupplyAirHumidityRatio_IP WRITE setZoneHeatingDesignSupplyAirHumidityRatio);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> zoneHeatingSizingFactor READ zoneHeatingSizingFactor WRITE setZoneHeatingSizingFactor RESET resetZoneHeatingSizingFactor);
-    Q_PROPERTY(openstudio::OSOptionalQuantity zoneHeatingSizingFactor_SI READ zoneHeatingSizingFactor_SI WRITE setZoneHeatingSizingFactor RESET resetZoneHeatingSizingFactor);
-    Q_PROPERTY(openstudio::OSOptionalQuantity zoneHeatingSizingFactor_IP READ zoneHeatingSizingFactor_IP WRITE setZoneHeatingSizingFactor RESET resetZoneHeatingSizingFactor);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> zoneCoolingSizingFactor READ zoneCoolingSizingFactor WRITE setZoneCoolingSizingFactor RESET resetZoneCoolingSizingFactor);
-    Q_PROPERTY(openstudio::OSOptionalQuantity zoneCoolingSizingFactor_SI READ zoneCoolingSizingFactor_SI WRITE setZoneCoolingSizingFactor RESET resetZoneCoolingSizingFactor);
-    Q_PROPERTY(openstudio::OSOptionalQuantity zoneCoolingSizingFactor_IP READ zoneCoolingSizingFactor_IP WRITE setZoneCoolingSizingFactor RESET resetZoneCoolingSizingFactor);
+    
+    
+    
 
-    Q_PROPERTY(std::string coolingDesignAirFlowMethod READ coolingDesignAirFlowMethod WRITE setCoolingDesignAirFlowMethod RESET resetCoolingDesignAirFlowMethod);
-    Q_PROPERTY(bool isCoolingDesignAirFlowMethodDefaulted READ isCoolingDesignAirFlowMethodDefaulted);
-    Q_PROPERTY(std::vector<std::string> coolingDesignAirFlowMethodValues READ coolingDesignAirFlowMethodValues);
+    
+    
+    
 
-    Q_PROPERTY(double coolingDesignAirFlowRate READ coolingDesignAirFlowRate WRITE setCoolingDesignAirFlowRate RESET resetCoolingDesignAirFlowRate);
-    Q_PROPERTY(openstudio::Quantity coolingDesignAirFlowRate_SI READ coolingDesignAirFlowRate_SI WRITE setCoolingDesignAirFlowRate RESET resetCoolingDesignAirFlowRate);
-    Q_PROPERTY(openstudio::Quantity coolingDesignAirFlowRate_IP READ coolingDesignAirFlowRate_IP WRITE setCoolingDesignAirFlowRate RESET resetCoolingDesignAirFlowRate);
-    Q_PROPERTY(bool isCoolingDesignAirFlowRateDefaulted READ isCoolingDesignAirFlowRateDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double coolingMinimumAirFlowperZoneFloorArea READ coolingMinimumAirFlowperZoneFloorArea WRITE setCoolingMinimumAirFlowperZoneFloorArea RESET resetCoolingMinimumAirFlowperZoneFloorArea);
-    Q_PROPERTY(openstudio::Quantity coolingMinimumAirFlowperZoneFloorArea_SI READ coolingMinimumAirFlowperZoneFloorArea_SI WRITE setCoolingMinimumAirFlowperZoneFloorArea RESET resetCoolingMinimumAirFlowperZoneFloorArea);
-    Q_PROPERTY(openstudio::Quantity coolingMinimumAirFlowperZoneFloorArea_IP READ coolingMinimumAirFlowperZoneFloorArea_IP WRITE setCoolingMinimumAirFlowperZoneFloorArea RESET resetCoolingMinimumAirFlowperZoneFloorArea);
-    Q_PROPERTY(bool isCoolingMinimumAirFlowperZoneFloorAreaDefaulted READ isCoolingMinimumAirFlowperZoneFloorAreaDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double coolingMinimumAirFlow READ coolingMinimumAirFlow WRITE setCoolingMinimumAirFlow RESET resetCoolingMinimumAirFlow);
-    Q_PROPERTY(openstudio::Quantity coolingMinimumAirFlow_SI READ coolingMinimumAirFlow_SI WRITE setCoolingMinimumAirFlow RESET resetCoolingMinimumAirFlow);
-    Q_PROPERTY(openstudio::Quantity coolingMinimumAirFlow_IP READ coolingMinimumAirFlow_IP WRITE setCoolingMinimumAirFlow RESET resetCoolingMinimumAirFlow);
-    Q_PROPERTY(bool isCoolingMinimumAirFlowDefaulted READ isCoolingMinimumAirFlowDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double coolingMinimumAirFlowFraction READ coolingMinimumAirFlowFraction WRITE setCoolingMinimumAirFlowFraction RESET resetCoolingMinimumAirFlowFraction);
-    Q_PROPERTY(openstudio::Quantity coolingMinimumAirFlowFraction_SI READ coolingMinimumAirFlowFraction_SI WRITE setCoolingMinimumAirFlowFraction RESET resetCoolingMinimumAirFlowFraction);
-    Q_PROPERTY(openstudio::Quantity coolingMinimumAirFlowFraction_IP READ coolingMinimumAirFlowFraction_IP WRITE setCoolingMinimumAirFlowFraction RESET resetCoolingMinimumAirFlowFraction);
-    Q_PROPERTY(bool isCoolingMinimumAirFlowFractionDefaulted READ isCoolingMinimumAirFlowFractionDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(std::string heatingDesignAirFlowMethod READ heatingDesignAirFlowMethod WRITE setHeatingDesignAirFlowMethod RESET resetHeatingDesignAirFlowMethod);
-    Q_PROPERTY(bool isHeatingDesignAirFlowMethodDefaulted READ isHeatingDesignAirFlowMethodDefaulted);
-    Q_PROPERTY(std::vector<std::string> heatingDesignAirFlowMethodValues READ heatingDesignAirFlowMethodValues);
+    
+    
+    
 
-    Q_PROPERTY(double heatingDesignAirFlowRate READ heatingDesignAirFlowRate WRITE setHeatingDesignAirFlowRate RESET resetHeatingDesignAirFlowRate);
-    Q_PROPERTY(openstudio::Quantity heatingDesignAirFlowRate_SI READ heatingDesignAirFlowRate_SI WRITE setHeatingDesignAirFlowRate RESET resetHeatingDesignAirFlowRate);
-    Q_PROPERTY(openstudio::Quantity heatingDesignAirFlowRate_IP READ heatingDesignAirFlowRate_IP WRITE setHeatingDesignAirFlowRate RESET resetHeatingDesignAirFlowRate);
-    Q_PROPERTY(bool isHeatingDesignAirFlowRateDefaulted READ isHeatingDesignAirFlowRateDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double heatingMaximumAirFlowperZoneFloorArea READ heatingMaximumAirFlowperZoneFloorArea WRITE setHeatingMaximumAirFlowperZoneFloorArea RESET resetHeatingMaximumAirFlowperZoneFloorArea);
-    Q_PROPERTY(openstudio::Quantity heatingMaximumAirFlowperZoneFloorArea_SI READ heatingMaximumAirFlowperZoneFloorArea_SI WRITE setHeatingMaximumAirFlowperZoneFloorArea RESET resetHeatingMaximumAirFlowperZoneFloorArea);
-    Q_PROPERTY(openstudio::Quantity heatingMaximumAirFlowperZoneFloorArea_IP READ heatingMaximumAirFlowperZoneFloorArea_IP WRITE setHeatingMaximumAirFlowperZoneFloorArea RESET resetHeatingMaximumAirFlowperZoneFloorArea);
-    Q_PROPERTY(bool isHeatingMaximumAirFlowperZoneFloorAreaDefaulted READ isHeatingMaximumAirFlowperZoneFloorAreaDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double heatingMaximumAirFlow READ heatingMaximumAirFlow WRITE setHeatingMaximumAirFlow RESET resetHeatingMaximumAirFlow);
-    Q_PROPERTY(openstudio::Quantity heatingMaximumAirFlow_SI READ heatingMaximumAirFlow_SI WRITE setHeatingMaximumAirFlow RESET resetHeatingMaximumAirFlow);
-    Q_PROPERTY(openstudio::Quantity heatingMaximumAirFlow_IP READ heatingMaximumAirFlow_IP WRITE setHeatingMaximumAirFlow RESET resetHeatingMaximumAirFlow);
-    Q_PROPERTY(bool isHeatingMaximumAirFlowDefaulted READ isHeatingMaximumAirFlowDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double heatingMaximumAirFlowFraction READ heatingMaximumAirFlowFraction WRITE setHeatingMaximumAirFlowFraction RESET resetHeatingMaximumAirFlowFraction);
-    Q_PROPERTY(openstudio::Quantity heatingMaximumAirFlowFraction_SI READ heatingMaximumAirFlowFraction_SI WRITE setHeatingMaximumAirFlowFraction RESET resetHeatingMaximumAirFlowFraction);
-    Q_PROPERTY(openstudio::Quantity heatingMaximumAirFlowFraction_IP READ heatingMaximumAirFlowFraction_IP WRITE setHeatingMaximumAirFlowFraction RESET resetHeatingMaximumAirFlowFraction);
-    Q_PROPERTY(bool isHeatingMaximumAirFlowFractionDefaulted READ isHeatingMaximumAirFlowFractionDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double designZoneAirDistributionEffectivenessinCoolingMode READ designZoneAirDistributionEffectivenessinCoolingMode WRITE setDesignZoneAirDistributionEffectivenessinCoolingMode RESET resetDesignZoneAirDistributionEffectivenessinCoolingMode);
-    Q_PROPERTY(openstudio::Quantity designZoneAirDistributionEffectivenessinCoolingMode_SI READ designZoneAirDistributionEffectivenessinCoolingMode_SI WRITE setDesignZoneAirDistributionEffectivenessinCoolingMode RESET resetDesignZoneAirDistributionEffectivenessinCoolingMode);
-    Q_PROPERTY(openstudio::Quantity designZoneAirDistributionEffectivenessinCoolingMode_IP READ designZoneAirDistributionEffectivenessinCoolingMode_IP WRITE setDesignZoneAirDistributionEffectivenessinCoolingMode RESET resetDesignZoneAirDistributionEffectivenessinCoolingMode);
-    Q_PROPERTY(bool isDesignZoneAirDistributionEffectivenessinCoolingModeDefaulted READ isDesignZoneAirDistributionEffectivenessinCoolingModeDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double designZoneAirDistributionEffectivenessinHeatingMode READ designZoneAirDistributionEffectivenessinHeatingMode WRITE setDesignZoneAirDistributionEffectivenessinHeatingMode RESET resetDesignZoneAirDistributionEffectivenessinHeatingMode);
-    Q_PROPERTY(openstudio::Quantity designZoneAirDistributionEffectivenessinHeatingMode_SI READ designZoneAirDistributionEffectivenessinHeatingMode_SI WRITE setDesignZoneAirDistributionEffectivenessinHeatingMode RESET resetDesignZoneAirDistributionEffectivenessinHeatingMode);
-    Q_PROPERTY(openstudio::Quantity designZoneAirDistributionEffectivenessinHeatingMode_IP READ designZoneAirDistributionEffectivenessinHeatingMode_IP WRITE setDesignZoneAirDistributionEffectivenessinHeatingMode RESET resetDesignZoneAirDistributionEffectivenessinHeatingMode);
-    Q_PROPERTY(bool isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted READ isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted);
+    
+    
+    
+    
 
     // TODO: Add relationships for objects related to this one, but not pointed to by the underlying data.
     //       Such relationships can be generated by the GenerateRelationships.rb script.
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> thermalZone READ thermalZoneAsModelObject WRITE setThermalZoneAsModelObject);
+    
    public:
     /** @name Constructors and Destructors */
     //@{

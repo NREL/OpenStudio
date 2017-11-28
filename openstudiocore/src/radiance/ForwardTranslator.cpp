@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "ForwardTranslator.hpp"
 
@@ -25,7 +34,6 @@
 #include "../model/DaylightingControl.hpp"
 #include "../model/GlareSensor.hpp"
 #include "../model/InteriorPartitionSurfaceGroup.hpp"
-#include "../model/Luminaire.hpp"
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
 #include "../model/WeatherFile.hpp"
@@ -44,10 +52,31 @@
 #include "../model/Space_Impl.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/WindowPropertyFrameAndDivider.hpp"
+#include "../model/Facility.hpp"
+#include "../model/Facility_Impl.hpp"
+#include "../model/Timestep.hpp"
+#include "../model/Timestep_Impl.hpp"
+#include "../model/SpaceItem.hpp"
+#include "../model/SpaceItem_Impl.hpp"
+#include "../model/SimulationControl.hpp"
+#include "../model/SimulationControl_Impl.hpp"
+#include "../model/RunPeriod.hpp"
+#include "../model/RunPeriod_Impl.hpp"
+#include "../model/People.hpp"
+#include "../model/People_Impl.hpp"
+#include "../model/Lights.hpp"
+#include "../model/Lights_Impl.hpp"
+#include "../model/Luminaire.hpp"
+#include "../model/Luminaire_Impl.hpp"
+#include "../model/OutputVariable.hpp"
+#include "../model/OutputVariable_Impl.hpp"
+
+
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"
-#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
+#include "../utilities/time/DateTime.hpp"
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/bcl/BCL.hpp"
@@ -63,8 +92,8 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/math/constants/constants.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/fstream.hpp>
+
+
 
 #include <cstring>
 #include <cmath>
@@ -92,7 +121,16 @@ using openstudio::model::OptionalShadingSurfaceGroup;
 using openstudio::model::OptionalInteriorPartitionSurfaceGroup;
 using openstudio::model::OptionalSurface;
 
-typedef boost::filesystem::basic_ofstream<char> OFSTREAM;
+typedef openstudio::filesystem::basic_ofstream<char> OFSTREAM;
+
+struct RadianceResourceInitializer{
+  RadianceResourceInitializer() 
+  {
+    Q_INIT_RESOURCE(radiance);
+  }
+};
+static RadianceResourceInitializer __radianceResourceInitializer__;
+
 
 namespace openstudio {
 namespace radiance {
@@ -250,23 +288,23 @@ namespace radiance {
 
       LOG(Debug, "Working Directory: " + openstudio::toString(outPath));
 
-      if (boost::filesystem::exists(outPath)){
-        boost::filesystem::remove_all(outPath);
+      if (openstudio::filesystem::exists(outPath)){
+        openstudio::filesystem::remove_all(outPath);
       }
 
-      boost::filesystem::create_directories(outPath);
+      openstudio::filesystem::create_directories(outPath);
 
       //create radiance dirs for model export
       openstudio::path radDir = outPath;
-      boost::filesystem::create_directory(radDir / openstudio::toPath("scene"));
-      boost::filesystem::create_directory(radDir / openstudio::toPath("scene/glazing"));
-      boost::filesystem::create_directory(radDir / openstudio::toPath("scene/shades"));
-      boost::filesystem::create_directory(radDir / openstudio::toPath("materials"));
-      boost::filesystem::create_directory(radDir / openstudio::toPath("numeric"));
-      boost::filesystem::create_directory(radDir / openstudio::toPath("views"));
-      boost::filesystem::create_directory(radDir / openstudio::toPath("options"));
-      boost::filesystem::create_directory(radDir / openstudio::toPath("bsdf"));
-      boost::filesystem::create_directory(radDir / openstudio::toPath("skies"));
+      openstudio::filesystem::create_directory(radDir / openstudio::toPath("scene"));
+      openstudio::filesystem::create_directory(radDir / openstudio::toPath("scene/glazing"));
+      openstudio::filesystem::create_directory(radDir / openstudio::toPath("scene/shades"));
+      openstudio::filesystem::create_directory(radDir / openstudio::toPath("materials"));
+      openstudio::filesystem::create_directory(radDir / openstudio::toPath("numeric"));
+      openstudio::filesystem::create_directory(radDir / openstudio::toPath("views"));
+      openstudio::filesystem::create_directory(radDir / openstudio::toPath("options"));
+      openstudio::filesystem::create_directory(radDir / openstudio::toPath("bsdf"));
+      openstudio::filesystem::create_directory(radDir / openstudio::toPath("skies"));
 
       // get the building
       openstudio::model::Building building = m_model.getUniqueModelObject<openstudio::model::Building>();
@@ -1646,14 +1684,12 @@ namespace radiance {
 										}
 
 										// write shade BSDF
-										QFile outFile(toQString(shadeBSDFPath));
-										bool opened = outFile.open(QIODevice::WriteOnly);
-										if (!opened){
+                                                                                openstudio::filesystem::ofstream outfile(shadeBSDFPath);
+										if (!outfile.is_open()){
 											LOG_AND_THROW("Cannot write file to '" << toString(shadeBSDFPath) << "'");
 										}
-										QTextStream textStream(&outFile);
-										textStream << defaultFile;
-										outFile.close();
+                                                                                openstudio::filesystem::write(outfile, defaultFile);
+										outfile.close();
 
 									}
 
@@ -1679,13 +1715,11 @@ namespace radiance {
 									}
 
 									// write shade BSDF
-									QFile outFileAir(toQString(airBSDFPath));
-									bool opened = outFileAir.open(QIODevice::WriteOnly);
-									if (!opened){
+                                                                        openstudio::filesystem::ofstream outFileAir(airBSDFPath);
+									if (!outFileAir.is_open()){
 										LOG_AND_THROW("Cannot write file to '" << toString(airBSDFPath) << "'");
 									}
-									QTextStream textStream2(&outFileAir);
-									textStream2 << defaultFile;
+                                                                        openstudio::filesystem::write(outFileAir, defaultFile);
 									outFileAir.close();
 
 								}
@@ -2368,6 +2402,135 @@ namespace radiance {
   {
     std::string result = boost::algorithm::replace_all_regex_copy(name, boost::regex("[\\.\\s:]"),  std::string("_"));
     return result;
+  }
+
+  openstudio::model::Model modelToRadPreProcess(const openstudio::model::Model & model)
+  {
+    model::Model outmodel = model.clone().cast<model::Model>(); 
+    outmodel.purgeUnusedResourceObjects();
+    outmodel.getUniqueModelObject<openstudio::model::Building>(); // implicitly create building object
+    outmodel.getUniqueModelObject<openstudio::model::Timestep>(); // implicitly create timestep object
+    outmodel.getUniqueModelObject<openstudio::model::RunPeriod>(); // implicitly create runperiod object
+
+    std::map<std::string, openstudio::model::ThermalZone> thermalZones;
+
+    std::vector<openstudio::model::Space> spaces = outmodel.getConcreteModelObjects<openstudio::model::Space>();
+    for (auto & space : spaces)
+    {
+      space.hardApplyConstructions();
+      space.hardApplySpaceType(true);
+      space.hardApplySpaceLoadSchedules();
+      
+      // make all surfaces with surface boundary condition adiabatic
+      std::vector<openstudio::model::Surface> surfaces = space.surfaces();
+      for (auto & surf_it : surfaces){
+        boost::optional<openstudio::model::Surface> adjacentSurface = surf_it.adjacentSurface();
+        if (adjacentSurface){
+
+          // make sure to hard apply constructions in other space before messing with surface in other space
+          boost::optional<openstudio::model::Space> adjacentSpace = adjacentSurface->space();
+          if (adjacentSpace){
+            adjacentSpace->hardApplyConstructions();
+          }
+
+          // resets both surfaces
+          surf_it.resetAdjacentSurface();
+
+          // set both to adiabatic
+          surf_it.setOutsideBoundaryCondition("Adiabatic");
+          adjacentSurface->setOutsideBoundaryCondition("Adiabatic");
+
+          // remove interior windows
+          for (openstudio::model::SubSurface subSurface : surf_it.subSurfaces()){
+            subSurface.remove();
+          }
+          for (openstudio::model::SubSurface subSurface : adjacentSurface->subSurfaces()){
+            subSurface.remove();
+          }
+        }
+      }
+
+      openstudio::model::Space new_space = space.clone(outmodel).optionalCast<openstudio::model::Space>().get();
+
+      boost::optional<openstudio::model::ThermalZone> thermalZone = space.thermalZone();
+
+      if (thermalZone && thermalZone->name())
+      {
+        if (thermalZones.find(*thermalZone->name()) == thermalZones.end())
+        {
+          openstudio::model::ThermalZone newThermalZone(outmodel);
+          newThermalZone.setName(*thermalZone->name());
+          newThermalZone.setUseIdealAirLoads(true);
+          thermalZones.insert(std::make_pair(*thermalZone->name(), newThermalZone));
+        }
+        auto itr = thermalZones.find(*thermalZone->name());
+        OS_ASSERT(itr != thermalZones.end()); // We just added it above if we needed it
+        new_space.setThermalZone(itr->second);
+      } else if (thermalZone && !thermalZone->name()) {
+        LOG_FREE(Warn, "radiance::modelToRadPreProcess", "Space discovered in un-named thermalZone, not translating");
+      }
+      }
+ 
+    std::vector<openstudio::model::ShadingSurfaceGroup> shadingsurfacegroups = outmodel.getConcreteModelObjects<openstudio::model::ShadingSurfaceGroup>(); 
+    for (auto & shadingSurfaceGroup : shadingsurfacegroups)
+    {
+      shadingSurfaceGroup.remove();
+    }
+  
+    std::vector<openstudio::model::SpaceItem> spaceitems = outmodel.getModelObjects<openstudio::model::SpaceItem>(); 
+    for (auto & spaceItem : spaceitems)
+    {
+      if (spaceItem.optionalCast<openstudio::model::People>()){
+       // keep people
+      }else if (spaceItem.optionalCast<openstudio::model::Lights>()){
+       // keep lights
+      }else if (spaceItem.optionalCast<openstudio::model::Luminaire>()){
+       // keep luminaires
+      }else{
+        spaceItem.remove();
+      }
+    }
+
+    std::vector<openstudio::model::OutputVariable> outputVariables = outmodel.getConcreteModelObjects<openstudio::model::OutputVariable>();
+    for (auto & outputVariable : outputVariables)
+    {
+      outputVariable.remove();
+    }
+
+    openstudio::model::OutputVariable outputVariable("Site Exterior Horizontal Sky Illuminance", outmodel);
+    outputVariable.setReportingFrequency("Hourly");
+
+    outputVariable = openstudio::model::OutputVariable("Site Exterior Beam Normal Illuminance", outmodel);
+    outputVariable.setReportingFrequency("Hourly");
+
+    outputVariable = openstudio::model::OutputVariable("Site Solar Altitude Angle", outmodel);
+    outputVariable.setReportingFrequency("Hourly");
+
+    outputVariable = openstudio::model::OutputVariable("Site Solar Azimuth Angle", outmodel);
+    outputVariable.setReportingFrequency("Hourly");
+
+    outputVariable = openstudio::model::OutputVariable("Site Sky Diffuse Solar Radiation Luminous Efficacy", outmodel);
+    outputVariable.setReportingFrequency("Hourly");
+
+    outputVariable = openstudio::model::OutputVariable("Site Beam Solar Radiation Luminous Efficacy", outmodel);
+    outputVariable.setReportingFrequency("Hourly");
+
+    outputVariable = openstudio::model::OutputVariable("Zone People Occupant Count", outmodel);
+    outputVariable.setReportingFrequency("Hourly");
+
+    outputVariable = openstudio::model::OutputVariable("Zone Lights Electric Power", outmodel);
+    outputVariable.setReportingFrequency("Hourly");
+
+    // only report weather periods
+    openstudio::model::SimulationControl simulation_control = outmodel.getUniqueModelObject<openstudio::model::SimulationControl>();
+    simulation_control.setRunSimulationforSizingPeriods(false);
+    simulation_control.setRunSimulationforWeatherFileRunPeriods(true);
+    simulation_control.setSolarDistribution("MinimalShadowing");
+
+    // purge unused 
+    outmodel.purgeUnusedResourceObjects();
+
+    return outmodel;
   }
 
 } // radiance

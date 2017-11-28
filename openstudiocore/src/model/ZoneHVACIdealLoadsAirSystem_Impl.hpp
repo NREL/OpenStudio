@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef MODEL_ZONEHVACIDEALLOADSAIRSYSTEM_IMPL_HPP
 #define MODEL_ZONEHVACIDEALLOADSAIRSYSTEM_IMPL_HPP
@@ -36,95 +45,95 @@ namespace detail {
 
   /** ZoneHVACIdealLoadsAirSystem_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACIdealLoadsAirSystem.*/
   class MODEL_API ZoneHVACIdealLoadsAirSystem_Impl : public ZoneHVACComponent_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(double maximumHeatingSupplyAirTemperature READ maximumHeatingSupplyAirTemperature WRITE setMaximumHeatingSupplyAirTemperature RESET resetMaximumHeatingSupplyAirTemperature);
-    Q_PROPERTY(openstudio::Quantity maximumHeatingSupplyAirTemperature_SI READ maximumHeatingSupplyAirTemperature_SI WRITE setMaximumHeatingSupplyAirTemperature RESET resetMaximumHeatingSupplyAirTemperature);
-    Q_PROPERTY(openstudio::Quantity maximumHeatingSupplyAirTemperature_IP READ maximumHeatingSupplyAirTemperature_IP WRITE setMaximumHeatingSupplyAirTemperature RESET resetMaximumHeatingSupplyAirTemperature);
-    Q_PROPERTY(bool isMaximumHeatingSupplyAirTemperatureDefaulted READ isMaximumHeatingSupplyAirTemperatureDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double minimumCoolingSupplyAirTemperature READ minimumCoolingSupplyAirTemperature WRITE setMinimumCoolingSupplyAirTemperature RESET resetMinimumCoolingSupplyAirTemperature);
-    Q_PROPERTY(openstudio::Quantity minimumCoolingSupplyAirTemperature_SI READ minimumCoolingSupplyAirTemperature_SI WRITE setMinimumCoolingSupplyAirTemperature RESET resetMinimumCoolingSupplyAirTemperature);
-    Q_PROPERTY(openstudio::Quantity minimumCoolingSupplyAirTemperature_IP READ minimumCoolingSupplyAirTemperature_IP WRITE setMinimumCoolingSupplyAirTemperature RESET resetMinimumCoolingSupplyAirTemperature);
-    Q_PROPERTY(bool isMinimumCoolingSupplyAirTemperatureDefaulted READ isMinimumCoolingSupplyAirTemperatureDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double maximumHeatingSupplyAirHumidityRatio READ maximumHeatingSupplyAirHumidityRatio WRITE setMaximumHeatingSupplyAirHumidityRatio RESET resetMaximumHeatingSupplyAirHumidityRatio);
-    Q_PROPERTY(openstudio::Quantity maximumHeatingSupplyAirHumidityRatio_SI READ maximumHeatingSupplyAirHumidityRatio_SI WRITE setMaximumHeatingSupplyAirHumidityRatio RESET resetMaximumHeatingSupplyAirHumidityRatio);
-    Q_PROPERTY(openstudio::Quantity maximumHeatingSupplyAirHumidityRatio_IP READ maximumHeatingSupplyAirHumidityRatio_IP WRITE setMaximumHeatingSupplyAirHumidityRatio RESET resetMaximumHeatingSupplyAirHumidityRatio);
-    Q_PROPERTY(bool isMaximumHeatingSupplyAirHumidityRatioDefaulted READ isMaximumHeatingSupplyAirHumidityRatioDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double minimumCoolingSupplyAirHumidityRatio READ minimumCoolingSupplyAirHumidityRatio WRITE setMinimumCoolingSupplyAirHumidityRatio RESET resetMinimumCoolingSupplyAirHumidityRatio);
-    Q_PROPERTY(openstudio::Quantity minimumCoolingSupplyAirHumidityRatio_SI READ minimumCoolingSupplyAirHumidityRatio_SI WRITE setMinimumCoolingSupplyAirHumidityRatio RESET resetMinimumCoolingSupplyAirHumidityRatio);
-    Q_PROPERTY(openstudio::Quantity minimumCoolingSupplyAirHumidityRatio_IP READ minimumCoolingSupplyAirHumidityRatio_IP WRITE setMinimumCoolingSupplyAirHumidityRatio RESET resetMinimumCoolingSupplyAirHumidityRatio);
-    Q_PROPERTY(bool isMinimumCoolingSupplyAirHumidityRatioDefaulted READ isMinimumCoolingSupplyAirHumidityRatioDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(std::string heatingLimit READ heatingLimit WRITE setHeatingLimit RESET resetHeatingLimit);
-    Q_PROPERTY(bool isHeatingLimitDefaulted READ isHeatingLimitDefaulted);
-    Q_PROPERTY(std::vector<std::string> heatingLimitValues READ heatingLimitValues);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> maximumHeatingAirFlowRate READ maximumHeatingAirFlowRate WRITE setMaximumHeatingAirFlowRate RESET resetMaximumHeatingAirFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumHeatingAirFlowRate_SI READ maximumHeatingAirFlowRate_SI WRITE setMaximumHeatingAirFlowRate RESET resetMaximumHeatingAirFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumHeatingAirFlowRate_IP READ maximumHeatingAirFlowRate_IP WRITE setMaximumHeatingAirFlowRate RESET resetMaximumHeatingAirFlowRate);
-    Q_PROPERTY(bool isMaximumHeatingAirFlowRateAutosized READ isMaximumHeatingAirFlowRateAutosized);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> maximumSensibleHeatingCapacity READ maximumSensibleHeatingCapacity WRITE setMaximumSensibleHeatingCapacity RESET resetMaximumSensibleHeatingCapacity);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumSensibleHeatingCapacity_SI READ maximumSensibleHeatingCapacity_SI WRITE setMaximumSensibleHeatingCapacity RESET resetMaximumSensibleHeatingCapacity);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumSensibleHeatingCapacity_IP READ maximumSensibleHeatingCapacity_IP WRITE setMaximumSensibleHeatingCapacity RESET resetMaximumSensibleHeatingCapacity);
-    Q_PROPERTY(bool isMaximumSensibleHeatingCapacityAutosized READ isMaximumSensibleHeatingCapacityAutosized);
+    
+    
+    
+    
 
-    Q_PROPERTY(std::string coolingLimit READ coolingLimit WRITE setCoolingLimit RESET resetCoolingLimit);
-    Q_PROPERTY(bool isCoolingLimitDefaulted READ isCoolingLimitDefaulted);
-    Q_PROPERTY(std::vector<std::string> coolingLimitValues READ coolingLimitValues);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> maximumCoolingAirFlowRate READ maximumCoolingAirFlowRate WRITE setMaximumCoolingAirFlowRate RESET resetMaximumCoolingAirFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumCoolingAirFlowRate_SI READ maximumCoolingAirFlowRate_SI WRITE setMaximumCoolingAirFlowRate RESET resetMaximumCoolingAirFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumCoolingAirFlowRate_IP READ maximumCoolingAirFlowRate_IP WRITE setMaximumCoolingAirFlowRate RESET resetMaximumCoolingAirFlowRate);
-    Q_PROPERTY(bool isMaximumCoolingAirFlowRateAutosized READ isMaximumCoolingAirFlowRateAutosized);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> maximumTotalCoolingCapacity READ maximumTotalCoolingCapacity WRITE setMaximumTotalCoolingCapacity RESET resetMaximumTotalCoolingCapacity);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumTotalCoolingCapacity_SI READ maximumTotalCoolingCapacity_SI WRITE setMaximumTotalCoolingCapacity RESET resetMaximumTotalCoolingCapacity);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumTotalCoolingCapacity_IP READ maximumTotalCoolingCapacity_IP WRITE setMaximumTotalCoolingCapacity RESET resetMaximumTotalCoolingCapacity);
-    Q_PROPERTY(bool isMaximumTotalCoolingCapacityAutosized READ isMaximumTotalCoolingCapacityAutosized);
+    
+    
+    
+    
 
-    Q_PROPERTY(std::string dehumidificationControlType READ dehumidificationControlType WRITE setDehumidificationControlType RESET resetDehumidificationControlType);
-    Q_PROPERTY(bool isDehumidificationControlTypeDefaulted READ isDehumidificationControlTypeDefaulted);
-    Q_PROPERTY(std::vector<std::string> dehumidificationControlTypeValues READ dehumidificationControlTypeValues);
+    
+    
+    
 
-    Q_PROPERTY(double coolingSensibleHeatRatio READ coolingSensibleHeatRatio WRITE setCoolingSensibleHeatRatio RESET resetCoolingSensibleHeatRatio);
-    Q_PROPERTY(openstudio::Quantity coolingSensibleHeatRatio_SI READ coolingSensibleHeatRatio_SI WRITE setCoolingSensibleHeatRatio RESET resetCoolingSensibleHeatRatio);
-    Q_PROPERTY(openstudio::Quantity coolingSensibleHeatRatio_IP READ coolingSensibleHeatRatio_IP WRITE setCoolingSensibleHeatRatio RESET resetCoolingSensibleHeatRatio);
-    Q_PROPERTY(bool isCoolingSensibleHeatRatioDefaulted READ isCoolingSensibleHeatRatioDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(std::string humidificationControlType READ humidificationControlType WRITE setHumidificationControlType RESET resetHumidificationControlType);
-    Q_PROPERTY(bool isHumidificationControlTypeDefaulted READ isHumidificationControlTypeDefaulted);
-    Q_PROPERTY(std::vector<std::string> humidificationControlTypeValues READ humidificationControlTypeValues);
+    
+    
+    
 
-    Q_PROPERTY(std::string demandControlledVentilationType READ demandControlledVentilationType WRITE setDemandControlledVentilationType RESET resetDemandControlledVentilationType);
-    Q_PROPERTY(bool isDemandControlledVentilationTypeDefaulted READ isDemandControlledVentilationTypeDefaulted);
-    Q_PROPERTY(std::vector<std::string> demandControlledVentilationTypeValues READ demandControlledVentilationTypeValues);
+    
+    
+    
 
-    Q_PROPERTY(std::string outdoorAirEconomizerType READ outdoorAirEconomizerType WRITE setOutdoorAirEconomizerType RESET resetOutdoorAirEconomizerType);
-    Q_PROPERTY(bool isOutdoorAirEconomizerTypeDefaulted READ isOutdoorAirEconomizerTypeDefaulted);
-    Q_PROPERTY(std::vector<std::string> outdoorAirEconomizerTypeValues READ outdoorAirEconomizerTypeValues);
+    
+    
+    
 
-    Q_PROPERTY(std::string heatRecoveryType READ heatRecoveryType WRITE setHeatRecoveryType RESET resetHeatRecoveryType);
-    Q_PROPERTY(bool isHeatRecoveryTypeDefaulted READ isHeatRecoveryTypeDefaulted);
-    Q_PROPERTY(std::vector<std::string> heatRecoveryTypeValues READ heatRecoveryTypeValues);
+    
+    
+    
 
-    Q_PROPERTY(double sensibleHeatRecoveryEffectiveness READ sensibleHeatRecoveryEffectiveness WRITE setSensibleHeatRecoveryEffectiveness RESET resetSensibleHeatRecoveryEffectiveness);
-    Q_PROPERTY(openstudio::Quantity sensibleHeatRecoveryEffectiveness_SI READ sensibleHeatRecoveryEffectiveness_SI WRITE setSensibleHeatRecoveryEffectiveness RESET resetSensibleHeatRecoveryEffectiveness);
-    Q_PROPERTY(openstudio::Quantity sensibleHeatRecoveryEffectiveness_IP READ sensibleHeatRecoveryEffectiveness_IP WRITE setSensibleHeatRecoveryEffectiveness RESET resetSensibleHeatRecoveryEffectiveness);
-    Q_PROPERTY(bool isSensibleHeatRecoveryEffectivenessDefaulted READ isSensibleHeatRecoveryEffectivenessDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double latentHeatRecoveryEffectiveness READ latentHeatRecoveryEffectiveness WRITE setLatentHeatRecoveryEffectiveness RESET resetLatentHeatRecoveryEffectiveness);
-    Q_PROPERTY(openstudio::Quantity latentHeatRecoveryEffectiveness_SI READ latentHeatRecoveryEffectiveness_SI WRITE setLatentHeatRecoveryEffectiveness RESET resetLatentHeatRecoveryEffectiveness);
-    Q_PROPERTY(openstudio::Quantity latentHeatRecoveryEffectiveness_IP READ latentHeatRecoveryEffectiveness_IP WRITE setLatentHeatRecoveryEffectiveness RESET resetLatentHeatRecoveryEffectiveness);
-    Q_PROPERTY(bool isLatentHeatRecoveryEffectivenessDefaulted READ isLatentHeatRecoveryEffectivenessDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> availabilitySchedule READ availabilityScheduleAsModelObject WRITE setAvailabilityScheduleAsModelObject RESET resetAvailabilitySchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> heatingAvailabilitySchedule READ heatingAvailabilityScheduleAsModelObject WRITE setHeatingAvailabilityScheduleAsModelObject RESET resetHeatingAvailabilitySchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> coolingAvailabilitySchedule READ coolingAvailabilityScheduleAsModelObject WRITE setCoolingAvailabilityScheduleAsModelObject RESET resetCoolingAvailabilitySchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> designSpecificationOutdoorAirObject READ designSpecificationOutdoorAirObjectAsModelObject WRITE setDesignSpecificationOutdoorAirObjectAsModelObject RESET resetDesignSpecificationOutdoorAirObject);
+    
+    
+    
+    
    public:
     /** @name Constructors and Destructors */
     //@{

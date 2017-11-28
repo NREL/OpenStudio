@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "Json.hpp"
 
@@ -23,15 +32,67 @@
 #include "Compare.hpp"
 #include "Logger.hpp"
 #include "PathHelpers.hpp"
+#include "FilesystemHelpers.hpp"
 #include "String.hpp"
+
+#include <jsoncpp/json.h>
 
 #include <OpenStudio.hxx>
 
-#include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
 
 namespace openstudio {
+
+// assert key is present
+void assertKey(const Json::Value& value, const std::string& key)
+{
+  if (!checkKey(value, key)){
+    throw openstudio::Exception(std::string("Cannot find key '" + key + "'"));
+  }
+}
+
+// assert type is correct if key is present
+void assertType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType)
+{
+  if (!checkType(value, key, valueType)){
+    throw openstudio::Exception(std::string("Key '" + key + "' is of wrong type"));
+  }
+}
+
+// assert key is present and type is correct
+void assertKeyAndType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType)
+{
+  assertKey(value, key);
+  assertType(value, key, valueType);
+}
+
+/// check key is present, return false if key is not found
+bool checkKey(const Json::Value& value, const std::string& key)
+{
+  if (!value.isMember(key)){
+    return false;
+  }
+  return true;
+}
+
+/// check type is correct if key is present, return false if type is not correct
+bool checkType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType)
+{
+  if (value.isMember(key)){
+    if (!value[key].isConvertibleTo(valueType)){
+      return false;
+    }
+  }
+  return true;
+}
+
+/// check key is present and type is correct, return false if key not found or type is not correct
+bool checkKeyAndType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType)
+{
+  return (checkKey(value, key) && checkType(value, key, valueType));
+}
+
 
 QVariant jsonMetadata() {
   QVariantMap metadata;
@@ -43,11 +104,11 @@ bool saveJSON(const QVariant& json, openstudio::path p, bool overwrite) {
   // Ensures file extension is .json. Warns if there is a mismatch.
   p = setFileExtension(p,"json",true);
 
-  // Use QFile and QIODevice serialize
-  QFile file(toQString(p));
-  if (file.open(QFile::WriteOnly)) {
+  openstudio::filesystem::ofstream file(p, std::ios_base::binary);
+  if (file.is_open()) {
     QJsonDocument doc = QJsonDocument::fromVariant(json);
-    file.write(doc.toJson());
+    const auto json = doc.toJson();
+    file.write(json.constData(), json.size());
     file.close();
 
     return true;
@@ -64,10 +125,10 @@ std::string toJSON(const QVariant& json) {
 }
 
 QVariant loadJSON(const openstudio::path& p) {
-  QFile file(toQString(p));
-  if (file.open(QFile::ReadOnly)) {
+  openstudio::filesystem::ifstream file(p, std::ios_base::binary);
+  if (file.is_open()) {
     QJsonParseError err;
-    QJsonDocument doc = QJsonDocument::fromJson(file.readAll(), &err);
+    QJsonDocument doc = QJsonDocument::fromJson(openstudio::filesystem::read_as_QByteArray(file), &err);
     file.close();
     if (err.error) {
       LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(err.errorString()));

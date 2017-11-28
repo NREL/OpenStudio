@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include <gtest/gtest.h>
 
@@ -28,6 +37,8 @@
 #include "../ThermalZone_Impl.hpp"
 #include "../BuildingStory.hpp"
 #include "../BuildingStory_Impl.hpp"
+#include "../ShadingSurfaceGroup.hpp"
+#include "../ShadingSurfaceGroup_Impl.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
 #include "../SpaceType.hpp"
@@ -49,6 +60,9 @@
 #include "../LifeCycleCost.hpp"
 
 #include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/geometry/Geometry.hpp"
+
+#include <math.h>
 
 using namespace openstudio::model;
 using namespace openstudio;
@@ -388,3 +402,58 @@ TEST_F(ModelFixture, Building_Clone)
   }
 }
 
+TEST_F(ModelFixture, Building_Rotations)
+{
+  Model model;
+  Building building = model.getUniqueModelObject<Building>();
+  Space space(model);
+  ShadingSurfaceGroup siteGroup(model);
+  EXPECT_TRUE(siteGroup.setShadingSurfaceType("Site"));
+  ShadingSurfaceGroup buildingGroup(model);
+  EXPECT_TRUE(buildingGroup.setShadingSurfaceType("Building"));
+  ShadingSurfaceGroup spaceGroup(model);
+  EXPECT_TRUE(spaceGroup.setSpace(space));
+
+  double degrees = 0;
+  building.setNorthAxis(degrees);
+
+  EXPECT_NEAR(cos(degToRad(degrees)), building.transformation().matrix()(0, 0), 0.0001);
+
+  EXPECT_NEAR(1, space.transformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(1, space.buildingTransformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(cos(degToRad(degrees)), space.siteTransformation().matrix()(0, 0), 0.0001);
+
+  EXPECT_NEAR(1, siteGroup.transformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(cos(degToRad(-degrees)), siteGroup.buildingTransformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(1, siteGroup.siteTransformation().matrix()(0, 0), 0.0001);
+
+  EXPECT_NEAR(1, buildingGroup.transformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(1, buildingGroup.buildingTransformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(cos(degToRad(degrees)), buildingGroup.siteTransformation().matrix()(0, 0), 0.0001);
+
+  EXPECT_NEAR(1, spaceGroup.transformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(1, spaceGroup.buildingTransformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(cos(degToRad(degrees)), spaceGroup.siteTransformation().matrix()(0, 0), 0.0001);
+
+  degrees = 20;
+  building.setNorthAxis(degrees);
+
+  EXPECT_NEAR(cos(degToRad(degrees)), building.transformation().matrix()(0, 0), 0.0001);
+
+  EXPECT_NEAR(1, space.transformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(1, space.buildingTransformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(cos(degToRad(degrees)), space.siteTransformation().matrix()(0, 0), 0.0001);
+
+  EXPECT_NEAR(1, siteGroup.transformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(cos(degToRad(-degrees)), siteGroup.buildingTransformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(1, siteGroup.siteTransformation().matrix()(0, 0), 0.0001);
+
+  EXPECT_NEAR(1, buildingGroup.transformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(1, buildingGroup.buildingTransformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(cos(degToRad(degrees)), buildingGroup.siteTransformation().matrix()(0, 0), 0.0001);
+
+  EXPECT_NEAR(1, spaceGroup.transformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(1, spaceGroup.buildingTransformation().matrix()(0, 0), 0.0001);
+  EXPECT_NEAR(cos(degToRad(degrees)), spaceGroup.siteTransformation().matrix()(0, 0), 0.0001);
+
+}

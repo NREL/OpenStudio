@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "DesignDayGridView.hpp"
 
@@ -71,7 +80,6 @@
 #define WINDDIRECTION "Wind Direction"
 #define RAININDICATOR "Rain Indicator"
 #define SNOWINDICATOR "Snow Indicator"
-#define SKYCLEARNESS "Sky Clearness"
 
 // SOLAR
 #define SOLARMODELINDICATOR "Solar Model Indicator"
@@ -79,6 +87,7 @@
 #define DIFFUSESOLARDAYSCHEDULE "Diffuse Solar Day Schedule"
 #define ASHRAETAUB "ASHRAE Taub"
 #define ASHRAETAUD "ASHRAE Taud"
+#define SKYCLEARNESS "Sky Clearness"
 
 namespace openstudio {
 
@@ -246,7 +255,6 @@ void DesignDayGridController::setCategoriesAndFields()
     fields.push_back(WINDDIRECTION);
     fields.push_back(RAININDICATOR);
     fields.push_back(SNOWINDICATOR);
-    fields.push_back(SKYCLEARNESS);
     std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Pressure\nWind\nPrecipitation"), fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
@@ -258,6 +266,7 @@ void DesignDayGridController::setCategoriesAndFields()
     fields.push_back(DIFFUSESOLARDAYSCHEDULE);
     fields.push_back(ASHRAETAUB);
     fields.push_back(ASHRAETAUD);
+    fields.push_back(SKYCLEARNESS);
     std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Solar"), fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
@@ -362,16 +371,7 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
         boost::optional<DataSource>()
         );
     }
-    else if (field == HUMIDITYINDICATINGCONDITIONSATMAXIMUMDRYBULB){
-      addValueEditColumn(Heading(QString(HUMIDITYINDICATINGCONDITIONSATMAXIMUMDRYBULB)),
-        NullAdapter(&model::DesignDay::humidityIndicatingConditionsAtMaximumDryBulb),
-        NullAdapter(&model::DesignDay::setHumidityIndicatingConditionsAtMaximumDryBulb),
-        boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetHumidityIndicatingConditionsAtMaximumDryBulb)),
-        boost::optional<std::function<bool(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted)),
-        boost::optional<DataSource>()
-        );
-    }
-    // STRING
+        // STRING
     else if (field == NAME) {
       addNameLineEditColumn(Heading(QString(NAME), false, false),
         false,
@@ -406,6 +406,22 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
         boost::optional<DataSource>()
         );
     }
+
+    // This should be reset when the humidity indication condition type is changed to something incompatible
+    else if (field == HUMIDITYINDICATINGCONDITIONSATMAXIMUMDRYBULB){
+      addQuantityEditColumn(Heading(QString(HUMIDITYINDICATINGCONDITIONSATMAXIMUMDRYBULB)),
+        QString("C"),
+        QString("C"),
+        QString("F"),
+        m_isIP,
+        NullAdapter(&model::DesignDay::humidityIndicatingConditionsAtMaximumDryBulb),
+        NullAdapter(&model::DesignDay::setHumidityIndicatingConditionsAtMaximumDryBulb),
+        boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetHumidityIndicatingConditionsAtMaximumDryBulb)),
+        boost::optional<std::function<bool(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted)),
+        boost::optional<DataSource>()
+        );
+    }
+
     else if (field == BAROMETRICPRESSURE){
       addQuantityEditColumn(Heading(QString(BAROMETRICPRESSURE)),
         QString("Pa"),
@@ -465,6 +481,7 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
         );
     }
     else if (field == HUMIDITYINDICATINGTYPE) {
+      // I don't see any problem here, yet the box stays empty. Checked the ReverseTranslator, it does its job too
       addComboBoxColumn<std::string, model::DesignDay>(Heading(QString(HUMIDITYINDICATINGTYPE)),
         static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
         std::function<std::vector<std::string>()>(&model::DesignDay::validHumidityIndicatingTypeValues),
@@ -554,8 +571,8 @@ void DesignDayGridController::onItemDropped(const OSItemId& itemId)
 
 void DesignDayGridController::refreshModelObjects()
 {
-  auto desighDays = m_model.getConcreteModelObjects<model::DesignDay>();
-  m_modelObjects = subsetCastVector<model::ModelObject>(desighDays);
+  auto designDays = m_model.getConcreteModelObjects<model::DesignDay>();
+  m_modelObjects = subsetCastVector<model::ModelObject>(designDays);
   std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
 }
 

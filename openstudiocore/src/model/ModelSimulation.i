@@ -28,6 +28,17 @@
 
 #endif
 
+namespace openstudio {
+namespace model {
+
+  // forward declarations
+  class Surface;
+  class SubSurface;
+  class InternalMass;
+  class Schedule;
+}
+}
+
 UNIQUEMODELOBJECT_TEMPLATES(SimulationControl);
 UNIQUEMODELOBJECT_TEMPLATES(LightingSimulationControl);
 UNIQUEMODELOBJECT_TEMPLATES(SizingParameters);

@@ -1,30 +1,38 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "RunTabView.hpp"
 
-#include "FileOperations.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
-#include "ScriptFolderListView.hpp"
 #include <OpenStudio.hxx>
 
+#include "../model/FileOperations.hpp"
 #include "../model/DaylightingControl.hpp"
 #include "../model/DaylightingControl_Impl.hpp"
 #include "../model/GlareSensor.hpp"
@@ -39,9 +47,9 @@
 #include "../model/UtilityBill.hpp"
 #include "../model/UtilityBill_Impl.hpp"
 
-#include "../runmanager/lib/JobStatusWidget.hpp"
-#include "../runmanager/lib/RubyJobUtils.hpp"
-#include "../runmanager/lib/RunManager.hpp"
+//#include "../runmanager/lib/JobStatusWidget.hpp"
+//#include "../runmanager/lib/RubyJobUtils.hpp"
+//#include "../runmanager/lib/RunManager.hpp"
 
 #include "../utilities/core/Application.hpp"
 #include "../utilities/core/ApplicationPathHelpers.hpp"
@@ -50,7 +58,7 @@
 
 #include "../shared_gui_components/WorkflowTools.hpp"
 
-#include <boost/filesystem.hpp>
+
 
 #include "../energyplus/ForwardTranslator.hpp"
 
@@ -61,7 +69,6 @@
 #include <QMessageBox>
 #include <QPainter>
 #include <QPlainTextEdit>
-#include <QProcess>
 #include <QProgressBar>
 #include <QPushButton>
 #include <QRadioButton>
@@ -72,44 +79,35 @@
 #include <QTimer>
 #include <QToolButton>
 #include <QVBoxLayout>
+#include <QTextEdit>
+#include <QProcess>
+#include <QProcessEnvironment>
+#include <QStandardPaths>
+#include <QFileSystemWatcher>
+#include <QDesktopServices>
+#include <QTcpServer>
+#include <QTcpSocket>
 
 namespace openstudio {
 
 RunTabView::RunTabView(const model::Model & model,
   QWidget * parent)
-  : MainTabView("Run Simulation", MainTabView::SUB_TAB, parent)
-    //m_runView(new RunView(model)),
-    //m_status(new openstudio::runmanager::JobStatusWidget(m_runView->runManager()))
+  : MainTabView("Run Simulation", MainTabView::MAIN_TAB, parent),
+    m_runView(new RunView())
 {
-  //addSubTab("Output", m_runView);
-  //addSubTab("Tree", m_status);
-
-  //connect(m_runView, SIGNAL(resultsGenerated(const openstudio::path &)),
-  //    this, SIGNAL(resultsGenerated(const openstudio::path &)));
+  addTabWidget(m_runView);
 }
 
-RunView::RunView(const model::Model & model,
-                 const openstudio::path &t_modelPath,
-                 const openstudio::path &t_tempFolder,
-                 openstudio::runmanager::RunManager t_runManager)
-  : m_model(model),
-    m_modelPath(t_modelPath),
-    m_tempFolder(t_tempFolder),
-    m_canceling(false)
-
+RunView::RunView()
+  : QWidget(), m_runSocket(nullptr)
 {
-  bool isConnected = t_runManager.connect(SIGNAL(statsChanged()), this, SLOT(runManagerStatsChanged()));
-  OS_ASSERT(isConnected);
-
   auto mainLayout = new QGridLayout();
-  mainLayout->setContentsMargins(5,5,5,5);
+  mainLayout->setContentsMargins(10,10,10,10);
   mainLayout->setSpacing(5);
   setLayout(mainLayout);
 
-  // Run / Play button area
-
   m_playButton = new QToolButton();
-  m_playButton->setText("     Run");
+  m_playButton->setText("Run");
   m_playButton->setCheckable(true);
   m_playButton->setChecked(false);
   QIcon playbuttonicon(QPixmap(":/images/run_simulation_button.png"));
@@ -120,294 +118,91 @@ RunView::RunView(const model::Model & model,
   m_playButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
   m_playButton->setIcon(playbuttonicon);
   m_playButton->setLayoutDirection(Qt::RightToLeft);
-//  m_playButton->setStyleSheet("QAbstractButton:!hover { border: none; }");
-
+  m_playButton->setStyleSheet("QAbstractButton:!hover { border: none; }");
+  
   mainLayout->addWidget(m_playButton, 0, 0);
   connect(m_playButton, &QToolButton::clicked, this, &RunView::playButtonClicked);
-
+  
   // Progress bar area
   m_progressBar = new QProgressBar();
- 
+  m_progressBar->setMaximum(State::complete);
+  
   auto progressbarlayout = new QVBoxLayout();
   progressbarlayout->addWidget(m_progressBar);
-  m_statusLabel = new QLabel("Ready");
-  progressbarlayout->addWidget(m_statusLabel);
   mainLayout->addLayout(progressbarlayout, 0, 1);
-  /*
-  m_radianceGroup = new QButtonGroup(this);
 
-  connect(m_radianceGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &RunView::on_radianceGroupClicked);
+  m_openSimDirButton = new QPushButton();
+  m_openSimDirButton->setText("Show Simulation");
+  m_openSimDirButton->setFlat(true);
+  m_openSimDirButton->setObjectName("StandardGrayButton");
+  connect(m_openSimDirButton, &QPushButton::clicked, this, &RunView::onOpenSimDirClicked);
+  mainLayout->addWidget(m_openSimDirButton,0,2);
 
-  int buttonCount = 0;
+  m_textInfo = new QTextEdit();
+  m_textInfo->setReadOnly(true);
+  mainLayout->addWidget(m_textInfo,1,0,1,3);
 
-  m_energyPlusButton = new QRadioButton("EnergyPlus");
-  m_radianceGroup->addButton(m_energyPlusButton,buttonCount++);
+  m_runProcess = new QProcess(this);
+  connect(m_runProcess, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &RunView::onRunProcessFinished);
 
-  m_radianceButton = new QRadioButton("Radiance");
-  m_radianceGroup->addButton(m_radianceButton,buttonCount++);
+  QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 
-
-  // "Radiance" Button Layout
- 
-  QLabel *radianceLabel = new QLabel("<b>Select Daylight Simulation Engine</b>");
-
-  auto radianceWidget = new QWidget();
-  radianceWidget->setObjectName("RunStatusViewRadiance");
-  auto radianceInteriorLayout = new QHBoxLayout();
-
-  radianceWidget->setLayout(radianceInteriorLayout);
-  radianceInteriorLayout->addWidget(radianceLabel);
-  radianceInteriorLayout->addStretch();
-  radianceInteriorLayout->addWidget(m_energyPlusButton);
-  radianceInteriorLayout->addStretch();
-  radianceInteriorLayout->addWidget(m_radianceButton);
-  */
-/*
-  radianceHLayout->addSpacing(100);
-  radianceHLayout->addWidget(radianceWidget, 3);
-  radianceHLayout->addStretch(2);
-  */
-  //radianceWidget->setStyleSheet("QWidget#RunStatusViewRadiance {background: #DADADA; border: 1px solid #A5A5A5;}");
-
-
-
-/*
-
-  m_radianceWarningsAndErrorsButton = new QPushButton();
-  m_radianceWarningsAndErrorsButton->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
-  m_radianceWarningsAndErrorsButton->hide();
-
-  connect(m_radianceWarningsAndErrorsButton, &QPushButton::clicked, this, &RunView::on_radianceWarningsAndErrorsClicked);
-
-  QHBoxLayout * radianceHLayout = new QHBoxLayout();
-  radianceHLayout->addWidget(m_radianceButton);
-  radianceHLayout->addWidget(m_radianceWarningsAndErrorsButton);
-  radianceHLayout->addStretch();
-
-  QVBoxLayout * radianceVLayout = new QVBoxLayout();
-  radianceVLayout->addWidget(m_energyPlusButton);
-  radianceVLayout->addLayout(radianceHLayout);
-
-  QGroupBox * groupBox = new QGroupBox("For Daylighting Calculation use");
-  groupBox->setLayout(radianceVLayout);
-*/
-
-  //mainLayout->addWidget(radianceWidget, 1, 1);
-
-  //if (usesRadianceForDaylightCalculations(t_runManager))
-  //{
-  //  m_radianceButton->setChecked(true);
-  //} else {
-  //  m_energyPlusButton->setChecked(true);
-  //}
-
-  openstudio::runmanager::ToolVersion epversion = getRequiredEnergyPlusVersion();
-  if( auto tag = epversion.getTag() ) {
-    m_toolWarningLabel = new QLabel(openstudio::toQString("<b>Notice:</b> EnergyPlus " + 
-      std::to_string(epversion.getMajor().get()) + "." +
-      std::to_string(epversion.getMinor().get()) + "." +
-      std::to_string(epversion.getBuild().get()) + " Build \"" +
-      tag.get() + "\""
-      " is required and not yet located."
-      "  Run Preferences -> Scan For Tools to locate."));
-  } else {
-    m_toolWarningLabel = new QLabel(openstudio::toQString("<b>Notice:</b> EnergyPlus " + 
-      std::to_string(epversion.getMajor().get()) + "." +
-      std::to_string(epversion.getMinor().get()) + "." +
-      std::to_string(epversion.getBuild().get()) +
-      " is required and not yet located."
-      "  Run Preferences -> Scan For Tools to locate."));
+  auto energyPlusExePath = getEnergyPlusExecutable();
+  if (!energyPlusExePath.empty()){
+    env.insert("ENERGYPLUS_EXE_PATH", toQString(energyPlusExePath));
   }
-  m_toolWarningLabel->hide();
 
-  mainLayout->addWidget(m_toolWarningLabel, 2, 1);
+  auto radianceDirectory = getRadianceDirectory();
+  if (!radianceDirectory.empty()){
+    env.insert("OS_RAYPATH", toQString(radianceDirectory));
+  }
 
-  locateEnergyPlus();
+  auto perlExecutablePath = getPerlExecutable();
+  if (!perlExecutablePath.empty()){
+    env.insert("PERL_EXE_PATH", toQString(perlExecutablePath));
+  }
 
-  m_warningsLabel = new QLabel("<b>Warnings:</b> 0");
-  m_errorsLabel = new QLabel("<b>Errors:</b> 0");
-  mainLayout->addWidget(m_warningsLabel, 3, 1);
-  mainLayout->addWidget(m_errorsLabel, 4, 1);
-  mainLayout->addWidget(new QLabel("Output"), 5, 1);
-  m_outputWindow = new QPlainTextEdit();
-  m_outputWindow->setReadOnly(true);
-  mainLayout->addWidget(m_outputWindow, 6, 1);
+  m_runProcess->setProcessEnvironment(env);
 
-  updateRunManagerStats(t_runManager);
+  m_runTcpServer = new QTcpServer();
+  m_runTcpServer->listen();
+  connect(m_runTcpServer, &QTcpServer::newConnection, this, &RunView::onNewConnection);
 }
 
-/*
-void RunView::getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warnings,
-                                                 std::vector<std::string> & errors)
+void RunView::onOpenSimDirClicked()
 {
-  openstudio::runmanager::RunManager rm = runManager();
-  boost::optional<model::Model> model(m_model);
-  openstudio::getRadiancePreRunWarningsAndErrors(warnings, errors, rm, model);
-}
-*/
-void RunView::locateEnergyPlus()
-{
-  openstudio::runmanager::ConfigOptions co(true);
-  openstudio::runmanager::ToolVersion epversion = getRequiredEnergyPlusVersion();
-  bool energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(epversion).tools().size() == 0;
-  
-  if (energyplus_not_installed){
-    m_toolWarningLabel->show();
-  } else {
-    m_toolWarningLabel->hide();
+  std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
+  QString url = QString::fromStdString((resourcePath(toPath(osdocument->savePath())) / "run").string());
+  QUrl qurl = QUrl::fromLocalFile(url);
+  if( ! QDesktopServices::openUrl(qurl) ) {
+    QMessageBox::critical(this, "Unable to open simulation", "Please save the OpenStudio Model to view the simulation.");
   }
 }
 
-void RunView::updateToolsWarnings()
+void RunView::onRunProcessFinished(int exitCode, QProcess::ExitStatus status)
 {
-  LOG(Debug, "updateToolsWarnings called");
-  
-  //getRadiancePreRunWarningsAndErrors(m_radianceWarnings,m_radianceErrors);
-
-  //QString checkBoxText;
-  //QString buttonText;
-
-  //if(m_radianceErrors.size() > 0){
-  //  m_energyPlusButton->setChecked(true);
-  //}
-
-  locateEnergyPlus();
-}
-
-void RunView::outputDataAdded(const openstudio::UUID &, const std::string &t_data)
-{
-  QTextCursor cursor = m_outputWindow->textCursor();
-  cursor.movePosition(QTextCursor::End);
-  cursor.insertText(openstudio::toQString(t_data));
-  m_outputWindow->ensureCursorVisible();
-}
-
-void RunView::updateRunManagerStats(openstudio::runmanager::RunManager t_runManager)
-{
-  double numberofjobs = 0;
-  double completedjobs = 0;
-  double totalerrors = 0;
-  double totalwarnings = 0;
-
-  std::map<std::string, double> stats = t_runManager.statistics();
-  numberofjobs = stats["Number of Jobs"];
-  completedjobs = stats["Completed Jobs"];
-  totalerrors = stats["Total Errors"];
-  totalwarnings = stats["Total Warnings"];
-
-  if (numberofjobs == 0) numberofjobs = 1;
-
-  m_progressBar->setRange(0, numberofjobs);
-  m_progressBar->setValue(completedjobs);
-
-  m_warningsLabel->setText(openstudio::toQString("<b>Warnings:</b> " + boost::lexical_cast<std::string>(int(totalwarnings))));
-  m_errorsLabel->setText(openstudio::toQString("<b>Errors:</b> " + boost::lexical_cast<std::string>(int(totalerrors))));
-}
-
-void RunView::runManagerStatsChanged()
-{
-  updateRunManagerStats(runManager());
-}
-
-void RunView::runFinished(const openstudio::path &t_sqlFile, const openstudio::path &t_radianceOutputPath)
-{
-  if (m_canceling)
-  {
-    m_statusLabel->setText("Canceled");
-  }
+  LOG(Debug, "run finished");
+  m_playButton->setChecked(false);
+  m_state = State::stopped;
+  m_progressBar->setValue(State::complete);
 
   std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
-
-  // DLM: should we attach the sql file to the model here?
-  // DLM: if model is re-opened with results they will not be added here, better to do this on results tab
-  //if (exists(t_sqlFile)){
-  //  SqlFile sqlFile(t_sqlFile);
-  //  if (sqlFile.connectionOpen()){
-  //    osdocument->model().setSqlFile(sqlFile);
-  //  }
-  //}
-  
-  m_canceling = false;
-  LOG(Debug, "Emitting results generated for sqlfile: " << openstudio::toString(t_sqlFile) << " and radiance file " << openstudio::toString(t_radianceOutputPath));
-  emit resultsGenerated(t_sqlFile, t_radianceOutputPath);
-
-  // needed so save of osm file does not trigger out of date and start running again
-  runManager().setPaused(true);
-
-  m_playButton->setChecked(false);
+  osdocument->save();
   osdocument->enableTabsAfterRun();
+  m_openSimDirButton->setEnabled(true);
+
+  if (m_runSocket){
+    delete m_runSocket;
+  }
+  m_runSocket = nullptr;
 }
 
-void RunView::treeChanged(const openstudio::UUID &t_uuid)
+openstudio::path RunView::resourcePath(const openstudio::path & osmPath) const
 {
-  std::string statusstr = "Ready";
-
-  try {
-    openstudio::runmanager::Job j = runManager().getJob(t_uuid);
-    while (j.parent())
-    {
-      j = j.parent().get();
-    }
-
-    openstudio::runmanager::TreeStatusEnum status = j.treeStatus();
-    LOG(Debug, "Tree finished, status is: " << status.valueName());
-    statusstr = status.valueDescription();
-
-    openstudio::path sqlpath;
-    openstudio::path radianceOutPath;
-
-    if (status == openstudio::runmanager::TreeStatusEnum::Finished
-        || status == openstudio::runmanager::TreeStatusEnum::Failed
-        || status == openstudio::runmanager::TreeStatusEnum::Canceled)
-    {
-      if (status == openstudio::runmanager::TreeStatusEnum::Failed && m_canceling)
-      {
-        statusstr = "Canceled";
-      }
-
-      try {
-        sqlpath = j.treeAllFiles().getLastByFilename("eplusout.sql").fullPath;
-      } catch (const std::exception &e) {
-        LOG(Debug, "Tree finished, error getting sql file: " << e.what());
-      } catch (...) {
-        LOG(Debug, "Tree finished, error getting sql file");
-        // no sql file exists
-      }
-
-      try {
-        radianceOutPath = j.treeOutputFiles().getLastByFilename("radout.sql").fullPath;
-      } catch (const std::exception &e) {
-        LOG(Debug, "Tree finished, error getting radout.sql file: " << e.what());
-      } catch (...) {
-        LOG(Debug, "Tree finished, error getting radout.sql file");
-        // no sql file exists
-      }
-
-      runFinished(sqlpath, radianceOutPath);
-    } else { 
-      m_canceling = false;
-    }
-  } catch (const std::exception &e) {
-    LOG(Debug, "Tree finished, error getting status: " << e.what());
-    runFinished(openstudio::path(), openstudio::path());
-
-  } catch (...) {
-    LOG(Debug, "Tree finished, error getting status");
-    runFinished(openstudio::path(), openstudio::path());
-    // no sql file exists
-  }
-
-  m_statusLabel->setText(openstudio::toQString(statusstr));
-}
-
-openstudio::runmanager::ToolVersion RunView::getRequiredEnergyPlusVersion()
-{
-  std::string sha = energyPlusBuildSHA();
-  if( ! sha.empty() ) {
-    return openstudio::runmanager::ToolVersion(energyPlusVersionMajor(),energyPlusVersionMinor(),energyPlusVersionPatch(),sha);
-  } else {
-    return openstudio::runmanager::ToolVersion(energyPlusVersionMajor(),energyPlusVersionMinor(),energyPlusVersionPatch());
-  }
+  auto baseName = osmPath.stem();
+  auto parentPath = osmPath.parent_path();
+  auto resourcePath = parentPath / baseName;
+  return resourcePath; 
 }
 
 void RunView::playButtonClicked(bool t_checked)
@@ -416,176 +211,171 @@ void RunView::playButtonClicked(bool t_checked)
 
   std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
 
-  if(osdocument->modified())
-  {
-    osdocument->save();
-    // save dialog was canceled
-    if(osdocument->modified()) {
-      return;
-    }
-  }
+  if (t_checked) {
+    // run
 
-  updateToolsWarnings();
-
-  if (!t_checked)
-  {
-    m_playButton->setChecked(true);
-
-    if (!m_canceling)
+    if(osdocument->modified())
     {
-      // we are pausing the simulations
-      m_statusLabel->setText("Canceling");
-      m_canceling = true;
-      openstudio::Application::instance().processEvents();
-      runmanager::RunManager rm = runManager();
-      pauseRunManager(rm);
-    } else {
-      LOG(Debug, "Already canceling, not doing it again");
-    }
-  } else {
-    runmanager::ConfigOptions co(true);
-    co.findTools(true, true, false, true);
-    co.saveQSettings();
-
-    updateToolsWarnings();
-
-    openstudio::runmanager::ToolVersion epver = getRequiredEnergyPlusVersion();
-    if (co.getTools().getAllByName("energyplus").getAllByVersion(epver).tools().size() == 0)
-    {
-      if( auto tag = epver.getTag() ) {
-        QMessageBox::information(this, 
-            "Missing EnergyPlus",
-            QString::fromStdString("EnergyPlus " +
-            std::to_string(epver.getMajor().get()) + "." +
-            std::to_string(epver.getMinor().get()) + "." +
-            std::to_string(epver.getBuild().get()) + " Build \"" +
-            tag.get() + "\" could not be located, simulation aborted."),
-            QMessageBox::Ok);
-      } else {
-        QMessageBox::information(this, 
-            "Missing EnergyPlus",
-            QString::fromStdString("EnergyPlus " +
-            std::to_string(epver.getMajor().get()) + "." +
-            std::to_string(epver.getMinor().get()) + "." +
-            std::to_string(epver.getBuild().get()) + 
-            " could not be located, simulation aborted."),
-            QMessageBox::Ok);
-      }
-      m_playButton->setChecked(false);
-      osdocument->enableTabsAfterRun();
-      return;
-    }
-
-    if (co.getTools().getAllByName("ruby").tools().size() == 0)
-    {
-      QMessageBox::information(this,
-          "Missing Ruby",
-          "Ruby could not be located, simulation aborted.",
-          QMessageBox::Ok);
-      m_playButton->setChecked(false);
-      osdocument->enableTabsAfterRun();
-      return;
-    }
-
-    // check for missing measure.rb file
-    for (const BCLMeasure measure : OSAppBase::instance()->project()->measures()){
-      if (!measure.primaryRubyScriptPath()){
-        QMessageBox::information(this, 
-            "Missing Ruby Script", 
-            toQString("Measure '" + measure.displayName() + "' is missing it's measure.rb file, update this measure and try again."),
-            QMessageBox::Ok);
+      osdocument->save();
+      // save dialog was canceled
+      if(osdocument->modified()) {
         m_playButton->setChecked(false);
-        osdocument->enableTabsAfterRun();
         return;
       }
     }
 
-    // TODO call Dan's ModelToRad translator to determine if there are problems
-    //if(m_radianceButton->isChecked() && (!m_radianceWarnings.empty() || !m_radianceErrors.empty())) {
-    //  showRadianceWarningsAndErrors(m_radianceWarnings, m_radianceErrors);
-    // if(m_radianceErrors.size()){
-    //    return;
-    //  }
-    //  else{
-    //    // check messageBox return value to run with warnings
-    //  }
-    //}
+    QStringList paths;
+    paths << QCoreApplication::applicationDirPath();
+    auto openstudioExePath = QStandardPaths::findExecutable("openstudio", paths);
 
-    m_canceling = false;
-    m_outputWindow->clear();
+    // run in save dir
+    //auto basePath = resourcePath(toPath(osdocument->savePath()));
+    
+    // run in temp dir
+    auto basePath = toPath(osdocument->modelTempDir()) / toPath("resources");
+    
+    auto workflowPath = basePath / "workflow.osw";
+    auto stdoutPath = basePath / "stdout";
+    auto stderrPath = basePath / "stderr";
 
-    // reset the model's sqlFile
-    osdocument->model().resetSqlFile();
+    OS_ASSERT(exists(workflowPath));
 
-    // Tell OSDoc that great things are happening
+    auto workflowJSONPath = QString::fromStdString(workflowPath.string());
+    QStringList arguments;
+    arguments << "run" << "-s" << QString::number(m_runTcpServer->serverPort()) << "-w" << workflowJSONPath;
+
+    LOG(Debug, "run exe" << openstudioExePath.toStdString());
+    LOG(Debug, "run arguments" << arguments.join(";").toStdString());
+
     osdocument->disableTabsDuringRun();
+    m_openSimDirButton->setEnabled(false);
 
-    // we are starting the simulations
-    QTimer::singleShot(0, this, SLOT(requestStartRunManager()));
-  }
-}
-
-void RunView::requestStartRunManager()
-{
-  // we are starting the simulations
-  std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
-  bool requireCalibrationReports = (osdocument->model().getConcreteModelObjects<model::UtilityBill>().size() > 0);
-  openstudio::runmanager::RunManager rm = runManager();
-  startRunManager(rm, m_modelPath, m_tempFolder, std::vector<double>(), requireCalibrationReports, this);
-}
-
-openstudio::runmanager::RunManager RunView::runManager()
-{
-  return OSAppBase::instance()->project()->runManager();
-}
-/*
-void RunView::showRadianceWarningsAndErrors(const std::vector<std::string> & warnings,
-                                            const std::vector<std::string> & errors)
-{
-  QString errorsAndWarnings;
-  QString text;
-  
-  if(warnings.size()){
-    errorsAndWarnings += "WARNINGS:\n";
-    for (std::string warning : warnings){
-      text = warning.c_str();
-      errorsAndWarnings += text;
-      errorsAndWarnings += '\n';
+    if (exists(stdoutPath)){
+      remove(stdoutPath);
     }
-    errorsAndWarnings += '\n';
-  }
+    if (exists(stderrPath)){
+      remove(stderrPath);
+    }
 
-  if(errors.size()){
-    errorsAndWarnings += "ERRORS:\n";
-    for (std::string error : errors){
-      text = error.c_str();
-      errorsAndWarnings += text;
-      errorsAndWarnings += '\n';
+    m_progressBar->setValue(0);
+    m_state = State::stopped;
+    m_textInfo->clear();
+    m_runProcess->setStandardOutputFile( toQString(stdoutPath) );
+    m_runProcess->setStandardErrorFile( toQString(stderrPath) );
+    m_runProcess->start(openstudioExePath, arguments);
+  } else {
+    // stop running
+    LOG(Debug, "Kill Simulation");
+    m_runProcess->kill();
+  }
+}
+
+void RunView::onNewConnection()
+{
+  m_runSocket = m_runTcpServer->nextPendingConnection();
+  connect(m_runSocket,&QTcpSocket::readyRead,this,&RunView::onRunDataReady); 
+}
+
+void RunView::onRunDataReady()
+{
+  auto appendErrorText = [&](const QString & text) {
+    m_textInfo->setTextColor(Qt::red);
+    m_textInfo->setFontPointSize(18);
+    m_textInfo->append(text);
+  };
+
+  auto appendNormalText = [&](const QString & text) {
+    m_textInfo->setTextColor(Qt::black);
+    m_textInfo->setFontPointSize(12);
+    m_textInfo->append(text);
+  };
+
+  auto appendH1Text = [&](const QString & text) {
+    m_textInfo->setTextColor(Qt::black);
+    m_textInfo->setFontPointSize(18);
+    m_textInfo->append(text);
+  };
+
+  auto appendH2Text = [&](const QString & text) {
+    m_textInfo->setTextColor(Qt::black);
+    m_textInfo->setFontPointSize(15);
+    m_textInfo->append(text);
+  };
+
+  QString data = m_runSocket->readAll();
+  QStringList lines = data.split("\n");
+
+  for (const auto& line: lines){
+    //std::cout << data.toStdString() << std::endl;
+
+    QString trimmedLine = line.trimmed();
+
+    // DLM: coordinate with openstudio-workflow-gem\lib\openstudio\workflow\adapters\output\socket.rb
+    if (trimmedLine.isEmpty()){
+      continue;
+    } else if (QString::compare(trimmedLine, "Starting state initialization", Qt::CaseInsensitive) == 0) {
+      appendH1Text("Initializing workflow.");
+      m_state = State::initialization;
+      m_progressBar->setValue(m_state);
+    } else if (QString::compare(trimmedLine, "Started", Qt::CaseInsensitive) == 0) {
+      // no-op
+    } else if (QString::compare(trimmedLine, "Returned from state initialization", Qt::CaseInsensitive) == 0) {
+      // no-op
+    } else if (QString::compare(trimmedLine, "Starting state os_measures", Qt::CaseInsensitive) == 0) {
+      appendH1Text("Processing OpenStudio Measures.");
+      m_state = State::os_measures;
+      m_progressBar->setValue(m_state);
+    } else if (QString::compare(trimmedLine, "Returned from state os_measures", Qt::CaseInsensitive) == 0) {
+      // no-op
+    } else if (QString::compare(trimmedLine, "Starting state translator", Qt::CaseInsensitive) == 0) {
+      appendH1Text("Translating the OpenStudio Model to EnergyPlus.");
+      m_state = State::translator;
+      m_progressBar->setValue(m_state);
+    } else if (QString::compare(trimmedLine, "Returned from state translator", Qt::CaseInsensitive) == 0) {
+      // no-op
+    } else if (QString::compare(trimmedLine, "Starting state ep_measures", Qt::CaseInsensitive) == 0) {
+      appendH1Text("Processing EnergyPlus Measures.");
+      m_state = State::ep_measures;
+      m_progressBar->setValue(m_state);
+    } else if (QString::compare(trimmedLine, "Returned from state ep_measures", Qt::CaseInsensitive) == 0) {
+      // no-op
+    } else if (QString::compare(trimmedLine, "Starting state preprocess", Qt::CaseInsensitive) == 0) {
+      // ignore this state
+      m_state = State::preprocess;
+      m_progressBar->setValue(m_state);
+    } else if (QString::compare(trimmedLine, "Returned from state preprocess", Qt::CaseInsensitive) == 0) {
+      // ignore this state
+    } else if (QString::compare(trimmedLine, "Starting state simulation", Qt::CaseInsensitive) == 0) {
+      appendH1Text("Starting Simulation.");
+      m_state = State::simulation;
+      m_progressBar->setValue(m_state);
+    } else if (QString::compare(trimmedLine, "Returned from state simulation", Qt::CaseInsensitive) == 0) {
+      // no-op
+    } else if (QString::compare(trimmedLine, "Starting state reporting_measures", Qt::CaseInsensitive) == 0) {
+      appendH1Text("Processing Reporting Measures.");
+      m_state = State::reporting_measures;
+      m_progressBar->setValue(m_state);
+    } else if (QString::compare(trimmedLine, "Returned from state reporting_measures", Qt::CaseInsensitive) == 0) {
+      // no-op
+    } else if (QString::compare(trimmedLine, "Starting state postprocess", Qt::CaseInsensitive) == 0) {
+      appendH1Text("Gathering Reports.");
+      m_state = State::postprocess;
+      m_progressBar->setValue(m_state);
+    } else if (QString::compare(trimmedLine, "Returned from state postprocess", Qt::CaseInsensitive) == 0) {
+      // no-op
+    } else if (QString::compare(trimmedLine, "Failure", Qt::CaseInsensitive) == 0) {
+      appendErrorText("Failed.");
+    } else if (QString::compare(trimmedLine, "Complete", Qt::CaseInsensitive) == 0) {
+      appendH1Text("Completed.");
+    } else if (trimmedLine.startsWith("Applying", Qt::CaseInsensitive)) {
+      appendH2Text(line);
+    } else if (trimmedLine.startsWith("Applied", Qt::CaseInsensitive)) {
+      // no-op
+    } else{
+      appendNormalText(line);
     }
   }
-
-  QMessageBox::critical(this, "Radiance Warnings and Errors", errorsAndWarnings);
 }
 
-void RunView::on_radianceWarningsAndErrorsClicked(bool checked)
-{
-  showRadianceWarningsAndErrors(m_radianceWarnings,m_radianceErrors);
-}
-
-void RunView::on_radianceGroupClicked(int idx)
-{
-  QAbstractButton * button = m_radianceGroup->button(idx);
-  OS_ASSERT(button);
-  if(button == m_radianceButton){
-    emit useRadianceStateChanged(true);
-    updateToolsWarnings();
-    if(m_radianceErrors.size()){
-      showRadianceWarningsAndErrors(m_radianceWarnings,m_radianceErrors);
-    }
-  }
-  else{
-    emit useRadianceStateChanged(false);
-  }
-}
-*/
 } // openstudio
+

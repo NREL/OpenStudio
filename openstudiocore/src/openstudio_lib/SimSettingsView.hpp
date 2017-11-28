@@ -1,27 +1,37 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
- *  All rights reserved.
- *  
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- *  
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- *  
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef OPENSTUDIO_SIMSETTINGSVIEW_HPP
 #define OPENSTUDIO_SIMSETTINGSVIEW_HPP
 
 #include <QWidget>
 
+#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "../model/Model.hpp"
 #include "../model/ShadowCalculation.hpp"
 #include "../model/SimulationControl.hpp"
@@ -37,17 +47,14 @@ class QPushButton;
 
 namespace openstudio {
 
-  class OSComboBox;
   class OSComboBox2;
-  class OSIntegerEdit;
   class OSIntegerEdit2;
-  class OSLineEdit;
-  class OSQuantityEdit;
-  class OSSwitch;
+  class OSLineEdit2;
+  class OSQuantityEdit2;
   class OSSwitch2;
   class ScheduleCalendarWidget;
 
-class SimSettingsView : public QWidget
+class SimSettingsView : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -87,20 +94,7 @@ private:
                 int row,
                 int column,
                 QString text,
-                OSComboBox * & comboBox);
-
-  void addField(QGridLayout * gridLayout,
-                int row,
-                int column,
-                QString text,
                 OSComboBox2 * & comboBox);
-
-  void addField(QGridLayout * gridLayout,
-                int row,
-                int column,
-                QLabel * & label,
-                QString text,
-                OSComboBox * & comboBox);
 
   void addField(QGridLayout * gridLayout,
                 int row,
@@ -113,20 +107,7 @@ private:
                 int row,
                 int column,
                 QString text,
-                OSIntegerEdit * & integerEdit);
-
-  void addField(QGridLayout * gridLayout,
-                int row,
-                int column,
-                QString text,
                 OSIntegerEdit2 * & integerEdit);
-
-  void addField(QGridLayout * gridLayout,
-                int row,
-                int column,
-                QLabel * & label,
-                QString text,
-                OSIntegerEdit * & integerEdit);
 
   void addField(QGridLayout * gridLayout,
                 int row,
@@ -139,26 +120,26 @@ private:
                 int row,
                 int column,
                 QString text,
-                OSLineEdit * & lineEdit);
+                OSLineEdit2 * & lineEdit);
 
   void addField(QGridLayout * gridLayout,
                 int row,
                 int column,
                 QString text,
-                OSQuantityEdit * & quantityEdit);
+                const std::string& modelUnits, 
+                const std::string& siUnits, 
+                const std::string& ipUnits, 
+                OSQuantityEdit2 * & quantityEdit);
 
   void addField(QGridLayout * gridLayout,
                 int row,
                 int column,
                 QLabel * & label,
                 QString text,
-                OSQuantityEdit * & quantityEdit);
-
-  void addField(QGridLayout * gridLayout,
-                int row,
-                int column,
-                QString text,
-                OSSwitch * & osSwitch);
+                const std::string& modelUnits, 
+                const std::string& siUnits, 
+                const std::string& ipUnits, 
+                OSQuantityEdit2 * & quantityEdit);
 
   void addField(QGridLayout * gridLayout,
                 int row,
@@ -232,25 +213,25 @@ private:
   OSSwitch2 * m_runSimulationforWeatherFileRunPeriods;
   OSIntegerEdit2 * m_maximumNumberofWarmupDays;
   OSIntegerEdit2 * m_minimumNumberofWarmupDays;
-  OSQuantityEdit * m_loadsConvergenceToleranceValue;
-  OSQuantityEdit * m_temperatureConvergenceToleranceValue;
-  OSComboBox * m_solarDistribution;
+  OSQuantityEdit2 * m_loadsConvergenceToleranceValue;
+  OSQuantityEdit2 * m_temperatureConvergenceToleranceValue;
+  OSComboBox2 * m_solarDistribution;
 
   // Radiance
-  OSIntegerEdit *  m_accumulatedRaysperRecord;
-  OSQuantityEdit * m_directThreshold;
-  OSQuantityEdit * m_directCertainty;
-  OSQuantityEdit * m_directJitter;
-  OSQuantityEdit * m_directPretest;
-  OSIntegerEdit * m_ambientBouncesVMX;
-  OSIntegerEdit * m_ambientBouncesDMX;
-  OSIntegerEdit * m_ambientDivisionsVMX;
-  OSIntegerEdit * m_ambientDivisionsDMX;
-  OSIntegerEdit * m_ambientSupersamples;
-  OSQuantityEdit * m_limitWeightVMX;
-  OSQuantityEdit * m_limitWeightDMX;
-  OSIntegerEdit * m_klemsSamplingDensity;
-  OSComboBox * m_skyDiscretizationResolution;
+  OSIntegerEdit2 *  m_accumulatedRaysperRecord;
+  OSQuantityEdit2 * m_directThreshold;
+  OSQuantityEdit2 * m_directCertainty;
+  OSQuantityEdit2 * m_directJitter;
+  OSQuantityEdit2 * m_directPretest;
+  OSIntegerEdit2 * m_ambientBouncesVMX;
+  OSIntegerEdit2 * m_ambientBouncesDMX;
+  OSIntegerEdit2 * m_ambientDivisionsVMX;
+  OSIntegerEdit2 * m_ambientDivisionsDMX;
+  OSIntegerEdit2 * m_ambientSupersamples;
+  OSQuantityEdit2 * m_limitWeightVMX;
+  OSQuantityEdit2 * m_limitWeightDMX;
+  OSIntegerEdit2 * m_klemsSamplingDensity;
+  OSComboBox2 * m_skyDiscretizationResolution;
   QLabel * m_accumulatedRaysperRecordLbl;
   QLabel * m_directThresholdLbl;
   QLabel * m_directCertaintyLbl;
@@ -267,59 +248,59 @@ private:
   QLabel * m_skyDiscretizationResolutionLbl;
 
   // SizingParameters
-  OSQuantityEdit * m_heatingSizingFactor;
-  OSQuantityEdit * m_coolingSizingFactor;
-  OSIntegerEdit * m_timestepsinAveragingWindow;
+  OSQuantityEdit2 * m_heatingSizingFactor;
+  OSQuantityEdit2 * m_coolingSizingFactor;
+  OSIntegerEdit2 * m_timestepsinAveragingWindow;
 
   // ProgramControl
-  OSIntegerEdit * m_numberOfThreadsAllowed;
+  OSIntegerEdit2 * m_numberOfThreadsAllowed;
 
   // Timestep
-  OSIntegerEdit * m_numberOfTimestepsPerHour;
+  OSIntegerEdit2 * m_numberOfTimestepsPerHour;
 
   // OutputControlReportingTolerances
-  OSQuantityEdit * m_toleranceForTimeHeatingSetpointNotMet;
-  OSQuantityEdit * m_toleranceForTimeCoolingSetpointNotMet;
+  OSQuantityEdit2 * m_toleranceForTimeHeatingSetpointNotMet;
+  OSQuantityEdit2 * m_toleranceForTimeCoolingSetpointNotMet;
 
   // ConvergenceLimits
-  OSIntegerEdit * m_maximumHVACIterations;
-  OSIntegerEdit * m_minimumPlantIterations;
-  OSIntegerEdit * m_maximumPlantIterations;
-  OSIntegerEdit * m_minimumSystemTimestep;
+  OSIntegerEdit2 * m_maximumHVACIterations;
+  OSIntegerEdit2 * m_minimumPlantIterations;
+  OSIntegerEdit2 * m_maximumPlantIterations;
+  OSIntegerEdit2 * m_minimumSystemTimestep;
 
   // ShadowCalculation
-  OSIntegerEdit * m_calculationFrequency;
-  OSIntegerEdit * m_maximumFiguresInShadowOverlapCalculations;
+  OSIntegerEdit2 * m_calculationFrequency;
+  OSIntegerEdit2 * m_maximumFiguresInShadowOverlapCalculations;
   OSComboBox2 * m_polygonClippingAlgorithm;
   OSComboBox2 * m_skyDiffuseModelingAlgorithm;
 
   // SurfaceConvectionAlgorithmInside
-  //OSLineEdit * m_algorithmSurfaceConvectionInside;
+  //OSLineEdit2 * m_algorithmSurfaceConvectionInside;
   OSComboBox2 * m_algorithmSurfaceConvectionInside;
 
   // SurfaceConvectionAlgorithmOutside
-  //OSLineEdit * m_algorithmSurfaceConvectionOutside;
+  //OSLineEdit2 * m_algorithmSurfaceConvectionOutside;
   OSComboBox2 * m_algorithmSurfaceConvectionOutside;
 
   // HeatBalance
-  //OSLineEdit * m_algorithmHeatBalance;
+  //OSLineEdit2 * m_algorithmHeatBalance;
   OSComboBox2 * m_algorithmHeatBalance;
-  OSQuantityEdit * m_surfaceTemperatureUpperLimit;
-  OSQuantityEdit * m_minimumSurfaceConvectionHeatTransferCoefficientValue;
-  OSQuantityEdit * m_maximumSurfaceConvectionHeatTransferCoefficientValue;
+  OSQuantityEdit2 * m_surfaceTemperatureUpperLimit;
+  OSQuantityEdit2 * m_minimumSurfaceConvectionHeatTransferCoefficientValue;
+  OSQuantityEdit2 * m_maximumSurfaceConvectionHeatTransferCoefficientValue;
 
   // ZoneAirHeatBalanceAlgorithm
-  //OSLineEdit * m_algorithmZoneAirHeatBalance;
+  //OSLineEdit2 * m_algorithmZoneAirHeatBalance;
   OSComboBox2 * m_algorithmZoneAirHeatBalance;
 
   // ZoneAirContaminantBalance
-  OSSwitch * m_carbonDioxideConcentration;
-  OSLineEdit * m_outdoorCarbonDioxideScheduleName;
+  OSSwitch2 * m_carbonDioxideConcentration;
+  OSLineEdit2 * m_outdoorCarbonDioxideScheduleName;
 
   // ZoneCapacitanceMultiplierResearchSpecial
-  OSQuantityEdit * m_temperatureCapacityMultiplier;
-  OSQuantityEdit * m_humidityCapacityMultiplier;
-  OSQuantityEdit * m_carbonDioxideCapacityMultiplier;
+  OSQuantityEdit2 * m_temperatureCapacityMultiplier;
+  OSQuantityEdit2 * m_humidityCapacityMultiplier;
+  OSQuantityEdit2 * m_carbonDioxideCapacityMultiplier;
 
 signals:
 

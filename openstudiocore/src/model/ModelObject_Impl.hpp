@@ -1,35 +1,44 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef MODEL_MODELOBJECT_IMPL_HPP
 #define MODEL_MODELOBJECT_IMPL_HPP
 
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp" // required for Q_PROPERTY
+#include "../nano/nano_signal_slot.hpp" // Signal-Slot replacement
 
 #include "../utilities/idf/WorkspaceObject_Impl.hpp"
 
 #include "../utilities/core/Optional.hpp"
 
-#include <QObject>
-#include <QVariant>
-#include <QStringList>
+// #include <QVariant>
+// #include <QStringList>
 
 namespace openstudio {
 
@@ -42,7 +51,6 @@ class Model;
 class Component;
 class LifeCycleCosts;
 
-class Relationship;
 class FieldViewer;
 
 class ParentObject;
@@ -59,13 +67,13 @@ namespace detail {
   /** Implemetation class for ModelObject. Each class deriving from ModelObject
    *  should provide an implementation class that derives from ModelObject_Impl. */
   class MODEL_API ModelObject_Impl : public openstudio::detail::WorkspaceObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(openstudio::IddObjectType iddObjectType READ iddObjectType);
-    Q_PROPERTY(openstudio::UUID handle READ handle);
-    Q_PROPERTY(boost::optional<std::string> name READ name WRITE mf_setName STORED true);
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> parent READ parentAsModelObject WRITE setParentAsModelObject);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> resources READ resourcesAsModelObjects);
+    // 
+    // 
+    // 
+
+    // 
+    // 
    public:
 
     /** @name Constructors and Destructors */
@@ -108,17 +116,17 @@ namespace detail {
     virtual Component createComponent() const;
 
     /** Return all valid relationship names. */
-    std::vector<std::string> relationshipNames() const;
+    // std::vector<std::string> relationshipNames() const;
 
     /** Return all \link Relationship relationships\endlink for this ModelObject. */
-    std::vector<Relationship> relationships() const;
+    // std::vector<Relationship> relationships() const;
 
     /** Get the \link Relationship relationship\endlink named name, if it exists. */
-    boost::optional<Relationship> getRelationship(const std::string& name) const;
+    // boost::optional<Relationship> getRelationship(const std::string& name) const;
 
-    bool setRelationship(const std::string& name, boost::optional<ModelObject> relatedModelObject);
+    // bool setRelationship(const std::string& name, boost::optional<ModelObject> relatedModelObject);
 
-    bool setRelationship(const std::string& name, const Component& component);
+    // bool setRelationship(const std::string& name, const Component& component);
 
     //@}
     /** @name Attributes
@@ -130,46 +138,46 @@ namespace detail {
     //@{
 
     /** Return all valid attribute names. */
-    std::vector<std::string> attributeNames() const;
+    // std::vector<std::string> attributeNames() const;
 
     /** Return all \link Attribute Attributes\endlink for this ModelObject. */
-    std::vector<openstudio::Attribute> attributes() const;
+    // std::vector<openstudio::Attribute> attributes() const;
 
     /** Get the attribute named name, if it exists. */
-    boost::optional<openstudio::Attribute> getAttribute(const std::string& name) const;
+    // boost::optional<openstudio::Attribute> getAttribute(const std::string& name) const;
 
     /** Is the named attribute settable. */
-    bool isSettableAttribute(const std::string& name) const;
+    // bool isSettableAttribute(const std::string& name) const;
 
     /** Is the named attribute optional. */
-    bool isOptionalAttribute(const std::string& name) const;
+    // bool isOptionalAttribute(const std::string& name) const;
 
     /** Set the attribute named name, if it exists. */
-    bool setAttribute(const std::string& name, bool value);
+    // bool setAttribute(const std::string& name, bool value);
 
     /** \overload */
-    bool setAttribute(const std::string& name, int value);
+    // bool setAttribute(const std::string& name, int value);
 
     /** \overload */
-    bool setAttribute(const std::string& name, unsigned value);
+    // bool setAttribute(const std::string& name, unsigned value);
 
     /** \overload */
-    bool setAttribute(const std::string& name, double value);
+    // bool setAttribute(const std::string& name, double value);
 
     /** \overload */
-    bool setAttribute(const std::string& name, const Quantity& value);
+    // bool setAttribute(const std::string& name, const Quantity& value);
 
     /** \overload */
-    bool setAttribute(const std::string& name, const std::string& value);
+    // bool setAttribute(const std::string& name, const std::string& value);
 
     /** \overload */
-    bool setAttribute(const std::string& name, const char* value);
+    // bool setAttribute(const std::string& name, const char* value);
 
     /** \overload */
-    bool setAttribute(const std::string& name, const QVariant& value);
+    // bool setAttribute(const std::string& name, const QVariant& value);
 
     /** Reset the attribute attribute, e.g. for optional types. */
-    bool resetAttribute(const std::string& name);
+    // bool resetAttribute(const std::string& name);
 
     //@}
     /** @name Getters */
@@ -229,15 +237,16 @@ namespace detail {
     boost::optional<unsigned> connectedObjectPort(unsigned port) const;
 
     //@}
-   public slots:
+    /** @name Nano Signals */
+    //@{
 
-    void requestProperties(const QStringList& names);
+    // Nano::Signal<void(const QVariantMap&)> reportProperties;
+    
+    //@}
 
-    void setProperties(const QVariantMap& properties);
+    // void requestProperties(const QStringList& names);
 
-   signals:
-
-    void reportProperties(const QVariantMap& properties);
+    // void setProperties(const QVariantMap& properties);
 
    protected:
 

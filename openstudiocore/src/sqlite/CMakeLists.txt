@@ -6,4 +6,7 @@ set(src
   #sqlite3ext.h
 )
 
-add_library(sqlite ${src})
+add_library(sqlite STATIC ${src})
+if( UNIX )
+  target_link_libraries(sqlite dl)
+endif()

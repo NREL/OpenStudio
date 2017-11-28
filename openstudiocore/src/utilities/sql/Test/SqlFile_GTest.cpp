@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include <gtest/gtest.h>
 
@@ -179,9 +188,9 @@ TEST_F(SqlFileFixture, BadStatement)
 TEST_F(SqlFileFixture, CreateSqlFile)
 {
   openstudio::path outfile = openstudio::tempDir() / openstudio::toPath("OpenStudioSqlFileTest.sql");
-  if (boost::filesystem::exists(outfile))
+  if (openstudio::filesystem::exists(outfile))
   {
-    boost::filesystem::remove(outfile);
+    openstudio::filesystem::remove(outfile);
   }
 
   openstudio::Calendar c(2012);
@@ -198,7 +207,7 @@ TEST_F(SqlFileFixture, CreateSqlFile)
 
   {
     openstudio::SqlFile sql(outfile,
-        openstudio::EpwFile(resourcesPath() / toPath("runmanager/USA_CO_Golden-NREL.724666_TMY3.epw")),
+        openstudio::EpwFile(resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw")),
         openstudio::DateTime::now(),
         c);
 
@@ -290,22 +299,22 @@ TEST_F(SqlFileFixture, CreateSqlFile)
 TEST_F(SqlFileFixture, AnnualTotalCosts) {
   
   // Total annual costs for all fuel types
-  EXPECT_NEAR(205828990.6, *(sqlFile2.annualTotalUtilityCost()), 0.1);
+  EXPECT_NEAR(194619758.82, *(sqlFile2.annualTotalUtilityCost()), 0.1);
 
   // Costs by fuel type
-  EXPECT_NEAR(28397.71, *(sqlFile2.annualTotalCost(FuelType::Electricity)), 0.1);
-  EXPECT_NEAR(427.78, *(sqlFile2.annualTotalCost(FuelType::Gas)), 0.1);
-  EXPECT_NEAR(330.76, *(sqlFile2.annualTotalCost(FuelType::DistrictCooling)), 0.1);
-  EXPECT_NEAR(833.49, *(sqlFile2.annualTotalCost(FuelType::DistrictHeating)), 0.1);
-  EXPECT_NEAR(0.85, *(sqlFile2.annualTotalCost(FuelType::Water)), 0.1);
-  EXPECT_NEAR(205799000, *(sqlFile2.annualTotalCost(FuelType::FuelOil_1)), 100);
+  EXPECT_NEAR(28168.44, *(sqlFile2.annualTotalCost(FuelType::Electricity)), 0.1);
+  EXPECT_NEAR(428.86, *(sqlFile2.annualTotalCost(FuelType::Gas)), 0.1);
+  EXPECT_NEAR(324.24, *(sqlFile2.annualTotalCost(FuelType::DistrictCooling)), 0.1);
+  EXPECT_NEAR(836.37, *(sqlFile2.annualTotalCost(FuelType::DistrictHeating)), 0.1);
+  EXPECT_NEAR(0.91, *(sqlFile2.annualTotalCost(FuelType::Water)), 0.1);
+  EXPECT_NEAR(194590000, *(sqlFile2.annualTotalCost(FuelType::FuelOil_1)), 100);
 
   // Costs by total building area by fuel type
-  EXPECT_NEAR(11.83, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Electricity)), 0.1);
+  EXPECT_NEAR(11.73, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Electricity)), 0.1);
   EXPECT_NEAR(0.18, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Gas)), 0.1);
 
   // Costs by conditioned building area by fuel type
-  EXPECT_NEAR(11.83, *(sqlFile2.annualTotalCostPerNetConditionedBldgArea(FuelType::Electricity)), 0.1);
+  EXPECT_NEAR(11.73, *(sqlFile2.annualTotalCostPerNetConditionedBldgArea(FuelType::Electricity)), 0.1);
   EXPECT_NEAR(0.18, *(sqlFile2.annualTotalCostPerNetConditionedBldgArea(FuelType::Gas)), 0.1);
 
 }
@@ -315,13 +324,13 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   openstudio::path fromPath = resourcesPath() / toPath("utilities/SqlFile") / toPath(name);
   openstudio::path path = toPath(name);
 
-  if (boost::filesystem::exists(path)){
-    boost::filesystem::remove(path);
+  if (openstudio::filesystem::exists(path)){
+    openstudio::filesystem::remove(path);
   }
-  ASSERT_FALSE(boost::filesystem::exists(path));
-  ASSERT_TRUE(boost::filesystem::exists(fromPath)) << toString(fromPath);
-  boost::filesystem::copy(fromPath, path);
-  ASSERT_TRUE(boost::filesystem::exists(path));
+  ASSERT_FALSE(openstudio::filesystem::exists(path));
+  ASSERT_TRUE(openstudio::filesystem::exists(fromPath)) << toString(fromPath);
+  openstudio::filesystem::copy(fromPath, path);
+  ASSERT_TRUE(openstudio::filesystem::exists(path));
 
   boost::optional<SqlFile> sqlFile;
   EXPECT_NO_THROW(sqlFile = SqlFile(path));

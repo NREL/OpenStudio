@@ -1,0 +1,3 @@
+call .\configure.bat -platform win32-msvc2013 -debug-and-release -opensource -shared -mp -openssl -I "${OPENSSL_ROOT_DIR}/include" -L "${OPENSSL_ROOT_DIR}/lib/VC" -opengl dynamic -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -qt-pcre -qt-libpng -qt-libjpeg -qt-freetype -qt-harfbuzz -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install"
+nmake
+nmake install

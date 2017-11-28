@@ -1,30 +1,35 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "EditController.hpp"
 #include "EditView.hpp"
 #include "OSViewSwitcher.hpp"
-
-#include "../analysisdriver/SimpleProject.hpp"
-
-#include "../analysis/Analysis.hpp"
-#include "../analysis/DataPoint.hpp"
+#include "WorkflowController.hpp"
 
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/core/Assert.hpp"
@@ -60,9 +65,9 @@ EditController::~EditController()
   if( editRubyMeasureView ) { delete editRubyMeasureView; }
 }
 
-void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseApp *t_app)
+void EditController::setMeasureStepItem(measuretab::MeasureStepItem * measureStepItem, BaseApp *t_app)
 {
-  m_measureItem = measureItem;
+  m_measureStepItem = measureStepItem;
 
   editRubyMeasureView->clear();
 
@@ -70,23 +75,23 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
 
   // Ruby Measure Name
 
-  editRubyMeasureView->nameLineEdit->setText(m_measureItem->displayName());
+  editRubyMeasureView->nameLineEdit->setText(m_measureStepItem->name());
 
-  connect(editRubyMeasureView->nameLineEdit, &QLineEdit::textEdited, m_measureItem.data(), &measuretab::MeasureItem::setDisplayName);
+  connect(editRubyMeasureView->nameLineEdit, &QLineEdit::textEdited, m_measureStepItem.data(), &measuretab::MeasureStepItem::setName);
 
   // Measure Description
 
-  editRubyMeasureView->descriptionTextEdit->setText(m_measureItem->description());
+  editRubyMeasureView->descriptionTextEdit->setText(m_measureStepItem->description());
 
   connect(editRubyMeasureView->descriptionTextEdit, &QTextEdit::textChanged, this, &EditController::updateDescription);
 
   // Measure Modeler Description
 
-  editRubyMeasureView->modelerDescriptionTextEdit->setText(m_measureItem->modelerDescription());
+  editRubyMeasureView->modelerDescriptionTextEdit->setText(m_measureStepItem->modelerDescription());
 
   // Inputs
 
-  std::vector<ruleset::OSArgument> arguments = m_measureItem->arguments();
+  std::vector<measure::OSArgument> arguments = m_measureStepItem->arguments();
 
   for( const auto & arg : arguments )
   {
@@ -98,20 +103,20 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
   }
 }
 
-measuretab::MeasureItem * EditController::measureItem() const
+measuretab::MeasureStepItem * EditController::measureStepItem() const
 {
-  return m_measureItem;
+  return m_measureStepItem;
 }
 
 void EditController::updateDescription()
 {
-  m_measureItem->setDescription(editRubyMeasureView->descriptionTextEdit->toPlainText());
+  m_measureStepItem->setDescription(editRubyMeasureView->descriptionTextEdit->toPlainText());
 }
 
 void EditController::reset()
 {
   // Evan note: It's bad to play with null pointers
-  if (!m_editNullView || !editView || !m_measureItem || !editRubyMeasureView) {
+  if (!m_editNullView || !editView || !m_measureStepItem || !editRubyMeasureView) {
     //return;
   }
 
@@ -119,7 +124,7 @@ void EditController::reset()
 
   m_inputControllers.clear();
 
-  m_measureItem = nullptr;
+  m_measureStepItem = nullptr;
 
   editRubyMeasureView->nameLineEdit->disconnect();
 
@@ -146,13 +151,13 @@ class EditMeasureMessageBox : public QMessageBox
   }
 };
 
-InputController::InputController(EditController * editController,const ruleset::OSArgument & argument, BaseApp *t_app)
+InputController::InputController(EditController * editController,const measure::OSArgument & argument, BaseApp *t_app)
   : QObject(),
     m_app(t_app),
     m_editController(editController),
     m_argument(argument)
 {
-  if( m_argument.type() == ruleset::OSArgumentType::Double )
+  if( m_argument.type() == measure::OSArgumentType::Double )
   {
     auto doubleInputView = new DoubleInputView();
 
@@ -171,7 +176,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     inputView = doubleInputView;
   }
-  else if( m_argument.type() == ruleset::OSArgumentType::Choice )
+  else if( m_argument.type() == measure::OSArgumentType::Choice )
   {
     auto choiceInputView = new ChoiceInputView();
 
@@ -196,9 +201,19 @@ InputController::InputController(EditController * editController,const ruleset::
     {
       choiceInputView->comboBox->insertItem(0,"");
     }
-    else if( choiceInputView->comboBox->findText(QString::fromStdString(m_argument.defaultValueAsString())) == -1 )
+    else
     {
-      choiceInputView->comboBox->insertItem(0,"");
+      int index = choiceInputView->comboBox->findData(QString::fromStdString(m_argument.defaultValueAsString()));
+
+      if (index == -1){
+        index = choiceInputView->comboBox->findText(QString::fromStdString(m_argument.defaultValueAsString()));
+      }
+
+      if (index == -1)
+      {
+        // DLM: this is an error
+        choiceInputView->comboBox->insertItem(0, "");
+      }
     }
 
     // Set the initial value
@@ -206,11 +221,9 @@ InputController::InputController(EditController * editController,const ruleset::
     {
       int index = choiceInputView->comboBox->findData(QString::fromStdString(m_argument.valueAsString()));
 
-      choiceInputView->comboBox->setCurrentIndex(index);
-    }
-    else if( m_argument.hasDefaultValue() )
-    {
-      int index = choiceInputView->comboBox->findData(QString::fromStdString(m_argument.defaultValueAsString()));
+      if (index == -1){
+        index = choiceInputView->comboBox->findText(QString::fromStdString(m_argument.valueAsString()));
+      }
 
       if( index != -1 )
       {
@@ -218,6 +231,25 @@ InputController::InputController(EditController * editController,const ruleset::
       }
       else
       {
+        // DLM: this is an error
+        choiceInputView->comboBox->setCurrentIndex(0);
+      }
+    }
+    else if( m_argument.hasDefaultValue() )
+    {
+      int index = choiceInputView->comboBox->findData(QString::fromStdString(m_argument.defaultValueAsString()));
+
+      if (index == -1){
+        index = choiceInputView->comboBox->findText(QString::fromStdString(m_argument.defaultValueAsString()));
+      }
+
+      if( index != -1 )
+      {
+        choiceInputView->comboBox->setCurrentIndex(index);
+      }
+      else
+      {
+        // DLM: this is an error
         choiceInputView->comboBox->setCurrentIndex(0);
       }
     }
@@ -230,7 +262,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     inputView = choiceInputView;
   }
-  else if( m_argument.type() == ruleset::OSArgumentType::Boolean )
+  else if( m_argument.type() == measure::OSArgumentType::Boolean )
   {
     auto boolInputView = new BoolInputView();
 
@@ -253,7 +285,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     inputView = boolInputView;
   }
-  else if( m_argument.type() == ruleset::OSArgumentType::Integer )
+  else if( m_argument.type() == measure::OSArgumentType::Integer )
   {
     auto integerInputView = new IntegerInputView();
 
@@ -272,7 +304,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     inputView = integerInputView;
   }
-  else if( m_argument.type() == ruleset::OSArgumentType::String )
+  else if( m_argument.type() == measure::OSArgumentType::String )
   {
     auto stringInputView = new StringInputView();
 
@@ -317,7 +349,8 @@ void InputController::setValue(const QString & text)
       m_argument.setValue(text.toStdString());
     }
 
-    m_editController->measureItem()->setArgument(m_argument);
+
+    m_editController->measureStepItem()->setArgument(m_argument);
 
     inputView->setIncomplete(isArgumentIncomplete());
   }
@@ -329,7 +362,7 @@ void InputController::setValue(bool value)
   {
     m_argument.setValue(value);
 
-    m_editController->measureItem()->setArgument(m_argument);
+    m_editController->measureStepItem()->setArgument(m_argument);
 
     inputView->setIncomplete(isArgumentIncomplete());
   }
@@ -350,7 +383,7 @@ void InputController::setValueForIndex(int index)
       m_argument.setValue(value.toStdString());
     }
 
-    m_editController->measureItem()->setArgument(m_argument);
+    m_editController->measureStepItem()->setArgument(m_argument);
 
     inputView->setIncomplete(isArgumentIncomplete());
   }
@@ -358,64 +391,19 @@ void InputController::setValueForIndex(int index)
 
 bool InputController::isArgumentIncomplete() const
 {
-  // Get the argument from the ruby perturbation by the same name as m_argument
-
-  std::vector<ruleset::OSArgument> argumentVector = m_editController->measureItem()->measure().arguments();
-
-  std::map<std::string,ruleset::OSArgument> argumentMap = convertOSArgumentVectorToMap(argumentVector);
-
-  auto it = argumentMap.find(m_argument.name());
-
-  if(it != argumentMap.end())
-  {
-    // Check the criteria for being incomplete
-
-    if (it->second.required() && !(it->second.hasValue() || it->second.hasDefaultValue()))
-    {
-      return true;
+  bool result = false;
+  std::vector<measure::OSArgument> incompleteArguments = m_editController->measureStepItem()->incompleteArguments();
+  for (const auto& incompleteArgument : incompleteArguments){
+    if (incompleteArgument.name() == m_argument.name()){
+      result = true;
     }
   }
-
-  return false;
+  return result;
 }
 
 bool InputController::isItOKToClearResults()
 {
-  bool doOperation(true);
-
-  // Find out if there are results
-  boost::optional<analysisdriver::SimpleProject> project = m_app->project();
-
-  if( ! project ) { return false; }
-
-  if( ! project->analysis().completeDataPoints().empty() )
-  {
-    // Ask user if they are sure they want to edit
-    doOperation = EditMeasureMessageBox::warning(m_app);
-  }
-
-  if( ! doOperation )
-  {
-    // Reset user interface to argument's value
-
-    if( m_argument.hasValue() )
-    {
-      QString argumentValue = QString::fromStdString(m_argument.valueAsString());
-
-      inputView->setDisplayValue(argumentValue);
-    }
-    else if( m_argument.hasDefaultValue() )
-    {
-      inputView->setDisplayValue(QString::fromStdString(m_argument.defaultValueAsString()));
-    }
-    else
-    {
-      inputView->setDisplayValue("");
-    }
-
-    return false;
-  }
-
+  // DLM: todo warn user when results are out of date
   return true;
 }
 

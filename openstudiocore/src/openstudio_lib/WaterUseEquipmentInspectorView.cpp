@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "WaterUseEquipmentInspectorView.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
@@ -239,7 +248,7 @@ WaterUseEquipmentDefinitionInspectorView::WaterUseEquipmentDefinitionInspectorVi
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,0,0);
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_nameEdit,1,0,1,3);
 
   // End Use Subcategory
@@ -248,7 +257,7 @@ WaterUseEquipmentDefinitionInspectorView::WaterUseEquipmentDefinitionInspectorVi
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,0);
 
-  m_endUseSubcategoryEdit = new OSLineEdit();
+  m_endUseSubcategoryEdit = new OSLineEdit2();
   mainGridLayout->addWidget(m_endUseSubcategoryEdit,3,0,1,3);
 
   // Peak Flow Rate
@@ -257,8 +266,8 @@ WaterUseEquipmentDefinitionInspectorView::WaterUseEquipmentDefinitionInspectorVi
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,4,0);
 
-  m_peakFlowRateEdit = new OSQuantityEdit(m_isIP);
-  connect(this, &WaterUseEquipmentDefinitionInspectorView::toggleUnitsClicked, m_peakFlowRateEdit, &OSQuantityEdit::onUnitSystemChange);
+  m_peakFlowRateEdit = new OSQuantityEdit2("m^3/s","m^3/s","gal/min", m_isIP);
+  connect(this, &WaterUseEquipmentDefinitionInspectorView::toggleUnitsClicked, m_peakFlowRateEdit, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_peakFlowRateEdit,5,0,1,3);
 
   // Target Temperature Schedule
@@ -322,9 +331,30 @@ void WaterUseEquipmentDefinitionInspectorView::onUpdate()
 
 void WaterUseEquipmentDefinitionInspectorView::attach(openstudio::model::WaterUseEquipmentDefinition & waterUseEquipmentDefinition)
 {
-  m_nameEdit->bind(waterUseEquipmentDefinition,"name");
-  m_endUseSubcategoryEdit->bind(waterUseEquipmentDefinition,"endUseSubcategory");
-  m_peakFlowRateEdit->bind(waterUseEquipmentDefinition,"peakFlowRate",m_isIP);
+  // m_nameEdit->bind(waterUseEquipmentDefinition,"name");
+  m_waterUseEquipmentDefinition = waterUseEquipmentDefinition;
+  m_nameEdit->bind(
+    *m_waterUseEquipmentDefinition,
+    OptionalStringGetter(std::bind(&model::WaterUseEquipmentDefinition::name, m_waterUseEquipmentDefinition.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::WaterUseEquipmentDefinition::setName, m_waterUseEquipmentDefinition.get_ptr(),std::placeholders::_1))
+  );
+
+  // m_endUseSubcategoryEdit->bind(waterUseEquipmentDefinition,"endUseSubcategory");
+  m_endUseSubcategoryEdit->bind(
+    *m_waterUseEquipmentDefinition,
+    StringGetter(std::bind(&model::WaterUseEquipmentDefinition::endUseSubcategory, m_waterUseEquipmentDefinition.get_ptr())),
+    boost::optional<StringSetter>(std::bind(&model::WaterUseEquipmentDefinition::setEndUseSubcategory, m_waterUseEquipmentDefinition.get_ptr(),std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::WaterUseEquipmentDefinition::resetEndUseSubcategory, m_waterUseEquipmentDefinition.get_ptr())),
+    boost::optional<BasicQuery>(std::bind(&model::WaterUseEquipmentDefinition::isEndUseSubcategoryDefaulted, m_waterUseEquipmentDefinition.get_ptr()))
+  );
+
+  // m_peakFlowRateEdit->bind(waterUseEquipmentDefinition,"peakFlowRate",m_isIP);
+  m_peakFlowRateEdit->bind(
+    m_isIP,
+    *m_waterUseEquipmentDefinition,
+    DoubleGetter(std::bind(&model::WaterUseEquipmentDefinition::peakFlowRate, m_waterUseEquipmentDefinition.get_ptr())),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::WaterUseEquipmentDefinition::*)(double)>(&model::WaterUseEquipmentDefinition::setPeakFlowRate), m_waterUseEquipmentDefinition.get_ptr(), std::placeholders::_1))
+  );
 
   m_targetTemperatureScheduleVC->attach(waterUseEquipmentDefinition);
   m_targetTemperatureScheduleVC->reportItems();
@@ -345,6 +375,8 @@ void WaterUseEquipmentDefinitionInspectorView::detach()
   m_nameEdit->unbind();
   m_endUseSubcategoryEdit->unbind();
   m_peakFlowRateEdit->unbind();
+
+  m_waterUseEquipmentDefinition = boost::none;
 
   m_targetTemperatureScheduleVC->detach();
   m_targetTemperatureScheduleVC->reportItems();

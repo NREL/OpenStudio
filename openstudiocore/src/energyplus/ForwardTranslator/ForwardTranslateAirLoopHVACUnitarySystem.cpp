@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
@@ -51,6 +60,8 @@
 #include "../../model/CoilHeatingGasMultiStage_Impl.hpp"
 #include "../../model/CoilHeatingGasMultiStageStageData.hpp"
 #include "../../model/CoilHeatingGasMultiStageStageData_Impl.hpp"
+#include "../../model/UnitarySystemPerformanceMultispeed.hpp"
+#include "../../model/UnitarySystemPerformanceMultispeed_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_TwoSpeed_FieldEnums.hxx>
@@ -66,7 +77,7 @@
 #include <utilities/idd/Coil_Heating_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Gas_MultiStage_FieldEnums.hxx>
-#include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_FieldEnums.hxx>
@@ -97,7 +108,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
 
   // Control Type
   //unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::ControlType,"Load");
-  s = modelObject.getImpl<model::detail::AirLoopHVACUnitarySystem_Impl>()->controlType();
+  s = modelObject.controlType();
   if (s) {
     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::ControlType,s.get());
   }
@@ -238,7 +249,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // DOAS DX Cooling Coil Leaving Minimum Air Temperature
   d = modelObject.dOASDXCoolingCoilLeavingMinimumAirTemperature();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::DOASDXCoolingCoilLeavingMinimumAirTemperature,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::MinimumSupplyAirTemperature,d.get());
   }
 
   // Latent Load Control
@@ -460,33 +471,27 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   //   }
   // }
 
-  // Not Implemented
-  // Design Specification Multispeed Heat Pump Object Type
-  // Design Specification Multispeed Heat Pump Object Name
-  // if( boost::optional<HVACComponent> designSpecificationMultispeedHeatPumpObject = modelObject.designSpecificationMultispeedHeatPumpObject() )
-  // {
-  //   boost::optional<IdfObject> _designSpecificationMultispeedHeatPumpObject = translateAndMapModelObject(designSpecificationMultispeedHeatPumpObject.get());
+  // Design Specification Multispeed Object Name
+   if( boost::optional<UnitarySystemPerformanceMultispeed> designSpecificationMultispeedObject = modelObject.designSpecificationMultispeedObject() )
+   {
+     boost::optional<IdfObject> _unitarySystemPerformance = translateAndMapModelObject(designSpecificationMultispeedObject.get());
 
-  //   if( _designSpecificationMultispeedHeatPumpObject && _designSpecificationMultispeedHeatPumpObject->name() )
-  //   {
-  //     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedHeatPumpObjectType,_designSpecificationMultispeedHeatPumpObject->iddObject().name());
-  //     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedHeatPumpObjectName,_designSpecificationMultispeedHeatPumpObject->name().get());
-  //   }
-  // }
-
-  // If not user specified, then generate the UnitarySystemPerformance:Multispeed used for multi speed coils
-  // Note it will never be user specified at this time, because OS does not have the UnitarySystemPerformanceMultispeed object
-  // The plan as of this writting is to eventually support UnitarySystemPerformanceMultispeed and if user specified, then
-  // don't do this automatic generation
-  
-  if( (coolingCoil && (coolingCoil->iddObjectType() == model::CoilCoolingDXMultiSpeed::iddObjectType())) || 
+     if( _unitarySystemPerformance && _unitarySystemPerformance->name() )
+     {
+       unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType,_unitarySystemPerformance->iddObject().name());
+       unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName,_unitarySystemPerformance->name().get());
+     }
+   } else if( (coolingCoil && (coolingCoil->iddObjectType() == model::CoilCoolingDXMultiSpeed::iddObjectType())) ||
       (heatingCoil && (heatingCoil->iddObjectType() == model::CoilHeatingDXMultiSpeed::iddObjectType())) ||
-      (heatingCoil && (heatingCoil->iddObjectType() == model::CoilHeatingGasMultiStage::iddObjectType())) ) {
+      (heatingCoil && (heatingCoil->iddObjectType() == model::CoilHeatingGasMultiStage::iddObjectType())) )
+   {
+
+    // If not user specified, then generate the UnitarySystemPerformance:Multispeed used for multi speed coils
 
     IdfObject _unitarySystemPerformance(openstudio::IddObjectType::UnitarySystemPerformance_Multispeed);
     m_idfObjects.push_back(_unitarySystemPerformance);
     _unitarySystemPerformance.setName(unitarySystem.nameString() + " Unitary System Performance");
-    
+
     boost::optional<model::CoilHeatingDXMultiSpeed> multispeedDXHeating;
     boost::optional<model::CoilHeatingGasMultiStage> multistageGasHeating;
     boost::optional<model::CoilCoolingDXMultiSpeed> multispeedDXCooling;
@@ -529,7 +534,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
       _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling,1);
     }
 
-    _unitarySystemPerformance.setString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation,"No"); 
+    _unitarySystemPerformance.setString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation,"No");
 
     auto heatingFlow = modelObject.supplyAirFlowRateDuringHeatingOperation();
     auto coolingFlow = modelObject.supplyAirFlowRateDuringCoolingOperation();
@@ -580,7 +585,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
 
     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType,_unitarySystemPerformance.iddObject().name());
     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName,_unitarySystemPerformance.nameString());
-  } 
+  }
 
   // Fill in node names for inner components
   if( !airInletNodeName || !airOutletNodeName ) {
@@ -757,10 +762,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
       _heatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,inletNodeName);
       _heatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,outletNodeName);
     }
-    else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Gas )
+    else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel )
     {
-      _heatingCoil->setString(Coil_Heating_GasFields::AirInletNodeName,inletNodeName);
-      _heatingCoil->setString(Coil_Heating_GasFields::AirOutletNodeName,outletNodeName);
+      _heatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName,inletNodeName);
+      _heatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName,outletNodeName);
     }
     else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
     {
@@ -822,10 +827,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
       _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,inletNodeName);
       _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,airOutletNodeName.get());
     }
-    else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Gas )
+    else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel )
     {
-      _supplementalHeatingCoil->setString(Coil_Heating_GasFields::AirInletNodeName,inletNodeName);
-      _supplementalHeatingCoil->setString(Coil_Heating_GasFields::AirOutletNodeName,airOutletNodeName.get());
+      _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName,inletNodeName);
+      _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName,airOutletNodeName.get());
     }
     else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
     {

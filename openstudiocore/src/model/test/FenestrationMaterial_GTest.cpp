@@ -1,21 +1,30 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include <gtest/gtest.h>
 
@@ -111,21 +120,23 @@ TEST_F(ModelFixture, FenestrationMaterial_Blind_Attributes)
   Model model;
   Blind blind(model);
 
-  // at material level, thickness attribute is equivalent to blind width field
-  ASSERT_TRUE(blind.getAttribute("thickness"));
-  Attribute blindThickness = blind.getAttribute("thickness").get();
-  EXPECT_TRUE(blindThickness.valueType() == AttributeValueType::Double);
+  /// Commented out due to removal of .getAttribute()
 
-  EXPECT_DOUBLE_EQ(0.001, blindThickness.valueAsDouble());
-  EXPECT_TRUE(blind.getDouble(OS_WindowMaterial_BlindFields::SlatWidth));
+  // at material level, thickness attribute is equivalent to blind width field
+  // ASSERT_TRUE(blind.getAttribute("thickness"));
+  // Attribute blindThickness = blind.getAttribute("thickness").get();
+  // EXPECT_TRUE(blindThickness.valueType() == AttributeValueType::Double);
+
+  // EXPECT_DOUBLE_EQ(0.001, blindThickness.valueAsDouble());
+  // EXPECT_TRUE(blind.getDouble(OS_WindowMaterial_BlindFields::SlatWidth));
 
   // should be settable
-  EXPECT_TRUE(blind.setAttribute("thickness", 0.0025));
+  // EXPECT_TRUE(blind.setAttribute("thickness", 0.0025));
 
-  ASSERT_TRUE(blind.getAttribute("thickness"));
-  blindThickness = blind.getAttribute("thickness").get();
-  EXPECT_TRUE(blindThickness.valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(0.0025, blindThickness.valueAsDouble());
+  // ASSERT_TRUE(blind.getAttribute("thickness"));
+  // blindThickness = blind.getAttribute("thickness").get();
+  // EXPECT_TRUE(blindThickness.valueType() == AttributeValueType::Double);
+  // EXPECT_DOUBLE_EQ(0.0025, blindThickness.valueAsDouble());
 }
 
 TEST_F(ModelFixture, FenestrationMaterial_Gas_Constructors)
@@ -178,12 +189,13 @@ TEST_F(ModelFixture, FenestrationMaterial_Gas_Attributes)
   //EXPECT_TRUE(gasThickness.valueType() == AttributeValueType::Double);
 
 
+  // Removed due to removal of attributes
   // should be settable
-  EXPECT_TRUE(gas.setAttribute("thickness", 0.001));
+  // EXPECT_TRUE(gas.setAttribute("thickness", 0.001));
 
-  ASSERT_TRUE(gas.getAttribute("thickness"));
-  Attribute gasThickness = gas.getAttribute("thickness").get();
-  EXPECT_DOUBLE_EQ(0.001, gasThickness.valueAsDouble());
+  // ASSERT_TRUE(gas.getAttribute("thickness"));
+  // Attribute gasThickness = gas.getAttribute("thickness").get();
+  // EXPECT_DOUBLE_EQ(0.001, gasThickness.valueAsDouble());
 
 }
 
@@ -279,13 +291,14 @@ TEST_F(ModelFixture, FenestrationMaterial_GasMixture_Attributes)
   //EXPECT_TRUE(gasMixtureThickness.valueType() == AttributeValueType::Double);
   //EXPECT_DOUBLE_EQ(0.0,gasMixtureThickness.valueAsDouble());
 
+  // Removed due to removal of attributes
   // should be settable
-  EXPECT_TRUE(gasMixture.setAttribute("thickness", 0.001));
+  // EXPECT_TRUE(gasMixture.setAttribute("thickness", 0.001));
 
-  ASSERT_TRUE(gasMixture.getAttribute("thickness"));
-  Attribute gasMixtureThickness = gasMixture.getAttribute("thickness").get();
-  EXPECT_TRUE(gasMixtureThickness.valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(0.001,gasMixtureThickness.valueAsDouble());
+  // ASSERT_TRUE(gasMixture.getAttribute("thickness"));
+  // Attribute gasMixtureThickness = gasMixture.getAttribute("thickness").get();
+  // EXPECT_TRUE(gasMixtureThickness.valueType() == AttributeValueType::Double);
+  // EXPECT_DOUBLE_EQ(0.001,gasMixtureThickness.valueAsDouble());
 }
 
 TEST_F(ModelFixture, FenestrationMaterial_RefractionExtinctionGlazing_Constructors)
@@ -326,14 +339,15 @@ TEST_F(ModelFixture, FenestrationMaterial_RefractionExtinctionGlazing_Attributes
   //EXPECT_TRUE(refractionExtinctionGlazingThickness.valueType() == AttributeValueType::Double);
   //EXPECT_DOUBLE_EQ(0.0,refractionExtinctionGlazingThickness.valueAsDouble());
 
+  // Removed due to removal of attributes
   // should be settable
-  EXPECT_TRUE(refractionExtinctionGlazing.setAttribute("thickness", 0.001));
+  // EXPECT_TRUE(refractionExtinctionGlazing.setAttribute("thickness", 0.001));
 
-  ASSERT_TRUE(refractionExtinctionGlazing.getAttribute("thickness"));
-  Attribute refractionExtinctionGlazingThickness =
-      refractionExtinctionGlazing.getAttribute("thickness").get();
-  EXPECT_TRUE(refractionExtinctionGlazingThickness.valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(0.001,refractionExtinctionGlazingThickness.valueAsDouble());
+  // ASSERT_TRUE(refractionExtinctionGlazing.getAttribute("thickness"));
+  // Attribute refractionExtinctionGlazingThickness =
+      // refractionExtinctionGlazing.getAttribute("thickness").get();
+  // EXPECT_TRUE(refractionExtinctionGlazingThickness.valueType() == AttributeValueType::Double);
+  // EXPECT_DOUBLE_EQ(0.001,refractionExtinctionGlazingThickness.valueAsDouble());
 }
 
 TEST_F(ModelFixture, FenestrationMaterial_Screen_Constructors)
@@ -370,13 +384,14 @@ TEST_F(ModelFixture, FenestrationMaterial_Screen_Attributes)
   //EXPECT_TRUE(screenThickness.valueType() == AttributeValueType::Double);
   //EXPECT_DOUBLE_EQ(0.0,screenThickness.valueAsDouble());
 
+  // Removed due to removal of attributes
   // should be settable
-  EXPECT_TRUE(screen.setAttribute("thickness", 0.001));
+  // EXPECT_TRUE(screen.setAttribute("thickness", 0.001));
 
-  ASSERT_TRUE(screen.getAttribute("thickness"));
-  Attribute screenThickness = screen.getAttribute("thickness").get();
-  EXPECT_TRUE(screenThickness.valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(0.001,screenThickness.valueAsDouble());
+  // ASSERT_TRUE(screen.getAttribute("thickness"));
+  // Attribute screenThickness = screen.getAttribute("thickness").get();
+  // EXPECT_TRUE(screenThickness.valueType() == AttributeValueType::Double);
+  // EXPECT_DOUBLE_EQ(0.001,screenThickness.valueAsDouble());
 }
 
 TEST_F(ModelFixture, FenestrationMaterial_Shade_Constructors)
@@ -413,13 +428,14 @@ TEST_F(ModelFixture, FenestrationMaterial_Shade_Attributes)
   //EXPECT_TRUE(shadeThickness.valueType() == AttributeValueType::Double);
   //EXPECT_DOUBLE_EQ(0.001,shadeThickness.valueAsDouble());
 
+  // Removed due to removal of attributes
   // should be settable
-  EXPECT_TRUE(shade.setAttribute("thickness", 0.001));
+  // EXPECT_TRUE(shade.setAttribute("thickness", 0.001));
 
-  ASSERT_TRUE(shade.getAttribute("thickness"));
-  Attribute shadeThickness = shade.getAttribute("thickness").get();
-  EXPECT_TRUE(shadeThickness.valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(0.001,shadeThickness.valueAsDouble());
+  // ASSERT_TRUE(shade.getAttribute("thickness"));
+  // Attribute shadeThickness = shade.getAttribute("thickness").get();
+  // EXPECT_TRUE(shadeThickness.valueType() == AttributeValueType::Double);
+  // EXPECT_DOUBLE_EQ(0.001,shadeThickness.valueAsDouble());
 }
 
 TEST_F(ModelFixture, FenestrationMaterial_SimpleGlazing_Constructors)
@@ -456,12 +472,13 @@ TEST_F(ModelFixture, FenestrationMaterial_SimpleGlazing_Attributes)
   //EXPECT_TRUE(simpleGlazingThickness.valueType() == AttributeValueType::Double);
   //EXPECT_DOUBLE_EQ(0.0,simpleGlazingThickness.valueAsDouble());
 
-  EXPECT_FALSE(simpleGlazing.setAttribute("thickness", 0.001));
+  // Removed due to removal of attributes
+  // EXPECT_FALSE(simpleGlazing.setAttribute("thickness", 0.001));
 
-  ASSERT_TRUE(simpleGlazing.getAttribute("thickness"));
-  Attribute simpleGlazingThickness = simpleGlazing.getAttribute("thickness").get();
-  EXPECT_TRUE(simpleGlazingThickness.valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(0.0,simpleGlazingThickness.valueAsDouble());
+  // ASSERT_TRUE(simpleGlazing.getAttribute("thickness"));
+  // Attribute simpleGlazingThickness = simpleGlazing.getAttribute("thickness").get();
+  // EXPECT_TRUE(simpleGlazingThickness.valueType() == AttributeValueType::Double);
+  // EXPECT_DOUBLE_EQ(0.0,simpleGlazingThickness.valueAsDouble());
 }
 
 TEST_F(ModelFixture, FenestrationMaterial_StandardGlazing_Constructors)
@@ -498,13 +515,14 @@ TEST_F(ModelFixture, FenestrationMaterial_StandardGlazing_Attributes)
   //EXPECT_TRUE(standardGlazingThickness.valueType() == AttributeValueType::Double);
   //EXPECT_DOUBLE_EQ(0.0,standardGlazingThickness.valueAsDouble());
 
+  // Removed due to removal of attributes
   // should be settable
-  EXPECT_TRUE(standardGlazing.setAttribute("thickness", 0.001));
+  // EXPECT_TRUE(standardGlazing.setAttribute("thickness", 0.001));
 
-  ASSERT_TRUE(standardGlazing.getAttribute("thickness"));
-  Attribute standardGlazingThickness = standardGlazing.getAttribute("thickness").get();
-  EXPECT_TRUE(standardGlazingThickness.valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(0.001,standardGlazingThickness.valueAsDouble());
+  // ASSERT_TRUE(standardGlazing.getAttribute("thickness"));
+  // Attribute standardGlazingThickness = standardGlazing.getAttribute("thickness").get();
+  // EXPECT_TRUE(standardGlazingThickness.valueType() == AttributeValueType::Double);
+  // EXPECT_DOUBLE_EQ(0.001,standardGlazingThickness.valueAsDouble());
 }
 
 TEST_F(ModelFixture, FenestrationMaterial_ThermochromicGlazing_Constructors)
@@ -554,15 +572,16 @@ TEST_F(ModelFixture, FenestrationMaterial_ThermochromicGlazing_Attributes)
   groupValues[1] = glazingAtTemp3.name().get();
   glazing.pushExtensibleGroup(groupValues);
 
+  // Removed due to removal of attributes
   // thickness is average of composite glazings (should also log warning)
-  ASSERT_TRUE(glazing.getAttribute("thickness"));
-  Attribute glazingThickness = glazing.getAttribute("thickness").get();
-  EXPECT_TRUE(glazingThickness.valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(0.002,glazingThickness.valueAsDouble());
+  // ASSERT_TRUE(glazing.getAttribute("thickness"));
+  // Attribute glazingThickness = glazing.getAttribute("thickness").get();
+  // EXPECT_TRUE(glazingThickness.valueType() == AttributeValueType::Double);
+  // EXPECT_DOUBLE_EQ(0.002,glazingThickness.valueAsDouble());
 
   // setter works and acts on all glazings pointed to
-  EXPECT_TRUE(glazing.setAttribute("thickness", 0.001));
-  EXPECT_DOUBLE_EQ(0.001,glazingAtTemp1.thickness());
-  EXPECT_DOUBLE_EQ(0.001,glazingAtTemp2.thickness());
-  EXPECT_DOUBLE_EQ(0.001,glazingAtTemp3.thickness());
+  // EXPECT_TRUE(glazing.setAttribute("thickness", 0.001));
+  // EXPECT_DOUBLE_EQ(0.001,glazingAtTemp1.thickness());
+  // EXPECT_DOUBLE_EQ(0.001,glazingAtTemp2.thickness());
+  // EXPECT_DOUBLE_EQ(0.001,glazingAtTemp3.thickness());
 }

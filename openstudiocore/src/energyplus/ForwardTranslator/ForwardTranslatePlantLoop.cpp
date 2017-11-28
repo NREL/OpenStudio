@@ -1,27 +1,38 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
 #include "../../model/PlantLoop.hpp"
 #include "../../model/PlantLoop_Impl.hpp"
+#include "../../model/AvailabilityManager.hpp"
+#include "../../model/AvailabilityManager_Impl.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../../model/SizingPlant.hpp"
@@ -88,6 +99,8 @@
 #include "../../model/ZoneHVACComponent.hpp"
 #include "../../model/ZoneHVACComponent_Impl.hpp"
 #include "../../model/SetpointManager.hpp"
+#include "../../model/SetpointManagerScheduledDualSetpoint.hpp"
+#include "../../model/SetpointManagerScheduledDualSetpoint_Impl.hpp"
 #include "../../model/LifeCycleCost.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -108,6 +121,8 @@
 #include <utilities/idd/Sizing_Plant_FieldEnums.hxx>
 #include <utilities/idd/AirTerminal_SingleDuct_ConstantVolume_CooledBeam_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
+#include <utilities/idd/FluidProperties_Name_FieldEnums.hxx>
+#include <utilities/idd/AvailabilityManagerAssignmentList_FieldEnums.hxx>
 #include "../../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
@@ -120,7 +135,8 @@ namespace energyplus {
 
 IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject, 
                           std::vector<ModelObject> & modelObjects,
-                          Loop & loop)
+                          Loop & loop,
+                          bool isSupplyBranch)
 {
   if(modelObjects.size() > 0)
   {
@@ -288,12 +304,12 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
       }
       else if( auto waterToWaterComponent = modelObject.optionalCast<WaterToWaterComponent>() )
       {
-        if( loop.supplyComponent(waterToWaterComponent->handle()) )
+        if( isSupplyBranch )
         {
           inletNode = waterToWaterComponent->supplyInletModelObject()->optionalCast<Node>();
           outletNode = waterToWaterComponent->supplyOutletModelObject()->optionalCast<Node>();
         }
-        else if( loop.demandComponent(waterToWaterComponent->handle()) )
+        else
         {
           if( auto tertiaryInletModelObject = waterToWaterComponent->tertiaryInletModelObject() ) {
             if( auto tertiaryInletNode = tertiaryInletModelObject->optionalCast<Node>() ) {
@@ -349,7 +365,6 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
         eg.setString(BranchExtensibleFields::ComponentName,objectName);
         eg.setString(BranchExtensibleFields::ComponentInletNodeName,inletNode->name().get());
         eg.setString(BranchExtensibleFields::ComponentOutletNodeName,outletNode->name().get());
-        eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Passive");
       }
 
       i++;
@@ -384,7 +399,22 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
   if( (s = plantLoop.fluidType()) )
   {
-    idfObject.setString(PlantLoopFields::FluidType,s.get());
+    if (istringEqual(s.get(),"PropyleneGlycol") || istringEqual(s.get(),"EthyleneGlycol")) {
+      idfObject.setString(PlantLoopFields::FluidType,"UserDefinedFluidType");
+      boost::optional<int> gc = plantLoop.glycolConcentration();
+      if ( gc ) {
+        boost::optional<IdfObject> fluidProperties = createFluidProperties(s.get(), gc.get());
+        if (fluidProperties) {
+          boost::optional<std::string> fluidPropertiesName = fluidProperties->getString(FluidProperties_NameFields::FluidName,true);
+          if (fluidPropertiesName) {
+            idfObject.setString(PlantLoopFields::UserDefinedFluidType,fluidPropertiesName.get());
+          }
+        }
+      }
+
+    } else {
+      idfObject.setString(PlantLoopFields::FluidType,s.get());
+    }
   }
 
   // Loop Temperature Setpoint Node Name
@@ -434,6 +464,33 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     auto scheme = plantLoop.loadDistributionScheme();
     idfObject.setString(PlantLoopFields::LoadDistributionScheme,scheme);
+  }
+
+  // AvailabilityManager
+  if (OptionalAvailabilityManager availMgr = plantLoop.availabilityManager()) {
+
+    // Availability Manager List
+    IdfObject availabilityManagerAssignmentListIdf(openstudio::IddObjectType::AvailabilityManagerAssignmentList);
+    availabilityManagerAssignmentListIdf.setName(plantLoop.name().get() + " Availability Manager List");
+    m_idfObjects.push_back(availabilityManagerAssignmentListIdf);
+    idfObject.setString(PlantLoopFields::AvailabilityManagerListName, availabilityManagerAssignmentListIdf.name().get());
+
+    // Availability Manager
+    OptionalIdfObject availMgrIdf = translateAndMapModelObject(availMgr.get());
+    OS_ASSERT(availMgrIdf);
+    IdfExtensibleGroup eg = availabilityManagerAssignmentListIdf.pushExtensibleGroup();
+    eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,availMgrIdf->iddObject().name());
+    eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,availMgrIdf->name().get());
+  }
+
+  //  PlantLoopDemandCalculationScheme
+  {
+    auto spms = plantLoop.supplyOutletNode().setpointManagers();
+    if( subsetCastVector<model::SetpointManagerScheduledDualSetpoint>(spms).empty() ) {
+      idfObject.setString(PlantLoopFields::PlantLoopDemandCalculationScheme,"SingleSetpoint");
+    } else {
+      idfObject.setString(PlantLoopFields::PlantLoopDemandCalculationScheme,"DualSetpointDeadband");
+    }
   }
 
   // Plant Loop Volume
@@ -534,7 +591,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     populateBranch( _supplyInletBranch,
                     supplyInletModelObjects,
-                    plantLoop );
+                    plantLoop,
+                    true);
   }
   else
   {
@@ -553,7 +611,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     eg.setString(BranchExtensibleFields::ComponentName,pipe.name().get());
     eg.setString(BranchExtensibleFields::ComponentInletNodeName,inletNodeName);
     eg.setString(BranchExtensibleFields::ComponentOutletNodeName,outletNodeName);
-    eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Passive");
   }
 
   // Populate supply equipment branches
@@ -594,7 +651,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     {
       populateBranch( _equipmentBranch,
                       allComponents,
-                      plantLoop );
+                      plantLoop,
+                      true);
     }
     else
     {
@@ -613,7 +671,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       eg.setString(BranchExtensibleFields::ComponentName,pipe.name().get());
       eg.setString(BranchExtensibleFields::ComponentInletNodeName,inletNodeName);
       eg.setString(BranchExtensibleFields::ComponentOutletNodeName,outletNodeName);
-      eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Passive");
     }
 
     ++it2;
@@ -640,7 +697,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     populateBranch( _supplyOutletBranch,
                     supplyOutletModelObjects,
-                    plantLoop );
+                    plantLoop,
+                    true);
   }
   else
   {
@@ -659,7 +717,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     eg.setString(BranchExtensibleFields::ComponentName,pipe.name().get());
     eg.setString(BranchExtensibleFields::ComponentInletNodeName,inletNodeName);
     eg.setString(BranchExtensibleFields::ComponentOutletNodeName,outletNodeName);
-    eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Passive");
   }
 
   // Demand Side
@@ -727,7 +784,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     populateBranch( _demandInletBranch,
                     demandInletModelObjects,
-                    plantLoop );
+                    plantLoop,
+                    false);
   }
   else
   {
@@ -746,7 +804,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     eg.setString(BranchExtensibleFields::ComponentName,pipe.name().get());
     eg.setString(BranchExtensibleFields::ComponentInletNodeName,inletNodeName);
     eg.setString(BranchExtensibleFields::ComponentOutletNodeName,outletNodeName);
-    eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Passive");
   }
 
   // Populate equipment branches
@@ -787,7 +844,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     {
       populateBranch( _equipmentBranch,
                       allComponents,
-                      plantLoop );
+                      plantLoop,
+                      false);
     }
     else
     {
@@ -806,7 +864,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       eg.setString(BranchExtensibleFields::ComponentName,pipe.name().get());
       eg.setString(BranchExtensibleFields::ComponentInletNodeName,inletNodeName);
       eg.setString(BranchExtensibleFields::ComponentOutletNodeName,outletNodeName);
-      eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Passive");
     }
 
     ++it2;
@@ -845,7 +902,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     eg.setString(BranchExtensibleFields::ComponentName,pipe.name().get());
     eg.setString(BranchExtensibleFields::ComponentInletNodeName,inletNodeName);
     eg.setString(BranchExtensibleFields::ComponentOutletNodeName,outletNodeName);
-    eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Bypass");
   }
 
   // Populate demand outlet branch
@@ -869,7 +925,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     populateBranch( _demandOutletBranch,
                     demandOutletModelObjects,
-                    plantLoop );
+                    plantLoop,
+                    false);
   }
   else
   {
@@ -888,7 +945,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     eg.setString(BranchExtensibleFields::ComponentName,pipe.name().get());
     eg.setString(BranchExtensibleFields::ComponentInletNodeName,inletNodeName);
     eg.setString(BranchExtensibleFields::ComponentOutletNodeName,outletNodeName);
-    eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Passive");
   }
 
   // Operation Scheme

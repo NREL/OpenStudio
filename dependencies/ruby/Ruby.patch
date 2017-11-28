@@ -1,0 +1,197 @@
+diff --git a/enc/make_encmake.rb b/enc/make_encmake.rb
+index 6ea2213..9b20dee 100755
+--- a/enc/make_encmake.rb
++++ b/enc/make_encmake.rb
+@@ -43,7 +43,7 @@ end
+ 
+ ALPHANUMERIC_ORDER = proc {|e| e.scan(/(\d+)|(\D+)/).map {|n,a| a||[n.size,n.to_i]}.flatten}
+ def target_encodings
+-  encs = Dir.open($srcdir) {|d| d.grep(/.+\.c\z/)} - BUILTIN_ENCS - ["mktable.c"]
++  encs = Dir.open($srcdir) {|d| d.grep(/.+\.c\z/)} - BUILTIN_ENCS - ["mktable.c", "encinit.c"]
+   encs.each {|e| e.chomp!(".c")}
+   encs.reject! {|e| !ENC_PATTERNS.any? {|p| File.fnmatch?(p, e)}} if !ENC_PATTERNS.empty?
+   encs.reject! {|e| NOENC_PATTERNS.any? {|p| File.fnmatch?(p, e)}}
+diff --git a/ext/Setup b/ext/Setup
+index 98ffffd..a738f11 100644
+--- a/ext/Setup
++++ b/ext/Setup
+@@ -1,28 +1,27 @@
+-#option nodynamic
++option nodynamic
+ 
+-#Win32API
+-#bigdecimal
+-#dbm
+-#digest
+-#digest/md5
+-#digest/rmd160
+-#digest/sha1
+-#digest/sha2
+-#etc
+-#fcntl
+-#gdbm
+-#io/wait
+-#nkf
+-#openssl
+-#pty
+-#racc/cparse
+-#readline
+-#ripper
+-#sdbm
+-#socket
+-#stringio
+-#strscan
+-#syslog
+-#tk
+-#win32ole
+-#zlib
++Win32API
++bigdecimal
++dbm
++digest
++digest/md5
++digest/rmd160
++digest/sha1
++digest/sha2
++etc
++fcntl
++gdbm
++io/wait
++nkf
++openssl
++pty
++racc/cparse
++readline
++ripper
++sdbm
++socket
++stringio
++strscan
++syslog
++tk
++zlib
+diff --git a/ext/zlib/extconf.rb b/ext/zlib/extconf.rb
+index b4348ce..e23b3d5 100644
+--- a/ext/zlib/extconf.rb
++++ b/ext/zlib/extconf.rb
+@@ -10,7 +10,7 @@ require 'rbconfig'
+ dir_config 'zlib'
+ 
+ 
+-if %w'z libz zlib1 zlib zdll zlibwapi'.find {|z| have_library(z, 'deflateReset')} and
++if %w'zlibstatic zlibstaticd'.find {|z| have_library(z, 'deflateReset', 'zlib.h')} and
+     have_header('zlib.h') then
+ 
+   defines = []
+diff --git a/lib/rubygems.rb b/lib/rubygems.rb
+index 98e7dfa..48cb26c 100644
+--- a/lib/rubygems.rb
++++ b/lib/rubygems.rb
+@@ -1191,21 +1191,21 @@ module Gem
+ 
+   MARSHAL_SPEC_DIR = "quick/Marshal.#{Gem.marshal_version}/"
+ 
+-  autoload :ConfigFile,         'rubygems/config_file'
+-  autoload :Dependency,         'rubygems/dependency'
+-  autoload :DependencyList,     'rubygems/dependency_list'
+-  autoload :DependencyResolver, 'rubygems/resolver'
+-  autoload :Installer,          'rubygems/installer'
+-  autoload :PathSupport,        'rubygems/path_support'
+-  autoload :Platform,           'rubygems/platform'
+-  autoload :RequestSet,         'rubygems/request_set'
+-  autoload :Requirement,        'rubygems/requirement'
+-  autoload :Resolver,           'rubygems/resolver'
+-  autoload :Source,             'rubygems/source'
+-  autoload :SourceList,         'rubygems/source_list'
+-  autoload :SpecFetcher,        'rubygems/spec_fetcher'
+-  autoload :Specification,      'rubygems/specification'
+-  autoload :Version,            'rubygems/version'
++  require 'rubygems/config_file'
++  require 'rubygems/dependency'
++  require 'rubygems/dependency_list'
++  require 'rubygems/resolver'
++  require 'rubygems/installer'
++  require 'rubygems/path_support'
++  require 'rubygems/platform'
++  require 'rubygems/request_set'
++  require 'rubygems/requirement'
++  require 'rubygems/resolver'
++  require 'rubygems/source'
++  require 'rubygems/source_list'
++  require 'rubygems/spec_fetcher'
++  require 'rubygems/specification'
++  require 'rubygems/version'
+ 
+   require "rubygems/specification"
+ end
+diff --git a/lib/rubygems/version.rb b/lib/rubygems/version.rb
+index 8335ebe..b97d55f 100644
+--- a/lib/rubygems/version.rb
++++ b/lib/rubygems/version.rb
+@@ -149,7 +149,7 @@
+ # a zero to give a sensible result.
+ 
+ class Gem::Version
+-  autoload :Requirement, 'rubygems/requirement'
++  require 'rubygems/requirement'
+ 
+   include Comparable
+ 
+diff --git a/load.c b/load.c
+index bf5d9cf..c4d8d5b 100644
+--- a/load.c
++++ b/load.c
+@@ -9,6 +9,9 @@
+ #include "probes.h"
+ #include "node.h"
+ 
++int rb_hasFile(const char *t_filename);
++int rb_require_embedded(const char *t_filename);
++
+ VALUE ruby_dln_librefs;
+ 
+ #define IS_RBEXT(e) (strcmp((e), ".rb") == 0)
+@@ -1075,9 +1078,13 @@ rb_require_safe(VALUE fname, int safe)
+ VALUE
+ rb_require(const char *fname)
+ {
++  if( rb_hasFile(fname) ) {
++    return rb_require_embedded(fname);
++  } else {
+     VALUE fn = rb_str_new2(fname);
+     OBJ_FREEZE(fn);
+     return rb_require_safe(fn, rb_safe_level());
++  }
+ }
+ 
+ static int
+diff --git a/main.c b/main.c
+index 16da117..c3146a4 100644
+--- a/main.c
++++ b/main.c
+@@ -36,3 +36,12 @@ main(int argc, char **argv)
+ 	return ruby_run_node(ruby_options(argc, argv));
+     }
+ }
++
++int rb_hasFile(const char *t_filename) {
++  return 0;
++}
++
++int rb_require_embedded(const char *t_filename) {
++  return 0;
++}
++
+diff --git a/win32/Makefile.sub b/win32/Makefile.sub
+index 668f9e1..73e5429 100644
+--- a/win32/Makefile.sub
++++ b/win32/Makefile.sub
+@@ -282,7 +282,7 @@ MINIRUBY = $(RUBY) -I$(MAKEDIR) -r$(arch)-fake
+ RUNRUBY = $(MINIRUBY)
+ !else
+ MINIRUBY = .\miniruby$(EXEEXT) -I$(srcdir)/lib -I.
+-RUNRUBY = .\$(PROGRAM) -I$(srcdir)/lib -I"$(EXTOUT)/$(arch)" -I.
++RUNRUBY = .\$(PROGRAM) -I$(srcdir)/lib -I"$(EXTOUT)/$(arch)" -I. -I./ext/date/lib/
+ !endif
+ MINIRUBY = $(MINIRUBY) $(MINIRUBYOPT)
+ RUNRUBY = $(RUNRUBY) "$(srcdir)/tool/runruby.rb" --extout="$(EXTOUT)" $(RUNRUBYOPT) -- $(RUN_OPTS)

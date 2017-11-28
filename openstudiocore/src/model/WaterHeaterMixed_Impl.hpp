@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef MODEL_WATERHEATERMIXED_IMPL_HPP
 #define MODEL_WATERHEATERMIXED_IMPL_HPP
@@ -36,139 +45,139 @@ class ThermalZone;
 namespace detail {
 
   class MODEL_API WaterHeaterMixed_Impl : public WaterToWaterComponent_Impl {
-    Q_OBJECT;
+    
 
-    Q_PROPERTY(boost::optional<double> tankVolume READ tankVolume WRITE setTankVolume RESET resetTankVolume);
-    Q_PROPERTY(openstudio::OSOptionalQuantity tankVolume_SI READ tankVolume_SI WRITE setTankVolume RESET resetTankVolume);
-    Q_PROPERTY(openstudio::OSOptionalQuantity tankVolume_IP READ tankVolume_IP WRITE setTankVolume RESET resetTankVolume);
-    Q_PROPERTY(bool isTankVolumeDefaulted READ isTankVolumeDefaulted);
-    Q_PROPERTY(bool isTankVolumeAutosized READ isTankVolumeAutosized);
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(double deadbandTemperatureDifference READ deadbandTemperatureDifference WRITE setDeadbandTemperatureDifference RESET resetDeadbandTemperatureDifference);
-    Q_PROPERTY(openstudio::Quantity deadbandTemperatureDifference_SI READ deadbandTemperatureDifference_SI WRITE setDeadbandTemperatureDifference RESET resetDeadbandTemperatureDifference);
-    Q_PROPERTY(openstudio::Quantity deadbandTemperatureDifference_IP READ deadbandTemperatureDifference_IP WRITE setDeadbandTemperatureDifference RESET resetDeadbandTemperatureDifference);
-    Q_PROPERTY(bool isDeadbandTemperatureDifferenceDefaulted READ isDeadbandTemperatureDifferenceDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> maximumTemperatureLimit READ maximumTemperatureLimit WRITE setMaximumTemperatureLimit RESET resetMaximumTemperatureLimit);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumTemperatureLimit_SI READ maximumTemperatureLimit_SI WRITE setMaximumTemperatureLimit RESET resetMaximumTemperatureLimit);
-    Q_PROPERTY(openstudio::OSOptionalQuantity maximumTemperatureLimit_IP READ maximumTemperatureLimit_IP WRITE setMaximumTemperatureLimit RESET resetMaximumTemperatureLimit);
+    
+    
+    
 
-    Q_PROPERTY(std::string heaterControlType READ heaterControlType WRITE setHeaterControlType RESET resetHeaterControlType);
-    Q_PROPERTY(bool isHeaterControlTypeDefaulted READ isHeaterControlTypeDefaulted);
-    Q_PROPERTY(std::vector<std::string> heaterControlTypeValues READ heaterControlTypeValues);
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> heaterMaximumCapacity READ heaterMaximumCapacity WRITE setHeaterMaximumCapacity RESET resetHeaterMaximumCapacity);
-    Q_PROPERTY(openstudio::OSOptionalQuantity heaterMaximumCapacity_SI READ heaterMaximumCapacity_SI WRITE setHeaterMaximumCapacity RESET resetHeaterMaximumCapacity);
-    Q_PROPERTY(openstudio::OSOptionalQuantity heaterMaximumCapacity_IP READ heaterMaximumCapacity_IP WRITE setHeaterMaximumCapacity RESET resetHeaterMaximumCapacity);
-    Q_PROPERTY(bool isHeaterMaximumCapacityAutosized READ isHeaterMaximumCapacityAutosized);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> heaterMinimumCapacity READ heaterMinimumCapacity WRITE setHeaterMinimumCapacity RESET resetHeaterMinimumCapacity);
-    Q_PROPERTY(openstudio::OSOptionalQuantity heaterMinimumCapacity_SI READ heaterMinimumCapacity_SI WRITE setHeaterMinimumCapacity RESET resetHeaterMinimumCapacity);
-    Q_PROPERTY(openstudio::OSOptionalQuantity heaterMinimumCapacity_IP READ heaterMinimumCapacity_IP WRITE setHeaterMinimumCapacity RESET resetHeaterMinimumCapacity);
+    
+    
+    
 
-    Q_PROPERTY(double heaterIgnitionMinimumFlowRate READ heaterIgnitionMinimumFlowRate WRITE setHeaterIgnitionMinimumFlowRate RESET resetHeaterIgnitionMinimumFlowRate);
-    Q_PROPERTY(openstudio::Quantity heaterIgnitionMinimumFlowRate_SI READ heaterIgnitionMinimumFlowRate_SI WRITE setHeaterIgnitionMinimumFlowRate RESET resetHeaterIgnitionMinimumFlowRate);
-    Q_PROPERTY(openstudio::Quantity heaterIgnitionMinimumFlowRate_IP READ heaterIgnitionMinimumFlowRate_IP WRITE setHeaterIgnitionMinimumFlowRate RESET resetHeaterIgnitionMinimumFlowRate);
-    Q_PROPERTY(bool isHeaterIgnitionMinimumFlowRateDefaulted READ isHeaterIgnitionMinimumFlowRateDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double heaterIgnitionDelay READ heaterIgnitionDelay WRITE setHeaterIgnitionDelay RESET resetHeaterIgnitionDelay);
-    Q_PROPERTY(openstudio::Quantity heaterIgnitionDelay_SI READ heaterIgnitionDelay_SI WRITE setHeaterIgnitionDelay RESET resetHeaterIgnitionDelay);
-    Q_PROPERTY(openstudio::Quantity heaterIgnitionDelay_IP READ heaterIgnitionDelay_IP WRITE setHeaterIgnitionDelay RESET resetHeaterIgnitionDelay);
-    Q_PROPERTY(bool isHeaterIgnitionDelayDefaulted READ isHeaterIgnitionDelayDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(std::string heaterFuelType READ heaterFuelType WRITE setHeaterFuelType);
-    Q_PROPERTY(std::vector<std::string> heaterFuelTypeValues READ heaterFuelTypeValues);
+    
+    
 
-    Q_PROPERTY(boost::optional<double> heaterThermalEfficiency READ heaterThermalEfficiency WRITE setHeaterThermalEfficiency RESET resetHeaterThermalEfficiency);
-    Q_PROPERTY(openstudio::OSOptionalQuantity heaterThermalEfficiency_SI READ heaterThermalEfficiency_SI WRITE setHeaterThermalEfficiency RESET resetHeaterThermalEfficiency);
-    Q_PROPERTY(openstudio::OSOptionalQuantity heaterThermalEfficiency_IP READ heaterThermalEfficiency_IP WRITE setHeaterThermalEfficiency RESET resetHeaterThermalEfficiency);
+    
+    
+    
 
-    Q_PROPERTY(double offCycleParasiticFuelConsumptionRate READ offCycleParasiticFuelConsumptionRate WRITE setOffCycleParasiticFuelConsumptionRate RESET resetOffCycleParasiticFuelConsumptionRate);
-    Q_PROPERTY(openstudio::Quantity offCycleParasiticFuelConsumptionRate_SI READ offCycleParasiticFuelConsumptionRate_SI WRITE setOffCycleParasiticFuelConsumptionRate RESET resetOffCycleParasiticFuelConsumptionRate);
-    Q_PROPERTY(openstudio::Quantity offCycleParasiticFuelConsumptionRate_IP READ offCycleParasiticFuelConsumptionRate_IP WRITE setOffCycleParasiticFuelConsumptionRate RESET resetOffCycleParasiticFuelConsumptionRate);
-    Q_PROPERTY(bool isOffCycleParasiticFuelConsumptionRateDefaulted READ isOffCycleParasiticFuelConsumptionRateDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<std::string> offCycleParasiticFuelType READ offCycleParasiticFuelType WRITE setOffCycleParasiticFuelType RESET resetOffCycleParasiticFuelType);
-    Q_PROPERTY(std::vector<std::string> offCycleParasiticFuelTypeValues READ offCycleParasiticFuelTypeValues);
+    
+    
 
-    Q_PROPERTY(double offCycleParasiticHeatFractiontoTank READ offCycleParasiticHeatFractiontoTank WRITE setOffCycleParasiticHeatFractiontoTank RESET resetOffCycleParasiticHeatFractiontoTank);
-    Q_PROPERTY(openstudio::Quantity offCycleParasiticHeatFractiontoTank_SI READ offCycleParasiticHeatFractiontoTank_SI WRITE setOffCycleParasiticHeatFractiontoTank RESET resetOffCycleParasiticHeatFractiontoTank);
-    Q_PROPERTY(openstudio::Quantity offCycleParasiticHeatFractiontoTank_IP READ offCycleParasiticHeatFractiontoTank_IP WRITE setOffCycleParasiticHeatFractiontoTank RESET resetOffCycleParasiticHeatFractiontoTank);
-    Q_PROPERTY(bool isOffCycleParasiticHeatFractiontoTankDefaulted READ isOffCycleParasiticHeatFractiontoTankDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double onCycleParasiticFuelConsumptionRate READ onCycleParasiticFuelConsumptionRate WRITE setOnCycleParasiticFuelConsumptionRate RESET resetOnCycleParasiticFuelConsumptionRate);
-    Q_PROPERTY(openstudio::Quantity onCycleParasiticFuelConsumptionRate_SI READ onCycleParasiticFuelConsumptionRate_SI WRITE setOnCycleParasiticFuelConsumptionRate RESET resetOnCycleParasiticFuelConsumptionRate);
-    Q_PROPERTY(openstudio::Quantity onCycleParasiticFuelConsumptionRate_IP READ onCycleParasiticFuelConsumptionRate_IP WRITE setOnCycleParasiticFuelConsumptionRate RESET resetOnCycleParasiticFuelConsumptionRate);
-    Q_PROPERTY(bool isOnCycleParasiticFuelConsumptionRateDefaulted READ isOnCycleParasiticFuelConsumptionRateDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<std::string> onCycleParasiticFuelType READ onCycleParasiticFuelType WRITE setOnCycleParasiticFuelType RESET resetOnCycleParasiticFuelType);
-    Q_PROPERTY(std::vector<std::string> onCycleParasiticFuelTypeValues READ onCycleParasiticFuelTypeValues);
+    
+    
 
-    Q_PROPERTY(double onCycleParasiticHeatFractiontoTank READ onCycleParasiticHeatFractiontoTank WRITE setOnCycleParasiticHeatFractiontoTank RESET resetOnCycleParasiticHeatFractiontoTank);
-    Q_PROPERTY(openstudio::Quantity onCycleParasiticHeatFractiontoTank_SI READ onCycleParasiticHeatFractiontoTank_SI WRITE setOnCycleParasiticHeatFractiontoTank RESET resetOnCycleParasiticHeatFractiontoTank);
-    Q_PROPERTY(openstudio::Quantity onCycleParasiticHeatFractiontoTank_IP READ onCycleParasiticHeatFractiontoTank_IP WRITE setOnCycleParasiticHeatFractiontoTank RESET resetOnCycleParasiticHeatFractiontoTank);
-    Q_PROPERTY(bool isOnCycleParasiticHeatFractiontoTankDefaulted READ isOnCycleParasiticHeatFractiontoTankDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(std::string ambientTemperatureIndicator READ ambientTemperatureIndicator WRITE setAmbientTemperatureIndicator);
-    Q_PROPERTY(std::vector<std::string> ambientTemperatureIndicatorValues READ ambientTemperatureIndicatorValues);
+    
+    
 
-    Q_PROPERTY(boost::optional<std::string> ambientTemperatureOutdoorAirNodeName READ ambientTemperatureOutdoorAirNodeName WRITE setAmbientTemperatureOutdoorAirNodeName RESET resetAmbientTemperatureOutdoorAirNodeName);
+    
 
-    Q_PROPERTY(boost::optional<double> offCycleLossCoefficienttoAmbientTemperature READ offCycleLossCoefficienttoAmbientTemperature WRITE setOffCycleLossCoefficienttoAmbientTemperature RESET resetOffCycleLossCoefficienttoAmbientTemperature);
-    Q_PROPERTY(openstudio::OSOptionalQuantity offCycleLossCoefficienttoAmbientTemperature_SI READ offCycleLossCoefficienttoAmbientTemperature_SI WRITE setOffCycleLossCoefficienttoAmbientTemperature RESET resetOffCycleLossCoefficienttoAmbientTemperature);
-    Q_PROPERTY(openstudio::OSOptionalQuantity offCycleLossCoefficienttoAmbientTemperature_IP READ offCycleLossCoefficienttoAmbientTemperature_IP WRITE setOffCycleLossCoefficienttoAmbientTemperature RESET resetOffCycleLossCoefficienttoAmbientTemperature);
+    
+    
+    
 
-    Q_PROPERTY(double offCycleLossFractiontoThermalZone READ offCycleLossFractiontoThermalZone WRITE setOffCycleLossFractiontoThermalZone RESET resetOffCycleLossFractiontoThermalZone);
-    Q_PROPERTY(openstudio::Quantity offCycleLossFractiontoThermalZone_SI READ offCycleLossFractiontoThermalZone_SI WRITE setOffCycleLossFractiontoThermalZone RESET resetOffCycleLossFractiontoThermalZone);
-    Q_PROPERTY(openstudio::Quantity offCycleLossFractiontoThermalZone_IP READ offCycleLossFractiontoThermalZone_IP WRITE setOffCycleLossFractiontoThermalZone RESET resetOffCycleLossFractiontoThermalZone);
-    Q_PROPERTY(bool isOffCycleLossFractiontoThermalZoneDefaulted READ isOffCycleLossFractiontoThermalZoneDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> onCycleLossCoefficienttoAmbientTemperature READ onCycleLossCoefficienttoAmbientTemperature WRITE setOnCycleLossCoefficienttoAmbientTemperature RESET resetOnCycleLossCoefficienttoAmbientTemperature);
-    Q_PROPERTY(openstudio::OSOptionalQuantity onCycleLossCoefficienttoAmbientTemperature_SI READ onCycleLossCoefficienttoAmbientTemperature_SI WRITE setOnCycleLossCoefficienttoAmbientTemperature RESET resetOnCycleLossCoefficienttoAmbientTemperature);
-    Q_PROPERTY(openstudio::OSOptionalQuantity onCycleLossCoefficienttoAmbientTemperature_IP READ onCycleLossCoefficienttoAmbientTemperature_IP WRITE setOnCycleLossCoefficienttoAmbientTemperature RESET resetOnCycleLossCoefficienttoAmbientTemperature);
+    
+    
+    
 
-    Q_PROPERTY(double onCycleLossFractiontoThermalZone READ onCycleLossFractiontoThermalZone WRITE setOnCycleLossFractiontoThermalZone RESET resetOnCycleLossFractiontoThermalZone);
-    Q_PROPERTY(openstudio::Quantity onCycleLossFractiontoThermalZone_SI READ onCycleLossFractiontoThermalZone_SI WRITE setOnCycleLossFractiontoThermalZone RESET resetOnCycleLossFractiontoThermalZone);
-    Q_PROPERTY(openstudio::Quantity onCycleLossFractiontoThermalZone_IP READ onCycleLossFractiontoThermalZone_IP WRITE setOnCycleLossFractiontoThermalZone RESET resetOnCycleLossFractiontoThermalZone);
-    Q_PROPERTY(bool isOnCycleLossFractiontoThermalZoneDefaulted READ isOnCycleLossFractiontoThermalZoneDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> peakUseFlowRate READ peakUseFlowRate WRITE setPeakUseFlowRate RESET resetPeakUseFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity peakUseFlowRate_SI READ peakUseFlowRate_SI WRITE setPeakUseFlowRate RESET resetPeakUseFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity peakUseFlowRate_IP READ peakUseFlowRate_IP WRITE setPeakUseFlowRate RESET resetPeakUseFlowRate);
+    
+    
+    
 
-    Q_PROPERTY(double useSideEffectiveness READ useSideEffectiveness WRITE setUseSideEffectiveness RESET resetUseSideEffectiveness);
-    Q_PROPERTY(openstudio::Quantity useSideEffectiveness_SI READ useSideEffectiveness_SI WRITE setUseSideEffectiveness RESET resetUseSideEffectiveness);
-    Q_PROPERTY(openstudio::Quantity useSideEffectiveness_IP READ useSideEffectiveness_IP WRITE setUseSideEffectiveness RESET resetUseSideEffectiveness);
-    Q_PROPERTY(bool isUseSideEffectivenessDefaulted READ isUseSideEffectivenessDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(double sourceSideEffectiveness READ sourceSideEffectiveness WRITE setSourceSideEffectiveness RESET resetSourceSideEffectiveness);
-    Q_PROPERTY(openstudio::Quantity sourceSideEffectiveness_SI READ sourceSideEffectiveness_SI WRITE setSourceSideEffectiveness RESET resetSourceSideEffectiveness);
-    Q_PROPERTY(openstudio::Quantity sourceSideEffectiveness_IP READ sourceSideEffectiveness_IP WRITE setSourceSideEffectiveness RESET resetSourceSideEffectiveness);
-    Q_PROPERTY(bool isSourceSideEffectivenessDefaulted READ isSourceSideEffectivenessDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> useSideDesignFlowRate READ useSideDesignFlowRate WRITE setUseSideDesignFlowRate RESET resetUseSideDesignFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity useSideDesignFlowRate_SI READ useSideDesignFlowRate_SI WRITE setUseSideDesignFlowRate RESET resetUseSideDesignFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity useSideDesignFlowRate_IP READ useSideDesignFlowRate_IP WRITE setUseSideDesignFlowRate RESET resetUseSideDesignFlowRate);
-    Q_PROPERTY(bool isUseSideDesignFlowRateDefaulted READ isUseSideDesignFlowRateDefaulted);
-    Q_PROPERTY(bool isUseSideDesignFlowRateAutosized READ isUseSideDesignFlowRateAutosized);
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<double> sourceSideDesignFlowRate READ sourceSideDesignFlowRate WRITE setSourceSideDesignFlowRate RESET resetSourceSideDesignFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity sourceSideDesignFlowRate_SI READ sourceSideDesignFlowRate_SI WRITE setSourceSideDesignFlowRate RESET resetSourceSideDesignFlowRate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity sourceSideDesignFlowRate_IP READ sourceSideDesignFlowRate_IP WRITE setSourceSideDesignFlowRate RESET resetSourceSideDesignFlowRate);
-    Q_PROPERTY(bool isSourceSideDesignFlowRateDefaulted READ isSourceSideDesignFlowRateDefaulted);
-    Q_PROPERTY(bool isSourceSideDesignFlowRateAutosized READ isSourceSideDesignFlowRateAutosized);
+    
+    
+    
+    
+    
 
-    Q_PROPERTY(double indirectWaterHeatingRecoveryTime READ indirectWaterHeatingRecoveryTime WRITE setIndirectWaterHeatingRecoveryTime RESET resetIndirectWaterHeatingRecoveryTime);
-    Q_PROPERTY(openstudio::Quantity indirectWaterHeatingRecoveryTime_SI READ indirectWaterHeatingRecoveryTime_SI WRITE setIndirectWaterHeatingRecoveryTime RESET resetIndirectWaterHeatingRecoveryTime);
-    Q_PROPERTY(openstudio::Quantity indirectWaterHeatingRecoveryTime_IP READ indirectWaterHeatingRecoveryTime_IP WRITE setIndirectWaterHeatingRecoveryTime RESET resetIndirectWaterHeatingRecoveryTime);
-    Q_PROPERTY(bool isIndirectWaterHeatingRecoveryTimeDefaulted READ isIndirectWaterHeatingRecoveryTimeDefaulted);
+    
+    
+    
+    
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> setpointTemperatureSchedule READ setpointTemperatureScheduleAsModelObject WRITE setSetpointTemperatureScheduleAsModelObject RESET resetSetpointTemperatureSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> partLoadFactorCurve READ partLoadFactorCurveAsModelObject WRITE setPartLoadFactorCurveAsModelObject RESET resetPartLoadFactorCurve);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> ambientTemperatureSchedule READ ambientTemperatureScheduleAsModelObject WRITE setAmbientTemperatureScheduleAsModelObject RESET resetAmbientTemperatureSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> ambientTemperatureThermalZone READ ambientTemperatureThermalZoneAsModelObject WRITE setAmbientTemperatureThermalZoneAsModelObject RESET resetAmbientTemperatureThermalZone);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> useFlowRateFractionSchedule READ useFlowRateFractionScheduleAsModelObject WRITE setUseFlowRateFractionScheduleAsModelObject RESET resetUseFlowRateFractionSchedule);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> coldWaterSupplyTemperatureSchedule READ coldWaterSupplyTemperatureScheduleAsModelObject WRITE setColdWaterSupplyTemperatureScheduleAsModelObject RESET resetColdWaterSupplyTemperatureSchedule);
+    
+    
+    
+    
+    
+    
 
    public:
     /** @name Constructors and Destructors */

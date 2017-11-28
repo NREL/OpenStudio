@@ -1,23 +1,34 @@
-/**********************************************************************
-*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "SpaceLoadInstancesWidget.hpp"
+
+#include "OSAppBase.hpp"
 
 #include "IconLibrary.hpp"
 #include "ModelObjectItem.hpp"
@@ -477,8 +488,15 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
   label->setStyleSheet("QLabel { font: bold; }");
   hLayout->addWidget(label);
 
-  m_nameEdit = new OSLineEdit();
-  m_nameEdit->bind(m_spaceLoadInstance, "name");
+  m_nameEdit = new OSLineEdit2();
+  // m_nameEdit->bind(m_spaceLoadInstance, "name");
+  opt_spaceLoadInstance = m_spaceLoadInstance;
+  m_nameEdit->bind(
+    *opt_spaceLoadInstance,
+    OptionalStringGetter(std::bind(&model::SpaceLoadInstance::name, opt_spaceLoadInstance.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::SpaceLoadInstance::setName, opt_spaceLoadInstance.get_ptr(),std::placeholders::_1))
+  );
+
   if (isDefault){
     m_nameEdit->setEnabled(false);
   }
@@ -493,7 +511,7 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
     m_removeButton->setVisible(false);
   }
   hLayout->addWidget(m_removeButton);
-  
+
   connect(m_removeButton, &QPushButton::clicked, this, &SpaceLoadInstanceMiniView::onRemoveClicked);
 
   // inherited label
@@ -517,9 +535,22 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_multiplierEdit = new OSDoubleEdit();
+  m_multiplierEdit = new OSDoubleEdit2();
   m_multiplierEdit->setFixedWidth(60);
-  m_multiplierEdit->bind(m_spaceLoadInstance, "multiplier", std::string("isMultiplierDefaulted"));
+
+  // m_multiplierEdit->bind(m_spaceLoadInstance, "multiplier", std::string("isMultiplierDefaulted"));
+  m_multiplierEdit->bind(
+    *opt_spaceLoadInstance,
+    DoubleGetter(std::bind(&model::SpaceLoadInstance::multiplier, opt_spaceLoadInstance.get_ptr())),
+	boost::optional<DoubleSetter>(),
+    boost::none,
+    boost::none,
+    boost::none,
+    boost::optional<BasicQuery>(std::bind(&model::SpaceLoadInstance::isMultiplierDefaulted, opt_spaceLoadInstance.get_ptr())),
+	boost::none,
+	boost::none
+  );
+
   if (isDefault){
     m_multiplierEdit->setEnabled(false);
   }
@@ -723,24 +754,29 @@ SpaceLoadInstancesWidget::SpaceLoadInstancesWidget(QWidget* parent)
 void SpaceLoadInstancesWidget::detach()
 {
   if (m_space){
-    this->disconnect(m_space->getImpl<openstudio::model::detail::Model_Impl>().get());
+      m_space->getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.disconnect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onSpaceRelationshipChange>(this);
     m_space.reset();
   }
 
   if (m_spaceType){
-    this->disconnect(m_spaceType->getImpl<openstudio::model::detail::Model_Impl>().get());
+    m_spaceType->getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.disconnect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onSpaceRelationshipChange>(this);
     m_spaceType.reset();
   }
 
   if (m_model){
     model::Building building = m_model->getUniqueModelObject<model::Building>();
-    this->disconnect(building.getImpl<openstudio::model::detail::Model_Impl>().get());
+      building.getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.disconnect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onBuildingRelationshipChange>(this);
 
     for (model::SpaceType spaceType : m_model->getConcreteModelObjects<model::SpaceType>()){
-      this->disconnect(spaceType.getImpl<openstudio::model::detail::Model_Impl>().get());
+      spaceType.getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.disconnect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onSpaceTypeRelationshipChange>(this);
     }
 
-    this->disconnect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get());
+    // m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.disconnect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectAdded>(this);
+    connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &SpaceLoadInstancesWidget::objectAdded, Qt::QueuedConnection);
+
+    // m_model->getImpl<openstudio::model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.disconnect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectRemoved>(this);
+    connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &SpaceLoadInstancesWidget::objectRemoved, Qt::QueuedConnection);
+
     m_model.reset();
   }
 
@@ -755,26 +791,20 @@ void SpaceLoadInstancesWidget::attach(const model::Space& space)
   m_space = space;
   m_model = space.model();
 
-  connect(m_model->getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &SpaceLoadInstancesWidget::objectAdded,
-    Qt::QueuedConnection);
+  // m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectAdded>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &SpaceLoadInstancesWidget::objectAdded, Qt::QueuedConnection);
 
-  connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-    this,
-    &SpaceLoadInstancesWidget::objectRemoved,
-    Qt::QueuedConnection);
+  //m_model->getImpl<openstudio::model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectRemoved>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &SpaceLoadInstancesWidget::objectRemoved, Qt::QueuedConnection);
 
   model::Building building = m_model->getUniqueModelObject<model::Building>();
-  connect(building.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange, this, &SpaceLoadInstancesWidget::onBuildingRelationshipChange);
+  building.getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onBuildingRelationshipChange>(this);
 
   for (model::SpaceType spaceType : m_model->getConcreteModelObjects<model::SpaceType>()){
-    connect(spaceType.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange, this, &SpaceLoadInstancesWidget::onSpaceTypeRelationshipChange);
+    spaceType.getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onSpaceTypeRelationshipChange>(this);
   }
 
-  connect(m_space->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange, this, &SpaceLoadInstancesWidget::onSpaceRelationshipChange);
+  m_space->getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onSpaceRelationshipChange>(this);
 
   m_dirty = true;
   QTimer::singleShot(0, this, SLOT(refresh()));
@@ -787,23 +817,17 @@ void SpaceLoadInstancesWidget::attach(const model::SpaceType& spaceType)
   m_spaceType = spaceType;
   m_model = spaceType.model();
 
-  connect(m_model->getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &SpaceLoadInstancesWidget::objectAdded,
-    Qt::QueuedConnection);
+  // m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectAdded>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &SpaceLoadInstancesWidget::objectAdded, Qt::QueuedConnection);
 
-  connect(m_model->getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-    this,
-    &SpaceLoadInstancesWidget::objectRemoved,
-    Qt::QueuedConnection);
+  //m_model->getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectRemoved>(this);
+  connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &SpaceLoadInstancesWidget::objectRemoved, Qt::QueuedConnection);
 
   model::Building building = m_model->getUniqueModelObject<model::Building>();
-  connect(building.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange, this, &SpaceLoadInstancesWidget::onBuildingRelationshipChange);
+  building.getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onBuildingRelationshipChange>(this);
 
   for (model::SpaceType spaceType : m_model->getConcreteModelObjects<model::SpaceType>()){
-    connect(spaceType.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange, this, &SpaceLoadInstancesWidget::onSpaceTypeRelationshipChange);
+    spaceType.getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onSpaceTypeRelationshipChange>(this);
   }
 
   m_dirty = true;
@@ -849,7 +873,7 @@ void SpaceLoadInstancesWidget::onSpaceRelationshipChange(int index, Handle newHa
 void SpaceLoadInstancesWidget::objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
   if (iddObjectType == IddObjectType::OS_SpaceType){
-    connect(impl.get(), &detail::WorkspaceObject_Impl::onRelationshipChange, this, &SpaceLoadInstancesWidget::onSpaceTypeRelationshipChange);
+    impl.get()->detail::WorkspaceObject_Impl::onRelationshipChange.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onSpaceTypeRelationshipChange>(this);
     return;
   }
 
@@ -897,14 +921,14 @@ void SpaceLoadInstancesWidget::refresh()
   }
   m_dirty = false;
 
-  QLayoutItem *child; 
-  while ((child = m_mainVLayout->takeAt(0)) != nullptr) { 
+  QLayoutItem *child;
+  while ((child = m_mainVLayout->takeAt(0)) != nullptr) {
     QWidget* widget = child->widget();
     if (widget){
       delete widget;
     }
-    delete child; 
-  } 
+    delete child;
+  }
 
   // existing m_newSpaceLoadDropZone and m_newSpaceLoadVectorController were deleted above
   m_newSpaceLoadVectorController = nullptr;
@@ -953,7 +977,7 @@ void SpaceLoadInstancesWidget::refresh()
 
   auto widget = new QWidget();
   widget->setLayout(hLayout);
-  
+
   m_mainVLayout->addWidget(widget);
 }
 
@@ -1004,7 +1028,7 @@ void SpaceLoadInstancesWidget::addSpaceLoads(const model::Space& space)
         line->setFrameShape(QFrame::HLine);
         line->setFrameShadow(QFrame::Sunken);
         m_mainVLayout->addWidget(line);
-  
+
         addSpaceLoadInstance(modelObject.cast<model::SpaceLoadInstance>(), false);
       }
     }
