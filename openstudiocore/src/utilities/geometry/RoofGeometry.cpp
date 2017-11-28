@@ -434,7 +434,7 @@ public:
   }
 
   static int getLavIndex(std::shared_ptr<Vertex> vertex, std::vector< std::vector< std::shared_ptr<Vertex> > >& sLav) {
-    for (int i = 0; i < sLav.size(); i++) {
+    for (unsigned i = 0; i < sLav.size(); i++) {
       if (std::find(sLav[i].begin(), sLav[i].end(), vertex) != sLav[i].end()) {
         return i;
       }
@@ -514,11 +514,12 @@ private:
     if (it == vertices.end()) {
       LOG_AND_THROW("Could not find vertex.");
     }
+    int vsize = vertices.size();
     int pos = std::distance(vertices.begin(), it);
     pos += offset;
     if (pos < 0) {
       pos += vertices.size();
-    } else if (pos > vertices.size() - 1) {
+    } else if (pos >= vsize) {
       pos -= vertices.size();
     }
     return pos;
@@ -532,7 +533,7 @@ public:
   std::shared_ptr<Edge> edge;
   bool closed = false;
 
-  int getNodeIndex(std::shared_ptr<FaceNode> node) {
+  unsigned getNodeIndex(std::shared_ptr<FaceNode> node) {
     auto it = std::find(nodes.begin(), nodes.end(), node);
     if (it == nodes.end()) {
       LOG_AND_THROW("Could not find node in nodes.")
@@ -541,7 +542,7 @@ public:
   }
 
   bool isEnd(std::shared_ptr<FaceNode> vertex) {
-    int nodeIndex = getNodeIndex(vertex);
+    unsigned nodeIndex = getNodeIndex(vertex);
     return (nodeIndex == 0 || nodeIndex == nodes.size() - 1);
   }
 
@@ -565,7 +566,7 @@ public:
 
     node->face = nullptr;
 
-    int nodeIndex = getNodeIndex(node);
+    unsigned nodeIndex = getNodeIndex(node);
     nodes.erase(nodes.begin() + nodeIndex);
 
     if (nodes.size() == 0) {
@@ -701,6 +702,10 @@ public:
       return *q1 < *q2;
     }
   };
+
+  static void insert_sorted(std::vector< std::shared_ptr<QueueEvent> >& queue, std::shared_ptr<QueueEvent> item) {
+    queue.insert(std::upper_bound(queue.begin(), queue.end(), item, QueueEvent::Comparer()), item);
+  }
 
 private:
   REGISTER_LOGGER("utilities.QueueEvent");
@@ -1062,7 +1067,7 @@ void addPush(std::shared_ptr<FaceNode> node, std::shared_ptr<FaceNode> newNode) 
     LOG_AND_THROW("Can't add node to closed Face");
   }
 
-  int nodeIndex = face->getNodeIndex(node);
+  unsigned nodeIndex = face->getNodeIndex(node);
   if (nodeIndex == face->nodes.size() - 1) {
     // if vertex is end of list, add newVertex to end
     face->nodes.push_back(newNode);
@@ -1251,7 +1256,8 @@ boost::optional<SplitCandidate> calcCandidatePointForSplit(std::shared_ptr<Verte
   }
 
   Vector3d vertexEdgeNormNegate = vertexEdge->normalize();
-  Vector3d edgesBisector = calcVectorBisector(vertexEdgeNormNegate, edge->normalize());
+  Vector3d edgeNorm = edge->normalize();
+  Vector3d edgesBisector = calcVectorBisector(vertexEdgeNormNegate, edgeNorm);
 
   LineLinear2d llv = LineLinear2d(vertexEdge->begin, vertexEdge->end);
   LineLinear2d lle = LineLinear2d(edge->begin, edge->end);
@@ -1354,12 +1360,12 @@ void computeSplitEvents(std::shared_ptr<Vertex> vertex, std::vector< std::shared
       // some of vertex event can share the same opposite
       // point
       std::shared_ptr<QueueEvent> e1(new QueueEvent(oppositeEdge.point, oppositeEdge.distance, vertex)); // SplitEvent
-      queue.push_back(e1);
+      QueueEvent::insert_sorted(queue, e1);
       continue;
     }
 
     std::shared_ptr<QueueEvent> e2(new QueueEvent(oppositeEdge.point, oppositeEdge.distance, vertex, oppositeEdge.oppositeEdge)); // SplitVertexEvent
-    queue.push_back(e2);
+    QueueEvent::insert_sorted(queue, e2);
     continue;
 
   }
@@ -1396,7 +1402,7 @@ void computeEdgeEvents(std::shared_ptr<Vertex> previousVertex, std::shared_ptr<V
   boost::optional<Point3d> point = computeIntersectionBisectors(previousVertex, nextVertex);
   if (point) {
     std::shared_ptr<QueueEvent> e(createEdgeEvent(point.get(), previousVertex, nextVertex));
-    queue.push_back(e);
+    QueueEvent::insert_sorted(queue, e);
   }
 }
 
@@ -1456,7 +1462,7 @@ double initPolygon(std::vector<Point3d>& polygon)
     LOG_AND_THROW("Polygon can't start and end with the same point.");
   }
 
-  for (int i = 1; i < polygon.size(); i++) {
+  for (unsigned i = 1; i < polygon.size(); i++) {
     if (polygon[i].z() != polygon[0].z()) {
       LOG_AND_THROW("All polygon z coordinates must be the same.");
     }
@@ -1533,7 +1539,7 @@ std::vector< std::shared_ptr<QueueEvent> > createEdgeChain(std::vector< std::sha
     std::shared_ptr<Vertex> endVertex = edgeList[edgeList.size() - 1]->nextVertex;
 
     bool do_continue = false;
-    for (int i = 0; i < edgeCluster.size(); i++) {
+    for (unsigned i = 0; i < edgeCluster.size(); i++) {
       if (edgeCluster[i]->previousVertex == endVertex) {
         // edge should be added as last in chain
         edgeList.push_back(edgeCluster[i]);
@@ -1624,7 +1630,8 @@ std::vector<Chain> createChains(std::vector< std::shared_ptr<QueueEvent> >& clus
     * them. Two events are assumed to be connected if next parent of one
     * event is equal to previous parent of second event.
     */
-    Chain edgeChain = Chain(createEdgeChain(edgeCluster), sLav);
+    std::vector< std::shared_ptr<QueueEvent> > edgeList = createEdgeChain(edgeCluster);
+    Chain edgeChain = Chain(edgeList, sLav);
     edgeChains.push_back(edgeChain); // EdgeChain
   }
 
@@ -1710,7 +1717,7 @@ std::vector<LevelEvent> groupLevelEvents(std::vector< std::shared_ptr<QueueEvent
 
     levelEvents.erase(levelEvents.begin());
 
-    for (int j = 0; j < levelEvents.size(); j++) {
+    for (unsigned j = 0; j < levelEvents.size(); j++) {
 
       if (levelEvents[j]->isEventInGroup(parentGroup)) {
         /* Because of numerical errors, split event and edge event
@@ -1795,8 +1802,7 @@ bool isInsidePolygon(Point3d& point, std::vector<Point3d>& points) {
     double x = point.x();
     double y = point.y();
 
-    // FIXME: missing parantheses?
-    if (node1.y() < y && node2.y() >= y || node2.y() < y && node1.y() >= y) {
+    if ((node1.y() < y && node2.y() >= y) || (node2.y() < y && node1.y() >= y)) {
       if (node1.x() + (y - node1.y()) / (node2.y() - node1.y()) * (node2.x() - node1.x()) < x) {
         oddNodes = !oddNodes;
       }
@@ -1818,7 +1824,7 @@ int chooseOppositeEdgeLavIndex(std::vector< std::shared_ptr<Vertex> >& edgeLavs,
   Vector3d centerVector = center - edgeStart;
   double centerDot = edgeNorm.dot(centerVector);
 
-  for (int i = 0; i < edgeLavs.size(); i++) {
+  for (unsigned i = 0; i < edgeLavs.size(); i++) {
     std::shared_ptr<Vertex> end = edgeLavs[i];
     std::shared_ptr<Vertex> begin = Vertex::previous(end, sLav);
     Vector3d beginVector = begin->point - edgeStart;
@@ -1834,20 +1840,20 @@ int chooseOppositeEdgeLavIndex(std::vector< std::shared_ptr<Vertex> >& edgeLavs,
     * should meet criteria.
     */
 
-    if (beginDot < centerDot && centerDot < endDot || beginDot > centerDot && centerDot > endDot) {
+    if ((beginDot < centerDot && centerDot < endDot) || (beginDot > centerDot && centerDot > endDot)) {
       return i;
     }
 
   }
 
   // Additional check if center is inside lav
-  for (int i = 0; i < edgeLavs.size(); i++) {
+  for (unsigned i = 0; i < edgeLavs.size(); i++) {
     std::shared_ptr<Vertex> end = edgeLavs[i];
     int index = Vertex::getLavIndex(end, sLav);
-    int size = sLav[index].size();
+    unsigned size = sLav[index].size();
     std::vector<Point3d> points;
     std::shared_ptr<Vertex> next = end;
-    for (int j = 0; j < size; j++) {
+    for (unsigned j = 0; j < size; j++) {
       points.push_back(next->point);
       next = Vertex::next(next, sLav[index]);
     }
@@ -1898,7 +1904,8 @@ void createOppositeEdgeChains(std::vector< std::vector< std::shared_ptr<Vertex> 
       if (oppositeEdge && !hasOppositeEdge) {
         // find lav vertex for opposite edge
 
-        std::shared_ptr<Vertex> nextVertex = findOppositeEdgeLav(sLav, oppositeEdge, Point3d(center));
+        Point3d c = Point3d(center);
+        std::shared_ptr<Vertex> nextVertex = findOppositeEdgeLav(sLav, oppositeEdge, c);
         if (nextVertex) {
           oppositeEdgeChains.push_back(Chain(oppositeEdge, nextVertex, sLav)); // SingleEdgeChain
         } else {
@@ -1990,7 +1997,7 @@ bool areSameLav(std::vector< std::shared_ptr<Vertex> >& lav1, std::vector< std::
   if (lav1.size() != lav2.size()) {
     return false;
   }
-  for (int i = 0; i < lav1.size(); i++) {
+  for (unsigned i = 0; i < lav1.size(); i++) {
     if (lav1[i] != lav2[i]) {
       return false;
     }
@@ -2047,11 +2054,11 @@ boost::optional<double> computeCloserEdgeEvent(std::shared_ptr<Vertex> vertex, s
 
   if (distance1 - EPSILON < distance2) {
     std::shared_ptr<QueueEvent> e(createEdgeEvent(point1.get(), vertex, nextVertex));
-    queue.push_back(e);
+    QueueEvent::insert_sorted(queue, e);
   }
   if (distance2 - EPSILON < distance1) {
     std::shared_ptr<QueueEvent> e(createEdgeEvent(point2.get(), previousVertex, vertex));
-    queue.push_back(e);
+    QueueEvent::insert_sorted(queue, e);
   }
 
   if (distance1 < distance2) {
@@ -2210,7 +2217,8 @@ void multiSplitEvent(LevelEvent& event, std::vector< std::vector< std::shared_pt
     Chain& chainBegin = event.chains[i];
     Chain& chainEnd = event.chains[(i + 1) % edgeListSize];
 
-    std::shared_ptr<Vertex> newVertex(createMultiSplitVertex(chainBegin.getNextEdge(), chainEnd.getPreviousEdge(), Point3d(event.point), event.distance));
+    Point3d p = Point3d(event.point);
+    std::shared_ptr<Vertex> newVertex(createMultiSplitVertex(chainBegin.getNextEdge(), chainEnd.getPreviousEdge(), p, event.distance));
 
     // Split and merge lavs...
     std::shared_ptr<Vertex> beginNextVertex = chainBegin.getNextVertex(sLav);
@@ -2314,7 +2322,8 @@ void multiEdgeEvent(LevelEvent& event, std::vector< std::vector< std::shared_ptr
   nextVertex->processed = true;
 
   std::shared_ptr<Ray2d> bisector(new Ray2d(calcBisector(event.point, prevVertex->previousEdge, nextVertex->nextEdge)));
-  std::shared_ptr<Vertex> edgeVertex(new Vertex(Point3d(event.point), event.distance, bisector, prevVertex->previousEdge, nextVertex->nextEdge));
+  Point3d p = Point3d(event.point);
+  std::shared_ptr<Vertex> edgeVertex(new Vertex(p, event.distance, bisector, prevVertex->previousEdge, nextVertex->nextEdge));
 
   // left face
   addFaceLeft(edgeVertex, event.chain.getPreviousVertex(sLav), faces);
@@ -2357,7 +2366,6 @@ void processTwoNodeLavs(std::vector< std::vector< std::shared_ptr<Vertex> > >& s
 }
 
 void removeEventsUnderHeight(std::vector< std::shared_ptr<QueueEvent> >& queue, double levelHeight) {
-  std::sort(queue.begin(), queue.end(), QueueEvent::Comparer());
   while (!queue.empty()) {
     if (queue[0]->distance > levelHeight + EPSILON) {
       break;
@@ -2367,7 +2375,7 @@ void removeEventsUnderHeight(std::vector< std::shared_ptr<QueueEvent> >& queue, 
 }
 
 void removeEmptyLav(std::vector< std::vector< std::shared_ptr<Vertex> > >& sLav) {
-  for (int i = 0; i < sLav.size(); i++) {
+  for (unsigned i = 0; i < sLav.size(); i++) {
     if (sLav[i].size() == 0) {
       sLav.erase(sLav.begin() + i);
       i--;
@@ -2460,7 +2468,7 @@ std::vector<Point3d> getGableTopAndBottomVertices(std::vector<Point3d>& surface)
   return ret;
 }
 
-int getOppositeGableIndex(std::vector< std::vector<Point3d> >& surfaces, std::vector<int> connectedSurfaces, int gableIndexNum) {
+int getOppositeGableIndex(std::vector< std::vector<Point3d> >& surfaces, std::vector<unsigned> connectedSurfaces, unsigned gableIndexNum) {
   // Obtain opposite gable index relative to gableIndexNum
   if (connectedSurfaces.size() < 4) {
     // There must be at least 4 connected surfaces (including gableIndexNum) for 
@@ -2470,7 +2478,7 @@ int getOppositeGableIndex(std::vector< std::vector<Point3d> >& surfaces, std::ve
   std::vector<Point3d> baseVertices = getGableTopAndBottomVertices(surfaces[gableIndexNum]);
   Edge base1 = Edge(baseVertices[0], baseVertices[1]);
   Edge base2 = Edge(baseVertices[0], baseVertices[2]);
-  for (int i = 0; i < connectedSurfaces.size(); i++) {
+  for (unsigned i = 0; i < connectedSurfaces.size(); i++) {
     if (connectedSurfaces[i] == gableIndexNum) {
       continue;
     }
@@ -2494,7 +2502,7 @@ void applyGableLogicTriangles(std::vector< std::vector<Point3d> >& surfaces) {
 
   std::set<int> processedSurfaces;
 
-  for (int i = 0; i < surfaces.size(); i++) {
+  for (unsigned i = 0; i < surfaces.size(); i++) {
     if (std::find(processedSurfaces.begin(), processedSurfaces.end(), i) != processedSurfaces.end()) {
       continue; // already processed
     }
@@ -2508,8 +2516,8 @@ void applyGableLogicTriangles(std::vector< std::vector<Point3d> >& surfaces) {
     processedSurfaces.insert(i);
     Point3d gableTop = gableVertices[0];
 
-    std::vector<int> connectedSurfaces;
-    for (int j = 0; j < surfaces.size(); j++) {
+    std::vector<unsigned> connectedSurfaces;
+    for (unsigned j = 0; j < surfaces.size(); j++) {
       for (Point3d& vertex : surfaces[j]) {
         if (vertex != gableTop) {
           continue;
@@ -2536,8 +2544,8 @@ void applyGableLogicTriangles(std::vector< std::vector<Point3d> >& surfaces) {
       // Shift gable top vertex for opposite surfaces
       std::vector<Point3d> newVertices;
 
-      std::vector<int> gableSurfaceIndices = {i, connectedSurfaces[oppositeGableIndex]};
-      for (int j = 0; j < gableSurfaceIndices.size(); j++) {
+      std::vector<unsigned> gableSurfaceIndices = {i, connectedSurfaces[oppositeGableIndex]};
+      for (unsigned j = 0; j < gableSurfaceIndices.size(); j++) {
         std::vector<Point3d>& surface = surfaces[gableSurfaceIndices[j]];
         for (Point3d& vertex : surface) {
           if (vertex != gableTop) {
@@ -2552,7 +2560,7 @@ void applyGableLogicTriangles(std::vector< std::vector<Point3d> >& surfaces) {
       }
 
       // Split gable top vertex (create ridge) for other surfaces
-      for (int j = 0; j < connectedSurfaces.size(); j++) {
+      for (unsigned j = 0; j < connectedSurfaces.size(); j++) {
         if (std::find(gableSurfaceIndices.begin(), gableSurfaceIndices.end(), connectedSurfaces[j]) != gableSurfaceIndices.end()) {
           continue; // already processed these surfaces
         }
@@ -2561,15 +2569,17 @@ void applyGableLogicTriangles(std::vector< std::vector<Point3d> >& surfaces) {
         std::vector<Point3d> trySurface2;
         std::vector<Edge> tryEdges1;
         std::vector<Edge> tryEdges2;
-        for (int k = 0; k < surface.size(); k++) {
+        for (unsigned k = 0; k < surface.size(); k++) {
           Point3d vertex = surface[k];
           if (vertex != gableTop) {
             trySurface1.push_back(vertex);
             trySurface2.push_back(vertex);
             continue;
           }
-          Point3d previousVertex = surface[(k - 1 + surface.size()) % surface.size()];
-          Point3d nextVertex = surface[(k + 1) % surface.size()];
+          int prevk = k - 1 + surface.size();
+          int nextk = k + 1;
+          Point3d previousVertex = surface[prevk % surface.size()];
+          Point3d nextVertex = surface[nextk % surface.size()];
 
           trySurface1.push_back(newVertices[0]);
           trySurface1.push_back(newVertices[1]);
@@ -2614,7 +2624,7 @@ void applyGableLogicTriangles(std::vector< std::vector<Point3d> >& surfaces) {
 
       Point3d newVertex = Point3d((gableVertices[1].x() + gableVertices[2].x()) / 2.0,
         (gableVertices[1].y() + gableVertices[2].y()) / 2.0, gableVertices[0].z());
-      for (int j = 0; j < connectedSurfaces.size(); j++) {
+      for (unsigned j = 0; j < connectedSurfaces.size(); j++) {
         std::vector<Point3d>& surface = surfaces[connectedSurfaces[j]];
         for (Point3d& vertex : surface) {
           if (vertex != gableTop) {
@@ -2799,7 +2809,7 @@ std::vector< std::vector<Point3d> > doShedRoof(std::vector<Point3d>& polygon, do
 
   // Construct vertical walls for each polygon edge up to the shed roof.
   std::vector< std::vector<Point3d> > walls;
-  for (int i = 0; i < polygon.size(); i++) {
+  for (unsigned i = 0; i < polygon.size(); i++) {
     Point3d vertex = polygon[i];
     Point3d nextVertex = polygon[(i + 1) % polygon.size()];
     std::vector<Point3d> wall = {vertex, nextVertex};
