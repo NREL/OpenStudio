@@ -41,7 +41,7 @@ namespace detail {
   /** MaterialPropertyMoisturePenetrationDepthSettings_Impl is a ModelObject_Impl that is the implementation class for MaterialPropertyMoisturePenetrationDepthSettings.*/
   class MODEL_API MaterialPropertyMoisturePenetrationDepthSettings_Impl : public ModelObject_Impl {
 
-  public:
+   public:
 
     /** @name Constructors and Destructors */
     //@{

@@ -60,6 +60,10 @@ namespace detail {
   std::vector<ModelObject> Material_Impl::children() const
   {
     std::vector<ModelObject> results(castVector<ModelObject>(getObject<Material>().getModelObjectSources<StandardsInformationMaterial>()));
+    
+    if (boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> empd = this->materialPropertyMoisturePenetrationDepthSettings()) {
+      results.push_back(empd.get());
+    }
 
     if (boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> empd = this->materialPropertyMoisturePenetrationDepthSettings()) {
       results.push_back(empd.get());
