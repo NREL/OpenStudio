@@ -126,7 +126,7 @@ class MODEL_API ScheduleRule : public ParentObject {
 
   bool setApplySaturday(bool applySaturday);
 
-  //void setApplyHoliday(bool applyHoliday);
+  //bool setApplyHoliday(bool applyHoliday);
 
   /// Sets the start date of the date range, will delete any specific dates specified.
   /// A start date > end date indicates that the range wraps around the year.

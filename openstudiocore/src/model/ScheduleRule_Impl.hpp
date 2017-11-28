@@ -46,16 +46,6 @@ namespace detail {
   /** ScheduleRule_Impl is a ParentObject_Impl that is the implementation class for ScheduleRule.*/
   class MODEL_API ScheduleRule_Impl : public ParentObject_Impl {
 
-
-
-
-
-
-
-
-
-    //
-
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -149,7 +139,7 @@ namespace detail {
 
     bool setApplySaturday(bool applySaturday);
 
-    //void setApplyHoliday(bool applyHoliday);
+    //bool setApplyHoliday(bool applyHoliday);
 
     /// Sets the start date of the date range, will delete any specific dates specified.
     /// A start date > end date indicates that the range wraps around the year.

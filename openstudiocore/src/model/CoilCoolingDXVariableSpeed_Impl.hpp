@@ -149,7 +149,7 @@ namespace detail {
 
     bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
-    // void setCondenserAirInletNodeName(boost::optional<std::string> condenserAirInletNodeName);
+    // bool setCondenserAirInletNodeName(boost::optional<std::string> condenserAirInletNodeName);
 
     // void resetCondenserAirInletNodeName();
 

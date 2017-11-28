@@ -126,7 +126,7 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
 
   bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
-  // void setCondenserAirInletNodeName(std::string condenserAirInletNodeName);
+  // bool setCondenserAirInletNodeName(std::string condenserAirInletNodeName);
 
   // void resetCondenserAirInletNodeName();
 
