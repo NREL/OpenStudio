@@ -58,61 +58,6 @@ namespace detail {
   /** ThermalZone_Impl is a HVACComponent_Impl that is the implementation class for ThermalZone.*/
   class MODEL_API ThermalZone_Impl : public HVACComponent_Impl {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -418,7 +363,7 @@ namespace detail {
 
     bool useIdealAirLoads() const;
 
-    void setUseIdealAirLoads(bool useIdealAirLoads);
+    bool setUseIdealAirLoads(bool useIdealAirLoads);
 
     bool addToNode(Node & node) override;
 

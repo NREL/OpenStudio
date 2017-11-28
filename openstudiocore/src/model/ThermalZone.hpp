@@ -352,7 +352,7 @@ class MODEL_API ThermalZone : public HVACComponent {
    *  If the ThermalZone is later added to a loop useIdealAirLoads
    *  will be reset to false.
    */
-  void setUseIdealAirLoads(bool useIdealAirLoads);
+  bool setUseIdealAirLoads(bool useIdealAirLoads);
 
   bool addToNode(Node & node);
 

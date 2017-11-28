@@ -1606,11 +1606,13 @@ namespace detail {
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
-  void ThermalZone_Impl::setUseIdealAirLoads(bool useIdealAirLoads)
+  bool ThermalZone_Impl::setUseIdealAirLoads(bool useIdealAirLoads)
   {
+    bool result = true;
+
     if (useIdealAirLoads)
     {
-      setString(OS_ThermalZoneFields::UseIdealAirLoads, "Yes");
+      result &= setString(OS_ThermalZoneFields::UseIdealAirLoads, "Yes");
 
       std::vector<ModelObject> comps = this->equipment();
 
@@ -1623,13 +1625,15 @@ namespace detail {
       {
         ThermalZone thisObject = this->getObject<ThermalZone>();
 
-        airLoop->removeBranchForZone(thisObject);
+        result &= airLoop->removeBranchForZone(thisObject);
       }
+
     }
     else
     {
-      setString(OS_ThermalZoneFields::UseIdealAirLoads, "No");
+      result &= setString(OS_ThermalZoneFields::UseIdealAirLoads, "No");
     }
+    return result;
   }
 
   openstudio::OSOptionalQuantity ThermalZone_Impl::ceilingHeight_SI() const {
@@ -2935,9 +2939,9 @@ bool ThermalZone::useIdealAirLoads() const
   return getImpl<detail::ThermalZone_Impl>()->useIdealAirLoads();
 }
 
-void ThermalZone::setUseIdealAirLoads(bool useIdealAirLoads)
+bool ThermalZone::setUseIdealAirLoads(bool useIdealAirLoads)
 {
-  getImpl<detail::ThermalZone_Impl>()->setUseIdealAirLoads(useIdealAirLoads);
+  return getImpl<detail::ThermalZone_Impl>()->setUseIdealAirLoads(useIdealAirLoads);
 }
 
 SizingZone ThermalZone::sizingZone() const
