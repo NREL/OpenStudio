@@ -520,6 +520,7 @@ set(${target_name}_test_src
   Test/AvailabilityManagerNightCycle_GTest.cpp
   Test/Building_GTest.cpp
   Test/CoilHeatingGas_GTest.cpp
+  Test/CoilCoolingDXMultiSpeed_GTest.cpp
   Test/Construction_GTest.cpp
   Test/DaylightingControl_GTest.cpp
   Test/DaylightingDeviceShelf_GTest.cpp
