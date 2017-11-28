@@ -138,7 +138,7 @@ namespace detail {
     /** Clears all PerturbableLayer information, including type. */
     void resetPerturbableLayer();
 
-    void setPerturbableLayerType(const std::string& type);
+    bool setPerturbableLayerType(const std::string& type);
 
     void resetPerturbableLayerType();
 

@@ -181,7 +181,7 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
 
   /** Set the perturbableLayerType to type. Can be one of the provided types, or a free-form
    *  string. \sa standardPerturbableLayerTypeValues */
-  void setPerturbableLayerType(const std::string& type);
+  bool setPerturbableLayerType(const std::string& type);
   void resetPerturbableLayerType();
 
   bool setOtherPerturbableLayerType(const std::string& otherPerturbableLayerType);

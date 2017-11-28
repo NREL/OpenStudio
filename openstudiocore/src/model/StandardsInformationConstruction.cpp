@@ -500,7 +500,7 @@ namespace detail {
     OS_ASSERT(ok);
   }
 
-  void StandardsInformationConstruction_Impl::setPerturbableLayerType(const std::string& type)
+  bool StandardsInformationConstruction_Impl::setPerturbableLayerType(const std::string& type)
   {
     bool ok(true);
 
@@ -510,7 +510,7 @@ namespace detail {
       OS_ASSERT(ok);
       ok = setString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType,"");
       OS_ASSERT(ok);
-      return;
+      return ok;
     }
 
     ok = setString(OS_StandardsInformation_ConstructionFields::PerturbableLayerType,type);
@@ -524,6 +524,7 @@ namespace detail {
       ok = setString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType,"");
       OS_ASSERT(ok);
     }
+    return ok;
   }
 
   void StandardsInformationConstruction_Impl::resetPerturbableLayerType()
@@ -824,8 +825,8 @@ void StandardsInformationConstruction::resetPerturbableLayer() {
   getImpl<detail::StandardsInformationConstruction_Impl>()->resetPerturbableLayer();
 }
 
-void StandardsInformationConstruction::setPerturbableLayerType(const std::string& type) {
-  getImpl<detail::StandardsInformationConstruction_Impl>()->setPerturbableLayerType(type);
+bool StandardsInformationConstruction::setPerturbableLayerType(const std::string& type) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setPerturbableLayerType(type);
 }
 
 void StandardsInformationConstruction::resetPerturbableLayerType() {
