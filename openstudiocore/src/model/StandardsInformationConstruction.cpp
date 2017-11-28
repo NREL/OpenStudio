@@ -804,8 +804,8 @@ void StandardsInformationConstruction::resetIntendedSurfaceType() {
   getImpl<detail::StandardsInformationConstruction_Impl>()->resetIntendedSurfaceType();
 }
 
-void StandardsInformationConstruction::setStandardsConstructionType(const std::string& type) {
-  getImpl<detail::StandardsInformationConstruction_Impl>()->setStandardsConstructionType(type);
+bool StandardsInformationConstruction::setStandardsConstructionType(const std::string& type) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setStandardsConstructionType(type);
 }
 
 void StandardsInformationConstruction::resetStandardsConstructionType() {
