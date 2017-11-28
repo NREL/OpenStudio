@@ -70,6 +70,8 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
+      result.push_back("Zone Air Terminal Cold Supply Duct Damper Position");
+      result.push_back("Zone Air Terminal Hot Supply Duct Damper Position");
     }
     return result;
   }
@@ -78,6 +80,7 @@ namespace detail {
     return AirTerminalDualDuctConstantVolume::iddObjectType();
   }
 
+  // Availability Schedule
   std::vector<ScheduleTypeKey> AirTerminalDualDuctConstantVolume_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
     std::vector<ScheduleTypeKey> result;
@@ -90,9 +93,28 @@ namespace detail {
     return result;
   }
 
-  boost::optional<Schedule> AirTerminalDualDuctConstantVolume_Impl::availabilitySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_DualDuct_ConstantVolumeFields::AvailabilitySchedule);
+  Schedule AirTerminalDualDuctConstantVolume_Impl::availabilitySchedule() const {
+    boost::optional<Schedule> result = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_DualDuct_ConstantVolumeFields::AvailabilitySchedule);
+    if (!result)
+    {
+      LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
+    }
+    return result.get();
   }
+
+
+  bool AirTerminalDualDuctConstantVolume_Impl::setAvailabilitySchedule(Schedule& schedule) {
+    bool result = setSchedule(OS_AirTerminal_DualDuct_ConstantVolumeFields::AvailabilitySchedule,
+                              "AirTerminalDualDuctConstantVolume",
+                              "Availability Schedule",
+                              schedule);
+    return result;
+  }
+
+
+
+
+
 
   unsigned AirTerminalDualDuctConstantVolume_Impl::outletPort() const {
     return OS_AirTerminal_DualDuct_ConstantVolumeFields::AirOutletNode;
@@ -127,6 +149,9 @@ namespace detail {
     LOG(Warn, "Ports cannot be added or removed for " << briefDescription() << " .");
   }
 
+
+
+  // Maximum Air Flow Rate
   boost::optional<double> AirTerminalDualDuctConstantVolume_Impl::maximumAirFlowRate() const {
     return getDouble(OS_AirTerminal_DualDuct_ConstantVolumeFields::MaximumAirFlowRate,true);
   }
@@ -140,19 +165,6 @@ namespace detail {
     return result;
   }
 
-  bool AirTerminalDualDuctConstantVolume_Impl::setAvailabilitySchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_AirTerminal_DualDuct_ConstantVolumeFields::AvailabilitySchedule,
-                              "AirTerminalDualDuctConstantVolume",
-                              "Availability Schedule",
-                              schedule);
-    return result;
-  }
-
-  void AirTerminalDualDuctConstantVolume_Impl::resetAvailabilitySchedule() {
-    bool result = setString(OS_AirTerminal_DualDuct_ConstantVolumeFields::AvailabilitySchedule, "");
-    OS_ASSERT(result);
-  }
-
   bool AirTerminalDualDuctConstantVolume_Impl::setMaximumAirFlowRate(double maximumAirFlowRate) {
     bool result = setDouble(OS_AirTerminal_DualDuct_ConstantVolumeFields::MaximumAirFlowRate, maximumAirFlowRate);
     return result;
@@ -163,7 +175,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  boost::optional<Node> AirTerminalDualDuctConstantVolume_Impl::HotAirInletNode() const {
+
+
+  boost::optional<Node> AirTerminalDualDuctConstantVolume_Impl::hotAirInletNode() const {
     boost::optional<Node> node;
     if( auto mo = inletModelObject(0) ) {
       node = mo->optionalCast<Node>();
@@ -172,7 +186,7 @@ namespace detail {
     return node;
   }
 
-  boost::optional<Node> AirTerminalDualDuctConstantVolume_Impl::ColdAirInletNode() const {
+  boost::optional<Node> AirTerminalDualDuctConstantVolume_Impl::coldAirInletNode() const {
     boost::optional<Node> node;
     if( auto mo = inletModelObject(1) ) {
       node = mo->optionalCast<Node>();
@@ -216,10 +230,15 @@ AirTerminalDualDuctConstantVolume::AirTerminalDualDuctConstantVolume(const Model
 {
   OS_ASSERT(getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  // bool ok = true;
-  // ok = setMaximumAirFlowRate();
-  // OS_ASSERT(ok);
+  Schedule sch = model.alwaysOnDiscreteSchedule();
+  bool ok = setAvailabilitySchedule(sch);
+  if (!ok)
+  {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s availability schedule to "
+                << sch.briefDescription() << ".");
+  }
+
   autosizeMaximumAirFlowRate();
 }
 
@@ -227,17 +246,25 @@ IddObjectType AirTerminalDualDuctConstantVolume::iddObjectType() {
   return IddObjectType(IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume);
 }
 
-boost::optional<Schedule> AirTerminalDualDuctConstantVolume::availabilitySchedule() const {
+Schedule AirTerminalDualDuctConstantVolume::availabilitySchedule() const {
   return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->availabilitySchedule();
 }
 
-boost::optional<Node> AirTerminalDualDuctConstantVolume::HotAirInletNode() const {
-  return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->HotAirInletNode();
+bool AirTerminalDualDuctConstantVolume::setAvailabilitySchedule(Schedule& schedule) {
+  return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->setAvailabilitySchedule(schedule);
 }
 
-boost::optional<Node> AirTerminalDualDuctConstantVolume::ColdAirInletNode() const {
-  return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->ColdAirInletNode();
+
+
+boost::optional<Node> AirTerminalDualDuctConstantVolume::hotAirInletNode() const {
+  return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->hotAirInletNode();
 }
+
+boost::optional<Node> AirTerminalDualDuctConstantVolume::coldAirInletNode() const {
+  return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->coldAirInletNode();
+}
+
+
 
 boost::optional<double> AirTerminalDualDuctConstantVolume::maximumAirFlowRate() const {
   return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->maximumAirFlowRate();
@@ -245,14 +272,6 @@ boost::optional<double> AirTerminalDualDuctConstantVolume::maximumAirFlowRate() 
 
 bool AirTerminalDualDuctConstantVolume::isMaximumAirFlowRateAutosized() const {
   return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->isMaximumAirFlowRateAutosized();
-}
-
-bool AirTerminalDualDuctConstantVolume::setAvailabilitySchedule(Schedule& schedule) {
-  return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->setAvailabilitySchedule(schedule);
-}
-
-void AirTerminalDualDuctConstantVolume::resetAvailabilitySchedule() {
-  getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->resetAvailabilitySchedule();
 }
 
 bool AirTerminalDualDuctConstantVolume::setMaximumAirFlowRate(double maximumAirFlowRate) {

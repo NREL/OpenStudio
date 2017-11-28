@@ -20,7 +20,7 @@
 #ifndef MODEL_AIRTERMINALDUALDUCTCONSTANTVOLUME_IMPL_HPP
 #define MODEL_AIRTERMINALDUALDUCTCONSTANTVOLUME_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "Mixer_Impl.hpp"
 
 namespace openstudio {
@@ -55,17 +55,17 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     //@}
     /** @name Getters */
     //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
     boost::optional<double> maximumAirFlowRate() const;
 
@@ -78,8 +78,6 @@ namespace detail {
   // Note Schedules are passed by reference, not const reference.
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
-
     bool setMaximumAirFlowRate(double maximumAirFlowRate);
 
     void autosizeMaximumAirFlowRate();
@@ -88,19 +86,19 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned outletPort() const;
+    virtual unsigned outletPort() const override;
 
-    unsigned inletPort(unsigned branchIndex) const;
+    virtual unsigned inletPort(unsigned branchIndex) const override;
 
-    unsigned nextInletPort() const;
+    virtual unsigned nextInletPort() const override;
 
-    unsigned newInletPortAfterBranch(unsigned branchIndex);
+    unsigned newInletPortAfterBranch(unsigned branchIndex) override;
 
-    void removePortForBranch(unsigned branchIndex);
+    void removePortForBranch(unsigned branchIndex) override;
 
-    boost::optional<Node> HotAirInletNode() const;
+    boost::optional<Node> hotAirInletNode() const;
 
-    boost::optional<Node> ColdAirInletNode() const;
+    boost::optional<Node> coldAirInletNode() const;
 
     bool addToNode(Node & node) override;
 
@@ -109,8 +107,8 @@ namespace detail {
     virtual ModelObject clone(Model model) const override;
 
     bool isRemovable() const override;
-
     //@}
+
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.AirTerminalDualDuctConstantVolume");

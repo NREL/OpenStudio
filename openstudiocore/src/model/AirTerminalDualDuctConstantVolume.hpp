@@ -20,7 +20,7 @@
 #ifndef MODEL_AIRTERMINALDUALDUCTCONSTANTVOLUME_HPP
 #define MODEL_AIRTERMINALDUALDUCTCONSTANTVOLUME_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "Mixer.hpp"
 
 namespace openstudio {
@@ -55,7 +55,7 @@ class MODEL_API AirTerminalDualDuctConstantVolume : public Mixer {
   /** @name Getters */
   //@{
 
-  boost::optional<Schedule> availabilitySchedule() const;
+  Schedule availabilitySchedule() const;
 
   boost::optional<double> maximumAirFlowRate() const;
 
@@ -68,19 +68,25 @@ class MODEL_API AirTerminalDualDuctConstantVolume : public Mixer {
   // Note Schedules are passed by reference, not const reference.
   bool setAvailabilitySchedule(Schedule& schedule);
 
-  void resetAvailabilitySchedule();
-
   bool setMaximumAirFlowRate(double maximumAirFlowRate);
 
   void autosizeMaximumAirFlowRate();
 
-  boost::optional<Node> HotAirInletNode() const;
-
-  boost::optional<Node> ColdAirInletNode() const;
-
   //@}
   /** @name Other */
   //@{
+
+  /** This corresponds to Mixer::inletModelObject(0), as well as the system's branch 0
+   * (ie. AirLoopHVAC::demandInletNodes()[0] and AirLoopHVAC::supplyOutletNodes()[0])
+   * In OpenStudio we avoid using hot / cold nomenclature in the dual duct system api,
+   * but here in the terminal interface we use the language for transparency with the idf.
+   */
+  boost::optional<Node> hotAirInletNode() const;
+
+  /** This corresponds to Mixer::inletModelObject(1), as well as the system's branch 1
+   * (ie. AirLoopHVAC::demandInletNodes()[1] and AirLoopHVAC::supplyOutletNodes()[1])
+   */
+  boost::optional<Node> coldAirInletNode() const;
 
   //@}
  protected:
