@@ -26,6 +26,10 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 #include "../../model/DesignSpecificationOutdoorAir.hpp"
 #include "../../model/DesignSpecificationOutdoorAir_Impl.hpp"
 #include <utilities/idd/AirTerminal_DualDuct_VAV_OutdoorAir_FieldEnums.hxx>
@@ -54,8 +58,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalDualDuctVAVOut
   m_idfObjects.push_back(_airDistributionUnit);
   m_idfObjects.push_back(idfObject);
 
-  if( auto schedule = modelObject.availabilitySchedule() ) {
-    if( auto idf = translateAndMapModelObject(schedule.get()) ) {
+  {
+    Schedule schedule = modelObject.availabilitySchedule();
+    if( auto idf = translateAndMapModelObject(schedule) )
+    {
       idfObject.setString(AirTerminal_DualDuct_VAV_OutdoorAirFields::AvailabilityScheduleName,idf->name().get());
     }
   }
@@ -64,6 +70,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalDualDuctVAVOut
     idfObject.setString(AirTerminal_DualDuct_VAV_OutdoorAirFields::AirOutletNodeName,mo->name().get());
   }
 
+  // outdoorAirInletNode = 0
   if( auto mo = modelObject.inletModelObject(0) ) {
     idfObject.setString(AirTerminal_DualDuct_VAV_OutdoorAirFields::OutdoorAirInletNodeName,mo->name().get());
   }
@@ -83,12 +90,24 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalDualDuctVAVOut
     idfObject.setString(AirTerminal_DualDuct_VAV_OutdoorAirFields::PerPersonVentilationRateMode,value);
   }
 
-/*  if( auto designOA = modelObject.designSpecificationOutdoorAirObject() ) {
-    if( auto idf = translateAndMapModelObject(designOA.get()) ) {
-      idfObject.setString(AirTerminal_DualDuct_VAV_OutdoorAirFields::DesignSpecificationOutdoorAirObjectName,idf->name().get());
+  // ControlForOutdoorAir: if yes, get the zone's space's DSOA
+  {
+    if( modelObject.controlForOutdoorAir() ) {
+      if( auto airLoopHVAC = modelObject.airLoopHVAC() ) {
+        auto zones = airLoopHVAC->demandComponents(modelObject,airLoopHVAC->demandOutletNode(),model::ThermalZone::iddObjectType());
+        if( ! zones.empty() ) {
+          auto zone = zones.front();
+          auto spaces = zone.cast<model::ThermalZone>().spaces();
+          if( ! spaces.empty() ) {
+            if( auto designSpecificationOutdoorAir = spaces.front().designSpecificationOutdoorAir() ) {
+              idfObject.setString(AirTerminal_DualDuct_VAV_OutdoorAirFields::DesignSpecificationOutdoorAirObjectName,
+                designSpecificationOutdoorAir->name().get());
+            }
+          }
+        }
+      }
     }
-  }*/
-
+  }
   // Populate fields for AirDistributionUnit
   if( boost::optional<ModelObject> outletNode = modelObject.outletModelObject() )
   {
