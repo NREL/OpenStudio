@@ -250,7 +250,7 @@ struct ModelObjectNameSorter{
           QString("F"),
           m_isIP,
           ProxyAdapter(&model::SizingZone::zoneCoolingDesignSupplyAirTemperature, &model::ThermalZone::sizingZone),
-          ProxyAdapter(static_cast<void (model::SizingZone::*)(double)>(&model::SizingZone::setZoneCoolingDesignSupplyAirTemperature),
+          ProxyAdapter(static_cast<bool (model::SizingZone::*)(double)>(&model::SizingZone::setZoneCoolingDesignSupplyAirTemperature),
           &model::ThermalZone::sizingZone));
       }
       else if (field == ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE){
@@ -260,7 +260,7 @@ struct ModelObjectNameSorter{
           QString("F"),
           m_isIP,
           ProxyAdapter(&model::SizingZone::zoneHeatingDesignSupplyAirTemperature, &model::ThermalZone::sizingZone),
-          ProxyAdapter(static_cast<void (model::SizingZone::*)(double)>(&model::SizingZone::setZoneHeatingDesignSupplyAirTemperature),
+          ProxyAdapter(static_cast<bool (model::SizingZone::*)(double)>(&model::SizingZone::setZoneHeatingDesignSupplyAirTemperature),
           &model::ThermalZone::sizingZone));
       }
       else if (field == ZONECOOLINGDESIGNSUPPLYAIRHUMIDITYRATIO){

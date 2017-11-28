@@ -1753,7 +1753,7 @@ void SimSettingsView::attachRadianceParameters()
     m_isIP,
     mo,
     DoubleGetter(std::bind(&model::RadianceParameters::limitWeightDMX, mo)),
-    DoubleSetterVoidReturn(std::bind(static_cast<void(model::RadianceParameters::*)(double)>(&model::RadianceParameters::setLimitWeightDMX), mo, std::placeholders::_1)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::RadianceParameters::*)(double)>(&model::RadianceParameters::setLimitWeightDMX), mo, std::placeholders::_1)),
     boost::optional<NoFailAction>(std::bind(&model::RadianceParameters::resetLimitWeightDMX, mo)),
     boost::none,
     boost::none,
