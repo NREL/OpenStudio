@@ -157,7 +157,7 @@ namespace detail {
     bool isDayofWeekforStartDayDefaulted() const;
     bool isLeapYear() const;
     bool isIsLeapYearDefaulted() const;
-    void setCalendarYear(int calendarYear);
+    bool setCalendarYear(int calendarYear);
     void resetCalendarYear();
     bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
     void resetDayofWeekforStartDay();

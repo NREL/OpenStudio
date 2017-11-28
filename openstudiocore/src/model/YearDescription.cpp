@@ -156,7 +156,7 @@ namespace detail {
     return isEmpty(OS_YearDescriptionFields::IsLeapYear);
   }
 
-  void YearDescription_Impl::setCalendarYear(boost::optional<int> calendarYear) {
+  bool YearDescription_Impl::setCalendarYear(boost::optional<int> calendarYear) {
     bool wasLeapYear = this->isLeapYear();
 
     bool result = false;
@@ -170,7 +170,9 @@ namespace detail {
     OS_ASSERT(result);
 
     bool isLeapYear = this->isLeapYear();
+    // TODO: should really capture the output of updateModelLeapYear here...
     updateModelLeapYear(wasLeapYear, isLeapYear);
+    return result;
   }
 
   void YearDescription_Impl::resetCalendarYear() {
@@ -372,8 +374,8 @@ bool YearDescription::isIsLeapYearDefaulted() const {
   return getImpl<detail::YearDescription_Impl>()->isIsLeapYearDefaulted();
 }
 
-void YearDescription::setCalendarYear(int calendarYear) {
-  getImpl<detail::YearDescription_Impl>()->setCalendarYear(calendarYear);
+bool YearDescription::setCalendarYear(int calendarYear) {
+  return getImpl<detail::YearDescription_Impl>()->setCalendarYear(calendarYear);
 }
 
 void YearDescription::resetCalendarYear() {

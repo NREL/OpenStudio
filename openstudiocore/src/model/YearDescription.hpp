@@ -82,7 +82,7 @@ class MODEL_API YearDescription : public ParentObject {
   /** @name Setters */
   //@{
 
-  void setCalendarYear(int calendarYear);
+  bool setCalendarYear(int calendarYear);
 
   void resetCalendarYear();
 

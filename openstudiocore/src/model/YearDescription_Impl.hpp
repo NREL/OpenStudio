@@ -94,7 +94,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setCalendarYear(boost::optional<int> calendarYear);
+    bool setCalendarYear(boost::optional<int> calendarYear);
 
     void resetCalendarYear();
 
