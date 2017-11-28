@@ -64,18 +64,29 @@
 #include "AirLoopHVACZoneSplitter_Impl.hpp"
 #include "AirLoopHVACZoneMixer.hpp"
 #include "AirLoopHVACZoneMixer_Impl.hpp"
-#include "AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
-#include "AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp"
+
 #include "AirTerminalSingleDuctUncontrolled.hpp"
 #include "AirTerminalSingleDuctUncontrolled_Impl.hpp"
 #include "AirTerminalSingleDuctVAVReheat.hpp"
 #include "AirTerminalSingleDuctVAVReheat_Impl.hpp"
+
+// Needed for addBranchForZone hacks
+#include "CoilHeatingWater.hpp"
+#include "CoilHeatingWater_Impl.hpp"
+#include "CoilCoolingWater.hpp"
+#include "CoilCoolingWater_Impl.hpp"
+#include "AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
+#include "AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp"
+#include "AirTerminalSingleDuctConstantVolumeFourPipeInduction.hpp"
+#include "AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl.hpp"
+//#include "ModelObject.hpp"
+//#include "ModelObject_Impl.hpp"
+
 #include "AvailabilityManager.hpp"
 #include "AvailabilityManager_Impl.hpp"
 #include "AvailabilityManagerNightCycle.hpp"
 #include "AvailabilityManagerNightCycle_Impl.hpp"
-#include "CoilHeatingWater.hpp"
-#include "CoilHeatingWater_Impl.hpp"
+
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include "PortList.hpp"
@@ -431,6 +442,10 @@ namespace detail {
 
   boost::optional<PlantLoop> AirLoopHVAC_Impl::plantForAirTerminal( HVACComponent & airTerminal )
   {
+    // TODO: two problems
+    // One is that terminals such as AirTerminalSingleDuctConstantVolumeFourPipeInduction actually
+    // have both a heating and a cooling coil...
+    // The other is the CooledBeam terminal has a CoilCoolingCooledBeam that is a StraightComponent, no a WaterToAir one.
     std::vector<WaterToAirComponent> comps = airTerminal.model().getModelObjects<WaterToAirComponent>();
 
     for( const auto & elem : comps )
@@ -804,12 +819,54 @@ namespace detail {
 
         if(lastAirTerminal && lastThermalZone)
         {
-          boost::optional<PlantLoop> plantLoop = plantForAirTerminal(lastAirTerminal.get());
+          // clone the air terminal
           Model t_model = model();
           airTerminal = lastAirTerminal->clone(t_model).cast<HVACComponent>();
-          if( plantLoop )
-          {
-            setPlantForAirTerminal(airTerminal.get(),plantLoop.get());
+
+          // Reconnect the cloned terminal to the plant loop(s)
+
+          // TODO: (Temporary?) Ugly hack for FourPipeInduction for now, which has both a cooling and heating plantLoop
+          if (lastAirTerminal->iddObjectType() == IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction) {
+
+            // Safe to directly cast
+            AirTerminalSingleDuctConstantVolumeFourPipeInduction lastAtuFourPipe = lastAirTerminal->cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+            AirTerminalSingleDuctConstantVolumeFourPipeInduction newAtuFourPipe = airTerminal->cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+
+            // If the original ATU's heating coil has a plant loop, reconnect it here
+            if (boost::optional<PlantLoop> _heatingPl = lastAtuFourPipe.heatingCoil().plantLoop() ){
+              _heatingPl->addDemandBranchForComponent(newAtuFourPipe.heatingCoil());
+            }
+
+            // If the original ATU has a cooling coil, if it's a CoilCoolingWater, and the cooling coil has a plantLoop, reconnect it here
+            if (lastAtuFourPipe.coolingCoil()) {
+              if (boost::optional<CoilCoolingWater> _lastCC = lastAtuFourPipe.coolingCoil()->cast<CoilCoolingWater>() ) {
+                if (boost::optional<PlantLoop> _coolingPl = _lastCC->plantLoop()) {
+                  _coolingPl->addDemandBranchForComponent(newAtuFourPipe.coolingCoil().get());
+                }
+              }
+            }
+
+            // TODO: Another ugly hack for CooledBeam, which isn't a HVAComponent but a StraightComponent
+          } else if (lastAirTerminal->iddObjectType() == IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam) {
+
+            // Safe to directly cast
+            AirTerminalSingleDuctConstantVolumeCooledBeam lastAtuCooledBeam = lastAirTerminal->cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
+            AirTerminalSingleDuctConstantVolumeCooledBeam newAtuCooledBeam = airTerminal->cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
+
+            // If the original ATU's coilCoolingCooledBeam has a plant loop, reconnect it here
+            if (boost::optional<PlantLoop> _coolingPl = lastAtuCooledBeam.coilCoolingCooledBeam().plantLoop() ){
+              _coolingPl->addDemandBranchForComponent(newAtuCooledBeam.coilCoolingCooledBeam());
+            }
+
+          } else {
+
+            // Default (old) behavior should work here, only a possible heating coil
+            boost::optional<PlantLoop> plantLoop = plantForAirTerminal(lastAirTerminal.get());
+
+            if( plantLoop ) {
+
+              setPlantForAirTerminal(airTerminal.get(),plantLoop.get());
+            }
           }
         }
         else if(lastAirTerminal)

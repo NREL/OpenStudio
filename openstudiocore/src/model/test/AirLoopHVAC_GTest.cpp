@@ -42,7 +42,7 @@
 #include "../AvailabilityManagerOptimumStart_Impl.hpp"
 #include "../AirLoopHVACSupplyPlenum.hpp"
 #include "../AirLoopHVACReturnPlenum.hpp"
-#include "../CoilHeatingWater.hpp"
+
 #include "../CoilCoolingWater.hpp"
 #include "../ControllerWaterCoil.hpp"
 #include "../AirLoopHVACOutdoorAirSystem.hpp"
@@ -55,6 +55,32 @@
 #include "../AirLoopHVACZoneSplitter_Impl.hpp"
 #include "../AirTerminalSingleDuctUncontrolled.hpp"
 #include "../AirTerminalSingleDuctUncontrolled_Impl.hpp"
+
+#include "../PlantLoop.hpp"
+#include "../CoilCoolingWater.hpp"
+#include "../CoilCoolingWater_Impl.hpp"
+#include "../CoilHeatingWater.hpp"
+#include "../CoilHeatingWater_Impl.hpp"
+#include "../CoilCoolingCooledBeam.hpp"
+#include "../CoilCoolingCooledBeam_Impl.hpp"
+
+#include "../AirTerminalSingleDuctConstantVolumeFourPipeInduction.hpp"
+#include "../AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl.hpp"
+#include "../AirTerminalSingleDuctVAVReheat.hpp"
+#include "../AirTerminalSingleDuctVAVReheat_Impl.hpp"
+#include "../AirTerminalSingleDuctVAVHeatAndCoolReheat.hpp"
+#include "../AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl.hpp"
+#include "../AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
+#include "../AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp"
+#include "../AirTerminalSingleDuctSeriesPIUReheat.hpp"
+#include "../AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp"
+#include "../AirTerminalSingleDuctParallelPIUReheat.hpp"
+#include "../AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
+#include "../AirTerminalSingleDuctConstantVolumeReheat.hpp"
+#include "../AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp"
+
+#include "../FanConstantVolume.hpp"
+
 #include "../ThermalZone.hpp"
 #include "../ScheduleCompact.hpp"
 #include "../ScheduleTypeLimits.hpp"
@@ -974,3 +1000,308 @@ TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
   }
 }
 
+
+
+/* Tests that coil connections are preserved when using addBranchForZone (which is used when you add a zone in OS App via clicking on the splitter */
+
+
+// AirTerminalSingleDuctVAVReheat, non optional reheatCoil. This is the "majority" case.
+TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctVAVReheat) {
+
+  Model m;
+
+  // Heating coil
+  PlantLoop p_heating(m);
+  CoilHeatingWater hc(m);
+  p_heating.addDemandBranchForComponent(hc);
+
+  // Air Side
+  AirLoopHVAC a(m);
+
+  Schedule sch = m.alwaysOnDiscreteSchedule();
+  AirTerminalSingleDuctVAVReheat atu(m, sch, hc);
+
+
+  // Add a zone with the terminal
+  ThermalZone z1(m);
+  a.addBranchForZone(z1, atu);
+
+  // New zone, addBranchForZone
+  ThermalZone z2(m);
+  a.addBranchForZone(z2);
+
+  // Check that you do have a terminal
+  ASSERT_TRUE(z2.airLoopHVACTerminal());
+
+  boost::optional<AirTerminalSingleDuctVAVReheat> _atu_z2;
+  _atu_z2 = z2.airLoopHVACTerminal().get().cast<AirTerminalSingleDuctVAVReheat>();
+  ASSERT_TRUE(_atu_z2);
+
+  // Check that the heating coil was properly connected
+  boost::optional<CoilHeatingWater> _hc = _atu_z2->reheatCoil().cast<CoilHeatingWater>();
+  ASSERT_TRUE(_hc);
+  ASSERT_TRUE(_hc->plantLoop());
+  ASSERT_EQ(p_heating.handle(), _hc->plantLoop()->handle());
+
+}
+
+
+// AirTerminalSingleDuctVAVHeatAndCoolReheat, non optional reheatCoil. This is the "majority" case.
+TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctVAVHeatAndCoolReheat) {
+
+  Model m;
+
+  // Heating coil
+  PlantLoop p_heating(m);
+  CoilHeatingWater hc(m);
+  p_heating.addDemandBranchForComponent(hc);
+
+  // Air Side
+  AirLoopHVAC a(m);
+
+  AirTerminalSingleDuctVAVHeatAndCoolReheat atu(m, hc);
+
+  // Add a zone with the terminal
+  ThermalZone z1(m);
+  a.addBranchForZone(z1, atu);
+
+  // New zone, addBranchForZone
+  ThermalZone z2(m);
+  a.addBranchForZone(z2);
+
+  // Check that you do have a terminal
+  ASSERT_TRUE(z2.airLoopHVACTerminal());
+
+  boost::optional<AirTerminalSingleDuctVAVHeatAndCoolReheat> _atu_z2;
+  _atu_z2 = z2.airLoopHVACTerminal().get().cast<AirTerminalSingleDuctVAVHeatAndCoolReheat>();
+  ASSERT_TRUE(_atu_z2);
+
+  // Check that the heating coil was properly connected
+  boost::optional<CoilHeatingWater> _hc = _atu_z2->reheatCoil().cast<CoilHeatingWater>();
+  ASSERT_TRUE(_hc);
+  ASSERT_TRUE(_hc->plantLoop());
+  ASSERT_EQ(p_heating.handle(), _hc->plantLoop()->handle());
+
+}
+
+
+
+// AirTerminalSingleDuctConstantVolumeReheat, non optional reheatCoil. This is the "majority" case.
+TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctConstantVolumeReheat) {
+
+  Model m;
+
+  // Heating coil
+  PlantLoop p_heating(m);
+  CoilHeatingWater hc(m);
+  p_heating.addDemandBranchForComponent(hc);
+
+  // Air Side
+  AirLoopHVAC a(m);
+
+  Schedule sch = m.alwaysOnDiscreteSchedule();
+  AirTerminalSingleDuctConstantVolumeReheat atu(m, sch, hc);
+
+
+  // Add a zone with the terminal
+  ThermalZone z1(m);
+  a.addBranchForZone(z1, atu);
+
+  // New zone, addBranchForZone
+  ThermalZone z2(m);
+  a.addBranchForZone(z2);
+
+  // Check that you do have a terminal
+  ASSERT_TRUE(z2.airLoopHVACTerminal());
+
+  boost::optional<AirTerminalSingleDuctConstantVolumeReheat> _atu_z2;
+  _atu_z2 = z2.airLoopHVACTerminal().get().cast<AirTerminalSingleDuctConstantVolumeReheat>();
+  ASSERT_TRUE(_atu_z2);
+
+  // Check that the heating coil was properly connected
+  boost::optional<CoilHeatingWater> _hc = _atu_z2->reheatCoil().cast<CoilHeatingWater>();
+  ASSERT_TRUE(_hc);
+  ASSERT_TRUE(_hc->plantLoop());
+  ASSERT_EQ(p_heating.handle(), _hc->plantLoop()->handle());
+
+}
+
+
+
+
+
+// AirTerminalSingleDuctSeriesPIUReheat, non optional reheatCoil. This is the "majority" case.
+TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctSeriesPIUReheat) {
+
+  Model m;
+
+  // Heating coil
+  PlantLoop p_heating(m);
+  CoilHeatingWater hc(m);
+  p_heating.addDemandBranchForComponent(hc);
+
+  // Air Side
+  AirLoopHVAC a(m);
+
+  FanConstantVolume fan(m);
+  AirTerminalSingleDuctSeriesPIUReheat atu(m, fan, hc);
+
+
+  // Add a zone with the terminal
+  ThermalZone z1(m);
+  a.addBranchForZone(z1, atu);
+
+  // New zone, addBranchForZone
+  ThermalZone z2(m);
+  a.addBranchForZone(z2);
+
+  // Check that you do have a terminal
+  ASSERT_TRUE(z2.airLoopHVACTerminal());
+
+  boost::optional<AirTerminalSingleDuctSeriesPIUReheat> _atu_z2;
+  _atu_z2 = z2.airLoopHVACTerminal().get().cast<AirTerminalSingleDuctSeriesPIUReheat>();
+  ASSERT_TRUE(_atu_z2);
+
+  // Check that the heating coil was properly connected
+  boost::optional<CoilHeatingWater> _hc = _atu_z2->reheatCoil().cast<CoilHeatingWater>();
+  ASSERT_TRUE(_hc);
+  ASSERT_TRUE(_hc->plantLoop());
+  ASSERT_EQ(p_heating.handle(), _hc->plantLoop()->handle());
+
+}
+
+// AirTerminalSingleDuctSeriesPIUReheat, non optional reheatCoil. This is the "majority" case.
+TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctParallelPIUReheat) {
+
+  Model m;
+
+  // Heating coil
+  PlantLoop p_heating(m);
+  CoilHeatingWater hc(m);
+  p_heating.addDemandBranchForComponent(hc);
+
+  // Air Side
+  AirLoopHVAC a(m);
+
+  Schedule sch = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume fan(m);
+  AirTerminalSingleDuctParallelPIUReheat atu(m, sch, fan, hc);
+
+
+  // Add a zone with the terminal
+  ThermalZone z1(m);
+  a.addBranchForZone(z1, atu);
+
+  // New zone, addBranchForZone
+  ThermalZone z2(m);
+  a.addBranchForZone(z2);
+
+  // Check that you do have a terminal
+  ASSERT_TRUE(z2.airLoopHVACTerminal());
+
+  boost::optional<AirTerminalSingleDuctParallelPIUReheat> _atu_z2;
+  _atu_z2 = z2.airLoopHVACTerminal().get().cast<AirTerminalSingleDuctParallelPIUReheat>();
+  ASSERT_TRUE(_atu_z2);
+
+  // Check that the heating coil was properly connected
+  boost::optional<CoilHeatingWater> _hc = _atu_z2->reheatCoil().cast<CoilHeatingWater>();
+  ASSERT_TRUE(_hc);
+  ASSERT_TRUE(_hc->plantLoop());
+  ASSERT_EQ(p_heating.handle(), _hc->plantLoop()->handle());
+
+}
+
+
+// FourPipeInduction, heatingCoil, optional coolingCoil (set here), so handled separately
+TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctConstantVolumeFourPipeInduction) {
+
+  Model m;
+
+  // Heating coil
+  PlantLoop p_heating(m);
+  CoilHeatingWater hc(m);
+  p_heating.addDemandBranchForComponent(hc);
+
+  // Cooling Coil
+  PlantLoop p_cooling(m);
+  CoilCoolingWater cc(m);
+  p_cooling.addDemandBranchForComponent(cc);
+
+
+  // Air Side
+  AirLoopHVAC a(m);
+
+  AirTerminalSingleDuctConstantVolumeFourPipeInduction atu(m, hc);
+  ASSERT_TRUE(atu.setCoolingCoil(cc));
+
+
+  // Add a zone with the terminal
+  ThermalZone z1(m);
+  a.addBranchForZone(z1, atu);
+
+  // New zone, addBranchForZone
+  ThermalZone z2(m);
+  a.addBranchForZone(z2);
+
+  // Check that you do have a terminal
+  ASSERT_TRUE(z2.airLoopHVACTerminal());
+
+  boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeInduction> _atu_z2;
+  _atu_z2 = z2.airLoopHVACTerminal().get().cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+  ASSERT_TRUE(_atu_z2);
+
+  // Check that the heating coil was properly connected
+  boost::optional<CoilHeatingWater> _hc = _atu_z2->heatingCoil().cast<CoilHeatingWater>();
+  ASSERT_TRUE(_hc);
+  ASSERT_TRUE(_hc->plantLoop());
+  ASSERT_EQ(p_heating.handle(), _hc->plantLoop()->handle());
+
+  // Check that do you have a cooling coil, and it is properly connected
+  ASSERT_TRUE(_atu_z2->coolingCoil());
+
+  boost::optional<CoilCoolingWater> _cc = _atu_z2->coolingCoil()->cast<CoilCoolingWater>();
+  ASSERT_TRUE(_cc);
+  ASSERT_TRUE(_cc->plantLoop());
+  ASSERT_EQ(p_cooling.handle(), _cc->plantLoop()->handle());
+}
+
+
+// CooledBeam has a CoilCoolingCooledBeam with is a StraightComponent, not an HVACComponent, so it's handled separately
+TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctConstantVolumeCooledBeam) {
+
+  Model m;
+
+  // Cooling Coil Cooled Beam
+  PlantLoop p_cooling(m);
+  CoilCoolingCooledBeam cc(m);
+  p_cooling.addDemandBranchForComponent(cc);
+
+
+  // Air Side
+  AirLoopHVAC a(m);
+
+  Schedule sch = m.alwaysOnDiscreteSchedule();
+  AirTerminalSingleDuctConstantVolumeCooledBeam atu(m, sch, cc);
+
+  // Add a zone with the terminal
+  ThermalZone z1(m);
+  a.addBranchForZone(z1, atu);
+
+  // New zone, addBranchForZone
+  ThermalZone z2(m);
+  a.addBranchForZone(z2);
+
+  // Check that you do have a terminal
+  ASSERT_TRUE(z2.airLoopHVACTerminal());
+
+  boost::optional<AirTerminalSingleDuctConstantVolumeCooledBeam> _atu_z2;
+  _atu_z2 = z2.airLoopHVACTerminal().get().cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
+  ASSERT_TRUE(_atu_z2);
+
+  // Check that the coilCoolingCooledBeam (non optional) was properly connected
+  boost::optional<CoilCoolingCooledBeam> _cc = _atu_z2->coilCoolingCooledBeam().cast<CoilCoolingCooledBeam>();
+  ASSERT_TRUE(_cc);
+  ASSERT_TRUE(_cc->plantLoop());
+  ASSERT_EQ(p_cooling.handle(), _cc->plantLoop()->handle());
+
+}
