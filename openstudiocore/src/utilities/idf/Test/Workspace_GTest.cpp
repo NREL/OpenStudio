@@ -79,8 +79,18 @@ TEST_F(IdfFixture, IdfFile_Workspace_DefaultConstructor)
 {
   Workspace workspaceNone(StrictnessLevel::None);
   EXPECT_TRUE(workspaceNone.isValid());
+  // Make sure the default is IddFileType::EnergyPlus
+  EXPECT_EQ(workspaceNone.iddFileType(), IddFileType::EnergyPlus);
+
   Workspace workspaceDraft(StrictnessLevel::Draft);
   EXPECT_TRUE(workspaceDraft.isValid());
+  EXPECT_EQ(workspaceDraft.iddFileType(), IddFileType::EnergyPlus);
+
+  // Test an OpenStudio one
+  Workspace workspaceOS(StrictnessLevel::Draft, IddFileType::OpenStudio);
+  EXPECT_TRUE(workspaceOS.isValid());
+  EXPECT_EQ(workspaceOS.iddFileType(), IddFileType::OpenStudio);
+
   EXPECT_ANY_THROW(Workspace workspaceFinal(StrictnessLevel::Final));
 }
 
@@ -88,6 +98,10 @@ TEST_F(IdfFixture, IdfFile_Workspace_Roundtrip)
 {
   ASSERT_TRUE(epIdfFile.objects().size() > 0);
   Workspace workspace(epIdfFile,StrictnessLevel::None);
+
+  // make sure this also creates an IddFileType::EnergyPlus
+  EXPECT_EQ(workspace.iddFileType(), IddFileType::EnergyPlus);
+
   IdfFile copyOfIdfFile = workspace.toIdfFile();
   // until == available, print out for diff
   openstudio::path outPath = outDir/toPath("passedThroughWorkspace.idf");
