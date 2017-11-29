@@ -30,6 +30,7 @@
 #include "ThreeJS.hpp"
 #include "Vector3d.hpp"
 #include "Geometry.hpp"
+#include "Intersection.hpp"
 
 #include "../core/Assert.hpp"
 #include "../core/Path.hpp"
@@ -477,6 +478,9 @@ namespace openstudio{
     }
 
     // correct the floor vertices
+
+    // simplify the vertices to remove potential duplicate, colinear points
+    faceVertices = simplify(faceVertices, false, 0.001);
 
     unsigned numPoints = faceVertices.size();
     if (numPoints < 3){
