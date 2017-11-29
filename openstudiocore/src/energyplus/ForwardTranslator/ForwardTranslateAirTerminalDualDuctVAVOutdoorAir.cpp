@@ -92,6 +92,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalDualDuctVAVOut
 
   // ControlForOutdoorAir: if yes, get the zone's space's DSOA
   {
+    bool dsoa_found = false;
     if( modelObject.controlForOutdoorAir() ) {
       if( auto airLoopHVAC = modelObject.airLoopHVAC() ) {
         auto zones = airLoopHVAC->demandComponents(modelObject,airLoopHVAC->demandOutletNode(),model::ThermalZone::iddObjectType());
@@ -102,10 +103,15 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalDualDuctVAVOut
             if( auto designSpecificationOutdoorAir = spaces.front().designSpecificationOutdoorAir() ) {
               idfObject.setString(AirTerminal_DualDuct_VAV_OutdoorAirFields::DesignSpecificationOutdoorAirObjectName,
                 designSpecificationOutdoorAir->name().get());
+              dsoa_found = true;
             }
           }
         }
       }
+    }
+    if (!dsoa_found) {
+      LOG(Error, "Cannot set the Required 'Design Specification Outdoor Air' (DSOA) object for " << briefDescription()
+              << ". You should set controlForOutdoorAir to 'true' and ensure the zone's Space/SpaceType has a DSOA attached.");
     }
   }
   // Populate fields for AirDistributionUnit
