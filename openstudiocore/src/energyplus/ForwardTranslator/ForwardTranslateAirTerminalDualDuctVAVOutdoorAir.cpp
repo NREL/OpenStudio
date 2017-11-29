@@ -110,7 +110,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalDualDuctVAVOut
       }
     }
     if (!dsoa_found) {
-      LOG(Error, "Cannot set the Required 'Design Specification Outdoor Air' (DSOA) object for " << briefDescription()
+      LOG(Error, "Cannot set the Required 'Design Specification Outdoor Air' (DSOA) object for " << modelObject.briefDescription()
               << ". You should set controlForOutdoorAir to 'true' and ensure the zone's Space/SpaceType has a DSOA attached.");
     }
   }
