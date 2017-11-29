@@ -1371,7 +1371,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 
   Schedule Model_Impl::alwaysOnDiscreteSchedule() const
   {
-    std::string alwaysOnName = this->alwaysOffDiscreteScheduleName();
+    std::string alwaysOnName = this->alwaysOnDiscreteScheduleName();
 
     std::vector<ScheduleConstant> schedules = model().getConcreteModelObjects<ScheduleConstant>();
 
