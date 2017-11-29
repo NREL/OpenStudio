@@ -3422,7 +3422,7 @@ OS:MaterialProperty:MoisturePenetrationDepth:Settings,
        \note The coating's resistance to water vapor diffusion relative to the
        \note resistance to water vapor diffusion in stagnant air
        \note (see Water Vapor Diffusion Resistance Factor above).
-  
+
 \group OpenStudio Constructions
 
 OS:Construction,
@@ -8701,9 +8701,10 @@ OS:AirLoopHVAC,
   A4, \field Availability Schedule
        \type object-list
         \object-list ScheduleNames
-  A5, \field Availability Manager
+  A5, \field Availability Manager List Name
+       \note Enter the name of an AvailabilityManagerAssignmentList object.
        \type object-list
-       \object-list SystemAvailabilityManagers
+       \object-list SystemAvailabilityManagerLists
   N1, \field Design Supply Air Flow Rate
        \type real
        \autosizable
@@ -9725,7 +9726,7 @@ OS:UnitarySystemPerformance:Multispeed,
        \key Yes
        \key No
        \default No
-       \note Controls coil operation during each HVAC timestep. 
+       \note Controls coil operation during each HVAC timestep.
        \note This choice does not apply to speed 1 operation.
        \note Yes = operate at the highest speed possible without exceeding the current load.
        \note No = allow operation at the average of two adjacent speeds to match the current load.
@@ -10499,14 +10500,13 @@ OS:AirTerminal:DualDuct:VAV:OutdoorAir,
        \autosizable
        \required-field
        \note If autosized this is the sum of flow needed for cooling and maximum required outdoor air
-  A7 , \field Design Specification Outdoor Air Object
+  A7 , \field Control For Outdoor Air
+       \note This field replaces the E+ field Design Specification Outdoor Air Object Name
+       \note Refer to OpenStudio API for details
+       \type choice
+       \key Yes
+       \key No
        \required-field
-       \type object-list
-       \object-list DesignSpecificationOutdoorAirNames
-       \note When the name of a DesignSpecification:OutdoorAir object is entered, the terminal
-       \note unit will increase flow as needed to meet this outdoor air requirement.
-       \note If Outdoor Air Flow per Person is non-zero, then the outdoor air requirement will
-       \note be computed based mode selected in the next field.
        \note At no time will the supply air flow rate exceed the value for Maximum Air Flow Rate.
   A8 ; \field Per Person Ventilation Rate Mode
        \type choice
@@ -10611,16 +10611,48 @@ OS:AvailabilityManager:Scheduled,
        \memo Determines the availability of a loop or system: whether it is on or off.
        \memo Schedule overrides fan/pump schedule.
        \min-fields 3
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
-  A2, \field Name
+  A2,  \field Name
        \type alpha
        \required-field
        \reference SystemAvailabilityManagers
-  A3; \field Schedule Name
+  A3;  \field Schedule Name
        \type object-list
        \required-field
+       \object-list ScheduleNames
+
+OS:AvailabilityManager:ScheduledOn,
+       \memo Determines the availability of a loop or system: only controls the turn on action.
+       \memo Schedule overrides fan/pump schedule.
+       \min-fields 3
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference SystemAvailabilityManagers
+  A3;  \field Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+
+OS:AvailabilityManager:ScheduledOff,
+       \memo Determines the availability of a loop or system: only controls the turn off action.
+       \memo Schedule overrides fan/pump schedule.
+       \min-fields 3
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference SystemAvailabilityManagers
+  A3;  \field Schedule Name
+       \required-field
+       \type object-list
        \object-list ScheduleNames
 
 OS:AvailabilityManager:NightCycle,
@@ -10648,6 +10680,10 @@ OS:AvailabilityManager:NightCycle,
        \key CycleOnAny
        \key CycleOnControlZone
        \key CycleOnAnyZoneFansOnly
+       \key CycleOnAnyCoolingOrHeatingZone
+       \key CycleOnAnyCoolingZone
+       \key CycleOnAnyHeatingZone
+       \key CycleOnAnyHeatingZoneFansOnly
        \default StayOff
        \note When AvailabilityManager:NightCycle is used in the zone component availability
        \note manager assignment list, the key choices for Control Type would only be
@@ -10655,15 +10691,30 @@ OS:AvailabilityManager:NightCycle,
   N1 , \field Thermostat Tolerance
        \default 1.0
        \units deltaC
+  A5 , \field Cycling Run Time Control Type
+       \type choice
+       \key FixedRunTime
+       \key Thermostat
+       \key ThermostatWithMinimumRunTime
+       \default FixedRunTime
   N2 , \field Cycling Run Time
        \default 3600.
        \units s
-  A6 ; \field Control Thermal Zone
+  A7 , \field Control Zone or Zone List Name
        \type object-list
-       \object-list ThermalZoneNames
+       \object-list ModelObjectLists
        \note When AvailabilityManager:NightCycle is used in the zone component availability
        \note manager assignment list, the Control Zone Name should be the name of the zone in which the
        \note zone component is.
+  A8 , \field Cooling Control Zone or Zone List Name
+       \type object-list
+       \object-list ModelObjectLists
+  A9 , \field Heating Control Zone or Zone List Name
+       \type object-list
+       \object-list ModelObjectLists
+  A10 ; \field Heating Zone Fans Only Zone or Zone List Name
+       \type object-list
+       \object-list ModelObjectLists
 
 OS:AvailabilityManager:OptimumStart,
        \memo Determines the optimal start of HVAC systems before occupancy.
@@ -10691,7 +10742,7 @@ OS:AvailabilityManager:OptimumStart,
        \object-list ThermalZoneNames
   A7 , \field Zone List
        \type object-list
-       \object-list ZoneListNames
+       \object-list ThermalZoneListNames
   N1 , \field Maximum Value for Optimum Start Time
        \required-field
        \units hr
@@ -10735,7 +10786,7 @@ OS:AvailabilityManager:OptimumStart,
 
 OS:AvailabilityManager:DifferentialThermostat,
        \memo Overrides fan/pump schedules depending on temperature difference between two nodes.
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
   A2 , \field Name
@@ -10756,6 +10807,79 @@ OS:AvailabilityManager:DifferentialThermostat,
        \type real
        \units deltaC
        \required-field
+
+
+OS:AvailabilityManager:HighTemperatureTurnOff,
+       \memo Overrides fan/pump schedules depending on temperature at sensor node.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference SystemAvailabilityManagers
+  A3 , \field Sensor Node Name
+       \type object-list
+       \object-list Node
+  N1 ; \field Temperature
+       \required-field
+       \type real
+       \units C
+
+OS:AvailabilityManager:HighTemperatureTurnOn,
+       \memo Overrides fan/pump schedules depending on temperature at sensor node.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference SystemAvailabilityManagers
+  A3 , \field Sensor Node Name
+       \type object-list
+       \object-list Node
+  N1 ; \field Temperature
+       \required-field
+       \type real
+       \units C
+
+OS:AvailabilityManager:LowTemperatureTurnOff,
+       \memo Overrides fan/pump schedules depending on temperature at sensor node.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference SystemAvailabilityManagers
+  A3 , \field Sensor Node Name
+       \type object-list
+       \object-list Node
+  N1 , \field Temperature
+       \required-field
+       \type real
+       \units C
+  A4 ; \field Applicability Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note If blank, defaults to always active
+
+OS:AvailabilityManager:LowTemperatureTurnOn,
+       \memo Overrides fan/pump schedules depending on temperature at sensor node.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference SystemAvailabilityManagers
+  A3 , \field Sensor Node Name
+       \type object-list
+       \object-list Node
+  N1 ; \field Temperature
+       \required-field
+       \type real
+       \units C
 
 OS:AvailabilityManager:NightVentilation,
        \memo depending on zone and outdoor conditions overrides fan schedule to do
@@ -12020,7 +12144,7 @@ OS:Chiller:Absorption,
        \required-field
 
 OS:CoolingTower:SingleSpeed,
-       \min-fields 10
+       \min-fields 45
   A1 , \field Handle
        \type handle
        \required-field
@@ -12191,14 +12315,60 @@ OS:CoolingTower:SingleSpeed,
        \minimum 1
        \default 2.5
        \note The allowable maximal fraction of the nominal flow rate per cell
-  N17; \field Sizing Factor
+  N17, \field Sizing Factor
+       \required-field
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
        \default 1.0
+  N18 , \field Free Convection Air Flow Rate Sizing Factor
+       \required-field
+       \type real
+       \minimum> 0.0
+       \maximum< 1.0
+  N19 , \field Free Convection U-Factor Times Area Value Sizing Factor
+       \required-field
+       \type real
+       \minimum> 0.0
+       \maximum< 1.0
+  N20 , \field Heat Rejection Capacity and Nominal Capacity Sizing Ratio
+       \required-field
+       \type real
+       \default 1.25
+  N21, \field Free Convection Nominal Capacity Sizing Factor
+       \required-field
+       \type real
+       \minimum> 0.0
+       \maximum< 1.0
+  N22, \field Design Inlet Air Dry-Bulb Temperature
+       \required-field
+       \type real
+       \units C
+       \minimum 20.0
+  N23, \field Design Inlet Air Wet-Bulb Temperature
+       \required-field
+       \type real
+       \units C
+       \minimum 20.0
+  N24, \field Design Approach Temperature
+       \required-field
+       \type real
+       \units deltaC
+       \autosizable
+       \minimum> 0
+  N25, \field Design Range Temperature
+       \required-field
+       \type real
+       \units deltaC
+       \autosizable
+       \minimum> 0
+  A13; \field End-Use Subcategory
+       \required-field
+       \type alpha
+       \retaincase
 
 OS:CoolingTower:TwoSpeed,
-       \min-fields 25
+       \min-fields 57
        \memo This tower model is based on Merkel's theory, which is also the basis
        \memo for the tower model in ASHRAE's HVAC1 Toolkit. The closed-circuit cooling tower
        \memo is modeled as a counter flow heat exchanger with a two-speed fan drawing air
@@ -12460,14 +12630,41 @@ OS:CoolingTower:TwoSpeed,
        \minimum 1
        \default 2.5
        \note The allowable maximal fraction of the nominal flow rate per cell
-  N29; \field Sizing Factor
+  N29, \field Sizing Factor
+       \required-field
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
        \default 1.0
+  N30, \field Design Inlet Air Dry-Bulb Temperature
+       \required-field
+       \type real
+       \units C
+       \minimum 20.0
+  N31, \field Design Inlet Air Wet-Bulb Temperature
+       \required-field
+       \type real
+       \units C
+       \minimum 20.0
+  N32, \field Design Approach Temperature
+       \required-field
+       \type real
+       \units deltaC
+       \autosizable
+       \minimum> 0
+  N33, \field Design Range Temperature
+       \required-field
+       \type real
+       \units deltaC
+       \autosizable
+       \minimum> 0
+  A13; \field End-Use Subcategory
+       \required-field
+       \type alpha
+       \retaincase
 
 OS:CoolingTower:VariableSpeed,
-       \min-fields 16
+       \min-fields 35
   A1 , \field Handle
        \type handle
        \required-field
@@ -12641,10 +12838,14 @@ OS:CoolingTower:VariableSpeed,
        \type real
        \minimum 1
        \note The allowable maximal fraction of the nominal flow rate per cell
-  N17; \field Sizing Factor
+  N17, \field Sizing Factor
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
+  A14; \field End-Use Subcategory
+       \required-field
+       \type alpha
+       \retaincase
 
 OS:CoolingTowerPerformance:CoolTools,
        \min-fields 45
@@ -19143,9 +19344,10 @@ OS:PlantLoop,
         \key UniformLoad
         \key UniformPLR
         \key SequentialUniformPLR
-  A17, \field Availability Manager Name
+  A17, \field Availability Manager List Name
+       \note Enter the name of an AvailabilityManagerAssignmentList object.
        \type object-list
-       \object-list SystemAvailabilityManagers
+       \object-list SystemAvailabilityManagerLists
   A18, \field Plant Loop Demand Calculation Scheme
        \type choice
        \default SingleSetpoint
@@ -19511,7 +19713,6 @@ OS:LoadProfile:Plant,
 
 OS:Pump:ConstantSpeed,
        \memo This pump model is described in the ASHRAE secondary HVAC toolkit.
-       \min-fields 10
   A1, \field Handle
        \type handle
        \required-field
@@ -19584,16 +19785,32 @@ OS:Pump:ConstantSpeed,
         \note optional, if used pump losses transfered to zone as internal gains
         \type Object-list
         \object-list ThermalZoneNames
-  N8;   \field Skin Loss Radiative Fraction
-        \note optional. If zone identified in previous field then this determines
-        \note the split between convection and radiation for the skin losses
+  N8,   \field Skin Loss Radiative Fraction
+       \required-field
         \type real
         \minimum 0.0
         \maximum 1.0
+  A9,  \field Design Power Sizing Method
+       \required-field
+       \type choice
+       \key PowerPerFlow
+       \key PowerPerFlowPerPressure
+  N9,  \field Design Electric Power per Unit Flow Rate
+       \required-field
+       \type real
+       \units W/(m3/s)
+       \ip-units W/(gal/min)
+       \minimum> 0
+  N10; \field Design Shaft Power per Unit Flow Rate per Unit Head
+       \required-field
+       \type real
+       \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
+       \units W/((m3/s)-Pa)
+       \ip-units W/((gal/min)-ftH20)
+       \minimum> 0
 
 OS:Pump:VariableSpeed,
        \memo This pump model is described in the ASHRAE secondary HVAC toolkit.
-       \min-fields 15
   A1, \field Handle
        \type handle
        \required-field
@@ -19704,10 +19921,44 @@ OS:Pump:VariableSpeed,
        \type object-list
        \units Rotations Per Minute
        \object-list ScheduleNames
-  A13; \field Maximum RPM Schedule
+  A13, \field Maximum RPM Schedule
        \type object-list
        \units Rotations Per Minute
        \object-list ScheduleNames
+  A14,  \field Zone Name
+        \note optional, if used pump losses transfered to zone as internal gains
+        \type object-list
+        \object-list ThermalZoneNames
+  N12,  \field Skin Loss Radiative Fraction
+        \required-field
+        \type real
+        \minimum 0.0
+        \maximum 1.0
+  A15,  \field Design Power Sizing Method
+       \required-field
+        \type choice
+        \key PowerPerFlow
+        \key PowerPerFlowPerPressure
+  N13,  \field Design Electric Power per Unit Flow Rate
+       \required-field
+        \type real
+        \note Used to size Design Power Consumption from design flow rate
+        \units W/(m3/s)
+        \ip-units W/(gal/min)
+        \minimum> 0
+  N14,  \field Design Shaft Power per Unit Flow Rate per Unit Head
+       \required-field
+        \type real
+        \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
+        \units W/((m3/s)-Pa)
+        \ip-units W/((gal/min)-ftH20)
+        \minimum> 0
+  N15;  \field Design Minimum Flow Rate Fraction
+       \required-field
+        \type real
+        \note Used to size Design Minimum Flow Rate
+        \minimum 0
+        \maximum 1.0
 
 OS:HeaderedPumps:ConstantSpeed,
        \memo This Headered pump object describes a pump bank with more than 1 pump in parallel
@@ -19779,13 +20030,30 @@ OS:HeaderedPumps:ConstantSpeed,
         \note optional, if used pump losses transfered to zone as internal gains
         \type Object-list
         \object-list ThermalZoneNames
-  N7 ;  \field Skin Loss Radiative Fraction
+  N7 ,  \field Skin Loss Radiative Fraction
         \note optional. If zone identified in previous field then this determines
         \note the split between convection and radiation for the skin losses
         \type real
         \minimum 0.0
         \maximum 1.0
         \required-field
+  A9,  \field Design Power Sizing Method
+       \type choice
+        \required-field
+       \key PowerPerFlow
+       \key PowerPerFlowPerPressure
+  N8,  \field Design Electric Power per Unit Flow Rate
+       \type real
+        \required-field
+       \units W/(m3/s)
+       \ip-units W/(gal/min)
+       \minimum> 0
+  N9; \field Design Shaft Power per Unit Flow Rate per Unit Head
+       \type real
+        \required-field
+       \units W/((m3/s)-Pa)
+       \ip-units W/((gal/min)-ftH20)
+       \minimum> 0
 
 OS:HeaderedPumps:VariableSpeed,
        \memo This Headered pump object describes a pump bank with more than 1 pump in parallel
@@ -19871,13 +20139,28 @@ OS:HeaderedPumps:VariableSpeed,
         \note optional, if used pump losses transfered to zone as internal gains
         \type object-list
         \object-list ThermalZoneNames
-  N12;  \field Skin Loss Radiative Fraction
-        \note optional. If zone identified in previous field then this determines
-        \note the split between convection and radiation for the skin losses
+  N12,  \field Skin Loss Radiative Fraction
         \type real
         \minimum 0.0
         \maximum 1.0
        \required-field
+  A9,  \field Design Power Sizing Method
+       \required-field
+       \type choice
+       \key PowerPerFlow
+       \key PowerPerFlowPerPressure
+  N13, \field Design Electric Power per Unit Flow Rate
+       \required-field
+       \type real
+       \units W/(m3/s)
+       \ip-units W/(gal/min)
+       \minimum> 0
+  N14; \field Design Shaft Power per Unit Flow Rate per Unit Head
+       \required-field
+       \type real
+       \units W/((m3/s)-Pa)
+       \ip-units W/((gal/min)-ftH20)
+       \minimum> 0
 
 OS:TemperingValve,
       \memo Temperature-controlled diversion valve used to divert flow around one or more plant
@@ -22024,7 +22307,7 @@ OS:ZoneHVAC:FourPipeFanCoil,
    N10, \field Heating Convergence Tolerance
         \type real
         \minimum> 0.0
-        \default 0.001       
+        \default 0.001
    A13, \field Supply Air Fan Operating Mode Schedule Name
         \type object-list
         \object-list ScheduleNames

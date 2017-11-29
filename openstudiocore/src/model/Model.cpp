@@ -218,7 +218,9 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitarySystem);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneMixer);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneSplitter);
+    REGISTER_CONSTRUCTOR(AirTerminalDualDuctConstantVolume);
     REGISTER_CONSTRUCTOR(AirTerminalDualDuctVAV);
+    REGISTER_CONSTRUCTOR(AirTerminalDualDuctVAVOutdoorAir);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctInletSideMixer);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeCooledBeam);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeFourPipeInduction);
@@ -231,11 +233,19 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVHeatAndCoolNoReheat);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVHeatAndCoolReheat);
     REGISTER_CONSTRUCTOR(AirWallMaterial);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerAssignmentList);
     REGISTER_CONSTRUCTOR(AvailabilityManagerNightCycle);
     REGISTER_CONSTRUCTOR(AvailabilityManagerOptimumStart);
     REGISTER_CONSTRUCTOR(AvailabilityManagerHybridVentilation);
     REGISTER_CONSTRUCTOR(AvailabilityManagerDifferentialThermostat);
     REGISTER_CONSTRUCTOR(AvailabilityManagerNightVentilation);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerHighTemperatureTurnOn);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerHighTemperatureTurnOff);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerLowTemperatureTurnOn);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerLowTemperatureTurnOff);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerScheduled);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerScheduledOn);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerScheduledOff);
     REGISTER_CONSTRUCTOR(Blind);
     REGISTER_CONSTRUCTOR(BoilerHotWater);
     REGISTER_CONSTRUCTOR(BoilerSteam);
@@ -660,7 +670,9 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitarySystem);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneMixer);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneSplitter);
+    REGISTER_COPYCONSTRUCTORS(AirTerminalDualDuctConstantVolume);
     REGISTER_COPYCONSTRUCTORS(AirTerminalDualDuctVAV);
+    REGISTER_COPYCONSTRUCTORS(AirTerminalDualDuctVAVOutdoorAir);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctInletSideMixer);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeCooledBeam);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeFourPipeInduction);
@@ -673,11 +685,19 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVHeatAndCoolNoReheat);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVHeatAndCoolReheat);
     REGISTER_COPYCONSTRUCTORS(AirWallMaterial);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerAssignmentList);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerNightCycle);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerOptimumStart);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerHybridVentilation);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerDifferentialThermostat);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerNightVentilation);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerHighTemperatureTurnOn);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerHighTemperatureTurnOff);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerLowTemperatureTurnOn);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerLowTemperatureTurnOff);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerScheduled);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerScheduledOn);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerScheduledOff);
     REGISTER_COPYCONSTRUCTORS(Blind);
     REGISTER_COPYCONSTRUCTORS(BoilerHotWater);
     REGISTER_COPYCONSTRUCTORS(BoilerSteam);
@@ -1516,6 +1536,34 @@ if (_className::iddObjectType() == typeToCreate) { \
     return "Plenum Space Type";
   }
 
+  Node Model_Impl::outdoorAirNode() const
+  {
+    std::string outdoorAirNodeName("Model Outdoor Air Node");
+
+    std::vector<Node> nodes = model().getConcreteModelObjects<Node>();
+
+    // Search for a node with the right name and not connected to any PlantLoop or AirLoopHVAC
+    for( const auto & node : nodes )
+    {
+      if( boost::optional<std::string> name = node.name() )
+      {
+        if( istringEqual(name.get(),outdoorAirNodeName) )
+        {
+          if( !node.plantLoop() && !node.airLoopHVAC() )
+          {
+            return node;
+          }
+        }
+      }
+    }
+
+    // Otherwise, create it
+    Node node(model());
+    node.setName(outdoorAirNodeName);
+
+    return node;
+  }
+
   WorkflowJSON Model_Impl::workflowJSON() const
   {
     return m_workflowJSON;
@@ -2032,6 +2080,11 @@ Schedule Model::alwaysOnContinuousSchedule() const
 std::string Model::alwaysOnContinuousScheduleName() const
 {
   return getImpl<detail::Model_Impl>()->alwaysOnContinuousScheduleName();
+}
+
+Node Model::outdoorAirNode() const
+{
+  return getImpl<detail::Model_Impl>()->outdoorAirNode();
 }
 
 SpaceType Model::plenumSpaceType() const

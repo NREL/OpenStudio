@@ -43,6 +43,8 @@
 #include "ZoneHVACComponent_Impl.hpp"
 #include "ZoneHVACFourPipeFanCoil.hpp"
 #include "ZoneHVACFourPipeFanCoil_Impl.hpp"
+#include "AirTerminalSingleDuctConstantVolumeFourPipeInduction.hpp"
+#include "AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl.hpp"
 #include <utilities/idd/OS_Coil_Cooling_Water_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
@@ -419,6 +421,22 @@ namespace detail {
         }
       }
     }
+
+
+    // AirTerminalSingleDuctConstantVolumeFourPipeInduction
+    std::vector<AirTerminalSingleDuctConstantVolumeFourPipeInduction> fourPipeSystems = this->model().getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+
+    for( const auto & fourPipeSystem : fourPipeSystems )
+    {
+      if( boost::optional<HVACComponent> coolingCoil = fourPipeSystem.coolingCoil() )
+      {
+        if( coolingCoil->handle() == this->handle() )
+        {
+          return fourPipeSystem;
+        }
+      }
+    }
+
 
     return boost::none;
   }

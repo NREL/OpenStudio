@@ -367,6 +367,25 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   void resetSizingFactor();
 
+  double designInletAirDryBulbTemperature() const;
+  bool setDesignInletAirDryBulbTemperature(double designInletAirDryBulbTemperature);
+
+  double designInletAirWetBulbTemperature() const;
+  bool setDesignInletAirWetBulbTemperature(double designInletAirWetBulbTemperature);
+
+  boost::optional<double> designApproachTemperature() const;
+  bool isDesignApproachTemperatureAutosized() const;
+  bool setDesignApproachTemperature(double designApproachTemperature);
+  void autosizeDesignApproachTemperature();
+
+  boost::optional<double> designRangeTemperature() const;
+  bool isDesignRangeTemperatureAutosized() const;
+  bool setDesignRangeTemperature(double designRangeTemperature);
+  void autosizeDesignRangeTemperature();
+
+  std::string endUseSubcategory() const;
+  bool setEndUseSubcategory(const std::string & endUseSubcategory);
+
   //@}
   /** @name Other */
   //@{

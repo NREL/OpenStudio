@@ -42,26 +42,6 @@ namespace detail {
 
   // derive CoilCoolingDXSingleSpeed_Impl from ModelObject_Impl to override virtual methods
   class MODEL_API CoilCoolingDXSingleSpeed_Impl : public StraightComponent_Impl {
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
    public:
     /** @name Constructors and Destructors */
     //@{
