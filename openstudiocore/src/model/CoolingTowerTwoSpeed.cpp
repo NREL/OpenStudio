@@ -1067,6 +1067,11 @@ CoolingTowerTwoSpeed::CoolingTowerTwoSpeed(const Model& model)
   autosizeLowFanSpeedFanPower();
   autosizeLowFanSpeedUFactorTimesAreaValue();
   setSizingFactor(1.0);
+  setDesignInletAirDryBulbTemperature(35.0);
+  setDesignInletAirWetBulbTemperature(25.6);
+  autosizeDesignApproachTemperature();
+  autosizeDesignRangeTemperature();
+  setEndUseSubcategory("General");
 }
 
 IddObjectType CoolingTowerTwoSpeed::iddObjectType() {

@@ -12144,7 +12144,7 @@ OS:Chiller:Absorption,
        \required-field
 
 OS:CoolingTower:SingleSpeed,
-       \min-fields 10
+       \min-fields 45
   A1 , \field Handle
        \type handle
        \required-field
@@ -12316,49 +12316,59 @@ OS:CoolingTower:SingleSpeed,
        \default 2.5
        \note The allowable maximal fraction of the nominal flow rate per cell
   N17, \field Sizing Factor
+       \required-field
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
        \default 1.0
   N18 , \field Free Convection Air Flow Rate Sizing Factor
+       \required-field
        \type real
        \minimum> 0.0
        \maximum< 1.0
   N19 , \field Free Convection U-Factor Times Area Value Sizing Factor
+       \required-field
        \type real
        \minimum> 0.0
        \maximum< 1.0
   N20 , \field Heat Rejection Capacity and Nominal Capacity Sizing Ratio
+       \required-field
        \type real
        \default 1.25
   N21, \field Free Convection Nominal Capacity Sizing Factor
+       \required-field
        \type real
        \minimum> 0.0
        \maximum< 1.0
   N22, \field Design Inlet Air Dry-Bulb Temperature
+       \required-field
        \type real
        \units C
        \minimum 20.0
   N23, \field Design Inlet Air Wet-Bulb Temperature
+       \required-field
        \type real
        \units C
        \minimum 20.0
   N24, \field Design Approach Temperature
+       \required-field
        \type real
        \units deltaC
        \autosizable
        \minimum> 0
   N25, \field Design Range Temperature
+       \required-field
        \type real
        \units deltaC
        \autosizable
        \minimum> 0
   A13; \field End-Use Subcategory
+       \required-field
        \type alpha
        \retaincase
 
 OS:CoolingTower:TwoSpeed,
-       \min-fields 25
+       \min-fields 57
        \memo This tower model is based on Merkel's theory, which is also the basis
        \memo for the tower model in ASHRAE's HVAC1 Toolkit. The closed-circuit cooling tower
        \memo is modeled as a counter flow heat exchanger with a two-speed fan drawing air
@@ -12621,34 +12631,40 @@ OS:CoolingTower:TwoSpeed,
        \default 2.5
        \note The allowable maximal fraction of the nominal flow rate per cell
   N29, \field Sizing Factor
+       \required-field
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
        \default 1.0
   N30, \field Design Inlet Air Dry-Bulb Temperature
+       \required-field
        \type real
        \units C
        \minimum 20.0
   N31, \field Design Inlet Air Wet-Bulb Temperature
+       \required-field
        \type real
        \units C
        \minimum 20.0
   N32, \field Design Approach Temperature
+       \required-field
        \type real
        \units deltaC
        \autosizable
        \minimum> 0
   N33, \field Design Range Temperature
+       \required-field
        \type real
        \units deltaC
        \autosizable
        \minimum> 0
   A13; \field End-Use Subcategory
+       \required-field
        \type alpha
        \retaincase
 
 OS:CoolingTower:VariableSpeed,
-       \min-fields 16
+       \min-fields 35
   A1 , \field Handle
        \type handle
        \required-field
@@ -12827,6 +12843,7 @@ OS:CoolingTower:VariableSpeed,
        \type real
        \minimum> 0.0
   A14; \field End-Use Subcategory
+       \required-field
        \type alpha
        \retaincase
 

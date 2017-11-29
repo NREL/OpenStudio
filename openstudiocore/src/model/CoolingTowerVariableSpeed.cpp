@@ -726,6 +726,7 @@ CoolingTowerVariableSpeed::CoolingTowerVariableSpeed(const Model& model)
   setBlowdownCalculationMode("ConcentrationRatio");
   setBlowdownConcentrationRatio(3.0000);
   setSizingFactor(1.0000);
+  setEndUseSubcategory("General");
 
   CurveCubic curve(model);
   curve.setName(name().get() + " Fan Power Ratio Curve");

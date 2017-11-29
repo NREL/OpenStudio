@@ -1324,6 +1324,24 @@ CoolingTowerSingleSpeed::CoolingTowerSingleSpeed(const Model& model)
   setCellMaximumWaterFlowRateFraction(2.5);
 
   setSizingFactor(1.0);
+
+  setFreeConvectionAirFlowRateSizingFactor(0.1);
+
+  setFreeConvectionUFactorTimesAreaValueSizingFactor(0.1);
+
+  setHeatRejectionCapacityAndNominalCapacitySizingRatio(1.25);
+
+  setFreeConvectionNominalCapacitySizingFactor(0.1);
+
+  setDesignInletAirDryBulbTemperature(35.0);
+
+  setDesignInletAirWetBulbTemperature(25.6);
+
+  autosizeDesignApproachTemperature();
+
+  autosizeDesignRangeTemperature();
+
+  setEndUseSubcategory("General");
 }
 
 IddObjectType CoolingTowerSingleSpeed::iddObjectType() {
