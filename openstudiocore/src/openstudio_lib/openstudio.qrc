@@ -10,6 +10,7 @@
     <file>images/air_loop_icon.png</file>
     <file>images/air_terminal_inlet_mixer.png</file>
     <file>images/airterminal_dualduct_vav.png</file>
+    <file>images/airterminal_dualduct_constantvolume.png</file>
     <file>images/arrow.png</file>
     <file>images/baseboard_electric.png</file>
     <file>images/baseboard_water.png</file>
@@ -421,6 +422,7 @@
     <file>images/mini_icons/mini_air_cooled.png</file>
     <file>images/mini_icons/mini_air_terminal_inlet_mixer.png</file>
     <file>images/mini_icons/airterminal_dualduct_vav.png</file>
+    <file>images/mini_icons/airterminal_dualduct_constantvolume.png</file>
     <file>images/mini_icons/mini_chiller_absorption_direct.png</file>
     <file>images/mini_icons/mini_chiller_absorption_indirect.png</file>
     <file>images/mini_icons/mini_coil_system_water.png</file>
