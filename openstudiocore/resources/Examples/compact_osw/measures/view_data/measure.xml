@@ -1,0 +1,140 @@
+<measure>
+  <schema_version>3.0</schema_version>
+  <name>view_data</name>
+  <uid>18cf0de7-48b8-48dc-ab68-0dd29f0b8bd0</uid>
+  <version_id>f93dc81a-bef4-45e0-a15f-2861abd00640</version_id>
+  <version_modified>20171128T155822Z</version_modified>
+  <xml_checksum>2C8A3EEF</xml_checksum>
+  <class_name>ViewData</class_name>
+  <display_name>ViewData</display_name>
+  <description>Visualize energy simulation data plotted on an OpenStudio model in a web based viewer</description>
+  <modeler_description>Converts the OpenStudio model to vA3C JSON format and renders using Three.js, simulation data is applied to surfaces of the model</modeler_description>
+  <arguments>
+    <argument>
+      <name>file_source</name>
+      <display_name>Model Source</display_name>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>Last OSM</default_value>
+      <choices>
+        <choice>
+          <value>Last OSM</value>
+          <display_name>Last OSM</display_name>
+        </choice>
+        <choice>
+          <value>Last IDF</value>
+          <display_name>Last IDF</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>reporting_frequency</name>
+      <display_name>Reporting Frequency</display_name>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>Hourly</default_value>
+      <choices>
+        <choice>
+          <value>Timestep</value>
+          <display_name>Timestep</display_name>
+        </choice>
+        <choice>
+          <value>Hourly</value>
+          <display_name>Hourly</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>variable1_name</name>
+      <display_name>Variable 1 Name</display_name>
+      <type>String</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>Surface Outside Face Temperature</default_value>
+    </argument>
+    <argument>
+      <name>variable2_name</name>
+      <display_name>Variable 2 Name</display_name>
+      <type>String</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>Surface Inside Face Temperature</default_value>
+    </argument>
+    <argument>
+      <name>variable3_name</name>
+      <display_name>Variable 3 Name</display_name>
+      <type>String</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>Zone Mean Radiant Temperature</default_value>
+    </argument>
+  </arguments>
+  <outputs/>
+  <provenances/>
+  <tags>
+    <tag>Reporting.QAQC</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ReportingMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <filename>USA_CO_Golden-NREL.724666_TMY3.epw</filename>
+      <filetype>epw</filetype>
+      <usage_type>test</usage_type>
+      <checksum>BDF687C1</checksum>
+    </file>
+    <file>
+      <filename>ExampleModel.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>1B6496DE</checksum>
+    </file>
+    <file>
+      <filename>ViewData_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>9B12A44E</checksum>
+    </file>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>1.6.3</identifier>
+        <min_compatible>1.8.0</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>7748F9FF</checksum>
+    </file>
+    <file>
+      <filename>report.html.in</filename>
+      <filetype>in</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>64866EE7</checksum>
+    </file>
+    <file>
+      <filename>SimpleModel.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>AC094EF8</checksum>
+    </file>
+    <file>
+      <filename>va3c.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>254BCDED</checksum>
+    </file>
+  </files>
+</measure>
