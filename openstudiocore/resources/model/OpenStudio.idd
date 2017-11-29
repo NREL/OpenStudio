@@ -3422,7 +3422,7 @@ OS:MaterialProperty:MoisturePenetrationDepth:Settings,
        \note The coating's resistance to water vapor diffusion relative to the
        \note resistance to water vapor diffusion in stagnant air
        \note (see Water Vapor Diffusion Resistance Factor above).
-  
+
 \group OpenStudio Constructions
 
 OS:Construction,
@@ -10500,14 +10500,13 @@ OS:AirTerminal:DualDuct:VAV:OutdoorAir,
        \autosizable
        \required-field
        \note If autosized this is the sum of flow needed for cooling and maximum required outdoor air
-  A7 , \field Design Specification Outdoor Air Object
+  A7 , \field Control For Outdoor Air
+       \note This field replaces the E+ field Design Specification Outdoor Air Object Name
+       \note Refer to OpenStudio API for details
+       \type choice
+       \key Yes
+       \key No
        \required-field
-       \type object-list
-       \object-list DesignSpecificationOutdoorAirNames
-       \note When the name of a DesignSpecification:OutdoorAir object is entered, the terminal
-       \note unit will increase flow as needed to meet this outdoor air requirement.
-       \note If Outdoor Air Flow per Person is non-zero, then the outdoor air requirement will
-       \note be computed based mode selected in the next field.
        \note At no time will the supply air flow rate exceed the value for Maximum Air Flow Rate.
   A8 ; \field Per Person Ventilation Rate Mode
        \type choice

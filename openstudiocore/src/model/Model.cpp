@@ -218,7 +218,9 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitarySystem);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneMixer);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneSplitter);
+    REGISTER_CONSTRUCTOR(AirTerminalDualDuctConstantVolume);
     REGISTER_CONSTRUCTOR(AirTerminalDualDuctVAV);
+    REGISTER_CONSTRUCTOR(AirTerminalDualDuctVAVOutdoorAir);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctInletSideMixer);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeCooledBeam);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeFourPipeInduction);
@@ -668,7 +670,9 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitarySystem);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneMixer);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneSplitter);
+    REGISTER_COPYCONSTRUCTORS(AirTerminalDualDuctConstantVolume);
     REGISTER_COPYCONSTRUCTORS(AirTerminalDualDuctVAV);
+    REGISTER_COPYCONSTRUCTORS(AirTerminalDualDuctVAVOutdoorAir);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctInletSideMixer);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeCooledBeam);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeFourPipeInduction);
@@ -1387,7 +1391,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 
   Schedule Model_Impl::alwaysOnDiscreteSchedule() const
   {
-    std::string alwaysOnName = this->alwaysOffDiscreteScheduleName();
+    std::string alwaysOnName = this->alwaysOnDiscreteScheduleName();
 
     std::vector<ScheduleConstant> schedules = model().getConcreteModelObjects<ScheduleConstant>();
 

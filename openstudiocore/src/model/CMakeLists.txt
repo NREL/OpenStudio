@@ -79,9 +79,15 @@ set(${target_name}_src
   AirLoopHVACZoneSplitter.hpp
   AirLoopHVACZoneSplitter_Impl.hpp
   AirLoopHVACZoneSplitter.cpp
+  AirTerminalDualDuctConstantVolume.hpp
+  AirTerminalDualDuctConstantVolume_Impl.hpp
+  AirTerminalDualDuctConstantVolume.cpp
   AirTerminalDualDuctVAV.hpp
   AirTerminalDualDuctVAV_Impl.hpp
   AirTerminalDualDuctVAV.cpp
+  AirTerminalDualDuctVAVOutdoorAir.hpp
+  AirTerminalDualDuctVAVOutdoorAir_Impl.hpp
+  AirTerminalDualDuctVAVOutdoorAir.cpp
   AirTerminalSingleDuctInletSideMixer.hpp
   AirTerminalSingleDuctInletSideMixer_Impl.hpp
   AirTerminalSingleDuctInletSideMixer.cpp
@@ -1473,7 +1479,9 @@ set(${target_name}_test_src
   test/AirLoopHVACUnitarySystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_GTest.cpp
   test/AirLoopHVAC_GTest.cpp
+  test/AirTerminalDualDuctConstantVolume_GTest.cpp
   test/AirTerminalDualDuctVAV_GTest.cpp
+  test/AirTerminalDualDuctVAVOutdoorAir_GTest.cpp
   test/AirTerminalSingleDuctInletSideMixer_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeFourPipeInduction_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeCooledBeam_GTest.cpp

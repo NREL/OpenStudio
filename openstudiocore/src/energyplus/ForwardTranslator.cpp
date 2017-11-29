@@ -552,10 +552,22 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirLoopHVACSupplyPlenum(airLoopHVACSupplyPlenum);
       break;
     }
+  case openstudio::IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume :
+    {
+      auto mo = modelObject.cast<AirTerminalDualDuctConstantVolume>();
+      retVal = translateAirTerminalDualDuctConstantVolume(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_AirTerminal_DualDuct_VAV :
     {
       auto mo = modelObject.cast<AirTerminalDualDuctVAV>();
       retVal = translateAirTerminalDualDuctVAV(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AirTerminal_DualDuct_VAV_OutdoorAir :
+    {
+      auto mo = modelObject.cast<AirTerminalDualDuctVAVOutdoorAir>();
+      retVal = translateAirTerminalDualDuctVAVOutdoorAir(mo);
       break;
     }
   case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction :
@@ -3135,6 +3147,8 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_AirLoopHVAC_UnitaryCoolOnly);
   result.push_back(IddObjectType::OS_AirLoopHVAC_ZoneMixer);
   result.push_back(IddObjectType::OS_AirLoopHVAC_ZoneSplitter);
+  result.push_back(IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume);
+  result.push_back(IddObjectType::OS_AirTerminal_DualDuct_VAV_OutdoorAir);
   result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam);
   result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled);
 
