@@ -15,14 +15,14 @@ OS:ScheduleTypeLimits,
 ! Always On Discrete
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
-  Always On Discrete,                     !- Name
+  Always On Discrete hvac_library,        !- Name
   {0d28348a-6700-450f-9304-2196e445dc49}, !- Schedule Type Limits Name
   1;                                      !- Value
 
 ! Always Off Discrete
 OS:Schedule:Constant,
   {b267e42b-9691-4116-8393-70bb1197dc5b}, !- Handle
-  Always Off Discrete,                    !- Name
+  Always Off Discrete hvac_library,       !- Name
   {0d28348a-6700-450f-9304-2196e445dc49}, !- Schedule Type Limits Name
   0;                                      !- Value
 
