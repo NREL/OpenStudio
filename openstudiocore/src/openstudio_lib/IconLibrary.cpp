@@ -80,8 +80,9 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirLoopHVAC_ZoneSplitter).value()] = new QPixmap(":images/splitter.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_DualDuct_VAV).value()] = new QPixmap(":images/airterminal_dualduct_vav.png");
 
-  // TODO: create icons for these two new ATUs
-  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume).value()] = new QPixmap(":images/airterminal_dualduct_vav.png");
+  // TODO: check this icon (I removed the "VAV" portion of the icon
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume).value()] = new QPixmap(":images/airterminal_dualduct_constantvolume.png");
+  // TODO: create icons for this new ATU
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_DualDuct_VAV_OutdoorAir).value()] = new QPixmap(":images/airterminal_dualduct_vav.png");
 
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam).value()] = new QPixmap(":images/chilled_beam.png");
@@ -309,8 +310,9 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass).value()] = new QPixmap(":images/mini_icons/mini_unitary_system.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_DualDuct_VAV).value()] = new QPixmap(":images/mini_icons/airterminal_dualduct_vav.png");
 
-  // TODO: create icons for these two new ATUs
-  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume).value()] = new QPixmap(":images/mini_icons/airterminal_dualduct_vav.png");
+  // TODO: check this icon (I removed the "VAV" portion of the icon
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume).value()] = new QPixmap(":images/mini_icons/airterminal_dualduct_constantvolume.png");
+  // TODO: create icons for this new ATU
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_DualDuct_VAV_OutdoorAir).value()] = new QPixmap(":images/mini_icons/airterminal_dualduct_vav.png");
 
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam).value()] = new QPixmap(":images/mini_icons/chilled_beam.png");
