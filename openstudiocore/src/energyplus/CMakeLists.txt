@@ -498,6 +498,8 @@ set(${target_name}_test_src
   Test/ReverseTranslator_GTest.cpp
 
   Test/AirLoopHVACUnitarySystem_GTest.cpp
+  Test/AirTerminalDualDuctConstantVolume_GTest.cpp
+  Test/AirTerminalDualDuctVAVOutdoorAir_GTest.cpp
   Test/AirWallMaterial_GTest.cpp
   Test/Building_GTest.cpp
   Test/CoilHeatingGas_GTest.cpp
