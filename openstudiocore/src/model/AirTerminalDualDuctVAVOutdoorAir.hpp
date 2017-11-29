@@ -37,8 +37,6 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
-class AirLoopHVAC;
-class Model;
 class Node;
 class DesignSpecificationOutdoorAir;
 
