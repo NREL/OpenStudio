@@ -2073,15 +2073,14 @@ Schedule Model::alwaysOnContinuousSchedule() const
   return getImpl<detail::Model_Impl>()->alwaysOnContinuousSchedule();
 }
 
-<<<<<<< HEAD
 std::string Model::alwaysOnContinuousScheduleName() const
 {
   return getImpl<detail::Model_Impl>()->alwaysOnContinuousScheduleName();
-=======
+}
+
 Node Model::outdoorAirNode() const
 {
   return getImpl<detail::Model_Impl>()->outdoorAirNode();
->>>>>>> julien/Fix_2410
 }
 
 SpaceType Model::plenumSpaceType() const
