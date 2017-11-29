@@ -3671,6 +3671,24 @@ std::string VersionTranslator::update_2_1_2_to_2_3_0(const IdfFile& idf_2_1_2, c
 
       ss << newObject;
       ss << avmList;
+    } else if (iddname == "OS:Chiller:Electric:EIR") {
+      auto iddObject = idd_2_3_0.getObject("OS:Chiller:Electric:EIR");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      if( object.getString(17) ) {
+        newObject.setString(19,"WaterCooled");
+      } else {
+        newObject.setString(19,"AirCooled");
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
     } else {
       ss << object;
     }
