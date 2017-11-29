@@ -3,16 +3,14 @@ OS:Version,
   {de09e553-501b-482c-8f3a-f24d04bcbf5e}, !- Handle
   2.3.0;                                  !- Version Identifier
 
-
 ! Always OnOff Discrete Schedule Type Limits
 OS:ScheduleTypeLimits,
   {0d28348a-6700-450f-9304-2196e445dc49}, !- Handle
-  OnOff hvac_library,                                  !- Name
+  OnOff hvac_library,                     !- Name
   0,                                      !- Lower Limit Value
   1,                                      !- Upper Limit Value
   Discrete,                               !- Numeric Type
   Availability;                           !- Unit Type
-
 
 ! Always On Discrete
 OS:Schedule:Constant,
@@ -27,7 +25,6 @@ OS:Schedule:Constant,
   Always Off Discrete,                    !- Name
   {0d28348a-6700-450f-9304-2196e445dc49}, !- Schedule Type Limits Name
   0;                                      !- Value
-
 
 OS:ScheduleTypeLimits,
   {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Handle
@@ -890,8 +887,8 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
   ,                                       !- Air Outlet Node Name
   0.001,                                  !- Convergence Tolerance
   Normal,                                 !- Damper Heating Action
-  Autocalculate,                          !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
-  Autocalculate,                          !- Maximum Flow Fraction During Reheat
+  AutoSize,                               !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
+  AutoSize,                               !- Maximum Flow Fraction During Reheat
   35,                                     !- Maximum Reheat Air Temperature {C}
   No;                                     !- Control For Outdoor Air
 
@@ -924,8 +921,8 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
   ,                                       !- Air Outlet Node Name
   0.001,                                  !- Convergence Tolerance
   Normal,                                 !- Damper Heating Action
-  Autocalculate,                          !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
-  Autocalculate,                          !- Maximum Flow Fraction During Reheat
+  AutoSize,                               !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
+  AutoSize,                               !- Maximum Flow Fraction During Reheat
   35,                                     !- Maximum Reheat Air Temperature {C}
   No;                                     !- Control For Outdoor Air
 
@@ -955,8 +952,8 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
   ,                                       !- Air Outlet Node Name
   0.001,                                  !- Convergence Tolerance
   Normal,                                 !- Damper Heating Action
-  Autocalculate,                          !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
-  Autocalculate,                          !- Maximum Flow Fraction During Reheat
+  AutoSize,                               !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
+  AutoSize,                               !- Maximum Flow Fraction During Reheat
   35,                                     !- Maximum Reheat Air Temperature {C}
   No;                                     !- Control For Outdoor Air
 
@@ -5245,8 +5242,6 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
   30,                                     !- Zone Terminal Unit On Parasitic Electric Energy Use {W}
   20,                                     !- Zone Terminal Unit Off Parasitic Electric Energy Use {W}
   1;                                      !- Rated Total Heating Capacity Sizing Ratio {W/W}
-
-
 
 OS:Coil:Cooling:DX:VariableRefrigerantFlow,
   {8c84c0ac-6832-4444-a64f-9d88308c1b14}, !- Handle
@@ -10362,7 +10357,6 @@ OS:ZoneHVAC:UnitVentilator,
   0.001,                                  !- Cooling Convergence Tolerance
   ,                                       !- Availability Manager List Name
   ;                                       !- Design Specification ZoneHVAC Sizing Object Name
-
 
 OS:Fan:OnOff,
   {1de181b7-cdad-45a4-b128-ca4ad5c4bda7}, !- Handle
