@@ -11314,3 +11314,23 @@ OS:Curve:Quadratic,
   -10000000000,                           !- Minimum Value of x
   10000000000;                            !- Maximum Value of x
 
+OS:AirTerminal:DualDuct:VAV:OutdoorAir,
+  {d8b51b89-2249-4cd4-9b5f-9e0c226fe5e0}, !- Handle
+  ATU Dual Duct VAV OA,                   !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule
+  ,                                       !- Air Outlet Node
+  ,                                       !- Outdoor Air Inlet Node
+  ,                                       !- Recirculated Air Inlet Node
+  autosize,                               !- Maximum Terminal Air Flow Rate {m3/s}
+  Yes,                                    !- Control For Outdoor Air
+  CurrentOccupancy;                       !- Per Person Ventilation Rate Mode
+
+OS:AirTerminal:DualDuct:ConstantVolume,
+  {21715e91-afdc-4810-b60e-ddb3440f5445}, !- Handle
+  ATU Dual Duct CV,                       !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule
+  ,                                       !- Air Outlet Node
+  ,                                       !- Hot Air Inlet Node
+  ,                                       !- Cold Air Inlet Node
+  autosize;                               !- Maximum Air Flow Rate {m3/s}
+
