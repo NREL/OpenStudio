@@ -3,19 +3,31 @@ OS:Version,
   {de09e553-501b-482c-8f3a-f24d04bcbf5e}, !- Handle
   2.3.0;                                  !- Version Identifier
 
-OS:Schedule:Constant,
-  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
-  Always On Discrete 1,                   !- Name
-  {0d28348a-6700-450f-9304-2196e445dc49}, !- Schedule Type Limits Name
-  1;                                      !- Value
 
+! Always OnOff Discrete Schedule Type Limits
 OS:ScheduleTypeLimits,
   {0d28348a-6700-450f-9304-2196e445dc49}, !- Handle
-  Schedule Type Limits 1,                 !- Name
+  OnOff hvac_library,                                  !- Name
   0,                                      !- Lower Limit Value
   1,                                      !- Upper Limit Value
   Discrete,                               !- Numeric Type
   Availability;                           !- Unit Type
+
+
+! Always On Discrete
+OS:Schedule:Constant,
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
+  Always On Discrete,                     !- Name
+  {0d28348a-6700-450f-9304-2196e445dc49}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+! Always Off Discrete
+OS:Schedule:Constant,
+  {b267e42b-9691-4116-8393-70bb1197dc5b}, !- Handle
+  Always Off Discrete,                    !- Name
+  {0d28348a-6700-450f-9304-2196e445dc49}, !- Schedule Type Limits Name
+  0;                                      !- Value
+
 
 OS:ScheduleTypeLimits,
   {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Handle
@@ -2863,7 +2875,7 @@ OS:Schedule:Day,
 OS:Fan:OnOff,
   {d609f359-7cae-452b-ad72-7a7d35e5408c}, !- Handle
   HPWH Fan,                               !- Name
-  {9875a6ce-9141-4182-9ef8-92f66eff28cf}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6,                                    !- Fan Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
@@ -2874,20 +2886,6 @@ OS:Fan:OnOff,
   {b5ed7293-6ce3-478f-baa7-81cb26574a12}, !- Fan Power Ratio Function of Speed Ratio Curve Name
   {8e01faf1-eca6-4876-9cf0-2baaf52a0798}, !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
   ;                                       !- End-Use Subcategory
-
-OS:Schedule:Constant,
-  {9875a6ce-9141-4182-9ef8-92f66eff28cf}, !- Handle
-  Always On Discrete 2,                   !- Name
-  {689e8ec5-f8df-4594-944d-3a478e57ebde}, !- Schedule Type Limits Name
-  1;                                      !- Value
-
-OS:ScheduleTypeLimits,
-  {689e8ec5-f8df-4594-944d-3a478e57ebde}, !- Handle
-  OnOff 2,                                !- Name
-  0,                                      !- Lower Limit Value
-  1,                                      !- Upper Limit Value
-  Discrete,                               !- Numeric Type
-  Availability;                           !- Unit Type
 
 OS:Curve:Exponent,
   {b5ed7293-6ce3-478f-baa7-81cb26574a12}, !- Handle
@@ -5238,7 +5236,7 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
   autosize,                               !- Outdoor Air Flow Rate During Cooling Operation {m3/s}
   autosize,                               !- Outdoor Air Flow Rate During Heating Operation {m3/s}
   autosize,                               !- Outdoor Air Flow Rate When No Cooling or Heating is Needed {m3/s}
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Supply Air Fan Operating Mode Schedule
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Supply Air Fan Operating Mode Schedule
   ,                                       !- Supply Air Fan placement
   {de259b99-d14c-4c97-a714-fc200c52027a}, !- Supply Air Fan
   ,                                       !- Outside Air Mixer
@@ -5248,24 +5246,12 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
   20,                                     !- Zone Terminal Unit Off Parasitic Electric Energy Use {W}
   1;                                      !- Rated Total Heating Capacity Sizing Ratio {W/W}
 
-OS:Schedule:Constant,
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Handle
-  Always On Discrete,                     !- Name
-  {c4b72eeb-4c4b-47c5-96c2-6f0d4a648825}, !- Schedule Type Limits Name
-  1;                                      !- Value
 
-OS:ScheduleTypeLimits,
-  {c4b72eeb-4c4b-47c5-96c2-6f0d4a648825}, !- Handle
-  Schedule Type Limits 2,                 !- Name
-  0,                                      !- Lower Limit Value
-  1,                                      !- Upper Limit Value
-  Discrete,                               !- Numeric Type
-  Availability;                           !- Unit Type
 
 OS:Coil:Cooling:DX:VariableRefrigerantFlow,
   {8c84c0ac-6832-4444-a64f-9d88308c1b14}, !- Handle
   VRF Zone Terminal Cooling Coil,         !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule
   autosize,                               !- Rated Total Cooling Capacity {W}
   autosize,                               !- Rated Sensible Heat Ratio
   autosize,                               !- Rated Air Flow Rate {m3/s}
@@ -5309,7 +5295,7 @@ OS:Curve:Quadratic,
 OS:Coil:Heating:DX:VariableRefrigerantFlow,
   {8e3a36fc-1c04-4c13-804d-32e93dec19b3}, !- Handle
   VRF Zone Terminal Heating Coil,         !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule
   autosize,                               !- Rated Total Heating Capacity {W}
   autosize,                               !- Rated Air Flow Rate {m3/s}
   ,                                       !- Coil Air Inlet Node
@@ -5352,7 +5338,7 @@ OS:Curve:Quadratic,
 OS:Fan:OnOff,
   {de259b99-d14c-4c97-a714-fc200c52027a}, !- Handle
   VRF Zone Terminal Fan,                  !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6,                                    !- Fan Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
@@ -8169,7 +8155,7 @@ OS:SetpointManager:MultiZone:MinimumHumidity:Average,
 OS:Fan:ConstantVolume,
   {49a478a7-2b88-4566-a68c-568f31353af8}, !- Handle
   Fan Coil with Const Fan Var Fluid Flow - Fan, !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Fan Efficiency
   ,                                       !- Pressure Rise {Pa}
   AutoSize,                               !- Maximum Flow Rate {m3/s}
@@ -8182,7 +8168,7 @@ OS:Fan:ConstantVolume,
 OS:Coil:Heating:Water,
   {9b16c087-b0de-427f-b746-d411b7e8f182}, !- Handle
   Fan Coil with Const Fan Var Fluid Flow - Heating Coil, !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
   ,                                       !- Water Inlet Node Name
@@ -8200,7 +8186,7 @@ OS:Coil:Heating:Water,
 OS:Coil:Cooling:Water,
   {2b874e0c-72a8-4be4-a2a8-4286f0d752f3}, !- Handle
   Fan Coil with Const Fan Var Fluid Flow - Cooling Coil, !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Design Water Flow Rate {m3/s}
   ,                                       !- Design Air Flow Rate {m3/s}
   ,                                       !- Design Inlet Water Temperature {C}
@@ -8218,7 +8204,7 @@ OS:Coil:Cooling:Water,
 OS:ZoneHVAC:FourPipeFanCoil,
   {ea8b26f9-62c5-4716-bf71-8c113894c0b5}, !- Handle
   Fan Coil with Const Fan Var Fluid Flow, !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ConstantFanVariableFlow,                !- Capacity Control Method
   autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
   ,                                       !- Low Speed Supply Air Flow Ratio
@@ -8245,7 +8231,7 @@ OS:ZoneHVAC:FourPipeFanCoil,
 OS:Fan:OnOff,
   {d5c825bb-4747-40b1-a6cc-c85df16d7718}, !- Handle
   Fan Coil with Cycling Fan - Fan,        !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6,                                    !- Fan Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
@@ -8283,7 +8269,7 @@ OS:Curve:Cubic,
 OS:Coil:Heating:Water,
   {6ebfa242-93b1-4d90-9ca4-eb5362303729}, !- Handle
   Fan Coil with Cycling Fan - Heating Coil, !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
   ,                                       !- Water Inlet Node Name
@@ -8301,7 +8287,7 @@ OS:Coil:Heating:Water,
 OS:Coil:Cooling:Water,
   {4ef81f27-6610-4509-bd72-345e9c0f6da3}, !- Handle
   Fan Coil with Cycling Fan - Cooling Coil, !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Design Water Flow Rate {m3/s}
   ,                                       !- Design Air Flow Rate {m3/s}
   ,                                       !- Design Inlet Water Temperature {C}
@@ -8319,7 +8305,7 @@ OS:Coil:Cooling:Water,
 OS:ZoneHVAC:FourPipeFanCoil,
   {e955a851-f15a-43d0-aceb-d53657b38e22}, !- Handle
   Fan Coil with Cycling Fan,              !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   CyclingFan,                             !- Capacity Control Method
   autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
   ,                                       !- Low Speed Supply Air Flow Ratio
@@ -8346,7 +8332,7 @@ OS:ZoneHVAC:FourPipeFanCoil,
 OS:Fan:VariableVolume,
   {e0cfb885-12c5-4d01-b86f-6514d92205f9}, !- Handle
   Fan Coil with Var Fan Var Fluid Flow - Fan, !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6045,                                 !- Fan Efficiency
   1017.592,                               !- Pressure Rise {Pa}
   Autosize,                               !- Maximum Flow Rate {m3/s}
@@ -8367,7 +8353,7 @@ OS:Fan:VariableVolume,
 OS:Coil:Heating:Water,
   {36deaf41-e00c-4a4e-a38d-d443cbea27dd}, !- Handle
   Fan Coil with Var Fan Var Fluid Flow - Heating Coil, !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
   ,                                       !- Water Inlet Node Name
@@ -8385,7 +8371,7 @@ OS:Coil:Heating:Water,
 OS:Coil:Cooling:Water,
   {d0c8bfd3-6158-49ea-bc7f-38e363f7c711}, !- Handle
   Fan Coil with Var Fan Var Fluid Flow - Cooling Coil, !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Design Water Flow Rate {m3/s}
   ,                                       !- Design Air Flow Rate {m3/s}
   ,                                       !- Design Inlet Water Temperature {C}
@@ -8403,7 +8389,7 @@ OS:Coil:Cooling:Water,
 OS:ZoneHVAC:FourPipeFanCoil,
   {e30b0f20-1761-46c4-8e04-0fd6846856be}, !- Handle
   Fan Coil with Var Fan Var Fluid Flow,   !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   VariableFanVariableFlow,                !- Capacity Control Method
   autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
   ,                                       !- Low Speed Supply Air Flow Ratio
@@ -8430,7 +8416,7 @@ OS:ZoneHVAC:FourPipeFanCoil,
 OS:Fan:VariableVolume,
   {b5c75ce0-7c70-4dac-bacb-0c1a5a1a5dab}, !- Handle
   Fan Coil with Var Fan Const Fluid Flow - Fan, !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6045,                                 !- Fan Efficiency
   1017.592,                               !- Pressure Rise {Pa}
   Autosize,                               !- Maximum Flow Rate {m3/s}
@@ -8451,7 +8437,7 @@ OS:Fan:VariableVolume,
 OS:Coil:Heating:Water,
   {9d8c2a17-eef1-44d6-a8dd-0e9b74726abe}, !- Handle
   Fan Coil with Var Fan Const Fluid Flow - Heating Coil, !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
   ,                                       !- Water Inlet Node Name
@@ -8469,7 +8455,7 @@ OS:Coil:Heating:Water,
 OS:Coil:Cooling:Water,
   {f39f97fc-0c4b-4c6a-b491-181bee1d7de3}, !- Handle
   Fan Coil with Var Fan Const Fluid Flow - Cooling Coil, !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Design Water Flow Rate {m3/s}
   ,                                       !- Design Air Flow Rate {m3/s}
   ,                                       !- Design Inlet Water Temperature {C}
@@ -8487,7 +8473,7 @@ OS:Coil:Cooling:Water,
 OS:ZoneHVAC:FourPipeFanCoil,
   {fbcfbbf5-5a0d-4582-8e83-820ea507ad66}, !- Handle
   Fan Coil with Var Fan Const Fluid Flow, !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   VariableFanConstantFlow,                !- Capacity Control Method
   autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
   ,                                       !- Low Speed Supply Air Flow Ratio
@@ -8529,7 +8515,7 @@ OS:Schedule:Day,
 OS:Fan:OnOff,
   {0591f811-25a9-4262-b630-cd4de5473511}, !- Handle
   Cycling HW PTAC Fan,                    !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6,                                    !- Fan Efficiency
   250,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
@@ -8567,7 +8553,7 @@ OS:Curve:Cubic,
 OS:Coil:Heating:Water,
   {603abd52-5b41-4fa9-b6d8-bcf7fcc90cb1}, !- Handle
   Cycling PTAC HW Htg Coil,               !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
   ,                                       !- Water Inlet Node Name
@@ -8585,7 +8571,7 @@ OS:Coil:Heating:Water,
 OS:Coil:Cooling:DX:SingleSpeed,
   {bcb16a3c-449c-4c78-90ce-9448c7a955bf}, !- Handle
   Cycling HW PTAC 1 Spd DX Clg Coil,      !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   autosize,                               !- Rated Total Cooling Capacity {W}
   autosize,                               !- Rated Sensible Heat Ratio
   3,                                      !- Rated COP {W/W}
@@ -8673,7 +8659,7 @@ OS:Curve:Quadratic,
 OS:ZoneHVAC:PackagedTerminalAirConditioner,
   {b2a9eb10-60c4-4f70-a5ee-2bb5652ad3de}, !- Handle
   Cycling PTAC DX Clg HW Htg,             !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
   OutdoorAir:Mixer,                       !- Outdoor Air Mixer Object Type
@@ -8701,7 +8687,7 @@ OS:ScheduleTypeLimits,
 OS:Fan:OnOff,
   {09e11b87-7cd6-49eb-a230-4116b8ae969e}, !- Handle
   Cycling Gas PTAC Fan,                   !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6,                                    !- Fan Efficiency
   250,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
@@ -8739,7 +8725,7 @@ OS:Curve:Cubic,
 OS:Coil:Heating:Gas,
   {b002c541-4c53-4faa-97c5-fc3544579a35}, !- Handle
   Cycling PTAC Gas Htg Coil,              !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.8,                                    !- Gas Burner Efficiency
   AutoSize,                               !- Nominal Capacity {W}
   ,                                       !- Air Inlet Node Name
@@ -8752,7 +8738,7 @@ OS:Coil:Heating:Gas,
 OS:Coil:Cooling:DX:SingleSpeed,
   {5f93800a-bc68-4ed4-8772-0031fc447859}, !- Handle
   Cycling Gas PTAC 1 Spd DX Clg Coil,     !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   autosize,                               !- Rated Total Cooling Capacity {W}
   autosize,                               !- Rated Sensible Heat Ratio
   3,                                      !- Rated COP {W/W}
@@ -8840,7 +8826,7 @@ OS:Curve:Quadratic,
 OS:ZoneHVAC:PackagedTerminalAirConditioner,
   {72b2278e-fba3-48af-82f0-ce4abf49f93c}, !- Handle
   Cycling PTAC DX Clg Gas Htg,            !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
   OutdoorAir:Mixer,                       !- Outdoor Air Mixer Object Type
@@ -8860,7 +8846,7 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
 OS:Fan:OnOff,
   {1ba4b960-da18-4801-8105-30ec0f154de4}, !- Handle
   Cycling Elec PTAC Fan,                  !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6,                                    !- Fan Efficiency
   250,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
@@ -8898,7 +8884,7 @@ OS:Curve:Cubic,
 OS:Coil:Heating:Electric,
   {73eb9865-de24-4f2e-898f-00783f94f083}, !- Handle
   Cycling PTAC Elec Htg Coil,             !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Efficiency
   ,                                       !- Nominal Capacity {W}
   ,                                       !- Air Inlet Node Name
@@ -8907,7 +8893,7 @@ OS:Coil:Heating:Electric,
 OS:Coil:Cooling:DX:SingleSpeed,
   {351a3f4b-84e2-45b6-989f-a0b5d58ff8db}, !- Handle
   Cycling Elec PTAC 1 Spd DX Clg Coil,    !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   autosize,                               !- Rated Total Cooling Capacity {W}
   autosize,                               !- Rated Sensible Heat Ratio
   3,                                      !- Rated COP {W/W}
@@ -8995,7 +8981,7 @@ OS:Curve:Quadratic,
 OS:ZoneHVAC:PackagedTerminalAirConditioner,
   {83f8ca38-5216-4e2e-ac87-b2c4a1e3863b}, !- Handle
   Cycling PTAC DX Clg Elec Htg,           !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
   OutdoorAir:Mixer,                       !- Outdoor Air Mixer Object Type
@@ -9015,7 +9001,7 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
 OS:Fan:ConstantVolume,
   {a8ca4d86-300f-4a29-8b9c-fb947f1c7332}, !- Handle
   Gas PTAC Fan,                           !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Fan Efficiency
   250,                                    !- Pressure Rise {Pa}
   AutoSize,                               !- Maximum Flow Rate {m3/s}
@@ -9028,7 +9014,7 @@ OS:Fan:ConstantVolume,
 OS:Coil:Heating:Gas,
   {37039771-e293-4a2c-85e8-659d39981554}, !- Handle
   PTAC Gas Htg Coil,                      !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.8,                                    !- Gas Burner Efficiency
   AutoSize,                               !- Nominal Capacity {W}
   ,                                       !- Air Inlet Node Name
@@ -9041,7 +9027,7 @@ OS:Coil:Heating:Gas,
 OS:Coil:Cooling:DX:SingleSpeed,
   {219dbe6c-606e-4e4b-b04e-2a5b715ecdf1}, !- Handle
   Gas PTAC 1 Spd DX Clg Coil,             !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   autosize,                               !- Rated Total Cooling Capacity {W}
   autosize,                               !- Rated Sensible Heat Ratio
   3,                                      !- Rated COP {W/W}
@@ -9129,7 +9115,7 @@ OS:Curve:Quadratic,
 OS:ZoneHVAC:PackagedTerminalAirConditioner,
   {1785b879-6709-499e-8d58-e8dbd465769d}, !- Handle
   PTAC DX Clg Gas Htg,                    !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
   OutdoorAir:Mixer,                       !- Outdoor Air Mixer Object Type
@@ -9144,12 +9130,12 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
   {37039771-e293-4a2c-85e8-659d39981554}, !- Heating Coil Name
   {219dbe6c-606e-4e4b-b04e-2a5b715ecdf1}, !- Cooling Coil Name
   DrawThrough,                            !- Fan Placement
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}; !- Supply Air Fan Operating Mode Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}; !- Supply Air Fan Operating Mode Schedule Name
 
 OS:Fan:ConstantVolume,
   {fc6a08c7-e44c-46da-9007-101277535b08}, !- Handle
   Elec PTAC Fan,                          !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Fan Efficiency
   250,                                    !- Pressure Rise {Pa}
   AutoSize,                               !- Maximum Flow Rate {m3/s}
@@ -9162,7 +9148,7 @@ OS:Fan:ConstantVolume,
 OS:Coil:Heating:Electric,
   {9b5ac4ca-dd7d-4f5f-9728-2376068957e3}, !- Handle
   PTAC Elec Htg Coil,                     !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Efficiency
   ,                                       !- Nominal Capacity {W}
   ,                                       !- Air Inlet Node Name
@@ -9171,7 +9157,7 @@ OS:Coil:Heating:Electric,
 OS:Coil:Cooling:DX:SingleSpeed,
   {50a91388-442c-43e1-a115-1f78812b5c36}, !- Handle
   Elec PTAC 1 Spd DX Clg Coil,            !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   autosize,                               !- Rated Total Cooling Capacity {W}
   autosize,                               !- Rated Sensible Heat Ratio
   3,                                      !- Rated COP {W/W}
@@ -9259,7 +9245,7 @@ OS:Curve:Quadratic,
 OS:ZoneHVAC:PackagedTerminalAirConditioner,
   {05567a93-e675-4832-9979-8a4558b8def7}, !- Handle
   PTAC DX Clg Elec Htg,                   !- Name
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
   OutdoorAir:Mixer,                       !- Outdoor Air Mixer Object Type
@@ -9274,7 +9260,7 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
   {9b5ac4ca-dd7d-4f5f-9728-2376068957e3}, !- Heating Coil Name
   {50a91388-442c-43e1-a115-1f78812b5c36}, !- Cooling Coil Name
   DrawThrough,                            !- Fan Placement
-  {876ea808-dc61-4c18-b9cf-d3bb38e90150}; !- Supply Air Fan Operating Mode Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}; !- Supply Air Fan Operating Mode Schedule Name
 
 OS:TemperingValve,
   {4985fb51-95da-475b-89c4-ffaa863320b9}, !- Handle
@@ -10377,19 +10363,6 @@ OS:ZoneHVAC:UnitVentilator,
   ,                                       !- Availability Manager List Name
   ;                                       !- Design Specification ZoneHVAC Sizing Object Name
 
-OS:Schedule:Constant,
-  {b267e42b-9691-4116-8393-70bb1197dc5b}, !- Handle
-  Always Off Discrete,                    !- Name
-  {088be94c-edd9-4948-a79e-eaea57084bfd}, !- Schedule Type Limits Name
-  0;                                      !- Value
-
-OS:ScheduleTypeLimits,
-  {088be94c-edd9-4948-a79e-eaea57084bfd}, !- Handle
-  OnOff 1,                                !- Name
-  0,                                      !- Lower Limit Value
-  1,                                      !- Upper Limit Value
-  Discrete,                               !- Numeric Type
-  Availability;                           !- Unit Type
 
 OS:Fan:OnOff,
   {1de181b7-cdad-45a4-b128-ca4ad5c4bda7}, !- Handle
