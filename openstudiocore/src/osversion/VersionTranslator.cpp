@@ -3681,7 +3681,7 @@ std::string VersionTranslator::update_2_1_2_to_2_3_0(const IdfFile& idf_2_1_2, c
         }
       }
 
-      if( object.getString(17) ) {
+      if( object.getString(17) && (! object.getString(17).get().empty()) ) {
         newObject.setString(19,"WaterCooled");
       } else {
         newObject.setString(19,"AirCooled");
