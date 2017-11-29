@@ -3643,6 +3643,34 @@ std::string VersionTranslator::update_2_1_2_to_2_3_0(const IdfFile& idf_2_1_2, c
 
       ss << newObject;
       ss << avmList;
+    } else if (iddname == "OS:PlantLoop") {
+      auto iddObject = idd_2_3_0.getObject("OS:PlantLoop");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      std::string  avmName = "";
+      if( auto loopName = object.getString(1) ) {
+        avmName = loopName.get();
+      }
+      avmName = avmName + " AvailabilityManagerAssignmentList";
+
+      IdfObject avmList(idd_2_3_0.getObject("OS:AvailabilityManagerAssignmentList").get());
+      std::string avmHandle = toString(createUUID());
+      avmList.setString(0,avmHandle);
+      avmList.setString(1,avmName);
+
+      newObject.setString(22,avmHandle);
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_new.push_back(avmList);
+
+      ss << newObject;
+      ss << avmList;
     } else {
       ss << object;
     }
