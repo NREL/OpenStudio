@@ -27,6 +27,7 @@
  **********************************************************************************************************************/
 
 #include "Geometry.hpp"
+#include "Vector3d.hpp"
 #include "Intersection.hpp"
 #include "../data/Matrix.hpp"
 #include "../core/Assert.hpp"
@@ -42,6 +43,7 @@
 #include <boost/geometry/strategies/cartesian/point_in_poly_franklin.hpp> 
 #include <boost/geometry/strategies/cartesian/point_in_poly_crossings_multiply.hpp> 
 #include <boost/geometry/algorithms/within.hpp> 
+#include <boost/geometry/algorithms/simplify.hpp> 
 
 typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
 typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
@@ -1092,6 +1094,148 @@ namespace openstudio{
     }
 
     return true;
+  }
+
+  boost::optional<double> getLinearAlpha(const Point3d& point0, const Point3d& point1, const Point3d& test){
+    // test = point0 + a*(point1 - point0)
+    Vector3d diff1 = point1 - point0;
+    Vector3d diffTest = test - point0;
+
+    double length = diff1.length();
+    if (length < 0.001){
+      return boost::none;
+    }
+
+    double a;
+    if (std::abs(diff1.x()) > std::abs(diff1.y())){
+      if (std::abs(diff1.x()) > std::abs(diff1.z())){
+        a = diffTest.x() / diff1.x();
+      } else{
+        a = diffTest.z() / diff1.z();
+      }
+    } else{
+      if (std::abs(diff1.y()) > std::abs(diff1.z())){
+        a = diffTest.y() / diff1.y();
+      } else{
+        a = diffTest.z() / diff1.z();
+      }
+    }
+
+    diff1.setLength(a*length);
+    Point3d test2 = point0 + diff1;
+    double d = getDistance(test, test2);
+    if (d < 0.001){
+      if (a > 0 && a < 1){
+        return a;
+      }
+    }
+
+    return boost::none;
+  }
+  
+  std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeCollinear, double tol)
+  {
+    std::vector<Point3d> allPoints;
+
+    bool reversed = false;
+    boost::optional<Vector3d> outwardNormal = getOutwardNormal(vertices);
+    if (!outwardNormal){
+      return std::vector<Point3d>();
+    } else if (outwardNormal->z() > 0){
+      reversed = true;
+    }
+
+    boost::optional<BoostPolygon> bp;
+    if (reversed){
+      bp = boostPolygonFromVertices(reverse(vertices), allPoints, tol);
+    } else {
+      bp = boostPolygonFromVertices(vertices, allPoints, tol);
+    }
+
+    if (!bp){
+      return std::vector<Point3d>();
+    }
+ 
+    BoostPolygon out;
+
+    // this uses the Douglas-Peucker algorithm with a max difference of 0 so no non-collinear points will be removed
+    // if we want to allow this algorithm to be called with a non-zero value I suggest naming it "approximate" or something
+    boost::geometry::simplify(*bp, out, 0.0);
+
+    std::vector<Point3d> tmp = verticesFromBoostPolygon(out, allPoints, tol);
+
+    if (reversed){
+      tmp = reverse(tmp);
+    }
+
+    if (removeCollinear){
+      // collinear points already removed
+      return tmp;
+    }
+
+    if (tmp.empty()){
+      return tmp;
+    }
+
+    // we want to add back in all the unique points, have to put them in the right place
+    std::set<size_t> pointsToAdd;
+    for (size_t i = 0; i < allPoints.size(); ++i){
+      bool found = false;
+      for (const auto& tmpPoint : tmp){
+        if (getDistance(tmpPoint, allPoints[i]) < tol){
+          found = true;
+        }
+      }
+      if (!found){
+        pointsToAdd.insert(i);
+      }
+    }
+
+    std::vector<Point3d> result;
+    result.push_back(tmp[0]);
+    for (size_t i = 1; i < tmp.size(); ++i){
+      // see which remaining points fit in this segment, double is index in allPoints, alpha along line
+      std::vector<std::pair<size_t, double> > pointsInSegment;
+      for (size_t j : pointsToAdd){
+        boost::optional<double> alpha = getLinearAlpha(tmp[i - 1], tmp[i], allPoints[j]);
+        if (alpha){
+          pointsInSegment.push_back(std::make_pair(j, *alpha));
+        }
+      }
+
+      std::sort(pointsInSegment.begin(), pointsInSegment.end(), [](std::pair<size_t, double> a, std::pair<size_t, double> b) {return a.second < b.second; });
+
+      for (const auto& pointInSegment : pointsInSegment){
+        result.push_back(allPoints[pointInSegment.first]);
+        pointsToAdd.erase(pointInSegment.first);
+      }
+
+      // push the next point in simplified polygon
+      result.push_back(tmp[i]);
+    }
+
+    // now check between last point and first point
+    std::vector<std::pair<size_t, double> > pointsInSegment;
+    for (size_t j : pointsToAdd){
+      boost::optional<double> alpha = getLinearAlpha(tmp[tmp.size() - 1], tmp[0], allPoints[j]);
+      if (alpha){
+        pointsInSegment.push_back(std::make_pair(j, *alpha));
+      }
+    }
+
+    std::sort(pointsInSegment.begin(), pointsInSegment.end(), [](std::pair<size_t, double> a, std::pair<size_t, double> b) {return a.second < b.second; });
+
+    for (const auto& pointInSegment : pointsInSegment){
+      result.push_back(allPoints[pointInSegment.first]);
+      pointsToAdd.erase(pointInSegment.first);
+    }
+
+    if (!pointsToAdd.empty()){
+      LOG_FREE(Warn, "utilities.geometry.simplify", pointsToAdd.size() << " unique vertices were not added back to the polygon");
+    }
+
+    return result;
+
   }
 
 } // openstudio
