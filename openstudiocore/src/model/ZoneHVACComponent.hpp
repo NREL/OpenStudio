@@ -120,6 +120,12 @@ class MODEL_API ZoneHVACComponent : public HVACComponent
    **/
   bool removeFromAirLoopHVAC();
 
+  /** Provided for backwards compatibility, use inletNode instead **/
+  boost::optional<ModelObject> airInletModelObject() const;
+
+  /** Provided for backwards compatibility, use outletNode instead **/
+  boost::optional<ModelObject> airOutletModelObject() const;
+
   protected:
 
   ZoneHVACComponent(IddObjectType type,const Model& model);

@@ -92,6 +92,10 @@ class MODEL_API ZoneHVACComponent_Impl : public HVACComponent_Impl {
 
   std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
 
+  boost::optional<ModelObject> airInletModelObject() const;
+
+  boost::optional<ModelObject> airOutletModelObject() const;
+
  protected:
 
   friend class Model_Impl;

@@ -368,6 +368,20 @@ namespace detail {
     return false;
   }
 
+  boost::optional<ModelObject> ZoneHVACComponent_Impl::airInletModelObject() const
+  {
+    auto node = inletNode();
+    if( node ) return node->cast<ModelObject>();
+    return boost::none;
+  }
+  
+  boost::optional<ModelObject> ZoneHVACComponent_Impl::airOutletModelObject() const
+  {
+    auto node = outletNode();
+    if( node ) return node->cast<ModelObject>();
+    return boost::none;
+  }
+
 } // detail
 
 ZoneHVACComponent::ZoneHVACComponent(std::shared_ptr<detail::ZoneHVACComponent_Impl> p)
@@ -433,6 +447,16 @@ boost::optional<AirLoopHVAC> ZoneHVACComponent::airLoopHVAC() const
 bool ZoneHVACComponent::removeFromAirLoopHVAC()
 {
   return getImpl<detail::ZoneHVACComponent_Impl>()->removeFromAirLoopHVAC();
+}
+
+boost::optional<ModelObject> ZoneHVACComponent::airInletModelObject() const
+{
+  return getImpl<detail::ZoneHVACComponent_Impl>()->airInletModelObject();
+}
+
+boost::optional<ModelObject> ZoneHVACComponent::airOutletModelObject() const
+{
+  return getImpl<detail::ZoneHVACComponent_Impl>()->airOutletModelObject();
 }
 
 } // model
