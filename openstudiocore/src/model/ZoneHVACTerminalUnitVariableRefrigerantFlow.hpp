@@ -138,9 +138,13 @@ class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow : public ZoneHVACCom
 
   HVACComponent supplyAirFan() const;
 
-  CoilCoolingDXVariableRefrigerantFlow coolingCoil() const;
+  boost::optional<CoilCoolingDXVariableRefrigerantFlow> coolingCoil() const;
 
-  CoilHeatingDXVariableRefrigerantFlow heatingCoil() const;
+  bool setCoolingCoil(const CoilCoolingDXVariableRefrigerantFlow & coil);
+
+  boost::optional<CoilHeatingDXVariableRefrigerantFlow> heatingCoil() const;
+
+  bool setHeatingCoil(const CoilHeatingDXVariableRefrigerantFlow & coil);
 
   double zoneTerminalUnitOnParasiticElectricEnergyUse() const;
 
