@@ -714,6 +714,36 @@ namespace detail {
     return false;
   }
 
+  std::string PumpConstantSpeed_Impl::designPowerSizingMethod() const {
+    auto value = getString(OS_Pump_ConstantSpeedFields::DesignPowerSizingMethod,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool PumpConstantSpeed_Impl::setDesignPowerSizingMethod(const std::string & designPowerSizingMethod) {
+    return setString(OS_Pump_ConstantSpeedFields::DesignPowerSizingMethod,designPowerSizingMethod);
+  }
+  
+  double PumpConstantSpeed_Impl::designElectricPowerPerUnitFlowRate() const {
+    auto value = getDouble(OS_Pump_ConstantSpeedFields::DesignElectricPowerperUnitFlowRate,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool PumpConstantSpeed_Impl::setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate) {
+    return setDouble(OS_Pump_ConstantSpeedFields::DesignElectricPowerperUnitFlowRate,designElectricPowerPerUnitFlowRate);
+  }
+  
+  double PumpConstantSpeed_Impl::designShaftPowerPerUnitFlowRatePerUnitHead() const {
+    auto value = getDouble(OS_Pump_ConstantSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool PumpConstantSpeed_Impl::setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead) {
+    return setDouble(OS_Pump_ConstantSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead,designShaftPowerPerUnitFlowRatePerUnitHead);
+  }
+
 } // detail
 
 PumpConstantSpeed::PumpConstantSpeed(const Model& model)
@@ -727,6 +757,9 @@ PumpConstantSpeed::PumpConstantSpeed(const Model& model)
   setMotorEfficiency(0.9);
   setPumpControlType("Intermittent");
   setFractionofMotorInefficienciestoFluidStream(0.0);
+  setDesignPowerSizingMethod("PowerPerFlowPerPressure");
+  setDesignElectricPowerPerUnitFlowRate(348701.1);
+  setDesignShaftPowerPerUnitFlowRatePerUnitHead(1.282051282);
 
   setString(OS_Pump_ConstantSpeedFields::PumpFlowRateSchedule,"");
   setString(OS_Pump_ConstantSpeedFields::PumpCurve,"");
@@ -743,6 +776,11 @@ IddObjectType PumpConstantSpeed::iddObjectType() {
 std::vector<std::string> PumpConstantSpeed::pumpControlTypeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_Pump_ConstantSpeedFields::PumpControlType);
+}
+
+std::vector<std::string> PumpConstantSpeed::designPowerSizingMethodValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_Pump_ConstantSpeedFields::DesignPowerSizingMethod);
 }
 
 boost::optional<double> PumpConstantSpeed::ratedFlowRate() const {
@@ -983,6 +1021,30 @@ bool PumpConstantSpeed::setSkinLossRadiativeFraction(const Quantity& skinLossRad
 
 void PumpConstantSpeed::resetSkinLossRadiativeFraction() {
   getImpl<detail::PumpConstantSpeed_Impl>()->resetSkinLossRadiativeFraction();
+}
+
+std::string PumpConstantSpeed::designPowerSizingMethod() const {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->designPowerSizingMethod();
+}
+
+bool PumpConstantSpeed::setDesignPowerSizingMethod(const std::string & designPowerSizingMethod) {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->setDesignPowerSizingMethod(designPowerSizingMethod);
+}
+
+double PumpConstantSpeed::designElectricPowerPerUnitFlowRate() const {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->designElectricPowerPerUnitFlowRate();
+}
+
+bool PumpConstantSpeed::setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate) {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->setDesignElectricPowerPerUnitFlowRate(designElectricPowerPerUnitFlowRate);
+}
+
+double PumpConstantSpeed::designShaftPowerPerUnitFlowRatePerUnitHead() const {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->designShaftPowerPerUnitFlowRatePerUnitHead();
+}
+
+bool PumpConstantSpeed::setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead) {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->setDesignShaftPowerPerUnitFlowRatePerUnitHead(designShaftPowerPerUnitFlowRatePerUnitHead);
 }
 
 /// @cond

@@ -160,6 +160,24 @@ boost::optional<IdfObject> ForwardTranslator::translatePumpConstantSpeed(
     idfObject.setDouble(Pump_ConstantSpeedFields::SkinLossRadiativeFraction,value.get());
   }
 
+  {
+    s = modelObject.designPowerSizingMethod();
+    idfObject.setString(Pump_ConstantSpeedFields::DesignPowerSizingMethod,s.get());
+  }
+
+
+  {
+    value = modelObject.designElectricPowerPerUnitFlowRate();
+    idfObject.setDouble(Pump_ConstantSpeedFields::DesignElectricPowerperUnitFlowRate,value.get());
+  }
+
+
+  {
+    value = modelObject.designShaftPowerPerUnitFlowRatePerUnitHead();
+    idfObject.setDouble(Pump_ConstantSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead,value.get());
+  }
+
+
   return idfObject;
 }
 

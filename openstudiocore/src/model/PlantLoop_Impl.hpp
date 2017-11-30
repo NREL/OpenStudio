@@ -44,6 +44,7 @@ class PlantEquipmentOperationScheme;
 class PlantEquipmentOperationHeatingLoad;
 class PlantEquipmentOperationCoolingLoad;
 class AvailabilityManager;
+class AvailabilityManagerAssignmentList;
 
 
 namespace detail {
@@ -76,12 +77,6 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
   std::string loadDistributionScheme();
 
   bool setLoadDistributionScheme(std::string scheme);
-
-  boost::optional<AvailabilityManager> availabilityManager() const;
-
-  bool setAvailabilityManager(const AvailabilityManager & availabilityManager);
-
-  void resetAvailabilityManager();
 
   std::string fluidType();
 
@@ -226,6 +221,26 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
   std::vector<ModelObject> children() const override;
 
   SizingPlant sizingPlant() const;
+
+
+  // AVM
+  // Impl_only
+  virtual AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const override;
+
+
+  std::vector<AvailabilityManager> availabilityManagers() const;
+  bool setAvailabilityManagers(const std::vector<AvailabilityManager> & avms);
+  void resetAvailabilityManagers();
+
+  bool addAvailabilityManager(const AvailabilityManager & availabilityManager);
+  bool addAvailabilityManager(const AvailabilityManager & availabilityManager, unsigned priority);
+
+  unsigned availabilityManagerPriority(const AvailabilityManager & availabilityManager) const;
+  bool setAvailabilityManagerPriority(const AvailabilityManager & availabilityManager, unsigned priority);
+
+  bool removeAvailabilityManager(const AvailabilityManager& avm);
+  bool removeAvailabilityManager(unsigned priority);
+
 
  private:
 

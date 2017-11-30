@@ -280,6 +280,10 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerVariableSpeed
     idfObject.setDouble(openstudio::CoolingTower_VariableSpeedFields::SizingFactor,d.get());
   } 
 
+  if( (s = modelObject.endUseSubcategory()) ) {
+    idfObject.setString(openstudio::CoolingTower_VariableSpeedFields::EndUseSubcategory,s.get());
+  }
+
   return boost::optional<IdfObject>(idfObject);
 }
 

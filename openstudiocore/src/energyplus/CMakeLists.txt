@@ -27,7 +27,9 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAirLoopHVACUnitarySystem.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACZoneMixer.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACZoneSplitter.cpp
+  ForwardTranslator/ForwardTranslateAirTerminalDualDuctConstantVolume.cpp
   ForwardTranslator/ForwardTranslateAirTerminalDualDuctVAV.cpp
+  ForwardTranslator/ForwardTranslateAirTerminalDualDuctVAVOutdoorAir.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeCooledBeam.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeFourPipeInduction.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeReheat.cpp
@@ -40,11 +42,19 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVHeatAndCoolNoReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVHeatAndCoolReheat.cpp
   ForwardTranslator/ForwardTranslateAirWallMaterial.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerAssignmentList.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerScheduled.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerScheduledOn.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerScheduledOff.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerHybridVentilation.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerOptimumStart.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerDifferentialThermostat.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerNightVentilation.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerNightCycle.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerHighTemperatureTurnOn.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerHighTemperatureTurnOff.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerLowTemperatureTurnOn.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerLowTemperatureTurnOff.cpp
   ForwardTranslator/ForwardTranslateBlind.cpp
   ForwardTranslator/ForwardTranslateBoilerHotWater.cpp
   ForwardTranslator/ForwardTranslateBoilerSteam.cpp
@@ -496,12 +506,28 @@ set(${target_name}_test_src
   Test/ReverseTranslator_GTest.cpp
 
   Test/AirLoopHVACUnitarySystem_GTest.cpp
+  Test/AirTerminalDualDuctConstantVolume_GTest.cpp
+  Test/AirTerminalDualDuctVAVOutdoorAir_GTest.cpp
   Test/AirWallMaterial_GTest.cpp
+
+  Test/AirLoopHVAC_GTest.cpp
+  Test/PlantLoop_GTest.cpp
+
+  # Test/AvailabilityManagerAssignmentList_GTest.cpp
+  Test/AvailabilityManagerScheduled_GTest.cpp
+  Test/AvailabilityManagerScheduledOn_GTest.cpp
+  Test/AvailabilityManagerScheduledOff_GTest.cpp
+  Test/AvailabilityManagerHighTemperatureTurnOn_GTest.cpp
+  Test/AvailabilityManagerHighTemperatureTurnOff_GTest.cpp
+  Test/AvailabilityManagerLowTemperatureTurnOn_GTest.cpp
+  Test/AvailabilityManagerLowTemperatureTurnOff_GTest.cpp
+  Test/AvailabilityManagerNightCycle_GTest.cpp
   Test/Building_GTest.cpp
 
   Test/CentralHeatPumpSystem_GTest.cpp
 
   Test/CoilHeatingGas_GTest.cpp
+  Test/CoilCoolingDXMultiSpeed_GTest.cpp
   Test/Construction_GTest.cpp
   Test/DaylightingControl_GTest.cpp
   Test/DaylightingDeviceShelf_GTest.cpp
@@ -522,6 +548,8 @@ set(${target_name}_test_src
   Test/Luminaire_GTest.cpp
   Test/Meter_GTest.cpp
   Test/People_GTest.cpp
+  Test/PlantEquipmentOperationSchemes_GTest.cpp
+
   Test/RunPeriodControlDaylightSavingTime_GTest.cpp
   Test/ScheduleInterval_GTest.cpp
   Test/ScheduleRuleset_GTest.cpp
@@ -534,7 +562,9 @@ set(${target_name}_test_src
   Test/Surface_GTest.cpp
   Test/SurfacePropertyConvectionCoefficients.cpp
   Test/TableMultiVariableLookup_GTest.cpp
+  Test/ThermalStorageChilledWaterStratified_GTest.cpp
   Test/ThermalZone_GTest.cpp
+  Test/ThermostatSetpointDualSetpoint_GTest.cpp
   Test/WindowPropertyFrameAndDivider_GTest.cpp
   Test/ZoneHVACLowTemperatureRadiantConstFlow_GTest.cpp
   Test/ZoneHVACLowTempRadiantElectric_GTest.cpp

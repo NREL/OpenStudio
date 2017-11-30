@@ -418,6 +418,15 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   translateConstructions(model);
   translateSchedules(model);
 
+  // Translate the Outdoor Air Node
+  {
+    auto node = model.outdoorAirNode();
+    // Create a new IddObjectType::OutdoorAir_Node
+    IdfObject idfObject(IddObjectType::OutdoorAir_Node);
+    m_idfObjects.push_back(idfObject);
+    idfObject.setName(node.name().get());
+  }
+
   // get air loops in sorted order
   std::vector<AirLoopHVAC> airLoops = model.getConcreteModelObjects<AirLoopHVAC>();
   std::sort(airLoops.begin(), airLoops.end(), WorkspaceObjectNameLess());
@@ -543,10 +552,22 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirLoopHVACSupplyPlenum(airLoopHVACSupplyPlenum);
       break;
     }
+  case openstudio::IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume :
+    {
+      auto mo = modelObject.cast<AirTerminalDualDuctConstantVolume>();
+      retVal = translateAirTerminalDualDuctConstantVolume(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_AirTerminal_DualDuct_VAV :
     {
       auto mo = modelObject.cast<AirTerminalDualDuctVAV>();
       retVal = translateAirTerminalDualDuctVAV(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AirTerminal_DualDuct_VAV_OutdoorAir :
+    {
+      auto mo = modelObject.cast<AirTerminalDualDuctVAVOutdoorAir>();
+      retVal = translateAirTerminalDualDuctVAVOutdoorAir(mo);
       break;
     }
   case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction :
@@ -659,11 +680,27 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     }
   case openstudio::IddObjectType::OS_AvailabilityManagerAssignmentList :
     {
-      return retVal;
+      auto mo = modelObject.cast<AvailabilityManagerAssignmentList>();
+      retVal = translateAvailabilityManagerAssignmentList(mo);
+      break;
     }
   case openstudio::IddObjectType::OS_AvailabilityManager_Scheduled :
     {
-      return retVal;
+      auto mo = modelObject.cast<AvailabilityManagerScheduled>();
+      retVal = translateAvailabilityManagerScheduled(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_ScheduledOn :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerScheduledOn>();
+      retVal = translateAvailabilityManagerScheduledOn(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_ScheduledOff :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerScheduledOff>();
+      retVal = translateAvailabilityManagerScheduledOff(mo);
+      break;
     }
   case openstudio::IddObjectType::OS_Material_AirWall :
     {
@@ -699,6 +736,30 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       auto mo = modelObject.cast<AvailabilityManagerNightCycle>();
       retVal = translateAvailabilityManagerNightCycle(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_HighTemperatureTurnOn :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerHighTemperatureTurnOn>();
+      retVal = translateAvailabilityManagerHighTemperatureTurnOn(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_HighTemperatureTurnOff :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerHighTemperatureTurnOff>();
+      retVal = translateAvailabilityManagerHighTemperatureTurnOff(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_LowTemperatureTurnOn :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerLowTemperatureTurnOn>();
+      retVal = translateAvailabilityManagerLowTemperatureTurnOn(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_LowTemperatureTurnOff :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerLowTemperatureTurnOff>();
+      retVal = translateAvailabilityManagerLowTemperatureTurnOff(mo);
       break;
     }
   case openstudio::IddObjectType::OS_Boiler_HotWater :
@@ -3092,10 +3153,16 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_AirLoopHVAC_UnitaryCoolOnly);
   result.push_back(IddObjectType::OS_AirLoopHVAC_ZoneMixer);
   result.push_back(IddObjectType::OS_AirLoopHVAC_ZoneSplitter);
+  result.push_back(IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume);
+  result.push_back(IddObjectType::OS_AirTerminal_DualDuct_VAV_OutdoorAir);
   result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam);
   result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled);
+
+  // TODO: @kbenne is this needed here?
+  // Does this mean these objects get translated even if not connected to anything?
   result.push_back(IddObjectType::OS_AvailabilityManagerAssignmentList);
   result.push_back(IddObjectType::OS_AvailabilityManager_Scheduled);
+
   result.push_back(IddObjectType::OS_Chiller_Electric_EIR);
   result.push_back(IddObjectType::OS_Coil_Cooling_DX_SingleSpeed);
   result.push_back(IddObjectType::OS_Coil_Cooling_DX_TwoSpeed);

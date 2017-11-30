@@ -67,6 +67,7 @@ class ModelObject;
 class Component;
 class ComponentData;
 class Schedule;
+class Node;
 class SpaceType;
 
 namespace detail {
@@ -75,7 +76,7 @@ namespace detail {
 
   /** Container for the OpenStudio Building Model hierarchy. */
   class MODEL_API Model_Impl : public openstudio::detail::Workspace_Impl {
-    
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -141,7 +142,7 @@ namespace detail {
     /** Get the LifeCycleCostParameters object if there is one, this implementation uses a cached reference to the LifeCycleCostParameters
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<LifeCycleCostParameters>(). */
     boost::optional<LifeCycleCostParameters> lifeCycleCostParameters() const;
-    
+
     /** Get the RunPeriod object if there is one, this implementation uses a cached reference to the RunPeriod
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<RunPeriod>(). */
     boost::optional<RunPeriod> runPeriod() const;
@@ -149,7 +150,7 @@ namespace detail {
     /** Get the YearDescription object if there is one, this implementation uses a cached reference to the YearDescription
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<YearDescription>(). */
     boost::optional<YearDescription> yearDescription() const;
-      
+
     /** Get or create the YearDescription object if there is one, then call method from YearDescription. */
     // DLM: this is due to issues exporting the model::YearDescription object because of name conflict with utilities::YearDescription.
     boost::optional<int> calendarYear() const;
@@ -184,6 +185,8 @@ namespace detail {
     Schedule alwaysOnContinuousSchedule() const;
 
     std::string alwaysOnContinuousScheduleName() const;
+
+    Node outdoorAirNode() const;
 
     SpaceType plenumSpaceType() const;
 
@@ -260,7 +263,7 @@ namespace detail {
 
     virtual void reportInitialModelObjects();
 
-   
+
 
    private:
     // explicitly unimplemented copy constructor

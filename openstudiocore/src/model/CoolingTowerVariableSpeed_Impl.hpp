@@ -249,6 +249,10 @@ namespace detail {
 
     bool addToNode(Node & node) override;
 
+    std::string endUseSubcategory() const;
+
+    bool setEndUseSubcategory(const std::string & endUseSubcategory);
+
    private:
 
     REGISTER_LOGGER("openstudio.model.CoolingTowerVariableSpeed");

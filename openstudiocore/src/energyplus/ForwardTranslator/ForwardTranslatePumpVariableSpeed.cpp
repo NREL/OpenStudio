@@ -229,6 +229,32 @@ boost::optional<IdfObject> ForwardTranslator::translatePumpVariableSpeed(
     idfObject.setString(Pump_VariableSpeedFields::MaximumRPMSchedule,schedule->name().get());
   }
 
+  if ((value = modelObject.skinLossRadiativeFraction())) {
+    idfObject.setDouble(Pump_VariableSpeedFields::SkinLossRadiativeFraction,value.get());
+  }
+
+  {
+    s = modelObject.designPowerSizingMethod();
+    idfObject.setString(Pump_VariableSpeedFields::DesignPowerSizingMethod,s.get());
+  }
+
+
+  {
+    value = modelObject.designElectricPowerPerUnitFlowRate();
+    idfObject.setDouble(Pump_VariableSpeedFields::DesignElectricPowerperUnitFlowRate,value.get());
+  }
+
+
+  {
+    value = modelObject.designShaftPowerPerUnitFlowRatePerUnitHead();
+    idfObject.setDouble(Pump_VariableSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead,value.get());
+  }
+
+  {
+    value = modelObject.designMinimumFlowRateFraction();
+    idfObject.setDouble(Pump_VariableSpeedFields::DesignMinimumFlowRateFraction,value.get());
+  }
+
   return idfObject;
 }
 

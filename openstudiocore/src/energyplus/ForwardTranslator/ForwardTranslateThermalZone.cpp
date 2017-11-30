@@ -399,7 +399,6 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
             Daylighting_ReferencePointFields::ZCoordinateofReferencePoint,
             secondaryDaylightingControl->positionZCoordinate());
 
-        
         double secondaryFrac = modelObject.fractionofZoneControlledbySecondaryDaylightingControl();
         if (istringEqual("None", secondaryDaylightingControl->lightingControlType())){
           if (secondaryFrac > 0.0){
@@ -638,9 +637,10 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
           }
         };
 
-        // Only translate ThermostatSetpointDualSetpoint if there are schedules attached
+        // Only translate ThermostatSetpointDualSetpoint if there is at least one schedule attached
+        // The translation to SingleHeating, SingleCooling, or DualSetpoint as appropriate is handled in ForwardTranslateThermostatSetpointDualSetpoint
         if( auto dualSetpoint = thermostat->optionalCast<ThermostatSetpointDualSetpoint>() ) {
-          if( dualSetpoint->heatingSetpointTemperatureSchedule() && dualSetpoint->coolingSetpointTemperatureSchedule() ) {
+          if( dualSetpoint->heatingSetpointTemperatureSchedule() || dualSetpoint->coolingSetpointTemperatureSchedule() ) {
             createZoneControlThermostat();
           }
         } else {
