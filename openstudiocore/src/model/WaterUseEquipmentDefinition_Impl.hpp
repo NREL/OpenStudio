@@ -43,18 +43,18 @@ namespace detail {
 
 /** WaterUseEquipmentDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for WaterUseEquipmentDefinition.*/
 class MODEL_API WaterUseEquipmentDefinition_Impl : public SpaceLoadDefinition_Impl {
-  
 
-  
-  
 
-  
-  
-  
 
-  
-  
-  
+
+
+
+
+
+
+
+
+
 
   public:
 
@@ -78,7 +78,7 @@ class MODEL_API WaterUseEquipmentDefinition_Impl : public SpaceLoadDefinition_Im
 
   std::string endUseSubcategory() const;
   bool isEndUseSubcategoryDefaulted() const;
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
   void resetEndUseSubcategory();
 
   double peakFlowRate() const;

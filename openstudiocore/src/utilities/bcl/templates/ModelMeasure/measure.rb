@@ -2,7 +2,7 @@
 # http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/
 
 # start the measure
-class ModelMeasureName < OpenStudio::Ruleset::ModelUserScript
+class ModelMeasureName < OpenStudio::Measure::ModelMeasure
 
   # human readable name
   def name
@@ -21,10 +21,10 @@ class ModelMeasureName < OpenStudio::Ruleset::ModelUserScript
 
   # define the arguments that the user will input
   def arguments(model)
-    args = OpenStudio::Ruleset::OSArgumentVector.new
+    args = OpenStudio::Measure::OSArgumentVector.new
 
     # the name of the space to add to the model
-    space_name = OpenStudio::Ruleset::OSArgument.makeStringArgument("space_name", true)
+    space_name = OpenStudio::Measure::OSArgument.makeStringArgument("space_name", true)
     space_name.setDisplayName("New space name")
     space_name.setDescription("This name will be used as the name of the new space.")
     args << space_name

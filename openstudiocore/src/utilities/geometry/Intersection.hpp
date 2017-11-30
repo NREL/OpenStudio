@@ -97,6 +97,9 @@ namespace openstudio{
   UTILITIES_API bool within(const Point3d& point1, const std::vector<Point3d>& polygon2, double tol);
   UTILITIES_API bool within(const std::vector<Point3d>& geometry1, const std::vector<Point3d>& polygon2, double tol);
 
+  /// simplify a list of vertices
+  UTILITIES_API std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeCollinear, double tol);
+
 } // openstudio
 
 #endif //UTILITIES_GEOMETRY_INTERSECTION_HPP
