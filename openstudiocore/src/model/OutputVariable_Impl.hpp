@@ -103,6 +103,10 @@ namespace detail {
 
     boost::optional<Schedule> schedule() const;
 
+    bool exportToBCVTB() const;
+
+    bool isExportToBCVTBDefaulted() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -120,6 +124,10 @@ namespace detail {
     bool setSchedule(Schedule& schedule);
 
     void resetSchedule();
+
+    void setExportToBCVTB(bool exportToBCVTB);
+    
+    void resetExportToBCVTB();
 
     //@}
    private:

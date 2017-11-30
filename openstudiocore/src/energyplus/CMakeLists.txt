@@ -151,6 +151,19 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateEvaporativeFluidCoolerSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateEvaporativeFluidCoolerTwoSpeed.cpp
   ForwardTranslator/ForwardTranslateExteriorLights.cpp
+  ForwardTranslator/ForwardTranslateExternalInterface.cpp
+  ForwardTranslator/ForwardTranslateExternalInterfaceActuator.cpp
+  ForwardTranslator/ForwardTranslateExternalInterfaceFunctionalMockupUnitExportFromVariable.cpp
+  ForwardTranslator/ForwardTranslateExternalInterfaceFunctionalMockupUnitExportToActuator.cpp
+  ForwardTranslator/ForwardTranslateExternalInterfaceFunctionalMockupUnitExportToSchedule.cpp
+  ForwardTranslator/ForwardTranslateExternalInterfaceFunctionalMockupUnitExportToVariable.cpp
+  ForwardTranslator/ForwardTranslateExternalInterfaceFunctionalMockupUnitImport.cpp
+  ForwardTranslator/ForwardTranslateExternalInterfaceFunctionalMockupUnitImportFromVariable.cpp
+  ForwardTranslator/ForwardTranslateExternalInterfaceFunctionalMockupUnitImportToActuator.cpp
+  ForwardTranslator/ForwardTranslateExternalInterfaceFunctionalMockupUnitImportToSchedule.cpp
+  ForwardTranslator/ForwardTranslateExternalInterfaceFunctionalMockupUnitImportToVariable.cpp
+  ForwardTranslator/ForwardTranslateExternalInterfaceSchedule.cpp
+  ForwardTranslator/ForwardTranslateExternalInterfaceVariable.cpp
   ForwardTranslator/ForwardTranslateFanConstantVolume.cpp
   ForwardTranslator/ForwardTranslateFanOnOff.cpp
   ForwardTranslator/ForwardTranslateFanVariableVolume.cpp
@@ -536,6 +549,7 @@ set(${target_name}_test_src
   Test/EMS_GTest.cpp
   Test/FuelCell_GTest.cpp
   Test/ExteriorLights_GTest.cpp
+  Test/ExternalInterfaceFT_GTest.cpp
   Test/GasEquipment_GTest.cpp
   Test/GeneratorMicroTurbine_GTest.cpp
   Test/HotWaterEquipment_GTest.cpp
