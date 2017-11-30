@@ -413,12 +413,6 @@ class MODEL_API AirLoopHVACUnitarySystem : public ZoneHVACComponent {
   /** @name Other */
   //@{
 
-  bool setControlType(std::string controlType);
-
-  void resetControlType();
-
-  std::string controlType() const;
-
   //@}
  protected:
   /// @cond
