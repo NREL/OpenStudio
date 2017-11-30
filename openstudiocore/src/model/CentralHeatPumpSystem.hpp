@@ -95,6 +95,15 @@ class MODEL_API CentralHeatPumpSystem : public WaterToWaterComponent {
 
   std::vector<CentralHeatPumpSystemModule> modules() const;
 
+  /** Convenience Function to return the Cooling Loop **/
+  boost::optional<PlantLoop> coolingPlantLoop() const;
+
+  /** Convenience Function to return the Source Loop **/
+  boost::optional<PlantLoop> sourcePlantLoop() const;
+
+  /** Convenience Function to return the Heating Loop **/
+  boost::optional<PlantLoop> heatingPlantLoop() const;
+
   //@}
  protected:
   /// @cond

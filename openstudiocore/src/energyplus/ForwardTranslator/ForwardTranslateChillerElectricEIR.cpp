@@ -78,11 +78,11 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
   }
   else if( (value = modelObject.referenceCapacity()) )
   {
-    idfObject.setDouble(Chiller_Electric_EIRFields::ReferenceCapacity,value.get()); 
+    idfObject.setDouble(Chiller_Electric_EIRFields::ReferenceCapacity,value.get());
   }
 
   // ReferenceCOP
-  
+
   if( (value = modelObject.referenceCOP()) )
   {
     idfObject.setDouble(Chiller_Electric_EIRFields::ReferenceCOP,value.get());
@@ -146,7 +146,7 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
   }
 
   // MinimumUnloadingRatio
-  
+
   if( (value = modelObject.minimumUnloadingRatio()) )
   {
     idfObject.setDouble(Chiller_Electric_EIRFields::MinimumUnloadingRatio,value.get());
@@ -193,15 +193,10 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
   }
 
   // CondenserType
+  // The "smart" logic is now handled in model itself
+  // (eg: if you connect the chiller to a secondaryPlantLoop, it switches automatically to "WaterCooled")
+  idfObject.setString(Chiller_Electric_EIRFields::CondenserType,modelObject.condenserType());
 
-  if( modelObject.demandInletModelObject() )
-  {
-    idfObject.setString(Chiller_Electric_EIRFields::CondenserType,"WaterCooled");
-  }
-  else
-  {
-    idfObject.setString(Chiller_Electric_EIRFields::CondenserType,"AirCooled");
-  }
 
   // CondenserFanPowerRatio
 

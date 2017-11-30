@@ -37,6 +37,7 @@ namespace model {
 
 class Schedule;
 class Curve;
+class ThermalZone;
 
 namespace detail {
 
@@ -62,6 +63,8 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
   static IddObjectType iddObjectType();
 
   static std::vector<std::string> pumpControlTypeValues();
+
+  static std::vector<std::string> designPowerSizingMethodValues();
 
   /** \deprecated */
   static std::vector<std::string> validPumpControlTypeValues();
@@ -273,6 +276,32 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
   bool setMaximumRPMSchedule(Schedule& schedule);
 
   void resetMaximumRPMSchedule();
+
+  std::string designPowerSizingMethod() const;
+
+  bool setDesignPowerSizingMethod(const std::string & designPowerSizingMethod);
+
+  double designElectricPowerPerUnitFlowRate() const;
+
+  bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
+
+  double designShaftPowerPerUnitFlowRatePerUnitHead() const;
+
+  bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
+
+  boost::optional<ThermalZone> zone() const;
+
+  bool setZone(const ThermalZone& thermalZone);
+
+  void resetZone();
+
+  double skinLossRadiativeFraction() const;
+
+  bool setSkinLossRadiativeFraction(double skinLossRadiativeFraction);
+
+  double designMinimumFlowRateFraction() const;
+  
+  bool setDesignMinimumFlowRateFraction(double designMinimumFlowRateFraction);
 
   //@}
  protected:

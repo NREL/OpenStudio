@@ -32,6 +32,8 @@
 
 #include "../../model/GeneratorMicroTurbine.hpp"
 #include "../../model/GeneratorMicroTurbine_Impl.hpp"
+#include "../../model/GeneratorMicroTurbineHeatRecovery.hpp"
+#include "../../model/GeneratorMicroTurbineHeatRecovery_Impl.hpp"
 
 #include "../../model/StraightComponent.hpp"
 #include "../../model/StraightComponent_Impl.hpp"
@@ -39,9 +41,6 @@
 #include "../../model/Node_Impl.hpp"
 #include "../../model/Curve.hpp"
 #include "../../model/Curve_Impl.hpp"
-
-#include "../../model/GeneratorMicroTurbineHeatRecovery.hpp"
-#include "../../model/GeneratorMicroTurbineHeatRecovery_Impl.hpp"
 
 #include <utilities/idd/Generator_MicroTurbine_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -55,27 +54,28 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateGeneratorMicroTurbine(model::GeneratorMicroTurbine & modelObject)
+/** This method forward translates the OS:Generator:MicroTurbine as well the optional attached OS:Generator:MicroTurbine:HeatRecovery
+ to the EnergyPlus Generator:MicroTurbine object */
+boost::optional<IdfObject> ForwardTranslator::translateGeneratorMicroTurbine(GeneratorMicroTurbine & modelObject)
 {
+
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_MicroTurbine, modelObject);
 
-
-  //get the GeneratorMicroTurbineHeatRecovery as an optional straight component, if exists cast it to optional GeneratorMicroTurbineHeatRecovery
-  // if cast is successful, get the object of class GeneratorMicroTurbineHeatRecovery
   boost::optional<GeneratorMicroTurbineHeatRecovery> generatorOptionalMicroTurbineHeatRecovery = modelObject.generatorMicroTurbineHeatRecovery();
-  // If there is a Heat Recovery Object
+  // If there is a Heat Recovery Object, we set the appropriate fields of the E+ object from the HR object
   if (generatorOptionalMicroTurbineHeatRecovery) {
+
     // Get it
     GeneratorMicroTurbineHeatRecovery generatorMCHPHX = *generatorOptionalMicroTurbineHeatRecovery;
-    
+
     // HeatRecoveryWaterInletNodeName
-    // Inlet Node Name 
+    // Inlet Node Name
     if ( auto temp = generatorMCHPHX.inletModelObject() )
     {
       auto s = temp->name();
       if(s)
       {
-        idfObject.setString(openstudio::Generator_MicroTurbineFields::HeatRecoveryWaterInletNodeName,*s);
+        idfObject.setString(Generator_MicroTurbineFields::HeatRecoveryWaterInletNodeName,*s);
       }
     }
 
@@ -83,7 +83,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorMicroTurbine(mod
     if ( auto temp = generatorMCHPHX.outletModelObject() ) {
       auto s = temp->name();
       if (s) {
-        idfObject.setString(openstudio::Generator_MicroTurbineFields::HeatRecoveryWaterOutletNodeName, *s);
+        idfObject.setString(Generator_MicroTurbineFields::HeatRecoveryWaterOutletNodeName, *s);
       }
     }
 
@@ -96,7 +96,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorMicroTurbine(mod
     //ReferenceInletWaterTemperature (double)
     idfObject.setDouble(Generator_MicroTurbineFields::ReferenceInletWaterTemperature, generatorMCHPHX.referenceInletWaterTemperature());
 
-    
+
     //HeatRecoveryWaterFlowOperatingMode
     {
       auto value = generatorMCHPHX.heatRecoveryWaterFlowOperatingMode();
@@ -160,8 +160,8 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorMicroTurbine(mod
       idfObject.setDouble(Generator_MicroTurbineFields::MaximumHeatRecoveryWaterTemperature,value.get());
     }
   }
-  
-  
+
+
   /// Doubles, non optional
   //ReferenceElectricalPowerOutput
   idfObject.setDouble(Generator_MicroTurbineFields::ReferenceElectricalPowerOutput, modelObject.referenceElectricalPowerOutput());
@@ -169,7 +169,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorMicroTurbine(mod
   //ReferenceElectricalEfficiencyUsingLowerHeatingValue
   idfObject.setDouble(Generator_MicroTurbineFields::ReferenceElectricalEfficiencyUsingLowerHeatingValue, modelObject.referenceElectricalEfficiencyUsingLowerHeatingValue());
 
-  
+
   /// Doubles, optional
   //MinimumFullLoadElectricalPowerOutput
   {
@@ -230,23 +230,23 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorMicroTurbine(mod
   {
     idfObject.setDouble(Generator_MicroTurbineFields::ReferenceExhaustAirMassFlowRate,value.get());
   }
-  
+
   //NominalExhaustAirOutletTemperature
   if( auto value = modelObject.nominalExhaustAirOutletTemperature() )
   {
     idfObject.setDouble(Generator_MicroTurbineFields::NominalExhaustAirOutletTemperature,value.get());
   }
-  
+
   /// Choice
   //FuelType
   {
     auto s = modelObject.fuelType();
     idfObject.setString(Generator_MicroTurbineFields::FuelType,s);
   }
-  
-  
+
+
   /// Nodes
-  
+
   // Will leave blank to assume outside air conditions
   //CombustionAirInletNodeName
   idfObject.setString(Generator_MicroTurbineFields::CombustionAirInletNodeName,"");
@@ -308,7 +308,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorMicroTurbine(mod
     }
   }
 
-  //ExhaustAirTemperatureFunctionofPartLoadRatioCurve 
+  //ExhaustAirTemperatureFunctionofPartLoadRatioCurve
   if( auto curve = modelObject.exhaustAirTemperatureFunctionofPartLoadRatioCurve() )  {
     if( auto _curve = translateAndMapModelObject(curve.get()) ) {
       idfObject.setString(Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofPartLoadRatioCurveName, _curve->name().get());

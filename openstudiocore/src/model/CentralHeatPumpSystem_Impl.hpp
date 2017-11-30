@@ -71,16 +71,14 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    // CoolingLoop
     virtual unsigned supplyInletPort() override;
-
     virtual unsigned supplyOutletPort() override;
-
+    // SourceLoop
     virtual unsigned demandInletPort() override;
-
     virtual unsigned demandOutletPort() override;
-
+    // HeatingLoop
     virtual unsigned tertiaryInletPort() const override;
-
     virtual unsigned tertiaryOutletPort() const override;
 
     //@}
@@ -122,6 +120,23 @@ namespace detail {
     bool setChillerHeaterModuleList(const boost::optional<ModelObjectList>& modelObjectList);
 
     void resetChillerHeaterModuleList();
+
+    /** Convenience Function to return the Cooling Loop **/
+    boost::optional<PlantLoop> coolingPlantLoop() const;
+
+    /** Convenience Function to return the Source Loop **/
+    boost::optional<PlantLoop> sourcePlantLoop() const;
+
+    /** Convenience Function to return the Heating Loop **/
+    boost::optional<PlantLoop> heatingPlantLoop() const;
+
+
+    // TODO: Need to override the clone, allowableChildTypes and children methods
+    ModelObject clone(Model model) const override;
+
+    // std::vector<IddObjectType> allowableChildTypes() const override;
+
+    // std::vector<ModelObject> children() const override;
 
     //@}
    protected:

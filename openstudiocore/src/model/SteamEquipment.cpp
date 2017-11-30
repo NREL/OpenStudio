@@ -75,7 +75,34 @@ namespace detail {
   const std::vector<std::string>& SteamEquipment_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Steam Equipment District Heating Rate");
+      result.push_back("Steam Equipment District Heating Energy");
+      result.push_back("Steam Equipment Radiant Heating Energy");
+      result.push_back("Steam Equipment Radiant Heating Rate");
+      result.push_back("Steam Equipment Convective Heating Energy");
+      result.push_back("Steam Equipment Convective Heating Rate");
+      result.push_back("Steam Equipment Latent Gain Energy");
+      result.push_back("Steam Equipment Latent Gain Rate");
+      result.push_back("Steam Equipment Lost Heat Energy");
+      result.push_back("Steam Equipment Lost Heat Rate");
+      result.push_back("Steam Equipment Total Heating Energy");
+      result.push_back("Steam Equipment Total Heating Rate");
+
+      // Reported in ThermalZone
+      //result.push_back("Zone Steam Equipment District Heating Rate");
+      //result.push_back("Zone Steam Equipment District Heating Energy");
+      //result.push_back("Zone Steam Equipment Radiant Heating Energy");
+      //result.push_back("Zone Steam Equipment Radiant Heating Rate");
+      //result.push_back("Zone Steam Equipment Convective Heating Energy");
+      //result.push_back("Zone Steam Equipment Convective Heating Rate");
+      //result.push_back("Zone Steam Equipment Latent Gain Energy");
+      //result.push_back("Zone Steam Equipment Latent Gain Rate");
+      //result.push_back("Zone Steam Equipment Lost Heat Energy");
+      //result.push_back("Zone Steam Equipment Lost Heat Rate");
+      //result.push_back("Zone Steam Equipment Total Heating Energy");
+      //result.push_back("Zone Steam Equipment Total Heating Rate");
     }
     return result;
   }

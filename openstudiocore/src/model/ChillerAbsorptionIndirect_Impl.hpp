@@ -67,6 +67,13 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual unsigned supplyInletPort() override;
+    virtual unsigned supplyOutletPort() override;
+    virtual unsigned demandInletPort() override;
+    virtual unsigned demandOutletPort() override;
+    virtual unsigned tertiaryInletPort() const override;
+    virtual unsigned tertiaryOutletPort() const override;
+
     //@}
     /** @name Getters */
     //@{
@@ -177,6 +184,7 @@ namespace detail {
 
     bool setGeneratorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve(const Curve& curve);
 
+    // TODO: This needs to be set automatically based on plant loop connected to it
     bool setGeneratorHeatSourceType(std::string generatorHeatSourceType);
 
     void setDesignGeneratorFluidFlowRate(boost::optional<double> designGeneratorFluidFlowRate);
@@ -194,13 +202,6 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-
-    unsigned supplyInletPort() override;
-    unsigned supplyOutletPort() override;
-    unsigned demandInletPort() override;
-    unsigned demandOutletPort() override;
-    unsigned tertiaryInletPort() const override;
-    unsigned tertiaryOutletPort() const override;
 
     std::vector<ModelObject> children() const override;
     ModelObject clone(Model model) const override;

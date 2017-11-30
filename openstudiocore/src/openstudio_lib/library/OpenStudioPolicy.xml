@@ -674,6 +674,16 @@
     <rule IddField="Cold Air Inlet Node" Access="HIDDEN"/>
     <rule IddField="Design Specification Outdoor Air Object" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_DualDuct_VAV_OutdoorAir">
+    <rule IddField="Air Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Outdoor Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Recirculated Air Inlet Node" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_DualDuct_ConstantVolume">
+    <rule IddField="Air Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Hot Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Cold Air Inlet Node" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_AirTerminal_SingleDuct_InletSideMixer">
     <rule IddField="Terminal Unit Outlet" Access="HIDDEN"/>
     <rule IddField="Terminal Unit Primary Air Inlet" Access="HIDDEN"/>

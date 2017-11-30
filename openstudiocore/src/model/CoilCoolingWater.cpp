@@ -43,6 +43,8 @@
 #include "ZoneHVACComponent_Impl.hpp"
 #include "ZoneHVACFourPipeFanCoil.hpp"
 #include "ZoneHVACFourPipeFanCoil_Impl.hpp"
+#include "AirTerminalSingleDuctConstantVolumeFourPipeInduction.hpp"
+#include "AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl.hpp"
 #include <utilities/idd/OS_Coil_Cooling_Water_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
@@ -73,6 +75,23 @@ namespace detail {
   {}
 
   CoilCoolingWater_Impl::~CoilCoolingWater_Impl(){}
+
+  const std::vector<std::string>& CoilCoolingWater_Impl::outputVariableNames() const
+  {
+    static std::vector<std::string> result;
+    if (result.empty())
+    {
+      result.push_back("Cooling Coil Total Cooling Energy");
+      result.push_back("Cooling Coil Sensible Cooling Energy");
+      result.push_back("Cooling Coil Total Cooling Rate");
+      result.push_back("Cooling Coil Sensible Cooling Rate");
+      result.push_back("Cooling Coil Wetted Area Fraction");
+      result.push_back("Cooling Coil Condensate Volume Flow Rate");
+      result.push_back("Cooling Coil Source Side Heat Transfer Energy");
+      result.push_back("Cooling Coil Condensate Volume");
+    }
+    return result;
+  }
 
   IddObjectType CoilCoolingWater_Impl::iddObjectType() const {
     return CoilCoolingWater::iddObjectType();
@@ -419,6 +438,22 @@ namespace detail {
         }
       }
     }
+
+
+    // AirTerminalSingleDuctConstantVolumeFourPipeInduction
+    std::vector<AirTerminalSingleDuctConstantVolumeFourPipeInduction> fourPipeSystems = this->model().getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+
+    for( const auto & fourPipeSystem : fourPipeSystems )
+    {
+      if( boost::optional<HVACComponent> coolingCoil = fourPipeSystem.coolingCoil() )
+      {
+        if( coolingCoil->handle() == this->handle() )
+        {
+          return fourPipeSystem;
+        }
+      }
+    }
+
 
     return boost::none;
   }

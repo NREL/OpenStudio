@@ -85,7 +85,9 @@ namespace detail {
   const std::vector<std::string>& AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not Appropriate: No Specific output for this object
     }
     return result;
   }

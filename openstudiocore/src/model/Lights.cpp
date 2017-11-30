@@ -75,10 +75,38 @@ namespace detail {
   const std::vector<std::string>& Lights_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Lights Electric Power");
+      result.push_back("Lights Radiant Heat Gain");
+      result.push_back("Lights Radiant Heating Rate");
+      result.push_back("Lights Visible Radiation Heating Energy");
+      result.push_back("Lights Visible Radiation Heating Rate");
+      result.push_back("Lights Convective Heating Energy");
+      result.push_back("Lights Convective Heating Rate");
+      result.push_back("Lights Return Air Heating Energy");
+      result.push_back("Lights Return Air Heating Rate");
+      result.push_back("Lights Total Heating Energy");
+      result.push_back("Lights Total Heating Rate");
+      result.push_back("Lights Electric Energy");
+
+      // Reported in ThermalZone
+      //result.push_back("Zone Lights Electric Power");
+      //result.push_back("Zone Lights Radiant Heating Energy");
+      //result.push_back("Zone Lights Radiant Heating Rate");
+      //result.push_back("Zone Lights Visible Radiation Heating Energy");
+      //result.push_back("Zone Lights Visible Radiation Heating Rate");
+      //result.push_back("Zone Lights Convective Heating Energy");
+      //result.push_back("Zone Lights Convective Heating Rate");
+      //result.push_back("Zone Lights Return Air Heating Energy");
+      //result.push_back("Zone Lights Return Air Heating Rate");
+      //result.push_back("Zone Lights Total Heating Energy");
+      //result.push_back("Zone Lights Total Heating Rate");
+      //result.push_back("Zone Lights Electric Energy");
     }
     return result;
   }
+
 
   IddObjectType Lights_Impl::iddObjectType() const {
     return Lights::iddObjectType();

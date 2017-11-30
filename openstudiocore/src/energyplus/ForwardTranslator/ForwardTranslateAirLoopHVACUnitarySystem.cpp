@@ -46,6 +46,8 @@
 #include "../../model/CoilCoolingDXMultiSpeedStageData_Impl.hpp"
 #include "../../model/CoilHeatingDXMultiSpeedStageData.hpp"
 #include "../../model/CoilHeatingDXMultiSpeedStageData_Impl.hpp"
+#include "../../model/CoilHeatingDXVariableSpeedSpeedData.hpp"
+#include "../../model/CoilHeatingDXVariableSpeedSpeedData_Impl.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
 #include "../../model/CoilSystemCoolingWaterHeatExchangerAssisted.hpp"
@@ -54,6 +56,8 @@
 #include "../../model/AirToAirComponent_Impl.hpp"
 #include "../../model/CoilHeatingDXMultiSpeed.hpp"
 #include "../../model/CoilHeatingDXMultiSpeed_Impl.hpp"
+#include "../../model/CoilHeatingDXVariableSpeed.hpp"
+#include "../../model/CoilHeatingDXVariableSpeed_Impl.hpp"
 #include "../../model/CoilCoolingDXMultiSpeed.hpp"
 #include "../../model/CoilCoolingDXMultiSpeed_Impl.hpp"
 #include "../../model/CoilHeatingGasMultiStage.hpp"
@@ -493,6 +497,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     _unitarySystemPerformance.setName(unitarySystem.nameString() + " Unitary System Performance");
 
     boost::optional<model::CoilHeatingDXMultiSpeed> multispeedDXHeating;
+    boost::optional<model::CoilHeatingDXVariableSpeed> varSpeedDXHeating;
     boost::optional<model::CoilHeatingGasMultiStage> multistageGasHeating;
     boost::optional<model::CoilCoolingDXMultiSpeed> multispeedDXCooling;
 
@@ -501,6 +506,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     if( heatingCoil ) {
       multispeedDXHeating = heatingCoil->optionalCast<model::CoilHeatingDXMultiSpeed>();
       multistageGasHeating = heatingCoil->optionalCast<model::CoilHeatingGasMultiStage>();
+      varSpeedDXHeating = heatingCoil->optionalCast<model::CoilHeatingDXVariableSpeed>();
     }
 
     if( coolingCoil ) {
@@ -508,12 +514,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     }
 
     std::vector<model::CoilHeatingDXMultiSpeedStageData> heatingStages;
+    std::vector<model::CoilHeatingDXVariableSpeedSpeedData> varHeatingStages;
     std::vector<model::CoilHeatingGasMultiStageStageData> gasHeatingStages;
     std::vector<model::CoilCoolingDXMultiSpeedStageData> coolingStages;
 
     if( multispeedDXHeating ) {
       heatingStages = multispeedDXHeating->stages();
       maxStages = heatingStages.size();
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating,maxStages);
+    } else if( varSpeedDXHeating ) {
+      varHeatingStages = varSpeedDXHeating->speeds();
+      maxStages = varHeatingStages.size();
       _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating,maxStages);
     } else if( multistageGasHeating ) {
       gasHeatingStages = multistageGasHeating->stages();

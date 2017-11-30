@@ -60,7 +60,7 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConvert
   bool isSimpleFixed = true;
 
   openstudio::model::ElectricLoadCenterStorageConverter elcConv( m_model );
-  
+
   // Name
   optS = workspaceObject.name();
   if(optS)
@@ -71,7 +71,7 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConvert
   // AvailabilityScheduleName
   if( (owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName)) )
   {
-    if (omo = translateAndMapWorkspaceObject(*owo))
+    if ( (omo = translateAndMapWorkspaceObject(*owo)) )
     {
       if (boost::optional<Schedule> schedule = omo->optionalCast<Schedule>())
       {
@@ -79,7 +79,7 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConvert
       }
     }
   }
-  
+
   // PowerConversionEfficiencyMethod, string
   optS = workspaceObject.getString(ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod);
   if(optS)
@@ -89,7 +89,7 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConvert
       isSimpleFixed = false;
     }
   }
-  
+
   if (isSimpleFixed) {
     // SimpleFixedEfficiency, optD
     optD = workspaceObject.getDouble(ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency);
@@ -104,11 +104,11 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConvert
     {
       elcConv.setDesignMaximumContinuousInputPower(*optD);
     }
-    
+
     // efficiencyFunctionofPowerCurveName, optCurve
     if( (owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_ConverterFields::EfficiencyFunctionofPowerCurveName)) )
     {
-      if (omo = translateAndMapWorkspaceObject(*owo))
+      if ( (omo = translateAndMapWorkspaceObject(*owo)) )
       {
         // Should technically make sure the curve is the right type, but in this case it's UnivariateCurves, lots of possibilities.
         if (boost::optional<Curve> effFPower = omo->optionalCast<Curve>())
@@ -124,11 +124,11 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConvert
   if (optD) {
     elcConv.setAncillaryPowerConsumedInStandby(*optD);
   }
-  
+
   // ZoneName
   if( (owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_ConverterFields::ZoneName)) )
   {
-    if (omo = translateAndMapWorkspaceObject(owo.get()))
+    if ( (omo = translateAndMapWorkspaceObject(owo.get())) )
     {
       if (boost::optional<ThermalZone> thermalZone = omo->optionalCast<ThermalZone>())
       {
@@ -143,9 +143,9 @@ OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConvert
   {
     elcConv.setRadiativeFraction(*optD);
   }
-     
-  
-  
+
+
+
   result=elcConv;
   return result;
 }

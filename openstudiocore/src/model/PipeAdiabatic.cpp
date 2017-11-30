@@ -68,7 +68,9 @@ PipeAdiabatic_Impl::~PipeAdiabatic_Impl(){}
 const std::vector<std::string>& PipeAdiabatic_Impl::outputVariableNames() const
 {
   static std::vector<std::string> result;
-  if (result.empty()){
+  if (result.empty())
+  {
+    // Not appropriate: no specific output
   }
   return result;
 }

@@ -68,7 +68,16 @@ namespace detail {
   const std::vector<std::string>& RefrigerationCondenserCascade_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // TODO implement checks and make sure there aren't any other variables
+      // FOR CONDENSERS COOLING SYSTEMS SERVING CASES AND/OR WALKINS:
+      result.push_back("Refrigeration System Condenser Heat Transfer Rate");
+      result.push_back("Refrigeration System Condenser Heat Transfer Energy");
+      // FOR CONDENSERS COOLING SYSTEMS SERVING AIR CHILLERS:
+      result.push_back("Refrigeration Air Chiller System Condenser Heat Transfer Rate");
+      result.push_back("Refrigeration Air Chiller System Condenser Heat Transfer Energy");
+
     }
     return result;
   }

@@ -31,6 +31,7 @@
 
 #include "ModelAPI.hpp"
 #include "Loop.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -91,12 +92,6 @@ class MODEL_API PlantLoop : public Loop {
   std::string loadDistributionScheme();
 
   bool setLoadDistributionScheme(std::string scheme);
-
-  boost::optional<AvailabilityManager> availabilityManager() const;
-
-  bool setAvailabilityManager(const AvailabilityManager& availabilityManager);
-
-  void resetAvailabilityManager();
 
   std::string fluidType();
 
@@ -266,6 +261,79 @@ class MODEL_API PlantLoop : public Loop {
   static IddObjectType iddObjectType();
 
   SizingPlant sizingPlant() const;
+
+
+  /*
+   * Return all AvailabilityManagers assigned to this list, in the priority order
+   *  AvailabilityManagers are used to override the system availabilitySchedule() with one of OpenStudio's
+   *  supported AvailabilityManager types.
+   */
+  std::vector<AvailabilityManager> availabilityManagers() const;
+
+  /*
+   * Add a new AvailabilityManager at the end of the list (priority = last).
+   */
+  bool addAvailabilityManager(const AvailabilityManager & availabilityManager);
+
+  /*
+   * Add a new AvailabilityManager to the list which a given priority (1 to x).
+   * Internally calls addAvailabilityManager then setPriority, see remarks there
+   */
+  bool addAvailabilityManager(const AvailabilityManager & availabilityManager, unsigned priority);
+
+
+  /*
+   * Set all availabilityManagers using a list of AvailabilityManagers
+   */
+  bool setAvailabilityManagers(const std::vector<AvailabilityManager> & avms);
+
+   /*
+   * Removes all AvailabilityManagers assigned (TODO: should that affect the availabilitySchedule?)
+   */
+  void resetAvailabilityManagers();
+
+  /*
+   * Remove the given AvailabilityManager from this AvailabilityManagerAssignmentList
+   */
+  bool removeAvailabilityManager(const AvailabilityManager& avm);
+
+  /*
+   * Remove the availabilityManager at the given priority
+   * Returns false if the priority isn't between 1 and the number of AVMs
+   */
+  bool removeAvailabilityManager(unsigned priority);
+
+  /*
+   * You can shuffle the priority of a given AvailabilityManager after having added it
+   * If priority is below 1, it's reset to 1.
+   * If priority is greater than the number of availability managers, will reset to last
+   */
+  bool setAvailabilityManagerPriority(const AvailabilityManager & availabilityManager, unsigned priority);
+
+  /*
+   * Get the priority of the AvailabilityManager given as argument
+   */
+  unsigned availabilityManagerPriority(const AvailabilityManager & availabilityManager) const;
+
+
+  // TODO: DEPRECATED SECTION Remove in the future (deprecated around 2.3.0)
+  /*
+   * Returns the first availability Manager used
+   */
+  OS_DEPRECATED boost::optional<AvailabilityManager> availabilityManager() const;
+
+  /* Deprecated, kept for backward compatibility with existing scripts, will be removed in a future version
+   * Behavior is that it will remove all AVMs assigned to this loop, and replace it with the one passed as argument
+   */
+  OS_DEPRECATED bool setAvailabilityManager(const AvailabilityManager& availabilityManager);
+
+  /*
+   * Clears all AVMs (forwards to resetAvailabilabilityManagers
+   **/
+  OS_DEPRECATED void resetAvailabilityManager();
+  // END DEPRECATED
+
+
 
   protected:
 

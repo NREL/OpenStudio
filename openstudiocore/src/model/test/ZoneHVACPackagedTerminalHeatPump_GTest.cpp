@@ -59,12 +59,12 @@ TEST(ZoneHVACPackagedTerminalHeatPump,ZoneHVACPackagedTerminalHeatPump_ZoneHVACP
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     model::Model m; 
+  ASSERT_EXIT (
+  {
+     model::Model m;
 
      model::ScheduleCompact availabilitySchedule(m);
-  
+
      model::FanConstantVolume fan(m,availabilitySchedule);
 
      model::CoilHeatingElectric supplementalHeatingCoil(m,availabilitySchedule);
@@ -165,10 +165,10 @@ TEST(ZoneHVACPackagedTerminalHeatPump,ZoneHVACPackagedTerminalHeatPump_ZoneHVACP
                                            totalHeatingCapacityFunctionofFlowFractionCurve,
                                            energyInputRatioFunctionofTemperatureCurve,
                                            energyInputRatioFunctionofFlowFractionCurve,
-                                           partLoadFractionCorrelationCurve ); 
+                                           partLoadFractionCorrelationCurve );
 
      model::ZoneHVACPackagedTerminalHeatPump pthp( m,
-                                                   availabilitySchedule, 
+                                                   availabilitySchedule,
                                                    fan,
                                                    heatingCoil,
                                                    coolingCoil,
@@ -184,17 +184,17 @@ TEST(ZoneHVACPackagedTerminalHeatPump,ZoneHVACPackagedTerminalHeatPump_ZoneHVACP
 
      pthp.supplementalHeatingCoil();
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
 TEST_F(ModelFixture,ZoneHVACPackagedTerminalHeatPump_Clone)
 {
-  model::Model m; 
+  model::Model m;
 
   model::ScheduleCompact availabilitySchedule(m);
-  
+
   model::FanConstantVolume fan(m,availabilitySchedule);
 
   model::CoilHeatingElectric supplementalHeatingCoil(m,availabilitySchedule);
@@ -308,10 +308,10 @@ TEST_F(ModelFixture,ZoneHVACPackagedTerminalHeatPump_Clone)
                                         totalHeatingCapacityFunctionofFlowFractionCurve,
                                         energyInputRatioFunctionofTemperatureCurve,
                                         energyInputRatioFunctionofFlowFractionCurve,
-                                        partLoadFractionCorrelationCurve ); 
+                                        partLoadFractionCorrelationCurve );
 
   model::ZoneHVACPackagedTerminalHeatPump pthp( m,
-                                                availabilitySchedule, 
+                                                availabilitySchedule,
                                                 fan,
                                                 heatingCoil,
                                                 coolingCoil,

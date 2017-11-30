@@ -41,39 +41,8 @@ class Schedule;
 
 namespace detail {
 
-class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
-{
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
+class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl {
  public:
-
 
   ChillerElectricEIR_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
@@ -101,6 +70,8 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
   virtual const std::vector<std::string> & outputVariableNames() const override;
 
   virtual bool addToNode(Node & node) override;
+
+  virtual bool removeFromSecondaryPlantLoop() override;
 
   virtual unsigned supplyInletPort() override;
 

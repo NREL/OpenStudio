@@ -65,7 +65,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGas( CoilHeati
                         sched.name().get() );
   }
   catch (std::exception& e) {
-    LOG(Error,"Could not translate " << modelObject.briefDescription() << ", because " 
+    LOG(Error,"Could not translate " << modelObject.briefDescription() << ", because "
         << e.what() << ".");
     return boost::none;
   }
@@ -79,7 +79,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGas( CoilHeati
   } else {
     idfObject.setString(openstudio::Coil_Heating_FuelFields::FuelType, modelObject.fuelType());
   }
-  
+
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
@@ -132,12 +132,12 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGas( CoilHeati
 
   m_idfObjects.push_back(idfObject);
 
-  // Part Load Fraction Correlation Curve 
+  // Part Load Fraction Correlation Curve
   if( boost::optional<model::Curve> curve = modelObject.partLoadFractionCorrelationCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
     {
-      idfObject.setString(Coil_Heating_FuelFields::PartLoadFractionCorrelationCurveName,_curve->name().get()); 
+      idfObject.setString(Coil_Heating_FuelFields::PartLoadFractionCorrelationCurveName,_curve->name().get());
     }
   }
 

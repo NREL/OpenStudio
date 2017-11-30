@@ -80,7 +80,11 @@ namespace detail {
   const std::vector<std::string>& FanVariableVolume_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Fan Electric Power");
+      result.push_back("Fan Rise in Air Temperature");
+      result.push_back("Fan Electric Energy");
     }
     return result;
   }

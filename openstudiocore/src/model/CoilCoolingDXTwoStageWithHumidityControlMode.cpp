@@ -82,10 +82,51 @@ namespace detail {
 
   const std::vector<std::string>& CoilCoolingDXTwoStageWithHumidityControlMode_Impl::outputVariableNames() const
   {
+    // TODO: static for now
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Cooling Coil Total Cooling Rate");
+      result.push_back("Cooling Coil Total Cooling Energy");
+      result.push_back("Cooling Coil Sensible Cooling Rate");
+      result.push_back("Cooling Coil Sensible Cooling Energy");
+      result.push_back("Cooling Coil Latent Cooling Rate");
+      result.push_back("Cooling Coil Latent Cooling Energy");
+      result.push_back("Cooling Coil Electric Power");
+      result.push_back("Cooling Coil Electric Energy");
+      result.push_back("Cooling Coil Runtime Fraction");
+
+      // condenserType = [AirCooled, EvaporativelyCooled]
+      // if (this->condenserType() == "EvaporativelyCooled") {
+        result.push_back("Cooling Coil Condenser Inlet Temperature");
+        result.push_back("Cooling Coil Evaporative Condenser Water Volume");
+        result.push_back("Cooling Coil Evaporative Condenser Pump Electric Power");
+        result.push_back("Cooling Coil Evaporative Condenser Pump Electric Energy");
+        result.push_back("Cooling Coil Basin Heater Electric Power");
+        result.push_back("Cooling Coil Basin Heater Electric Energy");
+        result.push_back("Cooling Coil Evaporative Condenser Mains Supply Water Volume");
+      // }
+
+      // Storage tank isn't implemented
+      // if has storage tank:
+      // result.push_back("Cooling Coil Condensate Volume Flow Rate");
+      // result.push_back("Cooling Coil Condensate Volume");
+      //
+
+      // Additional variables for Coil:Cooling:DX:TwoStageWithHumidityControlMode only:
+      result.push_back("Cooling Coil Stage 2 Runtime Fraction");
+      result.push_back("Cooling Coil Dehumidification Mode");
+
+      // If not part of AirLoopHVAC:UnitaryHeatPump:AirToAir
+      // (if part of a heat pump, crankcase heater is reported only for the heating coil):
+      // if ( !this->containingHVACComponent().empty() ) {
+      // result.push_back("Cooling Coil Crankcase Heater Electric Power");
+      // result.push_back("Cooling Coil Crankcase Heater Electric Energy");
+      // }
+
     }
     return result;
+
   }
 
   IddObjectType CoilCoolingDXTwoStageWithHumidityControlMode_Impl::iddObjectType() const {
@@ -94,7 +135,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -355,8 +395,43 @@ namespace detail {
   {
     auto newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXTwoStageWithHumidityControlMode>();
 
+    if (model != this->model()) {
+      // If there are CoilPerformanceDXCooling objects, clone them as well
+      if (boost::optional<CoilPerformanceDXCooling> coilPerf1 = normalModeStage1CoilPerformance())
+      {
+        CoilPerformanceDXCooling coilPerf1Clone = coilPerf1->clone(model).cast<CoilPerformanceDXCooling>();
+        newCoil.setNormalModeStage1CoilPerformance(coilPerf1Clone);
+      }
+
+      if (boost::optional<CoilPerformanceDXCooling> coilPerf2 = normalModeStage1Plus2CoilPerformance())
+      {
+        CoilPerformanceDXCooling coilPerf2Clone = coilPerf2->clone(model).cast<CoilPerformanceDXCooling>();
+        newCoil.setNormalModeStage1Plus2CoilPerformance(coilPerf2Clone);
+      }
+
+      if (boost::optional<CoilPerformanceDXCooling> coilPerf3 = dehumidificationMode1Stage1CoilPerformance())
+      {
+        CoilPerformanceDXCooling coilPerf3Clone = coilPerf3->clone(model).cast<CoilPerformanceDXCooling>();
+        newCoil.setDehumidificationMode1Stage1CoilPerformance(coilPerf3Clone);
+      }
+
+      if (boost::optional<CoilPerformanceDXCooling> coilPerf4 = dehumidificationMode1Stage1Plus2CoilPerformance())
+      {
+        CoilPerformanceDXCooling coilPerf4Clone = coilPerf4->clone(model).cast<CoilPerformanceDXCooling>();
+        newCoil.setDehumidificationMode1Stage1Plus2CoilPerformance(coilPerf4Clone);
+      }
+    }
+
     return newCoil;
   }
+
+  std::vector<IddObjectType> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::allowableChildTypes() const
+  {
+    std::vector<IddObjectType> result;
+    result.push_back(IddObjectType::OS_CoilPerformance_DX_Cooling);
+    return result;
+  }
+
 
   std::vector<ModelObject> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::children() const
   {
@@ -376,7 +451,6 @@ namespace detail {
     if( auto mo = dehumidificationMode1Stage1Plus2CoilPerformance() ) {
       result.push_back(mo.get());
     }
-
     return result;
   }
 

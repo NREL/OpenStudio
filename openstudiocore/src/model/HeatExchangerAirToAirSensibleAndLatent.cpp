@@ -72,7 +72,27 @@ namespace detail {
   const std::vector<std::string>& HeatExchangerAirToAirSensibleAndLatent_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Heat Exchanger Sensible Heating Rate");
+      result.push_back("Heat Exchanger Sensible Heating Energy");
+      result.push_back("Heat Exchanger Latent Gain Rate");
+      result.push_back("Heat Exchanger Latent Gain Energy");
+      result.push_back("Heat Exchanger Total Heating Rate");
+      result.push_back("Heat Exchanger Total Heating Energy");
+      result.push_back("Heat Exchanger Sensible Cooling Rate");
+      result.push_back("Heat Exchanger Sensible Cooling Energy");
+      result.push_back("Heat Exchanger Latent Cooling Rate");
+      result.push_back("Heat Exchanger Latent Cooling Energy");
+      result.push_back("Heat Exchanger Total Cooling Rate");
+      result.push_back("Heat Exchanger Total Cooling Energy");
+      result.push_back("Heat Exchanger Electric Power");
+      result.push_back("Heat Exchanger Electric Energy");
+      result.push_back("Heat Exchanger Sensible Effectiveness");
+      result.push_back("Heat Exchanger Latent Effectiveness");
+      result.push_back("Heat Exchanger Supply Air Bypass Mass Flow Rate");
+      result.push_back("Heat Exchanger Exhaust Air Bypass Mass Flow Rate");
+      result.push_back("Heat Exchanger Defrost Time Fraction");
     }
     return result;
   }

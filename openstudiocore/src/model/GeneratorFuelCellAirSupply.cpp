@@ -91,15 +91,15 @@ namespace detail {
     return GeneratorFuelCellAirSupply::iddObjectType();
   }
 
-  // This will clone both the GeneratorFuelCellExhaustGasToWaterHeatExchanger and its linked GeneratorFuelCell
-  // and will return a reference to the GeneratorMicroTurbineHeatRecovery
+  // This will clone both the GeneratorFuelCellAirSupply and its linked GeneratorFuelCell
+  // and will return a reference to the GeneratorFuelCellAirSupply
   ModelObject GeneratorFuelCellAirSupply_Impl::clone(Model model) const {
 
     // We call the parent generator's Clone method which will clone both the fuelCell and airSupply
     GeneratorFuelCell fs = fuelCell();
     GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
 
-    // We get the clone of the parent generator's MTHR so we can return that
+    // We get the clone of the parent generator's airSupply so we can return that
     GeneratorFuelCellAirSupply hxClone = fsClone.airSupply();
 
 
@@ -119,13 +119,13 @@ namespace detail {
     boost::optional<CurveQuadratic> curveQ;
     boost::optional<CurveCubic> curveC;
 
-    if (curveC = blowerPowerCurve()) {
+    if ( (curveC = blowerPowerCurve()) ) {
       result.push_back(curveC.get());
     }
-    if (curveQ = airRateFunctionofElectricPowerCurve()) {
+    if ( (curveQ = airRateFunctionofElectricPowerCurve()) ) {
       result.push_back(curveQ.get());
     }
-    if (curveQ = airRateFunctionofFuelRateCurve()) {
+    if ( (curveQ = airRateFunctionofFuelRateCurve()) ) {
       result.push_back(curveQ.get());
     }
 

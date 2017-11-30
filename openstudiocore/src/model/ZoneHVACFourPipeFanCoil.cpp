@@ -137,7 +137,22 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACFourPipeFanCoil_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Fan Coil Heating Rate");
+      result.push_back("Fan Coil Heating Energy");
+      result.push_back("Fan Coil Total Cooling Rate");
+      result.push_back("Fan Coil Total Cooling Energy");
+      result.push_back("Fan Coil Sensible Cooling Rate");
+      result.push_back("Fan Coil Sensible Cooling Energy");
+      result.push_back("Fan Coil Fan Electric Power");
+      result.push_back("Fan Coil Fan Electric Energy");
+      result.push_back("Fan Coil Runtime Fraction");
+      result.push_back("Fan Coil Fan Speed Level");
+      result.push_back("Fan Coil Part Load Ratio");
+      result.push_back("Fan Coil Availability Status");
+      result.push_back("Fan Coil Part Load Ratio");
+      result.push_back("Fan Coil Speed Ratio");
     }
     return result;
   }

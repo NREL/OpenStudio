@@ -58,8 +58,15 @@
 #include "AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp"
 #include "AirTerminalSingleDuctVAVReheat.hpp"
 #include "AirTerminalSingleDuctVAVReheat_Impl.hpp"
+#include "AirTerminalSingleDuctVAVHeatAndCoolReheat.hpp"
+#include "AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl.hpp"
 #include "AirTerminalSingleDuctParallelPIUReheat.hpp"
 #include "AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
+#include "AirTerminalSingleDuctSeriesPIUReheat.hpp"
+#include "AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp"
+#include "AirTerminalSingleDuctConstantVolumeFourPipeInduction.hpp"
+#include "AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl.hpp"
+
 #include "Model.hpp"
 #include <utilities/idd/OS_Coil_Heating_Water_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -91,6 +98,19 @@ namespace detail{
   {}
 
   CoilHeatingWater_Impl::~CoilHeatingWater_Impl(){}
+
+  const std::vector<std::string>& CoilHeatingWater_Impl::outputVariableNames() const
+  {
+    static std::vector<std::string> result;
+    if (result.empty())
+    {
+      result.push_back("Heating Coil Heating Energy");
+      result.push_back("Heating Coil Source Side Heat Transfer Energy");
+      result.push_back("Heating Coil Heating Rate");
+      result.push_back("Heating Coil U Factor Times Area Value");
+    }
+    return result;
+  }
 
   bool CoilHeatingWater_Impl::addToNode(Node & node)
   {
@@ -337,6 +357,28 @@ namespace detail{
   {
     // Process all types that might contain a CoilHeatingWater object.
 
+    // Here is the list of AirTerminals and AirLoopHVACUnitary that are in OpenStudio as of 2.3.0
+
+    // Can have a heating coil (and are implemented below)
+    // * AirTerminalSingleDuctConstantVolumeFourPipeInduction
+    // * AirTerminalSingleDuctConstantVolumeReheat
+    // * AirTerminalSingleDuctParallelPIUReheat
+    // * AirTerminalSingleDuctSeriesPIUReheat
+    // * AirTerminalSingleDuctVAVHeatAndCoolReheat
+    // * AirTerminalSingleDuctVAVReheat
+    // * AirLoopHVACUnitarySystem
+    // * AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass
+    // * AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
+
+    // Cannot have a heating coil:
+    // * AirTerminalDualDuctVAV
+    // * AirTerminalSingleDuctConstantVolumeCooledBeam
+    // * AirTerminalSingleDuctInletSideMixer
+    // * AirTerminalSingleDuctUncontrolled
+    // * AirTerminalSingleDuctVAVHeatAndCoolNoReheat
+    // * AirTerminalSingleDuctVAVNoReheat
+
+
     // AirLoopHVACUnitarySystem
     std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
 
@@ -387,6 +429,19 @@ namespace detail{
       }
     }
 
+    // AirTerminalSingleDuctVAVHeatAndCoolReheat
+    std::vector<AirTerminalSingleDuctVAVHeatAndCoolReheat> airTerminalSingleDuctVAVHeatAndCoolReheatObjects = this->model().getConcreteModelObjects<AirTerminalSingleDuctVAVHeatAndCoolReheat>();
+
+    for( const auto & airTerminalSingleDuctVAVHeatAndCoolReheatObject : airTerminalSingleDuctVAVHeatAndCoolReheatObjects )
+    {
+      // Not an optional
+      if( airTerminalSingleDuctVAVHeatAndCoolReheatObject.reheatCoil().handle() == this->handle() )
+      {
+        return airTerminalSingleDuctVAVHeatAndCoolReheatObject;
+      }
+    }
+
+
     // AirTerminalSingleDuctConstantVolumeReheat
 
     std::vector<AirTerminalSingleDuctConstantVolumeReheat> airTerminalSingleDuctConstantVolumeReheatObjects = this->model().getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeReheat>();
@@ -395,10 +450,25 @@ namespace detail{
     {
       if( boost::optional<HVACComponent> coil = airTerminalSingleDuctConstantVolumeReheatObject.reheatCoil() )
       {
+        // Not an optional actually...
         if( coil->handle() == this->handle() )
         {
           return airTerminalSingleDuctConstantVolumeReheatObject;
         }
+      }
+    }
+
+
+    // AirTerminalSingleDuctSeriesPIUReheat
+
+    std::vector<AirTerminalSingleDuctSeriesPIUReheat> airTerminalSingleDuctSeriesPIUReheatObjects = this->model().getConcreteModelObjects<AirTerminalSingleDuctSeriesPIUReheat>();
+
+    for( const auto & airTerminalSingleDuctSeriesPIUReheatObject : airTerminalSingleDuctSeriesPIUReheatObjects )
+    {
+      // Not an optional
+      if( airTerminalSingleDuctSeriesPIUReheatObject.reheatCoil().handle() == this->handle() )
+      {
+        return airTerminalSingleDuctSeriesPIUReheatObject;
       }
     }
 
@@ -408,12 +478,23 @@ namespace detail{
 
     for( const auto & airTerminalSingleDuctParallelPIUReheatObject : airTerminalSingleDuctParallelPIUReheatObjects )
     {
-      if( boost::optional<HVACComponent> coil = airTerminalSingleDuctParallelPIUReheatObject.reheatCoil() )
+      // Not an optional
+      if( airTerminalSingleDuctParallelPIUReheatObject.reheatCoil().handle() == this->handle() )
       {
-        if( coil->handle() == this->handle() )
-        {
-          return airTerminalSingleDuctParallelPIUReheatObject;
-        }
+        return airTerminalSingleDuctParallelPIUReheatObject;
+      }
+    }
+
+
+    // AirTerminalSingleDuctConstantVolumeFourPipeInduction
+    std::vector<AirTerminalSingleDuctConstantVolumeFourPipeInduction> fourPipeSystems = this->model().getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+
+    for( const auto & fourPipeSystem : fourPipeSystems )
+    {
+      // Not an optional
+      if( fourPipeSystem.heatingCoil().handle() == this->handle() )
+      {
+        return fourPipeSystem;
       }
     }
 

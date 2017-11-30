@@ -75,7 +75,34 @@ namespace detail {
   const std::vector<std::string>& HotWaterEquipment_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Hot Water Equipment District Heating Rate");
+      result.push_back("Hot Water Equipment District Heating Energy");
+      result.push_back("Hot Water Equipment Radiant Heating Energy");
+      result.push_back("Hot Water Equipment Radiant Heating Rate");
+      result.push_back("Hot Water Equipment Convective Heating Energy");
+      result.push_back("Hot Water Equipment Convective Heating Rate");
+      result.push_back("Hot Water Equipment Latent Gain Energy");
+      result.push_back("Hot Water Equipment Latent Gain Rate");
+      result.push_back("Hot Water Equipment Lost Heat Energy");
+      result.push_back("Hot Water Equipment Lost Heat Rate");
+      result.push_back("Hot Water Equipment Total Heating Energy");
+      result.push_back("Hot Water Equipment Total Heating Rate");
+
+      // Reported in ThermalZone
+      //result.push_back("Zone Hot Water Equipment District Heating Rate");
+      //result.push_back("Zone Hot Water Equipment District Heating Energy");
+      //result.push_back("Zone Hot Water Equipment Radiant Heating Energy");
+      //result.push_back("Zone Hot Water Equipment Radiant Heating Rate");
+      //result.push_back("Zone Hot Water Equipment Convective Heating Energy");
+      //result.push_back("Zone Hot Water Equipment Convective Heating Rate");
+      //result.push_back("Zone Hot Water Equipment Latent Gain Energy");
+      //result.push_back("Zone Hot Water Equipment Latent Gain Rate");
+      //result.push_back("Zone Hot Water Equipment Lost Heat Energy");
+      //result.push_back("Zone Hot Water Equipment Lost Heat Rate");
+      //result.push_back("Zone Hot Water Equipment Total Heating Energy");
+      //result.push_back("Zone Hot Water Equipment Total Heating Rate");
     }
     return result;
   }

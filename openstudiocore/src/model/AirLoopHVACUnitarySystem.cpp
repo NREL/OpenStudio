@@ -83,8 +83,55 @@ namespace detail {
 
   const std::vector<std::string>& AirLoopHVACUnitarySystem_Impl::outputVariableNames() const
   {
+    // TODO: make this non static, and do implement the test cases below
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Unitary System Fan Part Load Ratio");
+      result.push_back("Unitary System Compressor Part Load Ratio");
+      result.push_back("Unitary System Total Cooling Rate");
+      result.push_back("Unitary System Total Heating Rate");
+      result.push_back("Unitary System Sensible Cooling Rate");
+      result.push_back("Unitary System Sensible Heating Rate");
+      result.push_back("Unitary System Latent Cooling Rate");
+      result.push_back("Unitary System Latent Heating Rate");
+      result.push_back("Unitary System Ancillary Electric Power");
+
+      // Load based and SingleZoneVAV control outputs
+      result.push_back("Unitary System Predicted Sensible Load to Setpoint Heat Transfer Rate");
+      result.push_back("Unitary System Predicted Moisture Load to Setpoint Heat Transfer Rate");
+
+      // Two speed coil outputs
+      result.push_back("Unitary System Cycling Ratio");
+      result.push_back("Unitary System Compressor Speed Ratio");
+
+      // Multi speed coil outputs
+      result.push_back("Unitary System DX Coil Cycling Ratio");
+      result.push_back("Unitary System DX Coil Speed Ratio");
+      result.push_back("Unitary System DX Coil Speed Level");
+      result.push_back("Unitary System Electric Power");
+      result.push_back("Unitary System Electric Energy");
+      result.push_back("Unitary System Cooling Ancillary Electric Energy");
+      result.push_back("Unitary System Heating Ancillary Electric Energy");
+
+      // Multi speed coil outputs(If heat recovery is specified)
+      result.push_back("Unitary System Heat Recovery Rate");
+      result.push_back("Unitary System Heat Recovery Inlet Temperature");
+      result.push_back("Unitary System Heat Recovery Outlet Temperature");
+      result.push_back("Unitary System Heat Recovery Fluid Mass Flow Rate");
+      result.push_back("Unitary System Heat Recovery Energy");
+
+      // Variable speed coils
+      result.push_back("Unitary System Requested Sensible Cooling Rate");
+      result.push_back("Unitary System Requested Latent Cooling Rate");
+
+      // Water to air heat pump outputs
+      result.push_back("Unitary System Requested Sensible Cooling Rate");
+      result.push_back("Unitary System Requested Latent Cooling Rate");
+      result.push_back("Unitary System Requested Heating Rate");
+      result.push_back("Unitary System Water Coil Cycling Ratio");
+      result.push_back("Unitary System Water Coil Speed Ratio");
+      result.push_back("Unitary System Water Coil Speed Level");
     }
     return result;
   }

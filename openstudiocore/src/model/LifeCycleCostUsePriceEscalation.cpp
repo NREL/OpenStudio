@@ -151,7 +151,9 @@ std::vector<IddObjectType> LifeCycleCostUsePriceEscalation_Impl::allowableChildT
 const std::vector<std::string>& LifeCycleCostUsePriceEscalation_Impl::outputVariableNames() const
 {
   static std::vector<std::string> result;
-  if (result.empty()){
+  if (result.empty())
+  {
+    // Not appropriate: no specific output variable
   }
   return result;
 }
