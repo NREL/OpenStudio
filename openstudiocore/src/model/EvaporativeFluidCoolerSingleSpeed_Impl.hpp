@@ -76,7 +76,7 @@ namespace detail {
     virtual unsigned outletPort() override;
 
     virtual bool addToNode(Node & node) override;
-    
+
     //@}
     /** @name Getters */
     //@{
@@ -137,6 +137,9 @@ namespace detail {
     bool isBlowdownConcentrationRatioDefaulted() const;
 
     boost::optional<Schedule> blowdownMakeupWaterUsageSchedule() const;
+
+    // boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
+    // A11; \field Supply Water Storage Tank Name
 
     //@}
     /** @name Setters */

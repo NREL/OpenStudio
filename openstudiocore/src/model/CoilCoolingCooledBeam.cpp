@@ -81,6 +81,7 @@ namespace detail {
     static std::vector<std::string> result;
     if (result.empty())
     {
+
     }
     return result;
   }
@@ -99,6 +100,28 @@ namespace detail {
   {
     return OS_Coil_Cooling_CooledBeamFields::ChilledWaterOutletNodeName;
   }
+
+
+  // contaningHVACComponent is important: used for airLoopHVAC::addBranchForZone to connect the coil to the right loop
+  boost::optional<HVACComponent> CoilCoolingCooledBeam_Impl::containingHVACComponent() const
+  {
+    std::vector<AirTerminalSingleDuctConstantVolumeCooledBeam> airTerminalSingleDuctConstantVolumeCooledBeam;
+
+    airTerminalSingleDuctConstantVolumeCooledBeam = this->model().getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeCooledBeam>();
+
+    for( const auto & elem : airTerminalSingleDuctConstantVolumeCooledBeam )
+    {
+      if( boost::optional<HVACComponent> coil = elem.coilCoolingCooledBeam() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return elem;
+        }
+      }
+    }
+    return boost::none;
+  }
+
 
   boost::optional<StraightComponent> CoilCoolingCooledBeam_Impl::containingStraightComponent() const
   {

@@ -87,7 +87,58 @@ namespace detail {
   const std::vector<std::string>& AirConditionerVariableRefrigerantFlow_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("VRF Heat Pump Total Cooling Rate");
+      result.push_back("VRF Heat Pump Total Heating Rate");
+      result.push_back("VRF Heat Pump Cooling COP");
+      result.push_back("VRF Heat Pump Heating COP");
+      result.push_back("VRF Heat Pump COP");
+      result.push_back("VRF Heat Pump Part Load Ratio");
+      result.push_back("VRF Heat Pump Runtime Fraction");
+      result.push_back("VRF Heat Pump Cycling Ratio");
+      result.push_back("VRF Heat Pump Operating Mode");
+      result.push_back("VRF Heat Pump Condenser Inlet Temperature");
+      result.push_back("VRF Heat Pump Maximum Capacity Cooling Rate");
+      result.push_back("VRF Heat Pump Maximum Capacity Heating Rate");
+      result.push_back("VRF Heat Pump Crankcase Heater Electric Power");
+      result.push_back("VRF Heat Pump Crankcase Heater Electric Energy");
+      result.push_back("VRF Heat Pump Terminal Unit Heating Load Rate");
+      result.push_back("VRF Heat Pump Terminal Unit Cooling Load Rate");
+
+      // TODO: add proper tests once the ModelObject return type is changed.
+      // For now include all
+      // Heat Recovery:
+      result.push_back("VRF Heat Pump Heat Recovery Status Change Multiplier");
+      result.push_back("VRF Heat Pump Simultaneous Cooling and Heating Efficiency");
+      // Evap-cooled:
+      result.push_back("VRF Heat Pump Evaporative Condenser Water Use Volume");
+      result.push_back("VRF Heat Pump Evaporative Condenser Pump Electric Power");
+      result.push_back("VRF Heat Pump Evaporative Condenser Pump Electric Energy");
+      result.push_back("VRF Heat Pump Basin Heater Electric Power");
+      result.push_back("VRF Heat Pump Basin Heater Electric Energy");
+      result.push_back("VRF Heat Pump Heat Recovery Status Change Multiplier");
+      // Water-cooled:
+      result.push_back("VRF Heat Pump Condenser Outlet Temperature");
+      result.push_back("VRF Heat Pump Condenser Mass Flow Rate");
+      result.push_back("VRF Heat Pump Condenser Heat Transfer Energy");
+      result.push_back("VRF Heat Pump Condenser Heat Transfer Rate");
+      // Electric Fuel type (default):
+      result.push_back("VRF Heat Pump Cooling Electric Power");
+      result.push_back("VRF Heat Pump Cooling Electric Energy");
+      result.push_back("VRF Heat Pump Heating Electric Power");
+      result.push_back("VRF Heat Pump Heating Electric Energy");
+      // Electric defrost always used for Defrost Strategy = Resistive regardless of fuel type
+      result.push_back("VRF Heat Pump Defrost Electric Power");
+      result.push_back("VRF Heat Pump Defrost Electric Energy");
+      // Alternate Fuel types (e.g., FuelType = NaturalGas):
+      //result.push_back("VRF Heat Pump Cooling <FuelType> Rate");
+      //result.push_back("VRF Heat Pump Cooling <FuelType> Energy");
+      //result.push_back("VRF Heat Pump Heating <FuelType> Rate");
+      //result.push_back("VRF Heat Pump Heating <FuelType> Energy");
+      //result.push_back("VRF Heat Pump Defrost <FuelType> Rate");
+      //result.push_back("VRF Heat Pump Defrost <FuelType> Energy");
+
     }
     return result;
   }

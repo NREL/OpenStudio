@@ -548,7 +548,7 @@ void LocationView::clearSiteInfo()
 // ***** SLOTS *****
 void LocationView::onWeatherFileBtnClicked()
 {
-  QString fileTypes("Files (*.epw)");
+  QString fileTypes("EPW Files (*.epw);; All Files (*.*)");
 
   QString lastPath = m_lastEpwPathOpened;
   if (lastPath.isEmpty() && m_lastDdyPathOpened.isEmpty()){
@@ -559,7 +559,7 @@ void LocationView::onWeatherFileBtnClicked()
     lastPath = path.replace(".ddy", ".epw");
   }
 
-  QString fileName = QFileDialog::getOpenFileName(this,"Open EPW File",lastPath,fileTypes);
+  QString fileName = QFileDialog::getOpenFileName(this,"Open Weather File",lastPath,fileTypes);
   if(!fileName.isEmpty()){
     
     openstudio::path epwPath = toPath(fileName);

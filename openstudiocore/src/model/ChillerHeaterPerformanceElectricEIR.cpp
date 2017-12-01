@@ -29,10 +29,18 @@
 #include "ChillerHeaterPerformanceElectricEIR.hpp"
 #include "ChillerHeaterPerformanceElectricEIR_Impl.hpp"
 
+// Needed for the convenience functions to return parents
+#include "CentralHeatPumpSystem.hpp"
+#include "CentralHeatPumpSystem_Impl.hpp"
+#include "CentralHeatPumpSystemModule.hpp"
+#include "CentralHeatPumpSystemModule_Impl.hpp"
+#include "Model.hpp"
+//#include "Model_Impl.hpp"
+
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
 #include "CurveBiquadratic.hpp"
-#include "CurveCubic.hpp"
+#include "CurveBicubic.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -73,6 +81,9 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
+      // TODO: Implement? Problem is that the output for this is extremely weird/unusual
+      // You actually have to go to the CentralHeatPumpSystem to find the Number of Chiller Heater Modules XXX
+      // result.push_back("Chiller Heater Operation Mode Unit <x>");
     }
     return result;
   }
@@ -210,26 +221,26 @@ namespace detail {
     return value.get();
   }
 
-  Curve ChillerHeaterPerformanceElectricEIR_Impl::coolingModeCoolingCapacityFunctionofTemperatureCurve() const {
-    boost::optional<Curve> value = optionalCoolingModeCoolingCapacityFunctionofTemperatureCurve();
+  Curve ChillerHeaterPerformanceElectricEIR_Impl::coolingModeCoolingCapacityFunctionOfTemperatureCurve() const {
+    boost::optional<Curve> value = optionalCoolingModeCoolingCapacityFunctionOfTemperatureCurve();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Cooling Mode Cooling Capacity Functionof Temperature Curve attached.");
+      LOG_AND_THROW(briefDescription() << " does not have an Cooling Mode Cooling Capacity Function of Temperature Curve attached.");
     }
     return value.get();
   }
 
-  Curve ChillerHeaterPerformanceElectricEIR_Impl::coolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve() const {
-    boost::optional<Curve> value = optionalCoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve();
+  Curve ChillerHeaterPerformanceElectricEIR_Impl::coolingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve() const {
+    boost::optional<Curve> value = optionalCoolingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Cooling Mode Electric Inputto Cooling Output Ratio Functionof Temperature Curve attached.");
+      LOG_AND_THROW(briefDescription() << " does not have an Cooling Mode Electric Input to Cooling Output Ratio Function of Temperature Curve attached.");
     }
     return value.get();
   }
 
-  Curve ChillerHeaterPerformanceElectricEIR_Impl::coolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve() const {
-    boost::optional<Curve> value = optionalCoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve();
+  Curve ChillerHeaterPerformanceElectricEIR_Impl::coolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve() const {
+    boost::optional<Curve> value = optionalCoolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Cooling Mode Electric Inputto Cooling Output Ratio Functionof Part Load Ratio Curve attached.");
+      LOG_AND_THROW(briefDescription() << " does not have an Cooling Mode Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve attached.");
     }
     return value.get();
   }
@@ -246,26 +257,26 @@ namespace detail {
     return value.get();
   }
 
-  Curve ChillerHeaterPerformanceElectricEIR_Impl::heatingModeCoolingCapacityFunctionofTemperatureCurve() const {
-    boost::optional<Curve> value = optionalHeatingModeCoolingCapacityFunctionofTemperatureCurve();
+  Curve ChillerHeaterPerformanceElectricEIR_Impl::heatingModeCoolingCapacityFunctionOfTemperatureCurve() const {
+    boost::optional<Curve> value = optionalHeatingModeCoolingCapacityFunctionOfTemperatureCurve();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Heating Mode Cooling Capacity Functionof Temperature Curve attached.");
+      LOG_AND_THROW(briefDescription() << " does not have an Heating Mode Cooling Capacity Function of Temperature Curve attached.");
     }
     return value.get();
   }
 
-  Curve ChillerHeaterPerformanceElectricEIR_Impl::heatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve() const {
-    boost::optional<Curve> value = optionalHeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve();
+  Curve ChillerHeaterPerformanceElectricEIR_Impl::heatingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve() const {
+    boost::optional<Curve> value = optionalHeatingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Heating Mode Electric Inputto Cooling Output Ratio Functionof Temperature Curve attached.");
+      LOG_AND_THROW(briefDescription() << " does not have an Heating Mode Electric Input to Cooling Output Ratio Function of Temperature Curve attached.");
     }
     return value.get();
   }
 
-  Curve ChillerHeaterPerformanceElectricEIR_Impl::heatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve() const {
-    boost::optional<Curve> value = optionalHeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve();
+  Curve ChillerHeaterPerformanceElectricEIR_Impl::heatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve() const {
+    boost::optional<Curve> value = optionalHeatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Heating Mode Electric Inputto Cooling Output Ratio Functionof Part Load Ratio Curve attached.");
+      LOG_AND_THROW(briefDescription() << " does not have an Heating Mode Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve attached.");
     }
     return value.get();
   }
@@ -345,7 +356,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ChillerHeaterPerformanceElectricEIR_Impl::setChilledWaterFlowModeType(std::string chilledWaterFlowModeType) {
+  bool ChillerHeaterPerformanceElectricEIR_Impl::setChilledWaterFlowModeType(std::string const & chilledWaterFlowModeType) {
     bool result = setString(OS_ChillerHeaterPerformance_Electric_EIRFields::ChilledWaterFlowModeType, chilledWaterFlowModeType);
     return result;
   }
@@ -404,27 +415,27 @@ namespace detail {
     return result;
   }
 
-  bool ChillerHeaterPerformanceElectricEIR_Impl::setCondenserType(std::string condenserType) {
+  bool ChillerHeaterPerformanceElectricEIR_Impl::setCondenserType(std::string const & condenserType) {
     bool result = setString(OS_ChillerHeaterPerformance_Electric_EIRFields::CondenserType, condenserType);
     return result;
   }
 
-  bool ChillerHeaterPerformanceElectricEIR_Impl::setCoolingModeTemperatureCurveCondenserWaterIndependentVariable(std::string coolingModeTemperatureCurveCondenserWaterIndependentVariable) {
+  bool ChillerHeaterPerformanceElectricEIR_Impl::setCoolingModeTemperatureCurveCondenserWaterIndependentVariable(std::string const & coolingModeTemperatureCurveCondenserWaterIndependentVariable) {
     bool result = setString(OS_ChillerHeaterPerformance_Electric_EIRFields::CoolingModeTemperatureCurveCondenserWaterIndependentVariable, coolingModeTemperatureCurveCondenserWaterIndependentVariable);
     return result;
   }
 
-  bool ChillerHeaterPerformanceElectricEIR_Impl::setCoolingModeCoolingCapacityFunctionofTemperatureCurve(const Curve& curve) {
+  bool ChillerHeaterPerformanceElectricEIR_Impl::setCoolingModeCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve) {
     bool result = setPointer(OS_ChillerHeaterPerformance_Electric_EIRFields::CoolingModeCoolingCapacityFunctionofTemperatureCurveName, curve.handle());
     return result;
   }
 
-  bool ChillerHeaterPerformanceElectricEIR_Impl::setCoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(const Curve& curve) {
+  bool ChillerHeaterPerformanceElectricEIR_Impl::setCoolingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve(const Curve& curve) {
     bool result = setPointer(OS_ChillerHeaterPerformance_Electric_EIRFields::CoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName, curve.handle());
     return result;
   }
 
-  bool ChillerHeaterPerformanceElectricEIR_Impl::setCoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(const Curve& curve) {
+  bool ChillerHeaterPerformanceElectricEIR_Impl::setCoolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve(const Curve& curve) {
     bool result = setPointer(OS_ChillerHeaterPerformance_Electric_EIRFields::CoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName, curve.handle());
     return result;
   }
@@ -434,22 +445,22 @@ namespace detail {
     return result;
   }
 
-  bool ChillerHeaterPerformanceElectricEIR_Impl::setHeatingModeTemperatureCurveCondenserWaterIndependentVariable(std::string heatingModeTemperatureCurveCondenserWaterIndependentVariable) {
+  bool ChillerHeaterPerformanceElectricEIR_Impl::setHeatingModeTemperatureCurveCondenserWaterIndependentVariable(std::string const & heatingModeTemperatureCurveCondenserWaterIndependentVariable) {
     bool result = setString(OS_ChillerHeaterPerformance_Electric_EIRFields::HeatingModeTemperatureCurveCondenserWaterIndependentVariable, heatingModeTemperatureCurveCondenserWaterIndependentVariable);
     return result;
   }
 
-  bool ChillerHeaterPerformanceElectricEIR_Impl::setHeatingModeCoolingCapacityFunctionofTemperatureCurve(const Curve& curve) {
+  bool ChillerHeaterPerformanceElectricEIR_Impl::setHeatingModeCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve) {
     bool result = setPointer(OS_ChillerHeaterPerformance_Electric_EIRFields::HeatingModeCoolingCapacityFunctionofTemperatureCurveName, curve.handle());
     return result;
   }
 
-  bool ChillerHeaterPerformanceElectricEIR_Impl::setHeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(const Curve& curve) {
+  bool ChillerHeaterPerformanceElectricEIR_Impl::setHeatingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve(const Curve& curve) {
     bool result = setPointer(OS_ChillerHeaterPerformance_Electric_EIRFields::HeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName, curve.handle());
     return result;
   }
 
-  bool ChillerHeaterPerformanceElectricEIR_Impl::setHeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(const Curve& curve) {
+  bool ChillerHeaterPerformanceElectricEIR_Impl::setHeatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve(const Curve& curve) {
     bool result = setPointer(OS_ChillerHeaterPerformance_Electric_EIRFields::HeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName, curve.handle());
     return result;
   }
@@ -464,28 +475,141 @@ namespace detail {
     return result;
   }
 
-  boost::optional<Curve> ChillerHeaterPerformanceElectricEIR_Impl::optionalCoolingModeCoolingCapacityFunctionofTemperatureCurve() const {
+  boost::optional<Curve> ChillerHeaterPerformanceElectricEIR_Impl::optionalCoolingModeCoolingCapacityFunctionOfTemperatureCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_ChillerHeaterPerformance_Electric_EIRFields::CoolingModeCoolingCapacityFunctionofTemperatureCurveName);
   }
 
-  boost::optional<Curve> ChillerHeaterPerformanceElectricEIR_Impl::optionalCoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve() const {
+  boost::optional<Curve> ChillerHeaterPerformanceElectricEIR_Impl::optionalCoolingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_ChillerHeaterPerformance_Electric_EIRFields::CoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName);
   }
 
-  boost::optional<Curve> ChillerHeaterPerformanceElectricEIR_Impl::optionalCoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve() const {
+  boost::optional<Curve> ChillerHeaterPerformanceElectricEIR_Impl::optionalCoolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_ChillerHeaterPerformance_Electric_EIRFields::CoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName);
   }
 
-  boost::optional<Curve> ChillerHeaterPerformanceElectricEIR_Impl::optionalHeatingModeCoolingCapacityFunctionofTemperatureCurve() const {
+  boost::optional<Curve> ChillerHeaterPerformanceElectricEIR_Impl::optionalHeatingModeCoolingCapacityFunctionOfTemperatureCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_ChillerHeaterPerformance_Electric_EIRFields::HeatingModeCoolingCapacityFunctionofTemperatureCurveName);
   }
 
-  boost::optional<Curve> ChillerHeaterPerformanceElectricEIR_Impl::optionalHeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve() const {
+  boost::optional<Curve> ChillerHeaterPerformanceElectricEIR_Impl::optionalHeatingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_ChillerHeaterPerformance_Electric_EIRFields::HeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName);
   }
 
-  boost::optional<Curve> ChillerHeaterPerformanceElectricEIR_Impl::optionalHeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve() const {
+  boost::optional<Curve> ChillerHeaterPerformanceElectricEIR_Impl::optionalHeatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_ChillerHeaterPerformance_Electric_EIRFields::HeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName);
+  }
+
+  // Convenience functions to return parent CentralHeatPumpSystem and CentralHeatPumpSystemModule
+/*
+ *  boost::optional<CentralHeatPumpSystemModule> ChillerHeaterPerformanceElectricEIR_Impl::centralHeatPumpSystemModule() const {
+ *
+ *    boost::optional<CentralHeatPumpSystemModule> result;
+ *    for ( const CentralHeatPumpSystemModule& central_hp_module : this->model().getConcreteModelObjects<CentralHeatPumpSystemModule>() )
+ *    {
+ *      ChillerHeaterPerformanceElectricEIR chiller = central_hp_module.chillerHeaterModulesPerformanceComponent();
+ *        if (chiller.handle() == this->handle())
+ *        {
+ *          result = central_hp_module;
+ *        }
+ *    }
+ *    return result;
+ *  }
+ */
+
+/*
+ *  boost::optional<CentralHeatPumpSystem> ChillerHeaterPerformanceElectricEIR_Impl::centralHeatPumpSystem() const {
+ *
+ *    boost::optional<CentralHeatPumpSystem> result;
+ *
+ *    // Check if this chiller has a CentralHeatPumpSystemModule
+ *    if ( boost::optional<CentralHeatPumpSystemModule> this_central_hp_module = this->centralHeatPumpSystemModule() )
+ *    {
+ *      // TODO: use the CentralHeatPumpSystemModule::centralHeatPumpSystem() method instead
+ *      if ( boost::optional<CentralHeatPumpSystem> central_hp = this_central_hp_module->centralHeatPumpSystem() )
+ *      {
+ *        result = central_hp.get();
+ *      }
+ *
+ *      // loop on all CentralHeatPumpSystems in the model
+ *      //for ( const CentralHeatPumpSystem& central_hp : this->model().getConcreteModelObjects<CentralHeatPumpSystem>() )
+ *      //{
+ *        //// Loop on each CentralHeatPumpSystemModules
+ *        //for (const CentralHeatPumpSystemModule& central_hp_module : central_hp.modules() )
+ *        //{
+ *          //if ( central_hp_module.handle() == this_central_hp_module->handle() )
+ *          //{
+ *              //result = central_hp;
+ *          //}
+ *        //}
+ *      //}
+ *    }
+ *    return result;
+ *  }
+ */
+
+
+  // Convenience functions to return a vector of parent CentralHeatPumpSystemModules
+  std::vector<CentralHeatPumpSystemModule> ChillerHeaterPerformanceElectricEIR_Impl::centralHeatPumpSystemModules() const {
+
+    std::vector<CentralHeatPumpSystemModule> result;
+    // Loop on all CentralHeatPumpSystemModules
+    for ( const CentralHeatPumpSystemModule& central_hp_module : this->model().getConcreteModelObjects<CentralHeatPumpSystemModule>() )
+    {
+        // If the ChillerHeaterPerformanceElectricEIR is the same as this one, add it to the result
+        ChillerHeaterPerformanceElectricEIR chiller = central_hp_module.chillerHeaterModulesPerformanceComponent();
+        if (chiller.handle() == this->handle())
+        {
+          result.push_back(central_hp_module);
+        }
+    }
+    return result;
+  }
+
+
+  std::vector<CentralHeatPumpSystem> ChillerHeaterPerformanceElectricEIR_Impl::centralHeatPumpSystems() const {
+
+    std::vector<CentralHeatPumpSystem> result;
+
+    // TODO: cleanup
+    //EITHER
+    //
+    // Loop on all parent CentralHeatPumpSystemModules
+    /*
+     *for (const CentralHeatPumpSystemModule& mod : this->centralHeatPumpSystemModules() )
+     *{
+     *  // Use the CentralHeatPumpSystemModule::centralHeatPumpSystem() method instead
+     *  // If there's one, add that to result vector
+     *  if ( boost::optional<CentralHeatPumpSystem> central_hp = mod.centralHeatPumpSystem() )
+     *  {
+     *    result.push_back(central_hp.get()):
+     *  }
+     *}
+     */
+
+    // OR
+    //
+    // loop on all CentralHeatPumpSystems in the model
+    for ( const CentralHeatPumpSystem& central_hp : this->model().getConcreteModelObjects<CentralHeatPumpSystem>() )
+    {
+      // flag to avoid pushing it several times (a CentralHP can have multiple Mods that reference this chillerPerf)
+      bool is_added = false;
+
+      // Loop on each CentralHeatPumpSystemModules
+      for (const CentralHeatPumpSystemModule& central_hp_module : central_hp.modules() )
+      {
+        if (!is_added) {
+
+          ChillerHeaterPerformanceElectricEIR chiller = central_hp_module.chillerHeaterModulesPerformanceComponent();
+
+          if ( chiller.handle() == this->handle() ) {
+            result.push_back(central_hp);
+            is_added = true;
+          }
+        }
+      }
+    }
+
+    return result;
   }
 
 } // detail
@@ -555,19 +679,19 @@ ChillerHeaterPerformanceElectricEIR::ChillerHeaterPerformanceElectricEIR(const M
   chillerHeaterHtgEIRFT.setInputUnitTypeforY("Temperature");
   chillerHeaterHtgEIRFT.setOutputUnitType("Dimensionless");
 
-  CurveCubic chillerHeaterClgEIRFPLR(model);
+  CurveBicubic chillerHeaterClgEIRFPLR(model);
   chillerHeaterClgEIRFPLR.setCoefficient1Constant(0.0);
   chillerHeaterClgEIRFPLR.setCoefficient2x(1.22895);
   chillerHeaterClgEIRFPLR.setCoefficient3xPOW2(-0.751383);
-  chillerHeaterClgEIRFPLR.setCoefficient4xPOW3(0.517396);
+  chillerHeaterClgEIRFPLR.setCoefficient7xPOW3(0.517396);
   chillerHeaterClgEIRFPLR.setMinimumValueofx(0.2);
   chillerHeaterClgEIRFPLR.setMaximumValueofx(1);
 
-  CurveCubic chillerHeaterHtgEIRFPLR(model);
+  CurveBicubic chillerHeaterHtgEIRFPLR(model);
   chillerHeaterHtgEIRFPLR.setCoefficient1Constant(0.0);
   chillerHeaterHtgEIRFPLR.setCoefficient2x(1.12853);
   chillerHeaterHtgEIRFPLR.setCoefficient3xPOW2(-0.0264962);
-  chillerHeaterHtgEIRFPLR.setCoefficient4xPOW3(-0.103811);
+  chillerHeaterHtgEIRFPLR.setCoefficient7xPOW3(-0.103811);
   chillerHeaterHtgEIRFPLR.setMinimumValueofx(0.3);
   chillerHeaterHtgEIRFPLR.setMaximumValueofx(1);
 
@@ -597,21 +721,21 @@ ChillerHeaterPerformanceElectricEIR::ChillerHeaterPerformanceElectricEIR(const M
   OS_ASSERT(ok);
   ok = setCoolingModeTemperatureCurveCondenserWaterIndependentVariable( "EnteringCondenser" );
   OS_ASSERT(ok);
-  ok = setCoolingModeCoolingCapacityFunctionofTemperatureCurve( chillerHeaterClgCapFT );
+  ok = setCoolingModeCoolingCapacityFunctionOfTemperatureCurve( chillerHeaterClgCapFT );
   OS_ASSERT(ok);
-  ok = setCoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve( chillerHeaterClgEIRFT );
+  ok = setCoolingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve( chillerHeaterClgEIRFT );
   OS_ASSERT(ok);
-  ok = setCoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve( chillerHeaterClgEIRFPLR );
+  ok = setCoolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve( chillerHeaterClgEIRFPLR );
   OS_ASSERT(ok);
   ok = setCoolingModeCoolingCapacityOptimumPartLoadRatio( 1 );
   OS_ASSERT(ok);
   ok = setHeatingModeTemperatureCurveCondenserWaterIndependentVariable( "LeavingCondenser" );
   OS_ASSERT(ok);
-  ok = setHeatingModeCoolingCapacityFunctionofTemperatureCurve( chillerHeaterHtgCapFT );
+  ok = setHeatingModeCoolingCapacityFunctionOfTemperatureCurve( chillerHeaterHtgCapFT );
   OS_ASSERT(ok);
-  ok = setHeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve( chillerHeaterHtgEIRFT );
+  ok = setHeatingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve( chillerHeaterHtgEIRFT );
   OS_ASSERT(ok);
-  ok = setHeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve( chillerHeaterHtgEIRFPLR );
+  ok = setHeatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve( chillerHeaterHtgEIRFPLR );
   OS_ASSERT(ok);
   ok = setHeatingModeCoolingCapacityOptimumPartLoadRatio( 1 );
   OS_ASSERT(ok);
@@ -658,21 +782,21 @@ ChillerHeaterPerformanceElectricEIR::ChillerHeaterPerformanceElectricEIR(
   OS_ASSERT(ok);
   ok = setCoolingModeTemperatureCurveCondenserWaterIndependentVariable( "EnteringCondenser" );
   OS_ASSERT(ok);
-  ok = setCoolingModeCoolingCapacityFunctionofTemperatureCurve( chillerHeaterClgCapFT );
+  ok = setCoolingModeCoolingCapacityFunctionOfTemperatureCurve( chillerHeaterClgCapFT );
   OS_ASSERT(ok);
-  ok = setCoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve( chillerHeaterClgEIRFT );
+  ok = setCoolingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve( chillerHeaterClgEIRFT );
   OS_ASSERT(ok);
-  ok = setCoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve( chillerHeaterClgEIRFPLR );
+  ok = setCoolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve( chillerHeaterClgEIRFPLR );
   OS_ASSERT(ok);
   ok = setCoolingModeCoolingCapacityOptimumPartLoadRatio( 1 );
   OS_ASSERT(ok);
   ok = setHeatingModeTemperatureCurveCondenserWaterIndependentVariable( "LeavingCondenser" );
   OS_ASSERT(ok);
-  ok = setHeatingModeCoolingCapacityFunctionofTemperatureCurve( chillerHeaterHtgCapFT );
+  ok = setHeatingModeCoolingCapacityFunctionOfTemperatureCurve( chillerHeaterHtgCapFT );
   OS_ASSERT(ok);
-  ok = setHeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve( chillerHeaterHtgEIRFT );
+  ok = setHeatingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve( chillerHeaterHtgEIRFT );
   OS_ASSERT(ok);
-  ok = setHeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve( chillerHeaterHtgEIRFPLR );
+  ok = setHeatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve( chillerHeaterHtgEIRFPLR );
   OS_ASSERT(ok);
   ok = setHeatingModeCoolingCapacityOptimumPartLoadRatio( 1 );
   OS_ASSERT(ok);
@@ -788,16 +912,16 @@ std::string ChillerHeaterPerformanceElectricEIR::coolingModeTemperatureCurveCond
   return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->coolingModeTemperatureCurveCondenserWaterIndependentVariable();
 }
 
-Curve ChillerHeaterPerformanceElectricEIR::coolingModeCoolingCapacityFunctionofTemperatureCurve() const {
-  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->coolingModeCoolingCapacityFunctionofTemperatureCurve();
+Curve ChillerHeaterPerformanceElectricEIR::coolingModeCoolingCapacityFunctionOfTemperatureCurve() const {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->coolingModeCoolingCapacityFunctionOfTemperatureCurve();
 }
 
-Curve ChillerHeaterPerformanceElectricEIR::coolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve() const {
-  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->coolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve();
+Curve ChillerHeaterPerformanceElectricEIR::coolingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve() const {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->coolingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve();
 }
 
-Curve ChillerHeaterPerformanceElectricEIR::coolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve() const {
-  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->coolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve();
+Curve ChillerHeaterPerformanceElectricEIR::coolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve() const {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->coolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve();
 }
 
 double ChillerHeaterPerformanceElectricEIR::coolingModeCoolingCapacityOptimumPartLoadRatio() const {
@@ -808,16 +932,16 @@ std::string ChillerHeaterPerformanceElectricEIR::heatingModeTemperatureCurveCond
   return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->heatingModeTemperatureCurveCondenserWaterIndependentVariable();
 }
 
-Curve ChillerHeaterPerformanceElectricEIR::heatingModeCoolingCapacityFunctionofTemperatureCurve() const {
-  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->heatingModeCoolingCapacityFunctionofTemperatureCurve();
+Curve ChillerHeaterPerformanceElectricEIR::heatingModeCoolingCapacityFunctionOfTemperatureCurve() const {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->heatingModeCoolingCapacityFunctionOfTemperatureCurve();
 }
 
-Curve ChillerHeaterPerformanceElectricEIR::heatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve() const {
-  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->heatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve();
+Curve ChillerHeaterPerformanceElectricEIR::heatingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve() const {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->heatingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve();
 }
 
-Curve ChillerHeaterPerformanceElectricEIR::heatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve() const {
-  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->heatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve();
+Curve ChillerHeaterPerformanceElectricEIR::heatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve() const {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->heatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve();
 }
 
 double ChillerHeaterPerformanceElectricEIR::heatingModeCoolingCapacityOptimumPartLoadRatio() const {
@@ -876,7 +1000,7 @@ void ChillerHeaterPerformanceElectricEIR::setHeatingModeEnteringChilledWaterTemp
   getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setHeatingModeEnteringChilledWaterTemperatureLowLimit(heatingModeEnteringChilledWaterTemperatureLowLimit);
 }
 
-bool ChillerHeaterPerformanceElectricEIR::setChilledWaterFlowModeType(std::string chilledWaterFlowModeType) {
+bool ChillerHeaterPerformanceElectricEIR::setChilledWaterFlowModeType(const std::string& chilledWaterFlowModeType) {
   return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setChilledWaterFlowModeType(chilledWaterFlowModeType);
 }
 
@@ -912,44 +1036,44 @@ bool ChillerHeaterPerformanceElectricEIR::setCompressorMotorEfficiency(double co
   return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setCompressorMotorEfficiency(compressorMotorEfficiency);
 }
 
-bool ChillerHeaterPerformanceElectricEIR::setCondenserType(std::string condenserType) {
+bool ChillerHeaterPerformanceElectricEIR::setCondenserType(const std::string& condenserType) {
   return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setCondenserType(condenserType);
 }
 
-bool ChillerHeaterPerformanceElectricEIR::setCoolingModeTemperatureCurveCondenserWaterIndependentVariable(std::string coolingModeTemperatureCurveCondenserWaterIndependentVariable) {
+bool ChillerHeaterPerformanceElectricEIR::setCoolingModeTemperatureCurveCondenserWaterIndependentVariable(const std::string& coolingModeTemperatureCurveCondenserWaterIndependentVariable) {
   return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setCoolingModeTemperatureCurveCondenserWaterIndependentVariable(coolingModeTemperatureCurveCondenserWaterIndependentVariable);
 }
 
-bool ChillerHeaterPerformanceElectricEIR::setCoolingModeCoolingCapacityFunctionofTemperatureCurve(const Curve& curve) {
-  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setCoolingModeCoolingCapacityFunctionofTemperatureCurve(curve);
+bool ChillerHeaterPerformanceElectricEIR::setCoolingModeCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve) {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setCoolingModeCoolingCapacityFunctionOfTemperatureCurve(curve);
 }
 
-bool ChillerHeaterPerformanceElectricEIR::setCoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(const Curve& curve) {
-  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setCoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(curve);
+bool ChillerHeaterPerformanceElectricEIR::setCoolingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve(const Curve& curve) {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setCoolingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve(curve);
 }
 
-bool ChillerHeaterPerformanceElectricEIR::setCoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(const Curve& curve) {
-  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setCoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(curve);
+bool ChillerHeaterPerformanceElectricEIR::setCoolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve(const Curve& curve) {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setCoolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve(curve);
 }
 
 bool ChillerHeaterPerformanceElectricEIR::setCoolingModeCoolingCapacityOptimumPartLoadRatio(double coolingModeCoolingCapacityOptimumPartLoadRatio) {
   return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setCoolingModeCoolingCapacityOptimumPartLoadRatio(coolingModeCoolingCapacityOptimumPartLoadRatio);
 }
 
-bool ChillerHeaterPerformanceElectricEIR::setHeatingModeTemperatureCurveCondenserWaterIndependentVariable(std::string heatingModeTemperatureCurveCondenserWaterIndependentVariable) {
+bool ChillerHeaterPerformanceElectricEIR::setHeatingModeTemperatureCurveCondenserWaterIndependentVariable(const std::string& heatingModeTemperatureCurveCondenserWaterIndependentVariable) {
   return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setHeatingModeTemperatureCurveCondenserWaterIndependentVariable(heatingModeTemperatureCurveCondenserWaterIndependentVariable);
 }
 
-bool ChillerHeaterPerformanceElectricEIR::setHeatingModeCoolingCapacityFunctionofTemperatureCurve(const Curve& curve) {
-  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setHeatingModeCoolingCapacityFunctionofTemperatureCurve(curve);
+bool ChillerHeaterPerformanceElectricEIR::setHeatingModeCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve) {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setHeatingModeCoolingCapacityFunctionOfTemperatureCurve(curve);
 }
 
-bool ChillerHeaterPerformanceElectricEIR::setHeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(const Curve& curve) {
-  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setHeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(curve);
+bool ChillerHeaterPerformanceElectricEIR::setHeatingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve(const Curve& curve) {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setHeatingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve(curve);
 }
 
-bool ChillerHeaterPerformanceElectricEIR::setHeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(const Curve& curve) {
-  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setHeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(curve);
+bool ChillerHeaterPerformanceElectricEIR::setHeatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve(const Curve& curve) {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setHeatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve(curve);
 }
 
 bool ChillerHeaterPerformanceElectricEIR::setHeatingModeCoolingCapacityOptimumPartLoadRatio(double heatingModeCoolingCapacityOptimumPartLoadRatio) {
@@ -958,6 +1082,15 @@ bool ChillerHeaterPerformanceElectricEIR::setHeatingModeCoolingCapacityOptimumPa
 
 bool ChillerHeaterPerformanceElectricEIR::setSizingFactor(double sizingFactor) {
   return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->setSizingFactor(sizingFactor);
+}
+
+// Reverse lookups
+std::vector<CentralHeatPumpSystemModule> ChillerHeaterPerformanceElectricEIR::centralHeatPumpSystemModules() const {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->centralHeatPumpSystemModules();
+}
+
+std::vector<CentralHeatPumpSystem> ChillerHeaterPerformanceElectricEIR::centralHeatPumpSystems() const {
+  return getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>()->centralHeatPumpSystems();
 }
 
 /// @cond

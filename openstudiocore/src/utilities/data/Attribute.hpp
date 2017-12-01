@@ -236,6 +236,11 @@ class UTILITIES_API Attribute {
             const boost::optional<std::string>& units,
             const std::string& source = std::string());
 
+
+  // Destructor
+  virtual ~Attribute() {}
+
+
   explicit Attribute(const QDomElement& element);
 
   Attribute(const Attribute& other);

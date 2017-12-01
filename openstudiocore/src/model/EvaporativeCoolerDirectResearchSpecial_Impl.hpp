@@ -39,13 +39,6 @@ class Curve;
 namespace detail {
 
   class MODEL_API EvaporativeCoolerDirectResearchSpecial_Impl : public StraightComponent_Impl {
-    
-
-    
-    
-    
-
-    
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -137,6 +130,8 @@ namespace detail {
     void autosizePrimaryAirDesignFlowRate();
 
     bool isPrimaryAirDesignFlowRateAutosized() const;
+
+    // TODO: there's a Water Storage tank field in E+, not even added to the OpenStudio.idd here.
 
    private:
 

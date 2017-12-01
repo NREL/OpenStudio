@@ -39,8 +39,6 @@ namespace detail {
 
   /** ExteriorLightsDefinition_Impl is a ResourceObject_Impl that is the implementation class for ExteriorLightsDefinition.*/
   class MODEL_API ExteriorLightsDefinition_Impl : public ResourceObject_Impl {
-    
-    
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -61,6 +59,7 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
+    // TODO: remove (unused)
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;

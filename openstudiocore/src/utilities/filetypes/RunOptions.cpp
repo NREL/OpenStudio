@@ -48,7 +48,7 @@ namespace detail{
     this->onChange.nano_emit();
   }
 
-  std::string RunOptions_Impl::string() const 
+  std::string RunOptions_Impl::string() const
   {
     Json::Value result;
 
@@ -67,8 +67,11 @@ namespace detail{
 
       Json::Reader reader;
       Json::Value options;
+
       bool parsingSuccessful = reader.parse(m_customOutputAdapter->options(), options);
-      outputAdapter["options"] = options;
+      if (parsingSuccessful){
+        outputAdapter["options"] = options;
+      }
 
       result["output_adapter"] = outputAdapter;
     }
@@ -189,7 +192,7 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s)
   if (!parsingSuccessful){
     return result;
   }
-  
+
   result = RunOptions();
 
   if (value.isMember("debug") && value["debug"].isBool()){

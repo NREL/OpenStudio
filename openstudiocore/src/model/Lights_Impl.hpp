@@ -43,17 +43,6 @@ namespace detail {
 
   /** Lights_Impl is a SpaceLoadInstance_Impl that is the implementation class for Lights.*/
   class MODEL_API Lights_Impl : public SpaceLoadInstance_Impl {
-
-
-
-
-
-
-
-
-
-
-
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -161,6 +150,9 @@ namespace detail {
     /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
      *  numPeople. */
     double getPowerPerPerson(double floorArea, double numPeople) const;
+
+    /** Returns the output variable related to lights that actually use the Zone key **/
+    const std::vector<std::string>& zoneLevelOutputVariableNames() const;
 
     //@}
    protected:

@@ -41,24 +41,7 @@ namespace detail {
 
   /** AirTerminalSingleDuctParallelPIUReheat_Impl is a StraightComponent_Impl that is the implementation class for AirTerminalSingleDuctParallelPIUReheat.*/
   class MODEL_API AirTerminalSingleDuctParallelPIUReheat_Impl : public StraightComponent_Impl {
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -143,6 +126,10 @@ namespace detail {
     /** @name Setters */
     //@{
 
+
+    // TODO: @macumber all of these should have a return type of bool, and shouldn't accept boost::optional double (or at least be overloaded to accept a
+    // double too), see https://github.com/NREL/OpenStudio/issues/2620 and https://github.com/jmarrec/OpenStudio/commit/5d295638aea240becc14a45641ea72a413e1c360
+    // and https://github.com/NREL/OpenStudio/pull/2589
     bool setAvailabilitySchedule(Schedule& schedule);
 
     void setMaximumPrimaryAirFlowRate(boost::optional<double> maximumPrimaryAirFlowRate);
@@ -161,9 +148,9 @@ namespace detail {
 
     void autosizeFanOnFlowFraction();
 
-    void setFan( HVACComponent & hvacComponent );
+    bool setFan( HVACComponent & hvacComponent );
 
-    void setReheatCoil( HVACComponent & hvacComponent );
+    bool setReheatCoil( HVACComponent & hvacComponent );
 
     void setMaximumHotWaterorSteamFlowRate(boost::optional<double> maximumHotWaterorSteamFlowRate);
 

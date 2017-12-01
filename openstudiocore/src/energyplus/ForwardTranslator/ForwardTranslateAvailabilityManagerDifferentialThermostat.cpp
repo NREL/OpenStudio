@@ -34,7 +34,6 @@
 #include "../../utilities/core/Assert.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/AvailabilityManager_DifferentialThermostat_FieldEnums.hxx>
-#include <utilities/idd/ZoneList_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -44,7 +43,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerDifferentialThermostat( 
+boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerDifferentialThermostat(
     AvailabilityManagerDifferentialThermostat & modelObject)
 {
   IdfObject idfObject(IddObjectType::AvailabilityManager_DifferentialThermostat);

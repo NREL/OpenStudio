@@ -71,7 +71,10 @@ namespace detail {
   const std::vector<std::string>& AvailabilityManagerOptimumStart_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Availability Manager Optimum Start Control Status");
+      result.push_back("Availability Manager Optimum Start Time Before Occupancy");
     }
     return result;
   }

@@ -272,10 +272,12 @@ namespace detail {
     return getUpperLimitValue(true);
   }
 
+  // TODO: This is probably not needed here:
   std::vector<std::string> ScheduleTypeLimits_Impl::numericTypeValues() const {
     return ScheduleTypeLimits::numericTypeValues();
   }
 
+  // TODO: This is probably not needed here:
   std::vector<std::string> ScheduleTypeLimits_Impl::unitTypeValues() const {
     return ScheduleTypeLimits::unitTypeValues();
   }

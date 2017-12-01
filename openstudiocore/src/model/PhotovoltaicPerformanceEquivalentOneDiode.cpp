@@ -67,7 +67,9 @@ namespace detail {
   const std::vector<std::string>& PhotovoltaicPerformanceEquivalentOneDiode_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not appropriate: no specific variables
     }
     return result;
   }

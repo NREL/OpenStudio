@@ -61,9 +61,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
@@ -93,6 +93,9 @@ namespace detail {
     boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> emsCurveOrTableIndexVariable() const;
     boost::optional<EnergyManagementSystemConstructionIndexVariable> emsConstructionIndexVariable() const;
 
+    bool exportToBCVTB() const;
+
+    bool isExportToBCVTBDefaulted() const;
 
     //@}
     /** @name Setters */
@@ -122,6 +125,9 @@ namespace detail {
     bool setEMSVariableName(const EnergyManagementSystemCurveOrTableIndexVariable& object);
     bool setEMSVariableName(const EnergyManagementSystemConstructionIndexVariable& object);
 
+    void setExportToBCVTB(bool exportToBCVTB);
+
+    void resetExportToBCVTB();
 
     //@}
     /** @name Other */

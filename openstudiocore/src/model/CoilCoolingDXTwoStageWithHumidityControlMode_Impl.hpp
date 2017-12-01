@@ -64,11 +64,25 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
+    virtual ModelObject clone(Model model) const override;
+
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
+    virtual std::vector<ModelObject> children() const override;
+
+    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+
+    virtual unsigned inletPort() override;
+
+    virtual unsigned outletPort() override;
+
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
+    virtual bool addToNode(Node & node) override;
 
     //@}
     /** @name Getters */
@@ -142,14 +156,6 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-
-    unsigned inletPort() override;
-    unsigned outletPort() override;
-
-    ModelObject clone(Model model) const override;
-    std::vector<ModelObject> children() const override;
-    boost::optional<HVACComponent> containingHVACComponent() const override;
-    bool addToNode(Node & node) override;
 
     //@}
    protected:

@@ -76,7 +76,28 @@ namespace detail {
   const std::vector<std::string>& ThermalStorageChilledWaterStratified_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Chilled Water Thermal Storage Tank Temperature");
+      result.push_back("Chilled Water Thermal Storage Final Tank Temperature");
+      result.push_back("Chilled Water Thermal Storage Tank Heat Gain Rate");
+      result.push_back("Chilled Water Thermal Storage Tank Heat Gain Energy");
+      result.push_back("Chilled Water Thermal Storage Use Side Mass Flow Rate");
+      result.push_back("Chilled Water Thermal Storage Use Side Inlet Temperature");
+      result.push_back("Chilled Water Thermal Storage Use Side Outlet Temperature");
+      result.push_back("Chilled Water Thermal Storage Use Side Heat Transfer Rate");
+      result.push_back("Chilled Water Thermal Storage Use Side Heat Transfer Energy");
+      result.push_back("Chilled Water Thermal Storage Source Side Mass Flow Rate");
+      result.push_back("Chilled Water Thermal Storage Source Side Inlet Temperature");
+      result.push_back("Chilled Water Thermal Storage Source Side Outlet Temperature");
+      result.push_back("Chilled Water Thermal Storage Source Side Heat Transfer Rate");
+      result.push_back("Chilled Water Thermal Storage Source Side Heat Transfer Energy");
+
+      // TODO: This should really be a check on whether the node is defined...
+      for (int i=1; i<=12; ++i) {
+        result.push_back("Chilled Water Thermal Storage Temperature Node " + std::to_string(i));
+        result.push_back("Chilled Water Thermal Storage Final Temperature Node " + std::to_string(i));
+      }
     }
     return result;
   }

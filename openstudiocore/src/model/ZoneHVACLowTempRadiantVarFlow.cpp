@@ -144,6 +144,16 @@ namespace detail {
     static std::vector<std::string> result;
     if (result.empty())
     {
+      result.push_back("Zone Radiant HVAC Heating Rate");
+      result.push_back("Zone Radiant HVAC Heating Energy");
+      result.push_back("Zone Radiant HVAC Cooling Rate");
+      result.push_back("Zone Radiant HVAC Cooling Energy");
+      result.push_back("Zone Radiant HVAC Mass Flow Rate");
+      result.push_back("Zone Radiant HVAC Inlet Temperature");
+      result.push_back("Zone Radiant HVAC Outlet Temperature");
+      result.push_back("Zone Radiant HVAC Moisture Condensation Time");
+      result.push_back("Zone Radiant HVAC Heating Fluid Energy");
+      result.push_back("Zone Radiant HVAC Cooling Fluid Energy");
     }
     return result;
   }

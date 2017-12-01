@@ -21,3 +21,6 @@ test_fails.txt
 *.sublime-project
 cmake-build-debug
 
+developer/msvc/Visualizers/all_concat.natvis
+.vscode/
+

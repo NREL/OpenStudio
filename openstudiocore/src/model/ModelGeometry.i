@@ -176,6 +176,9 @@ SWIG_MODELOBJECT(LightingSimulationZone, 1);
   %inline {
     namespace openstudio {
       namespace model {
+        openstudio::model::SpaceType getPlenumSpaceType(openstudio::model::Model model){
+          return model.plenumSpaceType();
+        }
         std::vector<openstudio::model::Space> getSpaces(const openstudio::model::SpaceType& spaceType){
           return spaceType.spaces();
         }
@@ -192,6 +195,13 @@ SWIG_MODELOBJECT(LightingSimulationZone, 1);
     using System;
     using System.Runtime.InteropServices;
     
+    public partial class Model : Workspace {
+      public SpaceType plenumSpaceType()
+      {
+        return OpenStudio.OpenStudioModelGeometry.getPlenumSpaceType(this);
+      }
+    }  
+
     public partial class SpaceType : ResourceObject {
       public SpaceVector spaces()
       {

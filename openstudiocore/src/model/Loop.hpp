@@ -211,6 +211,7 @@ class MODEL_API Loop : public ParentObject {
 
   virtual std::vector<ModelObject> children() const;
 
+
   protected:
 
   friend class Model;
@@ -224,6 +225,9 @@ class MODEL_API Loop : public ParentObject {
   explicit Loop(std::shared_ptr<ImplType> impl);
 
   Loop(IddObjectType type,const Model& model);
+
+
+
 
  private:
 

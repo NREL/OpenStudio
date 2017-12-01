@@ -81,11 +81,13 @@ namespace detail {
     return false;
   }
 
-  // Get all output variable names that could be associated with this object.
+  // TODO: remove
   const std::vector<std::string>& Timestep_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not appropriate: no specific output
     }
     return result;
   }

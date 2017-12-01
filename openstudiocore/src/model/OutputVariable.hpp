@@ -88,6 +88,10 @@ class MODEL_API OutputVariable : public ModelObject {
 
   boost::optional<Schedule> schedule() const;
 
+  bool exportToBCVTB() const;
+
+  bool isExportToBCVTBDefaulted() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -105,6 +109,10 @@ class MODEL_API OutputVariable : public ModelObject {
   bool setSchedule(Schedule& schedule);
 
   void resetSchedule();
+
+  void setExportToBCVTB(bool exportToBCVTB);
+
+  void resetExportToBCVTB();
 
   //@}
  protected:

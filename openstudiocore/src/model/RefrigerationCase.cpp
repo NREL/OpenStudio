@@ -82,7 +82,43 @@ namespace detail {
   const std::vector<std::string>& RefrigerationCase_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Refrigeration Case Evaporator Total Cooling Rate");
+      result.push_back("Refrigeration Case Evaporator Total Cooling Energy");
+      result.push_back("Refrigeration Case Evaporator Sensible Cooling Rate");
+      result.push_back("Refrigeration Case Evaporator Sensible Cooling Energy");
+      result.push_back("Refrigeration Case Evaporator Latent Cooling Rate");
+      result.push_back("Refrigeration Case Evaporator Latent Cooling Energy");
+      result.push_back("Refrigeration Case Zone Sensible Cooling Rate");
+      result.push_back("Refrigeration Case Zone Sensible Cooling Energy");
+      result.push_back("Refrigeration Case Zone Sensible Heating Rate");
+      result.push_back("Refrigeration Case Zone Sensible Heating Energy");
+      result.push_back("Refrigeration Case Zone Latent Rate");
+      result.push_back("Refrigeration Case Zone Latent Energy");
+      result.push_back("Refrigeration Case Return Air Sensible Cooling Rate");
+      result.push_back("Refrigeration Case Return Air Sensible Cooling Energy");
+      result.push_back("Refrigeration Case Return Air Sensible Heating Rate");
+      result.push_back("Refrigeration Case Return Air Sensible Heating Energy");
+      result.push_back("Refrigeration Case Return Air Latent Rate");
+      result.push_back("Refrigeration Case Return Air Latent Energy");
+      result.push_back("Refrigeration Case Evaporator Fan Electric Power");
+      result.push_back("Refrigeration Case Evaporator Fan Electric Energy");
+      result.push_back("Refrigeration Case Lighting Electric Power");
+      result.push_back("Refrigeration Case Lighting Electric Energy");
+      result.push_back("Refrigeration Case Latent Credit Curve Value");
+
+      // TODO: implement tests
+
+      // If case defrost type is Electric, Hot-Gas, or Hot-Brine with Temperature Termination
+      result.push_back("Refrigeration Case Defrost Energy Correction Curve Value");
+      // If anti-sweat heater control type is not equal to None:
+      result.push_back("Refrigeration Case Anti Sweat Electric Power");
+      result.push_back("Refrigeration Case Anti Sweat Electric Energy");
+      // If case defrost type is Electric or Electric with Temperature Termination:
+      result.push_back("Refrigeration Case Defrost Electric Power");
+      result.push_back("Refrigeration Case Defrost Electric Energy");
+
     }
     return result;
   }
