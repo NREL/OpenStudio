@@ -1534,6 +1534,84 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       break;
     }
+  case openstudio::IddObjectType::OS_ExternalInterface :
+    {
+      model::ExternalInterface ei = modelObject.cast<ExternalInterface>();
+      retVal = translateExternalInterface(ei);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ExternalInterface_Actuator :
+    {
+      model::ExternalInterfaceActuator ei = modelObject.cast<ExternalInterfaceActuator>();
+      retVal = translateExternalInterfaceActuator(ei);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_From_Variable:
+  {
+    model::ExternalInterfaceFunctionalMockupUnitExportFromVariable ei = modelObject.cast<ExternalInterfaceFunctionalMockupUnitExportFromVariable>();
+    retVal = translateExternalInterfaceFunctionalMockupUnitExportFromVariable(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_To_Actuator:
+  {
+    model::ExternalInterfaceFunctionalMockupUnitExportToActuator ei = modelObject.cast<ExternalInterfaceFunctionalMockupUnitExportToActuator>();
+    retVal = translateExternalInterfaceFunctionalMockupUnitExportToActuator(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_To_Schedule:
+  {
+    model::ExternalInterfaceFunctionalMockupUnitExportToSchedule ei = modelObject.cast<ExternalInterfaceFunctionalMockupUnitExportToSchedule>();
+    retVal = translateExternalInterfaceFunctionalMockupUnitExportToSchedule(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_To_Variable:
+  {
+    model::ExternalInterfaceFunctionalMockupUnitExportToVariable ei = modelObject.cast<ExternalInterfaceFunctionalMockupUnitExportToVariable>();
+    retVal = translateExternalInterfaceFunctionalMockupUnitExportToVariable(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport:
+  {
+    model::ExternalInterfaceFunctionalMockupUnitImport ei = modelObject.cast<ExternalInterfaceFunctionalMockupUnitImport>();
+    retVal = translateExternalInterfaceFunctionalMockupUnitImport(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_From_Variable:
+  {
+    model::ExternalInterfaceFunctionalMockupUnitImportFromVariable ei = modelObject.cast<ExternalInterfaceFunctionalMockupUnitImportFromVariable>();
+    retVal = translateExternalInterfaceFunctionalMockupUnitImportFromVariable(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Actuator:
+  {
+    model::ExternalInterfaceFunctionalMockupUnitImportToActuator ei = modelObject.cast<ExternalInterfaceFunctionalMockupUnitImportToActuator>();
+    retVal = translateExternalInterfaceFunctionalMockupUnitImportToActuator(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Schedule:
+  {
+    model::ExternalInterfaceFunctionalMockupUnitImportToSchedule ei = modelObject.cast<ExternalInterfaceFunctionalMockupUnitImportToSchedule>();
+    retVal = translateExternalInterfaceFunctionalMockupUnitImportToSchedule(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Variable:
+  {
+    model::ExternalInterfaceFunctionalMockupUnitImportToVariable ei = modelObject.cast<ExternalInterfaceFunctionalMockupUnitImportToVariable>();
+    retVal = translateExternalInterfaceFunctionalMockupUnitImportToVariable(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_Schedule:
+  {
+    model::ExternalInterfaceSchedule ei = modelObject.cast<ExternalInterfaceSchedule>();
+    retVal = translateExternalInterfaceSchedule(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_Variable:
+  {
+    model::ExternalInterfaceVariable ei = modelObject.cast<ExternalInterfaceVariable>();
+    retVal = translateExternalInterfaceVariable(ei);
+    break;
+  }
   case openstudio::IddObjectType::OS_Facility :
     {
       // no-op
@@ -3258,6 +3336,19 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_EnergyManagementSystem_TrendVariable);
   result.push_back(IddObjectType::OS_Output_EnergyManagementSystem);
 
+  result.push_back(IddObjectType::OS_ExternalInterface);
+  result.push_back(IddObjectType::OS_ExternalInterface_Actuator);
+  result.push_back(IddObjectType::OS_ExternalInterface_Schedule);
+  result.push_back(IddObjectType::OS_ExternalInterface_Variable);
+  result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_From_Variable);
+  result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_To_Actuator);
+  result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_To_Schedule);
+  result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_To_Variable);
+  result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport);
+  result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_From_Variable);
+  result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Actuator);
+  result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Schedule);
+  result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Variable);
   return result;
 }
 

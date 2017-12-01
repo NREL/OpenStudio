@@ -111,7 +111,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   IdfObject unitarySystem = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirLoopHVAC_UnitarySystem, modelObject);
 
   // Control Type
-  //unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::ControlType,"Load");
   s = modelObject.controlType();
   if (s) {
     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::ControlType,s.get());
@@ -149,23 +148,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   boost::optional<std::string> airOutletNodeName;
 
   // Air Inlet Node Name
-  if( boost::optional<ModelObject> mo = modelObject.airInletModelObject() )
+  if( boost::optional<Node> node = modelObject.inletNode() )
   {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      airInletNodeName = node->name().get();
-      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::AirInletNodeName,node->name().get());
-    }
+    airInletNodeName = node->name().get();
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::AirInletNodeName,node->name().get());
   }
 
   // Air Outlet Node Name
-  if( boost::optional<ModelObject> mo = modelObject.airOutletModelObject() )
+  if( boost::optional<Node> node = modelObject.outletNode() )
   {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      airOutletNodeName = node->name().get();
-      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::AirOutletNodeName,node->name().get());
-    }
+    airOutletNodeName = node->name().get();
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::AirOutletNodeName,node->name().get());
   }
 
   // Supply Fan Object Type

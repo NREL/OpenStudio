@@ -212,6 +212,19 @@ MODELOBJECT_TEMPLATES(EnergyManagementSystemProgram);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemProgramCallingManager);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemOutputVariable);
 UNIQUEMODELOBJECT_TEMPLATES(OutputEnergyManagementSystem);
+UNIQUEMODELOBJECT_TEMPLATES(ExternalInterface);
+MODELOBJECT_TEMPLATES(ExternalInterfaceActuator);
+MODELOBJECT_TEMPLATES(ExternalInterfaceFunctionalMockupUnitExportFromVariable);
+MODELOBJECT_TEMPLATES(ExternalInterfaceFunctionalMockupUnitExportToActuator);
+MODELOBJECT_TEMPLATES(ExternalInterfaceFunctionalMockupUnitExportToSchedule);
+MODELOBJECT_TEMPLATES(ExternalInterfaceFunctionalMockupUnitExportToVariable);
+MODELOBJECT_TEMPLATES(ExternalInterfaceFunctionalMockupUnitImport);
+MODELOBJECT_TEMPLATES(ExternalInterfaceFunctionalMockupUnitImportFromVariable);
+MODELOBJECT_TEMPLATES(ExternalInterfaceFunctionalMockupUnitImportToActuator);
+MODELOBJECT_TEMPLATES(ExternalInterfaceFunctionalMockupUnitImportToSchedule);
+MODELOBJECT_TEMPLATES(ExternalInterfaceFunctionalMockupUnitImportToVariable);
+MODELOBJECT_TEMPLATES(ExternalInterfaceSchedule);
+MODELOBJECT_TEMPLATES(ExternalInterfaceVariable);
 
 SWIG_MODELOBJECT(ModelObject, 0);
 SWIG_MODELEXTENSIBLEGROUP(ModelExtensibleGroup);
@@ -251,5 +264,18 @@ SWIG_MODELOBJECT(EnergyManagementSystemProgram, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemProgramCallingManager, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemOutputVariable, 1);
 SWIG_UNIQUEMODELOBJECT(OutputEnergyManagementSystem);
+SWIG_UNIQUEMODELOBJECT(ExternalInterface);
+SWIG_MODELOBJECT(ExternalInterfaceActuator, 1);
+SWIG_MODELOBJECT(ExternalInterfaceFunctionalMockupUnitExportFromVariable, 1);
+SWIG_MODELOBJECT(ExternalInterfaceFunctionalMockupUnitExportToActuator, 1);
+SWIG_MODELOBJECT(ExternalInterfaceFunctionalMockupUnitExportToSchedule, 1);
+SWIG_MODELOBJECT(ExternalInterfaceFunctionalMockupUnitExportToVariable, 1);
+SWIG_MODELOBJECT(ExternalInterfaceFunctionalMockupUnitImport, 1);
+SWIG_MODELOBJECT(ExternalInterfaceFunctionalMockupUnitImportFromVariable, 1);
+SWIG_MODELOBJECT(ExternalInterfaceFunctionalMockupUnitImportToActuator, 1);
+SWIG_MODELOBJECT(ExternalInterfaceFunctionalMockupUnitImportToSchedule, 1);
+SWIG_MODELOBJECT(ExternalInterfaceFunctionalMockupUnitImportToVariable, 1);
+SWIG_MODELOBJECT(ExternalInterfaceSchedule, 1);
+SWIG_MODELOBJECT(ExternalInterfaceVariable, 1);
 
 #endif //MODEL_CORE_I 

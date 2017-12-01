@@ -27980,9 +27980,14 @@ OS:Output:Variable,
        \key RunPeriod
        \key Environment
        \key Annual
-  A6; \field Schedule Name
+  A6, \field Schedule Name
        \type object-list
        \object-list ScheduleNames
+  A7; \field Export To BCVTB
+       \type choice
+       \default False
+       \key True
+       \key False
 
 OS:Meter:Custom,
    \extensible:2
@@ -28236,10 +28241,15 @@ OS:EnergyManagementSystem:OutputVariable,
        \type object-list
        \object-list ErlProgramSubroutineNames
        \note optional for global scope variables, required for local scope variables
-  A7; \field Units
+  A7, \field Units
        \note optional but will result in dimensionless units for blank
        \note EnergyPlus units are standard SI units
        \type alpha
+  A8; \field Export To BCVTB
+       \type choice
+       \default False
+       \key True
+       \key False       
 
 OS:EnergyManagementSystem:MeteredOutputVariable,
        \memo This object sets up an EnergyPlus output variable from an Erl variable
@@ -28406,3 +28416,367 @@ OS:EnergyManagementSystem:ConstructionIndexVariable,
        \object-list ConstructionNames
        \required-field
 
+\group External Interface
+
+OS:ExternalInterface,
+        \memo This object activates the external interface of EnergyPlus. If the object
+        \memo ExternalInterface is present, then all ExtnernalInterface:* objects will receive
+        \memo their values from the BCVTB interface or from FMUs at each zone time step.
+        \memo If this object is not present, then the values of these objects will be fixed at the
+        \memo value declared in the "initial value" field of the corresponding object, and a
+        \memo warning will be written to the EnergyPlus error file.
+        \unique-object
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2;  \field Name of External Interface
+        \note Name of External Interface
+        \required-field
+        \type choice
+        \default PtolemyServer
+        \key PtolemyServer
+        \key FunctionalMockupUnitImport
+        \key FunctionalMockupUnitExport
+        \note Currently, the only valid entries are PtolemyServer, FunctionalMockupUnitImport, and FunctionalMockupUnitExport.
+
+OS:ExternalInterface:Schedule,
+       \min-fields 3
+       \memo A ExternalInterface:Schedule contains only one value,
+       \memo which is used during the warm-up period and the system sizing.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ScheduleNames
+  A3 , \field Schedule Type Limits Name
+       \type object-list
+       \object-list ScheduleTypeLimitsNames
+  N1,  \field Initial Value
+       \type real
+       \required-field
+       \note Used during warm-up and system sizing.
+  A4; \field Export To BCVTB
+       \type choice
+       \default True
+       \key True
+       \key False     
+
+OS:ExternalInterface:Variable,
+       \memo This input object is similar to EnergyManagementSystem:GlobalVariable. However, at
+       \memo the beginning of each zone time step, its value is set to the value received from the
+       \memo external interface. During the warm-up period and the system sizing, its value
+       \memo is set to the value specified by the field "initial value." This object can be used
+       \memo to move data into Erl subroutines.
+       \min-fields 3
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference ErlVariableNames
+       \note This name becomes a variable for use in Erl programs
+       \note no spaces allowed in name
+  N1, \field Initial Value
+       \type real
+       \required-field
+       \note Used during warm-up and system sizing.
+  A3; \field Export To BCVTB
+       \type choice
+       \default True
+       \key True
+       \key False     
+
+OS:ExternalInterface:Actuator,
+       \memo Hardware portion of EMS used to set up actuators in the model
+       \min-fields 5
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ErlVariableNames
+       \reference AllObjects
+       \note This name becomes a variable for use in Erl programs
+       \note no spaces allowed in name
+  A3 , \field Actuated Component Unique Name
+       \required-field
+       \type object-list
+       \object-list AllObjects
+  A4 , \field Actuated Component Type
+       \required-field
+       \type alpha
+  A5 , \field Actuated Component Control Type
+       \required-field
+       \type alpha
+  N1,  \field Optional Initial Value
+       \type real
+       \note If specified, it is used during warm-up and system sizing.
+       \note If not specified, then the actuator only overwrites the
+       \note actuated component after the warm-up and system sizing.
+  A6; \field Export To BCVTB
+       \type choice
+       \default True
+       \key True
+       \key False       
+
+OS:ExternalInterface:FunctionalMockupUnitImport,
+       \memo This object declares an FMU
+       \min-fields 5
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \retaincase
+       \reference FMUFileName
+  A3 , \field FMU File Name
+       \required-field
+       \type alpha
+       \retaincase
+  N1 , \field FMU Timeout
+       \note in milli-seconds
+       \type real
+       \units ms
+       \default 0.0
+  N2 ; \field FMU LoggingOn
+       \type integer
+       \default 0
+
+OS:ExternalInterface:FunctionalMockupUnitImport:From:Variable,
+       \memo This object declares an FMU input variable
+       \min-fields 7
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+  A3 , \field Output:Variable Index Key Name
+       \required-field
+       \type alpha
+  A4 , \field Output:Variable Name
+       \required-field
+       \type external-list
+       \external-list autoRDDvariable
+  A5 , \field FMU File Name
+       \required-field
+       \retaincase
+       \type object-list
+       \object-list FMUFileName
+  A6 , \field FMU Instance Name
+       \required-field
+       \type alpha
+       \retaincase
+  A7 ; \field FMU Variable Name
+       \required-field
+       \type alpha
+       \retaincase
+
+OS:ExternalInterface:FunctionalMockupUnitImport:To:Schedule,
+       \memo This objects contains only one value, which is used during the first
+       \memo call of EnergyPlus
+       \min-fields 6
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ScheduleNames
+  A3 , \field Schedule Type Limits Name
+       \type object-list
+       \object-list ScheduleTypeLimitsNames
+  A4 , \field FMU File Name
+       \required-field
+       \retaincase
+       \type object-list
+       \object-list FMUFileName
+  A5 , \field FMU Instance Name
+       \required-field
+       \type alpha
+       \retaincase
+  A6 , \field FMU Variable Name
+       \required-field
+       \type alpha
+       \retaincase
+  N1 ; \field Initial Value
+       \type real
+       \required-field
+       \note Used during the first call of EnergyPlus.
+
+OS:ExternalInterface:FunctionalMockupUnitImport:To:Actuator,
+       \memo Hardware portion of EMS used to set up actuators in the model
+       \memo that are dynamically updated from the FMU.
+       \min-fields 9
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \note This name becomes a read-only variable for use in Erl programs
+       \note no spaces allowed in name
+       \reference ErlVariableNames
+       \reference AllObjects
+  A3 , \field Actuated Component Unique Name
+       \required-field
+       \type object-list
+       \object-list AllObjects
+  A4 , \field Actuated Component Type
+       \required-field
+       \type alpha
+  A5 , \field Actuated Component Control Type
+       \required-field
+       \type alpha
+  A6 , \field FMU File Name
+       \required-field
+       \retaincase
+       \type object-list
+       \object-list FMUFileName
+  A7 , \field FMU Instance Name
+       \required-field
+       \type alpha
+       \retaincase
+  A8 , \field FMU Variable Name
+       \required-field
+       \type alpha
+       \retaincase
+  N1 ; \field Initial Value
+       \type real
+       \required-field
+       \note Used during the first call of EnergyPlus.
+
+OS:ExternalInterface:FunctionalMockupUnitImport:To:Variable,
+       \memo Declares Erl variable as having global scope
+       \memo No spaces allowed in names used for Erl variables
+       \min-fields 6
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ErlVariableNames
+       \note This name becomes a variable for use in Erl programs
+       \note no spaces allowed in name
+  A3 , \field FMU File Name
+       \required-field
+       \retaincase
+       \type object-list
+       \object-list FMUFileName
+  A4 , \field FMU Instance Name
+       \required-field
+       \type alpha
+       \retaincase
+  A5 , \field FMU Variable Name
+       \required-field
+       \type alpha
+       \retaincase
+  N1 ; \field Initial Value
+       \type real
+       \required-field
+       \note Used during the first call of EnergyPlus.
+
+OS:ExternalInterface:FunctionalMockupUnitExport:From:Variable,
+       \memo This object declares an FMU input variable
+       \min-fields 5
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+  A3 , \field Output:Variable Index Key Name
+       \required-field
+       \type alpha
+  A4 , \field Output:Variable Name
+       \required-field
+       \type external-list
+       \external-list autoRDDvariable
+  A5 ; \field FMU Variable Name
+       \required-field
+       \type alpha
+       \retaincase
+
+OS:ExternalInterface:FunctionalMockupUnitExport:To:Schedule,
+       \memo This objects contains only one value, which is used during the first
+       \memo call of EnergyPlus
+       \min-fields 4
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ScheduleNames
+  A3 , \field Schedule Type Limits Name
+       \type object-list
+       \object-list ScheduleTypeLimitsNames
+  A4 , \field FMU Variable Name
+       \required-field
+       \type alpha
+       \retaincase
+  N1 ; \field Initial Value
+       \type real
+       \required-field
+       \note Used during the first call of EnergyPlus.
+
+OS:ExternalInterface:FunctionalMockupUnitExport:To:Actuator,
+       \memo Hardware portion of EMS used to set up actuators in the model
+       \memo that are dynamically updated from the FMU.
+       \min-fields 7
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ErlVariableNames
+       \note This name becomes a read-only variable for use in Erl programs
+       \note no spaces allowed in name
+  A3 , \field Actuated Component Unique Name
+       \required-field
+       \type object-list
+       \object-list AllObjects
+  A4 , \field Actuated Component Type
+       \required-field
+       \type alpha
+  A5 , \field Actuated Component Control Type
+       \required-field
+       \type alpha
+  A6 , \field FMU Variable Name
+       \required-field
+       \type alpha
+       \retaincase
+  N1 ; \field Initial Value
+       \type real
+       \required-field
+       \note Used during the first call of EnergyPlus.
+
+OS:ExternalInterface:FunctionalMockupUnitExport:To:Variable,
+       \memo Declares Erl variable as having global scope
+       \memo No spaces allowed in names used for Erl variables
+       \min-fields 4
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ErlVariableNames
+       \note This name becomes a variable for use in Erl programs
+       \note no spaces allowed in name
+  A3 , \field FMU Variable Name
+       \required-field
+       \type alpha
+       \retaincase
+  N1 ; \field Initial Value
+       \type real
+       \required-field
+       \note Used during the first call of EnergyPlus.
+       

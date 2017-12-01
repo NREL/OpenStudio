@@ -84,11 +84,17 @@ class MODEL_API ZoneHVACComponent_Impl : public HVACComponent_Impl {
 
   bool addToNode(Node & node) override;
 
-  void removeFromAirLoopHVAC();
-
   boost::optional<AirLoopHVAC> airLoopHVAC() const override;
 
+  bool removeFromAirLoopHVAC();
+
+  void removeFromInletSideMixer();
+
   std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
+
+  boost::optional<ModelObject> airInletModelObject() const;
+
+  boost::optional<ModelObject> airOutletModelObject() const;
 
  protected:
 

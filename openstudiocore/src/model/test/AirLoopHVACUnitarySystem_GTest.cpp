@@ -316,8 +316,8 @@ TEST_F(ModelFixture,AirLoopHVACUnitarySystem_addToNode)
 
   EXPECT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
 
-  EXPECT_TRUE(testObject.airInletPort());
-  EXPECT_TRUE(testObject.airOutletPort());
+  EXPECT_TRUE(testObject.inletPort());
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodeTwoSameObjects)
@@ -331,8 +331,8 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodeTwoSameObjects)
   supplyOutletNode = airLoop.supplyOutletNode();
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
 
-  EXPECT_TRUE(testObject.airInletPort());
-  EXPECT_TRUE(testObject.airOutletPort());
+  EXPECT_TRUE(testObject.inletPort());
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodeAirLoopDemandSide)

@@ -73,6 +73,13 @@ TEST_F(ModelFixture, OutputVariable_ThermalZone)
   OutputVariable lightsElectricPower("Zone Lights Electric Power", model);
   EXPECT_EQ("*", lightsElectricPower.keyValue());
   EXPECT_EQ("Zone Lights Electric Power", lightsElectricPower.variableName());
+  //Check BCVTB
+  EXPECT_FALSE(lightsElectricPower.exportToBCVTB());
+  EXPECT_TRUE(lightsElectricPower.isExportToBCVTBDefaulted());
+  lightsElectricPower.setExportToBCVTB(true);
+  EXPECT_TRUE(lightsElectricPower.exportToBCVTB());
+  lightsElectricPower.resetExportToBCVTB();
+  EXPECT_FALSE(lightsElectricPower.exportToBCVTB());
 
   // add Zone Lights Radiant Heating Energy to only zone1
   OutputVariable lightsRadiantHeatGain("Zone Lights Radiant Heating Energy", model);

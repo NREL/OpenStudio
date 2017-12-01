@@ -30,7 +30,7 @@
 #define MODEL_AIRLOOPHVACUNITARYSYSTEM_IMPL_HPP
 
 #include "ModelAPI.hpp"
-#include "WaterToAirComponent_Impl.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -43,8 +43,8 @@ class UnitarySystemPerformanceMultispeed;
 
 namespace detail {
 
-  /** AirLoopHVACUnitarySystem_Impl is a WaterToAirComponent_Impl that is the implementation class for AirLoopHVACUnitarySystem.*/
-  class MODEL_API AirLoopHVACUnitarySystem_Impl : public WaterToAirComponent_Impl {
+  /** AirLoopHVACUnitarySystem_Impl is a ZoneHVACComponent_Impl that is the implementation class for AirLoopHVACUnitarySystem.*/
+  class MODEL_API AirLoopHVACUnitarySystem_Impl : public ZoneHVACComponent_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -79,13 +79,9 @@ namespace detail {
 
     virtual std::vector<IdfObject> remove() override;
 
-    virtual unsigned airInletPort() override;
+    virtual unsigned inletPort() const override;
    
-    virtual unsigned airOutletPort() override;
-
-    virtual unsigned waterInletPort() override;
-
-    virtual unsigned waterOutletPort() override;
+    virtual unsigned outletPort() const override;
 
     virtual bool addToNode(Node & node) override;
 

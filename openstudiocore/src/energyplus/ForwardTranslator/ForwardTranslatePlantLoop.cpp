@@ -361,6 +361,11 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
         inletNode = oaSystem->returnAirModelObject()->optionalCast<Node>();
         outletNode = oaSystem->mixedAirModelObject()->optionalCast<Node>();
       }
+      else if( auto unitary = modelObject.optionalCast<ZoneHVACComponent>() )
+      {
+        inletNode = unitary->inletNode()->optionalCast<Node>();
+        outletNode = unitary->outletNode()->optionalCast<Node>();
+      }
 
       if( inletNode && outletNode ) {
         IdfExtensibleGroup eg = branchIdfObject.pushExtensibleGroup();

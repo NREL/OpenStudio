@@ -557,6 +557,45 @@ set(${target_name}_src
   ExteriorLightsDefinition.hpp
   ExteriorLightsDefinition_Impl.hpp
   ExteriorLightsDefinition.cpp
+  ExternalInterface.cpp
+  ExternalInterface.hpp
+  ExternalInterface_Impl.hpp
+  ExternalInterfaceActuator.hpp
+  ExternalInterfaceActuator_Impl.hpp
+  ExternalInterfaceActuator.cpp
+  ExternalInterfaceFunctionalMockupUnitExportFromVariable.hpp
+  ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl.hpp
+  ExternalInterfaceFunctionalMockupUnitExportFromVariable.cpp
+  ExternalInterfaceFunctionalMockupUnitExportToActuator.hpp
+  ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl.hpp
+  ExternalInterfaceFunctionalMockupUnitExportToActuator.cpp
+  ExternalInterfaceFunctionalMockupUnitExportToSchedule.hpp
+  ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl.hpp
+  ExternalInterfaceFunctionalMockupUnitExportToSchedule.cpp
+  ExternalInterfaceFunctionalMockupUnitExportToVariable.hpp
+  ExternalInterfaceFunctionalMockupUnitExportToVariable_Impl.hpp
+  ExternalInterfaceFunctionalMockupUnitExportToVariable.cpp
+  ExternalInterfaceFunctionalMockupUnitImport.hpp
+  ExternalInterfaceFunctionalMockupUnitImport_Impl.hpp
+  ExternalInterfaceFunctionalMockupUnitImport.cpp
+  ExternalInterfaceFunctionalMockupUnitImportFromVariable.hpp
+  ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl.hpp
+  ExternalInterfaceFunctionalMockupUnitImportFromVariable.cpp
+  ExternalInterfaceFunctionalMockupUnitImportToActuator.hpp
+  ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl.hpp
+  ExternalInterfaceFunctionalMockupUnitImportToActuator.cpp
+  ExternalInterfaceFunctionalMockupUnitImportToSchedule.hpp
+  ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl.hpp
+  ExternalInterfaceFunctionalMockupUnitImportToSchedule.cpp
+  ExternalInterfaceFunctionalMockupUnitImportToVariable.hpp
+  ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl.hpp
+  ExternalInterfaceFunctionalMockupUnitImportToVariable.cpp
+  ExternalInterfaceSchedule.hpp
+  ExternalInterfaceSchedule_Impl.hpp
+  ExternalInterfaceSchedule.cpp
+  ExternalInterfaceVariable.hpp
+  ExternalInterfaceVariable_Impl.hpp
+  ExternalInterfaceVariable.cpp
   Facility.hpp
   Facility_Impl.hpp
   Facility.cpp
@@ -1599,6 +1638,19 @@ set(${target_name}_test_src
   test/EvaporativeCoolerIndirectResearchSpecial_GTest.cpp
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
   test/EvaporativeFluidCoolerTwoSpeed_GTest.cpp
+  test/ExternalInterface_GTest.cpp
+  test/ExternalInterfaceActuator_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitExportFromVariable_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitExportToActuator_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitExportToSchedule_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitExportToVariable_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitImport_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitImportFromVariable_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitImportToActuator_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitImportToSchedule_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitImportToVariable_GTest.cpp
+  test/ExternalInterfaceSchedule_GTest.cpp
+  test/ExternalInterfaceVariable_GTest.cpp
   test/Facility_GTest.cpp
   test/FanVariableVolume_GTest.cpp
   test/FanConstantVolume_GTest.cpp
