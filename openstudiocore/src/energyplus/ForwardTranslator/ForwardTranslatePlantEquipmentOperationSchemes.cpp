@@ -353,15 +353,15 @@ ComponentType plantLoopType(const PlantLoop & plantLoop) {
   }
 
   // If source side is purely cooling
-  if ( has_cooling and !has_heating and !has_both ) {
+  if ( has_cooling && !has_heating && !has_both ) {
         return ComponentType::COOLING;
 
   // If source side is purely heating
-  } else if ( !has_cooling and has_heating and !has_both ) {
+  } else if ( !has_cooling && has_heating && !has_both ) {
     return ComponentType::HEATING;
 
   // If there is nothing
-  } else if (!has_cooling and !has_heating and !has_both ) {
+  } else if (!has_cooling && !has_heating && !has_both ) {
     return ComponentType::NONE;
 
   // All other cases: BOTH
