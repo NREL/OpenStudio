@@ -2578,6 +2578,10 @@ bool EpwFile::parse(std::istream& ifs, bool storeData)
     return false;
   }
 
+  if(realYear) {
+    m_isActual = true;
+  }
+
   return result;
 }
 
