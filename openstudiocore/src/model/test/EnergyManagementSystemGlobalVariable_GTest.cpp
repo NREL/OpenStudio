@@ -46,8 +46,8 @@ using std::string;
 TEST_F(ModelFixture, EMSGlobalVariable_EMSGlobalVariable)
 {
   Model model;
-    
-  // add global variable
+
+  // add global variable, should rename it to remove the space
   EnergyManagementSystemGlobalVariable var(model, "glob var");
   EXPECT_EQ("glob_var", var.nameString());
 }

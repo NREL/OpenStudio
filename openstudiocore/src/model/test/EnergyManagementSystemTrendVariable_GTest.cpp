@@ -47,7 +47,7 @@ using std::string;
 TEST_F(ModelFixture, EMSTrendVariable_EMSTrendVariable)
 {
   Model model;
-  
+
   // add global variable
   EnergyManagementSystemGlobalVariable globvar(model, "glob var");
 
