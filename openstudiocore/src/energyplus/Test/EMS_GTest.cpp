@@ -107,6 +107,10 @@
 #include "../../model/StandardGlazing.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/Space_Impl.hpp"
+#include "../../model/SpaceType.hpp"
+#include "../../model/SpaceType_Impl.hpp"
+#include "../../model/SpaceLoad.hpp"
+#include "../../model/SpaceLoad_Impl.hpp"
 #include "../../model/Surface.hpp"
 #include "../../model/Surface_Impl.hpp"
 #include "../../model/SubSurface.hpp"
@@ -115,6 +119,10 @@
 #include "../../model/LifeCycleCost_Impl.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "../../model/GasEquipment.hpp"
+#include "../../model/GasEquipment_Impl.hpp"
+#include "../../model/GasEquipmentDefinition.hpp"
+#include "../../model/GasEquipmentDefinition_Impl.hpp"
 
 
 #include "../../model/Version.hpp"
@@ -498,6 +506,51 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWeatherActuator2_EMS) {
 
   model.save(toPath("./EMS_weatheractuator2.osm"), true);
   workspace.save(toPath("./EMS_weatheractuator2.idf"), true);
+}
+TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_EMS) {
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  ThermalZone zone1(model);
+  zone1.setName("Thermal Zone");
+
+  Space space(model);
+  SpaceType spaceType(model);
+  space.setThermalZone(zone1);
+  space.setSpaceType(spaceType);
+
+  GasEquipmentDefinition gasEquipDef(model);
+  GasEquipment gasEquip(gasEquipDef);
+  gasEquip.setName("Gas Equip");
+  space.setGasEquipmentPower(10, gasEquip);
+
+  // add actuator
+  std::string ControlType = "Gas Power Level";
+  std::string ComponentType = "GasEquipment";
+  EnergyManagementSystemActuator fanActuator(gasEquip, ComponentType, ControlType);
+  std::string actName = "Gas Equip Actuator";
+  fanActuator.setName(actName);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+
+
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
+  EXPECT_EQ("Gas_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
+  EXPECT_EQ("Thermal Zone Gas Equip", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
+  EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
+  EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+
+  model.save(toPath("./EMS_example.osm"), true);
+  workspace.save(toPath("./EMS_example.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorProgram_EMS) {
