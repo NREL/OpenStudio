@@ -64,8 +64,6 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemActuator(EnergyManagementSystemActuator & modelObject) {
   boost::optional<std::string> s;
   bool translate = true;
-  //check if modelObject is a SpaceLoad
-  auto load = modelObject.optionalCast<model::SpaceLoadInstance>();
 
   IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_Actuator);
   m_idfObjects.push_back(idfObject);
@@ -75,6 +73,9 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemAct
     idfObject.setName(*s);
   }
   const ModelObject m = modelObject.actuatedComponent();
+  //check if actuatedComponent is a SpaceLoad
+  auto load = m.optionalCast<model::SpaceLoadInstance>();
+
   if (!m.name()) { 
     LOG(Error, "Actuated Component Name for Actuator " << modelObject.nameString() << " does not exist, it will not be translated.");
     return boost::none;
