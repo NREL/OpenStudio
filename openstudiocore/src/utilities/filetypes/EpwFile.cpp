@@ -2581,6 +2581,10 @@ namespace openstudio{
       return false;
     }
 
+    if(realYear) {
+      m_isActual = true;
+    }
+
     return result;
   }
 
