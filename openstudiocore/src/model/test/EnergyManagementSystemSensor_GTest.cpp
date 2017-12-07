@@ -76,6 +76,21 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor)
   EXPECT_EQ(siteOutdoorAirDrybulbTemperature, OATdbSensor.outputVariable());
   EXPECT_EQ("", OATdbSensor.keyName());
 
+  // add zone Temperature
+  OutputVariable zoneTemperature("Zone Air Temperature", model);
+  zoneTemperature.setKeyValue(zone1.nameString());
+  EXPECT_EQ(zone1.nameString(), zoneTemperature.keyValue());
+  EXPECT_EQ("Zone Air Temperature", zoneTemperature.variableName());
+
+  // add sensor
+  EnergyManagementSystemSensor zoneSensor(model, zoneTemperature);
+  zoneSensor.setName("Zone Sensor");
+
+  EXPECT_EQ("Zone_Sensor", zoneSensor.nameString());
+  EXPECT_EQ(zoneTemperature.handle(), zoneSensor.outputVariable().get().handle());
+  EXPECT_EQ(zoneTemperature, zoneSensor.outputVariable());
+  EXPECT_EQ(zone1.nameString(), zoneSensor.keyName());
+
   // add Zone Lights Electric Power to both zones
   OutputVariable lightsElectricPower("Zone Lights Electric Power", model);
   EXPECT_EQ("*", lightsElectricPower.keyValue());
