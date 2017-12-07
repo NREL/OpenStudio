@@ -1,3 +1,14 @@
+## OpenStudio v2.3.0
+###### 2017-09-29 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.2.2...v2.3.0 )
+
+- ![Fixed:][fixed] [#2079]( https://github.com/NREL/OpenStudio/issues/2079 ), Fan:ZoneExhaust Balance Exhaust Fraction default to the opposite of EnergyPlus
+- ![Fixed:][fixed] [#2182]( https://github.com/NREL/OpenStudio/issues/2182 ), Wrong boundary in OS:WaterHeater:HeatPump  'Minimum Inlet Air Temperature for Compressor Operation'
+- ![Fixed:][fixed] [#2598]( https://github.com/NREL/OpenStudio/issues/2598 ), Fwd translation of EMS:InternalVariable does not sub UIDs w/ object names
+- ![Fixed:][fixed] [#2604]( https://github.com/NREL/OpenStudio/issues/2604 ), App locks up on Results Tab in Windows 10
+- ![Fixed:][fixed] [#2786]( https://github.com/NREL/OpenStudio/issues/2786 ), Outside Boundary Condition Object blank for interior surfaces
+- ![Fixed:][fixed] [#2789]( https://github.com/NREL/OpenStudio/issues/2789 ), FourPipe Fan Coil fails in 2.2.2 simulation with EnergyPlus 8.8
+- ![Improved:][improved] [#2054]( https://github.com/NREL/OpenStudio/issues/2054 ), CoilCoolingDXSingleSpeed requires an OptionalDouble for setRatedCOP
+
 ## OpenStudio v2.2.2
 ###### 2017-09-13 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.2.1...v2.2.2 )
 
