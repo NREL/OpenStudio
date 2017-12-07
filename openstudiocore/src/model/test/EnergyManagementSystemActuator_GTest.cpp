@@ -81,14 +81,14 @@ TEST_F(ModelFixture, EMSActuator_EMSActuator)
   
   fanActuator.setActuatedComponentControlType(fanControlType);
 
-  EXPECT_EQ(fan, fanActuator.actuatedComponent());
+  EXPECT_EQ(fan, fanActuator.actuatedComponent().get());
   EXPECT_EQ(fanControlType, fanActuator.actuatedComponentControlType());
  
   fanActuator.setActuatedComponentType(ComponentType);
   EXPECT_EQ(ComponentType, fanActuator.actuatedComponentType());
 
   fanActuator.setActuatedComponent(fan2);
-  EXPECT_EQ(fan2, fanActuator.actuatedComponent());
+  EXPECT_EQ(fan2, fanActuator.actuatedComponent().get());
 
   //add electric equipment actuator
   ElectricEquipmentDefinition definition(model);
@@ -104,7 +104,7 @@ TEST_F(ModelFixture, EMSActuator_EMSActuator)
 
   equipActuator.setActuatedComponentControlType(equipControlType);
 
-  EXPECT_EQ(electricEquipment, equipActuator.actuatedComponent());
+  EXPECT_EQ(electricEquipment, equipActuator.actuatedComponent().get());
   EXPECT_EQ(equipControlType, equipActuator.actuatedComponentControlType());
 
   equipActuator.setActuatedComponentType(ComponentType);

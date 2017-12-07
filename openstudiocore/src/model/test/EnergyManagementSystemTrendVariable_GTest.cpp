@@ -49,7 +49,7 @@ TEST_F(ModelFixture, EMSTrendVariable_EMSTrendVariable)
   Model model;
   
   // add global variable
-  EnergyManagementSystemGlobalVariable globvar(model, "glob var");
+  EnergyManagementSystemGlobalVariable globvar(model, "glob_var");
 
   // add trend variable
   EnergyManagementSystemTrendVariable var(model, "glob_var");
@@ -64,7 +64,7 @@ TEST_F(ModelFixture, EMSTrendVariable_EMSTrendVariable)
   EXPECT_EQ(globvar,var.emsGlobalVariable().get());
 
   // add global variable
-  EnergyManagementSystemGlobalVariable globvar2(model, "glob var2");
+  EnergyManagementSystemGlobalVariable globvar2(model, "glob_var2");
 
   EnergyManagementSystemTrendVariable var2(model, globvar2);
   EXPECT_EQ("glob_var2", var2.emsVariableName());

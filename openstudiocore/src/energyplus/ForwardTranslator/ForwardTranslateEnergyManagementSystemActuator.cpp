@@ -63,54 +63,61 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemActuator(EnergyManagementSystemActuator & modelObject) {
   boost::optional<std::string> s;
-  bool translate = true;
 
   IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_Actuator);
-  m_idfObjects.push_back(idfObject);
+
   //Name
   s = modelObject.name();
   if (s) {
     idfObject.setName(*s);
   }
-  const ModelObject m = modelObject.actuatedComponent();
-  //check if actuatedComponent is a SpaceLoad
-  auto load = m.optionalCast<model::SpaceLoadInstance>();
+  const boost::optional<ModelObject> m_opt = modelObject.actuatedComponent();
+  if (m_opt) {
+    ModelObject m = m_opt.get();
+    //check if actuatedComponent is a SpaceLoad
+    auto load = m.optionalCast<model::SpaceLoadInstance>();
 
-  if (!m.name()) { 
-    LOG(Error, "Actuated Component Name for Actuator " << modelObject.nameString() << " does not exist, it will not be translated.");
-    return boost::none;
-  }
-  if (m.iddObjectType() == openstudio::IddObjectType::OS_Site || m.iddObjectType() == openstudio::IddObjectType::OS_WeatherFile) {
-    idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, "Environment");
-    idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, "Weather Data");
-    idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
-    return idfObject;
-  } else if (load) {
-    // if SpaceLoad check if thermalzone names exist
-    auto space = load->space();
-    if (space) {
-      auto tz = space->thermalZone();
-      if (tz) {
-        std::string tz_name = tz.get().nameString() + " " + m.nameString();
-        idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, tz_name);
-        idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
-        idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
-        return idfObject;
+    if (!m.name()) {
+      LOG(Error, "Actuated Component Name for Actuator " << modelObject.nameString() << " does not exist, it will not be translated.");
+      return boost::none;
+    }
+    if (m.iddObjectType() == openstudio::IddObjectType::OS_Site || m.iddObjectType() == openstudio::IddObjectType::OS_WeatherFile) {
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, "Environment");
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, "Weather Data");
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
+      m_idfObjects.push_back(idfObject);
+      return idfObject;
+    } else if (load) {
+      // if SpaceLoad check if thermalzone names exist
+      auto space = load->space();
+      if (space) {
+        auto tz = space->thermalZone();
+        if (tz) {
+          std::string tz_name = tz.get().nameString() + " " + m.nameString();
+          idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, tz_name);
+          idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
+          idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
+          m_idfObjects.push_back(idfObject);
+          return idfObject;
+        } else {
+          LOG(Error, "SpaceLoad " << load.get().name().get() << "is not associated with a ThermalZone, it will not be translated.");
+          return boost::none;
+        }
       } else {
-        LOG(Error, "SpaceLoad " << load.get().name().get() << "is not associated with a ThermalZone, it will not be translated.");
+        LOG(Error, "SpaceLoad " << load.get().name().get() << "is not associated with a Space, it will not be translated.");
         return boost::none;
       }
     } else {
-      LOG(Error, "SpaceLoad " << load.get().name().get() << "is not associated with a Space, it will not be translated.");
-      return boost::none;
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, m.nameString());
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
+      idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
+      m_idfObjects.push_back(idfObject);
+      return idfObject;
     }
   } else {
-    idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, m.nameString());
-    idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
-    idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
-    return idfObject;
+    LOG(Error, "Actuated Component Name for Actuator " << modelObject.nameString() << " does not exist, it will not be translated.");
+    return boost::none;
   }
-  
 }
 
 } // energyplus

@@ -632,20 +632,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad3_EMS) {
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_EQ(0u, forwardTranslator.errors().size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
-
-  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
-
-
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
-  EXPECT_EQ("Gas_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
-  EXPECT_EQ("Thermal Zone Gas Equip", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
-  EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
-  EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+  EXPECT_EQ(1u, forwardTranslator.errors().size());
+  // should now be 0 since the actuator should not translate since the SpaceLoad got deleted on FT
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
 
   model.save(toPath("./EMS_example.osm"), true);
   workspace.save(toPath("./EMS_example.idf"), true);
