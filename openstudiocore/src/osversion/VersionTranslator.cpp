@@ -3734,6 +3734,92 @@ std::string VersionTranslator::update_2_3_0_to_2_3_1(const IdfFile& idf_2_3_0, c
       ss << newObject;
       ss << avmList;
 
+    } else if (iddname == "OS:AvailabilityManager:NightCycle") {
+      auto iddObject = idd_2_3_1.getObject("OS:AvailabilityManager:NightCycle");
+      IdfObject newObject(iddObject.get());
+
+      // Cycling Run Time Control Type was placed before Cycling Run Time
+      for( size_t i = 0; i < object.numNonextensibleFields() - 1; ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      // No need to set the default Cycling Run Time Control Type, it has a defaulted option
+      // But we need to carry the cycling Run Time (seconds) in the right field
+      if (auto cyclingRunTime = newObject.getDouble(6)) {
+        newObject.setDouble(7, cyclingRunTime.get());
+      }
+
+      // We need to create the four ModelObjectLists for the control zones
+      // 8 = Control Zone or Zone List Name
+      std::string  controlThermalZoneListName = "";
+      if( auto avmName = object.getString(1) ) {
+        controlThermalZoneListName = avmName.get();
+      }
+      controlThermalZoneListName = controlThermalZoneListName + " Control Zone List";
+
+      IdfObject controlThermalZoneList(idd_2_3_1.getObject("OS:ModelObjectList").get());
+      std::string controlThermalZoneListHandle = toString(createUUID());
+      controlThermalZoneList.setString(0, controlThermalZoneListHandle);
+      controlThermalZoneList.setString(1, controlThermalZoneListName);
+      newObject.setString(8, controlThermalZoneListHandle);
+
+      // 9 = Cooling Control Zone or Zone List Name
+      std::string  coolingControlThermalZoneListName = "";
+      if( auto avmName = object.getString(1) ) {
+        coolingControlThermalZoneListName = avmName.get();
+      }
+      coolingControlThermalZoneListName = coolingControlThermalZoneListName + " Cooling Control Zone List";
+
+      IdfObject coolingControlThermalZoneList(idd_2_3_1.getObject("OS:ModelObjectList").get());
+      std::string coolingControlThermalZoneListHandle = toString(createUUID());
+      coolingControlThermalZoneList.setString(0, coolingControlThermalZoneListHandle);
+      coolingControlThermalZoneList.setString(1, coolingControlThermalZoneListName);
+      newObject.setString(9, coolingControlThermalZoneListHandle);
+
+
+      // 10 = Heating Control Zone or Zone List Name
+      std::string  heatingControlThermalZoneListName = "";
+      if( auto avmName = object.getString(1) ) {
+        heatingControlThermalZoneListName = avmName.get();
+      }
+      heatingControlThermalZoneListName = heatingControlThermalZoneListName + " Heating Control Zone List";
+
+      IdfObject heatingControlThermalZoneList(idd_2_3_1.getObject("OS:ModelObjectList").get());
+      std::string heatingControlThermalZoneListHandle = toString(createUUID());
+      heatingControlThermalZoneList.setString(0, heatingControlThermalZoneListHandle);
+      heatingControlThermalZoneList.setString(1, heatingControlThermalZoneListName);
+      newObject.setString(10, heatingControlThermalZoneListHandle);
+
+
+      // 11 = Heating Control Zone or Zone List Name
+      std::string  heatingZoneFansOnlyThermalZoneListName = "";
+      if( auto avmName = object.getString(1) ) {
+        heatingZoneFansOnlyThermalZoneListName = avmName.get();
+      }
+      heatingZoneFansOnlyThermalZoneListName = heatingZoneFansOnlyThermalZoneListName + " Heating Zone Fans Only Zone List";
+
+      IdfObject heatingZoneFansOnlyThermalZoneList(idd_2_3_1.getObject("OS:ModelObjectList").get());
+      std::string heatingZoneFansOnlyThermalZoneListHandle = toString(createUUID());
+      heatingZoneFansOnlyThermalZoneList.setString(0, heatingZoneFansOnlyThermalZoneListHandle);
+      heatingZoneFansOnlyThermalZoneList.setString(1, heatingZoneFansOnlyThermalZoneListName);
+      newObject.setString(11, heatingZoneFansOnlyThermalZoneListHandle);
+
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_new.push_back(controlThermalZoneList);
+      m_new.push_back(coolingControlThermalZoneList);
+      m_new.push_back(heatingControlThermalZoneList);
+      m_new.push_back(heatingZoneFansOnlyThermalZoneList);
+
+
+      ss << newObject;
+      ss << controlThermalZoneList;
+      ss << coolingControlThermalZoneList;
+      ss << heatingControlThermalZoneList;
+      ss << heatingZoneFansOnlyThermalZoneList;
+
     } else {
       ss << object;
     }
