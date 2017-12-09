@@ -1826,7 +1826,7 @@ namespace detail {
     ModelObject mo = this->getObject<ModelObject>();
     Model _model = this->model();
 
-    if (plPort <= pl.numFields() ) {
+    if (plPort != pl.nextPort()) {
       _model.disconnect(pl, plPort);
     }
     _model.disconnect(mo, returnAirPort());
