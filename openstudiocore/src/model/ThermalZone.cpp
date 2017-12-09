@@ -1816,13 +1816,20 @@ namespace detail {
   void ThermalZone_Impl::disconnect()
   {
     PortList pl = inletPortList();
+    // This returns a 0-indexed for the extensible fields
+    // unsigned plPortIndex = pl.airLoopHVACPortIndex();
+    // This is the actual field index, used in disconnect
+    // unsigned plPort = pl.port(plPortIndex);
+
     unsigned plPort = pl.airLoopHVACPort();
 
     ModelObject mo = this->getObject<ModelObject>();
     Model _model = this->model();
 
-    _model.disconnect(pl,plPort);
-    _model.disconnect(mo,returnAirPort());
+    if (plPort != pl.nextPort()) {
+      _model.disconnect(pl, plPort);
+    }
+    _model.disconnect(mo, returnAirPort());
   }
 
   bool ThermalZone_Impl::useIdealAirLoads() const

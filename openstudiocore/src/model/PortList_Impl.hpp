@@ -65,7 +65,7 @@ class MODEL_API PortList_Impl : public ModelObject_Impl {
   unsigned port(unsigned portIndex);
 
   unsigned portIndex(unsigned port);
-  
+
   unsigned nextPort();
 
   boost::optional<ModelObject> modelObject(unsigned portIndex);
@@ -75,7 +75,7 @@ class MODEL_API PortList_Impl : public ModelObject_Impl {
   std::vector<ModelObject> modelObjects();
 
   unsigned newPortAfterIndex(unsigned portIndex);
-  
+
   unsigned portIndexForModelObject( ModelObject & modelObject, bool * ok = nullptr );
 
   unsigned nextPortIndex();
@@ -91,6 +91,8 @@ class MODEL_API PortList_Impl : public ModelObject_Impl {
   std::vector<openstudio::IdfObject> remove() override;
 
   unsigned airLoopHVACPort();
+
+  unsigned airLoopHVACPortIndex();
 
   boost::optional<ModelObject> airLoopHVACModelObject();
 
