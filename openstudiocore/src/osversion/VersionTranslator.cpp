@@ -118,7 +118,6 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.12.4")] = &VersionTranslator::update_1_12_3_to_1_12_4;
   m_updateMethods[VersionString("2.1.1")] = &VersionTranslator::update_2_1_0_to_2_1_1;
   m_updateMethods[VersionString("2.1.2")] = &VersionTranslator::update_2_1_1_to_2_1_2;
-  m_updateMethods[VersionString("2.3.0")] = &VersionTranslator::update_2_1_2_to_2_3_0;
   m_updateMethods[VersionString("2.3.1")] = &VersionTranslator::update_2_3_0_to_2_3_1;
   m_updateMethods[VersionString("2.4.0")] = &VersionTranslator::defaultUpdate;
 
@@ -3519,20 +3518,20 @@ std::string VersionTranslator::update_2_1_1_to_2_1_2(const IdfFile& idf_2_1_1, c
   return ss.str();
 }
 
-std::string VersionTranslator::update_2_1_2_to_2_3_0(const IdfFile& idf_2_1_2, const IddFileAndFactoryWrapper& idd_2_3_0) {
+std::string VersionTranslator::update_2_3_0_to_2_3_1(const IdfFile& idf_2_3_0, const IddFileAndFactoryWrapper& idd_2_3_1) {
   std::stringstream ss;
 
-  ss << idf_2_1_2.header() << std::endl << std::endl;
-  IdfFile targetIdf(idd_2_3_0.iddFile());
+  ss << idf_2_3_0.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_2_3_1.iddFile());
   ss << targetIdf.versionObject().get();
 
   boost::optional<std::string> value;
 
-  for (const IdfObject& object : idf_2_1_2.objects()) {
+  for (const IdfObject& object : idf_2_3_0.objects()) {
     auto iddname = object.iddObject().name();
 
     if (iddname == "OS:Pump:ConstantSpeed") {
-      auto iddObject = idd_2_3_0.getObject("OS:Pump:ConstantSpeed");
+      auto iddObject = idd_2_3_1.getObject("OS:Pump:ConstantSpeed");
       IdfObject newObject(iddObject.get());
 
       for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
@@ -3548,7 +3547,7 @@ std::string VersionTranslator::update_2_1_2_to_2_3_0(const IdfFile& idf_2_1_2, c
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
     } else if (iddname == "OS:Pump:VariableSpeed") {
-      auto iddObject = idd_2_3_0.getObject("OS:Pump:VariableSpeed");
+      auto iddObject = idd_2_3_1.getObject("OS:Pump:VariableSpeed");
       IdfObject newObject(iddObject.get());
 
       for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
@@ -3566,7 +3565,7 @@ std::string VersionTranslator::update_2_1_2_to_2_3_0(const IdfFile& idf_2_1_2, c
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
     } else if (iddname == "OS:CoolingTower:SingleSpeed") {
-      auto iddObject = idd_2_3_0.getObject("OS:CoolingTower:SingleSpeed");
+      auto iddObject = idd_2_3_1.getObject("OS:CoolingTower:SingleSpeed");
       IdfObject newObject(iddObject.get());
 
       for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
@@ -3588,7 +3587,7 @@ std::string VersionTranslator::update_2_1_2_to_2_3_0(const IdfFile& idf_2_1_2, c
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
     } else if (iddname == "OS:CoolingTower:TwoSpeed") {
-      auto iddObject = idd_2_3_0.getObject("OS:CoolingTower:TwoSpeed");
+      auto iddObject = idd_2_3_1.getObject("OS:CoolingTower:TwoSpeed");
       IdfObject newObject(iddObject.get());
 
       for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
@@ -3606,7 +3605,7 @@ std::string VersionTranslator::update_2_1_2_to_2_3_0(const IdfFile& idf_2_1_2, c
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
     } else if (iddname == "OS:CoolingTower:VariableSpeed") {
-      auto iddObject = idd_2_3_0.getObject("OS:CoolingTower:VariableSpeed");
+      auto iddObject = idd_2_3_1.getObject("OS:CoolingTower:VariableSpeed");
       IdfObject newObject(iddObject.get());
 
       for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
@@ -3621,7 +3620,7 @@ std::string VersionTranslator::update_2_1_2_to_2_3_0(const IdfFile& idf_2_1_2, c
       ss << newObject;
 
     } else if (iddname == "OS:Chiller:Electric:EIR") {
-      auto iddObject = idd_2_3_0.getObject("OS:Chiller:Electric:EIR");
+      auto iddObject = idd_2_3_1.getObject("OS:Chiller:Electric:EIR");
       IdfObject newObject(iddObject.get());
 
       for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
@@ -3638,27 +3637,7 @@ std::string VersionTranslator::update_2_1_2_to_2_3_0(const IdfFile& idf_2_1_2, c
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
-    } else {
-      ss << object;
-    }
-  }
-
-  return ss.str();
-}
-
-std::string VersionTranslator::update_2_3_0_to_2_3_1(const IdfFile& idf_2_3_0, const IddFileAndFactoryWrapper& idd_2_3_1) {
-  std::stringstream ss;
-
-  ss << idf_2_3_0.header() << std::endl << std::endl;
-  IdfFile targetIdf(idd_2_3_1.iddFile());
-  ss << targetIdf.versionObject().get();
-
-  boost::optional<std::string> value;
-
-  for (const IdfObject& object : idf_2_3_0.objects()) {
-    auto iddname = object.iddObject().name();
-
-    if (iddname == "OS:AirLoopHVAC") {
+    } else if (iddname == "OS:AirLoopHVAC") {
       auto iddObject = idd_2_3_1.getObject("OS:AirLoopHVAC");
       IdfObject newObject(iddObject.get());
 
