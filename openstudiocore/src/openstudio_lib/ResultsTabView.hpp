@@ -63,7 +63,7 @@ namespace openstudio {
 
     private slots:
       void refreshClicked();
-      void openResultsViewerClicked();
+      void openDViewClicked();
       void compareResultsClicked();
       void doPrint();
       void comboBoxChanged(int index);
@@ -86,7 +86,7 @@ namespace openstudio {
 
       QProgressBar * m_progressBar;
       QPushButton * m_refreshBtn;
-      QPushButton * m_openResultsViewerBtn;
+      QPushButton * m_openDViewBtn;
       QPushButton * m_compareBtn;
       QPushButton * m_printBtn;
       openstudio::path m_sqlFilePath;
