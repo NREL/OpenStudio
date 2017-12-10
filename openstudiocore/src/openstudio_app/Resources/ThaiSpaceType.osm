@@ -91,3 +91,1263 @@ OS:LifeCycleCost:Parameters,
   ,                                       !- Service Date Year
   ;                                       !- Length of Study Period in Years
 
+OS:SpaceType,
+  {48168c65-7ad0-4bff-ace5-85052681f96d}, !- Handle
+  TH-2016-Hospital-Patient Room, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {96cdffd1-2ca9-41c7-affa-6da25e2d45b1}, !- Handle
+  TH-2016-Hospital-Operating Room, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {1bc08439-e100-45a3-926a-ba1a36377e72}, !- Handle
+  TH-2016-Hospital-Emergency Room, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {50a2e897-117b-42a1-90f9-7a0252f2a4dc}, !- Handle
+  TH-2016-Hospital-ICU, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {427f2f4e-dfc9-4026-bf7d-b9558e6e1876}, !- Handle
+  TH-2016-Hospital-Pharmacy, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {d1dde38b-f0e0-4988-9c52-3f491a7ae6f4}, !- Handle
+  TH-2016-Hospital-Conference, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {c75a4019-b511-4248-b281-dc2c06ae49be}, !- Handle
+  TH-2016-Hospital-Corridor, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {4a3f6478-bd06-4fc9-a566-50143984fa27}, !- Handle
+  TH-2016-Hospital-Office space, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {74e4442c-56fe-42ac-8ec2-19ab4aef2529}, !- Handle
+  TH-2016-Hospital-Restaurant-Dining, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {d06e9bcb-6539-4c46-b60e-2c8305e791f3}, !- Handle
+  TH-2016-Hospital-Cafeteria/Fast-food dining, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {936c1ed5-a292-4a89-af7c-16ef3cd91450}, !- Handle
+  TH-2016-Hospital-Kitchen, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {b23fa715-cb49-4daf-80fc-b85e8ade255f}, !- Handle
+  TH-2016-Hospital-Laundry, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {38cfb561-32e3-43cd-84b8-29f4fc897b84}, !- Handle
+  TH-2016-Edu-Daycare (through age 4), !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {f6278e0c-6fac-4355-bda7-baa23e2a9380}, !- Handle
+  TH-2016-Edu-Daycare sickroom, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {bf1ef6c5-4d10-4ca3-a782-19bee07a44ce}, !- Handle
+  TH-2016-Edu-Classroom (age 5-8), !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {7df09383-d297-4ff5-9ad5-42013351d789}, !- Handle
+  TH-2016-Edu-Classroom (age9 plus), !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {1c9175df-3987-432a-a300-c187b93c5e34}, !- Handle
+  TH-2016-Edu-Lecture classroom, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {44de88c4-9ecf-4497-b976-98f5fe8e15df}, !- Handle
+  TH-2016-Edu-Lecture hall, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {f393e170-f33e-4f71-8f9f-cb8e0dd05cb5}, !- Handle
+  TH-2016-Edu-Art classroom, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {bf5447d7-85f6-4abb-8b04-c7dafa6a860b}, !- Handle
+  TH-2016-Edu-Science laboratory, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {699bbd4d-af31-4223-9680-265db6bc78e2}, !- Handle
+  TH-2016-Edu-University/College laboratory, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {2a270b77-b438-4119-a1e5-01bbda832fdd}, !- Handle
+  TH-2016-Edu-Wood/Metal shop, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {6e4598d6-1174-4525-b04b-71cdd55c166e}, !- Handle
+  TH-2016-Edu-Computer lab, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {54b71a98-d757-4427-9ee7-885a75511204}, !- Handle
+  TH-2016-Edu-Media center, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {9d1e3a9d-f733-4534-9500-0913535bc81f}, !- Handle
+  TH-2016-Edu-Theater, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {b6073c2c-2a11-45ae-a160-a4c041b07025}, !- Handle
+  TH-2016-Edu-Multipurpose, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {d704a479-8a5b-4eff-bc17-0d5da1b06773}, !- Handle
+  TH-2016-Edu-Corridor, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {05214fc9-d1ee-459f-b1e0-1d30dc407504}, !- Handle
+  TH-2016-Edu-Conference, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {df4daf66-add2-4c09-86f7-23bc6872d122}, !- Handle
+  TH-2016-Edu-Office space, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {1766eda3-e1a8-4959-9741-fe255ab2c293}, !- Handle
+  TH-2016-Edu-,          !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {0d562696-88fa-47a9-b5aa-73ae3e2c7509}, !- Handle
+  TH-2016-Edu-Coffee station, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {ecf2faae-ae3b-4186-8aa4-8a0a93631e95}, !- Handle
+  TH-2016-Edu-Fast-food dining, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {c41b5400-d5dc-41a1-ab29-7d9ba1b982a4}, !- Handle
+  TH-2016-Office-,          !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {2b9cb3b2-fa6c-4e47-80db-af7dd8e1f626}, !- Handle
+  TH-2016-Office-Lobby, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {a082fa58-bda5-4194-94c3-2ffb5aaafe48}, !- Handle
+  TH-2016-Office-Storage, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {b72506a4-e5bd-4fc1-a20f-5cf25b714f95}, !- Handle
+  TH-2016-Office-Office space, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {2e66f31d-b403-45c8-8513-21c790ae894f}, !- Handle
+  TH-2016-Office-Reception area, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {b1c788d8-4d53-4c7f-9b3e-7773be839a65}, !- Handle
+  TH-2016-Office-Telephone/data entry, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {69a1669b-642f-40ea-8062-801f9ebfc4c9}, !- Handle
+  TH-2016-Office-Conference, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {5c7ea6f0-cabe-4db8-b10b-3ff527734588}, !- Handle
+  TH-2016-Office-Corridor, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {4de049ae-9db8-4920-aeec-323a661c0368}, !- Handle
+  EIT-2016-Thai Office- Electrical/Mechanical, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {2218bbdd-ff85-4d8f-a694-685f55c075a9}, !- Handle
+  EIT-2016-Thai Office-Restrooms, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {caa3e8a0-596c-447c-8f9a-416ffc08a4c5}, !- Handle
+  TH-2016-Office-Computer, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {f0ef3f96-dc4b-4c77-aa5f-e9007a118d1c}, !- Handle
+  TH-2016-Office-,          !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {a2161c92-f10f-42dc-8c6e-f19ba9247213}, !- Handle
+  TH-2016-Office-Coffee station, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {e6b6098b-5021-4af0-aabd-5118c8f4a0d8}, !- Handle
+  TH-2016-Office-Fast food dining, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {421e4f43-14a4-47b8-9b62-d4c9773b5dfb}, !- Handle
+  TH-2016-Con-Dwelling unit, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {4618e6f4-3f57-4067-b90c-016dfc4b9bc7}, !- Handle
+  TH-2016-Con-Corridor, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {53a2d697-d79d-4fb1-a40a-283265b28552}, !- Handle
+  TH-2016-Con-Lobby, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {1ff192fe-3833-4ec0-9344-7bc4dc15bd29}, !- Handle
+  TH-2016-Con-Office space, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {3ca2a99c-9254-44bc-8d90-90984a331b80}, !- Handle
+  TH-2016-Con-Conference, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {5443ebe2-5467-4a9e-bfac-1de9980ff74d}, !- Handle
+  TH-2016-Con-,          !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {eddf3ddc-060b-461f-b91b-44749c5912e1}, !- Handle
+  TH-2016-Con-Coffee station, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {7086d9cc-3389-4472-bcc7-9c0fd0e142a8}, !- Handle
+  TH-2016-Con-Fast food dining, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {ded5e376-32e0-4542-9294-c400dbc753d0}, !- Handle
+  TH-2016-Con-Coin-operated laundry, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {e0f8562d-2164-449f-8302-ebd48234a522}, !- Handle
+  TH-2016-Gym-Sport arena (play area), !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {729f65f4-4761-4d46-a7ca-496c7f4a1148}, !- Handle
+  TH-2016-Gym-Gym, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {09516f9e-5bfa-412d-8339-cf0f8d012b26}, !- Handle
+  TH-2016-Gym-Spectator areas, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {aadc5ba0-abd2-475f-a23a-abbf2cfdfd55}, !- Handle
+  TH-2016-Gym-Swimming (pool & deck), !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {44a03f43-66cb-4ad7-87a3-a8a5669869c3}, !- Handle
+  TH-2016-Gym-Disco/dance floors, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {24f2674b-f584-457f-afac-ab5348535012}, !- Handle
+  TH-2016-Gym-Health club/aerobics room, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {2b84ba06-70cd-43cf-b500-052334b79cd3}, !- Handle
+  TH-2016-Gym-Health club/weight room, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {0e9f4bdb-3be7-4116-b673-9c9e632d7f77}, !- Handle
+  TH-2016-Gym-Bowling alley (seating), !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {eaca321e-6a25-47d3-b660-7c32214419a4}, !- Handle
+  TH-2016-Gym-Game arcades, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {9716aa0b-fadb-478f-a98c-3d7bf85887d3}, !- Handle
+  TH-2016-Exh-Stages, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {6b7996d7-610a-4957-9372-87097e89ae1f}, !- Handle
+  TH-2016-Exh-Children's Museum, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {07f638d0-b423-4804-bbf1-bb774afd0c72}, !- Handle
+  TH-2016-Exh-Museum/Gallery, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {c616dd11-5fda-4246-aeec-8ca765932509}, !- Handle
+  TH-2016-Exh/Gym--Corridor, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {3ac93ac4-7c5c-4c2a-b6a4-c0074da43b05}, !- Handle
+  TH-2016-Exh/Gym-Office space, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {0ccc42d9-7d37-45ce-bb23-25b6d3a498b1}, !- Handle
+  TH-2016-Exh/Gym--Conference, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {a939738d-369f-4f43-8ec9-1299fb76a063}, !- Handle
+  TH-2016-Exh/Gym--Coffee station, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {7db36893-e7f7-4735-991b-f0417eb612fd}, !- Handle
+  TH-2016-Exh/Gym--Fast food dining, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {a64339f6-74b0-46c1-8b51-19ee33fa81ec}, !- Handle
+  TH-2016-Aud-Auditorium , !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {363fc34c-2a48-4f3d-b384-0ab2a9aad7dd}, !- Handle
+  TH-2016-Aud-Places of religious worship, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {46aaf6b7-4fb3-490e-87e5-def5462d6a28}, !- Handle
+  TH-2016-Aud-Courtroom, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {f22585dd-35c4-47d7-bf79-665ce6cf77c7}, !- Handle
+  TH-2016-Aud-Legislative chamber, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {13e67e8a-7e59-42ec-8b5a-1c52105b77d0}, !- Handle
+  TH-2016-Aud-Library, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {50363b20-4520-4754-afae-a8e502bb2a3c}, !- Handle
+  TH-2016-Aud-Lobby, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {f5d22ded-0e4d-40b0-8250-bf66c977c7c4}, !- Handle
+  TH-2016-Aud-Corridor, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {192eb449-c789-4313-9742-d217340a9777}, !- Handle
+  TH-2016-Aud-Office space, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {80c67c81-552a-4be5-aeb7-526025abe042}, !- Handle
+  TH-2016-Aud-Conference, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {ce200074-6e01-448a-a2b9-3a7bfbf3cb5c}, !- Handle
+  TH-2016-Aud-Coffee station, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {21a65d05-7192-4fd4-bf64-3bab9c3c748d}, !- Handle
+  TH-2016-Aud-Fast food dining, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {7e55a960-e1fd-4d50-ae4e-5a1482493c98}, !- Handle
+  TH-2016-Hotel-Bedroom/Living room, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {30184d5e-1da0-4c51-8171-15019141898f}, !- Handle
+  TH-2016-Hotel-Barracks sleep area, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {59efb1bb-e6f6-48c6-984f-c7c941a59bc8}, !- Handle
+  TH-2016-Hotel-Laundry, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {077747e7-04e5-49cd-9ad2-acd377fc1e74}, !- Handle
+  TH-2016-Hotel-Laundry in dwelling unit, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {57ef51d4-b140-4f66-b0fe-47b80eb02010}, !- Handle
+  TH-2016-Hotel-Lobby, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {c2718188-f223-4e66-9aa5-ae4b7f01691d}, !- Handle
+  TH-2016-Hotel-Multipurpose, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {08833655-483a-4a71-9a1c-e9c5bf33b7ea}, !- Handle
+  TH-2016-Hotel-Corridor, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {4c0480f7-0970-4a33-890a-4789cfb038d4}, !- Handle
+  TH-2016-Hotel-Office space, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {ee3eb153-6278-451c-bf88-cce22aed9123}, !- Handle
+  TH-2016-Hotel-Conference, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {5c3bdf30-1f91-4bf7-93b7-4050e7c53fc4}, !- Handle
+  TH-2016-Hotel-Auditorium, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {ec16dcc3-b2a9-4b57-845f-35c3a8b06ab3}, !- Handle
+  TH-2016-Hotel-Restaurant-Dining, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {63f00d10-8f7a-4de0-90be-dc9db9ee9d6b}, !- Handle
+  TH-2016-Hotel-Cafeteria/Fast-food dining, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {f4a4f6eb-1092-40f6-b84b-acde73f70184}, !- Handle
+  TH-2016-Hotel-Bars/Lounge, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {ccdf4beb-437e-4774-b5b0-6b331dcd3d70}, !- Handle
+  TH-2016-Hotel-Kitchen, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {96ebb22d-c866-4a76-b237-a8e887c37b18}, !- Handle
+  TH-2016-Ent-Restaurant-Dining , !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {ea61bab0-eb58-4564-ae3d-f3ebd18b76a1}, !- Handle
+  TH-2016-Ent-Cafeteria/Fast-food dining, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {e9810685-318e-487d-a0c1-bf720f102951}, !- Handle
+  TH-2016-Ent-Bars/Lounge, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {d1097d08-9a99-4ae2-9a1e-047a548062c6}, !- Handle
+  TH-2016-Ent-Kitchen, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {0c3e891a-c3fe-49d3-9739-1ba17e3b2599}, !- Handle
+  TH-2016-Ent-Corridor, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {c806e1e6-3373-4eef-ba36-ca1f07c51c62}, !- Handle
+  TH-2016-Ent-Lobby, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {ae611fd1-59cf-4e7d-b09a-6b61cb4746df}, !- Handle
+  TH-2016-Ent-Office space, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {bc5df1d4-15b0-4f39-aa88-cf9c496382e2}, !- Handle
+  TH-2016-Ent-Conference, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {c8d598dc-8840-414b-bb17-b03248f8b47e}, !- Handle
+  TH-2016-Dep-Sales , !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {abc26e2e-b8ad-4d46-96b6-28608e7cdd88}, !- Handle
+  TH-2016-Dep-Mall common area, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {549224c4-f39d-48f5-ba60-27aee828f62b}, !- Handle
+  TH-2016-Dep-Barbershop, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {97516c17-6787-4e8d-bb10-bbbf720b8369}, !- Handle
+  TH-2016-Dep-Beauty salon, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {665c9c43-adba-4417-bd54-e6b0b211222e}, !- Handle
+  TH-2016-Dep-Pet shop, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {4bad2205-4ed3-4939-be66-6343641b2c60}, !- Handle
+  TH-2016-Dep-Supermarket, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {0e61f212-0869-4e44-9e6b-ce567543bf81}, !- Handle
+  TH-2016-Dep-Coin-operated laudries, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {bc975003-f6cc-4f3d-86cb-19d3dee0b081}, !- Handle
+  TH-2016-Dep-Shipping, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {162f1ba8-9f72-4aaa-b641-0ff12efab579}, !- Handle
+  TH-2016-Dep-Warehouse, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {06896273-bbfb-4336-a998-eb6268ed881f}, !- Handle
+  TH-2016-Dep-Photo studio, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {9e69cc40-01f7-465c-9091-f5628ddbc7bd}, !- Handle
+  TH-2016-Dep-Refrigeration area, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {54854e76-be0a-4607-802a-7ef3ac87743d}, !- Handle
+  TH-2016-Dep-Bank vaults, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {e909b604-d129-4dbd-9ffe-614a15186395}, !- Handle
+  TH-2016-Dep-Bank lobby, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {e3a7ce36-5d2d-4024-a06d-cb88ebd1be3d}, !- Handle
+  TH-2016-Dep-Corridor, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {0337f604-3913-4255-abba-7a465fd7e463}, !- Handle
+  TH-2016-Dep-Office space, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {ee955fdc-f9a6-4f80-8314-73c5294d217f}, !- Handle
+  TH-2016-Dep-Conference, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {7dcc0219-11e7-429c-993a-5f0698ecfa64}, !- Handle
+  TH-2016-Dep-Restaurant-Dining, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {3fa40862-47af-4626-818d-aceec75320c2}, !- Handle
+  TH-2016-Dep-Coffee station, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {8f61c763-2075-4459-ae73-091fc9b8ec93}, !- Handle
+  TH-2016-Dep-Cafeteria/Fast-food dining, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {652e7b13-14ee-445f-b0b0-3a9cff0bff55}, !- Handle
+  TH-2016-Dep-Bars/Lounge, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
+OS:SpaceType,
+  {5f7f886b-f620-4e66-819f-b4fd971217ee}, !- Handle
+  TH-2016-Dep-Kitchen, !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Building Type
+  ;                                       !- Standards Space Type
+
