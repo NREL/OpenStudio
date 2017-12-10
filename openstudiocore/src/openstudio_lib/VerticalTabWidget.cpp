@@ -79,7 +79,7 @@ void VerticalTabWidget::addTabButton(int id,
 {
   auto button = new QPushButton(m_tabBar);
 
-  button->setFixedSize(QSize(39, 42));
+  button->setFixedSize(QSize(36, 39));
 
   button->setToolTip(toolTip);
 

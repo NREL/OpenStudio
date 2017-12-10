@@ -185,7 +185,7 @@ namespace openstudio {
     bool isConnected;
 
     m_verticalId = 0;
-    m_subTabIds = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    m_subTabIds = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     // Make sure that the vector is the same size as the number of tabs
     OS_ASSERT(m_subTabIds.size() == static_cast<unsigned>(RESULTS_SUMMARY + 1));
 
@@ -716,7 +716,7 @@ namespace openstudio {
 
       break;
 
-    case BUILDING_SUMMARY:
+    //case BUILDING_SUMMARY:
       //******************************************************************************************************
       //
       //// Summary
@@ -728,7 +728,7 @@ namespace openstudio {
       //
       //******************************************************************************************************
 
-      break;
+      //break;
 
     case OUTPUT_VARIABLES:
       // Variables
@@ -1228,9 +1228,9 @@ namespace openstudio {
         qobject_cast<HVACSystemsTabController *>(m_mainTabController.get())->clearSceneSelection();
       }
       break;
-    case BUILDING_SUMMARY:
-      m_mainRightColumnController->configureForBuildingSummarySubTab(m_subTabId);
-      break;
+    //case BUILDING_SUMMARY:
+    //  m_mainRightColumnController->configureForBuildingSummarySubTab(m_subTabId);
+    //  break;
     case OUTPUT_VARIABLES:
       m_mainRightColumnController->configureForOutputVariablesSubTab(m_subTabId);
       break;
