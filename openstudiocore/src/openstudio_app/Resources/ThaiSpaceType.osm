@@ -93,90 +93,90 @@ OS:LifeCycleCost:Parameters,
 
 OS:SpaceType,
   {48168c65-7ad0-4bff-ace5-85052681f96d}, !- Handle
-  TH-2016-Hospital-Patient Room, !- Name
+  TH-2016-Hospital-Patient Room,          !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {99179932-1d20-484c-a712-bf63f81a48cb}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {96cdffd1-2ca9-41c7-affa-6da25e2d45b1}, !- Handle
-  TH-2016-Hospital-Operating Room, !- Name
+  TH-2016-Hospital-Operating Room,        !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {1dcf8579-538d-45c3-8b42-e1e7e2027520}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {1bc08439-e100-45a3-926a-ba1a36377e72}, !- Handle
-  TH-2016-Hospital-Emergency Room, !- Name
+  TH-2016-Hospital-Emergency Room,        !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {f33ac7cb-5f9e-4438-921c-95b9f395fed8}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {50a2e897-117b-42a1-90f9-7a0252f2a4dc}, !- Handle
-  TH-2016-Hospital-ICU, !- Name
+  TH-2016-Hospital-ICU,                   !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {99a4c217-e2e0-4101-b362-9c5f42ce8a99}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {427f2f4e-dfc9-4026-bf7d-b9558e6e1876}, !- Handle
-  TH-2016-Hospital-Pharmacy, !- Name
+  TH-2016-Hospital-Pharmacy,              !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {defea093-ea87-4504-9bb5-aea2e307e465}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {d1dde38b-f0e0-4988-9c52-3f491a7ae6f4}, !- Handle
-  TH-2016-Hospital-Conference, !- Name
+  TH-2016-Hospital-Conference,            !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {190695f7-fe17-4518-bf0d-f60fc5283738}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {c75a4019-b511-4248-b281-dc2c06ae49be}, !- Handle
-  TH-2016-Hospital-Corridor, !- Name
+  TH-2016-Hospital-Corridor,              !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {41138c41-99ce-47b1-945d-5e4ccf1f0a4b}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {4a3f6478-bd06-4fc9-a566-50143984fa27}, !- Handle
-  TH-2016-Hospital-Office space, !- Name
+  TH-2016-Hospital-Office space,          !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {1f0eb425-d1b9-41f3-93b7-33967bba507f}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {74e4442c-56fe-42ac-8ec2-19ab4aef2529}, !- Handle
-  TH-2016-Hospital-Restaurant-Dining, !- Name
+  TH-2016-Hospital-Restaurant-Dining,     !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {ff315101-3020-4c56-9094-b7eb0566cfda}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
@@ -186,107 +186,107 @@ OS:SpaceType,
   TH-2016-Hospital-Cafeteria/Fast-food dining, !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {ddf0e79d-1f98-493d-8b2f-405afe80def4}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {936c1ed5-a292-4a89-af7c-16ef3cd91450}, !- Handle
-  TH-2016-Hospital-Kitchen, !- Name
+  TH-2016-Hospital-Kitchen,               !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {64ba92b2-6621-4588-bc12-a014a675757b}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {b23fa715-cb49-4daf-80fc-b85e8ade255f}, !- Handle
-  TH-2016-Hospital-Laundry, !- Name
+  TH-2016-Hospital-Laundry,               !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {4cf686bd-41b4-4571-b82d-43223799d71a}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {38cfb561-32e3-43cd-84b8-29f4fc897b84}, !- Handle
-  TH-2016-Edu-Daycare (through age 4), !- Name
+  TH-2016-Edu-Daycare (through age 4),    !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {be11773c-162f-4bc5-b670-d4a9c6b6c286}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {f6278e0c-6fac-4355-bda7-baa23e2a9380}, !- Handle
-  TH-2016-Edu-Daycare sickroom, !- Name
+  TH-2016-Edu-Daycare sickroom,           !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {1666758a-e929-4841-b6c4-a2545630f222}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {bf1ef6c5-4d10-4ca3-a782-19bee07a44ce}, !- Handle
-  TH-2016-Edu-Classroom (age 5-8), !- Name
+  TH-2016-Edu-Classroom (age 5-8),        !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {31ddd522-c1d3-4d8a-8724-145e20a311eb}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {7df09383-d297-4ff5-9ad5-42013351d789}, !- Handle
-  TH-2016-Edu-Classroom (age9 plus), !- Name
+  TH-2016-Edu-Classroom (age9 plus),      !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {f1a9947d-f0f0-4a5c-8481-8978d563a12f}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {1c9175df-3987-432a-a300-c187b93c5e34}, !- Handle
-  TH-2016-Edu-Lecture classroom, !- Name
+  TH-2016-Edu-Lecture classroom,          !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {206b8684-27ec-496c-8585-0ccb285eb8ea}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {44de88c4-9ecf-4497-b976-98f5fe8e15df}, !- Handle
-  TH-2016-Edu-Lecture hall, !- Name
+  TH-2016-Edu-Lecture hall,               !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {92f36832-b265-4b3b-bbb2-37de476b4e02}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {f393e170-f33e-4f71-8f9f-cb8e0dd05cb5}, !- Handle
-  TH-2016-Edu-Art classroom, !- Name
+  TH-2016-Edu-Art classroom,              !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {ee4baab6-4a47-471a-a772-4758f315753e}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {bf5447d7-85f6-4abb-8b04-c7dafa6a860b}, !- Handle
-  TH-2016-Edu-Science laboratory, !- Name
+  TH-2016-Edu-Science laboratory,         !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {9847396a-93a3-4df0-adef-f96e1e6ae435}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
@@ -296,197 +296,197 @@ OS:SpaceType,
   TH-2016-Edu-University/College laboratory, !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {e40091a0-fb3d-4d40-8d2e-9d17a14bd15a}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {2a270b77-b438-4119-a1e5-01bbda832fdd}, !- Handle
-  TH-2016-Edu-Wood/Metal shop, !- Name
+  TH-2016-Edu-Wood/Metal shop,            !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {2e5ab5f6-1611-41ae-855f-6643427d87eb}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {6e4598d6-1174-4525-b04b-71cdd55c166e}, !- Handle
-  TH-2016-Edu-Computer lab, !- Name
+  TH-2016-Edu-Computer lab,               !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {2c634580-a2ef-4a1f-a69e-d34370fa2c98}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {54b71a98-d757-4427-9ee7-885a75511204}, !- Handle
-  TH-2016-Edu-Media center, !- Name
+  TH-2016-Edu-Media center,               !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {d911a548-7ceb-4e36-97c0-8797bc94127e}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {9d1e3a9d-f733-4534-9500-0913535bc81f}, !- Handle
-  TH-2016-Edu-Theater, !- Name
+  TH-2016-Edu-Theater,                    !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {9ce78e81-57c7-40e3-9cb1-e037a7b2d692}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {b6073c2c-2a11-45ae-a160-a4c041b07025}, !- Handle
-  TH-2016-Edu-Multipurpose, !- Name
+  TH-2016-Edu-Multipurpose,               !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {9a012d42-a254-4d04-b5e7-e1f00eed7ce9}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {d704a479-8a5b-4eff-bc17-0d5da1b06773}, !- Handle
-  TH-2016-Edu-Corridor, !- Name
+  TH-2016-Edu-Corridor,                   !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {b4a1f084-a944-4b25-868c-fe73d3f5136b}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {05214fc9-d1ee-459f-b1e0-1d30dc407504}, !- Handle
-  TH-2016-Edu-Conference, !- Name
+  TH-2016-Edu-Conference,                 !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {1f257a70-7cad-4ab8-b354-e64c84f5c829}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {df4daf66-add2-4c09-86f7-23bc6872d122}, !- Handle
-  TH-2016-Edu-Office space, !- Name
+  TH-2016-Edu-Office space,               !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {a40918cf-8b28-4353-a962-b3c6e7efa238}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {1766eda3-e1a8-4959-9741-fe255ab2c293}, !- Handle
-  TH-2016-Edu-,          !- Name
+  TH-2016-Edu-,                           !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {3ba19104-5372-4241-827d-bb676cc98d40}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {0d562696-88fa-47a9-b5aa-73ae3e2c7509}, !- Handle
-  TH-2016-Edu-Coffee station, !- Name
+  TH-2016-Edu-Coffee station,             !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {c042145e-8cb1-412c-b407-3a14eda6e6aa}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {ecf2faae-ae3b-4186-8aa4-8a0a93631e95}, !- Handle
-  TH-2016-Edu-Fast-food dining, !- Name
+  TH-2016-Edu-Fast-food dining,           !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {c5d79ff3-c998-4551-8681-6783c9eeaaed}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {c41b5400-d5dc-41a1-ab29-7d9ba1b982a4}, !- Handle
-  TH-2016-Office-,          !- Name
+  TH-2016-Office-,                        !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {2108fae8-6c0f-47b3-8366-e4b5e2bbc7f6}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {2b9cb3b2-fa6c-4e47-80db-af7dd8e1f626}, !- Handle
-  TH-2016-Office-Lobby, !- Name
+  TH-2016-Office-Lobby,                   !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {16e0ef66-1309-41f8-9938-0f87f61a12f9}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {a082fa58-bda5-4194-94c3-2ffb5aaafe48}, !- Handle
-  TH-2016-Office-Storage, !- Name
+  TH-2016-Office-Storage,                 !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {bf106899-3013-4023-b299-ac0046aa3fba}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {b72506a4-e5bd-4fc1-a20f-5cf25b714f95}, !- Handle
-  TH-2016-Office-Office space, !- Name
+  TH-2016-Office-Office space,            !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {23fac95d-56b8-4ff2-99a2-cfd6033c462c}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {2e66f31d-b403-45c8-8513-21c790ae894f}, !- Handle
-  TH-2016-Office-Reception area, !- Name
+  TH-2016-Office-Reception area,          !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {c5c98e90-0711-471e-b187-5922cff521c2}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {b1c788d8-4d53-4c7f-9b3e-7773be839a65}, !- Handle
-  TH-2016-Office-Telephone/data entry, !- Name
+  TH-2016-Office-Telephone/data entry,    !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {b28cb2eb-df91-4943-9616-8951290acb72}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {69a1669b-642f-40ea-8062-801f9ebfc4c9}, !- Handle
-  TH-2016-Office-Conference, !- Name
+  TH-2016-Office-Conference,              !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {938794c3-8474-49a9-aa17-52d8124bc358}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {5c7ea6f0-cabe-4db8-b10b-3ff527734588}, !- Handle
-  TH-2016-Office-Corridor, !- Name
+  TH-2016-Office-Corridor,                !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {6a167552-63e8-4b41-8d5b-1c2844eca0e0}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
@@ -496,327 +496,327 @@ OS:SpaceType,
   EIT-2016-Thai Office- Electrical/Mechanical, !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {ae2c0323-99ae-420b-b0e0-735bb15a2bf6}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {2218bbdd-ff85-4d8f-a694-685f55c075a9}, !- Handle
-  EIT-2016-Thai Office-Restrooms, !- Name
+  EIT-2016-Thai Office-Restrooms,         !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {2ba86ab1-56f8-4070-af7d-9f2860717455}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {caa3e8a0-596c-447c-8f9a-416ffc08a4c5}, !- Handle
-  TH-2016-Office-Computer, !- Name
+  TH-2016-Office-Computer,                !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {782dfa02-f0d1-4485-8890-707a9f24b237}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {f0ef3f96-dc4b-4c77-aa5f-e9007a118d1c}, !- Handle
-  TH-2016-Office-,          !- Name
+  TH-2016-Office- 1,                      !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {fe134304-bdbd-4727-9e50-c0f46dd2bc8e}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {a2161c92-f10f-42dc-8c6e-f19ba9247213}, !- Handle
-  TH-2016-Office-Coffee station, !- Name
+  TH-2016-Office-Coffee station,          !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {8f670a5c-4236-43df-86ae-f3d7d738b274}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {e6b6098b-5021-4af0-aabd-5118c8f4a0d8}, !- Handle
-  TH-2016-Office-Fast food dining, !- Name
+  TH-2016-Office-Fast food dining,        !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {795b86a2-f893-4798-9788-f92cd6167970}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {421e4f43-14a4-47b8-9b62-d4c9773b5dfb}, !- Handle
-  TH-2016-Con-Dwelling unit, !- Name
+  TH-2016-Con-Dwelling unit,              !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {a77a54eb-db2c-4833-98cc-f9d5f5285133}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {4618e6f4-3f57-4067-b90c-016dfc4b9bc7}, !- Handle
-  TH-2016-Con-Corridor, !- Name
+  TH-2016-Con-Corridor,                   !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {015a33cc-9df8-4d5e-ad8b-a56440120002}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {53a2d697-d79d-4fb1-a40a-283265b28552}, !- Handle
-  TH-2016-Con-Lobby, !- Name
+  TH-2016-Con-Lobby,                      !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {7ba97284-920b-4aa4-bdbc-3f8c9678effb}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {1ff192fe-3833-4ec0-9344-7bc4dc15bd29}, !- Handle
-  TH-2016-Con-Office space, !- Name
+  TH-2016-Con-Office space,               !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {c43d8ef6-4ae2-4197-a1a9-afbf545a4719}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {3ca2a99c-9254-44bc-8d90-90984a331b80}, !- Handle
-  TH-2016-Con-Conference, !- Name
+  TH-2016-Con-Conference,                 !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {21670180-e53a-4d72-98f2-2bf2ef2556f1}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {5443ebe2-5467-4a9e-bfac-1de9980ff74d}, !- Handle
-  TH-2016-Con-,          !- Name
+  TH-2016-Con-,                           !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {9879ee78-b07b-44e8-8040-18911037a4b9}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {eddf3ddc-060b-461f-b91b-44749c5912e1}, !- Handle
-  TH-2016-Con-Coffee station, !- Name
+  TH-2016-Con-Coffee station,             !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {ad0d6d1c-002f-4b63-9bce-8415a44fcf0d}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {7086d9cc-3389-4472-bcc7-9c0fd0e142a8}, !- Handle
-  TH-2016-Con-Fast food dining, !- Name
+  TH-2016-Con-Fast food dining,           !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {f67b8422-38a9-42f4-a3cd-b0d2fb5c9a00}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {ded5e376-32e0-4542-9294-c400dbc753d0}, !- Handle
-  TH-2016-Con-Coin-operated laundry, !- Name
+  TH-2016-Con-Coin-operated laundry,      !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {a8fa7574-7a1a-4983-ba8c-d11a7dc8bd84}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {e0f8562d-2164-449f-8302-ebd48234a522}, !- Handle
-  TH-2016-Gym-Sport arena (play area), !- Name
+  TH-2016-Gym-Sport arena (play area),    !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {c1171200-b122-4444-bf91-e88958bb5adc}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {729f65f4-4761-4d46-a7ca-496c7f4a1148}, !- Handle
-  TH-2016-Gym-Gym, !- Name
+  TH-2016-Gym-Gym,                        !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {d35b443c-2f10-4eef-82f6-1cb1524d2e1a}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {09516f9e-5bfa-412d-8339-cf0f8d012b26}, !- Handle
-  TH-2016-Gym-Spectator areas, !- Name
+  TH-2016-Gym-Spectator areas,            !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {dd813eba-5e12-478e-8ef7-91b402fa9cc1}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {aadc5ba0-abd2-475f-a23a-abbf2cfdfd55}, !- Handle
-  TH-2016-Gym-Swimming (pool & deck), !- Name
+  TH-2016-Gym-Swimming (pool & deck),     !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {5d8dbad8-e73b-40f6-aaec-3abdf9085772}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {44a03f43-66cb-4ad7-87a3-a8a5669869c3}, !- Handle
-  TH-2016-Gym-Disco/dance floors, !- Name
+  TH-2016-Gym-Disco/dance floors,         !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {b682c55d-8b98-4239-9137-7ba7f15b7773}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {24f2674b-f584-457f-afac-ab5348535012}, !- Handle
-  TH-2016-Gym-Health club/aerobics room, !- Name
+  TH-2016-Gym-Health club/aerobics room,  !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {79f42781-40fb-492b-99c4-8a4f0cec38ea}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {2b84ba06-70cd-43cf-b500-052334b79cd3}, !- Handle
-  TH-2016-Gym-Health club/weight room, !- Name
+  TH-2016-Gym-Health club/weight room,    !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {b4161926-c08e-4ef0-852d-6626ade6b096}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {0e9f4bdb-3be7-4116-b673-9c9e632d7f77}, !- Handle
-  TH-2016-Gym-Bowling alley (seating), !- Name
+  TH-2016-Gym-Bowling alley (seating),    !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {f672fe2e-2ea1-4502-a55d-849deabf346b}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {eaca321e-6a25-47d3-b660-7c32214419a4}, !- Handle
-  TH-2016-Gym-Game arcades, !- Name
+  TH-2016-Gym-Game arcades,               !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {4617f189-7bbd-4936-a98a-f1809b8b0f3a}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {9716aa0b-fadb-478f-a98c-3d7bf85887d3}, !- Handle
-  TH-2016-Exh-Stages, !- Name
+  TH-2016-Exh-Stages,                     !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {65b4d4b7-b85f-453f-9c70-46000156dc87}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {6b7996d7-610a-4957-9372-87097e89ae1f}, !- Handle
-  TH-2016-Exh-Children's Museum, !- Name
+  TH-2016-Exh-Children's Museum,          !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {91ddb396-3a1b-4d79-bd36-e2227c08e944}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {07f638d0-b423-4804-bbf1-bb774afd0c72}, !- Handle
-  TH-2016-Exh-Museum/Gallery, !- Name
+  TH-2016-Exh-Museum/Gallery,             !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {38e63787-7646-47a2-81e6-dae9e6dc08b8}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {c616dd11-5fda-4246-aeec-8ca765932509}, !- Handle
-  TH-2016-Exh/Gym--Corridor, !- Name
+  TH-2016-Exh/Gym--Corridor,              !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {caa54cc8-69fa-4eb9-bbf4-58fdf88a5ee5}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {3ac93ac4-7c5c-4c2a-b6a4-c0074da43b05}, !- Handle
-  TH-2016-Exh/Gym-Office space, !- Name
+  TH-2016-Exh/Gym-Office space,           !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {a2e34ebb-9f98-4909-a4eb-ef4e203381d9}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {0ccc42d9-7d37-45ce-bb23-25b6d3a498b1}, !- Handle
-  TH-2016-Exh/Gym--Conference, !- Name
+  TH-2016-Exh/Gym--Conference,            !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {bf25ade7-8515-4d2b-a9f4-7006bd1e99e4}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {a939738d-369f-4f43-8ec9-1299fb76a063}, !- Handle
-  TH-2016-Exh/Gym--Coffee station, !- Name
+  TH-2016-Exh/Gym--Coffee station,        !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {03c86cc7-8ec2-4a06-872a-5dbc2fdcdd3f}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {7db36893-e7f7-4735-991b-f0417eb612fd}, !- Handle
-  TH-2016-Exh/Gym--Fast food dining, !- Name
+  TH-2016-Exh/Gym--Fast food dining,      !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {db5863fb-61af-4873-9440-11bd8e94c572}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {a64339f6-74b0-46c1-8b51-19ee33fa81ec}, !- Handle
-  TH-2016-Aud-Auditorium , !- Name
+  TH-2016-Aud-Auditorium,                 !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {76760b40-77d8-41a9-92f9-c9df7e8422c2}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
@@ -826,127 +826,127 @@ OS:SpaceType,
   TH-2016-Aud-Places of religious worship, !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {3464c066-cb89-4341-b7b8-79fc7b4fdcd8}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {46aaf6b7-4fb3-490e-87e5-def5462d6a28}, !- Handle
-  TH-2016-Aud-Courtroom, !- Name
+  TH-2016-Aud-Courtroom,                  !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {589b244d-4238-4dd0-a1b2-8c7083634cf6}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {f22585dd-35c4-47d7-bf79-665ce6cf77c7}, !- Handle
-  TH-2016-Aud-Legislative chamber, !- Name
+  TH-2016-Aud-Legislative chamber,        !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {13d790d5-54e2-4a2f-96b4-8d34d3d886d5}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {13e67e8a-7e59-42ec-8b5a-1c52105b77d0}, !- Handle
-  TH-2016-Aud-Library, !- Name
+  TH-2016-Aud-Library,                    !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {44c66b77-7a4f-4de5-bf12-2840c1460448}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {50363b20-4520-4754-afae-a8e502bb2a3c}, !- Handle
-  TH-2016-Aud-Lobby, !- Name
+  TH-2016-Aud-Lobby,                      !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {9f95a858-057a-4d7a-97f6-c30e52465f13}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {f5d22ded-0e4d-40b0-8250-bf66c977c7c4}, !- Handle
-  TH-2016-Aud-Corridor, !- Name
+  TH-2016-Aud-Corridor,                   !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {1a405bb8-3894-4c67-a7f1-119632c8015f}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {192eb449-c789-4313-9742-d217340a9777}, !- Handle
-  TH-2016-Aud-Office space, !- Name
+  TH-2016-Aud-Office space,               !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {879089ac-9af2-43a2-b8a9-5ec863b2fdcd}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {80c67c81-552a-4be5-aeb7-526025abe042}, !- Handle
-  TH-2016-Aud-Conference, !- Name
+  TH-2016-Aud-Conference,                 !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {6eeb8200-31c3-41a4-9a61-deaeef456784}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {ce200074-6e01-448a-a2b9-3a7bfbf3cb5c}, !- Handle
-  TH-2016-Aud-Coffee station, !- Name
+  TH-2016-Aud-Coffee station,             !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {ab9abc88-a861-4f09-a416-a2ee4d728053}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {21a65d05-7192-4fd4-bf64-3bab9c3c748d}, !- Handle
-  TH-2016-Aud-Fast food dining, !- Name
+  TH-2016-Aud-Fast food dining,           !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {f07fd548-047e-4e72-9c49-e304d92c6574}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {7e55a960-e1fd-4d50-ae4e-5a1482493c98}, !- Handle
-  TH-2016-Hotel-Bedroom/Living room, !- Name
+  TH-2016-Hotel-Bedroom/Living room,      !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {58ad466f-6940-4513-afb1-82f0416c9a09}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {30184d5e-1da0-4c51-8171-15019141898f}, !- Handle
-  TH-2016-Hotel-Barracks sleep area, !- Name
+  TH-2016-Hotel-Barracks sleep area,      !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {cdae9f0a-8ee1-4cfd-a2dd-1dd17ee83ea2}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {59efb1bb-e6f6-48c6-984f-c7c941a59bc8}, !- Handle
-  TH-2016-Hotel-Laundry, !- Name
+  TH-2016-Hotel-Laundry,                  !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {aebef6c5-12bf-491a-824c-8ac6b5f20709}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
@@ -956,77 +956,77 @@ OS:SpaceType,
   TH-2016-Hotel-Laundry in dwelling unit, !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {1380b959-58ec-4bdf-b6ae-af5b451f2aff}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {57ef51d4-b140-4f66-b0fe-47b80eb02010}, !- Handle
-  TH-2016-Hotel-Lobby, !- Name
+  TH-2016-Hotel-Lobby,                    !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {44e8e90a-85e6-4410-b1fc-b8ca83db5ca3}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {c2718188-f223-4e66-9aa5-ae4b7f01691d}, !- Handle
-  TH-2016-Hotel-Multipurpose, !- Name
+  TH-2016-Hotel-Multipurpose,             !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {32134d47-d94d-4cb1-94c3-778f7dfd51e6}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {08833655-483a-4a71-9a1c-e9c5bf33b7ea}, !- Handle
-  TH-2016-Hotel-Corridor, !- Name
+  TH-2016-Hotel-Corridor,                 !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {2758213b-8092-493e-b06c-5760df2856f6}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {4c0480f7-0970-4a33-890a-4789cfb038d4}, !- Handle
-  TH-2016-Hotel-Office space, !- Name
+  TH-2016-Hotel-Office space,             !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {d8234665-7b6e-4c3c-bc3f-bdd1df14966e}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {ee3eb153-6278-451c-bf88-cce22aed9123}, !- Handle
-  TH-2016-Hotel-Conference, !- Name
+  TH-2016-Hotel-Conference,               !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {af72adb6-eab6-4942-aba2-bb78731edc91}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {5c3bdf30-1f91-4bf7-93b7-4050e7c53fc4}, !- Handle
-  TH-2016-Hotel-Auditorium, !- Name
+  TH-2016-Hotel-Auditorium,               !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {ba711ca9-4b14-4371-b976-923418c7b50d}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {ec16dcc3-b2a9-4b57-845f-35c3a8b06ab3}, !- Handle
-  TH-2016-Hotel-Restaurant-Dining, !- Name
+  TH-2016-Hotel-Restaurant-Dining,        !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {eec17d04-a39d-46be-b161-e9a4a31616db}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
@@ -1036,37 +1036,37 @@ OS:SpaceType,
   TH-2016-Hotel-Cafeteria/Fast-food dining, !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {6fec865a-85b7-4d4c-90c3-5ae823d4283b}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {f4a4f6eb-1092-40f6-b84b-acde73f70184}, !- Handle
-  TH-2016-Hotel-Bars/Lounge, !- Name
+  TH-2016-Hotel-Bars/Lounge,              !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {a74acf84-451a-45a6-84ca-b41a0c7a7248}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {ccdf4beb-437e-4774-b5b0-6b331dcd3d70}, !- Handle
-  TH-2016-Hotel-Kitchen, !- Name
+  TH-2016-Hotel-Kitchen,                  !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {6208f883-b838-4adc-bef5-3ca5d8116c95}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {96ebb22d-c866-4a76-b237-a8e887c37b18}, !- Handle
-  TH-2016-Ent-Restaurant-Dining , !- Name
+  TH-2016-Ent-Restaurant-Dining,          !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {b40a06f9-0e33-4712-a314-6dd4ef12a74a}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
@@ -1076,247 +1076,247 @@ OS:SpaceType,
   TH-2016-Ent-Cafeteria/Fast-food dining, !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {fe4f0675-379e-47bb-bf85-06087368e377}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {e9810685-318e-487d-a0c1-bf720f102951}, !- Handle
-  TH-2016-Ent-Bars/Lounge, !- Name
+  TH-2016-Ent-Bars/Lounge,                !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {c295f5dc-21d1-44bc-a3d4-66c357082d51}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {d1097d08-9a99-4ae2-9a1e-047a548062c6}, !- Handle
-  TH-2016-Ent-Kitchen, !- Name
+  TH-2016-Ent-Kitchen,                    !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {9fd6fcbc-141b-4eda-8603-97cf40c580e2}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {0c3e891a-c3fe-49d3-9739-1ba17e3b2599}, !- Handle
-  TH-2016-Ent-Corridor, !- Name
+  TH-2016-Ent-Corridor,                   !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {8d7da23d-c5f8-452f-a590-823ed2c8144c}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {c806e1e6-3373-4eef-ba36-ca1f07c51c62}, !- Handle
-  TH-2016-Ent-Lobby, !- Name
+  TH-2016-Ent-Lobby,                      !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {4773df05-c33e-46ff-9c8e-2873c22b841f}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {ae611fd1-59cf-4e7d-b09a-6b61cb4746df}, !- Handle
-  TH-2016-Ent-Office space, !- Name
+  TH-2016-Ent-Office space,               !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {7e211654-6759-4038-a786-54e4b02cdae7}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {bc5df1d4-15b0-4f39-aa88-cf9c496382e2}, !- Handle
-  TH-2016-Ent-Conference, !- Name
+  TH-2016-Ent-Conference,                 !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {e85b4246-415f-44bc-b10f-02417a173a1c}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {c8d598dc-8840-414b-bb17-b03248f8b47e}, !- Handle
-  TH-2016-Dep-Sales , !- Name
+  TH-2016-Dep-Sales,                      !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {60433bed-87f4-48fb-b4ea-aadfa67d5e22}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {abc26e2e-b8ad-4d46-96b6-28608e7cdd88}, !- Handle
-  TH-2016-Dep-Mall common area, !- Name
+  TH-2016-Dep-Mall common area,           !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {e5a2f5d5-9343-4e60-8e7f-99a98ca68eca}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {549224c4-f39d-48f5-ba60-27aee828f62b}, !- Handle
-  TH-2016-Dep-Barbershop, !- Name
+  TH-2016-Dep-Barbershop,                 !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {d4b78736-6cb2-4824-979d-95b86d063840}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {97516c17-6787-4e8d-bb10-bbbf720b8369}, !- Handle
-  TH-2016-Dep-Beauty salon, !- Name
+  TH-2016-Dep-Beauty salon,               !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {0c0647e5-207a-4821-998f-7a042c92d918}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {665c9c43-adba-4417-bd54-e6b0b211222e}, !- Handle
-  TH-2016-Dep-Pet shop, !- Name
+  TH-2016-Dep-Pet shop,                   !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {e5a8d3e5-defd-4cbf-b660-69d43121eee9}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {4bad2205-4ed3-4939-be66-6343641b2c60}, !- Handle
-  TH-2016-Dep-Supermarket, !- Name
+  TH-2016-Dep-Supermarket,                !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {30da5335-d2eb-4de6-b9c2-fe1d9f41530c}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {0e61f212-0869-4e44-9e6b-ce567543bf81}, !- Handle
-  TH-2016-Dep-Coin-operated laudries, !- Name
+  TH-2016-Dep-Coin-operated laudries,     !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {4cb89eee-5fd2-4ba5-b800-ec2eb9a6d558}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {bc975003-f6cc-4f3d-86cb-19d3dee0b081}, !- Handle
-  TH-2016-Dep-Shipping, !- Name
+  TH-2016-Dep-Shipping,                   !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {84e3cc37-75b7-436b-8e13-b7915f2aa329}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {162f1ba8-9f72-4aaa-b641-0ff12efab579}, !- Handle
-  TH-2016-Dep-Warehouse, !- Name
+  TH-2016-Dep-Warehouse,                  !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {c8801a45-241e-46e4-9125-47b9a9507e74}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {06896273-bbfb-4336-a998-eb6268ed881f}, !- Handle
-  TH-2016-Dep-Photo studio, !- Name
+  TH-2016-Dep-Photo studio,               !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {f7dbe90f-1b8b-4619-896f-f2637999db6e}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {9e69cc40-01f7-465c-9091-f5628ddbc7bd}, !- Handle
-  TH-2016-Dep-Refrigeration area, !- Name
+  TH-2016-Dep-Refrigeration area,         !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {784b2870-274b-4c3c-965b-4614034d9c46}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {54854e76-be0a-4607-802a-7ef3ac87743d}, !- Handle
-  TH-2016-Dep-Bank vaults, !- Name
+  TH-2016-Dep-Bank vaults,                !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {74d4a0af-2259-4872-a30a-0d1158344d37}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {e909b604-d129-4dbd-9ffe-614a15186395}, !- Handle
-  TH-2016-Dep-Bank lobby, !- Name
+  TH-2016-Dep-Bank lobby,                 !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {01d2a9c6-f96c-4ac5-b264-e632944d4956}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {e3a7ce36-5d2d-4024-a06d-cb88ebd1be3d}, !- Handle
-  TH-2016-Dep-Corridor, !- Name
+  TH-2016-Dep-Corridor,                   !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {552a6306-5806-43c7-8546-edd6a393c5a4}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {0337f604-3913-4255-abba-7a465fd7e463}, !- Handle
-  TH-2016-Dep-Office space, !- Name
+  TH-2016-Dep-Office space,               !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {8a9f5230-83d2-41d4-baaa-c84c795d6c17}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {ee955fdc-f9a6-4f80-8314-73c5294d217f}, !- Handle
-  TH-2016-Dep-Conference, !- Name
+  TH-2016-Dep-Conference,                 !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {03903889-3d37-46c0-84e4-863eca5654ef}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {7dcc0219-11e7-429c-993a-5f0698ecfa64}, !- Handle
-  TH-2016-Dep-Restaurant-Dining, !- Name
+  TH-2016-Dep-Restaurant-Dining,          !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {c346cdf5-4ff7-48e4-be4f-a5816ab72ba6}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {3fa40862-47af-4626-818d-aceec75320c2}, !- Handle
-  TH-2016-Dep-Coffee station, !- Name
+  TH-2016-Dep-Coffee station,             !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {9372848c-042d-45f1-bb81-0164ce3e3b2a}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
@@ -1326,28 +1326,910 @@ OS:SpaceType,
   TH-2016-Dep-Cafeteria/Fast-food dining, !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {f491c29a-15ee-42d3-aea3-1fc81abf43a8}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {652e7b13-14ee-445f-b0b0-3a9cff0bff55}, !- Handle
-  TH-2016-Dep-Bars/Lounge, !- Name
+  TH-2016-Dep-Bars/Lounge,                !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {2f20ba85-1daf-4675-a7c9-7cff4a6170f5}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
   {5f7f886b-f620-4e66-819f-b4fd971217ee}, !- Handle
-  TH-2016-Dep-Kitchen, !- Name
+  TH-2016-Dep-Kitchen,                    !- Name
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ,                                       !- Group Rendering Name
+  {e08a17bf-63ef-4f9f-a9cb-a4a2c8c41010}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
+
+OS:Rendering:Color,
+  {ae2c0323-99ae-420b-b0e0-735bb15a2bf6}, !- Handle
+  Rendering Color 1,                      !- Name
+  255,                                    !- Rendering Red Value
+  165,                                    !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {2ba86ab1-56f8-4070-af7d-9f2860717455}, !- Handle
+  Rendering Color 2,                      !- Name
+  173,                                    !- Rendering Red Value
+  255,                                    !- Rendering Green Value
+  47;                                     !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {76760b40-77d8-41a9-92f9-c9df7e8422c2}, !- Handle
+  Rendering Color 3,                      !- Name
+  100,                                    !- Rendering Red Value
+  149,                                    !- Rendering Green Value
+  237;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {ab9abc88-a861-4f09-a416-a2ee4d728053}, !- Handle
+  Rendering Color 4,                      !- Name
+  221,                                    !- Rendering Red Value
+  160,                                    !- Rendering Green Value
+  221;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {6eeb8200-31c3-41a4-9a61-deaeef456784}, !- Handle
+  Rendering Color 5,                      !- Name
+  0,                                      !- Rendering Red Value
+  100,                                    !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {1a405bb8-3894-4c67-a7f1-119632c8015f}, !- Handle
+  Rendering Color 6,                      !- Name
+  188,                                    !- Rendering Red Value
+  143,                                    !- Rendering Green Value
+  143;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {589b244d-4238-4dd0-a1b2-8c7083634cf6}, !- Handle
+  Rendering Color 7,                      !- Name
+  34,                                     !- Rendering Red Value
+  139,                                    !- Rendering Green Value
+  34;                                     !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {f07fd548-047e-4e72-9c49-e304d92c6574}, !- Handle
+  Rendering Color 8,                      !- Name
+  0,                                      !- Rendering Red Value
+  128,                                    !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {13d790d5-54e2-4a2f-96b4-8d34d3d886d5}, !- Handle
+  Rendering Color 9,                      !- Name
+  0,                                      !- Rendering Red Value
+  100,                                    !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {44c66b77-7a4f-4de5-bf12-2840c1460448}, !- Handle
+  Rendering Color 10,                     !- Name
+  255,                                    !- Rendering Red Value
+  0,                                      !- Rendering Green Value
+  255;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {9f95a858-057a-4d7a-97f6-c30e52465f13}, !- Handle
+  Rendering Color 11,                     !- Name
+  255,                                    !- Rendering Red Value
+  255,                                    !- Rendering Green Value
+  224;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {879089ac-9af2-43a2-b8a9-5ec863b2fdcd}, !- Handle
+  Rendering Color 12,                     !- Name
+  250,                                    !- Rendering Red Value
+  235,                                    !- Rendering Green Value
+  215;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {3464c066-cb89-4341-b7b8-79fc7b4fdcd8}, !- Handle
+  Rendering Color 13,                     !- Name
+  0,                                      !- Rendering Red Value
+  206,                                    !- Rendering Green Value
+  209;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {9879ee78-b07b-44e8-8040-18911037a4b9}, !- Handle
+  Rendering Color 14,                     !- Name
+  211,                                    !- Rendering Red Value
+  211,                                    !- Rendering Green Value
+  211;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {ad0d6d1c-002f-4b63-9bce-8415a44fcf0d}, !- Handle
+  Rendering Color 15,                     !- Name
+  178,                                    !- Rendering Red Value
+  34,                                     !- Rendering Green Value
+  34;                                     !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {a8fa7574-7a1a-4983-ba8c-d11a7dc8bd84}, !- Handle
+  Rendering Color 16,                     !- Name
+  255,                                    !- Rendering Red Value
+  240,                                    !- Rendering Green Value
+  245;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {21670180-e53a-4d72-98f2-2bf2ef2556f1}, !- Handle
+  Rendering Color 17,                     !- Name
+  255,                                    !- Rendering Red Value
+  105,                                    !- Rendering Green Value
+  180;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {015a33cc-9df8-4d5e-ad8b-a56440120002}, !- Handle
+  Rendering Color 18,                     !- Name
+  240,                                    !- Rendering Red Value
+  128,                                    !- Rendering Green Value
+  128;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {a77a54eb-db2c-4833-98cc-f9d5f5285133}, !- Handle
+  Rendering Color 19,                     !- Name
+  0,                                      !- Rendering Red Value
+  100,                                    !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {f67b8422-38a9-42f4-a3cd-b0d2fb5c9a00}, !- Handle
+  Rendering Color 20,                     !- Name
+  128,                                    !- Rendering Red Value
+  0,                                      !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {7ba97284-920b-4aa4-bdbc-3f8c9678effb}, !- Handle
+  Rendering Color 21,                     !- Name
+  255,                                    !- Rendering Red Value
+  0,                                      !- Rendering Green Value
+  255;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {c43d8ef6-4ae2-4197-a1a9-afbf545a4719}, !- Handle
+  Rendering Color 22,                     !- Name
+  72,                                     !- Rendering Red Value
+  209,                                    !- Rendering Green Value
+  204;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {01d2a9c6-f96c-4ac5-b264-e632944d4956}, !- Handle
+  Rendering Color 23,                     !- Name
+  224,                                    !- Rendering Red Value
+  255,                                    !- Rendering Green Value
+  255;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {74d4a0af-2259-4872-a30a-0d1158344d37}, !- Handle
+  Rendering Color 24,                     !- Name
+  255,                                    !- Rendering Red Value
+  0,                                      !- Rendering Green Value
+  255;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {d4b78736-6cb2-4824-979d-95b86d063840}, !- Handle
+  Rendering Color 25,                     !- Name
+  255,                                    !- Rendering Red Value
+  0,                                      !- Rendering Green Value
+  255;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {2f20ba85-1daf-4675-a7c9-7cff4a6170f5}, !- Handle
+  Rendering Color 26,                     !- Name
+  176,                                    !- Rendering Red Value
+  224,                                    !- Rendering Green Value
+  230;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {0c0647e5-207a-4821-998f-7a042c92d918}, !- Handle
+  Rendering Color 27,                     !- Name
+  0,                                      !- Rendering Red Value
+  206,                                    !- Rendering Green Value
+  209;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {f491c29a-15ee-42d3-aea3-1fc81abf43a8}, !- Handle
+  Rendering Color 28,                     !- Name
+  255,                                    !- Rendering Red Value
+  69,                                     !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {9372848c-042d-45f1-bb81-0164ce3e3b2a}, !- Handle
+  Rendering Color 29,                     !- Name
+  186,                                    !- Rendering Red Value
+  85,                                     !- Rendering Green Value
+  211;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {4cb89eee-5fd2-4ba5-b800-ec2eb9a6d558}, !- Handle
+  Rendering Color 30,                     !- Name
+  175,                                    !- Rendering Red Value
+  238,                                    !- Rendering Green Value
+  238;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {03903889-3d37-46c0-84e4-863eca5654ef}, !- Handle
+  Rendering Color 31,                     !- Name
+  106,                                    !- Rendering Red Value
+  90,                                     !- Rendering Green Value
+  205;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {552a6306-5806-43c7-8546-edd6a393c5a4}, !- Handle
+  Rendering Color 32,                     !- Name
+  127,                                    !- Rendering Red Value
+  255,                                    !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {e08a17bf-63ef-4f9f-a9cb-a4a2c8c41010}, !- Handle
+  Rendering Color 33,                     !- Name
+  173,                                    !- Rendering Red Value
+  216,                                    !- Rendering Green Value
+  230;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {e5a2f5d5-9343-4e60-8e7f-99a98ca68eca}, !- Handle
+  Rendering Color 34,                     !- Name
+  255,                                    !- Rendering Red Value
+  105,                                    !- Rendering Green Value
+  180;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {8a9f5230-83d2-41d4-baaa-c84c795d6c17}, !- Handle
+  Rendering Color 35,                     !- Name
+  240,                                    !- Rendering Red Value
+  255,                                    !- Rendering Green Value
+  255;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {e5a8d3e5-defd-4cbf-b660-69d43121eee9}, !- Handle
+  Rendering Color 36,                     !- Name
+  218,                                    !- Rendering Red Value
+  165,                                    !- Rendering Green Value
+  32;                                     !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {f7dbe90f-1b8b-4619-896f-f2637999db6e}, !- Handle
+  Rendering Color 37,                     !- Name
+  250,                                    !- Rendering Red Value
+  250,                                    !- Rendering Green Value
+  210;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {784b2870-274b-4c3c-965b-4614034d9c46}, !- Handle
+  Rendering Color 38,                     !- Name
+  250,                                    !- Rendering Red Value
+  235,                                    !- Rendering Green Value
+  215;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {c346cdf5-4ff7-48e4-be4f-a5816ab72ba6}, !- Handle
+  Rendering Color 39,                     !- Name
+  147,                                    !- Rendering Red Value
+  112,                                    !- Rendering Green Value
+  219;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {60433bed-87f4-48fb-b4ea-aadfa67d5e22}, !- Handle
+  Rendering Color 40,                     !- Name
+  0,                                      !- Rendering Red Value
+  0,                                      !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {84e3cc37-75b7-436b-8e13-b7915f2aa329}, !- Handle
+  Rendering Color 41,                     !- Name
+  188,                                    !- Rendering Red Value
+  143,                                    !- Rendering Green Value
+  143;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {30da5335-d2eb-4de6-b9c2-fe1d9f41530c}, !- Handle
+  Rendering Color 42,                     !- Name
+  255,                                    !- Rendering Red Value
+  160,                                    !- Rendering Green Value
+  122;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {c8801a45-241e-46e4-9125-47b9a9507e74}, !- Handle
+  Rendering Color 43,                     !- Name
+  248,                                    !- Rendering Red Value
+  248,                                    !- Rendering Green Value
+  255;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {3ba19104-5372-4241-827d-bb676cc98d40}, !- Handle
+  Rendering Color 44,                     !- Name
+  205,                                    !- Rendering Red Value
+  133,                                    !- Rendering Green Value
+  63;                                     !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {ee4baab6-4a47-471a-a772-4758f315753e}, !- Handle
+  Rendering Color 45,                     !- Name
+  0,                                      !- Rendering Red Value
+  0,                                      !- Rendering Green Value
+  128;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {31ddd522-c1d3-4d8a-8724-145e20a311eb}, !- Handle
+  Rendering Color 46,                     !- Name
+  0,                                      !- Rendering Red Value
+  0,                                      !- Rendering Green Value
+  139;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {f1a9947d-f0f0-4a5c-8481-8978d563a12f}, !- Handle
+  Rendering Color 47,                     !- Name
+  240,                                    !- Rendering Red Value
+  230,                                    !- Rendering Green Value
+  140;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {c042145e-8cb1-412c-b407-3a14eda6e6aa}, !- Handle
+  Rendering Color 48,                     !- Name
+  255,                                    !- Rendering Red Value
+  140,                                    !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {2c634580-a2ef-4a1f-a69e-d34370fa2c98}, !- Handle
+  Rendering Color 49,                     !- Name
+  135,                                    !- Rendering Red Value
+  206,                                    !- Rendering Green Value
+  235;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {1f257a70-7cad-4ab8-b354-e64c84f5c829}, !- Handle
+  Rendering Color 50,                     !- Name
+  127,                                    !- Rendering Red Value
+  255,                                    !- Rendering Green Value
+  212;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {b4a1f084-a944-4b25-868c-fe73d3f5136b}, !- Handle
+  Rendering Color 51,                     !- Name
+  128,                                    !- Rendering Red Value
+  128,                                    !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {be11773c-162f-4bc5-b670-d4a9c6b6c286}, !- Handle
+  Rendering Color 52,                     !- Name
+  34,                                     !- Rendering Red Value
+  139,                                    !- Rendering Green Value
+  34;                                     !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {1666758a-e929-4841-b6c4-a2545630f222}, !- Handle
+  Rendering Color 53,                     !- Name
+  248,                                    !- Rendering Red Value
+  248,                                    !- Rendering Green Value
+  255;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {c5d79ff3-c998-4551-8681-6783c9eeaaed}, !- Handle
+  Rendering Color 54,                     !- Name
+  95,                                     !- Rendering Red Value
+  158,                                    !- Rendering Green Value
+  160;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {206b8684-27ec-496c-8585-0ccb285eb8ea}, !- Handle
+  Rendering Color 55,                     !- Name
+  255,                                    !- Rendering Red Value
+  235,                                    !- Rendering Green Value
+  205;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {92f36832-b265-4b3b-bbb2-37de476b4e02}, !- Handle
+  Rendering Color 56,                     !- Name
+  240,                                    !- Rendering Red Value
+  230,                                    !- Rendering Green Value
+  140;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {d911a548-7ceb-4e36-97c0-8797bc94127e}, !- Handle
+  Rendering Color 57,                     !- Name
+  255,                                    !- Rendering Red Value
+  69,                                     !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {9a012d42-a254-4d04-b5e7-e1f00eed7ce9}, !- Handle
+  Rendering Color 58,                     !- Name
+  233,                                    !- Rendering Red Value
+  150,                                    !- Rendering Green Value
+  122;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {a40918cf-8b28-4353-a962-b3c6e7efa238}, !- Handle
+  Rendering Color 59,                     !- Name
+  205,                                    !- Rendering Red Value
+  133,                                    !- Rendering Green Value
+  63;                                     !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {9847396a-93a3-4df0-adef-f96e1e6ae435}, !- Handle
+  Rendering Color 60,                     !- Name
+  0,                                      !- Rendering Red Value
+  0,                                      !- Rendering Green Value
+  128;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {9ce78e81-57c7-40e3-9cb1-e037a7b2d692}, !- Handle
+  Rendering Color 61,                     !- Name
+  138,                                    !- Rendering Red Value
+  43,                                     !- Rendering Green Value
+  226;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {e40091a0-fb3d-4d40-8d2e-9d17a14bd15a}, !- Handle
+  Rendering Color 62,                     !- Name
+  175,                                    !- Rendering Red Value
+  238,                                    !- Rendering Green Value
+  238;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {2e5ab5f6-1611-41ae-855f-6643427d87eb}, !- Handle
+  Rendering Color 63,                     !- Name
+  211,                                    !- Rendering Red Value
+  211,                                    !- Rendering Green Value
+  211;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {c295f5dc-21d1-44bc-a3d4-66c357082d51}, !- Handle
+  Rendering Color 64,                     !- Name
+  255,                                    !- Rendering Red Value
+  160,                                    !- Rendering Green Value
+  122;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {fe4f0675-379e-47bb-bf85-06087368e377}, !- Handle
+  Rendering Color 65,                     !- Name
+  255,                                    !- Rendering Red Value
+  215,                                    !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {e85b4246-415f-44bc-b10f-02417a173a1c}, !- Handle
+  Rendering Color 66,                     !- Name
+  64,                                     !- Rendering Red Value
+  224,                                    !- Rendering Green Value
+  208;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {8d7da23d-c5f8-452f-a590-823ed2c8144c}, !- Handle
+  Rendering Color 67,                     !- Name
+  128,                                    !- Rendering Red Value
+  128,                                    !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {9fd6fcbc-141b-4eda-8603-97cf40c580e2}, !- Handle
+  Rendering Color 68,                     !- Name
+  0,                                      !- Rendering Red Value
+  0,                                      !- Rendering Green Value
+  205;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {4773df05-c33e-46ff-9c8e-2873c22b841f}, !- Handle
+  Rendering Color 69,                     !- Name
+  255,                                    !- Rendering Red Value
+  250,                                    !- Rendering Green Value
+  240;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {7e211654-6759-4038-a786-54e4b02cdae7}, !- Handle
+  Rendering Color 70,                     !- Name
+  250,                                    !- Rendering Red Value
+  128,                                    !- Rendering Green Value
+  114;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {b40a06f9-0e33-4712-a314-6dd4ef12a74a}, !- Handle
+  Rendering Color 71,                     !- Name
+  189,                                    !- Rendering Red Value
+  183,                                    !- Rendering Green Value
+  107;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {91ddb396-3a1b-4d79-bd36-e2227c08e944}, !- Handle
+  Rendering Color 72,                     !- Name
+  0,                                      !- Rendering Red Value
+  206,                                    !- Rendering Green Value
+  209;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {38e63787-7646-47a2-81e6-dae9e6dc08b8}, !- Handle
+  Rendering Color 73,                     !- Name
+  75,                                     !- Rendering Red Value
+  0,                                      !- Rendering Green Value
+  130;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {65b4d4b7-b85f-453f-9c70-46000156dc87}, !- Handle
+  Rendering Color 74,                     !- Name
+  255,                                    !- Rendering Red Value
+  192,                                    !- Rendering Green Value
+  203;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {03c86cc7-8ec2-4a06-872a-5dbc2fdcdd3f}, !- Handle
+  Rendering Color 75,                     !- Name
+  255,                                    !- Rendering Red Value
+  165,                                    !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {bf25ade7-8515-4d2b-a9f4-7006bd1e99e4}, !- Handle
+  Rendering Color 76,                     !- Name
+  240,                                    !- Rendering Red Value
+  255,                                    !- Rendering Green Value
+  255;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {caa54cc8-69fa-4eb9-bbf4-58fdf88a5ee5}, !- Handle
+  Rendering Color 77,                     !- Name
+  255,                                    !- Rendering Red Value
+  192,                                    !- Rendering Green Value
+  203;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {db5863fb-61af-4873-9440-11bd8e94c572}, !- Handle
+  Rendering Color 78,                     !- Name
+  0,                                      !- Rendering Red Value
+  255,                                    !- Rendering Green Value
+  127;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {a2e34ebb-9f98-4909-a4eb-ef4e203381d9}, !- Handle
+  Rendering Color 79,                     !- Name
+  160,                                    !- Rendering Red Value
+  82,                                     !- Rendering Green Value
+  45;                                     !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {f672fe2e-2ea1-4502-a55d-849deabf346b}, !- Handle
+  Rendering Color 80,                     !- Name
+  127,                                    !- Rendering Red Value
+  255,                                    !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {b682c55d-8b98-4239-9137-7ba7f15b7773}, !- Handle
+  Rendering Color 81,                     !- Name
+  0,                                      !- Rendering Red Value
+  128,                                    !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {4617f189-7bbd-4936-a98a-f1809b8b0f3a}, !- Handle
+  Rendering Color 82,                     !- Name
+  173,                                    !- Rendering Red Value
+  255,                                    !- Rendering Green Value
+  47;                                     !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {d35b443c-2f10-4eef-82f6-1cb1524d2e1a}, !- Handle
+  Rendering Color 83,                     !- Name
+  127,                                    !- Rendering Red Value
+  255,                                    !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {79f42781-40fb-492b-99c4-8a4f0cec38ea}, !- Handle
+  Rendering Color 84,                     !- Name
+  34,                                     !- Rendering Red Value
+  139,                                    !- Rendering Green Value
+  34;                                     !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {b4161926-c08e-4ef0-852d-6626ade6b096}, !- Handle
+  Rendering Color 85,                     !- Name
+  219,                                    !- Rendering Red Value
+  112,                                    !- Rendering Green Value
+  147;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {dd813eba-5e12-478e-8ef7-91b402fa9cc1}, !- Handle
+  Rendering Color 86,                     !- Name
+  255,                                    !- Rendering Red Value
+  245,                                    !- Rendering Green Value
+  238;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {c1171200-b122-4444-bf91-e88958bb5adc}, !- Handle
+  Rendering Color 87,                     !- Name
+  50,                                     !- Rendering Red Value
+  205,                                    !- Rendering Green Value
+  50;                                     !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {5d8dbad8-e73b-40f6-aaec-3abdf9085772}, !- Handle
+  Rendering Color 88,                     !- Name
+  128,                                    !- Rendering Red Value
+  128,                                    !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {ddf0e79d-1f98-493d-8b2f-405afe80def4}, !- Handle
+  Rendering Color 89,                     !- Name
+  230,                                    !- Rendering Red Value
+  230,                                    !- Rendering Green Value
+  250;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {190695f7-fe17-4518-bf0d-f60fc5283738}, !- Handle
+  Rendering Color 90,                     !- Name
+  173,                                    !- Rendering Red Value
+  255,                                    !- Rendering Green Value
+  47;                                     !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {41138c41-99ce-47b1-945d-5e4ccf1f0a4b}, !- Handle
+  Rendering Color 91,                     !- Name
+  72,                                     !- Rendering Red Value
+  209,                                    !- Rendering Green Value
+  204;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {f33ac7cb-5f9e-4438-921c-95b9f395fed8}, !- Handle
+  Rendering Color 92,                     !- Name
+  165,                                    !- Rendering Red Value
+  42,                                     !- Rendering Green Value
+  42;                                     !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {99a4c217-e2e0-4101-b362-9c5f42ce8a99}, !- Handle
+  Rendering Color 93,                     !- Name
+  154,                                    !- Rendering Red Value
+  205,                                    !- Rendering Green Value
+  50;                                     !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {64ba92b2-6621-4588-bc12-a014a675757b}, !- Handle
+  Rendering Color 94,                     !- Name
+  30,                                     !- Rendering Red Value
+  144,                                    !- Rendering Green Value
+  255;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {4cf686bd-41b4-4571-b82d-43223799d71a}, !- Handle
+  Rendering Color 95,                     !- Name
+  106,                                    !- Rendering Red Value
+  90,                                     !- Rendering Green Value
+  205;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {1f0eb425-d1b9-41f3-93b7-33967bba507f}, !- Handle
+  Rendering Color 96,                     !- Name
+  250,                                    !- Rendering Red Value
+  128,                                    !- Rendering Green Value
+  114;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {1dcf8579-538d-45c3-8b42-e1e7e2027520}, !- Handle
+  Rendering Color 97,                     !- Name
+  147,                                    !- Rendering Red Value
+  112,                                    !- Rendering Green Value
+  219;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {99179932-1d20-484c-a712-bf63f81a48cb}, !- Handle
+  Rendering Color 98,                     !- Name
+  0,                                      !- Rendering Red Value
+  255,                                    !- Rendering Green Value
+  255;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {defea093-ea87-4504-9bb5-aea2e307e465}, !- Handle
+  Rendering Color 99,                     !- Name
+  240,                                    !- Rendering Red Value
+  255,                                    !- Rendering Green Value
+  240;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {ff315101-3020-4c56-9094-b7eb0566cfda}, !- Handle
+  Rendering Color 100,                    !- Name
+  143,                                    !- Rendering Red Value
+  188,                                    !- Rendering Green Value
+  143;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {ba711ca9-4b14-4371-b976-923418c7b50d}, !- Handle
+  Rendering Color 101,                    !- Name
+  169,                                    !- Rendering Red Value
+  169,                                    !- Rendering Green Value
+  169;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {cdae9f0a-8ee1-4cfd-a2dd-1dd17ee83ea2}, !- Handle
+  Rendering Color 102,                    !- Name
+  250,                                    !- Rendering Red Value
+  240,                                    !- Rendering Green Value
+  230;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {a74acf84-451a-45a6-84ca-b41a0c7a7248}, !- Handle
+  Rendering Color 103,                    !- Name
+  128,                                    !- Rendering Red Value
+  128,                                    !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {58ad466f-6940-4513-afb1-82f0416c9a09}, !- Handle
+  Rendering Color 104,                    !- Name
+  152,                                    !- Rendering Red Value
+  251,                                    !- Rendering Green Value
+  152;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {6fec865a-85b7-4d4c-90c3-5ae823d4283b}, !- Handle
+  Rendering Color 105,                    !- Name
+  255,                                    !- Rendering Red Value
+  105,                                    !- Rendering Green Value
+  180;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {af72adb6-eab6-4942-aba2-bb78731edc91}, !- Handle
+  Rendering Color 106,                    !- Name
+  245,                                    !- Rendering Red Value
+  255,                                    !- Rendering Green Value
+  250;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {2758213b-8092-493e-b06c-5760df2856f6}, !- Handle
+  Rendering Color 107,                    !- Name
+  102,                                    !- Rendering Red Value
+  205,                                    !- Rendering Green Value
+  170;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {6208f883-b838-4adc-bef5-3ca5d8116c95}, !- Handle
+  Rendering Color 108,                    !- Name
+  184,                                    !- Rendering Red Value
+  134,                                    !- Rendering Green Value
+  11;                                     !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {aebef6c5-12bf-491a-824c-8ac6b5f20709}, !- Handle
+  Rendering Color 109,                    !- Name
+  0,                                      !- Rendering Red Value
+  191,                                    !- Rendering Green Value
+  255;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {1380b959-58ec-4bdf-b6ae-af5b451f2aff}, !- Handle
+  Rendering Color 110,                    !- Name
+  34,                                     !- Rendering Red Value
+  139,                                    !- Rendering Green Value
+  34;                                     !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {44e8e90a-85e6-4410-b1fc-b8ca83db5ca3}, !- Handle
+  Rendering Color 111,                    !- Name
+  255,                                    !- Rendering Red Value
+  69,                                     !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {32134d47-d94d-4cb1-94c3-778f7dfd51e6}, !- Handle
+  Rendering Color 112,                    !- Name
+  60,                                     !- Rendering Red Value
+  179,                                    !- Rendering Green Value
+  113;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {d8234665-7b6e-4c3c-bc3f-bdd1df14966e}, !- Handle
+  Rendering Color 113,                    !- Name
+  205,                                    !- Rendering Red Value
+  133,                                    !- Rendering Green Value
+  63;                                     !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {eec17d04-a39d-46be-b161-e9a4a31616db}, !- Handle
+  Rendering Color 114,                    !- Name
+  106,                                    !- Rendering Red Value
+  90,                                     !- Rendering Green Value
+  205;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {2108fae8-6c0f-47b3-8366-e4b5e2bbc7f6}, !- Handle
+  Rendering Color 115,                    !- Name
+  245,                                    !- Rendering Red Value
+  222,                                    !- Rendering Green Value
+  179;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {fe134304-bdbd-4727-9e50-c0f46dd2bc8e}, !- Handle
+  Rendering Color 116,                    !- Name
+  248,                                    !- Rendering Red Value
+  248,                                    !- Rendering Green Value
+  255;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {8f670a5c-4236-43df-86ae-f3d7d738b274}, !- Handle
+  Rendering Color 117,                    !- Name
+  255,                                    !- Rendering Red Value
+  140,                                    !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {782dfa02-f0d1-4485-8890-707a9f24b237}, !- Handle
+  Rendering Color 118,                    !- Name
+  210,                                    !- Rendering Red Value
+  180,                                    !- Rendering Green Value
+  140;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {938794c3-8474-49a9-aa17-52d8124bc358}, !- Handle
+  Rendering Color 119,                    !- Name
+  222,                                    !- Rendering Red Value
+  184,                                    !- Rendering Green Value
+  135;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {6a167552-63e8-4b41-8d5b-1c2844eca0e0}, !- Handle
+  Rendering Color 120,                    !- Name
+  135,                                    !- Rendering Red Value
+  206,                                    !- Rendering Green Value
+  235;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {795b86a2-f893-4798-9788-f92cd6167970}, !- Handle
+  Rendering Color 121,                    !- Name
+  47,                                     !- Rendering Red Value
+  79,                                     !- Rendering Green Value
+  79;                                     !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {16e0ef66-1309-41f8-9938-0f87f61a12f9}, !- Handle
+  Rendering Color 122,                    !- Name
+  0,                                      !- Rendering Red Value
+  139,                                    !- Rendering Green Value
+  139;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {23fac95d-56b8-4ff2-99a2-cfd6033c462c}, !- Handle
+  Rendering Color 123,                    !- Name
+  253,                                    !- Rendering Red Value
+  245,                                    !- Rendering Green Value
+  230;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {c5c98e90-0711-471e-b187-5922cff521c2}, !- Handle
+  Rendering Color 124,                    !- Name
+  255,                                    !- Rendering Red Value
+  69,                                     !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {bf106899-3013-4023-b299-ac0046aa3fba}, !- Handle
+  Rendering Color 125,                    !- Name
+  250,                                    !- Rendering Red Value
+  128,                                    !- Rendering Green Value
+  114;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {b28cb2eb-df91-4943-9616-8951290acb72}, !- Handle
+  Rendering Color 126,                    !- Name
+  255,                                    !- Rendering Red Value
+  0,                                      !- Rendering Green Value
+  0;                                      !- Rendering Blue Value
 
