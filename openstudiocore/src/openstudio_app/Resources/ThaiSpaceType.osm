@@ -797,7 +797,7 @@ OS:SpaceType,
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
   {76760b40-77d8-41a9-92f9-c9df7e8422c2}, !- Group Rendering Name
-  ,                                       !- Design Specification Outdoor Air Object Name
+  {c962ae49-f744-472d-b5a5-586fba5d16ba}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
@@ -807,7 +807,7 @@ OS:SpaceType,
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
   {3464c066-cb89-4341-b7b8-79fc7b4fdcd8}, !- Group Rendering Name
-  ,                                       !- Design Specification Outdoor Air Object Name
+  {b901f64f-49ae-4683-b0cc-f3ae29d2f888}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
@@ -817,7 +817,7 @@ OS:SpaceType,
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
   {589b244d-4238-4dd0-a1b2-8c7083634cf6}, !- Group Rendering Name
-  ,                                       !- Design Specification Outdoor Air Object Name
+  {933e0884-c654-45c2-b4bd-3bec2ec158cb}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
@@ -827,7 +827,7 @@ OS:SpaceType,
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
   {13d790d5-54e2-4a2f-96b4-8d34d3d886d5}, !- Group Rendering Name
-  ,                                       !- Design Specification Outdoor Air Object Name
+  {89f48ba9-f03f-4c30-a180-ee115f60f846}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
@@ -837,7 +837,7 @@ OS:SpaceType,
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
   {44c66b77-7a4f-4de5-bf12-2840c1460448}, !- Group Rendering Name
-  ,                                       !- Design Specification Outdoor Air Object Name
+  {feeddd5b-53af-4fc3-b510-3bdfd861d760}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
@@ -847,7 +847,7 @@ OS:SpaceType,
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
   {9f95a858-057a-4d7a-97f6-c30e52465f13}, !- Group Rendering Name
-  ,                                       !- Design Specification Outdoor Air Object Name
+  {bda65f5d-703d-4087-8439-a91fe9899dfb}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
@@ -857,7 +857,7 @@ OS:SpaceType,
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
   {1a405bb8-3894-4c67-a7f1-119632c8015f}, !- Group Rendering Name
-  ,                                       !- Design Specification Outdoor Air Object Name
+  {92bcb6d0-777f-4b96-8fd8-d48df0ab42c9}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
@@ -867,7 +867,7 @@ OS:SpaceType,
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
   {879089ac-9af2-43a2-b8a9-5ec863b2fdcd}, !- Group Rendering Name
-  ,                                       !- Design Specification Outdoor Air Object Name
+  {907b6190-5ecf-482b-b92f-90acc7348226}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
@@ -877,7 +877,7 @@ OS:SpaceType,
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
   {6eeb8200-31c3-41a4-9a61-deaeef456784}, !- Group Rendering Name
-  ,                                       !- Design Specification Outdoor Air Object Name
+  {518e3893-64cd-4351-a0a0-dcfafbda8d5a}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
@@ -887,7 +887,7 @@ OS:SpaceType,
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
   {ab9abc88-a861-4f09-a416-a2ee4d728053}, !- Group Rendering Name
-  ,                                       !- Design Specification Outdoor Air Object Name
+  {946690d7-d508-4f05-955c-2eebfcf87120}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
@@ -897,7 +897,7 @@ OS:SpaceType,
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
   {f07fd548-047e-4e72-9c49-e304d92c6574}, !- Group Rendering Name
-  ,                                       !- Design Specification Outdoor Air Object Name
+  {29b7dd6b-884d-4103-bb8c-338f57e1a16f}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
@@ -2198,4 +2198,143 @@ OS:Rendering:Color,
   255,                                    !- Rendering Red Value
   0,                                      !- Rendering Green Value
   0;                                      !- Rendering Blue Value
+
+OS:DesignSpecification:OutdoorAir,
+  {c962ae49-f744-472d-b5a5-586fba5d16ba}, !- Handle
+  EIT-2016-Aud-Auditorium-Ventilation,    !- Name
+  Sum,                                    !- Outdoor Air Method
+  0.0025,                                 !- Outdoor Air Flow per Person {m3/s-person}
+  0.0003,                                 !- Outdoor Air Flow per Floor Area {m3/s-m2}
+  0,                                      !- Outdoor Air Flow Rate {m3/s}
+  0,                                      !- Outdoor Air Flow Air Changes per Hour {1/hr}
+  ;                                       !- Outdoor Air Flow Rate Fraction Schedule Name
+
+OS:People:Definition,
+  {2b8c2295-fb53-44b2-977f-7c4320ec8947}, !- Handle
+  EIT-2016-Aud-Auditorium-People Definition, !- Name
+  People/Area,                            !- Number of People Calculation Method
+  ,                                       !- Number of People {people}
+  1.5,                                    !- People per Space Floor Area {person/m2}
+  ,                                       !- Space Floor Area per Person {m2/person}
+  0.3;                                    !- Fraction Radiant
+
+OS:People,
+  {220800e9-1b75-435b-98f1-64fb77fd61b1}, !- Handle
+  EIT-2016-Aud-Auditorium-People,         !- Name
+  {2b8c2295-fb53-44b2-977f-7c4320ec8947}, !- People Definition Name
+  {a64339f6-74b0-46c1-8b51-19ee33fa81ec}; !- Space or SpaceType Name
+
+OS:Lights:Definition,
+  {5273af2f-37cd-4b3a-9e03-623bcf6b40db}, !- Handle
+  90.1-2007-Aud-Auditorium-Lights Definition, !- Name
+  Watts/Area,                             !- Design Level Calculation Method
+  ,                                       !- Lighting Level {W}
+  3,                                      !- Watts per Space Floor Area {W/m2}
+  ;                                       !- Watts per Person {W/person}
+
+OS:Lights,
+  {f75e8b2f-c0f0-4b65-b8df-0a2e25b5718a}, !- Handle
+  90.1-2007-Aud-Auditorium-Lights,        !- Name
+  {5273af2f-37cd-4b3a-9e03-623bcf6b40db}, !- Lights Definition Name
+  {a64339f6-74b0-46c1-8b51-19ee33fa81ec}; !- Space or SpaceType Name
+
+OS:DesignSpecification:OutdoorAir,
+  {946690d7-d508-4f05-955c-2eebfcf87120}, !- Handle
+  EIT-2016-Aud-Coffee stations-Ventilation, !- Name
+  Sum,                                    !- Outdoor Air Method
+  0.0025,                                 !- Outdoor Air Flow per Person {m3/s-person}
+  0.0003,                                 !- Outdoor Air Flow per Floor Area {m3/s-m2}
+  0,                                      !- Outdoor Air Flow Rate {m3/s}
+  0,                                      !- Outdoor Air Flow Air Changes per Hour {1/hr}
+  ;                                       !- Outdoor Air Flow Rate Fraction Schedule Name
+
+OS:DesignSpecification:OutdoorAir,
+  {518e3893-64cd-4351-a0a0-dcfafbda8d5a}, !- Handle
+  EIT-2016-Aud-Conference-Ventilation,    !- Name
+  Sum,                                    !- Outdoor Air Method
+  0.0025,                                 !- Outdoor Air Flow per Person {m3/s-person}
+  0.0003,                                 !- Outdoor Air Flow per Floor Area {m3/s-m2}
+  0,                                      !- Outdoor Air Flow Rate {m3/s}
+  0,                                      !- Outdoor Air Flow Air Changes per Hour {1/hr}
+  ;                                       !- Outdoor Air Flow Rate Fraction Schedule Name
+
+OS:DesignSpecification:OutdoorAir,
+  {92bcb6d0-777f-4b96-8fd8-d48df0ab42c9}, !- Handle
+  EIT-2016-Aud-Corridor-Ventilation,      !- Name
+  Sum,                                    !- Outdoor Air Method
+  0,                                      !- Outdoor Air Flow per Person {m3/s-person}
+  0.0003,                                 !- Outdoor Air Flow per Floor Area {m3/s-m2}
+  0,                                      !- Outdoor Air Flow Rate {m3/s}
+  0,                                      !- Outdoor Air Flow Air Changes per Hour {1/hr}
+  ;                                       !- Outdoor Air Flow Rate Fraction Schedule Name
+
+OS:DesignSpecification:OutdoorAir,
+  {933e0884-c654-45c2-b4bd-3bec2ec158cb}, !- Handle
+  EIT-2016-Aud-Courtroom-Ventilation,     !- Name
+  Sum,                                    !- Outdoor Air Method
+  0.0025,                                 !- Outdoor Air Flow per Person {m3/s-person}
+  0.0003,                                 !- Outdoor Air Flow per Floor Area {m3/s-m2}
+  0,                                      !- Outdoor Air Flow Rate {m3/s}
+  0,                                      !- Outdoor Air Flow Air Changes per Hour {1/hr}
+  ;                                       !- Outdoor Air Flow Rate Fraction Schedule Name
+
+OS:DesignSpecification:OutdoorAir,
+  {29b7dd6b-884d-4103-bb8c-338f57e1a16f}, !- Handle
+  EIT-2016-Aud-Fast food dining-Ventilation, !- Name
+  Sum,                                    !- Outdoor Air Method
+  0.0038,                                 !- Outdoor Air Flow per Person {m3/s-person}
+  0.0009,                                 !- Outdoor Air Flow per Floor Area {m3/s-m2}
+  0,                                      !- Outdoor Air Flow Rate {m3/s}
+  0,                                      !- Outdoor Air Flow Air Changes per Hour {1/hr}
+  ;                                       !- Outdoor Air Flow Rate Fraction Schedule Name
+
+OS:DesignSpecification:OutdoorAir,
+  {89f48ba9-f03f-4c30-a180-ee115f60f846}, !- Handle
+  EIT-2016-Aud-Legislative chamber-Ventilation, !- Name
+  Sum,                                    !- Outdoor Air Method
+  0.0025,                                 !- Outdoor Air Flow per Person {m3/s-person}
+  0.0003,                                 !- Outdoor Air Flow per Floor Area {m3/s-m2}
+  0,                                      !- Outdoor Air Flow Rate {m3/s}
+  0,                                      !- Outdoor Air Flow Air Changes per Hour {1/hr}
+  ;                                       !- Outdoor Air Flow Rate Fraction Schedule Name
+
+OS:DesignSpecification:OutdoorAir,
+  {feeddd5b-53af-4fc3-b510-3bdfd861d760}, !- Handle
+  EIT-2016-Aud-Library-Ventilation,       !- Name
+  Sum,                                    !- Outdoor Air Method
+  0.0025,                                 !- Outdoor Air Flow per Person {m3/s-person}
+  0.0006,                                 !- Outdoor Air Flow per Floor Area {m3/s-m2}
+  0,                                      !- Outdoor Air Flow Rate {m3/s}
+  0,                                      !- Outdoor Air Flow Air Changes per Hour {1/hr}
+  ;                                       !- Outdoor Air Flow Rate Fraction Schedule Name
+
+OS:DesignSpecification:OutdoorAir,
+  {bda65f5d-703d-4087-8439-a91fe9899dfb}, !- Handle
+  EIT-2016-Aud-Lobby-Ventilation,         !- Name
+  Sum,                                    !- Outdoor Air Method
+  0.0025,                                 !- Outdoor Air Flow per Person {m3/s-person}
+  0.0003,                                 !- Outdoor Air Flow per Floor Area {m3/s-m2}
+  0,                                      !- Outdoor Air Flow Rate {m3/s}
+  0,                                      !- Outdoor Air Flow Air Changes per Hour {1/hr}
+  ;                                       !- Outdoor Air Flow Rate Fraction Schedule Name
+
+OS:DesignSpecification:OutdoorAir,
+  {907b6190-5ecf-482b-b92f-90acc7348226}, !- Handle
+  EIT-2016-Aud-Office space-Ventilation,  !- Name
+  Sum,                                    !- Outdoor Air Method
+  0.0025,                                 !- Outdoor Air Flow per Person {m3/s-person}
+  0.0003,                                 !- Outdoor Air Flow per Floor Area {m3/s-m2}
+  0,                                      !- Outdoor Air Flow Rate {m3/s}
+  0,                                      !- Outdoor Air Flow Air Changes per Hour {1/hr}
+  ;                                       !- Outdoor Air Flow Rate Fraction Schedule Name
+
+OS:DesignSpecification:OutdoorAir,
+  {b901f64f-49ae-4683-b0cc-f3ae29d2f888}, !- Handle
+  EIT-2016-Aud-Places of religious worship-Ventilation, !- Name
+  Sum,                                    !- Outdoor Air Method
+  0.0025,                                 !- Outdoor Air Flow per Person {m3/s-person}
+  0.0003,                                 !- Outdoor Air Flow per Floor Area {m3/s-m2}
+  0,                                      !- Outdoor Air Flow Rate {m3/s}
+  0,                                      !- Outdoor Air Flow Air Changes per Hour {1/hr}
+  ;                                       !- Outdoor Air Flow Rate Fraction Schedule Name
 
