@@ -75,6 +75,8 @@ void ResultsTabView::onUnitSystemChange(bool t_isIP)
 ResultsView::ResultsView(QWidget *t_parent)
   : QWidget(t_parent),
     m_isIP(true),
+    m_compareBtn(new QPushButton("Compare other result.")),
+    m_printBtn(new QPushButton("Print Via Browser")),
     m_progressBar(new QProgressBar()),
     m_refreshBtn(new QPushButton("Refresh")),
     m_openResultsViewerBtn(new QPushButton("Open ResultsViewer\nfor Detailed Reports"))
@@ -86,6 +88,8 @@ ResultsView::ResultsView(QWidget *t_parent)
   connect(m_refreshBtn, &QPushButton::clicked, this, &ResultsView::refreshClicked);
 
   connect(m_openResultsViewerBtn, &QPushButton::clicked, this, &ResultsView::openResultsViewerClicked);
+  connect(m_printBtn, &QPushButton::clicked, this, &ResultsView::doPrint);
+  connect(m_compareBtn, &QPushButton::clicked, this, &ResultsView::compareResultsClicked);
   
   auto hLayout = new QHBoxLayout(this);
   mainLayout->addLayout(hLayout);
@@ -100,8 +104,10 @@ ResultsView::ResultsView(QWidget *t_parent)
   hLayout->addWidget(m_comboBox, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
   hLayout->addStretch();
-
+  hLayout->addWidget(m_compareBtn, 0, Qt::AlignCenter);
+  hLayout->addWidget(m_printBtn, 0, Qt::AlignCenter);
   hLayout->addWidget(m_progressBar, 0, Qt::AlignVCenter);
+
   m_progressBar->setMinimum(0);
   m_progressBar->setMaximum(100);
   m_progressBar->setValue(0);
@@ -174,6 +180,64 @@ void ResultsView::openResultsViewerClicked()
   {
     QMessageBox::critical(this, "Unable to launch ResultsViewer", "ResultsViewer was not found in the expected location:\n" + openstudio::toQString(resultsviewer));
   }
+}
+
+//TODO:Implement compare windows.
+void ResultsView::compareResultsClicked()
+{
+    QString fn1 = m_comboBox->currentData().toString();
+    QString fn2 = QFileDialog::getExistingDirectory(this,tr("Open project output folder."));
+
+    LOG(Debug, "compareResultsClicked");
+
+#ifdef Q_OS_MAC
+    openstudio::path resultsviewer
+            = openstudio::getApplicationRunDirectory() / openstudio::toPath("../../../ReportCompare.app/Contents/MacOS/ReportCompare");
+#else
+    openstudio::path reportcompare
+            = openstudio::getApplicationRunDirectory() / openstudio::toPath("ReportCompare");
+#endif
+
+    QStringList args;
+
+    // instruct ResultsViewer to make its own copies of the sql files passed in and to clean them up
+    // when done
+
+    if (!fn1.isEmpty())
+    {
+        args.push_back(fn1);
+    }
+
+    if (!fn2.isEmpty())
+    {
+        args.push_back(fn2);
+    }
+    else{
+        return;
+    }
+
+    if(m_comboBox->currentText() == "EnergyPlus Results"){
+        args.push_back("e");
+    }
+    else if( m_comboBox->currentText() == "Results | OpenStudio"){
+        args.push_back("o");
+    }
+    else if( m_comboBox->currentText() == "BEC Report"){
+        args.push_back("b");
+    }
+
+    if (!QProcess::startDetached(openstudio::toQString(reportcompare), args))
+    {
+        QMessageBox::critical(this, "Unable to launch ReportCompare", "ReportCompare was not found in the expected location:\n" + openstudio::toQString(reportcompare));
+    }
+}
+
+void ResultsView::doPrint()
+{
+    if(!m_comboBox->currentData().toString().isEmpty()){
+        QString fn = m_comboBox->currentData().toString();
+        QDesktopServices::openUrl(QUrl(fn));
+    }
 }
 
 void ResultsView::onUnitSystemChange(bool t_isIP) 
