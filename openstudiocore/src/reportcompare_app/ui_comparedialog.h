@@ -10,7 +10,6 @@
 #define UI_COMPAREDIALOG_H
 
 #include <QtCore/QVariant>
-#include <QtWebKitWidgets/QWebView>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
@@ -22,6 +21,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 #include <dropfilebutton.h>
+#include <QWebEngineView>
 
 QT_BEGIN_NAMESPACE
 
@@ -39,13 +39,13 @@ public:
     QHBoxLayout *horizontalLayout_2;
     QWidget *wLeft;
     QHBoxLayout *horizontalLayout_3;
-    QWebView *webView;
+    QWebEngineView *webView;
     QWidget *wCenter;
     QHBoxLayout *horizontalLayout_4;
-    QWebView *webViewDebug;
+    QWebEngineView *webViewDebug;
     QWidget *wRight;
     QHBoxLayout *horizontalLayout_5;
-    QWebView *webView2;
+    QWebEngineView *webView2;
 
     void setupUi(QDialog *CompareDialog)
     {
@@ -110,9 +110,8 @@ public:
         horizontalLayout_3->setSpacing(3);
         horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
         horizontalLayout_3->setContentsMargins(0, 0, 0, 0);
-        webView = new QWebView(wLeft);
+        webView = new QWebEngineView(wLeft);
         webView->setObjectName(QStringLiteral("webView"));
-        webView->setUrl(QUrl(QStringLiteral("about:blank")));
 
         horizontalLayout_3->addWidget(webView);
 
@@ -125,9 +124,8 @@ public:
         horizontalLayout_4->setSpacing(3);
         horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
         horizontalLayout_4->setContentsMargins(0, 0, 0, 0);
-        webViewDebug = new QWebView(wCenter);
+        webViewDebug = new QWebEngineView(wCenter);
         webViewDebug->setObjectName(QStringLiteral("webViewDebug"));
-        webViewDebug->setUrl(QUrl(QStringLiteral("about:blank")));
 
         horizontalLayout_4->addWidget(webViewDebug);
 
@@ -140,9 +138,8 @@ public:
         horizontalLayout_5 = new QHBoxLayout(wRight);
         horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
         horizontalLayout_5->setContentsMargins(0, 0, 0, 0);
-        webView2 = new QWebView(wRight);
+        webView2 = new QWebEngineView(wRight);
         webView2->setObjectName(QStringLiteral("webView2"));
-        webView2->setUrl(QUrl(QStringLiteral("about:blank")));
 
         horizontalLayout_5->addWidget(webView2);
 

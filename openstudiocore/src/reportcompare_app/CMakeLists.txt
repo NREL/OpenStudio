@@ -15,39 +15,18 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # source files
 set(${target_name}_SRC
-becdoc.cpp
+main.cpp
 comparedialog.cpp
 dropfilebutton.cpp
-enegyplusdoc.cpp
-genbecreport.cpp
-htmltutil.cpp
-icompareelement.cpp
-idoc.cpp
 main.cpp
 menuwindow.cpp
-openstudiodoc.cpp
-opetableelement.cpp
-opsgraphelement.cpp
-tableelement.cpp
 )
 
 # moc files
 set(${target_name}_moc
-becdoc.h
 comparedialog.h
 dropfilebutton.h
-enegyplusdoc.h
-genbecreport.h
-htmltutil.h
-icompareelement.h
-idoc.h
 menuwindow.h
-openstudiodoc.h
-opetableelement.h
-opsgraphelement.h
-tableelement.h
-ui_comparedialog.h
-ui_menuwindow.h
 )
 
 ## Qt UI generation
@@ -59,7 +38,21 @@ configure_file(AboutBox.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/AboutBox.hpp")
 
 
 if(WIN32)
-  set(RC_BUILD_STR "0")
+
+  set(RC_BUILD_STR "1")
+  
+  if(NOT CMAKE_VERSION_MAJOR)
+	set(CMAKE_VERSION_MAJOR "1")
+  endif()
+  
+  if(NOT CMAKE_VERSION_MINOR)
+	set(CMAKE_VERSION_MINOR "0")
+  endif()
+  
+  if(NOT CMAKE_VERSION_PATCH)
+	set(CMAKE_VERSION_PATCH "0")
+  endif()
+  
   if(NOT CMAKE_VERSION_BUILD STREQUAL "" AND NOT CMAKE_VERSION_BUILD MATCHES "([a-zA-Z]+)")
     set(RC_BUILD_STR "${CMAKE_VERSION_BUILD}")
   endif()
@@ -105,19 +98,25 @@ foreach (_variableName ${_variableNames})
     message(STATUS "${_variableName}=${${_variableName}}")
 endforeach()
 
+set(DIRS ${QT_LIBRARY_DIR} ${LIBRARY_SEARCH_DIRECTORY})
+
+message(">>> CMAKE_CURRENT_SOURCE_DIR : " ${CMAKE_CURRENT_SOURCE_DIR})
+message(">>> QT_WEB_LIBS : " ${QT_WEB_LIBS})
+message(">>> QT_LIBS : " ${QT_LIBS})
+
 set(depends
   ${QT_LIBS}
+  ${QT_WEB_LIBS}
 )
 
 #C:\Qt\Qt5.4.1\5.4\msvc2013_opengl\lib\Qt5WebKitWidgets.lib
 #C:\Qt\Qt5.4.1\5.4\msvc2013_opengl\lib\Qt5WebKit.lib
-if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
-	target_link_libraries(${target_name} ${depends})
-else()
-	include_directories(${Qt5WebEngine_INCLUDE_DIRS})
-	include_directories(${Qt5WebEngineWidgets_INCLUDE_DIRS})
-	target_link_libraries(${target_name} ${depends} ${Qt5Core_DIR}/../../Qt5WebKitWidgets.lib ${Qt5Core_DIR}/../../Qt5WebKit.lib)
-endif()
+message(">>> QT_MAIN_LIB : " ${QT_MAIN_LIB})
+message(">>> QT_MAIN_LIB_D : " ${QT_MAIN_LIB_D})
+target_link_libraries(${target_name} optimized ${QT_MAIN_LIB} debug ${QT_MAIN_LIB_D})
+target_link_libraries(${target_name} ${depends} )
+#target_link_libraries(<your_app> Qt5::WinMain)
+#target_link_libraries(<your_app> ${Qt5Core_QTMAIN_LIBRARIES})
   
 AddPCH(${target_name}) 
 
@@ -155,17 +154,34 @@ if(APPLE OR WIN32)
 
   if(WIN32)
     get_target_property(QPA_PLUGIN Qt5::QWindowsIntegrationPlugin LOCATION)
+    if(${Qt5Widgets_VERSION} VERSION_LESS "5.3.2")
+      # Qt does not populate the windows print plugin property on 5.3.1 and earlier, so we have to do this manually
+      get_filename_component(QPA_PATH ${QPA_PLUGIN} DIRECTORY)
+      set(PRINT_PLUGIN "${QPA_PATH}/../printsupport/windowsprintersupport.dll")
+    else()
+      get_target_property(PRINT_PLUGIN Qt5::QWindowsPrinterSupportPlugin LOCATION)
+    endif()
   elseif(APPLE)
     get_target_property(QPA_PLUGIN Qt5::QCocoaIntegrationPlugin LOCATION)
+    # Qt does not create a mac print module in CMake, so we have to do this manually
+    get_filename_component(QPA_PATH ${QPA_PLUGIN} DIRECTORY)
+    set(PRINT_PLUGIN "${QPA_PATH}/../printsupport/libcocoaprintersupport.dylib")
   endif()
 
   install(PROGRAMS "${QPA_PLUGIN}"
           DESTINATION "${plugin_dest_dir}/platforms/"
   )
+  install(PROGRAMS "${PRINT_PLUGIN}"
+          DESTINATION "${plugin_dest_dir}/printsupport/"
+  )
 
   get_filename_component(QPA_PLUGIN_NAME "${QPA_PLUGIN}" NAME)
+  get_filename_component(PRINT_PLUGIN_NAME "${PRINT_PLUGIN}" NAME)
 
-  list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/platforms/${QPA_PLUGIN_NAME}")
+    list(APPEND QTPLUGINS
+    "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/platforms/${QPA_PLUGIN_NAME}"
+    "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/printsupport/${PRINT_PLUGIN_NAME}"
+  )
 
 endif()
 
