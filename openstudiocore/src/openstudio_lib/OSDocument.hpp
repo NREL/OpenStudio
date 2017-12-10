@@ -288,6 +288,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void addStandardMeasures();
 
+  void addDefaultMeasures();
+
   public slots:
 
   void enable();

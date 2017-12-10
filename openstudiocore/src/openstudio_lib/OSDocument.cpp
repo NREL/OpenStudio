@@ -1,4 +1,4 @@
-/***********************************************************************************************************************
+﻿/***********************************************************************************************************************
  *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -230,6 +230,7 @@ namespace openstudio {
     QTimer::singleShot(0, this, SLOT(updateWindowFilePath()));
 
     if (initalizeWorkflow){
+      QTimer::singleShot(0, this, SLOT(addDefaultMeasures()));
       QTimer::singleShot(0, this, SLOT(addStandardMeasures()));
     }
   }
@@ -1388,6 +1389,33 @@ void OSDocument::exportBEC()
         messageBox.exec();
       }
     }
+  }
+
+  //Thai version: add default measures
+  void OSDocument::addDefaultMeasures() {
+
+    std::string uid = "18cf0de7-48b8-48dc-ab68-0dd29f0b8bd0";
+
+    // Check measure weather exist or not?
+    boost::optional<BCLMeasure> result = LocalBCL::instance().getMeasure(uid);
+    if (result) { //if exist, update it
+      // update;
+    }
+    else { //if not exist , download and install 
+      RemoteBCL remoteBCL;
+      if (remoteBCL.isOnline()) {
+        try {
+          result = remoteBCL.getMeasure(uid);
+          if (result) {
+            std::pair<bool, std::string> result_status = OSAppBase::instance()->measureManager().updateMeasure(*result);
+          }
+        }catch (const std::exception&) {
+          QMessageBox::warning(mainWindow(), "Fail to download measure", "Cannot download the measure, Please check your internet connection.");
+           // QMessageBox::warning(mainWindow(), "ไม่สามารถดึงข้อมูล Measure", "ระบบไม่สามารถดึงข้อมูลจาก server ได้ในขณะนี้ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต แล้วลองใหม่อีกครั้ง");
+        }
+      }
+    }
+
   }
 
   void OSDocument::addStandardMeasures()
