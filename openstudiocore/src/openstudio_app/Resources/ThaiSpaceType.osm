@@ -412,16 +412,6 @@ OS:SpaceType,
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
-  {c41b5400-d5dc-41a1-ab29-7d9ba1b982a4}, !- Handle
-  TH-2016-Office-,                        !- Name
-  ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
-  {2108fae8-6c0f-47b3-8366-e4b5e2bbc7f6}, !- Group Rendering Name
-  ,                                       !- Design Specification Outdoor Air Object Name
-  ,                                       !- Standards Building Type
-  ;                                       !- Standards Space Type
-
-OS:SpaceType,
   {2b9cb3b2-fa6c-4e47-80db-af7dd8e1f626}, !- Handle
   TH-2016-Office-Lobby,                   !- Name
   ,                                       !- Default Construction Set Name
@@ -497,16 +487,6 @@ OS:SpaceType,
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
   {782dfa02-f0d1-4485-8890-707a9f24b237}, !- Group Rendering Name
-  ,                                       !- Design Specification Outdoor Air Object Name
-  ,                                       !- Standards Building Type
-  ;                                       !- Standards Space Type
-
-OS:SpaceType,
-  {f0ef3f96-dc4b-4c77-aa5f-e9007a118d1c}, !- Handle
-  TH-2016-Office- 1,                      !- Name
-  ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
-  {fe134304-bdbd-4727-9e50-c0f46dd2bc8e}, !- Group Rendering Name
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
@@ -2114,20 +2094,6 @@ OS:Rendering:Color,
   106,                                    !- Rendering Red Value
   90,                                     !- Rendering Green Value
   205;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {2108fae8-6c0f-47b3-8366-e4b5e2bbc7f6}, !- Handle
-  Rendering Color 115,                    !- Name
-  245,                                    !- Rendering Red Value
-  222,                                    !- Rendering Green Value
-  179;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {fe134304-bdbd-4727-9e50-c0f46dd2bc8e}, !- Handle
-  Rendering Color 116,                    !- Name
-  248,                                    !- Rendering Red Value
-  248,                                    !- Rendering Green Value
-  255;                                    !- Rendering Blue Value
 
 OS:Rendering:Color,
   {8f670a5c-4236-43df-86ae-f3d7d738b274}, !- Handle
