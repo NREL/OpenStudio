@@ -492,26 +492,6 @@ OS:SpaceType,
   ;                                       !- Standards Space Type
 
 OS:SpaceType,
-  {4de049ae-9db8-4920-aeec-323a661c0368}, !- Handle
-  EIT-2016-Thai Office- Electrical/Mechanical, !- Name
-  ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
-  {ae2c0323-99ae-420b-b0e0-735bb15a2bf6}, !- Group Rendering Name
-  ,                                       !- Design Specification Outdoor Air Object Name
-  ,                                       !- Standards Building Type
-  ;                                       !- Standards Space Type
-
-OS:SpaceType,
-  {2218bbdd-ff85-4d8f-a694-685f55c075a9}, !- Handle
-  EIT-2016-Thai Office-Restrooms,         !- Name
-  ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
-  {2ba86ab1-56f8-4070-af7d-9f2860717455}, !- Group Rendering Name
-  ,                                       !- Design Specification Outdoor Air Object Name
-  ,                                       !- Standards Building Type
-  ;                                       !- Standards Space Type
-
-OS:SpaceType,
   {caa3e8a0-596c-447c-8f9a-416ffc08a4c5}, !- Handle
   TH-2016-Office-Computer,                !- Name
   ,                                       !- Default Construction Set Name
@@ -1350,20 +1330,6 @@ OS:SpaceType,
   ,                                       !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
-
-OS:Rendering:Color,
-  {ae2c0323-99ae-420b-b0e0-735bb15a2bf6}, !- Handle
-  Rendering Color 1,                      !- Name
-  255,                                    !- Rendering Red Value
-  165,                                    !- Rendering Green Value
-  0;                                      !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {2ba86ab1-56f8-4070-af7d-9f2860717455}, !- Handle
-  Rendering Color 2,                      !- Name
-  173,                                    !- Rendering Red Value
-  255,                                    !- Rendering Green Value
-  47;                                     !- Rendering Blue Value
 
 OS:Rendering:Color,
   {76760b40-77d8-41a9-92f9-c9df7e8422c2}, !- Handle
