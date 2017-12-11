@@ -46,6 +46,7 @@
 #include <QDesktopServices>
 #include <QFileDialog>
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
 
 namespace openstudio {
 
@@ -150,6 +151,18 @@ void ResultsView::refreshClicked()
   m_view->triggerPageAction(QWebEnginePage::ReloadAndBypassCache);
 }
 
+static openstudio::path binResourcesPath()
+{
+	if (openstudio::applicationIsRunningFromBuildDirectory())
+	{
+		return openstudio::getApplicationSourceDirectory() / openstudio::toPath("src/openstudio_app/Resources");
+	}
+	else
+	{
+		return openstudio::getApplicationDirectory() / openstudio::toPath("../Resources");
+	}
+}
+
 void ResultsView::openDViewClicked()
 {
   LOG(Debug, "openDViewClicked");
@@ -158,8 +171,11 @@ void ResultsView::openDViewClicked()
   openstudio::path dview
     = openstudio::toPath(QCoreApplication::applicationDirPath()) / openstudio::toPath("../../../DView.app/Contents/MacOS/DView");
 #else
+  openstudio::path resPath = binResourcesPath();
+  std::string programPath = resPath.string() + "/DView.exe";
+
   openstudio::path dview
-    = openstudio::toPath(QCoreApplication::applicationDirPath()) / openstudio::toPath("DView");
+	  = openstudio::toPath(programPath);
 #endif
 
   QStringList args;
