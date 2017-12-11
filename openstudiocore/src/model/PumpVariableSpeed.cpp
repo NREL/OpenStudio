@@ -1089,6 +1089,7 @@ namespace detail {
     if (val) {
       setRatedPowerConsumption(val.get());
     }
+  }
 
   std::string PumpVariableSpeed_Impl::designPowerSizingMethod() const {
     auto value = getString(OS_Pump_VariableSpeedFields::DesignPowerSizingMethod,true);

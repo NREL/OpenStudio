@@ -1405,18 +1405,13 @@ void PlantLoop::resetComponentSetpointOperationSchemeSchedule() {
   getImpl<detail::PlantLoop_Impl>()->resetComponentSetpointOperationSchemeSchedule();
 }
 
-<<<<<<< HEAD
-  boost::optional<double> PlantLoop::autosizedMaximumLoopFlowRate() const {
-    return getImpl<detail::PlantLoop_Impl>()->autosizedMaximumLoopFlowRate();
-  }
+boost::optional<double> PlantLoop::autosizedMaximumLoopFlowRate() const {
+  return getImpl<detail::PlantLoop_Impl>()->autosizedMaximumLoopFlowRate();
+}
 
-  boost::optional<double> PlantLoop::autosizedPlantLoopVolume() const {
-    return getImpl<detail::PlantLoop_Impl>()->autosizedPlantLoopVolume();
-  }
-
-=======
-
-
+boost::optional<double> PlantLoop::autosizedPlantLoopVolume() const {
+  return getImpl<detail::PlantLoop_Impl>()->autosizedPlantLoopVolume();
+}
 
 /* Prefered way to interact with the Availability Managers */
 std::vector<AvailabilityManager> PlantLoop::availabilityManagers() const
@@ -1491,10 +1486,6 @@ bool PlantLoop::removeAvailabilityManager(const unsigned priority)
 // END DEPRECATED
 
 
-
-
-
->>>>>>> origin/develop
 } // model
 } // openstudio
 

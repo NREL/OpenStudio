@@ -533,6 +533,7 @@ namespace detail {
     if (val) {
       setDesignCondenserWaterFlowRate(val.get());
     }
+  }
 
   // Convenience functions to return parent CentralHeatPumpSystem and CentralHeatPumpSystemModule
 /*
