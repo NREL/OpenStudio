@@ -185,6 +185,10 @@ EnergyManagementSystemSensor::EnergyManagementSystemSensor(const Model& model, c
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s OutputVariable to "
       << outvar.briefDescription() << ".");
   }
+  if (!outvar.isKeyValueDefaulted()) {
+    std::string key = outvar.keyValue();
+    setKeyName(key);
+  }
 }
 
 EnergyManagementSystemSensor::EnergyManagementSystemSensor(const Model& model, const OutputMeter& outvar)

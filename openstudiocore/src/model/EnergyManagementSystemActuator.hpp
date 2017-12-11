@@ -63,7 +63,7 @@ class MODEL_API EnergyManagementSystemActuator : public ModelObject {
   /** @name Getters */
   //@{
 
-  ModelObject actuatedComponent() const;
+  boost::optional<ModelObject> actuatedComponent() const;
 
   std::string actuatedComponentControlType() const;
 
