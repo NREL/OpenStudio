@@ -119,6 +119,9 @@ namespace openstudio {
     enum State { stopped = 0, initialization = 1, os_measures = 2, translator = 3, ep_measures = 4, preprocess = 5, simulation = 6, reporting_measures = 7, postprocess = 8, complete = 9 };
     State m_state = State::stopped;
     void doFinish();
+	QStringList LogLs(QString filepath);
+	QStringList TranslateLogError(QString filePath, QStringList logsls);
+	void ValidateLog();
   };
 
   class RunTabView : public MainTabView
