@@ -99,6 +99,10 @@ enum PVReportMode { PVReportMode_OPENSTUDIO, PVReportMode_BEC, PVReportMode_ENER
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QComboBox>
+#include <QJsonDocument>
+#include <QJsonValue>
+#include <QJsonObject>
+#include <QJsonArray>
 
 #define STR_Mode_EPLUS "Energy Plus"
 #define STR_Mode_BEC "BEC"
@@ -955,9 +959,108 @@ void RunView::onOpenSimDirClicked()
   }
 }
 
+QStringList RunView::LogLs(QString filepath)
+{
+	QStringList lsout;
+	QFile file(filepath);
+	if (file.open(QIODevice::ReadOnly))
+	{
+		QTextStream in(&file);
+		QString sumString;
+		while (!in.atEnd())
+		{
+			QString line = in.readLine();
+			line = line.trimmed();
+			if (line.startsWith("**  Fatal  **")
+				|| line.startsWith("** Severe **")
+				|| line.startsWith("** Error **")){
+				if (!sumString.isEmpty()){
+					lsout.append(sumString);
+					//qDebug() << sumString;
+					sumString.clear();
+				}
+				sumString = line;
+			}
+			else if (line.startsWith("** ~~~ **")){
+				sumString += " " + line;
+			}
+		}
+
+		if (!sumString.isEmpty()){
+			lsout.append(sumString);
+			//qDebug() << sumString;
+			sumString.clear();
+		}
+
+		file.close();
+	}
+	return lsout;
+}
+
+QStringList RunView::TranslateLogError(QString filePath, QStringList logsls)
+{
+	QStringList lsout;
+	QStringList regexs;
+	QStringList texts;
+	QStringList names;
+
+	QFile file(filePath);
+	if (file.open(QIODevice::ReadOnly))
+	{
+		QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
+		QJsonObject root = doc.object();
+		foreach(QJsonValue element, root["rules"].toArray()){
+			QJsonObject node = element.toObject();
+			names.append(node["name"].toString());
+			texts.append(node["translate"].toString());
+			regexs.append(node["regex"].toString());
+		}
+	}
+
+	for (int i = 0; i<logsls.count(); i++){
+		QString line = logsls.at(i);
+
+		for (int r = 0; r<names.count(); r++){
+			QString regstr = regexs.at(r);
+			QRegExp rx(regstr);
+			int pos = 0;
+			if ((pos = rx.indexIn(line)) != -1) {
+				QString res = texts.at(r);
+				int ccloop = rx.captureCount();
+				for (int cc = 0; cc<ccloop; cc++){
+					QString rep = rx.cap(cc + 1);
+					QString dest = QString("$%1").arg(QString::number(cc + 1));
+					res.replace(dest, rep);
+				}
+				lsout.append(res);
+				break;
+			}
+		}
+	}
+	return lsout;
+}
+
+void RunView::ValidateLog()
+{
+	std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
+	auto basePath = toPath(osdocument->modelTempDir()) / toPath("resources");
+	QString eplusoutPath = basePath.string().c_str();
+	eplusoutPath = eplusoutPath + "/run/eplusout.err";
+	QStringList logls = LogLs(eplusoutPath);
+
+	openstudio::path path = binResourcesPath();
+	std::string errortranslatePath = path.string() + "/errortranslate.json";
+	QStringList tslog = TranslateLogError(errortranslatePath.c_str(), logls);
+	for (int i = 0; i<tslog.count(); i++){
+		QString msg = tslog.at(i);
+		logErrorText(msg);
+	}
+}
+
 void RunView::doFinish()
 {
     LOG(Debug, "run finished");
+	ValidateLog();
     m_playButton->setChecked(false);
     m_state = State::stopped;
     m_progressBar->setValue(State::complete);
@@ -1151,7 +1254,9 @@ void RunView::playButtonClicked00(bool t_checked, RunView::RUNMODE runmode, bool
                   }
               }else{
                   //logErrorText(QString("<font color=\"red\">ERROR:Can't read eblustbl.htm</font>"));
-				  logErrorText(QString("ERROR:Can't read %1").arg(eplustbl_path));
+				  //logErrorText(QString("ERROR:Can't read %1").arg(eplustbl_path));
+				  logErrorText("BEC Report คำนวณค่า SC เป็น 1 "
+								"(ไม่ได้ Run EnergyPlus ก่อน)");
               }
               ///////////////////////////
 
@@ -1213,8 +1318,11 @@ void RunView::playButtonClicked(bool t_checked)
 
     if(m_runMode->currentText() == STR_Mode_EPLUS)
         runmode = RUN_ENERGY;
-    else if(m_runMode->currentText() == STR_Mode_BEC)
-        runmode = RUN_BEC;
+	else if (m_runMode->currentText() == STR_Mode_BEC)
+	{
+		ValidateLog();
+		runmode = RUN_BEC;
+	}
     else
         runmode = RUN_ENERGY_BEC;
 

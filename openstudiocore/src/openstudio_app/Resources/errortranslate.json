@@ -1,0 +1,43 @@
+{
+	"rules": [{
+		"regex": "\\*\\* Severe \\*\\* ProcessSurfaceVertices: Suspected 4-sided but non-rectangular",
+		"translate": "หน้าต่างหรือประตูกระจกไม่เป็นสี่เหลี่ยมจัตุรัส",
+		"name": "1"
+	}, {
+		"regex": ".*Zone has no surfaces.*THERMAL ZONE (.*)",
+		"translate": "โซน $1 ไม่มีพื้นผิว",
+		"name": "2"
+	}, {
+		"regex": "Ground is not be allowed with windows",
+		"translate": "ไม่อนุญาตให้มีกระจกที่พื้น",
+		"name": "3"
+	}, {
+		"regex": "Field [Control Zone Name] is required but was blank",
+		"translate": "ผู้ใช้ลืมใส่โซนในระบบปรับอากาศ",
+		"name": "4"
+	}, {
+		"regex": "Zone has no surfaces, Zone=(.*)",
+		"translate": "โซน $1 ไม่มีรูปด้าน",
+		"name": "5"
+	}, {
+		"regex": "Object=BUILDINGSURFACE:DETAILED.*name=(.*)\\*\\* ~~~ \\*\\* Field \\[Construction Name\\] is required but was blank",
+		"translate": "SURFACE $1 ไม่ได้ระบุวัสดุ",
+		"name": "6"
+	}, {
+		"regex": "Surface=\\\"(.*)\\\" is non-planar",
+		"translate": "SURFACE $1 ไม่อยู่ในระนาบเดียวกัน",
+		"name": "7"
+	}, {
+		"regex": "does not have the same number of layers as the construction",
+		"translate": "วัสดุของฝ้าและพื้นไม่สอดคล้องกัน",
+		"name": "8"
+	}, {
+		"regex": "Error detected in Object=LIGHTS, .* Field \\[Schedule Name\\] is required but was blank",
+		"translate": "ลืมใส่ Schedule ในระบบแสงสว่าง",
+		"name": "9"
+	}, {
+		"regex": "Error detected in Object=ELECTRICEQUIPMENT,.* Field \\[Schedule Name\\] is required but was blank",
+		"translate": "ลืมใส่ Schedule ในอุปกรณ์ไฟฟ้า",
+		"name": "10"
+	}]
+}
