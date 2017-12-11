@@ -125,9 +125,9 @@ class MODEL_API AirTerminalSingleDuctParallelPIUReheat : public StraightComponen
 
   void autosizeFanOnFlowFraction();
 
-  void setFan( HVACComponent & hvacComponent );
+  bool setFan( HVACComponent & hvacComponent );
 
-  void setReheatCoil( HVACComponent & hvacComponent );
+  bool setReheatCoil( HVACComponent & hvacComponent );
 
   void setMaximumHotWaterorSteamFlowRate(double maximumHotWaterorSteamFlowRate);
 

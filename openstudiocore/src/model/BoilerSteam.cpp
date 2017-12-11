@@ -67,7 +67,50 @@ namespace detail {
   const std::vector<std::string>& BoilerSteam_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Boiler Heating Rate");
+      result.push_back("Boiler Heating Energy");
+      result.push_back("Boiler Steam Inlet Temperature");
+      result.push_back("Boiler Steam Outlet Temperature");
+      result.push_back("Boiler Mass Flow Rate");
+
+      // One of the following blocks will be applicable based on fuel type:
+      // TODO: DLM: the return type of this method needs to change to std::vector<std::string> in ModelObject
+      // until then, make this include all possible outputVariableNames for class regardless of fuelType
+      // std::string fuelType = this->fuelType();
+      // if (fuelType == "Electricity") {
+        result.push_back("Boiler Electric Power");
+        result.push_back("Boiler Electric Energy");
+      // } else if (fuelType == "NaturalGas") {
+        result.push_back("Boiler Gas Rate");
+        result.push_back("Boiler Gas Energy");
+      // } else if (fuelType == "PropaneGas") {
+        result.push_back("Boiler Propane Rate");
+        result.push_back("Boiler Propane Energy");
+      // } else if (fuelType == "FuelOil#1") {
+        result.push_back("Boiler FuelOil#1 Rate");
+        result.push_back("Boiler FuelOil#1 Energy");
+      // } else if (fuelType == "FuelOil#2") {
+        result.push_back("Boiler FuelOil#2 Rate");
+        result.push_back("Boiler FuelOil#2 Energy");
+      // } else if (fuelType == "Coal") {
+        result.push_back("Boiler Coal Rate");
+        result.push_back("Boiler Coal Energy");
+      // } else if (fuelType == "Diesel") {
+        result.push_back("Boiler Diesel Rate");
+        result.push_back("Boiler Diesel Energy");
+      // } else if (fuelType == "Gasoline") {
+        result.push_back("Boiler Gasoline Rate");
+        result.push_back("Boiler Gasoline Energy");
+      // } else if (fuelType == "OtherFuel1") {
+        result.push_back("Boiler OtherFuel1 Rate");
+        result.push_back("Boiler OtherFuel1 Energy");
+      // } else if (fuelType == "OtherFuel2") {
+        result.push_back("Boiler OtherFuel2 Rate");
+        result.push_back("Boiler OtherFuel2 Energy");
+      // }
+
     }
     return result;
   }

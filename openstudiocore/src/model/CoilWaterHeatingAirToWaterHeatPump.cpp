@@ -71,7 +71,24 @@ namespace detail {
   const std::vector<std::string>& CoilWaterHeatingAirToWaterHeatPump_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // As of EnergyPlus version 8.4.0 this object maps to Coil:WaterHeating:AirToWaterHeatPump:Pumped in idf format.
+      // TODO: Make sure this is right (it's Cooling, I expected Heating...)
+      // Taken from the I/O for v 8.7
+      result.push_back("Cooling Coil Total Cooling Rate");
+      result.push_back("Cooling Coil Total Cooling Energy");
+      result.push_back("Cooling Coil Sensible Cooling Rate");
+      result.push_back("Cooling Coil Sensible Cooling Energy");
+      result.push_back("Cooling Coil Latent Cooling Rate");
+      result.push_back("Cooling Coil Latent Cooling Energy");
+      result.push_back("Cooling Coil Runtime Fraction");
+      result.push_back("DX Cooling Coil Crankcase Heater Electric Power");
+      result.push_back("Cooling Coil Crankcase Heater Electric Energy");
+      result.push_back("Cooling Coil Total Water Heating Rate");
+      result.push_back("Cooling Coil Total Water Heating Energy");
+      result.push_back("Cooling Coil Water Heating Electric Power");
+      result.push_back("Cooling Coil Water Heating Electric Energy");
     }
     return result;
   }

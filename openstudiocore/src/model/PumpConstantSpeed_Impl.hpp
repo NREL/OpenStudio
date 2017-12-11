@@ -241,13 +241,25 @@ namespace detail {
 
     bool addToNode(Node & node) override;
 
-  boost::optional<double> autosizedRatedFlowRate() const ;
+    boost::optional<double> autosizedRatedFlowRate() const ;
 
-  boost::optional<double> autosizedRatedPowerConsumption() const ;
+    boost::optional<double> autosizedRatedPowerConsumption() const ;
 
-  virtual void autosize() override;
+    virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+    virtual void applySizingValues() override;
+
+    std::string designPowerSizingMethod() const;
+
+    bool setDesignPowerSizingMethod(const std::string & designPowerSizingMethod);
+
+    double designElectricPowerPerUnitFlowRate() const;
+
+    bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
+
+    double designShaftPowerPerUnitFlowRatePerUnitHead() const;
+
+    bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
 
    protected:
 

@@ -56,6 +56,7 @@ class WeatherFile;
 class Component;
 class ComponentData;
 class Schedule;
+class Node;
 class SpaceType;
 
 namespace detail {
@@ -122,7 +123,7 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Get the YearDescription object if there is one, this implementation uses a cached reference to the YearDescription
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<YearDescription>(). */
   boost::optional<YearDescription> yearDescription() const;
-  
+
   /** Get or create the YearDescription object if there is one, then call method from YearDescription. */
   // DLM: this is due to issues exporting the model::YearDescription object because of name conflict with utilities::YearDescription.
   boost::optional<int> calendarYear() const;
@@ -149,18 +150,34 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Get an always on schedule with discrete type limits if there is one.
    *  create a new schedule if necessary and add it to the model */
   Schedule alwaysOnDiscreteSchedule() const;
+    
+  /** Get the always on schedule with discrete type limits name. */
+  std::string alwaysOnDiscreteScheduleName() const;
 
   /** Get an always off schedule with discrete type limits if there is one.
    *  create a new schedule if necessary and add it to the model */
   Schedule alwaysOffDiscreteSchedule() const;
 
+  /** Get the always off schedule with discrete type limits name. */
+  std::string alwaysOffDiscreteScheduleName() const;
+
   /** Get an always on schedule with continuous type limits if there is one.
   *  create a new schedule if necessary and add it to the model */
   Schedule alwaysOnContinuousSchedule() const;
 
+  /** Get the always on schedule with continuous type limits name.*/
+  std::string alwaysOnContinuousScheduleName() const;
+
+  /** Get a Node named 'Model Outdoor Air Node' (intended to be forward translated to an OutdoorAir:Node) and not connected to a PlantLoop or AirLoopHVAC.
+  *  create a new Node if necessary and add it to the model */
+  Node outdoorAirNode() const;
+
   /** Get the space type used for plenums if there is one.
    *  Create a new space type if necessary and add it to the model */
   SpaceType plenumSpaceType() const;
+
+  /** Get the space type name used for plenums. */
+  std::string plenumSpaceTypeName() const;
 
   //@}
   /** @name Setters */

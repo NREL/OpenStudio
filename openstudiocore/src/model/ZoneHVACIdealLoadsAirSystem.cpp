@@ -73,7 +73,63 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACIdealLoadsAirSystem_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone Ideal Loads Supply Air Sensible Heating Energy");
+      result.push_back("Zone Ideal Loads Supply Air Total Heating Energy");
+      result.push_back("Zone Ideal Loads Supply Air Sensible Cooling Energy");
+      result.push_back("Zone Ideal Loads Supply Air Latent Cooling Energy");
+      result.push_back("Zone Ideal Loads Supply Air Total Cooling Energy");
+      result.push_back("Zone Ideal Loads Supply Air Latent Heating Energy");
+      result.push_back("Zone Ideal Loads Zone Sensible Heating Energy");
+      result.push_back("Zone Ideal Loads Zone Latent Heating Energy");
+      result.push_back("Zone Ideal Loads Zone Total Heating Energy");
+      result.push_back("Zone Ideal Loads Zone Sensible Cooling Energy");
+      result.push_back("Zone Ideal Loads Zone Latent Cooling Energy");
+      result.push_back("Zone Ideal Loads Zone Total Cooling Energy");
+      result.push_back("Zone Ideal Loads Outdoor Air Sensible Heating Energy");
+      result.push_back("Zone Ideal Loads Outdoor Air Latent Heating Energy");
+      result.push_back("Zone Ideal Loads Outdoor Air Total Heating Energy");
+      result.push_back("Zone Ideal Loads Outdoor Air Sensible Cooling Energy");
+      result.push_back("Zone Ideal Loads Outdoor Air Latent Cooling Energy");
+      result.push_back("Zone Ideal Loads Outdoor Air Total Cooling Energy");
+      result.push_back("Zone Ideal Loads Heat Recovery Sensible Heating Energy");
+      result.push_back("Zone Ideal Loads Heat Recovery Latent Heating Energy");
+      result.push_back("Zone Ideal Loads Heat Recovery Total Heating Energy");
+      result.push_back("Zone Ideal Loads Heat Recovery Sensible Cooling Energy");
+      result.push_back("Zone Ideal Loads Heat Recovery Latent Cooling Energy");
+      result.push_back("Zone Ideal Loads Heat Recovery Total Cooling Energy");
+      result.push_back("Zone Ideal Loads Supply Air Sensible Heating Rate");
+      result.push_back("Zone Ideal Loads Supply Air Latent Heating Rate");
+      result.push_back("Zone Ideal Loads Supply Air Total Heating Rate");
+      result.push_back("Zone Ideal Loads Supply Air Sensible Cooling Rate");
+      result.push_back("Zone Ideal Loads Supply Air Latent Cooling Rate");
+      result.push_back("Zone Ideal Loads Supply Air Total Cooling Rate");
+      result.push_back("Zone Ideal Loads Zone Sensible Heating Rate");
+      result.push_back("Zone Ideal Loads Zone Latent Heating Rate");
+      result.push_back("Zone Ideal Loads Zone Total Heating Rate");
+      result.push_back("Zone Ideal Loads Zone Sensible Cooling Rate");
+      result.push_back("Zone Ideal Loads Zone Latent Cooling Rate");
+      result.push_back("Zone Ideal Loads Zone Total Cooling Rate");
+      result.push_back("Zone Ideal Loads Outdoor Air Sensible Heating Rate");
+      result.push_back("Zone Ideal Loads Outdoor Air Latent Heating Rate");
+      result.push_back("Zone Ideal Loads Outdoor Air Total Heating Rate");
+      result.push_back("Zone Ideal Loads Outdoor Air Sensible Cooling Rate");
+      result.push_back("Zone Ideal Loads Outdoor Air Latent Cooling Rate");
+      result.push_back("Zone Ideal Loads Outdoor Air Total Cooling Rate");
+      result.push_back("Zone Ideal Loads Heat Recovery Sensible Heating Rate");
+      result.push_back("Zone Ideal Loads Heat Recovery Latent Heating Rate");
+      result.push_back("Zone Ideal Loads Heat Recovery Total Heating Rate");
+      result.push_back("Zone Ideal Loads Heat Recovery Sensible Cooling Rate");
+      result.push_back("Zone Ideal Loads Heat Recovery Latent Cooling Rate");
+      result.push_back("Zone Ideal Loads Heat Recovery Total Cooling Rate");
+      result.push_back("Zone Ideal Loads Economizer Active Time");
+      result.push_back("Zone Ideal Loads Heat Recovery Active Time");
+      result.push_back("Zone Ideal Loads Hybrid Ventilation Available Status");
+      result.push_back("Zone Ideal Loads Outdoor Air Mass Flow Rate");
+      result.push_back("Zone Ideal Loads Outdoor Air Standard Density Volume Flow Rate");
+      result.push_back("Zone Ideal Loads Supply Air Mass Flow Rate");
+      result.push_back("Zone Ideal Loads Supply Air Standard Density Volume Flow Rate");
     }
     return result;
   }

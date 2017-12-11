@@ -94,7 +94,38 @@ namespace detail {
   const std::vector<std::string>& CoilCoolingDXVariableSpeed_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Cooling Coil Electric Power");
+      result.push_back("Cooling Coil Total Cooling Rate");
+      result.push_back("Cooling Coil Sensible Cooling Rate");
+      result.push_back("Cooling Coil Source Side Heat Transfer Rate");
+      result.push_back("Cooling Coil Part Load Ratio");
+      result.push_back("Cooling Coil Runtime Fraction");
+      result.push_back("Cooling Coil Air Mass Flow Rate");
+      result.push_back("Cooling Coil Air Inlet Temperature");
+      result.push_back("Cooling Coil Air Inlet Humidity Ratio");
+      result.push_back("Cooling Coil Air Outlet Temperature");
+      result.push_back("Cooling Coil Air Outlet Humidity Ratio");
+      result.push_back("Cooling Coil Upper Speed Level");
+      result.push_back("Cooling Coil Neighboring Speed Levels Ratio");
+      result.push_back("VSAirtoAirHP Recoverable Waste Heat");
+      result.push_back("Cooling Coil Electric Energy");
+      result.push_back("Cooling Coil Total Cooling Energy");
+      result.push_back("Cooling Coil Sensible Cooling Energy");
+      result.push_back("Cooling Coil Latent Cooling Energy");
+      result.push_back("Cooling Coil Source Side Heat Transfer Energy");
+      result.push_back("Cooling Coil Crankcase Heater Electric Power");
+      result.push_back("Cooling Coil Crankcase Heater Electric Energy");
+      result.push_back("Cooling Coil Condensate Volume Flow Rate");
+      result.push_back("Cooling Coil Condensate Volume");
+      result.push_back("Cooling Coil Condenser Inlet Temperature");
+      result.push_back("Cooling Coil Evaporative Condenser Water Volume");
+      result.push_back("Cooling Coil Evaporative Condenser Mains Water Volume");
+      result.push_back("Cooling Coil Evaporative Condenser Pump Electric Power");
+      result.push_back("Cooling Coil Evaporative Condenser Pump Electric Energy");
+      result.push_back("Cooling Coil Basin Heater Electric Power");
+      result.push_back("Cooling Coil Basin Heater Electric Energy");
     }
     return result;
   }

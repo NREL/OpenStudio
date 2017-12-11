@@ -229,6 +229,9 @@ class MODEL_API Loop : public ParentObject {
 
   Loop(IddObjectType type,const Model& model);
 
+
+
+
  private:
 
   REGISTER_LOGGER("openstudio.model.Loop");

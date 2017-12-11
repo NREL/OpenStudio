@@ -65,6 +65,11 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual unsigned supplyInletPort() override;
+    virtual unsigned supplyOutletPort() override;
+    virtual unsigned demandInletPort() override;
+    virtual unsigned demandOutletPort() override;
+
     //@}
     /** @name Getters */
     //@{
@@ -191,10 +196,6 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned supplyInletPort() override;
-    unsigned supplyOutletPort() override;
-    unsigned demandInletPort() override;
-    unsigned demandOutletPort() override;
 
     //@}
    protected:

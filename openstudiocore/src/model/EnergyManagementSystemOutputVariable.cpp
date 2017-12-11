@@ -300,6 +300,31 @@ namespace detail {
     return value;
   }
 
+  bool EnergyManagementSystemOutputVariable_Impl::exportToBCVTB() const {
+    boost::optional<std::string> value = getString(OS_EnergyManagementSystem_OutputVariableFields::ExportToBCVTB, true);
+    OS_ASSERT(value);
+    return openstudio::istringEqual(value.get(), "True");
+  }
+
+  bool EnergyManagementSystemOutputVariable_Impl::isExportToBCVTBDefaulted() const {
+    return isEmpty(OS_EnergyManagementSystem_OutputVariableFields::ExportToBCVTB);
+  }
+
+  void EnergyManagementSystemOutputVariable_Impl::setExportToBCVTB(bool exportToBCVTB) {
+    bool result = false;
+    if (exportToBCVTB) {
+      result = setString(OS_EnergyManagementSystem_OutputVariableFields::ExportToBCVTB, "True");
+    } else {
+      result = setString(OS_EnergyManagementSystem_OutputVariableFields::ExportToBCVTB, "False");
+    }
+    OS_ASSERT(result);
+  }
+
+  void EnergyManagementSystemOutputVariable_Impl::resetExportToBCVTB() {
+    bool result = setString(OS_EnergyManagementSystem_OutputVariableFields::ExportToBCVTB, "");
+    OS_ASSERT(result);
+  }
+
 } // detail
 
 EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model, const std::string eMSVariableName)
@@ -546,6 +571,22 @@ bool EnergyManagementSystemOutputVariable::setEMSVariableName(const EnergyManage
 
 bool EnergyManagementSystemOutputVariable::setEMSVariableName(const EnergyManagementSystemConstructionIndexVariable& object) {
   return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setEMSVariableName(object);
+}
+
+bool EnergyManagementSystemOutputVariable::exportToBCVTB() const {
+  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->exportToBCVTB();
+}
+
+bool EnergyManagementSystemOutputVariable::isExportToBCVTBDefaulted() const {
+  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->isExportToBCVTBDefaulted();
+}
+
+void EnergyManagementSystemOutputVariable::setExportToBCVTB(bool exportToBCVTB) {
+  getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setExportToBCVTB(exportToBCVTB);
+}
+
+void EnergyManagementSystemOutputVariable::resetExportToBCVTB() {
+  getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->resetExportToBCVTB();
 }
 
 /// @cond

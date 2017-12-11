@@ -36,6 +36,7 @@ namespace openstudio {
 namespace model {
 
 class ChillerHeaterPerformanceElectricEIR;
+class CentralHeatPumpSystem;
 class Schedule;
 
 namespace detail {
@@ -64,11 +65,11 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     //@}
     /** @name Getters */
@@ -94,15 +95,15 @@ namespace detail {
     /** @name Other */
     //@{
 
-    //// CoolingLoop
-    //unsigned supplyInletPort();
-    //unsigned supplyOutletPort();
-    //// SourceLoop
-    //unsigned demandInletPort();
-    //unsigned demandOutletPort();
-    //// HeatingLoop
-    //unsigned tertiaryInletPort() const;
-    //unsigned tertiaryOutletPort() const;
+    // Convenience function to return parent CentralHeatPumpSystem
+    boost::optional<CentralHeatPumpSystem> centralHeatPumpSystem() const;
+
+    // Override the clone method to clone the ChillerHeaterPerformanceElectricEIR as well
+    ModelObject clone(Model model) const override;
+
+    // Treat the ChillerHeaterPerformanceElectricEIR as a child
+    std::vector<IddObjectType> allowableChildTypes() const override;
+    std::vector<ModelObject> children() const override;
 
     //@}
    protected:

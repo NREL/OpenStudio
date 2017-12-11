@@ -40,6 +40,7 @@
 #include "DefaultScheduleSet.hpp"
 #include "DefaultScheduleSet_Impl.hpp"
 #include "LifeCycleCost.hpp"
+#include "Model.hpp"
 
 #include <utilities/idd/OS_SteamEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -74,7 +75,34 @@ namespace detail {
   const std::vector<std::string>& SteamEquipment_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Steam Equipment District Heating Rate");
+      result.push_back("Steam Equipment District Heating Energy");
+      result.push_back("Steam Equipment Radiant Heating Energy");
+      result.push_back("Steam Equipment Radiant Heating Rate");
+      result.push_back("Steam Equipment Convective Heating Energy");
+      result.push_back("Steam Equipment Convective Heating Rate");
+      result.push_back("Steam Equipment Latent Gain Energy");
+      result.push_back("Steam Equipment Latent Gain Rate");
+      result.push_back("Steam Equipment Lost Heat Energy");
+      result.push_back("Steam Equipment Lost Heat Rate");
+      result.push_back("Steam Equipment Total Heating Energy");
+      result.push_back("Steam Equipment Total Heating Rate");
+
+      // Reported in ThermalZone
+      //result.push_back("Zone Steam Equipment District Heating Rate");
+      //result.push_back("Zone Steam Equipment District Heating Energy");
+      //result.push_back("Zone Steam Equipment Radiant Heating Energy");
+      //result.push_back("Zone Steam Equipment Radiant Heating Rate");
+      //result.push_back("Zone Steam Equipment Convective Heating Energy");
+      //result.push_back("Zone Steam Equipment Convective Heating Rate");
+      //result.push_back("Zone Steam Equipment Latent Gain Energy");
+      //result.push_back("Zone Steam Equipment Latent Gain Rate");
+      //result.push_back("Zone Steam Equipment Lost Heat Energy");
+      //result.push_back("Zone Steam Equipment Lost Heat Rate");
+      //result.push_back("Zone Steam Equipment Total Heating Energy");
+      //result.push_back("Zone Steam Equipment Total Heating Rate");
     }
     return result;
   }
@@ -214,9 +242,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SteamEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool SteamEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_SteamEquipmentFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void SteamEquipment_Impl::resetEndUseSubcategory() {
@@ -292,6 +321,16 @@ SteamEquipment::SteamEquipment(const SteamEquipmentDefinition& definition)
   : SpaceLoadInstance(SteamEquipment::iddObjectType(),definition)
 {
   OS_ASSERT(getImpl<detail::SteamEquipment_Impl>());
+
+  /*
+   *Schedule sch = this->model().alwaysOnDiscreteSchedule();
+   *bool test = this->setSchedule(sch);
+   *OS_ASSERT(test);
+   *test = this->setMultiplier(1.0);
+   *OS_ASSERT(test);
+   */
+  bool test = this->setEndUseSubcategory("General");
+  OS_ASSERT(test);
 }
 
 IddObjectType SteamEquipment::iddObjectType() {
@@ -339,8 +378,8 @@ void SteamEquipment::resetMultiplier() {
   getImpl<detail::SteamEquipment_Impl>()->resetMultiplier();
 }
 
-void SteamEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::SteamEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool SteamEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::SteamEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void SteamEquipment::resetEndUseSubcategory() {

@@ -78,7 +78,108 @@ namespace detail {
   const std::vector<std::string>& WaterHeaterStratified_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // In common with WaterHeater:Mixed
+      result.push_back("Water Heater Tank Temperature");
+      result.push_back("Water Heater Final Tank Temperature");
+      result.push_back("Water Heater Heat Loss Rate");
+      result.push_back("Water Heater Heat Loss Energy");
+      result.push_back("Water Heater Use Side Mass Flow Rate");
+      result.push_back("Water Heater Use Side Inlet Temperature");
+      result.push_back("Water Heater Use Side Outlet Temperature");
+      result.push_back("Water Heater Use Side Heat Transfer Rate");
+      result.push_back("Water Heater Use Side Heat Transfer Energy");
+      result.push_back("Water Heater Source Side Mass Flow Rate");
+      result.push_back("Water Heater Source Side Inlet Temperature");
+      result.push_back("Water Heater Source Side Outlet Temperature");
+      result.push_back("Water Heater Source Side Heat Transfer Rate");
+      result.push_back("Water Heater Source Side Heat Transfer Energy");
+      result.push_back("Water Heater Off Cycle Parasitic Tank Heat Transfer Rate");
+      result.push_back("Water Heater Off Cycle Parasitic Tank Heat Transfer Energy");
+      result.push_back("Water Heater On Cycle Parasitic Tank Heat Transfer Rate");
+      result.push_back("Water Heater On Cycle Parasitic Tank Heat Transfer Energy");
+      result.push_back("Water Heater Total Demand Heat Transfer Rate");
+      result.push_back("Water Heater Total Demand Energy");
+      result.push_back("Water Heater Heating Rate");
+      result.push_back("Water Heater Heating Energy");
+      result.push_back("Water Heater Unmet Demand Heat Transfer Rate");
+      result.push_back("Water Heater Unmet Demand Heat Transfer Energy");
+      result.push_back("Water Heater Venting Heat Transfer Rate");
+      result.push_back("Water Heater Venting Heat Transfer Energy");
+      result.push_back("Water Heater Net Heat Transfer Rate");
+      result.push_back("Water Heater Net Heat Transfer Energy");
+      result.push_back("Water Heater Cycle On Count");
+      result.push_back("Water Heater Runtime Fraction");
+      result.push_back("Water Heater Part Load Ratio");
+      result.push_back("Water Heater Electric Power");
+
+      // This should be based on fuel type
+
+      //result.push_back("Water Heater <Fuel Type> Rate");
+      //result.push_back("Water Heater <Fuel Type> Energy");
+          // Fuel type specific
+      // TODO: DLM: the return type of this method needs to change to std::vector<std::string> in ModelObject
+          // until then, make this include all possible outputVariableNames for class regardless of fuelType
+          // std::string fuelType = this->fuelType();
+      // if (fuelType == "Electricity") {
+      result.push_back("Water Heater Electric Power");
+      result.push_back("Water Heater Electric Energy");
+      // } else if (fuelType == "NaturalGas") {
+      result.push_back("Water Heater Gas Rate");
+      result.push_back("Water Heater Gas Energy");
+      // } else if (fuelType == "PropaneGas") {
+      result.push_back("Water Heater Propane Rate");
+      result.push_back("Water Heater Propane Energy");
+      // } else if (fuelType == "FuelOil#1") {
+      result.push_back("Water Heater FuelOil#1 Rate");
+      result.push_back("Water Heater FuelOil#1 Energy");
+      // } else if (fuelType == "FuelOil#2") {
+      result.push_back("Water Heater FuelOil#2 Rate");
+      result.push_back("Water Heater FuelOil#2 Energy");
+      // } else if (fuelType == "Coal") {
+      result.push_back("Water Heater Coal Rate");
+      result.push_back("Water Heater Coal Energy");
+      // } else if (fuelType == "Diesel") {
+      result.push_back("Water Heater Diesel Rate");
+      result.push_back("Water Heater Diesel Energy");
+      // } else if (fuelType == "Gasoline") {
+      result.push_back("Water Heater Gasoline Rate");
+      result.push_back("Water Heater Gasoline Energy");
+      // } else if (fuelType == "OtherFuel1") {
+      result.push_back("Water Heater OtherFuel1 Rate");
+      result.push_back("Water Heater OtherFuel1 Energy");
+      // } else if (fuelType == "OtherFuel2") {
+      result.push_back("Water Heater OtherFuel2 Rate");
+      result.push_back("Water Heater OtherFuel2 Energy");
+      // }
+
+      // TODO: implement these too...
+      //result.push_back("Water Heater Off Cycle Parasitic <Fuel Type> Rate");
+      //result.push_back("Water Heater Off Cycle Parasitic <Fuel Type> Energy");
+      //result.push_back("Water Heater On Cycle Parasitic <Fuel Type> Rate");
+      // result.push_back("Water Heater On Cycle Parasitic <Fuel Type> Energy");
+      //
+      result.push_back("Water Heater Water Volume Flow Rate");
+      result.push_back("Water Heater Water Volume");
+
+
+      // Specific to Stratified
+      result.push_back("Water Heater Heater 1 Heating Rate");
+      result.push_back("Water Heater Heater 2 Heating Rate");
+      result.push_back("Water Heater Heater 1 Heating Energy");
+      result.push_back("Water Heater Heater 2 Heating Energy");
+      result.push_back("Water Heater Heater 1 Cycle On Count");
+      result.push_back("Water Heater Heater 2 Cycle On Count");
+      result.push_back("Water Heater Heater 1 Runtime Fraction");
+      result.push_back("Water Heater Heater 2 Runtime Fraction");
+
+      // TODO: his should really be a check on whether the node is defined...
+      for (int i=1; i<=12; ++i) {
+        result.push_back("Water Heater Temperature Node " + std::to_string(i));
+        result.push_back("Water Heater Final Temperature Node " + std::to_string(i));
+      }
+
     }
     return result;
   }

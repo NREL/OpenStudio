@@ -299,22 +299,22 @@ TEST_F(SqlFileFixture, CreateSqlFile)
 TEST_F(SqlFileFixture, AnnualTotalCosts) {
   
   // Total annual costs for all fuel types
-  EXPECT_NEAR(205284016.81, *(sqlFile2.annualTotalUtilityCost()), 0.1);
+  EXPECT_NEAR(194619758.82, *(sqlFile2.annualTotalUtilityCost()), 0.1);
 
   // Costs by fuel type
-  EXPECT_NEAR(28423.6, *(sqlFile2.annualTotalCost(FuelType::Electricity)), 0.1);
-  EXPECT_NEAR(427.75, *(sqlFile2.annualTotalCost(FuelType::Gas)), 0.1);
-  EXPECT_NEAR(331.01, *(sqlFile2.annualTotalCost(FuelType::DistrictCooling)), 0.1);
-  EXPECT_NEAR(833.54, *(sqlFile2.annualTotalCost(FuelType::DistrictHeating)), 0.1);
+  EXPECT_NEAR(28168.44, *(sqlFile2.annualTotalCost(FuelType::Electricity)), 0.1);
+  EXPECT_NEAR(428.86, *(sqlFile2.annualTotalCost(FuelType::Gas)), 0.1);
+  EXPECT_NEAR(324.24, *(sqlFile2.annualTotalCost(FuelType::DistrictCooling)), 0.1);
+  EXPECT_NEAR(836.37, *(sqlFile2.annualTotalCost(FuelType::DistrictHeating)), 0.1);
   EXPECT_NEAR(0.91, *(sqlFile2.annualTotalCost(FuelType::Water)), 0.1);
-  EXPECT_NEAR(205254000, *(sqlFile2.annualTotalCost(FuelType::FuelOil_1)), 100);
+  EXPECT_NEAR(194590000, *(sqlFile2.annualTotalCost(FuelType::FuelOil_1)), 100);
 
   // Costs by total building area by fuel type
-  EXPECT_NEAR(11.84, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Electricity)), 0.1);
+  EXPECT_NEAR(11.73, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Electricity)), 0.1);
   EXPECT_NEAR(0.18, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Gas)), 0.1);
 
   // Costs by conditioned building area by fuel type
-  EXPECT_NEAR(11.84, *(sqlFile2.annualTotalCostPerNetConditionedBldgArea(FuelType::Electricity)), 0.1);
+  EXPECT_NEAR(11.73, *(sqlFile2.annualTotalCostPerNetConditionedBldgArea(FuelType::Electricity)), 0.1);
   EXPECT_NEAR(0.18, *(sqlFile2.annualTotalCostPerNetConditionedBldgArea(FuelType::Gas)), 0.1);
 
 }

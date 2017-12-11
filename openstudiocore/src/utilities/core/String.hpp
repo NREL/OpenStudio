@@ -39,7 +39,7 @@
 #include <QMetaType>
 
 /** \file String.hpp
- *  
+ *
  *  All strings are assumed to be UTF-8 encoded std::string.  Note that length of the std::string
  *  may therefore not match number of characters in the std::string. */
 

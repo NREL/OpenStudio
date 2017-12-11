@@ -212,7 +212,6 @@
     <rule IddField="Cooling Coil Name" Access="HIDDEN"/>
     <rule IddField="Supplemental Heating Coil Name" Access="HIDDEN"/>
     <rule IddField="Design Specification Multispeed Heat Pump Object Name" Access="HIDDEN"/>
-    <rule IddField="Control Type" Access="HIDDEN"/>
     <rule IddField="Outdoor Dry-Bulb Temperature Sensor Node Name" Access="HIDDEN"/>
     <rule IddField="Design Specification Multispeed Object Name" Access="LOCKED"/>
   </POLICY>
@@ -674,6 +673,16 @@
     <rule IddField="Hot Air Inlet Node" Access="HIDDEN"/>
     <rule IddField="Cold Air Inlet Node" Access="HIDDEN"/>
     <rule IddField="Design Specification Outdoor Air Object" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_DualDuct_VAV_OutdoorAir">
+    <rule IddField="Air Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Outdoor Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Recirculated Air Inlet Node" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_DualDuct_ConstantVolume">
+    <rule IddField="Air Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Hot Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Cold Air Inlet Node" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_AirTerminal_SingleDuct_InletSideMixer">
     <rule IddField="Terminal Unit Outlet" Access="HIDDEN"/>

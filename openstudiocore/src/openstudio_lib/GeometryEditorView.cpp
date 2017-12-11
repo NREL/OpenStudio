@@ -195,7 +195,7 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
   connect(m_view, &QWebEngineView::loadProgress, this, &EditorWebView::onLoadProgress);
   connect(m_view, &QWebEngineView::loadStarted, this, &EditorWebView::onLoadStarted);
   connect(m_view, &QWebEngineView::renderProcessTerminated, this, &EditorWebView::onRenderProcessTerminated);
-  
+
   // Qt 5.8 and higher
   //m_view->setAttribute(QWebEngineSettings::WebAttribute::AllowRunningInsecureContent, true);
 
@@ -370,7 +370,7 @@ void EditorWebView::translateExport()
     m_exportModel = model::Model();
     m_exportModelHandleMapping.clear();
   }
-  
+
 }
 
 void EditorWebView::startEditor()
@@ -536,7 +536,7 @@ void EditorWebView::saveExport()
 
     std::string contents = m_export.value<QString>().toStdString();
 
-    // DLM: should we compare checksums and only 
+    // DLM: should we compare checksums and only
     openstudio::path out = floorplanPath();
     if (!out.empty()){
       if (checksum(contents) != checksum(out)){

@@ -30,7 +30,7 @@
 #define MODEL_AIRLOOPHVACUNITARYSYSTEM_HPP
 
 #include "ModelAPI.hpp"
-#include "WaterToAirComponent.hpp"
+#include "ZoneHVACComponent.hpp"
 
 namespace openstudio {
 
@@ -48,7 +48,7 @@ namespace detail {
 } // detail
 
 /** AirLoopHVACUnitarySystem is a WaterToAirComponent that wraps the OpenStudio IDD object 'OS:AirLoopHVAC:UnitarySystem'. */
-class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
+class MODEL_API AirLoopHVACUnitarySystem : public ZoneHVACComponent {
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -78,9 +78,9 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
   /** @name Getters */
   //@{
 
-  //std::string controlType() const;
+  std::string controlType() const;
 
-  //bool isControlTypeDefaulted() const;
+  bool isControlTypeDefaulted() const;
 
   boost::optional<ThermalZone> controllingZoneorThermostatLocation() const;
 
@@ -228,9 +228,9 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
   /** @name Setters */
   //@{
 
-  //bool setControlType(std::string controlType);
+  bool setControlType(std::string controlType);
 
-  //void resetControlType();
+  void resetControlType();
 
   bool setControllingZoneorThermostatLocation(const ThermalZone& thermalZone);
 

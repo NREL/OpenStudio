@@ -41,17 +41,6 @@ namespace detail {
 
   /** HotWaterEquipmentDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for HotWaterEquipmentDefinition.*/
   class MODEL_API HotWaterEquipmentDefinition_Impl : public SpaceLoadDefinition_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -69,6 +58,8 @@ namespace detail {
     virtual ~HotWaterEquipmentDefinition_Impl() {}
 
     //@}
+
+    // TODO: remove
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
@@ -128,23 +119,23 @@ namespace detail {
     /** @name Other */
     //@{
 
-    /** Returns the design level represented by this definition, assuming floorArea (m^2) and 
+    /** Returns the design level represented by this definition, assuming floorArea (m^2) and
      *  numPeople. */
     double getDesignLevel(double floorArea, double numPeople) const;
 
-    /** Returns the watts/m^2 represented by this definition, assuming floorArea (m^2) and 
+    /** Returns the watts/m^2 represented by this definition, assuming floorArea (m^2) and
      *  numPeople. */
     double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-    /** Returns the watts/person represented by this definition, assuming floorArea (m^2) and 
+    /** Returns the watts/person represented by this definition, assuming floorArea (m^2) and
      *  numPeople. */
     double getPowerPerPerson(double floorArea, double numPeople) const;
-   
-    /** If method is a \link validDesignLevelCalculationMethodValues valid design level 
-     *  calculation method \endlink, changes this definition to an equivalent power level, under 
+
+    /** If method is a \link validDesignLevelCalculationMethodValues valid design level
+     *  calculation method \endlink, changes this definition to an equivalent power level, under
      *  the assumptions of floorArea (m^2) and numPeople. */
-    bool setDesignLevelCalculationMethod(const std::string& method, 
-                                         double floorArea, 
+    bool setDesignLevelCalculationMethod(const std::string& method,
+                                         double floorArea,
                                          double numPeople);
 
     //@}

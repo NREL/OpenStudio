@@ -145,7 +145,7 @@ void ModelObjectVectorController::detachOtherModelObject(const model::ModelObjec
 
 void ModelObjectVectorController::detachOtherModelObjects()
 {
-  for (const model::ModelObject& modelObject : m_otherModelObjects){
+  for (size_t i = 0; i < m_otherModelObjects.size(); i++) {
     // m_model->getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.disconnect<ModelObjectVectorController, &ModelObjectVectorController::objectAdded>(this);
     disconnect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ModelObjectVectorController::objectAdded);
 

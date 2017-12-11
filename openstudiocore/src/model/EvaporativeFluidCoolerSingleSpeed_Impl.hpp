@@ -76,7 +76,7 @@ namespace detail {
     virtual unsigned outletPort() override;
 
     virtual bool addToNode(Node & node) override;
-    
+
     //@}
     /** @name Getters */
     //@{
@@ -138,17 +138,20 @@ namespace detail {
 
     boost::optional<Schedule> blowdownMakeupWaterUsageSchedule() const;
 
-  boost::optional<double> autosizedDesignAirFlowRate() const ;
+    boost::optional<double> autosizedDesignAirFlowRate() const ;
 
-  boost::optional<double> autosizedFanPoweratDesignAirFlowRate() const ;
+    boost::optional<double> autosizedFanPoweratDesignAirFlowRate() const ;
 
-  boost::optional<double> autosizedUfactorTimesAreaValueatDesignAirFlowRate() const ;
+    boost::optional<double> autosizedUfactorTimesAreaValueatDesignAirFlowRate() const ;
 
-  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+    boost::optional<double> autosizedDesignWaterFlowRate() const ;
 
-  virtual void autosize() override;
+    virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+    virtual void applySizingValues() override;
+
+    // boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
+    // A11; \field Supply Water Storage Tank Name
 
     //@}
     /** @name Setters */

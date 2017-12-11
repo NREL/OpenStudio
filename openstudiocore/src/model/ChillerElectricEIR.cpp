@@ -70,6 +70,29 @@ namespace detail {
     : WaterToWaterComponent_Impl(other,model,keepHandle)
   {}
 
+  const std::vector<std::string> & ChillerElectricEIR_Impl::outputVariableNames() const
+  {
+    static std::vector<std::string> result;
+    if (result.empty())
+    {
+      result.push_back("Chiller Electric Power");
+      result.push_back("Chiller Electric Energy");
+      result.push_back("Chiller Evaporator Cooling Rate");
+      result.push_back("Chiller Evaporator Cooling Energy");
+      result.push_back("Chiller Evaporator Inlet Temperature");
+      result.push_back("Chiller Evaporator Outlet Temperature");
+      result.push_back("Chiller Evaporator Mass Flow Rate");
+      result.push_back("Chiller COP");
+      result.push_back("Chiller Condenser Heat Transfer Rate");
+      result.push_back("Chiller Condenser Heat Transfer Energy");
+      result.push_back("Chiller Part Load Ratio");
+      result.push_back("Chiller Cycling Ratio");
+      result.push_back("Chiller False Load Heat Transfer Rate");
+      result.push_back("Chiller False Load Heat Transfer Energy");
+    }
+    return result;
+  }
+
   IddObjectType ChillerElectricEIR_Impl::iddObjectType() const {
     return ChillerElectricEIR::iddObjectType();
   }
@@ -529,11 +552,24 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-
-
   bool ChillerElectricEIR_Impl::setCondenserType(std::string condenserType)
   {
-    return setString(OS_Chiller_Electric_EIRFields::CondenserType, condenserType);
+    bool ok = false;
+    if( ( istringEqual("AirCooled", condenserType) || istringEqual("EvaporativelyCooled", condenserType) )
+        && (this->secondaryPlantLoop()) )
+    {
+      LOG(Warn, "Cannot set condenserType to AirCooled or EvaporativelyCooled, chiller '"  << this->name() << "' is connected to a secondaryPlantLoop");
+    }
+    else if ( istringEqual("WaterCooled", condenserType) && !(this->secondaryPlantLoop()) )
+    {
+      LOG(Warn, "Cannot set condenserType to 'WaterCooled', chiller '"<< this->name() << "' is not connected to a secondaryPlantLoop");
+    }
+    else
+    {
+      ok = setString(OS_Chiller_Electric_EIRFields::CondenserType, condenserType);
+    }
+
+    return ok;
   }
 
   void ChillerElectricEIR_Impl::resetCondenserType() {
@@ -661,13 +697,6 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  const std::vector<std::string> & ChillerElectricEIR_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
-
-    return result;
-  }
-
   unsigned ChillerElectricEIR_Impl::supplyInletPort()
   {
     return OS_Chiller_Electric_EIRFields::ChilledWaterInletNodeName;
@@ -737,7 +766,24 @@ namespace detail {
 
   bool ChillerElectricEIR_Impl::addToNode(Node & node)
   {
-    return WaterToWaterComponent_Impl::addToNode(node);
+    // Connect the component
+    bool ok = WaterToWaterComponent_Impl::addToNode(node);
+
+    // If there's a secondary plant loop, switch the condenser type to "WaterCooled"
+    if (this->secondaryPlantLoop()) {
+      this->setCondenserType("WaterCooled");
+    }
+    return ok;
+  }
+
+  bool ChillerElectricEIR_Impl::removeFromSecondaryPlantLoop()
+  {
+    // Disconnect the component
+    bool ok = WaterToWaterComponent_Impl::removeFromSecondaryPlantLoop();
+
+    // Switch the condenser type to "AirCooled"
+    this->setCondenserType("AirCooled");
+    return ok;
   }
 
   boost::optional<ModelObject> ChillerElectricEIR_Impl::basinHeaterScheduleAsModelObject() const {

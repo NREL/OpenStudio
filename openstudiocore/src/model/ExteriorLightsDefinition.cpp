@@ -59,6 +59,7 @@ namespace detail {
     : ResourceObject_Impl(other,model,keepHandle)
   {}
 
+  // TODO: remove
   const std::vector<std::string>& ExteriorLightsDefinition_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;

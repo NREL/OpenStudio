@@ -362,6 +362,32 @@ namespace detail {
 
     void resetMaximumRPMSchedule();
 
+    std::string designPowerSizingMethod() const;
+
+    bool setDesignPowerSizingMethod(const std::string & designPowerSizingMethod);
+
+    double designElectricPowerPerUnitFlowRate() const;
+
+    bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
+
+    double designShaftPowerPerUnitFlowRatePerUnitHead() const;
+
+    bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
+
+    boost::optional<ThermalZone> zone() const;
+
+    bool setZone(const ThermalZone& thermalZone);
+
+    void resetZone();
+
+    double skinLossRadiativeFraction() const;
+
+    bool setSkinLossRadiativeFraction(double skinLossRadiativeFraction);
+
+    double designMinimumFlowRateFraction() const;
+    
+    bool setDesignMinimumFlowRateFraction(double designMinimumFlowRateFraction);
+
     //@}
    private:
     REGISTER_LOGGER("openstudio.model.PumpVariableSpeed");

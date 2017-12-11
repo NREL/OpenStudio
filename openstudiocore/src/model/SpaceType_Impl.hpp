@@ -60,32 +60,7 @@ namespace detail {
 
   /** SpaceType_Impl is a ResourceObject_Impl that is the implementation class for SpaceType.*/
   class MODEL_API SpaceType_Impl : public ResourceObject_Impl {
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -107,13 +82,10 @@ namespace detail {
     //@{
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
-    
+
     virtual IddObjectType iddObjectType() const override;
 
     virtual std::vector<ModelObject> children() const override;
-
-    virtual boost::optional<std::string> setName(const std::string& newName) override;
-    virtual boost::optional<std::string> setName(const std::string& newName, bool checkValidity) override;
 
     //@}
     /** @name Getters */
@@ -142,7 +114,7 @@ namespace detail {
 
     /// Sets the default construction set.
     bool setDefaultConstructionSet(const DefaultConstructionSet& defaultConstructionSet);
-    
+
     /// Resets the default construction set.
     void resetDefaultConstructionSet();
 
@@ -221,35 +193,35 @@ namespace detail {
 
     /// Resets DesignSpecificationOutdoorAir for this space type.
     void resetDesignSpecificationOutdoorAir();
-  
+
     /** Set all schedules for child space loads to their default value if there is one. */
     void hardApplySpaceLoadSchedules();
 
-    /** Returns the total people per space floor area in this space type, if it can be calculated 
+    /** Returns the total people per space floor area in this space type, if it can be calculated
      *  directly from the underlying people() data (without knowing floorArea). */
     boost::optional<double> peoplePerFloorArea() const;
 
-    /** Sets the peoplePerFloorArea, using people()[0], if it exists, as a template for the 
+    /** Sets the peoplePerFloorArea, using people()[0], if it exists, as a template for the
      *  remaining People and PeopleDefinition parameters. All other people() in this SpaceType will
      *  be removed. */
     bool setPeoplePerFloorArea(boost::optional<double> peoplePerFloorArea);
 
-    /** Sets the peoplePerFloorArea, using templatePeople as a template for the remaining 
-     *  People and PeopleDefinition parameters. All people() in this SpaceType (except for 
+    /** Sets the peoplePerFloorArea, using templatePeople as a template for the remaining
+     *  People and PeopleDefinition parameters. All people() in this SpaceType (except for
      *  templatePeople, if applicable), will be removed. */
     bool setPeoplePerFloorArea(double peoplePerFloorArea, const boost::optional<People>& templatePeople);
 
-    /** Returns the floor area per person for this space type, if it can be calculated directly 
+    /** Returns the floor area per person for this space type, if it can be calculated directly
      *  from the underlying people() data (without knowing floorArea). */
     boost::optional<double> spaceFloorAreaPerPerson() const;
 
-    /** Sets the spaceFloorAreaPerPerson, using people()[0], if it exists, as a template for the 
+    /** Sets the spaceFloorAreaPerPerson, using people()[0], if it exists, as a template for the
      *  remaining People and PeopleDefinition parameters. All other people() in this SpaceType will
      *  be removed. */
     bool setSpaceFloorAreaPerPerson(boost::optional<double> spaceFloorAreaPerPerson);
 
-    /** Sets the spaceFloorAreaPerPerson, using templatePeople as a template for the remaining 
-     *  People and PeopleDefinition parameters. All people() in this SpaceType (except for 
+    /** Sets the spaceFloorAreaPerPerson, using templatePeople as a template for the remaining
+     *  People and PeopleDefinition parameters. All people() in this SpaceType (except for
      *  templatePeople, if applicable), will be removed. */
     bool setSpaceFloorAreaPerPerson(double spaceFloorAreaPerPerson, const boost::optional<People>& templatePeople);
 
@@ -260,32 +232,32 @@ namespace detail {
     double getFloorAreaPerPerson(double floorArea) const;
 
     /** Returns the total lighting power per space floor area, if possible. Only works if there are
-     *  no luminaires in the space type, and if all lights are defined on a per space floor area 
+     *  no luminaires in the space type, and if all lights are defined on a per space floor area
      *  basis. */
     boost::optional<double> lightingPowerPerFloorArea() const;
 
     /** Sets the lightingPowerPerFloorArea, using lights()[0], if it exists, as a template for
-     *  the remaining Lights and LightsDefinition parameters. All other lights() and luminaires() 
+     *  the remaining Lights and LightsDefinition parameters. All other lights() and luminaires()
      *  in this SpaceType will be removed. */
     bool setLightingPowerPerFloorArea(boost::optional<double> lightingPowerPerFloorArea);
 
     /** Sets the lightingPowerPerFloorArea, using templateLights as a template for the remaining
-     *  Lights and LightsDefinition parameters. All lights() and luminaires() in this SpaceType 
+     *  Lights and LightsDefinition parameters. All lights() and luminaires() in this SpaceType
      *  (except for templateLights, if applicable), will be removed. */
-    bool setLightingPowerPerFloorArea(double lightingPowerPerFloorArea, 
+    bool setLightingPowerPerFloorArea(double lightingPowerPerFloorArea,
                                            const boost::optional<Lights>& templateLights);
 
-    /** Returns the total lighting power per person, if possible. Only works if there are no 
+    /** Returns the total lighting power per person, if possible. Only works if there are no
      *  luminaires in the space type, and if all lights are defined on a per person basis. */
     boost::optional<double> lightingPowerPerPerson() const;
 
     /** Sets the lightingPowerPerPerson, using lights()[0], if it exists, as a template for
-     *  the remaining Lights and LightsDefinition parameters. All other lights() and luminaires() 
+     *  the remaining Lights and LightsDefinition parameters. All other lights() and luminaires()
      *  in this SpaceType will be removed. */
     bool setLightingPowerPerPerson(boost::optional<double> lightingPowerPerPerson);
 
     /** Sets the lightingPowerPerPerson, using templateLights as a template for the remaining
-     *  Lights and LightsDefinition parameters. All lights() and luminaires() in this SpaceType 
+     *  Lights and LightsDefinition parameters. All lights() and luminaires() in this SpaceType
      *  (except for templateLights, if applicable), will be removed. */
     bool setLightingPowerPerPerson(double lightingPowerPerPerson,
                                    const boost::optional<Lights>& templateLights);
@@ -298,12 +270,12 @@ namespace detail {
      *  and luminaires, assuming floorArea (m^2) and numPeople. */
     double getLightingPowerPerFloorArea(double floorArea, double numPeople) const;
 
-    /** Returns the total lighting watts per person for this space type, including lights and 
+    /** Returns the total lighting watts per person for this space type, including lights and
      *  luminaires, assuming floorArea (m^2) and numPeople. */
     double getLightingPowerPerPerson(double floorArea, double numPeople) const;
 
-    /** Returns the total electric equipment power per space floor area, if it can be calculated 
-     *  directly from the underlying electricEquipment() data (without knowing floorArea and 
+    /** Returns the total electric equipment power per space floor area, if it can be calculated
+     *  directly from the underlying electricEquipment() data (without knowing floorArea and
      *  numPeople). */
     boost::optional<double> electricEquipmentPowerPerFloorArea() const;
 
@@ -314,14 +286,14 @@ namespace detail {
         boost::optional<double> electricEquipmentPowerPerFloorArea);
 
     /** Sets the electricEquipmentPowerPerFloorArea, using templateElectricEquipment as a template
-     *  for the remaining ElectricEquipment and ElectricEquipmentDefinition parameters. All other 
+     *  for the remaining ElectricEquipment and ElectricEquipmentDefinition parameters. All other
      *  electricEquipment() in this SpaceType will be removed. */
     bool setElectricEquipmentPowerPerFloorArea(
         double electricEquipmentPowerPerFloorArea,
         const boost::optional<ElectricEquipment>& templateElectricEquipment);
 
-    /** Returns the total electric equipment power per person, if it can be calculated 
-     *  directly from the underlying electricEquipment() data (without knowing floorArea and 
+    /** Returns the total electric equipment power per person, if it can be calculated
+     *  directly from the underlying electricEquipment() data (without knowing floorArea and
      *  numPeople). */
     boost::optional<double> electricEquipmentPowerPerPerson() const;
 
@@ -331,7 +303,7 @@ namespace detail {
     bool setElectricEquipmentPowerPerPerson(boost::optional<double> electricEquipmentPowerPerPerson);
 
     /** Sets the electricEquipmentPowerPerPerson, using templateElectricEquipment as a template
-     *  for the remaining ElectricEquipment and ElectricEquipmentDefinition parameters. All other 
+     *  for the remaining ElectricEquipment and ElectricEquipmentDefinition parameters. All other
      *  electricEquipment() in this SpaceType will be removed. */
     bool setElectricEquipmentPowerPerPerson(
         double electricEquipmentPowerPerPerson,
@@ -343,8 +315,8 @@ namespace detail {
 
     double getElectricEquipmentPowerPerPerson(double floorArea, double numPeople) const;
 
-    /** Returns the total gas equipment power per space floor area, if it can be calculated 
-     *  directly from the underlying gasEquipment() data (without knowing floorArea and 
+    /** Returns the total gas equipment power per space floor area, if it can be calculated
+     *  directly from the underlying gasEquipment() data (without knowing floorArea and
      *  numPeople). */
     boost::optional<double> gasEquipmentPowerPerFloorArea() const;
 
@@ -355,13 +327,13 @@ namespace detail {
         boost::optional<double> gasEquipmentPowerPerFloorArea);
 
     /** Sets the gasEquipmentPowerPerFloorArea, using templateGasEquipment as a template
-     *  for the remaining GasEquipment and GasEquipmentDefinition parameters. All other 
+     *  for the remaining GasEquipment and GasEquipmentDefinition parameters. All other
      *  gasEquipment() in this SpaceType will be removed. */
     bool setGasEquipmentPowerPerFloorArea(
         double gasEquipmentPowerPerFloorArea,
         const boost::optional<GasEquipment>& templateGasEquipment);
 
-    /** Returns the total gas equipment power per person, if it can be calculated directly from 
+    /** Returns the total gas equipment power per person, if it can be calculated directly from
      *  the underlying gasEquipment() data (without knowing floorArea and numPeople). */
     boost::optional<double> gasEquipmentPowerPerPerson() const;
 
@@ -371,7 +343,7 @@ namespace detail {
     bool setGasEquipmentPowerPerPerson(boost::optional<double> gasEquipmentPowerPerPerson);
 
     /** Sets the gasEquipmentPowerPerPerson, using templateGasEquipment as a template
-     *  for the remaining GasEquipment and GasEquipmentDefinition parameters. All other 
+     *  for the remaining GasEquipment and GasEquipmentDefinition parameters. All other
      *  gasEquipment() in this SpaceType will be removed. */
     bool setGasEquipmentPowerPerPerson(double gasEquipmentPowerPerPerson,
                                        const boost::optional<GasEquipment>& templateGasEquipment);
@@ -383,6 +355,8 @@ namespace detail {
     double getGasEquipmentPowerPerPerson(double floorArea, double numPeople) const;
 
     double floorArea() const;
+
+    boost::optional<std::string> setNameProtected(const std::string& newName);
 
     //@}
    protected:
@@ -409,7 +383,7 @@ namespace detail {
     bool setDefaultScheduleSetAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setRenderingColorAsModelObject(const boost::optional<ModelObject>& modelObject);
 
-    template <typename T, typename TDef> 
+    template <typename T, typename TDef>
     boost::optional<T> getMySpaceLoadInstance(const boost::optional<T>& templateSpaceLoadInstance);
 
     template <typename T>

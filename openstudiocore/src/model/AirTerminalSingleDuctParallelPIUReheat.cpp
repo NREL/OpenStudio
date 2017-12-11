@@ -87,7 +87,12 @@ namespace detail {
   const std::vector<std::string>& AirTerminalSingleDuctParallelPIUReheat_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone Air Terminal Heating Rate");
+      result.push_back("Zone Air Terminal Heating Energy");
+      result.push_back("Zone Air Terminal Sensible Cooling Rate");
+      result.push_back("Zone Air Terminal Sensible Cooling Energy");
     }
     return result;
   }
@@ -333,7 +338,7 @@ namespace detail {
     return value.get();
   }
 
-  void AirTerminalSingleDuctParallelPIUReheat_Impl::setReheatCoil( HVACComponent & hvacComponent )
+  bool AirTerminalSingleDuctParallelPIUReheat_Impl::setReheatCoil( HVACComponent & hvacComponent )
   {
     bool isTypeCorrect = false;
 
@@ -352,11 +357,14 @@ namespace detail {
 
     if( isTypeCorrect )
     {
-      setPointer(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::ReheatCoilName,hvacComponent.handle());
+      return setPointer(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::ReheatCoilName,hvacComponent.handle());
+    } else {
+      return false;
     }
+
   }
 
-  void AirTerminalSingleDuctParallelPIUReheat_Impl::setFan( HVACComponent & hvacComponent )
+  bool AirTerminalSingleDuctParallelPIUReheat_Impl::setFan( HVACComponent & hvacComponent )
   {
     bool isTypeCorrect = false;
 
@@ -367,7 +375,10 @@ namespace detail {
 
     if( isTypeCorrect )
     {
-      setPointer(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::FanName,hvacComponent.handle());
+      return setPointer(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::FanName,hvacComponent.handle());
+    } else {
+      LOG(Error, briefDescription() << " only accepts a Fan:ConstantVolume, and not the supplied " << hvacComponent.briefDescription() );
+      return false;
     }
   }
 
@@ -737,9 +748,20 @@ AirTerminalSingleDuctParallelPIUReheat::AirTerminalSingleDuctParallelPIUReheat( 
         << "availability schedule to " << schedule.briefDescription() << ".");
   }
 
-  setFan(fan);
+  test = setFan(fan);
+  if (!test) {
+    remove();
+    LOG_AND_THROW("Could not construct " << briefDescription() << ", because could not set its Fan to "
+        << fan.briefDescription() << ".");
+  }
 
-  setReheatCoil(reheatCoil);
+  test = setReheatCoil(reheatCoil);
+  if (!test) {
+    remove();
+     LOG_AND_THROW("Could not construct " << briefDescription() << ", because could not set its reheatCoil to "
+        << reheatCoil.briefDescription() << ".");
+  }
+
 
   autosizeMaximumHotWaterorSteamFlowRate();
 
@@ -891,14 +913,14 @@ Schedule AirTerminalSingleDuctParallelPIUReheat::availabilitySchedule() const
   return getImpl<detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->availabilitySchedule();
 }
 
-void AirTerminalSingleDuctParallelPIUReheat::setReheatCoil( HVACComponent & hvacComponent )
+bool AirTerminalSingleDuctParallelPIUReheat::setReheatCoil( HVACComponent & hvacComponent )
 {
-  getImpl<detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->setReheatCoil(hvacComponent);
+  return getImpl<detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->setReheatCoil(hvacComponent);
 }
 
-void AirTerminalSingleDuctParallelPIUReheat::setFan( HVACComponent & hvacComponent )
+bool AirTerminalSingleDuctParallelPIUReheat::setFan( HVACComponent & hvacComponent )
 {
-  getImpl<detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->setFan(hvacComponent);
+  return getImpl<detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->setFan(hvacComponent);
 }
 
 bool AirTerminalSingleDuctParallelPIUReheat::setAvailabilitySchedule(Schedule& schedule )

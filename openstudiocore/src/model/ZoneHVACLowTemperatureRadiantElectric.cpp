@@ -90,6 +90,10 @@ namespace detail {
     static std::vector<std::string> result;
     if (result.empty())
     {
+      result.push_back("Zone Radiant HVAC Electric Power");
+      result.push_back("Zone Radiant HVAC Electric Energy");
+      result.push_back("Zone Radiant HVAC Heating Energy");
+      result.push_back("Zone Radiant HVAC Heating Rate");
     }
     return result;
   }

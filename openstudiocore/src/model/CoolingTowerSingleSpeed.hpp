@@ -348,6 +348,36 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
   boost::optional<double> autosizedUFactorTimesAreaValueatFreeConvectionAirFlowRate() const ;
 
 
+  double freeConvectionAirFlowRateSizingFactor() const;
+  bool setFreeConvectionAirFlowRateSizingFactor(double freeConvectionAirFlowRateSizingFactor);
+
+  double freeConvectionUFactorTimesAreaValueSizingFactor() const;
+  bool setFreeConvectionUFactorTimesAreaValueSizingFactor(double freeConvectionUFactorTimesAreaValueSizingFactor);
+
+  double heatRejectionCapacityAndNominalCapacitySizingRatio() const;
+  bool setHeatRejectionCapacityAndNominalCapacitySizingRatio(double heatRejectionCapacityAndNominalCapacitySizingRatio);
+
+  double freeConvectionNominalCapacitySizingFactor() const;
+  bool setFreeConvectionNominalCapacitySizingFactor(double freeConvectionNominalCapacitySizingFactor);
+
+  double designInletAirDryBulbTemperature() const;
+  bool setDesignInletAirDryBulbTemperature(double designInletAirDryBulbTemperature);
+
+  double designInletAirWetBulbTemperature() const;
+  bool setDesignInletAirWetBulbTemperature(double designInletAirWetBulbTemperature);
+
+  boost::optional<double> designApproachTemperature() const;
+  bool isDesignApproachTemperatureAutosized() const;
+  bool setDesignApproachTemperature(double designApproachTemperature);
+  void autosizeDesignApproachTemperature();
+
+  boost::optional<double> designRangeTemperature() const;
+  bool isDesignRangeTemperatureAutosized() const;
+  bool setDesignRangeTemperature(double designRangeTemperature);
+  void autosizeDesignRangeTemperature();
+
+  std::string endUseSubcategory() const;
+  bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
   //@}
  protected:

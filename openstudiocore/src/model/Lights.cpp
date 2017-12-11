@@ -40,6 +40,7 @@
 #include "DefaultScheduleSet.hpp"
 #include "DefaultScheduleSet_Impl.hpp"
 #include "LifeCycleCost.hpp"
+#include "Model.hpp"
 
 #include <utilities/idd/OS_Lights_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -74,10 +75,38 @@ namespace detail {
   const std::vector<std::string>& Lights_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Lights Electric Power");
+      result.push_back("Lights Radiant Heat Gain");
+      result.push_back("Lights Radiant Heating Rate");
+      result.push_back("Lights Visible Radiation Heating Energy");
+      result.push_back("Lights Visible Radiation Heating Rate");
+      result.push_back("Lights Convective Heating Energy");
+      result.push_back("Lights Convective Heating Rate");
+      result.push_back("Lights Return Air Heating Energy");
+      result.push_back("Lights Return Air Heating Rate");
+      result.push_back("Lights Total Heating Energy");
+      result.push_back("Lights Total Heating Rate");
+      result.push_back("Lights Electric Energy");
+
+      // Reported in ThermalZone
+      //result.push_back("Zone Lights Electric Power");
+      //result.push_back("Zone Lights Radiant Heating Energy");
+      //result.push_back("Zone Lights Radiant Heating Rate");
+      //result.push_back("Zone Lights Visible Radiation Heating Energy");
+      //result.push_back("Zone Lights Visible Radiation Heating Rate");
+      //result.push_back("Zone Lights Convective Heating Energy");
+      //result.push_back("Zone Lights Convective Heating Rate");
+      //result.push_back("Zone Lights Return Air Heating Energy");
+      //result.push_back("Zone Lights Return Air Heating Rate");
+      //result.push_back("Zone Lights Total Heating Energy");
+      //result.push_back("Zone Lights Total Heating Rate");
+      //result.push_back("Zone Lights Electric Energy");
     }
     return result;
   }
+
 
   IddObjectType Lights_Impl::iddObjectType() const {
     return Lights::iddObjectType();
@@ -195,9 +224,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void Lights_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool Lights_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_LightsFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void Lights_Impl::resetEndUseSubcategory() {
@@ -350,6 +380,18 @@ Lights::Lights(const LightsDefinition& lightsDefinition)
   : SpaceLoadInstance(Lights::iddObjectType(),lightsDefinition)
 {
   OS_ASSERT(getImpl<detail::Lights_Impl>());
+
+  /*
+   *Schedule sch = this->model().alwaysOnDiscreteSchedule();
+   *bool test = this->setSchedule(sch);
+   *OS_ASSERT(test);
+   *test = this->setMultiplier(1.0);
+   *OS_ASSERT(test);
+   */
+  bool test = this->setEndUseSubcategory("General");
+  OS_ASSERT(test);
+  test = this->setFractionReplaceable(1.0);
+  OS_ASSERT(test);
 }
 
 IddObjectType Lights::iddObjectType() {
@@ -389,8 +431,8 @@ void Lights::resetMultiplier() {
   getImpl<detail::Lights_Impl>()->resetMultiplier();
 }
 
-void Lights::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::Lights_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool Lights::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::Lights_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void Lights::resetEndUseSubcategory() {

@@ -83,6 +83,8 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
 
   static IddObjectType iddObjectType();
 
+  std::vector<std::string> condenserTypeValues() const;
+
   /** @name Getters */
   //@{
 
@@ -248,7 +250,7 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
   void setEnergyInputRatioFunctionOfTemperatureCurve( const Curve& curve );
 
   /** Sets the CurveQuadratic referred to by the EnergyInputRatioFunctionOfFlowFractionCurveName field. **/
-  void setEnergyInputRatioFunctionOfFlowFractionCurve( const Curve& curve );  
+  void setEnergyInputRatioFunctionOfFlowFractionCurve( const Curve& curve );
 
   /** Sets the CurveQuadratic referred to by the PartLoadFractionCorrelationCurveName field. **/
   void setPartLoadFractionCorrelationCurve( const Curve & curve );
@@ -264,7 +266,7 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
   void setRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity( double value );
 
   /** Sets the value of the MaximumCyclingRate field. **/
-  void setMaximumCyclingRate( boost::optional<double> value );  
+  void setMaximumCyclingRate( boost::optional<double> value );
 
   void setMaximumCyclingRate( double value );
 
@@ -300,7 +302,7 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
   void setEvaporativeCondenserPumpRatedPowerConsumption( double value );
 
   /** Sets the value of the crankcaseHeaterCapacity field. **/
-  void setCrankcaseHeaterCapacity( boost::optional<double> value );  
+  void setCrankcaseHeaterCapacity( boost::optional<double> value );
 
   void setCrankcaseHeaterCapacity( double value );
 

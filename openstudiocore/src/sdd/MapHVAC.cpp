@@ -1097,7 +1097,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       model::AvailabilityManagerNightCycle nightCycle(model);
       nightCycle.setControlType("CycleOnControlZone");
 
-      airLoopHVAC.setAvailabilityManager(nightCycle);
+      airLoopHVAC.addAvailabilityManager(nightCycle);
 
       auto pair = std::pair<std::string,model::AvailabilityManagerNightCycle>(controlZone,nightCycle);
       m_nightCycleControlZones.insert(pair);
@@ -1107,8 +1107,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       airLoopHVAC.setNightCycleControlType("CycleOnAnyZoneFansOnly");
     }
 
-    if( auto avm = airLoopHVAC.availabilityManager() ) {
-      if( auto nightCycle = avm->optionalCast<model::AvailabilityManagerNightCycle>() ) {
+    if( ! airLoopHVAC.availabilityManagers().empty() ) {
+      auto avm = airLoopHVAC.availabilityManagers().front();
+      if( auto nightCycle = avm.optionalCast<model::AvailabilityManagerNightCycle>() ) {
         auto nightCycleTstatToleranceElement = airSystemElement.firstChildElement("NightCycleTstatTolerance");
         auto nightCycleTstatTolerance = nightCycleTstatToleranceElement.text().toDouble(&ok); 
         if( ok ) {
@@ -4815,7 +4816,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   {
     auto nightCycle = m_nightCycleControlZones.find(thermalZone.name().get());
     if( nightCycle != m_nightCycleControlZones.end() ) {
-      nightCycle->second.setControlThermalZone(thermalZone);
+      std::vector<model::ThermalZone> thermalZones = {thermalZone};
+      nightCycle->second.setControlThermalZones(thermalZones);
     }
   }
 
@@ -4950,7 +4952,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   if( ok && (operableWinInterlock == 1) ) {
     model::ZoneVentilationDesignFlowRate zoneVent(model);
     zoneVent.setName(thermalZone.nameString() + " Operable Window Ventilation");
-    zoneVent.setDesignFlowRateCalculationMethod("Flow/Area");
     zoneVent.setFlowRateperZoneFloorArea(0.000762);
     zoneVent.setVentilationType("Intake");
     zoneVent.setFanPressureRise(0.0);

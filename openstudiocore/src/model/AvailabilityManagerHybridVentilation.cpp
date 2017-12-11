@@ -75,7 +75,15 @@ namespace detail {
   const std::vector<std::string>& AvailabilityManagerHybridVentilation_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Availability Manager Hybrid Ventilation Control Mode");
+      result.push_back("Availability Manager Hybrid Ventilation Control Status");
+      result.push_back("Hybrid Ventilation Control HVAC System Operation Elapsed Time");
+      result.push_back("Hybrid Ventilation Control Natural Ventilation Elapsed Time");
+      result.push_back("Hybrid Ventilation Operative Temperature");
+      result.push_back("Hybrid Ventilation Lower Limit Operative Temperature");
+      result.push_back("Hybrid Ventilation Upper Limit Operative Temperature");
     }
     return result;
   }

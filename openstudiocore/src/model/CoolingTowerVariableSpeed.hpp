@@ -231,7 +231,9 @@ class MODEL_API CoolingTowerVariableSpeed : public StraightComponent {
 
   boost::optional<double> autosizedDesignFanPower() const ;
 
+  std::string endUseSubcategory() const;
 
+  bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
  protected:
 

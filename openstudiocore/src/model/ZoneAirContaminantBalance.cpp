@@ -96,7 +96,15 @@ namespace detail {
   const std::vector<std::string>& ZoneAirContaminantBalance_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Reported in ThermalZone
+      // The following output variables are available when Carbon Dioxide Concentration = Yes.
+      //result.push_back("Zone Air CO2 Internal Gain Volume Flow Rate");
+      //result.push_back("Zone Air CO2 Concentration");
+      // The following output variable is available when Generic Contaminant Concentration = Yes.
+      //result.push_back("Zone Generic Air Contaminant Generation Volume Flow Rate");
+      //result.push_back("Zone Air Generic Air Contaminant Concentration");
     }
     return result;
   }

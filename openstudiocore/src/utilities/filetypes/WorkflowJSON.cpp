@@ -123,7 +123,7 @@ namespace detail{
   WorkflowJSON WorkflowJSON_Impl::clone() const
   {
     WorkflowJSON result(this->string(true));
-      
+
     boost::optional<openstudio::path> oswPath = this->oswPath();
     if (oswPath){
       result.setOswPath(*oswPath);
@@ -157,7 +157,9 @@ namespace detail{
       Json::Reader reader;
       Json::Value options;
       bool parsingSuccessful = reader.parse(m_runOptions->string(), options);
-      clone["run_options"] = options;
+      if (parsingSuccessful){
+        clone["run_options"] = options;
+      }
     }
 
     Json::StyledWriter writer;
@@ -219,7 +221,7 @@ namespace detail{
     return false;
   }
 
-  bool WorkflowJSON_Impl::saveAs(const openstudio::path& p) 
+  bool WorkflowJSON_Impl::saveAs(const openstudio::path& p)
   {
     if (setOswPath(p, true)) {
       checkForUpdates();
@@ -227,7 +229,7 @@ namespace detail{
     }
     return false;
   }
-  
+
   void WorkflowJSON_Impl::reset()
   {
     m_value.removeMember("started_at");
@@ -367,7 +369,7 @@ namespace detail{
 
     m_oswFilename = p.filename();
     m_oswDir = p.parent_path();
-    setMeasureTypes(); 
+    setMeasureTypes();
     if (emitChange){
       onUpdate(); // onUpdate does not happen in setMeasureTypes
     }
@@ -385,7 +387,7 @@ namespace detail{
   bool WorkflowJSON_Impl::setOswDir(const openstudio::path& path)
   {
     m_oswDir = canonicalOrAbsolute(path);
-    setMeasureTypes(); 
+    setMeasureTypes();
     onUpdate(); // onUpdate does not happen in setMeasureTypes
     return true;
   }
@@ -443,7 +445,7 @@ namespace detail{
     std::vector<openstudio::path> result;
 
     Json::Value defaultValue(Json::arrayValue);
-    
+
     Json::Value paths = m_value.get("file_paths", defaultValue);
     paths.append("./files");
     paths.append("./weather");
@@ -481,7 +483,7 @@ namespace detail{
     onUpdate();
     return true;
   }
-  
+
   void WorkflowJSON_Impl::resetFilePaths()
   {
     m_value["file_paths"] = Json::Value(Json::arrayValue);
@@ -519,7 +521,7 @@ namespace detail{
     std::vector<openstudio::path> result;
 
     Json::Value defaultValue(Json::arrayValue);
-    
+
     Json::Value paths = m_value.get("measure_paths", defaultValue);
     paths.append("./measures");
     paths.append("../../measures");
@@ -622,14 +624,14 @@ namespace detail{
     }
     return toPath(result);
   }
-    
+
   bool WorkflowJSON_Impl::setWeatherFile(const openstudio::path& weatherFile)
   {
     m_value["weather_file"] = toString(weatherFile);
     onUpdate();
     return true;
   }
-    
+
   void WorkflowJSON_Impl::resetWeatherFile()
   {
     m_value.removeMember("weather_file");
@@ -640,7 +642,7 @@ namespace detail{
   {
     return m_steps;
   }
-  
+
   bool WorkflowJSON_Impl::setWorkflowSteps(const std::vector<WorkflowStep>& workflowSteps)
   {
     disconnectSteps();
@@ -764,7 +766,7 @@ namespace detail{
     openstudio::path newMeasureDirName = paths[0] / stem;
 
     if (existingMeasureDirName && (existingMeasureDirName->stem() != newMeasureDirName.stem())){
-      // update steps 
+      // update steps
       for (auto& step : m_steps){
         if (auto measureStep = step.optionalCast<MeasureStep>()){
           if (measureStep->measureDirName() == toString(existingMeasureDirName->stem())){
@@ -847,7 +849,7 @@ namespace detail{
       step.getImpl<detail::WorkflowStep_Impl>().get()->WorkflowStep_Impl::onChange.connect<WorkflowJSON_Impl, &WorkflowJSON_Impl::onUpdate>(this);
     }
   }
-  
+
   void WorkflowJSON_Impl::parseRunOptions()
   {
     if (m_runOptions){
@@ -870,14 +872,14 @@ namespace detail{
       m_value.removeMember("run_options");
     }
   }
-      
+
   void WorkflowJSON_Impl::disconnectRunOptions()
   {
     if (m_runOptions){
       m_runOptions->getImpl<detail::RunOptions_Impl>().get()->RunOptions_Impl::onChange.disconnect<WorkflowJSON_Impl, &WorkflowJSON_Impl::onUpdate>(this);
     }
   }
- 
+
   void WorkflowJSON_Impl::connectRunOptions()
   {
     if (m_runOptions){

@@ -69,7 +69,14 @@ namespace detail {
   const std::vector<std::string>& FluidCoolerTwoSpeed_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Cooling Tower Fan Electric Power");
+      result.push_back("Cooling Tower Fan Electric Energy");
+      result.push_back("Cooling Tower Heat Transfer Rate");
+      result.push_back("Cooling Tower Inlet Temperature");
+      result.push_back("Cooling Tower Outlet Temperature");
+      result.push_back("Cooling Tower Mass Flow Rate");
     }
     return result;
   }

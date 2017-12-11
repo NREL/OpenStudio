@@ -83,7 +83,35 @@ namespace detail {
   const std::vector<std::string>& RefrigerationTranscriticalSystem_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Refrigeration Transcritical System Total High Pressure Compressor Electric Power");
+      result.push_back("Refrigeration Transcritical System Total High Pressure Compressor Electric Energy");
+      result.push_back("Refrigeration Transcritical System Low Pressure Compressor Electric Power");
+      result.push_back("Refrigeration Transcritical System Low Pressure Compressor Electric Energy");
+      result.push_back("Refrigeration Transcritical System Total Compressor Electric Energy");
+      result.push_back("Refrigeration Transcritical System Average COP");
+      result.push_back("Refrigeration Transcritical System Medium Temperature Cases and Walk Ins Heat Transfer Rate");
+      result.push_back("Refrigeration Transcritical System Medium Temperature Cases and Walk Ins Heat Transfer Energy");
+      result.push_back("Refrigeration Transcritical System Low Temperature Cases and Walk Ins Heat Transfer Rate");
+      result.push_back("Refrigeration Transcritical System Low Temperature Cases and Walk Ins Heat Transfer Energy");
+      result.push_back("Refrigeration Transcritical System Total Cases and Walk Ins Heat Transfer Energy");
+      result.push_back("Refrigeration Transcritical System Medium Temperature Suction Pipe Heat Transfer Rate");
+      result.push_back("Refrigeration Transcritical System Medium Temperature Suction Pipe Heat Transfer Energy");
+      result.push_back("Refrigeration Transcritical System Low Temperature Suction Pipe Heat Transfer Rate");
+      result.push_back("Refrigeration Transcritical System Low Temperature Suction Pipe Heat Transfer Energy");
+      result.push_back("Refrigeration Transcritical System High Pressure Compressor Heat Transfer Rate");
+      result.push_back("Refrigeration Transcritical System High Pressure Compressor Heat Transfer Energy");
+      result.push_back("Refrigeration Transcritical System Low Pressure Compressor Heat Transfer Rate");
+      result.push_back("Refrigeration Transcritical System Low Pressure Compressor Heat Transfer Energy");
+      result.push_back("Refrigeration Transcritical System Net Rejected Heat Transfer Rate");
+      result.push_back("Refrigeration Transcritical System Net Rejected Heat Transfer Energy");
+      result.push_back("Refrigeration Transcritical System Estimated Refrigerant Inventory Mass");
+      result.push_back("Refrigeration Transcritical System Refrigerant Mass Flow Rate");
+      result.push_back("Refrigeration Transcritical System Medium Temperature Evaporating Temperature");
+      result.push_back("Refrigeration Transcritical System Medium Temperature Suction Temperature");
+      result.push_back("Refrigeration Transcritical System Low Temperature Evaporating Temperature");
+      result.push_back("Refrigeration Transcritical System Low Temperature Suction Temperature");
     }
     return result;
   }

@@ -85,7 +85,9 @@ namespace detail {
   const std::vector<std::string>& AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not Appropriate: No Specific output for this object
     }
     return result;
   }
@@ -290,6 +292,9 @@ namespace detail {
 
     HVACComponent coilHeatingClone = this->heatingCoil().clone(model).cast<HVACComponent>();
     airTerminalCVFourPipeInductionClone.setHeatingCoil(coilHeatingClone);
+
+    // Reset the inducedAirInletPort (inletPort and outletPort are already handled by the StraightComponent_Impl::clone() method)
+    airTerminalCVFourPipeInductionClone.setString(airTerminalCVFourPipeInductionClone.inducedAirInletPort(),"");
 
     return airTerminalCVFourPipeInductionClone;
   }

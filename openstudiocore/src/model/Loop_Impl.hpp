@@ -39,18 +39,13 @@ class Node;
 class HVACComponent;
 class Splitter;
 class Mixer;
+class AvailabilityManagerAssignmentList;
 
 namespace detail {
 
   class Model_Impl;
 
   class MODEL_API Loop_Impl : public ParentObject_Impl {
-
-    
-    
-    
-    
-    
 
   public:
 
@@ -127,6 +122,9 @@ namespace detail {
     virtual void autosize();
 
     virtual void applySizingValues();
+
+    virtual AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const = 0;
+
 
   private:
 

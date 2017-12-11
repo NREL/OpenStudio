@@ -67,7 +67,14 @@ namespace detail {
   const std::vector<std::string>& DistrictHeating_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("District Heating Hot Water Rate");
+      result.push_back("District Heating Hot Water Energy");
+      result.push_back("District Heating Rate");
+      result.push_back("District Heating Inlet Temperature");
+      result.push_back("District Heating Outlet Temperature");
+      result.push_back("District Heating Mass Flow Rate");
     }
     return result;
   }

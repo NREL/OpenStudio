@@ -75,7 +75,29 @@ namespace detail {
   const std::vector<std::string>& EvaporativeFluidCoolerTwoSpeed_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Cooling Tower Fan Electric Power");
+      result.push_back("Cooling Tower Fan Electric Energy");
+      result.push_back("Cooling Tower Heat Transfer Rate");
+      result.push_back("Cooling Tower Inlet Temperature");
+      result.push_back("Cooling Tower Outlet Temperature");
+      result.push_back("Cooling Tower Mass Flow Rate");
+      result.push_back("Cooling Tower Make Up Water Volume Flow Rate");
+      result.push_back("Cooling Tower Make Up Water Volume");
+      result.push_back("Cooling Tower Water Evaporation Volume Flow Rate");
+      result.push_back("Cooling Tower Water Evaporation Volume");
+      result.push_back("Cooling Tower Water Drift Volume Flow Rate");
+      result.push_back("Cooling Tower Water Drift Volume");
+      result.push_back("Cooling Tower Water Blowdown Volume Flow Rate");
+      result.push_back("Cooling Tower Water Blowdown Volume");
+      result.push_back("Cooling Tower Make Up Mains Water Volume");
+      // If Supply Water Storage Tank Name is specified:
+      // TODO: storage tank not implemented for now
+      //result.push_back("Cooling Tower Storage Tank Water Volume Flow Rate");
+      //result.push_back("Cooling Tower Storage Tank Water Volume");
+      //result.push_back("Cooling Tower Starved Storage Tank Water Volume Flow Rate");
+      //result.push_back("Cooling Tower Starved Storage Tank Water Volume");
     }
     return result;
   }

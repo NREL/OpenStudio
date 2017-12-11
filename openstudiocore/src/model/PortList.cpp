@@ -260,7 +260,7 @@ void PortList_Impl::removePort(unsigned port)
   eraseExtensibleGroup(port - numNonextensibleFields());
 }
 
-unsigned PortList_Impl::airLoopHVACPort()
+unsigned PortList_Impl::airLoopHVACPortIndex()
 {
   std::vector<ModelObject> objects = modelObjects();
 
@@ -276,6 +276,13 @@ unsigned PortList_Impl::airLoopHVACPort()
   }
 
   return nextPortIndex();
+}
+
+unsigned PortList_Impl::airLoopHVACPort()
+{
+  unsigned portIndex = airLoopHVACPortIndex();
+
+  return port(portIndex);
 }
 
 boost::optional<ModelObject> PortList_Impl::airLoopHVACModelObject()
@@ -376,6 +383,10 @@ ThermalZone PortList::thermalZone() const
 unsigned PortList::airLoopHVACPort()
 {
   return getImpl<detail::PortList_Impl>()->airLoopHVACPort();
+}
+unsigned PortList::airLoopHVACPortIndex()
+{
+  return getImpl<detail::PortList_Impl>()->airLoopHVACPortIndex();
 }
 
 boost::optional<ModelObject> PortList::airLoopHVACModelObject()

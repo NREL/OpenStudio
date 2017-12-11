@@ -119,17 +119,19 @@ namespace detail {
 
     bool isPrimaryDesignAirFlowRateAutosized() const;
 
-  boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const ;
+    boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const ;
 
-  boost::optional<double> autosizedSecondaryFanFlowRate() const ;
+    boost::optional<double> autosizedSecondaryFanFlowRate() const ;
 
-  boost::optional<double> autosizedSecondaryAirFanDesignPower() const ;
+    boost::optional<double> autosizedSecondaryAirFanDesignPower() const ;
 
-  boost::optional<double> autosizedPrimaryDesignAirFlowRate() const ;
+    boost::optional<double> autosizedPrimaryDesignAirFlowRate() const ;
 
-  virtual void autosize() override;
+    virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+    virtual void applySizingValues() override;
+
+    // TODO: Water Supply Storage Tank Name
 
     //@}
     /** @name Setters */

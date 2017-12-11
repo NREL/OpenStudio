@@ -168,7 +168,25 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACWaterToAirHeatPump_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone Water to Air Heat Pump Total Heating Rate");
+      result.push_back("Zone Water to Air Heat Pump Total Heating Energy");
+      result.push_back("Zone Water to Air Heat Pump Total Cooling Rate");
+      result.push_back("Zone Water to Air Heat Pump Total Cooling Energy");
+      result.push_back("Zone Water to Air Heat Pump Sensible Heating Rate");
+      result.push_back("Zone Water to Air Heat Pump Sensible Heating Energy");
+      result.push_back("Zone Water to Air Heat Pump Sensible Cooling Rate");
+      result.push_back("Zone Water to Air Heat Pump Sensible Cooling Energy");
+      result.push_back("Zone Water to Air Heat Pump Latent Heating Rate");
+      result.push_back("Zone Water to Air Heat Pump Latent Heating Energy");
+      result.push_back("Zone Water to Air Heat Pump Latent Cooling Rate");
+      result.push_back("Zone Water to Air Heat Pump Latent Cooling Energy");
+      result.push_back("Zone Water to Air Heat Pump Electric Power");
+      result.push_back("Zone Water to Air Heat Pump Electric Energy");
+      result.push_back("Zone Water to Air Heat Pump Fan Part Load Ratio");
+      result.push_back("Zone Water to Air Heat Pump Compressor Part Load Ratio");
+      result.push_back("Zone Water to Air Heat Pump Fan Availability Status");
     }
     return result;
   }

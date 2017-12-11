@@ -75,9 +75,50 @@ namespace detail {
 
   const std::vector<std::string>& CoolingTowerVariableSpeed_Impl::outputVariableNames() const
   {
+    // static until it changes
     static std::vector<std::string> result;
-    if (result.empty()){
-    }
+
+    // Common Variables
+    result.push_back("Cooling Tower Fan Electric Power");
+    result.push_back("Cooling Tower Fan Electric Energy");
+    result.push_back("Cooling Tower Heat Transfer Rate");
+    result.push_back("Cooling Tower Inlet Temperature");
+    result.push_back("Cooling Tower Outlet Temperature");
+    result.push_back("Cooling Tower Mass Flow Rate");
+    result.push_back("Cooling Tower Fan Part Load Ratio");
+    result.push_back("Cooling Tower Air Flow Rate Ratio");
+    result.push_back("Cooling Tower Operating Cells Count");
+
+
+    // When Mains Water is used
+    result.push_back("Cooling Tower Make Up Water Volume Flow Rate");
+    result.push_back("Cooling Tower Make Up Water Volume");
+    result.push_back("Cooling Tower Make Up Mains Water Volume");
+
+    // When storage tank water is used:
+    // Supply Water Storage Tank Name isn't implemented in OpenStudio
+    // TODO: Revisit if need be
+    //result.push_back("Cooling Tower Make Up Water Volume Flow Rate");
+    //result.push_back("Cooling Tower Make Up Water Volume");
+    //result.push_back("Cooling Tower Storage Tank Water Volume Flow Rate");
+    //result.push_back("Cooling Tower Storage Tank Water Volume");
+    //result.push_back("Cooling Tower Starved Storage Tank Water Volume Flow Rate");
+    //result.push_back("Cooling Tower Starved Storage Tank Water Volume");
+    //result.push_back("Cooling Tower Make Up Mains Water Volume");
+    //result.push_back("Cooling Tower Water Evaporation Volume Flow Rate");
+    //result.push_back("Cooling Tower Water Evaporation Volume");
+    //result.push_back("Cooling Tower Water Drift Volume Flow Rate");
+    //result.push_back("Cooling Tower Water Drift Volume");
+    //result.push_back("Cooling Tower Water Blowdown Volume Flow Rate");
+    //result.push_back("Cooling Tower Water Blowdown Volume");
+
+    // DLM: the return type of this method needs to change to std::vector<std::string> in ModelObject
+    // if specified
+    // if (this->basinHeaterCapacity() > 0) {
+      result.push_back("Cooling Tower Basin Heater Electric Power");
+      result.push_back("Cooling Tower Basin Heater Electric Energy");
+    // }
+
     return result;
   }
 
@@ -691,6 +732,16 @@ namespace detail {
 
     return false;
   }
+  
+  std::string CoolingTowerVariableSpeed_Impl::endUseSubcategory() const {
+    auto value = getString(OS_CoolingTower_VariableSpeedFields::EndUseSubcategory,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool CoolingTowerVariableSpeed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
+    return setString(OS_CoolingTower_VariableSpeedFields::EndUseSubcategory,endUseSubcategory);
+  }
 
   boost::optional<double> CoolingTowerVariableSpeed_Impl::autosizedDesignWaterFlowRate() const {
     return getAutosizedValue("Design Water Flow Rate", "m3/s");
@@ -753,6 +804,7 @@ CoolingTowerVariableSpeed::CoolingTowerVariableSpeed(const Model& model)
   setBlowdownCalculationMode("ConcentrationRatio");
   setBlowdownConcentrationRatio(3.0000);
   setSizingFactor(1.0000);
+  setEndUseSubcategory("General");
 
   CurveCubic curve(model);
   curve.setName(name().get() + " Fan Power Ratio Curve");
@@ -1104,6 +1156,14 @@ bool CoolingTowerVariableSpeed::setSizingFactor(double sizingFactor) {
 
 void CoolingTowerVariableSpeed::resetSizingFactor() {
   getImpl<detail::CoolingTowerVariableSpeed_Impl>()->resetSizingFactor();
+}
+
+std::string CoolingTowerVariableSpeed::endUseSubcategory() const {
+  return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->endUseSubcategory();
+}
+
+bool CoolingTowerVariableSpeed::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 /// @cond

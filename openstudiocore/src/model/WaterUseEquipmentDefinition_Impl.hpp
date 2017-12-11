@@ -43,19 +43,6 @@ namespace detail {
 
 /** WaterUseEquipmentDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for WaterUseEquipmentDefinition.*/
 class MODEL_API WaterUseEquipmentDefinition_Impl : public SpaceLoadDefinition_Impl {
-  
-
-  
-  
-
-  
-  
-  
-
-  
-  
-  
-
   public:
 
   WaterUseEquipmentDefinition_Impl(const IdfObject& idfObject,
@@ -72,13 +59,14 @@ class MODEL_API WaterUseEquipmentDefinition_Impl : public SpaceLoadDefinition_Im
 
   virtual ~WaterUseEquipmentDefinition_Impl() {}
 
+  // TODO: remove (unused)
   virtual const std::vector<std::string>& outputVariableNames() const override;
 
   virtual IddObjectType iddObjectType() const override;
 
   std::string endUseSubcategory() const;
   bool isEndUseSubcategoryDefaulted() const;
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
   void resetEndUseSubcategory();
 
   double peakFlowRate() const;

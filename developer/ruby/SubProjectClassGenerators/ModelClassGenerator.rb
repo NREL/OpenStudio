@@ -790,12 +790,12 @@ class ModelClassGenerator < SubProjectClassGenerator
 
       result << "    //@{\n\n"
 
-      result << "    virtual const std::vector<std::string>& outputVariableNames() const;\n\n"
+      result << "    virtual const std::vector<std::string>& outputVariableNames() const override;\n\n"
 
-      result << "    virtual IddObjectType iddObjectType() const;\n\n"
+      result << "    virtual IddObjectType iddObjectType() const override;\n\n"
 
       if @hasScheduleFields
-        result << "    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;\n\n"
+        result << "    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;\n\n"
       end
 
       result << "    //@}\n"

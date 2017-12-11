@@ -112,9 +112,9 @@ namespace detail {
 
     HVACComponent supplyAirFan() const;
 
-    CoilCoolingDXVariableRefrigerantFlow coolingCoil() const;
+    boost::optional<CoilCoolingDXVariableRefrigerantFlow> coolingCoil() const;
 
-    CoilHeatingDXVariableRefrigerantFlow heatingCoil() const;
+    boost::optional<CoilHeatingDXVariableRefrigerantFlow> heatingCoil() const;
 
     double zoneTerminalUnitOnParasiticElectricEnergyUse() const;
 

@@ -79,22 +79,28 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationHe
       equipmentList.setName(equipmentListName);
       eg.setString(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName,equipmentListName);
 
-      for( auto component : equipment ) {
-        
+      for( auto component : equipment )
+      {
+
         // TODO: Find the right way to deal with this
         // For now, "dirty" (?) fix for Generator:MicroTurbine
         // @kbenne, FYI
         boost::optional<IdfObject> idf_component;
 
+        // If you find a mCHPHR
         if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = component.optionalCast<GeneratorMicroTurbineHeatRecovery>())
         {
+          // Get the parent mchp and translate that, which will pull the appropriate fields from the mchpHR
+          // But we need the name of the mchp for the plant equipment list, not the mchpHR
           GeneratorMicroTurbine mchp = mchpHR->generatorMicroTurbine();
           idf_component = translateAndMapModelObject(mchp);
+          LOG(Trace, "Found a mchpHR, instead translated " << idf_component->briefDescription());
         }
-        else {
+        else
+        {
           idf_component = translateAndMapModelObject(component);
         }
-        
+
         auto eg2 = equipmentList.pushExtensibleGroup();
         OS_ASSERT(idf_component);
         eg2.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType,idf_component->iddObject().name());

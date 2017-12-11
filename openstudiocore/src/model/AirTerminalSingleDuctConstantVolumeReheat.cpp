@@ -29,7 +29,6 @@
 #include "AirTerminalSingleDuctConstantVolumeReheat.hpp"
 #include "AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "HVACComponent.hpp"
@@ -88,7 +87,9 @@ namespace detail {
   const std::vector<std::string>& AirTerminalSingleDuctConstantVolumeReheat_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // There are no outputs for the constant volume reheat air terminal.
     }
     return result;
   }

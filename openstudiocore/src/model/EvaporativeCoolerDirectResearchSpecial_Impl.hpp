@@ -39,13 +39,6 @@ class Curve;
 namespace detail {
 
   class MODEL_API EvaporativeCoolerDirectResearchSpecial_Impl : public StraightComponent_Impl {
-    
-
-    
-    
-    
-
-    
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -138,13 +131,13 @@ namespace detail {
 
     bool isPrimaryAirDesignFlowRateAutosized() const;
 
-  boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const ;
+    boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const ;
 
-  boost::optional<double> autosizedPrimaryAirDesignFlowRate() const ;
+    boost::optional<double> autosizedPrimaryAirDesignFlowRate() const ;
 
-  virtual void autosize() override;
+    virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+    virtual void applySizingValues() override;
 
    private:
 

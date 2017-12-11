@@ -200,8 +200,6 @@ void HVACSystemsController::update()
 
   if( m_dirty )
   {
-    m_hvacSystemsView->setUpdatesEnabled(false);
-
     model::OptionalModelObject mo;
     OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectModelObject(mo,false);
 
@@ -272,8 +270,6 @@ void HVACSystemsController::update()
       }
     }
 
-    systemComboBox->blockSignals(false);
-
     // Show layout
 
     m_hvacSystemsView->hvacToolbarView->zoomInButton->show();
@@ -286,6 +282,8 @@ void HVACSystemsController::update()
     m_hvacControlsController.reset();
     m_refrigerationController.reset();
     m_vrfController.reset();
+
+    OSAppBase::instance()->processEvents();
 
     if( handle == REFRIGERATION )
     {
@@ -384,7 +382,7 @@ void HVACSystemsController::update()
       }
     }
 
-    m_hvacSystemsView->setUpdatesEnabled(true);
+    systemComboBox->blockSignals(false);
 
     m_dirty = false;
   }
