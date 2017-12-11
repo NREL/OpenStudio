@@ -293,6 +293,9 @@ namespace detail {
     HVACComponent coilHeatingClone = this->heatingCoil().clone(model).cast<HVACComponent>();
     airTerminalCVFourPipeInductionClone.setHeatingCoil(coilHeatingClone);
 
+    // Reset the inducedAirInletPort (inletPort and outletPort are already handled by the StraightComponent_Impl::clone() method)
+    airTerminalCVFourPipeInductionClone.setString(airTerminalCVFourPipeInductionClone.inducedAirInletPort(),"");
+
     return airTerminalCVFourPipeInductionClone;
   }
 

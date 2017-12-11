@@ -811,7 +811,7 @@ namespace detail {
     if( ! airTerminal )
     {
       std::vector<ModelObject> modelObjects = demandComponents(splitter,mixer);
-      // Only clone last air terminal if there is are no plenums
+      // Only clone last air terminal if there are no plenums
       if( subsetCastVector<AirLoopHVACSupplyPlenum>(modelObjects).empty() &&
           subsetCastVector<AirLoopHVACReturnPlenum>(modelObjects).empty() )
       {
