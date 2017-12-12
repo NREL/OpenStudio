@@ -463,6 +463,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(PipeIndoor);
     REGISTER_CONSTRUCTOR(PipeOutdoor);
     REGISTER_CONSTRUCTOR(PlantComponentTemperatureSource);
+    REGISTER_CONSTRUCTOR(PlantComponentUserDefined);
     REGISTER_CONSTRUCTOR(PlantLoop);
     REGISTER_CONSTRUCTOR(PlantEquipmentOperationCoolingLoad);
     REGISTER_CONSTRUCTOR(PlantEquipmentOperationHeatingLoad);
@@ -928,6 +929,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(PipeIndoor);
     REGISTER_COPYCONSTRUCTORS(PipeOutdoor);
     REGISTER_COPYCONSTRUCTORS(PlantComponentTemperatureSource);
+    REGISTER_COPYCONSTRUCTORS(PlantComponentUserDefined);
     REGISTER_COPYCONSTRUCTORS(PlantLoop);
     REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationCoolingLoad);
     REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationHeatingLoad);

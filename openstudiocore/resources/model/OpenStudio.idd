@@ -28781,7 +28781,7 @@ OS:ExternalInterface:FunctionalMockupUnitExport:To:Variable,
 OS:PlantComponent:UserDefined,
       \memo Defines a generic plant component for custom modeling
       \memo using Energy Management System or External Interface
-      \min-fields 10
+      \min-fields 6
   A1, \field Handle
       \type handle
       \required-field    
@@ -28792,20 +28792,15 @@ OS:PlantComponent:UserDefined,
   A3, \field Main Model Program Calling Manager Name
       \type object-list
       \object-list ErlProgramCallingManagerNames
-  N1, \field Number of Plant Loop Connections
-      \type integer
-      \minimum 1
-      \maximum 4
-      \required-field
-  A4, \field Plant Connection 1 Inlet Node Name
+  A4, \field Plant Inlet Node Name
       \type object-list
       \object-list ConnectionNames
       \required-field
-  A5, \field Plant Connection 1 Outlet Node Name
+  A5, \field Plant Outlet Node Name
       \type object-list
       \object-list ConnectionNames
       \required-field
-  A6, \field Plant Connection 1 Loading Mode
+  A6, \field Plant Loading Mode
       \type choice
       \key DemandsLoad
       \key MeetsLoadWithPassiveCapacity
@@ -28813,107 +28808,19 @@ OS:PlantComponent:UserDefined,
       \key MeetsLoadWithNominalCapacityLowOutLimit
       \key MeetsLoadWithNominalCapacityHiOutLimit
       \required-field
-  A7, \field Plant Connection 1 Loop Flow Request Mode
+  A7, \field Plant Loop Flow Request Mode
       \type choice
       \key NeedsFlowIfLoopOn
       \key NeedsFlowAndTurnsLoopOn
       \key ReceivesWhateverFlowAvailable
       \required-field
-  A8, \field Plant Connection 1 Initialization Program Calling Manager Name
+  A8, \field Plant Initialization Program Calling Manager Name
       \type object-list
       \object-list ErlProgramCallingManagerNames
-  A9, \field Plant Connection 1 Simulation Program Calling Manager Name
+  A9, \field Plant Simulation Program Calling Manager Name
       \type object-list
       \object-list ErlProgramCallingManagerNames
-  A10, \field Plant Connection 2 Inlet Node Name
-       \type object-list
-       \object-list ConnectionNames
-  A11, \field Plant Connection 2 Outlet Node Name
-       \type object-list
-       \object-list ConnectionNames
-  A12, \field Plant Connection 2 Loading Mode
-       \type choice
-       \key DemandsLoad
-       \key MeetLoadWithPassiveCapacity
-       \key MeetLoadWithNominalCapacity
-       \key MeetLoadWithNominalCapacityLowOutLimit
-       \key MeetLoadWithNominalCapacityHiOutLimit
-  A13, \field Plant Connection 2 Loop Flow Request Mode
-       \type choice
-       \key NeedsFlowIfLoopOn
-       \key NeedsFlowAndTurnsLoopOn
-       \key ReceivesWhateverFlowAvailable
-  A14, \field Plant Connection 2 Initialization Program Calling Manager Name
-       \type object-list
-       \object-list ErlProgramCallingManagerNames
-  A15, \field Plant Connection 2 Simulation Program Calling Manager Name
-       \type object-list
-       \object-list ErlProgramCallingManagerNames
-  A16, \field Plant Connection 3 Inlet Node Name
-       \type object-list
-       \object-list ConnectionNames
-  A17, \field Plant Connection 3 Outlet Node Name
-       \type object-list
-       \object-list ConnectionNames
-  A18, \field Plant Connection 3 Loading Mode
-       \type choice
-       \key DemandsLoad
-       \key MeetLoadWithPassiveCapacity
-       \key MeetLoadWithNominalCapacity
-       \key MeetLoadWithNominalCapacityLowOutLimit
-       \key MeetLoadWithNominalCapacityHiOutLimit
-  A19, \field Plant Connection 3 Loop Flow Request Mode
-       \type choice
-       \key NeedsFlowIfLoopOn
-       \key NeedsFlowAndTurnsLoopOn
-       \key ReceivesWhateverFlowAvailable
-  A20, \field Plant Connection 3 Initialization Program Calling Manager Name
-       \type object-list
-       \object-list ErlProgramCallingManagerNames
-  A21, \field Plant Connection 3 Simulation Program Calling Manager Name
-       \type object-list
-       \object-list ErlProgramCallingManagerNames
-  A22, \field Plant Connection 4 Inlet Node Name
-       \type object-list
-       \object-list ConnectionNames
-  A23, \field Plant Connection 4 Outlet Node Name
-       \type object-list
-       \object-list ConnectionNames
-  A24, \field Plant Connection 4 Loading Mode
-       \type choice
-       \key DemandsLoad
-       \key MeetLoadWithPassiveCapacity
-       \key MeetLoadWithNominalCapacity
-       \key MeetLoadWithNominalCapacityLowOutLimit
-       \key MeetLoadWithNominalCapacityHiOutLimit
-  A25, \field Plant Connection 4 Loop Flow Request Mode
-       \type choice
-       \key NeedsFlowIfLoopOn
-       \key NeedsFlowAndTurnsLoopOn
-       \key ReceivesWhateverFlowAvailable
-  A26, \field Plant Connection 4 Initialization Program Calling Manager Name
-       \type object-list
-       \object-list ErlProgramCallingManagerNames
-  A27, \field Plant Connection 4 Simulation Program Calling Manager Name
-       \type object-list
-       \object-list ErlProgramCallingManagerNames
-  A28, \field Air Connection Inlet Node Name
-       \type object-list
-       \object-list ConnectionNames
-       \note Inlet air used for heat rejection or air source
-  A29, \field Air Connection Outlet Node Name
-       \type object-list
-       \object-list ConnectionNames
-       \note Outlet air used for heat rejection or air source
-  A30, \field Supply Inlet Water Storage Tank Name
-       \type object-list
-       \object-list WaterStorageTankNames
-       \note Water use storage tank for alternate source of water consumed by device
-  A31, \field Collection Outlet Water Storage Tank Name
-       \type object-list
-       \object-list WaterStorageTankNames
-       \note Water use storage tank for collection of condensate by device
-  A32; \field Ambient Zone Name
+  A10; \field Ambient Zone Name
        \type object-list
        \object-list ThermalZoneNames
        \note Used for modeling device losses to surrounding zone
