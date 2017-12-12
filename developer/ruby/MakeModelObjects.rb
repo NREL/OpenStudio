@@ -106,15 +106,18 @@ objects = []
 #objects << ["OS:ExternalInterface:FunctionalMockupUnitImport:From:Variable", "ExternalInterfaceFunctionalMockupUnitImportFromVariable", "ModelObject"]
 #objects << ["OS:ExternalInterface:FunctionalMockupUnitImport:To:Schedule", "ExternalInterfaceFunctionalMockupUnitImportToSchedule", "ModelObject"]
 #objects << ["OS:ExternalInterface:FunctionalMockupUnitImport:To:Actuator", "ExternalInterfaceFunctionalMockupUnitImportToActuator", "ModelObject"]
-objects << ["OS:ExternalInterface:FunctionalMockupUnitImport:To:Variable", "ExternalInterfaceFunctionalMockupUnitImportToVariable", "ModelObject"]
-objects << ["OS:ExternalInterface:FunctionalMockupUnitExport:From:Variable", "ExternalInterfaceFunctionalMockupUnitExportFromVariable", "ModelObject"]
-objects << ["OS:ExternalInterface:FunctionalMockupUnitExport:To:Schedule", "ExternalInterfaceFunctionalMockupUnitExportToSchedule", "ModelObject"]
-objects << ["OS:ExternalInterface:FunctionalMockupUnitExport:To:Actuator", "ExternalInterfaceFunctionalMockupUnitExportToActuator", "ModelObject"]
-objects << ["OS:ExternalInterface:FunctionalMockupUnitExport:To:Variable", "ExternalInterfaceFunctionalMockupUnitExportToVariable", "ModelObject"]
+#objects << ["OS:ExternalInterface:FunctionalMockupUnitImport:To:Variable", "ExternalInterfaceFunctionalMockupUnitImportToVariable", "ModelObject"]
+#objects << ["OS:ExternalInterface:FunctionalMockupUnitExport:From:Variable", "ExternalInterfaceFunctionalMockupUnitExportFromVariable", "ModelObject"]
+#objects << ["OS:ExternalInterface:FunctionalMockupUnitExport:To:Schedule", "ExternalInterfaceFunctionalMockupUnitExportToSchedule", "ModelObject"]
+#objects << ["OS:ExternalInterface:FunctionalMockupUnitExport:To:Actuator", "ExternalInterfaceFunctionalMockupUnitExportToActuator", "ModelObject"]
+#objects << ["OS:ExternalInterface:FunctionalMockupUnitExport:To:Variable", "ExternalInterfaceFunctionalMockupUnitExportToVariable", "ModelObject"]
+
+objects << ["OS:PlantComponent:UserDefined", "PlantComponentUserDefined", "ModelObject"]
 
 includePath = nil
 if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
-  includePath = "../../build/OSCore-prefix/src/OSCore-build/ruby/Debug"
+  #includePath = "../../build/OSCore-prefix/src/OSCore-build/ruby/Debug"
+  includePath = "../../build/Products/ruby/Debug"
   #includePath = "../../build/OSCore-prefix/src/OSCore-build/ruby/Release"
 else
   includePath = "../../build/OSCore-prefix/src/OSCore-build/ruby"

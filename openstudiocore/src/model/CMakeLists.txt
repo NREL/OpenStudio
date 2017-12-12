@@ -880,6 +880,9 @@ set(${target_name}_src
   PlantComponentTemperatureSource.hpp
   PlantComponentTemperatureSource_Impl.hpp
   PlantComponentTemperatureSource.cpp
+  PlantComponentUserDefined.hpp
+  PlantComponentUserDefined_Impl.hpp
+  PlantComponentUserDefined.cpp
   PlantLoop.hpp
   PlantLoop_Impl.hpp
   PlantLoop.cpp
