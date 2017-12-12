@@ -33,13 +33,23 @@
 #include "../ThreeJSReverseTranslator.hpp"
 #include "../ModelMerger.hpp"
 #include "../Model.hpp"
+#include "../BuildingStory.hpp"
+#include "../BuildingStory_Impl.hpp"
+#include "../DaylightingControl.hpp"
+#include "../DaylightingControl_Impl.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
 #include "../Surface.hpp"
 #include "../Surface_Impl.hpp"
+#include "../SubSurface.hpp"
+#include "../SubSurface_Impl.hpp"
 
 #include "../../utilities/geometry/ThreeJS.hpp"
 #include "../../utilities/geometry/FloorplanJS.hpp"
+#include "../../utilities/geometry/Geometry.hpp"
+#include "../../utilities/units/QuantityConverter.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -128,5 +138,115 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SurfaceMatch) {
     }
   }
   EXPECT_EQ(8u, numMatched);
+
+}
+
+
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/window_floorplan.json"); 
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  std::stringstream ss;
+  ss << *model;
+  std::string s = ss.str();
+
+  ASSERT_EQ(3u, model->getConcreteModelObjects<Space>().size());
+
+  boost::optional<Space> space1 = model->getConcreteModelObjectByName<Space>("Space 1");
+  boost::optional<Space> space2 = model->getConcreteModelObjectByName<Space>("Space 2");
+  boost::optional<Space> space3 = model->getConcreteModelObjectByName<Space>("Space 3");
+  ASSERT_TRUE(space1);
+  ASSERT_TRUE(space2);
+  ASSERT_TRUE(space3);
+
+  std::vector<Space> spaces;
+  spaces.push_back(*space1);
+  spaces.push_back(*space2);
+  spaces.push_back(*space3);
+
+  struct SpaceInfo{
+    std::string name;
+    unsigned numExteriorWalls;
+    boost::optional<Surface> southSurface;
+    std::vector<SubSurface> windows;
+    std::vector<DaylightingControl> dcs;
+  };
+
+  std::vector<SpaceInfo> infos;
+  for (const auto& space : spaces){
+    SpaceInfo info;
+    info.name = space.nameString();
+    info.numExteriorWalls = 0;
+    for (const auto& surface : space.surfaces()){
+      if (surface.surfaceType() == "Wall"){
+        if (surface.outsideBoundaryCondition() == "Outdoors"){
+          info.numExteriorWalls += 1;
+          if ((surface.azimuth() > degToRad(179)) && (surface.azimuth() < degToRad(181))){
+            // only one
+            EXPECT_FALSE(info.southSurface) << info.name;
+            info.southSurface = surface;
+            for (const auto& subSurface : surface.subSurfaces()){
+              info.windows.push_back(subSurface);
+            }
+          }
+        }
+      }
+    }
+
+    for (const auto& dc : space.daylightingControls()){
+      info.dcs.push_back(dc);
+    }
+
+    infos.push_back(info);
+  }
+
+  ASSERT_EQ(3u, infos.size());
+
+  EXPECT_EQ("Space 1", infos[0].name);
+  EXPECT_EQ(3, infos[0].numExteriorWalls);
+  ASSERT_TRUE(infos[0].southSurface);
+  EXPECT_EQ(9, infos[0].windows.size());
+  for (const auto& window : infos[0].windows){
+    EXPECT_EQ(convert(8.0, "ft^2", "m^2").get(), window.grossArea());
+  }
+  EXPECT_EQ(convert(800.0, "ft^2", "m^2").get(), infos[0].southSurface->grossArea());
+  EXPECT_EQ(convert(800.0 - 9*8.0, "ft^2", "m^2").get(), infos[0].southSurface->netArea());
+  EXPECT_EQ(1, infos[0].dcs.size());
+
+  EXPECT_EQ("Space 2", infos[0].name);
+  EXPECT_EQ(2, infos[0].numExteriorWalls);
+  ASSERT_TRUE(infos[0].southSurface);
+  EXPECT_EQ(17, infos[0].windows.size());
+  for (const auto& window : infos[0].windows){
+    EXPECT_EQ(convert(8.0, "ft^2", "m^2").get(), window.grossArea());
+  }
+  EXPECT_EQ(convert(800.0, "ft^2", "m^2").get(), infos[0].southSurface->grossArea());
+  EXPECT_EQ(convert(800.0 - 17*8.0, "ft^2", "m^2").get(), infos[0].southSurface->netArea());
+  EXPECT_EQ(1, infos[0].dcs.size());
+
+  EXPECT_EQ("Space 3", infos[0].name);
+  EXPECT_EQ(3, infos[0].numExteriorWalls);
+  ASSERT_TRUE(infos[0].southSurface);
+  EXPECT_EQ(1, infos[0].windows.size());
+  for (const auto& window : infos[0].windows){
+    EXPECT_EQ(convert(0.4*800.0, "ft^2", "m^2").get(), window.grossArea());
+  }
+  EXPECT_EQ(convert(800.0, "ft^2", "m^2").get(), infos[0].southSurface->grossArea());
+  EXPECT_EQ(convert(0.6*800.0, "ft^2", "m^2").get(), infos[0].southSurface->netArea());
+  EXPECT_EQ(1, infos[0].dcs.size());
 
 }

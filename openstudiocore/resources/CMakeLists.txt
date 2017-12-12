@@ -46,6 +46,7 @@ set(utilities_resources_src
   utilities/Geometry/floorplan.json
   utilities/Geometry/surface_match_floorplan.json
   utilities/Geometry/threejs.json
+  utilities/Geometry/window_floorplan.json
   utilities/Idf/CommentTest.idf
   utilities/Idf/DosLineEndingTest.idf
   utilities/Idf/UnixLineEndingTest.idf
