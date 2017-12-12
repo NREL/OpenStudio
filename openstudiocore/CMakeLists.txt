@@ -9,7 +9,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 
-project(OpenStudio VERSION 2.4.0)
+project(OpenStudio VERSION 2.4.1)
 
 include(ExternalProject)
 include(CPackComponent)

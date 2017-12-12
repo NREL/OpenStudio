@@ -1,4 +1,4 @@
-!IDD_Version 2.4.1
+!IDD_Version 2.4.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -12324,6 +12324,7 @@ OS:CoolingTower:SingleSpeed,
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
+       \default 1.0
   N18 , \field Free Convection Air Flow Rate Sizing Factor
        \required-field
        \type real
@@ -12337,6 +12338,7 @@ OS:CoolingTower:SingleSpeed,
   N20 , \field Heat Rejection Capacity and Nominal Capacity Sizing Ratio
        \required-field
        \type real
+       \default 1.25
   N21, \field Free Convection Nominal Capacity Sizing Factor
        \required-field
        \type real
@@ -12637,6 +12639,7 @@ OS:CoolingTower:TwoSpeed,
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
+       \default 1.0
   N30, \field Design Inlet Air Dry-Bulb Temperature
        \required-field
        \type real
@@ -28428,6 +28431,7 @@ OS:ExternalInterface,
        \required-field
    A2;  \field Name of External Interface
         \note Name of External Interface
+        \required-field
         \type choice
         \default PtolemyServer
         \key PtolemyServer
