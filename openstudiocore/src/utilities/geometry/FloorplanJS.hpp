@@ -145,8 +145,8 @@ namespace openstudio{
 
     ThreeModelObjectMetadata makeModelObjectMetadata(const std::string& iddObjectType, const Json::Value& object) const;
 
-    void makeGeometries(const Json::Value& story, const Json::Value& space, bool belowFloorPlenum, bool aboveCeilingPlenum, double lengthToMeters, double minZ, double maxZ,
-      const Json::Value& vertices, const Json::Value& edges, const Json::Value& faces, const std::string& faceId,
+    void makeGeometries(const Json::Value& story, const Json::Value& space, bool belowFloorPlenum, bool aboveCeilingPlenum, 
+      double lengthToMeters, double minZ, double maxZ, const Json::Value& vertices, const Json::Value& edges, const Json::Value& faces, const std::string& faceId,
       bool openstudioFormat, std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren) const;
     
     void makeSurface(const Json::Value& story, const Json::Value& space, bool belowFloorPlenum, bool aboveCeilingPlenum,

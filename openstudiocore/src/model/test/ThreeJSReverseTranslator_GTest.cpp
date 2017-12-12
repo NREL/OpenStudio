@@ -214,6 +214,8 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
     infos.push_back(info);
   }
 
+  std::sort(std::begin(infos), std::end(infos), [](SpaceInfo a, SpaceInfo b) {return a.name < b.name; });
+
   ASSERT_EQ(3u, infos.size());
 
   EXPECT_EQ("Space 1", infos[0].name);
@@ -227,26 +229,26 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
   EXPECT_EQ(convert(800.0 - 9*8.0, "ft^2", "m^2").get(), infos[0].southSurface->netArea());
   EXPECT_EQ(1, infos[0].dcs.size());
 
-  EXPECT_EQ("Space 2", infos[0].name);
-  EXPECT_EQ(2, infos[0].numExteriorWalls);
-  ASSERT_TRUE(infos[0].southSurface);
-  EXPECT_EQ(17, infos[0].windows.size());
-  for (const auto& window : infos[0].windows){
+  EXPECT_EQ("Space 2", infos[1].name);
+  EXPECT_EQ(2, infos[1].numExteriorWalls);
+  ASSERT_TRUE(infos[1].southSurface);
+  EXPECT_EQ(17, infos[1].windows.size());
+  for (const auto& window : infos[1].windows){
     EXPECT_EQ(convert(8.0, "ft^2", "m^2").get(), window.grossArea());
   }
-  EXPECT_EQ(convert(800.0, "ft^2", "m^2").get(), infos[0].southSurface->grossArea());
-  EXPECT_EQ(convert(800.0 - 17*8.0, "ft^2", "m^2").get(), infos[0].southSurface->netArea());
-  EXPECT_EQ(1, infos[0].dcs.size());
+  EXPECT_EQ(convert(800.0, "ft^2", "m^2").get(), infos[1].southSurface->grossArea());
+  EXPECT_EQ(convert(800.0 - 17*8.0, "ft^2", "m^2").get(), infos[1].southSurface->netArea());
+  EXPECT_EQ(1, infos[1].dcs.size());
 
-  EXPECT_EQ("Space 3", infos[0].name);
-  EXPECT_EQ(3, infos[0].numExteriorWalls);
-  ASSERT_TRUE(infos[0].southSurface);
-  EXPECT_EQ(1, infos[0].windows.size());
-  for (const auto& window : infos[0].windows){
+  EXPECT_EQ("Space 3", infos[2].name);
+  EXPECT_EQ(3, infos[2].numExteriorWalls);
+  ASSERT_TRUE(infos[2].southSurface);
+  EXPECT_EQ(1, infos[2].windows.size());
+  for (const auto& window : infos[2].windows){
     EXPECT_EQ(convert(0.4*800.0, "ft^2", "m^2").get(), window.grossArea());
   }
-  EXPECT_EQ(convert(800.0, "ft^2", "m^2").get(), infos[0].southSurface->grossArea());
-  EXPECT_EQ(convert(0.6*800.0, "ft^2", "m^2").get(), infos[0].southSurface->netArea());
-  EXPECT_EQ(1, infos[0].dcs.size());
+  EXPECT_EQ(convert(800.0, "ft^2", "m^2").get(), infos[2].southSurface->grossArea());
+  EXPECT_EQ(convert(0.6*800.0, "ft^2", "m^2").get(), infos[2].southSurface->netArea());
+  EXPECT_EQ(1, infos[2].dcs.size());
 
 }
