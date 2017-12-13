@@ -19807,7 +19807,7 @@ OS:Pump:ConstantSpeed,
        \type real
        \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
        \units W/((m3/s)-Pa)
-       \ip-units W/((gal/min)-ftH20)
+       \ip-units W/((gal/min)-ftH2O)
        \minimum> 0
 
 OS:Pump:VariableSpeed,
@@ -19952,7 +19952,7 @@ OS:Pump:VariableSpeed,
         \type real
         \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
         \units W/((m3/s)-Pa)
-        \ip-units W/((gal/min)-ftH20)
+        \ip-units W/((gal/min)-ftH2O)
         \minimum> 0
   N15;  \field Design Minimum Flow Rate Fraction
        \required-field
@@ -20053,7 +20053,7 @@ OS:HeaderedPumps:ConstantSpeed,
        \type real
         \required-field
        \units W/((m3/s)-Pa)
-       \ip-units W/((gal/min)-ftH20)
+       \ip-units W/((gal/min)-ftH2O)
        \minimum> 0
 
 OS:HeaderedPumps:VariableSpeed,
@@ -20160,7 +20160,7 @@ OS:HeaderedPumps:VariableSpeed,
        \required-field
        \type real
        \units W/((m3/s)-Pa)
-       \ip-units W/((gal/min)-ftH20)
+       \ip-units W/((gal/min)-ftH2O)
        \minimum> 0
 
 OS:TemperingValve,
@@ -28246,7 +28246,7 @@ OS:EnergyManagementSystem:OutputVariable,
        \type choice
        \default False
        \key True
-       \key False       
+       \key False
 
 OS:EnergyManagementSystem:MeteredOutputVariable,
        \memo This object sets up an EnergyPlus output variable from an Erl variable
@@ -28457,7 +28457,7 @@ OS:ExternalInterface:Schedule,
        \type choice
        \default True
        \key True
-       \key False     
+       \key False
 
 OS:ExternalInterface:Variable,
        \memo This input object is similar to EnergyManagementSystem:GlobalVariable. However, at
@@ -28483,7 +28483,7 @@ OS:ExternalInterface:Variable,
        \type choice
        \default True
        \key True
-       \key False     
+       \key False
 
 OS:ExternalInterface:Actuator,
        \memo Hardware portion of EMS used to set up actuators in the model
@@ -28517,7 +28517,7 @@ OS:ExternalInterface:Actuator,
        \type choice
        \default True
        \key True
-       \key False       
+       \key False
 
 OS:ExternalInterface:FunctionalMockupUnitImport,
        \memo This object declares an FMU
@@ -28775,4 +28775,4 @@ OS:ExternalInterface:FunctionalMockupUnitExport:To:Variable,
        \type real
        \required-field
        \note Used during the first call of EnergyPlus.
-       
+
