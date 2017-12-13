@@ -45,6 +45,8 @@
 #include "../../model/PlanarSurface.hpp"
 #include "../../model/FoundationKiva.hpp"
 #include "../../model/FoundationKiva_Impl.hpp"
+#include "../../model/SurfacePropertyExposedFoundationPerimeter.hpp"
+#include "../../model/SurfacePropertyExposedFoundationPerimeter_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -187,6 +189,14 @@ boost::optional<IdfObject> ForwardTranslator::translateSurface( model::Surface &
   std::sort(subSurfaces.begin(), subSurfaces.end(), WorkspaceObjectNameLess());
   for (SubSurface& subSurface : subSurfaces){
     translateAndMapModelObject(subSurface);
+  }
+
+  // create a defaulted SurfacePropertyExposedFoundationPerimeter object if it doesn't exist
+  if ((adjacentFoundation) && (surfaceType == "Floor")) {
+    if (!modelObject.surfacePropertyExposedFoundationPerimeter()) {
+      boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop = modelObject.createSurfacePropertyExposedFoundationPerimeter("ExposedPerimeterFraction", 1);
+      translateAndMapModelObject(optprop.get());
+    }
   }
 
   return idfObject;

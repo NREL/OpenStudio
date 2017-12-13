@@ -130,7 +130,7 @@ namespace detail {
 
 } // detail
 
-SurfacePropertyExposedFoundationPerimeter::SurfacePropertyExposedFoundationPerimeter(Surface& surface, std::string exposedPerimeterCalculationMethod)
+SurfacePropertyExposedFoundationPerimeter::SurfacePropertyExposedFoundationPerimeter(Surface& surface, std::string exposedPerimeterCalculationMethod, double exposedPerimeter)
   : ModelObject(SurfacePropertyExposedFoundationPerimeter::iddObjectType(), surface.model())
 {
   OS_ASSERT(getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>());
@@ -149,34 +149,17 @@ SurfacePropertyExposedFoundationPerimeter::SurfacePropertyExposedFoundationPerim
   ok = setExposedPerimeterCalculationMethod(exposedPerimeterCalculationMethod);
   OS_ASSERT(ok);
 
-  boost::optional<double> totalExposedPerimeter = surface.exposedPerimeter();
-  if (surface.exposedPerimeter()) {
-    ok = setTotalExposedPerimeter(surface.exposedPerimeter().get());
-  }
-  OS_ASSERT(ok);
-}
-
-SurfacePropertyExposedFoundationPerimeter::SurfacePropertyExposedFoundationPerimeter(Surface& surface, std::string exposedPerimeterCalculationMethod, double totalExposedPerimeter)
-  : ModelObject(SurfacePropertyExposedFoundationPerimeter::iddObjectType(), surface.model())
-{
-  OS_ASSERT(getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>());
-
-  if (surface.surfacePropertyExposedFoundationPerimeter())
+  if (exposedPerimeterCalculationMethod=="TotalExposedPerimeter") 
   {
-    LOG_AND_THROW("Surface '" << surface.nameString() << "' already has an associated SurfacePropertyExposedFoundationPerimeter object");
+    ok = setTotalExposedPerimeter(exposedPerimeter);
+    OS_ASSERT(ok);
+  } 
+  else if (exposedPerimeterCalculationMethod=="ExposedPerimeterFraction") 
+  {
+    ok = setExposedPerimeterFraction(exposedPerimeter);
+    OS_ASSERT(ok);
   }
 
-  bool ok = true;
-  OS_ASSERT(ok);
-
-  ok = setPointer(OS_SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName, surface.handle());
-  OS_ASSERT(ok);
-
-  ok = setExposedPerimeterCalculationMethod(exposedPerimeterCalculationMethod);
-  OS_ASSERT(ok);
-
-  ok = setTotalExposedPerimeter(totalExposedPerimeter);
-  OS_ASSERT(ok);
 }
 
 IddObjectType SurfacePropertyExposedFoundationPerimeter::iddObjectType() {
