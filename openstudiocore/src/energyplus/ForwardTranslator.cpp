@@ -2073,6 +2073,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translatePlantComponentTemperatureSource(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_PlantComponent_UserDefined:
+  {
+    model::PlantComponentUserDefined mo = modelObject.cast<PlantComponentUserDefined>();
+    retVal = translatePlantComponentUserDefined(mo);
+    break;
+  }
   case openstudio::IddObjectType::OS_PlantEquipmentOperation_CoolingLoad :
     {
       auto mo = modelObject.cast<PlantEquipmentOperationCoolingLoad>();

@@ -258,6 +258,7 @@ class PipeIndoor;
 class PipeOutdoor;
 class PlantLoop;
 class PlantComponentTemperatureSource;
+class PlantComponentUserDefined;
 class PlantEquipmentOperationCoolingLoad;
 class PlantEquipmentOperationHeatingLoad;
 class PlantEquipmentOperationOutdoorDryBulb;
@@ -906,6 +907,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translatePlantLoop( model::PlantLoop & modelObject );
 
   boost::optional<IdfObject> translatePlantComponentTemperatureSource( model::PlantComponentTemperatureSource & modelObject  );
+
+  boost::optional<IdfObject> translatePlantComponentUserDefined(model::PlantComponentUserDefined & modelObject);
 
   boost::optional<IdfObject> translatePlantEquipmentOperationSchemes( model::PlantLoop & plantLoop );
 
