@@ -280,7 +280,7 @@ namespace openstudio{
 
   std::string FloorplanJS::makeSurface(const Json::Value& story, const Json::Value& space, const std::string& parentSurfaceName, const std::string& parentSubSurfaceName, 
     bool belowFloorPlenum, bool aboveCeilingPlenum, const std::string& surfaceType, const Point3dVector& vertices, size_t faceFormat, 
-    std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren) const
+    std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren, double illuminanceSetpoint) const
   {
     bool plenum = false;
     std::string spaceNamePostFix;
@@ -430,6 +430,7 @@ namespace openstudio{
       userData.setSurfaceType(surfaceType);
       //userData.setAboveCeilingPlenum(aboveCeilingPlenum);
       //userData.setBelowFloorPlenum(belowFloorPlenum);
+      userData.setIlluminanceSetpoint(illuminanceSetpoint);
 
       ThreeSceneChild sceneChild(uuid, name, type, geometryId, materialId, userData);
       sceneChildren.push_back(sceneChild);
@@ -449,6 +450,7 @@ namespace openstudio{
     std::vector<Point3d> daylightingControlVertices;
 
     const Json::Value windowDefinitions = m_value.get("window_definitions", Json::arrayValue);
+    const Json::Value daylightingControlDefinitions = m_value.get("daylighting_control_definitions", Json::arrayValue);
     
     // get all the windows on this story
     std::map<std::string, std::vector<Json::Value> > edgeIdToWindowsMap;
@@ -578,8 +580,8 @@ namespace openstudio{
         finalRoofCeilingVertices.push_back(Point3d(v.x(), v.y(), maxZ));
       }
 
-      makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "Floor", finalfloorVertices, roofCeilingFaceFormat, geometries, sceneChildren);
-      makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "RoofCeiling", reverse(finalRoofCeilingVertices), roofCeilingFaceFormat, geometries, sceneChildren);
+      makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "Floor", finalfloorVertices, roofCeilingFaceFormat, geometries, sceneChildren, 0);
+      makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "RoofCeiling", reverse(finalRoofCeilingVertices), roofCeilingFaceFormat, geometries, sceneChildren, 0);
     }
 
     // create each wall
@@ -597,8 +599,13 @@ namespace openstudio{
       testSegment.push_back(Point3d(faceVertices[i % numPoints].x(), faceVertices[i % numPoints].y(), 0.0));
 
       Vector3d edgeVector = testSegment[1] - testSegment[0];
+      edgeVector.setLength(1.0);
+      Vector3d upVector(0, 0, 1);
+      Vector3d crossVector = upVector.cross(edgeVector);
 
       Point3dVectorVector allFinalWindowVertices;
+      Point3dVectorVector allFinalShadeVertices;
+      std::vector<unsigned> allFinalShadeParentSubSurfaceIndices;
 
       unsigned windowN = windowCenterVertices.size();
       OS_ASSERT(windowN == windowDefinitionIds.size());
@@ -637,23 +644,71 @@ namespace openstudio{
 
                 Vector3d widthVector = edgeVector;
                 widthVector.setLength(0.5*width);
-                Point3d windowRight = windowCenterVertices[windowIdx] + widthVector;
+                Point3d window1 = windowCenterVertices[windowIdx] + widthVector;
                 widthVector.setLength(-0.5*width);
-                Point3d windowLeft = windowCenterVertices[windowIdx] + widthVector;
+                Point3d window2 = windowCenterVertices[windowIdx] + widthVector;
                 
                 Point3dVector windowVertices;
-                windowVertices.push_back(Point3d(windowLeft.x(), windowLeft.y(), sillHeight + height));
-                windowVertices.push_back(Point3d(windowRight.x(), windowRight.y(), sillHeight + height));
-                windowVertices.push_back(Point3d(windowRight.x(), windowRight.y(), sillHeight));
-                windowVertices.push_back(Point3d(windowLeft.x(), windowLeft.y(), sillHeight));
+                windowVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight + height));
+                windowVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight));
+                windowVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight));
+                windowVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight + height));
 
+                unsigned parentSubSurfaceIndex = allFinalWindowVertices.size();
                 allFinalWindowVertices.push_back(windowVertices);
+
+                if (checkKeyAndType(*windowDefinition, "overhang_projection_factor", Json::realValue)){
+                  double projectionFactor = windowDefinition->get("overhang_projection_factor", 0.0).asDouble();
+                  
+                  Vector3d outVector = crossVector;
+                  outVector.setLength(projectionFactor*height);
+
+                  Point3d window3 = window1 + outVector;
+                  Point3d window4 = window2 + outVector;
+
+                  Point3dVector shadeVertices;
+                  shadeVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight + height));
+                  shadeVertices.push_back(Point3d(window3.x(), window3.y(), sillHeight + height));
+                  shadeVertices.push_back(Point3d(window4.x(), window4.y(), sillHeight + height));
+                  shadeVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight + height));
+
+                  allFinalShadeVertices.push_back(shadeVertices);
+                  allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
+                }
+
+                if (checkKeyAndType(*windowDefinition, "fin_projection_factor", Json::realValue)){
+                  double projectionFactor = windowDefinition->get("fin_projection_factor", 0.0).asDouble();
+                  
+                  Vector3d outVector = crossVector;
+                  outVector.setLength(projectionFactor*height);
+
+                  Point3d window3 = window1 + outVector;
+                  Point3d window4 = window2 + outVector;
+
+                  Point3dVector shadeVertices;
+                  shadeVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight + height));
+                  shadeVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight));
+                  shadeVertices.push_back(Point3d(window3.x(), window3.y(), sillHeight));
+                  shadeVertices.push_back(Point3d(window3.x(), window3.y(), sillHeight + height));
+
+                  allFinalShadeVertices.push_back(shadeVertices);
+                  allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
+
+                  shadeVertices.clear();
+                  shadeVertices.push_back(Point3d(window4.x(), window4.y(), sillHeight + height));
+                  shadeVertices.push_back(Point3d(window4.x(), window4.y(), sillHeight));
+                  shadeVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight));
+                  shadeVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight + height));
+
+                  allFinalShadeVertices.push_back(shadeVertices);
+                  allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
+                }
 
               } else if (istringEqual("Window to Wall Ratio", windowDefinitionType)){
                 assertKeyAndType(*windowDefinition, "sill_height", Json::realValue);
                 assertKeyAndType(*windowDefinition, "wwr", Json::realValue);
-
               }
+              
             }
 
             mappedWindows.insert(windowIdx);
@@ -674,13 +729,54 @@ namespace openstudio{
 
       std::string parentSurfaceName;
       for (const auto& finalWallVertices : allFinalWallVertices){
-        parentSurfaceName = makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "Wall", finalWallVertices, finalWallFaceFormat, geometries, sceneChildren);
+        parentSurfaceName = makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "Wall", finalWallVertices, finalWallFaceFormat, geometries, sceneChildren, 0);
       }
 
+      std::vector<std::string> parentSubSurfaceNames;
       for (const auto& finalWindowVertices : allFinalWindowVertices){
-        makeSurface(story, space, parentSurfaceName, "", belowFloorPlenum, aboveCeilingPlenum, "FixedWindow", finalWindowVertices, wallFaceFormat, geometries, sceneChildren);
+        std::string parentSubSurfaceName = makeSurface(story, space, parentSurfaceName, "", belowFloorPlenum, aboveCeilingPlenum, "FixedWindow", finalWindowVertices, wallFaceFormat, geometries, sceneChildren, 0);
+        parentSubSurfaceNames.push_back(parentSubSurfaceName);
       }
 
+      size_t shadeN = allFinalShadeVertices.size();
+      OS_ASSERT(shadeN == allFinalShadeParentSubSurfaceIndices.size());
+      for (size_t shadeIdx = 0; shadeIdx < shadeN; ++shadeIdx){
+        std::string parentSubSurfaceName = parentSubSurfaceNames[allFinalShadeParentSubSurfaceIndices[shadeIdx]];
+        makeSurface(story, space, "", parentSubSurfaceName, belowFloorPlenum, aboveCeilingPlenum, "SpaceShading", allFinalShadeVertices[shadeIdx], wallFaceFormat, geometries, sceneChildren, 0);
+      }
+    }
+
+    // get daylighting controls
+    for (const auto& daylightingControl : space.get("daylighting_controls", Json::arrayValue)){
+      assertKeyAndType(daylightingControl, "vertex_id", Json::stringValue);
+      std::string vertexId = daylightingControl.get("vertex_id", "").asString();
+
+      const Json::Value* vertex = findById(vertices, vertexId);
+      if (vertex){
+        assertKeyAndType(daylightingControl, "daylighting_control_definition_id", Json::stringValue);
+        std::string daylightingControlDefinitionId = daylightingControl.get("daylighting_control_definition_id", "").asString();
+
+        assertKeyAndType(*vertex, "x", Json::realValue);
+        assertKeyAndType(*vertex, "y", Json::realValue);
+        
+
+        const Json::Value* daylightingControlDefinition = findById(daylightingControlDefinitions, daylightingControlDefinitionId);
+        if (daylightingControlDefinition){
+          assertKey(*daylightingControlDefinition, "height");
+          assertKey(*daylightingControlDefinition, "illuminance_setpoint");
+
+          double height = lengthToMeters * daylightingControlDefinition->get("height", 0.0).asDouble();
+          double illuminanceSetpoint = daylightingControlDefinition->get("illuminance_setpoint", 0.0).asDouble(); // DLM: TODO put in unit conversion
+
+          Point3dVector dcVertices;
+          dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() - 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() + 0.1, height));
+          dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() + 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() + 0.1, height));
+          dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() + 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() - 0.1, height));
+          dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() - 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() - 0.1, height));
+
+          makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "DaylightingControl", dcVertices, wallFaceFormat, geometries, sceneChildren, illuminanceSetpoint);
+        }
+      }
     }
     
   }

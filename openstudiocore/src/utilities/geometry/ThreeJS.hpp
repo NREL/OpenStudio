@@ -164,7 +164,7 @@ namespace openstudio{
     /// surfaceType is overloaded as a more general type:
     /// Surfaces {"Wall", "Floor", "RoofCeiling"}
     /// SubSurfaces {"FixedWindow", "OperableWindow", "GlassDoor", "Skylight", "TubularDaylightDome", "TubularDaylightDiffuser", "Door", "OverheadDoor"}
-    /// ShadingSurfaces {"BuildingShading", "InteriorPartitionSurface", "RoofCeiling"}
+    /// ShadingSurfaces {"SiteShading", "BuildingShading", "SpaceShading"}
     /// InteriorPartitionSurfaces {"InteriorPartitionSurface"}
     /// DaylightingControl {"DaylightingControl"}
     std::string surfaceType() const; 
@@ -219,6 +219,7 @@ namespace openstudio{
     bool coincidentWithOutsideObject() const;
     std::string sunExposure() const;
     std::string windExposure() const;
+    double illuminanceSetpoint() const;
     //bool plenum() const;
     //bool belowFloorPlenum() const;
     //bool aboveCeilingPlenum() const;
@@ -258,6 +259,7 @@ namespace openstudio{
     void setCoincidentWithOutsideObject(bool b);
     void setSunExposure(const std::string& s);
     void setWindExposure(const std::string& s);
+    void setIlluminanceSetpoint(double d);
     //void setBelowFloorPlenum(bool v);
     //void setAboveCeilingPlenum(bool v);
 
@@ -302,6 +304,7 @@ namespace openstudio{
     bool m_coincidentWithOutsideObject;
     std::string m_sunExposure;
     std::string m_windExposure;
+    double m_illuminanceSetpoint;
     //bool m_belowFloorPlenum;
     //bool m_aboveCeilingPlenum;
   };

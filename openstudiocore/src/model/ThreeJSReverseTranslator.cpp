@@ -47,8 +47,12 @@
 #include "SubSurface_Impl.hpp"
 #include "ShadingSurface.hpp"
 #include "ShadingSurface_Impl.hpp"
+#include "ShadingSurfaceGroup.hpp"
+#include "ShadingSurfaceGroup_Impl.hpp"
 #include "InteriorPartitionSurface.hpp"
 #include "InteriorPartitionSurface_Impl.hpp"
+#include "InteriorPartitionSurfaceGroup.hpp"
+#include "InteriorPartitionSurfaceGroup_Impl.hpp"
 #include "PlanarSurfaceGroup.hpp"
 #include "PlanarSurfaceGroup_Impl.hpp"
 #include "Space.hpp"
@@ -57,6 +61,8 @@
 #include "DefaultConstructionSet_Impl.hpp"
 #include "ShadingSurfaceGroup.hpp"
 #include "InteriorPartitionSurfaceGroup.hpp"
+#include "DaylightingControl.hpp"
+
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
@@ -241,6 +247,7 @@ namespace openstudio
         std::string outsideBoundaryCondition = userData.outsideBoundaryCondition();
         std::string outsideBoundaryConditionObjectName = userData.outsideBoundaryConditionObjectName();
         std::string outsideBoundaryConditionObjectHandle = userData.outsideBoundaryConditionObjectHandle();
+        double illuminanceSetpoint = userData.illuminanceSetpoint();
         //bool plenum = userData.plenum();
         //bool belowFloorPlenum = userData.belowFloorPlenum();
         //bool aboveFloorPlenum = userData.aboveCeilingPlenum();
@@ -326,19 +333,19 @@ namespace openstudio
               surface.setSurfaceType(surfaceType);
 
               // DLM: can we use these to set adjacencies?
-        //std::string outsideBoundaryCondition = userData.outsideBoundaryCondition();
-        //std::string outsideBoundaryConditionObjectName = userData.outsideBoundaryConditionObjectName();
-        //std::string outsideBoundaryConditionObjectHandle = userData.outsideBoundaryConditionObjectHandle();
+              //std::string outsideBoundaryCondition = userData.outsideBoundaryCondition();
+              //std::string outsideBoundaryConditionObjectName = userData.outsideBoundaryConditionObjectName();
+              //std::string outsideBoundaryConditionObjectHandle = userData.outsideBoundaryConditionObjectHandle();
 
-            } catch (const std::exception& ){
+            } catch (const std::exception&){
               LOG_FREE(Warn, "modelFromThreeJS", "Could not create surface for vertices " << face);
             }
           }
 
         } else if (istringEqual(surfaceType, "FixedWindow") || istringEqual(surfaceType, "OperableWindow") || istringEqual(surfaceType, "GlassDoor") ||
-                   istringEqual(surfaceType, "Skylight") || istringEqual(surfaceType, "TubularDaylightDome") || istringEqual(surfaceType, "TubularDaylightDiffuser") ||
-                   istringEqual(surfaceType, "Door") || istringEqual(surfaceType, "OverheadDoor")){
-                    
+          istringEqual(surfaceType, "Skylight") || istringEqual(surfaceType, "TubularDaylightDome") || istringEqual(surfaceType, "TubularDaylightDiffuser") ||
+          istringEqual(surfaceType, "Door") || istringEqual(surfaceType, "OverheadDoor")){
+
           boost::optional<Surface> surface = model.getConcreteModelObjectByName<Surface>(surfaceName);
           if (!surface){
             LOG(Error, "Could not find Surface '" << surfaceName << "'");
@@ -357,15 +364,96 @@ namespace openstudio
               subSurface.setSurface(*surface);
               subSurface.setSubSurfaceType(surfaceType);
 
-            } catch (const std::exception& ){
+            } catch (const std::exception&){
               LOG_FREE(Warn, "modelFromThreeJS", "Could not create sub surface for vertices " << face);
             }
           }
 
+        } else if (istringEqual(surfaceType, "SiteShading") || istringEqual(surfaceType, "BuildingShading") || istringEqual(surfaceType, "SpaceShading")){
+
+          boost::optional<SubSurface> subSurface = model.getConcreteModelObjectByName<SubSurface>(subSurfaceName);
+          if (!subSurface){
+            LOG(Error, "Could not find SubSurface '" << subSurfaceName << "'");
+            continue;
+          }
+
+          OS_ASSERT(subSurface);
+
+          boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup;
+          if (istringEqual(surfaceType, "SpaceShading")){
+            std::vector<ShadingSurfaceGroup> groups = subSurface->shadingSurfaceGroups();
+            if (groups.empty()){
+              shadingSurfaceGroup = ShadingSurfaceGroup(model);
+              shadingSurfaceGroup->setName(subSurfaceName + " Shading Group");
+              shadingSurfaceGroup->setShadedSubSurface(*subSurface);
+            } else{
+              shadingSurfaceGroup = groups[0];
+            }
+          } else{
+            shadingSurfaceGroup = model.getConcreteModelObjectByName<ShadingSurfaceGroup>(surfaceType);
+            if (!shadingSurfaceGroup){
+              shadingSurfaceGroup = ShadingSurfaceGroup(model);
+              shadingSurfaceGroup->setName(surfaceType);
+            }
+          }
+
+          OS_ASSERT(shadingSurfaceGroup);
+
+          for (const auto& face : faces){
+            try{
+              // ensure we can create a plane before calling Surface ctor that might mess up the model
+              Plane plane(face);
+
+              ShadingSurface shadingSurface(face, model);
+              shadingSurface.setName(name);
+              shadingSurface.setShadingSurfaceGroup(*shadingSurfaceGroup);
+
+            } catch (const std::exception&){
+              LOG_FREE(Warn, "modelFromThreeJS", "Could not create shading surface for vertices " << face);
+            }
+          }
+
+        } else if (istringEqual(surfaceType, "DaylightingControl")){
+
+          if (spaceName.empty()){
+            spaceName = "Default Space";
+          }
+
+          boost::optional<Space> space = model.getConcreteModelObjectByName<Space>(spaceName);
+          if (!space){
+            LOG(Error, "Could not find Space '" << spaceName << "'");
+            continue;
+          }
+
+          OS_ASSERT(space);
+
+          for (const auto& face : faces){
+            boost::optional<Point3d> centroid = getCentroid(face);
+
+            if (centroid){
+              DaylightingControl dc(model);
+              dc.setName(name);
+              dc.setPositionXCoordinate(centroid->x());
+              dc.setPositionYCoordinate(centroid->y());
+              dc.setPositionZCoordinate(centroid->z());
+              dc.setSpace(*space);
+              dc.setIlluminanceSetpoint(illuminanceSetpoint);
+
+              boost::optional<ThermalZone> zone = space->thermalZone();
+              if (thermalZone){
+                if (!thermalZone->primaryDaylightingControl()){
+                  thermalZone->setPrimaryDaylightingControl(dc);
+                } else if (!thermalZone->secondaryDaylightingControl()){
+                  thermalZone->setSecondaryDaylightingControl(dc);
+                }
+              }
+
+            } else{
+              LOG_FREE(Warn, "modelFromThreeJS", "Could not create daylighting control for vertices " << face);
+            }
+          }
+
         }
-
-
-
       }
 
       // do intersections and matching between stories
