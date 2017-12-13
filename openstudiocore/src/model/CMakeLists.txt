@@ -1731,6 +1731,7 @@ set(${target_name}_test_src
   test/PlanarSurface_GTest.cpp
   test/PlantLoop_GTest.cpp
 ##  test/PlantComponentTemperatureSource_GTest.cpp
+  test/PlantComponentUserDefined_GTest.cpp
   test/PlantEquipmentOperationCoolingLoad_GTest.cpp
   test/PlantEquipmentOperationHeatingLoad_GTest.cpp
   test/Plenums_GTest.cpp

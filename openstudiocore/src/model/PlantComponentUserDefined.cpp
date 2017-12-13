@@ -95,13 +95,22 @@ namespace detail {
 
   std::vector<IddObjectType> PlantComponentUserDefined_Impl::allowableChildTypes() const {
     std::vector<IddObjectType> result;
+    result.push_back(IddObjectType::OS_EnergyManagementSystem_ProgramCallingManager);
     return result;
   }
 
   // Returns the children object
   std::vector<ModelObject> PlantComponentUserDefined_Impl::children() const {
     std::vector<ModelObject> result;
-
+    if (boost::optional<EnergyManagementSystemProgramCallingManager> mpcm = mainModelProgramCallingManager()) {
+      result.push_back(mpcm.get());
+    }
+    if (boost::optional<EnergyManagementSystemProgramCallingManager> ipcm = plantInitializationProgramCallingManager()) {
+      result.push_back(ipcm.get());
+    }
+    if (boost::optional<EnergyManagementSystemProgramCallingManager> spcm = plantSimulationProgramCallingManager()) {
+      result.push_back(spcm.get());
+    }
     return result;
   }
 
@@ -193,7 +202,10 @@ namespace detail {
 
   bool PlantComponentUserDefined_Impl::addToNode(Node & node) {
     if (boost::optional<PlantLoop> plant = node.plantLoop()) {
-      return StraightComponent_Impl::addToNode(node);
+      //allow PlantComponentUserDefined object on demand side as well
+      //if (plant->supplyComponent(node.handle())) {
+        return StraightComponent_Impl::addToNode(node);
+      //}
     }
 
     return false;
@@ -206,9 +218,9 @@ PlantComponentUserDefined::PlantComponentUserDefined(const Model& model)
   OS_ASSERT(getImpl<detail::PlantComponentUserDefined_Impl>());
 
   bool ok = true;
-  // ok = setPlantLoadingMode();
+  ok = setPlantLoadingMode("MeetsLoadWithNominalCapacityHiOutLimit");
   OS_ASSERT(ok);
-  // ok = setPlantLoopFlowRequestMode();
+  ok = setPlantLoopFlowRequestMode("NeedsFlowIfLoopOn");
   OS_ASSERT(ok);
 }
 
