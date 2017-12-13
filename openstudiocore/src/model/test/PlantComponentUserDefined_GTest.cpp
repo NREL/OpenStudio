@@ -32,9 +32,11 @@
 #include "../PlantComponentUserDefined_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../PlantLoop.hpp"
+#include "../ThermalZone.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
+#include "../EnergyManagementSystemProgramCallingManager.hpp"
 
 using namespace openstudio::model;
 
@@ -146,4 +148,57 @@ TEST_F(ModelFixture, PlantComponentUserDefined_remove) {
 
   EXPECT_TRUE(n1.handle().isNull());
   EXPECT_TRUE(n2.handle().isNull());
+}
+
+TEST_F(ModelFixture, PlantComponentUserDefined_programs) {
+  Model m;
+
+  PlantLoop plant(m);
+  PlantComponentUserDefined b1(m);
+  EnergyManagementSystemProgramCallingManager mainPCM(m);
+  EnergyManagementSystemProgramCallingManager initPCM(m);
+  EnergyManagementSystemProgramCallingManager simPCM(m);
+  EXPECT_TRUE(b1.setMainModelProgramCallingManager(mainPCM));
+  EXPECT_EQ(mainPCM,b1.mainModelProgramCallingManager());
+  EXPECT_TRUE(b1.setPlantInitializationProgramCallingManager(initPCM));
+  EXPECT_EQ(initPCM, b1.plantInitializationProgramCallingManager());
+  EXPECT_TRUE(b1.setPlantSimulationProgramCallingManager(simPCM));
+  EXPECT_EQ(simPCM, b1.plantSimulationProgramCallingManager());
+  b1.resetMainModelProgramCallingManager();
+  b1.resetPlantInitializationProgramCallingManager();
+  b1.resetPlantSimulationProgramCallingManager();
+  EXPECT_FALSE(b1.mainModelProgramCallingManager());
+  EXPECT_FALSE(b1.plantInitializationProgramCallingManager());
+  EXPECT_FALSE(b1.plantSimulationProgramCallingManager());
+}
+
+TEST_F(ModelFixture, PlantComponentUserDefined_zone) {
+  Model m;
+
+  PlantLoop plant(m);
+  ThermalZone tz(m);
+  PlantComponentUserDefined b1(m);
+
+  EXPECT_TRUE(b1.setAmbientZone(tz));
+  EXPECT_EQ(tz, b1.ambientZone());
+  b1.resetAmbientZone();
+  EXPECT_FALSE(b1.ambientZone());
+}
+
+TEST_F(ModelFixture, PlantComponentUserDefined_constructor) {
+  Model m;
+
+  PlantLoop plant(m);
+  PlantComponentUserDefined b1(m);
+
+  EXPECT_EQ("MeetsLoadWithNominalCapacityHiOutLimit",b1.plantLoadingMode());
+  EXPECT_EQ("NeedsFlowIfLoopOn", b1.plantLoopFlowRequestMode());
+  EXPECT_FALSE(b1.setPlantLoopFlowRequestMode("bad value"));
+  EXPECT_FALSE(b1.setPlantLoadingMode("bad value"));
+  EXPECT_TRUE(b1.setPlantLoopFlowRequestMode("NeedsFlowAndTurnsLoopOn"));
+  EXPECT_TRUE(b1.setPlantLoopFlowRequestMode("ReceivesWhateverFlowAvailable"));
+  EXPECT_TRUE(b1.setPlantLoadingMode("MeetsLoadWithNominalCapacityLowOutLimit"));
+  EXPECT_TRUE(b1.setPlantLoadingMode("MeetsLoadWithNominalCapacity"));
+  EXPECT_TRUE(b1.setPlantLoadingMode("MeetsLoadWithPassiveCapacity"));
+  EXPECT_TRUE(b1.setPlantLoadingMode("DemandsLoad"));
 }
