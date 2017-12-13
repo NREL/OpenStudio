@@ -278,8 +278,8 @@ namespace openstudio{
     return result;
   }
 
-  void FloorplanJS::makeSurface(const Json::Value& story, const Json::Value& space, bool belowFloorPlenum, bool aboveCeilingPlenum,
-    const std::string& surfaceType, const Point3dVector& vertices, size_t faceFormat, 
+  std::string FloorplanJS::makeSurface(const Json::Value& story, const Json::Value& space, const std::string& parentSurfaceName, const std::string& parentSubSurfaceName, 
+    bool belowFloorPlenum, bool aboveCeilingPlenum, const std::string& surfaceType, const Point3dVector& vertices, size_t faceFormat, 
     std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren) const
   {
     bool plenum = false;
@@ -318,6 +318,7 @@ namespace openstudio{
       std::string materialId;
 
       ThreeUserData userData;
+      userData.setName(faceId);
 
       std::string s;
       std::string id;
@@ -341,6 +342,12 @@ namespace openstudio{
         s = space.get("handle", "").asString();
         userData.setSpaceHandle(s);
       }
+
+      // parent surface
+      userData.setSurfaceName(parentSurfaceName);
+
+      // parent sub surface
+      userData.setSubSurfaceName(parentSubSurfaceName);
 
       // building unit
       if (checkKeyAndType(space, "building_unit_id", Json::stringValue)){
@@ -427,6 +434,8 @@ namespace openstudio{
       ThreeSceneChild sceneChild(uuid, name, type, geometryId, materialId, userData);
       sceneChildren.push_back(sceneChild);
     }
+
+    return faceId;
   }
 
   void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& space, 
@@ -506,7 +515,7 @@ namespace openstudio{
               if (checkKeyAndType(window, "alpha", Json::realValue)){
                 alphas.push_back(window.get("alpha", 0.0).asDouble());
               } else if (checkKeyAndType(window, "alpha", Json::arrayValue)){
-                Json::Value temp = face->get("alpha", Json::arrayValue);
+                Json::Value temp = window.get("alpha", Json::arrayValue);
                 Json::ArrayIndex tempN = temp.size();
                 for (Json::ArrayIndex tempIdx = 0; tempIdx < tempN; ++tempIdx){
                   alphas.push_back(temp[tempIdx].asDouble());
@@ -569,8 +578,8 @@ namespace openstudio{
         finalRoofCeilingVertices.push_back(Point3d(v.x(), v.y(), maxZ));
       }
 
-      makeSurface(story, space, belowFloorPlenum, aboveCeilingPlenum, "Floor", finalfloorVertices, roofCeilingFaceFormat, geometries, sceneChildren);
-      makeSurface(story, space, belowFloorPlenum, aboveCeilingPlenum, "RoofCeiling", reverse(finalRoofCeilingVertices), roofCeilingFaceFormat, geometries, sceneChildren);
+      makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "Floor", finalfloorVertices, roofCeilingFaceFormat, geometries, sceneChildren);
+      makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "RoofCeiling", reverse(finalRoofCeilingVertices), roofCeilingFaceFormat, geometries, sceneChildren);
     }
 
     // create each wall
@@ -634,9 +643,11 @@ namespace openstudio{
                 
                 Point3dVector windowVertices;
                 windowVertices.push_back(Point3d(windowLeft.x(), windowLeft.y(), sillHeight + height));
+                windowVertices.push_back(Point3d(windowRight.x(), windowRight.y(), sillHeight + height));
                 windowVertices.push_back(Point3d(windowRight.x(), windowRight.y(), sillHeight));
-                windowVertices.push_back(Point3d(windowRight.x(), windowRight.y(), sillHeight));
-                windowVertices.push_back(Point3d(windowLeft.x(), windowLeft.y(), sillHeight + height));
+                windowVertices.push_back(Point3d(windowLeft.x(), windowLeft.y(), sillHeight));
+
+                allFinalWindowVertices.push_back(windowVertices);
 
               } else if (istringEqual("Window to Wall Ratio", windowDefinitionType)){
                 assertKeyAndType(*windowDefinition, "sill_height", Json::realValue);
@@ -645,7 +656,6 @@ namespace openstudio{
               }
             }
 
-            //makeSubSurface(story, space, belowFloorPlenum, aboveCeilingPlenum, "Wall", finalWallVertices, wallFaceFormat, geometries, sceneChildren);
             mappedWindows.insert(windowIdx);
           }
         }
@@ -661,8 +671,14 @@ namespace openstudio{
         finalWallFaceFormat =  0; // triangle
         allFinalWallVertices = computeTriangulation(wallVertices, allFinalWindowVertices, tol);
       }
+
+      std::string parentSurfaceName;
       for (const auto& finalWallVertices : allFinalWallVertices){
-        makeSurface(story, space, belowFloorPlenum, aboveCeilingPlenum, "Wall", finalWallVertices, finalWallFaceFormat, geometries, sceneChildren);
+        parentSurfaceName = makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "Wall", finalWallVertices, finalWallFaceFormat, geometries, sceneChildren);
+      }
+
+      for (const auto& finalWindowVertices : allFinalWindowVertices){
+        makeSurface(story, space, parentSurfaceName, "", belowFloorPlenum, aboveCeilingPlenum, "FixedWindow", finalWindowVertices, wallFaceFormat, geometries, sceneChildren);
       }
 
     }

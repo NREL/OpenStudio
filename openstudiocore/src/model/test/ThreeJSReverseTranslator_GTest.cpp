@@ -223,10 +223,10 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
   ASSERT_TRUE(infos[0].southSurface);
   EXPECT_EQ(9, infos[0].windows.size());
   for (const auto& window : infos[0].windows){
-    EXPECT_EQ(convert(8.0, "ft^2", "m^2").get(), window.grossArea());
+    EXPECT_NEAR(convert(8.0, "ft^2", "m^2").get(), window.grossArea(), 0.001);
   }
-  EXPECT_EQ(convert(800.0, "ft^2", "m^2").get(), infos[0].southSurface->grossArea());
-  EXPECT_EQ(convert(800.0 - 9*8.0, "ft^2", "m^2").get(), infos[0].southSurface->netArea());
+  EXPECT_NEAR(convert(800.0, "ft^2", "m^2").get(), infos[0].southSurface->grossArea(), 0.001);
+  EXPECT_NEAR(convert(800.0 - 9*8.0, "ft^2", "m^2").get(), infos[0].southSurface->netArea(), 0.001);
   EXPECT_EQ(1, infos[0].dcs.size());
 
   EXPECT_EQ("Space 2", infos[1].name);
@@ -234,10 +234,10 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
   ASSERT_TRUE(infos[1].southSurface);
   EXPECT_EQ(17, infos[1].windows.size());
   for (const auto& window : infos[1].windows){
-    EXPECT_EQ(convert(8.0, "ft^2", "m^2").get(), window.grossArea());
+    EXPECT_NEAR(convert(8.0, "ft^2", "m^2").get(), window.grossArea(), 0.001);
   }
-  EXPECT_EQ(convert(800.0, "ft^2", "m^2").get(), infos[1].southSurface->grossArea());
-  EXPECT_EQ(convert(800.0 - 17*8.0, "ft^2", "m^2").get(), infos[1].southSurface->netArea());
+  EXPECT_NEAR(convert(800.0, "ft^2", "m^2").get(), infos[1].southSurface->grossArea(), 0.001);
+  EXPECT_NEAR(convert(800.0 - 17*8.0, "ft^2", "m^2").get(), infos[1].southSurface->netArea(), 0.001);
   EXPECT_EQ(1, infos[1].dcs.size());
 
   EXPECT_EQ("Space 3", infos[2].name);
@@ -245,10 +245,10 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
   ASSERT_TRUE(infos[2].southSurface);
   EXPECT_EQ(1, infos[2].windows.size());
   for (const auto& window : infos[2].windows){
-    EXPECT_EQ(convert(0.4*800.0, "ft^2", "m^2").get(), window.grossArea());
+    EXPECT_NEAR(convert(0.4*800.0, "ft^2", "m^2").get(), window.grossArea(), 0.001);
   }
-  EXPECT_EQ(convert(800.0, "ft^2", "m^2").get(), infos[2].southSurface->grossArea());
-  EXPECT_EQ(convert(0.6*800.0, "ft^2", "m^2").get(), infos[2].southSurface->netArea());
+  EXPECT_NEAR(convert(800.0, "ft^2", "m^2").get(), infos[2].southSurface->grossArea(), 0.001);
+  EXPECT_NEAR(convert(0.6*800.0, "ft^2", "m^2").get(), infos[2].southSurface->netArea(), 0.001);
   EXPECT_EQ(1, infos[2].dcs.size());
 
 }

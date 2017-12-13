@@ -675,6 +675,26 @@ namespace openstudio{
     return m_constructionMaterialName;
   }
 
+  std::string ThreeUserData::surfaceName() const
+  {
+    return m_surfaceName;
+  }
+
+  std::string ThreeUserData::surfaceHandle() const
+  {
+    return m_surfaceHandle;
+  }
+
+  std::string ThreeUserData::subSurfaceName() const
+  {
+    return m_subSurfaceName;
+  }
+
+  std::string ThreeUserData::subSurfaceHandle() const
+  {
+    return m_subSurfaceHandle;
+  }
+
   std::string ThreeUserData::spaceName() const
   {
     return m_spaceName;
@@ -843,6 +863,26 @@ namespace openstudio{
   void ThreeUserData::setConstructionMaterialName(const std::string& s)
   {
     m_constructionMaterialName = s;
+  }
+
+  void ThreeUserData::setSurfaceName(const std::string& s)
+  {
+    m_surfaceName = s;
+  }
+
+  void ThreeUserData::setSurfaceHandle(const std::string& s)
+  {
+    m_surfaceHandle = s;
+  }
+
+  void ThreeUserData::setSubSurfaceName(const std::string& s)
+  {
+    m_subSurfaceName = s;
+  }
+
+  void ThreeUserData::setSubSurfaceHandle(const std::string& s)
+  {
+    m_subSurfaceHandle = s;
   }
 
   void ThreeUserData::setSpaceName(const std::string& s)

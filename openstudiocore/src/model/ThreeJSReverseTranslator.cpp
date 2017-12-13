@@ -201,6 +201,10 @@ namespace openstudio
 
       // now translate all the surfaces
       ThreeSceneObject sceneObject = scene.object();
+      std::vector<ThreeSceneChild> children = sceneObject.children();
+
+      // sort the children to create all surfaces before sub surfaces
+
       for (const auto& child : sceneObject.children()){
         boost::optional<ThreeGeometry> geometry = scene.getGeometry(child.geometry());
         if (!geometry){
@@ -218,6 +222,10 @@ namespace openstudio
         std::string surfaceType = userData.surfaceType();
         std::string constructionName = userData.constructionName();
         UUID constructionHandle = toUUID(userData.constructionHandle());
+        std::string surfaceName = userData.surfaceName();
+        UUID surfaceHandle = toUUID(userData.surfaceHandle());
+        std::string subSurfaceName = userData.subSurfaceName();
+        UUID subSurfaceHandle = toUUID(userData.subSurfaceHandle());
         std::string spaceName = userData.spaceName();
         UUID spaceHandle = toUUID(userData.spaceHandle());
         std::string thermalZoneName = userData.thermalZoneName();
@@ -315,6 +323,7 @@ namespace openstudio
               Surface surface(face, model);
               surface.setName(name);
               surface.setSpace(*space);
+              surface.setSurfaceType(surfaceType);
 
               // DLM: can we use these to set adjacencies?
         //std::string outsideBoundaryCondition = userData.outsideBoundaryCondition();
@@ -325,7 +334,38 @@ namespace openstudio
               LOG_FREE(Warn, "modelFromThreeJS", "Could not create surface for vertices " << face);
             }
           }
+
+        } else if (istringEqual(surfaceType, "FixedWindow") || istringEqual(surfaceType, "OperableWindow") || istringEqual(surfaceType, "GlassDoor") ||
+                   istringEqual(surfaceType, "Skylight") || istringEqual(surfaceType, "TubularDaylightDome") || istringEqual(surfaceType, "TubularDaylightDiffuser") ||
+                   istringEqual(surfaceType, "Door") || istringEqual(surfaceType, "OverheadDoor")){
+                    
+          boost::optional<Surface> surface = model.getConcreteModelObjectByName<Surface>(surfaceName);
+          if (!surface){
+            LOG(Error, "Could not find Surface '" << surfaceName << "'");
+            continue;
+          }
+
+          OS_ASSERT(surface);
+
+          for (const auto& face : faces){
+            try{
+              // ensure we can create a plane before calling Surface ctor that might mess up the model
+              Plane plane(face);
+
+              SubSurface subSurface(face, model);
+              subSurface.setName(name);
+              subSurface.setSurface(*surface);
+              subSurface.setSubSurfaceType(surfaceType);
+
+            } catch (const std::exception& ){
+              LOG_FREE(Warn, "modelFromThreeJS", "Could not create sub surface for vertices " << face);
+            }
+          }
+
         }
+
+
+
       }
 
       // do intersections and matching between stories
