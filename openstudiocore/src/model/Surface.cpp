@@ -2090,25 +2090,14 @@ namespace detail {
     }    
   }
 
-  boost::optional<SurfacePropertyExposedFoundationPerimeter> Surface_Impl::createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod) {
+  boost::optional<SurfacePropertyExposedFoundationPerimeter> Surface_Impl::createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double exposedPerimeter) {
     Surface thisSurface = getObject<Surface>();
     std::vector<SurfacePropertyExposedFoundationPerimeter> props = thisSurface.getModelObjectSources<SurfacePropertyExposedFoundationPerimeter>(SurfacePropertyExposedFoundationPerimeter::iddObjectType());
     if (!props.empty()) {
       return boost::none;
     }    
     
-    SurfacePropertyExposedFoundationPerimeter prop(thisSurface, exposedPerimeterCalculationMethod);
-    return prop;
-  }
-
-  boost::optional<SurfacePropertyExposedFoundationPerimeter> Surface_Impl::createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double totalExposedPerimeter) {
-    Surface thisSurface = getObject<Surface>();
-    std::vector<SurfacePropertyExposedFoundationPerimeter> props = thisSurface.getModelObjectSources<SurfacePropertyExposedFoundationPerimeter>(SurfacePropertyExposedFoundationPerimeter::iddObjectType());
-    if (!props.empty()) {
-      return boost::none;
-    }    
-    
-    SurfacePropertyExposedFoundationPerimeter prop(thisSurface, exposedPerimeterCalculationMethod, totalExposedPerimeter);
+    SurfacePropertyExposedFoundationPerimeter prop(thisSurface, exposedPerimeterCalculationMethod, exposedPerimeter);
     return prop;
   }
   
@@ -2129,26 +2118,6 @@ namespace detail {
     if (prop) {
       prop->remove();
     }
-  }
-  
-  // TODO: write logic for determining exposed perimeter of a floor surface that is adjacent to ground
-  boost::optional<double> Surface_Impl::exposedPerimeter() {
-
-    if( (!openstudio::istringEqual(this->surfaceType(), "Floor")) || (!openstudio::istringEqual(this->outsideBoundaryCondition(), "Ground")) ) {
-      return boost::none;
-    }
-    
-    std::vector<Surface> surfaces = getObject<ModelObject>().getModelObjectSources<Surface>(Surface::iddObjectType());
-    std::vector<Surface> groundFloorSurfaces;
-    for (const Surface& surface : surfaces) {
-      if( (openstudio::istringEqual(surface.surfaceType(), "Floor")) && (openstudio::istringEqual(surface.outsideBoundaryCondition(), "Ground")) ) { // HERE
-        groundFloorSurfaces.push_back(surface);
-      }
-    }
-    
-    boost::optional<double> result = boost::none;
-    return result;
-    
   }
   
 } // detail
@@ -2448,12 +2417,8 @@ void Surface::resetAdjacentFoundation() {
   return getImpl<detail::Surface_Impl>()->resetAdjacentFoundation();
 }
 
-boost::optional<SurfacePropertyExposedFoundationPerimeter> Surface::createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod) {
-  return getImpl<detail::Surface_Impl>()->createSurfacePropertyExposedFoundationPerimeter(exposedPerimeterCalculationMethod);
-}
-
-boost::optional<SurfacePropertyExposedFoundationPerimeter> Surface::createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double totalExposedPerimeter) {
-  return getImpl<detail::Surface_Impl>()->createSurfacePropertyExposedFoundationPerimeter(exposedPerimeterCalculationMethod, totalExposedPerimeter);
+boost::optional<SurfacePropertyExposedFoundationPerimeter> Surface::createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double exposedPerimeter) {
+  return getImpl<detail::Surface_Impl>()->createSurfacePropertyExposedFoundationPerimeter(exposedPerimeterCalculationMethod, exposedPerimeter);
 }
 
 boost::optional<SurfacePropertyExposedFoundationPerimeter> Surface::surfacePropertyExposedFoundationPerimeter() const {
@@ -2462,10 +2427,6 @@ boost::optional<SurfacePropertyExposedFoundationPerimeter> Surface::surfacePrope
 
 void Surface::resetSurfacePropertyExposedFoundationPerimeter() {
   getImpl<detail::Surface_Impl>()->resetSurfacePropertyExposedFoundationPerimeter();
-}
-
-boost::optional<double> Surface::exposedPerimeter() {
-  return getImpl<detail::Surface_Impl>()->exposedPerimeter();
 }
 
 /// @cond

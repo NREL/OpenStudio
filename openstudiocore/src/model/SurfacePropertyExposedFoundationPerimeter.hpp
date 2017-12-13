@@ -49,13 +49,10 @@ class MODEL_API SurfacePropertyExposedFoundationPerimeter : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
-
-  explicit SurfacePropertyExposedFoundationPerimeter(Surface& surface,
-                                                     std::string exposedPerimeterCalculationMethod);
                                                      
   explicit SurfacePropertyExposedFoundationPerimeter(Surface& surface,
                                                      std::string exposedPerimeterCalculationMethod,
-                                                     double totalExposedPerimeter);
+                                                     double exposedPerimeter);
 
   virtual ~SurfacePropertyExposedFoundationPerimeter() {}
 
