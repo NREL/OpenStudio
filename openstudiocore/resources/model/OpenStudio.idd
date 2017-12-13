@@ -19806,8 +19806,8 @@ OS:Pump:ConstantSpeed,
        \required-field
        \type real
        \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
-       \units W/((m3/s)-Pa)
-       \ip-units W/((gal/min)-ftH2O)
+       \units W-s/m3-Pa
+       \ip-units W-min/gal-ftH2O
        \minimum> 0
 
 OS:Pump:VariableSpeed,
@@ -19951,8 +19951,8 @@ OS:Pump:VariableSpeed,
        \required-field
         \type real
         \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
-        \units W/((m3/s)-Pa)
-        \ip-units W/((gal/min)-ftH2O)
+        \units W-s/m3-Pa
+        \ip-units W-min/gal-ftH2O
         \minimum> 0
   N15;  \field Design Minimum Flow Rate Fraction
        \required-field
@@ -20052,8 +20052,8 @@ OS:HeaderedPumps:ConstantSpeed,
   N9; \field Design Shaft Power per Unit Flow Rate per Unit Head
        \type real
         \required-field
-       \units W/((m3/s)-Pa)
-       \ip-units W/((gal/min)-ftH2O)
+       \units W-s/m3-Pa
+       \ip-units W-min/gal-ftH2O
        \minimum> 0
 
 OS:HeaderedPumps:VariableSpeed,
@@ -20159,8 +20159,8 @@ OS:HeaderedPumps:VariableSpeed,
   N14; \field Design Shaft Power per Unit Flow Rate per Unit Head
        \required-field
        \type real
-       \units W/((m3/s)-Pa)
-       \ip-units W/((gal/min)-ftH2O)
+       \units W-s/m3-Pa
+       \ip-units W-min/gal-ftH2O
        \minimum> 0
 
 OS:TemperingValve,
