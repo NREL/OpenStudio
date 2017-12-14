@@ -32,6 +32,7 @@
 #include <model/ModelAPI.hpp>
 #include "ModelObject_Impl.hpp"
 #include "EnergyManagementSystemProgramCallingManager_Impl.hpp"
+#include "EnergyManagementSystemActuator_Impl.hpp"
 #include "StraightComponent_Impl.hpp"
 #include "ThermalZone_Impl.hpp"
 
@@ -78,27 +79,38 @@ class MODEL_API PlantComponentUserDefined_Impl : public StraightComponent_Impl {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: EnergyManagementSystemProgramCallingManager.
     boost::optional<EnergyManagementSystemProgramCallingManager> mainModelProgramCallingManager() const;
 
     std::string plantLoadingMode() const;
 
     std::string plantLoopFlowRequestMode() const;
 
-    // TODO: Check return type. From object lists, some candidates are: EnergyManagementSystemProgramCallingManager.
     boost::optional<EnergyManagementSystemProgramCallingManager> plantInitializationProgramCallingManager() const;
 
-    // TODO: Check return type. From object lists, some candidates are: EnergyManagementSystemProgramCallingManager.
     boost::optional<EnergyManagementSystemProgramCallingManager> plantSimulationProgramCallingManager() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
     boost::optional<ThermalZone> ambientZone() const;
+
+    boost::optional<EnergyManagementSystemActuator> designVolumeFlowRateActuator() const;
+
+    boost::optional<EnergyManagementSystemActuator> minimumMassFlowRateActuator() const;
+
+    boost::optional<EnergyManagementSystemActuator> maximumMassFlowRateActuator() const;
+
+    boost::optional<EnergyManagementSystemActuator> minimumLoadingCapacityActuator() const;
+
+    boost::optional<EnergyManagementSystemActuator> maximumLoadingCapacityActuator() const;
+
+    boost::optional<EnergyManagementSystemActuator> optimalLoadingCapacityActuator() const;
+
+    boost::optional<EnergyManagementSystemActuator> outletTemperatureActuator() const;
+
+    boost::optional<EnergyManagementSystemActuator> massFlowRateActuator() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: EnergyManagementSystemProgramCallingManager.
     bool setMainModelProgramCallingManager(const EnergyManagementSystemProgramCallingManager& energyManagementSystemProgramCallingManager);
 
     void resetMainModelProgramCallingManager();
@@ -107,20 +119,33 @@ class MODEL_API PlantComponentUserDefined_Impl : public StraightComponent_Impl {
 
     bool setPlantLoopFlowRequestMode(const std::string& plantLoopFlowRequestMode);
 
-    // TODO: Check argument type. From object lists, some candidates are: EnergyManagementSystemProgramCallingManager.
     bool setPlantInitializationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& energyManagementSystemProgramCallingManager);
 
     void resetPlantInitializationProgramCallingManager();
 
-    // TODO: Check argument type. From object lists, some candidates are: EnergyManagementSystemProgramCallingManager.
     bool setPlantSimulationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& energyManagementSystemProgramCallingManager);
 
     void resetPlantSimulationProgramCallingManager();
 
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
     bool setAmbientZone(const ThermalZone& thermalZone);
 
     void resetAmbientZone();
+
+    bool setDesignVolumeFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+
+    bool setMinimumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+
+    bool setMaximumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+
+    bool setMinimumLoadingCapacityActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+
+    bool setMaximumLoadingCapacityActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+
+    bool setOptimalLoadingCapacityActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+
+    bool setOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+
+    bool setMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
     //@}
     /** @name Other */

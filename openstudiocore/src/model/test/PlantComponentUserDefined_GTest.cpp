@@ -37,6 +37,7 @@
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
 #include "../EnergyManagementSystemProgramCallingManager.hpp"
+#include "../EnergyManagementSystemActuator.hpp"
 
 using namespace openstudio::model;
 
@@ -201,4 +202,14 @@ TEST_F(ModelFixture, PlantComponentUserDefined_constructor) {
   EXPECT_TRUE(b1.setPlantLoadingMode("MeetsLoadWithNominalCapacity"));
   EXPECT_TRUE(b1.setPlantLoadingMode("MeetsLoadWithPassiveCapacity"));
   EXPECT_TRUE(b1.setPlantLoadingMode("DemandsLoad"));
+
+  EXPECT_TRUE(b1.designVolumeFlowRateActuator());
+  EXPECT_TRUE(b1.minimumLoadingCapacityActuator());
+  EXPECT_TRUE(b1.maximumLoadingCapacityActuator());
+  EXPECT_TRUE(b1.minimumMassFlowRateActuator());
+  EXPECT_TRUE(b1.maximumMassFlowRateActuator());
+  EXPECT_TRUE(b1.optimalLoadingCapacityActuator());
+  EXPECT_TRUE(b1.outletTemperatureActuator());
+  EXPECT_TRUE(b1.massFlowRateActuator());
+
 }

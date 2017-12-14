@@ -64,6 +64,8 @@
 #include <utilities/idd/Pump_ConstantSpeed_FieldEnums.hxx>
 #include <utilities/idd/OS_EnergyManagementSystem_ProgramCallingManager_FieldEnums.hxx>
 #include <utilities/idd/EnergyManagementSystem_ProgramCallingManager_FieldEnums.hxx>
+#include <utilities/idd/OS_EnergyManagementSystem_Actuator_FieldEnums.hxx>
+#include <utilities/idd/EnergyManagementSystem_Actuator_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -104,8 +106,20 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantComponentUserDefined) {
   pcud.setPlantSimulationProgramCallingManager(simPCM);
   pcud.setAmbientZone(tz);
 
-  Node supplyOutletNode = p.supplyOutletNode();
-  pcud.addToNode(supplyOutletNode);
+  EnergyManagementSystemActuator dvfrActuator = pcud.designVolumeFlowRateActuator().get();
+  EnergyManagementSystemActuator mlcActuator = pcud.minimumLoadingCapacityActuator().get();
+  EnergyManagementSystemActuator mxlcActuator = pcud.maximumLoadingCapacityActuator().get();
+  EnergyManagementSystemActuator mmfrActuator = pcud.minimumMassFlowRateActuator().get();
+  EnergyManagementSystemActuator mxfrActuator = pcud.maximumMassFlowRateActuator().get();
+  EnergyManagementSystemActuator olcActuator = pcud.optimalLoadingCapacityActuator().get();
+  EnergyManagementSystemActuator otActuator = pcud.outletTemperatureActuator().get();
+  EnergyManagementSystemActuator mfrActuator = pcud.massFlowRateActuator().get();
+
+  //Node supplyOutletNode = p.supplyOutletNode();
+  //pcud.addToNode(supplyOutletNode);
+  // Add a supply branch for the pcud
+  ASSERT_TRUE(p.addSupplyBranchForComponent(pcud));
+
   std::string outname = pcud.outletModelObject().get().nameString();
   std::string inname = pcud.inletModelObject().get().nameString();
   // ForwardTranslate
@@ -115,8 +129,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantComponentUserDefined) {
   EXPECT_EQ(0u, forwardTranslator.errors().size());
   EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::PlantComponent_UserDefined).size());
   EXPECT_EQ(3u, w.getObjectsByType(IddObjectType::EnergyManagementSystem_ProgramCallingManager).size());
-
+  EXPECT_EQ(8u, w.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
   WorkspaceObject object = w.getObjectsByType(IddObjectType::PlantComponent_UserDefined)[0];
+  WorkspaceObjectVector actuators = w.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
+  EXPECT_EQ(8u, actuators.size());
+  for (const auto & actuator : actuators) {
+    EXPECT_EQ("best plant component", actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+    EXPECT_EQ("Plant Connection 1", actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
+  }
 
   ASSERT_TRUE(object.getString(PlantComponent_UserDefinedFields::Name, false));
   EXPECT_EQ("best plant component", object.getString(PlantComponent_UserDefinedFields::Name, false).get());
