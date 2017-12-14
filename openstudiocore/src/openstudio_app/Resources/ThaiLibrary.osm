@@ -4,12 +4,13 @@
 !- Supported By : To-Be-One Technology Co, Ltd.
 !- Craated Date : 22/05/2015
 !- Modified By  : Narongsak Mala (narongsak.mala@gmail.com)
-!- Modified Date : 11/12/2017
+!- Modified Date : 14/12/2017
 !- Remark       : This version was provided by K.Nan
 !-----------------------------------------------------------------
 
 
 !- Revision         Details
+!- 1.0.6-002        Add Schedule to SpaceType
 !- 1.0.6-001        Add space type
 !- 1.0.6-000        Add new Libraries
 !-                  - People Definition
@@ -18267,16 +18268,13 @@ OS:Material,
 OS:StandardsInformation:Material,
   {5b50cc42-c922-4057-8645-fb1f2b97c430}, !- Handle
   {7094af00-c14d-4cb8-ab38-d2237326176c}; !- Material Name
-OS:Material:AirGap,
-  {18380dc3-e44a-427a-ba27-f76cef83ed2b}, !- Handle
-  TH : Roof Air Space Resistance 0 Degree 100mm Hi 1, !- Name
-  0.174;                                  !- Thermal Resistance {m2-K/W}
+
 OS:StandardsInformation:Material,
   {a6a30599-ec37-4beb-9f72-a0b6eb113eb5}, !- Handle
-  {18380dc3-e44a-427a-ba27-f76cef83ed2b}; !- Material Name
+  {2a614ed8-fa53-404f-bed4-f1893e6c32d5}; !- Material Name
 OS:Material,
   {5d29fd10-1f2e-4fc8-bdb0-cccd522e4b09}, !- Handle
-  164 แผ่นยิปซั่มบอร์ด หนา 9 มม. 1, !- Name
+  164 แผ่นยิปซั่มบอร์ด หนา 9 มม., !- Name
   Smooth,                                 !- Roughness
   0.009,                                  !- Thickness {m}
   0.191,                                  !- Conductivity {W/m-K}
@@ -18610,7 +18608,7 @@ OS:SpaceType,
   {48168c65-7ad0-4bff-ace5-85052681f96d}, !- Handle
   TH-2016-Hospital-Patient Room,          !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {c65d34fd-4dda-43c9-9447-136c1d1a7be1}, !- Default Schedule Set Name
   {99179932-1d20-484c-a712-bf63f81a48cb}, !- Group Rendering Name
   {1f527f83-b76e-462c-9469-6c9b18f74a77}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18620,7 +18618,7 @@ OS:SpaceType,
   {96cdffd1-2ca9-41c7-affa-6da25e2d45b1}, !- Handle
   TH-2016-Hospital-Operating Room,        !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {c65d34fd-4dda-43c9-9447-136c1d1a7be1}, !- Default Schedule Set Name
   {1dcf8579-538d-45c3-8b42-e1e7e2027520}, !- Group Rendering Name
   {6f0787e0-9f2d-41d5-aecf-e6799c98a655}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18630,7 +18628,7 @@ OS:SpaceType,
   {1bc08439-e100-45a3-926a-ba1a36377e72}, !- Handle
   TH-2016-Hospital-Emergency Room,        !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {c65d34fd-4dda-43c9-9447-136c1d1a7be1}, !- Default Schedule Set Name
   {f33ac7cb-5f9e-4438-921c-95b9f395fed8}, !- Group Rendering Name
   {bb15cf73-28a7-4072-bc8f-5d1bb67d3b79}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18640,7 +18638,7 @@ OS:SpaceType,
   {50a2e897-117b-42a1-90f9-7a0252f2a4dc}, !- Handle
   TH-2016-Hospital-ICU,                   !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {c65d34fd-4dda-43c9-9447-136c1d1a7be1}, !- Default Schedule Set Name
   {99a4c217-e2e0-4101-b362-9c5f42ce8a99}, !- Group Rendering Name
   {43518754-74f7-46b4-83e8-09905ed7a9f4}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18650,7 +18648,7 @@ OS:SpaceType,
   {427f2f4e-dfc9-4026-bf7d-b9558e6e1876}, !- Handle
   TH-2016-Hospital-Pharmacy,              !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {c65d34fd-4dda-43c9-9447-136c1d1a7be1}, !- Default Schedule Set Name
   {defea093-ea87-4504-9bb5-aea2e307e465}, !- Group Rendering Name
   {50883875-359e-4c75-bf53-ac8cc2d9b123}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18660,7 +18658,7 @@ OS:SpaceType,
   {d1dde38b-f0e0-4988-9c52-3f491a7ae6f4}, !- Handle
   TH-2016-Hospital-Conference,            !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {c65d34fd-4dda-43c9-9447-136c1d1a7be1}, !- Default Schedule Set Name
   {190695f7-fe17-4518-bf0d-f60fc5283738}, !- Group Rendering Name
   {14886fe3-846d-415d-a725-a54dae37f547}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18670,7 +18668,7 @@ OS:SpaceType,
   {c75a4019-b511-4248-b281-dc2c06ae49be}, !- Handle
   TH-2016-Hospital-Corridor,              !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {c65d34fd-4dda-43c9-9447-136c1d1a7be1}, !- Default Schedule Set Name
   {41138c41-99ce-47b1-945d-5e4ccf1f0a4b}, !- Group Rendering Name
   {6f453457-ec4a-4b90-a43a-5c8b1c92bea7}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18680,7 +18678,7 @@ OS:SpaceType,
   {4a3f6478-bd06-4fc9-a566-50143984fa27}, !- Handle
   TH-2016-Hospital-Office space,          !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {c65d34fd-4dda-43c9-9447-136c1d1a7be1}, !- Default Schedule Set Name
   {1f0eb425-d1b9-41f3-93b7-33967bba507f}, !- Group Rendering Name
   {786465d0-943d-4615-a3b1-74d170ca7715}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18690,7 +18688,7 @@ OS:SpaceType,
   {74e4442c-56fe-42ac-8ec2-19ab4aef2529}, !- Handle
   TH-2016-Hospital-Restaurant-Dining,     !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {c65d34fd-4dda-43c9-9447-136c1d1a7be1}, !- Default Schedule Set Name
   {ff315101-3020-4c56-9094-b7eb0566cfda}, !- Group Rendering Name
   {119184a1-14eb-42d8-b272-3478b8df2634}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18700,7 +18698,7 @@ OS:SpaceType,
   {d06e9bcb-6539-4c46-b60e-2c8305e791f3}, !- Handle
   TH-2016-Hospital-Cafeteria/Fast-food dining, !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {c65d34fd-4dda-43c9-9447-136c1d1a7be1}, !- Default Schedule Set Name
   {ddf0e79d-1f98-493d-8b2f-405afe80def4}, !- Group Rendering Name
   {12bd6345-b5cd-45f5-b409-fdda7ea1c2fc}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18710,7 +18708,7 @@ OS:SpaceType,
   {936c1ed5-a292-4a89-af7c-16ef3cd91450}, !- Handle
   TH-2016-Hospital-Kitchen,               !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {c65d34fd-4dda-43c9-9447-136c1d1a7be1}, !- Default Schedule Set Name
   {64ba92b2-6621-4588-bc12-a014a675757b}, !- Group Rendering Name
   {07d77d44-226b-45c2-85a6-0d31cb33c886}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18720,7 +18718,7 @@ OS:SpaceType,
   {b23fa715-cb49-4daf-80fc-b85e8ade255f}, !- Handle
   TH-2016-Hospital-Laundry,               !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {c65d34fd-4dda-43c9-9447-136c1d1a7be1}, !- Default Schedule Set Name
   {4cf686bd-41b4-4571-b82d-43223799d71a}, !- Group Rendering Name
   {fc0c2960-1fd9-4275-9beb-db74f9770d3b}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18730,7 +18728,7 @@ OS:SpaceType,
   {38cfb561-32e3-43cd-84b8-29f4fc897b84}, !- Handle
   TH-2016-Edu-Daycare (through age 4),    !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {be11773c-162f-4bc5-b670-d4a9c6b6c286}, !- Group Rendering Name
   {fb102458-ec3f-47c5-b6ab-3d3d3eda0cfc}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18740,7 +18738,7 @@ OS:SpaceType,
   {f6278e0c-6fac-4355-bda7-baa23e2a9380}, !- Handle
   TH-2016-Edu-Daycare sickroom,           !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {1666758a-e929-4841-b6c4-a2545630f222}, !- Group Rendering Name
   {18ddfe04-7673-4e46-8108-c4dbfbdce95c}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18750,7 +18748,7 @@ OS:SpaceType,
   {bf1ef6c5-4d10-4ca3-a782-19bee07a44ce}, !- Handle
   TH-2016-Edu-Classroom (age 5-8),        !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {31ddd522-c1d3-4d8a-8724-145e20a311eb}, !- Group Rendering Name
   {dc5941e1-70cc-4053-80f4-993ed2b9920f}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18760,7 +18758,7 @@ OS:SpaceType,
   {7df09383-d297-4ff5-9ad5-42013351d789}, !- Handle
   TH-2016-Edu-Classroom (age9 plus),      !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {f1a9947d-f0f0-4a5c-8481-8978d563a12f}, !- Group Rendering Name
   {33120cd6-5492-4a1c-955e-da6b991ff02a}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18770,7 +18768,7 @@ OS:SpaceType,
   {1c9175df-3987-432a-a300-c187b93c5e34}, !- Handle
   TH-2016-Edu-Lecture classroom,          !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {206b8684-27ec-496c-8585-0ccb285eb8ea}, !- Group Rendering Name
   {98ae6965-1584-44c8-83b6-b757deed7b18}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18780,7 +18778,7 @@ OS:SpaceType,
   {44de88c4-9ecf-4497-b976-98f5fe8e15df}, !- Handle
   TH-2016-Edu-Lecture hall,               !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {92f36832-b265-4b3b-bbb2-37de476b4e02}, !- Group Rendering Name
   {bcca08bb-cab6-4f7d-a446-65d472102252}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18790,7 +18788,7 @@ OS:SpaceType,
   {f393e170-f33e-4f71-8f9f-cb8e0dd05cb5}, !- Handle
   TH-2016-Edu-Art classroom,              !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {ee4baab6-4a47-471a-a772-4758f315753e}, !- Group Rendering Name
   {1491d312-f09c-47b0-95e4-f7c2ed3c09f7}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18800,7 +18798,7 @@ OS:SpaceType,
   {bf5447d7-85f6-4abb-8b04-c7dafa6a860b}, !- Handle
   TH-2016-Edu-Science laboratory,         !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {9847396a-93a3-4df0-adef-f96e1e6ae435}, !- Group Rendering Name
   {38297d75-8d4e-4fed-a331-8cc3c5b118ea}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18810,7 +18808,7 @@ OS:SpaceType,
   {699bbd4d-af31-4223-9680-265db6bc78e2}, !- Handle
   TH-2016-Edu-University/College laboratory, !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {e40091a0-fb3d-4d40-8d2e-9d17a14bd15a}, !- Group Rendering Name
   {3b7758dd-1483-4276-9795-9d7908f7571f}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18820,7 +18818,7 @@ OS:SpaceType,
   {2a270b77-b438-4119-a1e5-01bbda832fdd}, !- Handle
   TH-2016-Edu-Wood/Metal shop,            !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {2e5ab5f6-1611-41ae-855f-6643427d87eb}, !- Group Rendering Name
   {7476bc9f-715d-4ae9-bfdb-2062a02a3e1b}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18830,7 +18828,7 @@ OS:SpaceType,
   {6e4598d6-1174-4525-b04b-71cdd55c166e}, !- Handle
   TH-2016-Edu-Computer lab,               !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {2c634580-a2ef-4a1f-a69e-d34370fa2c98}, !- Group Rendering Name
   {e9614f05-b2f8-40b3-8dfb-4e193b976905}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18840,7 +18838,7 @@ OS:SpaceType,
   {54b71a98-d757-4427-9ee7-885a75511204}, !- Handle
   TH-2016-Edu-Media center,               !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {d911a548-7ceb-4e36-97c0-8797bc94127e}, !- Group Rendering Name
   {287ce1f6-efce-425f-b01b-834daa9ccf4f}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18850,7 +18848,7 @@ OS:SpaceType,
   {9d1e3a9d-f733-4534-9500-0913535bc81f}, !- Handle
   TH-2016-Edu-Theater,                    !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {9ce78e81-57c7-40e3-9cb1-e037a7b2d692}, !- Group Rendering Name
   {8df11164-b5f1-4aff-864f-afac6f07933c}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18860,7 +18858,7 @@ OS:SpaceType,
   {b6073c2c-2a11-45ae-a160-a4c041b07025}, !- Handle
   TH-2016-Edu-Multipurpose,               !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {9a012d42-a254-4d04-b5e7-e1f00eed7ce9}, !- Group Rendering Name
   {015f7270-3611-45e9-994d-4ec28cc5fc19}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18870,7 +18868,7 @@ OS:SpaceType,
   {d704a479-8a5b-4eff-bc17-0d5da1b06773}, !- Handle
   TH-2016-Edu-Corridor,                   !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {b4a1f084-a944-4b25-868c-fe73d3f5136b}, !- Group Rendering Name
   {0221a373-1406-4cbe-8115-fc1848a5ddcf}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18880,7 +18878,7 @@ OS:SpaceType,
   {05214fc9-d1ee-459f-b1e0-1d30dc407504}, !- Handle
   TH-2016-Edu-Conference,                 !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {1f257a70-7cad-4ab8-b354-e64c84f5c829}, !- Group Rendering Name
   {4a3fb834-e415-4081-bb1d-af7b63676230}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18890,7 +18888,7 @@ OS:SpaceType,
   {df4daf66-add2-4c09-86f7-23bc6872d122}, !- Handle
   TH-2016-Edu-Office space,               !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {a40918cf-8b28-4353-a962-b3c6e7efa238}, !- Group Rendering Name
   {7440b4db-9c76-4fa0-8a63-44404f332c1e}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18900,7 +18898,7 @@ OS:SpaceType,
   {1766eda3-e1a8-4959-9741-fe255ab2c293}, !- Handle
   TH-2016-Edu-Breakroom,                  !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {3ba19104-5372-4241-827d-bb676cc98d40}, !- Group Rendering Name
   {431cf1ce-9121-49eb-a220-5392eed9f842}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18910,7 +18908,7 @@ OS:SpaceType,
   {0d562696-88fa-47a9-b5aa-73ae3e2c7509}, !- Handle
   TH-2016-Edu-Coffee station,             !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {c042145e-8cb1-412c-b407-3a14eda6e6aa}, !- Group Rendering Name
   {798d69fc-b46c-42b7-8bb3-105f3576bcea}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18920,7 +18918,7 @@ OS:SpaceType,
   {ecf2faae-ae3b-4186-8aa4-8a0a93631e95}, !- Handle
   TH-2016-Edu-Fast-food dining,           !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Default Schedule Set Name
   {c5d79ff3-c998-4551-8681-6783c9eeaaed}, !- Group Rendering Name
   {bd7d9b7a-ef93-43e3-96e3-6395f69da1aa}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18930,7 +18928,7 @@ OS:SpaceType,
   {2b9cb3b2-fa6c-4e47-80db-af7dd8e1f626}, !- Handle
   TH-2016-Office-Lobby,                   !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {4d40ee0b-69a1-4035-85b7-9d852b6e1bf1}, !- Default Schedule Set Name
   {16e0ef66-1309-41f8-9938-0f87f61a12f9}, !- Group Rendering Name
   {afd88646-3bc2-4253-b73d-012e2a32b86f}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18940,7 +18938,7 @@ OS:SpaceType,
   {a082fa58-bda5-4194-94c3-2ffb5aaafe48}, !- Handle
   TH-2016-Office-Storage,                 !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {4d40ee0b-69a1-4035-85b7-9d852b6e1bf1}, !- Default Schedule Set Name
   {bf106899-3013-4023-b299-ac0046aa3fba}, !- Group Rendering Name
   {58935495-5da5-40f6-8568-e773c82e22dc}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18950,7 +18948,7 @@ OS:SpaceType,
   {b72506a4-e5bd-4fc1-a20f-5cf25b714f95}, !- Handle
   TH-2016-Office-Office space,            !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {4d40ee0b-69a1-4035-85b7-9d852b6e1bf1}, !- Default Schedule Set Name
   {23fac95d-56b8-4ff2-99a2-cfd6033c462c}, !- Group Rendering Name
   {8dd05134-cc4d-489a-bc5b-4667e24f74d7}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18960,7 +18958,7 @@ OS:SpaceType,
   {2e66f31d-b403-45c8-8513-21c790ae894f}, !- Handle
   TH-2016-Office-Reception area,          !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {4d40ee0b-69a1-4035-85b7-9d852b6e1bf1}, !- Default Schedule Set Name
   {c5c98e90-0711-471e-b187-5922cff521c2}, !- Group Rendering Name
   {ae362efc-7cad-4a67-bb29-3082e66c7b6a}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18970,7 +18968,7 @@ OS:SpaceType,
   {b1c788d8-4d53-4c7f-9b3e-7773be839a65}, !- Handle
   TH-2016-Office-Telephone/data entry,    !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {4d40ee0b-69a1-4035-85b7-9d852b6e1bf1}, !- Default Schedule Set Name
   {b28cb2eb-df91-4943-9616-8951290acb72}, !- Group Rendering Name
   {fbf0eefc-9df9-4b25-ab27-f25fe8bd6640}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18980,7 +18978,7 @@ OS:SpaceType,
   {69a1669b-642f-40ea-8062-801f9ebfc4c9}, !- Handle
   TH-2016-Office-Conference,              !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {4d40ee0b-69a1-4035-85b7-9d852b6e1bf1}, !- Default Schedule Set Name
   {938794c3-8474-49a9-aa17-52d8124bc358}, !- Group Rendering Name
   {be999678-5b83-4694-89ec-7e35dfd69ebd}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -18990,7 +18988,7 @@ OS:SpaceType,
   {5c7ea6f0-cabe-4db8-b10b-3ff527734588}, !- Handle
   TH-2016-Office-Corridor,                !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {4d40ee0b-69a1-4035-85b7-9d852b6e1bf1}, !- Default Schedule Set Name
   {6a167552-63e8-4b41-8d5b-1c2844eca0e0}, !- Group Rendering Name
   {0d790f9d-7b04-40d3-b8d1-45c107e1ffbc}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19000,7 +18998,7 @@ OS:SpaceType,
   {caa3e8a0-596c-447c-8f9a-416ffc08a4c5}, !- Handle
   TH-2016-Office-Computer,                !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {4d40ee0b-69a1-4035-85b7-9d852b6e1bf1}, !- Default Schedule Set Name
   {782dfa02-f0d1-4485-8890-707a9f24b237}, !- Group Rendering Name
   {247ebbd4-59ee-4134-8bf5-011563dc44b7}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19010,7 +19008,7 @@ OS:SpaceType,
   {a2161c92-f10f-42dc-8c6e-f19ba9247213}, !- Handle
   TH-2016-Office-Coffee station,          !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {4d40ee0b-69a1-4035-85b7-9d852b6e1bf1}, !- Default Schedule Set Name
   {8f670a5c-4236-43df-86ae-f3d7d738b274}, !- Group Rendering Name
   {d16259ac-9468-479c-b22f-e73130e7404d}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19020,7 +19018,7 @@ OS:SpaceType,
   {e6b6098b-5021-4af0-aabd-5118c8f4a0d8}, !- Handle
   TH-2016-Office-Fast food dining,        !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {4d40ee0b-69a1-4035-85b7-9d852b6e1bf1}, !- Default Schedule Set Name
   {795b86a2-f893-4798-9788-f92cd6167970}, !- Group Rendering Name
   {5861781b-954c-4cc1-93a2-4e1548ef2453}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19030,7 +19028,7 @@ OS:SpaceType,
   {421e4f43-14a4-47b8-9b62-d4c9773b5dfb}, !- Handle
   TH-2016-Con-Dwelling unit,              !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {28212a6d-a395-407c-8540-665827df4abb}, !- Default Schedule Set Name
   {a77a54eb-db2c-4833-98cc-f9d5f5285133}, !- Group Rendering Name
   {8ef62ab7-09db-4f49-bd7e-54c3b04ef619}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19040,7 +19038,7 @@ OS:SpaceType,
   {4618e6f4-3f57-4067-b90c-016dfc4b9bc7}, !- Handle
   TH-2016-Con-Corridor,                   !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {28212a6d-a395-407c-8540-665827df4abb}, !- Default Schedule Set Name
   {015a33cc-9df8-4d5e-ad8b-a56440120002}, !- Group Rendering Name
   {2cd7087c-02ea-4079-89e8-dca5fdbcb924}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19050,7 +19048,7 @@ OS:SpaceType,
   {53a2d697-d79d-4fb1-a40a-283265b28552}, !- Handle
   TH-2016-Con-Lobby,                      !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {28212a6d-a395-407c-8540-665827df4abb}, !- Default Schedule Set Name
   {7ba97284-920b-4aa4-bdbc-3f8c9678effb}, !- Group Rendering Name
   {78f486f3-bfbc-4e65-a0cc-3aa1a47ff16b}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19060,7 +19058,7 @@ OS:SpaceType,
   {1ff192fe-3833-4ec0-9344-7bc4dc15bd29}, !- Handle
   TH-2016-Con-Office space,               !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {28212a6d-a395-407c-8540-665827df4abb}, !- Default Schedule Set Name
   {c43d8ef6-4ae2-4197-a1a9-afbf545a4719}, !- Group Rendering Name
   {d5149543-31d3-471b-bd77-8a52a6c992d1}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19070,7 +19068,7 @@ OS:SpaceType,
   {3ca2a99c-9254-44bc-8d90-90984a331b80}, !- Handle
   TH-2016-Con-Conference,                 !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {28212a6d-a395-407c-8540-665827df4abb}, !- Default Schedule Set Name
   {21670180-e53a-4d72-98f2-2bf2ef2556f1}, !- Group Rendering Name
   {98eedd03-94fc-445e-b061-fc52c000a064}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19080,7 +19078,7 @@ OS:SpaceType,
   {5443ebe2-5467-4a9e-bfac-1de9980ff74d}, !- Handle
   TH-2016-Con-Breakroom,                  !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {28212a6d-a395-407c-8540-665827df4abb}, !- Default Schedule Set Name
   {9879ee78-b07b-44e8-8040-18911037a4b9}, !- Group Rendering Name
   {12e37b85-1f7c-4754-956f-a6b40f592180}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19090,7 +19088,7 @@ OS:SpaceType,
   {eddf3ddc-060b-461f-b91b-44749c5912e1}, !- Handle
   TH-2016-Con-Coffee station,             !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {28212a6d-a395-407c-8540-665827df4abb}, !- Default Schedule Set Name
   {ad0d6d1c-002f-4b63-9bce-8415a44fcf0d}, !- Group Rendering Name
   {4b3b4876-e528-49bf-9e3b-2721b7b33a35}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19100,7 +19098,7 @@ OS:SpaceType,
   {7086d9cc-3389-4472-bcc7-9c0fd0e142a8}, !- Handle
   TH-2016-Con-Fast food dining,           !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {28212a6d-a395-407c-8540-665827df4abb}, !- Default Schedule Set Name
   {f67b8422-38a9-42f4-a3cd-b0d2fb5c9a00}, !- Group Rendering Name
   {ed7aeb78-3aad-42f5-b437-2bb2d9efd6f3}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19110,7 +19108,7 @@ OS:SpaceType,
   {ded5e376-32e0-4542-9294-c400dbc753d0}, !- Handle
   TH-2016-Con-Coin-operated laundry,      !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {28212a6d-a395-407c-8540-665827df4abb}, !- Default Schedule Set Name
   {a8fa7574-7a1a-4983-ba8c-d11a7dc8bd84}, !- Group Rendering Name
   {b6ca01e3-e38b-479e-8694-422df6e947d7}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19120,7 +19118,7 @@ OS:SpaceType,
   {e0f8562d-2164-449f-8302-ebd48234a522}, !- Handle
   TH-2016-Gym-Sport arena (play area),    !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {d267e52f-dba5-484c-b7cb-0c5cf0b565ec}, !- Default Schedule Set Name
   {c1171200-b122-4444-bf91-e88958bb5adc}, !- Group Rendering Name
   {07922329-930a-412e-bfa0-4a68333cb36f}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19130,7 +19128,7 @@ OS:SpaceType,
   {729f65f4-4761-4d46-a7ca-496c7f4a1148}, !- Handle
   TH-2016-Gym-Gym,                        !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {d267e52f-dba5-484c-b7cb-0c5cf0b565ec}, !- Default Schedule Set Name
   {d35b443c-2f10-4eef-82f6-1cb1524d2e1a}, !- Group Rendering Name
   {3cad0c05-1346-436c-bd4b-8126e2bf769a}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19140,7 +19138,7 @@ OS:SpaceType,
   {09516f9e-5bfa-412d-8339-cf0f8d012b26}, !- Handle
   TH-2016-Gym-Spectator areas,            !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {d267e52f-dba5-484c-b7cb-0c5cf0b565ec}, !- Default Schedule Set Name
   {dd813eba-5e12-478e-8ef7-91b402fa9cc1}, !- Group Rendering Name
   {ec76d820-0ce2-4cfe-b509-c2db7bb6c385}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19150,7 +19148,7 @@ OS:SpaceType,
   {aadc5ba0-abd2-475f-a23a-abbf2cfdfd55}, !- Handle
   TH-2016-Gym-Swimming (pool & deck),     !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {d267e52f-dba5-484c-b7cb-0c5cf0b565ec}, !- Default Schedule Set Name
   {5d8dbad8-e73b-40f6-aaec-3abdf9085772}, !- Group Rendering Name
   {9ed6ec8e-a86c-4e37-aa32-a9b5ebffae29}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19160,7 +19158,7 @@ OS:SpaceType,
   {44a03f43-66cb-4ad7-87a3-a8a5669869c3}, !- Handle
   TH-2016-Gym-Disco/dance floors,         !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {d267e52f-dba5-484c-b7cb-0c5cf0b565ec}, !- Default Schedule Set Name
   {b682c55d-8b98-4239-9137-7ba7f15b7773}, !- Group Rendering Name
   {07a9343f-85af-44e3-af2d-9585e92a941d}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19170,7 +19168,7 @@ OS:SpaceType,
   {24f2674b-f584-457f-afac-ab5348535012}, !- Handle
   TH-2016-Gym-Health club/aerobics room,  !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {d267e52f-dba5-484c-b7cb-0c5cf0b565ec}, !- Default Schedule Set Name
   {79f42781-40fb-492b-99c4-8a4f0cec38ea}, !- Group Rendering Name
   {e4713efa-7731-4c36-bac7-fc9b96b81fe1}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19180,7 +19178,7 @@ OS:SpaceType,
   {2b84ba06-70cd-43cf-b500-052334b79cd3}, !- Handle
   TH-2016-Gym-Health club/weight room,    !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {d267e52f-dba5-484c-b7cb-0c5cf0b565ec}, !- Default Schedule Set Name
   {b4161926-c08e-4ef0-852d-6626ade6b096}, !- Group Rendering Name
   {948f50c3-de4b-4852-a152-4691f4bcb9f0}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19190,7 +19188,7 @@ OS:SpaceType,
   {0e9f4bdb-3be7-4116-b673-9c9e632d7f77}, !- Handle
   TH-2016-Gym-Bowling alley (seating),    !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {d267e52f-dba5-484c-b7cb-0c5cf0b565ec}, !- Default Schedule Set Name
   {f672fe2e-2ea1-4502-a55d-849deabf346b}, !- Group Rendering Name
   {04796b62-49ea-4014-875b-b0dc327e987f}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19200,7 +19198,7 @@ OS:SpaceType,
   {eaca321e-6a25-47d3-b660-7c32214419a4}, !- Handle
   TH-2016-Gym-Game arcades,               !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {d267e52f-dba5-484c-b7cb-0c5cf0b565ec}, !- Default Schedule Set Name
   {4617f189-7bbd-4936-a98a-f1809b8b0f3a}, !- Group Rendering Name
   {4153ff67-d004-49b8-8fcf-6cdc6705b261}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19210,7 +19208,7 @@ OS:SpaceType,
   {9716aa0b-fadb-478f-a98c-3d7bf85887d3}, !- Handle
   TH-2016-Exh-Stages,                     !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {16094490-0bfc-4b17-8b9b-ab7a83b6c09b}, !- Default Schedule Set Name
   {65b4d4b7-b85f-453f-9c70-46000156dc87}, !- Group Rendering Name
   {1e263791-9676-450a-8b16-497c8b1a7732}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19220,7 +19218,7 @@ OS:SpaceType,
   {6b7996d7-610a-4957-9372-87097e89ae1f}, !- Handle
   TH-2016-Exh-Children's Museum,          !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {16094490-0bfc-4b17-8b9b-ab7a83b6c09b}, !- Default Schedule Set Name
   {91ddb396-3a1b-4d79-bd36-e2227c08e944}, !- Group Rendering Name
   {91c577c9-dcfa-41de-9646-b89e4bbd92cb}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19230,7 +19228,7 @@ OS:SpaceType,
   {07f638d0-b423-4804-bbf1-bb774afd0c72}, !- Handle
   TH-2016-Exh-Museum/Gallery,             !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {16094490-0bfc-4b17-8b9b-ab7a83b6c09b}, !- Default Schedule Set Name
   {38e63787-7646-47a2-81e6-dae9e6dc08b8}, !- Group Rendering Name
   {346a10c1-09fc-4eee-bae5-88ef8b02f9e3}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19240,7 +19238,7 @@ OS:SpaceType,
   {c616dd11-5fda-4246-aeec-8ca765932509}, !- Handle
   TH-2016-Exh/Gym--Corridor,              !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {16094490-0bfc-4b17-8b9b-ab7a83b6c09b}, !- Default Schedule Set Name
   {caa54cc8-69fa-4eb9-bbf4-58fdf88a5ee5}, !- Group Rendering Name
   {84df6be6-f6ed-4778-bf86-cb09ca29c476}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19250,7 +19248,7 @@ OS:SpaceType,
   {3ac93ac4-7c5c-4c2a-b6a4-c0074da43b05}, !- Handle
   TH-2016-Exh/Gym-Office space,           !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {16094490-0bfc-4b17-8b9b-ab7a83b6c09b}, !- Default Schedule Set Name
   {a2e34ebb-9f98-4909-a4eb-ef4e203381d9}, !- Group Rendering Name
   {e3266982-a925-48d0-b83a-1054290f05d4}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19260,7 +19258,7 @@ OS:SpaceType,
   {0ccc42d9-7d37-45ce-bb23-25b6d3a498b1}, !- Handle
   TH-2016-Exh/Gym--Conference,            !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {16094490-0bfc-4b17-8b9b-ab7a83b6c09b}, !- Default Schedule Set Name
   {bf25ade7-8515-4d2b-a9f4-7006bd1e99e4}, !- Group Rendering Name
   {47452e77-ca5f-4b07-ba6b-2b66bbf03699}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19270,7 +19268,7 @@ OS:SpaceType,
   {a939738d-369f-4f43-8ec9-1299fb76a063}, !- Handle
   TH-2016-Exh/Gym--Coffee station,        !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {16094490-0bfc-4b17-8b9b-ab7a83b6c09b}, !- Default Schedule Set Name
   {03c86cc7-8ec2-4a06-872a-5dbc2fdcdd3f}, !- Group Rendering Name
   {a8b21e15-acc4-4f37-8fef-40e8b673f792}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19280,7 +19278,7 @@ OS:SpaceType,
   {7db36893-e7f7-4735-991b-f0417eb612fd}, !- Handle
   TH-2016-Exh/Gym--Fast food dining,      !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {16094490-0bfc-4b17-8b9b-ab7a83b6c09b}, !- Default Schedule Set Name
   {db5863fb-61af-4873-9440-11bd8e94c572}, !- Group Rendering Name
   {22a51203-cd22-4400-841d-1823559f3bb0}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19290,7 +19288,7 @@ OS:SpaceType,
   {a64339f6-74b0-46c1-8b51-19ee33fa81ec}, !- Handle
   TH-2016-Aud-Auditorium,                 !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ec398894-6a34-490f-8f3b-961235db3219}, !- Default Schedule Set Name
   {76760b40-77d8-41a9-92f9-c9df7e8422c2}, !- Group Rendering Name
   {c962ae49-f744-472d-b5a5-586fba5d16ba}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19300,7 +19298,7 @@ OS:SpaceType,
   {363fc34c-2a48-4f3d-b384-0ab2a9aad7dd}, !- Handle
   TH-2016-Aud-Places of religious worship, !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ec398894-6a34-490f-8f3b-961235db3219}, !- Default Schedule Set Name
   {3464c066-cb89-4341-b7b8-79fc7b4fdcd8}, !- Group Rendering Name
   {b901f64f-49ae-4683-b0cc-f3ae29d2f888}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19310,7 +19308,7 @@ OS:SpaceType,
   {46aaf6b7-4fb3-490e-87e5-def5462d6a28}, !- Handle
   TH-2016-Aud-Courtroom,                  !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ec398894-6a34-490f-8f3b-961235db3219}, !- Default Schedule Set Name
   {589b244d-4238-4dd0-a1b2-8c7083634cf6}, !- Group Rendering Name
   {933e0884-c654-45c2-b4bd-3bec2ec158cb}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19320,7 +19318,7 @@ OS:SpaceType,
   {f22585dd-35c4-47d7-bf79-665ce6cf77c7}, !- Handle
   TH-2016-Aud-Legislative chamber,        !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ec398894-6a34-490f-8f3b-961235db3219}, !- Default Schedule Set Name
   {13d790d5-54e2-4a2f-96b4-8d34d3d886d5}, !- Group Rendering Name
   {89f48ba9-f03f-4c30-a180-ee115f60f846}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19330,7 +19328,7 @@ OS:SpaceType,
   {13e67e8a-7e59-42ec-8b5a-1c52105b77d0}, !- Handle
   TH-2016-Aud-Library,                    !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ec398894-6a34-490f-8f3b-961235db3219}, !- Default Schedule Set Name
   {44c66b77-7a4f-4de5-bf12-2840c1460448}, !- Group Rendering Name
   {feeddd5b-53af-4fc3-b510-3bdfd861d760}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19340,7 +19338,7 @@ OS:SpaceType,
   {50363b20-4520-4754-afae-a8e502bb2a3c}, !- Handle
   TH-2016-Aud-Lobby,                      !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ec398894-6a34-490f-8f3b-961235db3219}, !- Default Schedule Set Name
   {9f95a858-057a-4d7a-97f6-c30e52465f13}, !- Group Rendering Name
   {bda65f5d-703d-4087-8439-a91fe9899dfb}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19350,7 +19348,7 @@ OS:SpaceType,
   {f5d22ded-0e4d-40b0-8250-bf66c977c7c4}, !- Handle
   TH-2016-Aud-Corridor,                   !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ec398894-6a34-490f-8f3b-961235db3219}, !- Default Schedule Set Name
   {1a405bb8-3894-4c67-a7f1-119632c8015f}, !- Group Rendering Name
   {92bcb6d0-777f-4b96-8fd8-d48df0ab42c9}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19360,7 +19358,7 @@ OS:SpaceType,
   {192eb449-c789-4313-9742-d217340a9777}, !- Handle
   TH-2016-Aud-Office space,               !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ec398894-6a34-490f-8f3b-961235db3219}, !- Default Schedule Set Name
   {879089ac-9af2-43a2-b8a9-5ec863b2fdcd}, !- Group Rendering Name
   {907b6190-5ecf-482b-b92f-90acc7348226}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19370,7 +19368,7 @@ OS:SpaceType,
   {80c67c81-552a-4be5-aeb7-526025abe042}, !- Handle
   TH-2016-Aud-Conference,                 !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ec398894-6a34-490f-8f3b-961235db3219}, !- Default Schedule Set Name
   {6eeb8200-31c3-41a4-9a61-deaeef456784}, !- Group Rendering Name
   {518e3893-64cd-4351-a0a0-dcfafbda8d5a}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19380,7 +19378,7 @@ OS:SpaceType,
   {ce200074-6e01-448a-a2b9-3a7bfbf3cb5c}, !- Handle
   TH-2016-Aud-Coffee station,             !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ec398894-6a34-490f-8f3b-961235db3219}, !- Default Schedule Set Name
   {ab9abc88-a861-4f09-a416-a2ee4d728053}, !- Group Rendering Name
   {946690d7-d508-4f05-955c-2eebfcf87120}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19390,7 +19388,7 @@ OS:SpaceType,
   {21a65d05-7192-4fd4-bf64-3bab9c3c748d}, !- Handle
   TH-2016-Aud-Fast food dining,           !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ec398894-6a34-490f-8f3b-961235db3219}, !- Default Schedule Set Name
   {f07fd548-047e-4e72-9c49-e304d92c6574}, !- Group Rendering Name
   {29b7dd6b-884d-4103-bb8c-338f57e1a16f}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19400,7 +19398,7 @@ OS:SpaceType,
   {7e55a960-e1fd-4d50-ae4e-5a1482493c98}, !- Handle
   TH-2016-Hotel-Bedroom/Living room,      !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {dc4012c7-539a-42a0-b543-77ead10878a3}, !- Default Schedule Set Name
   {58ad466f-6940-4513-afb1-82f0416c9a09}, !- Group Rendering Name
   {ad76da68-6bb0-4dfa-9ea1-418385d3d914}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19410,7 +19408,7 @@ OS:SpaceType,
   {30184d5e-1da0-4c51-8171-15019141898f}, !- Handle
   TH-2016-Hotel-Barracks sleep area,      !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {dc4012c7-539a-42a0-b543-77ead10878a3}, !- Default Schedule Set Name
   {cdae9f0a-8ee1-4cfd-a2dd-1dd17ee83ea2}, !- Group Rendering Name
   {fdeeffe2-a7ff-4d36-91f9-52fd8ed4dfff}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19420,7 +19418,7 @@ OS:SpaceType,
   {59efb1bb-e6f6-48c6-984f-c7c941a59bc8}, !- Handle
   TH-2016-Hotel-Laundry,                  !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {dc4012c7-539a-42a0-b543-77ead10878a3}, !- Default Schedule Set Name
   {aebef6c5-12bf-491a-824c-8ac6b5f20709}, !- Group Rendering Name
   {e64838c9-e721-4784-a22f-b08baee4228a}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19430,7 +19428,7 @@ OS:SpaceType,
   {077747e7-04e5-49cd-9ad2-acd377fc1e74}, !- Handle
   TH-2016-Hotel-Laundry in dwelling unit, !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {dc4012c7-539a-42a0-b543-77ead10878a3}, !- Default Schedule Set Name
   {1380b959-58ec-4bdf-b6ae-af5b451f2aff}, !- Group Rendering Name
   {459393a0-3cd5-4afa-879f-654e8e4341ce}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19440,7 +19438,7 @@ OS:SpaceType,
   {57ef51d4-b140-4f66-b0fe-47b80eb02010}, !- Handle
   TH-2016-Hotel-Lobby,                    !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {dc4012c7-539a-42a0-b543-77ead10878a3}, !- Default Schedule Set Name
   {44e8e90a-85e6-4410-b1fc-b8ca83db5ca3}, !- Group Rendering Name
   {f494cc88-23de-48f2-a076-8aa336e1da06}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19450,7 +19448,7 @@ OS:SpaceType,
   {c2718188-f223-4e66-9aa5-ae4b7f01691d}, !- Handle
   TH-2016-Hotel-Multipurpose,             !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {dc4012c7-539a-42a0-b543-77ead10878a3}, !- Default Schedule Set Name
   {32134d47-d94d-4cb1-94c3-778f7dfd51e6}, !- Group Rendering Name
   {4e91422d-5d3d-49d3-a4dd-e26b8849386f}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19460,7 +19458,7 @@ OS:SpaceType,
   {08833655-483a-4a71-9a1c-e9c5bf33b7ea}, !- Handle
   TH-2016-Hotel-Corridor,                 !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {dc4012c7-539a-42a0-b543-77ead10878a3}, !- Default Schedule Set Name
   {2758213b-8092-493e-b06c-5760df2856f6}, !- Group Rendering Name
   {22d6cc0e-3787-4d0f-94c2-8c1c4d944ab9}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19470,7 +19468,7 @@ OS:SpaceType,
   {4c0480f7-0970-4a33-890a-4789cfb038d4}, !- Handle
   TH-2016-Hotel-Office space,             !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {dc4012c7-539a-42a0-b543-77ead10878a3}, !- Default Schedule Set Name
   {d8234665-7b6e-4c3c-bc3f-bdd1df14966e}, !- Group Rendering Name
   {6e8dfef6-9025-4fa1-85b0-c8ab7b8dd882}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19480,7 +19478,7 @@ OS:SpaceType,
   {ee3eb153-6278-451c-bf88-cce22aed9123}, !- Handle
   TH-2016-Hotel-Conference,               !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {dc4012c7-539a-42a0-b543-77ead10878a3}, !- Default Schedule Set Name
   {af72adb6-eab6-4942-aba2-bb78731edc91}, !- Group Rendering Name
   {0c0efebf-f323-482f-bb6c-cdca4e9a00e8}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19490,7 +19488,7 @@ OS:SpaceType,
   {5c3bdf30-1f91-4bf7-93b7-4050e7c53fc4}, !- Handle
   TH-2016-Hotel-Auditorium,               !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {dc4012c7-539a-42a0-b543-77ead10878a3}, !- Default Schedule Set Name
   {ba711ca9-4b14-4371-b976-923418c7b50d}, !- Group Rendering Name
   {a4ae5b21-541e-4b8b-88a5-7c35ea614ca2}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19500,7 +19498,7 @@ OS:SpaceType,
   {ec16dcc3-b2a9-4b57-845f-35c3a8b06ab3}, !- Handle
   TH-2016-Hotel-Restaurant-Dining,        !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {dc4012c7-539a-42a0-b543-77ead10878a3}, !- Default Schedule Set Name
   {eec17d04-a39d-46be-b161-e9a4a31616db}, !- Group Rendering Name
   {5332bc63-17e5-4339-bfe4-32a88b1fe793}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19510,7 +19508,7 @@ OS:SpaceType,
   {63f00d10-8f7a-4de0-90be-dc9db9ee9d6b}, !- Handle
   TH-2016-Hotel-Cafeteria/Fast-food dining, !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {dc4012c7-539a-42a0-b543-77ead10878a3}, !- Default Schedule Set Name
   {6fec865a-85b7-4d4c-90c3-5ae823d4283b}, !- Group Rendering Name
   {201cbef7-6382-4c2c-9069-49ebd670b49f}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19520,7 +19518,7 @@ OS:SpaceType,
   {f4a4f6eb-1092-40f6-b84b-acde73f70184}, !- Handle
   TH-2016-Hotel-Bars/Lounge,              !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {dc4012c7-539a-42a0-b543-77ead10878a3}, !- Default Schedule Set Name
   {a74acf84-451a-45a6-84ca-b41a0c7a7248}, !- Group Rendering Name
   {6585d9a8-5a3b-4955-a5c5-bca158633884}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19530,7 +19528,7 @@ OS:SpaceType,
   {ccdf4beb-437e-4774-b5b0-6b331dcd3d70}, !- Handle
   TH-2016-Hotel-Kitchen,                  !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {dc4012c7-539a-42a0-b543-77ead10878a3}, !- Default Schedule Set Name
   {6208f883-b838-4adc-bef5-3ca5d8116c95}, !- Group Rendering Name
   {214efff8-090b-4a76-a725-46e68d67575b}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19540,7 +19538,7 @@ OS:SpaceType,
   {96ebb22d-c866-4a76-b237-a8e887c37b18}, !- Handle
   TH-2016-Ent-Restaurant-Dining,          !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {d267e52f-dba5-484c-b7cb-0c5cf0b565ec}, !- Default Schedule Set Name
   {b40a06f9-0e33-4712-a314-6dd4ef12a74a}, !- Group Rendering Name
   {a1267643-da29-4d7d-9512-6328f7834a5d}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19550,7 +19548,7 @@ OS:SpaceType,
   {ea61bab0-eb58-4564-ae3d-f3ebd18b76a1}, !- Handle
   TH-2016-Ent-Cafeteria/Fast-food dining, !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {d267e52f-dba5-484c-b7cb-0c5cf0b565ec}, !- Default Schedule Set Name
   {fe4f0675-379e-47bb-bf85-06087368e377}, !- Group Rendering Name
   {556373ec-1e58-422d-b5eb-929f594ca364}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19560,7 +19558,7 @@ OS:SpaceType,
   {e9810685-318e-487d-a0c1-bf720f102951}, !- Handle
   TH-2016-Ent-Bars/Lounge,                !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {d267e52f-dba5-484c-b7cb-0c5cf0b565ec}, !- Default Schedule Set Name
   {c295f5dc-21d1-44bc-a3d4-66c357082d51}, !- Group Rendering Name
   {3a7db402-581d-4922-ae3f-0972494a4e0e}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19570,7 +19568,7 @@ OS:SpaceType,
   {d1097d08-9a99-4ae2-9a1e-047a548062c6}, !- Handle
   TH-2016-Ent-Kitchen,                    !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {d267e52f-dba5-484c-b7cb-0c5cf0b565ec}, !- Default Schedule Set Name
   {9fd6fcbc-141b-4eda-8603-97cf40c580e2}, !- Group Rendering Name
   {77a8e21f-5020-4c4c-a90a-baf47c567dcc}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19580,7 +19578,7 @@ OS:SpaceType,
   {0c3e891a-c3fe-49d3-9739-1ba17e3b2599}, !- Handle
   TH-2016-Ent-Corridor,                   !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {d267e52f-dba5-484c-b7cb-0c5cf0b565ec}, !- Default Schedule Set Name
   {8d7da23d-c5f8-452f-a590-823ed2c8144c}, !- Group Rendering Name
   {6d7a5036-1393-470c-9d73-32d18863302b}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19590,7 +19588,7 @@ OS:SpaceType,
   {c806e1e6-3373-4eef-ba36-ca1f07c51c62}, !- Handle
   TH-2016-Ent-Lobby,                      !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {d267e52f-dba5-484c-b7cb-0c5cf0b565ec}, !- Default Schedule Set Name
   {4773df05-c33e-46ff-9c8e-2873c22b841f}, !- Group Rendering Name
   {df887e00-8421-43ce-9055-2852d9eb41dc}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19600,7 +19598,7 @@ OS:SpaceType,
   {ae611fd1-59cf-4e7d-b09a-6b61cb4746df}, !- Handle
   TH-2016-Ent-Office space,               !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {d267e52f-dba5-484c-b7cb-0c5cf0b565ec}, !- Default Schedule Set Name
   {7e211654-6759-4038-a786-54e4b02cdae7}, !- Group Rendering Name
   {bf3d8b74-a8c6-4f08-af69-9b4c33a32160}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19610,7 +19608,7 @@ OS:SpaceType,
   {bc5df1d4-15b0-4f39-aa88-cf9c496382e2}, !- Handle
   TH-2016-Ent-Conference,                 !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {d267e52f-dba5-484c-b7cb-0c5cf0b565ec}, !- Default Schedule Set Name
   {e85b4246-415f-44bc-b10f-02417a173a1c}, !- Group Rendering Name
   {0fabfbe1-1f5e-4340-8368-41ef54f268a0}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19620,7 +19618,7 @@ OS:SpaceType,
   {c8d598dc-8840-414b-bb17-b03248f8b47e}, !- Handle
   TH-2016-Dep-Sales,                      !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {60433bed-87f4-48fb-b4ea-aadfa67d5e22}, !- Group Rendering Name
   {83a800bf-e0cb-4168-8fca-6750e7503217}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19630,7 +19628,7 @@ OS:SpaceType,
   {abc26e2e-b8ad-4d46-96b6-28608e7cdd88}, !- Handle
   TH-2016-Dep-Mall common area,           !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {e5a2f5d5-9343-4e60-8e7f-99a98ca68eca}, !- Group Rendering Name
   {c2272fdf-d74a-4dfe-b985-284708ce6cc8}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19640,7 +19638,7 @@ OS:SpaceType,
   {549224c4-f39d-48f5-ba60-27aee828f62b}, !- Handle
   TH-2016-Dep-Barbershop,                 !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {d4b78736-6cb2-4824-979d-95b86d063840}, !- Group Rendering Name
   {09b1ead3-189d-4a19-95a2-359ad3028842}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19650,7 +19648,7 @@ OS:SpaceType,
   {97516c17-6787-4e8d-bb10-bbbf720b8369}, !- Handle
   TH-2016-Dep-Beauty salon,               !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {0c0647e5-207a-4821-998f-7a042c92d918}, !- Group Rendering Name
   {d67443e1-f48d-4bc8-af1d-e84354742430}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19660,7 +19658,7 @@ OS:SpaceType,
   {665c9c43-adba-4417-bd54-e6b0b211222e}, !- Handle
   TH-2016-Dep-Pet shop,                   !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {e5a8d3e5-defd-4cbf-b660-69d43121eee9}, !- Group Rendering Name
   {e5c39be2-f52c-4b18-a473-869ba6376312}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19670,7 +19668,7 @@ OS:SpaceType,
   {4bad2205-4ed3-4939-be66-6343641b2c60}, !- Handle
   TH-2016-Dep-Supermarket,                !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {30da5335-d2eb-4de6-b9c2-fe1d9f41530c}, !- Group Rendering Name
   {eed07f38-5376-4bea-8c87-b82b84db749b}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19680,7 +19678,7 @@ OS:SpaceType,
   {0e61f212-0869-4e44-9e6b-ce567543bf81}, !- Handle
   TH-2016-Dep-Coin-operated laudries,     !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {4cb89eee-5fd2-4ba5-b800-ec2eb9a6d558}, !- Group Rendering Name
   {641e912a-53d0-4f90-94f9-d019544525b1}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19690,7 +19688,7 @@ OS:SpaceType,
   {bc975003-f6cc-4f3d-86cb-19d3dee0b081}, !- Handle
   TH-2016-Dep-Shipping,                   !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {84e3cc37-75b7-436b-8e13-b7915f2aa329}, !- Group Rendering Name
   {8c1c707d-30c7-4f35-855d-0d56c31ddcb2}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19700,7 +19698,7 @@ OS:SpaceType,
   {162f1ba8-9f72-4aaa-b641-0ff12efab579}, !- Handle
   TH-2016-Dep-Warehouse,                  !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {c8801a45-241e-46e4-9125-47b9a9507e74}, !- Group Rendering Name
   {ec74ddb5-3f3b-4607-bc4c-cc4ab27b6a43}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19710,7 +19708,7 @@ OS:SpaceType,
   {06896273-bbfb-4336-a998-eb6268ed881f}, !- Handle
   TH-2016-Dep-Photo studio,               !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {f7dbe90f-1b8b-4619-896f-f2637999db6e}, !- Group Rendering Name
   {235181b5-cbc5-4e8f-b0c2-f273976aced2}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19720,7 +19718,7 @@ OS:SpaceType,
   {9e69cc40-01f7-465c-9091-f5628ddbc7bd}, !- Handle
   TH-2016-Dep-Refrigeration area,         !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {784b2870-274b-4c3c-965b-4614034d9c46}, !- Group Rendering Name
   {bd4e9709-cd1f-444b-a965-8d528c5d4187}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19730,7 +19728,7 @@ OS:SpaceType,
   {54854e76-be0a-4607-802a-7ef3ac87743d}, !- Handle
   TH-2016-Dep-Bank vaults,                !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {74d4a0af-2259-4872-a30a-0d1158344d37}, !- Group Rendering Name
   {3422ee5d-3945-4b6d-b205-9e8f0c5a3f7a}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19740,7 +19738,7 @@ OS:SpaceType,
   {e909b604-d129-4dbd-9ffe-614a15186395}, !- Handle
   TH-2016-Dep-Bank lobby,                 !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {01d2a9c6-f96c-4ac5-b264-e632944d4956}, !- Group Rendering Name
   {6b1f958d-e96d-4977-adf5-42b5741e77fb}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19750,7 +19748,7 @@ OS:SpaceType,
   {e3a7ce36-5d2d-4024-a06d-cb88ebd1be3d}, !- Handle
   TH-2016-Dep-Corridor,                   !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {552a6306-5806-43c7-8546-edd6a393c5a4}, !- Group Rendering Name
   {9cec8d41-2d03-4722-8561-dd4c53ceca8a}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19760,7 +19758,7 @@ OS:SpaceType,
   {0337f604-3913-4255-abba-7a465fd7e463}, !- Handle
   TH-2016-Dep-Office space,               !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {8a9f5230-83d2-41d4-baaa-c84c795d6c17}, !- Group Rendering Name
   {c10a5818-9311-4d79-9266-c7dfc48fc8c7}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19770,7 +19768,7 @@ OS:SpaceType,
   {ee955fdc-f9a6-4f80-8314-73c5294d217f}, !- Handle
   TH-2016-Dep-Conference,                 !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {03903889-3d37-46c0-84e4-863eca5654ef}, !- Group Rendering Name
   {14551e4c-f8bb-4412-80fb-a0896f0e6c2a}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19780,7 +19778,7 @@ OS:SpaceType,
   {7dcc0219-11e7-429c-993a-5f0698ecfa64}, !- Handle
   TH-2016-Dep-Restaurant-Dining,          !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {c346cdf5-4ff7-48e4-be4f-a5816ab72ba6}, !- Group Rendering Name
   {9c89ce1e-f1c9-4caf-817e-afd835bcb19d}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19790,7 +19788,7 @@ OS:SpaceType,
   {3fa40862-47af-4626-818d-aceec75320c2}, !- Handle
   TH-2016-Dep-Coffee station,             !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {9372848c-042d-45f1-bb81-0164ce3e3b2a}, !- Group Rendering Name
   {91ab5cbc-34e1-4c62-a58c-7459f39c14a5}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19800,7 +19798,7 @@ OS:SpaceType,
   {8f61c763-2075-4459-ae73-091fc9b8ec93}, !- Handle
   TH-2016-Dep-Cafeteria/Fast-food dining, !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {f491c29a-15ee-42d3-aea3-1fc81abf43a8}, !- Group Rendering Name
   {2bb9f542-dcef-4f2d-9f73-af9b4c0e21ef}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19810,7 +19808,7 @@ OS:SpaceType,
   {652e7b13-14ee-445f-b0b0-3a9cff0bff55}, !- Handle
   TH-2016-Dep-Bars/Lounge,                !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {2f20ba85-1daf-4675-a7c9-7cff4a6170f5}, !- Group Rendering Name
   {087b7fb1-4f42-4ca2-887c-38d7aee5951e}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -19820,7 +19818,7 @@ OS:SpaceType,
   {5f7f886b-f620-4e66-819f-b4fd971217ee}, !- Handle
   TH-2016-Dep-Kitchen,                    !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Default Schedule Set Name
   {e08a17bf-63ef-4f9f-a9cb-a4a2c8c41010}, !- Group Rendering Name
   {b811eae5-9885-4e47-9e50-7445ff5d674c}, !- Design Specification Outdoor Air Object Name
   ,                                       !- Standards Building Type
@@ -25384,7 +25382,7 @@ OS:SpaceType,
   {eab90aea-5348-4c53-82bd-929a772fa3b0}, !- Handle
   TH-2016-Office-Breakroom,               !- Name
   ,                                       !- Default Construction Set Name
-  ,                                       !- Default Schedule Set Name
+  {4d40ee0b-69a1-4035-85b7-9d852b6e1bf1}, !- Default Schedule Set Name
   {8d1ce403-527d-4aac-ac16-7d650533953a}, !- Group Rendering Name
   {e9b0145f-7632-4f17-b334-3f6c121aa8d7}; !- Design Specification Outdoor Air Object Name
 
@@ -25491,3 +25489,1178 @@ OS:Lights,
   90.1-2007-Edu-Breakroom-Lights,         !- Name
   {775624a4-d078-4da7-9c73-686c4077fa5f}, !- Lights Definition Name
   {1766eda3-e1a8-4959-9741-fe255ab2c293}; !- Space or SpaceType Name
+  
+!---- Thai Schedule set 15/12/17 ----
+
+OS:DefaultScheduleSet,
+  {16094490-0bfc-4b17-8b9b-ab7a83b6c09b}, !- Handle
+  Thai Exhibition hall/Gymnasium Schedule Set, !- Name
+  ,                                       !- Hours of Operation Schedule Name
+  {9aff14fa-e167-4923-8156-e4cdc66acfa3}, !- Number of People Schedule Name
+  {2bba53da-8f61-4e0d-9d19-82e5f80a0dc8}, !- People Activity Level Schedule Name
+  {f057563c-8186-40ae-834a-b3ddd6ec5d64}, !- Lighting Schedule Name
+  {56149c8f-685d-41b6-9327-e92fc6f840cf}, !- Electric Equipment Schedule Name
+  ,                                       !- Gas Equipment Schedule Name
+  ,                                       !- Hot Water Equipment Schedule Name
+  ,                                       !- Infiltration Schedule Name
+  ,                                       !- Steam Equipment Schedule Name
+  {49de9421-ad8e-43ee-b390-8c67d758e731}; !- Other Equipment Schedule Name
+
+OS:Schedule:Ruleset,
+  {2bba53da-8f61-4e0d-9d19-82e5f80a0dc8}, !- Handle
+  Thai Exhibition hall/Gymnasium Activity Schedule Ruleset, !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  {a4cec613-3968-4b93-a584-aeeac2ec63c4}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {a4cec613-3968-4b93-a584-aeeac2ec63c4}, !- Handle
+  Schedule Day 62,                        !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  120.000007629395;                       !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {f057563c-8186-40ae-834a-b3ddd6ec5d64}, !- Handle
+  Thai Exhibition hall/Gymnasium Light Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {f09e5d1b-35ae-4fc4-9bce-c949f13ef9dc}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {f09e5d1b-35ae-4fc4-9bce-c949f13ef9dc}, !- Handle
+  Schedule Day 58,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {56149c8f-685d-41b6-9327-e92fc6f840cf}, !- Handle
+  Thai Exhibition hall/Gymnasium Electronic Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {f56501e8-4943-4389-bc76-672df1cf9e5a}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {f56501e8-4943-4389-bc76-672df1cf9e5a}, !- Handle
+  Schedule Day 60,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {49de9421-ad8e-43ee-b390-8c67d758e731}, !- Handle
+  Thai Exhibition hall/Gymnasium Other Equipment Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {26d3a40c-647c-4e95-8055-9624ec2939a3}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {26d3a40c-647c-4e95-8055-9624ec2939a3}, !- Handle
+  Schedule Day 64,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:ScheduleTypeLimits,
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Handle
+  ActivityLevel,                          !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Continuous,                             !- Numeric Type
+  ActivityLevel;                          !- Unit Type
+
+OS:ScheduleTypeLimits,
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Handle
+  Fractional,                             !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
+  Continuous;                             !- Numeric Type
+
+OS:DefaultScheduleSet,
+  {28212a6d-a395-407c-8540-665827df4abb}, !- Handle
+  Thai Condominium Schedule Set,          !- Name
+  ,                                       !- Hours of Operation Schedule Name
+  {dddb53fb-c6cc-4f41-9a7c-db870137cf6f}, !- Number of People Schedule Name
+  {2d99e6ca-2b0d-4d81-897c-b23e8ceb4ece}, !- People Activity Level Schedule Name
+  {baf3db63-4145-46a9-868a-f48dbf9d1ed4}, !- Lighting Schedule Name
+  {e42ce4c2-5767-45a2-9b4e-e344fc73db70}, !- Electric Equipment Schedule Name
+  ,                                       !- Gas Equipment Schedule Name
+  ,                                       !- Hot Water Equipment Schedule Name
+  ,                                       !- Infiltration Schedule Name
+  ,                                       !- Steam Equipment Schedule Name
+  {8f3d3cd9-2c00-4b93-b1b0-0b7713093d1c}; !- Other Equipment Schedule Name
+
+OS:Schedule:Ruleset,
+  {2d99e6ca-2b0d-4d81-897c-b23e8ceb4ece}, !- Handle
+  Thai Condominium Activity Schedule Ruleset, !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  {258cb1f3-19d6-4763-a394-207dfd100b5c}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {258cb1f3-19d6-4763-a394-207dfd100b5c}, !- Handle
+  Schedule Day 79,                        !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  120.000007629395;                       !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {baf3db63-4145-46a9-868a-f48dbf9d1ed4}, !- Handle
+  Thai Condominium Light Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {6fced918-3b1c-42e0-8f12-076c83a9b067}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {6fced918-3b1c-42e0-8f12-076c83a9b067}, !- Handle
+  Schedule Day 77,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {e42ce4c2-5767-45a2-9b4e-e344fc73db70}, !- Handle
+  Thai Condominium Electronic Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {2507f017-9d39-415d-b3fe-81ef1a6ad736}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {2507f017-9d39-415d-b3fe-81ef1a6ad736}, !- Handle
+  Schedule Day 76,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {8f3d3cd9-2c00-4b93-b1b0-0b7713093d1c}, !- Handle
+  Thai Condominium Other Equipment Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {90452ef3-ccc3-4f9c-b5eb-f514f5063a50}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {90452ef3-ccc3-4f9c-b5eb-f514f5063a50}, !- Handle
+  Schedule Day 78,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:DefaultScheduleSet,
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Handle
+  Thai Department Store Schedule Set,     !- Name
+  ,                                       !- Hours of Operation Schedule Name
+  {28ae66bf-6182-44d3-80e2-acf3135b6f83}, !- Number of People Schedule Name
+  {5ec39e8c-dc33-4697-8561-036f9faaedb2}, !- People Activity Level Schedule Name
+  {96cc2cbb-e51d-436e-bb5e-df02c996216c}, !- Lighting Schedule Name
+  {b915875f-dac9-4141-acdc-070fd82379c2}, !- Electric Equipment Schedule Name
+  ,                                       !- Gas Equipment Schedule Name
+  ,                                       !- Hot Water Equipment Schedule Name
+  ,                                       !- Infiltration Schedule Name
+  ,                                       !- Steam Equipment Schedule Name
+  {cbee905c-2c72-4c44-98d3-85517504af65}; !- Other Equipment Schedule Name
+
+OS:Schedule:Ruleset,
+  {5ec39e8c-dc33-4697-8561-036f9faaedb2}, !- Handle
+  Thai Department Store Activity Schedule Ruleset, !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  {c521c590-1cbd-4d43-93d2-d9221f0510cd}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {c521c590-1cbd-4d43-93d2-d9221f0510cd}, !- Handle
+  Schedule Day 48,                        !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  120.000007629395;                       !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {96cc2cbb-e51d-436e-bb5e-df02c996216c}, !- Handle
+  Thai Department Store Light Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {f3357784-f67d-4354-ad70-6cfb8f47c068}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {f3357784-f67d-4354-ad70-6cfb8f47c068}, !- Handle
+  Schedule Day 42,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {b915875f-dac9-4141-acdc-070fd82379c2}, !- Handle
+  Thai Department Store Electronic Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {5f9ade6a-92eb-4be9-b236-993e7e6acf55}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {5f9ade6a-92eb-4be9-b236-993e7e6acf55}, !- Handle
+  Schedule Day 44,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {cbee905c-2c72-4c44-98d3-85517504af65}, !- Handle
+  Thai Department Store Other Equipment Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {3af06dc6-3d74-44aa-a53a-d06f965eb246}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {3af06dc6-3d74-44aa-a53a-d06f965eb246}, !- Handle
+  Schedule Day 46,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Rule,
+  {56e17354-4b58-436b-9046-e78daa35e0fd}, !- Handle
+  Department Store Other Equipment Schedule Rule, !- Name
+  {cbee905c-2c72-4c44-98d3-85517504af65}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {fbf52a7f-34e0-43bc-9859-7d303a6a5237}, !- Day Schedule Name
+  Yes,                                    !- Apply Sunday
+  Yes,                                    !- Apply Monday
+  Yes,                                    !- Apply Tuesday
+  Yes,                                    !- Apply Wednesday
+  Yes,                                    !- Apply Thursday
+  Yes,                                    !- Apply Friday
+  Yes;                                    !- Apply Saturday
+
+OS:Schedule:Day,
+  {fbf52a7f-34e0-43bc-9859-7d303a6a5237}, !- Handle
+  Schedule Day 47,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:DefaultScheduleSet,
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Handle
+  Thai Education Institution Schedule Set, !- Name
+  ,                                       !- Hours of Operation Schedule Name
+  {ceb3f551-1cf1-4c14-891d-b592eab63f36}, !- Number of People Schedule Name
+  {4b7367b4-6d99-4902-9f12-31eec58c34f4}, !- People Activity Level Schedule Name
+  {0779c44e-dedb-42c1-9709-d6a012d77ca8}, !- Lighting Schedule Name
+  {b33ebe98-529a-46cd-ac99-0dac71e137bd}, !- Electric Equipment Schedule Name
+  ,                                       !- Gas Equipment Schedule Name
+  ,                                       !- Hot Water Equipment Schedule Name
+  ,                                       !- Infiltration Schedule Name
+  ,                                       !- Steam Equipment Schedule Name
+  {4e74b20f-2932-4da6-9e76-3b2f92ebb839}; !- Other Equipment Schedule Name
+
+OS:Schedule:Ruleset,
+  {4b7367b4-6d99-4902-9f12-31eec58c34f4}, !- Handle
+  Thai Education Facility Activity Schedule Ruleset, !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  {9bc99618-31c5-48b4-a1c6-462cc4811d69}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {9bc99618-31c5-48b4-a1c6-462cc4811d69}, !- Handle
+  Schedule Day 28,                        !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  120;                                    !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {0779c44e-dedb-42c1-9709-d6a012d77ca8}, !- Handle
+  Thai Education Facility Light Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {48eee8cc-27ac-437e-a82c-98430d4ec8b4}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {48eee8cc-27ac-437e-a82c-98430d4ec8b4}, !- Handle
+  Schedule Day 22,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Rule,
+  {c80d2f69-9f95-48a0-a71e-8c14d8632fd4}, !- Handle
+  Educational Instituion Light Schedule Rule, !- Name
+  {0779c44e-dedb-42c1-9709-d6a012d77ca8}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {9e99c4ff-8fd6-4e98-8f13-45d0268b027b}, !- Day Schedule Name
+  ,                                       !- Apply Sunday
+  Yes,                                    !- Apply Monday
+  Yes,                                    !- Apply Tuesday
+  Yes,                                    !- Apply Wednesday
+  Yes,                                    !- Apply Thursday
+  Yes;                                    !- Apply Friday
+
+OS:Schedule:Day,
+  {9e99c4ff-8fd6-4e98-8f13-45d0268b027b}, !- Handle
+  Schedule Day 23,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0.00415528379380703,                    !- Value Until Time 1
+  17,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {b33ebe98-529a-46cd-ac99-0dac71e137bd}, !- Handle
+  Thai Education Facility Electronic Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {2c1e53e3-ac3e-4067-aedd-9f407e32a73b}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {2c1e53e3-ac3e-4067-aedd-9f407e32a73b}, !- Handle
+  Schedule Day 24,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Rule,
+  {3cf2c33b-9e33-47ff-878f-08f87913dc8c}, !- Handle
+  Educational Instituion Electronic Schedule Rule, !- Name
+  {b33ebe98-529a-46cd-ac99-0dac71e137bd}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {5fa6c2a2-a197-4808-8fc7-f8b868e4e3d1}, !- Day Schedule Name
+  ,                                       !- Apply Sunday
+  Yes,                                    !- Apply Monday
+  Yes,                                    !- Apply Tuesday
+  Yes,                                    !- Apply Wednesday
+  Yes,                                    !- Apply Thursday
+  Yes;                                    !- Apply Friday
+
+OS:Schedule:Day,
+  {5fa6c2a2-a197-4808-8fc7-f8b868e4e3d1}, !- Handle
+  Schedule Day 25,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0.00415528379380703,                    !- Value Until Time 1
+  17,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {4e74b20f-2932-4da6-9e76-3b2f92ebb839}, !- Handle
+  Thai Education Facility Other Equipment Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {3cc2e03d-a83b-4a34-8b0f-b42c1aa33fca}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {3cc2e03d-a83b-4a34-8b0f-b42c1aa33fca}, !- Handle
+  Schedule Day 26,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Rule,
+  {8edb6492-5d4d-447e-824e-cbeb0950c04c}, !- Handle
+  Educational Instituion Other Equipment Schedule Rule, !- Name
+  {4e74b20f-2932-4da6-9e76-3b2f92ebb839}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {bd3b6c33-af1b-46c9-a6c1-4e2cdea3c642}, !- Day Schedule Name
+  ,                                       !- Apply Sunday
+  Yes,                                    !- Apply Monday
+  Yes,                                    !- Apply Tuesday
+  Yes,                                    !- Apply Wednesday
+  Yes,                                    !- Apply Thursday
+  Yes;                                    !- Apply Friday
+
+OS:Schedule:Day,
+  {bd3b6c33-af1b-46c9-a6c1-4e2cdea3c642}, !- Handle
+  Schedule Day 27,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0.00415528379380703,                    !- Value Until Time 1
+  17,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:DefaultScheduleSet,
+  {dc4012c7-539a-42a0-b543-77ead10878a3}, !- Handle
+  Thai Hotel Schedule Set,                !- Name
+  ,                                       !- Hours of Operation Schedule Name
+  {c4fd8c4d-67cc-4a45-a95e-0a8481b8126f}, !- Number of People Schedule Name
+  {de16637e-2450-4725-88ff-8d73badd23d5}, !- People Activity Level Schedule Name
+  {ed694459-734f-4ff9-9d5f-cbf9fb79f51c}, !- Lighting Schedule Name
+  {2870577e-81d2-432e-b7af-2c33bea2935e}, !- Electric Equipment Schedule Name
+  ,                                       !- Gas Equipment Schedule Name
+  ,                                       !- Hot Water Equipment Schedule Name
+  ,                                       !- Infiltration Schedule Name
+  ,                                       !- Steam Equipment Schedule Name
+  {04ce43d5-08a7-4a04-ac06-05f21a9f7d9a}; !- Other Equipment Schedule Name
+
+OS:Schedule:Ruleset,
+  {de16637e-2450-4725-88ff-8d73badd23d5}, !- Handle
+  Thai Hotel Activity Schedule Ruleset,   !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  {afaa8570-9fc9-40cc-b49e-9f02d4c67f6b}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {afaa8570-9fc9-40cc-b49e-9f02d4c67f6b}, !- Handle
+  Schedule Day 69,                        !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  120.000007629395;                       !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {ed694459-734f-4ff9-9d5f-cbf9fb79f51c}, !- Handle
+  Thai Hotel Light Schedule Ruleset,      !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {0750a99f-3ec1-4f3c-bc0c-0a9ab88092ce}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {0750a99f-3ec1-4f3c-bc0c-0a9ab88092ce}, !- Handle
+  Schedule Day 66,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {2870577e-81d2-432e-b7af-2c33bea2935e}, !- Handle
+  Thai Hotel Electronic Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {6f9a4546-1cc5-4c40-a372-4718a63a6521}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {6f9a4546-1cc5-4c40-a372-4718a63a6521}, !- Handle
+  Schedule Day 67,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {04ce43d5-08a7-4a04-ac06-05f21a9f7d9a}, !- Handle
+  Thai Hotel Other Equipment Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {d4efdc07-baa1-4174-bf79-2491a159436e}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {d4efdc07-baa1-4174-bf79-2491a159436e}, !- Handle
+  Schedule Day 68,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:DefaultScheduleSet,
+  {c65d34fd-4dda-43c9-9447-136c1d1a7be1}, !- Handle
+  Thai Hospital Schedule Set,             !- Name
+  ,                                       !- Hours of Operation Schedule Name
+  {00fc8a7f-dfd3-49d9-9d73-e0324723ecb4}, !- Number of People Schedule Name
+  {fbec9cde-7545-4431-acfa-1621a19365c6}, !- People Activity Level Schedule Name
+  {8a29472d-584e-4ff1-98dd-5b4461add042}, !- Lighting Schedule Name
+  {1340530f-6a2c-45aa-be13-4a17b4f867f1}, !- Electric Equipment Schedule Name
+  ,                                       !- Gas Equipment Schedule Name
+  ,                                       !- Hot Water Equipment Schedule Name
+  ,                                       !- Infiltration Schedule Name
+  ,                                       !- Steam Equipment Schedule Name
+  {1763c013-2190-4acb-a3e3-8bde92540829}; !- Other Equipment Schedule Name
+
+OS:Schedule:Ruleset,
+  {fbec9cde-7545-4431-acfa-1621a19365c6}, !- Handle
+  Thai Hospital Activity Schedule Ruleset, !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  {8a6269f3-2a3d-4e71-84df-2d93e4d2dfcf}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {8a6269f3-2a3d-4e71-84df-2d93e4d2dfcf}, !- Handle
+  Schedule Day 74,                        !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  120.000007629395;                       !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {8a29472d-584e-4ff1-98dd-5b4461add042}, !- Handle
+  Thai Hospital Light Schedule Ruleset,   !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {5b163be9-43a2-4fbc-a7d5-2ac95e2e76f7}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {5b163be9-43a2-4fbc-a7d5-2ac95e2e76f7}, !- Handle
+  Schedule Day 72,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {1340530f-6a2c-45aa-be13-4a17b4f867f1}, !- Handle
+  Thai Hospital Electronic Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {e169a34f-b3ac-4541-b9b1-cc87725e8e5a}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {e169a34f-b3ac-4541-b9b1-cc87725e8e5a}, !- Handle
+  Schedule Day 71,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {1763c013-2190-4acb-a3e3-8bde92540829}, !- Handle
+  Thai Hospital Other Equipment Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {3f9185d6-d30b-4a8f-9d53-5822a4bc500c}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {3f9185d6-d30b-4a8f-9d53-5822a4bc500c}, !- Handle
+  Schedule Day 73,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:DefaultScheduleSet,
+  {4d40ee0b-69a1-4035-85b7-9d852b6e1bf1}, !- Handle
+  Thai Office Schedule Set,               !- Name
+  ,                                       !- Hours of Operation Schedule Name
+  {f7dd89e2-fbca-4f21-a4ac-6ba14991feba}, !- Number of People Schedule Name
+  {c56c694f-890b-4191-ad3d-d23c5859cf8d}, !- People Activity Level Schedule Name
+  {ec562285-ea87-4ef7-b10b-0f4b26253fea}, !- Lighting Schedule Name
+  {3e196e27-c4b5-462c-9a2f-1de0db820cfb}, !- Electric Equipment Schedule Name
+  ,                                       !- Gas Equipment Schedule Name
+  ,                                       !- Hot Water Equipment Schedule Name
+  ,                                       !- Infiltration Schedule Name
+  ,                                       !- Steam Equipment Schedule Name
+  {5249c1bb-ca16-477a-8975-f226238e2342}; !- Other Equipment Schedule Name
+
+OS:Schedule:Ruleset,
+  {c56c694f-890b-4191-ad3d-d23c5859cf8d}, !- Handle
+  Thai Office Activity Schedule Ruleset,  !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  {05054e80-898f-4e88-9b15-65189a5d0a7a}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {05054e80-898f-4e88-9b15-65189a5d0a7a}, !- Handle
+  Schedule Day 36,                        !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  120;                                    !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {ec562285-ea87-4ef7-b10b-0f4b26253fea}, !- Handle
+  Thai Office Light Schedule Ruleset,     !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {d0f6f209-1698-47a1-895d-f992c399a6c9}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {d0f6f209-1698-47a1-895d-f992c399a6c9}, !- Handle
+  Schedule Day 30,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Rule,
+  {988ca329-2059-458e-9b37-fbd4e30f9226}, !- Handle
+  Office Light Schedule Rule,             !- Name
+  {ec562285-ea87-4ef7-b10b-0f4b26253fea}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {72258ec1-8b9e-4c65-bd89-648e3476d4cf}, !- Day Schedule Name
+  ,                                       !- Apply Sunday
+  Yes,                                    !- Apply Monday
+  Yes,                                    !- Apply Tuesday
+  Yes,                                    !- Apply Wednesday
+  Yes,                                    !- Apply Thursday
+  Yes;                                    !- Apply Friday
+
+OS:Schedule:Day,
+  {72258ec1-8b9e-4c65-bd89-648e3476d4cf}, !- Handle
+  Schedule Day 31,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0.00415528379380703,                    !- Value Until Time 1
+  17,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {3e196e27-c4b5-462c-9a2f-1de0db820cfb}, !- Handle
+  Thai Office Electronic Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {3532e5ad-7b12-441b-948a-9595f94c64f3}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {3532e5ad-7b12-441b-948a-9595f94c64f3}, !- Handle
+  Schedule Day 32,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Rule,
+  {d93756f4-6350-4933-b077-50a9feab1ece}, !- Handle
+  Office Electronic Schedule Rule,        !- Name
+  {3e196e27-c4b5-462c-9a2f-1de0db820cfb}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {a3e23ba3-8e8c-4183-a864-8828e15d82ff}, !- Day Schedule Name
+  ,                                       !- Apply Sunday
+  Yes,                                    !- Apply Monday
+  Yes,                                    !- Apply Tuesday
+  Yes,                                    !- Apply Wednesday
+  Yes,                                    !- Apply Thursday
+  Yes;                                    !- Apply Friday
+
+OS:Schedule:Day,
+  {a3e23ba3-8e8c-4183-a864-8828e15d82ff}, !- Handle
+  Schedule Day 33,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0.00415528379380703,                    !- Value Until Time 1
+  17,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {5249c1bb-ca16-477a-8975-f226238e2342}, !- Handle
+  Thai Office Other Equipment Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {9c51b0f2-93ad-41bb-bf7f-6a146c0218c4}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {9c51b0f2-93ad-41bb-bf7f-6a146c0218c4}, !- Handle
+  Schedule Day 34,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Rule,
+  {114e6b80-38cd-42c0-8066-95040d4cda34}, !- Handle
+  Office Other Equipment Schedule Rule,   !- Name
+  {5249c1bb-ca16-477a-8975-f226238e2342}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {6654e26b-796a-4b84-932e-638c32a22415}, !- Day Schedule Name
+  ,                                       !- Apply Sunday
+  Yes,                                    !- Apply Monday
+  Yes,                                    !- Apply Tuesday
+  Yes,                                    !- Apply Wednesday
+  Yes,                                    !- Apply Thursday
+  Yes;                                    !- Apply Friday
+
+OS:Schedule:Day,
+  {6654e26b-796a-4b84-932e-638c32a22415}, !- Handle
+  Schedule Day 35,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0.00415528379380703,                    !- Value Until Time 1
+  17,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:DefaultScheduleSet,
+  {d267e52f-dba5-484c-b7cb-0c5cf0b565ec}, !- Handle
+  Thai Entertainment Complex Schedule Set, !- Name
+  ,                                       !- Hours of Operation Schedule Name
+  {7720d1d0-5fa9-43d0-ba6c-c2e486966aa4}, !- Number of People Schedule Name
+  {f0ae5110-bb1f-4c42-8c2a-747800bb146a}, !- People Activity Level Schedule Name
+  {84e0671a-3ca2-4846-a796-166c704edb29}, !- Lighting Schedule Name
+  {3500b1ce-1ebb-455e-80a3-124ba2807fb7}, !- Electric Equipment Schedule Name
+  ,                                       !- Gas Equipment Schedule Name
+  ,                                       !- Hot Water Equipment Schedule Name
+  ,                                       !- Infiltration Schedule Name
+  ,                                       !- Steam Equipment Schedule Name
+  {bb883b86-91f5-4e4e-868b-6b83eed088fa}; !- Other Equipment Schedule Name
+
+OS:Schedule:Ruleset,
+  {f0ae5110-bb1f-4c42-8c2a-747800bb146a}, !- Handle
+  Thai Entertainment Complex Activity Schedule Ruleset, !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  {17ba469d-9df2-42ac-97fc-42df024d0032}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {17ba469d-9df2-42ac-97fc-42df024d0032}, !- Handle
+  Schedule Day 54,                        !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  120.000007629395;                       !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {84e0671a-3ca2-4846-a796-166c704edb29}, !- Handle
+  Thai Entertainment Complex Light Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {08114381-c044-4ba7-af7a-e1536d3f8e26}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {08114381-c044-4ba7-af7a-e1536d3f8e26}, !- Handle
+  Schedule Day 50,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {3500b1ce-1ebb-455e-80a3-124ba2807fb7}, !- Handle
+  Thai Entertainment Complex Electronic Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {d29711d1-86ff-452e-a1dd-da662d815b1c}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {d29711d1-86ff-452e-a1dd-da662d815b1c}, !- Handle
+  Schedule Day 52,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {bb883b86-91f5-4e4e-868b-6b83eed088fa}, !- Handle
+  Thai Entertainment Complex Other Equipment Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {fef0a008-5361-4ffe-a7a2-3b260ec280f3}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {fef0a008-5361-4ffe-a7a2-3b260ec280f3}, !- Handle
+  Schedule Day 56,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:DefaultScheduleSet,
+  {ec398894-6a34-490f-8f3b-961235db3219}, !- Handle
+  Thai Auditorium/Concert Hall Schedule Set, !- Name
+  ,                                       !- Hours of Operation Schedule Name
+  {d00e0da0-4d55-4010-94dc-ce934d211467}, !- Number of People Schedule Name
+  {f9c2f49f-14dd-45cd-bf93-2a586783fac6}, !- People Activity Level Schedule Name
+  {ab949dd7-ce6b-4901-9aa4-5a311341a6f2}, !- Lighting Schedule Name
+  {7dceb20b-a90f-4345-978a-e908d59449f5}, !- Electric Equipment Schedule Name
+  ,                                       !- Gas Equipment Schedule Name
+  ,                                       !- Hot Water Equipment Schedule Name
+  ,                                       !- Infiltration Schedule Name
+  ,                                       !- Steam Equipment Schedule Name
+  {7e5474c3-1780-4c97-b519-3ace2f7c7e49}; !- Other Equipment Schedule Name
+
+OS:Schedule:Ruleset,
+  {f9c2f49f-14dd-45cd-bf93-2a586783fac6}, !- Handle
+  Thai Auditorium/Concert Hall Activity Schedule Ruleset, !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  {d2996275-b3c8-4a8d-9d35-783298bc8b46}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {d2996275-b3c8-4a8d-9d35-783298bc8b46}, !- Handle
+  Schedule Day 83,                        !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  120.000007629395;                       !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {ab949dd7-ce6b-4901-9aa4-5a311341a6f2}, !- Handle
+  Thai Auditorium/Concert Hall Light Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {5a84e189-0df0-4055-897b-73be589a1b9d}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {5a84e189-0df0-4055-897b-73be589a1b9d}, !- Handle
+  Schedule Day 38,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {7dceb20b-a90f-4345-978a-e908d59449f5}, !- Handle
+  Thai Auditorium/Concert Hall Electronic Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {7328f2ce-0fdb-4e1f-b430-c2cd0f5b1288}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {7328f2ce-0fdb-4e1f-b430-c2cd0f5b1288}, !- Handle
+  Schedule Day 40,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {7e5474c3-1780-4c97-b519-3ace2f7c7e49}, !- Handle
+  Thai Auditorium/Concert Hall Other Equipment Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {1b59fa79-bc4f-4acd-8423-b584d5184339}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {1b59fa79-bc4f-4acd-8423-b584d5184339}, !- Handle
+  Schedule Day 81,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:ScheduleTypeLimits,
+  {d52d9ba4-3a16-41d8-b9fa-8f445c4c6d05}, ! Handle
+  Fraction,                               ! Name
+  0,                                      ! Lower Limit Value
+  1,                                      ! Upper Limit Value
+  CONTINUOUS;                             ! Numeric Type
+
+OS:Schedule:Ruleset,
+  {d00e0da0-4d55-4010-94dc-ce934d211467}, !- Handle
+  Thai Auditorium/Concert Hall Misc Occ,  !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {f753e2ff-8f27-4d74-88da-4fc08304267f}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {f753e2ff-8f27-4d74-88da-4fc08304267f}, !- Handle
+  Schedule Day 84,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {dddb53fb-c6cc-4f41-9a7c-db870137cf6f}, !- Handle
+  Thai Condominium Misc Occ,              !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {da23baa1-15ed-4c42-9678-6425ebb93f66}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {da23baa1-15ed-4c42-9678-6425ebb93f66}, !- Handle
+  Schedule Day 85,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {28ae66bf-6182-44d3-80e2-acf3135b6f83}, !- Handle
+  Thai Department Store Misc Occ,         !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {6800c025-62bb-4b1a-8462-6d2fbe2717cd}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {6800c025-62bb-4b1a-8462-6d2fbe2717cd}, !- Handle
+  Schedule Day 86,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {f7dd89e2-fbca-4f21-a4ac-6ba14991feba}, !- Handle
+  Thai Office Misc Occ,                   !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {815b6e1f-1c31-4ca1-8623-f069ab0c4413}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {815b6e1f-1c31-4ca1-8623-f069ab0c4413}, !- Handle
+  Schedule Day 87,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Day,
+  {c1a66119-79cd-49bb-b9fb-e883d4f69e17}, !- Handle
+  Schedule Day 88,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0.00415528379380703,                    !- Value Until Time 1
+  17,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {c4fd8c4d-67cc-4a45-a95e-0a8481b8126f}, !- Handle
+  Thai Hotel Misc Occ,                    !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {6a496275-fe3b-49d6-baea-2bbdfe4bb612}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {6a496275-fe3b-49d6-baea-2bbdfe4bb612}, !- Handle
+  Schedule Day 89,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {00fc8a7f-dfd3-49d9-9d73-e0324723ecb4}, !- Handle
+  Thai Hospital Misc Occ,                 !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {dfe1ebbb-02d1-49da-9fa5-07edf7c7373c}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {dfe1ebbb-02d1-49da-9fa5-07edf7c7373c}, !- Handle
+  Schedule Day 90,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {9aff14fa-e167-4923-8156-e4cdc66acfa3}, !- Handle
+  Thai Exhibition hall/Gymnasium Misc Occ, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {8df75155-5d83-46ca-b5eb-7bd78bf3bdcc}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {8df75155-5d83-46ca-b5eb-7bd78bf3bdcc}, !- Handle
+  Schedule Day 91,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {7720d1d0-5fa9-43d0-ba6c-c2e486966aa4}, !- Handle
+  Thai Entertainment Complex Misc Occ,    !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {ff7c7db9-558f-41e6-a0fc-aba2c4f0d0b5}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {ff7c7db9-558f-41e6-a0fc-aba2c4f0d0b5}, !- Handle
+  Schedule Day 92,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {ceb3f551-1cf1-4c14-891d-b592eab63f36}, !- Handle
+  Thai Education Facility Misc Occ,       !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {6dfa498e-7d9f-4ba0-bc46-4290ad4f70ff}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {6dfa498e-7d9f-4ba0-bc46-4290ad4f70ff}, !- Handle
+  Schedule Day 93,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Day,
+  {d75ec534-8534-4bcf-9dee-297d303e0d1a}, !- Handle
+  Schedule Day 94,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0.00415528379380703,                    !- Value Until Time 1
+  17,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {f85fd719-b695-4110-a207-7d5cc9a9715e}, !- Handle
+  Thai Department Store Misc Occ ,        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {f419a671-2da3-4375-993a-e7861476a141}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {f419a671-2da3-4375-993a-e7861476a141}, !- Handle
+  Schedule Day 95,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Day,
+  {dfecd701-fd07-4173-b3f7-056393b9f5ac}, !- Handle
+  Schedule Day 96,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+
+
