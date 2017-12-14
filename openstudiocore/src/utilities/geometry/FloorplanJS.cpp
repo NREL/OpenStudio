@@ -713,7 +713,7 @@ namespace openstudio{
 
                 double projectionFactor = 0.0;
                 if (checkKeyAndType(*windowDefinition, "overhang_projection_factor", Json::realValue) || checkKeyAndType(*windowDefinition, "overhang_projection_factor", Json::intValue)){
-                  double projectionFactor = windowDefinition->get("overhang_projection_factor", 0.0).asDouble();
+                  projectionFactor = windowDefinition->get("overhang_projection_factor", 0.0).asDouble();
                 }
 
                 // applyViewAndDaylightingGlassRatios does not currently take argument for fins
@@ -723,7 +723,8 @@ namespace openstudio{
                 Point3dVector exteriorShadingVertices;
                 Point3dVector interiorShelfVertices; // not populated
                 
-                if (applyViewAndDaylightingGlassRatios(wwr, 0.0, sillHeight, 0.0, projectionFactor, 0.0, wallVertices, viewVertices, daylightingVertices, exteriorShadingVertices, interiorShelfVertices))
+                bool test = applyViewAndDaylightingGlassRatios(wwr, 0.0, sillHeight, 0.0, projectionFactor, 0.0, wallVertices, viewVertices, daylightingVertices, exteriorShadingVertices, interiorShelfVertices);
+                if (test)
                 {
                   if (!viewVertices.empty()){
                     unsigned parentSubSurfaceIndex = allFinalWindowVertices.size();
