@@ -657,7 +657,7 @@ namespace openstudio{
                 unsigned parentSubSurfaceIndex = allFinalWindowVertices.size();
                 allFinalWindowVertices.push_back(windowVertices);
 
-                if (checkKeyAndType(*windowDefinition, "overhang_projection_factor", Json::realValue)){
+                if (checkKeyAndType(*windowDefinition, "overhang_projection_factor", Json::realValue) || checkKeyAndType(*windowDefinition, "overhang_projection_factor", Json::intValue)){
                   double projectionFactor = windowDefinition->get("overhang_projection_factor", 0.0).asDouble();
                   
                   Vector3d outVector = crossVector;
@@ -676,8 +676,8 @@ namespace openstudio{
                   allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
                 }
 
-                if (checkKeyAndType(*windowDefinition, "fin_projection_factor", Json::realValue)){
-                  double projectionFactor = windowDefinition->get("fin_projection_factor", 0.0).asDouble();
+                if (checkKeyAndType(*windowDefinition, "fin_projection_factor", Json::realValue) || checkKeyAndType(*windowDefinition, "fin_projection_factor", Json::intValue)){
+                  double projectionFactor  = windowDefinition->get("fin_projection_factor", 0.0).asDouble();
                   
                   Vector3d outVector = crossVector;
                   outVector.setLength(projectionFactor*height);
@@ -707,6 +707,34 @@ namespace openstudio{
               } else if (istringEqual("Window to Wall Ratio", windowDefinitionType)){
                 assertKeyAndType(*windowDefinition, "sill_height", Json::realValue);
                 assertKeyAndType(*windowDefinition, "wwr", Json::realValue);
+
+                double sillHeight = lengthToMeters * windowDefinition->get("sill_height", 0.0).asDouble();
+                double wwr = windowDefinition->get("wwr", 0.0).asDouble();
+
+                double projectionFactor = 0.0;
+                if (checkKeyAndType(*windowDefinition, "overhang_projection_factor", Json::realValue) || checkKeyAndType(*windowDefinition, "overhang_projection_factor", Json::intValue)){
+                  double projectionFactor = windowDefinition->get("overhang_projection_factor", 0.0).asDouble();
+                }
+
+                // applyViewAndDaylightingGlassRatios does not currently take argument for fins
+
+                Point3dVector viewVertices;
+                Point3dVector daylightingVertices; // not populated
+                Point3dVector exteriorShadingVertices;
+                Point3dVector interiorShelfVertices; // not populated
+                
+                if (applyViewAndDaylightingGlassRatios(wwr, 0.0, sillHeight, 0.0, projectionFactor, 0.0, wallVertices, viewVertices, daylightingVertices, exteriorShadingVertices, interiorShelfVertices))
+                {
+                  if (!viewVertices.empty()){
+                    unsigned parentSubSurfaceIndex = allFinalWindowVertices.size();
+                    allFinalWindowVertices.push_back(viewVertices);
+
+                    if (!exteriorShadingVertices.empty()){
+                      allFinalShadeVertices.push_back(exteriorShadingVertices);
+                      allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
+                    }
+                  }
+                }
               }
               
             }
