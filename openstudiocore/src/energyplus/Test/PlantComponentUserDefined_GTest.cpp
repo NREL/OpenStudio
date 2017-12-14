@@ -99,11 +99,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantComponentUserDefined) {
   PlantComponentUserDefined pcud(m);
   pcud.setName("best plant component");
   EnergyManagementSystemProgramCallingManager mainPCM(m);
-  EnergyManagementSystemProgramCallingManager simPCM(m);
-  EnergyManagementSystemProgramCallingManager initPCM(m);
   pcud.setMainModelProgramCallingManager(mainPCM);
-  pcud.setPlantInitializationProgramCallingManager(initPCM);
-  pcud.setPlantSimulationProgramCallingManager(simPCM);
+  boost::optional<EnergyManagementSystemProgramCallingManager> initPCM = pcud.plantInitializationProgramCallingManager();
+  boost::optional<EnergyManagementSystemProgramCallingManager> simPCM = pcud.plantSimulationProgramCallingManager();
+  
   pcud.setAmbientZone(tz);
 
   EnergyManagementSystemActuator dvfrActuator = pcud.designVolumeFlowRateActuator().get();
@@ -143,9 +142,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantComponentUserDefined) {
   ASSERT_TRUE(object.getString(PlantComponent_UserDefinedFields::MainModelProgramCallingManagerName, false));
   EXPECT_EQ(mainPCM.nameString(), object.getString(PlantComponent_UserDefinedFields::MainModelProgramCallingManagerName, false).get());
   ASSERT_TRUE(object.getString(PlantComponent_UserDefinedFields::PlantConnection1InitializationProgramCallingManagerName, false));
-  EXPECT_EQ(initPCM.nameString(), object.getString(PlantComponent_UserDefinedFields::PlantConnection1InitializationProgramCallingManagerName, false).get());
+  EXPECT_EQ(initPCM.get().nameString(), object.getString(PlantComponent_UserDefinedFields::PlantConnection1InitializationProgramCallingManagerName, false).get());
   ASSERT_TRUE(object.getString(PlantComponent_UserDefinedFields::PlantConnection1SimulationProgramCallingManagerName, false));
-  EXPECT_EQ(simPCM.nameString(), object.getString(PlantComponent_UserDefinedFields::PlantConnection1SimulationProgramCallingManagerName, false).get());
+  EXPECT_EQ(simPCM.get().nameString(), object.getString(PlantComponent_UserDefinedFields::PlantConnection1SimulationProgramCallingManagerName, false).get());
   ASSERT_TRUE(object.getString(PlantComponent_UserDefinedFields::PlantConnection1InletNodeName, false));
   EXPECT_EQ(inname, object.getString(PlantComponent_UserDefinedFields::PlantConnection1InletNodeName, false).get());
   ASSERT_TRUE(object.getString(PlantComponent_UserDefinedFields::PlantConnection1OutletNodeName, false));
