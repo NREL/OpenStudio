@@ -503,6 +503,43 @@ TEST_F(UnitsFixture,QuantityRegex_PumpFields) {
   aUnit = "W*s/m^3*Pa"; EXPECT_TRUE(isUnit(aUnit));
   aUnit = "W*min/gal*ftH_{2}O"; EXPECT_TRUE(isUnit(aUnit));
 
+
+  std::pair<std::string,int> atomicDecomp;
+
+  aUnit = "ftH_{2}O";
+  // this shouldn't be an atomic unit!
+  // EXPECT_FALSE(isAtomicUnit(aUnit));
+
+  // But we can at least make sure that the decomposition at least returns the right exponent (1...)
+  atomicDecomp = decomposeAtomicUnitString(aUnit);
+  EXPECT_EQ("ftH_{2}O", atomicDecomp.first);
+  EXPECT_EQ(1, atomicDecomp.second);
+
+  aUnit = "1/ftH_{2}O";
+  EXPECT_FALSE(containsScientificNotationValue(aUnit));
+  // There is no multiplier (km, ms, etc)
+  // This returns TRUE, like above... but we'll make sure it ends up fine...
+  // EXPECT_FALSE(containsAtomicUnit(aUnit));
+
+  // 1 over something is a Compound Unit)
+  EXPECT_TRUE(containsCompoundUnit(aUnit));
+
+  EXPECT_FALSE(containsScaledUnit(aUnit));
+  EXPECT_FALSE(containsDirectScaledUnit(aUnit));
+  EXPECT_TRUE(isUnit(aUnit));
+
+  ASSERT_TRUE(isCompoundUnit(aUnit));
+
+  std::pair< std::vector<std::string>,std::vector<std::string> > result;
+
+  result = decomposeCompoundUnitString(aUnit);
+  // Nothing on numerator
+  ASSERT_EQ(static_cast<size_t>(0),result.first.size());
+  // Should have one unit on the denominator
+  ASSERT_EQ(static_cast<size_t>(1),result.second.size());
+  EXPECT_EQ("ftH_{2}O",result.second[0]);
+
+
   // All of these variations do fail
 /*
  *  aUnit = "(W*s)/(m^3*Pa)"; EXPECT_TRUE(isUnit(aUnit));
@@ -516,3 +553,54 @@ TEST_F(UnitsFixture,QuantityRegex_PumpFields) {
  */
 
 }
+
+/* DEBUG AREA
+TEST_F(UnitsFixture, QuantityRegex_TESTBED) {
+
+  // target create Products/openstudio_utilities_test
+  // br set --file /home/julien/Software/Others/OpenStudio/openstudiocore/src/utilities/units/test/QuantityRegex_GTest.cpp --line 570
+  // process launch -- --gtest_filter=*QuantityRegex_TESTBED*
+  boost::regex rgx("(?:\\^\\{?)(-?[[:digit:]]+)(?:\\})?");
+  boost::smatch match;
+
+  int exponent;
+
+  std::string s = "short^{-3192}";
+
+  std::cout << "Expression:  \"" << rgx << "\"\n";
+  std::cout << "Text:        \"" << s << "\"\n";
+
+  if (boost::regex_search(s,match,rgx)) { // add a 4th argument boost::match_extra if you want to use captures
+
+    unsigned i; // add j for boost::match_extra
+    std::cout << "** Match found **\n   Sub-Expressions:\n";
+    for(i = 0; i < match.size(); ++i) {
+      std::cout << "      $" << i << " = \"" << match[i] << "\"\n";
+    }
+    // for use with 'boost::match_extra'
+     //std::cout << "   Captures:\n";
+     //for(i = 0; i < match.size(); ++i)
+     //{
+     //  std::cout << "      $" << i << " = {";
+     //  for(j = 0; j < match.captures(i).size(); ++j)
+     //  {
+     //    if(j)
+     //      std::cout << ", ";
+     //    else
+     //      std::cout << " ";
+     //    std::cout << "\"" << match.captures(i)[j] << "\"";
+     //  }
+     // std::cout << " }\n";
+     // }
+
+
+    std::istringstream iss(match[1]);
+    iss >> exponent;
+  } else {
+    exponent = 1;
+  }
+
+  EXPECT_EQ(-3192, exponent);
+
+
+} */
