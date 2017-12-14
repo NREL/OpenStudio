@@ -32,6 +32,7 @@
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
 #include "EnergyManagementSystemProgramCallingManager.hpp"
+#include "EnergyManagementSystemProgram.hpp"
 #include "EnergyManagementSystemActuator.hpp"
 #include "StraightComponent.hpp"
 #include "ThermalZone.hpp"
@@ -73,15 +74,21 @@ class MODEL_API PlantComponentUserDefined : public StraightComponent {
   /** @name Getters */
   //@{
 
-  boost::optional<EnergyManagementSystemProgramCallingManager> mainModelProgramCallingManager() const;
-
   std::string plantLoadingMode() const;
 
   std::string plantLoopFlowRequestMode() const;
 
+  boost::optional<EnergyManagementSystemProgramCallingManager> mainModelProgramCallingManager() const;
+
   boost::optional<EnergyManagementSystemProgramCallingManager> plantInitializationProgramCallingManager() const;
 
   boost::optional<EnergyManagementSystemProgramCallingManager> plantSimulationProgramCallingManager() const;
+
+  boost::optional<EnergyManagementSystemProgram> mainModelProgram() const;
+
+  boost::optional<EnergyManagementSystemProgram> plantInitializationProgram() const;
+
+  boost::optional<EnergyManagementSystemProgram> plantSimulationProgram() const;
 
   boost::optional<ThermalZone> ambientZone() const;
 
@@ -106,13 +113,13 @@ class MODEL_API PlantComponentUserDefined : public StraightComponent {
   /** @name Setters */
   //@{
 
-  bool setMainModelProgramCallingManager(const EnergyManagementSystemProgramCallingManager& energyManagementSystemProgramCallingManager);
-
-  void resetMainModelProgramCallingManager();
-
   bool setPlantLoadingMode(const std::string& plantLoadingMode);
 
   bool setPlantLoopFlowRequestMode(const std::string& plantLoopFlowRequestMode);
+
+  bool setMainModelProgramCallingManager(const EnergyManagementSystemProgramCallingManager& energyManagementSystemProgramCallingManager);
+
+  void resetMainModelProgramCallingManager();
 
   bool setPlantInitializationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& energyManagementSystemProgramCallingManager);
 
@@ -121,6 +128,18 @@ class MODEL_API PlantComponentUserDefined : public StraightComponent {
   bool setPlantSimulationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& energyManagementSystemProgramCallingManager);
 
   void resetPlantSimulationProgramCallingManager();
+
+  bool setMainModelProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram);
+
+  void resetMainModelProgram();
+
+  bool setPlantInitializationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram);
+
+  void resetPlantInitializationProgram();
+
+  bool setPlantSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram);
+
+  void resetPlantSimulationProgram();
 
   bool setAmbientZone(const ThermalZone& thermalZone);
 

@@ -112,7 +112,12 @@ TEST_F(ModelFixture, PlantComponentUserDefined_remove) {
 
   PlantLoop plant(m);
   PlantComponentUserDefined b1(m);
+  EXPECT_EQ(8u, m.getObjectsByType(EnergyManagementSystemActuator::iddObjectType()).size());
+  //EXPECT_EQ(3u, m.getObjectsByType(EnergyManagementSystemProgramCallingManager::iddObjectType()).size());
   PlantComponentUserDefined b2(m);
+  EXPECT_EQ(16u, m.getObjectsByType(EnergyManagementSystemActuator::iddObjectType()).size());
+  //EXPECT_EQ(6u, m.getObjectsByType(EnergyManagementSystemProgramCallingManager::iddObjectType()).size());
+
   EXPECT_FALSE(b1.loop());
   EXPECT_FALSE(b2.loop());
 
@@ -143,9 +148,13 @@ TEST_F(ModelFixture, PlantComponentUserDefined_remove) {
   EXPECT_EQ(plant.supplyComponents(b1, plant.supplyOutletNode()).size(), 0u);
   EXPECT_GT(plant.supplyComponents(b2, plant.supplyOutletNode()).size(), 0u);
   EXPECT_EQ(plant.supplyComponents(Node::iddObjectType()).size(), 4u);
+  EXPECT_EQ(8u, m.getObjectsByType(EnergyManagementSystemActuator::iddObjectType()).size());
+  //EXPECT_EQ(3u, m.getObjectsByType(EnergyManagementSystemProgramCallingManager::iddObjectType()).size());
   b2.remove();
   EXPECT_EQ(plant.supplyComponents(b2, plant.supplyOutletNode()).size(), 0u);
   EXPECT_EQ(plant.supplyComponents(Node::iddObjectType()).size(), 3u);
+  EXPECT_EQ(0u, m.getObjectsByType(EnergyManagementSystemActuator::iddObjectType()).size());
+  //EXPECT_EQ(0u, m.getObjectsByType(EnergyManagementSystemProgramCallingManager::iddObjectType()).size());
 
   EXPECT_TRUE(n1.handle().isNull());
   EXPECT_TRUE(n2.handle().isNull());

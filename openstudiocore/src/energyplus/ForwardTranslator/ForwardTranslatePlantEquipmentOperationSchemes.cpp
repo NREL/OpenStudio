@@ -308,7 +308,7 @@ boost::optional<double> flowrate(const HVACComponent & component)
     {
       auto mo = component.cast<PlantComponentUserDefined>();
       //TODO use Design Volume Flow Rate Actuator for PlantLoop 1
-      //result = mo.designVolumeFlowRate();
+      //result = mo.designVolumeFlowRateActuator().get();
       break;
     }
     case openstudio::IddObjectType::OS_HeatPump_WaterToWater_EquationFit_Cooling :
