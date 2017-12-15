@@ -12323,6 +12323,7 @@ OS:CoolingTower:SingleSpeed,
        \required-field
        \note Multiplies the autosized capacity and flow rates
        \type real
+       \default 1.0
        \minimum> 0.0
   N18 , \field Free Convection Air Flow Rate Sizing Factor
        \required-field
