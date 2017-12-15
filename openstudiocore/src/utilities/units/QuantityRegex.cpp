@@ -132,6 +132,7 @@ const boost::regex& regexBaseUnit() {
 const boost::regex& regexExponent() {
   // This regex looks for "^" (litteral), optional "{", captures (optional "-"  \d+) and finally optional "}"
   // The actual exponent is in the only capturing group, so match[1] is the exponent
+  // Standard flavor equivalent: "(?:\^\{?)(-?\d+)(?:\})?"
   static boost::regex rgx("(?:\\^\\{?)(-?[[:digit:]]+)(?:\\})?");
 
   return rgx;
@@ -146,6 +147,7 @@ const boost::regex& regexAtomicUnit() {
   // Valid until anything above is changed: the full one is equivalent to
   // "\\?[a-zA-Z\$]{1,8}(?:_(?:[a-zA-Z0-9\$]|\{[a-zA-Z0-9\$]{1,10}\}))?[a-zA-Z\$]{0,2}(?:\^(?:\d+|\{-\d+\}))?"
   //
+  // Currently because the exponent portion here is optional, it'll match anything that matches regexBaseUnit,
   regexComposer << regexBaseUnit().str() << "(?:\\^(?:[[:digit:]]+|\\{-[[:digit:]]+\\}))?";
   static boost::regex rgx(regexComposer.str());
   return rgx;
