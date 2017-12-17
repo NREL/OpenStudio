@@ -1700,7 +1700,11 @@ Loop addThaizAirLoopWithERV(Model & model){
 
 	AirLoopHVACOutdoorAirSystem outdoorAirSystem = AirLoopHVACOutdoorAirSystem(model, controllerOutdoorAir);
 
+  
 	HeatExchangerAirToAirSensibleAndLatent heatExchage = HeatExchangerAirToAirSensibleAndLatent(model);
+  heatExchage.setSupplyAirOutletTemperatureControl(false);
+  heatExchage.setEconomizerLockout(true);
+  heatExchage.setName("ERV HX");
 
 	Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
 
@@ -1710,11 +1714,11 @@ Loop addThaizAirLoopWithERV(Model & model){
 
 	//Node oaNode = outdoorAirSystem.outdoorAirModelObject()->cast<Node>();
 	Node oaNode = outdoorAirSystem.reliefAirModelObject()->cast<Node>();
+  heatExchage.addToNode(oaNode);
+
+  oaNode = heatExchage.secondaryAirOutletModelObject()->cast<Node>();
 	fan2.addToNode(oaNode);
 
-	oaNode = fan2.outletModelObject()->cast<Node>();
-	heatExchage.addToNode(oaNode);
-	
 	Node node1 = fan.outletModelObject()->cast<Node>();
 	deckTempSPM.addToNode(node1);
 
