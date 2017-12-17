@@ -12,7 +12,7 @@
 		"translate": "ไม่อนุญาตให้มีกระจกที่พื้น",
 		"name": "3"
 	}, {
-		"regex": "Field [Control Zone Name] is required but was blank",
+		"regex": "Field \\[Control Zone Name\\] is required but was blank",
 		"translate": "ผู้ใช้ลืมใส่โซนในระบบปรับอากาศ",
 		"name": "4"
 	}, {
@@ -20,7 +20,7 @@
 		"translate": "โซน $1 ไม่มีรูปด้าน",
 		"name": "5"
 	}, {
-		"regex": "Object=BUILDINGSURFACE:DETAILED.*name=(.*)\\*\\* ~~~ \\*\\* Field \\[Construction Name\\] is required but was blank",
+		"regex": "Object=BUILDINGSURFACE:DETAILED.*name=(.*);\\*\\* ~~~ \\*\\* Field \\[Construction Name\\] is required but was blank",
 		"translate": "SURFACE $1 ไม่ได้ระบุวัสดุ",
 		"name": "6"
 	}, {
@@ -32,12 +32,24 @@
 		"translate": "วัสดุของฝ้าและพื้นไม่สอดคล้องกัน",
 		"name": "8"
 	}, {
-		"regex": "Error detected in Object=LIGHTS, .* Field \\[Schedule Name\\] is required but was blank",
-		"translate": "ลืมใส่ Schedule ในระบบแสงสว่าง",
+		"regex": "Error detected in Object=LIGHTS, name=(.*);.* Field \\[Schedule Name\\] is required but was blank",
+		"translate": "ลืมใส่ Schedule อุปกรณ์ $1 ในระบบแสงสว่าง",
 		"name": "9"
 	}, {
-		"regex": "Error detected in Object=ELECTRICEQUIPMENT,.* Field \\[Schedule Name\\] is required but was blank",
-		"translate": "ลืมใส่ Schedule ในอุปกรณ์ไฟฟ้า",
+		"regex": "Error detected in Object=ELECTRICEQUIPMENT, name=(.*);.* Field \\[Schedule Name\\] is required but was blank",
+		"translate": "ลืมใส่ Schedule ในอุปกรณ์ไฟฟ้าชื่อ $1",
 		"name": "10"
+	}, {
+		"regex": "Error detected in Object=(.*),\\s*name=(.*);\\s*.*Field \\[(.*)\\]",
+		"translate": "Error ลืมใส่ $3 ใน $2",
+		"name": "11"
+	}, {
+		"regex": "Errors occurred(.*)",
+		"translate": "Error occurred$1",
+		"name": "12"
+	}, {
+		"regex": "Error detected(.*)",
+		"translate": "Error detected$1",
+		"name": "12"
 	}]
 }

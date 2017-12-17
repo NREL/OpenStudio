@@ -971,9 +971,9 @@ QStringList RunView::LogLs(QString filepath)
 		{
 			QString line = in.readLine();
 			line = line.trimmed();
-			if (line.startsWith("**  Fatal  **")
-				|| line.startsWith("** Severe **")
-				|| line.startsWith("** Error **")){
+			QRegExp rxStart("\\*\\*\\s*(Warning|Severe|Error|Fatal)\\s*\\*\\*");
+			QRegExp rxSub("\\*\\*\\s*~~~\\s*\\*\\*");
+			if (rxStart.indexIn(line)>-1){
 				if (!sumString.isEmpty()){
 					lsout.append(sumString);
 					//qDebug() << sumString;
@@ -981,8 +981,8 @@ QStringList RunView::LogLs(QString filepath)
 				}
 				sumString = line;
 			}
-			else if (line.startsWith("** ~~~ **")){
-				sumString += " " + line;
+			else if (rxSub.indexIn(line)>-1){
+				sumString += ";\n" + line.trimmed();
 			}
 		}
 
@@ -1019,7 +1019,7 @@ QStringList RunView::TranslateLogError(QString filePath, QStringList logsls)
 
 	for (int i = 0; i<logsls.count(); i++){
 		QString line = logsls.at(i);
-
+        logNormalText(line);
 		for (int r = 0; r<names.count(); r++){
 			QString regstr = regexs.at(r);
 			QRegExp rx(regstr);
