@@ -218,6 +218,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<double> AirTerminalDualDuctVAVOutdoorAir_Impl::autosizedMaximumTerminalAirFlowRate() const {
+    return getAutosizedValue("Maximum Air Flow Rate", "m3/s");
+  }
 
   // Design Specification Outdoor Air Object Name. Here we implement a bool, which will pull the Space/SpaceType DSOA
   bool AirTerminalDualDuctVAVOutdoorAir_Impl::controlForOutdoorAir() const
@@ -293,6 +296,19 @@ namespace detail {
   bool AirTerminalDualDuctVAVOutdoorAir_Impl::isRemovable() const
   {
     return HVACComponent_Impl::isRemovable();
+  }
+
+
+  void AirTerminalDualDuctVAVOutdoorAir_Impl::autosize() {
+    autosizeMaximumTerminalAirFlowRate();
+  }
+
+  void AirTerminalDualDuctVAVOutdoorAir_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumTerminalAirFlowRate();
+    if (val) {
+      setMaximumTerminalAirFlowRate(val.get());
+    }
   }
 
 } // detail
@@ -381,7 +397,19 @@ bool AirTerminalDualDuctVAVOutdoorAir::setControlForOutdoorAir(bool controlForOu
   return getImpl<detail::AirTerminalDualDuctVAVOutdoorAir_Impl>()->setControlForOutdoorAir(controlForOutdoorAir);
 }
 
+boost::optional<double> AirTerminalDualDuctVAVOutdoorAir::autosizedMaximumTerminalAirFlowRate() const {
+  return getImpl<detail::AirTerminalDualDuctVAVOutdoorAir_Impl>()->autosizedMaximumTerminalAirFlowRate();
+}
 
+/*
+ *void AirTerminalDualDuctVAVOutdoorAir::autosize() {
+ *  getImpl<detail::AirTerminalDualDuctVAVOutdoorAir_Impl>()->autosize();
+ *}
+ *
+ *void AirTerminalDualDuctVAVOutdoorAir::applySizingValues() {
+ *  getImpl<detail::AirTerminalDualDuctVAVOutdoorAir_Impl>()->applySizingValues();
+ *}
+ */
 
 /// @cond
 AirTerminalDualDuctVAVOutdoorAir::AirTerminalDualDuctVAVOutdoorAir(std::shared_ptr<detail::AirTerminalDualDuctVAVOutdoorAir_Impl> impl)

@@ -71,6 +71,9 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
 
     //@}
     /** @name Getters */
@@ -123,10 +126,11 @@ namespace detail {
 
     bool isRemovable() const override;
 
-
     boost::optional<Node> outdoorAirInletNode() const;
 
     boost::optional<Node> recirculatedAirInletNode() const;
+
+    boost::optional<double> autosizedMaximumTerminalAirFlowRate() const ;
 
     //@}
    protected:
