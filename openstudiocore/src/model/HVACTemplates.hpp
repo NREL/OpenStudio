@@ -82,6 +82,9 @@ MODEL_API Loop addCentralSystemWithAirCooled(Model & model);
 /*Central System (Thai  Central  A/C Water Cooled System)*/
 MODEL_API Loop addCentralSystemWithWaterCooled(Model & model);
 
+/*Central System (Thai  Absorption A/C System)*/
+MODEL_API Loop addCentralSystemWithAbsorption(Model & model);
+
 /*Thai Air Loop*/
 MODEL_API Loop addThaiAirLoop(Model & model);
 

@@ -33,6 +33,8 @@
 #include "AirLoopHVAC_Impl.hpp"
 #include "ChillerElectricEIR.hpp"
 #include "ChillerElectricEIR_Impl.hpp"
+#include "ChillerAbsorption.hpp"
+#include "ChillerAbsorption_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "ZoneHVACPackagedTerminalHeatPump.hpp"
@@ -1633,6 +1635,134 @@ Loop addCentralSystemWithWaterCooled(Model & model){
 	return airLoopHVAC;
 }
 
+/*Central System (Thai  Absorption A/C System)*/
+Loop addCentralSystemWithAbsorption(Model & model) {
+  Model tempModel;
+
+  Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
+
+  Schedule _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
+
+  Schedule _chilledWaterSchedule = chilledWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
+
+  AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+  airLoopHVAC.setName("Thai Air Loop");
+  SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
+  sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
+
+  FanVariableVolume fan = FanVariableVolume(model);
+  fan.setPressureRise(500);
+
+  CoilCoolingWater coilCoolingWater = CoilCoolingWater(model);
+
+  SetpointManagerScheduled deckTempSPM = SetpointManagerScheduled(model, _deckTempSchedule);
+
+  ControllerOutdoorAir controllerOutdoorAir = ControllerOutdoorAir(model);
+
+  AirLoopHVACOutdoorAirSystem outdoorAirSystem = AirLoopHVACOutdoorAirSystem(model, controllerOutdoorAir);
+
+  Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
+
+  outdoorAirSystem.addToNode(supplyOutletNode);
+  coilCoolingWater.addToNode(supplyOutletNode);
+  fan.addToNode(supplyOutletNode);
+
+  Node node1 = fan.outletModelObject()->cast<Node>();
+  deckTempSPM.addToNode(node1);
+
+  // Chilled Water Plant
+
+  PlantLoop chilledWaterPlant(model);
+  chilledWaterPlant.setName("Thai Chilled Water Loop");
+  SizingPlant chilledWaterSizing = chilledWaterPlant.sizingPlant();
+  chilledWaterSizing.setLoopType("Cooling");
+  chilledWaterSizing.setDesignLoopExitTemperature(7.22);
+  chilledWaterSizing.setLoopDesignTemperatureDifference(6.67);
+
+  Node chilledWaterOutletNode = chilledWaterPlant.supplyOutletNode();
+  Node chilledWaterInletNode = chilledWaterPlant.supplyInletNode();
+
+  Node chilledWaterDemandOutletNode = chilledWaterPlant.demandOutletNode();
+  Node chilledWaterDemandInletNode = chilledWaterPlant.demandInletNode();
+
+  PumpVariableSpeed pump2 = PumpVariableSpeed(model);
+
+  pump2.addToNode(chilledWaterInletNode);
+
+  ChillerAbsorption chiller = ChillerAbsorption(model);
+
+  //ChillerElectricEIR chiller(model, ccFofT, eirToCorfOfT, eirToCorfOfPlr);
+  //chiller.setCondenserType("WaterCooled");
+  //chiller.setCompressorType("Reciprocating");
+  chiller.setName("Absorption Chiller");
+  Node node = chilledWaterPlant.supplySplitter().lastOutletModelObject()->cast<Node>();
+  chiller.addToNode(node);
+
+  PipeAdiabatic pipe3(model);
+  chilledWaterPlant.addSupplyBranchForComponent(pipe3);
+
+  PipeAdiabatic pipe4(model);
+  pipe4.addToNode(chilledWaterOutletNode);
+
+  chilledWaterPlant.addDemandBranchForComponent(coilCoolingWater);
+
+  SetpointManagerScheduled chilledWaterSPM(model, _chilledWaterSchedule);
+
+  chilledWaterSPM.addToNode(chilledWaterOutletNode);
+
+  AirTerminalSingleDuctUncontrolled waterTerminal(model, _alwaysOnSchedule);
+  airLoopHVAC.addBranchForHVACComponent(waterTerminal);
+
+  // Condenser System
+
+  PlantLoop condenserSystem(model);
+  condenserSystem.setName("Condenser Water Loop");
+  SizingPlant condenserSizing = condenserSystem.sizingPlant();
+  condenserSizing.setLoopType("Condenser");
+  condenserSizing.setDesignLoopExitTemperature(29.4);
+  condenserSizing.setLoopDesignTemperatureDifference(5.6);
+
+  CoolingTowerSingleSpeed tower(model);
+  condenserSystem.addSupplyBranchForComponent(tower);
+
+  PipeAdiabatic condenserSupplyBypass(model);
+  condenserSystem.addSupplyBranchForComponent(condenserSupplyBypass);
+
+  Node condenserSystemDemandOutletNode = condenserSystem.demandOutletNode();
+  Node condenserSystemDemandInletNode = condenserSystem.demandInletNode();
+  Node condenserSystemSupplyOutletNode = condenserSystem.supplyOutletNode();
+  Node condenserSystemSupplyInletNode = condenserSystem.supplyInletNode();
+
+  PipeAdiabatic condenserSupplyOutlet(model);
+
+  condenserSupplyOutlet.addToNode(condenserSystemSupplyOutletNode);
+
+  PumpVariableSpeed pump3 = PumpVariableSpeed(model);
+
+  pump3.addToNode(condenserSystemSupplyInletNode);
+
+  condenserSystem.addDemandBranchForComponent(chiller);
+
+  PipeAdiabatic condenserDemandBypass(model);
+
+  condenserSystem.addDemandBranchForComponent(condenserDemandBypass);
+
+  PipeAdiabatic condenserDemandInlet(model);
+
+  condenserDemandInlet.addToNode(condenserSystemDemandInletNode);
+
+  PipeAdiabatic condenserDemandOutlet(model);
+
+  condenserDemandOutlet.addToNode(condenserSystemDemandOutletNode);
+
+  SetpointManagerScheduled spm = SetpointManagerScheduled(model, _deckTempSchedule);
+  //SetpointManagerFollowOutdoorAirTemperature spm(model);
+
+  spm.addToNode(condenserSystemSupplyOutletNode);
+
+  return airLoopHVAC;
+}
+
 /*Thai Air Loop*/
 Loop addThaiAirLoop(Model & model){
 	Model tempModel;
@@ -1700,7 +1830,11 @@ Loop addThaizAirLoopWithERV(Model & model){
 
 	AirLoopHVACOutdoorAirSystem outdoorAirSystem = AirLoopHVACOutdoorAirSystem(model, controllerOutdoorAir);
 
+  
 	HeatExchangerAirToAirSensibleAndLatent heatExchage = HeatExchangerAirToAirSensibleAndLatent(model);
+  heatExchage.setSupplyAirOutletTemperatureControl(false);
+  heatExchage.setEconomizerLockout(true);
+  heatExchage.setName("ERV HX");
 
 	Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
 
@@ -1710,11 +1844,11 @@ Loop addThaizAirLoopWithERV(Model & model){
 
 	//Node oaNode = outdoorAirSystem.outdoorAirModelObject()->cast<Node>();
 	Node oaNode = outdoorAirSystem.reliefAirModelObject()->cast<Node>();
+  heatExchage.addToNode(oaNode);
+
+  oaNode = heatExchage.secondaryAirOutletModelObject()->cast<Node>();
 	fan2.addToNode(oaNode);
 
-	oaNode = fan2.outletModelObject()->cast<Node>();
-	heatExchage.addToNode(oaNode);
-	
 	Node node1 = fan.outletModelObject()->cast<Node>();
 	deckTempSPM.addToNode(node1);
 

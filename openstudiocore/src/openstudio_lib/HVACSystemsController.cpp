@@ -753,6 +753,11 @@ void HVACSystemsController::addToModel(AddToModelEnum addToModelEnum)
 		  loop = model::addCentralSystemWithWaterCooled(m_model);
 		  break;
 	  }
+    case ADDTOMODEL_CENTRAL_SYSTEM_TYPE_2_THAI:
+    {
+      loop = model::addCentralSystemWithAbsorption(m_model);
+      break;
+    }
 	  case ADDTOMODEL_AIRLOOPHVAC_1_THAI:
 	  {
 		  loop = model::addThaiAirLoop(m_model);
