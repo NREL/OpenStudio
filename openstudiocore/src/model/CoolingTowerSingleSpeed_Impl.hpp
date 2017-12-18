@@ -76,6 +76,10 @@ namespace detail {
 
     virtual unsigned outletPort() override;
 
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
     //@}
     /** @name Getters */
     //@{
@@ -200,21 +204,21 @@ namespace detail {
 
     bool isSizingFactorDefaulted() const;
 
-  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+    boost::optional<double> autosizedDesignWaterFlowRate() const ;
 
-  boost::optional<double> autosizedDesignAirFlowRate() const ;
+    boost::optional<double> autosizedDesignAirFlowRate() const ;
 
-  boost::optional<double> autosizedFanPoweratDesignAirFlowRate() const ;
+    boost::optional<double> autosizedFanPoweratDesignAirFlowRate() const ;
 
-  boost::optional<double> autosizedUFactorTimesAreaValueatDesignAirFlowRate() const ;
+    boost::optional<double> autosizedUFactorTimesAreaValueatDesignAirFlowRate() const ;
 
-  boost::optional<double> autosizedAirFlowRateinFreeConvectionRegime() const ;
+    boost::optional<double> autosizedAirFlowRateinFreeConvectionRegime() const ;
 
-  boost::optional<double> autosizedUFactorTimesAreaValueatFreeConvectionAirFlowRate() const ;
+    boost::optional<double> autosizedUFactorTimesAreaValueatFreeConvectionAirFlowRate() const ;
 
-  virtual void autosize() override;
+    boost::optional<double> autosizedDesignApproachTemperature() const;
 
-  virtual void applySizingValues() override;
+    boost::optional<double> autosizedDesignRangeTemperature() const;
 
     //@}
     /** @name Setters */
