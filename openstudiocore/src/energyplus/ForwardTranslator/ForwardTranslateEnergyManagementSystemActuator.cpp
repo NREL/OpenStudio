@@ -74,20 +74,24 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemAct
   const boost::optional<ModelObject> m_opt = modelObject.actuatedComponent();
   if (m_opt) {
     ModelObject m = m_opt.get();
-    //check if actuatedComponent is a SpaceLoad
-    auto load = m.optionalCast<model::SpaceLoadInstance>();
 
-    if (!m.name()) {
-      LOG(Error, "Actuated Component Name for Actuator " << modelObject.nameString() << " does not exist, it will not be translated.");
-      return boost::none;
-    }
+    // Start by dealing with "OS:Site" and "OS:WeatherFile" that are special ones (will not pass the test on `m.name()` below
     if (m.iddObjectType() == openstudio::IddObjectType::OS_Site || m.iddObjectType() == openstudio::IddObjectType::OS_WeatherFile) {
       idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, "Environment");
       idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, "Weather Data");
       idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
       m_idfObjects.push_back(idfObject);
       return idfObject;
-    } else if (load) {
+    }
+
+    // The component should have a name
+    if (!m.name()) {
+      LOG(Error, "Actuated Component Name for Actuator '" << modelObject.nameString() << "' does not exist, it will not be translated.");
+      return boost::none;
+    }
+
+    // check if actuatedComponent is a SpaceLoad
+    if (auto load = m.optionalCast<model::SpaceLoadInstance>()) {
       // if SpaceLoad check if thermalzone names exist
       auto space = load->space();
       if (space) {
@@ -100,13 +104,17 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemAct
           m_idfObjects.push_back(idfObject);
           return idfObject;
         } else {
-          LOG(Error, "SpaceLoad " << load.get().name().get() << "is not associated with a ThermalZone, it will not be translated.");
+          LOG(Error, "Actuator '" << modelObject.nameString()  << "' references a SpaceLoad '"
+                      << load.get().name().get() << "' which is not associated with a ThermalZone, it will not be translated.");
           return boost::none;
         }
       } else {
-        LOG(Error, "SpaceLoad " << load.get().name().get() << "is not associated with a Space, it will not be translated.");
-        return boost::none;
+           LOG(Error, "Actuator '" << modelObject.nameString()  << "' references a SpaceLoad '"
+                      << load.get().name().get() << "' which is not associated with a Space, it will not be translated.");
+       return boost::none;
       }
+
+    // Classic case, we just write it
     } else {
       idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, m.nameString());
       idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
@@ -115,7 +123,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemAct
       return idfObject;
     }
   } else {
-    LOG(Error, "Actuated Component Name for Actuator " << modelObject.nameString() << " does not exist, it will not be translated.");
+    LOG(Error, "Actuated Component for Actuator " << modelObject.nameString() << " does not exist, it will not be translated.");
     return boost::none;
   }
 }

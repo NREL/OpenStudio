@@ -257,7 +257,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensorRename_EMS) {
   // add sensor
   EnergyManagementSystemSensor sensor(model, "Cooling Coil Runtime Fraction");
   sensor.setKeyName(toString(dx_coil.handle()));
- 
+
   //change name
   dx_coil.setName("New Coil Name");
 
@@ -444,6 +444,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWeatherActuator_EMS) {
   ThermalZone zone2(model);
 
   // weatherFile
+  // getUniqueModelObject will instantiate the object if not found
   WeatherFile weatherFile = model.getUniqueModelObject<WeatherFile>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<WeatherFile>());
 
@@ -657,7 +658,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad4_EMS) {
   OtherEquipment otherEquip(otherEquipDef);
   otherEquip.setName("Other Equip");
   space.setOtherEquipmentPower(10, otherEquip);
-  
+
   // add actuator
   std::string ControlType = "Power Level";
   std::string ComponentType = "OtherEquipment";
@@ -1058,16 +1059,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorGlobalVariable_EMS) {
   Model model;
 
   // add global variable
-  EnergyManagementSystemGlobalVariable var(model, "glob var");
+  EnergyManagementSystemGlobalVariable var(model, "glob_var");
   EXPECT_EQ("glob_var", var.nameString());
 
   // add global variable
-  EnergyManagementSystemGlobalVariable var2(model, "glob var 2");
+  EnergyManagementSystemGlobalVariable var2(model, "glob_var_2");
   EXPECT_EQ("glob_var_2", var2.nameString());
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  
+
   ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_GlobalVariable).size());
 
   WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_GlobalVariable)[0];
@@ -1107,11 +1108,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorOutputVariable_EMS) {
   Model model;
 
   // add global variable
-  EnergyManagementSystemGlobalVariable var(model,"glob var");
+  EnergyManagementSystemGlobalVariable var(model,"glob_var");
   EXPECT_EQ("glob_var", var.nameString());
 
   // add global variable
-  EnergyManagementSystemGlobalVariable var2(model, "glob var 2");
+  EnergyManagementSystemGlobalVariable var2(model, "glob_var_2");
   EXPECT_EQ("glob_var_2", var2.nameString());
 
   // add output variable
@@ -1159,7 +1160,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTrendVariable_EMS) {
   Model model;
 
   // add global variable
-  EnergyManagementSystemGlobalVariable globvar(model, "glob var");
+  EnergyManagementSystemGlobalVariable globvar(model, "glob_var");
 
   // add trend variable
   EnergyManagementSystemTrendVariable var(model, "glob_var");
@@ -1380,7 +1381,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTrendVariable2_EMS) {
   Model model;
 
   // add global variable
-  EnergyManagementSystemGlobalVariable globvar(model, "glob var");
+  EnergyManagementSystemGlobalVariable globvar(model, "glob_var");
 
   // add trend variable
   EnergyManagementSystemTrendVariable var(model, "glob_var");
