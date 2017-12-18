@@ -184,6 +184,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<double> AirTerminalDualDuctConstantVolume_Impl::autosizedMaximumAirFlowRate() const {
+    return getAutosizedValue("Maximum Air Flow Rate", "m3/s");
+  }
 
 
   boost::optional<Node> AirTerminalDualDuctConstantVolume_Impl::hotAirInletNode() const {
@@ -232,6 +235,18 @@ namespace detail {
     return HVACComponent_Impl::isRemovable();
   }
 
+  void AirTerminalDualDuctConstantVolume_Impl::autosize() {
+    autosizeMaximumAirFlowRate();
+  }
+
+  void AirTerminalDualDuctConstantVolume_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumAirFlowRate();
+    if (val) {
+      setMaximumAirFlowRate(val.get());
+    }
+  }
+
 } // detail
 
 AirTerminalDualDuctConstantVolume::AirTerminalDualDuctConstantVolume(const Model& model)
@@ -274,7 +289,6 @@ boost::optional<Node> AirTerminalDualDuctConstantVolume::coldAirInletNode() cons
 }
 
 
-
 boost::optional<double> AirTerminalDualDuctConstantVolume::maximumAirFlowRate() const {
   return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->maximumAirFlowRate();
 }
@@ -290,6 +304,20 @@ bool AirTerminalDualDuctConstantVolume::setMaximumAirFlowRate(double maximumAirF
 void AirTerminalDualDuctConstantVolume::autosizeMaximumAirFlowRate() {
   getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->autosizeMaximumAirFlowRate();
 }
+
+boost::optional<double> AirTerminalDualDuctConstantVolume::autosizedMaximumAirFlowRate() const {
+  return getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->autosizedMaximumAirFlowRate();
+}
+
+/*
+ *void AirTerminalDualDuctConstantVolume::autosize() {
+ *  getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->autosize();
+ *}
+ *
+ *void AirTerminalDualDuctConstantVolume::applySizingValues() {
+ *  getImpl<detail::AirTerminalDualDuctConstantVolume_Impl>()->applySizingValues();
+ *}
+ */
 
 /// @cond
 AirTerminalDualDuctConstantVolume::AirTerminalDualDuctConstantVolume(std::shared_ptr<detail::AirTerminalDualDuctConstantVolume_Impl> impl)
