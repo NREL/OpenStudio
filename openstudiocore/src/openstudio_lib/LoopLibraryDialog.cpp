@@ -104,6 +104,10 @@ LoopLibraryDialog::LoopLibraryDialog(QWidget * parent)
 	  QString("Thai Central A/C Water Cooled System"),
 	  QPixmap(":/images/thai_air_loop_icon.png"));
 
+  newItem(ADDTOMODEL_CENTRAL_SYSTEM_TYPE_2_THAI,
+    QString("Thai Absorption A/C System"),
+    QPixmap(":/images/thai_air_loop_icon.png"));
+
   newItem(ADDTOMODEL_AIRLOOPHVAC_1_THAI,
 	  QString("Thai Air Loop"),
 	  QPixmap(":/images/thai_air_loop_icon.png"));

@@ -38,6 +38,7 @@ enum AddToModelEnum
   ADDTOMODEL_SPLIT_TYPE_2_THAI,			/*Split type/DX Type (Inverter) with ERV*/
   ADDTOMODEL_CENTRAL_SYSTEM_TYPE_0_THAI, /*Central System (Thai Central A/C Air Cooled System)*/
   ADDTOMODEL_CENTRAL_SYSTEM_TYPE_1_THAI, /*Central System (Thai Central A/C Air Cooled System)*/
+  ADDTOMODEL_CENTRAL_SYSTEM_TYPE_2_THAI, /*Central System (Thai  Absorption A/C System)*/
   ADDTOMODEL_AIRLOOPHVAC_1_THAI,		/*Thai Air Loop*/
   ADDTOMODEL_AIRLOOPHVAC_2_THAI,		/*Thai Air Loop with ERV*/
   ADDTOMODEL_AIRLOOPHVAC_THAI,
