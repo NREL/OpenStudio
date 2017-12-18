@@ -453,7 +453,7 @@ module OpenStudio
     end
     
     def minimal_template_path
-      return(Plugin.dir + "/resources/templates/MinimalTemplate.osm")
+      return(Plugin.dir + "/resources/templates/ThaiLibrary.osm")
     end
     
     def empty_template_path
