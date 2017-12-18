@@ -4677,6 +4677,8 @@ OS:ScheduleTypeLimits,
        \key SolarEnergy
        \key Availability
        \key Percent
+       \key Control
+       \key Mode   
        \key ControlMode
        \key LinearPowerDensity
 

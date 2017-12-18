@@ -48,11 +48,16 @@ TEST_F(ModelFixture, EMSGlobalVariable_EMSGlobalVariable)
   Model model;
     
   // add global variable
+  unsigned n1 = model.objects().size();
   EnergyManagementSystemGlobalVariable var(model, "glob_var");
   EXPECT_EQ("glob_var", var.nameString());
+  unsigned n2 = model.objects().size();
+  EXPECT_EQ(n1 + 1, n2);
 
-  //should crash
+  //should crash and not create any new objects
+  n1 = model.objects().size();
   EXPECT_ANY_THROW(EnergyManagementSystemGlobalVariable var(model, "glob var"));
-  
+  n2 = model.objects().size();
+  EXPECT_EQ(n1, n2);
 }
 
