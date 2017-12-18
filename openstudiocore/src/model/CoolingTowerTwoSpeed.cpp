@@ -34,6 +34,7 @@
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 #include "PlantLoop.hpp"
+#include "SizingPlant.hpp"
 #include "Node.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
@@ -1016,27 +1017,27 @@ namespace detail {
     bool result = setString(OS_CoolingTower_TwoSpeedFields::SizingFactor, "");
     OS_ASSERT(result);
   }
-  
+
   double CoolingTowerTwoSpeed_Impl::designInletAirDryBulbTemperature() const {
     auto value = getDouble(OS_CoolingTower_TwoSpeedFields::DesignInletAirDryBulbTemperature,true);
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   bool CoolingTowerTwoSpeed_Impl::setDesignInletAirDryBulbTemperature(double designInletAirDryBulbTemperature) {
     return setDouble(OS_CoolingTower_TwoSpeedFields::DesignInletAirDryBulbTemperature,designInletAirDryBulbTemperature);
   }
-  
+
   double CoolingTowerTwoSpeed_Impl::designInletAirWetBulbTemperature() const {
     auto value = getDouble(OS_CoolingTower_TwoSpeedFields::DesignInletAirWetBulbTemperature,true);
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   bool CoolingTowerTwoSpeed_Impl::setDesignInletAirWetBulbTemperature(double designInletAirWetBulbTemperature) {
     return setDouble(OS_CoolingTower_TwoSpeedFields::DesignInletAirWetBulbTemperature,designInletAirWetBulbTemperature);
   }
-  
+
   boost::optional<double> CoolingTowerTwoSpeed_Impl::designApproachTemperature() const {
     auto value = getDouble(OS_CoolingTower_TwoSpeedFields::DesignApproachTemperature,true);
     OS_ASSERT(value);
@@ -1051,15 +1052,15 @@ namespace detail {
     }
     return result;
   }
-  
+
   bool CoolingTowerTwoSpeed_Impl::setDesignApproachTemperature(double designApproachTemperature) {
     return setDouble(OS_CoolingTower_TwoSpeedFields::DesignApproachTemperature,designApproachTemperature);
   }
-  
+
   void CoolingTowerTwoSpeed_Impl::autosizeDesignApproachTemperature() {
     setString(OS_CoolingTower_TwoSpeedFields::DesignApproachTemperature,"autosize");
   }
-  
+
   boost::optional<double> CoolingTowerTwoSpeed_Impl::designRangeTemperature() const {
     auto value = getDouble(OS_CoolingTower_TwoSpeedFields::DesignRangeTemperature,true);
     OS_ASSERT(value);
@@ -1074,21 +1075,21 @@ namespace detail {
     }
     return result;
   }
-  
+
   bool CoolingTowerTwoSpeed_Impl::setDesignRangeTemperature(double designRangeTemperature) {
     return setDouble(OS_CoolingTower_TwoSpeedFields::DesignRangeTemperature,designRangeTemperature);
   }
-  
+
   void CoolingTowerTwoSpeed_Impl::autosizeDesignRangeTemperature() {
     setString(OS_CoolingTower_TwoSpeedFields::DesignRangeTemperature,"autosize");
   }
-  
+
   std::string CoolingTowerTwoSpeed_Impl::endUseSubcategory() const {
     auto value = getString(OS_CoolingTower_TwoSpeedFields::EndUseSubcategory,true);
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   bool CoolingTowerTwoSpeed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
     return setString(OS_CoolingTower_TwoSpeedFields::EndUseSubcategory,endUseSubcategory);
   }
@@ -1137,6 +1138,30 @@ namespace detail {
     return getAutosizedValue("Free Convection Nominal Capacity", "W");
   }
 
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedDesignApproachTemperature() const {
+    boost::optional<double> result;
+
+    // Calculate Approach as design wet bulb temp - EWT (from SizingPlant)
+    if (boost::optional<PlantLoop> pl = this->plantLoop()) {
+      SizingPlant sz = pl->sizingPlant();
+      double EWT = sz.designLoopExitTemperature() - sz.loopDesignTemperatureDifference();
+      result = EWT - designInletAirWetBulbTemperature();
+    }
+    return result;
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedDesignRangeTemperature() const {
+    boost::optional<double> result;
+
+    // Return the SizingPlant DeltaT
+    if (boost::optional<PlantLoop> pl = this->plantLoop()) {
+      SizingPlant sz = pl->sizingPlant();
+      result = sz.loopDesignTemperatureDifference();
+    }
+    return result;
+  }
+
   void CoolingTowerTwoSpeed_Impl::autosize() {
     autosizeDesignWaterFlowRate();
     autosizeHighFanSpeedAirFlowRate();
@@ -1149,6 +1174,8 @@ namespace detail {
     autosizeFreeConvectionRegimeUFactorTimesAreaValue();
     autosizeLowSpeedNominalCapacity();
     autosizeFreeConvectionNominalCapacity();
+    autosizeDesignRangeTemperature();
+    autosizeDesignApproachTemperature();
   }
 
   void CoolingTowerTwoSpeed_Impl::applySizingValues() {
@@ -1206,6 +1233,16 @@ namespace detail {
     val = autosizedFreeConvectionNominalCapacity();
     if (val) {
       setFreeConvectionNominalCapacity(val.get());
+    }
+
+    val = autosizedDesignApproachTemperature();
+    if (val) {
+      setDesignApproachTemperature(val.get());
+    }
+
+    val = autosizedDesignRangeTemperature();
+    if (val) {
+      setDesignRangeTemperature(val.get());
     }
 
   }
@@ -1948,6 +1985,14 @@ CoolingTowerTwoSpeed::CoolingTowerTwoSpeed(std::shared_ptr<detail::CoolingTowerT
 
   boost::optional<double> CoolingTowerTwoSpeed::autosizedFreeConvectionNominalCapacity() const {
     return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedFreeConvectionNominalCapacity();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedDesignApproachTemperature() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedDesignApproachTemperature();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedDesignRangeTemperature() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedDesignRangeTemperature();
   }
 
 } // model
