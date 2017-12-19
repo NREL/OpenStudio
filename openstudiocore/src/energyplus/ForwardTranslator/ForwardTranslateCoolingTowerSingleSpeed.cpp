@@ -283,7 +283,10 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerSingleSpeed( 
   if( (d = modelObject.sizingFactor()) )
   {
     idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::SizingFactor,d.get());
-  } 
+  } else {
+    // DLM: apply default value of 1, was added to IDD but did not fix previous files
+    idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::SizingFactor,1);
+  }
 
   if( (d = modelObject.freeConvectionAirFlowRateSizingFactor()) ) {
     idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::FreeConvectionAirFlowRateSizingFactor,d.get());
