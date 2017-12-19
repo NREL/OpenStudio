@@ -252,3 +252,35 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
   EXPECT_EQ(1, infos[2].dcs.size());
 
 }
+
+
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SimAUD_Paper) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan-paper.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  EXPECT_EQ(0, rt.errors().size());
+  EXPECT_EQ(0, rt.warnings().size());
+
+  for (const auto& error : rt.errors()){
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+
+  for (const auto& warning : rt.warnings()){
+    EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
+  }
+
+}
