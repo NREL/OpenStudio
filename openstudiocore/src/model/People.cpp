@@ -423,9 +423,9 @@ namespace detail {
   }
 
   boost::optional<double> People_Impl::spaceFloorAreaPerPerson() const {
-    OptionalDouble temp = peoplePerFloorArea();
+    OptionalDouble temp = peopleDefinition().spaceFloorAreaperPerson();
     if (temp) {
-      return 1.0 / temp.get();
+      return temp.get() * multiplier();
     }
     return temp;
   }

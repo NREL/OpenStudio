@@ -12322,7 +12322,6 @@ OS:CoolingTower:SingleSpeed,
        \default 2.5
        \note The allowable maximal fraction of the nominal flow rate per cell
   N17, \field Sizing Factor
-       \required-field
        \note Multiplies the autosized capacity and flow rates
        \type real
        \default 1.0
