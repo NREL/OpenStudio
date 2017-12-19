@@ -107,9 +107,14 @@ class MODEL_API AirTerminalDualDuctVAV : public Mixer {
     */
   boost::optional<Node> coldAirInletNode() const;
 
+  /* Queries the autosized value from the SQL file */
   boost::optional<double> autosizedMaximumDamperAirFlowRate() const ;
 
+  /* Autosize all autosizeable fields */
+  // void autosize();
 
+  /* Hard applies the autosized values from SQL file */
+  // void applySizingValues();
 
   //@}
  protected:

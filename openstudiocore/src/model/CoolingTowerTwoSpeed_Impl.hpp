@@ -73,7 +73,11 @@ namespace detail {
 
     virtual unsigned outletPort() override;
 
-    bool addToNode(Node & node) override;
+    virtual bool addToNode(Node & node) override;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
 
     //@}
     /** @name Getters */
@@ -215,31 +219,31 @@ namespace detail {
 
     bool isSizingFactorDefaulted() const;
 
-  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+    boost::optional<double> autosizedDesignWaterFlowRate() const;
 
-  boost::optional<double> autosizedHighFanSpeedAirFlowRate() const ;
+    boost::optional<double> autosizedHighFanSpeedAirFlowRate() const;
 
-  boost::optional<double> autosizedHighFanSpeedFanPower() const ;
+    boost::optional<double> autosizedHighFanSpeedFanPower() const;
 
-  boost::optional<double> autosizedHighFanSpeedUFactorTimesAreaValue() const ;
+    boost::optional<double> autosizedHighFanSpeedUFactorTimesAreaValue() const;
 
-  boost::optional<double> autosizedLowFanSpeedAirFlowRate() const ;
+    boost::optional<double> autosizedLowFanSpeedAirFlowRate() const;
 
-  boost::optional<double> autosizedLowFanSpeedFanPower() const ;
+    boost::optional<double> autosizedLowFanSpeedFanPower() const;
 
-  boost::optional<double> autosizedLowFanSpeedUFactorTimesAreaValue() const ;
+    boost::optional<double> autosizedLowFanSpeedUFactorTimesAreaValue() const;
 
-  boost::optional<double> autosizedFreeConvectionRegimeAirFlowRate() const ;
+    boost::optional<double> autosizedFreeConvectionRegimeAirFlowRate() const;
 
-  boost::optional<double> autosizedFreeConvectionRegimeUFactorTimesAreaValue() const ;
+    boost::optional<double> autosizedFreeConvectionRegimeUFactorTimesAreaValue() const;
 
-  boost::optional<double> autosizedLowSpeedNominalCapacity() const ;
+    boost::optional<double> autosizedLowSpeedNominalCapacity() const;
 
-  boost::optional<double> autosizedFreeConvectionNominalCapacity() const ;
+    boost::optional<double> autosizedFreeConvectionNominalCapacity() const;
 
-  virtual void autosize() override;
+    boost::optional<double> autosizedDesignApproachTemperature() const;
 
-  virtual void applySizingValues() override;
+    boost::optional<double> autosizedDesignRangeTemperature() const;
 
     //@}
     /** @name Setters */

@@ -338,6 +338,17 @@ void AirTerminalDualDuctVAV::resetDesignSpecificationOutdoorAirObject() {
   getImpl<detail::AirTerminalDualDuctVAV_Impl>()->resetDesignSpecificationOutdoorAirObject();
 }
 
+/*
+ *void AirTerminalDualDuctVAV::autosize() {
+ *  getImpl<detail::AirTerminalDualDuctVAV_Impl>()->autosize();
+ *}
+ *
+ *void AirTerminalDualDuctVAV::applySizingValues() {
+ *  getImpl<detail::AirTerminalDualDuctVAV_Impl>()->applySizingValues();
+ *}
+ */
+
+
 /// @cond
 AirTerminalDualDuctVAV::AirTerminalDualDuctVAV(std::shared_ptr<detail::AirTerminalDualDuctVAV_Impl> impl)
   : Mixer(std::move(impl))

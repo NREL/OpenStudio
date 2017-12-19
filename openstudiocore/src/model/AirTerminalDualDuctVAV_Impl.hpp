@@ -71,6 +71,10 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
     //@}
     /** @name Getters */
     //@{
@@ -85,11 +89,7 @@ namespace detail {
 
     boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAirObject() const;
 
-  boost::optional<double> autosizedMaximumDamperAirFlowRate() const ;
-
-  virtual void autosize() override;
-
-  virtual void applySizingValues() override;
+    boost::optional<double> autosizedMaximumDamperAirFlowRate() const ;
 
     //@}
     /** @name Setters */
