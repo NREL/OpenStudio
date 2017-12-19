@@ -170,6 +170,10 @@ namespace openstudio
 
       Model model;
 
+      std::map<std::string, SpaceType> originalNameToSpaceTypeMap;
+
+      // DLM: todo need to sort object types so we make spaces first, etc
+
       // create all the objects we will need
       ThreeSceneMetadata metadata = scene.metadata();
       for (const auto& m : metadata.modelObjectMetadata()){
@@ -182,7 +186,9 @@ namespace openstudio
         if (istringEqual(iddObjectType, "OS:ThermalZone")){
           modelObject = ThermalZone(model);
         }else if (istringEqual(iddObjectType, "OS:SpaceType")){
-          modelObject = SpaceType(model);
+          SpaceType spaceType(model);
+          modelObject = spaceType;
+          originalNameToSpaceTypeMap.insert(std::make_pair(name, spaceType));
         }else if (istringEqual(iddObjectType, "OS:BuildingStory")){
           modelObject = BuildingStory(model);
         } else if (istringEqual(iddObjectType, "OS:Space")){
@@ -209,7 +215,7 @@ namespace openstudio
       ThreeSceneObject sceneObject = scene.object();
       std::vector<ThreeSceneChild> children = sceneObject.children();
 
-      // sort the children to create all surfaces before sub surfaces
+      // DLM: todo sort the children to create all surfaces before sub surfaces
 
       for (const auto& child : sceneObject.children()){
         boost::optional<ThreeGeometry> geometry = scene.getGeometry(child.geometry());
@@ -251,6 +257,9 @@ namespace openstudio
         //bool plenum = userData.plenum();
         //bool belowFloorPlenum = userData.belowFloorPlenum();
         //bool aboveFloorPlenum = userData.aboveCeilingPlenum();
+
+        // DLM: these objects may have been renamed on import (e.g. if space and space type have the same name)
+        // need to keep a map of original name to object for each type rather than relying on model name
 
         boost::optional<ThermalZone> thermalZone = model.getConcreteModelObjectByName<ThermalZone>(thermalZoneName);
         if (!thermalZone && !thermalZoneName.empty()){
