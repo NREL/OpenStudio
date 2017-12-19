@@ -7,8 +7,6 @@
 !- Modified Date : 19/12/2017
 !- Remark       : This version was provided by K.Nan
 !-----------------------------------------------------------------
-
-
 !- Revision         Details
 !- 1.0.7-000        Update Library in order to support sketchup plugin
 !- 1.0.6-002        Add Schedule to SpaceType
@@ -38,6 +36,7 @@
 OS:Version,
   {b653c3f7-4e0a-4d5f-96c4-80df2458037f}, !- Handle
   1.7.0;                                  !- Version Identifier
+
 OS:SpaceType,
   {e0526529-4fdb-4700-9395-efccd411628b}, !- Handle
   189.1-2009 - Office - BreakRoom - CZ1-3, !- Name
@@ -7593,12 +7592,12 @@ OS:WindowProperty:FrameAndDivider,
   ,                                       !- Inside Reveal Depth {m}
   ;                                       !- Inside Reveal Solar Absorptance
 
-
-  OS:Schedule:Ruleset,
+OS:Schedule:Ruleset,
   {342f4dcd-6d67-4754-b5d5-ae5cb4ecd8b1}, !- Handle
   Educational Instituion Light Schedule Ruleset, !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {8940202b-63e5-47dd-a1a8-bfe89cb40bde}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {8940202b-63e5-47dd-a1a8-bfe89cb40bde}, !- Handle
   Schedule Day 22,                        !- Name
@@ -7607,6 +7606,7 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0;                                      !- Value Until Time 1
+
 OS:Schedule:Rule,
   {ea04cbc4-fd60-47ce-a3fc-d2928e44746d}, !- Handle
   Educational Instituion Light Schedule Rule, !- Name
@@ -7619,6 +7619,7 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Wednesday
   Yes,                                    !- Apply Thursday
   Yes;                                    !- Apply Friday
+
 OS:Schedule:Day,
   {a33810c4-8bf8-47d4-9117-ab322056dec4}, !- Handle
   Schedule Day 23,                        !- Name
@@ -7633,11 +7634,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
+
 OS:Schedule:Ruleset,
   {6e603ddf-afd8-4140-8faf-0242b66742e6}, !- Handle
   Educational Instituion Electronic Schedule Ruleset, !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {67a34fa0-2513-41af-a619-396869369493}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {67a34fa0-2513-41af-a619-396869369493}, !- Handle
   Schedule Day 24,                        !- Name
@@ -7646,6 +7649,7 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0;                                      !- Value Until Time 1
+
 OS:Schedule:Rule,
   {e9ac2a8f-67e7-493a-807d-d1e58d942f0c}, !- Handle
   Educational Instituion Electronic Schedule Rule, !- Name
@@ -7658,6 +7662,7 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Wednesday
   Yes,                                    !- Apply Thursday
   Yes;                                    !- Apply Friday
+
 OS:Schedule:Day,
   {bf1c79c1-f963-4cab-ad26-e020051d4bf6}, !- Handle
   Schedule Day 25,                        !- Name
@@ -7672,11 +7677,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
+
 OS:Schedule:Ruleset,
   {a1438b8b-6197-45c9-aecc-cd0c69fb1b52}, !- Handle
   Educational Instituion Other Equipment Schedule Ruleset, !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {e5c21ea2-167a-4dba-a3b3-5bfd32ad8969}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {e5c21ea2-167a-4dba-a3b3-5bfd32ad8969}, !- Handle
   Schedule Day 26,                        !- Name
@@ -7685,6 +7692,7 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0;                                      !- Value Until Time 1
+
 OS:Schedule:Rule,
   {336e88ed-68c0-40d1-90b0-876e78efd61b}, !- Handle
   Educational Instituion Other Equipment Schedule Rule, !- Name
@@ -7697,6 +7705,7 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Wednesday
   Yes,                                    !- Apply Thursday
   Yes;                                    !- Apply Friday
+
 OS:Schedule:Day,
   {354767c4-1c26-4919-a2bc-c5fa3bb4ee99}, !- Handle
   Schedule Day 27,                        !- Name
@@ -7711,11 +7720,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
+
 OS:Schedule:Ruleset,
   {86fd08a2-2745-4bd1-9006-baed41a1dd1d}, !- Handle
   Educational Instituion Activity Schedule Ruleset, !- Name
   {115aba64-18e9-477b-9f56-bc49f71a3d65}, !- Schedule Type Limits Name
   {180f4f37-d9d1-4986-9c02-1de1c6a1ad53}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {180f4f37-d9d1-4986-9c02-1de1c6a1ad53}, !- Handle
   Schedule Day 28,                        !- Name
@@ -7724,11 +7735,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   120;                                    !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {cdc3ae36-14aa-4372-81be-1421a936f333}, !- Handle
   Educational Instituion Cooling Schedule Ruleset, !- Name
   {18985602-6601-4741-ad8a-8b439ace1883}, !- Schedule Type Limits Name
   {4e8c424d-e881-43a6-b533-1e83dce78874}; !- Default Day Schedule Name
+
 OS:ScheduleTypeLimits,
   {18985602-6601-4741-ad8a-8b439ace1883}, !- Handle
   Temperature 4,                          !- Name
@@ -7736,6 +7749,7 @@ OS:ScheduleTypeLimits,
   200,                                    !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
+
 OS:Schedule:Day,
   {4e8c424d-e881-43a6-b533-1e83dce78874}, !- Handle
   Schedule Day 29,                        !- Name
@@ -7744,11 +7758,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   25;                                     !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {9d5f53c3-7f0b-4392-8cb2-3f3f8cedd6dc}, !- Handle
   Office Light Schedule Ruleset,          !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {ccc7a534-da15-46fe-baec-bbcc5dadeff9}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {ccc7a534-da15-46fe-baec-bbcc5dadeff9}, !- Handle
   Schedule Day 30,                        !- Name
@@ -7757,6 +7773,7 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0;                                      !- Value Until Time 1
+
 OS:Schedule:Rule,
   {a5d7303e-053b-4686-9060-2693bb981bf9}, !- Handle
   Office Light Schedule Rule,             !- Name
@@ -7769,6 +7786,7 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Wednesday
   Yes,                                    !- Apply Thursday
   Yes;                                    !- Apply Friday
+
 OS:Schedule:Day,
   {dc272786-2b34-4447-9f8a-5636f32baa0f}, !- Handle
   Schedule Day 31,                        !- Name
@@ -7783,11 +7801,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
+
 OS:Schedule:Ruleset,
   {743d6498-fa16-46de-bc4f-126bbf14d5c6}, !- Handle
   Office Electronic Schedule Ruleset,     !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {c7a95702-8438-4c21-92d2-378f75aeb8c1}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {c7a95702-8438-4c21-92d2-378f75aeb8c1}, !- Handle
   Schedule Day 32,                        !- Name
@@ -7796,6 +7816,7 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0;                                      !- Value Until Time 1
+
 OS:Schedule:Rule,
   {90d0b700-f200-40d5-bfe1-cc4cbf90fc80}, !- Handle
   Office Electronic Schedule Rule,        !- Name
@@ -7808,6 +7829,7 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Wednesday
   Yes,                                    !- Apply Thursday
   Yes;                                    !- Apply Friday
+
 OS:Schedule:Day,
   {c71d17b3-d95d-4191-9f66-5f4f7ea6703a}, !- Handle
   Schedule Day 33,                        !- Name
@@ -7822,11 +7844,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
+
 OS:Schedule:Ruleset,
   {91d0c431-1e51-4d96-ab83-12a38805a436}, !- Handle
   Office Other Equipment Schedule Ruleset, !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {7be6c952-8f19-4f4a-a7fb-51cbabea5047}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {7be6c952-8f19-4f4a-a7fb-51cbabea5047}, !- Handle
   Schedule Day 34,                        !- Name
@@ -7835,6 +7859,7 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0;                                      !- Value Until Time 1
+
 OS:Schedule:Rule,
   {4682d453-25a1-4c09-9049-ce5a81e06717}, !- Handle
   Office Other Equipment Schedule Rule,   !- Name
@@ -7847,6 +7872,7 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Wednesday
   Yes,                                    !- Apply Thursday
   Yes;                                    !- Apply Friday
+
 OS:Schedule:Day,
   {ae3b0996-e6a1-41bc-b6b0-dabdb14704ef}, !- Handle
   Schedule Day 35,                        !- Name
@@ -7861,11 +7887,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
+
 OS:Schedule:Ruleset,
   {5cacf0c0-80f7-4502-8cae-875b4e96689b}, !- Handle
   Office Activity Schedule Ruleset,       !- Name
   {115aba64-18e9-477b-9f56-bc49f71a3d65}, !- Schedule Type Limits Name
   {1a6635ba-4b23-43ee-a236-65ff37ea8c4c}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {1a6635ba-4b23-43ee-a236-65ff37ea8c4c}, !- Handle
   Schedule Day 36,                        !- Name
@@ -7874,11 +7902,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   120;                                    !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {d7de3b1c-a351-40b0-9883-ee88aafd4f29}, !- Handle
   Office Cooling Schedule Ruleset,        !- Name
   {18985602-6601-4741-ad8a-8b439ace1883}, !- Schedule Type Limits Name
   {edd6f29f-f83b-470e-97cf-88258ed183bc}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {edd6f29f-f83b-470e-97cf-88258ed183bc}, !- Handle
   Schedule Day 37,                        !- Name
@@ -7887,11 +7917,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   25;                                     !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {478b56cc-9064-4870-9b08-3615eb66234a}, !- Handle
   Theater Light Schedule Ruleset,         !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {011f2fce-4dde-41ad-a8dd-199c31cf7e36}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {011f2fce-4dde-41ad-a8dd-199c31cf7e36}, !- Handle
   Schedule Day 38,                        !- Name
@@ -7900,6 +7932,7 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0;                                      !- Value Until Time 1
+
 OS:Schedule:Rule,
   {773f06d3-3759-407e-adf6-8030817edea2}, !- Handle
   Theater Light Schedule Rule,            !- Name
@@ -7913,6 +7946,7 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Thursday
   Yes,                                    !- Apply Friday
   Yes;                                    !- Apply Saturday
+
 OS:Schedule:Day,
   {96a19682-a0e5-49f7-a2ac-cc88cd308496}, !- Handle
   Schedule Day 39,                        !- Name
@@ -7927,11 +7961,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
+
 OS:Schedule:Ruleset,
   {3a62581d-92dd-4b0f-936c-a672bde1804b}, !- Handle
   Theater Electronic Schedule Ruleset,    !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {c889660b-d23a-46eb-8c35-b49b7b64c6bb}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {c889660b-d23a-46eb-8c35-b49b7b64c6bb}, !- Handle
   Schedule Day 40,                        !- Name
@@ -7940,6 +7976,7 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0;                                      !- Value Until Time 1
+
 OS:Schedule:Rule,
   {31196dca-745e-4752-8b13-82a69ee76159}, !- Handle
   Theater Electronic Schedule Rule,       !- Name
@@ -7953,6 +7990,7 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Thursday
   Yes,                                    !- Apply Friday
   Yes;                                    !- Apply Saturday
+
 OS:Schedule:Day,
   {d0d25da1-084c-4de3-a13e-23f08e3e2a2c}, !- Handle
   Schedule Day 41,                        !- Name
@@ -7967,11 +8005,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
+
 OS:Schedule:Ruleset,
   {e9e1e693-3e83-43e3-94f9-b5a322b2e1d7}, !- Handle
   Department Store Light Schedule Ruleset, !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {4e73f143-3c50-43cb-b34e-29dce96f487a}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {4e73f143-3c50-43cb-b34e-29dce96f487a}, !- Handle
   Schedule Day 42,                        !- Name
@@ -7980,6 +8020,7 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0;                                      !- Value Until Time 1
+
 OS:Schedule:Rule,
   {4c1d2653-8fcc-41e2-9745-8c99c1b9f854}, !- Handle
   Department Store Light Schedule Rule,   !- Name
@@ -7993,6 +8034,7 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Thursday
   Yes,                                    !- Apply Friday
   Yes;                                    !- Apply Saturday
+
 OS:Schedule:Day,
   {b3cb691e-fe42-4b50-9b00-ea4ef7d72fbe}, !- Handle
   Schedule Day 43,                        !- Name
@@ -8007,11 +8049,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
+
 OS:Schedule:Ruleset,
   {6c852acb-95be-415e-ad1d-6c4eb9c20071}, !- Handle
   Department Store Electronic Schedule Ruleset, !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {cc00c9bb-d70c-4d57-a6c6-0572f02ca148}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {cc00c9bb-d70c-4d57-a6c6-0572f02ca148}, !- Handle
   Schedule Day 44,                        !- Name
@@ -8020,6 +8064,7 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0;                                      !- Value Until Time 1
+
 OS:Schedule:Rule,
   {b8e7db4d-3801-47da-b0fb-40d51ebc3fb6}, !- Handle
   Department Store Electronic Schedule Ruleset, !- Name
@@ -8033,6 +8078,7 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Thursday
   Yes,                                    !- Apply Friday
   Yes;                                    !- Apply Saturday
+
 OS:Schedule:Day,
   {574f7311-9ba5-48d3-95d8-69666cd16eb8}, !- Handle
   Schedule Day 45,                        !- Name
@@ -8047,11 +8093,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
+
 OS:Schedule:Ruleset,
   {6d33b993-140c-4b54-99ad-b8eaadf3d9e7}, !- Handle
   Department Store Other Equipment Schedule Ruleset, !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {a061784f-bf34-4996-99e7-83ec82bb43c6}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {a061784f-bf34-4996-99e7-83ec82bb43c6}, !- Handle
   Schedule Day 46,                        !- Name
@@ -8060,6 +8108,7 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0;                                      !- Value Until Time 1
+
 OS:Schedule:Rule,
   {2900ea18-7b23-4436-8717-2b0afb516cd5}, !- Handle
   Department Store Other Equipment Schedule Rule, !- Name
@@ -8073,6 +8122,7 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Thursday
   Yes,                                    !- Apply Friday
   Yes;                                    !- Apply Saturday
+
 OS:Schedule:Day,
   {9a5d3cac-a2d4-4d77-9efe-e1ff9054c018}, !- Handle
   Schedule Day 47,                        !- Name
@@ -8087,11 +8137,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
+
 OS:Schedule:Ruleset,
   {65c478f3-c2b6-4786-a35a-53015a2055e5}, !- Handle
   Department Store Activity Schedule Ruleset, !- Name
   {115aba64-18e9-477b-9f56-bc49f71a3d65}, !- Schedule Type Limits Name
   {f1ca58a1-e307-43ce-a393-77b8051ac7ef}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {f1ca58a1-e307-43ce-a393-77b8051ac7ef}, !- Handle
   Schedule Day 48,                        !- Name
@@ -8100,11 +8152,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   120.000007629395;                       !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {eaccdeff-89e7-4e2e-8a2b-d28a7e18722e}, !- Handle
   Department Store Cooling Schedule Ruleset, !- Name
   {18985602-6601-4741-ad8a-8b439ace1883}, !- Schedule Type Limits Name
   {9ff24578-9625-4750-b75f-51c6eb00a7ab}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {9ff24578-9625-4750-b75f-51c6eb00a7ab}, !- Handle
   Schedule Day 49,                        !- Name
@@ -8113,11 +8167,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   25;                                     !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {543f74de-b104-43fe-8fe9-a35deb06f9e5}, !- Handle
   Service Facility Light Schedule Ruleset, !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {1bdeed59-0ef4-4332-8758-df5c8479e976}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {1bdeed59-0ef4-4332-8758-df5c8479e976}, !- Handle
   Schedule Day 50,                        !- Name
@@ -8126,6 +8182,7 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0;                                      !- Value Until Time 1
+
 OS:Schedule:Rule,
   {1c59ba3d-557a-4666-88e8-067d3ce591a3}, !- Handle
   Service Facility Light Schedule Rule,   !- Name
@@ -8139,6 +8196,7 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Thursday
   Yes,                                    !- Apply Friday
   Yes;                                    !- Apply Saturday
+
 OS:Schedule:Day,
   {84d9f9d7-553e-452d-a726-4731424b0c43}, !- Handle
   Schedule Day 51,                        !- Name
@@ -8153,11 +8211,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
+
 OS:Schedule:Ruleset,
   {aa3743eb-03f4-4fbd-b8ec-ac0b07e0ea83}, !- Handle
   Service Facility Electronic Schedule Ruleset, !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {46f563ca-840c-4356-a24d-e98200a17b3e}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {46f563ca-840c-4356-a24d-e98200a17b3e}, !- Handle
   Schedule Day 52,                        !- Name
@@ -8166,6 +8226,7 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0;                                      !- Value Until Time 1
+
 OS:Schedule:Rule,
   {7cfb3b3a-024f-4a36-af88-c020aa67272f}, !- Handle
   Service Facility Electronic Schedule Rule, !- Name
@@ -8179,6 +8240,7 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Thursday
   Yes,                                    !- Apply Friday
   Yes;                                    !- Apply Saturday
+
 OS:Schedule:Day,
   {de01285b-054a-46e5-ac34-ddce721bee36}, !- Handle
   Schedule Day 53,                        !- Name
@@ -8193,11 +8255,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
+
 OS:Schedule:Ruleset,
   {bb6958e6-f21f-435d-8137-c72bfb642f1d}, !- Handle
   Service Facility Activity Schedule Ruleset, !- Name
   {115aba64-18e9-477b-9f56-bc49f71a3d65}, !- Schedule Type Limits Name
   {b990afe1-0150-4250-9458-e7fa1f9ff760}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {b990afe1-0150-4250-9458-e7fa1f9ff760}, !- Handle
   Schedule Day 54,                        !- Name
@@ -8206,11 +8270,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   120.000007629395;                       !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {83d52c90-bd5b-4afb-9239-10b03b7b26fe}, !- Handle
   Service Facility Cooling Schedule Ruleset, !- Name
   {18985602-6601-4741-ad8a-8b439ace1883}, !- Schedule Type Limits Name
   {80fb0e28-e5d7-4bb5-96c2-b5626d7accfe}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {80fb0e28-e5d7-4bb5-96c2-b5626d7accfe}, !- Handle
   Schedule Day 55,                        !- Name
@@ -8219,11 +8285,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   25;                                     !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {4bf0bcf9-68f2-4fe6-ae06-5c9900e8a6a9}, !- Handle
   Service Facility Other Equipment Schedule Ruleset, !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {40b89b92-e95b-4b5c-afa0-09c465e454dc}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {40b89b92-e95b-4b5c-afa0-09c465e454dc}, !- Handle
   Schedule Day 56,                        !- Name
@@ -8232,6 +8300,7 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0;                                      !- Value Until Time 1
+
 OS:Schedule:Rule,
   {fc866275-fbce-470f-b921-478d636413d9}, !- Handle
   Service Facility Other Equipment Schedule Rule, !- Name
@@ -8245,6 +8314,7 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Thursday
   Yes,                                    !- Apply Friday
   Yes;                                    !- Apply Saturday
+
 OS:Schedule:Day,
   {b8be2cf5-23b3-44d5-8d4e-c9ac04be1817}, !- Handle
   Schedule Day 57,                        !- Name
@@ -8259,11 +8329,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
+
 OS:Schedule:Ruleset,
   {2c4fd89a-591e-4a89-9a3a-27ad899e7545}, !- Handle
   Community Building Light Schedule Ruleset, !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {6938a084-3f89-4369-8a3b-8de86c671dae}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {6938a084-3f89-4369-8a3b-8de86c671dae}, !- Handle
   Schedule Day 58,                        !- Name
@@ -8272,6 +8344,7 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0;                                      !- Value Until Time 1
+
 OS:Schedule:Rule,
   {df4a1240-2dec-45d6-9ecb-5f1cae333043}, !- Handle
   Community Building Light Schedule Ruleset, !- Name
@@ -8285,6 +8358,7 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Thursday
   Yes,                                    !- Apply Friday
   Yes;                                    !- Apply Saturday
+
 OS:Schedule:Day,
   {d8191332-9a54-4e0c-bb4f-782c19caa842}, !- Handle
   Schedule Day 59,                        !- Name
@@ -8299,11 +8373,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
+
 OS:Schedule:Ruleset,
   {42a22930-999e-4f25-b488-53a86482ad39}, !- Handle
   Community Building Electronic Schedule Ruleset, !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {2caea7b2-f574-47e7-92f5-8561b8757547}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {2caea7b2-f574-47e7-92f5-8561b8757547}, !- Handle
   Schedule Day 60,                        !- Name
@@ -8312,6 +8388,7 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0;                                      !- Value Until Time 1
+
 OS:Schedule:Rule,
   {41093b3a-1dc2-4eef-b705-b0bf9d144da8}, !- Handle
   Community Building Electronic Schedule Rule, !- Name
@@ -8325,6 +8402,7 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Thursday
   Yes,                                    !- Apply Friday
   Yes;                                    !- Apply Saturday
+
 OS:Schedule:Day,
   {c2d81f77-436f-45b1-aae9-f5f1b44ef83c}, !- Handle
   Schedule Day 61,                        !- Name
@@ -8339,11 +8417,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
+
 OS:Schedule:Ruleset,
   {3c6bc983-7be5-438e-976c-789203305fea}, !- Handle
   Community Building Activity Schedule Ruleset, !- Name
   {115aba64-18e9-477b-9f56-bc49f71a3d65}, !- Schedule Type Limits Name
   {02e71bfe-0596-4219-aed4-c00670f3e7ce}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {02e71bfe-0596-4219-aed4-c00670f3e7ce}, !- Handle
   Schedule Day 62,                        !- Name
@@ -8352,11 +8432,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   120.000007629395;                       !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {085acd6c-835d-4724-b755-486a5ce7279a}, !- Handle
   Community Building Cooling Schedule Ruleset, !- Name
   {18985602-6601-4741-ad8a-8b439ace1883}, !- Schedule Type Limits Name
   {967fd3e7-1d37-4f24-beb6-455c0d4b0ae6}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {967fd3e7-1d37-4f24-beb6-455c0d4b0ae6}, !- Handle
   Schedule Day 63,                        !- Name
@@ -8365,11 +8447,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   25;                                     !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {98e30d2c-1b78-483b-9ff4-7b7d12fb7088}, !- Handle
   Community Building Other Equipment Schedule Ruleset, !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {d15a6c0a-287c-45a0-9c48-7db2d09fc5a8}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {d15a6c0a-287c-45a0-9c48-7db2d09fc5a8}, !- Handle
   Schedule Day 64,                        !- Name
@@ -8378,6 +8462,7 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0;                                      !- Value Until Time 1
+
 OS:Schedule:Rule,
   {1027c79a-8ae1-42e0-b632-c43166bbef74}, !- Handle
   Community Building Other Equipment Schedule Rule, !- Name
@@ -8391,6 +8476,7 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Thursday
   Yes,                                    !- Apply Friday
   Yes;                                    !- Apply Saturday
+
 OS:Schedule:Day,
   {3876e32f-bf79-43ff-9a1d-37a3d6357600}, !- Handle
   Schedule Day 65,                        !- Name
@@ -8405,11 +8491,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
+
 OS:Schedule:Ruleset,
   {98159c78-0161-4245-a001-618c3c422429}, !- Handle
   Hotel Light Schedule Ruleset,           !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {b3f8ee4d-5e50-41e8-bfd2-44e44a467ce9}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {b3f8ee4d-5e50-41e8-bfd2-44e44a467ce9}, !- Handle
   Schedule Day 66,                        !- Name
@@ -8418,11 +8506,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   1;                                      !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {44dbf982-73f3-4ad4-ab62-54d6deb91e9c}, !- Handle
   Hotel Electronic Schedule Ruleset,      !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {ad896ed5-2ba5-450c-9a94-daf0a273820c}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {ad896ed5-2ba5-450c-9a94-daf0a273820c}, !- Handle
   Schedule Day 67,                        !- Name
@@ -8431,11 +8521,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   1;                                      !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {bac91769-7829-421f-bd26-c3fc47147e83}, !- Handle
   Hotel Other Equipment Schedule Ruleset, !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {76516c5c-0d97-4885-903b-64859976217a}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {76516c5c-0d97-4885-903b-64859976217a}, !- Handle
   Schedule Day 68,                        !- Name
@@ -8444,11 +8536,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   1;                                      !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {53383dda-ff79-414b-9da2-4d94c7619c21}, !- Handle
   Hotel Activity Schedule Ruleset,        !- Name
   {115aba64-18e9-477b-9f56-bc49f71a3d65}, !- Schedule Type Limits Name
   {bd648913-c2bd-43c1-b166-700085990147}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {bd648913-c2bd-43c1-b166-700085990147}, !- Handle
   Schedule Day 69,                        !- Name
@@ -8457,11 +8551,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   120.000007629395;                       !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {42f167cc-52cc-4a4b-a7da-c801e5177d35}, !- Handle
   Hotel Cooling Schedule Ruleset,         !- Name
   {18985602-6601-4741-ad8a-8b439ace1883}, !- Schedule Type Limits Name
   {48763118-ff04-433b-b6ee-d849f0a302ae}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {48763118-ff04-433b-b6ee-d849f0a302ae}, !- Handle
   Schedule Day 70,                        !- Name
@@ -8470,11 +8566,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   25;                                     !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {bbbf308e-7d92-4d31-b8d8-011574a149b8}, !- Handle
   Medical Center Electronic Schedule Ruleset, !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {a3c08e58-1592-4066-a16b-10122f0ba8d3}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {a3c08e58-1592-4066-a16b-10122f0ba8d3}, !- Handle
   Schedule Day 71,                        !- Name
@@ -8483,11 +8581,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   1;                                      !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {6676c7e7-7739-4557-bf00-1e02a9fb4901}, !- Handle
   Medical Center Light Schedule Ruleset,  !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {7a6e2a56-1447-463f-9b86-ace125fb580c}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {7a6e2a56-1447-463f-9b86-ace125fb580c}, !- Handle
   Schedule Day 72,                        !- Name
@@ -8496,11 +8596,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   1;                                      !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {6931753a-732f-4d02-b424-8ac0707bf209}, !- Handle
   Medical Center Other Equipment Schedule Ruleset, !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {7d43e94f-dcf9-4838-972b-5f981c6c266d}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {7d43e94f-dcf9-4838-972b-5f981c6c266d}, !- Handle
   Schedule Day 73,                        !- Name
@@ -8509,11 +8611,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   1;                                      !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {49300f04-bef0-4fe4-9153-06a37586867d}, !- Handle
   Medical Center Activity Schedule Ruleset, !- Name
   {115aba64-18e9-477b-9f56-bc49f71a3d65}, !- Schedule Type Limits Name
   {4f3bacec-c10b-4492-b96f-4e5bff02182a}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {4f3bacec-c10b-4492-b96f-4e5bff02182a}, !- Handle
   Schedule Day 74,                        !- Name
@@ -8522,11 +8626,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   120.000007629395;                       !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {32da57f6-240d-4806-8839-c8dfbe2da30c}, !- Handle
   Medical Center Cooling Schedule Ruleset, !- Name
   {18985602-6601-4741-ad8a-8b439ace1883}, !- Schedule Type Limits Name
   {bebfdd7c-aad2-49bf-a46d-52e4b1b4281e}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {bebfdd7c-aad2-49bf-a46d-52e4b1b4281e}, !- Handle
   Schedule Day 75,                        !- Name
@@ -8535,11 +8641,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   25;                                     !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {5c1754b4-7f60-49be-8a26-3e89eabc24fe}, !- Handle
   Condominium Electronic Schedule Ruleset, !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {8f9717bd-1d8d-482c-b9b0-6a030bee2598}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {8f9717bd-1d8d-482c-b9b0-6a030bee2598}, !- Handle
   Schedule Day 76,                        !- Name
@@ -8548,11 +8656,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   1;                                      !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {2b8b39c3-c35c-4171-889b-082d4ca4790e}, !- Handle
   Condominium Light Schedule Ruleset,     !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {f2260e00-6846-4dcc-a24d-4e5b2df294d5}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {f2260e00-6846-4dcc-a24d-4e5b2df294d5}, !- Handle
   Schedule Day 77,                        !- Name
@@ -8561,11 +8671,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   1;                                      !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {c865cd66-c8ec-4bed-b464-1b35d9080800}, !- Handle
   Condominium Other Equipment Schedule Ruleset, !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {09f31a82-7276-4c0c-8bdc-1f6aeac8525b}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {09f31a82-7276-4c0c-8bdc-1f6aeac8525b}, !- Handle
   Schedule Day 78,                        !- Name
@@ -8574,11 +8686,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   1;                                      !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {cb113ee1-d558-41fa-8bac-70994e65ddcd}, !- Handle
   Condominium Activity Schedule Ruleset,  !- Name
   {115aba64-18e9-477b-9f56-bc49f71a3d65}, !- Schedule Type Limits Name
   {d66d8087-fdc9-4206-9e8e-7f62530204e1}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {d66d8087-fdc9-4206-9e8e-7f62530204e1}, !- Handle
   Schedule Day 79,                        !- Name
@@ -8587,11 +8701,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   120.000007629395;                       !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {f6255af2-00f1-48a0-a0a0-3eeb816dccde}, !- Handle
   Condominium Cooling Schedule Ruleset,   !- Name
   {18985602-6601-4741-ad8a-8b439ace1883}, !- Schedule Type Limits Name
   {45877ec7-99d9-4a5f-80d6-a248ddfc9047}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {45877ec7-99d9-4a5f-80d6-a248ddfc9047}, !- Handle
   Schedule Day 80,                        !- Name
@@ -8600,11 +8716,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   25;                                     !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {a0e43136-8713-4705-bda6-83f5d3b7d93f}, !- Handle
   Theater Other Equipment Schedule Ruleset, !- Name
   {00d8a08d-fdaf-40f4-9427-ac27fd74bfe4}, !- Schedule Type Limits Name
   {fa1a835c-5675-4604-a329-594d1d4bd1d9}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {fa1a835c-5675-4604-a329-594d1d4bd1d9}, !- Handle
   Schedule Day 81,                        !- Name
@@ -8613,6 +8731,7 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0;                                      !- Value Until Time 1
+
 OS:Schedule:Rule,
   {6edd53a9-04dd-41ba-9854-6a53b857a411}, !- Handle
   Theater Other Equipment Schedule Rule,  !- Name
@@ -8626,6 +8745,7 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Thursday
   Yes,                                    !- Apply Friday
   Yes;                                    !- Apply Saturday
+
 OS:Schedule:Day,
   {fb0af46f-ea85-47b4-9e6e-e43f96e2b5b3}, !- Handle
   Schedule Day 82,                        !- Name
@@ -8640,11 +8760,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
+
 OS:Schedule:Ruleset,
   {054783a8-71a4-4507-8fe7-550271e6ab5c}, !- Handle
   Theater Activity Schedule Ruleset,      !- Name
   {115aba64-18e9-477b-9f56-bc49f71a3d65}, !- Schedule Type Limits Name
   {3f54e5f7-0c81-41ca-863d-2eeafe5f21a5}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {3f54e5f7-0c81-41ca-863d-2eeafe5f21a5}, !- Handle
   Schedule Day 83,                        !- Name
@@ -8653,11 +8775,13 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   120.000007629395;                       !- Value Until Time 1
+
 OS:Schedule:Ruleset,
   {bd265d43-021c-4a8d-9b8c-0a52268e1603}, !- Handle
   Theater Cooling Schedule Rule,          !- Name
   {18985602-6601-4741-ad8a-8b439ace1883}, !- Schedule Type Limits Name
   {6a4c5f57-395c-4e1f-89c4-5016cbad75a6}; !- Default Day Schedule Name
+
 OS:Schedule:Day,
   {6a4c5f57-395c-4e1f-89c4-5016cbad75a6}, !- Handle
   Schedule Day 84,                        !- Name
@@ -9192,12 +9316,9 @@ OS:WindowMaterial:SimpleGlazingSystem,
   0.39,                                   !- Solar Heat Gain Coefficient
   0.6;                                    !- Visible Transmittance
 
-
 OS:StandardsInformation:Material,
   {a5b66322-5515-4cde-9c88-e7caa82bad6a}, !- Handle
   {81709dcb-9629-43ac-b77c-36b0480ae87b}; !- Material Name
-
-
 
 OS:Construction,
   {2552be44-24f7-4e0b-8a1d-f54ed78ce3dd}, !- Handle
@@ -9214,19 +9335,11 @@ OS:Material,
   608,                                    !- Density {kg/m3}
   1630;                                   !- Specific Heat {J/kg-K}
 
-
-
-
-
-
-
 OS:Construction,
   {7dbfddf8-0287-4087-810d-45faf71e4afe}, !- Handle
   Thai Interior Window,                   !- Name
   ,                                       !- Surface Rendering Name
   {81709dcb-9629-43ac-b77c-36b0480ae87b}; !- Layer 1
-
-
 
 OS:Material,
   {d3370d71-c5af-49ec-94ee-94c22eb66070}, !- Handle
@@ -9248,7 +9361,6 @@ OS:Material:NoMass,
   0.9,                                    !- Thermal Absorptance
   0.7,                                    !- Solar Absorptance
   0.8;                                    !- Visible Absorptance
-
 
 OS:StandardsInformation:Material,
   {8ee9f16f-f359-481c-ad48-b549f5ee0330}, !- Handle
@@ -9353,6 +9465,7 @@ OS:ScheduleTypeLimits,
   ,                                       !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
   VolumetricFlowRate;                     !- Unit Type
+
 OS:Schedule:Ruleset,
   {69f1037e-56bb-4c62-a6f7-c96d567558d1}, !- Handle
   Community Building HtgSetp Schedule Ruleset, !- Name
@@ -10271,6 +10384,7 @@ OS:Schedule:Day,
   0,                                      !- Minute 1
   25;                                     !- Value Until Time 1
   
+
 OS:Material,
   {17a9a9f8-84bb-4fde-b5e1-38ee17df3097}, !- Handle
   002 กระดาษอัด หนา 4 มม., !- Name
@@ -13235,6 +13349,7 @@ OS:Material,
 !-------------------------End Materails---------------------------
 
 !------------ Glazing System Window Materails -----------
+
 OS:WindowMaterial:SimpleGlazingSystem,
   {dc1fd878-7e0e-47cb-8284-f3d17033ca21}, !- Handle
   Th-Glass titanium steel coating 30 % 6 mm 1, !- Name
@@ -15006,6 +15121,7 @@ OS:StandardsInformation:Material,
   {88d8a7cd-9d8f-4ad9-90c7-8526e7784c47}; !- Material Name
 
 !----------------------- Lighting -----------------------
+
 OS:Lights:Definition,
  {5e984427-d844-45aa-a52a-149cc6e895ae},  !- Handle
   Th-Incandescent Lighting-100w,          !- Name
@@ -15038,6 +15154,7 @@ OS:Lights:Definition,
   ,                                       !- Watts per Space Floor Area {W/m2}
   ;                                       !- Watts per Person {W/person}
  
+
 OS:Lights:Definition,
  {2f5d3b65-0a35-457f-9035-9f99a5458129},  !- Handle
   Th-Philips LED 5W Warm-white-5w,        !- Name
@@ -15046,6 +15163,7 @@ OS:Lights:Definition,
   ,                                       !- Watts per Space Floor Area {W/m2}
   ;                                       !- Watts per Person {W/person}
  
+
 OS:Lights:Definition,
  {013b1904-f1fd-48fe-a404-db6979a7269f},  !- Handle
   Th-Fluorescent Ring-8w,                 !- Name
@@ -15078,6 +15196,7 @@ OS:Lights:Definition,
   ,                                       !- Watts per Space Floor Area {W/m2}
   ;                                       !- Watts per Person {W/person}
    
+
 OS:Lights:Definition,
  {417838c4-6d4b-47e5-9fc4-eb797ab43abc},  !- Handle
   Th-Fluorescent Ring-11w,                !- Name
@@ -15086,6 +15205,7 @@ OS:Lights:Definition,
   ,                                       !- Watts per Space Floor Area {W/m2}
   ;                                       !- Watts per Person {W/person}
        
+
 OS:Lights:Definition,
  {b870293b-50b0-4645-92ae-d73a5fd5348b},  !- Handle
   Th-Fluorescent Ring-10w,                !- Name
@@ -15094,6 +15214,7 @@ OS:Lights:Definition,
   ,                                       !- Watts per Space Floor Area {W/m2}
   ;                                       !- Watts per Person {W/person}
     
+
 OS:Lights:Definition,
  {f431c065-896c-41c4-a47a-9f90423be82f},  !- Handle
   Th-General Fluorescent Lamp-9w,         !- Name
@@ -15119,6 +15240,7 @@ OS:Lights:Definition,
   ;                                       !- Watts per Person {W/person}
 
  !----------------------- Lighting System ----------------
+
 OS:Lights:Definition,
   {7d74576e-8f7a-4a95-ad94-1a9d0affc606},   !- Handle
   TH : คอมแพคฟลูออเรสเซนต์ BIOBULB BNU01D-11 เดย์ไลท์,  !- Name
@@ -16375,7 +16497,6 @@ OS:Lights:Definition,
   ,                                     !- Watts per Space Floor Area {W/m2}
   ;                                     !- Watts per Person {W/person}
 
-
 OS:Lights:Definition,
   {0c8c4ac6-9f6c-4ed6-9a7a-3a9d2e1fc761},   !- Handle
   TH : คอมแพคฟลูออเรสเซนต์ OSRAM DULUXSTAR MINITWIST เดย์ไลท์,  !- Name
@@ -16546,8 +16667,6 @@ OS:Lights:Definition,
   ,                                     !- Watts per Space Floor Area {W/m2}
   ;                                     !- Watts per Person {W/person}
 
-
-
 OS:Lights:Definition,
   {024f1828-ace4-416a-b5c0-b1ec2fe4ff5d},   !- Handle
   TH : คอมแพคฟลูออเรสเซนต์ PHILIPS TORNADO คูลเดย์ไลท์, !- Name
@@ -16579,7 +16698,6 @@ OS:Lights:Definition,
   11,                                   !- Lighting Level {W}
   ,                                     !- Watts per Space Floor Area {W/m2}
   ;                                     !- Watts per Person {W/person}
-
 
 OS:Lights:Definition,
   {76ef7987-3305-4a5d-8b5d-52a1cefc0457},   !- Handle
@@ -18165,7 +18283,6 @@ OS:Lights:Definition,
   ,                                     !- Watts per Space Floor Area {W/m2}
   ;                                     !- Watts per Person {W/person}
 
-
 OS:Lights:Definition,
   {8ca3b36e-fd24-4fd7-bc50-944695629d91},   !- Handle
   TH : แอลอีดี (E27) L&E LED-BULB-800LM,    !- Name
@@ -18686,7 +18803,6 @@ OS:Lights:Definition,
   ,                                     !- Watts per Space Floor Area {W/m2}
   ;                                     !- Watts per Person {W/person}
 
-
 OS:Lights:Definition,
   {a9fda5fd-c35e-4382-8cee-cd38237aacc5},   !- Handle
   TH : แอลอีดี (E27) PHILIPS LEDBULB 5W,    !- Name
@@ -18791,7 +18907,6 @@ OS:Lights:Definition,
   ,                                     !- Watts per Space Floor Area {W/m2}
   ;                                     !- Watts per Person {W/person}
 
-
 OS:Lights:Definition,
   {02e81e20-563d-468c-ac69-2b0f8004d988},   !- Handle
   TH : แอลอีดี (MR16) RACER DECTOP, !- Name
@@ -18839,7 +18954,6 @@ OS:Lights:Definition,
   7,                                    !- Lighting Level {W}
   ,                                     !- Watts per Space Floor Area {W/m2}
   ;                                     !- Watts per Person {W/person}
-
 
 OS:Lights:Definition,
   {3042d230-769b-4efc-ad49-aa721a2bf087},   !- Handle
@@ -18987,6 +19101,7 @@ OS:Lights:Definition,
 
 !------------------------------------------------------------------------------------
   
+
 OS:Material:AirGap,
   {2a614ed8-fa53-404f-bed4-f6693e6c32d5},           !- Handle
   TH : Roof Air Space Resistance 0 Degree 5mm Hi,   !- Name
@@ -19077,481 +19192,6 @@ OS:Material:AirGap,
   TH : Roof Air Space Resistance 45 Degree 100mm Lo,    !- Name
   0.768;                                                !- Thermal Resistance {m2-K/W}
 
-  
-OS:Material:AirGap,
-  {2a614ed8-fa53-404f-bed4-f1093e6c32d5}, !- Handle
-  F05 Ceiling air space resistance,       !- Name
-  0.18;                                   !- Thermal Resistance {m2-K/W}
-  
-OS:StandardsInformation:Material,
-  {545bf2d6-a5b7-4745-87db-374675b9adf6}, !- Handle
-  {2a614ed8-fa53-404f-bed4-f1093e6c32d5}; !- Material Name
-
-
-  
-OS:Material,
-  {0ed2a254-f2fa-403e-8ba1-79175fd0ed3d}, !- Handle
-  M11 100mm lightweight concrete,         !- Name
-  MediumRough,                            !- Roughness
-  0.1016,                                 !- Thickness {m}
-  0.53,                                   !- Conductivity {W/m-K}
-  1280,                                   !- Density {kg/m3}
-  840.000000000002,                       !- Specific Heat {J/kg-K}
-  0.9,                                    !- Thermal Absorptance
-  0.5,                                    !- Solar Absorptance
-  0.5;                                    !- Visible Absorptance
-
-OS:StandardsInformation:Material,
-  {c6bb8f7b-dff1-4814-9cd3-13319696813c}, !- Handle
-  {0ed2a254-f2fa-403e-8ba1-79175fd0ed3d}; !- Material Name
-
-
-
-
-
-
-
-
-
-
-
-
-
-OS:WindowMaterial:Glazing,
-  {c51ec9e3-f684-42f4-b67d-591666991784}, !- Handle
-  Theoretical Glass [167],                !- Name
-  SpectralAverage,                        !- Optical Data Type
-  ,                                       !- Window Glass Spectral Data Set Name
-  0.00299999999999999,                    !- Thickness {m}
-  0.2374,                                 !- Solar Transmittance at Normal Incidence
-  0.7126,                                 !- Front Side Solar Reflectance at Normal Incidence
-  0,                                      !- Back Side Solar Reflectance at Normal Incidence
-  0.2512,                                 !- Visible Transmittance at Normal Incidence
-  0.6988,                                 !- Front Side Visible Reflectance at Normal Incidence
-  0,                                      !- Back Side Visible Reflectance at Normal Incidence
-  0,                                      !- Infrared Transmittance at Normal Incidence
-  0.985,                                  !- Front Side Infrared Hemispherical Emissivity
-  0.985,                                  !- Back Side Infrared Hemispherical Emissivity
-  2.1073,                                 !- Conductivity {W/m-K}
-  1,                                      !- Dirt Correction Factor for Solar and Visible Transmittance
-  No;                                     !- Solar Diffusing
-
-OS:StandardsInformation:Material,
-  {c83efe52-5ee7-4bb9-8aca-7cbd030b1945}, !- Handle
-  {c51ec9e3-f684-42f4-b67d-591666991784}; !- Material Name
-
-
-
-
-
-OS:Material,
-  {8493fef8-9809-4979-a024-8dfc82421565}, !- Handle
-  I01 25mm insulation board,              !- Name
-  MediumRough,                            !- Roughness
-  0.0254,                                 !- Thickness {m}
-  0.03,                                   !- Conductivity {W/m-K}
-  43,                                     !- Density {kg/m3}
-  1210,                                   !- Specific Heat {J/kg-K}
-  0.9,                                    !- Thermal Absorptance
-  0.6,                                    !- Solar Absorptance
-  0.6;                                    !- Visible Absorptance
-
-OS:StandardsInformation:Material,
-  {d7765207-3392-4b22-8f8b-97f640b435f4}, !- Handle
-  {8493fef8-9809-4979-a024-8dfc82421565}; !- Material Name
-
-
-
-OS:WindowMaterial:Glazing,
-  {32f534d4-997e-48dd-9996-adc31dca1449}, !- Handle
-  Clear 3mm,                              !- Name
-  SpectralAverage,                        !- Optical Data Type
-  ,                                       !- Window Glass Spectral Data Set Name
-  0.00299999999999999,                    !- Thickness {m}
-  0.837,                                  !- Solar Transmittance at Normal Incidence
-  0.075,                                  !- Front Side Solar Reflectance at Normal Incidence
-  0,                                      !- Back Side Solar Reflectance at Normal Incidence
-  0.898,                                  !- Visible Transmittance at Normal Incidence
-  0.081,                                  !- Front Side Visible Reflectance at Normal Incidence
-  0,                                      !- Back Side Visible Reflectance at Normal Incidence
-  0,                                      !- Infrared Transmittance at Normal Incidence
-  0.84,                                   !- Front Side Infrared Hemispherical Emissivity
-  0.84,                                   !- Back Side Infrared Hemispherical Emissivity
-  0.9,                                    !- Conductivity {W/m-K}
-  1,                                      !- Dirt Correction Factor for Solar and Visible Transmittance
-  No;                                     !- Solar Diffusing
-
-OS:StandardsInformation:Material,
-  {0f9193bf-9f04-461d-997b-ca2cb6f9e99b}, !- Handle
-  {32f534d4-997e-48dd-9996-adc31dca1449}; !- Material Name
-
-
-
-
-OS:Material,
-  {20dd75fb-bb93-4254-b788-10a83a075663}, !- Handle
-  G05 25mm wood,                          !- Name
-  MediumSmooth,                           !- Roughness
-  0.0254,                                 !- Thickness {m}
-  0.15,                                   !- Conductivity {W/m-K}
-  608,                                    !- Density {kg/m3}
-  1630,                                   !- Specific Heat {J/kg-K}
-  0.9,                                    !- Thermal Absorptance
-  0.5,                                    !- Solar Absorptance
-  0.5;                                    !- Visible Absorptance
-
-OS:StandardsInformation:Material,
-  {a7209dda-e47f-4988-b30d-a79d2ce9f3c0}, !- Handle
-  {20dd75fb-bb93-4254-b788-10a83a075663}; !- Material Name
-
-
-
-
-
-
-
-OS:Material,
-  {15233567-5d6a-4edf-a404-3fe317404d70}, !- Handle
-  Wall Insulation [35],                   !- Name
-  MediumRough,                            !- Roughness
-  0.0452,                                 !- Thickness {m}
-  0.0432,                                 !- Conductivity {W/m-K}
-  91,                                     !- Density {kg/m3}
-  836.999999999999,                       !- Specific Heat {J/kg-K}
-  0.9,                                    !- Thermal Absorptance
-  0.5,                                    !- Solar Absorptance
-  0.5;                                    !- Visible Absorptance
-
-OS:StandardsInformation:Material,
-  {8dad66d4-cf25-49d5-80e3-0f5f030c8463}, !- Handle
-  {15233567-5d6a-4edf-a404-3fe317404d70}; !- Material Name
-
-
-
-OS:Material,
-  {d685b838-3ae4-4a0b-8303-51c9297985dd}, !- Handle
-  Roof Insulation [21],                   !- Name
-  MediumRough,                            !- Roughness
-  0.2105,                                 !- Thickness {m}
-  0.049,                                  !- Conductivity {W/m-K}
-  265,                                    !- Density {kg/m3}
-  836.800000000001,                       !- Specific Heat {J/kg-K}
-  0.9,                                    !- Thermal Absorptance
-  0.7,                                    !- Solar Absorptance
-  0.7;                                    !- Visible Absorptance
-
-OS:StandardsInformation:Material,
-  {11995df0-bac9-4f66-9303-a832ee083dcf}, !- Handle
-  {d685b838-3ae4-4a0b-8303-51c9297985dd}; !- Material Name
-
-
-
-
-
-
-OS:WindowMaterial:Glazing,
-  {0fb74a22-0b3c-44c3-9ecb-fdedafb63fda}, !- Handle
-  Theoretical Glass [197],                !- Name
-  SpectralAverage,                        !- Optical Data Type
-  ,                                       !- Window Glass Spectral Data Set Name
-  0.00299999999999999,                    !- Thickness {m}
-  0.2349,                                 !- Solar Transmittance at Normal Incidence
-  0.7151,                                 !- Front Side Solar Reflectance at Normal Incidence
-  0,                                      !- Back Side Solar Reflectance at Normal Incidence
-  0.2512,                                 !- Visible Transmittance at Normal Incidence
-  0.6988,                                 !- Front Side Visible Reflectance at Normal Incidence
-  0,                                      !- Back Side Visible Reflectance at Normal Incidence
-  0,                                      !- Infrared Transmittance at Normal Incidence
-  0.9,                                    !- Front Side Infrared Hemispherical Emissivity
-  0.9,                                    !- Back Side Infrared Hemispherical Emissivity
-  0.0415,                                 !- Conductivity {W/m-K}
-  1,                                      !- Dirt Correction Factor for Solar and Visible Transmittance
-  No;                                     !- Solar Diffusing
-
-OS:StandardsInformation:Material,
-  {7c1eec51-2f97-4855-b2d1-dee396b10b9a}, !- Handle
-  {0fb74a22-0b3c-44c3-9ecb-fdedafb63fda}; !- Material Name
-
-
-
-
-
-
-OS:Material,
-  {86c63f48-004b-41fa-9082-ef9d67605dd6}, !- Handle
-  Wall Insulation [36],                   !- Name
-  MediumRough,                            !- Roughness
-  0.0565999999999999,                     !- Thickness {m}
-  0.0432,                                 !- Conductivity {W/m-K}
-  91,                                     !- Density {kg/m3}
-  836.999999999999,                       !- Specific Heat {J/kg-K}
-  0.9,                                    !- Thermal Absorptance
-  0.5,                                    !- Solar Absorptance
-  0.5;                                    !- Visible Absorptance
-
-OS:StandardsInformation:Material,
-  {a1bfd3aa-6d57-47e7-85c0-00b50a6c291a}, !- Handle
-  {86c63f48-004b-41fa-9082-ef9d67605dd6}; !- Material Name
-
-
-
-
-
-
-OS:WindowMaterial:Glazing,
-  {8e3b0056-5c77-4812-936e-a0acb51c8d43}, !- Handle
-  Theoretical Glass [202],                !- Name
-  SpectralAverage,                        !- Optical Data Type
-  ,                                       !- Window Glass Spectral Data Set Name
-  0.00299999999999999,                    !- Thickness {m}
-  0.2325,                                 !- Solar Transmittance at Normal Incidence
-  0.7175,                                 !- Front Side Solar Reflectance at Normal Incidence
-  0,                                      !- Back Side Solar Reflectance at Normal Incidence
-  0.3192,                                 !- Visible Transmittance at Normal Incidence
-  0.6308,                                 !- Front Side Visible Reflectance at Normal Incidence
-  0,                                      !- Back Side Visible Reflectance at Normal Incidence
-  0,                                      !- Infrared Transmittance at Normal Incidence
-  0.9,                                    !- Front Side Infrared Hemispherical Emissivity
-  0.9,                                    !- Back Side Infrared Hemispherical Emissivity
-  0.0192,                                 !- Conductivity {W/m-K}
-  1,                                      !- Dirt Correction Factor for Solar and Visible Transmittance
-  No;                                     !- Solar Diffusing
-
-OS:StandardsInformation:Material,
-  {384d3391-bf2d-4019-8c1f-e8ec3fd12fa4}, !- Handle
-  {8e3b0056-5c77-4812-936e-a0acb51c8d43}; !- Material Name
-
-
-
-
-
-
-OS:Material,
-  {797c89e5-49d2-4929-878d-c01c2d4f65bf}, !- Handle
-  Wall Insulation [37],                   !- Name
-  MediumRough,                            !- Roughness
-  0.0680999999999999,                     !- Thickness {m}
-  0.0432,                                 !- Conductivity {W/m-K}
-  91,                                     !- Density {kg/m3}
-  836.999999999999,                       !- Specific Heat {J/kg-K}
-  0.9,                                    !- Thermal Absorptance
-  0.5,                                    !- Solar Absorptance
-  0.5;                                    !- Visible Absorptance
-
-OS:StandardsInformation:Material,
-  {f6035342-0149-4ea4-a2d6-cb31e0096655}, !- Handle
-  {797c89e5-49d2-4929-878d-c01c2d4f65bf}; !- Material Name
-
-
-
-
-
-
-OS:WindowMaterial:Glazing,
-  {6b986149-4d27-4395-8784-6f01e63a470b}, !- Handle
-  Theoretical Glass [207],                !- Name
-  SpectralAverage,                        !- Optical Data Type
-  ,                                       !- Window Glass Spectral Data Set Name
-  0.00299999999999999,                    !- Thickness {m}
-  0.3311,                                 !- Solar Transmittance at Normal Incidence
-  0.6189,                                 !- Front Side Solar Reflectance at Normal Incidence
-  0,                                      !- Back Side Solar Reflectance at Normal Incidence
-  0.44,                                   !- Visible Transmittance at Normal Incidence
-  0.51,                                   !- Front Side Visible Reflectance at Normal Incidence
-  0,                                      !- Back Side Visible Reflectance at Normal Incidence
-  0,                                      !- Infrared Transmittance at Normal Incidence
-  0.9,                                    !- Front Side Infrared Hemispherical Emissivity
-  0.9,                                    !- Back Side Infrared Hemispherical Emissivity
-  0.0133,                                 !- Conductivity {W/m-K}
-  1,                                      !- Dirt Correction Factor for Solar and Visible Transmittance
-  No;                                     !- Solar Diffusing
-
-OS:StandardsInformation:Material,
-  {4396f391-93ca-4fe4-af94-05cf696c9435}, !- Handle
-  {6b986149-4d27-4395-8784-6f01e63a470b}; !- Material Name
-
-
-
-
-
-
-OS:Material,
-  {4a8d2e13-f63a-4207-9dda-3f2e6e1de10d}, !- Handle
-  Wall Insulation [40],                   !- Name
-  MediumRough,                            !- Roughness
-  0.0793999999999999,                     !- Thickness {m}
-  0.0432,                                 !- Conductivity {W/m-K}
-  91,                                     !- Density {kg/m3}
-  836.999999999999,                       !- Specific Heat {J/kg-K}
-  0.9,                                    !- Thermal Absorptance
-  0.5,                                    !- Solar Absorptance
-  0.5;                                    !- Visible Absorptance
-
-OS:StandardsInformation:Material,
-  {9e8cba4f-4037-42f6-84ee-5779fcec866b}, !- Handle
-  {4a8d2e13-f63a-4207-9dda-3f2e6e1de10d}; !- Material Name
-
-
-
-
-
-
-
-
-
-OS:Material,
-  {ad3c59b6-6b6c-4d1d-a9e7-ef32980023e5}, !- Handle
-  Wall Insulation [42],                   !- Name
-  MediumRough,                            !- Roughness
-  0.0913999999999999,                     !- Thickness {m}
-  0.0432,                                 !- Conductivity {W/m-K}
-  91,                                     !- Density {kg/m3}
-  836.999999999999,                       !- Specific Heat {J/kg-K}
-  0.9,                                    !- Thermal Absorptance
-  0.5,                                    !- Solar Absorptance
-  0.5;                                    !- Visible Absorptance
-
-OS:StandardsInformation:Material,
-  {84c2fb4a-35ab-4a41-aa92-ba7dcdcd5049}, !- Handle
-  {ad3c59b6-6b6c-4d1d-a9e7-ef32980023e5}; !- Material Name
-
-
-
-OS:Material,
-  {974c10e4-1777-4808-8bac-f8c8cacb9690}, !- Handle
-  Metal Roofing,                          !- Name
-  MediumSmooth,                           !- Roughness
-  0.0015,                                 !- Thickness {m}
-  45.006,                                 !- Conductivity {W/m-K}
-  7680,                                   !- Density {kg/m3}
-  418.4,                                  !- Specific Heat {J/kg-K}
-  0.9,                                    !- Thermal Absorptance
-  0.6,                                    !- Solar Absorptance
-  0.6;                                    !- Visible Absorptance
-
-OS:StandardsInformation:Material,
-  {f29c2bf3-299f-4c8c-9b2b-1f3e8b4ebf13}, !- Handle
-  {974c10e4-1777-4808-8bac-f8c8cacb9690}; !- Material Name
-
-OS:Material,
-  {481c1af1-c048-42f6-83eb-e22390f48e53}, !- Handle
-  Roof Insulation [25],                   !- Name
-  MediumRough,                            !- Roughness
-  0.263,                                  !- Thickness {m}
-  0.049,                                  !- Conductivity {W/m-K}
-  265,                                    !- Density {kg/m3}
-  836.800000000001,                       !- Specific Heat {J/kg-K}
-  0.9,                                    !- Thermal Absorptance
-  0.7,                                    !- Solar Absorptance
-  0.7;                                    !- Visible Absorptance
-
-OS:StandardsInformation:Material,
-  {31302a45-351e-47f5-8ba5-cd86bb1e7daf}, !- Handle
-  {481c1af1-c048-42f6-83eb-e22390f48e53}; !- Material Name
-
-
-
-
-
-
-OS:WindowMaterial:Glazing,
-  {8fb7ea74-e85a-45a7-b167-4b76e2fea79e}, !- Handle
-  Theoretical Glass [216],                !- Name
-  SpectralAverage,                        !- Optical Data Type
-  ,                                       !- Window Glass Spectral Data Set Name
-  0.00299999999999999,                    !- Thickness {m}
-  0.3801,                                 !- Solar Transmittance at Normal Incidence
-  0.5699,                                 !- Front Side Solar Reflectance at Normal Incidence
-  0,                                      !- Back Side Solar Reflectance at Normal Incidence
-  0.5079,                                 !- Visible Transmittance at Normal Incidence
-  0.4421,                                 !- Front Side Visible Reflectance at Normal Incidence
-  0,                                      !- Back Side Visible Reflectance at Normal Incidence
-  0,                                      !- Infrared Transmittance at Normal Incidence
-  0.9,                                    !- Front Side Infrared Hemispherical Emissivity
-  0.9,                                    !- Back Side Infrared Hemispherical Emissivity
-  0.0133,                                 !- Conductivity {W/m-K}
-  1,                                      !- Dirt Correction Factor for Solar and Visible Transmittance
-  No;                                     !- Solar Diffusing
-
-OS:StandardsInformation:Material,
-  {c85bff12-19de-453f-b9bf-7ee6e3f75853}, !- Handle
-  {8fb7ea74-e85a-45a7-b167-4b76e2fea79e}; !- Material Name
-
-
-
-
-
-
-OS:Material,
-  {8958248e-c613-47d9-811f-c2093667a433}, !- Handle
-  Wall Insulation [44],                   !- Name
-  MediumRough,                            !- Roughness
-  0.1104,                                 !- Thickness {m}
-  0.0432,                                 !- Conductivity {W/m-K}
-  91,                                     !- Density {kg/m3}
-  836.999999999999,                       !- Specific Heat {J/kg-K}
-  0.9,                                    !- Thermal Absorptance
-  0.5,                                    !- Solar Absorptance
-  0.5;                                    !- Visible Absorptance
-
-OS:StandardsInformation:Material,
-  {3bfd7a00-ab4b-4a57-812d-1fa15e435b1d}, !- Handle
-  {8958248e-c613-47d9-811f-c2093667a433}; !- Material Name
-
-
-
-OS:Material,
-  {0d28c5d8-2c41-4f8f-8c5a-3e5e258dc5b8}, !- Handle
-  Roof Insulation [26],                   !- Name
-  MediumRough,                            !- Roughness
-  0.2941,                                 !- Thickness {m}
-  0.049,                                  !- Conductivity {W/m-K}
-  265,                                    !- Density {kg/m3}
-  836.800000000001,                       !- Specific Heat {J/kg-K}
-  0.9,                                    !- Thermal Absorptance
-  0.7,                                    !- Solar Absorptance
-  0.7;                                    !- Visible Absorptance
-
-OS:StandardsInformation:Material,
-  {a06e9d8d-3928-416b-9c1e-63829bbcdcb1}, !- Handle
-  {0d28c5d8-2c41-4f8f-8c5a-3e5e258dc5b8}; !- Material Name
-
-
-
-
-
-
-OS:WindowMaterial:Glazing,
-  {1ef57f0c-fcc7-4d22-aceb-27f65b882b32}, !- Handle
-  Theoretical Glass [221],                !- Name
-  SpectralAverage,                        !- Optical Data Type
-  ,                                       !- Window Glass Spectral Data Set Name
-  0.00299999999999999,                    !- Thickness {m}
-  0.4296,                                 !- Solar Transmittance at Normal Incidence
-  0.5204,                                 !- Front Side Solar Reflectance at Normal Incidence
-  0,                                      !- Back Side Solar Reflectance at Normal Incidence
-  0.4503,                                 !- Visible Transmittance at Normal Incidence
-  0.4997,                                 !- Front Side Visible Reflectance at Normal Incidence
-  0,                                      !- Back Side Visible Reflectance at Normal Incidence
-  0,                                      !- Infrared Transmittance at Normal Incidence
-  0.9,                                    !- Front Side Infrared Hemispherical Emissivity
-  0.9,                                    !- Back Side Infrared Hemispherical Emissivity
-  0.0089,                                 !- Conductivity {W/m-K}
-  1,                                      !- Dirt Correction Factor for Solar and Visible Transmittance
-  No;                                     !- Solar Diffusing
-
-OS:StandardsInformation:Material,
-  {ac2c1735-2d57-4704-b274-13338f136c51}, !- Handle
-  {1ef57f0c-fcc7-4d22-aceb-27f65b882b32}; !- Material Name
-
-
-
-OS:Construction,
-  {c2015e14-8a99-41b4-a8b9-ca08a758e5b5}, !- Handle
-  Air Wall,                               !- Name
-  ,                                       !- Surface Rendering Name
-  ;                                       !- Layer 1
-
 OS:Material,
   {d81e1b78-e03c-40ae-b706-25daca0bb8f9}, !- Handle
   001 กระจก,                    !- Name
@@ -19563,6 +19203,7 @@ OS:Material,
   0.9,                                    !- Thermal Absorptance
   0.3,                                    !- Solar Absorptance
   0.5;                                    !- Visible Absorptance
+
 OS:StandardsInformation:Material,
   {dfc87299-3e2d-4c08-a9bc-873dfdda417a}, !- Handle
   {d81e1b78-e03c-40ae-b706-25daca0bb8f9}; !- Material Name
@@ -19574,6 +19215,7 @@ OS:Construction,
   {bac984f9-2b67-4925-9b7a-147d74e5b855}, !- Layer 1
   {106704ec-96f4-4d8f-bae8-b15c6031c4fd}, !- Layer 2
   {bac984f9-2b67-4925-9b7a-147d74e5b855}; !- Layer 3
+
 OS:StandardsInformation:Construction,
   {4844fcb3-4118-43b1-a5bd-cf58c4e92873}, !- Handle
   {02810892-a280-4789-93b5-2b2368dc48f7}, !- Construction Name
@@ -19597,6 +19239,7 @@ OS:Construction,
   03 Thai Precast Concrete Wall 10 cm,    !- Name
   ,                                       !- Surface Rendering Name
   {9128b6e7-f71b-4f97-8209-6f95a5104f01}; !- Layer 1
+
 OS:StandardsInformation:Construction,
   {b0d3cf69-9055-41d9-987d-974356e127e4}, !- Handle
   {540b37ff-af76-4209-93f7-1c60e726f414}, !- Construction Name
@@ -19650,6 +19293,7 @@ OS:Construction,
   {9128b6e7-f71b-4f97-8209-6f95a5104f01}, !- Layer 2
   {2a614ed8-fa53-404f-bed4-f1893e6c32d5}, !- Layer 3
   {abc74710-066f-4760-b2d3-e76b2e71133e}; !- Layer 4
+
 OS:StandardsInformation:Construction,
   {fe670833-24b1-4321-95d5-9ed2382be56a}, !- Handle
   {b12b5364-40c0-4750-85b8-5bd3a93ce22b}, !- Construction Name
@@ -19679,6 +19323,7 @@ OS:Material,
   0.9,                                    !- Thermal Absorptance
   0.5,                                    !- Solar Absorptance
   0.7;                                    !- Visible Absorptance
+
 OS:StandardsInformation:Material,
   {5b50cc42-c922-4057-8645-fb1f2b97c430}, !- Handle
   {7094af00-c14d-4cb8-ab38-d2237326176c}; !- Material Name
@@ -19686,6 +19331,7 @@ OS:StandardsInformation:Material,
 OS:StandardsInformation:Material,
   {a6a30599-ec37-4beb-9f72-a0b6eb113eb5}, !- Handle
   {2a614ed8-fa53-404f-bed4-f1893e6c32d5}; !- Material Name
+
 OS:Material,
   {5d29fd10-1f2e-4fc8-bdb0-cccd522e4b09}, !- Handle
   164 แผ่นยิปซั่มบอร์ด หนา 9 มม., !- Name
@@ -19697,9 +19343,11 @@ OS:Material,
   0.9,                                    !- Thermal Absorptance
   0.3,                                    !- Solar Absorptance
   0.5;                                    !- Visible Absorptance
+
 OS:StandardsInformation:Material,
   {11ed6951-644c-428d-b372-41586c38bc91}, !- Handle
   {5d29fd10-1f2e-4fc8-bdb0-cccd522e4b09}; !- Material Name
+
 OS:Construction,
   {b3915616-ea05-49ed-817e-d5825f6f5aeb}, !- Handle
   07 Thai Roof Deck with 3" Glass Wool,   !- Name
@@ -19709,6 +19357,7 @@ OS:Construction,
   {2a614ed8-fa53-404f-bed4-f9093e6c32d5}, !- Layer 3
   {1275b73e-0452-4fb2-a103-6c67db414dc8}, !- Layer 4
   {96fd29bb-a17d-4beb-a9f1-a76718594334}; !- Layer 5
+
 OS:StandardsInformation:Construction,
   {81cadc91-212c-422e-8433-a37af4c324b8}, !- Handle
   {b3915616-ea05-49ed-817e-d5825f6f5aeb}, !- Construction Name
@@ -19733,6 +19382,7 @@ OS:Construction,
   ,                                       !- Surface Rendering Name
   {0ec0855a-b7e9-462a-9cd2-c624177e112f}, !- Layer 1
   {970bf0c8-6a34-4f34-9e0f-60c7998bcf56}; !- Layer 2
+
 OS:StandardsInformation:Construction,
   {ac42f6ee-4d94-48b6-b981-3a762518be14}, !- Handle
   {2f828cfb-85b0-4ec0-8126-68235f66ea31}, !- Construction Name
@@ -19790,14 +19440,17 @@ OS:StandardsInformation:Material,
 OS:StandardsInformation:Material,
   {1494dbc6-f353-4a76-a7ca-4ab55f778628}, !- Handle
   {b93f4ec5-c2ee-4ee1-92c1-9af29ae7c268}; !- Material Name
+
 OS:StandardsInformation:Construction,
   {17b0c5d4-2b79-4808-b5a4-fdedd9035cca}, !- Handle
   {c2015e14-8a99-41b4-a8b9-ca08a758e5b5}; !- Construction Name
+
 OS:Construction,
   {5a091563-e9e2-47cf-b40f-9b34cb4f846c}, !- Handle
   09 Thai Exterior Door,                  !- Name
   ,                                       !- Surface Rendering Name
   {ce1e1b02-56c0-478e-9e05-0a4f8f64553b}; !- Layer 1
+
 OS:StandardsInformation:Construction,
   {a38265ab-1e60-4e80-ac09-48e96a633d53}, !- Handle
   {5a091563-e9e2-47cf-b40f-9b34cb4f846c}, !- Construction Name
@@ -19815,11 +19468,13 @@ OS:StandardsInformation:Construction,
   ,                                       !- Fenestration Divider Type
   ,                                       !- Fenestration Tint
   ;                                       !- Fenestration Gas Fill
+
 OS:Construction,
   {ddf1758a-427b-41c5-b4b3-794a1ab0c407}, !- Handle
   10 Thai Interior Ceiling,               !- Name
   ,                                       !- Surface Rendering Name
   {abc74710-066f-4760-b2d3-e76b2e71133e}; !- Layer 1
+
 OS:StandardsInformation:Construction,
   {1872ac18-5c37-4efa-a2b0-3b471b7604e8}, !- Handle
   {ddf1758a-427b-41c5-b4b3-794a1ab0c407}, !- Construction Name
@@ -19837,12 +19492,14 @@ OS:StandardsInformation:Construction,
   ,                                       !- Fenestration Divider Type
   ,                                       !- Fenestration Tint
   ;                                       !- Fenestration Gas Fill
+
 OS:Construction,
   {01c79824-4cdc-45fe-b494-176e70187f7e}, !- Handle
   11 Thai Interior Door,                  !- Name
   ,                                       !- Surface Rendering Name
   {4e9b9ee5-f517-4df6-8d8f-6c0098435770}, !- Layer 1
   {4e9b9ee5-f517-4df6-8d8f-6c0098435770}; !- Layer 2
+
 OS:StandardsInformation:Construction,
   {c35a5ed4-11ed-4c1c-b823-0e3fa6628b95}, !- Handle
   {01c79824-4cdc-45fe-b494-176e70187f7e}, !- Construction Name
@@ -19860,12 +19517,14 @@ OS:StandardsInformation:Construction,
   ,                                       !- Fenestration Divider Type
   ,                                       !- Fenestration Tint
   ;                                       !- Fenestration Gas Fill
+
 OS:Construction,
   {5241e674-b36c-4e9d-8613-0fa40f590384}, !- Handle
   12 Thai Interior Floor,                 !- Name
   ,                                       !- Surface Rendering Name
   {7bf14561-34bb-4f81-9c35-b2cf21089a8b}, !- Layer 1
   {9128b6e7-f71b-4f97-8209-6f95a5104f01}; !- Layer 2
+
 OS:StandardsInformation:Construction,
   {878d6bdc-60cb-423e-8218-1d443c6fc1e6}, !- Handle
   {5241e674-b36c-4e9d-8613-0fa40f590384}, !- Construction Name
@@ -19883,6 +19542,7 @@ OS:StandardsInformation:Construction,
   ,                                       !- Fenestration Divider Type
   ,                                       !- Fenestration Tint
   ;                                       !- Fenestration Gas Fill
+
 OS:Construction,
   {892966ac-5247-46b1-b3b2-e01e7eccbf07}, !- Handle
   13 Thai Interior Partition,             !- Name
@@ -19890,6 +19550,7 @@ OS:Construction,
   {46ee1a35-986b-432d-9148-9a6339f2f048}, !- Layer 1
   ,                                       !- Layer 2
   {46ee1a35-986b-432d-9148-9a6339f2f048}; !- Layer 3
+
 OS:StandardsInformation:Construction,
   {7be67b28-b23f-4e0d-8759-4f95fa02dc04}, !- Handle
   {892966ac-5247-46b1-b3b2-e01e7eccbf07}, !- Construction Name
@@ -19907,11 +19568,13 @@ OS:StandardsInformation:Construction,
   ,                                       !- Fenestration Divider Type
   ,                                       !- Fenestration Tint
   ;                                       !- Fenestration Gas Fill
+
 OS:Construction,
   {97c93edc-02d7-4758-908a-a5277d4a7b20}, !- Handle
   14 Thai Interior Wall,                  !- Name
   ,                                       !- Surface Rendering Name
   {b758faa0-aa74-494b-a7a2-642e766d00b7}; !- Layer 1
+
 OS:StandardsInformation:Construction,
   {cc74fea5-4a7a-42ea-bce3-be86e41520e5}, !- Handle
   {97c93edc-02d7-4758-908a-a5277d4a7b20}, !- Construction Name
@@ -19929,11 +19592,13 @@ OS:StandardsInformation:Construction,
   ,                                       !- Fenestration Divider Type
   ,                                       !- Fenestration Tint
   ;                                       !- Fenestration Gas Fill
+
 OS:Construction,
   {b8c0e398-4fe8-436f-b0e1-2d71ee74dc0d}, !- Handle
   15 Thai Interior Window,                !- Name
   ,                                       !- Surface Rendering Name
   {dc9a0568-6bc8-4eae-84ae-9134134be597}; !- Layer 1
+
 OS:StandardsInformation:Construction,
   {61c174f9-f654-49ed-a362-8e1048d36a53}, !- Handle
   {b8c0e398-4fe8-436f-b0e1-2d71ee74dc0d}, !- Construction Name
@@ -19951,11 +19616,13 @@ OS:StandardsInformation:Construction,
   ,                                       !- Fenestration Divider Type
   ,                                       !- Fenestration Tint
   ;                                       !- Fenestration Gas Fill
+
 OS:Construction,
   {a2a679e3-66cc-400a-8ec3-906b23a4e871}, !- Handle
   16 Thai Exterior Window - Clear,        !- Name
   ,                                       !- Surface Rendering Name
   {dc9a0568-6bc8-4eae-84ae-9134134be597}; !- Layer 1
+
 OS:StandardsInformation:Construction,
   {39717c88-9ad8-4e7f-a819-18e089618eea}, !- Handle
   {a2a679e3-66cc-400a-8ec3-906b23a4e871}, !- Construction Name
@@ -19973,11 +19640,13 @@ OS:StandardsInformation:Construction,
   ,                                       !- Fenestration Divider Type
   ,                                       !- Fenestration Tint
   ;                                       !- Fenestration Gas Fill
+
 OS:Construction,
   {98b933bc-dc9f-4943-a204-25652537801b}, !- Handle
   17 Thai Exterior Window - Green,        !- Name
   ,                                       !- Surface Rendering Name
   {eb1033de-3fa4-4300-88f2-609aed710dea}; !- Layer 1
+
 OS:StandardsInformation:Construction,
   {dab6398e-9192-4762-a9cf-08b17db76c9d}, !- Handle
   {98b933bc-dc9f-4943-a204-25652537801b}, !- Construction Name
@@ -19995,11 +19664,13 @@ OS:StandardsInformation:Construction,
   ,                                       !- Fenestration Divider Type
   ,                                       !- Fenestration Tint
   ;                                       !- Fenestration Gas Fill
+
 OS:Construction,
   {80392511-5a59-4d56-af68-870c9c894ff7}, !- Handle
   18 Thai Exterior Glass Door 12 mm,      !- Name
   ,                                       !- Surface Rendering Name
   {760785e0-e526-4e39-a74e-23704f67c4ad}; !- Layer 1
+
 OS:StandardsInformation:Construction,
   {58437e83-3bb3-4d25-afa3-e7e305791275}, !- Handle
   {80392511-5a59-4d56-af68-870c9c894ff7}, !- Construction Name
@@ -28075,6 +27746,3 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
-
-
-
