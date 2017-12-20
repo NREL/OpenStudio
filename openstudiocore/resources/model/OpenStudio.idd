@@ -4226,6 +4226,40 @@ OS:Exterior:Lights:Definition,
        \ip-units W
        \minimum 0
 
+Exterior:FuelEquipment,
+       \memo only used for Meter type reporting, does not affect building loads
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ExteriorFuelEquipmentDefinitionNames
+       \reference ExteriorEquipmentDefinitionNames
+  N1 ; \field Design Level
+       \required-field
+       \units W
+       \type real
+       \minimum 0
+       \ip-units W
+
+Exterior:WaterEquipment,
+       \memo only used for Meter type reporting, does not affect building loads
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ExteriorWaterEquipmentDefinitionNames
+       \reference ExteriorEquipmentDefinitionNames
+  N1 ; \field Design Level
+       \required-field
+       \units m3/s
+       \ip-units gal/min
+       \type real
+       \minimum 0
+
 \group OpenStudio Schedules
 
 OS:Schedule:Compact,
@@ -4678,7 +4712,7 @@ OS:ScheduleTypeLimits,
        \key Availability
        \key Percent
        \key Control
-       \key Mode   
+       \key Mode
        \key ControlMode
        \key LinearPowerDensity
 
@@ -6388,6 +6422,76 @@ OS:Exterior:Lights,
        \minimum 0.0
        \default 1.0
   A6; \field End-Use Subcategory
+       \type alpha
+       \retaincase
+       \default General
+
+Exterior:FuelEquipment,
+       \memo only used for Meter type reporting, does not affect building loads
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+  A3, \field Exterior FuelEquipment Definition Name
+       \type object-list
+       \required-field
+       \object-list ExteriorFuelEquipmentDefinitionNames
+  A4 , \field Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+       \note units in schedule should be fraction applied to capacity of the exterior fuel equipment, generally (0.0 - 1.0)
+  A5 , \field Fuel Use Type
+       \required-field
+       \type choice
+       \key Electricity
+       \key NaturalGas
+       \key PropaneGas
+       \key FuelOil#1
+       \key FuelOil#2
+       \key Diesel
+       \key Gasoline
+       \key Coal
+       \key OtherFuel1
+       \key OtherFuel2
+       \key Steam
+       \key DistrictHeating
+       \key DistrictCooling
+  N1, \field Multiplier
+       \type real
+       \minimum 0.0
+       \default 1.0
+  A5 ; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
+
+Exterior:WaterEquipment,
+       \memo only used for Meter type reporting, does not affect building loads
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+  A3, \field Exterior WaterEquipment Definition Name
+       \type object-list
+       \required-field
+       \object-list ExteriorWaterEquipmentDefinitionNames
+  A4 , \field Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+       \note units in Schedule should be fraction applied to capacity of the exterior water equipment, generally (0.0 - 1.0)
+  N1, \field Multiplier
+       \type real
+       \minimum 0.0
+       \default 1.0
+  A5 ; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
        \retaincase
        \default General
