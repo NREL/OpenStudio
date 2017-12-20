@@ -4226,7 +4226,7 @@ OS:Exterior:Lights:Definition,
        \ip-units W
        \minimum 0
 
-Exterior:FuelEquipment,
+Exterior:FuelEquipment:Definition,
        \memo only used for Meter type reporting, does not affect building loads
   A1,  \field Handle
        \type handle
@@ -4243,7 +4243,7 @@ Exterior:FuelEquipment,
        \minimum 0
        \ip-units W
 
-Exterior:WaterEquipment,
+Exterior:WaterEquipment:Definition,
        \memo only used for Meter type reporting, does not affect building loads
   A1,  \field Handle
        \type handle
