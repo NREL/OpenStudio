@@ -924,6 +924,15 @@ RunView::RunView()
 
   m_runProcess = new QProcess(this);
   connect(m_runProcess, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &RunView::onRunProcessFinished);
+  
+  //connect(m_runProcess, SIGNAL(readyRead()), this, SLOT(readyReadStandardError()));
+  //connect(m_runProcess, SIGNAL(readyRead()), this, SLOT(readyReadStandardOutput()));
+
+  connect(m_runProcess, SIGNAL(readyReadStandardError()), this, SLOT(readyReadStandardError()));
+  connect(m_runProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(readyReadStandardOutput()));
+
+  //connect(m_runProcess, static_cast<void(QProcess::*)()>(&QProcess::readyReadStandardError), this, &RunView::readyReadStandardError);
+  //connect(m_runProcess, static_cast<void(QProcess::*)()>(&QProcess::readyReadStandardOutput), this, &RunView::readyReadStandardOutput);
 
   QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 
@@ -1059,14 +1068,17 @@ void RunView::ValidateLog()
 
 void RunView::doFinish()
 {
-    LOG(Debug, "run finished");
+    logNormalText("run finished");
 	ValidateLog();
     m_playButton->setChecked(false);
     m_state = State::stopped;
     m_progressBar->setValue(State::complete);
 
     std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
+	QDateTime now = QDateTime::currentDateTime();
+	logNormalText(QString("Finish save project ")+now.toString());
     osdocument->save();
+	logNormalText(QString("Finish save project success ")+now.toString());
     osdocument->enableTabsAfterRun();
     m_openSimDirButton->setEnabled(true);
 
@@ -1076,20 +1088,36 @@ void RunView::doFinish()
     m_runSocket = nullptr;
 }
 
+void RunView::readyReadStandardError()
+{
+	QProcess *p = (QProcess *)sender();
+	QByteArray buf = p->readAllStandardOutput();
+	logErrorText(buf);
+}
+
+void RunView::readyReadStandardOutput()
+{
+	QProcess *p = (QProcess *)sender();
+	QByteArray buf = p->readAllStandardOutput();
+	logNormalText(buf);
+}
+
 void RunView::onRunProcessFinished(int exitCode, QProcess::ExitStatus status)
 {
-  if(runmode == RUN_ENERGY_BEC)
-  {
-    runmode = RUN_BEC;
-    playButtonClicked00(true, runmode, false);
-  }
-  else if(runmode == RUN_BEC){
-    becFinished();
-    doFinish();
-  }
-  else{
-      doFinish();
-  }
+	QDateTime now = QDateTime::currentDateTime();
+	logNormalText("Run process finish." + now.toString());
+	if(runmode == RUN_ENERGY_BEC)
+	{
+		runmode = RUN_BEC;
+		playButtonClicked00(true, runmode, false);
+	}
+	else if(runmode == RUN_BEC){
+		becFinished();
+		doFinish();
+	}
+	else{
+		doFinish();
+	}
 }
 
 openstudio::path RunView::resourcePath(const openstudio::path & osmPath) const
@@ -1102,6 +1130,9 @@ openstudio::path RunView::resourcePath(const openstudio::path & osmPath) const
 
 void RunView::playButtonClicked00(bool t_checked, RunView::RUNMODE runmode, bool clearLog)
 {
+	QDateTime now = QDateTime::currentDateTime();
+	logNormalText(QString("START ")+now.toString());
+
     std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
 
     if (t_checked) {
@@ -1158,15 +1189,14 @@ void RunView::playButtonClicked00(bool t_checked, RunView::RUNMODE runmode, bool
           QStringList arguments;
           arguments << "run" << "-s" << QString::number(m_runTcpServer->serverPort()) << "-w" << workflowJSONPath;
 
-          LOG(Debug, "run exe" << openstudioExePath.toStdString());
-          LOG(Debug, "run arguments" << arguments.join(";").toStdString());
+		  logNormalText(QString("run exe") + openstudioExePath);
+		  logNormalText(QString("run arguments") + arguments.join(";"));
           m_runProcess->start(openstudioExePath, arguments);
       }
       else
       {
           //TODO:RUN bec here.
 
-          LOG(Debug, "RUN BEC");
           logH1Text("RUN BEC");
 
           m_tempFolder = toPath(osdocument->modelTempDir());
@@ -1191,6 +1221,7 @@ void RunView::playButtonClicked00(bool t_checked, RunView::RUNMODE runmode, bool
               wwr_totoal = 0.0f;
               if (file.open(QIODevice::ReadOnly | QIODevice::Text))
               {
+				  logNormalText(QString("START READ eblustbl.htm FOR SUNLIT FRACTION.")+now.toString());
                   logH2Text(QString("Start read eblustbl.htm<"));
                   QTextStream in(&file);
                   QString str = in.readAll();
@@ -1252,6 +1283,7 @@ void RunView::playButtonClicked00(bool t_checked, RunView::RUNMODE runmode, bool
                           }
                       }
                   }
+				  logNormalText(QString("END READ eblustbl.htm FOR SUNLIT FRACTION.")+now.toString());
               }else{
                   //logErrorText(QString("<font color=\"red\">ERROR:Can't read eblustbl.htm</font>"));
 				  //logErrorText(QString("ERROR:Can't read %1").arg(eplustbl_path));
@@ -1262,7 +1294,9 @@ void RunView::playButtonClicked00(bool t_checked, RunView::RUNMODE runmode, bool
 
               becoutputPath = outpath+"output.xml";
 
+			  logNormalText(QString("START READ DO BEC INPUT.")+now.toString());
               bool success = doBecInput(outpath+"input.xml", osdocument->model(), filePath, err);
+			  logNormalText(QString("END READ DO BEC INPUT.")+now.toString());
 
               if(!err.isEmpty())
                   logErrorText(err);
@@ -1271,7 +1305,9 @@ void RunView::playButtonClicked00(bool t_checked, RunView::RUNMODE runmode, bool
                   osdocument->enableTabsAfterRun();
                   onRunProcessFinished(1, QProcess::NormalExit);
 
+				  logNormalText(QString("START UPDATE PV IN FILE.")+now.toString());
                   updatePVInfile();
+				  logNormalText(QString("END UPDATE PV IN FILE.")+now.toString());
                   //m_canceling = false;
                   logErrorText(QString("Can't generate bec input files"));
                   return;
@@ -1279,6 +1315,7 @@ void RunView::playButtonClicked00(bool t_checked, RunView::RUNMODE runmode, bool
               else
               {
                   logNormalText("Call newBEC.exe.");
+				  logNormalText(QString("START CALL newBec.exe ") + now.toString());
                   callRealBEC(outpath);
               }
           }
@@ -1286,7 +1323,7 @@ void RunView::playButtonClicked00(bool t_checked, RunView::RUNMODE runmode, bool
 
     } else {
       // stop running
-      LOG(Debug, "Kill Simulation");
+	  logNormalText("Kill Simulation");
       m_runProcess->kill();
     }
 }

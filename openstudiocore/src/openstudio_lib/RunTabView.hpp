@@ -72,7 +72,8 @@ namespace openstudio {
     enum RUNMODE { RUN_NONE=0, RUN_ENERGY, RUN_BEC, RUN_ENERGY_BEC};
     void playButtonClicked(bool t_checked);
     void onRunProcessFinished(int exitCode, QProcess::ExitStatus status);
-
+	void readyReadStandardError();
+	void readyReadStandardOutput();
     //void onSimDirChanged(const QString &path);
 
     //void onFileChanged(const QString &path);
