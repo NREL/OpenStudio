@@ -6459,11 +6459,11 @@ Exterior:FuelEquipment,
        \key Steam
        \key DistrictHeating
        \key DistrictCooling
-  N1, \field Multiplier
+  N1,  \field Multiplier
        \type real
        \minimum 0.0
        \default 1.0
-  A5 ; \field End-Use Subcategory
+  A6 ; \field End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
        \retaincase
