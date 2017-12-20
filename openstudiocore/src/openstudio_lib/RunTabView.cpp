@@ -1028,7 +1028,7 @@ QStringList RunView::TranslateLogError(QString filePath, QStringList logsls)
 
 	for (int i = 0; i<logsls.count(); i++){
 		QString line = logsls.at(i);
-        logNormalText(line);
+        //logNormalText(line);
 		for (int r = 0; r<names.count(); r++){
 			QString regstr = regexs.at(r);
 			QRegExp rx(regstr);
