@@ -30,6 +30,7 @@
 #include "ThreeJS.hpp"
 #include "Vector3d.hpp"
 #include "Geometry.hpp"
+#include "Plane.hpp"
 #include "Intersection.hpp"
 
 #include "../core/Assert.hpp"
@@ -660,48 +661,52 @@ namespace openstudio{
                 if (checkKeyAndType(*windowDefinition, "overhang_projection_factor", Json::realValue) || checkKeyAndType(*windowDefinition, "overhang_projection_factor", Json::intValue)){
                   double projectionFactor = windowDefinition->get("overhang_projection_factor", 0.0).asDouble();
                   
-                  Vector3d outVector = crossVector;
-                  outVector.setLength(projectionFactor*height);
+                  if (projectionFactor > 0){
+                    Vector3d outVector = crossVector;
+                    outVector.setLength(projectionFactor*height);
 
-                  Point3d window3 = window1 + outVector;
-                  Point3d window4 = window2 + outVector;
+                    Point3d window3 = window1 + outVector;
+                    Point3d window4 = window2 + outVector;
 
-                  Point3dVector shadeVertices;
-                  shadeVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight + height));
-                  shadeVertices.push_back(Point3d(window3.x(), window3.y(), sillHeight + height));
-                  shadeVertices.push_back(Point3d(window4.x(), window4.y(), sillHeight + height));
-                  shadeVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight + height));
+                    Point3dVector shadeVertices;
+                    shadeVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight + height));
+                    shadeVertices.push_back(Point3d(window3.x(), window3.y(), sillHeight + height));
+                    shadeVertices.push_back(Point3d(window4.x(), window4.y(), sillHeight + height));
+                    shadeVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight + height));
 
-                  allFinalShadeVertices.push_back(shadeVertices);
-                  allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
+                    allFinalShadeVertices.push_back(shadeVertices);
+                    allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
+                  }
                 }
 
                 if (checkKeyAndType(*windowDefinition, "fin_projection_factor", Json::realValue) || checkKeyAndType(*windowDefinition, "fin_projection_factor", Json::intValue)){
                   double projectionFactor  = windowDefinition->get("fin_projection_factor", 0.0).asDouble();
                   
-                  Vector3d outVector = crossVector;
-                  outVector.setLength(projectionFactor*height);
+                  if (projectionFactor > 0){
+                    Vector3d outVector = crossVector;
+                    outVector.setLength(projectionFactor*height);
 
-                  Point3d window3 = window1 + outVector;
-                  Point3d window4 = window2 + outVector;
+                    Point3d window3 = window1 + outVector;
+                    Point3d window4 = window2 + outVector;
 
-                  Point3dVector shadeVertices;
-                  shadeVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight + height));
-                  shadeVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight));
-                  shadeVertices.push_back(Point3d(window3.x(), window3.y(), sillHeight));
-                  shadeVertices.push_back(Point3d(window3.x(), window3.y(), sillHeight + height));
+                    Point3dVector shadeVertices;
+                    shadeVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight + height));
+                    shadeVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight));
+                    shadeVertices.push_back(Point3d(window3.x(), window3.y(), sillHeight));
+                    shadeVertices.push_back(Point3d(window3.x(), window3.y(), sillHeight + height));
 
-                  allFinalShadeVertices.push_back(shadeVertices);
-                  allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
+                    allFinalShadeVertices.push_back(shadeVertices);
+                    allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
 
-                  shadeVertices.clear();
-                  shadeVertices.push_back(Point3d(window4.x(), window4.y(), sillHeight + height));
-                  shadeVertices.push_back(Point3d(window4.x(), window4.y(), sillHeight));
-                  shadeVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight));
-                  shadeVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight + height));
+                    shadeVertices.clear();
+                    shadeVertices.push_back(Point3d(window4.x(), window4.y(), sillHeight + height));
+                    shadeVertices.push_back(Point3d(window4.x(), window4.y(), sillHeight));
+                    shadeVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight));
+                    shadeVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight + height));
 
-                  allFinalShadeVertices.push_back(shadeVertices);
-                  allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
+                    allFinalShadeVertices.push_back(shadeVertices);
+                    allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
+                  }
                 }
 
               } else if (istringEqual("Window to Wall Ratio", windowDefinitionType)){
