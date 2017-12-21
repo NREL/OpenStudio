@@ -40,7 +40,7 @@ namespace model {
 namespace detail {
 
   ExteriorFuelEquipmentDefinition_Impl::ExteriorFuelEquipmentDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : ResourceObject_Impl(idfObject,model,keepHandle)
+    : ExteriorLoadDefinition_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == ExteriorFuelEquipmentDefinition::iddObjectType());
   }
@@ -48,7 +48,7 @@ namespace detail {
   ExteriorFuelEquipmentDefinition_Impl::ExteriorFuelEquipmentDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                Model_Impl* model,
                                                                bool keepHandle)
-    : ResourceObject_Impl(other,model,keepHandle)
+    : ExteriorLoadDefinition_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == ExteriorFuelEquipmentDefinition::iddObjectType());
   }
@@ -56,7 +56,7 @@ namespace detail {
   ExteriorFuelEquipmentDefinition_Impl::ExteriorFuelEquipmentDefinition_Impl(const ExteriorFuelEquipmentDefinition_Impl& other,
                                                                Model_Impl* model,
                                                                bool keepHandle)
-    : ResourceObject_Impl(other,model,keepHandle)
+    : ExteriorLoadDefinition_Impl(other,model,keepHandle)
   {}
 
   // TODO: remove
@@ -86,7 +86,7 @@ namespace detail {
 } // detail
 
 ExteriorFuelEquipmentDefinition::ExteriorFuelEquipmentDefinition(const Model& model)
-  : ResourceObject(ExteriorFuelEquipmentDefinition::iddObjectType(),model)
+  : ExteriorLoadDefinition(ExteriorFuelEquipmentDefinition::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ExteriorFuelEquipmentDefinition_Impl>());
 
@@ -109,7 +109,7 @@ bool ExteriorFuelEquipmentDefinition::setDesignLevel(double designLevel) {
 
 /// @cond
 ExteriorFuelEquipmentDefinition::ExteriorFuelEquipmentDefinition(std::shared_ptr<detail::ExteriorFuelEquipmentDefinition_Impl> impl)
-  : ResourceObject(std::move(impl))
+  : ExteriorLoadDefinition(std::move(impl))
 {}
 /// @endcond
 
