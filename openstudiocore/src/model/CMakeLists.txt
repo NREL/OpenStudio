@@ -557,6 +557,18 @@ set(${target_name}_src
   ExteriorLightsDefinition.hpp
   ExteriorLightsDefinition_Impl.hpp
   ExteriorLightsDefinition.cpp
+  ExteriorFuelEquipment.hpp
+  ExteriorFuelEquipment_Impl.hpp
+  ExteriorFuelEquipment.cpp
+  ExteriorFuelEquipmentDefinition.hpp
+  ExteriorFuelEquipmentDefinition_Impl.hpp
+  ExteriorFuelEquipmentDefinition.cpp
+  ExteriorWaterEquipment.hpp
+  ExteriorWaterEquipment_Impl.hpp
+  ExteriorWaterEquipment.cpp
+  ExteriorWaterEquipmentDefinition.hpp
+  ExteriorWaterEquipmentDefinition_Impl.hpp
+  ExteriorWaterEquipmentDefinition.cpp
   ExternalInterface.cpp
   ExternalInterface.hpp
   ExternalInterface_Impl.hpp
