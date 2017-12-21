@@ -30,7 +30,7 @@
 #define MODEL_EXTERIORFUELEQUIPMENT_HPP
 
 #include "ModelAPI.hpp"
-#include "ModelObject.hpp"
+#include "ExteriorLoadInstance.hpp"
 
 namespace openstudio {
 namespace model {
@@ -45,10 +45,10 @@ namespace detail {
 
 } // detail
 
-/** ExteriorFuelEquipment is a ModelObject that wraps the OpenStudio IDD object
+/** ExteriorFuelEquipment is a ExteriorLoadInstance that wraps the OpenStudio IDD object
  *  'OS:Exterior:FuelEquipment'. ExteriorFuelEquipment is a child of Facility and instances
  *  ExteriorFuelEquipmentDefinition. */
-class MODEL_API ExteriorFuelEquipment : public ModelObject {
+class MODEL_API ExteriorFuelEquipment : public ExteriorLoadInstance {
  public:
   /** @name Constructors and Destructors */
   //@{
