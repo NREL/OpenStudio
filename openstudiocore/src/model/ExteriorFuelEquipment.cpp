@@ -109,8 +109,8 @@ namespace detail {
     return value.get();
   }
 
-  Schedule AvailabilityManagerScheduled_Impl::schedule() const {
-    boost::optional<Schedule> value = optionalSchedule();
+  Schedule ExteriorFuelEquipment_Impl::schedule() const {
+    boost::optional<Schedule> value = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Exterior_FuelEquipmentFields::ScheduleName);
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Schedule attached.");
     }
@@ -203,10 +203,9 @@ namespace detail {
 
   boost::optional<ModelObject> ExteriorFuelEquipment_Impl::scheduleAsModelObject() const {
     OptionalModelObject result;
-    if( auto t_schedule = schedule() ) {
-      result = t_schedule->cast<ModelObject>();
-    }
-    return result;
+    Schedule schedule = this->schedule();
+    result = schedule.cast<ModelObject>();
+   return result;
   }
 
   boost::optional<ModelObject> ExteriorFuelEquipment_Impl::facilityAsModelObject() const {
