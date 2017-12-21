@@ -98,9 +98,9 @@ boost::optional<model::ModelObject> ReverseTranslator::translateExteriorWaterEqu
 
   // Fuel Use Type is always water, so it doesn't exist in OpenStudio
   if ((s = workspaceObject.getString(Exterior_WaterEquipmentFields::FuelUseType,false,true))) {
-    if !(openstudio::istringequal("Water",  *s) {
+    if (!openstudio::istringEqual("Water",  *s)) {
       LOG(Error, "The Fuel Use Type is not 'Water' for " << workspaceObject.briefDescription() <<
-                " but " << *s << " which is highly unexpected for a water equipment. OpenStudio will use 'Water' instead.")
+                " but " << *s << " which is highly unexpected for a water equipment. OpenStudio will use 'Water' instead.");
     }
   }
 

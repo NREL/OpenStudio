@@ -43,31 +43,50 @@
 #include "../../model/ScheduleConstant.hpp"
 #include "../../model/ScheduleConstant_Impl.hpp"
 
-#include <utilities/idd/Zone_FieldEnums.hxx>
-
-#include <resources.hxx>
-
-#include <sstream>
+#include <utilities/idd/Exterior_Lights_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ExteriorLights)
+TEST_F(EnergyPlusFixture,ForwardTranslator_ExteriorLights)
 {
   Model model;
 
   ExteriorLightsDefinition exteriorLightsDefinition(model);
-  exteriorLightsDefinition.setDesignLevel(2303.0);
+  exteriorLightsDefinition.setDesignLevel(2303.3);
 
   ScheduleConstant schedule(model);
   schedule.setValue(1.0);
 
   ExteriorLights exteriorLights(exteriorLightsDefinition,schedule);
   exteriorLights.setControlOption("AstronomicalClock");
+  exteriorLights.setName("My ExteriorLights");
+  exteriorLights.setEndUseSubcategory("Exterior Lighting");
+
 
   ForwardTranslator trans;
   Workspace workspace = trans.translateModel(model);
+
+  WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::Exterior_Lights));
+  EXPECT_EQ(1u, idfObjs.size());
+  WorkspaceObject idf_extEq(idfObjs[0]);
+
+  // Name
+  EXPECT_EQ("My ExteriorLights", idf_extEq.getString(Exterior_LightsFields::Name).get());
+
+  // ControlOption
+  EXPECT_EQ("AstronomicalClock", idf_extEq.getString(Exterior_LightsFields::ControlOption).get());
+
+  // Schedule Name
+  ASSERT_EQ(schedule.name(), idf_extEq.getString(Exterior_LightsFields::ScheduleName).get());
+
+  // Design Level
+  EXPECT_DOUBLE_EQ(2303.3, idf_extEq.getDouble(Exterior_LightsFields::DesignLevel).get());
+
+  // End Use Subcategory
+  EXPECT_EQ("Exterior Lighting", idf_extEq.getString(Exterior_LightsFields::EndUseSubcategory).get());
 
 }
 

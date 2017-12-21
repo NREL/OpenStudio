@@ -55,14 +55,14 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ExteriorFuelEquipment)
   Model m;
 
   ExteriorFuelEquipmentDefinition exteriorFuelEquipmentDefinition(m);
-  exteriorFuelEquipmentDefinition.setDesignLevel(2303.0);
+  exteriorFuelEquipmentDefinition.setDesignLevel(2303.3);
 
   ScheduleConstant sch(m);
   sch.setValue(1.0);
 
-  ExteriorFuelEquipment exteriorFuelEquipment(exteriorFuelEquipmentDefinition,schedule);
+  ExteriorFuelEquipment exteriorFuelEquipment(exteriorFuelEquipmentDefinition, sch);
   exteriorFuelEquipment.setName("My ExteriorFuelEquipment");
-  exteriorFuelEquipment.setFuelType("NaturalGas");
+  exteriorFuelEquipment.setFuelType("Electricity");
   exteriorFuelEquipment.setEndUseSubcategory("Water Pump");
 
 
@@ -83,7 +83,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ExteriorFuelEquipment)
   ASSERT_EQ(sch.name(), idf_extEq.getString(Exterior_FuelEquipmentFields::ScheduleName).get());
 
   // Design Level
-  EXPECT_DOUBLE_EQ(2303,0, idf_extEq.getDouble(Exterior_FuelEquipmentFields::DesignLevel).get());
+  EXPECT_DOUBLE_EQ(2303.3, idf_extEq.getDouble(Exterior_FuelEquipmentFields::DesignLevel).get());
 
   // End Use Subcategory
   EXPECT_EQ("Water Pump", idf_extEq.getString(Exterior_FuelEquipmentFields::EndUseSubcategory).get());
@@ -100,18 +100,18 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_ExteriorFuelEquipment)
   idf_extEq.setName("My ExteriorFuelEquipment");
 
   // Fuel Use Type
-  EXPECT_TRUE(idf_extEq.setString("NaturalGas", Exterior_FuelEquipmentFields::FuelUseType));
+  EXPECT_TRUE(idf_extEq.setString(Exterior_FuelEquipmentFields::FuelUseType, "NaturalGas"));
 
   // Schedule Name
   IdfObject idf_sch(IddObjectType::Schedule_Constant);
   idf_sch.setName("My Schedule");
-  EXPECT_TRUE(idf_extEq.setString(idf_sch.name().get(), Exterior_FuelEquipmentFields::ScheduleName));
+  EXPECT_TRUE(idf_extEq.setString(Exterior_FuelEquipmentFields::ScheduleName, idf_sch.name().get()));
 
   // Design Level
-  EXPECT_TRUE(idf_extEq.setDouble(2303.3, Exterior_FuelEquipmentFields::DesignLevel));
+  EXPECT_TRUE(idf_extEq.setDouble(Exterior_FuelEquipmentFields::DesignLevel, 2303.3));
 
   // End Use Subcategory
-  EXPECT_TRUE(idf_extEq.setString("My EndUseSubcategory", Exterior_FuelEquipmentFields::EndUseSubcategory));
+  EXPECT_TRUE(idf_extEq.setString(Exterior_FuelEquipmentFields::EndUseSubcategory, "My EndUseSubcategory"));
 
   IdfObjectVector objects;
   objects.push_back(idf_extEq);
@@ -133,7 +133,7 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_ExteriorFuelEquipment)
   EXPECT_EQ("My Schedule", extEq.schedule().name().get());
 
   ExteriorFuelEquipmentDefinition extEqDef = extEq.exteriorFuelEquipmentDefinition();
-  EXPECT_DOUBLE_EQ(2303, extEqDef.designLevel());
+  EXPECT_DOUBLE_EQ(2303.3, extEqDef.designLevel());
 
   EXPECT_EQ("My EndUseSubcategory", extEq.endUseSubcategory());
 
