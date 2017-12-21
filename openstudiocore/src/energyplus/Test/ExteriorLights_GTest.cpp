@@ -90,3 +90,55 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ExteriorLights)
 
 }
 
+
+TEST_F(EnergyPlusFixture,ReverseTranslator_ExteriorLights)
+{
+  StrictnessLevel level(StrictnessLevel::Draft);
+  IddFileType iddFileType(IddFileType::EnergyPlus);
+  Workspace workspace(level, iddFileType);
+
+  IdfObject idf_extEq(IddObjectType::Exterior_Lights);
+  idf_extEq.setName("My ExteriorLights");
+
+  // Control Option
+  EXPECT_TRUE(idf_extEq.setString(Exterior_LightsFields::ControlOption, "AstronomicalClock"));
+
+  // Schedule Name
+  IdfObject idf_sch(IddObjectType::Schedule_Constant);
+  idf_sch.setName("My Schedule");
+  EXPECT_TRUE(idf_extEq.setString(Exterior_LightsFields::ScheduleName, idf_sch.name().get()));
+
+  // Design Level
+  EXPECT_TRUE(idf_extEq.setDouble(Exterior_LightsFields::DesignLevel, 2303.3));
+
+  // End Use Subcategory
+  EXPECT_TRUE(idf_extEq.setString(Exterior_LightsFields::EndUseSubcategory, "My EndUseSubcategory"));
+
+  IdfObjectVector objects;
+  objects.push_back(idf_extEq);
+  objects.push_back(idf_sch);
+  EXPECT_EQ(2u,workspace.addObjects(objects).size());
+
+  ReverseTranslator rt;
+  Model m = rt.translateWorkspace(workspace);
+
+  ASSERT_EQ(1u, m.getModelObjects<ScheduleConstant>().size());
+  ASSERT_EQ(1u, m.getModelObjects<ExteriorLightsDefinition>().size());
+  ASSERT_EQ(1u, m.getModelObjects<ExteriorLights>().size());
+  ExteriorLights extEq = m.getModelObjects<ExteriorLights>()[0];
+
+  EXPECT_EQ("My ExteriorLights", extEq.name().get());
+
+  EXPECT_EQ("AstronomicalClock", extEq.controlOption());
+
+  ASSERT_TRUE(extEq.schedule());
+  EXPECT_EQ("My Schedule", extEq.schedule().get().name().get());
+
+  ExteriorLightsDefinition extEqDef = extEq.exteriorLightsDefinition();
+  EXPECT_DOUBLE_EQ(2303.3, extEqDef.designLevel());
+
+  EXPECT_EQ("My EndUseSubcategory", extEq.endUseSubcategory());
+
+}
+
+
