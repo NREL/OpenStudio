@@ -53,7 +53,7 @@ class MODEL_API ExteriorFuelEquipment : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  /** This constructor sets schedule to always on, defaults to Fuel Type = NaturalGas */
+  /** This constructor sets schedule to always on, defaults to Fuel Type = Electricity */
   ExteriorFuelEquipment(const ExteriorFuelEquipmentDefinition& definition);
 
   /** This constructor requires a user-specified schedule. */

@@ -249,7 +249,7 @@ ExteriorFuelEquipment::ExteriorFuelEquipment(const ExteriorFuelEquipmentDefiniti
   ok = setSchedule(defaultSchedule);
   OS_ASSERT(ok);
 
-  setFuelType("NaturalGas");
+  setFuelType("Electricity");
 
   /*
    *ok = this->setMultiplier(1.0);
