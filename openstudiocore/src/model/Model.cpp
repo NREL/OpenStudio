@@ -372,6 +372,10 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(EvaporativeFluidCoolerTwoSpeed);
     REGISTER_CONSTRUCTOR(ExteriorLights);
     REGISTER_CONSTRUCTOR(ExteriorLightsDefinition);
+    REGISTER_CONSTRUCTOR(ExteriorFuelEquipment);
+    REGISTER_CONSTRUCTOR(ExteriorFuelEquipmentDefinition);
+    REGISTER_CONSTRUCTOR(ExteriorWaterEquipment);
+    REGISTER_CONSTRUCTOR(ExteriorWaterEquipmentDefinition);
     REGISTER_CONSTRUCTOR(ExternalInterface);
     REGISTER_CONSTRUCTOR(ExternalInterfaceActuator);
     REGISTER_CONSTRUCTOR(ExternalInterfaceFunctionalMockupUnitExportFromVariable);
@@ -837,6 +841,10 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(EvaporativeFluidCoolerTwoSpeed);
     REGISTER_COPYCONSTRUCTORS(ExteriorLights);
     REGISTER_COPYCONSTRUCTORS(ExteriorLightsDefinition);
+    REGISTER_COPYCONSTRUCTORS(ExteriorFuelEquipment);
+    REGISTER_COPYCONSTRUCTORS(ExteriorFuelEquipmentDefinition);
+    REGISTER_COPYCONSTRUCTORS(ExteriorWaterEquipment);
+    REGISTER_COPYCONSTRUCTORS(ExteriorWaterEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(ExternalInterface);
     REGISTER_COPYCONSTRUCTORS(ExternalInterfaceActuator);
     REGISTER_COPYCONSTRUCTORS(ExternalInterfaceFunctionalMockupUnitExportFromVariable);
@@ -1888,21 +1896,21 @@ if (_className::iddObjectType() == typeToCreate) { \
         modelObj->autosize();
       } else if (auto modelObj = optModelObj.optionalCast<Loop>()) { // Loop
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<SizingZone>()) { // SizingZone 
+      } else if (auto modelObj = optModelObj.optionalCast<SizingZone>()) { // SizingZone
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<SizingSystem>()) { // SizingSystem 
+      } else if (auto modelObj = optModelObj.optionalCast<SizingSystem>()) { // SizingSystem
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<ControllerOutdoorAir>()) { // ControllerOutdoorAir 
+      } else if (auto modelObj = optModelObj.optionalCast<ControllerOutdoorAir>()) { // ControllerOutdoorAir
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR 
+      } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXMultiSpeedStageData>()) { // CoilCoolingDXMultiSpeedStageData 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXMultiSpeedStageData>()) { // CoilCoolingDXMultiSpeedStageData
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilPerformanceDXCooling>()) { // CoilPerformanceDXCooling 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilPerformanceDXCooling>()) { // CoilPerformanceDXCooling
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) { // CoilHeatingDXMultiSpeedStageData 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) { // CoilHeatingDXMultiSpeedStageData
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) { // CoilHeatingGasMultiStageStageData 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) { // CoilHeatingGasMultiStageStageData
         modelObj->autosize();
       }
     }
@@ -1915,21 +1923,21 @@ if (_className::iddObjectType() == typeToCreate) { \
         modelObj->applySizingValues();
       } else if (auto modelObj = optModelObj.optionalCast<Loop>()) { // Loop
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<SizingZone>()) { // SizingZone 
+      } else if (auto modelObj = optModelObj.optionalCast<SizingZone>()) { // SizingZone
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<SizingSystem>()) { // SizingSystem 
+      } else if (auto modelObj = optModelObj.optionalCast<SizingSystem>()) { // SizingSystem
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<ControllerOutdoorAir>()) { // ControllerOutdoorAir 
+      } else if (auto modelObj = optModelObj.optionalCast<ControllerOutdoorAir>()) { // ControllerOutdoorAir
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR 
+      } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXMultiSpeedStageData>()) { // CoilCoolingDXMultiSpeedStageData 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXMultiSpeedStageData>()) { // CoilCoolingDXMultiSpeedStageData
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilPerformanceDXCooling>()) { // CoilPerformanceDXCooling 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilPerformanceDXCooling>()) { // CoilPerformanceDXCooling
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) { // CoilHeatingDXMultiSpeedStageData 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) { // CoilHeatingDXMultiSpeedStageData
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) { // CoilHeatingGasMultiStageStageData 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) { // CoilHeatingGasMultiStageStageData
         modelObj->applySizingValues();
       }
     }
