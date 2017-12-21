@@ -31,6 +31,7 @@
 #include "../../model/Model.hpp"
 #include "../../model/ExteriorFuelEquipment.hpp"
 #include "../../model/ExteriorFuelEquipmentDefinition.hpp"
+
 #include "../../model/Schedule.hpp"
 
 #include <utilities/idd/Exterior_FuelEquipment_FieldEnums.hxx>
@@ -48,8 +49,8 @@ boost::optional<IdfObject> ForwardTranslator::translateExteriorFuelEquipment(
   m_idfObjects.push_back(idfObject);
   idfObject.setString(Exterior_FuelEquipmentFields::Name, modelObject.name().get());
 
-  Schedule schedule = modelObject.schedule();
-  OptionalIdfObject relatedIdfObject = translateAndMapModelObject(schedule);
+  auto sch = modelObject.schedule();
+  OptionalIdfObject relatedIdfObject = translateAndMapModelObject(sch);
   OS_ASSERT(relatedIdfObject);
   idfObject.setString(Exterior_FuelEquipmentFields::ScheduleName,relatedIdfObject->name().get());
 

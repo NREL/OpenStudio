@@ -32,6 +32,7 @@
 #include "../../model/ExteriorWaterEquipment.hpp"
 #include "../../model/ExteriorWaterEquipmentDefinition.hpp"
 #include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
 
 #include <utilities/idd/Exterior_WaterEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -48,8 +49,8 @@ boost::optional<IdfObject> ForwardTranslator::translateExteriorWaterEquipment(
   m_idfObjects.push_back(idfObject);
   idfObject.setString(Exterior_WaterEquipmentFields::Name, modelObject.name().get());
 
-  Schedule schedule = modelObject.schedule();
-  OptionalIdfObject relatedIdfObject = translateAndMapModelObject(schedule);
+  auto sch = modelObject.schedule();
+  OptionalIdfObject relatedIdfObject = translateAndMapModelObject(sch);
   OS_ASSERT(relatedIdfObject);
   idfObject.setString(Exterior_WaterEquipmentFields::ScheduleName,relatedIdfObject->name().get());
 
