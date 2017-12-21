@@ -255,6 +255,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"EvaporativeFluidCoolerSingleSpeed","Blowdown Makeup Water Usage","blowdownMakeupWaterUsageSchedule",true,"VolumetricFlowRate",0.0,OptionalDouble()},
     {"EvaporativeFluidCoolerTwoSpeed","Blowdown Makeup Water Usage","blowdownMakeupWaterUsageSchedule",true,"VolumetricFlowRate",0.0,OptionalDouble()},
     {"ExteriorLights","Exterior Lights","schedule",true,"",0.0,1.0},
+    {"ExteriorFuelEquipment","Exterior FuelEquipment","schedule",true,"",0.0,1.0},
+    {"ExteriorWaterEquipment","Exterior WaterEquipment","schedule",true,"",0.0,1.0},
     {"FanConstantVolume","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"FanOnOff","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"FanVariableVolume","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
