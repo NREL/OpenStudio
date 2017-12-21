@@ -103,7 +103,7 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_ExteriorFuelEquipment)
   EXPECT_TRUE(idf_extEq.setString("NaturalGas", Exterior_FuelEquipmentFields::FuelUseType));
 
   // Schedule Name
-  IdfObject idf_sch(IddObjectType::Schedule_Constant)
+  IdfObject idf_sch(IddObjectType::Schedule_Constant);
   idf_sch.setName("My Schedule");
   EXPECT_TRUE(idf_extEq.setString(idf_sch.name().get(), Exterior_FuelEquipmentFields::ScheduleName));
 
