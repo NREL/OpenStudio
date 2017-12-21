@@ -53,7 +53,7 @@ namespace detail {
   ExteriorWaterEquipment_Impl::ExteriorWaterEquipment_Impl(const IdfObject& idfObject,
                                            Model_Impl* model,
                                            bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : ExteriorLoadInstance_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == ExteriorWaterEquipment::iddObjectType());
   }
@@ -61,7 +61,7 @@ namespace detail {
   ExteriorWaterEquipment_Impl::ExteriorWaterEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                            Model_Impl* model,
                                            bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ExteriorLoadInstance_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == ExteriorWaterEquipment::iddObjectType());
   }
@@ -69,7 +69,7 @@ namespace detail {
   ExteriorWaterEquipment_Impl::ExteriorWaterEquipment_Impl(const ExteriorWaterEquipment_Impl& other,
                                            Model_Impl* model,
                                            bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ExteriorLoadInstance_Impl(other,model,keepHandle)
   {}
 
   boost::optional<ParentObject> ExteriorWaterEquipment_Impl::parent() const {
@@ -103,10 +103,26 @@ namespace detail {
     return result;
   }
 
+  int ExteriorWaterEquipment_Impl::definitionIndex() const {
+    return OS_Exterior_WaterEquipmentFields::ExteriorWaterEquipmentDefinitionName;
+  }
+
   ExteriorWaterEquipmentDefinition ExteriorWaterEquipment_Impl::exteriorWaterEquipmentDefinition() const {
-    boost::optional<ExteriorWaterEquipmentDefinition> value = getObject<ModelObject>().getModelObjectTarget<ExteriorWaterEquipmentDefinition>(OS_Exterior_WaterEquipmentFields::ExteriorWaterEquipmentDefinitionName);
-    OS_ASSERT(value);
-    return value.get();
+     return this->definition().cast<ExteriorWaterEquipmentDefinition>();
+  }
+
+  bool ExteriorWaterEquipment_Impl::setExteriorWaterEquipmentDefinition(const ExteriorWaterEquipmentDefinition& exteriorWaterEquipmentDefinition) {
+    return this->setPointer(this->definitionIndex(), exteriorWaterEquipmentDefinition.handle());
+  }
+
+  bool ExteriorWaterEquipment_Impl::setDefinition(const ExteriorLoadDefinition& definition)
+  {
+    bool result = false;
+    boost::optional<ExteriorWaterEquipmentDefinition> exteriorWaterEquipmentDefinition = definition.optionalCast<ExteriorWaterEquipmentDefinition>();
+    if (exteriorWaterEquipmentDefinition){
+      result = setExteriorWaterEquipmentDefinition(*exteriorWaterEquipmentDefinition);
+    }
+    return result;
   }
 
   Schedule ExteriorWaterEquipment_Impl::schedule() const {
@@ -135,11 +151,6 @@ namespace detail {
 
   bool ExteriorWaterEquipment_Impl::isEndUseSubcategoryDefaulted() const {
     return isEmpty(OS_Exterior_WaterEquipmentFields::EndUseSubcategory);
-  }
-
-  bool ExteriorWaterEquipment_Impl::setExteriorWaterEquipmentDefinition(const ExteriorWaterEquipmentDefinition& exteriorWaterEquipmentDefinition) {
-    bool result = setPointer(OS_Exterior_WaterEquipmentFields::ExteriorWaterEquipmentDefinitionName, exteriorWaterEquipmentDefinition.handle());
-    return result;
   }
 
   bool ExteriorWaterEquipment_Impl::setSchedule(Schedule& schedule) {
@@ -222,7 +233,7 @@ namespace detail {
 
 ExteriorWaterEquipment::ExteriorWaterEquipment(const ExteriorWaterEquipmentDefinition& definition)
 
-  : ModelObject(ExteriorWaterEquipment::iddObjectType(),definition.model())
+  : ExteriorLoadInstance(ExteriorWaterEquipment::iddObjectType(),definition)
 {
   OS_ASSERT(getImpl<detail::ExteriorWaterEquipment_Impl>());
 
@@ -244,7 +255,7 @@ ExteriorWaterEquipment::ExteriorWaterEquipment(const ExteriorWaterEquipmentDefin
 
 ExteriorWaterEquipment::ExteriorWaterEquipment(const ExteriorWaterEquipmentDefinition& definition,
                                Schedule& schedule)
-  : ModelObject(ExteriorWaterEquipment::iddObjectType(),definition.model())
+  : ExteriorLoadInstance(ExteriorWaterEquipment::iddObjectType(),definition)
 {
   OS_ASSERT(getImpl<detail::ExteriorWaterEquipment_Impl>());
 
@@ -328,7 +339,7 @@ Facility ExteriorWaterEquipment::facility() const {
 
 /// @cond
 ExteriorWaterEquipment::ExteriorWaterEquipment(std::shared_ptr<detail::ExteriorWaterEquipment_Impl> impl)
-  : ModelObject(std::move(impl))
+  : ExteriorLoadInstance(std::move(impl))
 {}
 /// @endcond
 
