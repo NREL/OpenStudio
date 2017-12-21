@@ -85,9 +85,9 @@ TEST_F(ModelFixture, ExteriorFuelEquipment_SettersGetters)
   EXPECT_TRUE(definition.setDesignLevel(2303.3));
   EXPECT_DOUBLE_EQ(2303.3, definition.designLevel());
 
-  // ASSERT_EQ(1u, definition.instances().size());
-  // EXPECT_EQ(fuelEq.handle(), definition.instances()[0].handle());
-
+  ASSERT_EQ(1u, definition.instances().size());
+  EXPECT_EQ(fuelEq.handle(), definition.instances()[0].handle());
+  EXPECT_EQ(definition.handle(), fuelEq.definition().handle());
 
   // Test Equipment
 
@@ -125,7 +125,6 @@ TEST_F(ModelFixture, ExteriorFuelEquipment_RemoveEquipment)
 {
   {
     Model model;
-
 
     ExteriorFuelEquipmentDefinition definition(model);
     ExteriorFuelEquipment fuelEq(definition);
@@ -226,7 +225,7 @@ TEST_F(ModelFixture, ExteriorFuelEquipment_Clone)
   {
     Model model2;
     definition.clone(model2);
-    EXPECT_EQ(4u, model2.numObjects());
+    EXPECT_EQ(1u, model2.numObjects());
   }
 
   // clone fuelEq into new model
