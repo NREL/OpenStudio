@@ -4211,49 +4211,49 @@ OS:OtherEquipment:Definition,
 OS:Exterior:Lights:Definition,
        \memo only used for Meter type reporting, does not affect building loads
        \min-fields 1
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
-  A2, \field Name
+  A2,  \field Name
        \type alpha
        \required-field
        \reference ExteriorLightsDefinitionNames
        \reference ExteriorEquipmentDefinitionNames
-  N1; \field Design Level
+  N1;  \field Design Level
        \type real
        \required-field
        \units W
        \ip-units W
        \minimum 0
 
-Exterior:FuelEquipment:Definition,
+OS:Exterior:FuelEquipment:Definition,
        \memo only used for Meter type reporting, does not affect building loads
   A1,  \field Handle
        \type handle
        \required-field
-  A2 , \field Name
+  A2,  \field Name
        \required-field
        \type alpha
        \reference ExteriorFuelEquipmentDefinitionNames
        \reference ExteriorEquipmentDefinitionNames
-  N1 ; \field Design Level
+  N1;  \field Design Level
        \required-field
        \units W
        \type real
        \minimum 0
        \ip-units W
 
-Exterior:WaterEquipment:Definition,
+OS:Exterior:WaterEquipment:Definition,
        \memo only used for Meter type reporting, does not affect building loads
   A1,  \field Handle
        \type handle
        \required-field
-  A2 , \field Name
+  A2,  \field Name
        \required-field
        \type alpha
        \reference ExteriorWaterEquipmentDefinitionNames
        \reference ExteriorEquipmentDefinitionNames
-  N1 ; \field Design Level
+  N1;  \field Design Level
        \required-field
        \units m3/s
        \ip-units gal/min
@@ -6426,24 +6426,26 @@ OS:Exterior:Lights,
        \retaincase
        \default General
 
-Exterior:FuelEquipment,
+OS:Exterior:FuelEquipment,
        \memo only used for Meter type reporting, does not affect building loads
   A1,  \field Handle
        \type handle
        \required-field
-  A2 , \field Name
+  A2,  \field Name
        \required-field
        \type alpha
-  A3, \field Exterior FuelEquipment Definition Name
+       \reference ExteriorFuelEquipmentNames
+       \reference ExteriorEquipmentNames
+  A3,  \field Exterior Fuel Equipment Definition Name
        \type object-list
        \required-field
        \object-list ExteriorFuelEquipmentDefinitionNames
-  A4 , \field Schedule Name
+  A4,  \field Schedule Name
        \required-field
        \type object-list
        \object-list ScheduleNames
        \note units in schedule should be fraction applied to capacity of the exterior fuel equipment, generally (0.0 - 1.0)
-  A5 , \field Fuel Use Type
+  A5,  \field Fuel Use Type
        \required-field
        \type choice
        \key Electricity
@@ -6463,34 +6465,36 @@ Exterior:FuelEquipment,
        \type real
        \minimum 0.0
        \default 1.0
-  A6 ; \field End-Use Subcategory
+  A6;  \field End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
        \retaincase
        \default General
 
-Exterior:WaterEquipment,
+OS:Exterior:WaterEquipment,
        \memo only used for Meter type reporting, does not affect building loads
   A1,  \field Handle
        \type handle
        \required-field
-  A2 , \field Name
+  A2,  \field Name
        \required-field
        \type alpha
-  A3, \field Exterior WaterEquipment Definition Name
+       \reference ExteriorWaterEquipmentNames
+       \reference ExteriorEquipmentNames
+  A3,  \field Exterior Water Equipment Definition Name
        \type object-list
        \required-field
        \object-list ExteriorWaterEquipmentDefinitionNames
-  A4 , \field Schedule Name
+  A4,  \field Schedule Name
        \required-field
        \type object-list
        \object-list ScheduleNames
        \note units in Schedule should be fraction applied to capacity of the exterior water equipment, generally (0.0 - 1.0)
-  N1, \field Multiplier
+  N1,  \field Multiplier
        \type real
        \minimum 0.0
        \default 1.0
-  A5 ; \field End-Use Subcategory
+  A5;  \field End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
        \retaincase
