@@ -128,7 +128,7 @@ namespace detail {
   Schedule ExteriorFuelEquipment_Impl::schedule() const {
     boost::optional<Schedule> value = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Exterior_FuelEquipmentFields::ScheduleName);
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Schedule attached.");
+      value = this->model().alwaysOnDiscreteSchedule();
     }
     return value.get();
   }
