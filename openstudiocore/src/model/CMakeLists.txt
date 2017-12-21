@@ -1656,7 +1656,9 @@ set(${target_name}_test_src
   test/EvaporativeCoolerIndirectResearchSpecial_GTest.cpp
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
   test/EvaporativeFluidCoolerTwoSpeed_GTest.cpp
+  test/ExteriorLights_GTest.cpp
   test/ExteriorFuelEquipment_GTest.cpp
+  test/ExteriorWaterEquipment_GTest.cpp
   test/ExternalInterface_GTest.cpp
   test/ExternalInterfaceActuator_GTest.cpp
   test/ExternalInterfaceFunctionalMockupUnitExportFromVariable_GTest.cpp
