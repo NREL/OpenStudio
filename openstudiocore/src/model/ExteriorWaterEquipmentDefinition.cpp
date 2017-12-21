@@ -40,7 +40,7 @@ namespace model {
 namespace detail {
 
   ExteriorWaterEquipmentDefinition_Impl::ExteriorWaterEquipmentDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : ResourceObject_Impl(idfObject,model,keepHandle)
+    : ExteriorLoadDefinition_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == ExteriorWaterEquipmentDefinition::iddObjectType());
   }
@@ -48,7 +48,7 @@ namespace detail {
   ExteriorWaterEquipmentDefinition_Impl::ExteriorWaterEquipmentDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                Model_Impl* model,
                                                                bool keepHandle)
-    : ResourceObject_Impl(other,model,keepHandle)
+    : ExteriorLoadDefinition_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == ExteriorWaterEquipmentDefinition::iddObjectType());
   }
@@ -56,7 +56,7 @@ namespace detail {
   ExteriorWaterEquipmentDefinition_Impl::ExteriorWaterEquipmentDefinition_Impl(const ExteriorWaterEquipmentDefinition_Impl& other,
                                                                Model_Impl* model,
                                                                bool keepHandle)
-    : ResourceObject_Impl(other,model,keepHandle)
+    : ExteriorLoadDefinition_Impl(other,model,keepHandle)
   {}
 
   // TODO: remove
@@ -86,7 +86,7 @@ namespace detail {
 } // detail
 
 ExteriorWaterEquipmentDefinition::ExteriorWaterEquipmentDefinition(const Model& model)
-  : ResourceObject(ExteriorWaterEquipmentDefinition::iddObjectType(),model)
+  : ExteriorLoadDefinition(ExteriorWaterEquipmentDefinition::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ExteriorWaterEquipmentDefinition_Impl>());
 
@@ -109,7 +109,7 @@ bool ExteriorWaterEquipmentDefinition::setDesignLevel(double designLevel) {
 
 /// @cond
 ExteriorWaterEquipmentDefinition::ExteriorWaterEquipmentDefinition(std::shared_ptr<detail::ExteriorWaterEquipmentDefinition_Impl> impl)
-  : ResourceObject(std::move(impl))
+  : ExteriorLoadDefinition(std::move(impl))
 {}
 /// @endcond
 
