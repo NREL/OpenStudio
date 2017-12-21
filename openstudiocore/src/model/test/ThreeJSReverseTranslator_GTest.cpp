@@ -31,6 +31,7 @@
 #include "ModelFixture.hpp"
 
 #include "../ThreeJSReverseTranslator.hpp"
+#include "../ThreeJSForwardTranslator.hpp"
 #include "../ModelMerger.hpp"
 #include "../Model.hpp"
 #include "../BuildingStory.hpp"
@@ -39,12 +40,16 @@
 #include "../DaylightingControl_Impl.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
+#include "../ShadingSurfaceGroup.hpp"
+#include "../ShadingSurfaceGroup_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
 #include "../Surface.hpp"
 #include "../Surface_Impl.hpp"
 #include "../SubSurface.hpp"
 #include "../SubSurface_Impl.hpp"
+#include "../ShadingSurface.hpp"
+#include "../ShadingSurface_Impl.hpp"
 
 #include "../../utilities/geometry/ThreeJS.hpp"
 #include "../../utilities/geometry/FloorplanJS.hpp"
@@ -164,6 +169,9 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
   ss << *model;
   std::string s = ss.str();
 
+  ThreeJSForwardTranslator ft;
+  ft.modelToThreeJS(*model, true);
+
   ASSERT_EQ(3u, model->getConcreteModelObjects<Space>().size());
 
   boost::optional<Space> space1 = model->getConcreteModelObjectByName<Space>("Space 1");
@@ -224,6 +232,8 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
   EXPECT_EQ(9, infos[0].windows.size());
   for (const auto& window : infos[0].windows){
     EXPECT_NEAR(convert(8.0, "ft^2", "m^2").get(), window.grossArea(), 0.001);
+    ASSERT_EQ(1u, window.shadingSurfaceGroups().size());
+    EXPECT_EQ(3u, window.shadingSurfaceGroups()[0].shadingSurfaces().size()); // overhang + fins
   }
   EXPECT_NEAR(convert(800.0, "ft^2", "m^2").get(), infos[0].southSurface->grossArea(), 0.001);
   EXPECT_NEAR(convert(800.0 - 9*8.0, "ft^2", "m^2").get(), infos[0].southSurface->netArea(), 0.001);
@@ -235,6 +245,7 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
   EXPECT_EQ(17, infos[1].windows.size());
   for (const auto& window : infos[1].windows){
     EXPECT_NEAR(convert(8.0, "ft^2", "m^2").get(), window.grossArea(), 0.001);
+    EXPECT_EQ(0, window.shadingSurfaceGroups().size()); // no shades
   }
   EXPECT_NEAR(convert(800.0, "ft^2", "m^2").get(), infos[1].southSurface->grossArea(), 0.001);
   EXPECT_NEAR(convert(800.0 - 17*8.0, "ft^2", "m^2").get(), infos[1].southSurface->netArea(), 0.001);
@@ -246,10 +257,13 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
   EXPECT_EQ(1, infos[2].windows.size());
   for (const auto& window : infos[2].windows){
     EXPECT_NEAR(convert(0.4*800.0, "ft^2", "m^2").get(), window.grossArea(), 0.001);
+    ASSERT_EQ(1u, window.shadingSurfaceGroups().size());
+    EXPECT_EQ(1u, window.shadingSurfaceGroups()[0].shadingSurfaces().size()); // just overhang
   }
   EXPECT_NEAR(convert(800.0, "ft^2", "m^2").get(), infos[2].southSurface->grossArea(), 0.001);
   EXPECT_NEAR(convert(0.6*800.0, "ft^2", "m^2").get(), infos[2].southSurface->netArea(), 0.001);
   EXPECT_EQ(1, infos[2].dcs.size());
+
 
 }
 

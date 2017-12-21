@@ -49,12 +49,17 @@
 #include "InteriorPartitionSurface_Impl.hpp"
 #include "PlanarSurfaceGroup.hpp"
 #include "PlanarSurfaceGroup_Impl.hpp"
+#include "ShadingSurfaceGroup.hpp"
+#include "ShadingSurfaceGroup_Impl.hpp"
 #include "Space.hpp"
 #include "Space_Impl.hpp"
 #include "DefaultConstructionSet.hpp"
 #include "DefaultConstructionSet_Impl.hpp"
 #include "ShadingSurfaceGroup.hpp"
 #include "InteriorPartitionSurfaceGroup.hpp"
+#include "DaylightingControl.hpp"
+#include "DaylightingControl_Impl.hpp"
+
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
@@ -141,6 +146,11 @@ namespace openstudio
         currentSurface.remove();
       }
 
+      // remove current shadingSurfaceGroups
+      for (auto& shadingSurfaceGroup : currentSpace.shadingSurfaceGroups()){
+        shadingSurfaceGroup.remove();
+      }
+
       // add new surfaces
       for (const auto& newSurface : newSpace.surfaces()){
         // DLM: this should probably be moved to a mergeSurface method
@@ -163,7 +173,44 @@ namespace openstudio
         }
       }
 
-      // DLM: TODO shadingSurfaceGroups
+      // add new shadingSurfaceGroups
+      for (const auto& newShadingSurfaceGroup : newSpace.shadingSurfaceGroups()){
+        
+        // check if this already merged via a window clone
+        if (m_newMergedHandles.find(newShadingSurfaceGroup.handle()) != m_newMergedHandles.end()){
+          continue;
+        }
+
+        ShadingSurfaceGroup clone = newShadingSurfaceGroup.clone(m_currentModel).cast<ShadingSurfaceGroup>();
+        clone.setSpace(currentSpace);
+
+        m_newMergedHandles.insert(newShadingSurfaceGroup.handle());
+        m_currentToNewHandleMapping[clone.handle()] = newShadingSurfaceGroup.handle();
+        m_newToCurrentHandleMapping[newShadingSurfaceGroup.handle()] = clone.handle();
+
+        boost::optional<SubSurface> newShadedSubSurface = newShadingSurfaceGroup.shadedSubSurface();
+        if (newShadedSubSurface){
+          boost::optional<UUID> currentSubSurfaceHandle = getCurrentModelHandle(newShadedSubSurface->handle());
+          if (currentSubSurfaceHandle){
+            boost::optional<SubSurface> currentSubSurface = m_currentModel.getModelObject<SubSurface>(*currentSubSurfaceHandle);
+            if (currentSubSurface){
+              clone.setShadedSubSurface(*currentSubSurface);
+            }
+          }
+        }
+
+        boost::optional<Surface> newShadedSurface = newShadingSurfaceGroup.shadedSurface();
+        if (newShadedSurface){
+          boost::optional<UUID> currentSurfaceHandle = getCurrentModelHandle(newShadedSurface->handle());
+          if (currentSurfaceHandle){
+            boost::optional<Surface> currentSurface = m_currentModel.getModelObject<Surface>(*currentSurfaceHandle);
+            if (currentSurface){
+              clone.setShadedSurface(*currentSurface);
+            }
+          }
+        }
+      }
+
       // DLM: TODO interiorPartitionSurfaceGroups
 
       // thermal zone
@@ -231,6 +278,46 @@ namespace openstudio
         currentSpace.resetDefaultConstructionSet();
       }
 
+      // remove current daylightingControls
+      for (auto& daylightingControl : currentSpace.daylightingControls()){
+        daylightingControl.remove();
+      }
+
+      // add new daylightingControls
+      for (const auto& newDaylightingControl : newSpace.daylightingControls()){
+
+        DaylightingControl clone = newDaylightingControl.clone(m_currentModel).cast<DaylightingControl>();
+        clone.setSpace(currentSpace);
+
+        m_newMergedHandles.insert(newDaylightingControl.handle());
+        m_currentToNewHandleMapping[clone.handle()] = newDaylightingControl.handle();
+        m_newToCurrentHandleMapping[newDaylightingControl.handle()] = clone.handle();
+
+        // hook up daylighting control to thermal zone
+        for (const auto& newThermalZone : newDaylightingControl.getModelObjectSources<ThermalZone>()){
+          boost::optional<DaylightingControl> primaryDaylightingControl = newThermalZone.primaryDaylightingControl();
+          boost::optional<DaylightingControl> secondaryDaylightingControl = newThermalZone.secondaryDaylightingControl();
+
+          if (primaryDaylightingControl && (primaryDaylightingControl->handle() == newDaylightingControl.handle())){
+            boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(newThermalZone);
+            if (currentObject){
+              ThermalZone currentThermalZone = currentObject->cast<ThermalZone>();
+              currentThermalZone.setPrimaryDaylightingControl(clone);
+              currentThermalZone.setFractionofZoneControlledbyPrimaryDaylightingControl(newThermalZone.fractionofZoneControlledbyPrimaryDaylightingControl());
+            }
+
+          } else if (secondaryDaylightingControl && (secondaryDaylightingControl->handle() == newDaylightingControl.handle())){
+            boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(newThermalZone);
+            if (currentObject){
+              ThermalZone currentThermalZone = currentObject->cast<ThermalZone>();
+              currentThermalZone.setSecondaryDaylightingControl(clone);
+              currentThermalZone.setFractionofZoneControlledbySecondaryDaylightingControl(newThermalZone.fractionofZoneControlledbySecondaryDaylightingControl());
+            }
+          }
+
+        }
+
+      }
     }
 
     void ModelMerger::mergeThermalZone(ThermalZone& currentThermalZone, const ThermalZone& newThermalZone)

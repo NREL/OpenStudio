@@ -415,6 +415,9 @@ namespace openstudio
               LOG(Error, "Could not find Space '" << spaceName << "'");
               continue;
             }
+          }else{
+            LOG(Error, "Surface missing required Space Name");
+            continue;
           }
           OS_ASSERT(space);
 
@@ -466,7 +469,7 @@ namespace openstudio
               //std::string outsideBoundaryConditionObjectHandle = userData.outsideBoundaryConditionObjectHandle();
 
             } catch (const std::exception&){
-              LOG_FREE(Warn, "modelFromThreeJS", "Could not create surface for vertices " << face);
+              LOG(Warn, "Could not create surface for vertices " << face);
             }
           }
 
@@ -483,6 +486,9 @@ namespace openstudio
               LOG(Error, "Could not find Surface '" << surfaceName << "'");
               continue;
             }
+          }else{
+            LOG(Error, "SubSurface missing required Surface Name");
+            continue;
           }
           OS_ASSERT(surface);
 
@@ -499,32 +505,43 @@ namespace openstudio
               originalNameToSubSurfaceMap.insert(std::make_pair(name, subSurface));
 
             } catch (const std::exception&){
-              LOG_FREE(Warn, "modelFromThreeJS", "Could not create sub surface for vertices " << face);
+              LOG(Warn, "Could not create sub surface for vertices " << face);
             }
           }
 
         } else if (istringEqual(surfaceType, "SiteShading") || istringEqual(surfaceType, "BuildingShading") || istringEqual(surfaceType, "SpaceShading")){
 
-
-          boost::optional<SubSurface> subSurface;
-          if (!subSurfaceName.empty()){
-            const auto it = originalNameToSubSurfaceMap.find(subSurfaceName);
-            if (it != originalNameToSubSurfaceMap.end()){
-              subSurface = it->second;
-            }else{
-              LOG(Error, "Could not find SubSurface '" << subSurfaceName << "'");
-              continue;
-            }
-          }
-          OS_ASSERT(subSurface);
-
           boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup;
           if (istringEqual(surfaceType, "SpaceShading")){
+
+            boost::optional<SubSurface> subSurface;
+            if (!subSurfaceName.empty()){
+              const auto it = originalNameToSubSurfaceMap.find(subSurfaceName);
+              if (it != originalNameToSubSurfaceMap.end()){
+                subSurface = it->second;
+              }else{
+                LOG(Error, "Could not find SubSurface '" << subSurfaceName << "'");
+                continue;
+              }
+            }else{
+              LOG(Error, "SpaceShading missing required SubSurface Name");
+              continue;
+            }
+            OS_ASSERT(subSurface);
+
+            boost::optional<Space> space = subSurface->space();
+            if (!space){
+              LOG(Error, "Cannot find Space for SubSurface '" << subSurfaceName << "'");
+              continue;
+            }
+            OS_ASSERT(space);
+
             std::vector<ShadingSurfaceGroup> groups = subSurface->shadingSurfaceGroups();
             if (groups.empty()){
               std::string shadingGroupName = subSurfaceName + " Shading Group";
               shadingSurfaceGroup = ShadingSurfaceGroup(model);
               shadingSurfaceGroup->setName(shadingGroupName);
+              shadingSurfaceGroup->setSpace(*space);
               shadingSurfaceGroup->setShadedSubSurface(*subSurface);
             } else{
               shadingSurfaceGroup = groups[0];
@@ -549,7 +566,7 @@ namespace openstudio
               shadingSurface.setShadingSurfaceGroup(*shadingSurfaceGroup);
 
             } catch (const std::exception&){
-              LOG_FREE(Warn, "modelFromThreeJS", "Could not create shading surface for vertices " << face);
+              LOG(Warn, "Could not create shading surface for vertices " << face);
             }
           }
 
@@ -593,7 +610,7 @@ namespace openstudio
               }
 
             } else{
-              LOG_FREE(Warn, "modelFromThreeJS", "Could not create daylighting control for vertices " << face);
+              LOG(Warn, "Could not create daylighting control for vertices " << face);
             }
           }
 
