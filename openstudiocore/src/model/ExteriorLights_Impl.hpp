@@ -124,6 +124,10 @@ namespace detail {
 
     //@}
    protected:
+
+    // index of the definition name
+    virtual int definitionIndex() const override;
+
    private:
     REGISTER_LOGGER("openstudio.model.ExteriorLights");
 

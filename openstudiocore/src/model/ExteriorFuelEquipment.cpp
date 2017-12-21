@@ -53,7 +53,7 @@ namespace detail {
   ExteriorFuelEquipment_Impl::ExteriorFuelEquipment_Impl(const IdfObject& idfObject,
                                            Model_Impl* model,
                                            bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : ExteriorLoadInstance_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == ExteriorFuelEquipment::iddObjectType());
   }
@@ -61,7 +61,7 @@ namespace detail {
   ExteriorFuelEquipment_Impl::ExteriorFuelEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                            Model_Impl* model,
                                            bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ExteriorLoadInstance_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == ExteriorFuelEquipment::iddObjectType());
   }
@@ -69,7 +69,7 @@ namespace detail {
   ExteriorFuelEquipment_Impl::ExteriorFuelEquipment_Impl(const ExteriorFuelEquipment_Impl& other,
                                            Model_Impl* model,
                                            bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ExteriorLoadInstance_Impl(other,model,keepHandle)
   {}
 
   boost::optional<ParentObject> ExteriorFuelEquipment_Impl::parent() const {
@@ -103,10 +103,26 @@ namespace detail {
     return result;
   }
 
+  int ExteriorFuelEquipment_Impl::definitionIndex() const {
+    return OS_Exterior_FuelEquipmentFields::ExteriorFuelEquipmentDefinitionName;
+  }
+
   ExteriorFuelEquipmentDefinition ExteriorFuelEquipment_Impl::exteriorFuelEquipmentDefinition() const {
-    boost::optional<ExteriorFuelEquipmentDefinition> value = getObject<ModelObject>().getModelObjectTarget<ExteriorFuelEquipmentDefinition>(OS_Exterior_FuelEquipmentFields::ExteriorFuelEquipmentDefinitionName);
-    OS_ASSERT(value);
-    return value.get();
+     return this->definition().cast<ExteriorFuelEquipmentDefinition>();
+  }
+
+  bool ExteriorFuelEquipment_Impl::setExteriorFuelEquipmentDefinition(const ExteriorFuelEquipmentDefinition& exteriorFuelEquipmentDefinition) {
+    return this->setPointer(this->definitionIndex(), exteriorFuelEquipmentDefinition.handle());
+  }
+
+  bool ExteriorFuelEquipment_Impl::setDefinition(const ExteriorLoadDefinition& definition)
+  {
+    bool result = false;
+    boost::optional<ExteriorFuelEquipmentDefinition> exteriorFuelEquipmentDefinition = definition.optionalCast<ExteriorFuelEquipmentDefinition>();
+    if (exteriorFuelEquipmentDefinition){
+      result = setExteriorFuelEquipmentDefinition(*exteriorFuelEquipmentDefinition);
+    }
+    return result;
   }
 
   Schedule ExteriorFuelEquipment_Impl::schedule() const {
@@ -141,11 +157,6 @@ namespace detail {
 
   bool ExteriorFuelEquipment_Impl::isEndUseSubcategoryDefaulted() const {
     return isEmpty(OS_Exterior_FuelEquipmentFields::EndUseSubcategory);
-  }
-
-  bool ExteriorFuelEquipment_Impl::setExteriorFuelEquipmentDefinition(const ExteriorFuelEquipmentDefinition& exteriorFuelEquipmentDefinition) {
-    bool result = setPointer(OS_Exterior_FuelEquipmentFields::ExteriorFuelEquipmentDefinitionName, exteriorFuelEquipmentDefinition.handle());
-    return result;
   }
 
   bool ExteriorFuelEquipment_Impl::setSchedule(Schedule& schedule) {
@@ -237,8 +248,7 @@ namespace detail {
 } // detail
 
 ExteriorFuelEquipment::ExteriorFuelEquipment(const ExteriorFuelEquipmentDefinition& definition)
-
-  : ModelObject(ExteriorFuelEquipment::iddObjectType(),definition.model())
+  : ExteriorLoadInstance(ExteriorFuelEquipment::iddObjectType(),definition)
 {
   OS_ASSERT(getImpl<detail::ExteriorFuelEquipment_Impl>());
 
@@ -262,7 +272,7 @@ ExteriorFuelEquipment::ExteriorFuelEquipment(const ExteriorFuelEquipmentDefiniti
 
 ExteriorFuelEquipment::ExteriorFuelEquipment(const ExteriorFuelEquipmentDefinition& definition,
                                Schedule& schedule)
-  : ModelObject(ExteriorFuelEquipment::iddObjectType(),definition.model())
+  : ExteriorLoadInstance(ExteriorFuelEquipment::iddObjectType(),definition)
 {
   OS_ASSERT(getImpl<detail::ExteriorFuelEquipment_Impl>());
 
@@ -365,7 +375,7 @@ Facility ExteriorFuelEquipment::facility() const {
 
 /// @cond
 ExteriorFuelEquipment::ExteriorFuelEquipment(std::shared_ptr<detail::ExteriorFuelEquipment_Impl> impl)
-  : ModelObject(std::move(impl))
+  : ExteriorLoadInstance(std::move(impl))
 {}
 /// @endcond
 
