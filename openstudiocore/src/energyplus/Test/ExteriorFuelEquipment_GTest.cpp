@@ -62,7 +62,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ExteriorFuelEquipment)
 
   ExteriorFuelEquipment exteriorFuelEquipment(exteriorFuelEquipmentDefinition, sch);
   exteriorFuelEquipment.setName("My ExteriorFuelEquipment");
-  exteriorFuelEquipment.setFuelType("Electricity");
+  exteriorFuelEquipment.setFuelType("NaturalGas");
   exteriorFuelEquipment.setEndUseSubcategory("Water Pump");
 
 
