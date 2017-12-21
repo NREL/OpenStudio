@@ -551,6 +551,12 @@ set(${target_name}_src
   EvaporativeFluidCoolerTwoSpeed.hpp
   EvaporativeFluidCoolerTwoSpeed_Impl.hpp
   EvaporativeFluidCoolerTwoSpeed.cpp
+  ExteriorLoadInstance.hpp
+  ExteriorLoadInstance_Impl.hpp
+  ExteriorLoadInstance.cpp
+  ExteriorLoadDefinition.hpp
+  ExteriorLoadDefinition_Impl.hpp
+  ExteriorLoadDefinition.cpp
   ExteriorLights.hpp
   ExteriorLights_Impl.hpp
   ExteriorLights.cpp
@@ -1650,6 +1656,7 @@ set(${target_name}_test_src
   test/EvaporativeCoolerIndirectResearchSpecial_GTest.cpp
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
   test/EvaporativeFluidCoolerTwoSpeed_GTest.cpp
+  test/ExteriorFuelEquipment_GTest.cpp
   test/ExternalInterface_GTest.cpp
   test/ExternalInterfaceActuator_GTest.cpp
   test/ExternalInterfaceFunctionalMockupUnitExportFromVariable_GTest.cpp
