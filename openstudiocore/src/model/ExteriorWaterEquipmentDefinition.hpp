@@ -30,7 +30,7 @@
 #define MODEL_EXTERIORWATEREQUIPMENTDEFINITION_HPP
 
 #include "ModelAPI.hpp"
-#include "ResourceObject.hpp"
+#include "ExteriorLoadDefinition.hpp"
 
 namespace openstudio {
 namespace model {
@@ -41,9 +41,9 @@ namespace detail {
 
 } // detail
 
-/** ExteriorWaterEquipmentDefinition is a ResourceObject that wraps the OpenStudio IDD object
+/** ExteriorWaterEquipmentDefinition is a ExteriorLoadDefinition that wraps the OpenStudio IDD object
  *  'OS:Exterior:WaterEquipment:Definition'. */
-class MODEL_API ExteriorWaterEquipmentDefinition : public ResourceObject {
+class MODEL_API ExteriorWaterEquipmentDefinition : public ExteriorLoadDefinition {
  public:
   /** @name Constructors and Destructors */
   //@{
