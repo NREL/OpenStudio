@@ -1534,6 +1534,31 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       break;
     }
+
+  case openstudio::IddObjectType::OS_Exterior_FuelEquipment :
+    {
+      model::ExteriorFuelEquipment lights = modelObject.cast<ExteriorFuelEquipment>();
+      retVal = translateExteriorFuelEquipment(lights);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Exterior_FuelEquipment_Definition:
+    {
+      // no-op
+      break;
+    }
+
+  case openstudio::IddObjectType::OS_Exterior_WaterEquipment :
+    {
+      model::ExteriorWaterEquipment lights = modelObject.cast<ExteriorWaterEquipment>();
+      retVal = translateExteriorWaterEquipment(lights);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Exterior_WaterEquipment_Definition:
+    {
+      // no-op
+      break;
+    }
+
   case openstudio::IddObjectType::OS_ExternalInterface :
     {
       model::ExternalInterface ei = modelObject.cast<ExternalInterface>();
@@ -2008,7 +2033,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::MaterialPropertyMoisturePenetrationDepthSettings empd = modelObject.cast<MaterialPropertyMoisturePenetrationDepthSettings>();
       retVal = translateMaterialPropertyMoisturePenetrationDepthSettings(empd);
       break;
-    }    
+    }
   case openstudio::IddObjectType::OS_Material_RoofVegetation :
     {
       model::RoofVegetation material = modelObject.cast<RoofVegetation>();
