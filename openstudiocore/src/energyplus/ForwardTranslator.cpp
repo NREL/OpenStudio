@@ -1537,8 +1537,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
 
   case openstudio::IddObjectType::OS_Exterior_FuelEquipment :
     {
-      model::ExteriorFuelEquipment lights = modelObject.cast<ExteriorFuelEquipment>();
-      retVal = translateExteriorFuelEquipment(lights);
+      model::ExteriorFuelEquipment mo = modelObject.cast<ExteriorFuelEquipment>();
+      retVal = translateExteriorFuelEquipment(mo);
       break;
     }
   case openstudio::IddObjectType::OS_Exterior_FuelEquipment_Definition:
@@ -1549,8 +1549,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
 
   case openstudio::IddObjectType::OS_Exterior_WaterEquipment :
     {
-      model::ExteriorWaterEquipment lights = modelObject.cast<ExteriorWaterEquipment>();
-      retVal = translateExteriorWaterEquipment(lights);
+      model::ExteriorWaterEquipment mo = modelObject.cast<ExteriorWaterEquipment>();
+      retVal = translateExteriorWaterEquipment(mo);
       break;
     }
   case openstudio::IddObjectType::OS_Exterior_WaterEquipment_Definition:
@@ -3248,6 +3248,9 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_SpaceInfiltration_DesignFlowRate);
   result.push_back(IddObjectType::OS_SpaceInfiltration_EffectiveLeakageArea);
   result.push_back(IddObjectType::OS_Exterior_Lights);
+  result.push_back(IddObjectType::OS_Exterior_FuelEquipment);
+  result.push_back(IddObjectType::OS_Exterior_WaterEquipment);
+
 
   result.push_back(IddObjectType::OS_AirLoopHVAC);
   result.push_back(IddObjectType::OS_AirLoopHVAC_ControllerList);
