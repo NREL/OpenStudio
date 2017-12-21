@@ -88,6 +88,13 @@ class DesignSpecificationOutdoorAir;
 class SpaceLoadInstance;
 class SpaceLoadDefinition;
 class GeneratorPhotovoltaic;
+
+class ExteriorLights;
+class ExteriorFuelEquipment;
+class ExteriorWaterEquipment;
+class ExteriorLoadDefinition;
+class ExteriorLoadInstance;
+
 }
 }
 
@@ -128,10 +135,13 @@ MODELOBJECT_TEMPLATES(GlareSensor);
 MODELOBJECT_TEMPLATES(IlluminanceMap);
 MODELOBJECT_TEMPLATES(DaylightingDeviceShelf);
 MODELOBJECT_TEMPLATES(SpaceType);
+MODELOBJECT_TEMPLATES(LightingSimulationZone);
+
+MODELOBJECT_TEMPLATES(ExteriorLoadInstance);   
 MODELOBJECT_TEMPLATES(ExteriorLights);
 MODELOBJECT_TEMPLATES(ExteriorFuelEquipment);
 MODELOBJECT_TEMPLATES(ExteriorWaterEquipment);
-MODELOBJECT_TEMPLATES(LightingSimulationZone);
+
 
 SWIG_UNIQUEMODELOBJECT(Site);
 SWIG_UNIQUEMODELOBJECT(Facility);
@@ -170,10 +180,13 @@ SWIG_MODELOBJECT(GlareSensor, 1);
 SWIG_MODELOBJECT(IlluminanceMap, 1); 
 SWIG_MODELOBJECT(DaylightingDeviceShelf, 1);
 SWIG_MODELOBJECT(SpaceType, 1);
+SWIG_MODELOBJECT(LightingSimulationZone, 1);
+
+SWIG_MODELOBJECT(ExteriorLoadInstance, 0); 
 SWIG_MODELOBJECT(ExteriorLights, 1);
 SWIG_MODELOBJECT(ExteriorFuelEquipment, 1);
 SWIG_MODELOBJECT(ExteriorWaterEquipment, 1);
-SWIG_MODELOBJECT(LightingSimulationZone, 1);
+
 
 #if defined SWIGCSHARP || defined(SWIGJAVA)
 
