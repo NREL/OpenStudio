@@ -100,8 +100,8 @@ boost::optional<model::ModelObject> ReverseTranslator::translateExteriorFuelEqui
     exteriorFuelEquipment->setFuelType(*s);
   } else {
     LOG(Warn, "The Fuel Use Type (required) isn't set for " << workspaceObject.briefDescription() <<
-              " while it is a required field with no default... Will default to NaturalGas")
-    exteriorFuelEquipment->setFuelType("NaturalGas");
+              " while it is a required field with no default... Will default to Electricity")
+    exteriorFuelEquipment->setFuelType("Electricity");
   }
 
   if ((s = workspaceObject.getString(Exterior_FuelEquipmentFields::EndUseSubcategory,false,true))) {
