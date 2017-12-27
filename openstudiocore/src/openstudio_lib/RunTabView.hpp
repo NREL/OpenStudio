@@ -36,6 +36,8 @@
 #include <QComboBox>
 #include <QWidget>
 #include <QProcess>
+#include <QFile>
+
 //#include "../runmanager/lib/ConfigOptions.hpp"
 //#include "../runmanager/lib/RunManager.hpp"
 //#include "../runmanager/lib/Workflow.hpp"
@@ -64,16 +66,18 @@ namespace openstudio {
     public:
 
     RunView();
+    void readSunlite(QFile *file);
+public slots:
+	void readyReadStandardError();
+	void readyReadStandardOutput();
 
-    private:
-
+private:
     REGISTER_LOGGER("openstudio::RunView");
 
     enum RUNMODE { RUN_NONE=0, RUN_ENERGY, RUN_BEC, RUN_ENERGY_BEC};
     void playButtonClicked(bool t_checked);
     void onRunProcessFinished(int exitCode, QProcess::ExitStatus status);
-	void readyReadStandardError();
-	void readyReadStandardOutput();
+
     //void onSimDirChanged(const QString &path);
 
     //void onFileChanged(const QString &path);
@@ -83,7 +87,7 @@ namespace openstudio {
     void onRunDataReady();
 
     //NOTE: BEC CODE
-    bool doBecInput(const QString &path, const model::Model &model, QString &outpath, QString &err);
+    bool doBecInput(const QString &path, const model::Model &model, QString &outpath);
     double getPV(openstudio::model::Model* model);
     void addPVAndBenchmarkToFile(const QString &fileName, int mode);
     void updatePVInfile();
@@ -113,6 +117,12 @@ namespace openstudio {
     QTcpSocket * m_runSocket;
     //QFileSystemWatcher * m_simDirWatcher;
     //QFileSystemWatcher * m_eperrWatcher;
+
+    int iiimax, iiimin, iiival;
+    bool iiitvisible;
+    QString iiitextFormat;
+    QString errrr;
+
     openstudio::path m_tempFolder;
     QString becoutputPath;
     double buildingArea;
@@ -120,9 +130,13 @@ namespace openstudio {
     enum State { stopped = 0, initialization = 1, os_measures = 2, translator = 3, ep_measures = 4, preprocess = 5, simulation = 6, reporting_measures = 7, postprocess = 8, complete = 9 };
     State m_state = State::stopped;
     void doFinish();
+	void osdocument_save(std::shared_ptr<OSDocument> osdocument);
 	QStringList LogLs(QString filepath);
 	QStringList TranslateLogError(QString filePath, QStringList logsls);
 	void ValidateLog();
+    void processBec();
+    void beginInfiniteProgress(const QString& message);
+    void endInfiniteProgress();
   };
 
   class RunTabView : public MainTabView

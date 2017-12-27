@@ -425,6 +425,11 @@ ForwardTranslator::~ForwardTranslator()
 {
 }
 
+QString ForwardTranslator::getBVName()
+{
+
+}
+
 bool ForwardTranslator::modelTobec(const openstudio::model::Model& model
                                    , const openstudio::path& path
                                    , ProgressBar* progressBar
@@ -432,9 +437,10 @@ bool ForwardTranslator::modelTobec(const openstudio::model::Model& model
                                    , QHash<QString, QList<double>>* sunlits
 								   , float wwr_totoal)
 {
-    QInputDialog inputBuildingType;
     _sunlits = sunlits;
-	  _wwr_totoal = wwr_totoal;
+    _wwr_totoal = wwr_totoal;
+
+    QInputDialog inputBuildingType;
     inputBuildingType.setOption(QInputDialog::UseListViewForComboBoxItems);
     inputBuildingType.setWindowTitle("What is building type.");
     inputBuildingType.setLabelText("Selection:");
