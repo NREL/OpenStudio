@@ -1111,6 +1111,13 @@ void RunView::processBec()
 		becoutputPath = outpath + "output.xml";
 
 		logNormalText(QString("START READ DO BEC INPUT.") + now.toString());
+
+        bec::ForwardTranslator trans;
+        bvName = trans.getBVName();
+        if(bvName.isEmpty()){
+            return;
+        }
+
         QFuture<bool> future = QtConcurrent::run(this, &RunView::doBecInput, outpath + "input.xml", osdocument->model(), filePath);
         while (future.isRunning()){
             QApplication::processEvents();
@@ -1138,9 +1145,8 @@ void RunView::processBec()
 		else
 		{
 			logNormalText("Call newBEC.exe.");
-			logNormalText(QString("START CALL newBec.exe ") + now.toString());
+            logNormalText(QString("START CALL newBec.exe ") + now.toString());
             beginInfiniteProgress("Process in BEC");
-            QApplication::processEvents();
 			callRealBEC(outpath);
 		}
 	}
@@ -1579,9 +1585,7 @@ bool RunView::doBecInput(const QString &path, const model::Model &model, QString
     bec::ForwardTranslator trans;
     logNormalText(QString("Create input.xml at %1").arg(path));
 
-    std::string bvn;
-    bool success = trans.modelTobec(model, path.toStdString().c_str(), NULL, &bvn, &sunlits, wwr_totoal);
-    bvName = bvn.c_str();
+    bool success = trans.modelTobec(model, path.toStdString().c_str(), NULL, &sunlits, wwr_totoal, bvName);
 
     std::string bvsdefault = binResourcesPath().string() + "/" + "default_building_standard.bvs";
     BenchmarkDialog* bmdlg = new BenchmarkDialog(bvsdefault.c_str(), this);
