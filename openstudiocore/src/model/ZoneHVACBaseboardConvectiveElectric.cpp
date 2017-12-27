@@ -287,6 +287,23 @@ namespace detail {
     }
   }
 
+  boost::optional<double> ZoneHVACBaseboardConvectiveElectric_Impl::autosizedNominalCapacity() const {
+    return getAutosizedValue("Design Size Heating Design Capacity", "W");
+  }
+
+  void ZoneHVACBaseboardConvectiveElectric_Impl::autosize() {
+    autosizeNominalCapacity();
+  }
+
+  void ZoneHVACBaseboardConvectiveElectric_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalCapacity();
+    if (val) {
+      setNominalCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 ZoneHVACBaseboardConvectiveElectric::ZoneHVACBaseboardConvectiveElectric(const Model& model)
@@ -383,6 +400,10 @@ ZoneHVACBaseboardConvectiveElectric::ZoneHVACBaseboardConvectiveElectric(std::sh
   : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> ZoneHVACBaseboardConvectiveElectric::autosizedNominalCapacity() const {
+    return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->autosizedNominalCapacity();
+  }
 
 } // model
 } // openstudio

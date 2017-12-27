@@ -397,6 +397,33 @@ namespace detail {
     return modelObjectClone;
   }
 
+  boost::optional<double> AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::autosizedMaximumAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::autosizedMaximumHotWaterorSteamFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Reheat Water Flow Rate", "m3/s");
+  }
+
+  void AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::autosize() {
+    autosizeMaximumAirFlowRate();
+    autosizeMaximumHotWaterorSteamFlowRate();
+  }
+
+  void AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumAirFlowRate();
+    if (val) {
+      setMaximumAirFlowRate(val.get());
+    }
+
+    val = autosizedMaximumHotWaterorSteamFlowRate();
+    if (val) {
+      setMaximumHotWaterorSteamFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 AirTerminalSingleDuctVAVHeatAndCoolReheat::AirTerminalSingleDuctVAVHeatAndCoolReheat(const Model& model, const HVACComponent& reheatCoil)
@@ -509,6 +536,14 @@ AirTerminalSingleDuctVAVHeatAndCoolReheat::AirTerminalSingleDuctVAVHeatAndCoolRe
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> AirTerminalSingleDuctVAVHeatAndCoolReheat::autosizedMaximumAirFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl>()->autosizedMaximumAirFlowRate();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVHeatAndCoolReheat::autosizedMaximumHotWaterorSteamFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl>()->autosizedMaximumHotWaterorSteamFlowRate();
+  }
 
 } // model
 } // openstudio

@@ -89,6 +89,12 @@ namespace detail {
 
     boost::optional<Schedule> sourceTemperatureSchedule() const;
 
+  boost::optional<double> autosizedDesignVolumeFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

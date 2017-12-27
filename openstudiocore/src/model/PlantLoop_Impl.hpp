@@ -222,6 +222,13 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   SizingPlant sizingPlant() const;
 
+  boost::optional<double> autosizedMaximumLoopFlowRate() const ;
+
+  boost::optional<double> autosizedPlantLoopVolume() const;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
 
   // AVM
   // Impl_only
@@ -240,7 +247,6 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   bool removeAvailabilityManager(const AvailabilityManager& avm);
   bool removeAvailabilityManager(unsigned priority);
-
 
  private:
 

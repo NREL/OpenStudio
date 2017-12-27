@@ -846,6 +846,83 @@ namespace detail {
     return true;
   }
 
+ 
+  boost::optional<double> ZoneHVACWaterToAirHeatPump_Impl::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
+    return getAutosizedValue("Design Size Cooling Supply Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACWaterToAirHeatPump_Impl::autosizedSupplyAirFlowRateDuringHeatingOperation() const {
+    return getAutosizedValue("Design Size Heating Supply Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACWaterToAirHeatPump_Impl::autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getAutosizedValue("Design Size No Load Supply Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACWaterToAirHeatPump_Impl::autosizedOutdoorAirFlowRateDuringCoolingOperation() const {
+    return getAutosizedValue("Design Size Outdoor Air Flow Rate During Cooling Operation", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACWaterToAirHeatPump_Impl::autosizedOutdoorAirFlowRateDuringHeatingOperation() const {
+    return getAutosizedValue("Design Size Outdoor Air Flow Rate During Heating Operation", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACWaterToAirHeatPump_Impl::autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getAutosizedValue("Design Size Outdoor Air Flow Rate When No Cooling or Heating is Needed", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACWaterToAirHeatPump_Impl::autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const {
+    return getAutosizedValue("Design Size Maximum Supply Air Temperature from Supplemental Heater", "C");
+  }
+
+  void ZoneHVACWaterToAirHeatPump_Impl::autosize() {
+    autosizeSupplyAirFlowRateDuringCoolingOperation();
+    autosizeSupplyAirFlowRateDuringHeatingOperation();
+    autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    autosizeOutdoorAirFlowRateDuringCoolingOperation();
+    autosizeOutdoorAirFlowRateDuringHeatingOperation();
+    autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
+  }
+
+  void ZoneHVACWaterToAirHeatPump_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedSupplyAirFlowRateDuringCoolingOperation();
+    if (val) {
+      setSupplyAirFlowRateDuringCoolingOperation(val.get());
+    }
+
+    val = autosizedSupplyAirFlowRateDuringHeatingOperation();
+    if (val) {
+      setSupplyAirFlowRateDuringHeatingOperation(val.get());
+    }
+
+    val = autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    if (val) {
+      setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(val.get());
+    }
+
+    val = autosizedOutdoorAirFlowRateDuringCoolingOperation();
+    if (val) {
+      setOutdoorAirFlowRateDuringCoolingOperation(val.get());
+    }
+
+    val = autosizedOutdoorAirFlowRateDuringHeatingOperation();
+    if (val) {
+      setOutdoorAirFlowRateDuringHeatingOperation(val.get());
+    }
+
+    val = autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    if (val) {
+      setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(val.get());
+    }
+
+    val = autosizedMaximumSupplyAirTemperaturefromSupplementalHeater();
+    if (val) {
+      setMaximumSupplyAirTemperaturefromSupplementalHeater(val.get());
+    }
+
+  }
 
 } // detail
 
@@ -1234,6 +1311,34 @@ ZoneHVACWaterToAirHeatPump::ZoneHVACWaterToAirHeatPump(std::shared_ptr<detail::Z
   : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> ZoneHVACWaterToAirHeatPump::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
+    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->autosizedSupplyAirFlowRateDuringCoolingOperation();
+  }
+
+  boost::optional<double> ZoneHVACWaterToAirHeatPump::autosizedSupplyAirFlowRateDuringHeatingOperation() const {
+    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->autosizedSupplyAirFlowRateDuringHeatingOperation();
+  }
+
+  boost::optional<double> ZoneHVACWaterToAirHeatPump::autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
+
+  boost::optional<double> ZoneHVACWaterToAirHeatPump::autosizedOutdoorAirFlowRateDuringCoolingOperation() const {
+    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->autosizedOutdoorAirFlowRateDuringCoolingOperation();
+  }
+
+  boost::optional<double> ZoneHVACWaterToAirHeatPump::autosizedOutdoorAirFlowRateDuringHeatingOperation() const {
+    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->autosizedOutdoorAirFlowRateDuringHeatingOperation();
+  }
+
+  boost::optional<double> ZoneHVACWaterToAirHeatPump::autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
+
+  boost::optional<double> ZoneHVACWaterToAirHeatPump::autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const {
+    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->autosizedMaximumSupplyAirTemperaturefromSupplementalHeater();
+  }
 
 } // model
 } // openstudio

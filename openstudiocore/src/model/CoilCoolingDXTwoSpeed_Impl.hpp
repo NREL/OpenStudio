@@ -137,6 +137,30 @@ namespace detail {
 
     boost::optional<Schedule> basinHeaterOperatingSchedule()const;
 
+  boost::optional<double> autosizedRatedHighSpeedTotalCoolingCapacity() const ;
+
+  boost::optional<double> autosizedRatedHighSpeedSensibleHeatRatio() const ;
+
+  boost::optional<double> autosizedRatedHighSpeedAirFlowRate() const ;
+
+  boost::optional<double> autosizedRatedLowSpeedTotalCoolingCapacity() const ;
+
+  boost::optional<double> autosizedRatedLowSpeedSensibleHeatRatio() const ;
+
+  boost::optional<double> autosizedRatedLowSpeedAirFlowRate() const ;
+
+  boost::optional<double> autosizedHighSpeedEvaporativeCondenserAirFlowRate() const ;
+
+  boost::optional<double> autosizedHighSpeedEvaporativeCondenserPumpRatedPowerConsumption() const ;
+
+  boost::optional<double> autosizedLowSpeedEvaporativeCondenserAirFlowRate() const ;
+
+  boost::optional<double> autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

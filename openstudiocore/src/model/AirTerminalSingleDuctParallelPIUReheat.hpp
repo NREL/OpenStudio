@@ -143,6 +143,18 @@ class MODEL_API AirTerminalSingleDuctParallelPIUReheat : public StraightComponen
 
   void resetConvergenceTolerance();
 
+  boost::optional<double> autosizedMaximumPrimaryAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumSecondaryAirFlowRate() const ;
+
+  boost::optional<double> autosizedMinimumPrimaryAirFlowFraction() const ;
+
+  boost::optional<double> autosizedFanOnFlowFraction() const ;
+
+  boost::optional<double> autosizedMaximumHotWaterorSteamFlowRate() const ;
+
+
+
   //@}
  protected:
   /// @cond

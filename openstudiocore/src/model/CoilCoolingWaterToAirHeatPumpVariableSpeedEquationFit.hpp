@@ -124,6 +124,14 @@ class MODEL_API CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit : public W
 
   void removeAllSpeeds();
 
+  boost::optional<double> autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const ;
+
+  boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const ;
+
+  boost::optional<double> autosizedRatedWaterFlowRateAtSelectedNominalSpeedLevel() const ;
+
+
+
   //@}
  protected:
   /// @cond

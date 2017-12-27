@@ -262,6 +262,9 @@ class MODEL_API PlantLoop : public Loop {
 
   SizingPlant sizingPlant() const;
 
+  boost::optional<double> autosizedMaximumLoopFlowRate() const ;
+
+  boost::optional<double> autosizedPlantLoopVolume() const;
 
   /*
    * Return all AvailabilityManagers assigned to this list, in the priority order
@@ -332,8 +335,6 @@ class MODEL_API PlantLoop : public Loop {
    **/
   OS_DEPRECATED void resetAvailabilityManager();
   // END DEPRECATED
-
-
 
   protected:
 

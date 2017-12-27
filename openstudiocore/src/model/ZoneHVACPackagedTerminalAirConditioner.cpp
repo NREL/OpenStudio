@@ -638,6 +638,73 @@ namespace detail {
     return true;
   }
 
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner_Impl::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
+    return getAutosizedValue("Design Size Cooling Supply Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner_Impl::autosizedSupplyAirFlowRateDuringHeatingOperation() const {
+    return getAutosizedValue("Design Size Heating Supply Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner_Impl::autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getAutosizedValue("Design Size No Load Supply Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner_Impl::autosizedOutdoorAirFlowRateDuringCoolingOperation() const {
+    return getAutosizedValue("Design Size Outdoor Air Flow Rate During Cooling Operation", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner_Impl::autosizedOutdoorAirFlowRateDuringHeatingOperation() const {
+    return getAutosizedValue("Design Size Outdoor Air Flow Rate During Heating Operation", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner_Impl::autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getAutosizedValue("Design Size Outdoor Air Flow Rate When No Cooling or Heating is Needed", "m3/s");
+  }
+
+  void ZoneHVACPackagedTerminalAirConditioner_Impl::autosize() {
+    autosizeSupplyAirFlowRateDuringCoolingOperation();
+    autosizeSupplyAirFlowRateDuringHeatingOperation();
+    autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    autosizeOutdoorAirFlowRateDuringCoolingOperation();
+    autosizeOutdoorAirFlowRateDuringHeatingOperation();
+    autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
+
+  void ZoneHVACPackagedTerminalAirConditioner_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedSupplyAirFlowRateDuringCoolingOperation();
+    if (val) {
+      setSupplyAirFlowRateDuringCoolingOperation(val.get());
+    }
+
+    val = autosizedSupplyAirFlowRateDuringHeatingOperation();
+    if (val) {
+      setSupplyAirFlowRateDuringHeatingOperation(val.get());
+    }
+
+    val = autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    if (val) {
+      setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(val.get());
+    }
+
+    val = autosizedOutdoorAirFlowRateDuringCoolingOperation();
+    if (val) {
+      setOutdoorAirFlowRateDuringCoolingOperation(val.get());
+    }
+
+    val = autosizedOutdoorAirFlowRateDuringHeatingOperation();
+    if (val) {
+      setOutdoorAirFlowRateDuringHeatingOperation(val.get());
+    }
+
+    val = autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    if (val) {
+      setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(val.get());
+    }
+
+  }
+
 } // detail
 
 ZoneHVACPackagedTerminalAirConditioner::ZoneHVACPackagedTerminalAirConditioner( const Model& model,
@@ -887,6 +954,30 @@ void ZoneHVACPackagedTerminalAirConditioner::setCoolingCoil( HVACComponent & coo
 {
   getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setCoolingCoil(coolingCoil);
 }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->autosizedSupplyAirFlowRateDuringCoolingOperation();
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner::autosizedSupplyAirFlowRateDuringHeatingOperation() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->autosizedSupplyAirFlowRateDuringHeatingOperation();
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner::autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner::autosizedOutdoorAirFlowRateDuringCoolingOperation() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->autosizedOutdoorAirFlowRateDuringCoolingOperation();
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner::autosizedOutdoorAirFlowRateDuringHeatingOperation() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->autosizedOutdoorAirFlowRateDuringHeatingOperation();
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner::autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
 
 } // model
 } // openstudio

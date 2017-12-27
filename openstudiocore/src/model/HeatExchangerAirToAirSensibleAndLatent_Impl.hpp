@@ -217,6 +217,12 @@ namespace detail {
 
     bool economizerLockout() const;
 
+  boost::optional<double> autosizedNominalSupplyAirFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

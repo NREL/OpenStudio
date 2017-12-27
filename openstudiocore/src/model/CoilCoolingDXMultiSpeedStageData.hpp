@@ -31,6 +31,7 @@
 
 #include "ModelAPI.hpp"
 #include "ParentObject.hpp"
+#include "../model/CoilCoolingDXMultiSpeed.hpp"
 
 namespace openstudio {
 
@@ -174,6 +175,20 @@ class MODEL_API CoilCoolingDXMultiSpeedStageData : public ParentObject {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedGrossRatedTotalCoolingCapacity() const ;
+
+  boost::optional<double> autosizedGrossRatedSensibleHeatRatio() const ;
+
+  boost::optional<double> autosizedRatedAirFlowRate() const ;
+
+  boost::optional<double> autosizedEvaporativeCondenserAirFlowRate() const ;
+
+  boost::optional<double> autosizedRatedEvaporativeCondenserPumpPowerConsumption() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond
@@ -188,6 +203,11 @@ class MODEL_API CoilCoolingDXMultiSpeedStageData : public ParentObject {
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.CoilCoolingDXMultiSpeedStageData");
+
+  // Used to determine the index of this performance data in the
+  // list of stages in the parent object.
+  boost::optional<std::tuple<int, CoilCoolingDXMultiSpeed>> stageIndexAndParentCoil() const;
+
 };
 
 /** \relates CoilCoolingDXMultiSpeedStageData*/

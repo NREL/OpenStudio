@@ -672,6 +672,33 @@ namespace detail {
     return result;
   }
 
+  boost::optional<double> ControllerOutdoorAir_Impl::autosizedMinimumOutdoorAirFlowRate() const {
+    return getAutosizedValue("Minimum Outdoor Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ControllerOutdoorAir_Impl::autosizedMaximumOutdoorAirFlowRate() const {
+    return getAutosizedValue("Maximum Outdoor Air Flow Rate", "m3/s");
+  }
+
+  void ControllerOutdoorAir_Impl::autosize() {
+    autosizeMinimumOutdoorAirFlowRate();
+    autosizeMaximumOutdoorAirFlowRate();
+  }
+
+  void ControllerOutdoorAir_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMinimumOutdoorAirFlowRate();
+    if (val) {
+      setMinimumOutdoorAirFlowRate(val.get());
+    }
+
+    val = autosizedMaximumOutdoorAirFlowRate();
+    if (val) {
+      setMaximumOutdoorAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 // create a new ControllerOutdoorAir object in the model's workspace
@@ -1008,6 +1035,22 @@ void ControllerOutdoorAir::resetTimeofDayEconomizerControlSchedule()
 {
   getImpl<detail::ControllerOutdoorAir_Impl>()->resetTimeofDayEconomizerControlSchedule();
 }
+
+  boost::optional<double> ControllerOutdoorAir::autosizedMinimumOutdoorAirFlowRate() const {
+    return getImpl<detail::ControllerOutdoorAir_Impl>()->autosizedMinimumOutdoorAirFlowRate();
+  }
+
+  boost::optional<double> ControllerOutdoorAir::autosizedMaximumOutdoorAirFlowRate() const {
+    return getImpl<detail::ControllerOutdoorAir_Impl>()->autosizedMaximumOutdoorAirFlowRate();
+  }
+
+  void ControllerOutdoorAir::autosize() {
+    return getImpl<detail::ControllerOutdoorAir_Impl>()->autosize();
+  }
+
+  void ControllerOutdoorAir::applySizingValues() {
+    return getImpl<detail::ControllerOutdoorAir_Impl>()->applySizingValues();
+  }
 
 } // model
 } // openstudio

@@ -1665,6 +1665,53 @@ namespace detail {
     return boost::none;
   }
 
+  boost::optional<double> WaterHeaterMixed_Impl::autosizedTankVolume() const {
+    return getAutosizedValue("Design Size Tank Volume", "m3");
+  }
+
+  boost::optional<double> WaterHeaterMixed_Impl::autosizedHeaterMaximumCapacity() const {
+    return getAutosizedValue("Design Size Heater Maximum Capacity", "W");
+  }
+
+  boost::optional<double> WaterHeaterMixed_Impl::autosizedUseSideDesignFlowRate() const {
+    return getAutosizedValue("Design Size Use Side Design Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> WaterHeaterMixed_Impl::autosizedSourceSideDesignFlowRate() const {
+    return getAutosizedValue("Design Size Source Side Design Flow Rate", "m3/s");
+  }
+
+  void WaterHeaterMixed_Impl::autosize() {
+    autosizeTankVolume();
+    autosizeHeaterMaximumCapacity();
+    autosizeUseSideDesignFlowRate();
+    autosizeSourceSideDesignFlowRate();
+  }
+
+  void WaterHeaterMixed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedTankVolume();
+    if (val) {
+      setTankVolume(val.get());
+    }
+
+    val = autosizedHeaterMaximumCapacity();
+    if (val) {
+      setHeaterMaximumCapacity(val.get());
+    }
+
+    val = autosizedUseSideDesignFlowRate();
+    if (val) {
+      setUseSideDesignFlowRate(val.get());
+    }
+
+    val = autosizedSourceSideDesignFlowRate();
+    if (val) {
+      setSourceSideDesignFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 WaterHeaterMixed::WaterHeaterMixed(const Model& model)
@@ -2407,6 +2454,22 @@ WaterHeaterMixed::WaterHeaterMixed(std::shared_ptr<detail::WaterHeaterMixed_Impl
   : WaterToWaterComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> WaterHeaterMixed::autosizedTankVolume() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->autosizedTankVolume();
+  }
+
+  boost::optional<double> WaterHeaterMixed::autosizedHeaterMaximumCapacity() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->autosizedHeaterMaximumCapacity();
+  }
+
+  boost::optional<double> WaterHeaterMixed::autosizedUseSideDesignFlowRate() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->autosizedUseSideDesignFlowRate();
+  }
+
+  boost::optional<double> WaterHeaterMixed::autosizedSourceSideDesignFlowRate() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->autosizedSourceSideDesignFlowRate();
+  }
 
 } // model
 } // openstudio

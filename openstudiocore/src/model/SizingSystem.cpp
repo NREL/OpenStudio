@@ -30,6 +30,10 @@
 #include "SizingSystem_Impl.hpp"
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVAC_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "ControllerOutdoorAir.hpp"
+#include "ControllerOutdoorAir_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
@@ -37,6 +41,7 @@
 #include <utilities/idd/OS_Sizing_System_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/sql/SqlFile.hpp"
 
 namespace openstudio {
 
@@ -654,6 +659,217 @@ void SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
   OS_ASSERT(this->setPointer(OS_Sizing_SystemFields::AirLoopName, airLoopHVAC.handle()));
 }
 
+  boost::optional<double> SizingSystem_Impl::autosizedDesignOutdoorAirFlowRate() const {
+    boost::optional<double> result;
+    
+    // Get the parent AirLoopHVAC
+    boost::optional<AirLoopHVAC> parAirLoop = airLoopHVAC();
+    
+    // Get the OA system
+    boost::optional<AirLoopHVACOutdoorAirSystem> oaSys = parAirLoop->airLoopHVACOutdoorAirSystem();
+    if (!oaSys) {
+      LOG(Debug, "This object's parent AirLoopHVAC has no AirLoopHVACOutdoorAirSystem, cannot retrieve the autosizedDesignOutdoorAirFlowRate.");
+      return result;
+    }
+
+    // Get the OA Controller
+    ControllerOutdoorAir oaController = oaSys->getControllerOutdoorAir();
+
+    return oaController.getAutosizedValue("Maximum Outdoor Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> SizingSystem_Impl::autosizedCoolingDesignCapacity() const {     
+    boost::optional < double > result;
+    
+    std::string capacityType = "Cooling";
+
+    // Get the parent AirLoopHVAC
+    AirLoopHVAC parAirLoop = airLoopHVAC();
+
+    // Get the name of the air loop
+    if (!parAirLoop.name()) {
+      LOG(Warn, "This object's parent AirLoopHVAC does not have a name, cannot retrieve the autosized " + capacityType + " Design Capacity.");
+      return result;
+    }
+
+    // Get the object name and transform to the way it is recorded
+    // in the sql file
+    std::string sqlName = parAirLoop.name().get();
+    boost::to_upper(sqlName);
+
+    // Check that the model has a sql file
+    if (!model().sqlFile()) {
+      LOG(Warn, "This model has no sql file, cannot retrieve the autosized " + capacityType + " Design Capacity.");
+      return result;
+    }
+
+    // Query the Intialization Summary -> System Sizing Information table to get 
+    // the row names that contains information for this component.
+    std::stringstream rowsQuery;
+    rowsQuery << "SELECT RowName ";
+    rowsQuery << "FROM tabulardatawithstrings ";
+    rowsQuery << "WHERE ReportName='Initialization Summary' ";
+    rowsQuery << "AND ReportForString='Entire Facility' ";
+    rowsQuery << "AND TableName = 'System Sizing Information' ";
+    rowsQuery << "AND Value='" + sqlName + "'";
+
+    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery.str());
+
+    // Warn if the query failed
+    if (!rowNames) {
+      LOG(Warn, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary System Sizing table.");
+      return result;
+    }
+
+    // Query each row of the Intialization Summary -> System Sizing table
+    // that contains this component to get the desired value.
+    for (std::string rowName : rowNames.get()) {
+      std::stringstream rowCheckQuery;
+      rowCheckQuery << "SELECT Value ";
+      rowCheckQuery << "FROM tabulardatawithstrings ";
+      rowCheckQuery << "WHERE ReportName='Initialization Summary' ";
+      rowCheckQuery << "AND ReportForString='Entire Facility' ";
+      rowCheckQuery << "AND TableName = 'System Sizing Information' ";
+      rowCheckQuery << "AND RowName='" << rowName << "' ";
+      rowCheckQuery << "AND Value='" << capacityType << "'";
+      boost::optional<std::string> rowValueName = model().sqlFile().get().execAndReturnFirstString(rowCheckQuery.str());
+      // Check if the query succeeded
+      if (!rowValueName) {
+        continue;
+      }
+      // This is the right row
+      std::stringstream valQuery;
+      valQuery << "SELECT Value ";
+      valQuery << "FROM tabulardatawithstrings ";
+      valQuery << "WHERE ReportName='Initialization Summary' ";
+      valQuery << "AND ReportForString='Entire Facility' ";
+      valQuery << "AND TableName = 'System Sizing Information' ";
+      valQuery << "AND ColumnName='User Design Capacity' ";
+      valQuery << "AND RowName='" << rowName << "' ";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
+      // Check if the query succeeded
+      if (val) {
+        result = val.get();
+        break;
+      }
+    }
+
+    if (!result) {
+      LOG(Debug, "The autosized value query for " + capacityType + " Design Capacity of " + sqlName + " returned no value.");
+    }
+
+    return result;
+
+  }
+
+  boost::optional<double> SizingSystem_Impl::autosizedHeatingDesignCapacity() const {
+    boost::optional < double > result;
+
+    std::string capacityType = "Heating";
+
+    // Get the parent AirLoopHVAC
+    AirLoopHVAC parAirLoop = airLoopHVAC();
+
+    // Get the name of the air loop
+    if (!parAirLoop.name()) {
+      LOG(Debug, "This object's parent AirLoopHVAC does not have a name, cannot retrieve the autosized " + capacityType + " Design Capacity.");
+      return result;
+    }
+
+    // Get the object name and transform to the way it is recorded
+    // in the sql file
+    std::string sqlName = parAirLoop.name().get();
+    boost::to_upper(sqlName);
+
+    // Check that the model has a sql file
+    if (!model().sqlFile()) {
+      LOG(Warn, "This model has no sql file, cannot retrieve the autosized " + capacityType + " Design Capacity.");
+      return result;
+    }
+
+    // Query the Intialization Summary -> System Sizing Information table to get 
+    // the row names that contains information for this component.
+    std::stringstream rowsQuery;
+    rowsQuery << "SELECT RowName ";
+    rowsQuery << "FROM tabulardatawithstrings ";
+    rowsQuery << "WHERE ReportName='Initialization Summary' ";
+    rowsQuery << "AND ReportForString='Entire Facility' ";
+    rowsQuery << "AND TableName = 'System Sizing Information' ";
+    rowsQuery << "AND Value='" + sqlName + "'";
+
+    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery.str());
+
+    // Warn if the query failed
+    if (!rowNames) {
+      LOG(Warn, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary System Sizing table.");
+      return result;
+    }
+
+    // Query each row of the Intialization Summary -> System Sizing table
+    // that contains this component to get the desired value.
+    for (std::string rowName : rowNames.get()) {
+      std::stringstream rowCheckQuery;
+      rowCheckQuery << "SELECT Value ";
+      rowCheckQuery << "FROM tabulardatawithstrings ";
+      rowCheckQuery << "WHERE ReportName='Initialization Summary' ";
+      rowCheckQuery << "AND ReportForString='Entire Facility' ";
+      rowCheckQuery << "AND TableName = 'System Sizing Information' ";
+      rowCheckQuery << "AND RowName='" << rowName << "' ";
+      rowCheckQuery << "AND Value='" << capacityType << "'";
+      boost::optional<std::string> rowValueName = model().sqlFile().get().execAndReturnFirstString(rowCheckQuery.str());
+      // Check if the query succeeded
+      if (!rowValueName) {
+        continue;
+      }
+      // This is the right row
+      std::stringstream valQuery;
+      valQuery << "SELECT Value ";
+      valQuery << "FROM tabulardatawithstrings ";
+      valQuery << "WHERE ReportName='Initialization Summary' ";
+      valQuery << "AND ReportForString='Entire Facility' ";
+      valQuery << "AND TableName = 'System Sizing Information' ";
+      valQuery << "AND ColumnName='User Design Capacity' ";
+      valQuery << "AND RowName='" << rowName << "' ";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
+      // Check if the query succeeded
+      if (val) {
+        result = val.get();
+        break;
+      }
+    }
+
+    if (!result) {
+      LOG(Debug, "The autosized value query for " + capacityType + " Design Capacity of " + sqlName + " returned no value.");
+    }
+
+    return result;
+  }
+
+  void SizingSystem_Impl::autosize() {
+    autosizeDesignOutdoorAirFlowRate();
+    autosizeCoolingDesignCapacity();
+    autosizeHeatingDesignCapacity();
+  }
+
+  void SizingSystem_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedDesignOutdoorAirFlowRate();
+    if (val) {
+      setDesignOutdoorAirFlowRate(val.get());
+    }
+
+    val = autosizedCoolingDesignCapacity();
+    if (val) {
+      setCoolingDesignCapacity(val.get());
+    }
+
+    val = autosizedHeatingDesignCapacity();
+    if (val) {
+      setHeatingDesignCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 SizingSystem::SizingSystem(const Model& model, const AirLoopHVAC & airLoopHVAC)
@@ -1154,6 +1370,26 @@ SizingSystem::SizingSystem(std::shared_ptr<detail::SizingSystem_Impl> impl)
   : ModelObject(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> SizingSystem::autosizedDesignOutdoorAirFlowRate() const {
+    return getImpl<detail::SizingSystem_Impl>()->autosizedDesignOutdoorAirFlowRate();
+  }
+
+  boost::optional<double> SizingSystem::autosizedCoolingDesignCapacity() const {
+    return getImpl<detail::SizingSystem_Impl>()->autosizedCoolingDesignCapacity();
+  }
+
+  boost::optional<double> SizingSystem::autosizedHeatingDesignCapacity() const {
+    return getImpl<detail::SizingSystem_Impl>()->autosizedHeatingDesignCapacity();
+  }
+
+  void SizingSystem::autosize() {
+    return getImpl<detail::SizingSystem_Impl>()->autosize();
+  }
+
+  void SizingSystem::applySizingValues() {
+    return getImpl<detail::SizingSystem_Impl>()->applySizingValues();
+  }
 
 } // model
 

@@ -34,6 +34,7 @@
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 #include "PlantLoop.hpp"
+#include "SizingPlant.hpp"
 #include "Node.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
@@ -1016,27 +1017,27 @@ namespace detail {
     bool result = setString(OS_CoolingTower_TwoSpeedFields::SizingFactor, "");
     OS_ASSERT(result);
   }
-  
+
   double CoolingTowerTwoSpeed_Impl::designInletAirDryBulbTemperature() const {
     auto value = getDouble(OS_CoolingTower_TwoSpeedFields::DesignInletAirDryBulbTemperature,true);
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   bool CoolingTowerTwoSpeed_Impl::setDesignInletAirDryBulbTemperature(double designInletAirDryBulbTemperature) {
     return setDouble(OS_CoolingTower_TwoSpeedFields::DesignInletAirDryBulbTemperature,designInletAirDryBulbTemperature);
   }
-  
+
   double CoolingTowerTwoSpeed_Impl::designInletAirWetBulbTemperature() const {
     auto value = getDouble(OS_CoolingTower_TwoSpeedFields::DesignInletAirWetBulbTemperature,true);
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   bool CoolingTowerTwoSpeed_Impl::setDesignInletAirWetBulbTemperature(double designInletAirWetBulbTemperature) {
     return setDouble(OS_CoolingTower_TwoSpeedFields::DesignInletAirWetBulbTemperature,designInletAirWetBulbTemperature);
   }
-  
+
   boost::optional<double> CoolingTowerTwoSpeed_Impl::designApproachTemperature() const {
     auto value = getDouble(OS_CoolingTower_TwoSpeedFields::DesignApproachTemperature,true);
     OS_ASSERT(value);
@@ -1051,15 +1052,15 @@ namespace detail {
     }
     return result;
   }
-  
+
   bool CoolingTowerTwoSpeed_Impl::setDesignApproachTemperature(double designApproachTemperature) {
     return setDouble(OS_CoolingTower_TwoSpeedFields::DesignApproachTemperature,designApproachTemperature);
   }
-  
+
   void CoolingTowerTwoSpeed_Impl::autosizeDesignApproachTemperature() {
     setString(OS_CoolingTower_TwoSpeedFields::DesignApproachTemperature,"autosize");
   }
-  
+
   boost::optional<double> CoolingTowerTwoSpeed_Impl::designRangeTemperature() const {
     auto value = getDouble(OS_CoolingTower_TwoSpeedFields::DesignRangeTemperature,true);
     OS_ASSERT(value);
@@ -1074,23 +1075,176 @@ namespace detail {
     }
     return result;
   }
-  
+
   bool CoolingTowerTwoSpeed_Impl::setDesignRangeTemperature(double designRangeTemperature) {
     return setDouble(OS_CoolingTower_TwoSpeedFields::DesignRangeTemperature,designRangeTemperature);
   }
-  
+
   void CoolingTowerTwoSpeed_Impl::autosizeDesignRangeTemperature() {
     setString(OS_CoolingTower_TwoSpeedFields::DesignRangeTemperature,"autosize");
   }
-  
+
   std::string CoolingTowerTwoSpeed_Impl::endUseSubcategory() const {
     auto value = getString(OS_CoolingTower_TwoSpeedFields::EndUseSubcategory,true);
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   bool CoolingTowerTwoSpeed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
     return setString(OS_CoolingTower_TwoSpeedFields::EndUseSubcategory,endUseSubcategory);
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedDesignWaterFlowRate() const {
+    return getAutosizedValue("Design Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedHighFanSpeedAirFlowRate() const {
+    return getAutosizedValue("Air Flow Rate at High Fan Speed", "m3/s");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedHighFanSpeedFanPower() const {
+    return getAutosizedValue("Fan Power at High Fan Speed", "W");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedHighFanSpeedUFactorTimesAreaValue() const {
+    return getAutosizedValue("U-Factor Times Area Value at High Fan Speed", "W/C");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedLowFanSpeedAirFlowRate() const {
+    return getAutosizedValue("Low Fan Speed Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedLowFanSpeedFanPower() const {
+    return getAutosizedValue("Fan Power at Low Fan Speed", "W");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedLowFanSpeedUFactorTimesAreaValue() const {
+    return getAutosizedValue("U-Factor Times Area Value at Low Fan Speed", "W/K");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedFreeConvectionRegimeAirFlowRate() const {
+    return getAutosizedValue("Free Convection Regime Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedFreeConvectionRegimeUFactorTimesAreaValue() const {
+    return getAutosizedValue("Free Convection U-Factor Times Area Value", "W/K");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedLowSpeedNominalCapacity() const {
+    return getAutosizedValue("Low Speed Nominal Capacity", "W");
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedFreeConvectionNominalCapacity() const {
+    return getAutosizedValue("Free Convection Nominal Capacity", "W");
+  }
+
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedDesignApproachTemperature() const {
+    boost::optional<double> result;
+
+    // Calculate Approach as design wet bulb temp - EWT (from SizingPlant)
+    if (boost::optional<PlantLoop> pl = this->plantLoop()) {
+      SizingPlant sz = pl->sizingPlant();
+      double EWT = sz.designLoopExitTemperature() - sz.loopDesignTemperatureDifference();
+      result = EWT - designInletAirWetBulbTemperature();
+    }
+    return result;
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed_Impl::autosizedDesignRangeTemperature() const {
+    boost::optional<double> result;
+
+    // Return the SizingPlant DeltaT
+    if (boost::optional<PlantLoop> pl = this->plantLoop()) {
+      SizingPlant sz = pl->sizingPlant();
+      result = sz.loopDesignTemperatureDifference();
+    }
+    return result;
+  }
+
+  void CoolingTowerTwoSpeed_Impl::autosize() {
+    autosizeDesignWaterFlowRate();
+    autosizeHighFanSpeedAirFlowRate();
+    autosizeHighFanSpeedFanPower();
+    autosizeHighFanSpeedUFactorTimesAreaValue();
+    autosizeLowFanSpeedAirFlowRate();
+    autosizeLowFanSpeedFanPower();
+    autosizeLowFanSpeedUFactorTimesAreaValue();
+    autosizeFreeConvectionRegimeAirFlowRate();
+    autosizeFreeConvectionRegimeUFactorTimesAreaValue();
+    autosizeLowSpeedNominalCapacity();
+    autosizeFreeConvectionNominalCapacity();
+    autosizeDesignRangeTemperature();
+    autosizeDesignApproachTemperature();
+  }
+
+  void CoolingTowerTwoSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedDesignWaterFlowRate();
+    if (val) {
+      setDesignWaterFlowRate(val.get());
+    }
+
+    val = autosizedHighFanSpeedAirFlowRate();
+    if (val) {
+      setHighFanSpeedAirFlowRate(val.get());
+    }
+
+    val = autosizedHighFanSpeedFanPower();
+    if (val) {
+      setHighFanSpeedFanPower(val.get());
+    }
+
+    val = autosizedHighFanSpeedUFactorTimesAreaValue();
+    if (val) {
+      setHighFanSpeedUFactorTimesAreaValue(val.get());
+    }
+
+    val = autosizedLowFanSpeedAirFlowRate();
+    if (val) {
+      setLowFanSpeedAirFlowRate(val.get());
+    }
+
+    val = autosizedLowFanSpeedFanPower();
+    if (val) {
+      setLowFanSpeedFanPower(val.get());
+    }
+
+    val = autosizedLowFanSpeedUFactorTimesAreaValue();
+    if (val) {
+      setLowFanSpeedUFactorTimesAreaValue(val.get());
+    }
+
+    val = autosizedFreeConvectionRegimeAirFlowRate();
+    if (val) {
+      setFreeConvectionRegimeAirFlowRate(val.get());
+    }
+
+    val = autosizedFreeConvectionRegimeUFactorTimesAreaValue();
+    if (val) {
+      setFreeConvectionRegimeUFactorTimesAreaValue(val.get());
+    }
+
+    val = autosizedLowSpeedNominalCapacity();
+    if (val) {
+      setLowSpeedNominalCapacity(val.get());
+    }
+
+    val = autosizedFreeConvectionNominalCapacity();
+    if (val) {
+      setFreeConvectionNominalCapacity(val.get());
+    }
+
+    val = autosizedDesignApproachTemperature();
+    if (val) {
+      setDesignApproachTemperature(val.get());
+    }
+
+    val = autosizedDesignRangeTemperature();
+    if (val) {
+      setDesignRangeTemperature(val.get());
+    }
+
   }
 
 } // detail
@@ -1788,6 +1942,58 @@ CoolingTowerTwoSpeed::CoolingTowerTwoSpeed(std::shared_ptr<detail::CoolingTowerT
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedDesignWaterFlowRate() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedDesignWaterFlowRate();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedHighFanSpeedAirFlowRate() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedHighFanSpeedAirFlowRate();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedHighFanSpeedFanPower() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedHighFanSpeedFanPower();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedHighFanSpeedUFactorTimesAreaValue() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedHighFanSpeedUFactorTimesAreaValue();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedLowFanSpeedAirFlowRate() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedLowFanSpeedAirFlowRate();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedLowFanSpeedFanPower() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedLowFanSpeedFanPower();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedLowFanSpeedUFactorTimesAreaValue() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedLowFanSpeedUFactorTimesAreaValue();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedFreeConvectionRegimeAirFlowRate() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedFreeConvectionRegimeAirFlowRate();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedFreeConvectionRegimeUFactorTimesAreaValue() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedFreeConvectionRegimeUFactorTimesAreaValue();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedLowSpeedNominalCapacity() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedLowSpeedNominalCapacity();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedFreeConvectionNominalCapacity() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedFreeConvectionNominalCapacity();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedDesignApproachTemperature() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedDesignApproachTemperature();
+  }
+
+  boost::optional<double> CoolingTowerTwoSpeed::autosizedDesignRangeTemperature() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizedDesignRangeTemperature();
+  }
 
 } // model
 } // openstudio

@@ -132,6 +132,23 @@ namespace detail {
     return false;
   }
 
+  boost::optional<double> DistrictHeating_Impl::autosizedNominalCapacity() const {
+    return getAutosizedValue("Design Size Nominal Capacity", "W");
+  }
+
+  void DistrictHeating_Impl::autosize() {
+    autosizeNominalCapacity();
+  }
+
+  void DistrictHeating_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalCapacity();
+    if (val) {
+      setNominalCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 DistrictHeating::DistrictHeating(const Model& model)
@@ -169,6 +186,10 @@ DistrictHeating::DistrictHeating(std::shared_ptr<detail::DistrictHeating_Impl> i
 {}
 /// @endcond
 
+
+  boost::optional<double> DistrictHeating::autosizedNominalCapacity() const {
+    return getImpl<detail::DistrictHeating_Impl>()->autosizedNominalCapacity();
+  }
 
 } // model
 

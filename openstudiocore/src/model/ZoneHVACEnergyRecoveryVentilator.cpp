@@ -350,6 +350,33 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_EnergyRecoveryVentilatorFields::ExhaustAirFanName);
   }
 
+  boost::optional<double> ZoneHVACEnergyRecoveryVentilator_Impl::autosizedSupplyAirFlowRate() const {
+    return getAutosizedValue("Design Size Supply Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACEnergyRecoveryVentilator_Impl::autosizedExhaustAirFlowRate() const {
+    return getAutosizedValue("Design Size Exhaust Air Flow Rate", "m3/s");
+  }
+
+  void ZoneHVACEnergyRecoveryVentilator_Impl::autosize() {
+    autosizeSupplyAirFlowRate();
+    autosizeExhaustAirFlowRate();
+  }
+
+  void ZoneHVACEnergyRecoveryVentilator_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedSupplyAirFlowRate();
+    if (val) {
+      setSupplyAirFlowRate(val.get());
+    }
+
+    val = autosizedExhaustAirFlowRate();
+    if (val) {
+      setExhaustAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 ZoneHVACEnergyRecoveryVentilator::ZoneHVACEnergyRecoveryVentilator(const Model& model)
@@ -528,6 +555,14 @@ ZoneHVACEnergyRecoveryVentilator::ZoneHVACEnergyRecoveryVentilator(std::shared_p
   : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> ZoneHVACEnergyRecoveryVentilator::autosizedSupplyAirFlowRate() const {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilator_Impl>()->autosizedSupplyAirFlowRate();
+  }
+
+  boost::optional<double> ZoneHVACEnergyRecoveryVentilator::autosizedExhaustAirFlowRate() const {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilator_Impl>()->autosizedExhaustAirFlowRate();
+  }
 
 } // model
 } // openstudio

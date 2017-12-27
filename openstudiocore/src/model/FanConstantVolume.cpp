@@ -459,6 +459,23 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<double> FanConstantVolume_Impl::autosizedMaximumFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Flow Rate", "m3/s");
+  }
+
+  void FanConstantVolume_Impl::autosize() {
+    autosizeMaximumFlowRate();
+  }
+
+  void FanConstantVolume_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumFlowRate();
+    if (val) {
+      setMaximumFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 // create a new FanConstantVolume object in the model's workspace
@@ -577,6 +594,10 @@ void FanConstantVolume::resetMaximumFlowRate() {
 void FanConstantVolume::autosizeMaximumFlowRate() {
   getImpl<detail::FanConstantVolume_Impl>()->autosizeMaximumFlowRate();
 }
+
+  boost::optional<double> FanConstantVolume::autosizedMaximumFlowRate() const {
+    return getImpl<detail::FanConstantVolume_Impl>()->autosizedMaximumFlowRate();
+  }
 
 } // model
 } // openstudio

@@ -424,6 +424,23 @@ namespace detail {
     }
   }
 
+  boost::optional<double> ZoneHVACLowTemperatureRadiantElectric_Impl::autosizedMaximumElectricalPowertoPanel() const {
+    return getAutosizedValue("Design Size Heating Design Capacity", "W");
+  }
+
+  void ZoneHVACLowTemperatureRadiantElectric_Impl::autosize() {
+    autosizeMaximumElectricalPowertoPanel();
+  }
+
+  void ZoneHVACLowTemperatureRadiantElectric_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumElectricalPowertoPanel();
+    if (val) {
+      setMaximumElectricalPowertoPanel(val.get());
+    }
+
+  }
+
 } // detail
 
 ZoneHVACLowTemperatureRadiantElectric::ZoneHVACLowTemperatureRadiantElectric(const Model& model, Schedule & availabilitySchedule, Schedule & heatingTemperatureSchedule)
@@ -604,6 +621,10 @@ ZoneHVACLowTemperatureRadiantElectric::ZoneHVACLowTemperatureRadiantElectric(std
   : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> ZoneHVACLowTemperatureRadiantElectric::autosizedMaximumElectricalPowertoPanel() const {
+    return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->autosizedMaximumElectricalPowertoPanel();
+  }
 
 } // model
 } // openstudio

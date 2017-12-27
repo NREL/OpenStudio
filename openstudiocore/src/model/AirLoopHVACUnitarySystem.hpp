@@ -413,6 +413,16 @@ class MODEL_API AirLoopHVACUnitarySystem : public ZoneHVACComponent {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() const ;
+
+  boost::optional<double> autosizedMaximumSupplyAirTemperature() const ;
+
+
+
   //@}
  protected:
   /// @cond

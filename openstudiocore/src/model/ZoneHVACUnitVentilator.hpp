@@ -159,6 +159,14 @@ class MODEL_API ZoneHVACUnitVentilator : public ZoneHVACComponent {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedMaximumSupplyAirFlowRate() const ;
+
+  boost::optional<double> autosizedMinimumOutdoorAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumOutdoorAirFlowRate() const ;
+
+
+
   //@}
  protected:
   /// @cond

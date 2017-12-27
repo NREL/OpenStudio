@@ -69,7 +69,7 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    ModelObject actuatedComponent() const;
+    boost::optional<ModelObject> actuatedComponent() const;
 
     std::string actuatedComponentControlType() const;
 

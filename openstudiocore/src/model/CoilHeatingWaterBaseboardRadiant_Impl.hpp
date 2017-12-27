@@ -99,6 +99,14 @@ namespace detail {
 
     double convergenceTolerance() const;
 
+  boost::optional<double> autosizedHeatingDesignCapacity() const ;
+
+  boost::optional<double> autosizedMaximumWaterFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

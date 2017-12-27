@@ -835,6 +835,118 @@ namespace detail{
     return boost::none;
   }
 
+  boost::optional<double> CoilCoolingDXTwoSpeed_Impl::autosizedRatedHighSpeedTotalCoolingCapacity() const {
+    return getAutosizedValue("Design Size High Speed Gross Rated Total Cooling Capacity", "W");
+  }
+
+  boost::optional<double> CoilCoolingDXTwoSpeed_Impl::autosizedRatedHighSpeedSensibleHeatRatio() const {
+    return getAutosizedValue("Design Size High Speed Rated Sensible Heat Ratio", "");
+  }
+
+  boost::optional<double> CoilCoolingDXTwoSpeed_Impl::autosizedRatedHighSpeedAirFlowRate() const {
+    return getAutosizedValue("Design Size High Speed Rated Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoilCoolingDXTwoSpeed_Impl::autosizedRatedLowSpeedTotalCoolingCapacity() const {
+    return getAutosizedValue("Design Size Low Speed Gross Rated Total Cooling Capacity", "W");
+  }
+
+  boost::optional<double> CoilCoolingDXTwoSpeed_Impl::autosizedRatedLowSpeedSensibleHeatRatio() const {
+    return getAutosizedValue("Design Size Low Speed Gross Rated Sensible Heat Ratio", "");
+  }
+
+  boost::optional<double> CoilCoolingDXTwoSpeed_Impl::autosizedRatedLowSpeedAirFlowRate() const {
+    return getAutosizedValue("Design Size Low Speed Rated Air Flow Rate", "m3/s");
+  }
+
+  // E+ output has a bug where this field label is incorrect
+  boost::optional<double> CoilCoolingDXTwoSpeed_Impl::autosizedHighSpeedEvaporativeCondenserAirFlowRate() const {
+    return getAutosizedValue("Design Size High Speed Evaporative Condenser Effectiveness", "m3/s");
+  }
+
+  // E+ output has a bug where this field label is incorrect
+  boost::optional<double> CoilCoolingDXTwoSpeed_Impl::autosizedHighSpeedEvaporativeCondenserPumpRatedPowerConsumption() const {
+    return getAutosizedValue("Design Size High Speed Evaporative Condenser Air Flow Rate", "W");
+  }
+
+  // E+ output has a bug where this field label is incorrect
+  boost::optional<double> CoilCoolingDXTwoSpeed_Impl::autosizedLowSpeedEvaporativeCondenserAirFlowRate() const {
+    return getAutosizedValue("Design Size Low Speed Evaporative Condenser Effectiveness", "m3/s");
+  }
+
+  // E+ output has a bug where this field label is incorrect
+  boost::optional<double> CoilCoolingDXTwoSpeed_Impl::autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const {
+    return getAutosizedValue("Design Size Low Speed Evaporative Condenser Air Flow Rate", "W");
+  }
+
+  void CoilCoolingDXTwoSpeed_Impl::autosize() {
+    boost::optional<double> emptyVal;
+    setRatedHighSpeedTotalCoolingCapacity(emptyVal);
+    setRatedHighSpeedSensibleHeatRatio(emptyVal);
+    setRatedHighSpeedAirFlowRate(emptyVal);
+    setRatedLowSpeedTotalCoolingCapacity(emptyVal);
+    setRatedLowSpeedSensibleHeatRatio(emptyVal);
+    setRatedLowSpeedAirFlowRate(emptyVal);
+    setHighSpeedEvaporativeCondenserAirFlowRate(emptyVal);
+    setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(emptyVal);
+    setLowSpeedEvaporativeCondenserAirFlowRate(emptyVal);
+    setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption(emptyVal);
+  }
+
+  void CoilCoolingDXTwoSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRatedHighSpeedTotalCoolingCapacity();
+    if (val) {
+      setRatedHighSpeedTotalCoolingCapacity(val.get());
+    }
+
+    val = autosizedRatedHighSpeedSensibleHeatRatio();
+    if (val) {
+      setRatedHighSpeedSensibleHeatRatio(val.get());
+    }
+
+    val = autosizedRatedHighSpeedAirFlowRate();
+    if (val) {
+      setRatedHighSpeedAirFlowRate(val.get());
+    }
+
+    val = autosizedRatedLowSpeedTotalCoolingCapacity();
+    if (val) {
+      setRatedLowSpeedTotalCoolingCapacity(val.get());
+    }
+
+    val = autosizedRatedLowSpeedSensibleHeatRatio();
+    if (val) {
+      setRatedLowSpeedSensibleHeatRatio(val.get());
+    }
+
+    val = autosizedRatedLowSpeedAirFlowRate();
+    if (val) {
+      setRatedLowSpeedAirFlowRate(val.get());
+    }
+
+    val = autosizedHighSpeedEvaporativeCondenserAirFlowRate();
+    if (val) {
+      setHighSpeedEvaporativeCondenserAirFlowRate(val.get());
+    }
+
+    val = autosizedHighSpeedEvaporativeCondenserPumpRatedPowerConsumption();
+    if (val) {
+      setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(val.get());
+    }
+
+    val = autosizedLowSpeedEvaporativeCondenserAirFlowRate();
+    if (val) {
+      setLowSpeedEvaporativeCondenserAirFlowRate(val.get());
+    }
+
+    val = autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption();
+    if (val) {
+      setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption(val.get());
+    }
+
+  }
+
 }// detail
 
 
@@ -1489,6 +1601,46 @@ IddObjectType CoilCoolingDXTwoSpeed::iddObjectType() {
   IddObjectType result(IddObjectType::OS_Coil_Cooling_DX_TwoSpeed);
   return result;
 }
+
+  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedHighSpeedTotalCoolingCapacity() const {
+    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedRatedHighSpeedTotalCoolingCapacity();
+  }
+
+  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedHighSpeedSensibleHeatRatio() const {
+    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedRatedHighSpeedSensibleHeatRatio();
+  }
+
+  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedHighSpeedAirFlowRate() const {
+    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedRatedHighSpeedAirFlowRate();
+  }
+
+  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedLowSpeedTotalCoolingCapacity() const {
+    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedRatedLowSpeedTotalCoolingCapacity();
+  }
+
+  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedLowSpeedSensibleHeatRatio() const {
+    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedRatedLowSpeedSensibleHeatRatio();
+  }
+
+  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedLowSpeedAirFlowRate() const {
+    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedRatedLowSpeedAirFlowRate();
+  }
+
+  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedHighSpeedEvaporativeCondenserAirFlowRate() const {
+    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedHighSpeedEvaporativeCondenserAirFlowRate();
+  }
+
+  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedHighSpeedEvaporativeCondenserPumpRatedPowerConsumption() const {
+    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedHighSpeedEvaporativeCondenserPumpRatedPowerConsumption();
+  }
+
+  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedLowSpeedEvaporativeCondenserAirFlowRate() const {
+    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedLowSpeedEvaporativeCondenserAirFlowRate();
+  }
+
+  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const {
+    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption();
+  }
 
 } // model
 } // openstudio

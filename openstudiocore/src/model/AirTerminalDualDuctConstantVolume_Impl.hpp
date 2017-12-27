@@ -70,6 +70,10 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
     //@}
     /** @name Getters */
     //@{
@@ -116,6 +120,9 @@ namespace detail {
     virtual ModelObject clone(Model model) const override;
 
     bool isRemovable() const override;
+
+    boost::optional<double> autosizedMaximumAirFlowRate() const ;
+
     //@}
 
    protected:

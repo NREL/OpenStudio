@@ -155,6 +155,10 @@ class MODEL_API CoilHeatingDXMultiSpeed : public StraightComponent {
   /** Remove all stages **/
   void removeAllStages();
 
+  boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
+
+
+
   //@}
  protected:
   /// @cond

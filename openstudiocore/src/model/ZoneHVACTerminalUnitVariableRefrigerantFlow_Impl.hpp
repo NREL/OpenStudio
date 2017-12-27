@@ -122,6 +122,24 @@ namespace detail {
 
     double ratedTotalHeatingCapacitySizingRatio() const;
 
+  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingisNeeded() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoHeatingisNeeded() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

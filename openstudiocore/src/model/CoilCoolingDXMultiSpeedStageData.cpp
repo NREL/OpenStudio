@@ -36,6 +36,7 @@
 #include "../model/CurveBiquadratic_Impl.hpp"
 #include "../model/CurveQuadratic.hpp"
 #include "../model/CurveQuadratic_Impl.hpp"
+#include "../model/CoilCoolingDXMultiSpeed_Impl.hpp"
 #include <utilities/idd/OS_Coil_Cooling_DX_MultiSpeed_StageData_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
@@ -417,6 +418,146 @@ namespace detail {
     return t_clone;
   }
 
+  boost::optional<std::tuple<int, CoilCoolingDXMultiSpeed>> CoilCoolingDXMultiSpeedStageData_Impl::stageIndexAndParentCoil() const {
+
+    boost::optional<std::tuple<int, CoilCoolingDXMultiSpeed>> result;
+
+    // This coil performance object can only be found in a CoilCoolingDXMultiSpeed
+    // Check all CoilCoolingDXMultiSpeeds in the model, seeing if this is inside of one of them.
+    boost::optional<int> stageIndex;
+    boost::optional<CoilCoolingDXMultiSpeed> parentCoil;
+    auto coilCoolingDXMultiSpeeds = this->model().getConcreteModelObjects<CoilCoolingDXMultiSpeed>();
+    for (const auto & coilInModel : coilCoolingDXMultiSpeeds) {
+      // Check the coil performance objects in this coil to see if one of them is this object       
+      std::vector<CoilCoolingDXMultiSpeedStageData> perfStages = coilInModel.stages();
+      int i = 1;
+      for (auto perfStage : perfStages) {
+        if (perfStage.handle() == this->handle()) {
+          stageIndex = i;
+          parentCoil = coilInModel;
+          break;
+        }
+        i++;
+      }
+    }
+
+    // Warn if this coil performance object was not found inside a coil
+    if (!parentCoil) {
+      LOG(Warn, name().get() + " was not found inside a CoilCoolingDXMultiSpeed in the model, cannot retrieve the autosized value.");
+      return result;
+    }
+
+    return std::make_tuple(stageIndex.get(), parentCoil.get());
+  }
+
+
+  boost::optional<double> CoilCoolingDXMultiSpeedStageData_Impl::autosizedGrossRatedTotalCoolingCapacity() const {
+    auto indexAndNameOpt = stageIndexAndParentCoil();
+    boost::optional<double> result;
+    if (!indexAndNameOpt) {
+      return result;
+    }
+    auto indexAndName = indexAndNameOpt.get();
+    int index = std::get<0>(indexAndName);
+    CoilCoolingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
+    std::string sqlField = "Speed " + std::to_string(index) + " Design Size Rated Total Cooling Capacity";
+  
+    return parentCoil.getAutosizedValue(sqlField, "W");
+  }
+
+  boost::optional<double> CoilCoolingDXMultiSpeedStageData_Impl::autosizedGrossRatedSensibleHeatRatio() const {
+    auto indexAndNameOpt = stageIndexAndParentCoil();
+    boost::optional<double> result;
+    if (!indexAndNameOpt) {
+      return result;
+    }
+    auto indexAndName = indexAndNameOpt.get();
+    int index = std::get<0>(indexAndName);
+    CoilCoolingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
+    std::string sqlField = "Speed " + std::to_string(index) + " Design Size Rated Sensible Heat Ratio";
+
+    return parentCoil.getAutosizedValue(sqlField, "");
+  }
+
+  boost::optional<double> CoilCoolingDXMultiSpeedStageData_Impl::autosizedRatedAirFlowRate() const {
+    auto indexAndNameOpt = stageIndexAndParentCoil();
+    boost::optional<double> result;
+    if (!indexAndNameOpt) {
+      return result;
+    }
+    auto indexAndName = indexAndNameOpt.get();
+    int index = std::get<0>(indexAndName);
+    CoilCoolingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
+    std::string sqlField = "Design Size Speed " + std::to_string(index) + " Rated Air Flow Rate";
+
+    return parentCoil.getAutosizedValue(sqlField, "m3/s");
+  }
+
+  boost::optional<double> CoilCoolingDXMultiSpeedStageData_Impl::autosizedEvaporativeCondenserAirFlowRate() const {
+    auto indexAndNameOpt = stageIndexAndParentCoil();
+    boost::optional<double> result;
+    if (!indexAndNameOpt) {
+      return result;
+    }
+    auto indexAndName = indexAndNameOpt.get();
+    int index = std::get<0>(indexAndName);
+    CoilCoolingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
+    std::string sqlField = "Speed " + std::to_string(index) + " Design Size Evaporative Condenser Air Flow Rate";
+
+    return parentCoil.getAutosizedValue(sqlField, "m3/s");
+  }
+
+  boost::optional<double> CoilCoolingDXMultiSpeedStageData_Impl::autosizedRatedEvaporativeCondenserPumpPowerConsumption() const {
+    auto indexAndNameOpt = stageIndexAndParentCoil();
+    boost::optional<double> result;
+    if (!indexAndNameOpt) {
+      return result;
+    }
+    auto indexAndName = indexAndNameOpt.get();
+    int index = std::get<0>(indexAndName);
+    CoilCoolingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
+    std::string sqlField = "Speed " + std::to_string(index) + " Design Size Rated Evaporative Condenser Pump Power Consumption";
+    
+    return parentCoil.getAutosizedValue(sqlField, "W");
+  }
+
+  void CoilCoolingDXMultiSpeedStageData_Impl::autosize() {
+    autosizeGrossRatedTotalCoolingCapacity();
+    autosizeGrossRatedSensibleHeatRatio();
+    autosizeRatedAirFlowRate();
+    autosizeEvaporativeCondenserAirFlowRate();
+    autosizeRatedEvaporativeCondenserPumpPowerConsumption();
+  }
+
+  void CoilCoolingDXMultiSpeedStageData_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedGrossRatedTotalCoolingCapacity();
+    if (val) {
+      setGrossRatedTotalCoolingCapacity(val.get());
+    }
+
+    val = autosizedGrossRatedSensibleHeatRatio();
+    if (val) {
+      setGrossRatedSensibleHeatRatio(val.get());
+    }
+
+    val = autosizedRatedAirFlowRate();
+    if (val) {
+      setRatedAirFlowRate(val.get());
+    }
+
+    val = autosizedEvaporativeCondenserAirFlowRate();
+    if (val) {
+      setEvaporativeCondenserAirFlowRate(val.get());
+    }
+
+    val = autosizedRatedEvaporativeCondenserPumpPowerConsumption();
+    if (val) {
+      setRatedEvaporativeCondenserPumpPowerConsumption(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilCoolingDXMultiSpeedStageData::CoilCoolingDXMultiSpeedStageData(const Model& model)
@@ -739,6 +880,38 @@ CoilCoolingDXMultiSpeedStageData::CoilCoolingDXMultiSpeedStageData(std::shared_p
   : ParentObject(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> CoilCoolingDXMultiSpeedStageData::autosizedGrossRatedTotalCoolingCapacity() const {
+    return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->autosizedGrossRatedTotalCoolingCapacity();
+  }
+
+  boost::optional<double> CoilCoolingDXMultiSpeedStageData::autosizedGrossRatedSensibleHeatRatio() const {
+    return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->autosizedGrossRatedSensibleHeatRatio();
+  }
+
+  boost::optional<double> CoilCoolingDXMultiSpeedStageData::autosizedRatedAirFlowRate() const {
+    return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->autosizedRatedAirFlowRate();
+  }
+
+  boost::optional<double> CoilCoolingDXMultiSpeedStageData::autosizedEvaporativeCondenserAirFlowRate() const {
+    return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->autosizedEvaporativeCondenserAirFlowRate();
+  }
+
+  boost::optional<double> CoilCoolingDXMultiSpeedStageData::autosizedRatedEvaporativeCondenserPumpPowerConsumption() const {
+    return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->autosizedRatedEvaporativeCondenserPumpPowerConsumption();
+  }
+
+  void CoilCoolingDXMultiSpeedStageData::autosize() {
+    return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->autosize();
+  }
+
+  void CoilCoolingDXMultiSpeedStageData::applySizingValues() {
+    return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->applySizingValues();
+  }
+
+  boost::optional<std::tuple<int, CoilCoolingDXMultiSpeed>> CoilCoolingDXMultiSpeedStageData::stageIndexAndParentCoil() const {
+    return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->stageIndexAndParentCoil();
+  }
 
 } // model
 } // openstudio

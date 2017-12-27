@@ -99,6 +99,12 @@ namespace detail {
 
     double fractionofRadiantEnergyIncidentonPeople() const;
 
+  boost::optional<double> autosizedMaximumPowerInput() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

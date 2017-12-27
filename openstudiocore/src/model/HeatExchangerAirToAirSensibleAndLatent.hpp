@@ -198,6 +198,10 @@ class MODEL_API HeatExchangerAirToAirSensibleAndLatent : public AirToAirComponen
 
   void setEconomizerLockout(bool economizerLockout);
 
+  boost::optional<double> autosizedNominalSupplyAirFlowRate() const ;
+
+
+
  protected:
 
   /// @cond

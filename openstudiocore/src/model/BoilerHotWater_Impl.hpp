@@ -147,6 +147,14 @@ namespace detail {
 
     bool isSizingFactorDefaulted() const;
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

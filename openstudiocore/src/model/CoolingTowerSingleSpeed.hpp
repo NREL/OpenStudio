@@ -47,7 +47,7 @@ class CoolingTowerSingleSpeed_Impl;
 
 } // detail
 
-/** CoolingTowerSingleSpeed is a StraightComponent that wraps the OpenStudio IDD object 
+/** CoolingTowerSingleSpeed is a StraightComponent that wraps the OpenStudio IDD object
  *  'OS:CoolingTower:SingleSpeed'. */
 class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
  public:
@@ -334,6 +334,29 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
   bool setSizingFactor(const Quantity& sizingFactor);
 
   void resetSizingFactor();
+
+  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+  boost::optional<double> autosizedDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedFanPoweratDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedUFactorTimesAreaValueatDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedAirFlowRateinFreeConvectionRegime() const ;
+
+  boost::optional<double> autosizedUFactorTimesAreaValueatFreeConvectionAirFlowRate() const ;
+
+  /* This method mimics what E+ does because this value it isn't reported in the SQL file:
+   * It gets the input from the Sizing:Plant attached to the loop and the entered design inlet air wet-bulb temperature
+   */
+  boost::optional<double> autosizedDesignApproachTemperature() const;
+
+ /* This method mimics what E+ does because this value it isn't reported in the SQL file:
+  * It gets the input from the Sizing:Plant attached to the loop
+  */
+  boost::optional<double> autosizedDesignRangeTemperature() const;
+
 
   double freeConvectionAirFlowRateSizingFactor() const;
   bool setFreeConvectionAirFlowRateSizingFactor(double freeConvectionAirFlowRateSizingFactor);

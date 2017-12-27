@@ -95,6 +95,10 @@ class MODEL_API PlantComponentTemperatureSource : public StraightComponent {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedDesignVolumeFlowRate() const ;
+
+
+
   //@}
  protected:
   /// @cond

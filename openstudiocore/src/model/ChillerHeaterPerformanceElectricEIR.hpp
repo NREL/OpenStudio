@@ -217,6 +217,16 @@ class MODEL_API ChillerHeaterPerformanceElectricEIR : public ParentObject {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedReferenceCoolingModeEvaporatorCapacity() const ;
+
+  boost::optional<double> autosizedDesignChilledWaterFlowRate() const ;
+
+  boost::optional<double> autosizedDesignCondenserWaterFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   // Reverse lookups
   // Convenience functions to return parent CentralHeatPumpSystem and CentralHeatPumpSystemModule
   // I've decided that multiple CentralHeatPumpSystemModules can reference the same ChillerHeaterPerformanceElectricEIR

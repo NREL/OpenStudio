@@ -180,6 +180,16 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAir : public StraightComponent
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+
+  boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const ;
+
+
+
   //@}
  protected:
   /// @cond

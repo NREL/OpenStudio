@@ -118,6 +118,10 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
     unsigned componentInletPort,
     unsigned componentOutletPort );
 
+  virtual void autosize();
+
+  virtual void applySizingValues();
+
  protected:
 
   friend class Model_Impl;

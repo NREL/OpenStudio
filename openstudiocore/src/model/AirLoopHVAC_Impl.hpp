@@ -249,6 +249,12 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
   bool removeAvailabilityManager(const AvailabilityManager& avm);
   bool removeAvailabilityManager(unsigned priority);
 
+  boost::optional<double> autosizedDesignSupplyAirFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
   private:
 
   REGISTER_LOGGER("openstudio.model.AirLoopHVAC");

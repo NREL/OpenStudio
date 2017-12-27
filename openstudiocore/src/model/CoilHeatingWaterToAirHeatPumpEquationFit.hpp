@@ -161,6 +161,14 @@ class MODEL_API CoilHeatingWaterToAirHeatPumpEquationFit : public WaterToAirComp
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedRatedAirFlowRate() const ;
+
+  boost::optional<double> autosizedRatedWaterFlowRate() const ;
+
+  boost::optional<double> autosizedRatedHeatingCapacity() const ;
+
+
+
   //@}
  protected:
   /// @cond

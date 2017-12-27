@@ -143,6 +143,14 @@ class MODEL_API ControllerOutdoorAir : public ParentObject {
 
   virtual std::vector<openstudio::IdfObject> remove();
 
+  boost::optional<double> autosizedMinimumOutdoorAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumOutdoorAirFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
  protected:
 
   typedef detail::ControllerOutdoorAir_Impl ImplType;

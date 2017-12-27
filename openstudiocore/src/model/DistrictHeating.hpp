@@ -88,6 +88,10 @@ class MODEL_API DistrictHeating : public StraightComponent {
 
   //@}
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+
+
  protected:
   /// @cond
   typedef detail::DistrictHeating_Impl ImplType;

@@ -168,7 +168,7 @@ namespace model {
     return os.str();
   }
 
-  // This really shouldn't be necessary
+  // This really should not be necessary
   IdfObject toIdfObject() const {
     return *self;
   }

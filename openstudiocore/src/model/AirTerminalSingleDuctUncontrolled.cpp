@@ -304,6 +304,23 @@ namespace detail{
     OS_ASSERT(result);
   }
 
+  boost::optional<double> AirTerminalSingleDuctUncontrolled_Impl::autosizedMaximumAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Air Flow Rate", "m3/s");
+  }
+
+  void AirTerminalSingleDuctUncontrolled_Impl::autosize() {
+    autosizeMaximumAirFlowRate();
+  }
+
+  void AirTerminalSingleDuctUncontrolled_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumAirFlowRate();
+    if (val) {
+      setMaximumAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 AirTerminalSingleDuctUncontrolled::AirTerminalSingleDuctUncontrolled(const Model& model,
@@ -359,6 +376,10 @@ bool AirTerminalSingleDuctUncontrolled::setMaximumAirFlowRate(const Quantity& ma
 void AirTerminalSingleDuctUncontrolled::autosizeMaximumAirFlowRate() {
   getImpl<detail::AirTerminalSingleDuctUncontrolled_Impl>()->autosizeMaximumAirFlowRate();
 }
+
+  boost::optional<double> AirTerminalSingleDuctUncontrolled::autosizedMaximumAirFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctUncontrolled_Impl>()->autosizedMaximumAirFlowRate();
+  }
 
 } // model
 } // openstudio

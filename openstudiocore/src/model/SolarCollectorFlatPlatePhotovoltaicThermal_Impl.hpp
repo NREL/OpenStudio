@@ -95,6 +95,12 @@ namespace detail {
 
     bool isDesignFlowRateAutosized() const;
 
+  boost::optional<double> autosizedDesignFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

@@ -1015,6 +1015,73 @@ namespace detail {
     return setDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirTemperatureinHeatingMode,maximumSupplyAirTemperatureInHeatingMode);
   }
 
+  boost::optional<double> ZoneHVACFourPipeFanCoil_Impl::autosizedMaximumSupplyAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Supply Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACFourPipeFanCoil_Impl::autosizedMaximumOutdoorAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Outdoor Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACFourPipeFanCoil_Impl::autosizedMaximumColdWaterFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Cold Water Flow", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACFourPipeFanCoil_Impl::autosizedMaximumHotWaterFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Hot Water Flow", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACFourPipeFanCoil_Impl::autosizedMinimumSupplyAirTemperatureinCoolingMode() const {
+    return getAutosizedValue("Design Size Minimum Supply Air Temperature in Cooling Mode", "C");
+  }
+
+  boost::optional<double> ZoneHVACFourPipeFanCoil_Impl::autosizedMaximumSupplyAirTemperatureinHeatingMode() const {
+    return getAutosizedValue("Design Size Maximum Supply Air Temperature in Heating Mode", "C");
+  }
+
+  void ZoneHVACFourPipeFanCoil_Impl::autosize() {
+    autosizeMaximumSupplyAirFlowRate();
+    autosizeMaximumOutdoorAirFlowRate();
+    autosizeMaximumColdWaterFlowRate();
+    autosizeMaximumHotWaterFlowRate();
+    autosizeMinimumSupplyAirTemperatureInCoolingMode();
+    autosizeMaximumSupplyAirTemperatureInHeatingMode();
+  }
+
+  void ZoneHVACFourPipeFanCoil_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumSupplyAirFlowRate();
+    if (val) {
+      setMaximumSupplyAirFlowRate(val.get());
+    }
+
+    val = autosizedMaximumOutdoorAirFlowRate();
+    if (val) {
+      setMaximumOutdoorAirFlowRate(val.get());
+    }
+
+    val = autosizedMaximumColdWaterFlowRate();
+    if (val) {
+      setMaximumColdWaterFlowRate(val.get());
+    }
+
+    val = autosizedMaximumHotWaterFlowRate();
+    if (val) {
+      setMaximumHotWaterFlowRate(val.get());
+    }
+
+    val = autosizedMinimumSupplyAirTemperatureinCoolingMode();
+    if (val) {
+      setMinimumSupplyAirTemperatureInCoolingMode(val.get());
+    }
+
+    val = autosizedMaximumSupplyAirTemperatureinHeatingMode();
+    if (val) {
+      setMaximumSupplyAirTemperatureInHeatingMode(val.get());
+    }
+
+  }
+
 } // detail
 
 ZoneHVACFourPipeFanCoil::ZoneHVACFourPipeFanCoil(const Model& model,
@@ -1439,6 +1506,30 @@ ZoneHVACFourPipeFanCoil::ZoneHVACFourPipeFanCoil(std::shared_ptr<detail::ZoneHVA
   : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> ZoneHVACFourPipeFanCoil::autosizedMaximumSupplyAirFlowRate() const {
+    return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->autosizedMaximumSupplyAirFlowRate();
+  }
+
+  boost::optional<double> ZoneHVACFourPipeFanCoil::autosizedMaximumOutdoorAirFlowRate() const {
+    return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->autosizedMaximumOutdoorAirFlowRate();
+  }
+
+  boost::optional<double> ZoneHVACFourPipeFanCoil::autosizedMaximumColdWaterFlowRate() const {
+    return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->autosizedMaximumColdWaterFlowRate();
+  }
+
+  boost::optional<double> ZoneHVACFourPipeFanCoil::autosizedMaximumHotWaterFlowRate() const {
+    return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->autosizedMaximumHotWaterFlowRate();
+  }
+
+  boost::optional<double> ZoneHVACFourPipeFanCoil::autosizedMinimumSupplyAirTemperatureinCoolingMode() const {
+    return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->autosizedMinimumSupplyAirTemperatureinCoolingMode();
+  }
+
+  boost::optional<double> ZoneHVACFourPipeFanCoil::autosizedMaximumSupplyAirTemperatureinHeatingMode() const {
+    return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->autosizedMaximumSupplyAirTemperatureinHeatingMode();
+  }
 
 } // model
 } // openstudio

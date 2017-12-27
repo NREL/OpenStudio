@@ -107,6 +107,12 @@ namespace detail {
     // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> heatingControlTemperatureSchedule() const;
 
+  boost::optional<double> autosizedMaximumHotWaterFlow() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{
@@ -135,6 +141,9 @@ namespace detail {
     //@{
 
     bool addToNode(Node & node) override;
+
+    // Used to find the ZoneHVAC that contains this coil
+    boost::optional<ZoneHVACLowTempRadiantVarFlow> parentZoneHVAC() const;
 
     //@}
    protected:

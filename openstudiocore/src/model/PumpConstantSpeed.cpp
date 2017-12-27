@@ -714,6 +714,32 @@ namespace detail {
     return false;
   }
 
+  boost::optional<double> PumpConstantSpeed_Impl::autosizedRatedFlowRate() const {
+    return getAutosizedValue("Design Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> PumpConstantSpeed_Impl::autosizedRatedPowerConsumption() const {
+    return getAutosizedValue("Design Power Consumption", "W");
+  }
+
+  void PumpConstantSpeed_Impl::autosize() {
+    autosizeRatedFlowRate();
+    autosizeRatedPowerConsumption();
+  }
+
+  void PumpConstantSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRatedFlowRate();
+    if (val) {
+      setRatedFlowRate(val.get());
+    }
+
+    val = autosizedRatedPowerConsumption();
+    if (val) {
+      setRatedPowerConsumption(val.get());
+    }
+  }
+
   std::string PumpConstantSpeed_Impl::designPowerSizingMethod() const {
     auto value = getString(OS_Pump_ConstantSpeedFields::DesignPowerSizingMethod,true);
     OS_ASSERT(value);
@@ -1052,6 +1078,14 @@ PumpConstantSpeed::PumpConstantSpeed(std::shared_ptr<detail::PumpConstantSpeed_I
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> PumpConstantSpeed::autosizedRatedFlowRate() const {
+    return getImpl<detail::PumpConstantSpeed_Impl>()->autosizedRatedFlowRate();
+  }
+
+  boost::optional<double> PumpConstantSpeed::autosizedRatedPowerConsumption() const {
+    return getImpl<detail::PumpConstantSpeed_Impl>()->autosizedRatedPowerConsumption();
+  }
 
 } // model
 } // openstudio

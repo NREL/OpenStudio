@@ -433,6 +433,28 @@ class MODEL_API Model : public openstudio::Workspace {
   /// @cond
   detail::Model_Impl* rawImpl() const;
   /// @endcond
+
+  /** For each object in the model with autosizable fields,
+   *  sets all autosizable fields to 'autosize'.
+   *  Fields that previously contained hard-sized
+   *  values will be overwritten by 'autosize.'
+   */
+  void autosize();
+
+  /** For each object in the model with autosizable fields,
+   *  retrieves the autosized values from the sizing run and then
+   *  sets these values in the object explicitly.
+   *  Requires a sql file with sizing run results from a
+   *  previous simulation.
+   *  For example, if a ChillerElectricEIR's Reference Capacity
+   *  was previously autosized to 120,000W by the sizing run,
+   *  this method would find the 120,000W in the sql file and then
+   *  set the Reference Capacity field to 120,000W explicitly.  Next
+   *  time a simulation is run, the chiller's capacity will be 120,000W,
+   *  it will not be autosized during the sizing run.
+   */
+  void applySizingValues();
+
  protected:
   /// @cond
   typedef detail::Model_Impl ImplType;

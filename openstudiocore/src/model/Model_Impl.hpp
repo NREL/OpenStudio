@@ -263,7 +263,9 @@ namespace detail {
 
     virtual void reportInitialModelObjects();
 
+    void autosize();
 
+    void applySizingValues();
 
    private:
     // explicitly unimplemented copy constructor

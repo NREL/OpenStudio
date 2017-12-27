@@ -180,6 +180,14 @@ class MODEL_API HeatExchangerFluidToFluid : public WaterToWaterComponent {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedLoopDemandSideDesignFlowRate() const ;
+
+  boost::optional<double> autosizedLoopSupplySideDesignFlowRate() const ;
+
+  boost::optional<double> autosizedHeatExchangerUFactorTimesAreaValue() const ;
+
+
+
   //@}
  protected:
   /// @cond

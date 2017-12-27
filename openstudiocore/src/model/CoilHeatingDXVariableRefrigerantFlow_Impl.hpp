@@ -97,6 +97,14 @@ namespace detail {
 
     std::vector<ModelObject> children() const override;
 
+  boost::optional<double> autosizedRatedTotalHeatingCapacity() const ;
+
+  boost::optional<double> autosizedRatedAirFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
    protected:
 
    private:

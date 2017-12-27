@@ -487,6 +487,33 @@ namespace detail {
     return newBoiler;
   }
 
+  boost::optional<double> BoilerHotWater_Impl::autosizedNominalCapacity() const {
+    return getAutosizedValue("Design Size Nominal Capacity", "W");
+  }
+
+  boost::optional<double> BoilerHotWater_Impl::autosizedDesignWaterFlowRate() const {
+    return getAutosizedValue("Design Size Design Water Flow Rate", "m3/s");
+  }
+
+  void BoilerHotWater_Impl::autosize() {
+    autosizeNominalCapacity();
+    autosizeDesignWaterFlowRate();
+  }
+
+  void BoilerHotWater_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalCapacity();
+    if (val) {
+      setNominalCapacity(val.get());
+    }
+
+    val = autosizedDesignWaterFlowRate();
+    if (val) {
+      setDesignWaterFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 BoilerHotWater::BoilerHotWater(const Model& model)
@@ -729,6 +756,14 @@ BoilerHotWater::BoilerHotWater(std::shared_ptr<detail::BoilerHotWater_Impl> impl
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> BoilerHotWater::autosizedNominalCapacity() const {
+    return getImpl<detail::BoilerHotWater_Impl>()->autosizedNominalCapacity();
+  }
+
+  boost::optional<double> BoilerHotWater::autosizedDesignWaterFlowRate() const {
+    return getImpl<detail::BoilerHotWater_Impl>()->autosizedDesignWaterFlowRate();
+  }
 
 } // model
 } // openstudio

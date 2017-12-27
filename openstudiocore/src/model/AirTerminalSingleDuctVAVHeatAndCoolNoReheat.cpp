@@ -283,6 +283,23 @@ namespace detail {
     return true;
   }
 
+  boost::optional<double> AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl::autosizedMaximumAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Air Flow Rate", "m3/s");
+  }
+
+  void AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl::autosize() {
+    autosizeMaximumAirFlowRate();
+  }
+
+  void AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumAirFlowRate();
+    if (val) {
+      setMaximumAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 AirTerminalSingleDuctVAVHeatAndCoolNoReheat::AirTerminalSingleDuctVAVHeatAndCoolNoReheat(const Model& model)
@@ -339,6 +356,10 @@ AirTerminalSingleDuctVAVHeatAndCoolNoReheat::AirTerminalSingleDuctVAVHeatAndCool
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> AirTerminalSingleDuctVAVHeatAndCoolNoReheat::autosizedMaximumAirFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl>()->autosizedMaximumAirFlowRate();
+  }
 
 } // model
 } // openstudio

@@ -142,6 +142,10 @@ class MODEL_API CoilHeatingGas : public StraightComponent {
 
   void resetPartLoadFractionCorrelationCurve();
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+
+
   //@}
  protected:
 

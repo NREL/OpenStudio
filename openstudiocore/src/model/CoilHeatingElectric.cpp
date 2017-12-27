@@ -395,6 +395,23 @@ namespace detail {
     return false;
   }
 
+  boost::optional<double> CoilHeatingElectric_Impl::autosizedNominalCapacity() const {
+    return getAutosizedValue("Design Size Nominal Capacity", "W");
+  }
+
+  void CoilHeatingElectric_Impl::autosize() {
+    autosizeNominalCapacity();
+  }
+
+  void CoilHeatingElectric_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalCapacity();
+    if (val) {
+      setNominalCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilHeatingElectric::CoilHeatingElectric(const Model& model, Schedule & schedule )
@@ -486,6 +503,10 @@ CoilHeatingElectric::CoilHeatingElectric(std::shared_ptr<detail::CoilHeatingElec
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> CoilHeatingElectric::autosizedNominalCapacity() const {
+    return getImpl<detail::CoilHeatingElectric_Impl>()->autosizedNominalCapacity();
+  }
 
 } // model
 

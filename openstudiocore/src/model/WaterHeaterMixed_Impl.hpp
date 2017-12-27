@@ -371,6 +371,18 @@ namespace detail {
 
     bool isIndirectWaterHeatingRecoveryTimeDefaulted() const;
 
+  boost::optional<double> autosizedTankVolume() const ;
+
+  boost::optional<double> autosizedHeaterMaximumCapacity() const ;
+
+  boost::optional<double> autosizedUseSideDesignFlowRate() const ;
+
+  boost::optional<double> autosizedSourceSideDesignFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

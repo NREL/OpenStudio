@@ -428,6 +428,43 @@ namespace detail {
     return boost::none;
   }
 
+  boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedAirFlowRate() const {
+    return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedWaterFlowRate() const {
+    return getAutosizedValue("Design Size Rated Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedHeatingCapacity() const {
+    return getAutosizedValue("Design Size Rated Heating Capacity", "W");
+  }
+
+  void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosize() {
+    autosizeRatedAirFlowRate();
+    autosizeRatedWaterFlowRate();
+    autosizeRatedHeatingCapacity();
+  }
+
+  void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRatedAirFlowRate();
+    if (val) {
+      setRatedAirFlowRate(val.get());
+    }
+
+    val = autosizedRatedWaterFlowRate();
+    if (val) {
+      setRatedWaterFlowRate(val.get());
+    }
+
+    val = autosizedRatedHeatingCapacity();
+    if (val) {
+      setRatedHeatingCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 // create a new CoilHeatingWaterToAirHeatPumpEquationFit object in the model's workspace
@@ -638,6 +675,18 @@ CoilHeatingWaterToAirHeatPumpEquationFit::CoilHeatingWaterToAirHeatPumpEquationF
   : WaterToAirComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit::autosizedRatedAirFlowRate() const {
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->autosizedRatedAirFlowRate();
+  }
+
+  boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit::autosizedRatedWaterFlowRate() const {
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->autosizedRatedWaterFlowRate();
+  }
+
+  boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit::autosizedRatedHeatingCapacity() const {
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->autosizedRatedHeatingCapacity();
+  }
 
 } // model
 } // openstudio

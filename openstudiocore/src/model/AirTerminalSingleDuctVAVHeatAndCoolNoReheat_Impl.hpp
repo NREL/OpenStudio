@@ -86,6 +86,12 @@ namespace detail {
 
     double zoneMinimumAirFlowFraction() const;
 
+  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

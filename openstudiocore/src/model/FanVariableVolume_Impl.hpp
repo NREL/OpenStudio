@@ -212,6 +212,12 @@ namespace detail {
 
     bool isEndUseSubcategoryDefaulted() const;
 
+  boost::optional<double> autosizedMaximumFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

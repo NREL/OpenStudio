@@ -133,6 +133,22 @@ namespace detail {
 
     boost::optional<Schedule> basinHeaterOperatingSchedule()const;
 
+    // Autosizing methods
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
+    boost::optional <double> autosizedRatedAirFlowRate() const;
+
+    boost::optional <double> autosizedRatedTotalCoolingCapacity() const;
+
+    boost::optional <double> autosizedRatedSensibleHeatRatio() const;
+
+    boost::optional <double> autosizedEvaporativeCondenserAirFlowRate() const;
+
+    boost::optional <double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const;
+
     //@}
     /** @name Setters */
     //@{

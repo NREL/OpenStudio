@@ -1308,6 +1308,47 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSin
 }
 
 
+// FourPipeInduction seems to have problems with the inducedAirInletNode
+TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctConstantVolumeFourPipeInduction_inducedAirInletNode) {
+
+  Model m;
+
+  // Heating coil
+  PlantLoop p_heating(m);
+  CoilHeatingWater hc(m);
+  p_heating.addDemandBranchForComponent(hc);
+
+  // Air Side
+  AirLoopHVAC a(m);
+
+  AirTerminalSingleDuctConstantVolumeFourPipeInduction atu(m, hc);
+
+  // Add a zone with the terminal
+  ThermalZone z1(m);
+  a.addBranchForZone(z1, atu);
+
+  EXPECT_TRUE(atu.inducedAirInletNode());
+
+  // New zone, addBranchForZone
+  ThermalZone z2(m);
+  a.addBranchForZone(z2);
+
+  // Check that you do have a terminal
+  ASSERT_TRUE(z2.airLoopHVACTerminal());
+
+  boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeInduction> _atu_z2;
+  _atu_z2 = z2.airLoopHVACTerminal().get().cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+  ASSERT_TRUE(_atu_z2);
+
+  // Check that the inducedAirInletNode was properly connected
+  EXPECT_TRUE(_atu_z2->inducedAirInletNode());
+
+  // and the atu1's one wasn't disconnected
+  EXPECT_TRUE(atu.inducedAirInletNode());
+
+}
+
+
 // CooledBeam has a CoilCoolingCooledBeam with is a StraightComponent, not an HVACComponent, so it's handled separately
 TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctConstantVolumeCooledBeam) {
 

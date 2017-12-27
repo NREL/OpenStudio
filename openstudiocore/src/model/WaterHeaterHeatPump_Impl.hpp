@@ -118,6 +118,14 @@ namespace detail {
 
     std::string controlSensorLocationInStratifiedTank() const;
 
+  boost::optional<double> autosizedCondenserWaterFlowRate() const ;
+
+  boost::optional<double> autosizedEvaporatorAirFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

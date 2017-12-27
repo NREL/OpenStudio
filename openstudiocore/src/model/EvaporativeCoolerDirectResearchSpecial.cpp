@@ -314,6 +314,33 @@ namespace detail{
     OS_ASSERT(result);
   }
 
+  boost::optional<double> EvaporativeCoolerDirectResearchSpecial_Impl::autosizedRecirculatingWaterPumpPowerConsumption() const {
+    return getAutosizedValue("Recirculating Pump Power", "W");
+  }
+
+  boost::optional<double> EvaporativeCoolerDirectResearchSpecial_Impl::autosizedPrimaryAirDesignFlowRate() const {
+    return getAutosizedValue("Primary Air Design Flow Rate", "m3/s");
+  }
+
+  void EvaporativeCoolerDirectResearchSpecial_Impl::autosize() {
+    autosizeRecirculatingWaterPumpPowerConsumption();
+    autosizePrimaryAirDesignFlowRate();
+  }
+
+  void EvaporativeCoolerDirectResearchSpecial_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRecirculatingWaterPumpPowerConsumption();
+    if (val) {
+      setRecirculatingWaterPumpPowerConsumption(val.get());
+    }
+
+    val = autosizedPrimaryAirDesignFlowRate();
+    if (val) {
+      setPrimaryAirDesignFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 // create a new EvaporativeCoolerDirectResearchSpecial object in the model's workspace
@@ -476,6 +503,14 @@ IddObjectType EvaporativeCoolerDirectResearchSpecial::iddObjectType() {
   IddObjectType result(IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial);
   return result;
 }
+
+  boost::optional<double> EvaporativeCoolerDirectResearchSpecial::autosizedRecirculatingWaterPumpPowerConsumption() const {
+    return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->autosizedRecirculatingWaterPumpPowerConsumption();
+  }
+
+  boost::optional<double> EvaporativeCoolerDirectResearchSpecial::autosizedPrimaryAirDesignFlowRate() const {
+    return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->autosizedPrimaryAirDesignFlowRate();
+  }
 
 } // model
 } // openstudio

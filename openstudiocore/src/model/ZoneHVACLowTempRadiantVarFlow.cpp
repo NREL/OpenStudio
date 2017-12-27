@@ -509,6 +509,23 @@ namespace detail {
     }
   }
 
+  boost::optional<double> ZoneHVACLowTempRadiantVarFlow_Impl::autosizedHydronicTubingLength() const {
+    return getAutosizedValue("Design Size Hydronic Tubing Length", "m");
+  }
+
+  void ZoneHVACLowTempRadiantVarFlow_Impl::autosize() {
+    autosizeHydronicTubingLength();
+  }
+
+  void ZoneHVACLowTempRadiantVarFlow_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedHydronicTubingLength();
+    if (val) {
+      setHydronicTubingLength(val.get());
+    }
+
+  }
+
 } // detail
 
 ZoneHVACLowTempRadiantVarFlow::ZoneHVACLowTempRadiantVarFlow(const Model& model,
@@ -705,6 +722,10 @@ ZoneHVACLowTempRadiantVarFlow::ZoneHVACLowTempRadiantVarFlow(std::shared_ptr<det
   : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> ZoneHVACLowTempRadiantVarFlow::autosizedHydronicTubingLength() const {
+    return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->autosizedHydronicTubingLength();
+  }
 
 } // model
 } // openstudio

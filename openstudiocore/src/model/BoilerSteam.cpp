@@ -726,6 +726,23 @@ namespace detail {
     return false;
   }
 
+  boost::optional<double> BoilerSteam_Impl::autosizedNominalCapacity() const {
+    return getAutosizedValue("Design Size Nominal Capacity", "W");
+  }
+
+  void BoilerSteam_Impl::autosize() {
+    autosizeNominalCapacity();
+  }
+
+  void BoilerSteam_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalCapacity();
+    if (val) {
+      setNominalCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 BoilerSteam::BoilerSteam(const Model& model)
@@ -1001,6 +1018,10 @@ BoilerSteam::BoilerSteam(std::shared_ptr<detail::BoilerSteam_Impl> impl)
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> BoilerSteam::autosizedNominalCapacity() const {
+    return getImpl<detail::BoilerSteam_Impl>()->autosizedNominalCapacity();
+  }
 
 } // model
 } // openstudio

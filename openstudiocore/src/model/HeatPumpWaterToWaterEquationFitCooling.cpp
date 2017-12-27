@@ -357,6 +357,53 @@ namespace detail {
     return OS_HeatPump_WaterToWater_EquationFit_CoolingFields::LoadSideOutletNodeName;
   }
 
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling_Impl::autosizedReferenceLoadSideFlowRate() const {
+    return getAutosizedValue("Design Size Load Side Volume Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling_Impl::autosizedReferenceSourceSideFlowRate() const {
+    return getAutosizedValue("Design Size Source Side Volume Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling_Impl::autosizedRatedCoolingCapacity() const {
+    return getAutosizedValue("Design Size Nominal Capacity", "W");
+  }
+
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling_Impl::autosizedRatedCoolingPowerConsumption() const {
+    return getAutosizedValue("Design Size Cooling Power Consumption", "W");
+  }
+
+  void HeatPumpWaterToWaterEquationFitCooling_Impl::autosize() {
+    autosizeReferenceLoadSideFlowRate();
+    autosizeReferenceSourceSideFlowRate();
+    autosizeRatedCoolingCapacity();
+    autosizeRatedCoolingPowerConsumption();
+  }
+
+  void HeatPumpWaterToWaterEquationFitCooling_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedReferenceLoadSideFlowRate();
+    if (val) {
+      setReferenceLoadSideFlowRate(val.get());
+    }
+
+    val = autosizedReferenceSourceSideFlowRate();
+    if (val) {
+      setReferenceSourceSideFlowRate(val.get());
+    }
+
+    val = autosizedRatedCoolingCapacity();
+    if (val) {
+      setRatedCoolingCapacity(val.get());
+    }
+
+    val = autosizedRatedCoolingPowerConsumption();
+    if (val) {
+      setRatedCoolingPowerConsumption(val.get());
+    }
+
+  }
+
 } // detail
 
 HeatPumpWaterToWaterEquationFitCooling::HeatPumpWaterToWaterEquationFitCooling(const Model& model)
@@ -577,6 +624,22 @@ HeatPumpWaterToWaterEquationFitCooling::HeatPumpWaterToWaterEquationFitCooling(s
   : WaterToWaterComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling::autosizedReferenceLoadSideFlowRate() const {
+    return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->autosizedReferenceLoadSideFlowRate();
+  }
+
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling::autosizedReferenceSourceSideFlowRate() const {
+    return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->autosizedReferenceSourceSideFlowRate();
+  }
+
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling::autosizedRatedCoolingCapacity() const {
+    return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->autosizedRatedCoolingCapacity();
+  }
+
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling::autosizedRatedCoolingPowerConsumption() const {
+    return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->autosizedRatedCoolingPowerConsumption();
+  }
 
 } // model
 } // openstudio

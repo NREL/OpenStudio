@@ -156,6 +156,14 @@ class MODEL_API CoilHeatingDXVariableSpeed : public StraightComponent {
 
   void removeAllSpeeds();
 
+  boost::optional<double> autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel() const ;
+
+  boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const ;
+
+  boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
+
+
+
   //@}
  protected:
   /// @cond

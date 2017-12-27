@@ -131,6 +131,16 @@ class MODEL_API AirTerminalSingleDuctSeriesPIUReheat : public StraightComponent 
   unsigned secondaryAirInletPort() const;
   boost::optional<Node> secondaryAirInletNode() const;
 
+  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumPrimaryAirFlowRate() const ;
+
+  boost::optional<double> autosizedMinimumPrimaryAirFlowFraction() const ;
+
+  boost::optional<double> autosizedMaximumHotWaterorSteamFlowRate() const ;
+
+
+
   //@}
  protected:
   /// @cond

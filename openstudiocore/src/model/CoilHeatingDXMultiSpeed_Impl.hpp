@@ -118,6 +118,12 @@ namespace detail {
 
     int regionnumberforCalculatingHSPF() const;
 
+  boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

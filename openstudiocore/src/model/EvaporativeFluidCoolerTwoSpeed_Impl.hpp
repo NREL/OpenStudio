@@ -160,6 +160,28 @@ namespace detail {
 
     // boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
 
+  boost::optional<double> autosizedHighFanSpeedAirFlowRate() const ;
+
+  boost::optional<double> autosizedHighFanSpeedFanPower() const ;
+
+  boost::optional<double> autosizedLowFanSpeedAirFlowRate() const ;
+
+  boost::optional<double> autosizedLowFanSpeedFanPower() const ;
+
+  boost::optional<double> autosizedLowSpeedStandardDesignCapacity() const ;
+
+  boost::optional<double> autosizedHighFanSpeedUfactorTimesAreaValue() const ;
+
+  boost::optional<double> autosizedLowFanSpeedUfactorTimesAreaValue() const ;
+
+  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+  boost::optional<double> autosizedLowSpeedUserSpecifiedDesignCapacity() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

@@ -131,7 +131,13 @@ namespace detail {
 
     bool isPrimaryAirDesignFlowRateAutosized() const;
 
-    // TODO: there's a Water Storage tank field in E+, not even added to the OpenStudio.idd here.
+    boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const ;
+
+    boost::optional<double> autosizedPrimaryAirDesignFlowRate() const ;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
 
    private:
 

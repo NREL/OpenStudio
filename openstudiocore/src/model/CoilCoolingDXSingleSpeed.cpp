@@ -938,6 +938,68 @@ namespace detail{
     return false;
   }
 
+  // Autosizing methods
+  void CoilCoolingDXSingleSpeed_Impl::autosize() {
+    autosizeRatedTotalCoolingCapacity();
+    autosizeRatedSensibleHeatRatio();
+    autosizeRatedAirFlowRate();
+    boost::optional<double> emptyVal;
+    setEvaporativeCondenserAirFlowRate(emptyVal);
+    setEvaporativeCondenserPumpRatedPowerConsumption(emptyVal);
+  }
+
+  void CoilCoolingDXSingleSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+
+    val = autosizedRatedAirFlowRate();
+    if (val) {
+      setRatedAirFlowRate(val.get());
+    }
+
+    val = autosizedRatedTotalCoolingCapacity();
+    if (val) {
+      setRatedTotalCoolingCapacity(val.get());
+    }
+
+    val = autosizedRatedSensibleHeatRatio();
+    if (val) {
+      setRatedSensibleHeatRatio(val.get());
+    }
+
+    val = autosizedEvaporativeCondenserAirFlowRate();
+    if (val) {
+      setEvaporativeCondenserAirFlowRate(val.get());
+    }
+
+    val = autosizedEvaporativeCondenserPumpRatedPowerConsumption();
+    if (val) {
+      setEvaporativeCondenserPumpRatedPowerConsumption(val.get());
+    }
+
+  }
+
+  boost::optional<double> CoilCoolingDXSingleSpeed_Impl::autosizedRatedAirFlowRate() const {
+    return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoilCoolingDXSingleSpeed_Impl::autosizedRatedTotalCoolingCapacity() const {
+    return getAutosizedValue("Design Size Gross Rated Total Cooling Capacity", "W");
+  }
+
+  boost::optional<double> CoilCoolingDXSingleSpeed_Impl::autosizedRatedSensibleHeatRatio()  const {
+    return getAutosizedValue("Design Size Gross Rated Sensible Heat Ratio", "");
+  }
+
+  // E+ output has a bug where this field label is incorrect
+  boost::optional<double> CoilCoolingDXSingleSpeed_Impl::autosizedEvaporativeCondenserAirFlowRate() const {
+    return getAutosizedValue("Design Size Evaporative Condenser Effectiveness", "m3/s");
+  }
+
+  // E+ output has a bug where this field label is incorrect
+  boost::optional<double> CoilCoolingDXSingleSpeed_Impl::autosizedEvaporativeCondenserPumpRatedPowerConsumption()  const {
+    return getAutosizedValue("Design Size Evaporative Condenser Air Flow Rate", "W");
+  }
+
 }// detail
 
 CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(const Model& model)
@@ -1528,6 +1590,29 @@ bool CoilCoolingDXSingleSpeed::setRatedAirFlowRate(const Quantity& ratedAirFlowR
 void CoilCoolingDXSingleSpeed::autosizeRatedAirFlowRate() {
   getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizeRatedAirFlowRate();
 }
+
+// Autosizing methods
+
+boost::optional <double> CoilCoolingDXSingleSpeed::autosizedRatedAirFlowRate() const {
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedRatedAirFlowRate();
+}
+
+boost::optional <double> CoilCoolingDXSingleSpeed::autosizedRatedTotalCoolingCapacity() const {
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedRatedTotalCoolingCapacity();
+}
+
+boost::optional <double> CoilCoolingDXSingleSpeed::autosizedRatedSensibleHeatRatio() const {
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedRatedSensibleHeatRatio();
+}
+
+boost::optional<double> CoilCoolingDXSingleSpeed::autosizedEvaporativeCondenserAirFlowRate() const {
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedEvaporativeCondenserAirFlowRate();
+}
+
+boost::optional<double> CoilCoolingDXSingleSpeed::autosizedEvaporativeCondenserPumpRatedPowerConsumption()  const {
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedEvaporativeCondenserPumpRatedPowerConsumption();
+}
+
 
 } // model
 } // openstudio

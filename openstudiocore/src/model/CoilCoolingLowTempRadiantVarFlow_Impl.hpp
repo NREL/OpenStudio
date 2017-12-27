@@ -100,6 +100,12 @@ class MODEL_API CoilCoolingLowTempRadiantVarFlow_Impl : public StraightComponent
 
     bool isCondensationControlDewpointOffsetDefaulted() const;
 
+  boost::optional<double> autosizedMaximumColdWaterFlow() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{
@@ -131,6 +137,9 @@ class MODEL_API CoilCoolingLowTempRadiantVarFlow_Impl : public StraightComponent
     //@{
     
     bool addToNode(Node & node) override;
+
+    // Used to find the ZoneHVAC that contains this coil
+    boost::optional<ZoneHVACLowTempRadiantVarFlow> parentZoneHVAC() const;
 
     //@}
    protected:

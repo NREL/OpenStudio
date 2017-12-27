@@ -153,6 +153,18 @@ namespace detail {
 
     bool isRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacityDefaulted() const;
 
+  boost::optional<double> autosizedRatedAirFlowRate() const ;
+
+  boost::optional<double> autosizedRatedWaterFlowRate() const ;
+
+  boost::optional<double> autosizedRatedTotalCoolingCapacity() const ;
+
+  boost::optional<double> autosizedRatedSensibleCoolingCapacity() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

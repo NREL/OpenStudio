@@ -743,6 +743,43 @@ namespace detail {
     return setString(OS_CoolingTower_VariableSpeedFields::EndUseSubcategory,endUseSubcategory);
   }
 
+  boost::optional<double> CoolingTowerVariableSpeed_Impl::autosizedDesignWaterFlowRate() const {
+    return getAutosizedValue("Design Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoolingTowerVariableSpeed_Impl::autosizedDesignAirFlowRate() const {
+    return getAutosizedValue("Design Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoolingTowerVariableSpeed_Impl::autosizedDesignFanPower() const {
+    return getAutosizedValue("Fan Power at Design Air Flow Rate", "W");
+  }
+
+  void CoolingTowerVariableSpeed_Impl::autosize() {
+    autosizeDesignWaterFlowRate();
+    autosizeDesignAirFlowRate();
+    autosizeDesignFanPower();
+  }
+
+  void CoolingTowerVariableSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedDesignWaterFlowRate();
+    if (val) {
+      setDesignWaterFlowRate(val.get());
+    }
+
+    val = autosizedDesignAirFlowRate();
+    if (val) {
+      setDesignAirFlowRate(val.get());
+    }
+
+    val = autosizedDesignFanPower();
+    if (val) {
+      setDesignFanPower(val.get());
+    }
+
+  }
+
 } // detail
 
 CoolingTowerVariableSpeed::CoolingTowerVariableSpeed(const Model& model)
@@ -1134,6 +1171,18 @@ CoolingTowerVariableSpeed::CoolingTowerVariableSpeed(std::shared_ptr<detail::Coo
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> CoolingTowerVariableSpeed::autosizedDesignWaterFlowRate() const {
+    return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->autosizedDesignWaterFlowRate();
+  }
+
+  boost::optional<double> CoolingTowerVariableSpeed::autosizedDesignAirFlowRate() const {
+    return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->autosizedDesignAirFlowRate();
+  }
+
+  boost::optional<double> CoolingTowerVariableSpeed::autosizedDesignFanPower() const {
+    return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->autosizedDesignFanPower();
+  }
 
 } // model
 } // openstudio

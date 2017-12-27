@@ -137,6 +137,16 @@ namespace detail {
 
     boost::optional<double> sizingFactor() const;
 
+  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+  boost::optional<double> autosizedDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedDesignFanPower() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

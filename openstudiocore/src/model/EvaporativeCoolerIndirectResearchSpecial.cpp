@@ -492,6 +492,53 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<double> EvaporativeCoolerIndirectResearchSpecial_Impl::autosizedRecirculatingWaterPumpPowerConsumption() const {
+    return getAutosizedValue("Recirculating Pump Power", "W");
+  }
+
+  boost::optional<double> EvaporativeCoolerIndirectResearchSpecial_Impl::autosizedSecondaryFanFlowRate() const {
+    return getAutosizedValue("Design Size Secondary Fan Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> EvaporativeCoolerIndirectResearchSpecial_Impl::autosizedSecondaryAirFanDesignPower() const {
+    return getAutosizedValue("Secondary Fan Power", "W");
+  }
+
+  boost::optional<double> EvaporativeCoolerIndirectResearchSpecial_Impl::autosizedPrimaryDesignAirFlowRate() const {
+    return getAutosizedValue("Primary Air Design Flow Rate", "m3/s");
+  }
+
+  void EvaporativeCoolerIndirectResearchSpecial_Impl::autosize() {
+    autosizeRecirculatingWaterPumpPowerConsumption();
+    autosizeSecondaryFanFlowRate();
+    autosizeSecondaryAirFanDesignPower();
+    autosizePrimaryDesignAirFlowRate();
+  }
+
+  void EvaporativeCoolerIndirectResearchSpecial_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRecirculatingWaterPumpPowerConsumption();
+    if (val) {
+      setRecirculatingWaterPumpPowerConsumption(val.get());
+    }
+
+    val = autosizedSecondaryFanFlowRate();
+    if (val) {
+      setSecondaryFanFlowRate(val.get());
+    }
+
+    val = autosizedSecondaryAirFanDesignPower();
+    if (val) {
+      setSecondaryAirFanDesignPower(val.get());
+    }
+
+    val = autosizedPrimaryDesignAirFlowRate();
+    if (val) {
+      setPrimaryDesignAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 EvaporativeCoolerIndirectResearchSpecial::EvaporativeCoolerIndirectResearchSpecial(const Model& model)
@@ -735,6 +782,22 @@ EvaporativeCoolerIndirectResearchSpecial::EvaporativeCoolerIndirectResearchSpeci
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> EvaporativeCoolerIndirectResearchSpecial::autosizedRecirculatingWaterPumpPowerConsumption() const {
+    return getImpl<detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->autosizedRecirculatingWaterPumpPowerConsumption();
+  }
+
+  boost::optional<double> EvaporativeCoolerIndirectResearchSpecial::autosizedSecondaryFanFlowRate() const {
+    return getImpl<detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->autosizedSecondaryFanFlowRate();
+  }
+
+  boost::optional<double> EvaporativeCoolerIndirectResearchSpecial::autosizedSecondaryAirFanDesignPower() const {
+    return getImpl<detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->autosizedSecondaryAirFanDesignPower();
+  }
+
+  boost::optional<double> EvaporativeCoolerIndirectResearchSpecial::autosizedPrimaryDesignAirFlowRate() const {
+    return getImpl<detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->autosizedPrimaryDesignAirFlowRate();
+  }
 
 } // model
 } // openstudio

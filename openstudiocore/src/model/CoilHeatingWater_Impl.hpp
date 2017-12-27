@@ -144,6 +144,16 @@ namespace detail {
 
     void setRatedRatioForAirAndWaterConvection( double value );
 
+  boost::optional<double> autosizedUFactorTimesAreaValue() const ;
+
+  boost::optional<double> autosizedMaximumWaterFlowRate() const ;
+
+  boost::optional<double> autosizedRatedCapacity() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
   private:
     REGISTER_LOGGER("openstudio.model.CoilHeatingWater");

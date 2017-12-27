@@ -215,6 +215,18 @@ namespace detail {
 
     boost::optional<UnitarySystemPerformanceMultispeed> designSpecificationMultispeedObject() const;
 
+  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() const ;
+
+  boost::optional<double> autosizedMaximumSupplyAirTemperature() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

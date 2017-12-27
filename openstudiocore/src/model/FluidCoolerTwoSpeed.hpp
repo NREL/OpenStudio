@@ -177,6 +177,24 @@ class MODEL_API FluidCoolerTwoSpeed : public StraightComponent {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedHighFanSpeedUfactorTimesAreaValue() const ;
+
+  boost::optional<double> autosizedLowFanSpeedUfactorTimesAreaValue() const ;
+
+  boost::optional<double> autosizedLowSpeedNominalCapacity() const ;
+
+  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+  boost::optional<double> autosizedHighFanSpeedAirFlowRate() const ;
+
+  boost::optional<double> autosizedHighFanSpeedFanPower() const ;
+
+  boost::optional<double> autosizedLowFanSpeedAirFlowRate() const ;
+
+  boost::optional<double> autosizedLowFanSpeedFanPower() const ;
+
+
+
   //@}
  protected:
   /// @cond

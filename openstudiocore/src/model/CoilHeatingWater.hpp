@@ -164,6 +164,14 @@ class MODEL_API CoilHeatingWater : public WaterToAirComponent {
    */
   boost::optional<ControllerWaterCoil> controllerWaterCoil();
 
+  boost::optional<double> autosizedUFactorTimesAreaValue() const ;
+
+  boost::optional<double> autosizedMaximumWaterFlowRate() const ;
+
+  boost::optional<double> autosizedRatedCapacity() const ;
+
+
+
   //@}
  protected:
 

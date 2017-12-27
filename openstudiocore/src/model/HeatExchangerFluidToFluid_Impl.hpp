@@ -120,6 +120,16 @@ namespace detail {
 
     boost::optional<double> operationMaximumTemperatureLimit() const;
 
+  boost::optional<double> autosizedLoopDemandSideDesignFlowRate() const ;
+
+  boost::optional<double> autosizedLoopSupplySideDesignFlowRate() const ;
+
+  boost::optional<double> autosizedHeatExchangerUFactorTimesAreaValue() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

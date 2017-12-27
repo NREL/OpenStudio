@@ -95,6 +95,16 @@ class MODEL_API AirTerminalDualDuctConstantVolume : public Mixer {
    */
   boost::optional<Node> coldAirInletNode() const;
 
+
+  /* Queries the autosized maximum terminal air flow rate from the SQL file */
+  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+
+  /* Autosize all autosizeable fields */
+  // void autosize();
+
+  /* Hard applies the autosized values from SQL file */
+  // void applySizingValues();
+
   //@}
  protected:
   /// @cond

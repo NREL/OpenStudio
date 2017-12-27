@@ -1,4 +1,4 @@
-!IDD_Version 2.3.0
+!IDD_Version 2.4.1
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -4677,6 +4677,8 @@ OS:ScheduleTypeLimits,
        \key SolarEnergy
        \key Availability
        \key Percent
+       \key Control
+       \key Mode   
        \key ControlMode
        \key LinearPowerDensity
 
@@ -12320,11 +12322,10 @@ OS:CoolingTower:SingleSpeed,
        \default 2.5
        \note The allowable maximal fraction of the nominal flow rate per cell
   N17, \field Sizing Factor
-       \required-field
        \note Multiplies the autosized capacity and flow rates
        \type real
-       \minimum> 0.0
        \default 1.0
+       \minimum> 0.0
   N18 , \field Free Convection Air Flow Rate Sizing Factor
        \required-field
        \type real
@@ -12338,7 +12339,6 @@ OS:CoolingTower:SingleSpeed,
   N20 , \field Heat Rejection Capacity and Nominal Capacity Sizing Ratio
        \required-field
        \type real
-       \default 1.25
   N21, \field Free Convection Nominal Capacity Sizing Factor
        \required-field
        \type real
@@ -12639,7 +12639,6 @@ OS:CoolingTower:TwoSpeed,
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
-       \default 1.0
   N30, \field Design Inlet Air Dry-Bulb Temperature
        \required-field
        \type real
@@ -19809,8 +19808,8 @@ OS:Pump:ConstantSpeed,
        \required-field
        \type real
        \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
-       \units W/((m3/s)-Pa)
-       \ip-units W/((gal/min)-ftH20)
+       \units W-s/m3-Pa
+       \ip-units W-min/gal-ftH2O
        \minimum> 0
 
 OS:Pump:VariableSpeed,
@@ -19954,8 +19953,8 @@ OS:Pump:VariableSpeed,
        \required-field
         \type real
         \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
-        \units W/((m3/s)-Pa)
-        \ip-units W/((gal/min)-ftH20)
+        \units W-s/m3-Pa
+        \ip-units W-min/gal-ftH2O
         \minimum> 0
   N15;  \field Design Minimum Flow Rate Fraction
        \required-field
@@ -20055,8 +20054,8 @@ OS:HeaderedPumps:ConstantSpeed,
   N9; \field Design Shaft Power per Unit Flow Rate per Unit Head
        \type real
         \required-field
-       \units W/((m3/s)-Pa)
-       \ip-units W/((gal/min)-ftH20)
+       \units W-s/m3-Pa
+       \ip-units W-min/gal-ftH2O
        \minimum> 0
 
 OS:HeaderedPumps:VariableSpeed,
@@ -20162,8 +20161,8 @@ OS:HeaderedPumps:VariableSpeed,
   N14; \field Design Shaft Power per Unit Flow Rate per Unit Head
        \required-field
        \type real
-       \units W/((m3/s)-Pa)
-       \ip-units W/((gal/min)-ftH20)
+       \units W-s/m3-Pa
+       \ip-units W-min/gal-ftH2O
        \minimum> 0
 
 OS:TemperingValve,
@@ -28249,7 +28248,7 @@ OS:EnergyManagementSystem:OutputVariable,
        \type choice
        \default False
        \key True
-       \key False       
+       \key False
 
 OS:EnergyManagementSystem:MeteredOutputVariable,
        \memo This object sets up an EnergyPlus output variable from an Erl variable
@@ -28431,7 +28430,6 @@ OS:ExternalInterface,
        \required-field
    A2;  \field Name of External Interface
         \note Name of External Interface
-        \required-field
         \type choice
         \default PtolemyServer
         \key PtolemyServer
@@ -28461,7 +28459,7 @@ OS:ExternalInterface:Schedule,
        \type choice
        \default True
        \key True
-       \key False     
+       \key False
 
 OS:ExternalInterface:Variable,
        \memo This input object is similar to EnergyManagementSystem:GlobalVariable. However, at
@@ -28487,7 +28485,7 @@ OS:ExternalInterface:Variable,
        \type choice
        \default True
        \key True
-       \key False     
+       \key False
 
 OS:ExternalInterface:Actuator,
        \memo Hardware portion of EMS used to set up actuators in the model
@@ -28521,7 +28519,7 @@ OS:ExternalInterface:Actuator,
        \type choice
        \default True
        \key True
-       \key False       
+       \key False
 
 OS:ExternalInterface:FunctionalMockupUnitImport,
        \memo This object declares an FMU
@@ -28779,4 +28777,4 @@ OS:ExternalInterface:FunctionalMockupUnitExport:To:Variable,
        \type real
        \required-field
        \note Used during the first call of EnergyPlus.
-       
+

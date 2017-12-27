@@ -281,6 +281,23 @@ namespace detail {
     return setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicThermalModelPerformanceName, performance.handle());
   }
 
+  boost::optional<double> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::autosizedDesignFlowRate() const {
+    return getAutosizedValue("Design Size Design Flow Rate", "m3/s");
+  }
+
+  void SolarCollectorFlatPlatePhotovoltaicThermal_Impl::autosize() {
+    autosizeDesignFlowRate();
+  }
+
+  void SolarCollectorFlatPlatePhotovoltaicThermal_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedDesignFlowRate();
+    if (val) {
+      setDesignFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 SolarCollectorFlatPlatePhotovoltaicThermal::SolarCollectorFlatPlatePhotovoltaicThermal(const Model& model)
@@ -360,6 +377,10 @@ SolarCollectorFlatPlatePhotovoltaicThermal::SolarCollectorFlatPlatePhotovoltaicT
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> SolarCollectorFlatPlatePhotovoltaicThermal::autosizedDesignFlowRate() const {
+    return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->autosizedDesignFlowRate();
+  }
 
 } // model
 } // openstudio

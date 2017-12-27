@@ -132,6 +132,20 @@ namespace detail {
 
     bool isCoefficientofInductionKinAutocalculated() const;
 
+  boost::optional<double> autosizedSupplyAirVolumetricFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumTotalChilledWaterVolumetricFlowRate() const ;
+
+  boost::optional<double> autosizedNumberofBeams() const ;
+
+  boost::optional<double> autosizedBeamLength() const ;
+
+  boost::optional<double> autosizedCoefficientofInductionKin() const;
+  
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

@@ -38,6 +38,11 @@
 #include "ResourceObject_Impl.hpp"
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
+#include "CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
+#include "CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp"
+#include "CoilPerformanceDXCooling.hpp"
+#include "CoilPerformanceDXCooling_Impl.hpp"
+
 
 #include "ScheduleTypeRegistry.hpp"
 #include "Schedule.hpp"
@@ -624,6 +629,151 @@ namespace detail {
     return keyValue;
   }
 
+  /** Gets the autosized component value from the sql file **/
+  boost::optional<double> ModelObject_Impl::getAutosizedValue(std::string valueName, std::string units) const {
+    boost::optional < double > result;
+
+    // Get the object name
+    if (!name()) {
+      LOG(Warn, "This object does not have a name, cannot retrieve the autosized value '" + valueName + "'.");
+      return result;
+    }
+
+    // Get the object name and transform to the way it is recorded
+    // in the sql file
+    std::string sqlName = name().get();
+    boost::to_upper(sqlName);
+
+    // Get the object type and transform to the way it is recorded
+    // in the sql file
+    std::string sqlObjectType = iddObject().type().valueDescription();
+    boost::replace_all(sqlObjectType, "OS:", "");
+
+    // Special logic to deal with EnergyPlus inconsistencies
+    if (sqlObjectType == "CoilPerformance:DX:Cooling") {
+      // Get the parent object
+      boost::optional<CoilCoolingDXTwoStageWithHumidityControlMode> parentCoil;
+      auto coilTwoSpdHumCtrls = this->model().getConcreteModelObjects<CoilCoolingDXTwoStageWithHumidityControlMode>();
+      for (const auto & coilInModel : coilTwoSpdHumCtrls) {
+        // Check the coil performance objects in this coil to see if one of them is this object       
+        auto coilPerf = coilInModel.normalModeStage1CoilPerformance();
+        if (coilPerf) {
+          if (coilPerf->handle() == this->handle()) {
+            parentCoil = coilInModel;
+            break;
+          }
+        }
+
+        coilPerf = coilInModel.normalModeStage1Plus2CoilPerformance();
+        if (coilPerf) {
+          if (coilPerf->handle() == this->handle()) {
+            parentCoil = coilInModel;
+            break;
+          }
+        }
+
+        coilPerf = coilInModel.dehumidificationMode1Stage1CoilPerformance();
+        if (coilPerf) {
+          if (coilPerf->handle() == this->handle()) {
+            parentCoil = coilInModel;
+            break;
+          }
+        }
+
+        coilPerf = coilInModel.dehumidificationMode1Stage1Plus2CoilPerformance();
+        if (coilPerf) {
+          if (coilPerf->handle() == this->handle()) {
+            parentCoil = coilInModel;
+            break;
+          }
+        }
+      }
+      
+      if (!parentCoil) {
+        LOG(Warn, "The CoilPerformance:DX:Cooling object called " + sqlName + " does not have a parent CoilCoolingDXTwoStageWithHumidityControlMode, cannot retrieve the autosized value.");
+        return result;
+      }
+
+      std::string parSqlName = parentCoil->name().get();
+      boost::to_upper(parSqlName);
+      // Join the parent and child object names, like:
+      // COIL COOLING DX TWO STAGE WITH HUMIDITY CONTROL MODE 1:COIL PERFORMANCE DX COOLING 1
+      sqlName = parSqlName + std::string(":") + sqlName;
+    }
+
+    // Check that the model has a sql file
+    if (!model().sqlFile()) {
+      LOG(Warn, "This model has no sql file, cannot retrieve the autosized value '" + valueName + "'.");
+      return result;
+    }
+
+    // Query the Intialization Summary -> Component Sizing table to get 
+    // the row names that contains information for this component.
+    std::stringstream rowsQuery;
+    rowsQuery << "SELECT RowName ";
+    rowsQuery << "FROM tabulardatawithstrings ";
+    rowsQuery << "WHERE ReportName='Initialization Summary' ";
+    rowsQuery << "AND ReportForString='Entire Facility' ";
+    rowsQuery << "AND TableName = 'Component Sizing Information' ";
+    rowsQuery << "AND Value='" + sqlName + "'";
+
+    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery.str());
+
+    // Warn if the query failed
+    if (!rowNames) {
+      LOG(Warn, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary Component Sizing table.");
+      return result;
+    }
+
+    // Query each row of the Intialization Summary -> Component Sizing table
+    // that contains this component to get the desired value.
+    std::string valueNameAndUnits = valueName + std::string(" [") + units + std::string("]");
+    if (units == "") {
+      valueNameAndUnits = valueName;
+    } else if (units == "typo_in_energyplus") {
+      valueNameAndUnits = valueName + std::string(" []");
+    }
+
+    for (std::string rowName : rowNames.get()) {
+      std::stringstream rowCheckQuery;
+      rowCheckQuery << "SELECT Value ";
+      rowCheckQuery << "FROM tabulardatawithstrings ";
+      rowCheckQuery << "WHERE ReportName='Initialization Summary' ";
+      rowCheckQuery << "AND ReportForString='Entire Facility' ";
+      rowCheckQuery << "AND TableName = 'Component Sizing Information' ";
+      rowCheckQuery << "AND RowName='" << rowName << "' ";
+      rowCheckQuery << "AND Value='" << valueNameAndUnits << "'";
+      boost::optional<std::string> rowValueName = model().sqlFile().get().execAndReturnFirstString(rowCheckQuery.str());
+      // Check if the query succeeded
+      if (!rowValueName) {
+        continue;
+      }
+      // This is the right row
+      std::stringstream valQuery;
+      valQuery << "SELECT Value ";
+      valQuery << "FROM tabulardatawithstrings ";
+      valQuery << "WHERE ReportName='Initialization Summary' ";
+      valQuery << "AND ReportForString='Entire Facility' ";
+      valQuery << "AND TableName = 'Component Sizing Information' ";
+      valQuery << "AND ColumnName='Value' ";
+      valQuery << "AND RowName='" << rowName << "' ";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
+      // Check if the query succeeded
+      if (val) {
+        result = val.get();
+        break;
+      }
+    }
+
+
+    if (!result) {
+      LOG(Debug, "The autosized value query for " + valueNameAndUnits + " of " + sqlName + " returned no value.");
+    }
+
+    return result;
+
+  }
+
   //void ModelObject_Impl::connect(unsigned outletPort, ModelObject target, unsigned inletPort)
   //{
   //  OptionalConnection connection = getOutletConnection(outletPort);
@@ -1178,6 +1328,12 @@ ModelObject::ModelObject(IddObjectType type, const Model& model, bool fastName)
 ModelObject::ModelObject(std::shared_ptr<detail::ModelObject_Impl> p)
   : WorkspaceObject(std::move(p))
 {}
+
+/** Gets the autosized component value from the sql file **/
+boost::optional<double> ModelObject::getAutosizedValue(std::string valueName, std::string units) const
+{
+  return getImpl<detail::ModelObject_Impl>()->getAutosizedValue(valueName, units);
+}
 
 } // model
 } // openstudio

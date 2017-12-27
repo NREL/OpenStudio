@@ -180,6 +180,16 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl {
 
   boost::optional<Schedule> basinHeaterSchedule() const;
 
+  boost::optional<double> autosizedReferenceCapacity() const ;
+
+  boost::optional<double> autosizedReferenceChilledWaterFlowRate() const ;
+
+  boost::optional<double> autosizedReferenceCondenserFluidFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
   //@}
   /** @name Setters */
   //@{

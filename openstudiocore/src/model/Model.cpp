@@ -1881,6 +1881,61 @@ if (_className::iddObjectType() == typeToCreate) { \
   {
     m_cachedWeatherFile.reset();
   }
+
+  void Model_Impl::autosize() {
+    for (auto optModelObj : objects()) {
+      if (auto modelObj = optModelObj.optionalCast<HVACComponent>()) { // HVACComponent
+        modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<Loop>()) { // Loop
+        modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<SizingZone>()) { // SizingZone 
+        modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<SizingSystem>()) { // SizingSystem 
+        modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<ControllerOutdoorAir>()) { // ControllerOutdoorAir 
+        modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR 
+        modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXMultiSpeedStageData>()) { // CoilCoolingDXMultiSpeedStageData 
+        modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilPerformanceDXCooling>()) { // CoilPerformanceDXCooling 
+        modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) { // CoilHeatingDXMultiSpeedStageData 
+        modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) { // CoilHeatingGasMultiStageStageData 
+        modelObj->autosize();
+      }
+    }
+    return;
+  }
+
+  void Model_Impl::applySizingValues() {
+    for (auto optModelObj : objects()) {
+      if (auto modelObj = optModelObj.optionalCast<HVACComponent>()) { // HVACComponent
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<Loop>()) { // Loop
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<SizingZone>()) { // SizingZone 
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<SizingSystem>()) { // SizingSystem 
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<ControllerOutdoorAir>()) { // ControllerOutdoorAir 
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR 
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXMultiSpeedStageData>()) { // CoilCoolingDXMultiSpeedStageData 
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilPerformanceDXCooling>()) { // CoilPerformanceDXCooling 
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) { // CoilHeatingDXMultiSpeedStageData 
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) { // CoilHeatingGasMultiStageStageData 
+        modelObj->applySizingValues();
+      }
+    }
+    return;
+  }
+
 } // detail
 
 Model::Model()
@@ -3354,6 +3409,14 @@ void addExampleConstructions(Model& model) {
   interiorPartition.setName("Interior Partition");
   defaultConstructions.setInteriorPartitionConstruction(interiorPartition);
   opaqueMaterials.clear();
+}
+
+void Model::autosize() {
+  return getImpl<detail::Model_Impl>()->autosize();
+}
+
+void Model::applySizingValues() {
+  return getImpl<detail::Model_Impl>()->applySizingValues();
 }
 
 } // model

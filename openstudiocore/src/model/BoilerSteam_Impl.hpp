@@ -174,6 +174,12 @@ namespace detail {
 
     bool isSizingFactorDefaulted() const;
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

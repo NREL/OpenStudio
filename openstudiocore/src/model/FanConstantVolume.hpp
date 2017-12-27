@@ -119,6 +119,10 @@ class MODEL_API FanConstantVolume : public StraightComponent {
 
   void autosizeMaximumFlowRate();
 
+  boost::optional<double> autosizedMaximumFlowRate() const ;
+
+
+
  protected:
   friend class Model;
   friend class openstudio::IdfObject;

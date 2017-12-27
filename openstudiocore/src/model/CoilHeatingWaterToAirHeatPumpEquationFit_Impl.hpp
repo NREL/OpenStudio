@@ -122,6 +122,16 @@ namespace detail {
 
     double heatingPowerConsumptionCoefficient5() const;
 
+  boost::optional<double> autosizedRatedAirFlowRate() const ;
+
+  boost::optional<double> autosizedRatedWaterFlowRate() const ;
+
+  boost::optional<double> autosizedRatedHeatingCapacity() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

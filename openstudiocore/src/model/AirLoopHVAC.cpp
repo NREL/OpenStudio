@@ -811,7 +811,7 @@ namespace detail {
     if( ! airTerminal )
     {
       std::vector<ModelObject> modelObjects = demandComponents(splitter,mixer);
-      // Only clone last air terminal if there is are no plenums
+      // Only clone last air terminal if there are no plenums
       if( subsetCastVector<AirLoopHVACSupplyPlenum>(modelObjects).empty() &&
           subsetCastVector<AirLoopHVACReturnPlenum>(modelObjects).empty() )
       {
@@ -1737,6 +1737,23 @@ namespace detail {
     return supplySplitter() ? true : false;
   }
 
+  boost::optional<double> AirLoopHVAC_Impl::autosizedDesignSupplyAirFlowRate() const {
+    return getAutosizedValue("Design Supply Air Flow Rate", "m3/s");
+  }
+
+  void AirLoopHVAC_Impl::autosize() {
+    autosizeDesignSupplyAirFlowRate();
+  }
+
+  void AirLoopHVAC_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedDesignSupplyAirFlowRate();
+    if (val) {
+      setDesignSupplyAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 AirLoopHVAC::AirLoopHVAC(Model& model, bool dualDuct)
@@ -2072,6 +2089,9 @@ bool AirLoopHVAC::addAvailabilityManager(const AvailabilityManager & availabilit
   return getImpl<detail::AirLoopHVAC_Impl>()->addAvailabilityManager(availabilityManager, priority);
 }
 
+boost::optional<double> AirLoopHVAC::autosizedDesignSupplyAirFlowRate() const {
+  return getImpl<detail::AirLoopHVAC_Impl>()->autosizedDesignSupplyAirFlowRate();
+}
 
 unsigned AirLoopHVAC::availabilityManagerPriority(const AvailabilityManager & availabilityManager) const
 {
@@ -2115,7 +2135,6 @@ bool AirLoopHVAC::removeAvailabilityManager(unsigned priority)
 
 
 // END DEPRECATED
-
 
 } // model
 

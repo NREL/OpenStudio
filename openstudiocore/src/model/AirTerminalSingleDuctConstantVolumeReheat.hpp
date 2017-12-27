@@ -130,6 +130,12 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeReheat : public StraightCompo
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumHotWaterorSteamFlowRate() const ;
+
+
+
   //@}
  protected:
   /// @cond

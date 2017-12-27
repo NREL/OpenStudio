@@ -211,6 +211,9 @@ class MODEL_API Loop : public ParentObject {
 
   virtual std::vector<ModelObject> children() const;
 
+  void autosize();
+
+  void applySizingValues();
 
   protected:
 

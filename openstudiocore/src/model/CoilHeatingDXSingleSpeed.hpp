@@ -219,6 +219,14 @@ class MODEL_API CoilHeatingDXSingleSpeed : public StraightComponent {
   bool setDefrostEnergyInputRatioFunctionofTemperatureCurve( const Curve& curve );
   void resetDefrostEnergyInputRatioFunctionofTemperatureCurve();
 
+  boost::optional<double> autosizedRatedTotalHeatingCapacity() const ;
+
+  boost::optional<double> autosizedRatedAirFlowRate() const ;
+
+  boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
+
+
+
   //@}
  protected:
   /// @cond

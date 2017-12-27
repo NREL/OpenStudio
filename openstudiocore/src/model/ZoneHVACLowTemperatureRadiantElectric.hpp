@@ -123,6 +123,10 @@ class MODEL_API ZoneHVACLowTemperatureRadiantElectric : public ZoneHVACComponent
 
   /** @name Other */
 
+  boost::optional<double> autosizedMaximumElectricalPowertoPanel() const ;
+
+
+
   //@}
  protected:
   /// @cond

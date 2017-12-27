@@ -76,6 +76,10 @@ namespace detail {
 
     virtual unsigned outletPort() override;
 
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
     //@}
     /** @name Getters */
     //@{
@@ -199,6 +203,22 @@ namespace detail {
     Quantity getSizingFactor(bool returnIP=false) const;
 
     bool isSizingFactorDefaulted() const;
+
+    boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+    boost::optional<double> autosizedDesignAirFlowRate() const ;
+
+    boost::optional<double> autosizedFanPoweratDesignAirFlowRate() const ;
+
+    boost::optional<double> autosizedUFactorTimesAreaValueatDesignAirFlowRate() const ;
+
+    boost::optional<double> autosizedAirFlowRateinFreeConvectionRegime() const ;
+
+    boost::optional<double> autosizedUFactorTimesAreaValueatFreeConvectionAirFlowRate() const ;
+
+    boost::optional<double> autosizedDesignApproachTemperature() const;
+
+    boost::optional<double> autosizedDesignRangeTemperature() const;
 
     //@}
     /** @name Setters */

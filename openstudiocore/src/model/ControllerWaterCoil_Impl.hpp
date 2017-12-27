@@ -97,6 +97,14 @@ class MODEL_API ControllerWaterCoil_Impl : public HVACComponent_Impl {
 
   bool isMinimumActuatedFlowDefaulted() const;
 
+  boost::optional<double> autosizedControllerConvergenceTolerance() const ;
+
+  boost::optional<double> autosizedMaximumActuatedFlow() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
   //@}
   /** @name Setters */
   //@{

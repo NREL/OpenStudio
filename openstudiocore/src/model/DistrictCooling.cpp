@@ -134,6 +134,23 @@ namespace detail {
     return false;
   }
 
+  boost::optional<double> DistrictCooling_Impl::autosizedNominalCapacity() const {
+    return getAutosizedValue("Design Size Nominal Capacity", "W");
+  }
+
+  void DistrictCooling_Impl::autosize() {
+    autosizeNominalCapacity();
+  }
+
+  void DistrictCooling_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalCapacity();
+    if (val) {
+      setNominalCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 DistrictCooling::DistrictCooling(const Model& model)
@@ -173,6 +190,10 @@ DistrictCooling::DistrictCooling(std::shared_ptr<detail::DistrictCooling_Impl> i
 {}
 /// @endcond
 
+
+  boost::optional<double> DistrictCooling::autosizedNominalCapacity() const {
+    return getImpl<detail::DistrictCooling_Impl>()->autosizedNominalCapacity();
+  }
 
 } // model
 

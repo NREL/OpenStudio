@@ -417,6 +417,16 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   void resetIndirectWaterHeatingRecoveryTime();
 
+  boost::optional<double> autosizedTankVolume() const ;
+
+  boost::optional<double> autosizedHeaterMaximumCapacity() const ;
+
+  boost::optional<double> autosizedUseSideDesignFlowRate() const ;
+
+  boost::optional<double> autosizedSourceSideDesignFlowRate() const ;
+
+
+
   //@}
  protected:
 

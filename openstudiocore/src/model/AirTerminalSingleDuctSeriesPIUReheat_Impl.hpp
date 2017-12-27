@@ -100,6 +100,18 @@ namespace detail {
 
     double convergenceTolerance() const;
 
+  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumPrimaryAirFlowRate() const ;
+
+  boost::optional<double> autosizedMinimumPrimaryAirFlowFraction() const ;
+
+  boost::optional<double> autosizedMaximumHotWaterorSteamFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

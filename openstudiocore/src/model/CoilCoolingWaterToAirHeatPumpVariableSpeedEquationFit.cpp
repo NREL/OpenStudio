@@ -412,6 +412,43 @@ bool CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::setSpeedDataLis
     OS_ASSERT(result);
   }
 
+  boost::optional<double> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const {
+    return getAutosizedValue("Design Size Rated Total Cooling Capacity", "W");
+  }
+
+  boost::optional<double> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const {
+    return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::autosizedRatedWaterFlowRateAtSelectedNominalSpeedLevel() const {
+    return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+  }
+
+  void CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::autosize() {
+    autosizeGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
+    autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
+    autosizeRatedWaterFlowRateAtSelectedNominalSpeedLevel();
+  }
+
+  void CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
+    if (val) {
+      setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(val.get());
+    }
+
+    val = autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel();
+    if (val) {
+      setRatedAirFlowRateAtSelectedNominalSpeedLevel(val.get());
+    }
+
+    val = autosizedRatedWaterFlowRateAtSelectedNominalSpeedLevel();
+    if (val) {
+      setRatedWaterFlowRateAtSelectedNominalSpeedLevel(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit(const Model& model)
@@ -584,6 +621,18 @@ CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::CoilCoolingWaterToAirHeat
   : WaterToAirComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const {
+    return getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
+  }
+
+  boost::optional<double> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const {
+    return getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel();
+  }
+
+  boost::optional<double> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::autosizedRatedWaterFlowRateAtSelectedNominalSpeedLevel() const {
+    return getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->autosizedRatedWaterFlowRateAtSelectedNominalSpeedLevel();
+  }
 
 } // model
 } // openstudio

@@ -103,10 +103,18 @@ class MODEL_API AirTerminalDualDuctVAVOutdoorAir : public Mixer {
     */
   boost::optional<Node> recirculatedAirInletNode() const;
 
-
   //@}
   /** @name Other */
   //@{
+
+  /* Queries the autosized maximum terminal air flow rate from the SQL file */
+  boost::optional<double> autosizedMaximumTerminalAirFlowRate() const ;
+
+  /* Autosize all autosizeable fields */
+  // void autosize();
+
+  /* Hard applies the autosized values from SQL file */
+  // void applySizingValues();
 
   //@}
  protected:

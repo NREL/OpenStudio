@@ -171,6 +171,18 @@ class MODEL_API ChillerAbsorption : public WaterToWaterComponent {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  boost::optional<double> autosizedNominalPumpingPower() const ;
+
+  boost::optional<double> autosizedDesignChilledWaterFlowRate() const ;
+
+  boost::optional<double> autosizedDesignCondenserWaterFlowRate() const ;
+
+  boost::optional<double> autosizedDesignGeneratorFluidFlowRate() const ;
+
+
+
   //@}
  protected:
   /// @cond

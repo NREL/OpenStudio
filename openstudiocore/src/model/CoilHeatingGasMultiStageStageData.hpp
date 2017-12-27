@@ -31,6 +31,7 @@
 
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
+#include "../model/CoilHeatingGasMultiStage.hpp"
 
 namespace openstudio {
 
@@ -83,6 +84,12 @@ class MODEL_API CoilHeatingGasMultiStageStageData : public ModelObject {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond
@@ -97,6 +104,11 @@ class MODEL_API CoilHeatingGasMultiStageStageData : public ModelObject {
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.CoilHeatingGasMultiStageStageData");
+
+  // Used to determine the index of this performance data in the
+  // list of stages in the parent object.
+  boost::optional<std::tuple<int, CoilHeatingGasMultiStage>> stageIndexAndParentCoil() const;
+
 };
 
 /** \relates CoilHeatingGasMultiStageStageData*/

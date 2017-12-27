@@ -134,6 +134,10 @@ class MODEL_API FanOnOff : public StraightComponent {
   
   //@{
 
+  boost::optional<double> autosizedMaximumFlowRate() const ;
+
+
+
   //@}
  protected:
   /// @cond

@@ -101,6 +101,14 @@ namespace detail {
 
     Curve wasteHeatFunctionofTemperatureCurve() const;
 
+  boost::optional<double> autosizedGrossRatedHeatingCapacity() const ;
+
+  boost::optional<double> autosizedRatedAirFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
     //@}
     /** @name Setters */
     //@{
@@ -136,6 +144,11 @@ namespace detail {
     //@{
 
     //@}
+
+    // Used to determine the index of this performance data in the
+    // list of stages in the parent object.
+    boost::optional<std::tuple<int, CoilHeatingDXMultiSpeed>> stageIndexAndParentCoil() const;
+
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.CoilHeatingDXMultiSpeedStageData");

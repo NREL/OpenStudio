@@ -118,6 +118,12 @@ namespace detail {
     // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
 
+  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

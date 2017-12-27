@@ -285,6 +285,23 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::AvailabilityScheduleName);
   }
 
+  boost::optional<double> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::autosizedHeatingDesignCapacity() const {
+    return getAutosizedValue("Design Size Heating Design Capacity", "W");
+  }
+
+  void ZoneHVACBaseboardRadiantConvectiveElectric_Impl::autosize() {
+    autosizeHeatingDesignCapacity();
+  }
+
+  void ZoneHVACBaseboardRadiantConvectiveElectric_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedHeatingDesignCapacity();
+    if (val) {
+      setHeatingDesignCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 ZoneHVACBaseboardRadiantConvectiveElectric::ZoneHVACBaseboardRadiantConvectiveElectric(const Model& model)
@@ -409,6 +426,10 @@ ZoneHVACBaseboardRadiantConvectiveElectric::ZoneHVACBaseboardRadiantConvectiveEl
   : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> ZoneHVACBaseboardRadiantConvectiveElectric::autosizedHeatingDesignCapacity() const {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->autosizedHeatingDesignCapacity();
+  }
 
 } // model
 } // openstudio

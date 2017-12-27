@@ -142,6 +142,12 @@ namespace detail {
 
     bool addToNode(Node & node) override;
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
   private:
     REGISTER_LOGGER("openstudio.model.CoilHeatingGas");

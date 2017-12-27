@@ -4059,7 +4059,7 @@ OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
   {3667b348-2052-4711-9cd2-7226dc650e72}, !- Handle
   Chilled Beam,                           !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  ,                                       !- Cooled Beam Type
+  Passive,                                !- Cooled Beam Type
   ,                                       !- Supply Air Inlet Node Name
   ,                                       !- Supply Air Outlet Node Name
   {9409bb35-2087-4798-897c-a6703b5a7669}, !- Cooling Coil Name

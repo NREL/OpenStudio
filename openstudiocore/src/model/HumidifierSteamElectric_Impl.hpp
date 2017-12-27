@@ -93,6 +93,14 @@ namespace detail {
 
     // boost::optional<WaterStorageTank> waterStorageTank() const;
 
+  boost::optional<double> autosizedRatedCapacity() const ;
+
+  boost::optional<double> autosizedRatedPower() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{

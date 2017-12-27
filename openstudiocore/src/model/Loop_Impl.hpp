@@ -119,6 +119,10 @@ namespace detail {
 
     virtual Mixer demandMixer() = 0;
 
+    virtual void autosize();
+
+    virtual void applySizingValues();
+
     virtual AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const = 0;
 
 

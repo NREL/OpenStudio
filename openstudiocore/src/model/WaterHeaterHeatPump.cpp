@@ -544,6 +544,33 @@ namespace detail {
     return result;
   }
 
+  boost::optional<double> WaterHeaterHeatPump_Impl::autosizedCondenserWaterFlowRate() const {
+    return getAutosizedValue("Design Size Condenser Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> WaterHeaterHeatPump_Impl::autosizedEvaporatorAirFlowRate() const {
+    return getAutosizedValue("Design Size Evaporator Air Flow Rate", "m3/s");
+  }
+
+  void WaterHeaterHeatPump_Impl::autosize() {
+    autosizeCondenserWaterFlowRate();
+    autosizeEvaporatorAirFlowRate();
+  }
+
+  void WaterHeaterHeatPump_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedCondenserWaterFlowRate();
+    if (val) {
+      setCondenserWaterFlowRate(val.get());
+    }
+
+    val = autosizedEvaporatorAirFlowRate();
+    if (val) {
+      setEvaporatorAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 WaterHeaterHeatPump::WaterHeaterHeatPump(const Model& model,
@@ -866,6 +893,14 @@ WaterHeaterHeatPump::WaterHeaterHeatPump(std::shared_ptr<detail::WaterHeaterHeat
   : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> WaterHeaterHeatPump::autosizedCondenserWaterFlowRate() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->autosizedCondenserWaterFlowRate();
+  }
+
+  boost::optional<double> WaterHeaterHeatPump::autosizedEvaporatorAirFlowRate() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->autosizedEvaporatorAirFlowRate();
+  }
 
 } // model
 } // openstudio

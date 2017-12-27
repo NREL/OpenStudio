@@ -182,6 +182,12 @@ class MODEL_API BoilerHotWater : public StraightComponent {
 
   void resetSizingFactor();
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+
+
   //@}
  protected:
   /// @cond

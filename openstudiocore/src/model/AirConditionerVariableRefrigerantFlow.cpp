@@ -1902,6 +1902,73 @@ namespace detail {
     return false;
   }
 
+  boost::optional<double> AirConditionerVariableRefrigerantFlow_Impl::autosizedRatedTotalCoolingCapacity() const {
+    return getAutosizedValue("Design Size Rated Total Cooling Capacity (gross)", "W");
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow_Impl::autosizedRatedTotalHeatingCapacity() const {
+    return getAutosizedValue("Design Size Rated Total Heating Capacity", "W");
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow_Impl::autosizedResistiveDefrostHeaterCapacity() const {
+    return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "");
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow_Impl::autosizedWaterCondenserVolumeFlowRate() const {
+    return getAutosizedValue("Design Size Water Condenser Volume Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow_Impl::autosizedEvaporativeCondenserAirFlowRate() const {
+    return getAutosizedValue("Design Size Evaporative Condenser Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow_Impl::autosizedEvaporativeCondenserPumpRatedPowerConsumption() const {
+    return getAutosizedValue("Design Size Evaporative Condenser Pump Rated Power Consumption", "W");
+  }
+
+  void AirConditionerVariableRefrigerantFlow_Impl::autosize() {
+    autosizeRatedTotalCoolingCapacity();
+    autosizeRatedTotalHeatingCapacity();
+    autosizeResistiveDefrostHeaterCapacity();
+    autosizeWaterCondenserVolumeFlowRate();
+    autosizeEvaporativeCondenserAirFlowRate();
+    autosizeEvaporativeCondenserPumpRatedPowerConsumption();
+  }
+
+  void AirConditionerVariableRefrigerantFlow_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRatedTotalCoolingCapacity();
+    if (val) {
+      setRatedTotalCoolingCapacity(val.get());
+    }
+
+    val = autosizedRatedTotalHeatingCapacity();
+    if (val) {
+      setRatedTotalHeatingCapacity(val.get());
+    }
+
+    val = autosizedResistiveDefrostHeaterCapacity();
+    if (val) {
+      setResistiveDefrostHeaterCapacity(val.get());
+    }
+
+    val = autosizedWaterCondenserVolumeFlowRate();
+    if (val) {
+      setWaterCondenserVolumeFlowRate(val.get());
+    }
+
+    val = autosizedEvaporativeCondenserAirFlowRate();
+    if (val) {
+      setEvaporativeCondenserAirFlowRate(val.get());
+    }
+
+    val = autosizedEvaporativeCondenserPumpRatedPowerConsumption();
+    if (val) {
+      setEvaporativeCondenserPumpRatedPowerConsumption(val.get());
+    }
+
+  }
+
 } // detail
 
 
@@ -3064,6 +3131,30 @@ AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(std
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow::autosizedRatedTotalCoolingCapacity() const {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizedRatedTotalCoolingCapacity();
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow::autosizedRatedTotalHeatingCapacity() const {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizedRatedTotalHeatingCapacity();
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow::autosizedResistiveDefrostHeaterCapacity() const {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizedResistiveDefrostHeaterCapacity();
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow::autosizedWaterCondenserVolumeFlowRate() const {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizedWaterCondenserVolumeFlowRate();
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow::autosizedEvaporativeCondenserAirFlowRate() const {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizedEvaporativeCondenserAirFlowRate();
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow::autosizedEvaporativeCondenserPumpRatedPowerConsumption() const {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizedEvaporativeCondenserPumpRatedPowerConsumption();
+  }
 
 } // model
 } // openstudio

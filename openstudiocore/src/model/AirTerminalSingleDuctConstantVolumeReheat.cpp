@@ -521,6 +521,33 @@ namespace detail {
     return true;
   }
 
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeReheat_Impl::autosizedMaximumAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeReheat_Impl::autosizedMaximumHotWaterorSteamFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Reheat Water Flow Rate", "m3/s");
+  }
+
+  void AirTerminalSingleDuctConstantVolumeReheat_Impl::autosize() {
+    autosizeMaximumAirFlowRate();
+    autosizeMaximumHotWaterorSteamFlowRate();
+  }
+
+  void AirTerminalSingleDuctConstantVolumeReheat_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumAirFlowRate();
+    if (val) {
+      setMaximumAirFlowRate(val.get());
+    }
+
+    val = autosizedMaximumHotWaterorSteamFlowRate();
+    if (val) {
+      setMaximumHotWaterorSteamFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 AirTerminalSingleDuctConstantVolumeReheat::AirTerminalSingleDuctConstantVolumeReheat(const Model& model,
@@ -667,6 +694,14 @@ AirTerminalSingleDuctConstantVolumeReheat::AirTerminalSingleDuctConstantVolumeRe
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeReheat::autosizedMaximumAirFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->autosizedMaximumAirFlowRate();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeReheat::autosizedMaximumHotWaterorSteamFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->autosizedMaximumHotWaterorSteamFlowRate();
+  }
 
 } // model
 } // openstudio

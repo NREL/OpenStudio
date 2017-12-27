@@ -443,6 +443,20 @@ namespace detail {
     return std::vector<ModelObject>();
   }
 
+  // default implementation does nothing.
+  // should only be used by objects that have
+  // no autosized fields 
+  void Loop_Impl::autosize() {
+    return;
+  }
+
+  // default implementation does nothing.
+  // should only be used by objects that have
+  // no autosized fields 
+  void Loop_Impl::applySizingValues() {
+    return;
+  }
+
 } // detail
 
 Loop::Loop(IddObjectType type,const Model& model)
@@ -575,6 +589,14 @@ Splitter Loop::demandSplitter() const
 Mixer Loop::demandMixer() const
 {
   return getImpl<detail::Loop_Impl>()->demandMixer();
+}
+
+void Loop::autosize() {
+  return getImpl<detail::Loop_Impl>()->autosize();
+}
+
+void Loop::applySizingValues() {
+  return getImpl<detail::Loop_Impl>()->applySizingValues();
 }
 
 } // model

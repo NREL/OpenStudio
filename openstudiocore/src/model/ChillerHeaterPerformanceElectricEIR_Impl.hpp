@@ -135,6 +135,16 @@ namespace detail {
 
     double sizingFactor() const;
 
+  boost::optional<double> autosizedReferenceCoolingModeEvaporatorCapacity() const ;
+
+  boost::optional<double> autosizedDesignChilledWaterFlowRate() const ;
+
+  boost::optional<double> autosizedDesignCondenserWaterFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
     //@}
     /** @name Setters */
     //@{

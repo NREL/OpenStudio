@@ -254,6 +254,33 @@ boost::optional<HVACComponent> ControllerWaterCoil_Impl::waterCoil() const
   return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_Controller_WaterCoilFields::WaterCoilName);
 }
 
+  boost::optional<double> ControllerWaterCoil_Impl::autosizedControllerConvergenceTolerance() const {
+    return getAutosizedValue("Controller Convergence Tolerance", "");
+  }
+
+  boost::optional<double> ControllerWaterCoil_Impl::autosizedMaximumActuatedFlow() const {
+    return getAutosizedValue("Maximum Actuated Flow", "m3/s");
+  }
+
+  void ControllerWaterCoil_Impl::autosize() {
+    autosizeControllerConvergenceTolerance();
+    autosizeMaximumActuatedFlow();
+  }
+
+  void ControllerWaterCoil_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedControllerConvergenceTolerance();
+    if (val) {
+      setControllerConvergenceTolerance(val.get());
+    }
+
+    val = autosizedMaximumActuatedFlow();
+    if (val) {
+      setMaximumActuatedFlow(val.get());
+    }
+
+  }
+
 } // detail
 
 ControllerWaterCoil::ControllerWaterCoil(const Model& model)
@@ -405,6 +432,14 @@ ControllerWaterCoil::ControllerWaterCoil(std::shared_ptr<detail::ControllerWater
 {}
 /// @endcond
 
+
+  boost::optional<double> ControllerWaterCoil::autosizedControllerConvergenceTolerance() const {
+    return getImpl<detail::ControllerWaterCoil_Impl>()->autosizedControllerConvergenceTolerance();
+  }
+
+  boost::optional<double> ControllerWaterCoil::autosizedMaximumActuatedFlow() const {
+    return getImpl<detail::ControllerWaterCoil_Impl>()->autosizedMaximumActuatedFlow();
+  }
 
 } // model
 

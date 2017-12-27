@@ -254,6 +254,22 @@ class MODEL_API ZoneHVACWaterToAirHeatPump : public ZoneHVACComponent {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+
+  boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const ;
+
+
+
   //@}
  protected:
   /// @cond

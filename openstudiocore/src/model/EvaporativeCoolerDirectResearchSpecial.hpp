@@ -139,6 +139,12 @@ class MODEL_API EvaporativeCoolerDirectResearchSpecial : public StraightComponen
 
   void resetWaterPumpPowerModifierCurve();
 
+  boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const ;
+
+  boost::optional<double> autosizedPrimaryAirDesignFlowRate() const ;
+
+
+
   //@}
  protected:
   friend class Model;

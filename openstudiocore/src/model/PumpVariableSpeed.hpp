@@ -277,6 +277,10 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
 
   void resetMaximumRPMSchedule();
 
+  boost::optional<double> autosizedRatedFlowRate() const ;
+
+  boost::optional<double> autosizedRatedPowerConsumption() const ;
+
   std::string designPowerSizingMethod() const;
 
   bool setDesignPowerSizingMethod(const std::string & designPowerSizingMethod);

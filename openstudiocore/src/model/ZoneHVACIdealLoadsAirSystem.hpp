@@ -308,6 +308,16 @@ class MODEL_API ZoneHVACIdealLoadsAirSystem : public ZoneHVACComponent {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedMaximumHeatingAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumSensibleHeatingCapacity() const ;
+
+  boost::optional<double> autosizedMaximumCoolingAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumTotalCoolingCapacity() const ;
+
+
+
   //@}
  protected:
   /// @cond

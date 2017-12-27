@@ -100,6 +100,10 @@ class MODEL_API CoilHeatingElectric : public StraightComponent {
 
   //@}
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+
+
  protected:
   /// @cond
 

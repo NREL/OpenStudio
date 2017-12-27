@@ -175,6 +175,20 @@ class MODEL_API AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass : public StraightC
 
   bool setDehumidificationControlType(std::string dehumidificationControlType);
 
+  boost::optional<double> autosizedSystemAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedSystemAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedSystemAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+
+
+
   //@}
   /** @name Other */
   //@{
