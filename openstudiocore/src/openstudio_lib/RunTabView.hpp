@@ -68,8 +68,12 @@ namespace openstudio {
     RunView();
     void readSunlite(QFile *file);
 public slots:
-	void readyReadStandardError();
-	void readyReadStandardOutput();
+    void becError(QProcess::ProcessError err);
+    void becFinished(int exitcode, QProcess::ExitStatus status);
+    void becReadyReadStandardError();
+    void becReadyReadStandardOutput();
+    void becStarted();
+    void becStateChanged(QProcess::ProcessState pstate);
 
 private:
     REGISTER_LOGGER("openstudio::RunView");
@@ -111,6 +115,7 @@ private:
     QLabel * m_statusLabel;
     QTextEdit * m_textInfo;
     QProcess * m_runProcess;
+    QProcess * m_becProcess;
     QPushButton * m_openSimDirButton;
     QComboBox* m_runMode;
     QTcpServer * m_runTcpServer;

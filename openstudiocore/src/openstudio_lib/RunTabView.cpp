@@ -877,6 +877,7 @@ RunTabView::RunTabView(const model::Model & model,
 RunView::RunView()
   : QWidget(), m_runSocket(nullptr)
 {
+  m_becProcess = NULL;
   auto mainLayout = new QGridLayout();
   mainLayout->setContentsMargins(10,10,10,10);
   mainLayout->setSpacing(5);
@@ -926,15 +927,9 @@ RunView::RunView()
 
   m_runProcess = new QProcess(this);
   connect(m_runProcess, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &RunView::onRunProcessFinished);
-  
-  //connect(m_runProcess, SIGNAL(readyRead()), this, SLOT(readyReadStandardError()));
-  //connect(m_runProcess, SIGNAL(readyRead()), this, SLOT(readyReadStandardOutput()));
+  //connect(m_runProcess, SIGNAL(readyReadStandardError()), this, SLOT(readyReadStandardError()));
+  //connect(m_runProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(readyReadStandardOutput()));
 
-  connect(m_runProcess, SIGNAL(readyReadStandardError()), this, SLOT(readyReadStandardError()));
-  connect(m_runProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(readyReadStandardOutput()));
-
-  //connect(m_runProcess, static_cast<void(QProcess::*)()>(&QProcess::readyReadStandardError), this, &RunView::readyReadStandardError);
-  //connect(m_runProcess, static_cast<void(QProcess::*)()>(&QProcess::readyReadStandardOutput), this, &RunView::readyReadStandardOutput);
 
   QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 
@@ -958,6 +953,9 @@ RunView::RunView()
   m_runTcpServer = new QTcpServer();
   m_runTcpServer->listen();
   connect(m_runTcpServer, &QTcpServer::newConnection, this, &RunView::onNewConnection);
+  iiimax = m_progressBar->maximum();
+  iiimin = m_progressBar->minimum();
+  iiival = m_progressBar->value();
 }
 
 void RunView::onOpenSimDirClicked()
@@ -1054,18 +1052,6 @@ QStringList RunView::TranslateLogError(QString filePath, QStringList logsls)
 void RunView::processBec()
 {
 	QDateTime now = QDateTime::currentDateTime();
-	bool tvisible = m_progressBar->isTextVisible();
-	m_progressBar->setTextVisible(true);
-	QString textFormat = m_progressBar->text();
-	m_progressBar->setFormat("Saving and update project...");
-	int max, min, val;
-	max = m_progressBar->maximum();
-	min = m_progressBar->minimum();
-	val = m_progressBar->value();
-
-	m_progressBar->setMaximum(0);
-	m_progressBar->setMinimum(0);
-	m_progressBar->setValue(0);
 
 	//TODO:RUN bec here.
 	std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
@@ -1118,10 +1104,13 @@ void RunView::processBec()
             return;
         }
 
+		beginInfiniteProgress("Create bec input.");
         QFuture<bool> future = QtConcurrent::run(this, &RunView::doBecInput, outpath + "input.xml", osdocument->model(), filePath);
         while (future.isRunning()){
             QApplication::processEvents();
         }
+		endInfiniteProgress();
+
         bool success = future.result();
 		logNormalText(QString("END READ DO BEC INPUT.") + now.toString());
 
@@ -1129,7 +1118,6 @@ void RunView::processBec()
             logErrorText(errrr);
 
 		if (!success){
-			osdocument->enableTabsAfterRun();
 			onRunProcessFinished(1, QProcess::NormalExit);
 
 			logNormalText(QString("START UPDATE PV IN FILE.") + now.toString());
@@ -1140,21 +1128,16 @@ void RunView::processBec()
 			logNormalText(QString("END UPDATE PV IN FILE.") + now.toString());
 			//m_canceling = false;
 			logErrorText(QString("Can't generate bec input files"));
+			osdocument->enableTabsAfterRun();
 			return;
 		}
 		else
 		{
 			logNormalText("Call newBEC.exe.");
             logNormalText(QString("START CALL newBec.exe ") + now.toString());
-            beginInfiniteProgress("Process in BEC");
 			callRealBEC(outpath);
 		}
 	}
-	m_progressBar->setMaximum(max);
-	m_progressBar->setMinimum(min);
-	m_progressBar->setValue(val);
-	m_progressBar->setTextVisible(tvisible);
-    m_progressBar->setFormat(textFormat);
 }
 
 void RunView::readSunlite(QFile *file)
@@ -1231,9 +1214,6 @@ void RunView::beginInfiniteProgress(const QString &message)
     m_progressBar->setTextVisible(true);
     iiitextFormat = m_progressBar->text();
     m_progressBar->setFormat(message);
-    iiimax = m_progressBar->maximum();
-    iiimin = m_progressBar->minimum();
-    iiival = m_progressBar->value();
 
     m_progressBar->setMaximum(0);
     m_progressBar->setMinimum(0);
@@ -1309,18 +1289,41 @@ void RunView::doFinish()
     m_runSocket = nullptr;
 }
 
-void RunView::readyReadStandardError()
+void RunView::becError(QProcess::ProcessError err)
 {
-	QProcess *p = (QProcess *)sender();
-	QByteArray buf = p->readAllStandardError();
-	logErrorText(buf);
+    QProcess *p = (QProcess *)sender();
+    logErrorText(p->errorString());
 }
 
-void RunView::readyReadStandardOutput()
+void RunView::becFinished(int exitcode, QProcess::ExitStatus status)
 {
-	QProcess *p = (QProcess *)sender();
-	QByteArray buf = p->readAllStandardOutput();
-	logNormalText(buf);
+    becFinished();
+    doFinish();
+    endInfiniteProgress();
+}
+
+void RunView::becReadyReadStandardError()
+{
+    QProcess *p = (QProcess *)sender();
+    QByteArray buf = p->readAllStandardError();
+    logErrorText(buf);
+}
+
+void RunView::becReadyReadStandardOutput()
+{
+    QProcess *p = (QProcess *)sender();
+    QByteArray buf = p->readAllStandardOutput();
+    logNormalText(buf);
+}
+
+void RunView::becStarted()
+{
+
+}
+
+void RunView::becStateChanged(QProcess::ProcessState pstate)
+{
+
 }
 
 void RunView::onRunProcessFinished(int exitCode, QProcess::ExitStatus status)
@@ -1331,11 +1334,6 @@ void RunView::onRunProcessFinished(int exitCode, QProcess::ExitStatus status)
 	{
 		runmode = RUN_BEC;
 		playButtonClicked00(true, runmode, false);
-	}
-	else if(runmode == RUN_BEC){
-		becFinished();
-		doFinish();
-        endInfiniteProgress();
 	}
 	else{
 		doFinish();
@@ -1424,7 +1422,15 @@ void RunView::playButtonClicked00(bool t_checked, RunView::RUNMODE runmode, bool
     } else {
       // stop running
 	  logNormalText("Kill Simulation");
-      m_runProcess->kill();
+	  if (m_runProcess->isOpen()){
+		  m_runProcess->kill();
+	  }
+	  
+	  if (m_becProcess && m_becProcess->isOpen()){
+		  m_becProcess->kill();
+		  m_becProcess->deleteLater();
+		  m_becProcess = NULL;
+	  }
     }
 }
 
@@ -1441,7 +1447,6 @@ void RunView::becFinished()
     else{
         //std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
         logH1Text(QString("Generate bec report %1 complete.").arg(outpath));
-        m_playButton->setChecked(false);
         updatePVInfile();
     }
 
@@ -2031,6 +2036,8 @@ void RunView::updatePVInfile()
 }
 
 void RunView::callRealBEC(const QString &dir){
+
+    beginInfiniteProgress("Process in BEC");
     QString outpath = dir;
     outpath.replace("\\", "/");
     if(!outpath.endsWith("//")){
@@ -2043,29 +2050,30 @@ void RunView::callRealBEC(const QString &dir){
     arguments << outpath;
 
     logNormalText(QString("Run bec at:%1").arg(program.c_str()));
-    m_runProcess->start(program.c_str(), arguments);
 
-    /*
-    if(becProcess)
-        becProcess->deleteLater();
+    if(m_becProcess)
+    {
+        m_becProcess->deleteLater();
+        m_becProcess = NULL;
+    }
 
-    becProcess = new QProcess(this);
-    becProcess->start(program.c_str(), arguments);
+    m_becProcess = new QProcess(this);
+    m_becProcess->start(program.c_str(), arguments);
 
     //BEC SLOT
-    connect(becProcess, SIGNAL(error(QProcess::ProcessError))
+    connect(m_becProcess, SIGNAL(error(QProcess::ProcessError))
             , SLOT(becError(QProcess::ProcessError)));
-    connect(becProcess, SIGNAL(finished(int, QProcess::ExitStatus))
+    connect(m_becProcess, SIGNAL(finished(int, QProcess::ExitStatus))
             , SLOT(becFinished(int, QProcess::ExitStatus)));
-    connect(becProcess, SIGNAL(readyReadStandardError())
+    connect(m_becProcess, SIGNAL(readyReadStandardError())
             , SLOT(becReadyReadStandardError()));
-    connect(becProcess, SIGNAL(readyReadStandardOutput())
+    connect(m_becProcess, SIGNAL(readyReadStandardOutput())
             , SLOT(becReadyReadStandardOutput()));
-    connect(becProcess, SIGNAL(started())
+    connect(m_becProcess, SIGNAL(started())
             , SLOT(becStarted()));
-    connect(becProcess, SIGNAL(stateChanged(QProcess::ProcessState))
+    connect(m_becProcess, SIGNAL(stateChanged(QProcess::ProcessState))
             , SLOT(becStateChanged(QProcess::ProcessState)));
-            */
+    logNormalText(QString("Running bec at:%1").arg(program.c_str()));
 }
 
 void RunView::logErrorText(const QString &text, const QString colorName) {
