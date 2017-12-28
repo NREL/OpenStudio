@@ -44,12 +44,24 @@
 		"translate": "Error ลืมใส่ $3 ใน $2",
 		"name": "11"
 	}, {
-		"regex": "Errors occurred(.*)",
-		"translate": "Error occurred$1",
+		"regex": "IP: IDF .* Error detected in\\s*.*name=(.*)\\s.*Field\\s*\\[Construction Name] is required but was blank",
+		"translate": "SUB SURFACE $1 ไม่ได้ระบุวัสดุ",
 		"name": "12"
+	}, {
+		"regex": "AIR has no air flow",
+		"translate": "ตรวจสอบค่าที่กรอกของอุปกรณ์ระบบปรับอากาศ",
+		"name": "13"
+	}, {
+		"regex": "Rated air volume flow rate per watt of rated total cooling capacity is out of range.",
+		"translate": "ค่า Rated air volume flow rate per watt of rated total cooling capacity ควรอยู่ในช่วง 0.00004027 ถึง 0.00006041 m³/s W",
+		"name": "14"
+	}, {
+		"regex": "name=(.*)\\s*\\*\\*\\s*~~~\\s*\\*\\*\\sField \\[Zone Node Name] is required but was blank",
+		"translate": "ลืมใส่ Thermal Zone ตรงตำแหน่ง $1",
+		"name": "15"
 	}, {
 		"regex": "Error detected(.*)",
 		"translate": "Error detected$1",
-		"name": "12"
+		"name": "16"
 	}]
 }
