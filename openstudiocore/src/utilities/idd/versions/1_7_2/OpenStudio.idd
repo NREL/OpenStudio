@@ -10204,7 +10204,7 @@ OS:Chiller:Electric:EIR,
        \units C
        \minimum 2
        \default 2.0
-  A14; \field Basin Heater Operating Schedule Name
+  A14, \field Basin Heater Operating Schedule Name
        \note This field is only used for Condenser Type = EvaporativelyCooled.
        \note Schedule values greater than 0 allow the basin heater to operate whenever the outdoor
        \note air dry-bulb temperature is below the basin heater setpoint temperature.
@@ -10212,6 +10212,14 @@ OS:Chiller:Electric:EIR,
        \note throughout the entire simulation.
        \type object-list
        \object-list ScheduleNames
+  A15; \field Compressor Type
+       \type choice
+       \default Reciprocating
+       \key Reciprocating
+       \key Screw Driven
+       \key Scroll
+       \key Rotary
+       \key Centrifugal
 
 OS:CoolingTower:SingleSpeed,
        \min-fields 10
