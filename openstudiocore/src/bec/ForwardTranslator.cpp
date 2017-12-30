@@ -425,44 +425,49 @@ ForwardTranslator::~ForwardTranslator()
 {
 }
 
-bool ForwardTranslator::modelTobec(const openstudio::model::Model& model
-                                   , const openstudio::path& path
-                                   , ProgressBar* progressBar
-                                   , std::string *bvName
-                                   , QHash<QString, QList<double>>* sunlits
-								   , float wwr_totoal)
+QString ForwardTranslator::getBVName()
 {
     QInputDialog inputBuildingType;
-    _sunlits = sunlits;
-	  _wwr_totoal = wwr_totoal;
     inputBuildingType.setOption(QInputDialog::UseListViewForComboBoxItems);
     inputBuildingType.setWindowTitle("What is building type.");
     inputBuildingType.setLabelText("Selection:");
     QStringList types;
-        types <<"Office building"
-        <<"Department store"
-        <<"Community building"
-        <<"Hotel"
-        <<"Condominium"
-        <<"Medical Center"
-        <<"Educational Institution"
-        <<"Service Facility"
-        <<"Theater";
+    types <<"Office building"
+            <<"Department store"
+            <<"Community building"
+            <<"Hotel"
+            <<"Condominium"
+            <<"Medical Center"
+            <<"Educational Institution"
+            <<"Service Facility"
+            <<"Theater";
 
     inputBuildingType.setComboBoxItems(types);
 
     int ret = inputBuildingType.exec();
 
     if (ret == QDialog::Accepted){
+        return inputBuildingType.textValue();
+    }
+    return "";
+}
 
-        if (bvName)
-            (*bvName) = inputBuildingType.textValue().toStdString();
+bool ForwardTranslator::modelTobec(const openstudio::model::Model& model
+                                   , const openstudio::path& path
+                                   , ProgressBar* progressBar
+                                   , QHash<QString, QList<double>>* sunlits
+                                   , float wwr_totoal
+                                   , QString bvName)
+{
+    _sunlits = sunlits;
+    _wwr_totoal = wwr_totoal;
 
+    if (true){
         m_progressBar = progressBar;
         m_logSink.setThreadId(QThread::currentThread());
         m_logSink.resetStringStream();
 
-        boost::optional<QDomDocument> doc = this->translateModel(model, inputBuildingType.textValue());
+        boost::optional<QDomDocument> doc = this->translateModel(model, bvName);
         if (!doc){
             return false;
         }

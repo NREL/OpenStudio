@@ -103,6 +103,8 @@ enum PVReportMode { PVReportMode_OPENSTUDIO, PVReportMode_BEC, PVReportMode_ENER
 #include <QJsonValue>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QtConcurrent>
+#include <QFuture>
 
 #define STR_Mode_EPLUS "Energy Plus"
 #define STR_Mode_BEC "BEC"
@@ -875,6 +877,7 @@ RunTabView::RunTabView(const model::Model & model,
 RunView::RunView()
   : QWidget(), m_runSocket(nullptr)
 {
+  m_becProcess = NULL;
   auto mainLayout = new QGridLayout();
   mainLayout->setContentsMargins(10,10,10,10);
   mainLayout->setSpacing(5);
@@ -924,15 +927,9 @@ RunView::RunView()
 
   m_runProcess = new QProcess(this);
   connect(m_runProcess, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &RunView::onRunProcessFinished);
-  
-  //connect(m_runProcess, SIGNAL(readyRead()), this, SLOT(readyReadStandardError()));
-  //connect(m_runProcess, SIGNAL(readyRead()), this, SLOT(readyReadStandardOutput()));
+  //connect(m_runProcess, SIGNAL(readyReadStandardError()), this, SLOT(readyReadStandardError()));
+  //connect(m_runProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(readyReadStandardOutput()));
 
-  connect(m_runProcess, SIGNAL(readyReadStandardError()), this, SLOT(readyReadStandardError()));
-  connect(m_runProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(readyReadStandardOutput()));
-
-  //connect(m_runProcess, static_cast<void(QProcess::*)()>(&QProcess::readyReadStandardError), this, &RunView::readyReadStandardError);
-  //connect(m_runProcess, static_cast<void(QProcess::*)()>(&QProcess::readyReadStandardOutput), this, &RunView::readyReadStandardOutput);
 
   QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 
@@ -956,6 +953,9 @@ RunView::RunView()
   m_runTcpServer = new QTcpServer();
   m_runTcpServer->listen();
   connect(m_runTcpServer, &QTcpServer::newConnection, this, &RunView::onNewConnection);
+  iiimax = m_progressBar->maximum();
+  iiimin = m_progressBar->minimum();
+  iiival = m_progressBar->value();
 }
 
 void RunView::onOpenSimDirClicked()
@@ -1049,6 +1049,187 @@ QStringList RunView::TranslateLogError(QString filePath, QStringList logsls)
 	return lsout;
 }
 
+void RunView::processBec()
+{
+	QDateTime now = QDateTime::currentDateTime();
+
+	//TODO:RUN bec here.
+	std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
+	logH1Text("RUN BEC");
+
+	m_tempFolder = toPath(osdocument->modelTempDir());
+	QString outpath = (m_tempFolder / "resources").string().c_str();
+	if (!outpath.isEmpty()){
+
+		//GEN INPUT
+		QString filePath;
+        errrr.clear();
+		outpath += "/run/9-BEC-0/";
+		logNormalText(QString("Temp output : '%1'").arg(outpath));
+
+		QDir dir(outpath);
+		if (!dir.exists()) {
+			dir.mkpath(".");
+		}
+
+		//////////////////////////
+		QString eplustbl_path = outpath + "../eplustbl.htm";
+		QFile file(eplustbl_path);
+		sunlits.clear();
+		wwr_totoal = 0.0f;
+		if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+		{
+            beginInfiniteProgress("Reading sun lite");
+            QFuture<void> future = QtConcurrent::run(this, &RunView::readSunlite, &file);
+            while (future.isRunning()){
+                QApplication::processEvents();
+            }
+            endInfiniteProgress();
+		}
+		else{
+			//logErrorText(QString("<font color=\"red\">ERROR:Can't read eblustbl.htm</font>"));
+			//logErrorText(QString("ERROR:Can't read %1").arg(eplustbl_path));
+			logErrorText("BEC Report คำนวณค่า SC เป็น 1 "
+				"(ไม่ได้ Run EnergyPlus ก่อน)");
+		}
+		///////////////////////////
+
+		becoutputPath = outpath + "output.xml";
+
+		logNormalText(QString("START READ DO BEC INPUT.") + now.toString());
+
+        bec::ForwardTranslator trans;
+        bvName = trans.getBVName();
+        if(bvName.isEmpty()){
+            return;
+        }
+
+		beginInfiniteProgress("Create bec input.");
+        QFuture<bool> future = QtConcurrent::run(this, &RunView::doBecInput, outpath + "input.xml", osdocument->model(), filePath);
+        while (future.isRunning()){
+            QApplication::processEvents();
+        }
+		endInfiniteProgress();
+
+        bool success = future.result();
+		logNormalText(QString("END READ DO BEC INPUT.") + now.toString());
+
+        if (!errrr.isEmpty())
+            logErrorText(errrr);
+
+		if (!success){
+			onRunProcessFinished(1, QProcess::NormalExit);
+
+			logNormalText(QString("START UPDATE PV IN FILE.") + now.toString());
+            QFuture<void> future = QtConcurrent::run(this, &RunView::updatePVInfile);
+            while (future.isRunning()){
+                QApplication::processEvents();
+            }
+			logNormalText(QString("END UPDATE PV IN FILE.") + now.toString());
+			//m_canceling = false;
+			logErrorText(QString("Can't generate bec input files"));
+			osdocument->enableTabsAfterRun();
+			return;
+		}
+		else
+		{
+			logNormalText("Call newBEC.exe.");
+            logNormalText(QString("START CALL newBec.exe ") + now.toString());
+			callRealBEC(outpath);
+		}
+	}
+}
+
+void RunView::readSunlite(QFile *file)
+{
+    QDateTime now = QDateTime::currentDateTime();
+    logNormalText(QString("START READ eblustbl.htm FOR SUNLIT FRACTION.") + now.toString());
+    logH2Text(QString("Start read eblustbl.htm<"));
+    QTextStream in(file);
+    QString str = in.readAll();
+    QString gwstr = str;
+    int start = str.indexOf("<b>Sunlit Fraction</b>");
+    int table_start_idx = str.indexOf("<table", start);
+    int table_end_idx = str.indexOf("</table>", table_start_idx + 6);
+
+    logNormalText(QString("table sidx:%1->%2:%3").arg(start).arg(table_start_idx).arg(table_end_idx));
+
+    str = str.mid(table_start_idx, table_end_idx - table_start_idx);
+    str = str.replace("\r", "");
+    str = str.replace("\n", "");
+    str = str.replace(QRegExp("<table[^>]*>"), "");
+    str = str.replace("</table>", "");
+    str = str.replace(QRegExp("<td[^>]*>"), "");
+    str = str.replace(QRegExp("<tr[^>]*>"), "");
+
+    QStringList rowls = str.split("</tr>");
+
+    logH2Text("Sunlit Fraction");
+    for (int irow = 1; irow < rowls.size(); ++irow) {
+        QStringList cols = rowls.at(irow).split("</td>");
+
+        if (cols.size()<1)
+            break;
+
+        QString sfname = cols.at(0);
+        QString msg = sfname + ":";
+        for (int icol = 1; icol < cols.size(); ++icol) {
+            double num = cols.at(icol).trimmed().toDouble();
+            sunlits[sfname.toUpper().trimmed()].append(num);
+            msg += QString::number(num) + ",";
+        }
+        logNormalText(QString("%1\n").arg(msg));
+    }
+    logH2Text(QString("SF:%1").arg(QString::number(sunlits.size())));
+
+    //Read Conditioned Window-Wall Ratio --> Gross Window-Wall Ratio [%] --> <td align="right">       35.20</td>
+    int idx_of_wwrAll = gwstr.indexOf("Conditioned Window-Wall Ratio");
+    int idx_of_wwrAll_end = -1;
+    if (idx_of_wwrAll > -1){
+        idx_of_wwrAll = gwstr.indexOf("Gross Window-Wall Ratio [%]", idx_of_wwrAll);
+        const QString tdBegin("<td align=\"right\"> ");
+        const QString tdEnd("</td>");
+        idx_of_wwrAll = gwstr.indexOf(tdBegin, idx_of_wwrAll);
+        if (idx_of_wwrAll > -1){
+            idx_of_wwrAll += tdBegin.length();
+            idx_of_wwrAll_end = gwstr.indexOf(tdEnd, idx_of_wwrAll);
+            logNormalText(QString("idx0:%1, idx1:%2").arg(idx_of_wwrAll).arg(idx_of_wwrAll_end));
+            if (idx_of_wwrAll_end > -1){
+                gwstr = gwstr.mid(idx_of_wwrAll, idx_of_wwrAll_end - idx_of_wwrAll);
+                logNormalText(QString("gwstr:[%1]").arg(gwstr));
+                gwstr = gwstr.trimmed();
+                wwr_totoal = gwstr.toFloat();
+                wwr_totoal = wwr_totoal / 100.0f;
+                logH2Text(QString("wwr_totoal:[%1]").arg(wwr_totoal));
+                logH2Text(QString("wwr totoal:%1").arg(gwstr));
+            }
+        }
+    }
+    logNormalText(QString("END READ eblustbl.htm FOR SUNLIT FRACTION.") + now.toString());
+}
+
+void RunView::beginInfiniteProgress(const QString &message)
+{
+    iiitvisible = m_progressBar->isTextVisible();
+    m_progressBar->setTextVisible(true);
+    iiitextFormat = m_progressBar->text();
+    m_progressBar->setFormat(message);
+
+    m_progressBar->setMaximum(0);
+    m_progressBar->setMinimum(0);
+    m_progressBar->setValue(0);
+
+}
+
+void RunView::endInfiniteProgress()
+{
+    m_progressBar->setMaximum(iiimax);
+    m_progressBar->setMinimum(iiimin);
+    m_progressBar->setValue(iiival);
+    m_progressBar->setTextVisible(iiitvisible);
+    m_progressBar->setFormat(iiitextFormat);
+}
+
 void RunView::ValidateLog()
 {
 	std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
@@ -1066,21 +1247,41 @@ void RunView::ValidateLog()
 	}
 }
 
+void fosdocument_save(OSDocument* osdocument){
+	osdocument->save();
+}
+
+void RunView::osdocument_save(std::shared_ptr<OSDocument> osdocument){ 
+    beginInfiniteProgress("Saving and update project...");
+
+	QDateTime now = QDateTime::currentDateTime();
+	logNormalText(QString("Start save project ") + now.toString());
+
+	QFuture<void> future = QtConcurrent::run(fosdocument_save, osdocument.get());
+
+	while (future.isRunning()){
+		QApplication::processEvents();
+	}
+
+	logNormalText(QString("Finish save project success ") + now.toString());
+
+    endInfiniteProgress();
+}
+
 void RunView::doFinish()
 {
     logNormalText("run finished");
 	ValidateLog();
-    m_playButton->setChecked(false);
-    m_state = State::stopped;
-    m_progressBar->setValue(State::complete);
-
+   
     std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
-	QDateTime now = QDateTime::currentDateTime();
-	logNormalText(QString("Finish save project ")+now.toString());
-    osdocument->save();
-	logNormalText(QString("Finish save project success ")+now.toString());
+	osdocument_save(osdocument);
+
+	m_playButton->setChecked(false);
+	m_state = State::stopped;
+	m_progressBar->setValue(State::complete);
     osdocument->enableTabsAfterRun();
     m_openSimDirButton->setEnabled(true);
+	m_runMode->setEnabled(true);
 
     if (m_runSocket){
       delete m_runSocket;
@@ -1088,18 +1289,41 @@ void RunView::doFinish()
     m_runSocket = nullptr;
 }
 
-void RunView::readyReadStandardError()
+void RunView::becError(QProcess::ProcessError err)
 {
-	QProcess *p = (QProcess *)sender();
-	QByteArray buf = p->readAllStandardOutput();
-	logErrorText(buf);
+    QProcess *p = (QProcess *)sender();
+    logErrorText(p->errorString());
 }
 
-void RunView::readyReadStandardOutput()
+void RunView::becFinished(int exitcode, QProcess::ExitStatus status)
 {
-	QProcess *p = (QProcess *)sender();
-	QByteArray buf = p->readAllStandardOutput();
-	logNormalText(buf);
+    becFinished();
+    doFinish();
+    endInfiniteProgress();
+}
+
+void RunView::becReadyReadStandardError()
+{
+    QProcess *p = (QProcess *)sender();
+    QByteArray buf = p->readAllStandardError();
+    logErrorText(buf);
+}
+
+void RunView::becReadyReadStandardOutput()
+{
+    QProcess *p = (QProcess *)sender();
+    QByteArray buf = p->readAllStandardOutput();
+    logNormalText(buf);
+}
+
+void RunView::becStarted()
+{
+
+}
+
+void RunView::becStateChanged(QProcess::ProcessState pstate)
+{
+
 }
 
 void RunView::onRunProcessFinished(int exitCode, QProcess::ExitStatus status)
@@ -1110,10 +1334,6 @@ void RunView::onRunProcessFinished(int exitCode, QProcess::ExitStatus status)
 	{
 		runmode = RUN_BEC;
 		playButtonClicked00(true, runmode, false);
-	}
-	else if(runmode == RUN_BEC){
-		becFinished();
-		doFinish();
 	}
 	else{
 		doFinish();
@@ -1140,7 +1360,7 @@ void RunView::playButtonClicked00(bool t_checked, RunView::RUNMODE runmode, bool
 
       if(osdocument->modified())
       {
-        osdocument->save();
+		  osdocument_save(osdocument);
         // save dialog was canceled
         if(osdocument->modified()) {
           m_playButton->setChecked(false);
@@ -1168,6 +1388,7 @@ void RunView::playButtonClicked00(bool t_checked, RunView::RUNMODE runmode, bool
 
       osdocument->disableTabsDuringRun();
       m_openSimDirButton->setEnabled(false);
+	  m_runMode->setEnabled(false);
 
       m_progressBar->setValue(0);
       m_state = State::stopped;
@@ -1195,136 +1416,21 @@ void RunView::playButtonClicked00(bool t_checked, RunView::RUNMODE runmode, bool
       }
       else
       {
-          //TODO:RUN bec here.
-
-          logH1Text("RUN BEC");
-
-          m_tempFolder = toPath(osdocument->modelTempDir());
-          QString outpath = (m_tempFolder/"resources").string().c_str();
-          if(!outpath.isEmpty()){
-
-              //GEN INPUT
-              QString filePath;
-              QString err;
-              outpath += "/run/9-BEC-0/";
-              logNormalText(QString("Temp output : '%1'").arg(outpath));
-
-              QDir dir(outpath);
-              if (!dir.exists()) {
-                  dir.mkpath(".");
-              }
-
-              //////////////////////////
-			  QString eplustbl_path = outpath + "../eplustbl.htm";
-			  QFile file(eplustbl_path);
-              sunlits.clear();
-              wwr_totoal = 0.0f;
-              if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-              {
-				  logNormalText(QString("START READ eblustbl.htm FOR SUNLIT FRACTION.")+now.toString());
-                  logH2Text(QString("Start read eblustbl.htm<"));
-                  QTextStream in(&file);
-                  QString str = in.readAll();
-                  QString gwstr = str;
-                  int start = str.indexOf("<b>Sunlit Fraction</b>");
-                  int table_start_idx = str.indexOf("<table", start);
-                  int table_end_idx = str.indexOf("</table>", table_start_idx+6);
-
-                  logNormalText(QString("table sidx:%1->%2:%3").arg(start).arg(table_start_idx).arg(table_end_idx));
-
-                  str = str.mid(table_start_idx, table_end_idx-table_start_idx);
-                  str = str.replace("\r", "");
-                  str = str.replace("\n", "");
-                  str = str.replace(QRegExp("<table[^>]*>"), "");
-                  str = str.replace("</table>", "");
-                  str = str.replace(QRegExp("<td[^>]*>"), "");
-                  str = str.replace(QRegExp("<tr[^>]*>"), "");
-
-                  QStringList rowls = str.split("</tr>");
-
-                  logH2Text("Sunlit Fraction");
-                  for (int irow = 1; irow < rowls.size(); ++irow) {
-                      QStringList cols = rowls.at(irow).split("</td>");
-
-                      if(cols.size()<1)
-                          break;
-
-                      QString sfname = cols.at(0);
-                      QString msg = sfname+":";
-                      for (int icol = 1; icol < cols.size(); ++icol) {
-                          double num = cols.at(icol).trimmed().toDouble();
-                          sunlits[sfname.toUpper().trimmed()].append(num);
-                          msg += QString::number(num)+",";
-                      }
-                      logNormalText(QString("%1\n").arg(msg));
-                  }
-                  logH2Text(QString("SF:%1").arg(QString::number(sunlits.size())));
-
-                  //Read Conditioned Window-Wall Ratio --> Gross Window-Wall Ratio [%] --> <td align="right">       35.20</td>
-                  int idx_of_wwrAll = gwstr.indexOf("Conditioned Window-Wall Ratio");
-                  int idx_of_wwrAll_end = -1;
-                  if (idx_of_wwrAll > -1){
-                      idx_of_wwrAll = gwstr.indexOf("Gross Window-Wall Ratio [%]", idx_of_wwrAll);
-                      const QString tdBegin("<td align=\"right\"> ");
-                      const QString tdEnd("</td>");
-                      idx_of_wwrAll = gwstr.indexOf(tdBegin, idx_of_wwrAll);
-                      if (idx_of_wwrAll > -1){
-                          idx_of_wwrAll += tdBegin.length();
-                          idx_of_wwrAll_end = gwstr.indexOf(tdEnd, idx_of_wwrAll);
-                          logNormalText(QString("idx0:%1, idx1:%2").arg(idx_of_wwrAll).arg(idx_of_wwrAll_end));
-                          if (idx_of_wwrAll_end > -1){
-                              gwstr = gwstr.mid(idx_of_wwrAll, idx_of_wwrAll_end - idx_of_wwrAll);
-                              logNormalText(QString("gwstr:[%1]").arg(gwstr));
-                              gwstr = gwstr.trimmed();
-                              wwr_totoal = gwstr.toFloat();
-                              wwr_totoal = wwr_totoal/100.0f;
-                              logH2Text(QString("wwr_totoal:[%1]").arg(wwr_totoal));
-                              logH2Text(QString("wwr totoal:%1").arg(gwstr));
-                          }
-                      }
-                  }
-				  logNormalText(QString("END READ eblustbl.htm FOR SUNLIT FRACTION.")+now.toString());
-              }else{
-                  //logErrorText(QString("<font color=\"red\">ERROR:Can't read eblustbl.htm</font>"));
-				  //logErrorText(QString("ERROR:Can't read %1").arg(eplustbl_path));
-				  logErrorText("BEC Report คำนวณค่า SC เป็น 1 "
-								"(ไม่ได้ Run EnergyPlus ก่อน)");
-              }
-              ///////////////////////////
-
-              becoutputPath = outpath+"output.xml";
-
-			  logNormalText(QString("START READ DO BEC INPUT.")+now.toString());
-              bool success = doBecInput(outpath+"input.xml", osdocument->model(), filePath, err);
-			  logNormalText(QString("END READ DO BEC INPUT.")+now.toString());
-
-              if(!err.isEmpty())
-                  logErrorText(err);
-
-              if(!success){
-                  osdocument->enableTabsAfterRun();
-                  onRunProcessFinished(1, QProcess::NormalExit);
-
-				  logNormalText(QString("START UPDATE PV IN FILE.")+now.toString());
-                  updatePVInfile();
-				  logNormalText(QString("END UPDATE PV IN FILE.")+now.toString());
-                  //m_canceling = false;
-                  logErrorText(QString("Can't generate bec input files"));
-                  return;
-              }
-              else
-              {
-                  logNormalText("Call newBEC.exe.");
-				  logNormalText(QString("START CALL newBec.exe ") + now.toString());
-                  callRealBEC(outpath);
-              }
-          }
+          processBec();
       }
 
     } else {
       // stop running
 	  logNormalText("Kill Simulation");
-      m_runProcess->kill();
+	  if (m_runProcess->isOpen()){
+		  m_runProcess->kill();
+	  }
+	  
+	  if (m_becProcess && m_becProcess->isOpen()){
+		  m_becProcess->kill();
+		  m_becProcess->deleteLater();
+		  m_becProcess = NULL;
+	  }
     }
 }
 
@@ -1341,7 +1447,6 @@ void RunView::becFinished()
     else{
         //std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
         logH1Text(QString("Generate bec report %1 complete.").arg(outpath));
-        m_playButton->setChecked(false);
         updatePVInfile();
     }
 
@@ -1476,7 +1581,8 @@ void RunView::onRunDataReady()
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //NOTE: BEC CODE
-bool RunView::doBecInput(const QString &path, const model::Model &model, QString &outpath, QString &err){
+bool RunView::doBecInput(const QString &path, const model::Model &model, QString &outpath){
+    errrr.clear();
     QString output = path;
 
     outpath = output;
@@ -1484,9 +1590,7 @@ bool RunView::doBecInput(const QString &path, const model::Model &model, QString
     bec::ForwardTranslator trans;
     logNormalText(QString("Create input.xml at %1").arg(path));
 
-    std::string bvn;
-    bool success = trans.modelTobec(model, path.toStdString().c_str(), NULL, &bvn, &sunlits, wwr_totoal);
-    bvName = bvn.c_str();
+    bool success = trans.modelTobec(model, path.toStdString().c_str(), NULL, &sunlits, wwr_totoal, bvName);
 
     std::string bvsdefault = binResourcesPath().string() + "/" + "default_building_standard.bvs";
     BenchmarkDialog* bmdlg = new BenchmarkDialog(bvsdefault.c_str(), this);
@@ -1500,8 +1604,8 @@ bool RunView::doBecInput(const QString &path, const model::Model &model, QString
          it < translatorErrors.end();
          ++it )
     {
-        err.append(QString::fromStdString(it->logMessage()));
-        err.append("\n");
+        errrr.append(QString::fromStdString(it->logMessage()));
+        errrr.append("\n");
     }
     //translatorWarnings = trans.warnings();
 
@@ -1932,6 +2036,8 @@ void RunView::updatePVInfile()
 }
 
 void RunView::callRealBEC(const QString &dir){
+
+    beginInfiniteProgress("Process in BEC");
     QString outpath = dir;
     outpath.replace("\\", "/");
     if(!outpath.endsWith("//")){
@@ -1944,29 +2050,30 @@ void RunView::callRealBEC(const QString &dir){
     arguments << outpath;
 
     logNormalText(QString("Run bec at:%1").arg(program.c_str()));
-    m_runProcess->start(program.c_str(), arguments);
 
-    /*
-    if(becProcess)
-        becProcess->deleteLater();
+    if(m_becProcess)
+    {
+        m_becProcess->deleteLater();
+        m_becProcess = NULL;
+    }
 
-    becProcess = new QProcess(this);
-    becProcess->start(program.c_str(), arguments);
+    m_becProcess = new QProcess(this);
+    m_becProcess->start(program.c_str(), arguments);
 
     //BEC SLOT
-    connect(becProcess, SIGNAL(error(QProcess::ProcessError))
+    connect(m_becProcess, SIGNAL(error(QProcess::ProcessError))
             , SLOT(becError(QProcess::ProcessError)));
-    connect(becProcess, SIGNAL(finished(int, QProcess::ExitStatus))
+    connect(m_becProcess, SIGNAL(finished(int, QProcess::ExitStatus))
             , SLOT(becFinished(int, QProcess::ExitStatus)));
-    connect(becProcess, SIGNAL(readyReadStandardError())
+    connect(m_becProcess, SIGNAL(readyReadStandardError())
             , SLOT(becReadyReadStandardError()));
-    connect(becProcess, SIGNAL(readyReadStandardOutput())
+    connect(m_becProcess, SIGNAL(readyReadStandardOutput())
             , SLOT(becReadyReadStandardOutput()));
-    connect(becProcess, SIGNAL(started())
+    connect(m_becProcess, SIGNAL(started())
             , SLOT(becStarted()));
-    connect(becProcess, SIGNAL(stateChanged(QProcess::ProcessState))
+    connect(m_becProcess, SIGNAL(stateChanged(QProcess::ProcessState))
             , SLOT(becStateChanged(QProcess::ProcessState)));
-            */
+    logNormalText(QString("Running bec at:%1").arg(program.c_str()));
 }
 
 void RunView::logErrorText(const QString &text, const QString colorName) {
