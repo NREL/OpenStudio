@@ -50,6 +50,8 @@ public:
     size_t valuesCount() const;
     BenchmarkValue* valueAt(size_t idx) const;
     double getValueByName(const QString &name);
+    QStringList keys();
+    QStringList names();
     void resetToDefault();
 signals:
 

@@ -70,6 +70,30 @@ double BenchmarkDialog::getValueByName(const QString &name)
     return 0.0;
 }
 
+QStringList BenchmarkDialog::keys()
+{
+    QStringList keys;
+    QList<BenchmarkValue*>::iterator it = values.begin();
+    while (it!=values.end()) {
+        BenchmarkValue* value = (*it);
+        keys.append(value->key());
+        it++;
+    }
+    return keys;
+}
+
+QStringList BenchmarkDialog::names()
+{
+    QStringList keys;
+    QList<BenchmarkValue*>::iterator it = values.begin();
+    while (it!=values.end()) {
+        BenchmarkValue* value = (*it);
+        keys.append(value->name());
+        it++;
+    }
+    return keys;
+}
+
 void BenchmarkDialog::resetToDefault()
 {
     qDebug() << __FUNCTION__;
@@ -412,7 +436,16 @@ BenchmarkValue::BenchmarkValue(const QString &key, const QString& name, double v
     dValue->setObjectName(QStringLiteral("DoubleSpinBox_Value"));
     hl->addWidget(dValue);
     lnName->setText(name);
+
+    QFont font("", 0);
+    QFontMetrics fm(font);
+	int pixelsWide = fm.width(name);
+    int pixelsHigh = fm.height();
+
+    lnName->setMinimumSize(pixelsWide, pixelsHigh);
+
     dValue->setValue(value);
+    dValue->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
     _key = key;
     this->setLayout(hl);
 }

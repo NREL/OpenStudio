@@ -154,6 +154,7 @@
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -168,7 +169,7 @@
 #include <math.h>
 #include <QRegularExpression>
 #include <QRegExp>
-
+#include "../openstudio_lib/benchmarkdialog.hpp"
 
 #include <cmath>
 # define M_PI 3.14159265358979323846  /* pi */
@@ -425,24 +426,51 @@ ForwardTranslator::~ForwardTranslator()
 {
 }
 
+static openstudio::path binResourcesPath()
+{
+    if (openstudio::applicationIsRunningFromBuildDirectory())
+    {
+        return openstudio::getApplicationSourceDirectory() / openstudio::toPath("src/openstudio_app/Resources");
+    }
+    else
+    {
+        return openstudio::getApplicationDirectory() / openstudio::toPath("../Resources");
+    }
+}
+
 QString ForwardTranslator::getBVName()
 {
     QInputDialog inputBuildingType;
     inputBuildingType.setOption(QInputDialog::UseListViewForComboBoxItems);
     inputBuildingType.setWindowTitle("What is building type.");
     inputBuildingType.setLabelText("Selection:");
+
+    QFont font("", 0);
+    QFontMetrics fm(font);
+    int pixelsWide = fm.width("Thai Exhibition hall/Gymnasium");
+    inputBuildingType.setMinimumWidth(pixelsWide);
+
     QStringList types;
-    types <<"Office building"
-            <<"Department store"
-            <<"Community building"
-            <<"Hotel"
-            <<"Condominium"
-            <<"Medical Center"
-            <<"Educational Institution"
-            <<"Service Facility"
-            <<"Theater";
+
+    std::string bvsdefault = binResourcesPath().string() +"/"+ "default_building_standard.bvs";
+    BenchmarkDialog bmdlg(bvsdefault.c_str());
+    types = bmdlg.names();
+    bmdlg.accept();
+
+    if(types.isEmpty()){
+        types <<"Office building"
+                <<"Department store"
+                <<"Community building"
+                <<"Hotel"
+                <<"Condominium"
+                <<"Medical Center"
+                <<"Educational Institution"
+                <<"Service Facility"
+                <<"Theater";
+    }
 
     inputBuildingType.setComboBoxItems(types);
+    inputBuildingType.resize(pixelsWide, inputBuildingType.size().height());
 
     int ret = inputBuildingType.exec();
 

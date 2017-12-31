@@ -170,6 +170,10 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   m_preferencesMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::configureProxyClicked);
 
+  action = new QAction(tr("Configure &Benchmark"),this);
+  m_preferencesMenu->addAction(action);
+  connect(action, &QAction::triggered, this, &MainMenu::configureBenchmarkClicked);
+
   if(m_isIP){
     m_displayIPUnitsAction->trigger();
   }

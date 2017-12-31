@@ -34,9 +34,10 @@
 #include "MainMenu.hpp"
 #include "MainTabView.hpp"
 #include "VerticalTabWidget.hpp"
+#include "benchmarkdialog.hpp"
 
 #include "../shared_gui_components/NetworkProxyDialog.hpp"
-
+#include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/Assert.hpp"
 
 #include <QAction>
@@ -134,6 +135,7 @@ MainWindow::MainWindow(bool isPlugin, QWidget *parent) :
   connect(mainMenu, &MainMenu::downloadMeasuresClicked, this, &MainWindow::downloadMeasuresClicked);
   connect(mainMenu, &MainMenu::changeBclLogin, this, &MainWindow::changeBclLogin);
   connect(mainMenu, &MainMenu::configureProxyClicked, this, &MainWindow::configureProxyClicked);
+  connect(mainMenu, &MainMenu::configureBenchmarkClicked, this, &MainWindow::configureBenchmarkClicked);
   connect(this, &MainWindow::enableRevertToSaved, mainMenu, &MainMenu::enableRevertToSavedAction);
 }
 
@@ -313,6 +315,25 @@ void MainWindow::configureProxyClicked()
       }
     }
   }
+}
+
+static openstudio::path resourcesPath()
+{
+    if (openstudio::applicationIsRunningFromBuildDirectory())
+    {
+        return openstudio::getApplicationSourceDirectory() / openstudio::toPath("src/openstudio_app/Resources");
+    }
+    else
+    {
+        return openstudio::getApplicationDirectory() / openstudio::toPath("../Resources");
+    }
+}
+
+void MainWindow::configureBenchmarkClicked()
+{
+    std::string bvsdefault = resourcesPath().string() +"/"+ "default_building_standard.bvs";
+    BenchmarkDialog* bmdlg = new BenchmarkDialog(bvsdefault.c_str(), this);
+    bmdlg->exec();
 }
 
 void MainWindow::loadProxySettings()

@@ -178,6 +178,8 @@ class MainWindow : public QMainWindow
 
   void configureProxyClicked();
 
+  void configureBenchmarkClicked();
+
   void loadProxySettings();
 
 };

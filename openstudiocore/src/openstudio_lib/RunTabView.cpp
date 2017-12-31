@@ -1593,9 +1593,9 @@ bool RunView::doBecInput(const QString &path, const model::Model &model, QString
     bool success = trans.modelTobec(model, path.toStdString().c_str(), NULL, &sunlits, wwr_totoal, bvName);
 
     std::string bvsdefault = binResourcesPath().string() + "/" + "default_building_standard.bvs";
-    BenchmarkDialog* bmdlg = new BenchmarkDialog(bvsdefault.c_str(), this);
-    bvVal = bmdlg->getValueByName(bvName);
-    bmdlg->accept();
+    BenchmarkDialog bmdlg(bvsdefault.c_str(), this);
+    bvVal = bmdlg.getValueByName(bvName);
+    bmdlg.accept();
 
     std::vector<LogMessage> translatorErrors = trans.errors();
     //std::vector<LogMessage> translatorWarnings = trans.warnings();

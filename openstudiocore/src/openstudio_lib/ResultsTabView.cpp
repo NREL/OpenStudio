@@ -153,14 +153,14 @@ void ResultsView::refreshClicked()
 
 static openstudio::path binResourcesPath()
 {
-	if (openstudio::applicationIsRunningFromBuildDirectory())
-	{
-		return openstudio::getApplicationSourceDirectory() / openstudio::toPath("src/openstudio_app/Resources");
-	}
-	else
-	{
-		return openstudio::getApplicationDirectory() / openstudio::toPath("../Resources");
-	}
+    if (openstudio::applicationIsRunningFromBuildDirectory())
+    {
+        return openstudio::getApplicationSourceDirectory() / openstudio::toPath("src/openstudio_app/Resources");
+    }
+    else
+    {
+        return openstudio::getApplicationDirectory() / openstudio::toPath("../Resources");
+    }
 }
 
 void ResultsView::openDViewClicked()
