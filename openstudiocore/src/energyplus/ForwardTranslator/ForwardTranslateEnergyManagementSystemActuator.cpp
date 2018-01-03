@@ -113,8 +113,6 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemAct
             idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, tz_name);
             idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
             idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
-            m_idfObjects.push_back(idfObject);
-
             if (!result){
               result = idfObject;
             }
@@ -123,8 +121,14 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemAct
                         << load.get().name().get() << "' which is not associated with a ThermalZone, it will not be translated.");
           }
         }
-
+        //Give WArning that spaceType has multiple spaces
+        if (spaceType->spaces().size() > 1) {
+          LOG(Warn, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load.get().name().get() << "' attached to SpaceType '" << spaceType.get().nameString() << "', with multiple spaces. Check your EMS programs to make sure your actuators are correct.");
+        }
         // return the first idf object
+        if (result) {
+          m_idfObjects.push_back(result.get());
+        }
         return result;
 
       } else if (space) {
