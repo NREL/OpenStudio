@@ -94,6 +94,7 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_VAV_HeatAndCool_Reheat).value()] = new QPixmap(":images/vav-reheat.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Boiler_HotWater).value()] = new QPixmap(":images/boiler.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Boiler_Steam).value()] = new QPixmap(":images/boiler_steam.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_CentralHeatPumpSystem).value()] = new QPixmap(":images/centralheatpumpsystem.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Chiller_Electric_EIR).value()] = new QPixmap(":images/chiller_air.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Chiller_Absorption_Indirect).value()] = new QPixmap(":images/chiller_absorption_indirect.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Chiller_Absorption).value()] = new QPixmap(":images/chiller_absorption_direct.png");
@@ -320,6 +321,7 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_InletSideMixer).value()] = new QPixmap(":images/mini_icons/mini_air_terminal_inlet_mixer.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Boiler_HotWater).value()] = new QPixmap(":images/mini_icons/boiler_steam.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Boiler_Steam).value()] = new QPixmap(":images/mini_icons/boiler.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_CentralHeatPumpSystem).value()] = new QPixmap(":images/mini_icons/centralheatpumpsystem.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Chiller_Electric_EIR).value()] = new QPixmap(":images/mini_icons/chiller_air.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Chiller_Absorption_Indirect).value()] = new QPixmap(":images/mini_icons/mini_chiller_absorption_indirect.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Chiller_Absorption).value()] = new QPixmap(":images/mini_icons/mini_chiller_absorption_direct.png");
