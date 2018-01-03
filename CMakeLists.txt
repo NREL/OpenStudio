@@ -504,7 +504,7 @@ if( BUILD_DVIEW )
 
     ExternalProject_Add(DView
       DEPENDS lk curl
-      GIT_REPOSITORY https://github.com/kbenne/wex.git
+      GIT_REPOSITORY https://github.com/NREL/wex.git
       GIT_TAG develop
       CMAKE_CACHE_ARGS
         -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
