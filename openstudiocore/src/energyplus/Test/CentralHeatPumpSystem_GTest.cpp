@@ -47,6 +47,9 @@
 // I think I'll need to cast to a node
 #include "../../model/Node_Impl.hpp"
 
+#include "../../model/BoilerHotWater.hpp"
+#include "../../model/CoolingTowerSingleSpeed.hpp"
+
 #include "../../model/Schedule.hpp"
 
 
@@ -64,13 +67,36 @@
 #include "../../utilities/idf/IdfObject.hpp"
 
 // OS FieldEnums
-#include <utilities/idd/OS_CentralHeatPumpSystem_FieldEnums.hxx>
-#include <utilities/idd/OS_CentralHeatPumpSystem_Module_FieldEnums.hxx>
-#include <utilities/idd/OS_ChillerHeaterPerformance_Electric_EIR_FieldEnums.hxx>
-
+// #include <utilities/idd/OS_CentralHeatPumpSystem_FieldEnums.hxx>
+// #include <utilities/idd/OS_CentralHeatPumpSystem_Module_FieldEnums.hxx>
+// #include <utilities/idd/OS_ChillerHeaterPerformance_Electric_EIR_FieldEnums.hxx>
 
 // E+ FieldEnums
 #include <utilities/idd/CentralHeatPumpSystem_FieldEnums.hxx>
+
+#include <utilities/idd/PlantEquipmentList_FieldEnums.hxx>
+
+#include <utilities/idd/PlantLoop_FieldEnums.hxx>
+#include <utilities/idd/PlantEquipmentOperationSchemes_FieldEnums.hxx>
+
+#include <utilities/idd/PlantEquipmentOperation_HeatingLoad_FieldEnums.hxx>
+#include <utilities/idd/PlantEquipmentOperation_CoolingLoad_FieldEnums.hxx>
+#include <utilities/idd/PlantEquipmentOperation_Uncontrolled_FieldEnums.hxx>
+
+#include <utilities/idd/PlantEquipmentList_FieldEnums.hxx>
+
+#include <utilities/idd/BranchList_FieldEnums.hxx>
+#include <utilities/idd/Branch_FieldEnums.hxx>
+
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/IdfObject_Impl.hpp"
+
+#include "../../utilities/idf/WorkspaceObject.hpp"
+#include "../../utilities/idf/WorkspaceObject_Impl.hpp"
+
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
+
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -90,26 +116,33 @@ using namespace openstudio::model;
 using namespace openstudio;
 
 
-TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem) {
+/* Ensures that the nodes that translated correctly
+ * that means correct node names in the CentralHeatPumpSystem but also
+ * on the Branches
+ */
+TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_Nodes) {
 
-  Model model;
+  boost::optional<WorkspaceObject> _wo;
+  ForwardTranslator ft;
 
-  CentralHeatPumpSystem central_hp(model);
+  Model m;
+
+  CentralHeatPumpSystem central_hp(m);
   ASSERT_TRUE(central_hp.setAncillaryPower(0.7));
   EXPECT_FALSE(central_hp.ancillaryOperationSchedule());
-  Schedule schedule = model.alwaysOnDiscreteSchedule();
+  Schedule schedule = m.alwaysOnDiscreteSchedule();
 
   // Return type: bool
   ASSERT_TRUE(central_hp.setAncillaryOperationSchedule(schedule));
   EXPECT_TRUE(central_hp.ancillaryOperationSchedule());
 
   // First module has one
-  CentralHeatPumpSystemModule central_hp_module(model);
+  CentralHeatPumpSystemModule central_hp_module(m);
   central_hp.addModule(central_hp_module);
   EXPECT_EQ(1, central_hp_module.numberofChillerHeaterModules());
 
   // Second has 2
-  CentralHeatPumpSystemModule central_hp_module2(model);
+  CentralHeatPumpSystemModule central_hp_module2(m);
   central_hp.addModule(central_hp_module2);
   ASSERT_TRUE(central_hp_module2.setNumberofChillerHeaterModules(2));
 
@@ -117,34 +150,37 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem) {
   ASSERT_EQ( (unsigned)2, central_hp.modules().size() );
 
 
-  // Connect tthe CentralHP to three plant loops
+  // Connect the CentralHP to three plant loops
   // CoolingLoop: on the supply side
-  {
-    PlantLoop coolingPlant(model);
-    auto node = coolingPlant.supplyOutletNode();
-    EXPECT_TRUE(central_hp.addToNode(node));
-  }
+  PlantLoop coolingPlant(m);
+  EXPECT_TRUE(coolingPlant.addSupplyBranchForComponent(central_hp));
 
   // SourceLoop: on the demand side
-  {
-    PlantLoop sourcePlant(model);
-    auto node = sourcePlant.demandInletNode();
-    EXPECT_TRUE(central_hp.addToNode(node));
-  }
+  PlantLoop sourcePlant(m);
+  EXPECT_TRUE(sourcePlant.addDemandBranchForComponent(central_hp));
+  // Also add a CT to the sourcePlant
+  CoolingTowerSingleSpeed ct(m);
+  sourcePlant.addSupplyBranchForComponent(ct);
+
   // HeatingLoop: on the supply side
-  {
-    PlantLoop heatingPlant(model);
-    auto node = heatingPlant.supplyOutletNode();
-    EXPECT_TRUE(central_hp.addToTertiaryNode(node));
-  }
+  PlantLoop heatingPlant(m);
+  // Workaround to be able to use addToTertiaryNode
+  BoilerHotWater temp_b(m);
+  EXPECT_TRUE(heatingPlant.addSupplyBranchForComponent(temp_b));
 
-  ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
+  ASSERT_TRUE(temp_b.inletModelObject());
+  auto node = temp_b.inletModelObject().get().cast<Node>();
+  EXPECT_TRUE(central_hp.addToTertiaryNode(node));
+  temp_b.remove();
 
-  EXPECT_EQ(0u, forwardTranslator.errors().size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::CentralHeatPumpSystem).size());
 
-  IdfObject i_central_hp = workspace.getObjectsByType(IddObjectType::CentralHeatPumpSystem)[0];
+  // Translate
+  Workspace w = ft.translateModel(m);
+
+  EXPECT_EQ(0u, ft.errors().size());
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::CentralHeatPumpSystem).size());
+
+  IdfObject i_central_hp = w.getObjectsByType(IddObjectType::CentralHeatPumpSystem)[0];
 
   // supply = Cooling
   ASSERT_EQ(i_central_hp.getString(CentralHeatPumpSystemFields::CoolingLoopInletNodeName).get(),
@@ -168,8 +204,255 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem) {
             central_hp.tertiaryOutletModelObject().get().name());
 
 
-  model.save(toPath("./ft_central_hp.osm"), true);
-  workspace.save(toPath("./ft_central_hp.idf"), true);
+  // Check node names on supply/demand branches
+  // Checks that the special case implemented in ForwardTranslatePlantLoop::populateBranch does the right job
+
+  // supply = Cooling (on supply)
+  {
+    _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, coolingPlant.name().get());
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_plant = _wo.get();
+    WorkspaceObject idf_brlist = idf_plant.getTarget(PlantLoopFields::PlantSideBranchListName).get();
+
+    // Should have three branches: supply inlet, the one with the centralHP, supply outlet
+    ASSERT_EQ(3u, idf_brlist.extensibleGroups().size());
+    // Get the Central HP one
+    WorkspaceExtensibleGroup w_eg = idf_brlist.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+    WorkspaceObject idf_branch = w_eg.getTarget(BranchListExtensibleFields::BranchName).get();
+
+    // There should be only one equipment on the branch
+    ASSERT_EQ(1u, idf_branch.extensibleGroups().size());
+    WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+
+    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(),
+        central_hp.name());
+
+    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentInletNodeName).get(),
+        central_hp.supplyInletModelObject().get().name());
+
+    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentOutletNodeName).get(),
+        central_hp.supplyOutletModelObject().get().name());
+  }
+
+  // tertiary = Heating (on supply)
+  {
+    _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, heatingPlant.name().get());
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_plant = _wo.get();
+    WorkspaceObject idf_brlist = idf_plant.getTarget(PlantLoopFields::PlantSideBranchListName).get();
+
+    // Should have three branches: supply inlet, the one with the centralHP, supply outlet
+    ASSERT_EQ(3u, idf_brlist.extensibleGroups().size());
+    // Get the Central HP one
+    WorkspaceExtensibleGroup w_eg = idf_brlist.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+    WorkspaceObject idf_branch = w_eg.getTarget(BranchListExtensibleFields::BranchName).get();
+
+    // There should be only one equipment on the branch
+    ASSERT_EQ(1u, idf_branch.extensibleGroups().size());
+    WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+
+    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(),
+        central_hp.name());
+
+    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentInletNodeName).get(),
+        central_hp.tertiaryInletModelObject().get().name());
+
+    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentOutletNodeName).get(),
+        central_hp.tertiaryOutletModelObject().get().name());
+  }
+
+  // demand = Source (on demand)
+  {
+    _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, sourcePlant.name().get());
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_plant = _wo.get();
+    // Demand Side Branch List Name
+    WorkspaceObject idf_brlist = idf_plant.getTarget(PlantLoopFields::DemandSideBranchListName).get();
+
+    // Should have four branches: supply inlet, the one with the centralHP, a bypass, supply outlet
+    ASSERT_EQ(4u, idf_brlist.extensibleGroups().size());
+    // Get the Central HP one, which should be the second one
+    WorkspaceExtensibleGroup w_eg = idf_brlist.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+    WorkspaceObject idf_branch = w_eg.getTarget(BranchListExtensibleFields::BranchName).get();
+
+    // There should be only one equipment on the branch
+    ASSERT_EQ(1u, idf_branch.extensibleGroups().size());
+    WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+
+    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(),
+        central_hp.name());
+
+    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentInletNodeName).get(),
+        central_hp.demandInletModelObject().get().name());
+
+    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentOutletNodeName).get(),
+        central_hp.demandOutletModelObject().get().name());
+  }
+
+  // m.save(toPath("./ft_central_hp.osm"), true);
+  // w.save(toPath("./ft_central_hp.idf"), true);
 
 }
+
+/* This tests ensures that the CentralHeatPumpSystem ends up in a PlantEquipmentOperation:HeatingLoad for the heating loop
+ * and PlantEquipmentOperation:CoolingLoad for the cooling loop. For the source loop, it's on the demand side so it shouldn't
+ * be part of the plant equipment list used
+ */
+TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_PlantEquipmentOperation) {
+
+  boost::optional<WorkspaceObject> _wo;
+  ForwardTranslator ft;
+
+  Model m;
+
+  CentralHeatPumpSystem central_hp(m);
+
+  // Add a Module
+  CentralHeatPumpSystemModule central_hp_module(m);
+  central_hp.addModule(central_hp_module);
+  EXPECT_EQ(1, central_hp_module.numberofChillerHeaterModules());
+
+  // Connect the CentralHP to three plant loops
+  // CoolingLoop: on the supply side
+  PlantLoop coolingPlant(m);
+  EXPECT_TRUE(coolingPlant.addSupplyBranchForComponent(central_hp));
+
+  // SourceLoop: on the demand side
+  PlantLoop sourcePlant(m);
+  EXPECT_TRUE(sourcePlant.addDemandBranchForComponent(central_hp));
+  // Also add a CT to the sourcePlant
+  CoolingTowerSingleSpeed ct(m);
+  sourcePlant.addSupplyBranchForComponent(ct);
+
+  // HeatingLoop: on the supply side
+  PlantLoop heatingPlant(m);
+  // Workaround to be able to use addToTertiaryNode
+  BoilerHotWater temp_b(m);
+  EXPECT_TRUE(heatingPlant.addSupplyBranchForComponent(temp_b));
+
+  ASSERT_TRUE(temp_b.inletModelObject());
+  auto node = temp_b.inletModelObject().get().cast<Node>();
+  EXPECT_TRUE(central_hp.addToTertiaryNode(node));
+  temp_b.remove();
+
+
+
+  Workspace w = ft.translateModel(m);
+
+  EXPECT_EQ(0u, ft.errors().size());
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::CentralHeatPumpSystem).size());
+
+  IdfObject i_central_hp = w.getObjectsByType(IddObjectType::CentralHeatPumpSystem)[0];
+
+
+
+  // Get the Loops, and find their plant operation scheme
+
+  // supply = Cooling
+  {
+    _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, coolingPlant.name().get());
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_coolingPlant = _wo.get();
+    WorkspaceObject idf_plant_op = idf_coolingPlant.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
+
+    // Should have created a Cooling Load one only
+    ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
+    WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    ASSERT_EQ("PlantEquipmentOperation:CoolingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
+
+    // Get the Operation Scheme
+    _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_op_scheme = _wo.get();
+
+    // Get the Plant Equipment List of this CoolingLoad scheme
+    // There should only be one Load Range
+    ASSERT_EQ(1u, idf_op_scheme.extensibleGroups().size());
+    // Load range 1
+    w_eg = idf_op_scheme.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    _wo = w_eg.getTarget(PlantEquipmentOperation_CoolingLoadExtensibleFields::RangeEquipmentListName);
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_peq_list = _wo.get();
+
+    // Should have one equipment on it: CentralHeatPumpSystem
+    ASSERT_EQ(1u, idf_peq_list.extensibleGroups().size());
+    IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
+    ASSERT_EQ(central_hp.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
+
+  }
+
+
+  // tertiary = Heating
+  {
+    _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, heatingPlant.name().get());
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_heatingPlant = _wo.get();
+    WorkspaceObject idf_plant_op = idf_heatingPlant.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
+
+    // Should have created a Heating Load one only
+    ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
+    WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    ASSERT_EQ("PlantEquipmentOperation:HeatingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
+
+    // Get the Operation Scheme
+    _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_op_scheme = _wo.get();
+
+    // Get the Plant Equipment List of this HeatingLoad scheme
+    // There should only be one Load Range
+    ASSERT_EQ(1u, idf_op_scheme.extensibleGroups().size());
+    // Load range 1
+    w_eg = idf_op_scheme.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    _wo = w_eg.getTarget(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName);
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_peq_list = _wo.get();
+
+    // Should have one equipment on it: CentralHeatPumpSystem
+    ASSERT_EQ(1u, idf_peq_list.extensibleGroups().size());
+    IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
+    ASSERT_EQ(central_hp.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
+
+  }
+
+
+
+  // SourceLoop: on the demand side. So it shouldn't be on it
+  {
+    _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, sourcePlant.name().get());
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_sourcePlant = _wo.get();
+    WorkspaceObject idf_plant_op = idf_sourcePlant.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
+
+    // Should have created a Cooling Load one only
+    ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
+    WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    ASSERT_EQ("PlantEquipmentOperation:CoolingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
+
+    // Get the Operation Scheme
+    _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_op_scheme = _wo.get();
+
+    // Get the Plant Equipment List of this HeatingLoad scheme
+    // There should only be one Load Range
+    ASSERT_EQ(1u, idf_op_scheme.extensibleGroups().size());
+    // Load range 1
+    w_eg = idf_op_scheme.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    _wo = w_eg.getTarget(PlantEquipmentOperation_CoolingLoadExtensibleFields::RangeEquipmentListName);
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_peq_list = _wo.get();
+
+    // Should have one equipment on it: Cooling Tower
+    ASSERT_EQ(1u, idf_peq_list.extensibleGroups().size());
+    IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
+    ASSERT_EQ(ct.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
+
+  }
+
+  m.save(toPath("./ft_central_hp.osm"), true);
+  w.save(toPath("./ft_central_hp.idf"), true);
+
+}
+
 
