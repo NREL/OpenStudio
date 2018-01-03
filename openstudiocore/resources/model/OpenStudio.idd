@@ -4678,7 +4678,7 @@ OS:ScheduleTypeLimits,
        \key Availability
        \key Percent
        \key Control
-       \key Mode   
+       \key Mode
        \key ControlMode
        \key LinearPowerDensity
 
@@ -11752,7 +11752,7 @@ OS:ChillerHeaterPerformance:Electric:EIR,
   N14, \field Design Hot Water Flow Rate
        \required-field
        \type real
-       \units m2/s
+       \units m3/s
        \minimum 0.0
        \ip-units gal/min
   N15, \field Compressor Motor Efficiency
