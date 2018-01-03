@@ -655,29 +655,32 @@ if( BUILD_DVIEW )
       set(DVIEW_ZIP_FILENAME "DView-linux.tar.gz")
       set(DVIEW_ZIP_EXPECTED_MD5 "8E100CE8E3A220C929A147D1DFA72662")
     endif()
-  endif()
 
-  set(DVIEW_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${DVIEW_ZIP_FILENAME}")
-  if(EXISTS "${DVIEW_ZIP_LOCAL_PATH}")
-    file(MD5 "${DVIEW_ZIP_LOCAL_PATH}" RUBY_ZIP_MD5)
-  endif()
+    set(DVIEW_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${DVIEW_ZIP_FILENAME}")
+    if(EXISTS "${DVIEW_ZIP_LOCAL_PATH}")
+      file(MD5 "${DVIEW_ZIP_LOCAL_PATH}" RUBY_ZIP_MD5)
+    endif()
 
-  if( NOT DVIEW_ZIP_MD5 STREQUAL DVIEW_ZIP_EXPECTED_MD5)
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${DVIEW_ZIP_FILENAME}"
-      ${DVIEW_ZIP_LOCAL_PATH}
-      INACTIVITY_TIMEOUT 120
-      SHOW_PROGRESS
-      EXPECTED_MD5 ${DVIEW_ZIP_EXPECTED_MD5})
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${DVIEW_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    if( NOT DVIEW_ZIP_MD5 STREQUAL DVIEW_ZIP_EXPECTED_MD5)
+      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${DVIEW_ZIP_FILENAME}"
+        ${DVIEW_ZIP_LOCAL_PATH}
+        INACTIVITY_TIMEOUT 120
+        SHOW_PROGRESS
+        EXPECTED_MD5 ${DVIEW_ZIP_EXPECTED_MD5})
+        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${DVIEW_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    endif()
+
+    set(DVIEW_INSTALL_DIR "${CMAKE_BINARY_DIR}/DView-install")
   endif()
 
   if( WIN32 )
-    install(PROGRAMS "${CMAKE_BINARY_DIR}/DView-install/DView.exe" DESTINATION ./bin COMPONENT "DView")
+    install(PROGRAMS "${DVIEW_INSTALL_DIR}/DView.exe" DESTINATION ./bin COMPONENT "DView")
   elseif( APPLE )
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/DView-install/DView.app" DESTINATION . USE_SOURCE_PERMISSIONS COMPONENT "DView")
+    install(DIRECTORY "${DVIEW_INSTALL_DIR}/DView.app" DESTINATION . USE_SOURCE_PERMISSIONS COMPONENT "DView")
   else()
-    install(PROGRAMS "${CMAKE_BINARY_DIR}/DView-install/DView" DESTINATION ./bin COMPONENT "DView")
+    install(PROGRAMS "${DVIEW_INSTALL_DIR}/DView" DESTINATION ./bin COMPONENT "DView")
   endif()
+
 endif()
 
 # SWIG
