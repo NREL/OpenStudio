@@ -1741,6 +1741,8 @@ namespace detail {
 
   bool WaterHeaterMixed_Impl::setSourceSideFlowControlMode(const std::string & sourceSideFlowControlMode) {
 
+    bool result = false;
+
     // Do not accept IndirectHeatAlternateSetpoint unless there is already a schedule that is set
     if ( openstudio::istringEqual("IndirectHeatAlternateSetpoint", sourceSideFlowControlMode) )
     {
@@ -1753,14 +1755,18 @@ namespace detail {
     // If other than IndirectHeatAlternateSetpoint, Reset the indirect alternate setpoint temp schedule
     else
     {
-      if (indirectAlternateSetpointTemperatureSchedule()) {
+      // Have to do this before resetting the schedule, in case a bad (per IDD) value other than 'IndirectHeatAlternateSetpoint' is provided
+      result = setString(OS_WaterHeater_MixedFields::SourceSideFlowControlMode, sourceSideFlowControlMode);
+
+      if (result && indirectAlternateSetpointTemperatureSchedule()) {
         LOG(Info, "Resetting the 'Indirect Alternate Setpoint Temperature Schedule Name' for " << briefDescription());
         setString(OS_WaterHeater_MixedFields::IndirectAlternateSetpointTemperatureScheduleName, "");
       }
+
     }
 
-    bool result = setString(OS_WaterHeater_MixedFields::SourceSideFlowControlMode, sourceSideFlowControlMode);
     return result;
+
   }
 
 
