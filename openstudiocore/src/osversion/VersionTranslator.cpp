@@ -3622,6 +3622,43 @@ std::string VersionTranslator::update_2_3_0_to_2_3_1(const IdfFile& idf_2_3_0, c
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
 
+
+
+    } else if (iddname == "OS:Boiler:HotWater") {
+      auto iddObject = idd_2_3_1.getObject("OS:Boiler:HotWater");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+      newObject.setString(18,"General");
+
+    } else if (iddname == "OS:Boiler:Steam") {
+      auto iddObject = idd_2_3_1.getObject("OS:Boiler:Steam");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+      newObject.setString(16,"General");
+
+    } else if (iddname == "OS:WaterHeater:Mixed") {
+      auto iddObject = idd_2_3_1.getObject("OS:WaterHeater:Mixed");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      newObject.setString(42,"General");
+
+
     } else if (iddname == "OS:Chiller:Electric:EIR") {
       auto iddObject = idd_2_3_1.getObject("OS:Chiller:Electric:EIR");
       IdfObject newObject(iddObject.get());
@@ -3631,6 +3668,9 @@ std::string VersionTranslator::update_2_3_0_to_2_3_1(const IdfFile& idf_2_3_0, c
           newObject.setString(i,value.get());
         }
       }
+
+      // endUseSubcategory
+      newObject.setString(34,"General");
 
       if( object.getString(17) && (! object.getString(17).get().empty()) ) {
         newObject.setString(19,"WaterCooled");
