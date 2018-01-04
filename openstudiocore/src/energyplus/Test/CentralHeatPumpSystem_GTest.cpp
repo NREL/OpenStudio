@@ -164,7 +164,9 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_Nodes) {
 
   // HeatingLoop: on the supply side
   PlantLoop heatingPlant(m);
-  // Workaround to be able to use addToTertiaryNode
+  // Workaround to be able to use addToTertiaryNode directly
+  // (addSupplyBranchForComponent should work directly, but this is tested in model GTest, so here we just make sure we call
+  // addToTertiaryNode directly)
   BoilerHotWater temp_b(m);
   EXPECT_TRUE(heatingPlant.addSupplyBranchForComponent(temp_b));
 
@@ -326,7 +328,9 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_PlantEquipmentOp
 
   // HeatingLoop: on the supply side
   PlantLoop heatingPlant(m);
-  // Workaround to be able to use addToTertiaryNode
+  // Workaround to be able to use addToTertiaryNode directly
+  // (addSupplyBranchForComponent should work directly, but this is tested in model GTest, so here we just make sure we call
+  // addToTertiaryNode directly)
   BoilerHotWater temp_b(m);
   EXPECT_TRUE(heatingPlant.addSupplyBranchForComponent(temp_b));
 
@@ -455,4 +459,49 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_PlantEquipmentOp
 
 }
 
+TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_NoModules) {
 
+  boost::optional<WorkspaceObject> _wo;
+  ForwardTranslator ft;
+
+  Model m;
+
+  CentralHeatPumpSystem central_hp(m);
+
+  // DO NOT Add a Module
+  EXPECT_EQ(0u, central_hp.modules().size());
+
+  // Connect the CentralHP to three plant loops
+  // CoolingLoop: on the supply side
+  PlantLoop coolingPlant(m);
+  EXPECT_TRUE(coolingPlant.addSupplyBranchForComponent(central_hp));
+
+  // SourceLoop: on the demand side
+  PlantLoop sourcePlant(m);
+  EXPECT_TRUE(sourcePlant.addDemandBranchForComponent(central_hp));
+  // Also add a CT to the sourcePlant
+  CoolingTowerSingleSpeed ct(m);
+  sourcePlant.addSupplyBranchForComponent(ct);
+
+   // HeatingLoop: on the supply side
+  PlantLoop heatingPlant(m);
+  // Workaround to be able to use addToTertiaryNode directly
+  // (addSupplyBranchForComponent should work directly, but this is tested in model GTest, so here we just make sure we call
+  // addToTertiaryNode directly)
+  BoilerHotWater temp_b(m);
+  EXPECT_TRUE(heatingPlant.addSupplyBranchForComponent(temp_b));
+
+  ASSERT_TRUE(temp_b.inletModelObject());
+  auto node = temp_b.inletModelObject().get().cast<Node>();
+  EXPECT_TRUE(central_hp.addToTertiaryNode(node));
+  temp_b.remove();
+  EXPECT_TRUE(central_hp.coolingPlantLoop());
+  EXPECT_TRUE(central_hp.sourcePlantLoop());
+  EXPECT_TRUE(central_hp.heatingPlantLoop());
+
+  Workspace w = ft.translateModel(m);
+
+  EXPECT_EQ(0u, ft.errors().size());
+  EXPECT_EQ(0u, w.getObjectsByType(IddObjectType::CentralHeatPumpSystem).size());
+
+}
