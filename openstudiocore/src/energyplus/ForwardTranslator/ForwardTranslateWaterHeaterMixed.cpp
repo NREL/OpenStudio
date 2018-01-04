@@ -466,6 +466,12 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
 
   idfObject.setString(WaterHeater_MixedFields::SourceSideFlowControlMode,"IndirectHeatPrimarySetpoint");
 
+  if( (s = modelObject.endUseSubcategory()) ) {
+    idfObject.setString(WaterHeater_MixedFields::EndUseSubcategory,s.get());
+  }
+
+
+
   return boost::optional<IdfObject>(idfObject);
 }
 
