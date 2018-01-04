@@ -51,6 +51,9 @@
 #include "../model/WaterToAirComponent_Impl.hpp"
 #include "../model/WaterToWaterComponent.hpp"
 #include "../model/WaterToWaterComponent_Impl.hpp"
+// Special case
+//#include "../model/CentralHeatPumpSystem.hpp"
+//#include "../model/CentralHeatPumpSystem_Impl.hpp"
 #include "../model/WaterUseConnections.hpp"
 #include "../model/WaterUseConnections_Impl.hpp"
 #include "../model/WaterUseEquipment.hpp"
@@ -501,10 +504,28 @@ void HVACLayoutController::addLibraryObjectToModelNode(OSItemId itemid, model::H
   }
 
   if( object ) {
+
     if( boost::optional<model::HVACComponent> hvacComponent = object->optionalCast<model::HVACComponent>() )
     {
       if( boost::optional<model::Node> node = comp.optionalCast<model::Node>() )
       {
+        // Special case for when you have a tertiaryPlantLoop, for CentralHeatPumpSystem
+        /*
+         *if( boost::optional<model::CentralHeatPumpSystem> central_hp = object->optionalCast<model::CentralHeatPumpSystem>() ) {
+         *  // If it's already connected to a plantLoop (cooling) and a secondaryplantloop (source), try to connect to the tertiary (heating)
+         *  if (boost::optional<model::PlantLoop> coolingPlant = central_hp->coolingPlantLoop()) {
+         *    if (boost::optional<model::PlantLoop> sourcePlant = central_hp->sourcePlantLoop()) {
+         *      // CentralHeatPumpSystem overrides addToTertiaryNode to restrict it to the supply side of the tertiary(=heating) loop
+         *      added = central_hp->addToTertiaryNode(node.get());
+         *    }
+         *  }
+         *} else {
+         *  added = hvacComponent->addToNode(node.get());
+         *}
+         */
+        // I implemented logic in CentralHeatPumpSystem::addToNode which will do the right thing and call addToTertiaryNode
+        // when needed. It has the merit of working for addSupplyBranchForComponent (etc) too.
+
         added = hvacComponent->addToNode(node.get());
       }
       else if( boost::optional<model::Splitter> splitter = comp.optionalCast<model::Splitter>() )
@@ -586,20 +607,28 @@ void HVACLayoutController::removeModelObject(model::ModelObject & modelObject)
     {
       boost::optional<model::PlantLoop> plant = comp->plantLoop();
       boost::optional<model::PlantLoop> secondaryPlant = comp->secondaryPlantLoop();
+      boost::optional<model::PlantLoop> tertiaryPlant = comp->tertiaryPlantLoop();
 
-      if( plant && secondaryPlant )
-      {
-        if( plant.get() == loop.get() )
-        {
-          comp->removeFromPlantLoop();
-
-          return;
+      // If it's on at least two plantLoops, we disconnect it from the current loop only (instead of deleting) and return
+      if (plant ? (secondaryPlant || tertiaryPlant) : (secondaryPlant && tertiaryPlant)) {
+        if (plant) {
+          if( plant.get() == loop.get() ) {
+            comp->removeFromPlantLoop();
+            return;
+          }
         }
-        if( secondaryPlant.get() == loop.get() )
-        {
-          comp->removeFromSecondaryPlantLoop();
-
-          return;
+        if (secondaryPlant) {
+          if( secondaryPlant.get() == loop.get() )
+          {
+            comp->removeFromSecondaryPlantLoop();
+            return;
+          }
+        }
+        if (tertiaryPlant) {
+          if( tertiaryPlant.get() == loop.get() ) {
+            comp->removeFromTertiaryPlantLoop();
+            return;
+          }
         }
       }
     }
@@ -1504,7 +1533,7 @@ void HVACLayoutController::updateLater()
   QTimer::singleShot(0,this,SLOT(update()));
 }
 
-SystemAvailabilityVectorController::SystemAvailabilityVectorController() 
+SystemAvailabilityVectorController::SystemAvailabilityVectorController()
   : ModelObjectVectorController()
 {
   m_reportItemsMutex = new QMutex();
