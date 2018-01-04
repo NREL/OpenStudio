@@ -464,13 +464,32 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
     idfObject.setDouble(WaterHeater_MixedFields::IndirectWaterHeatingRecoveryTime,value.get());
   }
 
-  idfObject.setString(WaterHeater_MixedFields::SourceSideFlowControlMode,"IndirectHeatPrimarySetpoint");
+  // SourceSideFlowControlMode
+  s = modelObject.sourceSideFlowControlMode();
+  if( s )
+  {
+    idfObject.setString(WaterHeater_MixedFields::SourceSideFlowControlMode,s.get());
 
-  if( (s = modelObject.endUseSubcategory()) ) {
-    idfObject.setString(WaterHeater_MixedFields::EndUseSubcategory,s.get());
+    if ( openstudio::istringEqual("IndirectHeatAlternateSetpoint", s.get()) ) {
+      // IndirectAlternateSetpointTemperatureScheduleName
+      schedule = modelObject.indirectAlternateSetpointTemperatureSchedule();
+      if( schedule  ) {
+        translateAndMapModelObject(schedule.get());
+        idfObject.setString(WaterHeater_MixedFields::IndirectAlternateSetpointTemperatureScheduleName,schedule->name().get());
+      } else {
+        LOG(Error, "Something really wrong happened, the Source Side Control Mode is set to 'IndirectHeatAlternateSetpoint' yet "
+                   "there is no IndirectAlternateSetpointTemperatureScheduleName which is impossible per model logic for "
+                   << modelObject.briefDescription());
+      }
+    }
+
   }
 
 
+  // EndUseSubcategory
+  if( (s = modelObject.endUseSubcategory()) ) {
+    idfObject.setString(WaterHeater_MixedFields::EndUseSubcategory,s.get());
+  }
 
   return boost::optional<IdfObject>(idfObject);
 }
