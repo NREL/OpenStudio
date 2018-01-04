@@ -74,6 +74,8 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   static std::vector<std::string> ambientTemperatureIndicatorValues();
 
+  static std::vector<std::string> sourceSideFlowControlModeValues();
+
   /** @name Getters */
   //@{
 
@@ -228,6 +230,10 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
   Quantity getIndirectWaterHeatingRecoveryTime(bool returnIP=false) const;
 
   bool isIndirectWaterHeatingRecoveryTimeDefaulted() const;
+
+  std::string sourceSideFlowControlMode() const;
+
+  boost::optional<Schedule> indirectAlternateSetpointTemperatureSchedule() const;
 
   std::string endUseSubcategory() const;
 
@@ -427,24 +433,18 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   boost::optional<double> autosizedSourceSideDesignFlowRate() const;
 
-  bool setEndUseSubcategory(const std::string & endUseSubcategory);
-
-  // TODO
-  /*
-   *A19, \field Source Side Flow Control Mode
-   *     \type choice
-   *     \key StorageTank
-   *     \key IndirectHeatPrimarySetpoint
-   *     \key IndirectHeatAlternateSetpoint
-   *     \default IndirectHeatPrimarySetpoint
-   *     \note StorageTank mode always requests flow unless tank is at its Maximum Temperature Limit
-   *     \note IndirectHeatPrimarySetpoint mode requests flow whenever primary setpoint calls for heat
-   *     \note IndirectHeatAlternateSetpoint mode requests flow whenever alternate indirect setpoint calls for heat
-   *A20, \field Indirect Alternate Setpoint Temperature Schedule Name
-   *     \note This field is only used if the previous is set to IndirectHeatAlternateSetpoint
-   *     \type object-list
-   *     \object-list ScheduleName
+  /* This will not accept 'IndirectHeatAlternateSetpoint' as a control mode, you should instead use 'setIndirectAlternateSetpointTemperatureSchedule'.
+   * For any other modes ('StorageTank', 'IndirectHeatPrimarySetpoint'), this resets the indirect alternate setpoint temperature schedule
    */
+  bool setSourceSideFlowControlMode(const std::string & sourceSideFlowControlMode);
+
+  /* This will automatically switch the Source Side Flow Control Mode to 'IndirectHeatAlternateSetpoint' */
+  bool setIndirectAlternateSetpointTemperatureSchedule(Schedule& indirectAlternateSetpointTemperatureSchedule);
+
+  /* This will automatically reset the Source Side Flow Control Mode to default 'IndirectHeatPrimarySetpoint' */
+  void resetIndirectAlternateSetpointTemperatureSchedule();
+
+  bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
   //@}
  protected:

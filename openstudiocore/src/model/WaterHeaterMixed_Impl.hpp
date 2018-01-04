@@ -253,6 +253,10 @@ namespace detail {
 
     boost::optional<double> autosizedSourceSideDesignFlowRate() const;
 
+    std::string sourceSideFlowControlMode() const;
+
+    boost::optional<Schedule> indirectAlternateSetpointTemperatureSchedule() const;
+
     std::string endUseSubcategory() const;
 
     //@}
@@ -443,24 +447,12 @@ namespace detail {
 
     void resetIndirectWaterHeatingRecoveryTime();
 
-    bool setEndUseSubcategory(const std::string & endUseSubcategory);
+    bool setSourceSideFlowControlMode(const std::string & sourceSideFlowControlMode);
 
-    // TODO
-  /*
-   *A19, \field Source Side Flow Control Mode
-   *     \type choice
-   *     \key StorageTank
-   *     \key IndirectHeatPrimarySetpoint
-   *     \key IndirectHeatAlternateSetpoint
-   *     \default IndirectHeatPrimarySetpoint
-   *     \note StorageTank mode always requests flow unless tank is at its Maximum Temperature Limit
-   *     \note IndirectHeatPrimarySetpoint mode requests flow whenever primary setpoint calls for heat
-   *     \note IndirectHeatAlternateSetpoint mode requests flow whenever alternate indirect setpoint calls for heat
-   *A20, \field Indirect Alternate Setpoint Temperature Schedule Name
-   *     \note This field is only used if the previous is set to IndirectHeatAlternateSetpoint
-   *     \type object-list
-   *     \object-list ScheduleName
-   */
+    bool setIndirectAlternateSetpointTemperatureSchedule(Schedule& indirectAlternateSetpointTemperatureSchedule);
+    void resetIndirectAlternateSetpointTemperatureSchedule();
+
+    bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
     //@}
    protected:
@@ -518,6 +510,7 @@ namespace detail {
     openstudio::OSOptionalQuantity sourceSideDesignFlowRate_IP() const;
     openstudio::Quantity indirectWaterHeatingRecoveryTime_SI() const;
     openstudio::Quantity indirectWaterHeatingRecoveryTime_IP() const;
+    std::vector<std::string> sourceSideFlowControlModeValues() const;
 
     boost::optional<ModelObject> setpointTemperatureScheduleAsModelObject() const;
     boost::optional<ModelObject> partLoadFactorCurveAsModelObject() const;
@@ -526,12 +519,17 @@ namespace detail {
     boost::optional<ModelObject> useFlowRateFractionScheduleAsModelObject() const;
     boost::optional<ModelObject> coldWaterSupplyTemperatureScheduleAsModelObject() const;
 
+    boost::optional<ModelObject> indirectAlternateSetpointTemperatureScheduleAsModelObject() const;
+
     bool setSetpointTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setPartLoadFactorCurveAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setAmbientTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setAmbientTemperatureThermalZoneAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setUseFlowRateFractionScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setColdWaterSupplyTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+
+    bool setIndirectAlternateSetpointTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+
   };
 
 } // detail
