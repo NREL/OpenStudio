@@ -523,7 +523,8 @@ namespace openstudio{
   }
 
   ThreeUserData::ThreeUserData()
-    : m_coincidentWithOutsideObject(false)
+    : m_coincidentWithOutsideObject(false),
+      m_illuminanceSetpoint(0.0)
       //m_belowFloorPlenum(false),
       //m_aboveCeilingPlenum(false)
   {}
@@ -537,6 +538,10 @@ namespace openstudio{
     assertType(value, "constructionName", Json::stringValue);
     assertType(value, "constructionHandle", Json::stringValue);
     assertType(value, "constructionMaterialName", Json::stringValue);
+    assertType(value, "surfaceName", Json::stringValue);
+    assertType(value, "surfaceHandle", Json::stringValue);
+    assertType(value, "subSurfaceName", Json::stringValue);
+    assertType(value, "subSurfaceHandle", Json::stringValue);
     assertType(value, "spaceName", Json::stringValue);
     assertType(value, "spaceHandle", Json::stringValue);
     assertType(value, "thermalZoneName", Json::stringValue);
@@ -561,6 +566,7 @@ namespace openstudio{
     assertType(value, "coincidentWithOutsideObject", Json::stringValue);
     assertType(value, "sunExposure", Json::stringValue);
     assertType(value, "windExposure", Json::stringValue);
+    assertType(value, "illuminanceSetpoint", Json::realValue);
     assertType(value, "belowFloorPlenum", Json::booleanValue);
     assertType(value, "aboveCeilingPlenum", Json::booleanValue);
 
@@ -571,6 +577,10 @@ namespace openstudio{
     m_constructionName = value.get("constructionName", "").asString();
     m_constructionHandle = value.get("constructionHandle", "").asString();
     m_constructionMaterialName = value.get("constructionMaterialName", "").asString();
+    m_surfaceName = value.get("surfaceName", "").asString();
+    m_surfaceHandle = value.get("surfaceHandle", "").asString();
+    m_subSurfaceName = value.get("subSurfaceName", "").asString();
+    m_subSurfaceHandle = value.get("subSurfaceHandle", "").asString();
     m_spaceName = value.get("spaceName", "").asString();
     m_spaceHandle = value.get("spaceHandle", "").asString();
     m_thermalZoneName = value.get("thermalZoneName", "").asString();
@@ -595,6 +605,7 @@ namespace openstudio{
     m_coincidentWithOutsideObject = value.get("coincidentWithOutsideObject", false).asBool();
     m_sunExposure = value.get("sunExposure", "").asString();
     m_windExposure = value.get("windExposure", "").asString();
+    m_illuminanceSetpoint = value.get("illuminanceSetpoint", "").asDouble();
     //m_belowFloorPlenum = value.get("belowFloorPlenum", "").asBool();
     //m_aboveCeilingPlenum = value.get("aboveCeilingPlenum", "").asBool();
   }
@@ -610,6 +621,10 @@ namespace openstudio{
     result["constructionName"] = m_constructionName;
     result["constructionName"] = m_constructionName;
     result["constructionMaterialName"] = m_constructionMaterialName;
+    result["surfaceName"] = m_surfaceName;
+    result["surfaceHandle"] = m_surfaceHandle;
+    result["subSurfaceName"] = m_subSurfaceName;
+    result["subSurfaceHandle"] = m_subSurfaceHandle;
     result["spaceName"] = m_spaceName;
     result["spaceHandle"] = m_spaceHandle;
     result["thermalZoneName"] = m_thermalZoneName;
@@ -634,6 +649,7 @@ namespace openstudio{
     result["coincidentWithOutsideObject"] = m_coincidentWithOutsideObject;
     result["sunExposure"] = m_sunExposure;
     result["windExposure"] = m_windExposure;
+    result["illuminanceSetpoint"] = m_illuminanceSetpoint;
     //result["belowFloorPlenum"] = m_belowFloorPlenum;
     //result["aboveCeilingPlenum"] = m_aboveCeilingPlenum;
 
@@ -673,6 +689,26 @@ namespace openstudio{
   std::string ThreeUserData::constructionMaterialName() const
   {
     return m_constructionMaterialName;
+  }
+
+  std::string ThreeUserData::surfaceName() const
+  {
+    return m_surfaceName;
+  }
+
+  std::string ThreeUserData::surfaceHandle() const
+  {
+    return m_surfaceHandle;
+  }
+
+  std::string ThreeUserData::subSurfaceName() const
+  {
+    return m_subSurfaceName;
+  }
+
+  std::string ThreeUserData::subSurfaceHandle() const
+  {
+    return m_subSurfaceHandle;
   }
 
   std::string ThreeUserData::spaceName() const
@@ -795,6 +831,11 @@ namespace openstudio{
     return m_windExposure;
   }
 
+  double ThreeUserData::illuminanceSetpoint() const
+  {
+    return m_illuminanceSetpoint;
+  }
+
   //bool ThreeUserData::plenum() const
   //{
   //  return (m_belowFloorPlenum || m_aboveCeilingPlenum);
@@ -843,6 +884,26 @@ namespace openstudio{
   void ThreeUserData::setConstructionMaterialName(const std::string& s)
   {
     m_constructionMaterialName = s;
+  }
+
+  void ThreeUserData::setSurfaceName(const std::string& s)
+  {
+    m_surfaceName = s;
+  }
+
+  void ThreeUserData::setSurfaceHandle(const std::string& s)
+  {
+    m_surfaceHandle = s;
+  }
+
+  void ThreeUserData::setSubSurfaceName(const std::string& s)
+  {
+    m_subSurfaceName = s;
+  }
+
+  void ThreeUserData::setSubSurfaceHandle(const std::string& s)
+  {
+    m_subSurfaceHandle = s;
   }
 
   void ThreeUserData::setSpaceName(const std::string& s)
@@ -963,6 +1024,11 @@ namespace openstudio{
   void ThreeUserData::setWindExposure(const std::string& s)
   {
     m_windExposure = s;
+  }
+
+  void ThreeUserData::setIlluminanceSetpoint(double d)
+  {
+    m_illuminanceSetpoint = d;
   }
 
   //void ThreeUserData::setBelowFloorPlenum(bool v)

@@ -101,6 +101,13 @@ namespace openstudio{
   /// reverse order of vertices
   UTILITIES_API std::vector<Point3d> reverse(const std::vector<Point3d>& vertices);
 
+  /// Sets view and daylighting window, overhang and light shelf vertices by reference.  Returns true if successful, false otherwise.
+  UTILITIES_API bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio,
+                                                        double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
+                                                        double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor,
+                                                        const std::vector<Point3d>& surfaceVertices, std::vector<Point3d>& viewVertices,
+                                                        std::vector<Point3d>& daylightingVertices, std::vector<Point3d>& exteriorShadingVertices, 
+                                                        std::vector<Point3d>& interiorShelfVertices); 
 
 } // openstudio
 

@@ -160,28 +160,58 @@ namespace openstudio{
     ThreeUserData();
     std::string handle() const;
     std::string name() const;
-    std::string surfaceType() const;
+
+    /// surfaceType is overloaded as a more general type:
+    /// Surfaces {"Wall", "Floor", "RoofCeiling"}
+    /// SubSurfaces {"FixedWindow", "OperableWindow", "GlassDoor", "Skylight", "TubularDaylightDome", "TubularDaylightDiffuser", "Door", "OverheadDoor"}
+    /// ShadingSurfaces {"SiteShading", "BuildingShading", "SpaceShading"}
+    /// InteriorPartitionSurfaces {"InteriorPartitionSurface"}
+    /// DaylightingControl {"DaylightingControl"}
+    std::string surfaceType() const; 
     std::string surfaceTypeMaterialName() const;
+
+    /// Construction name if any
     std::string constructionName() const;
     std::string constructionHandle() const;
     std::string constructionMaterialName() const;
+
+    /// Parent surface name if any
+    std::string surfaceName() const;
+    std::string surfaceHandle() const;
+
+    /// Parent sub surface name if any
+    std::string subSurfaceName() const;
+    std::string subSurfaceHandle() const;
+
+    /// Parent spaces name if any
     std::string spaceName() const;
     std::string spaceHandle() const;
+
+    /// ThermalZone name if any
     std::string thermalZoneName() const;
     std::string thermalZoneHandle() const;
     std::string thermalZoneMaterialName() const;
+
+    /// SpaceType name if any
     std::string spaceTypeName() const;
     std::string spaceTypeHandle() const;
     std::string spaceTypeMaterialName() const;
+
+    /// BuildingStory name if any
     std::string buildingStoryName() const;
     std::string buildingStoryHandle() const;
     std::string buildingStoryMaterialName() const;
+
+    /// BuildingUnit name if any
     std::string buildingUnitName() const;
     std::string buildingUnitHandle() const;
     std::string buildingUnitMaterialName() const;
+
+    /// ConstructionSet name if any
     std::string constructionSetName() const;
     std::string constructionSetHandle() const;
     std::string constructionSetMaterialName() const;
+
     std::string outsideBoundaryCondition() const;
     std::string outsideBoundaryConditionObjectName() const;
     std::string outsideBoundaryConditionObjectHandle() const;
@@ -189,6 +219,7 @@ namespace openstudio{
     bool coincidentWithOutsideObject() const;
     std::string sunExposure() const;
     std::string windExposure() const;
+    double illuminanceSetpoint() const;
     //bool plenum() const;
     //bool belowFloorPlenum() const;
     //bool aboveCeilingPlenum() const;
@@ -200,6 +231,10 @@ namespace openstudio{
     void setConstructionName(const std::string& s);
     void setConstructionHandle(const std::string& s);
     void setConstructionMaterialName(const std::string& s);
+    void setSurfaceName(const std::string& s);
+    void setSurfaceHandle(const std::string& s);
+    void setSubSurfaceName(const std::string& s);
+    void setSubSurfaceHandle(const std::string& s);
     void setSpaceName(const std::string& s);
     void setSpaceHandle(const std::string& s);
     void setThermalZoneName(const std::string& s);
@@ -224,6 +259,7 @@ namespace openstudio{
     void setCoincidentWithOutsideObject(bool b);
     void setSunExposure(const std::string& s);
     void setWindExposure(const std::string& s);
+    void setIlluminanceSetpoint(double d);
     //void setBelowFloorPlenum(bool v);
     //void setAboveCeilingPlenum(bool v);
 
@@ -234,11 +270,16 @@ namespace openstudio{
 
     std::string m_handle;
     std::string m_name;
+    std::string m_type;
     std::string m_surfaceType;
     std::string m_surfaceTypeMaterialName;
     std::string m_constructionName;
     std::string m_constructionHandle;
     std::string m_constructionMaterialName;
+    std::string m_surfaceName;
+    std::string m_surfaceHandle;
+    std::string m_subSurfaceName;
+    std::string m_subSurfaceHandle;
     std::string m_spaceName;
     std::string m_spaceHandle;
     std::string m_thermalZoneName;
@@ -263,6 +304,7 @@ namespace openstudio{
     bool m_coincidentWithOutsideObject;
     std::string m_sunExposure;
     std::string m_windExposure;
+    double m_illuminanceSetpoint;
     //bool m_belowFloorPlenum;
     //bool m_aboveCeilingPlenum;
   };

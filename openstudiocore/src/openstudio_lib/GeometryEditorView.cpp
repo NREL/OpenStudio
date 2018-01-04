@@ -402,10 +402,10 @@ void EditorWebView::startEditor()
 
     if (m_isIP){
       config["units"] = "ft";
-      config["initialGridSize"] = 4;
+      config["initialGridSize"] = 15;
     }else{
       config["units"] = "m";
-      config["initialGridSize"] = 1;
+      config["initialGridSize"] = 5;
     }
     
     boost::optional<model::Site> site = m_model.getOptionalUniqueModelObject<model::Site>();
