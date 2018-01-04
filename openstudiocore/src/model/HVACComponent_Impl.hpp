@@ -48,12 +48,6 @@ class ZoneHVACComponent;
 namespace detail {
 
 class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
-  
-
-  
-  
-  
-  
 
  public:
 
@@ -96,24 +90,24 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
   virtual ModelObject clone(Model model) const override;
 
   /** This function returns a vector of HVACComponent that are directly downstream
-   *  from this object on an AirLoopHVAC or PlantLoop. 
-   *  @param[in] previous is used to indicate which path of edges to return 
+   *  from this object on an AirLoopHVAC or PlantLoop.
+   *  @param[in] previous is used to indicate which path of edges to return
   **/
   virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & previous);
 
   virtual boost::optional<HVACComponent> containingHVACComponent() const;
 
   virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
-  
+
   virtual boost::optional<StraightComponent> containingStraightComponent() const;
 
-  bool addToNode(Node & node, 
-    const HVACComponent & systemStartComponent, 
+  bool addToNode(Node & node,
+    const HVACComponent & systemStartComponent,
     const HVACComponent & systemEndComponent,
     unsigned componentInletPort,
     unsigned componentOutletPort);
 
-  bool removeFromLoop( const HVACComponent & systemStartComponent, 
+  bool removeFromLoop( const HVACComponent & systemStartComponent,
     const HVACComponent & systemEndComponent,
     unsigned componentInletPort,
     unsigned componentOutletPort );

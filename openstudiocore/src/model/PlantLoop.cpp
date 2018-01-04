@@ -283,10 +283,7 @@ bool PlantLoop_Impl::addSupplyBranchForComponent( HVACComponent component )
         if ( (node->outletModelObject().get() == mixer) &&
               (node->inletModelObject().get() == splitter) )
         {
-          if( component.addToNode(node.get()) )
-          {
-            return true;
-          }
+          return component.addToNode(node.get());
         }
       }
     }
