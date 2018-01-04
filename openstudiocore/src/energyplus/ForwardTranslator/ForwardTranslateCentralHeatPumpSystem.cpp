@@ -52,6 +52,14 @@ boost::optional<IdfObject> ForwardTranslator::translateCentralHeatPumpSystem( Ce
   OptionalDouble d;
   OptionalModelObject temp;
 
+  auto const& modules = modelObject.getImpl<model::detail::CentralHeatPumpSystem_Impl>()->modules();
+
+  // If the CentralHeatPumpSystem doesn't have at least one CentralHeatPumpSystemModule, then it shouldn't be translated
+  if (modules.empty()) {
+    LOG(Warn, "CentralHeatPumpSystem " << modelObject.name().get() << " has no CentralHeatPumpSystemModules, it will not be translated");
+    return boost::none;
+  }
+
   // Name
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::CentralHeatPumpSystem, modelObject);
 
@@ -122,7 +130,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCentralHeatPumpSystem( Ce
   // ChillerHeaterModulesPerformanceComponentName1
   // ChillerHeaterModulesControlScheduleName1
   // NumberofChillerHeaterModules1
-  auto const& modules = modelObject.getImpl<model::detail::CentralHeatPumpSystem_Impl>()->modules();
+
   for ( auto const& module : modules ) {
     IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
 
