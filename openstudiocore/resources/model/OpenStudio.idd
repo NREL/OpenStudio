@@ -11508,11 +11508,16 @@ OS:Boiler:HotWater,
        \units W
        \minimum 0
        \default 0.0
-  N10; \field Sizing Factor
+  N10, \field Sizing Factor
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0
        \default 1.0
+  A9 ; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 OS:Boiler:Steam,
        \memo This boiler model is an adaptation of the empirical model from the Building
@@ -11566,11 +11571,16 @@ OS:Boiler:Steam,
        \type object-list
        \required-field
        \object-list ConnectionNames
-  N11; \field Sizing Factor
+  N11, \field Sizing Factor
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
        \default 1.0
+  A6 ; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 OS:HeatPump:WaterToWater:EquationFit:Heating,
    A1, \field Handle
@@ -11946,7 +11956,7 @@ OS:Chiller:Electric:EIR,
        \units C
        \minimum 2
        \default 2.0
-  A14; \field Basin Heater Operating Schedule Name
+  A14, \field Basin Heater Operating Schedule Name
        \note This field is only used for Condenser Type = EvaporativelyCooled.
        \note Schedule values greater than 0 allow the basin heater to operate whenever the outdoor
        \note air dry-bulb temperature is below the basin heater setpoint temperature.
@@ -11954,6 +11964,25 @@ OS:Chiller:Electric:EIR,
        \note throughout the entire simulation.
        \type object-list
        \object-list ScheduleNames
+  N18, \field Condenser Heat Recovery Relative Capacity Fraction
+       \note This optional field is the fraction of total rejected heat that can be recovered at full load
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  A15, \field Heat Recovery Inlet High Temperature Limit Schedule Name
+       \note This optional schedule of temperatures will turn off heat recovery if inlet exceeds the value
+       \type object-list
+       \object-list ScheduleNames
+  A16, \field Heat Recovery Leaving Temperature Setpoint Node Name
+       \note This optional field provides control over the heat recovery
+       \note Using this triggers a model more suited to series bundle and chillers with higher temperature heat recovery
+       \note If this field is not used, the bundles are modeled as being in parallel
+       \type node
+  A17; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 OS:CentralHeatPumpSystem,
   A1,  \field Handle
@@ -24077,13 +24106,31 @@ OS:WaterHeater:Mixed,
        \units m3/s
        \ip-units gal/min
        \minimum 0.0
-  N22; \field Indirect Water Heating Recovery Time
+  N22, \field Indirect Water Heating Recovery Time
        \type real
        \default 1.5
        \note Parameter for autosizing design flow rates for indirectly heated water tanks
        \note Time required to raise temperature of entire tank from 14.4C to 57.2C
        \units hr
        \minimum> 0.0
+  A19, \field Source Side Flow Control Mode
+       \type choice
+       \key StorageTank
+       \key IndirectHeatPrimarySetpoint
+       \key IndirectHeatAlternateSetpoint
+       \default IndirectHeatPrimarySetpoint
+       \note StorageTank mode always requests flow unless tank is at its Maximum Temperature Limit
+       \note IndirectHeatPrimarySetpoint mode requests flow whenever primary setpoint calls for heat
+       \note IndirectHeatAlternateSetpoint mode requests flow whenever alternate indirect setpoint calls for heat
+  A20, \field Indirect Alternate Setpoint Temperature Schedule Name
+       \note This field is only used if the previous is set to IndirectHeatAlternateSetpoint
+       \type object-list
+       \object-list ScheduleNames
+  A21; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 OS:WaterHeater:HeatPump,
        \min-fields 25
