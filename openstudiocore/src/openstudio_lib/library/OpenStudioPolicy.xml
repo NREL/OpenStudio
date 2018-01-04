@@ -556,6 +556,11 @@
     <rule IddField="Basin Heater Setpoint Temperature" Access="HIDDEN"/>
     <rule IddField="Basin Heater Operating Schedule Name" Access="HIDDEN"/>
     <rule IddField="Condenser Type" Access="HIDDEN"/>
+
+    <!-- REMOVE ONCE IMPLEMENTED IN SDK -->
+    <rule IddField="Condenser Heat Recovery Relative Capacity Fraction" Access="HIDDEN"/>
+    <rule IddField="Heat Recovery Inlet High Temperature Limit Schedule Name" Access="HIDDEN"/>
+    <rule IddField="Heat Recovery Leaving Temperature Setpoint Node Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_Chiller_Absorption_Indirect">
     <rule IddField="Chilled Water Inlet Node Name" Access="HIDDEN"/>
