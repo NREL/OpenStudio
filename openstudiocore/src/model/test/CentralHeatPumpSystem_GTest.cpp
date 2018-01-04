@@ -220,9 +220,102 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections)
     EXPECT_TRUE( central_hp.removeFromTertiaryPlantLoop() );
     plant = central_hp.tertiaryPlantLoop();
     EXPECT_FALSE(plant);
-    EXPECT_EQ(5u,heatingPlant.demandComponents().size());
+    EXPECT_EQ(5u, heatingPlant.demandComponents().size());
   }
 }
+
+
+/* I overriden the base class WaterToWaterComponent addToNode() and addToTertiaryNode()
+ * addToNode will call addToTertiaryNode behind the scenes when needed
+ * that is if you try to add it to the supply side of a plant loop when it already has a coolingLoop
+ * it should add it to the tertiary(=heating) loop
+ * This should work with addSupplyBranchForComponent too
+ * AddToTertiaryNode is overriden to not work when trying to add to a demand side node */
+TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections_addToNodeOverride)
+{
+  Model model;
+  CentralHeatPumpSystem central_hp(model);
+
+  PlantLoop coolingPlant(model);
+
+  PlantLoop coolingPlant2(model);
+  auto c_supply_node2 = coolingPlant2.supplyOutletNode();
+
+  PlantLoop sourcePlant(model);
+
+  PlantLoop heatingPlant(model);
+  auto h_supply_node = heatingPlant.supplyOutletNode();
+  auto h_demand_node = heatingPlant.demandInletNode();
+
+
+  // Connect to the cooling loop
+  EXPECT_TRUE(coolingPlant.addSupplyBranchForComponent(central_hp));
+  ASSERT_TRUE(central_hp.coolingPlantLoop());
+  EXPECT_EQ(coolingPlant, central_hp.coolingPlantLoop().get());
+
+  EXPECT_FALSE(central_hp.sourcePlantLoop());
+  EXPECT_FALSE(central_hp.heatingPlantLoop());
+
+
+  // Connect to the source loop
+  EXPECT_TRUE(sourcePlant.addDemandBranchForComponent(central_hp));
+
+  ASSERT_TRUE(central_hp.coolingPlantLoop());
+  EXPECT_EQ(coolingPlant, central_hp.coolingPlantLoop().get());
+
+  ASSERT_TRUE(central_hp.sourcePlantLoop());
+  EXPECT_EQ(sourcePlant, central_hp.sourcePlantLoop().get());
+
+  EXPECT_FALSE(central_hp.heatingPlantLoop());
+
+
+  // Have a cooling loop and no heating loop: should connect the heating loop
+  EXPECT_TRUE(heatingPlant.addSupplyBranchForComponent(central_hp));
+  ASSERT_TRUE(central_hp.coolingPlantLoop());
+  EXPECT_EQ(coolingPlant, central_hp.coolingPlantLoop().get());
+  ASSERT_TRUE(central_hp.sourcePlantLoop());
+  EXPECT_EQ(sourcePlant, central_hp.sourcePlantLoop().get());
+  ASSERT_TRUE(central_hp.heatingPlantLoop());
+  EXPECT_EQ(heatingPlant, central_hp.heatingPlantLoop().get());
+
+
+  // Have a cooling loop and a heating loop: should reconnect the cooling loop
+  // Try with addToNode instead
+  EXPECT_TRUE(central_hp.addToNode(c_supply_node2));
+
+  ASSERT_TRUE(central_hp.coolingPlantLoop());
+  EXPECT_EQ(coolingPlant2, central_hp.coolingPlantLoop().get());
+
+  ASSERT_TRUE(central_hp.sourcePlantLoop());
+  EXPECT_EQ(sourcePlant, central_hp.sourcePlantLoop().get());
+
+  ASSERT_TRUE(central_hp.heatingPlantLoop());
+  EXPECT_EQ(heatingPlant, central_hp.heatingPlantLoop().get());
+
+
+  // Disconnect the tertiary (heating) loop
+  EXPECT_TRUE(central_hp.removeFromTertiaryPlantLoop());
+  EXPECT_FALSE(central_hp.heatingPlantLoop());
+
+  // Shouldn't accept tertiary connection to the demand side
+  EXPECT_FALSE(central_hp.addToTertiaryNode(h_demand_node));
+
+  // Try addToNode to the heating plant loop, should work to connect the heating loop
+  EXPECT_TRUE(central_hp.addToNode(h_supply_node));
+
+  ASSERT_TRUE(central_hp.coolingPlantLoop());
+  EXPECT_EQ(coolingPlant2, central_hp.coolingPlantLoop().get());
+
+  ASSERT_TRUE(central_hp.sourcePlantLoop());
+  EXPECT_EQ(sourcePlant, central_hp.sourcePlantLoop().get());
+
+  ASSERT_TRUE(central_hp.heatingPlantLoop());
+  EXPECT_EQ(heatingPlant, central_hp.heatingPlantLoop().get());
+
+
+}
+
+
 
 
 TEST_F(ModelFixture, CentralHeatPumpSystem_Clone_PlantLoops)
