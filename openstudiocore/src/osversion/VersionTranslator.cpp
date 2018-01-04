@@ -3909,6 +3909,12 @@ std::string VersionTranslator::update_2_4_0_to_2_4_1(const IdfFile& idf_2_4_0, c
         }
       }
 
+      // Source Side Flow Control Mode
+      newObject.setString(40,"IndirectHeatPrimarySetpoint");
+
+      // Indirect Alternate Setpoint Temperature Schedule Name: nothing to do, leave empty
+
+      // End Use Subcategory
       newObject.setString(42,"General");
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
@@ -3923,6 +3929,16 @@ std::string VersionTranslator::update_2_4_0_to_2_4_1(const IdfFile& idf_2_4_0, c
           newObject.setString(i,value.get());
         }
       }
+
+      // Condenser Heat Recovery Relative Capacity Fraction: this is an optional
+      // but in E+ code (ChillerElectricEIR.cc > GetElectricEIRChillerInput() around line 655)
+      // if omitted (and heat recovery is used), it defaults to 1.0
+      // newObject.setDouble(32, 1.0);
+
+      // Heat Recovery Inlet High Temperature Limit Schedule Name: leave empty
+
+
+      // Heat Recovery Leaving Temperature Setpoint Node Name: leave empty
 
       // endUseSubcategory
       newObject.setString(34,"General");
