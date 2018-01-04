@@ -52,6 +52,9 @@ class MODEL_API CentralHeatPumpSystem : public WaterToWaterComponent {
   /** @name Constructors and Destructors */
   //@{
 
+  /* This constructor adds a chiller heater module list to store your CentralHeatPumpSystemModules, but it doesn't add a CentralHeatPumpSystemModule
+   * At least one CentralHeatPumpSystemModule is needed for this object to work correctly (and be translated) to EnergyPlus.
+   */
   explicit CentralHeatPumpSystem(const Model& model);
 
   virtual ~CentralHeatPumpSystem() {}

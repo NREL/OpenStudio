@@ -115,7 +115,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> CentralHeatPumpSystem_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -381,6 +380,9 @@ CentralHeatPumpSystem::CentralHeatPumpSystem(const Model& model)
   chillerHeaterModuleList.setName(this->name().get() + " Chiller Heater Module List");
   ok = getImpl<detail::CentralHeatPumpSystem_Impl>()->setChillerHeaterModuleList(chillerHeaterModuleList);
   OS_ASSERT(ok);
+
+  // Perhaps we should by default add one CentralHeatPumpSystemModule
+  // But this is at least caught by the ForwardTranslator right now...
 
 }
 
