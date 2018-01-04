@@ -229,6 +229,8 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   bool isIndirectWaterHeatingRecoveryTimeDefaulted() const;
 
+  std::string endUseSubcategory() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -417,15 +419,32 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   void resetIndirectWaterHeatingRecoveryTime();
 
-  boost::optional<double> autosizedTankVolume() const ;
+  boost::optional<double> autosizedTankVolume() const;
 
-  boost::optional<double> autosizedHeaterMaximumCapacity() const ;
+  boost::optional<double> autosizedHeaterMaximumCapacity() const;
 
-  boost::optional<double> autosizedUseSideDesignFlowRate() const ;
+  boost::optional<double> autosizedUseSideDesignFlowRate() const;
 
-  boost::optional<double> autosizedSourceSideDesignFlowRate() const ;
+  boost::optional<double> autosizedSourceSideDesignFlowRate() const;
 
+  bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
+  // TODO
+  /*
+   *A19, \field Source Side Flow Control Mode
+   *     \type choice
+   *     \key StorageTank
+   *     \key IndirectHeatPrimarySetpoint
+   *     \key IndirectHeatAlternateSetpoint
+   *     \default IndirectHeatPrimarySetpoint
+   *     \note StorageTank mode always requests flow unless tank is at its Maximum Temperature Limit
+   *     \note IndirectHeatPrimarySetpoint mode requests flow whenever primary setpoint calls for heat
+   *     \note IndirectHeatAlternateSetpoint mode requests flow whenever alternate indirect setpoint calls for heat
+   *A20, \field Indirect Alternate Setpoint Temperature Schedule Name
+   *     \note This field is only used if the previous is set to IndirectHeatAlternateSetpoint
+   *     \type object-list
+   *     \object-list ScheduleName
+   */
 
   //@}
  protected:

@@ -1714,6 +1714,16 @@ namespace detail {
 
   }
 
+  std::string WaterHeaterMixed_Impl::endUseSubcategory() const {
+    auto value = getString(OS_WaterHeater_MixedFields::EndUseSubcategory,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool WaterHeaterMixed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
+    return setString(OS_WaterHeater_MixedFields::EndUseSubcategory,endUseSubcategory);
+  }
+
 } // detail
 
 WaterHeaterMixed::WaterHeaterMixed(const Model& model)
@@ -1748,6 +1758,8 @@ WaterHeaterMixed::WaterHeaterMixed(const Model& model)
   ScheduleRuleset setpoint_schedule(model);
   setpoint_schedule.defaultDaySchedule().addValue(Time(0,24,0,0),60.0);
   setSetpointTemperatureSchedule(setpoint_schedule);
+
+  setEndUseSubcategory("General");
 }
 
 IddObjectType WaterHeaterMixed::iddObjectType() {
@@ -2449,6 +2461,14 @@ bool WaterHeaterMixed::setIndirectWaterHeatingRecoveryTime(const Quantity& indir
 
 void WaterHeaterMixed::resetIndirectWaterHeatingRecoveryTime() {
   getImpl<detail::WaterHeaterMixed_Impl>()->resetIndirectWaterHeatingRecoveryTime();
+}
+
+std::string WaterHeaterMixed::endUseSubcategory() const {
+  return getImpl<detail::WaterHeaterMixed_Impl>()->endUseSubcategory();
+}
+
+bool WaterHeaterMixed::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::WaterHeaterMixed_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 /// @cond
