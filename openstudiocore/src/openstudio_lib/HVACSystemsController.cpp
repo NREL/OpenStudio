@@ -51,9 +51,6 @@
 #include "../model/WaterToAirComponent_Impl.hpp"
 #include "../model/WaterToWaterComponent.hpp"
 #include "../model/WaterToWaterComponent_Impl.hpp"
-// Special case
-//#include "../model/CentralHeatPumpSystem.hpp"
-//#include "../model/CentralHeatPumpSystem_Impl.hpp"
 #include "../model/WaterUseConnections.hpp"
 #include "../model/WaterUseConnections_Impl.hpp"
 #include "../model/WaterUseEquipment.hpp"
@@ -509,23 +506,10 @@ void HVACLayoutController::addLibraryObjectToModelNode(OSItemId itemid, model::H
     {
       if( boost::optional<model::Node> node = comp.optionalCast<model::Node>() )
       {
-        // Special case for when you have a tertiaryPlantLoop, for CentralHeatPumpSystem
-        /*
-         *if( boost::optional<model::CentralHeatPumpSystem> central_hp = object->optionalCast<model::CentralHeatPumpSystem>() ) {
-         *  // If it's already connected to a plantLoop (cooling) and a secondaryplantloop (source), try to connect to the tertiary (heating)
-         *  if (boost::optional<model::PlantLoop> coolingPlant = central_hp->coolingPlantLoop()) {
-         *    if (boost::optional<model::PlantLoop> sourcePlant = central_hp->sourcePlantLoop()) {
-         *      // CentralHeatPumpSystem overrides addToTertiaryNode to restrict it to the supply side of the tertiary(=heating) loop
-         *      added = central_hp->addToTertiaryNode(node.get());
-         *    }
-         *  }
-         *} else {
-         *  added = hvacComponent->addToNode(node.get());
-         *}
-         */
-        // I implemented logic in CentralHeatPumpSystem::addToNode which will do the right thing and call addToTertiaryNode
-        // when needed. It has the merit of working for addSupplyBranchForComponent (etc) too.
-
+        // Note: Julien Marrec, 2018-01-04
+        // When you have a WaterToWaterComponent that has a tertiaryPlantLoop, you should override the addToNode method
+        // to call addToTertiaryNode when needed. This will work with addSupplyBranchForComponent (etc) too
+        // Take a look at CentralHeatPumpSystem::addToNode (and CentralHeatPumpSystem::addToTertiaryNode) for an actual example
         added = hvacComponent->addToNode(node.get());
       }
       else if( boost::optional<model::Splitter> splitter = comp.optionalCast<model::Splitter>() )
