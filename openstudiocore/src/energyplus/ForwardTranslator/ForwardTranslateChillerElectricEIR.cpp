@@ -282,6 +282,11 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
     }
   }
 
+  // End Use Subcategory
+  if( (s = modelObject.endUseSubcategory()) ) {
+    idfObject.setString(Chiller_Electric_EIRFields::EndUseSubcategory,s.get());
+  }
+
   return boost::optional<IdfObject>(idfObject);
 }
 
