@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -158,7 +158,7 @@ if load_old_plugin and old_plugin
   ext.description = "Adds building energy modeling capabilities by coupling SketchUp to the EnergyPlus simulation engine.  \r\n\r\nVisit www.energyplus.gov for more information."
   ext.version = old_version
   ext.creator = "National Renewable Energy Laboratory"
-  ext.copyright = "2008-2017, Alliance for Sustainable Energy"
+  ext.copyright = "2008-2018, Alliance for Sustainable Energy"
 
   # 'true' automatically loads the extension the first time it is registered, e.g., after install
   Sketchup.register_extension(ext, true)
@@ -170,7 +170,7 @@ elsif new_plugin
   ext.description = "Adds building energy modeling capabilities by coupling SketchUp to the OpenStudio suite of tools.  \r\n\r\nVisit openstudio.net for more information."
   ext.version = new_version
   ext.creator = "National Renewable Energy Laboratory"
-  ext.copyright = "2008-2017, Alliance for Sustainable Energy"
+  ext.copyright = "2008-2018, Alliance for Sustainable Energy"
 
   # 'true' automatically loads the extension the first time it is registered, e.g., after install
   Sketchup.register_extension(ext, true)
