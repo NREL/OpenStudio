@@ -15,13 +15,14 @@ class BenchmarkValue : public QWidget
 {
     Q_OBJECT
 public:
-    explicit BenchmarkValue(const QString& key, const QString &name, double value, QWidget *parent = 0);
+	explicit BenchmarkValue(const QString& key, const QString &name, const QString& name100n, double value, QWidget *parent = 0);
     ~BenchmarkValue();
     void setName(const QString& name);
     void setValue(double value);
     void setEditable(bool isEdit);
     QString toString();
     QString name();
+	QString name100n();
     QString key() const;
     double value() const;
 signals:
@@ -32,6 +33,7 @@ private:
     QString _key;
     QHBoxLayout *hl;
     QLineEdit   *lnName;
+	QString _name100n;
     QDoubleSpinBox   *dValue;
 };
 
@@ -42,7 +44,7 @@ public:
     explicit BenchmarkDialog(const QString &defaultConfigPath, QWidget *parent = 0);
     ~BenchmarkDialog();
     void setEditable(bool isEdit);
-    void addBenchmark(const QString &key, const QString& name, double value);
+	void addBenchmark(const QString &key, const QString& name, const QString& name100n, double value);
     QString hashOfUsernamePassword(const QString& username, const QString& password);
     bool isCorrectPass(const QString& pass);
     void setNewPassword(const QString& pass);
@@ -53,6 +55,7 @@ public:
     QStringList keys();
     QStringList names();
     void resetToDefault();
+    QString findText100n(const QString &name);
 signals:
 
 public slots:

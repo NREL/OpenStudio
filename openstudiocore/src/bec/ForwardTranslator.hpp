@@ -72,7 +72,7 @@ namespace bec {
 
     virtual ~ForwardTranslator();
 
-    QString getBVName();
+    QString getBVName(QString &newTextName);
     bool modelTobec(const openstudio::model::Model& model
                     , const openstudio::path& path
                     , ProgressBar* progressBar = nullptr

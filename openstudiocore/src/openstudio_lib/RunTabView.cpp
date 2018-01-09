@@ -123,6 +123,7 @@ enum PVReportMode { PVReportMode_OPENSTUDIO, PVReportMode_BEC, PVReportMode_ENER
 
 static double lastPV;
 static QString bvName;
+static QString newBVName;
 static double bvVal;
 static double WholeNetEnergyConsumptionPerArea = 0.0;
 static QPlainTextEdit* _log = NULL;
@@ -811,6 +812,7 @@ background-color: #ffff99;\n\
     //doTable(docElem.tagName(), docElem, file, 0);
 
     QString tables = doTableV2(docElem);
+	tables.replace(bvName, newBVName);
     file.write(tables.toUtf8());
 
     //BENCHMARK
@@ -835,7 +837,7 @@ background-color: #ffff99;\n\
                             "  </tr>\n"
                             "</tbody></table><br><br>\n</body>")
             .arg("bv_table")
-            .arg(bvName)
+            .arg(newBVName)
             .arg(doubleToMoney(bvVal))
             .arg(doubleToMoney(WholeNetEnergyConsumptionPerArea))
             .arg(pass);
@@ -1099,7 +1101,9 @@ void RunView::processBec()
 		logNormalText(QString("START READ DO BEC INPUT.") + now.toString());
 
         bec::ForwardTranslator trans;
-        bvName = trans.getBVName();
+
+        bvName = trans.getBVName(newBVName);
+		qDebug() << "bvName:" << bvName << ", newBVName:" << newBVName;
         if(bvName.isEmpty()){
             return;
         }
@@ -1583,6 +1587,7 @@ void RunView::onRunDataReady()
 //NOTE: BEC CODE
 bool RunView::doBecInput(const QString &path, const model::Model &model, QString &outpath){
     errrr.clear();
+	qDebug() << "Do bec input";
     QString output = path;
 
     outpath = output;
@@ -1591,7 +1596,7 @@ bool RunView::doBecInput(const QString &path, const model::Model &model, QString
     logNormalText(QString("Create input.xml at %1").arg(path));
 
     bool success = trans.modelTobec(model, path.toStdString().c_str(), NULL, &sunlits, wwr_totoal, bvName);
-
+	qDebug() << "bvName:" << bvName;
     std::string bvsdefault = binResourcesPath().string() + "/" + "default_building_standard.bvs";
     BenchmarkDialog bmdlg(bvsdefault.c_str(), this);
     bvVal = bmdlg.getValueByName(bvName);
@@ -1893,11 +1898,12 @@ background-color: #ffff99;\n\
                                 "</body>")
                 .arg(bvid)
                 .arg(savePathFile.baseName())
-                .arg(bvName)
+				.arg(newBVName)
                 .arg(doubleToMoney(bvVal))
                 .arg(doubleToMoney(val))
                 .arg(pass);
 
+		text.replace(bvName, newBVName);
         text.replace("</body>", table);
     }
         break;
@@ -2000,6 +2006,7 @@ background-color: #ffff99;\n\
                 .arg(doubleToMoney(val))
                 .arg(pass);
 
+		text.replace(bvName, newBVName);
         text.replace("</body>", table);
     }
         break;
@@ -2058,8 +2065,6 @@ void RunView::callRealBEC(const QString &dir){
     }
 
     m_becProcess = new QProcess(this);
-    m_becProcess->start(program.c_str(), arguments);
-
     //BEC SLOT
     connect(m_becProcess, SIGNAL(error(QProcess::ProcessError))
             , SLOT(becError(QProcess::ProcessError)));
@@ -2073,6 +2078,8 @@ void RunView::callRealBEC(const QString &dir){
             , SLOT(becStarted()));
     connect(m_becProcess, SIGNAL(stateChanged(QProcess::ProcessState))
             , SLOT(becStateChanged(QProcess::ProcessState)));
+
+	m_becProcess->start(program.c_str(), arguments);
     logNormalText(QString("Running bec at:%1").arg(program.c_str()));
 }
 

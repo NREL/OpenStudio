@@ -26,20 +26,22 @@ void BenchmarkDialog::setupBenchmarkValues(QSettings& settingBase, QSettings *se
     int i=0;
     while (1) {
         QString key = QString("building_standard%1").arg(i);
+		QString key100n = QString("building_standard100%1").arg(i);
         if(settingBase.contains(key)){
             if(settingsReg){
                 settingsReg->setValue(key, settingBase.value(key).toString());
             }
 
+			QString val100n = settingBase.value(key100n).toString();
             QStringList kv = settingBase.value(key).toString().split("=");
             if(kv.size()==2){
-                qDebug() << "key:" << kv.at(0) << ", value:" << kv.at(1);
+				qDebug() << "key:" << kv.at(0) << ", value:" << kv.at(1) << ", oldval:" << val100n;
                 double value;
                 bool toOK;
                 value = kv.at(1).toDouble(&toOK);
                 if(!toOK)
                     value = 0.0f;
-                this->addBenchmark(key, kv.at(0), value);
+				this->addBenchmark(key, kv.at(0), val100n, value);
             }
         }
         else
@@ -63,7 +65,7 @@ double BenchmarkDialog::getValueByName(const QString &name)
     QList<BenchmarkValue*>::iterator it = values.begin();
     while (it!=values.end()) {
         BenchmarkValue* value = (*it);
-        if(value->name() == name)
+		if (value->name() == name || value->name100n() == name)
             return value->value();
         it++;
     }
@@ -123,6 +125,21 @@ void BenchmarkDialog::resetToDefault()
         setNewPassword(ADMIN);
         setupBenchmarkValues(settingsINI, &settingsReg);
     }
+}
+
+QString BenchmarkDialog::findText100n(const QString& name)
+{
+	qDebug() << "Find on name " << name;
+    QString ret;
+    for(int i=0;i<values.size();i++){
+        BenchmarkValue* bv = values.at(i);
+		qDebug() << "--- " << bv->name() << "," << bv->name100n();
+        if(bv->name() == name){
+            ret = bv->name100n();
+            break;
+        }
+    }
+    return ret;
 }
 
 BenchmarkDialog::BenchmarkDialog(const QString &defaultConfigPath, QWidget *parent)
@@ -243,9 +260,9 @@ void BenchmarkDialog::setEditable(bool isEdit)
     }
 }
 
-void BenchmarkDialog::addBenchmark(const QString&key, const QString &name, double value)
+void BenchmarkDialog::addBenchmark(const QString&key, const QString &name, const QString& name100n, double value)
 {
-    BenchmarkValue* bv = new BenchmarkValue(key, name, value, this);
+    BenchmarkValue* bv = new BenchmarkValue(key, name, name100n, value, this);
     bv->setObjectName(name+"@"+value);
     vlayout->insertWidget(values.size(), bv);
     values.append(bv);
@@ -420,9 +437,10 @@ void BenchmarkDialog::eventReset()
     resetToDefault();
 }
 
-BenchmarkValue::BenchmarkValue(const QString &key, const QString& name, double value, QWidget *parent)
+BenchmarkValue::BenchmarkValue(const QString &key, const QString& name, const QString& name100n, double value, QWidget *parent)
     :QWidget(parent)
 {
+	_name100n = name100n;
     hl = new QHBoxLayout(this);
     hl->setObjectName(QStringLiteral("horizontalLayout"));
     hl->setContentsMargins(0, 0, 0, 0);
@@ -491,6 +509,12 @@ QString BenchmarkValue::name()
 {
     return lnName->text();
 }
+
+QString BenchmarkValue::name100n()
+{
+	return _name100n;
+}
+
 
 QString BenchmarkValue::key() const
 {

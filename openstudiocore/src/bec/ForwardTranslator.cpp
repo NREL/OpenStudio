@@ -438,7 +438,7 @@ static openstudio::path binResourcesPath()
     }
 }
 
-QString ForwardTranslator::getBVName()
+QString ForwardTranslator::getBVName(QString& newTextName)
 {
     QInputDialog inputBuildingType;
     inputBuildingType.setOption(QInputDialog::UseListViewForComboBoxItems);
@@ -475,9 +475,15 @@ QString ForwardTranslator::getBVName()
     int ret = inputBuildingType.exec();
 
     if (ret == QDialog::Accepted){
-        return inputBuildingType.textValue();
-    }
-    return "";
+        QString tv = inputBuildingType.textValue();
+        QString oldBvName = bmdlg.findText100n(tv);
+        newTextName = tv;
+        return oldBvName;
+	}
+	else
+	{
+		return "";
+	}
 }
 
 bool ForwardTranslator::modelTobec(const openstudio::model::Model& model
