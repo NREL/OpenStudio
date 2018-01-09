@@ -6,7 +6,7 @@
 
 ; Define helper variables
 !define PRODUCT_NAME "OpenStudioThai"
-!define PRODUCT_VERSION "2.0.0.0"
+!define PRODUCT_VERSION "2.2.0"
 !define PRODUCT_DISPLAY_NAME "${PRODUCT_NAME} v${PRODUCT_VERSION}"
 !define PRODUCT_PUBLISHER "ToBeOne Technology Co, Ltd"
 !define PRODUCT_WEB_SITE "ww.2b1tech.com"
@@ -16,7 +16,7 @@
 var ISEXSIT_DOTNET_FULL_INTSTALLED
 ;var ISEXSIT_DOTNET_CLNT_INTSTALLED
 
-SetCompress off
+SetCompress auto
 ;SetCompress  auto
 
 ; Interface Settings
@@ -56,8 +56,8 @@ var ICONS_GROUP
 LangString Title ${LANG_THAI} "คำแนะนำ"
 LangString Title ${LANG_ENGLISH} "Suggestion"
 
-LangString Message ${LANG_THAI} "เพื่อให้สามารถใช้งานโปรแกรม Open Studion Thai Edition  1.7.0 และ Energy Plus 8.2.0  ได้โดยสะดวกกับงานออกแบบ ขอแนะนำให้ติดตั้งโปรแกรมช่วยในการออกแบบ SketchUp Make 2017 ซึ่ง ที่ให้มาพร้อมกันใน Package Installer นี้"
-LangString Message ${LANG_ENGLISH} "To be able to use Open Studion Thai Edition 1.7.0 and Energy Plus 8.2.0 Easily design. It is recommended to install SketchUp Make 2017 that is included in the Package Installer."
+LangString Message ${LANG_THAI} "เพื่อให้สามารถใช้งานโปรแกรม Open Studion Thai Edition 2.2.0 และ Energy Plus 8.7.0  ได้โดยสะดวกกับงานออกแบบ ขอแนะนำให้ติดตั้งโปรแกรมช่วยในการออกแบบ SketchUp Make 2017 ซึ่ง ที่ให้มาพร้อมกันใน Package Installer นี้"
+LangString Message ${LANG_ENGLISH} "To be able to use Open Studion Thai Edition 2.2.0 and Energy Plus 8.7.0 easily. It is recommended to install SketchUp Make 2017 that is included in the Package Installer."
 
 
 Name "${PRODUCT_DISPLAY_NAME}"
@@ -185,8 +185,8 @@ SectionEnd
 
 ; Section descriptions
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC001} "Install SketcUpMake 32 bit"
+  !insertmacro MUI_DESCRIPTION_TEXT ${SEC001} "Install SketcUpMake 64 bit"
   ;!insertmacro MUI_DESCRIPTION_TEXT ${SEC002} "Install EnergyPlus-8.2.0-8397c2e30b 32 bit"
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC003} "Install OpenStudio 1.7.0 32 bit"
+  !insertmacro MUI_DESCRIPTION_TEXT ${SEC003} "Install OpenStudio 2.2.0 64 bit"
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
