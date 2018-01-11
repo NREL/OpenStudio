@@ -98,8 +98,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantComponentUserDefined) {
 
   PlantComponentUserDefined pcud(m);
   pcud.setName("best plant component");
-  EnergyManagementSystemProgramCallingManager mainPCM(m);
-  pcud.setMainModelProgramCallingManager(mainPCM);
+  //EnergyManagementSystemProgramCallingManager mainPCM(m);
+  //pcud.setMainModelProgramCallingManager(mainPCM);
   boost::optional<EnergyManagementSystemProgramCallingManager> initPCM = pcud.plantInitializationProgramCallingManager();
   boost::optional<EnergyManagementSystemProgramCallingManager> simPCM = pcud.plantSimulationProgramCallingManager();
   
@@ -127,7 +127,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantComponentUserDefined) {
 
   EXPECT_EQ(0u, forwardTranslator.errors().size());
   EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::PlantComponent_UserDefined).size());
-  EXPECT_EQ(3u, w.getObjectsByType(IddObjectType::EnergyManagementSystem_ProgramCallingManager).size());
+  EXPECT_EQ(2u, w.getObjectsByType(IddObjectType::EnergyManagementSystem_ProgramCallingManager).size());
   EXPECT_EQ(8u, w.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
   WorkspaceObject object = w.getObjectsByType(IddObjectType::PlantComponent_UserDefined)[0];
   WorkspaceObjectVector actuators = w.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
@@ -140,7 +140,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantComponentUserDefined) {
   ASSERT_TRUE(object.getString(PlantComponent_UserDefinedFields::Name, false));
   EXPECT_EQ("best plant component", object.getString(PlantComponent_UserDefinedFields::Name, false).get());
   ASSERT_TRUE(object.getString(PlantComponent_UserDefinedFields::MainModelProgramCallingManagerName, false));
-  EXPECT_EQ(mainPCM.nameString(), object.getString(PlantComponent_UserDefinedFields::MainModelProgramCallingManagerName, false).get());
+  //EXPECT_EQ(mainPCM.nameString(), object.getString(PlantComponent_UserDefinedFields::MainModelProgramCallingManagerName, false).get());
   ASSERT_TRUE(object.getString(PlantComponent_UserDefinedFields::PlantConnection1InitializationProgramCallingManagerName, false));
   EXPECT_EQ(initPCM.get().nameString(), object.getString(PlantComponent_UserDefinedFields::PlantConnection1InitializationProgramCallingManagerName, false).get());
   ASSERT_TRUE(object.getString(PlantComponent_UserDefinedFields::PlantConnection1SimulationProgramCallingManagerName, false));
