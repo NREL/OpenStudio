@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -94,6 +94,16 @@ class MODEL_API AirTerminalDualDuctConstantVolume : public Mixer {
    * (ie. AirLoopHVAC::demandInletNodes()[1] and AirLoopHVAC::supplyOutletNodes()[1])
    */
   boost::optional<Node> coldAirInletNode() const;
+
+
+  /* Queries the autosized maximum terminal air flow rate from the SQL file */
+  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+
+  /* Autosize all autosizeable fields */
+  // void autosize();
+
+  /* Hard applies the autosized values from SQL file */
+  // void applySizingValues();
 
   //@}
  protected:

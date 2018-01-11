@@ -2364,9 +2364,17 @@ ScheduleTypeLimits,
        \note Angle (degrees)
        \note Convection Coefficient (W/m2-K or Btu/sqft-hr-F)
        \note Activity Level (W/person)
+       \note Clothing Insulation (clo)
        \note Velocity (m/s or ft/min)
+       \note Rotations Per Minute (rpm)
+       \note Volumetric Flow Rate (m3/s or ft3/s)
+       \note Mass Flow Rate (kg/s or lb_m/s)       
        \note Capacity (W or Btu/h)
        \note Power (W)
+       \note Pressure (Pa or psi)
+       \note Solar Energy (Wh/m2)
+       \note Availability (0-Off or 1-On)
+       \note Linear Power Density (W/m or W/ft)
        \type choice
        \key Dimensionless
        \key Temperature
@@ -2375,13 +2383,21 @@ ScheduleTypeLimits,
        \key Angle
        \key ConvectionCoefficient
        \key ActivityLevel
+       \key ClothingInsulation
        \key Velocity
+       \key RotationsPerMinute
+       \key VolumetricFlowRate
+       \key MassFlowRate
        \key Capacity
        \key Power
+       \key Pressure
+       \key SolarEnergy
        \key Availability
        \key Percent
        \key Control
-       \key Mode
+       \key Mode   
+       \key ControlMode
+       \key LinearPowerDensity
        \default Dimensionless
 
 Schedule:Day:Hourly,

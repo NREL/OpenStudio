@@ -1,3 +1,24 @@
+## OpenStudio v2.4.0
+###### 2017-12-12 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.3.1...v2.4.0 )
+
+- ![Fixed:][fixed] [#230]( https://github.com/NREL/OpenStudio/issues/230 ), No way to make or use Hot Water Equipment objects in App (Bugzilla #988)
+- ![Fixed:][fixed] [#882]( https://github.com/NREL/OpenStudio/issues/882 ), E+ translator warning: Unknown object OS:Coil:Heating:Water:Baseboard
+- ![Fixed:][fixed] [#1422]( https://github.com/NREL/OpenStudio/issues/1422 ), Document Thermal Zones and Zone Equipment
+- ![Fixed:][fixed] [#1423]( https://github.com/NREL/OpenStudio/issues/1423 ), Document Airloops
+- ![Fixed:][fixed] [#1424]( https://github.com/NREL/OpenStudio/issues/1424 ), Document Plantloops
+- ![Fixed:][fixed] [#1425]( https://github.com/NREL/OpenStudio/issues/1425 ), Document VRF
+- ![Fixed:][fixed] [#1426]( https://github.com/NREL/OpenStudio/issues/1426 ), Document Refrigeration
+- ![Fixed:][fixed] [#1427]( https://github.com/NREL/OpenStudio/issues/1427 ), Document Utility Rates
+- ![Fixed:][fixed] [#1428]( https://github.com/NREL/OpenStudio/issues/1428 ), Document EnergyPlus Troubleshooting
+- ![Fixed:][fixed] [#1429]( https://github.com/NREL/OpenStudio/issues/1429 ), Document Timeseries Results
+- ![Fixed:][fixed] [#1430]( https://github.com/NREL/OpenStudio/issues/1430 ), Document General Modeling QAQC
+- ![Fixed:][fixed] [#2305]( https://github.com/NREL/OpenStudio/issues/2305 ), ATU CV Four Pipe problems with InducedAirInletNode
+- ![Fixed:][fixed] [#2750]( https://github.com/NREL/OpenStudio/issues/2750 ), EMS:Sensor constructor with OutputVariable should get the KeyValue 
+- ![Fixed:][fixed] [#2879]( https://github.com/NREL/OpenStudio/issues/2879 ), The default chilled beam type is missing 
+- ![Fixed:][fixed] [#2888]( https://github.com/NREL/OpenStudio/issues/2888 ), Cannot edit any of the Fractions for the loads in current develop in OS App
+- ![Fixed:][fixed] [#2891]( https://github.com/NREL/OpenStudio/issues/2891 ), 2.3.1 AirLoopHVAC doesn't have an AvailabilityManagerAssignmentList assigned
+- ![Improved:][improved] [#907]( https://github.com/NREL/OpenStudio/issues/907 ), Water end-use column missing from PAT results tab
+
 ## OpenStudio v2.3.1
 ###### 2017-12-04 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.3.0...v2.3.1 )
 

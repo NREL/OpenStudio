@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -101,6 +101,13 @@ namespace openstudio{
   /// reverse order of vertices
   UTILITIES_API std::vector<Point3d> reverse(const std::vector<Point3d>& vertices);
 
+  /// Sets view and daylighting window, overhang and light shelf vertices by reference.  Returns true if successful, false otherwise.
+  UTILITIES_API bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio,
+                                                        double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
+                                                        double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor,
+                                                        const std::vector<Point3d>& surfaceVertices, std::vector<Point3d>& viewVertices,
+                                                        std::vector<Point3d>& daylightingVertices, std::vector<Point3d>& exteriorShadingVertices, 
+                                                        std::vector<Point3d>& interiorShelfVertices); 
 
 } // openstudio
 

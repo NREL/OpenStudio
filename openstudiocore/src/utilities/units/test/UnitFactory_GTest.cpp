@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -106,7 +106,7 @@ TEST_F(UnitsFixture,UnitFactory_ParseStandardUnits)
   OptionalFahrenheitUnit TF = T->optionalCast<FahrenheitUnit>();
   ASSERT_TRUE(TC);
   ASSERT_FALSE(TF);
-  
+
   T = UnitFactory::instance().createUnit("F");
   TC = T->optionalCast<CelsiusUnit>();
   TF = T->optionalCast<FahrenheitUnit>();
@@ -122,7 +122,7 @@ TEST_F(UnitsFixture,UnitFactory_TestForAndReturnUnitObjects) {
   ASSERT_TRUE(openstudio::createUnit("s",UnitSystem::IP)->system() == UnitSystem::IP);
   ASSERT_TRUE(openstudio::getSystem("kg*m/s^2") == UnitSystem::SI);
   ASSERT_TRUE(openstudio::getSystem("ft") == UnitSystem::IP);
-  
+
   OptionalUnit f1 = openstudio::createUnit("kg*m/s^2");
   ASSERT_TRUE(f1);
   ASSERT_NO_THROW(f1->cast<SIUnit>());
@@ -207,9 +207,24 @@ TEST_F(UnitsFixture,UnitFactory_KitchenSink) {
   EXPECT_EQ(-3,u.baseUnitExponent("s"));
   EXPECT_EQ(-1,u.baseUnitExponent("K"));
 
-  // odd bug observed. test added so can fix it. 
+  // odd bug observed. test added so can fix it.
   std::string unitString = openstudio::extractUnitString("J/J");
   u = openstudio::createUnit(unitString,UnitSystem::SI)->cast<SIUnit>();
   EXPECT_EQ("",u.standardString(false));
   EXPECT_EQ("",u.prettyString());
+}
+
+/* Test for bug found in #2900 where it currently returns "1/ftH_{2}O^2" (this is a createUnit problem really...) */
+TEST_F(UnitsFixture,UnitFactory_IP_Pressure_wc) {
+  {
+    OptionalUnit unit = openstudio::createUnit("1/ftH_{2}O");
+    ASSERT_TRUE(unit);
+    EXPECT_EQ("1/ftH_{2}O", unit->standardString());
+  }
+
+  {
+    OptionalUnit unit = openstudio::createUnit("1/inH_{2}O");
+    ASSERT_TRUE(unit);
+    EXPECT_EQ("1/inH_{2}O", unit->standardString());
+  }
 }
