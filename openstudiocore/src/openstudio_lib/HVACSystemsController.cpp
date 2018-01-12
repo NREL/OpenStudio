@@ -366,14 +366,20 @@ void HVACSystemsController::update()
       {
         m_hvacControlsController = std::shared_ptr<HVACControlsController>(new HVACControlsController(this));
 
-        if( currentLoop() && currentLoop()->optionalCast<model::AirLoopHVAC>() )
-        {
-          m_hvacSystemsView->mainViewSwitcher->setView(m_hvacControlsController->hvacControlsView());
+        if( currentLoop() ) {
+          if ( currentLoop()->optionalCast<model::AirLoopHVAC>() || currentLoop()->optionalCast<model::PlantLoop>( )
+          {
+            m_hvacSystemsView->mainViewSwitcher->setView(m_hvacControlsController->hvacControlsView());
 
-          m_hvacSystemsView->hvacToolbarView->zoomInButton->setEnabled(false);
-          m_hvacSystemsView->hvacToolbarView->zoomOutButton->setEnabled(false);
+            m_hvacSystemsView->hvacToolbarView->zoomInButton->setEnabled(false);
+            m_hvacSystemsView->hvacToolbarView->zoomOutButton->setEnabled(false);
 
-          OSAppBase::instance()->currentDocument()->mainRightColumnController()->mainRightColumnView()->setCurrentId(MainRightColumnController::MY_MODEL);
+            OSAppBase::instance()->currentDocument()->mainRightColumnController()->mainRightColumnView()->setCurrentId(MainRightColumnController::MY_MODEL);
+          }
+          else
+          {
+            m_hvacSystemsView->mainViewSwitcher->setView(m_hvacControlsController->noControlsView());
+          }
         }
         else
         {
@@ -1247,6 +1253,63 @@ void HVACControlsController::update()
 
         m_hvacControlsView->supplyAirTemperatureViewSwitcher->setView(m_noSupplyAirTempControlView);
       }
+
+
+      // AVM List
+      auto availabilityManagerObjectVectorController = new AvailabilityManagerObjectVectorController();
+      availabilityManagerObjectVectorController->attach(t_airLoopHVAC.get());
+      m_availabilityManagerDropZone = new OSDropZone(availabilityManagerObjectVectorController);
+      m_availabilityManagerDropZone->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+      m_availabilityManagerDropZone->setMinItems(0);
+      m_availabilityManagerDropZone->setMaxItems(5);
+      m_availabilityManagerDropZone->setItemsRemoveable(true);
+      m_availabilityManagerDropZone->setAcceptDrops(true);
+      m_availabilityManagerDropZone->setItemsAcceptDrops(true);
+      m_availabilityManagerDropZone->setEnabled(true);
+      m_hvacControlsView->availabilityManagerViewSwitcher->setView(m_availabilityManagerDropZone)
+    }
+
+    // Else if a plantLoop
+    else if( boost::optional<model::PlantLoop> t_plantLoop = plantLoop() )
+    {
+      QString title;
+      title.append(QString::fromStdString(t_plantLoop->name().get()));
+      m_hvacControlsView->systemNameLabel->setText(title);
+
+      // Cooling Type
+
+      m_hvacControlsView->coolingTypeLabel->setText("Unclassified Cooling Type");
+
+      std::vector<model::ModelObject> modelObjects = t_plantLoop->supplyComponents(model::ChillerElectricEIR::iddObjectType());
+      if( modelObjects.size() > 0 )
+      {
+        m_hvacControlsView->coolingTypeLabel->setText("Electric Chiller");
+      }
+
+      // Heating Type
+
+      m_hvacControlsView->heatingTypeLabel->setText("Unclassified Heating Type");
+
+      modelObjects = t_airLoopHVAC->supplyComponents(model::BoilerHotWater::iddObjectType());
+      if( modelObjects.size() > 0 )
+      {
+        m_hvacControlsView->heatingTypeLabel->setText("Boiler");
+      }
+
+      // AvailabilityManagers
+
+      auto availabilityManagerObjectVectorController = new AvailabilityManagerObjectVectorController();
+      availabilityManagerObjectVectorController->attach(t_plantLoop.get());
+      m_availabilityManagerDropZone = new OSDropZone(availabilityManagerObjectVectorController);
+      m_availabilityManagerDropZone->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+      m_availabilityManagerDropZone->setMinItems(0);
+      m_availabilityManagerDropZone->setMaxItems(10);
+      m_availabilityManagerDropZone->setItemsRemoveable(true);
+      m_availabilityManagerDropZone->setAcceptDrops(true);
+      m_availabilityManagerDropZone->setItemsAcceptDrops(true);
+      m_availabilityManagerDropZone->setEnabled(true);
+      m_hvacControlsView->availabilityManagerViewSwitcher->setView(m_availabilityManagerDropZone);
+
     }
 
     m_hvacControlsView->setUpdatesEnabled(true);
@@ -1504,7 +1567,7 @@ void HVACLayoutController::updateLater()
   QTimer::singleShot(0,this,SLOT(update()));
 }
 
-SystemAvailabilityVectorController::SystemAvailabilityVectorController() 
+SystemAvailabilityVectorController::SystemAvailabilityVectorController()
   : ModelObjectVectorController()
 {
   m_reportItemsMutex = new QMutex();
@@ -1733,6 +1796,207 @@ void SupplyAirTempScheduleVectorController::onDrop(const OSItemId& itemId)
 void SupplyAirTempScheduleVectorController::onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId)
 {
   onDrop(replacementItemId);
+}
+
+
+
+/***********************************************************************************************************************
+ *        A V A I L A B I L I T Y    M A N A G E R S - AvailabilityManagerObjectVectorController
+ ***********************************************************************************************************************/
+
+// CLASSIC ONES
+
+void AvailabilityManagerObjectVectorController::attach(const model::ModelObject& modelObject)
+{
+  detach();
+
+  m_modelObject = modelObject;
+
+  if( m_modelObject )
+  {
+    m_model = m_modelObject->model();
+
+    m_model->getImpl<model::detail::Model_Impl>().get()->onChange.connect<AvailabilityManagerObjectVectorController, &AvailabilityManagerObjectVectorController::reportItemsLater>(this);
+  }
+
+  reportItemsLater();
+}
+
+void AvailabilityManagerObjectVectorController::detach()
+{
+  if( m_modelObject )
+  {
+    m_modelObject.reset();
+  }
+
+  if( m_model )
+  {
+    m_model->getImpl<model::detail::Model_Impl>().get()->onChange.disconnect<AvailabilityManagerObjectVectorController, &AvailabilityManagerObjectVectorController::reportItemsLater>(this);
+
+    m_model.reset();
+  }
+
+  reportItemsLater();
+}
+
+void AvailabilityManagerObjectVectorController::reportItemsLater()
+{
+  m_reportScheduled = true;
+
+  QTimer::singleShot(-1,this,SLOT(reportItems()));
+}
+
+void AvailabilityManagerObjectVectorController::reportItems()
+{
+  if( ! m_reportItemsMutex->tryLock() ) {
+    return;
+  }
+
+  if( m_reportScheduled )
+  {
+    m_reportScheduled = false;
+
+    ModelObjectVectorController::reportItems();
+  }
+
+  m_reportItemsMutex->unlock();
+}
+
+
+// ACTUAL STUFF
+
+boost::optional<model::Loop> AvailabilityManagerObjectVectorController::currentLoop()
+{
+  if( m_modelObject && ! m_modelObject->handle().isNull() )
+  {
+    return m_modelObject->optionalCast<model::Loop>();
+  }
+  else
+  {
+    return boost::none;
+  }
+}
+
+
+std::vector<OSItemId> AvailabilityManagerObjectVectorController::makeVector()
+{
+  std::vector<OSItemId> result;
+
+  if( boost::optional<model::Loop> t_currentLoop = currentLoop() )
+  {
+    std::vector<AvailabilityManager> t_avms = t_currentLoop->availabilityManagers();
+    for( auto it = t_avms.begin(); it != t_avms.end(); ++it ) {
+      result.push_back(modelObjectToItemId(*it, false));
+    }
+  }
+
+  return result;
+}
+
+
+
+void AvailabilityManagerObjectVectorController::onRemoveItem(OSItem * item)
+{
+
+  /**
+  if( boost::optional<model::Loop> t_currentLoop = currentLoop() )
+
+    model::LayeredConstruction construction = m_modelObject->cast<model::LayeredConstruction>();
+    std::vector<model::Material> layers = construction.layers();
+    OSAppBase * app = OSAppBase::instance();
+    unsigned idx = 0;
+    for (model::Material layer : layers){
+      boost::optional<model::ModelObject> modelObject = app->currentDocument()->getModelObject(item->itemId());
+      if(modelObject){
+        if(modelObject->handle() == layer.handle()){
+          construction.eraseLayer(idx);
+          break;
+        }
+        idx++;
+      }
+    }
+  }*/
+
+  if( boost::optional<model::Loop> t_currentLoop = currentLoop() )
+  {
+    // Start by getting the old one
+    ModelObjectItem* modelObjectItem = qobject_cast<ModelObjectItem*>(item);
+    OS_ASSERT(modelObjectItem);
+    model::ModelObject modelObject = modelObjectItem->modelObject();
+    if (!modelObject.handle().isNull()) {
+      // There is no reason we shouldn't enter this code block if the onDrop is fine...
+      if (model::AvailabilityManager c_avm = modelObject->optionalCast<model::AvailabilityManager>()) {
+        t_currentLoop.removeAvailabilityManager(c_avm);
+      }
+    }
+  }
+
+}
+
+void AvailabilityManagerObjectVectorController::onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId)
+{
+  // Start by making sure the replacement object is indeed an AvailabilityManager
+  if( boost::optional<model::Loop> t_currentLoop = currentLoop() )
+  {
+    boost::optional<model::ModelObject> mo = getModelObject(replacementItemId);
+    if (mo)
+    {
+      if (mo->optionalCast<model::AvailabilityManager>())
+      {
+        if (this->fromComponentLibrary(itemId))
+        {
+          mo = mo->clone(t_currentLoop->model());
+        }
+
+        model::AvailabilityManager new_avm = mo->cast<model::AvailabilityManager>();
+
+        // Now that we know it's an AVM, we need to inset the new and remove the old
+        // Start by getting the old one
+        ModelObjectItem* modelObjectItem = qobject_cast<ModelObjectItem*>(item);
+        OS_ASSERT(modelObjectItem);
+        model::ModelObject modelObject = modelObjectItem->modelObject();
+        if (!modelObject.handle().isNull()) {
+          // There is no reason we shouldn't enter this code block if the onDrop is fine...
+          if (model::AvailabilityManager c_avm = modelObject->optionalCast<model::AvailabilityManager>()) {
+
+            // Get the priority of the current avm
+            unsigned priority = c_avm.availabilityManagerPriority();
+
+            // Insert the new avm at this priority
+            t_currentLoop->addAvailabilityManager(new_avm, priority);
+
+            // remove the old one? Actually, Let me try just shifting them... might be more useful think you can always delete later
+
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+/* On Drop, if it's an AvailabilityManager, call currentLoop->addAvailabilityManager */
+void AvailabilityManagerObjectVectorController::onDrop(const OSItemId& itemId)
+{
+  if( boost::optional<model::Loop> t_currentLoop = currentLoop() )
+  {
+    boost::optional<model::ModelObject> mo = getModelObject(itemId);
+
+    if (mo)
+    {
+      if (mo->optionalCast<model::AvailabilityManager>())
+      {
+        if (this->fromComponentLibrary(itemId))
+        {
+          mo = mo->clone(t_currentLoop->model());
+        }
+
+        model::AvailabilityManager avm = mo->cast<model::AvailabilityManager>();
+        t_currentLoop->addAvailabilityManager(avm);
+      }
+    }
+  }
 }
 
 } // openstudio

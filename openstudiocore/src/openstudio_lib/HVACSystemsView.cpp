@@ -79,7 +79,7 @@ HVACToolbarView::HVACToolbarView()
 
   auto labelWidget = new QWidget();
   auto labelLayout = new QHBoxLayout();
-  labelLayout->setContentsMargins(0,0,0,0); 
+  labelLayout->setContentsMargins(0,0,0,0);
   labelLayout->setSpacing(5);
   labelLayout->setAlignment(Qt::AlignLeft);
   labelWidget->setLayout(labelLayout);
@@ -212,7 +212,7 @@ HVACSystemsView::HVACSystemsView()
   hvacToolbarView = new HVACToolbarView();
   mainVLayout->addWidget(hvacToolbarView);
 
-  mainViewSwitcher = new OSViewSwitcher();  
+  mainViewSwitcher = new OSViewSwitcher();
   mainVLayout->addWidget(mainViewSwitcher);
 }
 
@@ -382,6 +382,26 @@ HVACControlsView::HVACControlsView()
   ventilationViewSwitcher = new OSViewSwitcher();
   ventilationViewSwitcher->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
   mainVLayout->addWidget(ventilationViewSwitcher);
+
+
+  // Add a line
+  auto line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainVLayout->addWidget(line);
+
+  // AvailabilityManagers
+  QLabel * avmTitle = new QLabel("Availability Managers");
+  avmTitle->setObjectName("H1");
+  mainVLayout->addWidget(avmTitle);
+
+  QLabel * avmListTitle = new QLabel("Availability Managers from highest precedence to lowest");
+  avmListTitle->setObjectName("H2");
+  mainVLayout->addWidget(avmListTitle);
+
+  availabilityManagerViewSwitcher = new OSViewSwitcher();
+  availabilityManagerViewSwitcher->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed); // QSizePolicy::MinimumExpanding, QSizePolicy::Expanding
+  mainVLayout->addWidget(availabilityManagerViewSwitcher)
 }
 
 MechanicalVentilationView::MechanicalVentilationView()

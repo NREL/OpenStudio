@@ -111,7 +111,7 @@ class HVACSystemsController : public QObject, public Nano::Observer
   void clearSceneSelection();
 
   public slots:
-  
+
   void updateLater();
 
   private slots:
@@ -167,7 +167,7 @@ class HVACSystemsController : public QObject, public Nano::Observer
   bool m_isIP;
 
   signals:
-  
+
   void toggleUnitsClicked(bool displayIP);
 
 };
@@ -193,7 +193,7 @@ class HVACControlsController : public QObject, public Nano::Observer
   void updateLater();
 
   private slots:
-  
+
   void update();
 
   void onEconomizerComboBoxIndexChanged(int index);
@@ -258,7 +258,7 @@ class HVACLayoutController : public QObject, public Nano::Observer
   void updateLater();
 
   private slots:
-  
+
   void update();
 
   void onModelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
@@ -357,6 +357,53 @@ class SupplyAirTempScheduleVectorController : public ModelObjectVectorController
 
   QMutex * m_reportItemsMutex;
 };
+
+
+class AvailabilityManagerObjectVectorController : public ModelObjectVectorController
+{
+  Q_OBJECT
+
+ public:
+
+  AvailabilityManagerObjectVectorController(QWidget * parentWidget);
+
+  virtual ~AvailabilityManagerObjectVectorController()  { delete m_reportItemsMutex; }
+
+  void attach(const model::ModelObject& modelObject) override;
+
+  void detach();
+
+  boost::optional<model::Loop> currentLoop() const;
+
+
+ public slots:
+
+  void reportItemsLater();
+
+  void reportItems()
+
+ protected:
+
+  // virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle) override;
+
+  // virtual void onDataChange(const model::ModelObject& modelObject) override;
+
+  virtual std::vector<OSItemId> makeVector() override;
+
+  virtual void onRemoveItem(OSItem* item) override;
+
+  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId) override;
+
+  virtual void onDrop(const OSItemId& itemId) override;
+
+private:
+
+  bool m_reportScheduled;
+
+  QMutex * m_reportItemsMutex;
+
+}
+
 
 } // openstudio
 
