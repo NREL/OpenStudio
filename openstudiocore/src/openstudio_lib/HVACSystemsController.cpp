@@ -60,7 +60,9 @@
 #include "../model/AirLoopHVACOutdoorAirSystem.hpp"
 #include "../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
-#include "../model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "../model/AirLoopHVACUnitaryHeatPumpAirToAir_mpl.hpp"
+#include "../model/AvailabilityManager.hpp"
+#include "../model/AvailabilityManager_Impl.hpp"
 #include "../model/ControllerMechanicalVentilation.hpp"
 #include "../model/ControllerMechanicalVentilation_Impl.hpp"
 #include "../model/ControllerOutdoorAir.hpp"
@@ -367,7 +369,8 @@ void HVACSystemsController::update()
         m_hvacControlsController = std::shared_ptr<HVACControlsController>(new HVACControlsController(this));
 
         if( currentLoop() ) {
-          if ( currentLoop()->optionalCast<model::AirLoopHVAC>() || currentLoop()->optionalCast<model::PlantLoop>( )
+          // TODO: Later will need to change it to add an actual plantLoopControlsController
+          if ( (currentLoop()->optionalCast<model::AirLoopHVAC>()) || (currentLoop()->optionalCast<model::PlantLoop>()) )
           {
             m_hvacSystemsView->mainViewSwitcher->setView(m_hvacControlsController->hvacControlsView());
 

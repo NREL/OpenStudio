@@ -380,7 +380,7 @@ class AvailabilityManagerObjectVectorController : public ModelObjectVectorContro
 
   void reportItemsLater();
 
-  void reportItems()
+  void reportItems();
 
  protected:
 
@@ -402,7 +402,7 @@ private:
 
   QMutex * m_reportItemsMutex;
 
-}
+};
 
 
 } // openstudio
