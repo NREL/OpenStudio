@@ -1632,4 +1632,8 @@
     <rule IddField="Heat Recovery Water Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Heat Recovery Water Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_PlantComponent_UserDefined">
+    <rule IddField="Plant Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Plant Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
 </ROOT>

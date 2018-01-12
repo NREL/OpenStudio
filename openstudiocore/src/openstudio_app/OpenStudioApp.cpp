@@ -85,6 +85,7 @@
 #include "../model/SetpointManagerMixedAir.hpp"
 #include "../model/SetpointManagerScheduled.hpp"
 #include "../model/SetpointManagerSingleZoneReheat.hpp"
+#include "../model/PlantComponentUserDefined.hpp"
 #include "../model/ZoneHVACBaseboardConvectiveWater.hpp"
 #include "../model/ZoneHVACFourPipeFanCoil.hpp"
 #include "../model/ZoneHVACLowTempRadiantConstFlow.hpp"

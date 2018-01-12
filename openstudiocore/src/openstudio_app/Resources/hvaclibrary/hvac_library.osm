@@ -1,7 +1,7 @@
 
 OS:Version,
   {de09e553-501b-482c-8f3a-f24d04bcbf5e}, !- Handle
-  2.3.0;                                  !- Version Identifier
+  2.4.1;                                  !- Version Identifier
 
 ! Always OnOff Discrete Schedule Type Limits
 OS:ScheduleTypeLimits,
@@ -541,7 +541,16 @@ OS:CoolingTower:SingleSpeed,
   MinimalCell,                            !- Cell Control
   0.33,                                   !- Cell Minimum  Water Flow Rate Fraction
   2.5,                                    !- Cell Maximum Water Flow Rate Fraction
-  1;                                      !- Sizing Factor
+  1,                                      !- Sizing Factor
+  ,                                       !- Free Convection Air Flow Rate Sizing Factor
+  ,                                       !- Free Convection U-Factor Times Area Value Sizing Factor
+  ,                                       !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
+  ,                                       !- Free Convection Nominal Capacity Sizing Factor
+  ,                                       !- Design Inlet Air Dry-Bulb Temperature {C}
+  ,                                       !- Design Inlet Air Wet-Bulb Temperature {C}
+  ,                                       !- Design Approach Temperature {deltaC}
+  ,                                       !- Design Range Temperature {deltaC}
+  ;                                       !- End-Use Subcategory
 
 OS:Curve:Biquadratic,
   {43241c62-f9aa-470c-877b-aed134698156}, ! Handle
@@ -1590,7 +1599,21 @@ OS:Pump:VariableSpeed,
   ,                                       ! Coefficient 4 of the Part Load Performance Curve
   ,                                       ! Minimum Flow Rate {m3/s}
   ,                                       ! Pump Control Type
-  ;                                       ! Pump Flow Rate Schedule Name
+  ,                                       ! Pump Flow Rate Schedule Name
+  ,                                       !- Pump Curve Name
+  ,                                       !- Impeller Diameter {m}
+  ,                                       !- VFD Control Type
+  ,                                       !- Pump rpm Schedule Name
+  ,                                       !- Minimum Pressure Schedule {Pa}
+  ,                                       !- Maximum Pressure Schedule {Pa}
+  ,                                       !- Minimum RPM Schedule {Rotations Per Minute}
+  ,                                       !- Maximum RPM Schedule {Rotations Per Minute}
+  ,                                       !- Zone Name
+  ,                                       !- Skin Loss Radiative Fraction
+  ,                                       !- Design Power Sizing Method
+  ,                                       !- Design Electric Power per Unit Flow Rate {W/(m3/s)}
+  ,                                       !- Design Shaft Power per Unit Flow Rate per Unit Head {W-s/m3-Pa}
+  ;                                       !- Design Minimum Flow Rate Fraction
 
 OS:Pump:ConstantSpeed,
   {179abade-266d-45a5-a002-0bfe1caeeb23}, !- Handle
@@ -1608,7 +1631,10 @@ OS:Pump:ConstantSpeed,
   ,                                       !- Impeller Diameter {m}
   ,                                       !- Rotational Speed {rev/min}
   ,                                       !- Zone
-  ;                                       !- Skin Loss Radiative Fraction
+  ,                                       !- Skin Loss Radiative Fraction
+  ,                                       !- Design Power Sizing Method
+  ,                                       !- Design Electric Power per Unit Flow Rate {W/(m3/s)}
+  ;                                       !- Design Shaft Power per Unit Flow Rate per Unit Head {W-s/m3-Pa}
 
 OS:HeaderedPumps:ConstantSpeed,
   {19902d0d-e3a7-4725-9f85-cc1bd897b8f9}, !- Handle
@@ -1625,7 +1651,10 @@ OS:HeaderedPumps:ConstantSpeed,
   Continuous,                             !- Pump Control Type
   ,                                       !- Pump Flow Rate Schedule
   ,                                       !- Thermal Zone
-  0.1;                                    !- Skin Loss Radiative Fraction
+  0.1,                                    !- Skin Loss Radiative Fraction
+  ,                                       !- Design Power Sizing Method
+  ,                                       !- Design Electric Power per Unit Flow Rate {W/(m3/s)}
+  ;                                       !- Design Shaft Power per Unit Flow Rate per Unit Head {W-s/m3-Pa}
 
 OS:HeaderedPumps:VariableSpeed,
   {5a813bd2-9427-45dd-9909-0edd559f9027}, !- Handle
@@ -1647,7 +1676,10 @@ OS:HeaderedPumps:VariableSpeed,
   Continuous,                             !- Pump Control Type
   ,                                       !- Pump Flow Rate Schedule
   ,                                       !- Thermal Zone
-  0.1;                                    !- Skin Loss Radiative Fraction
+  0.1,                                    !- Skin Loss Radiative Fraction
+  ,                                       !- Design Power Sizing Method
+  ,                                       !- Design Electric Power per Unit Flow Rate {W/(m3/s)}
+  ;                                       !- Design Shaft Power per Unit Flow Rate per Unit Head {W-s/m3-Pa}
 
 OS:ZoneHVAC:HighTemperatureRadiant,
   {78b89842-8c8d-46d2-8f30-1322d180980e}, !- Handle
@@ -4527,7 +4559,8 @@ OS:CoolingTower:VariableSpeed,
   ,                                       !- Cell Control
   ,                                       !- Cell Minimum  Water Flow Rate Fraction
   ,                                       !- Cell Maximum Water Flow Rate Fraction
-  1;                                      !- Sizing Factor
+  1,                                      !- Sizing Factor
+  ;                                       !- End-Use Subcategory
 
 OS:Curve:Cubic,
   {07e95396-18cf-4b45-8c39-d1c6d9b569a4}, !- Handle
@@ -4570,7 +4603,8 @@ OS:CoolingTower:VariableSpeed,
   ,                                       !- Cell Control
   ,                                       !- Cell Minimum  Water Flow Rate Fraction
   ,                                       !- Cell Maximum Water Flow Rate Fraction
-  0.33;                                   !- Sizing Factor
+  0.33,                                   !- Sizing Factor
+  ;                                       !- End-Use Subcategory
 
 OS:Curve:Cubic,
   {ef3db801-9ea9-468f-8d25-da4759413263}, !- Handle
@@ -4660,7 +4694,8 @@ OS:CoolingTower:VariableSpeed,
   ,                                       !- Cell Control
   ,                                       !- Cell Minimum  Water Flow Rate Fraction
   ,                                       !- Cell Maximum Water Flow Rate Fraction
-  0.33;                                   !- Sizing Factor
+  0.33,                                   !- Sizing Factor
+  ;                                       !- End-Use Subcategory
 
 OS:Curve:Cubic,
   {e9ae406d-ab3e-4461-8418-7af997698c00}, !- Handle
@@ -7812,7 +7847,12 @@ OS:CoolingTower:TwoSpeed,
   ,                                       !- Cell Control
   ,                                       !- Cell Minimum  Water Flow Rate Fraction
   ,                                       !- Cell Maximum Water Flow Rate Fraction
-  1;                                      !- Sizing Factor
+  1,                                      !- Sizing Factor
+  ,                                       !- Design Inlet Air Dry-Bulb Temperature {C}
+  ,                                       !- Design Inlet Air Wet-Bulb Temperature {C}
+  ,                                       !- Design Approach Temperature {deltaC}
+  ,                                       !- Design Range Temperature {deltaC}
+  ;                                       !- End-Use Subcategory
 
 OS:Coil:Heating:Water,
   {852ba7c2-6dca-42d0-b8d0-523404c57aa0}, !- Handle
@@ -11334,115 +11374,122 @@ OS:AirTerminal:DualDuct:ConstantVolume,
   ,                                       !- Cold Air Inlet Node
   autosize;                               !- Maximum Air Flow Rate {m3/s}
 
+OS:StandardsInformation:Material,
+  {4376f05d-bbf3-40f7-be03-4171974aefd8}, !- Handle
+  {0e7d4a49-4eee-48f1-8cba-d3afc0f7239c}; !- Material Name
+
+OS:StandardsInformation:Construction,
+  {b1f5fa7e-743e-4bc9-b561-3bdf2980fafd}, !- Handle
+  {de11bfc1-7dc3-4a5b-a98d-46d3a33c1b82}; !- Construction Name
+
 OS:PlantComponent:UserDefined,
-  {755188d3-403b-42d8-9689-ed55366bd3d7}, !- Handle
-  best plant component,                   !- Name
+  {42d34fc1-d875-44dc-8f25-448310b5ba71}, !- Handle
+  Plant Component User Defined 1,         !- Name
   ,                                       !- Main Model Program Calling Manager Name
   ,                                       !- Main Model Program Name
   ,                                       !- Plant Inlet Node Name
   ,                                       !- Plant Outlet Node Name
   MeetsLoadWithNominalCapacityHiOutLimit, !- Plant Loading Mode
   NeedsFlowIfLoopOn,                      !- Plant Loop Flow Request Mode
-  {ed6aa426-ea38-46ce-8516-535c5f313ef1}, !- Plant Initialization Program Calling Manager Name
-  {309ef6e3-8ba7-4db7-b962-2304400c668d}, !- Plant Initialization Program Name
-  {879ae3fc-f120-4e77-8579-04a01f351f35}, !- Plant Simulation Program Calling Manager Name
-  {6e818187-1f4f-4e41-8cd1-439b98a35e9a}, !- Plant Simulation Program Name
-  {525ee072-bcb6-4e01-89e3-3684837259a0}, !- Design Volume Flow Rate Actuator
-  {5080a59f-8bbf-497b-b15b-a7693403d0cc}, !- Minimum Mass Flow Rate Actuator
-  {0a090015-ae11-41b8-ba5c-503c8bc2158e}, !- Maximum Mass Flow Rate Actuator
-  {5acdd668-be05-4f17-899b-568db22f6bd0}, !- Minimum Loading Capacity Actuator
-  {cbf8a77d-f6f7-400e-a49c-183e4a41d6e9}, !- Maximum Loading Capacity Actuator
-  {4b6ce0ed-e39b-4230-9fc8-ac0e55549259}, !- Optimal Loading Capacity Actuator
-  {c09a1b8c-cddf-45ef-9997-1d80f442bc53}, !- Outlet Temperature Actuator
-  {1c75f6fc-55d2-471e-822d-5df49def2f4b}, !- Mass Flow Rate Actuator
-  ;                                       !- Ambient Zone Name
+  {599addbb-a3dc-49a5-a228-654376bb48ce}, !- Plant Initialization Program Calling Manager Name
+  {72044f72-33e7-4b86-aed0-39c8acf2f9dc}, !- Plant Initialization Program Name
+  {a6ba477e-43a4-4aab-860a-e96f56861682}, !- Plant Simulation Program Calling Manager Name
+  {b52a712e-59aa-40f9-8649-cda114806841}, !- Plant Simulation Program Name
+  {d3c5b4d2-fc5f-42a2-859a-64f8dab1d6a7}, !- Design Volume Flow Rate Actuator
+  {341a9fc6-b9d8-406d-bc0e-8e18319cb389}, !- Minimum Mass Flow Rate Actuator
+  {ab63622a-7356-40fe-bf24-f3705530f60b}, !- Maximum Mass Flow Rate Actuator
+  {8350f270-85e3-4827-8883-3683997f0ae3}, !- Minimum Loading Capacity Actuator
+  {596054f3-5c00-4614-ac61-26966f361a0d}, !- Maximum Loading Capacity Actuator
+  {8b144b63-95ec-4674-9ed4-ce125185f107}, !- Optimal Loading Capacity Actuator
+  {ea36e08d-524c-4f79-842c-e3a2603d1936}, !- Outlet Temperature Actuator
+  {69531b92-22ad-41e4-9446-d128320ecfcb}; !- Mass Flow Rate Actuator
 
 OS:EnergyManagementSystem:Actuator,
-  {525ee072-bcb6-4e01-89e3-3684837259a0}, !- Handle
+  {d3c5b4d2-fc5f-42a2-859a-64f8dab1d6a7}, !- Handle
   PCUD_Vdot_Design,                       !- Name
-  {755188d3-403b-42d8-9689-ed55366bd3d7}, !- Actuated Component Name
+  {42d34fc1-d875-44dc-8f25-448310b5ba71}, !- Actuated Component Name
   Plant Connection 1,                     !- Actuated Component Type
   Design Volume Flow Rate;                !- Actuated Component Control Type
 
 OS:EnergyManagementSystem:Actuator,
-  {5080a59f-8bbf-497b-b15b-a7693403d0cc}, !- Handle
+  {341a9fc6-b9d8-406d-bc0e-8e18319cb389}, !- Handle
   PCUD_Mdot_Min,                          !- Name
-  {755188d3-403b-42d8-9689-ed55366bd3d7}, !- Actuated Component Name
+  {42d34fc1-d875-44dc-8f25-448310b5ba71}, !- Actuated Component Name
   Plant Connection 1,                     !- Actuated Component Type
   Minimum Mass Flow Rate;                 !- Actuated Component Control Type
 
 OS:EnergyManagementSystem:Actuator,
-  {0a090015-ae11-41b8-ba5c-503c8bc2158e}, !- Handle
+  {ab63622a-7356-40fe-bf24-f3705530f60b}, !- Handle
   PCUD_Mdot_Max,                          !- Name
-  {755188d3-403b-42d8-9689-ed55366bd3d7}, !- Actuated Component Name
+  {42d34fc1-d875-44dc-8f25-448310b5ba71}, !- Actuated Component Name
   Plant Connection 1,                     !- Actuated Component Type
   Maximum Mass Flow Rate;                 !- Actuated Component Control Type
 
 OS:EnergyManagementSystem:Actuator,
-  {5acdd668-be05-4f17-899b-568db22f6bd0}, !- Handle
+  {8350f270-85e3-4827-8883-3683997f0ae3}, !- Handle
   PCUD_Cap_Min,                           !- Name
-  {755188d3-403b-42d8-9689-ed55366bd3d7}, !- Actuated Component Name
+  {42d34fc1-d875-44dc-8f25-448310b5ba71}, !- Actuated Component Name
   Plant Connection 1,                     !- Actuated Component Type
   Minimum Loading Capacity;               !- Actuated Component Control Type
 
 OS:EnergyManagementSystem:Actuator,
-  {cbf8a77d-f6f7-400e-a49c-183e4a41d6e9}, !- Handle
+  {596054f3-5c00-4614-ac61-26966f361a0d}, !- Handle
   PCUD_Cap_Max,                           !- Name
-  {755188d3-403b-42d8-9689-ed55366bd3d7}, !- Actuated Component Name
+  {42d34fc1-d875-44dc-8f25-448310b5ba71}, !- Actuated Component Name
   Plant Connection 1,                     !- Actuated Component Type
   Maximum Loading Capacity;               !- Actuated Component Control Type
 
 OS:EnergyManagementSystem:Actuator,
-  {4b6ce0ed-e39b-4230-9fc8-ac0e55549259}, !- Handle
+  {8b144b63-95ec-4674-9ed4-ce125185f107}, !- Handle
   PCUD_Cap_Opt,                           !- Name
-  {755188d3-403b-42d8-9689-ed55366bd3d7}, !- Actuated Component Name
+  {42d34fc1-d875-44dc-8f25-448310b5ba71}, !- Actuated Component Name
   Plant Connection 1,                     !- Actuated Component Type
   Optimal Loading Capacity;               !- Actuated Component Control Type
 
 OS:EnergyManagementSystem:Actuator,
-  {c09a1b8c-cddf-45ef-9997-1d80f442bc53}, !- Handle
+  {ea36e08d-524c-4f79-842c-e3a2603d1936}, !- Handle
   PCUD_Tout,                              !- Name
-  {755188d3-403b-42d8-9689-ed55366bd3d7}, !- Actuated Component Name
+  {42d34fc1-d875-44dc-8f25-448310b5ba71}, !- Actuated Component Name
   Plant Connection 1,                     !- Actuated Component Type
   Outlet Temperature;                     !- Actuated Component Control Type
 
 OS:EnergyManagementSystem:Actuator,
-  {1c75f6fc-55d2-471e-822d-5df49def2f4b}, !- Handle
+  {69531b92-22ad-41e4-9446-d128320ecfcb}, !- Handle
   PCUD_Mdot_Request,                      !- Name
-  {755188d3-403b-42d8-9689-ed55366bd3d7}, !- Actuated Component Name
+  {42d34fc1-d875-44dc-8f25-448310b5ba71}, !- Actuated Component Name
   Plant Connection 1,                     !- Actuated Component Type
   Mass Flow Rate;                         !- Actuated Component Control Type
 
 OS:EnergyManagementSystem:Program,
-  {309ef6e3-8ba7-4db7-b962-2304400c668d}, !- Handle
+  {72044f72-33e7-4b86-aed0-39c8acf2f9dc}, !- Handle
   PCUD_InitProgram,                       !- Name
-  SET LoopExitTemp = 82.22,               ! - <none> 
-  SET LoopDeltaTemp = 4.0,                ! - <none> 
-  SET CP = @CPCW LoopExitTemp,            ! - <none> 
-  SET rho = @RhoH2O LoopExitTemp,         ! - <none> 
-  SET {525ee072-bcb6-4e01-89e3-3684837259a0} = 0.5, ! - <none> 
-  SET {5080a59f-8bbf-497b-b15b-a7693403d0cc} = 0.0, ! - <none> 
-  SET {0a090015-ae11-41b8-ba5c-503c8bc2158e} = {525ee072-bcb6-4e01-89e3-3684837259a0} * rho, ! - <none> 
-  SET PCUD_Cap = CP * rho * LoopDeltaTemp * 0.5, ! - <none> 
-  SET {5acdd668-be05-4f17-899b-568db22f6bd0} = 0.0, ! - <none> 
-  SET {cbf8a77d-f6f7-400e-a49c-183e4a41d6e9} = PCUD_Cap, ! - <none> 
-  SET {4b6ce0ed-e39b-4230-9fc8-ac0e55549259} = 0.9 * PCUD_Cap; ! - <none> 
+  SET LoopExitTemp = 82.22,               ! - <none>
+  SET LoopDeltaTemp = 4.0,                ! - <none>
+  SET CP = @CPCW LoopExitTemp,            ! - <none>
+  SET rho = @RhoH2O LoopExitTemp,         ! - <none>
+  SET {d3c5b4d2-fc5f-42a2-859a-64f8dab1d6a7} = 0.5, ! - <none>
+  SET {341a9fc6-b9d8-406d-bc0e-8e18319cb389} = 0.0, ! - <none>
+  SET {ab63622a-7356-40fe-bf24-f3705530f60b} = {d3c5b4d2-fc5f-42a2-859a-64f8dab1d6a7} * rho, ! - <none>
+  SET PCUD_Cap = CP * rho * LoopDeltaTemp * 0.5, ! - <none>
+  SET {8350f270-85e3-4827-8883-3683997f0ae3} = 0.0, ! - <none>
+  SET {596054f3-5c00-4614-ac61-26966f361a0d} = PCUD_Cap, ! - <none>
+  SET {8b144b63-95ec-4674-9ed4-ce125185f107} = 0.9 * PCUD_Cap; ! - <none>
 
 OS:EnergyManagementSystem:ProgramCallingManager,
-  {ed6aa426-ea38-46ce-8516-535c5f313ef1}, !- Handle
+  {599addbb-a3dc-49a5-a228-654376bb48ce}, !- Handle
   PCUD_InitProgramCallingManager,         !- Name
   UserDefinedComponentModel,              !- EnergyPlus Model Calling Point
-  {309ef6e3-8ba7-4db7-b962-2304400c668d}; !- Program Name 1
+  {72044f72-33e7-4b86-aed0-39c8acf2f9dc}; !- Program Name 1
 
 OS:EnergyManagementSystem:Program,
-  {6e818187-1f4f-4e41-8cd1-439b98a35e9a}, !- Handle
+  {b52a712e-59aa-40f9-8649-cda114806841}, !- Handle
   PCUD_SimProgram,                        !- Name
-  SET {c09a1b8c-cddf-45ef-9997-1d80f442bc53} = 82.22, ! - <none> 
-  SET {1c75f6fc-55d2-471e-822d-5df49def2f4b} = 0.5; ! - <none> 
+  SET {ea36e08d-524c-4f79-842c-e3a2603d1936} = 82.22, ! - <none>
+  SET {69531b92-22ad-41e4-9446-d128320ecfcb} = 0.5; ! - <none>
 
 OS:EnergyManagementSystem:ProgramCallingManager,
-  {879ae3fc-f120-4e77-8579-04a01f351f35}, !- Handle
+  {a6ba477e-43a4-4aab-860a-e96f56861682}, !- Handle
   PCUD_SimProgramCallingManager,          !- Name
   UserDefinedComponentModel,              !- EnergyPlus Model Calling Point
-  {6e818187-1f4f-4e41-8cd1-439b98a35e9a}; !- Program Name 1 
+  {b52a712e-59aa-40f9-8649-cda114806841}; !- Program Name 1
 
