@@ -80,7 +80,18 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "${PRODUCT_NAME} Install
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "2.2.0.0"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" ""
 
-Section "SketchUpMake" SEC001
+
+Section "BCL Offline" SEC001
+  SetOutPath "$INSTDIR"
+  SetOutPath "$APPDATA"
+  File "BCL.exe"
+  SetOutPath "$APPDATA"
+  ExecWait '"$APPDATA\BCL.exe"'
+SectionEnd
+
+
+
+Section "SketchUpMake" SEC004
   SetOutPath "$INSTDIR"
   SetOutPath "$APPDATA"
   File "SketchUp2017-x64.msi"
@@ -118,10 +129,9 @@ Section "OpenStudio" SEC003
   ExecWait '"$APPDATA\OpenStudio-2.2.0.exe"'
 SectionEnd
 
-
 ;Set user variables
 Function .onSelChange
-SectionGetFlags ${SEC001} $R0
+SectionGetFlags ${SEC004} $R0
 IntOp $R0 $R0 & ${SF_SELECTED}
 
 ${If} $R0 != ${SF_SELECTED}
@@ -144,16 +154,19 @@ Function .onInit
   
   ;ReadRegStr $ISEXSIT_DOTNET_CLNT_INTSTALLED "SHCTX" "SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Client" "install"
   ;${If} $ISEXSIT_DOTNET_CLNT_INTSTALLED == ""
-  ;  StrCpy $ISEXSIT_DOTNET_CLNT_INTSTALLED "false"
-  ;${Else}
-  ;  StrCpy $ISEXSIT_DOTNET_CLNT_INTSTALLED "true"
+  ;  StrCpy $ISEXSIT_DOTNET_CLNT_INTST
+  ;  StrCpy $ISEXSIT_DOTNET_CLNT_INTSTALLEDALLED "false"
+  ;${Else} "true"
   ;${EndIf}
 
+  StrCpy $0 0
+  IntOp $0 $0 | ${SF_SELECTED}
+  SectionSetFlags ${SEC001} $0
   
   ;Set section flags
   StrCpy $0 0
   IntOp $0 $0 | ${SF_SELECTED}
-  SectionSetFlags ${SEC001} $0
+  SectionSetFlags ${SEC004} $0
   
   ; StrCpy $0 0
   ; IntOp $0 $0 | ${SF_SELECTED}
@@ -181,12 +194,14 @@ Section -Post
 	Delete '"$APPDATA\SketchUp2017-x64.msi"'
 	;Delete '"$APPDATA\EnergyPlus-8.2.0-8397c2e30b-Windows-i386.exe"'
 	Delete '"$APPDATA\OpenStudio-2.2.0.exe"'
+	Delete '"$APPDATA\bcl.exe"'
 SectionEnd
 
 ; Section descriptions
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC001} "Install SketcUpMake 64 bit"
+  !insertmacro MUI_DESCRIPTION_TEXT ${SEC004} "Install SketcUpMake 64 bit"
   ;!insertmacro MUI_DESCRIPTION_TEXT ${SEC002} "Install EnergyPlus-8.2.0-8397c2e30b 32 bit"
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC003} "Install OpenStudio 2.2.0 64 bit"
+  !insertmacro MUI_DESCRIPTION_TEXT ${SEC001} "Install BCL Offline"
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
