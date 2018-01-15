@@ -148,6 +148,10 @@ namespace detail {
 
   virtual void applySizingValues() override;
 
+  virtual std::vector<std::string> emsActuatorControlTypes() const override;
+
+  virtual std::string emsActuatorComponentType() const override;
+
     //@}
    private:
 

@@ -164,6 +164,18 @@ class MODEL_API HVACComponent : public ParentObject
 
   void applySizingValues();
 
+  /** Return the names of the available ems actuators. 
+  */
+  virtual std::vector<std::string> emsActuatorControlTypes() const;
+
+  /** Return the name of the Component Type for the purpose of 
+   * ems actuators. For instance the ems actuator component type
+   * for FanConstantVolume is simply "Fan".
+   *
+   * If there are no available actuator control types, then return an empty string.
+   */
+  virtual std::string emsActuatorComponentType() const;
+
   protected:
 
   HVACComponent(IddObjectType type,const Model& model);

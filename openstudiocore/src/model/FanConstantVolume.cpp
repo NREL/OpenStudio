@@ -476,6 +476,15 @@ namespace detail {
 
   }
 
+  std::vector<std::string> FanConstantVolume_Impl::emsActuatorControlTypes() const {
+    std::vector<std::string> types{"Fan Air Mass Flow Rate","Fan Pressure Rise","Fan Total Efficiency","Fan Autosized Air Flow Rate"};
+    return types;
+  }
+
+  std::string HVACComponent_Impl::emsActuatorComponentType() const {
+    return std::string("FAN");
+  }
+
 } // detail
 
 // create a new FanConstantVolume object in the model's workspace

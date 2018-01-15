@@ -122,6 +122,10 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
 
   virtual void applySizingValues();
 
+  virtual std::vector<std::string> emsActuatorControlTypes() const;
+
+  virtual std::string emsActuatorComponentType() const;
+
  protected:
 
   friend class Model_Impl;

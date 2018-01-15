@@ -522,6 +522,14 @@ namespace detail {
     return;
   }
 
+  std::vector<std::string> HVACComponent_Impl::emsActuatorControlTypes() const {
+    return std::vector<std::string>();
+  }
+
+  std::string HVACComponent_Impl::emsActuatorComponentType() const {
+    return std::string();
+  }
+
 } // detail
 
 HVACComponent::HVACComponent(std::shared_ptr<detail::HVACComponent_Impl> p)
@@ -605,6 +613,16 @@ void HVACComponent::autosize() {
 
 void HVACComponent::applySizingValues() {
   return getImpl<detail::HVACComponent_Impl>()->applySizingValues();
+}
+
+std::vector<std::string> HVACComponent::emsActuatorControlTypes() const
+{
+  return getImpl<detail::HVACComponent_Impl>()->emsActuatorControlTypes();
+}
+
+std::string HVACComponent::emsActuatorComponentType() const
+{
+  return getImpl<detail::HVACComponent_Impl>()->emsActuatorComponentType();
 }
 
 } // model
