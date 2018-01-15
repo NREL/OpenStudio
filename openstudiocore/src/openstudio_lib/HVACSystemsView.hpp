@@ -159,6 +159,8 @@ class HVACControlsView : public QScrollArea
   OSViewSwitcher * hvacOperationViewSwitcher;
 
   OSComboBox2 * nightCycleComboBox;
+
+  OSViewSwitcher * availabilityManagerViewSwitcher;
 };
 
 class MechanicalVentilationView : public QWidget

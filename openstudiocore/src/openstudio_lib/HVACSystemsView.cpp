@@ -385,7 +385,7 @@ HVACControlsView::HVACControlsView()
 
 
   // Add a line
-  auto line = new QFrame();
+  line = new QFrame();
   line->setFrameShape(QFrame::HLine);
   line->setFrameShadow(QFrame::Sunken);
   mainVLayout->addWidget(line);
@@ -401,7 +401,7 @@ HVACControlsView::HVACControlsView()
 
   availabilityManagerViewSwitcher = new OSViewSwitcher();
   availabilityManagerViewSwitcher->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed); // QSizePolicy::MinimumExpanding, QSizePolicy::Expanding
-  mainVLayout->addWidget(availabilityManagerViewSwitcher)
+  mainVLayout->addWidget(availabilityManagerViewSwitcher);
 }
 
 MechanicalVentilationView::MechanicalVentilationView()

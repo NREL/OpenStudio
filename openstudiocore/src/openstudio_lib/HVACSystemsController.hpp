@@ -53,6 +53,8 @@ namespace model {
 class HVACComponent;
 class AirLoopHVAC;
 class SetpointManagerScheduled;
+class PlantLoop;
+class AvailabilityManagerAssignmentList;
 
 }
 
@@ -69,6 +71,7 @@ class NoSupplyAirTempControlView;
 class NoMechanicalVentilationView;
 class ScheduledSPMView;
 class SystemAvailabilityVectorController;
+class AvailabilityManagerObjectVectorController;
 class OSDropZone;
 class FollowOATempSPMView;
 class OAResetSPMView;
@@ -188,6 +191,8 @@ class HVACControlsController : public QObject, public Nano::Observer
 
   boost::optional<model::AirLoopHVAC> airLoopHVAC() const;
 
+  boost::optional<model::PlantLoop> plantLoop() const;
+
   public slots:
 
   void updateLater();
@@ -233,6 +238,8 @@ class HVACControlsController : public QObject, public Nano::Observer
   QPointer<AirLoopHVACUnitaryHeatPumpAirToAirControlView> m_airLoopHVACUnitaryHeatPumpAirToAirControlView;
 
   QPointer<HVACSystemsController> m_hvacSystemsController;
+
+  QPointer<OSDropZone> m_availabilityManagerDropZone;
 
   bool m_dirty;
 };
@@ -361,11 +368,11 @@ class SupplyAirTempScheduleVectorController : public ModelObjectVectorController
 
 class AvailabilityManagerObjectVectorController : public ModelObjectVectorController
 {
-  Q_OBJECT
+  Q_OBJECT;
 
  public:
 
-  AvailabilityManagerObjectVectorController(QWidget * parentWidget);
+  AvailabilityManagerObjectVectorController();
 
   virtual ~AvailabilityManagerObjectVectorController()  { delete m_reportItemsMutex; }
 
@@ -373,8 +380,9 @@ class AvailabilityManagerObjectVectorController : public ModelObjectVectorContro
 
   void detach();
 
-  boost::optional<model::Loop> currentLoop() const;
+  boost::optional<model::PlantLoop> currentLoop();
 
+  boost::optional<model::AvailabilityManagerAssignmentList> avmList();
 
  public slots:
 
@@ -384,9 +392,9 @@ class AvailabilityManagerObjectVectorController : public ModelObjectVectorContro
 
  protected:
 
-  // virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle) override;
+  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle) override;
 
-  // virtual void onDataChange(const model::ModelObject& modelObject) override;
+  virtual void onDataChange(const model::ModelObject& modelObject) override;
 
   virtual std::vector<OSItemId> makeVector() override;
 
@@ -396,7 +404,7 @@ class AvailabilityManagerObjectVectorController : public ModelObjectVectorContro
 
   virtual void onDrop(const OSItemId& itemId) override;
 
-private:
+ private:
 
   bool m_reportScheduled;
 
