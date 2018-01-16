@@ -71,7 +71,7 @@ class MODEL_API ExternalInterfaceSchedule : public Schedule {
   /** @name Setters */
   //@{
 
-  void setInitialValue(double initialValue);
+  bool setInitialValue(double initialValue);
 
   void setExportToBCVTB(bool exportToBCVTB);
 
@@ -107,4 +107,3 @@ typedef std::vector<ExternalInterfaceSchedule> ExternalInterfaceScheduleVector;
 } // openstudio
 
 #endif // MODEL_EXTERNALINTERFACESCHEDULE_HPP
-

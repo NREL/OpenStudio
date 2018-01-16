@@ -79,7 +79,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setInitialValue(double initialValue);
+    bool setInitialValue(double initialValue);
 
     void setExportToBCVTB(bool exportToBCVTB);
 
@@ -101,4 +101,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_EXTERNALINTERFACEVARIABLE_IMPL_HPP
-

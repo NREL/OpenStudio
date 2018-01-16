@@ -83,9 +83,9 @@ namespace detail {
     return -9999;
   }
 
-  void ExternalInterfaceVariable_Impl::setInitialValue(double initialValue) {
+  bool ExternalInterfaceVariable_Impl::setInitialValue(double initialValue) {
     bool result = setDouble(OS_ExternalInterface_VariableFields::InitialValue, initialValue);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool ExternalInterfaceVariable_Impl::exportToBCVTB() const {
@@ -135,8 +135,8 @@ double ExternalInterfaceVariable::initialValue() const {
   return getImpl<detail::ExternalInterfaceVariable_Impl>()->initialValue();
 }
 
-void ExternalInterfaceVariable::setInitialValue(double initialValue) {
-  getImpl<detail::ExternalInterfaceVariable_Impl>()->setInitialValue(initialValue);
+bool ExternalInterfaceVariable::setInitialValue(double initialValue) {
+  return getImpl<detail::ExternalInterfaceVariable_Impl>()->setInitialValue(initialValue);
 }
 
 bool ExternalInterfaceVariable::exportToBCVTB() const {
@@ -163,4 +163,3 @@ ExternalInterfaceVariable::ExternalInterfaceVariable(std::shared_ptr<detail::Ext
 
 } // model
 } // openstudio
-

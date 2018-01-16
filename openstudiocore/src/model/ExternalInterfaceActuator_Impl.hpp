@@ -91,7 +91,7 @@ namespace detail {
 
     bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
 
-    void setOptionalInitialValue(double optionalInitialValue);
+    bool setOptionalInitialValue(double optionalInitialValue);
 
     void resetOptionalInitialValue();
 
@@ -115,4 +115,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_EXTERNALINTERFACEACTUATOR_IMPL_HPP
-

@@ -90,7 +90,7 @@ namespace detail {
 
     virtual bool resetScheduleTypeLimits() override;
 
-    void setInitialValue(double initialValue);
+    bool setInitialValue(double initialValue);
 
     void setExportToBCVTB(bool exportToBCVTB);
 
@@ -115,4 +115,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_EXTERNALINTERFACESCHEDULE_IMPL_HPP
-

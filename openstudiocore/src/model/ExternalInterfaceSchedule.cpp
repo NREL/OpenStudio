@@ -132,9 +132,9 @@ namespace detail {
     return false;
   }
 
-  void ExternalInterfaceSchedule_Impl::setInitialValue(double initialValue) {
+  bool ExternalInterfaceSchedule_Impl::setInitialValue(double initialValue) {
     bool result = setDouble(OS_ExternalInterface_ScheduleFields::InitialValue, initialValue);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool ExternalInterfaceSchedule_Impl::exportToBCVTB() const {
@@ -192,8 +192,8 @@ double ExternalInterfaceSchedule::initialValue() const {
 }
 
 
-void ExternalInterfaceSchedule::setInitialValue(double initialValue) {
-  getImpl<detail::ExternalInterfaceSchedule_Impl>()->setInitialValue(initialValue);
+bool ExternalInterfaceSchedule::setInitialValue(double initialValue) {
+  return getImpl<detail::ExternalInterfaceSchedule_Impl>()->setInitialValue(initialValue);
 }
 
 bool ExternalInterfaceSchedule::exportToBCVTB() const {
@@ -220,4 +220,3 @@ ExternalInterfaceSchedule::ExternalInterfaceSchedule(std::shared_ptr<detail::Ext
 
 } // model
 } // openstudio
-

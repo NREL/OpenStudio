@@ -120,9 +120,9 @@ namespace detail {
     return result;
   }
 
-  void ExternalInterfaceActuator_Impl::setOptionalInitialValue(double optionalInitialValue) {
+  bool ExternalInterfaceActuator_Impl::setOptionalInitialValue(double optionalInitialValue) {
     bool result = setDouble(OS_ExternalInterface_ActuatorFields::OptionalInitialValue, optionalInitialValue);
-    OS_ASSERT(result);
+    return result;
   }
 
   void ExternalInterfaceActuator_Impl::resetOptionalInitialValue() {
@@ -229,8 +229,8 @@ bool ExternalInterfaceActuator::setActuatedComponentControlType(const std::strin
   return getImpl<detail::ExternalInterfaceActuator_Impl>()->setActuatedComponentControlType(actuatedComponentControlType);
 }
 
-void ExternalInterfaceActuator::setOptionalInitialValue(double optionalInitialValue) {
-  getImpl<detail::ExternalInterfaceActuator_Impl>()->setOptionalInitialValue(optionalInitialValue);
+bool ExternalInterfaceActuator::setOptionalInitialValue(double optionalInitialValue) {
+  return getImpl<detail::ExternalInterfaceActuator_Impl>()->setOptionalInitialValue(optionalInitialValue);
 }
 
 void ExternalInterfaceActuator::resetOptionalInitialValue() {
@@ -261,4 +261,3 @@ ExternalInterfaceActuator::ExternalInterfaceActuator(std::shared_ptr<detail::Ext
 
 } // model
 } // openstudio
-

@@ -96,9 +96,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ExternalInterfaceFunctionalMockupUnitExportToVariable_Impl::setInitialValue(double initialValue) {
+  bool ExternalInterfaceFunctionalMockupUnitExportToVariable_Impl::setInitialValue(double initialValue) {
     bool result = setDouble(OS_ExternalInterface_FunctionalMockupUnitExport_To_VariableFields::InitialValue, initialValue);
-    OS_ASSERT(result);
+    return result;
   }
 
 } // detail
@@ -130,8 +130,8 @@ void ExternalInterfaceFunctionalMockupUnitExportToVariable::setFMUVariableName(c
   getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToVariable_Impl>()->setFMUVariableName(fMUVariableName);
 }
 
-void ExternalInterfaceFunctionalMockupUnitExportToVariable::setInitialValue(double initialValue) {
-  getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToVariable_Impl>()->setInitialValue(initialValue);
+bool ExternalInterfaceFunctionalMockupUnitExportToVariable::setInitialValue(double initialValue) {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToVariable_Impl>()->setInitialValue(initialValue);
 }
 
 /// @cond
@@ -142,4 +142,3 @@ ExternalInterfaceFunctionalMockupUnitExportToVariable::ExternalInterfaceFunction
 
 } // model
 } // openstudio
-

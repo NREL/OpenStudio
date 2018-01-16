@@ -85,7 +85,7 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitExportToActuator : public M
 
   void setFMUVariableName(const std::string& fMUVariableName);
 
-  void setInitialValue(double initialValue);
+  bool setInitialValue(double initialValue);
 
   //@}
   /** @name Other */
@@ -117,4 +117,3 @@ typedef std::vector<ExternalInterfaceFunctionalMockupUnitExportToActuator> Exter
 } // openstudio
 
 #endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITEXPORTTOACTUATOR_HPP
-

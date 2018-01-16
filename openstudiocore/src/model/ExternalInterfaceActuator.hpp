@@ -83,7 +83,7 @@ class MODEL_API ExternalInterfaceActuator : public ModelObject {
 
   bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
 
-  void setOptionalInitialValue(double optionalInitialValue);
+  bool setOptionalInitialValue(double optionalInitialValue);
 
   void resetOptionalInitialValue();
 
@@ -121,4 +121,3 @@ typedef std::vector<ExternalInterfaceActuator> ExternalInterfaceActuatorVector;
 } // openstudio
 
 #endif // MODEL_EXTERNALINTERFACEACTUATOR_HPP
-
