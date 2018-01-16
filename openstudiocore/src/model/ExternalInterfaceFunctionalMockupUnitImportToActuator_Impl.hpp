@@ -102,7 +102,7 @@ namespace detail {
 
     void setFMUVariableName(const std::string& fMUVariableName);
 
-    void setInitialValue(double initialValue);
+    bool setInitialValue(double initialValue);
 
     //@}
     /** @name Other */
@@ -121,4 +121,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOACTUATOR_IMPL_HPP
-
