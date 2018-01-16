@@ -152,6 +152,8 @@ namespace detail {
 
   virtual std::string emsActuatorComponentType() const override;
 
+  virtual std::vector<std::string> emsInternalVariables() const override;
+
     //@}
    private:
 

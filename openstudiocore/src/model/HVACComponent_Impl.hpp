@@ -125,6 +125,8 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
   virtual std::vector<std::string> emsActuatorControlTypes() const;
 
   virtual std::string emsActuatorComponentType() const;
+  
+  virtual std::vector<std::string> emsInternalVariables() const;
 
  protected:
 

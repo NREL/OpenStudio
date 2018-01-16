@@ -101,7 +101,9 @@ namespace detail {
     {
       result.push_back("Fan Electric Power");
       result.push_back("Fan Rise in Air Temperature");
+      result.push_back("Fan Heat Gain to Air");
       result.push_back("Fan Electric Energy");
+      result.push_back("Fan Air Mass Flow Rate");
       result.push_back("Fan Runtime Fraction");
     }
     return result;
@@ -520,6 +522,20 @@ namespace detail {
       setMaximumFlowRate(val.get());
     }
 
+  }
+
+  std::vector<std::string> FanOnOff_Impl::emsActuatorControlTypes() const {
+    std::vector<std::string> types{"Fan Air Mass Flow Rate", "Fan Pressure Rise", "Fan Total Efficiency", "Fan Autosized Air Flow Rate"};
+    return types;
+  }
+
+  std::string FanOnOff_Impl::emsActuatorComponentType() const {
+    return std::string("FAN");
+  }
+
+  std::vector<std::string> FanOnOff_Impl::emsInternalVariables() const {
+    std::vector<std::string> types{"Fan Maximum Mass Flow Rate", "Fan Nominal Pressure Rise", "Fan Nominal Total Efficiency"};
+    return types;
   }
 
 } // detail

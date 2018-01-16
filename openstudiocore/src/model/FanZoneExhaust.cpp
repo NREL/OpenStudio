@@ -86,6 +86,8 @@ namespace detail {
       result.push_back("Fan Electric Power");
       result.push_back("Fan Rise in Air Temperature");
       result.push_back("Fan Electric Energy");
+      result.push_back("Fan Heat Gain to Air");
+      result.push_back("Fan Air Mass Flow Rate");
       result.push_back("Fan Unbalanced Air Mass Flow Rate");
       result.push_back("Fan Balanced Air Mass Flow Rate");
     }
@@ -323,6 +325,20 @@ namespace detail {
   void FanZoneExhaust_Impl::resetBalancedExhaustFractionSchedule() {
     bool result = setString(OS_Fan_ZoneExhaustFields::BalancedExhaustFractionScheduleName, "");
     OS_ASSERT(result);
+  }
+
+  std::vector<std::string> FanZoneExhaust_Impl::emsActuatorControlTypes() const {
+    std::vector<std::string> types{"Fan Air Mass Flow Rate", "Fan Pressure Rise", "Fan Total Efficiency", "Fan Autosized Air Flow Rate"};
+    return types;
+  }
+
+  std::string FanZoneExhaust_Impl::emsActuatorComponentType() const {
+    return std::string("FAN");
+  }
+
+  std::vector<std::string> FanZoneExhaust_Impl::emsInternalVariables() const {
+    std::vector<std::string> types{"Fan Maximum Mass Flow Rate", "Fan Nominal Pressure Rise", "Fan Nominal Total Efficiency"};
+    return types;
   }
 
 } // detail

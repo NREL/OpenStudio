@@ -99,7 +99,9 @@ namespace detail {
     {
       result.push_back("Fan Electric Power");
       result.push_back("Fan Rise in Air Temperature");
+      result.push_back("Fan Heat Gain to Air");
       result.push_back("Fan Electric Energy");
+      result.push_back("Fan Air Mass Flow Rate");
     }
     return result;
   }
@@ -481,8 +483,13 @@ namespace detail {
     return types;
   }
 
-  std::string HVACComponent_Impl::emsActuatorComponentType() const {
+  std::string FanConstantVolume_Impl::emsActuatorComponentType() const {
     return std::string("FAN");
+  }
+
+  std::vector<std::string> FanConstantVolume_Impl::emsInternalVariables() const {
+    std::vector<std::string> types{"Fan Maximum Mass Flow Rate", "Fan Nominal Pressure Rise", "Fan Nominal Total Efficiency"};
+    return types;
   }
 
 } // detail

@@ -176,6 +176,10 @@ class MODEL_API HVACComponent : public ParentObject
    */
   virtual std::string emsActuatorComponentType() const;
 
+  /** Return the names of the available ems internal variables.
+  */
+  virtual std::vector<std::string> emsInternalVariables() const;
+
   protected:
 
   HVACComponent(IddObjectType type,const Model& model);
