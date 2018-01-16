@@ -140,14 +140,14 @@ namespace detail {
     return isEmpty(OS_ExternalInterface_ActuatorFields::ExportToBCVTB);
   }
 
-  void ExternalInterfaceActuator_Impl::setExportToBCVTB(bool exportToBCVTB) {
+  bool ExternalInterfaceActuator_Impl::setExportToBCVTB(bool exportToBCVTB) {
     bool result = false;
     if (exportToBCVTB) {
       result = setString(OS_ExternalInterface_ActuatorFields::ExportToBCVTB, "True");
     } else {
       result = setString(OS_ExternalInterface_ActuatorFields::ExportToBCVTB, "False");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void ExternalInterfaceActuator_Impl::resetExportToBCVTB() {
@@ -245,8 +245,8 @@ bool ExternalInterfaceActuator::isExportToBCVTBDefaulted() const {
   return getImpl<detail::ExternalInterfaceActuator_Impl>()->isExportToBCVTBDefaulted();
 }
 
-void ExternalInterfaceActuator::setExportToBCVTB(bool exportToBCVTB) {
-  getImpl<detail::ExternalInterfaceActuator_Impl>()->setExportToBCVTB(exportToBCVTB);
+bool ExternalInterfaceActuator::setExportToBCVTB(bool exportToBCVTB) {
+  return getImpl<detail::ExternalInterfaceActuator_Impl>()->setExportToBCVTB(exportToBCVTB);
 }
 
 void ExternalInterfaceActuator::resetExportToBCVTB() {

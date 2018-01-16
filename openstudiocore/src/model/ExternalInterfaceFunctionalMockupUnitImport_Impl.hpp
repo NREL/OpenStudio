@@ -87,7 +87,7 @@ namespace detail {
 
     void resetFMUTimeout();
 
-    void setFMULoggingOn(int fMULoggingOn);
+    bool setFMULoggingOn(int fMULoggingOn);
 
     void resetFMULoggingOn();
 

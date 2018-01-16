@@ -110,7 +110,7 @@ class MODEL_API OutputVariable : public ModelObject {
 
   void resetSchedule();
 
-  void setExportToBCVTB(bool exportToBCVTB);
+  bool setExportToBCVTB(bool exportToBCVTB);
 
   void resetExportToBCVTB();
 

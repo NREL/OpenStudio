@@ -95,7 +95,7 @@ namespace detail {
 
     void resetOptionalInitialValue();
 
-    void setExportToBCVTB(bool exportToBCVTB);
+    bool setExportToBCVTB(bool exportToBCVTB);
 
     void resetExportToBCVTB();
 

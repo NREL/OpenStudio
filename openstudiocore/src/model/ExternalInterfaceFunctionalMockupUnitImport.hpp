@@ -77,7 +77,7 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImport : public ModelObject
 
   void resetFMUTimeout();
 
-  void setFMULoggingOn(int fMULoggingOn);
+  bool setFMULoggingOn(int fMULoggingOn);
 
   void resetFMULoggingOn();
 

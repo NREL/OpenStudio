@@ -73,7 +73,7 @@ class MODEL_API ExternalInterfaceSchedule : public Schedule {
 
   bool setInitialValue(double initialValue);
 
-  void setExportToBCVTB(bool exportToBCVTB);
+  bool setExportToBCVTB(bool exportToBCVTB);
 
   void resetExportToBCVTB();
 

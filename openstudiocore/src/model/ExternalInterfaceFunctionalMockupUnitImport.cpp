@@ -109,9 +109,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ExternalInterfaceFunctionalMockupUnitImport_Impl::setFMULoggingOn(int fMULoggingOn) {
+  bool ExternalInterfaceFunctionalMockupUnitImport_Impl::setFMULoggingOn(int fMULoggingOn) {
     bool result = setInt(OS_ExternalInterface_FunctionalMockupUnitImportFields::FMULoggingOn, fMULoggingOn);
-    OS_ASSERT(result);
+    return result;
   }
 
   void ExternalInterfaceFunctionalMockupUnitImport_Impl::resetFMULoggingOn() {
@@ -175,8 +175,8 @@ void ExternalInterfaceFunctionalMockupUnitImport::resetFMUTimeout() {
   getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->resetFMUTimeout();
 }
 
-void ExternalInterfaceFunctionalMockupUnitImport::setFMULoggingOn(int fMULoggingOn) {
-  getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->setFMULoggingOn(fMULoggingOn);
+bool ExternalInterfaceFunctionalMockupUnitImport::setFMULoggingOn(int fMULoggingOn) {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->setFMULoggingOn(fMULoggingOn);
 }
 
 void ExternalInterfaceFunctionalMockupUnitImport::resetFMULoggingOn() {

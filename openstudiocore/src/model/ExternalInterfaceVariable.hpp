@@ -71,7 +71,7 @@ class MODEL_API ExternalInterfaceVariable : public ModelObject {
 
   bool setInitialValue(double initialValue);
 
-  void setExportToBCVTB(bool exportToBCVTB);
+  bool setExportToBCVTB(bool exportToBCVTB);
 
   void resetExportToBCVTB();
 

@@ -87,7 +87,7 @@ class MODEL_API ExternalInterfaceActuator : public ModelObject {
 
   void resetOptionalInitialValue();
 
-  void setExportToBCVTB(bool exportToBCVTB);
+  bool setExportToBCVTB(bool exportToBCVTB);
 
   void resetExportToBCVTB();
 
