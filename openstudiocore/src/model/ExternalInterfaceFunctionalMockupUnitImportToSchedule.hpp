@@ -84,7 +84,7 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImportToSchedule : public S
 
   void setFMUVariableName(const std::string& fMUVariableName);
 
-  void setInitialValue(double initialValue);
+  bool setInitialValue(double initialValue);
 
   //@}
   /** @name Other */
@@ -116,4 +116,3 @@ typedef std::vector<ExternalInterfaceFunctionalMockupUnitImportToSchedule> Exter
 } // openstudio
 
 #endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOSCHEDULE_HPP
-

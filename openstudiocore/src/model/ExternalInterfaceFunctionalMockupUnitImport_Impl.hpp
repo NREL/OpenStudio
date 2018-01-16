@@ -83,7 +83,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setFMUTimeout(double fMUTimeout);
+    bool setFMUTimeout(double fMUTimeout);
 
     void resetFMUTimeout();
 
@@ -109,4 +109,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORT_IMPL_HPP
-

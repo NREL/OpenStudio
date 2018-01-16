@@ -99,9 +99,9 @@ namespace detail {
     return isEmpty(OS_ExternalInterface_FunctionalMockupUnitImportFields::FMULoggingOn);
   }
 
-  void ExternalInterfaceFunctionalMockupUnitImport_Impl::setFMUTimeout(double fMUTimeout) {
+  bool ExternalInterfaceFunctionalMockupUnitImport_Impl::setFMUTimeout(double fMUTimeout) {
     bool result = setDouble(OS_ExternalInterface_FunctionalMockupUnitImportFields::FMUTimeout, fMUTimeout);
-    OS_ASSERT(result);
+    return result;
   }
 
   void ExternalInterfaceFunctionalMockupUnitImport_Impl::resetFMUTimeout() {
@@ -167,8 +167,8 @@ bool ExternalInterfaceFunctionalMockupUnitImport::isFMULoggingOnDefaulted() cons
   return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->isFMULoggingOnDefaulted();
 }
 
-void ExternalInterfaceFunctionalMockupUnitImport::setFMUTimeout(double fMUTimeout) {
-  getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->setFMUTimeout(fMUTimeout);
+bool ExternalInterfaceFunctionalMockupUnitImport::setFMUTimeout(double fMUTimeout) {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->setFMUTimeout(fMUTimeout);
 }
 
 void ExternalInterfaceFunctionalMockupUnitImport::resetFMUTimeout() {
@@ -199,4 +199,3 @@ ExternalInterfaceFunctionalMockupUnitImport::ExternalInterfaceFunctionalMockupUn
 
 } // model
 } // openstudio
-

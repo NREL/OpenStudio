@@ -101,7 +101,7 @@ namespace detail {
 
     void setFMUVariableName(const std::string& fMUVariableName);
 
-    void setInitialValue(double initialValue);
+    bool setInitialValue(double initialValue);
 
     // ensure that this object does not contain the date 2/29
     virtual void ensureNoLeapDays() override;
@@ -123,4 +123,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOSCHEDULE_IMPL_HPP
-
