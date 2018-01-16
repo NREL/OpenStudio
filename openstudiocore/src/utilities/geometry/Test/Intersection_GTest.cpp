@@ -1398,7 +1398,7 @@ TEST_F(GeometryFixture, simplify)
 
   auto area = getArea(points);
   ASSERT_TRUE(area);
-  
+
   Point3dVector points2 = simplify(points, false, tol);
 
   auto area2 = getArea(points2);
@@ -1505,7 +1505,7 @@ TEST_F(GeometryFixture, simplify2)
 
   auto area = getArea(points);
   ASSERT_TRUE(area);
-  
+
   Point3dVector points2 = simplify(points, false, tol);
 
   auto area2 = getArea(points2);
@@ -1523,7 +1523,7 @@ TEST_F(GeometryFixture, simplify2)
   expectedPoints.push_back(Point3d(158, 98, 0));
   expectedPoints.push_back(Point3d(158, 70, 0));
   expectedPoints.push_back(Point3d(158, 40, 0));
-  
+
   auto area3 = getArea(expectedPoints);
   ASSERT_TRUE(area3);
 
@@ -1570,7 +1570,7 @@ TEST_F(GeometryFixture, simplify3)
 
   auto area = getArea(points);
   ASSERT_TRUE(area);
-  
+
   Point3dVector points2 = simplify(points, false, tol);
 
   auto area2 = getArea(points2);
@@ -1599,7 +1599,7 @@ TEST_F(GeometryFixture, simplify3)
   expectedPoints.push_back(Point3d(158, 120, 0));
   expectedPoints.push_back(Point3d(158, 108, 0));
   expectedPoints.push_back(Point3d(158, 89, 0));
-  
+
   auto area3 = getArea(expectedPoints);
   ASSERT_TRUE(area3);
 
@@ -1631,9 +1631,9 @@ TEST_F(GeometryFixture, simplify4)
 
   auto area = getArea(points);
   ASSERT_TRUE(area);
-  
+
   Point3dVector points2 = simplify(points, false, tol);
-  
+
   std::cout << points2 << std::endl << std::endl;
 
   auto area2 = getArea(points2);
@@ -1648,7 +1648,7 @@ TEST_F(GeometryFixture, simplify4)
   expectedPoints.push_back(Point3d(158, 21, 0));
   expectedPoints.push_back(Point3d(113, 21, 0));
   expectedPoints.push_back(Point3d(113, 120, 0));
-  
+
   auto area3 = getArea(expectedPoints);
   ASSERT_TRUE(area3);
 

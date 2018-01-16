@@ -290,7 +290,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
       idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::CoolingCoilObjectType,_coolingCoil->iddObject().name());
 
       // CoolingCoilObjectName
-      
+
       idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::CoolingCoilObjectName,_coolingCoil->name().get());
 
       std::string coolingCoilInletNodeName;
@@ -314,7 +314,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
       idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingCoilObjectType,_heatingCoil->iddObject().name());
 
       // HeatingCoilObjectName
-      
+
       idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingCoilObjectName,_heatingCoil->name().get());
 
       if( coolingCoil ) {

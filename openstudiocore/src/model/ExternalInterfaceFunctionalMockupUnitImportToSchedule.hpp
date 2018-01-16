@@ -51,7 +51,7 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImportToSchedule : public S
   /** @name Constructors and Destructors */
   //@{
 
-  explicit ExternalInterfaceFunctionalMockupUnitImportToSchedule(const Model& model, 
+  explicit ExternalInterfaceFunctionalMockupUnitImportToSchedule(const Model& model,
                                                                  const ExternalInterfaceFunctionalMockupUnitImport& fMUFile,
                                                                  const std::string& fMUInstanceName,
                                                                  const std::string& fMUVariableName,

@@ -174,7 +174,7 @@ namespace detail {
 
     virtual void applySizingValues() override;
 
-  private:    
+  private:
 
     REGISTER_LOGGER("openstudio.model.CoilCoolingWater");
 

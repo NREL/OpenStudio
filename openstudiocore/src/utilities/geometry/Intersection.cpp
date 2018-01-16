@@ -40,10 +40,10 @@
 #include <boost/geometry/geometries/ring.hpp>
 #include <boost/geometry/multi/geometries/multi_polygon.hpp>
 #include <boost/geometry/geometries/adapted/boost_tuple.hpp>
-#include <boost/geometry/strategies/cartesian/point_in_poly_franklin.hpp> 
-#include <boost/geometry/strategies/cartesian/point_in_poly_crossings_multiply.hpp> 
-#include <boost/geometry/algorithms/within.hpp> 
-#include <boost/geometry/algorithms/simplify.hpp> 
+#include <boost/geometry/strategies/cartesian/point_in_poly_franklin.hpp>
+#include <boost/geometry/strategies/cartesian/point_in_poly_crossings_multiply.hpp>
+#include <boost/geometry/algorithms/within.hpp>
+#include <boost/geometry/algorithms/simplify.hpp>
 
 typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
 typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
@@ -1132,7 +1132,7 @@ namespace openstudio{
 
     return boost::none;
   }
-  
+
   std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeCollinear, double tol)
   {
     std::vector<Point3d> allPoints;
@@ -1155,7 +1155,7 @@ namespace openstudio{
     if (!bp){
       return std::vector<Point3d>();
     }
- 
+
     BoostPolygon out;
 
     // this uses the Douglas-Peucker algorithm with a max difference of 0 so no non-collinear points will be removed

@@ -134,7 +134,7 @@ namespace detail {
     boost::optional<CoilHeatingGasMultiStage> parentCoil;
     auto coilHeatingGasMultiStages = this->model().getConcreteModelObjects<CoilHeatingGasMultiStage>();
     for (const auto & coilInModel : coilHeatingGasMultiStages) {
-      // Check the coil performance objects in this coil to see if one of them is this object       
+      // Check the coil performance objects in this coil to see if one of them is this object
       std::vector< CoilHeatingGasMultiStageStageData> perfStages = coilInModel.stages();
       int i = 1;
       for (auto perfStage : perfStages) {

@@ -31,7 +31,7 @@
 
   // Ignore outdoor air node for now
   %ignore openstudio::model::Model::outdoorAirNode;
-  
+
   // should be able to do something here as C# supports partial classes
   // http://www.swig.org/Doc1.3/CSharp.html#csharp_extending_proxy_class
   %typemap(csclassmodifiers) openstudio::model::Model "public partial class"
@@ -110,7 +110,7 @@ class Node;
 %feature("valuewrapper") SpaceType;
 %feature("valuewrapper") Node;
 
-// templates 
+// templates
 %ignore std::vector<openstudio::model::ModelObject>::vector(size_type);
 %ignore std::vector<openstudio::model::ModelObject>::resize(size_type);
 %template(ModelObjectVector)std::vector<openstudio::model::ModelObject>;

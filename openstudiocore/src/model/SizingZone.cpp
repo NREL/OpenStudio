@@ -965,7 +965,7 @@ namespace detail {
       return result;
     }
 
-    // Query the Intialization Summary -> Zone Sizing DOAS Inputs Information table to get 
+    // Query the Intialization Summary -> Zone Sizing DOAS Inputs Information table to get
     // the row names that contains information for this component.
     std::stringstream rowsQuery;
     rowsQuery << "SELECT RowName ";
@@ -1034,7 +1034,7 @@ namespace detail {
       return result;
     }
 
-    // Query the Intialization Summary -> Zone Sizing DOAS Inputs Information table to get 
+    // Query the Intialization Summary -> Zone Sizing DOAS Inputs Information table to get
     // the row names that contains information for this component.
     std::stringstream rowsQuery;
     rowsQuery << "SELECT RowName ";

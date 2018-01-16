@@ -175,7 +175,7 @@ namespace openstudio
 
       // add new shadingSurfaceGroups
       for (const auto& newShadingSurfaceGroup : newSpace.shadingSurfaceGroups()){
-        
+
         // check if this already merged via a window clone
         if (m_newMergedHandles.find(newShadingSurfaceGroup.handle()) != m_newMergedHandles.end()){
           continue;

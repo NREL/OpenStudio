@@ -194,13 +194,13 @@ SWIG_MODELOBJECT(LightingSimulationZone, 1);
 
     using System;
     using System.Runtime.InteropServices;
-    
+
     public partial class Model : Workspace {
       public SpaceType plenumSpaceType()
       {
         return OpenStudio.OpenStudioModelGeometry.getPlenumSpaceType(this);
       }
-    }  
+    }
 
     public partial class SpaceType : ResourceObject {
       public SpaceVector spaces()

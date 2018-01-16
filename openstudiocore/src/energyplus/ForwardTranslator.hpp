@@ -757,19 +757,19 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateEvaporativeFluidCoolerTwoSpeed( model::EvaporativeFluidCoolerTwoSpeed & modelObject  );
 
   boost::optional<IdfObject> translateExteriorLights(model::ExteriorLights& modelObject );
-  
+
   boost::optional<IdfObject> translateExternalInterface(model::ExternalInterface& modelObject );
-    
+
   boost::optional<IdfObject> translateExternalInterfaceActuator(model::ExternalInterfaceActuator& modelObject );
-  
+
   boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitExportFromVariable(model::ExternalInterfaceFunctionalMockupUnitExportFromVariable& modelObject );
-    
+
   boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitExportToActuator(model::ExternalInterfaceFunctionalMockupUnitExportToActuator& modelObject );
-      
+
   boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitExportToSchedule(model::ExternalInterfaceFunctionalMockupUnitExportToSchedule& modelObject );
 
   boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitExportToVariable(model::ExternalInterfaceFunctionalMockupUnitExportToVariable& modelObject );
-    
+
   boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitImport(model::ExternalInterfaceFunctionalMockupUnitImport& modelObject );
 
   boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitImportFromVariable(model::ExternalInterfaceFunctionalMockupUnitImportFromVariable& modelObject );
@@ -779,7 +779,7 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitImportToSchedule(model::ExternalInterfaceFunctionalMockupUnitImportToSchedule& modelObject );
 
   boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitImportToVariable(model::ExternalInterfaceFunctionalMockupUnitImportToVariable& modelObject );
-  
+
   boost::optional<IdfObject> translateExternalInterfaceSchedule(model::ExternalInterfaceSchedule& modelObject);
 
   boost::optional<IdfObject> translateExternalInterfaceVariable(model::ExternalInterfaceVariable& modelObject);
@@ -868,7 +868,7 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateLuminaire( model::Luminaire & modelObject );
 
   boost::optional<IdfObject> translateMaterialPropertyGlazingSpectralData( model::MaterialPropertyGlazingSpectralData & modelObject );
-  
+
   boost::optional<IdfObject> translateMaterialPropertyMoisturePenetrationDepthSettings( model::MaterialPropertyMoisturePenetrationDepthSettings & modelObject );
 
   boost::optional<IdfObject> translateMaterialPropertyMoisturePenetrationDepthSettings( model::MaterialPropertyMoisturePenetrationDepthSettings & modelObject );

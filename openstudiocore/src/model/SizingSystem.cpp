@@ -663,10 +663,10 @@ bool SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
 
   boost::optional<double> SizingSystem_Impl::autosizedDesignOutdoorAirFlowRate() const {
     boost::optional<double> result;
-    
+
     // Get the parent AirLoopHVAC
     boost::optional<AirLoopHVAC> parAirLoop = airLoopHVAC();
-    
+
     // Get the OA system
     boost::optional<AirLoopHVACOutdoorAirSystem> oaSys = parAirLoop->airLoopHVACOutdoorAirSystem();
     if (!oaSys) {
@@ -680,9 +680,9 @@ bool SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
     return oaController.getAutosizedValue("Maximum Outdoor Air Flow Rate", "m3/s");
   }
 
-  boost::optional<double> SizingSystem_Impl::autosizedCoolingDesignCapacity() const {     
+  boost::optional<double> SizingSystem_Impl::autosizedCoolingDesignCapacity() const {
     boost::optional < double > result;
-    
+
     std::string capacityType = "Cooling";
 
     // Get the parent AirLoopHVAC
@@ -705,7 +705,7 @@ bool SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
       return result;
     }
 
-    // Query the Intialization Summary -> System Sizing Information table to get 
+    // Query the Intialization Summary -> System Sizing Information table to get
     // the row names that contains information for this component.
     std::stringstream rowsQuery;
     rowsQuery << "SELECT RowName ";
@@ -789,7 +789,7 @@ bool SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
       return result;
     }
 
-    // Query the Intialization Summary -> System Sizing Information table to get 
+    // Query the Intialization Summary -> System Sizing Information table to get
     // the row names that contains information for this component.
     std::stringstream rowsQuery;
     rowsQuery << "SELECT RowName ";

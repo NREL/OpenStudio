@@ -516,7 +516,7 @@ SWIG_MODELOBJECT(SolarCollectorPerformancePhotovoltaicThermalSimple, 1);
       {
         return OpenStudio.OpenStudioModelHVAC.getOutdoorAirNode(this);
       }
-    }  
+    }
 
     public partial class Building : ParentObject {
       public ThermalZoneVector thermalZones()

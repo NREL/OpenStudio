@@ -287,7 +287,7 @@ namespace detail {
     return false;
   }
 
- 
+
   boost::optional<double> CoilHeatingWaterBaseboard_Impl::autosizedHeatingDesignCapacity() const {
     boost::optional < double > result;
     // Get the containing ZoneHVAC equipment and get its autosized value

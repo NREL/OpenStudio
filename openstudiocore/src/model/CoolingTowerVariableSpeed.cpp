@@ -732,13 +732,13 @@ namespace detail {
 
     return false;
   }
-  
+
   std::string CoolingTowerVariableSpeed_Impl::endUseSubcategory() const {
     auto value = getString(OS_CoolingTower_VariableSpeedFields::EndUseSubcategory,true);
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   bool CoolingTowerVariableSpeed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
     return setString(OS_CoolingTower_VariableSpeedFields::EndUseSubcategory,endUseSubcategory);
   }

@@ -173,7 +173,7 @@ TEST_F(ModelFixture, EMSSensorOutVar) {
 
   outvar1.remove();
   EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<EnergyManagementSystemSensor>().size());
-  
+
 }
 
 

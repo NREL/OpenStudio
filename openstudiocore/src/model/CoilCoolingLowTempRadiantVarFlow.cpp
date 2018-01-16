@@ -341,7 +341,7 @@ namespace detail {
         result = zoneHVAC;
         break;
       }
-     
+
     }
 
     // Warn if this coil was not found inside a ZoneHVACLowTempRadiantVarFlow

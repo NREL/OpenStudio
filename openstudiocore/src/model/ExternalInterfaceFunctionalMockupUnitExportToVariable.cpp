@@ -103,8 +103,8 @@ namespace detail {
 
 } // detail
 
-ExternalInterfaceFunctionalMockupUnitExportToVariable::ExternalInterfaceFunctionalMockupUnitExportToVariable(const Model& model, 
-                                                                                                             const std::string& fMUVariableName, 
+ExternalInterfaceFunctionalMockupUnitExportToVariable::ExternalInterfaceFunctionalMockupUnitExportToVariable(const Model& model,
+                                                                                                             const std::string& fMUVariableName,
                                                                                                              double initialValue)
   : ModelObject(ExternalInterfaceFunctionalMockupUnitExportToVariable::iddObjectType(),model)
 {

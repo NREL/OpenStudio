@@ -1888,21 +1888,21 @@ if (_className::iddObjectType() == typeToCreate) { \
         modelObj->autosize();
       } else if (auto modelObj = optModelObj.optionalCast<Loop>()) { // Loop
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<SizingZone>()) { // SizingZone 
+      } else if (auto modelObj = optModelObj.optionalCast<SizingZone>()) { // SizingZone
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<SizingSystem>()) { // SizingSystem 
+      } else if (auto modelObj = optModelObj.optionalCast<SizingSystem>()) { // SizingSystem
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<ControllerOutdoorAir>()) { // ControllerOutdoorAir 
+      } else if (auto modelObj = optModelObj.optionalCast<ControllerOutdoorAir>()) { // ControllerOutdoorAir
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR 
+      } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXMultiSpeedStageData>()) { // CoilCoolingDXMultiSpeedStageData 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXMultiSpeedStageData>()) { // CoilCoolingDXMultiSpeedStageData
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilPerformanceDXCooling>()) { // CoilPerformanceDXCooling 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilPerformanceDXCooling>()) { // CoilPerformanceDXCooling
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) { // CoilHeatingDXMultiSpeedStageData 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) { // CoilHeatingDXMultiSpeedStageData
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) { // CoilHeatingGasMultiStageStageData 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) { // CoilHeatingGasMultiStageStageData
         modelObj->autosize();
       }
     }
@@ -1915,21 +1915,21 @@ if (_className::iddObjectType() == typeToCreate) { \
         modelObj->applySizingValues();
       } else if (auto modelObj = optModelObj.optionalCast<Loop>()) { // Loop
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<SizingZone>()) { // SizingZone 
+      } else if (auto modelObj = optModelObj.optionalCast<SizingZone>()) { // SizingZone
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<SizingSystem>()) { // SizingSystem 
+      } else if (auto modelObj = optModelObj.optionalCast<SizingSystem>()) { // SizingSystem
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<ControllerOutdoorAir>()) { // ControllerOutdoorAir 
+      } else if (auto modelObj = optModelObj.optionalCast<ControllerOutdoorAir>()) { // ControllerOutdoorAir
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR 
+      } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXMultiSpeedStageData>()) { // CoilCoolingDXMultiSpeedStageData 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXMultiSpeedStageData>()) { // CoilCoolingDXMultiSpeedStageData
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilPerformanceDXCooling>()) { // CoilPerformanceDXCooling 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilPerformanceDXCooling>()) { // CoilPerformanceDXCooling
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) { // CoilHeatingDXMultiSpeedStageData 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) { // CoilHeatingDXMultiSpeedStageData
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) { // CoilHeatingGasMultiStageStageData 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) { // CoilHeatingGasMultiStageStageData
         modelObj->applySizingValues();
       }
     }

@@ -49,7 +49,7 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImportFromVariable : public
   /** @name Constructors and Destructors */
   //@{
 
-   explicit ExternalInterfaceFunctionalMockupUnitImportFromVariable(const Model& model, 
+   explicit ExternalInterfaceFunctionalMockupUnitImportFromVariable(const Model& model,
                                                                     const std::string& outputVariableIndexKeyName,
                                                                     const std::string& outputVariableName,
                                                                     const ExternalInterfaceFunctionalMockupUnitImport& fMUFile,

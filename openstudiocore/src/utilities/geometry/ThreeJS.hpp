@@ -167,7 +167,7 @@ namespace openstudio{
     /// ShadingSurfaces {"SiteShading", "BuildingShading", "SpaceShading"}
     /// InteriorPartitionSurfaces {"InteriorPartitionSurface"}
     /// DaylightingControl {"DaylightingControl"}
-    std::string surfaceType() const; 
+    std::string surfaceType() const;
     std::string surfaceTypeMaterialName() const;
 
     /// Construction name if any

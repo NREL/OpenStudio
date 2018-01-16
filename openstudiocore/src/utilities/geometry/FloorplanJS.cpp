@@ -279,8 +279,8 @@ namespace openstudio{
     return result;
   }
 
-  std::string FloorplanJS::makeSurface(const Json::Value& story, const Json::Value& space, const std::string& parentSurfaceName, const std::string& parentSubSurfaceName, 
-    bool belowFloorPlenum, bool aboveCeilingPlenum, const std::string& surfaceType, const Point3dVector& vertices, size_t faceFormat, 
+  std::string FloorplanJS::makeSurface(const Json::Value& story, const Json::Value& space, const std::string& parentSurfaceName, const std::string& parentSubSurfaceName,
+    bool belowFloorPlenum, bool aboveCeilingPlenum, const std::string& surfaceType, const Point3dVector& vertices, size_t faceFormat,
     std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren, double illuminanceSetpoint) const
   {
     bool plenum = false;
@@ -440,7 +440,7 @@ namespace openstudio{
     return faceId;
   }
 
-  void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& space, 
+  void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& space,
     bool belowFloorPlenum, bool aboveCeilingPlenum, double lengthToMeters, double minZ, double maxZ,
     const Json::Value& vertices, const Json::Value& edges, const Json::Value& faces, const std::string& faceId,
     bool openstudioFormat, std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren) const
@@ -452,7 +452,7 @@ namespace openstudio{
 
     const Json::Value windowDefinitions = m_value.get("window_definitions", Json::arrayValue);
     const Json::Value daylightingControlDefinitions = m_value.get("daylighting_control_definitions", Json::arrayValue);
-    
+
     // get all the windows on this story
     std::map<std::string, std::vector<Json::Value> > edgeIdToWindowsMap;
     for (const auto& window : story.get("windows", Json::arrayValue)){
@@ -648,7 +648,7 @@ namespace openstudio{
                 Point3d window1 = windowCenterVertices[windowIdx] + widthVector;
                 widthVector.setLength(-0.5*width);
                 Point3d window2 = windowCenterVertices[windowIdx] + widthVector;
-                
+
                 Point3dVector windowVertices;
                 windowVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight + height));
                 windowVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight));
@@ -660,7 +660,7 @@ namespace openstudio{
 
                 if (checkKeyAndType(*windowDefinition, "overhang_projection_factor", Json::realValue) || checkKeyAndType(*windowDefinition, "overhang_projection_factor", Json::intValue)){
                   double projectionFactor = windowDefinition->get("overhang_projection_factor", 0.0).asDouble();
-                  
+
                   if (projectionFactor > 0){
                     Vector3d outVector = crossVector;
                     outVector.setLength(projectionFactor*height);
@@ -681,7 +681,7 @@ namespace openstudio{
 
                 if (checkKeyAndType(*windowDefinition, "fin_projection_factor", Json::realValue) || checkKeyAndType(*windowDefinition, "fin_projection_factor", Json::intValue)){
                   double projectionFactor  = windowDefinition->get("fin_projection_factor", 0.0).asDouble();
-                  
+
                   if (projectionFactor > 0){
                     Vector3d outVector = crossVector;
                     outVector.setLength(projectionFactor*height);
@@ -727,7 +727,7 @@ namespace openstudio{
                 Point3dVector daylightingVertices; // not populated
                 Point3dVector exteriorShadingVertices;
                 Point3dVector interiorShelfVertices; // not populated
-                
+
                 bool test = applyViewAndDaylightingGlassRatios(wwr, 0.0, sillHeight, 0.0, projectionFactor, 0.0, wallVertices, viewVertices, daylightingVertices, exteriorShadingVertices, interiorShelfVertices);
                 if (test)
                 {
@@ -742,7 +742,7 @@ namespace openstudio{
                   }
                 }
               }
-              
+
             }
 
             mappedWindows.insert(windowIdx);
@@ -792,7 +792,7 @@ namespace openstudio{
 
         assertKeyAndType(*vertex, "x", Json::realValue);
         assertKeyAndType(*vertex, "y", Json::realValue);
-        
+
 
         const Json::Value* daylightingControlDefinition = findById(daylightingControlDefinitions, daylightingControlDefinitionId);
         if (daylightingControlDefinition){
@@ -812,7 +812,7 @@ namespace openstudio{
         }
       }
     }
-    
+
   }
 
   ThreeModelObjectMetadata FloorplanJS::makeModelObjectMetadata(const std::string& iddObjectType, const Json::Value& object) const

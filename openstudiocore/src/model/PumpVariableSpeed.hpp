@@ -304,7 +304,7 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
   bool setSkinLossRadiativeFraction(double skinLossRadiativeFraction);
 
   double designMinimumFlowRateFraction() const;
-  
+
   bool setDesignMinimumFlowRateFraction(double designMinimumFlowRateFraction);
 
   //@}

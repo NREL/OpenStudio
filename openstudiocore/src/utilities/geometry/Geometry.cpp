@@ -763,7 +763,7 @@ namespace openstudio{
         }
       }
     }
-    
+
     if (doDaylightGlass){
       daylightingVertices.push_back(Point3d(daylightingMinX, daylightingMinY + daylightingHeight, 0));
       daylightingVertices.push_back(Point3d(daylightingMinX, daylightingMinY, 0));

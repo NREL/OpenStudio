@@ -178,17 +178,17 @@ namespace openstudio
       return typeOrder;
     }
 
-    bool sortModelObjectMetadata(const ThreeModelObjectMetadata &lhs, const ThreeModelObjectMetadata &rhs) { 
+    bool sortModelObjectMetadata(const ThreeModelObjectMetadata &lhs, const ThreeModelObjectMetadata &rhs) {
       unsigned leftTypeOrder = getIddObjectTypeOrder(lhs.iddObjectType());
       unsigned rightTypeOrder = getIddObjectTypeOrder(rhs.iddObjectType());
 
       if (leftTypeOrder == rightTypeOrder){
         return lhs.name() < rhs.name();
       }
-      return leftTypeOrder < rightTypeOrder; 
+      return leftTypeOrder < rightTypeOrder;
     }
 
-    
+
     unsigned getUserDataSurfaceTypeOrder(const std::string& userDataSurfaceType){
 
     /// surfaceType is overloaded as a more general type:
@@ -215,18 +215,18 @@ namespace openstudio
       return typeOrder;
     }
 
-    bool sortSceneChildren(const ThreeSceneChild &lhs, const ThreeSceneChild &rhs) { 
+    bool sortSceneChildren(const ThreeSceneChild &lhs, const ThreeSceneChild &rhs) {
       unsigned leftTypeOrder = getIddObjectTypeOrder(lhs.userData().surfaceType());
       unsigned rightTypeOrder = getIddObjectTypeOrder(rhs.userData().surfaceType());
 
       if (leftTypeOrder == rightTypeOrder){
         return lhs.userData().name() < rhs.userData().name();
       }
-      return leftTypeOrder < rightTypeOrder; 
+      return leftTypeOrder < rightTypeOrder;
     }
 
-    
-    
+
+
     boost::optional<Model> ThreeJSReverseTranslator::modelFromThreeJS(const ThreeScene& scene)
     {
       m_logSink.setThreadId(QThread::currentThread());

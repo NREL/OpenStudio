@@ -745,27 +745,27 @@ namespace detail {
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   bool PumpConstantSpeed_Impl::setDesignPowerSizingMethod(const std::string & designPowerSizingMethod) {
     return setString(OS_Pump_ConstantSpeedFields::DesignPowerSizingMethod,designPowerSizingMethod);
   }
-  
+
   double PumpConstantSpeed_Impl::designElectricPowerPerUnitFlowRate() const {
     auto value = getDouble(OS_Pump_ConstantSpeedFields::DesignElectricPowerperUnitFlowRate,true);
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   bool PumpConstantSpeed_Impl::setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate) {
     return setDouble(OS_Pump_ConstantSpeedFields::DesignElectricPowerperUnitFlowRate,designElectricPowerPerUnitFlowRate);
   }
-  
+
   double PumpConstantSpeed_Impl::designShaftPowerPerUnitFlowRatePerUnitHead() const {
     auto value = getDouble(OS_Pump_ConstantSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead,true);
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   bool PumpConstantSpeed_Impl::setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead) {
     return setDouble(OS_Pump_ConstantSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead,designShaftPowerPerUnitFlowRatePerUnitHead);
   }

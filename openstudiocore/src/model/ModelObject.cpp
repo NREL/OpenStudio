@@ -655,7 +655,7 @@ namespace detail {
       boost::optional<CoilCoolingDXTwoStageWithHumidityControlMode> parentCoil;
       auto coilTwoSpdHumCtrls = this->model().getConcreteModelObjects<CoilCoolingDXTwoStageWithHumidityControlMode>();
       for (const auto & coilInModel : coilTwoSpdHumCtrls) {
-        // Check the coil performance objects in this coil to see if one of them is this object       
+        // Check the coil performance objects in this coil to see if one of them is this object
         auto coilPerf = coilInModel.normalModeStage1CoilPerformance();
         if (coilPerf) {
           if (coilPerf->handle() == this->handle()) {
@@ -688,7 +688,7 @@ namespace detail {
           }
         }
       }
-      
+
       if (!parentCoil) {
         LOG(Warn, "The CoilPerformance:DX:Cooling object called " + sqlName + " does not have a parent CoilCoolingDXTwoStageWithHumidityControlMode, cannot retrieve the autosized value.");
         return result;
@@ -707,7 +707,7 @@ namespace detail {
       return result;
     }
 
-    // Query the Intialization Summary -> Component Sizing table to get 
+    // Query the Intialization Summary -> Component Sizing table to get
     // the row names that contains information for this component.
     std::stringstream rowsQuery;
     rowsQuery << "SELECT RowName ";

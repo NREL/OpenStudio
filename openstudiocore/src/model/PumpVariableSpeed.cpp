@@ -1096,27 +1096,27 @@ namespace detail {
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   bool PumpVariableSpeed_Impl::setDesignPowerSizingMethod(const std::string & designPowerSizingMethod) {
     return setString(OS_Pump_VariableSpeedFields::DesignPowerSizingMethod,designPowerSizingMethod);
   }
-  
+
   double PumpVariableSpeed_Impl::designElectricPowerPerUnitFlowRate() const {
     auto value = getDouble(OS_Pump_VariableSpeedFields::DesignElectricPowerperUnitFlowRate,true);
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   bool PumpVariableSpeed_Impl::setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate) {
     return setDouble(OS_Pump_VariableSpeedFields::DesignElectricPowerperUnitFlowRate,designElectricPowerPerUnitFlowRate);
   }
-  
+
   double PumpVariableSpeed_Impl::designShaftPowerPerUnitFlowRatePerUnitHead() const {
     auto value = getDouble(OS_Pump_VariableSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead,true);
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   bool PumpVariableSpeed_Impl::setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead) {
     return setDouble(OS_Pump_VariableSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead,designShaftPowerPerUnitFlowRatePerUnitHead);
   }
@@ -1136,7 +1136,7 @@ namespace detail {
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   bool PumpVariableSpeed_Impl::setSkinLossRadiativeFraction(double skinLossRadiativeFraction) {
     return setDouble(OS_Pump_VariableSpeedFields::SkinLossRadiativeFraction,skinLossRadiativeFraction);
   }

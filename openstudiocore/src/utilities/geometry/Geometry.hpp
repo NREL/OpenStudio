@@ -106,8 +106,8 @@ namespace openstudio{
                                                         double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
                                                         double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor,
                                                         const std::vector<Point3d>& surfaceVertices, std::vector<Point3d>& viewVertices,
-                                                        std::vector<Point3d>& daylightingVertices, std::vector<Point3d>& exteriorShadingVertices, 
-                                                        std::vector<Point3d>& interiorShelfVertices); 
+                                                        std::vector<Point3d>& daylightingVertices, std::vector<Point3d>& exteriorShadingVertices,
+                                                        std::vector<Point3d>& interiorShelfVertices);
 
 } // openstudio
 

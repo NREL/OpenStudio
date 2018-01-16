@@ -80,7 +80,7 @@ namespace detail {
     virtual std::vector<IdfObject> remove() override;
 
     virtual unsigned inletPort() const override;
-   
+
     virtual unsigned outletPort() const override;
 
     virtual bool addToNode(Node & node) override;
