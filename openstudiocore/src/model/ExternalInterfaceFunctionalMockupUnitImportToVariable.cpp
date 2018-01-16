@@ -114,14 +114,14 @@ namespace detail {
     return result;
   }
 
-  void ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl::setFMUInstanceName(const std::string& fMUInstanceName) {
+  bool ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl::setFMUInstanceName(const std::string& fMUInstanceName) {
     bool result = setString(OS_ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::FMUInstanceName, fMUInstanceName);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl::setFMUVariableName(const std::string& fMUVariableName) {
+  bool ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl::setFMUVariableName(const std::string& fMUVariableName) {
     bool result = setString(OS_ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::FMUVariableName, fMUVariableName);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl::setInitialValue(double initialValue) {
@@ -175,12 +175,12 @@ bool ExternalInterfaceFunctionalMockupUnitImportToVariable::setFMUFile(const Ext
   return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl>()->setFMUFile(fMUFile);
 }
 
-void ExternalInterfaceFunctionalMockupUnitImportToVariable::setFMUInstanceName(const std::string& fMUInstanceName) {
-  getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl>()->setFMUInstanceName(fMUInstanceName);
+bool ExternalInterfaceFunctionalMockupUnitImportToVariable::setFMUInstanceName(const std::string& fMUInstanceName) {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl>()->setFMUInstanceName(fMUInstanceName);
 }
 
-void ExternalInterfaceFunctionalMockupUnitImportToVariable::setFMUVariableName(const std::string& fMUVariableName) {
-  getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl>()->setFMUVariableName(fMUVariableName);
+bool ExternalInterfaceFunctionalMockupUnitImportToVariable::setFMUVariableName(const std::string& fMUVariableName) {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl>()->setFMUVariableName(fMUVariableName);
 }
 
 bool ExternalInterfaceFunctionalMockupUnitImportToVariable::setInitialValue(double initialValue) {

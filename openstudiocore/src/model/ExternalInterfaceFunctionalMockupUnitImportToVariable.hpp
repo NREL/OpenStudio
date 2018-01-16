@@ -80,9 +80,9 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImportToVariable : public M
 
   bool setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile);
 
-  void setFMUInstanceName(const std::string& fMUInstanceName);
+  bool setFMUInstanceName(const std::string& fMUInstanceName);
 
-  void setFMUVariableName(const std::string& fMUVariableName);
+  bool setFMUVariableName(const std::string& fMUVariableName);
 
   bool setInitialValue(double initialValue);
 

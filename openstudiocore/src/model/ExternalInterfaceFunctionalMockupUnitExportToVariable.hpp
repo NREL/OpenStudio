@@ -67,7 +67,7 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitExportToVariable : public M
   /** @name Setters */
   //@{
 
-  void setFMUVariableName(const std::string& fMUVariableName);
+  bool setFMUVariableName(const std::string& fMUVariableName);
 
   bool setInitialValue(double initialValue);
 

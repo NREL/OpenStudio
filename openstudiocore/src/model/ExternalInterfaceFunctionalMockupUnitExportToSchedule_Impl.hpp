@@ -88,7 +88,7 @@ namespace detail {
 
     virtual bool resetScheduleTypeLimits() override;
 
-    void setFMUVariableName(const std::string& fMUVariableName);
+    bool setFMUVariableName(const std::string& fMUVariableName);
 
     bool setInitialValue(double initialValue);
 
