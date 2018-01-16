@@ -96,17 +96,8 @@ namespace detail {
 
   const std::vector<std::string>& FanOnOff_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Fan Electric Power");
-      result.push_back("Fan Rise in Air Temperature");
-      result.push_back("Fan Heat Gain to Air");
-      result.push_back("Fan Electric Energy");
-      result.push_back("Fan Air Mass Flow Rate");
-      result.push_back("Fan Runtime Fraction");
-    }
-    return result;
+    static std::vector<std::string> results{"Fan Electric Power", "Fan Rise in Air Temperature", "Fan Heat Gain to Air", "Fan Electric Energy", "Fan Air Mass Flow Rate", "Fan Runtime Fraction"};
+    return results;
   }
 
   IddObjectType FanOnOff_Impl::iddObjectType() const
