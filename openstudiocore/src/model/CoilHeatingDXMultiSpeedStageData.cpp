@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -35,6 +35,7 @@
 #include "Model_Impl.hpp"
 #include "CurveBiquadratic.hpp"
 #include "CurveQuadratic.hpp"
+#include "../model/CoilHeatingDXMultiSpeed_Impl.hpp"
 
 #include <utilities/idd/OS_Coil_Heating_DX_MultiSpeed_StageData_FieldEnums.hxx>
 
@@ -287,6 +288,86 @@ namespace detail {
     return t_clone;
   }
 
+  boost::optional<std::tuple<int, CoilHeatingDXMultiSpeed>> CoilHeatingDXMultiSpeedStageData_Impl::stageIndexAndParentCoil() const {
+
+    boost::optional<std::tuple<int, CoilHeatingDXMultiSpeed>> result;
+
+    // This coil performance object can only be found in a CoilCoolingDXMultiSpeed
+    // Check all CoilCoolingDXMultiSpeeds in the model, seeing if this is inside of one of them.
+    boost::optional<int> stageIndex;
+    boost::optional<CoilHeatingDXMultiSpeed> parentCoil;
+    auto coilCoolingDXMultiSpeeds = this->model().getConcreteModelObjects<CoilHeatingDXMultiSpeed>();
+    for (const auto & coilInModel : coilCoolingDXMultiSpeeds) {
+      // Check the coil performance objects in this coil to see if one of them is this object       
+      std::vector<CoilHeatingDXMultiSpeedStageData> perfStages = coilInModel.stages();
+      int i = 1;
+      for (auto perfStage : perfStages) {
+        if (perfStage.handle() == this->handle()) {
+          stageIndex = i;
+          parentCoil = coilInModel;
+          break;
+        }
+        i++;
+      }
+    }
+
+    // Warn if this coil performance object was not found inside a coil
+    if (!parentCoil) {
+      LOG(Warn, name().get() + " was not found inside a CoilHeatingDXMultiSpeed in the model, cannot retrieve the autosized value.");
+      return result;
+    }
+
+    return std::make_tuple(stageIndex.get(), parentCoil.get());
+  }
+
+
+  boost::optional<double> CoilHeatingDXMultiSpeedStageData_Impl::autosizedGrossRatedHeatingCapacity() const {
+    auto indexAndNameOpt = stageIndexAndParentCoil();
+    boost::optional<double> result;
+    if (!indexAndNameOpt) {
+      return result;
+    }
+    auto indexAndName = indexAndNameOpt.get();
+    int index = std::get<0>(indexAndName);
+    CoilHeatingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
+    std::string sqlField = "Speed " + std::to_string(index) + " Design Size Rated Total Heating Capacity";
+
+    return parentCoil.getAutosizedValue(sqlField, "W");
+  }
+
+  boost::optional<double> CoilHeatingDXMultiSpeedStageData_Impl::autosizedRatedAirFlowRate() const {
+    auto indexAndNameOpt = stageIndexAndParentCoil();
+    boost::optional<double> result;
+    if (!indexAndNameOpt) {
+      return result;
+    }
+    auto indexAndName = indexAndNameOpt.get();
+    int index = std::get<0>(indexAndName);
+    CoilHeatingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
+    std::string sqlField = "Speed " + std::to_string(index) + " Design Size Rated Air Flow Rate";
+
+    return parentCoil.getAutosizedValue(sqlField, "m3/s");
+  }
+
+  void CoilHeatingDXMultiSpeedStageData_Impl::autosize() {
+    autosizeGrossRatedHeatingCapacity();
+    autosizeRatedAirFlowRate();
+  }
+
+  void CoilHeatingDXMultiSpeedStageData_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedGrossRatedHeatingCapacity();
+    if (val) {
+      setGrossRatedHeatingCapacity(val.get());
+    }
+
+    val = autosizedRatedAirFlowRate();
+    if (val) {
+      setRatedAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilHeatingDXMultiSpeedStageData::CoilHeatingDXMultiSpeedStageData(const Model& model)
@@ -521,6 +602,26 @@ CoilHeatingDXMultiSpeedStageData::CoilHeatingDXMultiSpeedStageData(std::shared_p
   : ParentObject(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> CoilHeatingDXMultiSpeedStageData::autosizedGrossRatedHeatingCapacity() const {
+    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->autosizedGrossRatedHeatingCapacity();
+  }
+
+  boost::optional<double> CoilHeatingDXMultiSpeedStageData::autosizedRatedAirFlowRate() const {
+    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->autosizedRatedAirFlowRate();
+  }
+
+  void CoilHeatingDXMultiSpeedStageData::autosize() {
+    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->autosize();
+  }
+
+  void CoilHeatingDXMultiSpeedStageData::applySizingValues() {
+    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->applySizingValues();
+  }
+
+  boost::optional<std::tuple<int, CoilHeatingDXMultiSpeed>> CoilHeatingDXMultiSpeedStageData::stageIndexAndParentCoil() const {
+    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->stageIndexAndParentCoil();
+  }
 
 } // model
 } // openstudio

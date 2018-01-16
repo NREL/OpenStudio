@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -46,7 +46,6 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
  public:
 
-
   ChillerElectricEIR_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
   ChillerElectricEIR_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -73,6 +72,8 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
   virtual const std::vector<std::string> & outputVariableNames() const override;
 
   virtual bool addToNode(Node & node) override;
+
+  virtual bool removeFromSecondaryPlantLoop() override;
 
   virtual unsigned supplyInletPort() override;
 
@@ -180,6 +181,16 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
   bool isBasinHeaterSetpointTemperatureDefaulted() const;
 
   boost::optional<Schedule> basinHeaterSchedule() const;
+
+  boost::optional<double> autosizedReferenceCapacity() const ;
+
+  boost::optional<double> autosizedReferenceChilledWaterFlowRate() const ;
+
+  boost::optional<double> autosizedReferenceCondenserFluidFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
 
   //@}
   /** @name Setters */

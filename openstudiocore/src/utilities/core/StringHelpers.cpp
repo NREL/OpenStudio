@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -109,26 +109,42 @@ std::string toNeatString(double value,
                          unsigned numFractionalDigits,
                          bool applyCommas)
 {
-  std::stringstream ss;
-  ss << std::fixed << std::setprecision(numFractionalDigits) << value;
-  std::string result = ss.str();
-  if (applyCommas) {
-    boost::smatch m;
-    bool ok = boost::regex_match(result,
-                                 m,
-                                 boost::regex("(-?[0-9]{1,3})([0-9]{3})*(\\.[0-9]+|$)"),
-                                 boost::match_extra);
-    OS_ASSERT(ok);
-    ss.str("");
-    ss << std::string(m[1].first,m[1].second);
-    for (std::string::const_iterator start = m[1].second; start != m[3].first; ) {
-      std::string::const_iterator end = start;
-      ++(++(++end));
-      ss << "," << std::string(start,end);
-      start = end;
+
+  std::string result;
+
+  if (std::isinf(value)) {
+    if (value > 0) {
+      result = "+Inf";
+    } else {
+      result = "-Inf";
     }
-    ss << std::string(m[3].first,m[3].second);
+  } else if (std::isnan(value)) {
+    result = "NaN";
+
+  } else {
+
+    std::stringstream ss;
+    ss << std::fixed << std::setprecision(numFractionalDigits) << value;
     result = ss.str();
+
+    if (applyCommas) {
+      boost::smatch m;
+      bool ok = boost::regex_match(result,
+          m,
+          boost::regex("(-?[0-9]{1,3})([0-9]{3})*(\\.[0-9]+|$)"),
+          boost::match_extra);
+      OS_ASSERT(ok);
+      ss.str("");
+      ss << std::string(m[1].first,m[1].second);
+      for (std::string::const_iterator start = m[1].second; start != m[3].first; ) {
+        std::string::const_iterator end = start;
+        ++(++(++end));
+        ss << "," << std::string(start,end);
+        start = end;
+      }
+      ss << std::string(m[3].first,m[3].second);
+      result = ss.str();
+    }
   }
   return result;
 }

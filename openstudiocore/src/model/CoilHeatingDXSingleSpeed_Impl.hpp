@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -157,6 +157,16 @@ class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
   bool isResistiveDefrostHeaterCapacityDefaulted() const;
 
   bool isResistiveDefrostHeaterCapacityAutosized() const;
+
+  boost::optional<double> autosizedRatedTotalHeatingCapacity() const ;
+
+  boost::optional<double> autosizedRatedAirFlowRate() const ;
+
+  boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
 
   //@}
   /** @name Setters */

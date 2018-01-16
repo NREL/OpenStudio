@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -294,6 +294,9 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
    *  used by this object, return value will be .empty(). Used to maintain compatibility between schedule's
    *  ScheduleTypeLimits and how schedule is used by other objects. */
   std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+
+  /** Gets the autosized component value from the sql file **/
+  boost::optional<double> getAutosizedValue(std::string valueName, std::string unitString) const;
 
   //@}
   /** @name HVAC System Connections */

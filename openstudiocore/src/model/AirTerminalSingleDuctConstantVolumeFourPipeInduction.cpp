@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -85,7 +85,9 @@ namespace detail {
   const std::vector<std::string>& AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not Appropriate: No Specific output for this object
     }
     return result;
   }
@@ -290,6 +292,9 @@ namespace detail {
 
     HVACComponent coilHeatingClone = this->heatingCoil().clone(model).cast<HVACComponent>();
     airTerminalCVFourPipeInductionClone.setHeatingCoil(coilHeatingClone);
+
+    // Reset the inducedAirInletPort (inletPort and outletPort are already handled by the StraightComponent_Impl::clone() method)
+    airTerminalCVFourPipeInductionClone.setString(airTerminalCVFourPipeInductionClone.inducedAirInletPort(),"");
 
     return airTerminalCVFourPipeInductionClone;
   }
@@ -571,6 +576,43 @@ namespace detail {
     return OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::InducedAirInletNodeName;
   }
 
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::autosizedMaximumTotalAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Total Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::autosizedMaximumHotWaterFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Hot Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::autosizedMaximumColdWaterFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Cold Water Flow Rate", "m3/s");
+  }
+
+  void AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::autosize() {
+    autosizeMaximumTotalAirFlowRate();
+    autosizeMaximumHotWaterFlowRate();
+    autosizeMaximumColdWaterFlowRate();
+  }
+
+  void AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumTotalAirFlowRate();
+    if (val) {
+      setMaximumTotalAirFlowRate(val.get());
+    }
+
+    val = autosizedMaximumHotWaterFlowRate();
+    if (val) {
+      setMaximumHotWaterFlowRate(val.get());
+    }
+
+    val = autosizedMaximumColdWaterFlowRate();
+    if (val) {
+      setMaximumColdWaterFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 AirTerminalSingleDuctConstantVolumeFourPipeInduction::AirTerminalSingleDuctConstantVolumeFourPipeInduction(const Model& model, HVACComponent& heatingCoil)
@@ -772,6 +814,18 @@ AirTerminalSingleDuctConstantVolumeFourPipeInduction::AirTerminalSingleDuctConst
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeInduction::autosizedMaximumTotalAirFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->autosizedMaximumTotalAirFlowRate();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeInduction::autosizedMaximumHotWaterFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->autosizedMaximumHotWaterFlowRate();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeInduction::autosizedMaximumColdWaterFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->autosizedMaximumColdWaterFlowRate();
+  }
 
 } // model
 } // openstudio

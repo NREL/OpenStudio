@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -65,13 +65,13 @@ using namespace openstudio::model;
 //Test construction of the GeneratorMicroTurbine, then check that fields in default constructor
 //are being set to the expected values
 TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
-  
+
   //create a model to use in testing this code.
   Model model;
-  
+
   // test constructor for Generator:MicroTurbine
   GeneratorMicroTurbine mchp = GeneratorMicroTurbine(model);
-  
+
   // Test default values that I've set in the constructors
   // Reference Electrical Power Output
   ASSERT_EQ(65000, mchp.referenceElectricalPowerOutput());
@@ -82,21 +82,21 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   ASSERT_EQ(0.29, mchp.referenceElectricalEfficiencyUsingLowerHeatingValue());
   mchp.setReferenceElectricalEfficiencyUsingLowerHeatingValue(0.35);
   ASSERT_EQ(0.35, mchp.referenceElectricalEfficiencyUsingLowerHeatingValue());
-  
+
   // Check that the curves have been properly defaulted
-  
+
   //ElectricalPowerFunctionofTemperatureandElevationCurve Name
   ASSERT_EQ(1.2027697,mchp.electricalPowerFunctionofTemperatureandElevationCurve().cast<CurveBiquadratic>().coefficient1Constant());
   ASSERT_EQ(8.797885E-07,mchp.electricalPowerFunctionofTemperatureandElevationCurve().cast<CurveBiquadratic>().coefficient6xTIMESY());
-  
+
   //ElectricalEfficiencyFunctionofTemperatureCurve
   ASSERT_EQ(1.0402217,mchp.electricalEfficiencyFunctionofTemperatureCurve().cast<CurveCubic>().coefficient1Constant());
   ASSERT_EQ(5.133175E-07,mchp.electricalEfficiencyFunctionofTemperatureCurve().cast<CurveCubic>().coefficient4xPOW3());
-  
+
   //ElectricalEfficiencyFunctionofPartLoadRatioCurve
   ASSERT_EQ(0.215290,mchp.electricalEfficiencyFunctionofPartLoadRatioCurve().cast<CurveCubic>().coefficient1Constant());
   ASSERT_EQ(1.497306,mchp.electricalEfficiencyFunctionofPartLoadRatioCurve().cast<CurveCubic>().coefficient4xPOW3());
-  
+
   // Check curve setters
   // Test curve setters to see if set at the right place
   CurveBiquadratic elecPowerFTempElevation(model);
@@ -114,20 +114,20 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
     elecEffFPLR.setCoefficient2x(0.3);
     elecEffFPLR.setCoefficient3xPOW2(0.03);
     mchp.setElectricalEfficiencyFunctionofPartLoadRatioCurve(elecEffFPLR);
-    
+
   // Verify the setter
   ASSERT_EQ(1,mchp.electricalPowerFunctionofTemperatureandElevationCurve().cast<CurveBiquadratic>().coefficient1Constant());
   ASSERT_EQ(2,mchp.electricalEfficiencyFunctionofTemperatureCurve().cast<CurveCubic>().coefficient1Constant());
   ASSERT_EQ(3,mchp.electricalEfficiencyFunctionofPartLoadRatioCurve().cast<CurveCubic>().coefficient1Constant());
 
-  
+
   // Test defaulted values
   EXPECT_FALSE(mchp.availabilitySchedule());
   Schedule schedule = model.alwaysOnDiscreteSchedule();
   EXPECT_TRUE(mchp.setAvailabilitySchedule(schedule));
   ASSERT_TRUE(mchp.availabilitySchedule());
-  
-  
+
+
   EXPECT_TRUE(mchp.isMinimumFullLoadElectricalPowerOutputDefaulted());
   EXPECT_EQ(0.0, mchp.minimumFullLoadElectricalPowerOutput());
   mchp.setMinimumFullLoadElectricalPowerOutput(10);
@@ -135,7 +135,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   EXPECT_FALSE(mchp.isMinimumFullLoadElectricalPowerOutputDefaulted());
   mchp.resetMinimumFullLoadElectricalPowerOutput();
   EXPECT_TRUE(mchp.isMinimumFullLoadElectricalPowerOutputDefaulted());
-  
+
   // Maximum Full Load Electrical Power Output => defaulted to referenceElectricalPowerOutput
   EXPECT_TRUE(mchp.isMaximumFullLoadElectricalPowerOutputDefaulted());
   EXPECT_EQ(mchp.referenceElectricalPowerOutput(), mchp.maximumFullLoadElectricalPowerOutput());
@@ -144,7 +144,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   EXPECT_FALSE(mchp.isMaximumFullLoadElectricalPowerOutputDefaulted());
   mchp.resetMaximumFullLoadElectricalPowerOutput();
   EXPECT_TRUE(mchp.isMaximumFullLoadElectricalPowerOutputDefaulted());
-  
+
   // Reference Combustion Air Inlet Temperature defaults to 15
   EXPECT_TRUE(mchp.isReferenceCombustionAirInletTemperatureDefaulted());
   EXPECT_EQ(15.0, mchp.referenceCombustionAirInletTemperature());
@@ -153,7 +153,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   EXPECT_FALSE(mchp.isReferenceCombustionAirInletTemperatureDefaulted());
   mchp.resetReferenceCombustionAirInletTemperature();
   EXPECT_TRUE(mchp.isReferenceCombustionAirInletTemperatureDefaulted());
-  
+
   // Reference Combustion Air Inlet Humidity Ratio, defaults to 0.00638
   EXPECT_TRUE(mchp.isReferenceCombustionAirInletHumidityRatioDefaulted());
   EXPECT_EQ(0.00638, mchp.referenceCombustionAirInletHumidityRatio());
@@ -162,7 +162,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   EXPECT_FALSE(mchp.isReferenceCombustionAirInletHumidityRatioDefaulted());
   mchp.resetReferenceCombustionAirInletHumidityRatio();
   EXPECT_TRUE(mchp.isReferenceCombustionAirInletHumidityRatioDefaulted());
-  
+
   // Reference Elevation
   EXPECT_TRUE(mchp.isReferenceElevationDefaulted());
   EXPECT_EQ(0.0, mchp.referenceElevation());
@@ -171,7 +171,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   EXPECT_FALSE(mchp.isReferenceElevationDefaulted());
   mchp.resetReferenceElevation();
   EXPECT_TRUE(mchp.isReferenceElevationDefaulted());
-  
+
   //Fuel Type
   EXPECT_TRUE(mchp.isFuelTypeDefaulted());
   EXPECT_EQ("NaturalGas", mchp.fuelType());
@@ -180,7 +180,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   EXPECT_FALSE(mchp.isFuelTypeDefaulted());
   mchp.resetFuelType();
   EXPECT_TRUE(mchp.isFuelTypeDefaulted());
-  
+
   // FuelHigherHeatingValue
   // \default 50000
   EXPECT_TRUE(mchp.isFuelHigherHeatingValueDefaulted());
@@ -200,7 +200,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   EXPECT_FALSE(mchp.isFuelLowerHeatingValueDefaulted());
   mchp.resetFuelLowerHeatingValue();
   EXPECT_TRUE(mchp.isFuelLowerHeatingValueDefaulted());
-  
+
   // N10, \field Standby Power
   //   \default 0.0
   EXPECT_TRUE(mchp.isStandbyPowerDefaulted());
@@ -210,8 +210,8 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   EXPECT_FALSE(mchp.isStandbyPowerDefaulted());
   mchp.resetStandbyPower();
   EXPECT_TRUE(mchp.isStandbyPowerDefaulted());
-   
-   
+
+
   // N11, \field Ancillary Power
   //   \default 0.0
   EXPECT_TRUE(mchp.isAncillaryPowerDefaulted());
@@ -222,7 +222,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   mchp.resetAncillaryPower();
   EXPECT_TRUE(mchp.isAncillaryPowerDefaulted());
 
-  
+
   // \field Ancillary Power Function of Fuel Input Curve Name
   // \object-list QuadraticCurves
   EXPECT_FALSE(mchp.ancillaryPowerFunctionofFuelInputCurve());
@@ -233,18 +233,18 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
     EXPECT_EQ(ancPFfuelInputCurve.handle(), setCurve->handle());
   }
 
-  
+
   // Optional Generator:MicroTurbine:HeatRecovery
   // \field Generator MicroTurbine Heat Recovery Name
   // I'll check the setter and getter in a separate function where I also test all of this object
   EXPECT_FALSE(mchp.generatorMicroTurbineHeatRecovery());
-  
+
   // TODO: Check return type. From object lists, some candidates are: Connection.
   //boost::optional<Connection> combustionAirInletNode() const;
 
   // TODO: Check return type. From object lists, some candidates are: Connection.
   // boost::optional<Connection> combustionAirOutletNode() const;
-  
+
   // N12, \field Reference Exhaust Air Mass Flow Rate
   EXPECT_FALSE(mchp.referenceExhaustAirMassFlowRate());
   mchp.setReferenceExhaustAirMassFlowRate(100);
@@ -260,9 +260,9 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   if( boost::optional<Curve> setCurve = mchp.exhaustAirFlowRateFunctionofTemperatureCurve() ) {
     EXPECT_EQ(exhaustAirFlowFT.handle(), setCurve->handle());
   }
-  
-  
-  
+
+
+
 
   // A13, \field Exhaust Air Flow Rate Function of Part Load Ratio Curve Name
   // TODO: Check return type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
@@ -275,13 +275,13 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
     EXPECT_EQ(exhaustAirFlowFPLR.handle(), setCurve->handle());
   }
 
-  
+
   // N13, \field Nominal Exhaust Air Outlet Temperature
   EXPECT_FALSE(mchp.nominalExhaustAirOutletTemperature());
   mchp.setNominalExhaustAirOutletTemperature(100);
   boost::optional<double> testnomEAmdotR = mchp.nominalExhaustAirOutletTemperature();
   EXPECT_EQ((*testnomEAmdotR),100);
-  
+
   // A14, \field Exhaust Air Temperature Function of Temperature Curve Name
   // TODO: Check return type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
   EXPECT_FALSE(mchp.exhaustAirTemperatureFunctionofPartLoadRatioCurve());
@@ -291,32 +291,31 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   if( boost::optional<Curve> setCurve = mchp.exhaustAirTemperatureFunctionofPartLoadRatioCurve() ) {
     EXPECT_EQ(exhaustAirTempFPLR.handle(), setCurve->handle());
   }
-  
+
 }
 
-// TODO: Do I need to test the Generator:icroTurbine:HeatRecovery here or in its own file?
 TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
-  
+
   //create a model to use in testing this code.
   Model model;
-  
+
   // test constructor for Generator:MicroTurbine
   GeneratorMicroTurbine mchp = GeneratorMicroTurbine(model);
-  
+
   // A3, \field Heat Recovery Water Inlet Node Name
 
   //  A4, \field Heat Recovery Water Outlet Node Name
 
- 
+
   GeneratorMicroTurbineHeatRecovery mchpHR = GeneratorMicroTurbineHeatRecovery(model, mchp);
 
   // Check if the parent mchp does have this mchpHR set
   EXPECT_EQ(mchpHR, mchp.generatorMicroTurbineHeatRecovery().get());
 
-  
+
   // Check if we can get the parent mchp from the mchpHR
   EXPECT_EQ(mchp, mchpHR.generatorMicroTurbine());
- 
+
   //N1 , \field Reference Thermal Efficiency Using Lower Heat Value
   //  \default 0.0 but overriden in construction to 0.4975
   EXPECT_FALSE(mchpHR.isReferenceThermalEfficiencyUsingLowerHeatValueDefaulted());
@@ -332,7 +331,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   EXPECT_EQ(60.0, mchpHR.referenceInletWaterTemperature());
   mchpHR.setReferenceInletWaterTemperature(65);
   EXPECT_EQ(65.0, mchpHR.referenceInletWaterTemperature());
-  
+
 
   // A5 , \field Heat Recovery Water Flow Operating Mode
   //  \default PlantControl
@@ -358,9 +357,9 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   mchpHR.setHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve(hrWaterFlowFTP);
   ASSERT_TRUE(mchpHR.heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve());
   if( boost::optional<Curve> setCurve = mchpHR.heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve() ) {
-    EXPECT_EQ(hrWaterFlowFTP.handle(), setCurve->handle());  
+    EXPECT_EQ(hrWaterFlowFTP.handle(), setCurve->handle());
   }
-  
+
 
   // A7 , \field Thermal Efficiency Function of Temperature and Elevation Curve Name
   // \object-list BicubicBiquadraticCurves, BiVariateTables
@@ -370,9 +369,9 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   mchpHR.setThermalEfficiencyFunctionofTemperatureandElevationCurve(hrEffFTempElev);
   ASSERT_TRUE(mchpHR.thermalEfficiencyFunctionofTemperatureandElevationCurve());
   if( boost::optional<Curve> setCurve = mchpHR.thermalEfficiencyFunctionofTemperatureandElevationCurve() ) {
-    EXPECT_EQ(hrEffFTempElev.handle(), setCurve->handle()); 
-  }  
-  
+    EXPECT_EQ(hrEffFTempElev.handle(), setCurve->handle());
+  }
+
   // A8 , \field Heat Recovery Rate Function of Part Load Ratio Curve Name
   // QuadraticCubicCurves, UniVariateTables
   // boost::optional<Curve> heatRecoveryRateFunctionofPartLoadRatioCurve() const;
@@ -381,11 +380,11 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   mchpHR.setHeatRecoveryRateFunctionofPartLoadRatioCurve(hrRRWaterFlowFPLR);
   ASSERT_TRUE(mchpHR.heatRecoveryRateFunctionofPartLoadRatioCurve());
   if( boost::optional<Curve> setCurve = mchpHR.heatRecoveryRateFunctionofPartLoadRatioCurve() ) {
-    EXPECT_EQ(hrRRWaterFlowFPLR.handle(), setCurve->handle());  
+    EXPECT_EQ(hrRRWaterFlowFPLR.handle(), setCurve->handle());
   }
-    
-  
-  
+
+
+
   // A9 , \field Heat Recovery Rate Function of Inlet Water Temperature Curve Name
   // QuadraticCurves, UniVariateTables
   // boost::optional<Curve> heatRecoveryRateFunctionofInletWaterTemperatureCurve() const;
@@ -394,10 +393,10 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   mchpHR.setHeatRecoveryRateFunctionofInletWaterTemperatureCurve(hrRRFInletTemp);
   ASSERT_TRUE(mchpHR.heatRecoveryRateFunctionofInletWaterTemperatureCurve());
   if( boost::optional<Curve> setCurve = mchpHR.heatRecoveryRateFunctionofInletWaterTemperatureCurve() ) {
-    EXPECT_EQ(hrRRFInletTemp.handle(), setCurve->handle()); 
+    EXPECT_EQ(hrRRFInletTemp.handle(), setCurve->handle());
   }
-  
-  
+
+
   // A10, \field Heat Recovery Rate Function of Water Flow Rate Curve Name
   // QuadraticCurves, UniVariateTables.
   // boost::optional<Curve> heatRecoveryRateFunctionofWaterFlowRateCurve() const;
@@ -406,10 +405,10 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   mchpHR.setHeatRecoveryRateFunctionofWaterFlowRateCurve(hrRRFWaterFlow);
   ASSERT_TRUE(mchpHR.heatRecoveryRateFunctionofWaterFlowRateCurve());
   if( boost::optional<Curve> setCurve = mchpHR.heatRecoveryRateFunctionofWaterFlowRateCurve() ) {
-    EXPECT_EQ(hrRRFWaterFlow.handle(), setCurve->handle()); 
+    EXPECT_EQ(hrRRFWaterFlow.handle(), setCurve->handle());
   }
- 
- 
+
+
   // N7, \field Minimum Heat Recovery Water Flow Rate
   EXPECT_TRUE(mchpHR.isMinimumHeatRecoveryWaterFlowRateDefaulted());
   EXPECT_EQ(0, mchpHR.minimumHeatRecoveryWaterFlowRate());
@@ -418,7 +417,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   EXPECT_FALSE(mchpHR.isMinimumHeatRecoveryWaterFlowRateDefaulted());
   mchpHR.resetMinimumHeatRecoveryWaterFlowRate();
   EXPECT_TRUE(mchpHR.isMinimumHeatRecoveryWaterFlowRateDefaulted());
- 
+
   // N8, \field Maximum Heat Recovery Water Flow Rate
   // TODO: I think I should really make this default to reference hr water flow rate times 1.5
   EXPECT_TRUE(mchpHR.isMaximumHeatRecoveryWaterFlowRateDefaulted());
@@ -428,22 +427,22 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   EXPECT_FALSE(mchpHR.isMaximumHeatRecoveryWaterFlowRateDefaulted());
   mchpHR.resetMaximumHeatRecoveryWaterFlowRate();
   EXPECT_TRUE(mchpHR.isMaximumHeatRecoveryWaterFlowRateDefaulted());
-  
+
   //  N9; \field Maximum Heat Recovery Water Temperature
   // boost::optional<double> maximumHeatRecoveryWaterTemperature() const;
   EXPECT_FALSE(mchpHR.maximumHeatRecoveryWaterTemperature());
   mchpHR.setMaximumHeatRecoveryWaterTemperature(90);
   boost::optional<double> testmaxHRWT = mchpHR.maximumHeatRecoveryWaterTemperature();
   EXPECT_EQ((*testmaxHRWT),90);
-  
+
   // Test setRatedThermaltoElectricalPowerRatio
   mchpHR.setRatedThermaltoElectricalPowerRatio(1.72);
   EXPECT_EQ(1.72, mchpHR.ratedThermaltoElectricalPowerRatio());
-  
+
   // Test the accessor from the mchp
   boost::optional<double> ratedThermaltoElectricalPowerRatio = mchp.ratedThermaltoElectricalPowerRatio();
   EXPECT_EQ((*ratedThermaltoElectricalPowerRatio),1.72);
-  
+
   // Test setting it to a microturbine and resetting
   /*mchp.setGeneratorMicroTurbineHeatRecovery(mchpHR);
   ASSERT_TRUE(mchp.generatorMicroTurbineHeatRecovery());
@@ -457,8 +456,8 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
 
   EXPECT_FALSE(mchp.generatorMicroTurbineHeatRecovery());
 
-  
-  
+
+
 }
 
 
@@ -466,12 +465,12 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
 // Todo: Need to handle that properly, check if the HR was cloned too
 TEST_F(ModelFixture,GeneratorMicroTurbine_Clone)
 {
-  
+
   Model model;
-  
+
   // test constructor for Generator:MicroTurbine
   GeneratorMicroTurbine mchp = GeneratorMicroTurbine(model);
-    
+
   // Test curve setters to see if set at the right place
   CurveBiquadratic elecPowerFTempElevation(model);
     elecPowerFTempElevation.setCoefficient1Constant(1);
@@ -488,9 +487,9 @@ TEST_F(ModelFixture,GeneratorMicroTurbine_Clone)
     elecEffFPLR.setCoefficient2x(0.3);
     elecEffFPLR.setCoefficient3xPOW2(0.03);
     mchp.setElectricalEfficiencyFunctionofPartLoadRatioCurve(elecEffFPLR);
-    
+
   // Verify the setter is already done above...
-  
+
   //Clone into the same model
   GeneratorMicroTurbine  mchpClone = mchp.clone(model).cast<GeneratorMicroTurbine>();
 
@@ -500,15 +499,15 @@ TEST_F(ModelFixture,GeneratorMicroTurbine_Clone)
 
   // Add a MicroTurbine:HeatRecovery and clone again
   GeneratorMicroTurbineHeatRecovery mchpHR = GeneratorMicroTurbineHeatRecovery(model, mchp);
-  
+
   // Clone in same model and verify that the mCHPHR is also cloned
   GeneratorMicroTurbine  mchpClone1 = mchp.clone(model).cast<GeneratorMicroTurbine>();
   ASSERT_TRUE(mchpClone1.generatorMicroTurbineHeatRecovery());
   // Make sure it's not just pointing to the same one
   boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHRclone = mchpClone1.generatorMicroTurbineHeatRecovery();
   EXPECT_NE(mchpHR.handle(), mchpHRclone->handle());
-  
-  
+
+
   //Clone into another model
   Model model2;
   GeneratorMicroTurbine  mchpClone2 = mchp.clone(model2).cast<GeneratorMicroTurbine>();
@@ -517,13 +516,13 @@ TEST_F(ModelFixture,GeneratorMicroTurbine_Clone)
   ASSERT_EQ(1,mchpClone2.electricalPowerFunctionofTemperatureandElevationCurve().cast<CurveBiquadratic>().coefficient1Constant());
   ASSERT_EQ(2,mchpClone2.electricalEfficiencyFunctionofTemperatureCurve().cast<CurveCubic>().coefficient1Constant());
   ASSERT_EQ(3,mchpClone2.electricalEfficiencyFunctionofPartLoadRatioCurve().cast<CurveCubic>().coefficient1Constant());
-  
+
   // Check that the heatRecovery module has been clone into the model too
   ASSERT_TRUE(mchpClone2.generatorMicroTurbineHeatRecovery());
   // Make sure it's not just pointing to the same one
   boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHRclone2 = mchpClone1.generatorMicroTurbineHeatRecovery();
   EXPECT_NE(mchpHR.handle(), mchpHRclone2->handle());
-  
+
 }
 
 
@@ -531,7 +530,7 @@ TEST_F(ModelFixture,GeneratorMicroTurbine_HeatRecovery_addToNode) {
   Model model;
 
   GeneratorMicroTurbine mchp = GeneratorMicroTurbine(model);
-  
+
   GeneratorMicroTurbineHeatRecovery mchpHR = GeneratorMicroTurbineHeatRecovery(model, mchp);
 
   AirLoopHVAC airLoop = AirLoopHVAC(model);
@@ -547,7 +546,7 @@ TEST_F(ModelFixture,GeneratorMicroTurbine_HeatRecovery_addToNode) {
   EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
 
   PlantLoop plantLoop(model);
-  
+
   // This should de settable to the supply side
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_TRUE(mchpHR.addToNode(supplyOutletNode));

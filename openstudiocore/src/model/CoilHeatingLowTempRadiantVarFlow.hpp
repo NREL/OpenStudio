@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -31,6 +31,8 @@
 
 #include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
+#include "ZoneHVACLowTempRadiantVarFlow.hpp"
+#include "ZoneHVACLowTempRadiantVarFlow_Impl.hpp"
 
 namespace openstudio {
 
@@ -105,6 +107,10 @@ class MODEL_API CoilHeatingLowTempRadiantVarFlow : public StraightComponent {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedMaximumHotWaterFlow() const ;
+
+
+
   //@}
  protected:
   /// @cond
@@ -119,6 +125,10 @@ class MODEL_API CoilHeatingLowTempRadiantVarFlow : public StraightComponent {
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.CoilHeatingLowTempRadiantVarFlow");
+
+  // Used to find the ZoneHVAC that contains this coil
+  boost::optional<ZoneHVACLowTempRadiantVarFlow> parentZoneHVAC() const;
+
 };
 
 /** \relates CoilHeatingLowTempRadiantVarFlow*/

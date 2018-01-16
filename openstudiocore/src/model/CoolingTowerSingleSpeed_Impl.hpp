@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,112 +44,6 @@ namespace detail {
 
   /** CoolingTowerSingleSpeed_Impl is a StraightComponent_Impl that is the implementation class for CoolingTowerSingleSpeed.*/
   class MODEL_API CoolingTowerSingleSpeed_Impl : public StraightComponent_Impl {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -181,6 +75,10 @@ namespace detail {
     virtual unsigned inletPort() override;
 
     virtual unsigned outletPort() override;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
 
     //@}
     /** @name Getters */
@@ -305,6 +203,22 @@ namespace detail {
     Quantity getSizingFactor(bool returnIP=false) const;
 
     bool isSizingFactorDefaulted() const;
+
+    boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+    boost::optional<double> autosizedDesignAirFlowRate() const ;
+
+    boost::optional<double> autosizedFanPoweratDesignAirFlowRate() const ;
+
+    boost::optional<double> autosizedUFactorTimesAreaValueatDesignAirFlowRate() const ;
+
+    boost::optional<double> autosizedAirFlowRateinFreeConvectionRegime() const ;
+
+    boost::optional<double> autosizedUFactorTimesAreaValueatFreeConvectionAirFlowRate() const ;
+
+    boost::optional<double> autosizedDesignApproachTemperature() const;
+
+    boost::optional<double> autosizedDesignRangeTemperature() const;
 
     //@}
     /** @name Setters */
@@ -447,6 +361,50 @@ namespace detail {
     void resetSizingFactor();
 
     bool addToNode(Node & node) override;
+
+    double freeConvectionAirFlowRateSizingFactor() const;
+
+    bool setFreeConvectionAirFlowRateSizingFactor(double freeConvectionAirFlowRateSizingFactor);
+
+    double freeConvectionUFactorTimesAreaValueSizingFactor() const;
+
+    bool setFreeConvectionUFactorTimesAreaValueSizingFactor(double freeConvectionUFactorTimesAreaValueSizingFactor);
+
+    double heatRejectionCapacityAndNominalCapacitySizingRatio() const;
+
+    bool setHeatRejectionCapacityAndNominalCapacitySizingRatio(double heatRejectionCapacityAndNominalCapacitySizingRatio);
+
+    double freeConvectionNominalCapacitySizingFactor() const;
+
+    bool setFreeConvectionNominalCapacitySizingFactor(double freeConvectionNominalCapacitySizingFactor);
+
+    double designInletAirDryBulbTemperature() const;
+
+    bool setDesignInletAirDryBulbTemperature(double designInletAirDryBulbTemperature);
+
+    double designInletAirWetBulbTemperature() const;
+
+    bool setDesignInletAirWetBulbTemperature(double designInletAirWetBulbTemperature);
+
+    boost::optional<double> designApproachTemperature() const;
+
+    bool isDesignApproachTemperatureAutosized() const;
+
+    void autosizeDesignApproachTemperature();
+
+    bool setDesignApproachTemperature(double designApproachTemperature);
+
+    boost::optional<double> designRangeTemperature() const;
+
+    bool isDesignRangeTemperatureAutosized() const;
+
+    bool setDesignRangeTemperature(double designRangeTemperature);
+
+    void autosizeDesignRangeTemperature();
+
+    std::string endUseSubcategory() const;
+
+    bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
     //@}
    protected:

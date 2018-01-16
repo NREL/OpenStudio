@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -83,7 +83,19 @@ namespace detail {
   const std::vector<std::string>& CoilWaterHeatingDesuperheater_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // TODO: scraped from I/O ref, but should double check here... (gut feeling (c) JM)
+      result.push_back("Water Heater Part Load Ratio");
+      result.push_back("Water Heater Heating Rate");
+      result.push_back("Water Heater Heating Energy");
+      result.push_back("Water Heater Pump Electric Power");
+      result.push_back("Water Heater Pump Electric Energy");
+      result.push_back("Water Heater Heat Reclaim Efficiency Modifier Multiplier");
+      result.push_back("Water Heater On Cycle Parasitic Electric Power");
+      result.push_back("Water Heater On Cycle Parasitic Electric Energy");
+      result.push_back("Water Heater Off Cycle Parasitic Electric Power");
+      result.push_back("Water Heater Off Cycle Parasitic Electric Energy");
     }
     return result;
   }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,9 +44,6 @@ namespace detail {
   class MODEL_API LightsDefinition_Impl : public SpaceLoadDefinition_Impl {
 
 
-
-
-
     Q_PROPERTY(openstudio::OSOptionalQuantity lightingLevel_SI
                READ lightingLevel_SI
                WRITE setLightingLevel);
@@ -71,14 +68,12 @@ namespace detail {
                WRITE setWattsperPerson);
 
 
-
     Q_PROPERTY(openstudio::Quantity fractionRadiant_SI
                READ fractionRadiant_SI
                WRITE setFractionRadiant);
     Q_PROPERTY(openstudio::Quantity fractionRadiant_IP
                READ fractionRadiant_IP
                WRITE setFractionRadiant);
-
 
 
     Q_PROPERTY(openstudio::Quantity fractionVisible_SI
@@ -89,18 +84,12 @@ namespace detail {
                WRITE setFractionVisible);
 
 
-
     Q_PROPERTY(openstudio::Quantity returnAirFraction_SI
                READ returnAirFraction_SI
                WRITE setReturnAirFraction);
     Q_PROPERTY(openstudio::Quantity returnAirFraction_IP
                READ returnAirFraction_IP
                WRITE setReturnAirFraction);
-
-
-
-
-
 
 
    public:
@@ -132,6 +121,7 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
+    // TODO: remove (unused)
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;

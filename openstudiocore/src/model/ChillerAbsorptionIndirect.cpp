@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -70,9 +70,45 @@ namespace detail {
 
   const std::vector<std::string>& ChillerAbsorptionIndirect_Impl::outputVariableNames() const
   {
+    // static until ModelObject return type is changed for outputvariableNames
     static std::vector<std::string> result;
-    if (result.empty()){
-    }
+
+    // Common variables
+    result.push_back("Chiller Electric Power");
+    result.push_back("Chiller Electric Energy");
+    result.push_back("Chiller Evaporator Cooling Rate");
+    result.push_back("Chiller Evaporator Cooling Energy");
+    result.push_back("Chiller Evaporator Inlet Temperature");
+    result.push_back("Chiller Evaporator Outlet Temperature");
+    result.push_back("Chiller Evaporator Mass Flow Rate");
+    result.push_back("Chiller Condenser Heat Transfer Rate");
+    result.push_back("Chiller Condenser Heat Transfer Energy");
+    result.push_back("Chiller Condenser Inlet Temperature");
+    result.push_back("Chiller Condenser Outlet Temperature");
+    result.push_back("Chiller Condenser Mass Flow Rate");
+    result.push_back("Chiller COP");
+    result.push_back("Chiller Part-Load Ratio");
+    result.push_back("Chiller Cycling Ratio");
+
+    // TODO: add proper tests once the ModelObject return type is changed.
+    // Generator = Hot Water
+    //if (this->generatorHeatSourceType() == "HotWater")
+    //{
+      result.push_back("Chiller Source Hot Water Rate");
+      result.push_back("Chiller Source Hot Water Energy");
+      result.push_back("Chiller Hot Water Mass Flow Rate");
+    //}
+    //
+    // Generator = Steam
+    // generatorHeatSourceType == 'Steam'
+    //if (this->generatorHeatSourceType() == "Steam")
+    //{
+      result.push_back("Chiller Source Steam Rate");
+      result.push_back("Chiller Source Steam Energy");
+      result.push_back("Chiller Steam Mass Flow Rate");
+      result.push_back("Chiller Steam Heat Loss Rate");
+
+    //}
     return result;
   }
 
@@ -507,6 +543,63 @@ namespace detail {
     return OS_Chiller_Absorption_IndirectFields::GeneratorOutletNode;
   }
 
+  boost::optional<double> ChillerAbsorptionIndirect_Impl::autosizedNominalCapacity() const {
+    return getAutosizedValue("Design Size Nominal Capacity", "W");
+  }
+
+  boost::optional<double> ChillerAbsorptionIndirect_Impl::autosizedNominalPumpingPower() const {
+    return getAutosizedValue("Design Size Nominal Pumping Power", "W");
+  }
+
+  boost::optional<double> ChillerAbsorptionIndirect_Impl::autosizedDesignChilledWaterFlowRate() const {
+    return getAutosizedValue("Design Size Design Chilled Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ChillerAbsorptionIndirect_Impl::autosizedDesignCondenserWaterFlowRate() const {
+    return getAutosizedValue("Design Size Design Condenser Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ChillerAbsorptionIndirect_Impl::autosizedDesignGeneratorFluidFlowRate() const {
+    return getAutosizedValue("Design Size Design Generator Fluid Flow Rate", "m3/s");
+  }
+
+  void ChillerAbsorptionIndirect_Impl::autosize() {
+    autosizeNominalCapacity();
+    autosizeNominalPumpingPower();
+    autosizeDesignChilledWaterFlowRate();
+    autosizeDesignCondenserWaterFlowRate();
+    autosizeDesignGeneratorFluidFlowRate();
+  }
+
+  void ChillerAbsorptionIndirect_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalCapacity();
+    if (val) {
+      setNominalCapacity(val.get());
+    }
+
+    val = autosizedNominalPumpingPower();
+    if (val) {
+      setNominalPumpingPower(val.get());
+    }
+
+    val = autosizedDesignChilledWaterFlowRate();
+    if (val) {
+      setDesignChilledWaterFlowRate(val.get());
+    }
+
+    val = autosizedDesignCondenserWaterFlowRate();
+    if (val) {
+      setDesignCondenserWaterFlowRate(val.get());
+    }
+
+    val = autosizedDesignGeneratorFluidFlowRate();
+    if (val) {
+      setDesignGeneratorFluidFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 ChillerAbsorptionIndirect::ChillerAbsorptionIndirect(const Model& model)
@@ -860,6 +953,26 @@ ChillerAbsorptionIndirect::ChillerAbsorptionIndirect(std::shared_ptr<detail::Chi
   : WaterToWaterComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> ChillerAbsorptionIndirect::autosizedNominalCapacity() const {
+    return getImpl<detail::ChillerAbsorptionIndirect_Impl>()->autosizedNominalCapacity();
+  }
+
+  boost::optional<double> ChillerAbsorptionIndirect::autosizedNominalPumpingPower() const {
+    return getImpl<detail::ChillerAbsorptionIndirect_Impl>()->autosizedNominalPumpingPower();
+  }
+
+  boost::optional<double> ChillerAbsorptionIndirect::autosizedDesignChilledWaterFlowRate() const {
+    return getImpl<detail::ChillerAbsorptionIndirect_Impl>()->autosizedDesignChilledWaterFlowRate();
+  }
+
+  boost::optional<double> ChillerAbsorptionIndirect::autosizedDesignCondenserWaterFlowRate() const {
+    return getImpl<detail::ChillerAbsorptionIndirect_Impl>()->autosizedDesignCondenserWaterFlowRate();
+  }
+
+  boost::optional<double> ChillerAbsorptionIndirect::autosizedDesignGeneratorFluidFlowRate() const {
+    return getImpl<detail::ChillerAbsorptionIndirect_Impl>()->autosizedDesignGeneratorFluidFlowRate();
+  }
 
 } // model
 } // openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -37,6 +37,13 @@
 #include "CentralHeatPumpSystemModule_Impl.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
+
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
+
+// Need for clone override
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -76,7 +83,27 @@ namespace detail {
   const std::vector<std::string>& CentralHeatPumpSystem_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Chiller Heater System Cooling Electric Power");
+      result.push_back("Chiller Heater System Cooling Electric Energy");
+      result.push_back("Chiller Heater System Heating Electric Power");
+      result.push_back("Chiller Heater System Heating Electric Energy");
+      result.push_back("Chiller Heater System Cooling Rate");
+      result.push_back("Chiller Heater System Cooling Energy");
+      result.push_back("Chiller Heater System Heating Rate");
+      result.push_back("Chiller Heater System Heating Energy");
+      result.push_back("Chiller Heater System Source Heat Transfer Rate");
+      result.push_back("Chiller Heater System Source Heat Transfer Energy");
+      result.push_back("Chiller Heater System Cooling Inlet Temperature");
+      result.push_back("Chiller Heater System Cooling Outlet Temperature");
+      result.push_back("Chiller Heater System Cooling Mass Flow Rate");
+      result.push_back("Chiller Heater System Heating Inlet Temperature");
+      result.push_back("Chiller Heater System Heating Outlet Temperature");
+      result.push_back("Chiller Heater System Heating Mass Flow Rate");
+      result.push_back("Chiller Heater System Source Inlet Temperature");
+      result.push_back("Chiller Heater System Source Outlet Temperature");
+      result.push_back("Chiller Heater System Source Mass Flow Rate");
     }
     return result;
   }
@@ -97,6 +124,39 @@ namespace detail {
     }
     return result;
   }
+
+
+  // This will clone the CentralHeatPumpSystem as well as the CentralHeatPumpSystemModules if there are some
+  // and will return a reference to the new CentralHeatPumpSystem
+  ModelObject CentralHeatPumpSystem_Impl::clone(Model model) const
+  {
+
+    // Call the WaterToWater clone method, for a clean one, and that will reset the connections to loops
+    CentralHeatPumpSystem newCentralHP = WaterToWaterComponent_Impl::clone(model).cast<CentralHeatPumpSystem>();
+
+    // In the CentralHeatPumpSystem Implementation, the actual important object is the chillerHeaterModuleList
+    // Create a new (blank) ModelObjectList, and set it
+    auto newChillerHeaterModuleList = ModelObjectList(model);
+    newChillerHeaterModuleList.setName(newCentralHP.name().get() + " Chiller Heater Module List");
+    bool ok = true;
+    ok = newCentralHP.getImpl<detail::CentralHeatPumpSystem_Impl>()->setChillerHeaterModuleList(newChillerHeaterModuleList);
+    OS_ASSERT(ok);
+
+    // Now, the matter is to repopulate it.
+    for(const CentralHeatPumpSystemModule & centralHPMod: this->modules()) {
+
+      // The CentralHeatPumpSystemModule_Impl::clone method will set the reference to the same
+      // ChillerHeaterPerformanceElectricEIR as the original one
+      CentralHeatPumpSystemModule centralHPModClone = centralHPMod.clone(model).cast<CentralHeatPumpSystemModule>();
+
+      // Add that to the new object
+      newCentralHP.addModule(centralHPModClone);
+
+    }
+
+    return newCentralHP;
+  }
+
 
   // CoolingLoop
   unsigned CentralHeatPumpSystem_Impl::supplyInletPort()
@@ -121,11 +181,13 @@ namespace detail {
   }
 
   // HeatingLoop
-  unsigned CentralHeatPumpSystem_Impl::tertiaryInletPort() const {
+  unsigned CentralHeatPumpSystem_Impl::tertiaryInletPort() const
+  {
     return OS_CentralHeatPumpSystemFields::HeatingLoopInletNodeName;
   }
 
-  unsigned CentralHeatPumpSystem_Impl::tertiaryOutletPort() const {
+  unsigned CentralHeatPumpSystem_Impl::tertiaryOutletPort() const
+  {
     return OS_CentralHeatPumpSystemFields::HeatingLoopOutletNodeName;
   }
 
@@ -135,11 +197,12 @@ namespace detail {
   }
 
   bool CentralHeatPumpSystem_Impl::addModule( const CentralHeatPumpSystemModule & centralHeatPumpSystemModule) {
+    bool result = false;
     auto modelObjectList = chillerHeaterModuleList();
     if( modelObjectList ) {
-      modelObjectList->addModelObject(centralHeatPumpSystemModule);
+      result = modelObjectList->addModelObject(centralHeatPumpSystemModule);
     }
-    return false;
+    return result;
   }
 
   void CentralHeatPumpSystem_Impl::removeModule( const CentralHeatPumpSystemModule & centralHeatPumpSystemModule) {
@@ -178,6 +241,22 @@ namespace detail {
     }
     return result;
   }
+
+  /** Convenience Function to return the Cooling Loop **/
+  boost::optional<PlantLoop> CentralHeatPumpSystem_Impl::coolingPlantLoop() const {
+    return WaterToWaterComponent_Impl::plantLoop();
+  }
+
+  /** Convenience Function to return the Source Loop **/
+  boost::optional<PlantLoop> CentralHeatPumpSystem_Impl::sourcePlantLoop() const {
+    return WaterToWaterComponent_Impl::secondaryPlantLoop();
+  }
+
+  /** Convenience Function to return the Heating Loop **/
+  boost::optional<PlantLoop> CentralHeatPumpSystem_Impl::heatingPlantLoop() const {
+    return WaterToWaterComponent_Impl::tertiaryPlantLoop();
+  }
+
 
   bool CentralHeatPumpSystem_Impl::setChillerHeaterModuleList(const boost::optional<ModelObjectList>& modelObjectList) {
     bool result(false);
@@ -306,6 +385,19 @@ void CentralHeatPumpSystem::removeAllModules() {
 
 std::vector<CentralHeatPumpSystemModule> CentralHeatPumpSystem::modules() const {
   return getImpl<detail::CentralHeatPumpSystem_Impl>()->modules();
+}
+
+// Convenience functions
+boost::optional<PlantLoop> CentralHeatPumpSystem::coolingPlantLoop() const {
+  return getImpl<detail::CentralHeatPumpSystem_Impl>()->coolingPlantLoop();
+}
+
+boost::optional<PlantLoop> CentralHeatPumpSystem::sourcePlantLoop() const {
+  return getImpl<detail::CentralHeatPumpSystem_Impl>()->sourcePlantLoop();
+}
+
+boost::optional<PlantLoop> CentralHeatPumpSystem::heatingPlantLoop() const {
+  return getImpl<detail::CentralHeatPumpSystem_Impl>()->heatingPlantLoop();
 }
 
 /// @cond

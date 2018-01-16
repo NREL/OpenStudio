@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -55,6 +55,8 @@
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "Model.hpp"
+
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
@@ -129,11 +131,48 @@ namespace detail{
   // Get all output variable names that could be associated with this object.
   const std::vector<std::string>& CoilCoolingDXSingleSpeed_Impl::outputVariableNames() const
   {
+    // TODO: static for now
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Cooling Coil Total Cooling Rate");
+      result.push_back("Cooling Coil Total Cooling Energy");
+      result.push_back("Cooling Coil Sensible Cooling Rate");
+      result.push_back("Cooling Coil Sensible Cooling Energy");
+      result.push_back("Cooling Coil Latent Cooling Rate");
+      result.push_back("Cooling Coil Latent Cooling Energy");
+      result.push_back("Cooling Coil Electric Power");
+      result.push_back("Cooling Coil Electric Energy");
+      result.push_back("Cooling Coil Runtime Fraction");
+
+      // condenserType = [AirCooled, EvaporativelyCooled]
+      // if (this->condenserType() == "EvaporativelyCooled") {
+        result.push_back("Cooling Coil Condenser Inlet Temperature");
+        result.push_back("Cooling Coil Evaporative Condenser Water Volume");
+        result.push_back("Cooling Coil Evaporative Condenser Pump Electric Power");
+        result.push_back("Cooling Coil Evaporative Condenser Pump Electric Energy");
+        result.push_back("Cooling Coil Basin Heater Electric Power");
+        result.push_back("Cooling Coil Basin Heater Electric Energy");
+        result.push_back("Cooling Coil Evaporative Condenser Mains Supply Water Volume");
+      // }
+
+      // Storage tank isn't implemented
+      // if has storage tank:
+      // result.push_back("Cooling Coil Condensate Volume Flow Rate");
+      // result.push_back("Cooling Coil Condensate Volume");
+      //
+
+      // If not part of AirLoopHVAC:UnitaryHeatPump:AirToAir
+      // (if part of a heat pump, crankcase heater is reported only for the heating coil):
+      // if ( !this->containingHVACComponent().empty() ) {
+      // result.push_back("Cooling Coil Crankcase Heater Electric Power");
+      // result.push_back("Cooling Coil Crankcase Heater Electric Energy");
+      // }
+
     }
     return result;
   }
+
 
   IddObjectType CoilCoolingDXSingleSpeed_Impl::iddObjectType() const {
     return CoilCoolingDXSingleSpeed::iddObjectType();
@@ -919,6 +958,68 @@ namespace detail{
     return false;
   }
 
+  // Autosizing methods
+  void CoilCoolingDXSingleSpeed_Impl::autosize() {
+    autosizeRatedTotalCoolingCapacity();
+    autosizeRatedSensibleHeatRatio();
+    autosizeRatedAirFlowRate();
+    boost::optional<double> emptyVal;
+    setEvaporativeCondenserAirFlowRate(emptyVal);
+    setEvaporativeCondenserPumpRatedPowerConsumption(emptyVal);
+  }
+
+  void CoilCoolingDXSingleSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+
+    val = autosizedRatedAirFlowRate();
+    if (val) {
+      setRatedAirFlowRate(val.get());
+    }
+
+    val = autosizedRatedTotalCoolingCapacity();
+    if (val) {
+      setRatedTotalCoolingCapacity(val.get());
+    }
+
+    val = autosizedRatedSensibleHeatRatio();
+    if (val) {
+      setRatedSensibleHeatRatio(val.get());
+    }
+
+    val = autosizedEvaporativeCondenserAirFlowRate();
+    if (val) {
+      setEvaporativeCondenserAirFlowRate(val.get());
+    }
+
+    val = autosizedEvaporativeCondenserPumpRatedPowerConsumption();
+    if (val) {
+      setEvaporativeCondenserPumpRatedPowerConsumption(val.get());
+    }
+
+  }
+
+  boost::optional<double> CoilCoolingDXSingleSpeed_Impl::autosizedRatedAirFlowRate() const {
+    return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoilCoolingDXSingleSpeed_Impl::autosizedRatedTotalCoolingCapacity() const {
+    return getAutosizedValue("Design Size Gross Rated Total Cooling Capacity", "W");
+  }
+
+  boost::optional<double> CoilCoolingDXSingleSpeed_Impl::autosizedRatedSensibleHeatRatio()  const {
+    return getAutosizedValue("Design Size Gross Rated Sensible Heat Ratio", "");
+  }
+
+  // E+ output has a bug where this field label is incorrect
+  boost::optional<double> CoilCoolingDXSingleSpeed_Impl::autosizedEvaporativeCondenserAirFlowRate() const {
+    return getAutosizedValue("Design Size Evaporative Condenser Effectiveness", "m3/s");
+  }
+
+  // E+ output has a bug where this field label is incorrect
+  boost::optional<double> CoilCoolingDXSingleSpeed_Impl::autosizedEvaporativeCondenserPumpRatedPowerConsumption()  const {
+    return getAutosizedValue("Design Size Evaporative Condenser Air Flow Rate", "W");
+  }
+
 }// detail
 
 CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(const Model& model)
@@ -1433,6 +1534,11 @@ IddObjectType CoilCoolingDXSingleSpeed::iddObjectType() {
   return result;
 }
 
+std::vector<std::string> CoilCoolingDXSingleSpeed::condenserTypeValues() const {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_Coil_Cooling_DX_SingleSpeedFields::CondenserType);
+}
+
 boost::optional<double> CoilCoolingDXSingleSpeed::ratedTotalCoolingCapacity() const {
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->ratedTotalCoolingCapacity();
 }
@@ -1504,6 +1610,29 @@ bool CoilCoolingDXSingleSpeed::setRatedAirFlowRate(const Quantity& ratedAirFlowR
 void CoilCoolingDXSingleSpeed::autosizeRatedAirFlowRate() {
   getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizeRatedAirFlowRate();
 }
+
+// Autosizing methods
+
+boost::optional <double> CoilCoolingDXSingleSpeed::autosizedRatedAirFlowRate() const {
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedRatedAirFlowRate();
+}
+
+boost::optional <double> CoilCoolingDXSingleSpeed::autosizedRatedTotalCoolingCapacity() const {
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedRatedTotalCoolingCapacity();
+}
+
+boost::optional <double> CoilCoolingDXSingleSpeed::autosizedRatedSensibleHeatRatio() const {
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedRatedSensibleHeatRatio();
+}
+
+boost::optional<double> CoilCoolingDXSingleSpeed::autosizedEvaporativeCondenserAirFlowRate() const {
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedEvaporativeCondenserAirFlowRate();
+}
+
+boost::optional<double> CoilCoolingDXSingleSpeed::autosizedEvaporativeCondenserPumpRatedPowerConsumption()  const {
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedEvaporativeCondenserPumpRatedPowerConsumption();
+}
+
 
 } // model
 } // openstudio

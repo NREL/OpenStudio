@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -87,7 +87,58 @@ namespace detail {
   const std::vector<std::string>& AirConditionerVariableRefrigerantFlow_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("VRF Heat Pump Total Cooling Rate");
+      result.push_back("VRF Heat Pump Total Heating Rate");
+      result.push_back("VRF Heat Pump Cooling COP");
+      result.push_back("VRF Heat Pump Heating COP");
+      result.push_back("VRF Heat Pump COP");
+      result.push_back("VRF Heat Pump Part Load Ratio");
+      result.push_back("VRF Heat Pump Runtime Fraction");
+      result.push_back("VRF Heat Pump Cycling Ratio");
+      result.push_back("VRF Heat Pump Operating Mode");
+      result.push_back("VRF Heat Pump Condenser Inlet Temperature");
+      result.push_back("VRF Heat Pump Maximum Capacity Cooling Rate");
+      result.push_back("VRF Heat Pump Maximum Capacity Heating Rate");
+      result.push_back("VRF Heat Pump Crankcase Heater Electric Power");
+      result.push_back("VRF Heat Pump Crankcase Heater Electric Energy");
+      result.push_back("VRF Heat Pump Terminal Unit Heating Load Rate");
+      result.push_back("VRF Heat Pump Terminal Unit Cooling Load Rate");
+
+      // TODO: add proper tests once the ModelObject return type is changed.
+      // For now include all
+      // Heat Recovery:
+      result.push_back("VRF Heat Pump Heat Recovery Status Change Multiplier");
+      result.push_back("VRF Heat Pump Simultaneous Cooling and Heating Efficiency");
+      // Evap-cooled:
+      result.push_back("VRF Heat Pump Evaporative Condenser Water Use Volume");
+      result.push_back("VRF Heat Pump Evaporative Condenser Pump Electric Power");
+      result.push_back("VRF Heat Pump Evaporative Condenser Pump Electric Energy");
+      result.push_back("VRF Heat Pump Basin Heater Electric Power");
+      result.push_back("VRF Heat Pump Basin Heater Electric Energy");
+      result.push_back("VRF Heat Pump Heat Recovery Status Change Multiplier");
+      // Water-cooled:
+      result.push_back("VRF Heat Pump Condenser Outlet Temperature");
+      result.push_back("VRF Heat Pump Condenser Mass Flow Rate");
+      result.push_back("VRF Heat Pump Condenser Heat Transfer Energy");
+      result.push_back("VRF Heat Pump Condenser Heat Transfer Rate");
+      // Electric Fuel type (default):
+      result.push_back("VRF Heat Pump Cooling Electric Power");
+      result.push_back("VRF Heat Pump Cooling Electric Energy");
+      result.push_back("VRF Heat Pump Heating Electric Power");
+      result.push_back("VRF Heat Pump Heating Electric Energy");
+      // Electric defrost always used for Defrost Strategy = Resistive regardless of fuel type
+      result.push_back("VRF Heat Pump Defrost Electric Power");
+      result.push_back("VRF Heat Pump Defrost Electric Energy");
+      // Alternate Fuel types (e.g., FuelType = NaturalGas):
+      //result.push_back("VRF Heat Pump Cooling <FuelType> Rate");
+      //result.push_back("VRF Heat Pump Cooling <FuelType> Energy");
+      //result.push_back("VRF Heat Pump Heating <FuelType> Rate");
+      //result.push_back("VRF Heat Pump Heating <FuelType> Energy");
+      //result.push_back("VRF Heat Pump Defrost <FuelType> Rate");
+      //result.push_back("VRF Heat Pump Defrost <FuelType> Energy");
+
     }
     return result;
   }
@@ -1851,6 +1902,73 @@ namespace detail {
     return false;
   }
 
+  boost::optional<double> AirConditionerVariableRefrigerantFlow_Impl::autosizedRatedTotalCoolingCapacity() const {
+    return getAutosizedValue("Design Size Rated Total Cooling Capacity (gross)", "W");
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow_Impl::autosizedRatedTotalHeatingCapacity() const {
+    return getAutosizedValue("Design Size Rated Total Heating Capacity", "W");
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow_Impl::autosizedResistiveDefrostHeaterCapacity() const {
+    return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "");
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow_Impl::autosizedWaterCondenserVolumeFlowRate() const {
+    return getAutosizedValue("Design Size Water Condenser Volume Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow_Impl::autosizedEvaporativeCondenserAirFlowRate() const {
+    return getAutosizedValue("Design Size Evaporative Condenser Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow_Impl::autosizedEvaporativeCondenserPumpRatedPowerConsumption() const {
+    return getAutosizedValue("Design Size Evaporative Condenser Pump Rated Power Consumption", "W");
+  }
+
+  void AirConditionerVariableRefrigerantFlow_Impl::autosize() {
+    autosizeRatedTotalCoolingCapacity();
+    autosizeRatedTotalHeatingCapacity();
+    autosizeResistiveDefrostHeaterCapacity();
+    autosizeWaterCondenserVolumeFlowRate();
+    autosizeEvaporativeCondenserAirFlowRate();
+    autosizeEvaporativeCondenserPumpRatedPowerConsumption();
+  }
+
+  void AirConditionerVariableRefrigerantFlow_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRatedTotalCoolingCapacity();
+    if (val) {
+      setRatedTotalCoolingCapacity(val.get());
+    }
+
+    val = autosizedRatedTotalHeatingCapacity();
+    if (val) {
+      setRatedTotalHeatingCapacity(val.get());
+    }
+
+    val = autosizedResistiveDefrostHeaterCapacity();
+    if (val) {
+      setResistiveDefrostHeaterCapacity(val.get());
+    }
+
+    val = autosizedWaterCondenserVolumeFlowRate();
+    if (val) {
+      setWaterCondenserVolumeFlowRate(val.get());
+    }
+
+    val = autosizedEvaporativeCondenserAirFlowRate();
+    if (val) {
+      setEvaporativeCondenserAirFlowRate(val.get());
+    }
+
+    val = autosizedEvaporativeCondenserPumpRatedPowerConsumption();
+    if (val) {
+      setEvaporativeCondenserPumpRatedPowerConsumption(val.get());
+    }
+
+  }
+
 } // detail
 
 
@@ -3013,6 +3131,30 @@ AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(std
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow::autosizedRatedTotalCoolingCapacity() const {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizedRatedTotalCoolingCapacity();
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow::autosizedRatedTotalHeatingCapacity() const {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizedRatedTotalHeatingCapacity();
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow::autosizedResistiveDefrostHeaterCapacity() const {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizedResistiveDefrostHeaterCapacity();
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow::autosizedWaterCondenserVolumeFlowRate() const {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizedWaterCondenserVolumeFlowRate();
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow::autosizedEvaporativeCondenserAirFlowRate() const {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizedEvaporativeCondenserAirFlowRate();
+  }
+
+  boost::optional<double> AirConditionerVariableRefrigerantFlow::autosizedEvaporativeCondenserPumpRatedPowerConsumption() const {
+    return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->autosizedEvaporativeCondenserPumpRatedPowerConsumption();
+  }
 
 } // model
 } // openstudio

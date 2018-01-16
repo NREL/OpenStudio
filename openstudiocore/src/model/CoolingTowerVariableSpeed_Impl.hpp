@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -137,6 +137,16 @@ namespace detail {
 
     boost::optional<double> sizingFactor() const;
 
+  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+  boost::optional<double> autosizedDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedDesignFanPower() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{
@@ -248,6 +258,10 @@ namespace detail {
     std::vector<ModelObject> children() const override;
 
     bool addToNode(Node & node) override;
+
+    std::string endUseSubcategory() const;
+
+    bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
    private:
 

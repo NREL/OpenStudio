@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -84,7 +84,28 @@ namespace detail {
   const std::vector<std::string>& CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Heating Coil Electric Power");
+      result.push_back("Heating Coil Heating Rate");
+      result.push_back("Heating Coil Sensible Heating Rate");
+      result.push_back("Heating Coil Source Side Heat Transfer Rate");
+      result.push_back("Heating Coil Part Load Ratio");
+      result.push_back("Heating Coil Runtime Fraction");
+      result.push_back("Heating Coil Air Mass Flow Rate");
+      result.push_back("Heating Coil Air Inlet Temperature");
+      result.push_back("Heating Coil Air Inlet Humidity Ratio");
+      result.push_back("Heating Coil Air Outlet Temperature");
+      result.push_back("Heating Coil Air Outlet Humidity Ratio");
+      result.push_back("Heating Coil Source Side Mass Flow Rate");
+      result.push_back("Heating Coil Source Side Inlet Temperature");
+      result.push_back("Heating Coil Source Side Outlet Temperature");
+      result.push_back("Heating Coil Upper Speed Level");
+      result.push_back("Heating Coil Neighboring Speed Levels Ratio");
+      result.push_back("Heating Coil Recoverable Heat Transfer Rate");
+      result.push_back("Heating Coil Electric Energy");
+      result.push_back("Heating Coil Heating Energy");
+      result.push_back("Heating Coil Source Side Heat Transfer Energy");
     }
     return result;
   }
@@ -356,6 +377,43 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<double> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel() const {
+    return getAutosizedValue("Design Size Nominal Heating Capacity", "W");
+  }
+
+  boost::optional<double> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const {
+    return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::autosizedRatedWaterFlowRateAtSelectedNominalSpeedLevel() const {
+    return getAutosizedValue("Design Size Rated Water Flow Rate", "m3/s");
+  }
+
+  void CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::autosize() {
+    autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel();
+    autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
+    autosizeRatedWaterFlowRateAtSelectedNominalSpeedLevel();
+  }
+
+  void CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel();
+    if (val) {
+      setRatedHeatingCapacityAtSelectedNominalSpeedLevel(val.get());
+    }
+
+    val = autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel();
+    if (val) {
+      setRatedAirFlowRateAtSelectedNominalSpeedLevel(val.get());
+    }
+
+    val = autosizedRatedWaterFlowRateAtSelectedNominalSpeedLevel();
+    if (val) {
+      setRatedWaterFlowRateAtSelectedNominalSpeedLevel(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit(const Model& model)
@@ -494,6 +552,18 @@ CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::CoilHeatingWaterToAirHeat
   : WaterToAirComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel() const {
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel();
+  }
+
+  boost::optional<double> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const {
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel();
+  }
+
+  boost::optional<double> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::autosizedRatedWaterFlowRateAtSelectedNominalSpeedLevel() const {
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->autosizedRatedWaterFlowRateAtSelectedNominalSpeedLevel();
+  }
 
 } // model
 } // openstudio

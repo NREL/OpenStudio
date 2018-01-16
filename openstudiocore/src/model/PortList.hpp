@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -104,6 +104,11 @@ class MODEL_API PortList : public ModelObject {
    *  If there is no AirLoopHVAC object, then the next available port is returned
    */
   unsigned airLoopHVACPort();
+
+  /** Returns the port Index connected to an AirLoopHVAC object.
+   *  If there is no AirLoopHVAC object, then the next available portIndex is returned
+   */
+  unsigned airLoopHVACPortIndex();
 
   /** Returns the object connected to an AirLoopHVAC object. */
   boost::optional<ModelObject> airLoopHVACModelObject();

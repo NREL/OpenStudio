@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -240,6 +240,26 @@ namespace detail {
     unsigned outletPort() override;
 
     bool addToNode(Node & node) override;
+
+    boost::optional<double> autosizedRatedFlowRate() const ;
+
+    boost::optional<double> autosizedRatedPowerConsumption() const ;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
+    std::string designPowerSizingMethod() const;
+
+    bool setDesignPowerSizingMethod(const std::string & designPowerSizingMethod);
+
+    double designElectricPowerPerUnitFlowRate() const;
+
+    bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
+
+    double designShaftPowerPerUnitFlowRatePerUnitHead() const;
+
+    bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
 
    protected:
 

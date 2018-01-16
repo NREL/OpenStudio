@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -101,7 +101,7 @@ void checkWorkflowStepResult(const WorkflowStep& step, const boost::optional<BCL
   }
 
   if (!step.result()){
-    bool t = false;
+    // bool t = false;
   }
 
   ASSERT_TRUE(step.result());
@@ -276,7 +276,7 @@ TEST(Filetypes, WorkflowJSON_Min)
   path p = resourcesPath() / toPath("utilities/Filetypes/min.osw");
   path p2 = resourcesPath() / toPath("utilities/Filetypes/min.out.osw");
   ASSERT_TRUE(WorkflowJSON::load(p));
- 
+
   try{
     WorkflowJSON workflow(p);
     EXPECT_TRUE(workflow.checkForUpdates());
@@ -526,7 +526,7 @@ TEST(Filetypes, WorkflowJSON_Full)
 
     ASSERT_TRUE(workflow.seedFile());
     EXPECT_EQ("1_9_0/example.osm", workflow.seedFile().get());
-   
+
     // DLM: version resources went away, so make a file for ourselves
     openstudio::path expectedSeedPath = resourcesPath() / toPath("osversion/1_9_0/example.osm");
     if (!boost::filesystem::exists(expectedSeedPath)){
@@ -594,7 +594,7 @@ TEST(Filetypes, WorkflowJSON_Full)
     ASSERT_TRUE(measureStep.getArgument("flowPerZoneFloorArea"));
     ASSERT_EQ(VariantType::Double, measureStep.getArgument("flowPerZoneFloorArea")->variantType().value());
     EXPECT_EQ(10.76, measureStep.getArgument("flowPerZoneFloorArea")->valueAsDouble());
-        
+
     EXPECT_FALSE(workflow.checkForUpdates());
     workflowSteps[0].setResult(getWorkflowStepResult(workflowSteps[0], measures[0]));
     workflowSteps[1].setResult(getWorkflowStepResult(workflowSteps[1], measures[1]));
@@ -636,7 +636,7 @@ TEST(Filetypes, WorkflowJSON_Full)
     boost::optional<BCLMeasure> measure;
 
     ASSERT_TRUE(workflowSteps[0].optionalCast<MeasureStep>());
-    MeasureStep measureStep = workflowSteps[0].cast<MeasureStep>();    
+    MeasureStep measureStep = workflowSteps[0].cast<MeasureStep>();
     measure = workflow.getBCLMeasure(measureStep);
     ASSERT_TRUE(measure);
     measures.push_back(measure.get());
@@ -647,7 +647,7 @@ TEST(Filetypes, WorkflowJSON_Full)
     checkWorkflowStepResult(workflowSteps[0], measures[0]);
 
     ASSERT_TRUE(workflowSteps[1].optionalCast<MeasureStep>());
-    measureStep = workflowSteps[1].cast<MeasureStep>();    
+    measureStep = workflowSteps[1].cast<MeasureStep>();
     measure = workflow.getBCLMeasure(measureStep);
     ASSERT_TRUE(measure);
     measures.push_back(measure.get());
@@ -659,7 +659,7 @@ TEST(Filetypes, WorkflowJSON_Full)
     checkWorkflowStepResult(workflowSteps[1], measures[1]);
 
     ASSERT_TRUE(workflowSteps[2].optionalCast<MeasureStep>());
-    measureStep = workflowSteps[2].cast<MeasureStep>();    
+    measureStep = workflowSteps[2].cast<MeasureStep>();
     measure = workflow.getBCLMeasure(measureStep);
     ASSERT_TRUE(measure);
     measures.push_back(measure.get());
@@ -728,7 +728,7 @@ TEST(Filetypes, WorkflowJSON_Min_Results)
     ASSERT_TRUE(measureStep.getArgument("percent_decrease"));
     ASSERT_EQ(VariantType::Integer, measureStep.getArgument("percent_decrease")->variantType().value());
     EXPECT_EQ(5, measureStep.getArgument("percent_decrease")->valueAsInteger());
-    
+
     EXPECT_FALSE(workflow.checkForUpdates());
     workflowSteps[0].setResult(getWorkflowStepResult(workflowSteps[0], boost::none));
     workflowSteps[1].setResult(getWorkflowStepResult(workflowSteps[1], boost::none));
@@ -955,7 +955,7 @@ TEST(Filetypes, WorkflowJSON_Setters)
   EXPECT_EQ(toPath("./files/in.epw"), workflowJSON.weatherFile().get());
 
   std::string json = workflowJSON.string();
-  
+
   workflowJSON.resetSeedFile();
   workflowJSON.resetWeatherFile();
 
@@ -1047,7 +1047,7 @@ TEST(Filetypes, RunOptions)
   EXPECT_FALSE(workflow.runOptions());
 
   CustomOutputAdapter adapter("my_ruby_file.rb", "MyOutputAdapter", "{}");
-  
+
   RunOptions options;
   options.setDebug(true);
   options.setCustomOutputAdapter(adapter);

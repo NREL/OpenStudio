@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -80,7 +80,11 @@ namespace detail{
   const std::vector<std::string>& AirTerminalSingleDuctVAVReheat_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone Air Terminal VAV Damper Position");
+      result.push_back("Zone Air Terminal Minimum Air Flow Fraction");
+      result.push_back("Zone Air Terminal Outdoor Air Volume Flow Rate");
     }
     return result;
   }
@@ -641,6 +645,53 @@ namespace detail{
     return setBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ControlForOutdoorAir,controlForOutdoorAir);;
   }
 
+  boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedMaximumAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedMaximumHotWaterOrSteamFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Reheat Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedMaximumFlowPerZoneFloorAreaDuringReheat() const {
+    return getAutosizedValue("Design Size Maximum Flow per Zone Floor Area during Reheat", "m3/s-m2");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedMaximumFlowFractionDuringReheat() const {
+    return getAutosizedValue("Design Size Maximum Flow Fraction during Reheat", "typo_in_energyplus");
+  }
+
+  void AirTerminalSingleDuctVAVReheat_Impl::autosize() {
+    autosizeMaximumAirFlowRate();
+    autosizeMaximumHotWaterOrSteamFlowRate();
+    autosizeMaximumFlowPerZoneFloorAreaDuringReheat();
+    autosizeMaximumFlowFractionDuringReheat();
+  }
+
+  void AirTerminalSingleDuctVAVReheat_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumAirFlowRate();
+    if (val) {
+      setMaximumAirFlowRate(val.get());
+    }
+
+    val = autosizedMaximumHotWaterOrSteamFlowRate();
+    if (val) {
+      setMaximumHotWaterOrSteamFlowRate(val.get());
+    }
+
+    val = autosizedMaximumFlowPerZoneFloorAreaDuringReheat();
+    if (val) {
+      setMaximumFlowPerZoneFloorAreaDuringReheat(val.get());
+    }
+
+    val = autosizedMaximumFlowFractionDuringReheat();
+    if (val) {
+      setMaximumFlowFractionDuringReheat(val.get());
+    }
+
+  }
+
 } // detail
 
 AirTerminalSingleDuctVAVReheat::AirTerminalSingleDuctVAVReheat( const Model& model,
@@ -897,6 +948,22 @@ bool AirTerminalSingleDuctVAVReheat::setControlForOutdoorAir(bool controlForOutd
 {
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setControlForOutdoorAir(controlForOutdoorAir);
 }
+
+  boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumAirFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumAirFlowRate();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumHotWaterOrSteamFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumHotWaterOrSteamFlowRate();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumFlowPerZoneFloorAreaDuringReheat() const {
+    return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumFlowPerZoneFloorAreaDuringReheat();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumFlowFractionDuringReheat() const {
+    return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumFlowFractionDuringReheat();
+  }
 
 } // model
 

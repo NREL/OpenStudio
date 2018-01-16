@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,18 +39,13 @@ class Node;
 class HVACComponent;
 class Splitter;
 class Mixer;
+class AvailabilityManagerAssignmentList;
 
 namespace detail {
 
   class Model_Impl;
 
   class MODEL_API Loop_Impl : public ParentObject_Impl {
-
-
-
-
-
-
 
   public:
 
@@ -123,6 +118,13 @@ namespace detail {
     virtual Splitter demandSplitter() = 0;
 
     virtual Mixer demandMixer() = 0;
+
+    virtual void autosize();
+
+    virtual void applySizingValues();
+
+    virtual AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const = 0;
+
 
   private:
 

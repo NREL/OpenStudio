@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -69,6 +69,8 @@ namespace detail {
     virtual ModelObject clone(Model model) const override;
 
     virtual IddObjectType iddObjectType() const override;
+
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
@@ -154,7 +156,26 @@ namespace detail {
 
     bool setHeatExchangerConfiguration( std::string value );
 
-  private:
+    boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+    boost::optional<double> autosizedDesignAirFlowRate() const ;
+
+    boost::optional<double> autosizedDesignInletWaterTemperature() const ;
+
+    boost::optional<double> autosizedDesignInletAirTemperature() const ;
+
+    boost::optional<double> autosizedDesignOutletAirTemperature() const ;
+
+    boost::optional<double> autosizedDesignInletAirHumidityRatio() const ;
+
+    boost::optional<double> autosizedDesignOutletAirHumidityRatio() const ;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
+  private:    
+
     REGISTER_LOGGER("openstudio.model.CoilCoolingWater");
 
     boost::optional<ModelObject> availabilityScheduleAsModelObject() const;

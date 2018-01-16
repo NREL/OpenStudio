@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -65,6 +65,11 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual unsigned supplyInletPort() override;
+    virtual unsigned supplyOutletPort() override;
+    virtual unsigned demandInletPort() override;
+    virtual unsigned demandOutletPort() override;
+
     //@}
     /** @name Getters */
     //@{
@@ -118,6 +123,20 @@ namespace detail {
     double degreeofSubcoolinginSteamGenerator() const;
 
     double sizingFactor() const;
+
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  boost::optional<double> autosizedNominalPumpingPower() const ;
+
+  boost::optional<double> autosizedDesignChilledWaterFlowRate() const ;
+
+  boost::optional<double> autosizedDesignCondenserWaterFlowRate() const ;
+
+  boost::optional<double> autosizedDesignGeneratorFluidFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
 
     //@}
     /** @name Setters */
@@ -177,10 +196,6 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned supplyInletPort() override;
-    unsigned supplyOutletPort() override;
-    unsigned demandInletPort() override;
-    unsigned demandOutletPort() override;
 
     //@}
    protected:

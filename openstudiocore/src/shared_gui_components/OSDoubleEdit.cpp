@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -36,6 +36,7 @@
 
 #include <QDoubleValidator>
 #include <QFocusEvent>
+#include <QLocale>
 
 #include <iomanip>
 
@@ -51,6 +52,10 @@ OSDoubleEdit2::OSDoubleEdit2( QWidget * parent )
   setEnabled(false);
 
   m_doubleValidator = new QDoubleValidator();
+  // Set the Locale to C, so that "1234.56" is accepted, but not "1234,56", no matter the user's system locale
+  QLocale lo(QLocale::C);
+  m_doubleValidator->setLocale(lo);
+
   //this->setValidator(m_doubleValidator);
 }
 

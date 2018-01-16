@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -242,6 +242,45 @@ namespace detail {
     return result;
   }
 
+  boost::optional<double> CoilHeatingWaterBaseboardRadiant_Impl::autosizedHeatingDesignCapacity() const {
+    boost::optional < double > result;
+    // Get the containing ZoneHVAC equipment and get its autosized value
+    auto parentHVAC = containingZoneHVACComponent();
+    if (!parentHVAC) {
+      return result;
+    }
+    return parentHVAC->getAutosizedValue("Design Size Heating Design Capacity", "W");
+  }
+
+  boost::optional<double> CoilHeatingWaterBaseboardRadiant_Impl::autosizedMaximumWaterFlowRate() const {
+    boost::optional < double > result;
+    // Get the containing ZoneHVAC equipment and get its autosized value
+    auto parentHVAC = containingZoneHVACComponent();
+    if (!parentHVAC) {
+      return result;
+    }
+    return parentHVAC->getAutosizedValue("Design Size Maximum Water Flow Rate", "m3/s");
+  }
+
+  void CoilHeatingWaterBaseboardRadiant_Impl::autosize() {
+    autosizeHeatingDesignCapacity();
+    autosizeMaximumWaterFlowRate();
+  }
+
+  void CoilHeatingWaterBaseboardRadiant_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedHeatingDesignCapacity();
+    if (val) {
+      setHeatingDesignCapacity(val.get());
+    }
+
+    val = autosizedMaximumWaterFlowRate();
+    if (val) {
+      setMaximumWaterFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilHeatingWaterBaseboardRadiant::CoilHeatingWaterBaseboardRadiant(const Model& model)
@@ -360,6 +399,14 @@ CoilHeatingWaterBaseboardRadiant::CoilHeatingWaterBaseboardRadiant(std::shared_p
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> CoilHeatingWaterBaseboardRadiant::autosizedHeatingDesignCapacity() const {
+    return getImpl<detail::CoilHeatingWaterBaseboardRadiant_Impl>()->autosizedHeatingDesignCapacity();
+  }
+
+  boost::optional<double> CoilHeatingWaterBaseboardRadiant::autosizedMaximumWaterFlowRate() const {
+    return getImpl<detail::CoilHeatingWaterBaseboardRadiant_Impl>()->autosizedMaximumWaterFlowRate();
+  }
 
 } // model
 } // openstudio

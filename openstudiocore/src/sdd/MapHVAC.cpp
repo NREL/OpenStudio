@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -1097,7 +1097,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       model::AvailabilityManagerNightCycle nightCycle(model);
       nightCycle.setControlType("CycleOnControlZone");
 
-      airLoopHVAC.setAvailabilityManager(nightCycle);
+      airLoopHVAC.addAvailabilityManager(nightCycle);
 
       auto pair = std::pair<std::string,model::AvailabilityManagerNightCycle>(controlZone,nightCycle);
       m_nightCycleControlZones.insert(pair);
@@ -1107,8 +1107,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       airLoopHVAC.setNightCycleControlType("CycleOnAnyZoneFansOnly");
     }
 
-    if( auto avm = airLoopHVAC.availabilityManager() ) {
-      if( auto nightCycle = avm->optionalCast<model::AvailabilityManagerNightCycle>() ) {
+    if( ! airLoopHVAC.availabilityManagers().empty() ) {
+      auto avm = airLoopHVAC.availabilityManagers().front();
+      if( auto nightCycle = avm.optionalCast<model::AvailabilityManagerNightCycle>() ) {
         auto nightCycleTstatToleranceElement = airSystemElement.firstChildElement("NightCycleTstatTolerance");
         auto nightCycleTstatTolerance = nightCycleTstatToleranceElement.text().toDouble(&ok);
         if( ok ) {
@@ -4815,7 +4816,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   {
     auto nightCycle = m_nightCycleControlZones.find(thermalZone.name().get());
     if( nightCycle != m_nightCycleControlZones.end() ) {
-      nightCycle->second.setControlThermalZone(thermalZone);
+      std::vector<model::ThermalZone> thermalZones = {thermalZone};
+      nightCycle->second.setControlThermalZones(thermalZones);
     }
   }
 

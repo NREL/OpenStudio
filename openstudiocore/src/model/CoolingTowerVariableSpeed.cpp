@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -75,9 +75,50 @@ namespace detail {
 
   const std::vector<std::string>& CoolingTowerVariableSpeed_Impl::outputVariableNames() const
   {
+    // static until it changes
     static std::vector<std::string> result;
-    if (result.empty()){
-    }
+
+    // Common Variables
+    result.push_back("Cooling Tower Fan Electric Power");
+    result.push_back("Cooling Tower Fan Electric Energy");
+    result.push_back("Cooling Tower Heat Transfer Rate");
+    result.push_back("Cooling Tower Inlet Temperature");
+    result.push_back("Cooling Tower Outlet Temperature");
+    result.push_back("Cooling Tower Mass Flow Rate");
+    result.push_back("Cooling Tower Fan Part Load Ratio");
+    result.push_back("Cooling Tower Air Flow Rate Ratio");
+    result.push_back("Cooling Tower Operating Cells Count");
+
+
+    // When Mains Water is used
+    result.push_back("Cooling Tower Make Up Water Volume Flow Rate");
+    result.push_back("Cooling Tower Make Up Water Volume");
+    result.push_back("Cooling Tower Make Up Mains Water Volume");
+
+    // When storage tank water is used:
+    // Supply Water Storage Tank Name isn't implemented in OpenStudio
+    // TODO: Revisit if need be
+    //result.push_back("Cooling Tower Make Up Water Volume Flow Rate");
+    //result.push_back("Cooling Tower Make Up Water Volume");
+    //result.push_back("Cooling Tower Storage Tank Water Volume Flow Rate");
+    //result.push_back("Cooling Tower Storage Tank Water Volume");
+    //result.push_back("Cooling Tower Starved Storage Tank Water Volume Flow Rate");
+    //result.push_back("Cooling Tower Starved Storage Tank Water Volume");
+    //result.push_back("Cooling Tower Make Up Mains Water Volume");
+    //result.push_back("Cooling Tower Water Evaporation Volume Flow Rate");
+    //result.push_back("Cooling Tower Water Evaporation Volume");
+    //result.push_back("Cooling Tower Water Drift Volume Flow Rate");
+    //result.push_back("Cooling Tower Water Drift Volume");
+    //result.push_back("Cooling Tower Water Blowdown Volume Flow Rate");
+    //result.push_back("Cooling Tower Water Blowdown Volume");
+
+    // DLM: the return type of this method needs to change to std::vector<std::string> in ModelObject
+    // if specified
+    // if (this->basinHeaterCapacity() > 0) {
+      result.push_back("Cooling Tower Basin Heater Electric Power");
+      result.push_back("Cooling Tower Basin Heater Electric Energy");
+    // }
+
     return result;
   }
 
@@ -691,6 +732,53 @@ namespace detail {
 
     return false;
   }
+  
+  std::string CoolingTowerVariableSpeed_Impl::endUseSubcategory() const {
+    auto value = getString(OS_CoolingTower_VariableSpeedFields::EndUseSubcategory,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool CoolingTowerVariableSpeed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
+    return setString(OS_CoolingTower_VariableSpeedFields::EndUseSubcategory,endUseSubcategory);
+  }
+
+  boost::optional<double> CoolingTowerVariableSpeed_Impl::autosizedDesignWaterFlowRate() const {
+    return getAutosizedValue("Design Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoolingTowerVariableSpeed_Impl::autosizedDesignAirFlowRate() const {
+    return getAutosizedValue("Design Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoolingTowerVariableSpeed_Impl::autosizedDesignFanPower() const {
+    return getAutosizedValue("Fan Power at Design Air Flow Rate", "W");
+  }
+
+  void CoolingTowerVariableSpeed_Impl::autosize() {
+    autosizeDesignWaterFlowRate();
+    autosizeDesignAirFlowRate();
+    autosizeDesignFanPower();
+  }
+
+  void CoolingTowerVariableSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedDesignWaterFlowRate();
+    if (val) {
+      setDesignWaterFlowRate(val.get());
+    }
+
+    val = autosizedDesignAirFlowRate();
+    if (val) {
+      setDesignAirFlowRate(val.get());
+    }
+
+    val = autosizedDesignFanPower();
+    if (val) {
+      setDesignFanPower(val.get());
+    }
+
+  }
 
 } // detail
 
@@ -716,6 +804,7 @@ CoolingTowerVariableSpeed::CoolingTowerVariableSpeed(const Model& model)
   setBlowdownCalculationMode("ConcentrationRatio");
   setBlowdownConcentrationRatio(3.0000);
   setSizingFactor(1.0000);
+  setEndUseSubcategory("General");
 
   CurveCubic curve(model);
   curve.setName(name().get() + " Fan Power Ratio Curve");
@@ -1069,11 +1158,31 @@ void CoolingTowerVariableSpeed::resetSizingFactor() {
   getImpl<detail::CoolingTowerVariableSpeed_Impl>()->resetSizingFactor();
 }
 
+std::string CoolingTowerVariableSpeed::endUseSubcategory() const {
+  return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->endUseSubcategory();
+}
+
+bool CoolingTowerVariableSpeed::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setEndUseSubcategory(endUseSubcategory);
+}
+
 /// @cond
 CoolingTowerVariableSpeed::CoolingTowerVariableSpeed(std::shared_ptr<detail::CoolingTowerVariableSpeed_Impl> impl)
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> CoolingTowerVariableSpeed::autosizedDesignWaterFlowRate() const {
+    return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->autosizedDesignWaterFlowRate();
+  }
+
+  boost::optional<double> CoolingTowerVariableSpeed::autosizedDesignAirFlowRate() const {
+    return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->autosizedDesignAirFlowRate();
+  }
+
+  boost::optional<double> CoolingTowerVariableSpeed::autosizedDesignFanPower() const {
+    return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->autosizedDesignFanPower();
+  }
 
 } // model
 } // openstudio

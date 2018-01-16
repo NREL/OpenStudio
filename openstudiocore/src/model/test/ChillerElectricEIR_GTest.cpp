@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -454,4 +454,60 @@ TEST(ChillerElectricEIR,PlantLoop_addDemandBranch)
   EXPECT_EQ(5u,plantLoop.demandComponents().size());
 }
 
+// Check condenser type setting/defaulting
+TEST(ChillerElectricEIR, ChillerElectricEIR_CondenserType)
+{
+  model::Model m;
 
+  model::PlantLoop pl1(m);
+  model::PlantLoop pl2(m);
+
+  model::ChillerElectricEIR ch(m);
+
+  // By default, AirCooled (from IDD)
+  EXPECT_EQ("AirCooled", ch.condenserType());
+
+  // Not connected to a secondary plantLoop
+  ASSERT_TRUE(ch.setCondenserType("EvaporativelyCooled"));
+  ASSERT_EQ("EvaporativelyCooled", ch.condenserType());
+
+  ASSERT_TRUE(ch.setCondenserType("AirCooled"));
+  ASSERT_EQ("AirCooled", ch.condenserType());
+
+  ASSERT_FALSE(ch.setCondenserType("WaterCooled"));
+
+  // Add to primary plant loop (on supply), behavior should be the same
+  ASSERT_TRUE(pl1.addSupplyBranchForComponent(ch));
+  // Should have stayed
+  ASSERT_EQ("AirCooled", ch.condenserType());
+  ASSERT_TRUE(ch.setCondenserType("EvaporativelyCooled"));
+  ASSERT_EQ("EvaporativelyCooled", ch.condenserType());
+
+  ASSERT_TRUE(ch.setCondenserType("AirCooled"));
+  ASSERT_EQ("AirCooled", ch.condenserType());
+
+  ASSERT_FALSE(ch.setCondenserType("WaterCooled"));
+
+
+  // Add to the Secondary plant loop (on demand), behavior should be reversed
+  ASSERT_TRUE(pl2.addDemandBranchForComponent(ch));
+  // Should have been automatically set to WaterCooled
+  ASSERT_EQ("WaterCooled", ch.condenserType());
+
+  ASSERT_FALSE(ch.setCondenserType("AirCooled"));
+  ASSERT_FALSE(ch.setCondenserType("EvaporativelyCooled"));
+
+  // Disconnect from the secondary plant Loop
+  ASSERT_TRUE(ch.removeFromSecondaryPlantLoop());
+  // Should have been automatically switched to AirCooled
+  ASSERT_EQ("AirCooled", ch.condenserType());
+
+  ASSERT_TRUE(ch.setCondenserType("EvaporativelyCooled"));
+  ASSERT_EQ("EvaporativelyCooled", ch.condenserType());
+
+  ASSERT_TRUE(ch.setCondenserType("AirCooled"));
+  ASSERT_EQ("AirCooled", ch.condenserType());
+
+  ASSERT_FALSE(ch.setCondenserType("WaterCooled"));
+
+}

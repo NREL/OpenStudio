@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -55,7 +55,9 @@ class AirLoopHVACUnitarySystem;
 class AirLoopHVACReturnPlenum;
 class AirLoopHVACSupplyPlenum;
 class AirLoopHVACZoneSplitter;
+class AirTerminalDualDuctConstantVolume;
 class AirTerminalDualDuctVAV;
+class AirTerminalDualDuctVAVOutdoorAir;
 class AirTerminalSingleDuctConstantVolumeCooledBeam;
 class AirTerminalSingleDuctConstantVolumeFourPipeInduction;
 class AirTerminalSingleDuctConstantVolumeReheat;
@@ -70,11 +72,19 @@ class AirTerminalSingleDuctVAVHeatAndCoolReheat;
 class AirLoopHVACZoneMixer;
 class AirLoopHVACOutdoorAirSystem;
 class AirWallMaterial;
+class AvailabilityManagerAssignmentList;
 class AvailabilityManagerHybridVentilation;
 class AvailabilityManagerOptimumStart;
 class AvailabilityManagerDifferentialThermostat;
 class AvailabilityManagerNightVentilation;
 class AvailabilityManagerNightCycle;
+class AvailabilityManagerHighTemperatureTurnOn;
+class AvailabilityManagerHighTemperatureTurnOff;
+class AvailabilityManagerLowTemperatureTurnOn;
+class AvailabilityManagerLowTemperatureTurnOff;
+class AvailabilityManagerScheduled;
+class AvailabilityManagerScheduledOn;
+class AvailabilityManagerScheduledOff;
 class Blind;
 class Building;
 class BoilerHotWater;
@@ -171,6 +181,19 @@ class EvaporativeCoolerIndirectResearchSpecial;
 class EvaporativeFluidCoolerSingleSpeed;
 class EvaporativeFluidCoolerTwoSpeed;
 class ExteriorLights;
+class ExternalInterface;
+class ExternalInterfaceActuator;
+class ExternalInterfaceFunctionalMockupUnitExportFromVariable;
+class ExternalInterfaceFunctionalMockupUnitExportToActuator;
+class ExternalInterfaceFunctionalMockupUnitExportToSchedule;
+class ExternalInterfaceFunctionalMockupUnitExportToVariable;
+class ExternalInterfaceFunctionalMockupUnitImport;
+class ExternalInterfaceFunctionalMockupUnitImportFromVariable;
+class ExternalInterfaceFunctionalMockupUnitImportToActuator;
+class ExternalInterfaceFunctionalMockupUnitImportToSchedule;
+class ExternalInterfaceFunctionalMockupUnitImportToVariable;
+class ExternalInterfaceSchedule;
+class ExternalInterfaceVariable;
 class FanConstantVolume;
 class FanOnOff;
 class FanVariableVolume;
@@ -479,7 +502,11 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateAirLoopHVACZoneSplitter( model::AirLoopHVACZoneSplitter & airLoopHVACZoneSplitter );
 
+  boost::optional<IdfObject> translateAirTerminalDualDuctConstantVolume ( model::AirTerminalDualDuctConstantVolume & modelObject );
+
   boost::optional<IdfObject> translateAirTerminalDualDuctVAV ( model::AirTerminalDualDuctVAV & modelObject );
+
+  boost::optional<IdfObject> translateAirTerminalDualDuctVAVOutdoorAir ( model::AirTerminalDualDuctVAVOutdoorAir & modelObject );
 
   boost::optional<IdfObject> translateAirTerminalSingleDuctConstantVolumeCooledBeam ( model::AirTerminalSingleDuctConstantVolumeCooledBeam & modelObject );
 
@@ -505,6 +532,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateAirWallMaterial( model::AirWallMaterial & modelObject );
 
+  boost::optional<IdfObject> translateAvailabilityManagerAssignmentList( model::AvailabilityManagerAssignmentList & modelObject );
+
   boost::optional<IdfObject> translateAvailabilityManagerHybridVentilation( model::AvailabilityManagerHybridVentilation & modelObject );
 
   boost::optional<IdfObject> translateAvailabilityManagerOptimumStart( model::AvailabilityManagerOptimumStart & modelObject );
@@ -514,6 +543,20 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateAvailabilityManagerNightVentilation( model::AvailabilityManagerNightVentilation & modelObject );
 
   boost::optional<IdfObject> translateAvailabilityManagerNightCycle( model::AvailabilityManagerNightCycle & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerHighTemperatureTurnOn( model::AvailabilityManagerHighTemperatureTurnOn & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerHighTemperatureTurnOff( model::AvailabilityManagerHighTemperatureTurnOff & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerLowTemperatureTurnOn( model::AvailabilityManagerLowTemperatureTurnOn & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerLowTemperatureTurnOff( model::AvailabilityManagerLowTemperatureTurnOff & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerScheduled( model::AvailabilityManagerScheduled & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerScheduledOn( model::AvailabilityManagerScheduledOn & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerScheduledOff( model::AvailabilityManagerScheduledOff & modelObject );
 
   boost::optional<IdfObject> translateBlind( model::Blind & modelObject );
 
@@ -714,6 +757,32 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateEvaporativeFluidCoolerTwoSpeed( model::EvaporativeFluidCoolerTwoSpeed & modelObject  );
 
   boost::optional<IdfObject> translateExteriorLights(model::ExteriorLights& modelObject );
+  
+  boost::optional<IdfObject> translateExternalInterface(model::ExternalInterface& modelObject );
+    
+  boost::optional<IdfObject> translateExternalInterfaceActuator(model::ExternalInterfaceActuator& modelObject );
+  
+  boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitExportFromVariable(model::ExternalInterfaceFunctionalMockupUnitExportFromVariable& modelObject );
+    
+  boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitExportToActuator(model::ExternalInterfaceFunctionalMockupUnitExportToActuator& modelObject );
+      
+  boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitExportToSchedule(model::ExternalInterfaceFunctionalMockupUnitExportToSchedule& modelObject );
+
+  boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitExportToVariable(model::ExternalInterfaceFunctionalMockupUnitExportToVariable& modelObject );
+    
+  boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitImport(model::ExternalInterfaceFunctionalMockupUnitImport& modelObject );
+
+  boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitImportFromVariable(model::ExternalInterfaceFunctionalMockupUnitImportFromVariable& modelObject );
+
+  boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitImportToActuator(model::ExternalInterfaceFunctionalMockupUnitImportToActuator& modelObject );
+
+  boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitImportToSchedule(model::ExternalInterfaceFunctionalMockupUnitImportToSchedule& modelObject );
+
+  boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitImportToVariable(model::ExternalInterfaceFunctionalMockupUnitImportToVariable& modelObject );
+  
+  boost::optional<IdfObject> translateExternalInterfaceSchedule(model::ExternalInterfaceSchedule& modelObject);
+
+  boost::optional<IdfObject> translateExternalInterfaceVariable(model::ExternalInterfaceVariable& modelObject);
 
   boost::optional<IdfObject> translateFanConstantVolume( model::FanConstantVolume & modelObject );
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -31,6 +31,7 @@
 
 #include "ModelAPI.hpp"
 #include "AvailabilityManager_Impl.hpp"
+#include "ModelObjectList.hpp"
 #include "../utilities/units/Quantity.hpp"
 #include "../utilities/units/OSOptionalQuantity.hpp"
 
@@ -44,22 +45,6 @@ namespace detail {
 
   /** AvailabilityManagerNightCycle_Impl is a ModelObject_Impl that is the implementation class for AvailabilityManagerNightCycle.*/
   class MODEL_API AvailabilityManagerNightCycle_Impl : public AvailabilityManager_Impl {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
    public:
 
@@ -83,51 +68,54 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+
     Schedule applicabilitySchedule() const;
-
-    Schedule fanSchedule() const;
-
-    std::string controlType() const;
-
-    bool isControlTypeDefaulted() const;
-
-    double thermostatTolerance() const;
-
-    Quantity getThermostatTolerance(bool returnIP=false) const;
-
-    bool isThermostatToleranceDefaulted() const;
-
-    double cyclingRunTime() const;
-
-    Quantity getCyclingRunTime(bool returnIP=false) const;
-
-    bool isCyclingRunTimeDefaulted() const;
-
-    boost::optional<ThermalZone> controlThermalZone() const;
-
     bool setApplicabilitySchedule(Schedule& schedule);
 
+    Schedule fanSchedule() const;
     bool setFanSchedule(Schedule& schedule);
 
+    std::string controlType() const;
+    bool isControlTypeDefaulted() const;
     bool setControlType(std::string controlType);
-
     void resetControlType();
 
+    double thermostatTolerance() const;
+    Quantity getThermostatTolerance(bool returnIP=false) const;
+    bool isThermostatToleranceDefaulted() const;
     bool setThermostatTolerance(double thermostatTolerance);
-
     bool setThermostatTolerance(const Quantity& thermostatTolerance);
-
     void resetThermostatTolerance();
 
+    std::string cyclingRunTimeControlType() const;
+    bool isCyclingRunTimeControlTypeDefaulted() const;
+    bool setCyclingRunTimeControlType(std::string cyclingRunTimeControlType);
+    void resetCyclingRunTimeControlType();
+
+    double cyclingRunTime() const;
+    Quantity getCyclingRunTime(bool returnIP=false) const;
+    bool isCyclingRunTimeDefaulted() const;
     bool setCyclingRunTime(double cyclingRunTime);
-
     bool setCyclingRunTime(const Quantity& cyclingRunTime);
-
     void resetCyclingRunTime();
 
-    bool setControlThermalZone(const boost::optional<ThermalZone>& thermalZone);
 
-    void resetControlThermalZone();
+    std::vector<ThermalZone> controlThermalZones() const;
+    bool setControlThermalZones(const std::vector<ThermalZone>& thermalZones);
+    void resetControlThermalZones();
+
+    std::vector<ThermalZone> coolingControlThermalZones() const;
+    bool setCoolingControlThermalZones(const std::vector<ThermalZone>& thermalZones);
+    void resetCoolingControlThermalZones();
+
+    std::vector<ThermalZone> heatingControlThermalZones() const;
+    bool setHeatingControlThermalZones(const std::vector<ThermalZone>& thermalZones);
+    void resetHeatingControlThermalZones();
+
+    std::vector<ThermalZone> heatingZoneFansOnlyThermalZones() const;
+    bool setHeatingZoneFansOnlyThermalZones(const std::vector<ThermalZone>& thermalZones);
+    void resetHeatingZoneFansOnlyThermalZones();
+
 
    private:
     REGISTER_LOGGER("openstudio.model.AvailabilityManagerNightCycle");
@@ -141,13 +129,29 @@ namespace detail {
     openstudio::Quantity cyclingRunTime_SI() const;
     openstudio::Quantity cyclingRunTime_IP() const;
 
+    std::vector<std::string> cyclingRunTimeControlTypeValues() const;
+
+
     boost::optional<ModelObject> applicabilityScheduleAsModelObject() const;
     boost::optional<ModelObject> fanScheduleAsModelObject() const;
-    boost::optional<ModelObject> controlThermalZoneAsModelObject() const;
+    // boost::optional<ModelObject> controlThermalZonesAsModelObject() const;
 
     bool setApplicabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setFanScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setControlThermalZoneAsModelObject(const boost::optional<ModelObject>& modelObject);
+    // bool setControlThermalZoneAsModelObject(const boost::optional<ModelObject>& modelObject);
+
+    ModelObjectList controlThermalZoneList() const;
+    void clearControlThermalZoneList();
+
+    ModelObjectList coolingControlThermalZoneList() const;
+    void clearCoolingControlThermalZoneList();
+
+    ModelObjectList heatingControlThermalZoneList() const;
+    void clearHeatingControlThermalZoneList();
+
+    ModelObjectList heatingZoneFansOnlyThermalZoneList() const;
+    void clearHeatingZoneFansOnlyThermalZoneList();
+
   };
 
 } // detail

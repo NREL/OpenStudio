@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -95,7 +95,11 @@ namespace detail {
   const std::vector<std::string>& FanConstantVolume_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Fan Electric Power");
+      result.push_back("Fan Rise in Air Temperature");
+      result.push_back("Fan Electric Energy");
     }
     return result;
   }
@@ -455,6 +459,23 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<double> FanConstantVolume_Impl::autosizedMaximumFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Flow Rate", "m3/s");
+  }
+
+  void FanConstantVolume_Impl::autosize() {
+    autosizeMaximumFlowRate();
+  }
+
+  void FanConstantVolume_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumFlowRate();
+    if (val) {
+      setMaximumFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 // create a new FanConstantVolume object in the model's workspace
@@ -573,6 +594,10 @@ void FanConstantVolume::resetMaximumFlowRate() {
 void FanConstantVolume::autosizeMaximumFlowRate() {
   getImpl<detail::FanConstantVolume_Impl>()->autosizeMaximumFlowRate();
 }
+
+  boost::optional<double> FanConstantVolume::autosizedMaximumFlowRate() const {
+    return getImpl<detail::FanConstantVolume_Impl>()->autosizedMaximumFlowRate();
+  }
 
 } // model
 } // openstudio

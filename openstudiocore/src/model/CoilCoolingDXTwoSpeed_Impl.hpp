@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -136,6 +136,30 @@ namespace detail {
     boost::optional<double> basinHeaterSetpointTemperature()const;
 
     boost::optional<Schedule> basinHeaterOperatingSchedule()const;
+
+  boost::optional<double> autosizedRatedHighSpeedTotalCoolingCapacity() const ;
+
+  boost::optional<double> autosizedRatedHighSpeedSensibleHeatRatio() const ;
+
+  boost::optional<double> autosizedRatedHighSpeedAirFlowRate() const ;
+
+  boost::optional<double> autosizedRatedLowSpeedTotalCoolingCapacity() const ;
+
+  boost::optional<double> autosizedRatedLowSpeedSensibleHeatRatio() const ;
+
+  boost::optional<double> autosizedRatedLowSpeedAirFlowRate() const ;
+
+  boost::optional<double> autosizedHighSpeedEvaporativeCondenserAirFlowRate() const ;
+
+  boost::optional<double> autosizedHighSpeedEvaporativeCondenserPumpRatedPowerConsumption() const ;
+
+  boost::optional<double> autosizedLowSpeedEvaporativeCondenserAirFlowRate() const ;
+
+  boost::optional<double> autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
 
     //@}
     /** @name Setters */

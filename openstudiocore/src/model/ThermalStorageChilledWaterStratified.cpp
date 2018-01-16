@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -76,7 +76,28 @@ namespace detail {
   const std::vector<std::string>& ThermalStorageChilledWaterStratified_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Chilled Water Thermal Storage Tank Temperature");
+      result.push_back("Chilled Water Thermal Storage Final Tank Temperature");
+      result.push_back("Chilled Water Thermal Storage Tank Heat Gain Rate");
+      result.push_back("Chilled Water Thermal Storage Tank Heat Gain Energy");
+      result.push_back("Chilled Water Thermal Storage Use Side Mass Flow Rate");
+      result.push_back("Chilled Water Thermal Storage Use Side Inlet Temperature");
+      result.push_back("Chilled Water Thermal Storage Use Side Outlet Temperature");
+      result.push_back("Chilled Water Thermal Storage Use Side Heat Transfer Rate");
+      result.push_back("Chilled Water Thermal Storage Use Side Heat Transfer Energy");
+      result.push_back("Chilled Water Thermal Storage Source Side Mass Flow Rate");
+      result.push_back("Chilled Water Thermal Storage Source Side Inlet Temperature");
+      result.push_back("Chilled Water Thermal Storage Source Side Outlet Temperature");
+      result.push_back("Chilled Water Thermal Storage Source Side Heat Transfer Rate");
+      result.push_back("Chilled Water Thermal Storage Source Side Heat Transfer Energy");
+
+      // TODO: This should really be a check on whether the node is defined...
+      for (int i=1; i<=12; ++i) {
+        result.push_back("Chilled Water Thermal Storage Temperature Node " + std::to_string(i));
+        result.push_back("Chilled Water Thermal Storage Final Temperature Node " + std::to_string(i));
+      }
     }
     return result;
   }
@@ -702,6 +723,33 @@ namespace detail {
     return result;
   }
 
+  boost::optional<double> ThermalStorageChilledWaterStratified_Impl::autosizedUseSideDesignFlowRate() const {
+    return getAutosizedValue("Use Side Design Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ThermalStorageChilledWaterStratified_Impl::autosizedSourceSideDesignFlowRate() const {
+    return getAutosizedValue("Source Side Design Flow Rate", "m3/s");
+  }
+
+  void ThermalStorageChilledWaterStratified_Impl::autosize() {
+    autosizeUseSideDesignFlowRate();
+    autosizeSourceSideDesignFlowRate();
+  }
+
+  void ThermalStorageChilledWaterStratified_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedUseSideDesignFlowRate();
+    if (val) {
+      setUseSideDesignFlowRate(val.get());
+    }
+
+    val = autosizedSourceSideDesignFlowRate();
+    if (val) {
+      setSourceSideDesignFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 ThermalStorageChilledWaterStratified::ThermalStorageChilledWaterStratified(const Model& model)
@@ -1161,6 +1209,14 @@ ThermalStorageChilledWaterStratified::ThermalStorageChilledWaterStratified(std::
   : WaterToWaterComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> ThermalStorageChilledWaterStratified::autosizedUseSideDesignFlowRate() const {
+    return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->autosizedUseSideDesignFlowRate();
+  }
+
+  boost::optional<double> ThermalStorageChilledWaterStratified::autosizedSourceSideDesignFlowRate() const {
+    return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->autosizedSourceSideDesignFlowRate();
+  }
 
 } // model
 } // openstudio

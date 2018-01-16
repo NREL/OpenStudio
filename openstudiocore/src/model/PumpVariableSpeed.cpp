@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -43,6 +43,8 @@
 #include "CurveCubic_Impl.hpp"
 #include "CurveQuartic.hpp"
 #include "CurveQuartic_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -78,7 +80,25 @@ namespace detail {
   const std::vector<std::string>& PumpVariableSpeed_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Pump Electric Power");
+      result.push_back("Pump Electric Energy");
+      result.push_back("Pump Shaft Power");
+      result.push_back("Pump Fluid Heat Gain Rate");
+      result.push_back("Pump Fluid Heat Gain Energy");
+      result.push_back("Pump Outlet Temperature");
+      result.push_back("Pump Mass Flow Rate");
+
+      // The Key is the Pump, not the zone, so it's right to report here
+      // EnergyPlus/Pumps.cc::GetPumpInput()
+      // TODO: Implement this check and make not static above once ModelObject return type has changed
+      //if (! p.zone().empty() ) {
+        result.push_back("Pump Zone Total Heating Rate");
+        result.push_back("Pump Zone Total Heating Energy");
+        result.push_back("Pump Zone Convective Heating Rate");
+        result.push_back("Pump Zone Radiative Heating Rate");
+      // }
     }
     return result;
   }
@@ -1045,6 +1065,95 @@ namespace detail {
     return true;
   }
 
+  boost::optional<double> PumpVariableSpeed_Impl::autosizedRatedFlowRate() const {
+    return getAutosizedValue("Design Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> PumpVariableSpeed_Impl::autosizedRatedPowerConsumption() const {
+    return getAutosizedValue("Design Power Consumption", "W");
+  }
+
+  void PumpVariableSpeed_Impl::autosize() {
+    autosizeRatedFlowRate();
+    autosizeRatedPowerConsumption();
+  }
+
+  void PumpVariableSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRatedFlowRate();
+    if (val) {
+      setRatedFlowRate(val.get());
+    }
+
+    val = autosizedRatedPowerConsumption();
+    if (val) {
+      setRatedPowerConsumption(val.get());
+    }
+  }
+
+  std::string PumpVariableSpeed_Impl::designPowerSizingMethod() const {
+    auto value = getString(OS_Pump_VariableSpeedFields::DesignPowerSizingMethod,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool PumpVariableSpeed_Impl::setDesignPowerSizingMethod(const std::string & designPowerSizingMethod) {
+    return setString(OS_Pump_VariableSpeedFields::DesignPowerSizingMethod,designPowerSizingMethod);
+  }
+  
+  double PumpVariableSpeed_Impl::designElectricPowerPerUnitFlowRate() const {
+    auto value = getDouble(OS_Pump_VariableSpeedFields::DesignElectricPowerperUnitFlowRate,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool PumpVariableSpeed_Impl::setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate) {
+    return setDouble(OS_Pump_VariableSpeedFields::DesignElectricPowerperUnitFlowRate,designElectricPowerPerUnitFlowRate);
+  }
+  
+  double PumpVariableSpeed_Impl::designShaftPowerPerUnitFlowRatePerUnitHead() const {
+    auto value = getDouble(OS_Pump_VariableSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool PumpVariableSpeed_Impl::setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead) {
+    return setDouble(OS_Pump_VariableSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead,designShaftPowerPerUnitFlowRatePerUnitHead);
+  }
+
+  double PumpVariableSpeed_Impl::designMinimumFlowRateFraction() const {
+    auto value = getDouble(OS_Pump_VariableSpeedFields::DesignMinimumFlowRateFraction,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool PumpVariableSpeed_Impl::setDesignMinimumFlowRateFraction(double designMinimumFlowRateFraction) {
+    return setDouble(OS_Pump_VariableSpeedFields::DesignMinimumFlowRateFraction,designMinimumFlowRateFraction);
+  }
+
+  double PumpVariableSpeed_Impl::skinLossRadiativeFraction() const {
+    auto value = getDouble(OS_Pump_VariableSpeedFields::SkinLossRadiativeFraction,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool PumpVariableSpeed_Impl::setSkinLossRadiativeFraction(double skinLossRadiativeFraction) {
+    return setDouble(OS_Pump_VariableSpeedFields::SkinLossRadiativeFraction,skinLossRadiativeFraction);
+  }
+
+  boost::optional<ThermalZone> PumpVariableSpeed_Impl::zone() const {
+    return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Pump_VariableSpeedFields::ZoneName);
+  }
+
+  bool PumpVariableSpeed_Impl::setZone(const ThermalZone& thermalZone) {
+    return setPointer(OS_Pump_VariableSpeedFields::ZoneName, thermalZone.handle());
+  }
+
+  void PumpVariableSpeed_Impl::resetZone() {
+    bool result = setString(OS_Pump_VariableSpeedFields::ZoneName, "");
+    OS_ASSERT(result);
+  }
+
 } // detail
 
 PumpVariableSpeed::PumpVariableSpeed(const Model& model)
@@ -1053,11 +1162,22 @@ PumpVariableSpeed::PumpVariableSpeed(const Model& model)
   OS_ASSERT(getImpl<detail::PumpVariableSpeed_Impl>());
 
   setPumpControlType("Intermittent");
+
+  setSkinLossRadiativeFraction(0.5);
+  setDesignPowerSizingMethod("PowerPerFlowPerPressure");
+  setDesignElectricPowerPerUnitFlowRate(348701.1);
+  setDesignShaftPowerPerUnitFlowRatePerUnitHead(1.282051282);
+  setDesignMinimumFlowRateFraction(0.0);
 }
 
 IddObjectType PumpVariableSpeed::iddObjectType() {
   IddObjectType result(IddObjectType::OS_Pump_VariableSpeed);
   return result;
+}
+
+std::vector<std::string> PumpVariableSpeed::designPowerSizingMethodValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_Pump_VariableSpeedFields::DesignPowerSizingMethod);
 }
 
 std::vector<std::string> PumpVariableSpeed::pumpControlTypeValues() {
@@ -1462,12 +1582,72 @@ void PumpVariableSpeed::resetMaximumRPMSchedule() {
   getImpl<detail::PumpVariableSpeed_Impl>()->resetMaximumRPMSchedule();
 }
 
+std::string PumpVariableSpeed::designPowerSizingMethod() const {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->designPowerSizingMethod();
+}
+
+bool PumpVariableSpeed::setDesignPowerSizingMethod(const std::string & designPowerSizingMethod) {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->setDesignPowerSizingMethod(designPowerSizingMethod);
+}
+
+double PumpVariableSpeed::designElectricPowerPerUnitFlowRate() const {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->designElectricPowerPerUnitFlowRate();
+}
+
+bool PumpVariableSpeed::setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate) {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->setDesignElectricPowerPerUnitFlowRate(designElectricPowerPerUnitFlowRate);
+}
+
+double PumpVariableSpeed::designShaftPowerPerUnitFlowRatePerUnitHead() const {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->designShaftPowerPerUnitFlowRatePerUnitHead();
+}
+
+bool PumpVariableSpeed::setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead) {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->setDesignShaftPowerPerUnitFlowRatePerUnitHead(designShaftPowerPerUnitFlowRatePerUnitHead);
+}
+
+boost::optional<ThermalZone> PumpVariableSpeed::zone() const {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->zone();
+}
+
+bool PumpVariableSpeed::setZone(const ThermalZone& thermalZone) {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->setZone(thermalZone);
+}
+
+void PumpVariableSpeed::resetZone() {
+  getImpl<detail::PumpVariableSpeed_Impl>()->resetZone();
+}
+
+double PumpVariableSpeed::skinLossRadiativeFraction() const {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->skinLossRadiativeFraction();
+}
+
+bool PumpVariableSpeed::setSkinLossRadiativeFraction(double skinLossRadiativeFraction) {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->setSkinLossRadiativeFraction(skinLossRadiativeFraction);
+}
+
+double PumpVariableSpeed::designMinimumFlowRateFraction() const {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->designMinimumFlowRateFraction();
+}
+
+bool PumpVariableSpeed::setDesignMinimumFlowRateFraction(double designMinimumFlowRateFraction) {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->setDesignMinimumFlowRateFraction(designMinimumFlowRateFraction);
+}
+
 /// @cond
 PumpVariableSpeed::PumpVariableSpeed(std::shared_ptr<detail::PumpVariableSpeed_Impl> impl)
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
 
+
+  boost::optional<double> PumpVariableSpeed::autosizedRatedFlowRate() const {
+    return getImpl<detail::PumpVariableSpeed_Impl>()->autosizedRatedFlowRate();
+  }
+
+  boost::optional<double> PumpVariableSpeed::autosizedRatedPowerConsumption() const {
+    return getImpl<detail::PumpVariableSpeed_Impl>()->autosizedRatedPowerConsumption();
+  }
 
 } // model
 } // openstudio

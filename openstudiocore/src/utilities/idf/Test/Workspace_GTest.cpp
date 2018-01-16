@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -79,8 +79,18 @@ TEST_F(IdfFixture, IdfFile_Workspace_DefaultConstructor)
 {
   Workspace workspaceNone(StrictnessLevel::None);
   EXPECT_TRUE(workspaceNone.isValid());
+  // Make sure the default is IddFileType::EnergyPlus
+  EXPECT_EQ(IddFileType::EnergyPlus, workspaceNone.iddFileType().value());
+
   Workspace workspaceDraft(StrictnessLevel::Draft);
   EXPECT_TRUE(workspaceDraft.isValid());
+  EXPECT_EQ(IddFileType::EnergyPlus, workspaceDraft.iddFileType().value());
+
+  // Test an OpenStudio one
+  Workspace workspaceOS(StrictnessLevel::Draft, IddFileType::OpenStudio);
+  EXPECT_TRUE(workspaceOS.isValid());
+  EXPECT_EQ(IddFileType::OpenStudio, workspaceOS.iddFileType().value());
+
   EXPECT_ANY_THROW(Workspace workspaceFinal(StrictnessLevel::Final));
 }
 
@@ -88,6 +98,10 @@ TEST_F(IdfFixture, IdfFile_Workspace_Roundtrip)
 {
   ASSERT_TRUE(epIdfFile.objects().size() > 0);
   Workspace workspace(epIdfFile,StrictnessLevel::None);
+
+  // make sure this also creates an IddFileType::EnergyPlus
+  EXPECT_EQ(IddFileType::EnergyPlus, workspace.iddFileType().value());
+
   IdfFile copyOfIdfFile = workspace.toIdfFile();
   // until == available, print out for diff
   openstudio::path outPath = outDir/toPath("passedThroughWorkspace.idf");
@@ -1473,7 +1487,7 @@ TEST_F(IdfFixture,Workspace_LocateURLs) {
   // DLM: replace with OS_WeatherFileFields
 
   // create workspace with single TDV object in it
-  Workspace ws;
+  Workspace ws(StrictnessLevel::Draft, IddFileType::OpenStudio);
   OptionalWorkspaceObject owo = ws.addObject(IdfObject(IddObjectType::OS_WeatherFile));
   ASSERT_TRUE(owo);
   WorkspaceObject epw = *owo;

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -244,6 +244,14 @@ namespace detail {
 
     boost::optional<Schedule> maximumRPMSchedule() const;
 
+  boost::optional<double> autosizedRatedFlowRate() const ;
+
+  boost::optional<double> autosizedRatedPowerConsumption() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{
@@ -353,6 +361,32 @@ namespace detail {
     bool setMaximumRPMSchedule(Schedule& schedule);
 
     void resetMaximumRPMSchedule();
+
+    std::string designPowerSizingMethod() const;
+
+    bool setDesignPowerSizingMethod(const std::string & designPowerSizingMethod);
+
+    double designElectricPowerPerUnitFlowRate() const;
+
+    bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
+
+    double designShaftPowerPerUnitFlowRatePerUnitHead() const;
+
+    bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
+
+    boost::optional<ThermalZone> zone() const;
+
+    bool setZone(const ThermalZone& thermalZone);
+
+    void resetZone();
+
+    double skinLossRadiativeFraction() const;
+
+    bool setSkinLossRadiativeFraction(double skinLossRadiativeFraction);
+
+    double designMinimumFlowRateFraction() const;
+    
+    bool setDesignMinimumFlowRateFraction(double designMinimumFlowRateFraction);
 
     //@}
    private:

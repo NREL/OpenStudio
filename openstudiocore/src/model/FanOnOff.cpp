@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -99,6 +99,10 @@ namespace detail {
     static std::vector<std::string> result;
     if (result.empty())
     {
+      result.push_back("Fan Electric Power");
+      result.push_back("Fan Rise in Air Temperature");
+      result.push_back("Fan Electric Energy");
+      result.push_back("Fan Runtime Fraction");
     }
     return result;
   }
@@ -501,6 +505,23 @@ namespace detail {
     return boost::none;
   }
 
+  boost::optional<double> FanOnOff_Impl::autosizedMaximumFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Flow Rate", "m3/s");
+  }
+
+  void FanOnOff_Impl::autosize() {
+    autosizeMaximumFlowRate();
+  }
+
+  void FanOnOff_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumFlowRate();
+    if (val) {
+      setMaximumFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 FanOnOff::FanOnOff(const Model& model)
@@ -768,6 +789,10 @@ FanOnOff::FanOnOff(std::shared_ptr<detail::FanOnOff_Impl> impl)
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> FanOnOff::autosizedMaximumFlowRate() const {
+    return getImpl<detail::FanOnOff_Impl>()->autosizedMaximumFlowRate();
+  }
 
 } // model
 } // openstudio

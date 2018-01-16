@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -79,7 +79,18 @@ namespace detail {
   const std::vector<std::string>& HeatExchangerFluidToFluid_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Fluid Heat Exchanger Heat Transfer Rate");
+      result.push_back("Fluid Heat Exchanger Heat Transfer Energy");
+      result.push_back("Fluid Heat Exchanger Loop Supply Side Mass Flow Rate");
+      result.push_back("Fluid Heat Exchanger Loop Supply Side Inlet Temperature");
+      result.push_back("Fluid Heat Exchanger Loop Supply Side Outlet Temperature");
+      result.push_back("Fluid Heat Exchanger Loop Demand Side Mass Flow Rate");
+      result.push_back("Fluid Heat Exchanger Loop Demand Side Inlet Temperature");
+      result.push_back("Fluid Heat Exchanger Loop Demand Side Outlet Temperature");
+      result.push_back("Fluid Heat Exchanger Operation Status");
+      result.push_back("Fluid Heat Exchanger Effectiveness");
     }
     return result;
   }
@@ -420,6 +431,43 @@ namespace detail {
     return OS_HeatExchanger_FluidToFluidFields::LoopDemandSideOutletNode;
   }
 
+  boost::optional<double> HeatExchangerFluidToFluid_Impl::autosizedLoopDemandSideDesignFlowRate() const {
+    return getAutosizedValue("Loop Demand Side Design Fluid Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> HeatExchangerFluidToFluid_Impl::autosizedLoopSupplySideDesignFlowRate() const {
+    return getAutosizedValue("Loop Supply Side Design Fluid Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> HeatExchangerFluidToFluid_Impl::autosizedHeatExchangerUFactorTimesAreaValue() const {
+    return getAutosizedValue("Heat Exchanger U-Factor Times Area Value", "W/C");
+  }
+
+  void HeatExchangerFluidToFluid_Impl::autosize() {
+    autosizeLoopDemandSideDesignFlowRate();
+    autosizeLoopSupplySideDesignFlowRate();
+    autosizeHeatExchangerUFactorTimesAreaValue();
+  }
+
+  void HeatExchangerFluidToFluid_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedLoopDemandSideDesignFlowRate();
+    if (val) {
+      setLoopDemandSideDesignFlowRate(val.get());
+    }
+
+    val = autosizedLoopSupplySideDesignFlowRate();
+    if (val) {
+      setLoopSupplySideDesignFlowRate(val.get());
+    }
+
+    val = autosizedHeatExchangerUFactorTimesAreaValue();
+    if (val) {
+      setHeatExchangerUFactorTimesAreaValue(val.get());
+    }
+
+  }
+
 } // detail
 
 HeatExchangerFluidToFluid::HeatExchangerFluidToFluid(const Model& model)
@@ -673,6 +721,18 @@ HeatExchangerFluidToFluid::HeatExchangerFluidToFluid(std::shared_ptr<detail::Hea
   : WaterToWaterComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> HeatExchangerFluidToFluid::autosizedLoopDemandSideDesignFlowRate() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->autosizedLoopDemandSideDesignFlowRate();
+  }
+
+  boost::optional<double> HeatExchangerFluidToFluid::autosizedLoopSupplySideDesignFlowRate() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->autosizedLoopSupplySideDesignFlowRate();
+  }
+
+  boost::optional<double> HeatExchangerFluidToFluid::autosizedHeatExchangerUFactorTimesAreaValue() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->autosizedHeatExchangerUFactorTimesAreaValue();
+  }
 
 } // model
 } // openstudio

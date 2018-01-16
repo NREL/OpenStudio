@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -65,7 +65,9 @@ ControllerWaterCoil_Impl::ControllerWaterCoil_Impl(const ControllerWaterCoil_Imp
 const std::vector<std::string>& ControllerWaterCoil_Impl::outputVariableNames() const
 {
   static std::vector<std::string> result;
-  if (result.empty()){
+  if (result.empty())
+  {
+    // Not appropriate: no specific output
   }
   return result;
 }
@@ -252,6 +254,33 @@ boost::optional<HVACComponent> ControllerWaterCoil_Impl::waterCoil() const
   return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_Controller_WaterCoilFields::WaterCoilName);
 }
 
+  boost::optional<double> ControllerWaterCoil_Impl::autosizedControllerConvergenceTolerance() const {
+    return getAutosizedValue("Controller Convergence Tolerance", "");
+  }
+
+  boost::optional<double> ControllerWaterCoil_Impl::autosizedMaximumActuatedFlow() const {
+    return getAutosizedValue("Maximum Actuated Flow", "m3/s");
+  }
+
+  void ControllerWaterCoil_Impl::autosize() {
+    autosizeControllerConvergenceTolerance();
+    autosizeMaximumActuatedFlow();
+  }
+
+  void ControllerWaterCoil_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedControllerConvergenceTolerance();
+    if (val) {
+      setControllerConvergenceTolerance(val.get());
+    }
+
+    val = autosizedMaximumActuatedFlow();
+    if (val) {
+      setMaximumActuatedFlow(val.get());
+    }
+
+  }
+
 } // detail
 
 ControllerWaterCoil::ControllerWaterCoil(const Model& model)
@@ -403,6 +432,14 @@ ControllerWaterCoil::ControllerWaterCoil(std::shared_ptr<detail::ControllerWater
 {}
 /// @endcond
 
+
+  boost::optional<double> ControllerWaterCoil::autosizedControllerConvergenceTolerance() const {
+    return getImpl<detail::ControllerWaterCoil_Impl>()->autosizedControllerConvergenceTolerance();
+  }
+
+  boost::optional<double> ControllerWaterCoil::autosizedMaximumActuatedFlow() const {
+    return getImpl<detail::ControllerWaterCoil_Impl>()->autosizedMaximumActuatedFlow();
+  }
 
 } // model
 

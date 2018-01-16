@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -443,6 +443,20 @@ namespace detail {
     return std::vector<ModelObject>();
   }
 
+  // default implementation does nothing.
+  // should only be used by objects that have
+  // no autosized fields 
+  void Loop_Impl::autosize() {
+    return;
+  }
+
+  // default implementation does nothing.
+  // should only be used by objects that have
+  // no autosized fields 
+  void Loop_Impl::applySizingValues() {
+    return;
+  }
+
 } // detail
 
 Loop::Loop(IddObjectType type,const Model& model)
@@ -575,6 +589,14 @@ Splitter Loop::demandSplitter() const
 Mixer Loop::demandMixer() const
 {
   return getImpl<detail::Loop_Impl>()->demandMixer();
+}
+
+void Loop::autosize() {
+  return getImpl<detail::Loop_Impl>()->autosize();
+}
+
+void Loop::applySizingValues() {
+  return getImpl<detail::Loop_Impl>()->applySizingValues();
 }
 
 } // model

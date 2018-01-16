@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -83,7 +83,12 @@ namespace detail {
   const std::vector<std::string>& CoilHeatingElectric_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Heating Coil Air Heating Energy");
+      result.push_back("Heating Coil Air Heating Rate");
+      result.push_back("Heating Coil Electric Energy");
+      result.push_back("Heating Coil Electric Power");
     }
     return result;
   }
@@ -390,6 +395,23 @@ namespace detail {
     return false;
   }
 
+  boost::optional<double> CoilHeatingElectric_Impl::autosizedNominalCapacity() const {
+    return getAutosizedValue("Design Size Nominal Capacity", "W");
+  }
+
+  void CoilHeatingElectric_Impl::autosize() {
+    autosizeNominalCapacity();
+  }
+
+  void CoilHeatingElectric_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalCapacity();
+    if (val) {
+      setNominalCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilHeatingElectric::CoilHeatingElectric(const Model& model, Schedule & schedule )
@@ -481,6 +503,10 @@ CoilHeatingElectric::CoilHeatingElectric(std::shared_ptr<detail::CoilHeatingElec
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> CoilHeatingElectric::autosizedNominalCapacity() const {
+    return getImpl<detail::CoilHeatingElectric_Impl>()->autosizedNominalCapacity();
+  }
 
 } // model
 

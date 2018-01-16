@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -144,6 +144,16 @@ namespace detail {
     static std::vector<std::string> result;
     if (result.empty())
     {
+      result.push_back("Zone Radiant HVAC Heating Rate");
+      result.push_back("Zone Radiant HVAC Heating Energy");
+      result.push_back("Zone Radiant HVAC Cooling Rate");
+      result.push_back("Zone Radiant HVAC Cooling Energy");
+      result.push_back("Zone Radiant HVAC Mass Flow Rate");
+      result.push_back("Zone Radiant HVAC Inlet Temperature");
+      result.push_back("Zone Radiant HVAC Outlet Temperature");
+      result.push_back("Zone Radiant HVAC Moisture Condensation Time");
+      result.push_back("Zone Radiant HVAC Heating Fluid Energy");
+      result.push_back("Zone Radiant HVAC Cooling Fluid Energy");
     }
     return result;
   }
@@ -499,6 +509,23 @@ namespace detail {
     }
   }
 
+  boost::optional<double> ZoneHVACLowTempRadiantVarFlow_Impl::autosizedHydronicTubingLength() const {
+    return getAutosizedValue("Design Size Hydronic Tubing Length", "m");
+  }
+
+  void ZoneHVACLowTempRadiantVarFlow_Impl::autosize() {
+    autosizeHydronicTubingLength();
+  }
+
+  void ZoneHVACLowTempRadiantVarFlow_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedHydronicTubingLength();
+    if (val) {
+      setHydronicTubingLength(val.get());
+    }
+
+  }
+
 } // detail
 
 ZoneHVACLowTempRadiantVarFlow::ZoneHVACLowTempRadiantVarFlow(const Model& model,
@@ -695,6 +722,10 @@ ZoneHVACLowTempRadiantVarFlow::ZoneHVACLowTempRadiantVarFlow(std::shared_ptr<det
   : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> ZoneHVACLowTempRadiantVarFlow::autosizedHydronicTubingLength() const {
+    return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->autosizedHydronicTubingLength();
+  }
 
 } // model
 } // openstudio

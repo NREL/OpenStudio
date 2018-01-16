@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -122,10 +122,28 @@ namespace detail {
 
     bool isConvergenceToleranceDefaulted() const;
 
+  boost::optional<double> autosizedMaximumPrimaryAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumSecondaryAirFlowRate() const ;
+
+  boost::optional<double> autosizedMinimumPrimaryAirFlowFraction() const ;
+
+  boost::optional<double> autosizedFanOnFlowFraction() const ;
+
+  boost::optional<double> autosizedMaximumHotWaterorSteamFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{
 
+
+    // TODO: @macumber all of these should have a return type of bool, and shouldn't accept boost::optional double (or at least be overloaded to accept a
+    // double too), see https://github.com/NREL/OpenStudio/issues/2620 and https://github.com/jmarrec/OpenStudio/commit/5d295638aea240becc14a45641ea72a413e1c360
+    // and https://github.com/NREL/OpenStudio/pull/2589
     bool setAvailabilitySchedule(Schedule& schedule);
 
     bool setMaximumPrimaryAirFlowRate(boost::optional<double> maximumPrimaryAirFlowRate);

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -31,6 +31,7 @@
 
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
+#include "../model/CoilHeatingGasMultiStage.hpp"
 
 namespace openstudio {
 
@@ -83,6 +84,12 @@ class MODEL_API CoilHeatingGasMultiStageStageData : public ModelObject {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
   //@}
  protected:
   /// @cond
@@ -97,6 +104,11 @@ class MODEL_API CoilHeatingGasMultiStageStageData : public ModelObject {
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.CoilHeatingGasMultiStageStageData");
+
+  // Used to determine the index of this performance data in the
+  // list of stages in the parent object.
+  boost::optional<std::tuple<int, CoilHeatingGasMultiStage>> stageIndexAndParentCoil() const;
+
 };
 
 /** \relates CoilHeatingGasMultiStageStageData*/

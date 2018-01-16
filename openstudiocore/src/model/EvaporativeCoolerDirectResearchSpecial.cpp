@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -70,7 +70,20 @@ namespace detail{
   const std::vector<std::string>& EvaporativeCoolerDirectResearchSpecial_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Evaporative Cooler Electric Power");
+      result.push_back("Evaporative Cooler Stage Effectiveness");
+      result.push_back("Evaporative Cooler Electric Energy");
+      result.push_back("Evaporative Cooler Water Volume");
+      result.push_back("Evaporative Cooler Mains Water Volume");
+
+      // Doc doesn't specify, but 95% sure this is only
+      // If Supply Water Storage Tank Name is specified:
+      // TODO: if storage tank gets implemented
+      //result.push_back("Evaporative Cooler Storage Tank Water Volume");
+      //result.push_back("Evaporative Cooler Starved Water Volume");
+      //result.push_back("Evaporative Cooler Starved Mains Water Volume");
     }
     return result;
   }
@@ -301,6 +314,33 @@ namespace detail{
     OS_ASSERT(result);
   }
 
+  boost::optional<double> EvaporativeCoolerDirectResearchSpecial_Impl::autosizedRecirculatingWaterPumpPowerConsumption() const {
+    return getAutosizedValue("Recirculating Pump Power", "W");
+  }
+
+  boost::optional<double> EvaporativeCoolerDirectResearchSpecial_Impl::autosizedPrimaryAirDesignFlowRate() const {
+    return getAutosizedValue("Primary Air Design Flow Rate", "m3/s");
+  }
+
+  void EvaporativeCoolerDirectResearchSpecial_Impl::autosize() {
+    autosizeRecirculatingWaterPumpPowerConsumption();
+    autosizePrimaryAirDesignFlowRate();
+  }
+
+  void EvaporativeCoolerDirectResearchSpecial_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRecirculatingWaterPumpPowerConsumption();
+    if (val) {
+      setRecirculatingWaterPumpPowerConsumption(val.get());
+    }
+
+    val = autosizedPrimaryAirDesignFlowRate();
+    if (val) {
+      setPrimaryAirDesignFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 // create a new EvaporativeCoolerDirectResearchSpecial object in the model's workspace
@@ -463,6 +503,14 @@ IddObjectType EvaporativeCoolerDirectResearchSpecial::iddObjectType() {
   IddObjectType result(IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial);
   return result;
 }
+
+  boost::optional<double> EvaporativeCoolerDirectResearchSpecial::autosizedRecirculatingWaterPumpPowerConsumption() const {
+    return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->autosizedRecirculatingWaterPumpPowerConsumption();
+  }
+
+  boost::optional<double> EvaporativeCoolerDirectResearchSpecial::autosizedPrimaryAirDesignFlowRate() const {
+    return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->autosizedPrimaryAirDesignFlowRate();
+  }
 
 } // model
 } // openstudio

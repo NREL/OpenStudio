@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -77,7 +77,24 @@ namespace detail {
   const std::vector<std::string>& ThermalStorageIceDetailed_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Ice Thermal Storage Cooling Rate");
+      result.push_back("Ice Thermal Storage Change Fraction");
+      result.push_back("Ice Thermal Storage End Fraction");
+      result.push_back("Ice Thermal Storage Mass Flow Rate");
+      result.push_back("Ice Thermal Storage Bypass Mass Flow Rate");
+      result.push_back("Ice Thermal Storage Tank Mass Flow Rate");
+      result.push_back("Ice Thermal Storage Fluid Inlet Temperature");
+      result.push_back("Ice Thermal Storage Blended Outlet Temperature");
+      result.push_back("Ice Thermal Storage Tank Outlet Temperature");
+      result.push_back("Ice Thermal Storage Cooling Discharge Rate");
+      result.push_back("Ice Thermal Storage Cooling Discharge Energy");
+      result.push_back("Ice Thermal Storage Cooling Charge Rate");
+      result.push_back("Ice Thermal Storage Cooling Charge Energy");
+      result.push_back("Ice Thermal Storage Ancillary Electric Power");
+      result.push_back("Ice Thermal Storage Ancillary Electric Energy");
+      result.push_back("Ice Thermal Storage On Coil Fraction");
     }
     return result;
   }

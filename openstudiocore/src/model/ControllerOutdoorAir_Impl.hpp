@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -178,6 +178,14 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
   void resetTimeofDayEconomizerControlSchedule();
 
   std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
+  boost::optional<double> autosizedMinimumOutdoorAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumOutdoorAirFlowRate() const ;
+
+  void autosize();
+
+  void applySizingValues();
 
  private:
 

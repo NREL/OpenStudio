@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -78,7 +78,24 @@ namespace detail {
   const std::vector<std::string>& PumpConstantSpeed_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Pump Electric Power");
+      result.push_back("Pump Electric Energy");
+      result.push_back("Pump Shaft Power");
+      result.push_back("Pump Fluid Heat Gain Rate");
+      result.push_back("Pump Fluid Heat Gain Energy");
+      result.push_back("Pump Outlet Temperature");
+      result.push_back("Pump Mass Flow Rate");
+      // The Key is the Pump, not the zone, so it's right to report here
+      // EnergyPlus/Pumps.cc::GetPumpInput()
+      // TODO: Implement this check and make not static above once ModelObject return type has changed
+      // if (! p.zone().empty() ) {
+        result.push_back("Pump Zone Total Heating Rate");
+        result.push_back("Pump Zone Total Heating Energy");
+        result.push_back("Pump Zone Convective Heating Rate");
+        result.push_back("Pump Zone Radiative Heating Rate");
+      // }
     }
     return result;
   }
@@ -697,6 +714,62 @@ namespace detail {
     return false;
   }
 
+  boost::optional<double> PumpConstantSpeed_Impl::autosizedRatedFlowRate() const {
+    return getAutosizedValue("Design Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> PumpConstantSpeed_Impl::autosizedRatedPowerConsumption() const {
+    return getAutosizedValue("Design Power Consumption", "W");
+  }
+
+  void PumpConstantSpeed_Impl::autosize() {
+    autosizeRatedFlowRate();
+    autosizeRatedPowerConsumption();
+  }
+
+  void PumpConstantSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRatedFlowRate();
+    if (val) {
+      setRatedFlowRate(val.get());
+    }
+
+    val = autosizedRatedPowerConsumption();
+    if (val) {
+      setRatedPowerConsumption(val.get());
+    }
+  }
+
+  std::string PumpConstantSpeed_Impl::designPowerSizingMethod() const {
+    auto value = getString(OS_Pump_ConstantSpeedFields::DesignPowerSizingMethod,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool PumpConstantSpeed_Impl::setDesignPowerSizingMethod(const std::string & designPowerSizingMethod) {
+    return setString(OS_Pump_ConstantSpeedFields::DesignPowerSizingMethod,designPowerSizingMethod);
+  }
+  
+  double PumpConstantSpeed_Impl::designElectricPowerPerUnitFlowRate() const {
+    auto value = getDouble(OS_Pump_ConstantSpeedFields::DesignElectricPowerperUnitFlowRate,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool PumpConstantSpeed_Impl::setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate) {
+    return setDouble(OS_Pump_ConstantSpeedFields::DesignElectricPowerperUnitFlowRate,designElectricPowerPerUnitFlowRate);
+  }
+  
+  double PumpConstantSpeed_Impl::designShaftPowerPerUnitFlowRatePerUnitHead() const {
+    auto value = getDouble(OS_Pump_ConstantSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+  
+  bool PumpConstantSpeed_Impl::setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead) {
+    return setDouble(OS_Pump_ConstantSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead,designShaftPowerPerUnitFlowRatePerUnitHead);
+  }
+
 } // detail
 
 PumpConstantSpeed::PumpConstantSpeed(const Model& model)
@@ -710,6 +783,9 @@ PumpConstantSpeed::PumpConstantSpeed(const Model& model)
   setMotorEfficiency(0.9);
   setPumpControlType("Intermittent");
   setFractionofMotorInefficienciestoFluidStream(0.0);
+  setDesignPowerSizingMethod("PowerPerFlowPerPressure");
+  setDesignElectricPowerPerUnitFlowRate(348701.1);
+  setDesignShaftPowerPerUnitFlowRatePerUnitHead(1.282051282);
 
   setString(OS_Pump_ConstantSpeedFields::PumpFlowRateSchedule,"");
   setString(OS_Pump_ConstantSpeedFields::PumpCurve,"");
@@ -726,6 +802,11 @@ IddObjectType PumpConstantSpeed::iddObjectType() {
 std::vector<std::string> PumpConstantSpeed::pumpControlTypeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_Pump_ConstantSpeedFields::PumpControlType);
+}
+
+std::vector<std::string> PumpConstantSpeed::designPowerSizingMethodValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_Pump_ConstantSpeedFields::DesignPowerSizingMethod);
 }
 
 boost::optional<double> PumpConstantSpeed::ratedFlowRate() const {
@@ -968,11 +1049,43 @@ void PumpConstantSpeed::resetSkinLossRadiativeFraction() {
   getImpl<detail::PumpConstantSpeed_Impl>()->resetSkinLossRadiativeFraction();
 }
 
+std::string PumpConstantSpeed::designPowerSizingMethod() const {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->designPowerSizingMethod();
+}
+
+bool PumpConstantSpeed::setDesignPowerSizingMethod(const std::string & designPowerSizingMethod) {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->setDesignPowerSizingMethod(designPowerSizingMethod);
+}
+
+double PumpConstantSpeed::designElectricPowerPerUnitFlowRate() const {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->designElectricPowerPerUnitFlowRate();
+}
+
+bool PumpConstantSpeed::setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate) {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->setDesignElectricPowerPerUnitFlowRate(designElectricPowerPerUnitFlowRate);
+}
+
+double PumpConstantSpeed::designShaftPowerPerUnitFlowRatePerUnitHead() const {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->designShaftPowerPerUnitFlowRatePerUnitHead();
+}
+
+bool PumpConstantSpeed::setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead) {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->setDesignShaftPowerPerUnitFlowRatePerUnitHead(designShaftPowerPerUnitFlowRatePerUnitHead);
+}
+
 /// @cond
 PumpConstantSpeed::PumpConstantSpeed(std::shared_ptr<detail::PumpConstantSpeed_Impl> impl)
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> PumpConstantSpeed::autosizedRatedFlowRate() const {
+    return getImpl<detail::PumpConstantSpeed_Impl>()->autosizedRatedFlowRate();
+  }
+
+  boost::optional<double> PumpConstantSpeed::autosizedRatedPowerConsumption() const {
+    return getImpl<detail::PumpConstantSpeed_Impl>()->autosizedRatedPowerConsumption();
+  }
 
 } // model
 } // openstudio

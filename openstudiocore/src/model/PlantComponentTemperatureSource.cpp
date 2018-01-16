@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -72,7 +72,14 @@ namespace detail {
   const std::vector<std::string>& PlantComponentTemperatureSource_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Plant Temperature Source Component Mass Flow Rate");
+      result.push_back("Plant Temperature Source Component Inlet Temperature");
+      result.push_back("Plant Temperature Source Component Outlet Temperature");
+      result.push_back("Plant Temperature Source Component Source Temperature");
+      result.push_back("Plant Temperature Source Component Heat Transfer Rate");
+      result.push_back("Plant Temperature Source Component Heat Transfer Energy");
     }
     return result;
   }
@@ -179,6 +186,23 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<double> PlantComponentTemperatureSource_Impl::autosizedDesignVolumeFlowRate() const {
+    return getAutosizedValue("Design Size Design Fluid Flow Rate", "m3/s");
+  }
+
+  void PlantComponentTemperatureSource_Impl::autosize() {
+    autosizeDesignVolumeFlowRate();
+  }
+
+  void PlantComponentTemperatureSource_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedDesignVolumeFlowRate();
+    if (val) {
+      setDesignVolumeFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 PlantComponentTemperatureSource::PlantComponentTemperatureSource(const Model& model)
@@ -255,6 +279,10 @@ PlantComponentTemperatureSource::PlantComponentTemperatureSource(std::shared_ptr
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> PlantComponentTemperatureSource::autosizedDesignVolumeFlowRate() const {
+    return getImpl<detail::PlantComponentTemperatureSource_Impl>()->autosizedDesignVolumeFlowRate();
+  }
 
 } // model
 } // openstudio

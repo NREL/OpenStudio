@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -116,7 +116,6 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACUnitHeater_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-
     if (result.empty())
     {
       result.push_back("Zone Unit Heater Heating Rate");
@@ -124,6 +123,7 @@ namespace detail {
       result.push_back("Zone Unit Heater Fan Electric Power");
       result.push_back("Zone Unit Heater Fan Electric Energy");
       result.push_back("Zone Unit Heater Fan Availability Status");
+      result.push_back("Zone Unit Heater Fan Part Load Ratio");
     }
     return result;
   }
@@ -440,6 +440,33 @@ namespace detail {
     }
     return false;
   }
+  boost::optional<double> ZoneHVACUnitHeater_Impl::autosizedMaximumSupplyAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Supply Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACUnitHeater_Impl::autosizedMaximumHotWaterFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Hot Water Flow Rate", "m3/s");
+  }
+
+  void ZoneHVACUnitHeater_Impl::autosize() {
+    autosizeMaximumSupplyAirFlowRate();
+    autosizeMaximumHotWaterFlowRate();
+  }
+
+  void ZoneHVACUnitHeater_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumSupplyAirFlowRate();
+    if (val) {
+      setMaximumSupplyAirFlowRate(val.get());
+    }
+
+    val = autosizedMaximumHotWaterFlowRate();
+    if (val) {
+      setMaximumHotWaterFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 ZoneHVACUnitHeater::ZoneHVACUnitHeater(const Model& model,
@@ -614,6 +641,14 @@ void ZoneHVACUnitHeater::resetHeatingConvergenceTolerance()
 ZoneHVACUnitHeater::ZoneHVACUnitHeater(std::shared_ptr<detail::ZoneHVACUnitHeater_Impl> impl)
   : ZoneHVACComponent(std::move(impl))
 {}
+
+  boost::optional<double> ZoneHVACUnitHeater::autosizedMaximumSupplyAirFlowRate() const {
+    return getImpl<detail::ZoneHVACUnitHeater_Impl>()->autosizedMaximumSupplyAirFlowRate();
+  }
+
+  boost::optional<double> ZoneHVACUnitHeater::autosizedMaximumHotWaterFlowRate() const {
+    return getImpl<detail::ZoneHVACUnitHeater_Impl>()->autosizedMaximumHotWaterFlowRate();
+  }
 
 } // model
 } // openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -195,7 +195,7 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
   connect(m_view, &QWebEngineView::loadProgress, this, &EditorWebView::onLoadProgress);
   connect(m_view, &QWebEngineView::loadStarted, this, &EditorWebView::onLoadStarted);
   connect(m_view, &QWebEngineView::renderProcessTerminated, this, &EditorWebView::onRenderProcessTerminated);
-  
+
   // Qt 5.8 and higher
   //m_view->setAttribute(QWebEngineSettings::WebAttribute::AllowRunningInsecureContent, true);
 
@@ -370,7 +370,7 @@ void EditorWebView::translateExport()
     m_exportModel = model::Model();
     m_exportModelHandleMapping.clear();
   }
-  
+
 }
 
 void EditorWebView::startEditor()
@@ -402,10 +402,10 @@ void EditorWebView::startEditor()
 
     if (m_isIP){
       config["units"] = "ft";
-      config["initialGridSize"] = 4;
+      config["initialGridSize"] = 15;
     }else{
       config["units"] = "m";
-      config["initialGridSize"] = 1;
+      config["initialGridSize"] = 5;
     }
 
     boost::optional<model::Site> site = m_model.getOptionalUniqueModelObject<model::Site>();
@@ -536,7 +536,7 @@ void EditorWebView::saveExport()
 
     std::string contents = m_export.value<QString>().toStdString();
 
-    // DLM: should we compare checksums and only 
+    // DLM: should we compare checksums and only
     openstudio::path out = floorplanPath();
     if (!out.empty()){
       if (checksum(contents) != checksum(out)){

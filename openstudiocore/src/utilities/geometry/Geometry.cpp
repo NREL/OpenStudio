@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -40,6 +40,8 @@
 #include <polypartition/polypartition.h>
 
 #include <list>
+
+#include <QPolygon>
 
 namespace openstudio{
   /// convert degrees to radians
@@ -556,6 +558,258 @@ namespace openstudio{
     std::vector<Point3d> result(vertices);
     std::reverse(result.begin(), result.end());
     return result;
+  }
+
+  bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio,
+    double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
+    double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor,
+    const Point3dVector& vertices, Point3dVector& viewVertices,
+    Point3dVector& daylightingVertices, Point3dVector& exteriorShadingVertices,
+    Point3dVector& interiorShelfVertices)
+  {
+    // check inputs for reasonableness
+    double totalWWR = viewGlassToWallRatio + daylightingGlassToWallRatio;
+    if (totalWWR == 0){
+      // requesting no glass? remove existing windows?
+      return false;
+    }else if (totalWWR < 0.0 || totalWWR >= 1.0){
+      return false;
+    }
+
+    boost::optional<double> grossArea = getArea(vertices);
+    if (!grossArea){
+      return false;
+    }
+
+    Transformation transformation = Transformation::alignFace(vertices);
+    Point3dVector faceVertices = transformation.inverse() * vertices;
+
+    if (faceVertices.empty()){
+      return false;
+    }
+
+    bool doViewGlass = (viewGlassToWallRatio > 0);
+    bool doDaylightGlass = (daylightingGlassToWallRatio > 0);
+    bool doExteriorShading = (doViewGlass && (exteriorShadingProjectionFactor > 0));
+    bool doInteriorShelf = (doDaylightGlass && (interiorShelfProjectionFactor > 0));
+    bool doViewAndDaylightGlass = (doViewGlass && doDaylightGlass);
+
+    // ignore these user arguments?
+    if (!doViewGlass){
+      desiredViewGlassSillHeight = 0.0;
+    }
+    if (!doDaylightGlass){
+      desiredDaylightingGlassHeaderHeight = 0.0;
+    }
+
+    // new coordinate system has z' in direction of outward normal, y' is up
+    double xmin = std::numeric_limits<double>::max();
+    double xmax = std::numeric_limits<double>::min();
+    double ymin = std::numeric_limits<double>::max();
+    double ymax = std::numeric_limits<double>::min();
+    for (const Point3d& faceVertex : faceVertices){
+      xmin = std::min(xmin, faceVertex.x());
+      xmax = std::max(xmax, faceVertex.x());
+      ymin = std::min(ymin, faceVertex.y());
+      ymax = std::max(ymax, faceVertex.y());
+    }
+    if ((xmin > xmax) || (ymin > ymax)){
+      return false;
+    }
+
+    double oneInch = 0.0254;
+
+    // DLM: preserve a 1" gap between window and edge to keep SketchUp happy
+    double minGlassToEdgeDistance = oneInch;
+    double minViewToDaylightDistance = 0;
+    if (doViewAndDaylightGlass){
+      minViewToDaylightDistance = oneInch;
+    }
+
+    // wall parameters
+    double wallWidth = xmax - xmin;
+    double wallHeight = ymax - ymin;
+    double wallArea = wallWidth*wallHeight;
+
+    if (wallWidth < 2*minGlassToEdgeDistance){
+      return false;
+    }
+
+    if (wallHeight < 2*minGlassToEdgeDistance + minViewToDaylightDistance){
+      return false;
+    }
+
+    // check against actual surface area to ensure this is a rectangle?
+    if (std::abs(wallArea - grossArea.get()) > oneInch*oneInch){
+      return false;
+    }
+
+    double maxWindowArea = wallArea - 2*wallHeight*minGlassToEdgeDistance - (wallWidth-2*minGlassToEdgeDistance)*(2*minGlassToEdgeDistance + minViewToDaylightDistance);
+    double requestedViewArea = viewGlassToWallRatio*wallArea;
+    double requestedDaylightingArea = daylightingGlassToWallRatio*wallArea;
+    double requestedTotalWindowArea = totalWWR*wallArea;
+
+    if (requestedTotalWindowArea > maxWindowArea){
+      return false;
+    }
+
+    // view glass parameters
+    double viewMinX = 0;
+    double viewMinY = 0;
+    double viewWidth = 0;
+    double viewHeight = 0;
+
+    // daylighting glass parameters
+    double daylightingWidth = 0;
+    double daylightingHeight = 0;
+    double daylightingMinX = 0;
+    double daylightingMinY = 0;
+
+    // initial free parameters
+    double viewWidthInset = minGlassToEdgeDistance;
+    double viewSillHeight = std::max(desiredViewGlassSillHeight, minGlassToEdgeDistance);
+    double daylightingWidthInset = minGlassToEdgeDistance;
+    double daylightingHeaderHeight = std::max(desiredDaylightingGlassHeaderHeight, minGlassToEdgeDistance);
+
+    bool converged = false;
+    for (unsigned i = 0; i < 100; ++i){
+
+      // view glass parameters
+      viewMinX = viewWidthInset;
+      viewMinY = viewSillHeight;
+      viewWidth = wallWidth - 2*viewWidthInset;
+      viewHeight = requestedViewArea/viewWidth;
+
+      // daylighting glass parameters
+      daylightingWidth = wallWidth - 2*daylightingWidthInset;
+      daylightingHeight = requestedDaylightingArea/daylightingWidth;
+      daylightingMinX = viewWidthInset;
+      daylightingMinY = wallHeight - daylightingHeaderHeight - daylightingHeight;
+
+      if (viewMinY + viewHeight + minViewToDaylightDistance > daylightingMinY){
+        // windows overlap or exceed maximum size
+
+        if (doViewAndDaylightGlass){
+
+          // try shrinking vertical offsets
+          viewSillHeight = std::max(viewSillHeight - oneInch, minGlassToEdgeDistance);
+          daylightingHeaderHeight = std::max(daylightingHeaderHeight - oneInch, minGlassToEdgeDistance);
+
+        }else if (doViewGlass){
+
+          // solve directly
+          viewSillHeight = wallHeight - minGlassToEdgeDistance - viewHeight;
+
+          if (viewSillHeight < minGlassToEdgeDistance){
+            // cannot make window this large
+            return false;
+          }
+
+        }else if (doDaylightGlass){
+
+          // solve directly
+          daylightingHeaderHeight = wallHeight - minGlassToEdgeDistance - daylightingHeight;
+
+          if (daylightingHeaderHeight < minGlassToEdgeDistance){
+            // cannot make window this large
+            return false;
+          }
+
+        }
+
+      }else{
+
+        converged = true;
+        break;
+
+      }
+    }
+
+    if (!converged){
+      return false;
+    }
+
+    QPolygonF surfacePolygon;
+    for (const Point3d& point : faceVertices){
+      if (std::abs(point.z()) > 0.001){
+        LOG_FREE(Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface point z not on plane, z =" << point.z());
+      }
+      surfacePolygon << QPointF(point.x(),point.y());
+    }
+    // close the polygon
+    surfacePolygon << QPointF(faceVertices[0].x(), faceVertices[0].y());
+
+    if (doViewGlass){
+      viewVertices.push_back(Point3d(viewMinX, viewMinY + viewHeight, 0));
+      viewVertices.push_back(Point3d(viewMinX, viewMinY, 0));
+      viewVertices.push_back(Point3d(viewMinX + viewWidth, viewMinY, 0));
+      viewVertices.push_back(Point3d(viewMinX + viewWidth, viewMinY + viewHeight, 0));
+
+      QPolygonF windowPolygon;
+      for (const Point3d& point : viewVertices){
+        if (std::abs(point.z()) > 0.001){
+          LOG_FREE(Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface point z not on plane, z =" << point.z());
+        }
+        windowPolygon << QPointF(point.x(),point.y());
+      }
+      // close the polygon
+      windowPolygon << QPointF(viewVertices[0].x(), viewVertices[0].y());
+
+      // sub surface must be fully contained by base surface
+      for (const QPointF& point : windowPolygon){
+        if (!surfacePolygon.containsPoint(point, Qt::OddEvenFill)){
+          LOG_FREE(Debug, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface does not fully contain SubSurface");
+          return false;
+        }
+      }
+    }
+    
+    if (doDaylightGlass){
+      daylightingVertices.push_back(Point3d(daylightingMinX, daylightingMinY + daylightingHeight, 0));
+      daylightingVertices.push_back(Point3d(daylightingMinX, daylightingMinY, 0));
+      daylightingVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY, 0));
+      daylightingVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY + daylightingHeight, 0));
+
+      QPolygonF windowPolygon;
+      for (const Point3d& point : daylightingVertices){
+        if (std::abs(point.z()) > 0.001){
+          LOG_FREE(Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface point z not on plane, z =" << point.z());
+        }
+        windowPolygon << QPointF(point.x(),point.y());
+      }
+      // close the polygon
+      windowPolygon << QPointF(daylightingVertices[0].x(), daylightingVertices[0].y());
+
+      // sub surface must be fully contained by base surface
+      for (const QPointF& point : windowPolygon){
+        if (!surfacePolygon.containsPoint(point, Qt::OddEvenFill)){
+          LOG_FREE(Debug, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface does not fully contain SubSurface");
+          return false;
+        }
+      }
+    }
+
+    if (doExteriorShading) {
+      exteriorShadingVertices.push_back(Point3d(viewMinX, viewMinY + viewHeight, 0));
+      exteriorShadingVertices.push_back(Point3d(viewMinX, viewMinY + viewHeight, exteriorShadingProjectionFactor*viewHeight));
+      exteriorShadingVertices.push_back(Point3d(viewMinX + viewWidth, viewMinY + viewHeight, exteriorShadingProjectionFactor*viewHeight));
+      exteriorShadingVertices.push_back(Point3d(viewMinX + viewWidth, viewMinY + viewHeight, 0));
+    }
+
+    if (doInteriorShelf) {
+      interiorShelfVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY, 0));
+      interiorShelfVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY, -interiorShelfProjectionFactor*daylightingHeight));
+      interiorShelfVertices.push_back(Point3d(daylightingMinX, daylightingMinY, -interiorShelfProjectionFactor*daylightingHeight));
+      interiorShelfVertices.push_back(Point3d(daylightingMinX, daylightingMinY, 0));
+    }
+
+    // put all vertices back into input coordinate system
+    viewVertices = transformation*viewVertices;
+    daylightingVertices = transformation*daylightingVertices;
+    exteriorShadingVertices = transformation*exteriorShadingVertices;
+    interiorShelfVertices = transformation*interiorShelfVertices;
+
+    return true;
   }
 
 } // openstudio

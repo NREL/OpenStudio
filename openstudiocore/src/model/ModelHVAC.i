@@ -75,14 +75,25 @@ MODELOBJECT_TEMPLATES(Mixer);
 MODELOBJECT_TEMPLATES(AirLoopHVACReturnPlenum);
 MODELOBJECT_TEMPLATES(AirLoopHVACZoneMixer);
 MODELOBJECT_TEMPLATES(ConnectorMixer);
-MODELOBJECT_TEMPLATES(AvailabilityManager);
-MODELOBJECT_TEMPLATES(AvailabilityManagerNightCycle);
 MODELOBJECT_TEMPLATES(SetpointManagerColdest);
 MODELOBJECT_TEMPLATES(SetpointManagerFollowGroundTemperature);
+
+/* TODO: should this be exposed yet? */
+MODELOBJECT_TEMPLATES(AvailabilityManagerAssignmentList);
+
+MODELOBJECT_TEMPLATES(AvailabilityManager);
+MODELOBJECT_TEMPLATES(AvailabilityManagerNightCycle);
 MODELOBJECT_TEMPLATES(AvailabilityManagerHybridVentilation);
 MODELOBJECT_TEMPLATES(AvailabilityManagerOptimumStart);
 MODELOBJECT_TEMPLATES(AvailabilityManagerDifferentialThermostat);
 MODELOBJECT_TEMPLATES(AvailabilityManagerNightVentilation);
+MODELOBJECT_TEMPLATES(AvailabilityManagerHighTemperatureTurnOn);
+MODELOBJECT_TEMPLATES(AvailabilityManagerHighTemperatureTurnOff);
+MODELOBJECT_TEMPLATES(AvailabilityManagerLowTemperatureTurnOn);
+MODELOBJECT_TEMPLATES(AvailabilityManagerLowTemperatureTurnOff);
+MODELOBJECT_TEMPLATES(AvailabilityManagerScheduled);
+MODELOBJECT_TEMPLATES(AvailabilityManagerScheduledOn);
+MODELOBJECT_TEMPLATES(AvailabilityManagerScheduledOff);
 MODELOBJECT_TEMPLATES(SetpointManagerFollowOutdoorAirTemperature);
 MODELOBJECT_TEMPLATES(SetpointManagerFollowSystemNodeTemperature);
 MODELOBJECT_TEMPLATES(SetpointManagerMixedAir);
@@ -109,7 +120,9 @@ MODELOBJECT_TEMPLATES(Splitter);
 MODELOBJECT_TEMPLATES(AirLoopHVACSupplyPlenum);
 MODELOBJECT_TEMPLATES(AirLoopHVACZoneSplitter);
 MODELOBJECT_TEMPLATES(ConnectorSplitter);
+MODELOBJECT_TEMPLATES(AirTerminalDualDuctConstantVolume);
 MODELOBJECT_TEMPLATES(AirTerminalDualDuctVAV);
+MODELOBJECT_TEMPLATES(AirTerminalDualDuctVAVOutdoorAir);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeCooledBeam);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeFourPipeInduction);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeReheat);
@@ -288,14 +301,25 @@ SWIG_MODELOBJECT(Mixer, 0);
 SWIG_MODELOBJECT(AirLoopHVACReturnPlenum, 1);
 SWIG_MODELOBJECT(AirLoopHVACZoneMixer, 1);
 SWIG_MODELOBJECT(ConnectorMixer, 1);
-SWIG_MODELOBJECT(AvailabilityManager, 0);
-SWIG_MODELOBJECT(AvailabilityManagerNightCycle, 1);
 SWIG_MODELOBJECT(SetpointManagerColdest, 1);
 SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature, 1);
+
+/* TODO: Should this be exposed yet? */
+SWIG_MODELOBJECT(AvailabilityManagerAssignmentList, 1);
+
+SWIG_MODELOBJECT(AvailabilityManager, 0);
+SWIG_MODELOBJECT(AvailabilityManagerNightCycle, 1);
 SWIG_MODELOBJECT(AvailabilityManagerHybridVentilation, 1);
 SWIG_MODELOBJECT(AvailabilityManagerOptimumStart, 1);
 SWIG_MODELOBJECT(AvailabilityManagerDifferentialThermostat, 1);
 SWIG_MODELOBJECT(AvailabilityManagerNightVentilation, 1);
+SWIG_MODELOBJECT(AvailabilityManagerHighTemperatureTurnOn, 1);
+SWIG_MODELOBJECT(AvailabilityManagerHighTemperatureTurnOff, 1);
+SWIG_MODELOBJECT(AvailabilityManagerLowTemperatureTurnOn, 1);
+SWIG_MODELOBJECT(AvailabilityManagerLowTemperatureTurnOff, 1);
+SWIG_MODELOBJECT(AvailabilityManagerScheduled, 1);
+SWIG_MODELOBJECT(AvailabilityManagerScheduledOn, 1);
+SWIG_MODELOBJECT(AvailabilityManagerScheduledOff, 1);
 SWIG_MODELOBJECT(SetpointManagerFollowOutdoorAirTemperature, 1);
 SWIG_MODELOBJECT(SetpointManagerFollowSystemNodeTemperature, 1);
 SWIG_MODELOBJECT(SetpointManagerMixedAir, 1);
@@ -322,7 +346,9 @@ SWIG_MODELOBJECT(Splitter, 0);
 SWIG_MODELOBJECT(AirLoopHVACSupplyPlenum, 1);
 SWIG_MODELOBJECT(AirLoopHVACZoneSplitter, 1);
 SWIG_MODELOBJECT(ConnectorSplitter, 1);
+SWIG_MODELOBJECT(AirTerminalDualDuctConstantVolume, 1);
 SWIG_MODELOBJECT(AirTerminalDualDuctVAV, 1);
+SWIG_MODELOBJECT(AirTerminalDualDuctVAVOutdoorAir, 1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctConstantVolumeCooledBeam, 1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctConstantVolumeFourPipeInduction, 1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctConstantVolumeReheat, 1);
@@ -461,6 +487,9 @@ SWIG_MODELOBJECT(SolarCollectorPerformancePhotovoltaicThermalSimple, 1);
   %inline {
     namespace openstudio {
       namespace model {
+        openstudio::model::Node getOutdoorAirNode(openstudio::model::Model model){
+          return model.outdoorAirNode();
+        }
         std::vector<openstudio::model::ThermalZone> getThermalZones(const openstudio::model::Building& building){
           return building.thermalZones();
         }
@@ -481,6 +510,13 @@ SWIG_MODELOBJECT(SolarCollectorPerformancePhotovoltaicThermalSimple, 1);
 
     using System;
     using System.Runtime.InteropServices;
+
+    public partial class Model : Workspace {
+      public Node outdoorAirNode()
+      {
+        return OpenStudio.OpenStudioModelHVAC.getOutdoorAirNode(this);
+      }
+    }  
 
     public partial class Building : ParentObject {
       public ThermalZoneVector thermalZones()

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -74,7 +74,25 @@ namespace detail {
   const std::vector<std::string>& CoilHeatingWaterToAirHeatPumpEquationFit_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Heating Coil Electric Power");
+      result.push_back("Heating Coil Heating Rate");
+      result.push_back("Heating Coil Sensible Heating Rate");
+      result.push_back("Heating Coil Source Side Heat Transfer Rate");
+      result.push_back("Heating Coil Part Load Ratio");
+      result.push_back("Heating Coil Runtime Fraction");
+      result.push_back("Heating Coil Air Mass Flow Rate");
+      result.push_back("Heating Coil Air Inlet Temperature");
+      result.push_back("Heating Coil Air Inlet Humidity Ratio");
+      result.push_back("Heating Coil Air Outlet Temperature");
+      result.push_back("Heating Coil Air Outlet Humidity Ratio");
+      result.push_back("Heating Coil Source Side Mass Flow Rate");
+      result.push_back("Heating Coil Source Side Inlet Temperature");
+      result.push_back("Heating Coil Source Side Outlet Temperature");
+      result.push_back("Heating Coil Electric Energy");
+      result.push_back("Heating Coil Heating Energy");
+      result.push_back("Heating Coil Source Side Heat Transfer Energy");
     }
     return result;
   }
@@ -410,6 +428,43 @@ namespace detail {
     return boost::none;
   }
 
+  boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedAirFlowRate() const {
+    return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedWaterFlowRate() const {
+    return getAutosizedValue("Design Size Rated Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosizedRatedHeatingCapacity() const {
+    return getAutosizedValue("Design Size Rated Heating Capacity", "W");
+  }
+
+  void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosize() {
+    autosizeRatedAirFlowRate();
+    autosizeRatedWaterFlowRate();
+    autosizeRatedHeatingCapacity();
+  }
+
+  void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRatedAirFlowRate();
+    if (val) {
+      setRatedAirFlowRate(val.get());
+    }
+
+    val = autosizedRatedWaterFlowRate();
+    if (val) {
+      setRatedWaterFlowRate(val.get());
+    }
+
+    val = autosizedRatedHeatingCapacity();
+    if (val) {
+      setRatedHeatingCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 // create a new CoilHeatingWaterToAirHeatPumpEquationFit object in the model's workspace
@@ -620,6 +675,18 @@ CoilHeatingWaterToAirHeatPumpEquationFit::CoilHeatingWaterToAirHeatPumpEquationF
   : WaterToAirComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit::autosizedRatedAirFlowRate() const {
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->autosizedRatedAirFlowRate();
+  }
+
+  boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit::autosizedRatedWaterFlowRate() const {
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->autosizedRatedWaterFlowRate();
+  }
+
+  boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit::autosizedRatedHeatingCapacity() const {
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->autosizedRatedHeatingCapacity();
+  }
 
 } // model
 } // openstudio

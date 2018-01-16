@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -367,9 +367,60 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   void resetSizingFactor();
 
+  double designInletAirDryBulbTemperature() const;
+  bool setDesignInletAirDryBulbTemperature(double designInletAirDryBulbTemperature);
+
+  double designInletAirWetBulbTemperature() const;
+  bool setDesignInletAirWetBulbTemperature(double designInletAirWetBulbTemperature);
+
+  boost::optional<double> designApproachTemperature() const;
+  bool isDesignApproachTemperatureAutosized() const;
+  bool setDesignApproachTemperature(double designApproachTemperature);
+  void autosizeDesignApproachTemperature();
+
+  boost::optional<double> designRangeTemperature() const;
+  bool isDesignRangeTemperatureAutosized() const;
+  bool setDesignRangeTemperature(double designRangeTemperature);
+  void autosizeDesignRangeTemperature();
+
+  std::string endUseSubcategory() const;
+  bool setEndUseSubcategory(const std::string & endUseSubcategory);
+
   //@}
   /** @name Other */
   //@{
+
+  boost::optional<double> autosizedDesignWaterFlowRate() const;
+
+  boost::optional<double> autosizedHighFanSpeedAirFlowRate() const;
+
+  boost::optional<double> autosizedHighFanSpeedFanPower() const;
+
+  boost::optional<double> autosizedHighFanSpeedUFactorTimesAreaValue() const;
+
+  boost::optional<double> autosizedLowFanSpeedAirFlowRate() const;
+
+  boost::optional<double> autosizedLowFanSpeedFanPower() const;
+
+  boost::optional<double> autosizedLowFanSpeedUFactorTimesAreaValue() const;
+
+  boost::optional<double> autosizedFreeConvectionRegimeAirFlowRate() const;
+
+  boost::optional<double> autosizedFreeConvectionRegimeUFactorTimesAreaValue() const;
+
+  boost::optional<double> autosizedLowSpeedNominalCapacity() const;
+
+  boost::optional<double> autosizedFreeConvectionNominalCapacity() const;
+
+  /* This method mimics what E+ does because this value it isn't reported in the SQL file:
+   * It gets the input from the Sizing:Plant attached to the loop and the entered design inlet air wet-bulb temperature
+   */
+  boost::optional<double> autosizedDesignApproachTemperature() const;
+
+ /* This method mimics what E+ does because this value it isn't reported in the SQL file:
+  * It gets the input from the Sizing:Plant attached to the loop
+  */
+  boost::optional<double> autosizedDesignRangeTemperature() const;
 
   //@}
  protected:

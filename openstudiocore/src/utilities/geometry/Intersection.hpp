@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -96,6 +96,9 @@ namespace openstudio{
   /// currently only tests that all points of geometry1 are within polygon2, better support when upgrade to boost 1.57
   UTILITIES_API bool within(const Point3d& point1, const std::vector<Point3d>& polygon2, double tol);
   UTILITIES_API bool within(const std::vector<Point3d>& geometry1, const std::vector<Point3d>& polygon2, double tol);
+
+  /// simplify a list of vertices
+  UTILITIES_API std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeCollinear, double tol);
 
 } // openstudio
 

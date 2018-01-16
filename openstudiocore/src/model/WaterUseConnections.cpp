@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -78,7 +78,29 @@ namespace detail {
   const std::vector<std::string>& WaterUseConnections_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Water Use Connections Hot Water Mass Flow Rate");
+      result.push_back("Water Use Connections Cold Water Mass Flow Rate");
+      result.push_back("Water Use Connections Total Mass Flow Rate");
+      result.push_back("Water Use Connections Drain Water Mass Flow Rate");
+      result.push_back("Water Use Connections Heat Recovery Mass Flow Rate");
+      result.push_back("Water Use Connections Hot Water Volume Flow Rate");
+      result.push_back("Water Use Connections Cold Water Volume Flow Rate");
+      result.push_back("Water Use Connections Total Volume Flow Rate");
+      result.push_back("Water Use Connections Hot Water Volume");
+      result.push_back("Water Use Connections Cold Water Volume");
+      result.push_back("Water Use Connections Total Volume");
+      result.push_back("Water Use Connections Hot Water Temperature");
+      result.push_back("Water Use Connections Cold Water Temperature");
+      result.push_back("Water Use Connections Drain Water Temperature");
+      result.push_back("Water Use Connections Return Water Temperature");
+      result.push_back("Water Use Connections Waste Water Temperature");
+      result.push_back("Water Use Connections Heat Recovery Water Temperature");
+      result.push_back("Water Use Connections Heat Recovery Effectiveness");
+      result.push_back("Water Use Connections Heat Recovery Rate");
+      result.push_back("Water Use Connections Heat Recovery Energy");
+      result.push_back("Water Use Connections Plant Hot Water Energy");
     }
     return result;
   }

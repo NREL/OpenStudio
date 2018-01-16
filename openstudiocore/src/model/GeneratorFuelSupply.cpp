@@ -85,7 +85,12 @@ namespace detail {
   const std::vector<std::string>& GeneratorFuelSupply_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Key actually used is the FuelCell itself
+      //result.push_back("Generator Fuel Compressor Electric Power");
+      //result.push_back("Generator Fuel Compressor Electric Energy");
+      //result.push_back("Generator Fuel Compressor Skin Heat Loss Rate");
     }
     return result;
   }
@@ -94,15 +99,15 @@ namespace detail {
     return GeneratorFuelSupply::iddObjectType();
   }
 
-  // This will clone both the GeneratorFuelCellExhaustGasToWaterHeatExchanger and its linked GeneratorFuelCell
-  // and will return a reference to the GeneratorMicroTurbineHeatRecovery
+  // This will clone both the GeneratorFuelSupply and its linked GeneratorFuelCell
+  // and will return a reference to the GeneratorFuelSupply
   ModelObject GeneratorFuelSupply_Impl::clone(Model model) const {
 
     // We call the parent generator's Clone method which will clone both the fuelCell and fuelCellHX
     GeneratorFuelCell fs = fuelCell();
     GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
 
-    // We get the clone of the parent generator's MTHR so we can return that
+    // We get the clone of the parent generator's GeneratorFuelSupply so we can return that
     GeneratorFuelSupply hxClone = fsClone.fuelSupply();
 
 
@@ -120,7 +125,7 @@ namespace detail {
     std::vector<ModelObject> result;
     boost::optional<CurveCubic> curveC;
 
-    if (curveC = compressorPowerMultiplierFunctionofFuelRateCurve()) {
+    if ( (curveC = compressorPowerMultiplierFunctionofFuelRateCurve()) ) {
       result.push_back(curveC.get());
     }
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -72,7 +72,27 @@ namespace detail {
   const std::vector<std::string>& HeatExchangerAirToAirSensibleAndLatent_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Heat Exchanger Sensible Heating Rate");
+      result.push_back("Heat Exchanger Sensible Heating Energy");
+      result.push_back("Heat Exchanger Latent Gain Rate");
+      result.push_back("Heat Exchanger Latent Gain Energy");
+      result.push_back("Heat Exchanger Total Heating Rate");
+      result.push_back("Heat Exchanger Total Heating Energy");
+      result.push_back("Heat Exchanger Sensible Cooling Rate");
+      result.push_back("Heat Exchanger Sensible Cooling Energy");
+      result.push_back("Heat Exchanger Latent Cooling Rate");
+      result.push_back("Heat Exchanger Latent Cooling Energy");
+      result.push_back("Heat Exchanger Total Cooling Rate");
+      result.push_back("Heat Exchanger Total Cooling Energy");
+      result.push_back("Heat Exchanger Electric Power");
+      result.push_back("Heat Exchanger Electric Energy");
+      result.push_back("Heat Exchanger Sensible Effectiveness");
+      result.push_back("Heat Exchanger Latent Effectiveness");
+      result.push_back("Heat Exchanger Supply Air Bypass Mass Flow Rate");
+      result.push_back("Heat Exchanger Exhaust Air Bypass Mass Flow Rate");
+      result.push_back("Heat Exchanger Defrost Time Fraction");
     }
     return result;
   }
@@ -701,6 +721,23 @@ namespace detail {
     return OS_HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNode;
   }
 
+  boost::optional<double> HeatExchangerAirToAirSensibleAndLatent_Impl::autosizedNominalSupplyAirFlowRate() const {
+    return getAutosizedValue("Design Size Nominal Supply Air Flow Rate", "m3/s");
+  }
+
+  void HeatExchangerAirToAirSensibleAndLatent_Impl::autosize() {
+    autosizeNominalSupplyAirFlowRate();
+  }
+
+  void HeatExchangerAirToAirSensibleAndLatent_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalSupplyAirFlowRate();
+    if (val) {
+      setNominalSupplyAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 HeatExchangerAirToAirSensibleAndLatent::HeatExchangerAirToAirSensibleAndLatent(const Model& model)
@@ -1033,6 +1070,10 @@ HeatExchangerAirToAirSensibleAndLatent::HeatExchangerAirToAirSensibleAndLatent(s
   : AirToAirComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> HeatExchangerAirToAirSensibleAndLatent::autosizedNominalSupplyAirFlowRate() const {
+    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->autosizedNominalSupplyAirFlowRate();
+  }
 
 } // model
 } // openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -508,6 +508,20 @@ namespace detail {
     return boost::none;
   }
 
+  // default implementation does nothing.
+  // should only be used by objects that have
+  // no autosized fields 
+  void HVACComponent_Impl::autosize() {
+    return;
+  }
+
+  // default implementation does nothing.
+  // should only be used by objects that have
+  // no autosized fields 
+  void HVACComponent_Impl::applySizingValues() {
+    return;
+  }
+
 } // detail
 
 HVACComponent::HVACComponent(std::shared_ptr<detail::HVACComponent_Impl> p)
@@ -583,6 +597,14 @@ boost::optional<ZoneHVACComponent> HVACComponent::containingZoneHVACComponent() 
 boost::optional<StraightComponent> HVACComponent::containingStraightComponent() const
 {
   return getImpl<detail::HVACComponent_Impl>()->containingStraightComponent();
+}
+
+void HVACComponent::autosize() {
+  return getImpl<detail::HVACComponent_Impl>()->autosize();
+}
+
+void HVACComponent::applySizingValues() {
+  return getImpl<detail::HVACComponent_Impl>()->applySizingValues();
 }
 
 } // model

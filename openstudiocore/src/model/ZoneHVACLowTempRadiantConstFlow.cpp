@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -141,7 +141,26 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACLowTempRadiantConstFlow_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone Radiant HVAC Heating Rate");
+      result.push_back("Zone Radiant HVAC Heating Energy");
+      result.push_back("Zone Radiant HVAC Cooling Rate");
+      result.push_back("Zone Radiant HVAC Cooling Energy");
+      result.push_back("Zone Radiant HVAC Mass Flow Rate");
+      result.push_back("Zone Radiant HVAC Injection Mass Flow Rate");
+      result.push_back("Zone Radiant HVAC Recirculation Mass Flow Rate");
+      result.push_back("Zone Radiant HVAC Inlet Temperature");
+      result.push_back("Zone Radiant HVAC Outlet Temperature");
+      result.push_back("Zone Radiant HVAC Pump Inlet Temperature");
+      result.push_back("Zone Radiant HVAC Pump Electric Power");
+      result.push_back("Zone Radiant HVAC Pump Electric Energy");
+      result.push_back("Zone Radiant HVAC Pump Mass Flow Rate");
+      result.push_back("Zone Radiant HVAC Pump Fluid Heat Gain Rate");
+      result.push_back("Zone Radiant HVAC Pump Fluid Heat Gain Energy");
+      result.push_back("Zone Radiant HVAC Moisture Condensation Time");
+      result.push_back("Zone Radiant HVAC Cooling Fluid Heat Transfer Energy");
+      result.push_back("Zone Radiant HVAC Heating Fluid Heat Transfer Energy");
     }
     return result;
   }

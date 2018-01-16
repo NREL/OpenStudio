@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -212,4 +212,19 @@ TEST_F(UnitsFixture,UnitFactory_KitchenSink) {
   u = openstudio::createUnit(unitString,UnitSystem::SI)->cast<SIUnit>();
   EXPECT_EQ("",u.standardString(false));
   EXPECT_EQ("",u.prettyString());
+}
+
+/* Test for bug found in #2900 where it currently returns "1/ftH_{2}O^2" (this is a createUnit problem really...) */
+TEST_F(UnitsFixture,UnitFactory_IP_Pressure_wc) {
+  {
+    OptionalUnit unit = openstudio::createUnit("1/ftH_{2}O");
+    ASSERT_TRUE(unit);
+    EXPECT_EQ("1/ftH_{2}O", unit->standardString());
+  }
+
+  {
+    OptionalUnit unit = openstudio::createUnit("1/inH_{2}O");
+    ASSERT_TRUE(unit);
+    EXPECT_EQ("1/inH_{2}O", unit->standardString());
+  }
 }

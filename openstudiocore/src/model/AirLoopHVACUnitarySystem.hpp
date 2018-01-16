@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,7 +30,7 @@
 #define MODEL_AIRLOOPHVACUNITARYSYSTEM_HPP
 
 #include "ModelAPI.hpp"
-#include "WaterToAirComponent.hpp"
+#include "ZoneHVACComponent.hpp"
 
 namespace openstudio {
 
@@ -48,7 +48,7 @@ namespace detail {
 } // detail
 
 /** AirLoopHVACUnitarySystem is a WaterToAirComponent that wraps the OpenStudio IDD object 'OS:AirLoopHVAC:UnitarySystem'. */
-class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
+class MODEL_API AirLoopHVACUnitarySystem : public ZoneHVACComponent {
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -412,6 +412,16 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
   //@}
   /** @name Other */
   //@{
+
+  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() const ;
+
+  boost::optional<double> autosizedMaximumSupplyAirTemperature() const ;
+
+
 
   //@}
  protected:

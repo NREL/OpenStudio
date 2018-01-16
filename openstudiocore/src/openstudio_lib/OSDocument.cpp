@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -405,7 +405,7 @@ namespace openstudio {
       ":images/on_space_types_tab.png",
       ":images/off_space_types_tab.png",
       ":images/disabled_space_types_tab.png");
-        
+
     // Geometry
     m_mainWindow->addVerticalTabButton(GEOMETRY,
       "Geometry",
@@ -883,7 +883,7 @@ namespace openstudio {
     m_mainWindow->verticalTabWidget()->enableTabButton(OUTPUT_VARIABLES, false);
     m_mainWindow->verticalTabWidget()->enableTabButton(SIMULATION_SETTINGS, false);
     m_mainWindow->verticalTabWidget()->enableTabButton(RUBY_SCRIPTS, false);
-    m_mainWindow->verticalTabWidget()->enableTabButton(RUN_SIMULATION, false); 
+    m_mainWindow->verticalTabWidget()->enableTabButton(RUN_SIMULATION, false);
     m_mainWindow->verticalTabWidget()->enableTabButton(RESULTS_SUMMARY, false);
 
     m_mainWindow->verticalTabWidget()->refreshTabButtons();
@@ -907,7 +907,7 @@ namespace openstudio {
     m_mainWindow->verticalTabWidget()->enableTabButton(OUTPUT_VARIABLES, true);
     m_mainWindow->verticalTabWidget()->enableTabButton(SIMULATION_SETTINGS, true);
     m_mainWindow->verticalTabWidget()->enableTabButton(RUBY_SCRIPTS, true);
-    m_mainWindow->verticalTabWidget()->enableTabButton(RUN_SIMULATION, true); 
+    m_mainWindow->verticalTabWidget()->enableTabButton(RUN_SIMULATION, true);
     m_mainWindow->verticalTabWidget()->enableTabButton(RESULTS_SUMMARY, true);
 
     m_mainWindow->verticalTabWidget()->refreshTabButtons();
@@ -1003,7 +1003,7 @@ namespace openstudio {
           epwInUserPath = searchFilesDir / *weatherFilePath;
           if (boost::filesystem::exists(epwInUserPath)){
             epwInUserPathChecksum = checksum(epwInUserPath);
-          } 
+          }
         }
       }
 
@@ -1355,7 +1355,7 @@ namespace openstudio {
 
     WorkflowJSON workflow = m_model.workflowJSON();
     std::vector<WorkflowStep> steps;
-      
+
     // standard report measure
     bool srmAdded = false;
     boost::optional<BCLMeasure> srm = standardReportMeasure();
@@ -1387,7 +1387,7 @@ namespace openstudio {
         return;
       }
     }
-       
+
     if (!srmAdded){
       QMessageBox::warning(mainWindow(), "OpenStudio Results Measure Not Found", "Could not find or download OpenStudio Results Measure.");
       enable();
@@ -1432,6 +1432,7 @@ namespace openstudio {
       // saves the model to modelTempDir / m_savePath.filename()
       // also copies the temp files to user location
       bool saved = saveModel(this->model(), modelPath, toPath(m_modelTempDir));
+      OS_ASSERT(saved);
 
       this->setSavePath(toQString(modelPath));
 
@@ -1504,6 +1505,7 @@ namespace openstudio {
       // saves the model to modelTempDir / filePath.filename()
       // also copies the temp files to user location
       bool saved = saveModel(this->model(), modelPath, toPath(m_modelTempDir));
+      OS_ASSERT(saved);
 
       this->setSavePath(toQString(modelPath));
 

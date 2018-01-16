@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,6 +44,7 @@ class PlantEquipmentOperationScheme;
 class PlantEquipmentOperationHeatingLoad;
 class PlantEquipmentOperationCoolingLoad;
 class AvailabilityManager;
+class AvailabilityManagerAssignmentList;
 
 
 namespace detail {
@@ -63,17 +64,19 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   virtual ~PlantLoop_Impl() {}
 
+  //@}
+  /** @name Virtual Methods */
+  //@{
+
+  virtual const std::vector<std::string>& outputVariableNames() const override;
+
   virtual IddObjectType iddObjectType() const override;
+
+
 
   std::string loadDistributionScheme();
 
   bool setLoadDistributionScheme(std::string scheme);
-
-  boost::optional<AvailabilityManager> availabilityManager() const;
-
-  bool setAvailabilityManager(const AvailabilityManager & availabilityManager);
-
-  void resetAvailabilityManager();
 
   std::string fluidType();
 
@@ -218,6 +221,32 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
   std::vector<ModelObject> children() const override;
 
   SizingPlant sizingPlant() const;
+
+  boost::optional<double> autosizedMaximumLoopFlowRate() const ;
+
+  boost::optional<double> autosizedPlantLoopVolume() const;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
+  // AVM
+  // Impl_only
+  virtual AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const override;
+
+
+  std::vector<AvailabilityManager> availabilityManagers() const;
+  bool setAvailabilityManagers(const std::vector<AvailabilityManager> & avms);
+  void resetAvailabilityManagers();
+
+  bool addAvailabilityManager(const AvailabilityManager & availabilityManager);
+  bool addAvailabilityManager(const AvailabilityManager & availabilityManager, unsigned priority);
+
+  unsigned availabilityManagerPriority(const AvailabilityManager & availabilityManager) const;
+  bool setAvailabilityManagerPriority(const AvailabilityManager & availabilityManager, unsigned priority);
+
+  bool removeAvailabilityManager(const AvailabilityManager& avm);
+  bool removeAvailabilityManager(unsigned priority);
 
  private:
 

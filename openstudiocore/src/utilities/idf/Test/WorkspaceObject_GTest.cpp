@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -396,8 +396,8 @@ TEST_F(IdfFixture,WorkspaceObject_ClearGroups) {
 
 TEST_F(IdfFixture, WorkspaceObject_OS_DaylightingDevice_Shelf)
 {
-  // defaults to IddFileType::OpenStudio
-  Workspace ws;
+  // defaults to IddFileType::EnergyPlus so need to specify IddFileType::OpenStudio
+  Workspace ws(StrictnessLevel::Draft, IddFileType::OpenStudio);
   OptionalWorkspaceObject w1 = ws.addObject(IdfObject(IddObjectType::OS_DaylightingDevice_Shelf));
   OptionalWorkspaceObject w2 = ws.addObject(IdfObject(IddObjectType::OS_InteriorPartitionSurface));
   ASSERT_TRUE(w1);
@@ -409,15 +409,15 @@ TEST_F(IdfFixture, WorkspaceObject_OS_DaylightingDevice_Shelf)
 
 //TEST_F(IdfFixture, WorkspaceObject_OS_AirLoopHVAC_ZoneSplitter)
 //{
-//  //Workspace ws();
+//  //Workspace ws(StrictnessLevel::Draft, IddFileType::OpenStudio);
 //  //OptionalHandle h1 = ws.addObject(IdfObject(IddObjectType::OS_AirLoopHVAC_ZoneSplitter));
 //  //OptionalHandle h2 = ws.addObject(IdfObject(IddObjectType::OS_Connection));
 //}
 
 TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects)
 {
-  // defaults to IddFileType::OpenStudio
-  Workspace ws1;
+  // defaults to IddFileType::EnergyPlus so need to specify IddFileType::OpenStudio
+  Workspace ws1(StrictnessLevel::Draft, IddFileType::OpenStudio);
   OptionalWorkspaceObject w1 = ws1.addObject(IdfObject(IddObjectType::OS_Surface));
   ASSERT_TRUE(w1);
   EXPECT_EQ(1u, ws1.objects().size());
@@ -427,7 +427,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects)
   EXPECT_FALSE(h1.isNull());
   EXPECT_EQ(h1, w1->handle());
 
-  Workspace ws2;
+  Workspace ws2(StrictnessLevel::Draft, IddFileType::OpenStudio);
   ws2.addObjects(ws1.objects());
   ASSERT_EQ(1u, ws2.objects().size());
   WorkspaceObject w2 = ws2.objects()[0];
@@ -440,8 +440,8 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects)
 
 TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
 {
-  // defaults to IddFileType::OpenStudio
-  Workspace ws1;
+  // defaults to IddFileType::EnergyPlus so need to specify IddFileType::OpenStudio
+  Workspace ws1(StrictnessLevel::Draft, IddFileType::OpenStudio);
   OptionalWorkspaceObject w1 = ws1.addObject(IdfObject(IddObjectType::OS_Surface));
   ASSERT_TRUE(w1);
   EXPECT_EQ(1u, ws1.objects().size());
@@ -460,7 +460,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
   EXPECT_FALSE(ih.isNull());
   EXPECT_EQ(ih,i1.handle());
 
-  Workspace ws2;
+  Workspace ws2(StrictnessLevel::Draft, IddFileType::OpenStudio);
   ws2.addObjects(idf1.objects());
   ASSERT_EQ(1u, ws2.objects().size());
   WorkspaceObject w2 = ws2.objects()[0];
@@ -473,7 +473,8 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
 
 TEST_F(IdfFixture, WorkspaceObject_Filter_Sources)
 {
-  Workspace ws;
+  // defaults to IddFileType::EnergyPlus so need to specify IddFileType::OpenStudio
+  Workspace ws(StrictnessLevel::Draft, IddFileType::OpenStudio);
   OptionalWorkspaceObject node = ws.addObject(IdfObject(IddObjectType::OS_Node));
   OptionalWorkspaceObject node2 = ws.addObject(IdfObject(IddObjectType::OS_Node));
   OptionalWorkspaceObject node3 = ws.addObject(IdfObject(IddObjectType::OS_Node));
@@ -495,7 +496,8 @@ TEST_F(IdfFixture, WorkspaceObject_SetDouble_NaN_and_Inf) {
 
   // try with an WorkspaceObject
   // WorkspaceObject does prevent Infinity and NaN
-  Workspace ws;
+  // defaults to IddFileType::EnergyPlus so need to specify IddFileType::OpenStudio
+  Workspace ws(StrictnessLevel::Draft, IddFileType::OpenStudio);
   WorkspaceObject object = ws.addObject(IdfObject(IddObjectType::OS_People_Definition)).get();
 
   // Set Number of People

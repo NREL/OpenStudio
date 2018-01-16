@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -75,7 +75,18 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACUnitVentilator_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone Unit Ventilator Heating Rate");
+      result.push_back("Zone Unit Ventilator Heating Energy");
+      result.push_back("Zone Unit Ventilator Total Cooling Rate");
+      result.push_back("Zone Unit Ventilator Total Cooling Energy");
+      result.push_back("Zone Unit Ventilator Sensible Cooling Rate");
+      result.push_back("Zone Unit Ventilator Sensible Cooling Energy");
+      result.push_back("Zone Unit Ventilator Fan Electric Power");
+      result.push_back("Zone Unit Ventilator Fan Electric Energy");
+      result.push_back("Zone Unit Ventilator Fan Availability Status");
+      result.push_back("Zone Unit Ventilator Fan Part Load Ratio");
     }
     return result;
   }
@@ -480,6 +491,43 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_UnitVentilatorFields::SupplyAirFanName);
   }
 
+  boost::optional<double> ZoneHVACUnitVentilator_Impl::autosizedMaximumSupplyAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Supply Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACUnitVentilator_Impl::autosizedMinimumOutdoorAirFlowRate() const {
+    return getAutosizedValue("Design Size Minimum Outdoor Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACUnitVentilator_Impl::autosizedMaximumOutdoorAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Outdoor Air Flow Rate", "m3/s");
+  }
+
+  void ZoneHVACUnitVentilator_Impl::autosize() {
+    autosizeMaximumSupplyAirFlowRate();
+    autosizeMinimumOutdoorAirFlowRate();
+    autosizeMaximumOutdoorAirFlowRate();
+  }
+
+  void ZoneHVACUnitVentilator_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumSupplyAirFlowRate();
+    if (val) {
+      setMaximumSupplyAirFlowRate(val.get());
+    }
+
+    val = autosizedMinimumOutdoorAirFlowRate();
+    if (val) {
+      setMinimumOutdoorAirFlowRate(val.get());
+    }
+
+    val = autosizedMaximumOutdoorAirFlowRate();
+    if (val) {
+      setMaximumOutdoorAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 ZoneHVACUnitVentilator::ZoneHVACUnitVentilator(const Model& model)
@@ -720,6 +768,18 @@ ZoneHVACUnitVentilator::ZoneHVACUnitVentilator(std::shared_ptr<detail::ZoneHVACU
   : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> ZoneHVACUnitVentilator::autosizedMaximumSupplyAirFlowRate() const {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->autosizedMaximumSupplyAirFlowRate();
+  }
+
+  boost::optional<double> ZoneHVACUnitVentilator::autosizedMinimumOutdoorAirFlowRate() const {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->autosizedMinimumOutdoorAirFlowRate();
+  }
+
+  boost::optional<double> ZoneHVACUnitVentilator::autosizedMaximumOutdoorAirFlowRate() const {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->autosizedMaximumOutdoorAirFlowRate();
+  }
 
 } // model
 } // openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -81,7 +81,25 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone VRF Air Terminal Total Cooling Rate");
+      result.push_back("Zone VRF Air Terminal Total Cooling Energy");
+      result.push_back("Zone VRF Air Terminal Sensible Cooling Rate");
+      result.push_back("Zone VRF Air Terminal Sensible Cooling Energy");
+      result.push_back("Zone VRF Air Terminal Latent Cooling Rate");
+      result.push_back("Zone VRF Air Terminal Latent Cooling Energy");
+      result.push_back("Zone VRF Air Terminal Total Heating Rate");
+      result.push_back("Zone VRF Air Terminal Total Heating Energy");
+      result.push_back("Zone VRF Air Terminal Sensible Heating Rate");
+      result.push_back("Zone VRF Air Terminal Sensible Heating Energy");
+      result.push_back("Zone VRF Air Terminal Latent Heating Rate");
+      result.push_back("Zone VRF Air Terminal Latent Heating Energy");
+      result.push_back("Zone VRF Air Terminal Cooling Electric Power");
+      result.push_back("Zone VRF Air Terminal Cooling Electric Energy");
+      result.push_back("Zone VRF Air Terminal Heating Electric Power");
+      result.push_back("Zone VRF Air Terminal Heating Electric Energy");
+      result.push_back("Zone VRF Air Terminal Fan Availability Status");
     }
     return result;
   }
@@ -222,20 +240,12 @@ namespace detail {
     return value.get();
   }
 
-  CoilCoolingDXVariableRefrigerantFlow ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::coolingCoil() const {
-    boost::optional<CoilCoolingDXVariableRefrigerantFlow> result = getObject<ModelObject>().getModelObjectTarget<CoilCoolingDXVariableRefrigerantFlow>(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::CoolingCoil);
-
-    Q_ASSERT(result);
-
-    return result.get();
+  boost::optional<CoilCoolingDXVariableRefrigerantFlow> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::coolingCoil() const {
+    return getObject<ModelObject>().getModelObjectTarget<CoilCoolingDXVariableRefrigerantFlow>(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::CoolingCoil);
   }
 
-  CoilHeatingDXVariableRefrigerantFlow ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::heatingCoil() const {
-    boost::optional<CoilHeatingDXVariableRefrigerantFlow> result = getObject<ModelObject>().getModelObjectTarget<CoilHeatingDXVariableRefrigerantFlow>(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingCoil);
-
-    Q_ASSERT(result);
-
-    return result.get();
+  boost::optional<CoilHeatingDXVariableRefrigerantFlow> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::heatingCoil() const {
+    return getObject<ModelObject>().getModelObjectTarget<CoilHeatingDXVariableRefrigerantFlow>(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingCoil);
   }
 
   double ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::zoneTerminalUnitOnParasiticElectricEnergyUse() const {
@@ -421,15 +431,17 @@ namespace detail {
 
     HVACComponent fanClone = supplyAirFan().clone(model).cast<HVACComponent>();
 
-    CoilCoolingDXVariableRefrigerantFlow coolingCoilClone = coolingCoil().clone(model).cast<CoilCoolingDXVariableRefrigerantFlow>();
+    if( auto coil = coolingCoil() ) {
+      auto coilClone = coil->clone(model).cast<CoilCoolingDXVariableRefrigerantFlow>();
+      terminalClone.getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setCoolingCoil(coilClone);
+    }
 
-    CoilHeatingDXVariableRefrigerantFlow heatingCoilClone = heatingCoil().clone(model).cast<CoilHeatingDXVariableRefrigerantFlow>();
+    if( auto coil = heatingCoil() ) {
+      auto coilClone = coil->clone(model).cast<CoilHeatingDXVariableRefrigerantFlow>();
+      terminalClone.getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setHeatingCoil(coilClone);
+    }
 
     terminalClone.getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplyAirFan(fanClone);
-
-    terminalClone.getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setCoolingCoil(coolingCoilClone);
-
-    terminalClone.getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setHeatingCoil(heatingCoilClone);
 
     // TODO Move this into base clase
     terminalClone.setString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirInletNode,"");
@@ -443,10 +455,93 @@ namespace detail {
     std::vector<ModelObject> result;
 
     result.push_back(supplyAirFan());
-    result.push_back(coolingCoil());
-    result.push_back(heatingCoil());
+
+    if( auto coil = coolingCoil() ) {
+      result.push_back(coil.get());
+    }
+
+    if( auto coil = heatingCoil() ) {
+      result.push_back(coil.get());
+    }
 
     return result;
+  }
+
+  boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
+    return getAutosizedValue("Design Size Cooling Supply Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::autosizedSupplyAirFlowRateWhenNoCoolingisNeeded() const {
+    return getAutosizedValue("Design Size No Cooling Supply Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::autosizedSupplyAirFlowRateDuringHeatingOperation() const {
+    return getAutosizedValue("Design Size Heating Supply Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::autosizedSupplyAirFlowRateWhenNoHeatingisNeeded() const {
+    return getAutosizedValue("Design Size No Heating Supply Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::autosizedOutdoorAirFlowRateDuringCoolingOperation() const {
+    return getAutosizedValue("Design Size Outdoor Air Flow Rate During Cooling Operation", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::autosizedOutdoorAirFlowRateDuringHeatingOperation() const {
+    return getAutosizedValue("Design Size Outdoor Air Flow Rate During Heating Operation", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getAutosizedValue("Design Size Outdoor Air Flow Rate When No Cooling or Heating is Needed", "m3/s");
+  }
+
+  void ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::autosize() {
+    autosizeSupplyAirFlowRateDuringCoolingOperation();
+    autosizeSupplyAirFlowRateWhenNoCoolingisNeeded();
+    autosizeSupplyAirFlowRateDuringHeatingOperation();
+    autosizeSupplyAirFlowRateWhenNoHeatingisNeeded();
+    autosizeOutdoorAirFlowRateDuringCoolingOperation();
+    autosizeOutdoorAirFlowRateDuringHeatingOperation();
+    autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
+
+  void ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedSupplyAirFlowRateDuringCoolingOperation();
+    if (val) {
+      setSupplyAirFlowRateDuringCoolingOperation(val.get());
+    }
+
+    val = autosizedSupplyAirFlowRateWhenNoCoolingisNeeded();
+    if (val) {
+      setSupplyAirFlowRateWhenNoCoolingisNeeded(val.get());
+    }
+
+    val = autosizedSupplyAirFlowRateDuringHeatingOperation();
+    if (val) {
+      setSupplyAirFlowRateDuringHeatingOperation(val.get());
+    }
+
+    val = autosizedSupplyAirFlowRateWhenNoHeatingisNeeded();
+    if (val) {
+      setSupplyAirFlowRateWhenNoHeatingisNeeded(val.get());
+    }
+
+    val = autosizedOutdoorAirFlowRateDuringCoolingOperation();
+    if (val) {
+      setOutdoorAirFlowRateDuringCoolingOperation(val.get());
+    }
+
+    val = autosizedOutdoorAirFlowRateDuringHeatingOperation();
+    if (val) {
+      setOutdoorAirFlowRateDuringHeatingOperation(val.get());
+    }
+
+    val = autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    if (val) {
+      setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(val.get());
+    }
+
   }
 
 } // detail
@@ -611,11 +706,11 @@ HVACComponent ZoneHVACTerminalUnitVariableRefrigerantFlow::supplyAirFan() const 
   return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->supplyAirFan();
 }
 
-CoilCoolingDXVariableRefrigerantFlow ZoneHVACTerminalUnitVariableRefrigerantFlow::coolingCoil() const {
+boost::optional<CoilCoolingDXVariableRefrigerantFlow> ZoneHVACTerminalUnitVariableRefrigerantFlow::coolingCoil() const {
   return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->coolingCoil();
 }
 
-CoilHeatingDXVariableRefrigerantFlow ZoneHVACTerminalUnitVariableRefrigerantFlow::heatingCoil() const {
+boost::optional<CoilHeatingDXVariableRefrigerantFlow> ZoneHVACTerminalUnitVariableRefrigerantFlow::heatingCoil() const {
   return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->heatingCoil();
 }
 
@@ -707,11 +802,47 @@ bool ZoneHVACTerminalUnitVariableRefrigerantFlow::setRatedTotalHeatingCapacitySi
   return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setRatedTotalHeatingCapacitySizingRatio(ratedTotalHeatingCapacitySizingRatio);
 }
 
+bool ZoneHVACTerminalUnitVariableRefrigerantFlow::setCoolingCoil(const CoilCoolingDXVariableRefrigerantFlow & coil) {
+  return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setCoolingCoil(coil);
+}
+
+bool ZoneHVACTerminalUnitVariableRefrigerantFlow::setHeatingCoil(const CoilHeatingDXVariableRefrigerantFlow & coil) {
+  return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setHeatingCoil(coil);
+}
+
 /// @cond
 ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrigerantFlow(std::shared_ptr<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl> impl)
   : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->autosizedSupplyAirFlowRateDuringCoolingOperation();
+  }
+
+  boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow::autosizedSupplyAirFlowRateWhenNoCoolingisNeeded() const {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->autosizedSupplyAirFlowRateWhenNoCoolingisNeeded();
+  }
+
+  boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow::autosizedSupplyAirFlowRateDuringHeatingOperation() const {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->autosizedSupplyAirFlowRateDuringHeatingOperation();
+  }
+
+  boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow::autosizedSupplyAirFlowRateWhenNoHeatingisNeeded() const {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->autosizedSupplyAirFlowRateWhenNoHeatingisNeeded();
+  }
+
+  boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow::autosizedOutdoorAirFlowRateDuringCoolingOperation() const {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->autosizedOutdoorAirFlowRateDuringCoolingOperation();
+  }
+
+  boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow::autosizedOutdoorAirFlowRateDuringHeatingOperation() const {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->autosizedOutdoorAirFlowRateDuringHeatingOperation();
+  }
+
+  boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow::autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
 
 } // model
 } // openstudio

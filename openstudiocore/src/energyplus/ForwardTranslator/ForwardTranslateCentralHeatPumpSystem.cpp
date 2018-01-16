@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -74,36 +74,49 @@ boost::optional<IdfObject> ForwardTranslator::translateCentralHeatPumpSystem( Ce
    }
   }
 
-  // SourceLoopInletNodeName
-  if( auto mo = modelObject.supplyInletModelObject() ) {
-    if( auto node = mo->optionalCast<Node>() ) {
-      idfObject.setString(CentralHeatPumpSystemFields::SourceLoopInletNodeName,node->name().get());
-    }
-  }
-
-  // SourceLoopOutletNodeName
-  if( auto mo = modelObject.supplyOutletModelObject() ) {
-    if( auto node = mo->optionalCast<Node>() ) {
-      idfObject.setString(CentralHeatPumpSystemFields::SourceLoopOutletNodeName,node->name().get());
-    }
-  }
+  // supply = Cooling Loop, demand=Source Loop, tertiary = Heating Loop
 
   // CoolingLoopInletNodeName
-  if( auto mo = modelObject.demandInletModelObject() ) {
+  if( auto mo = modelObject.supplyInletModelObject() ) {
     if( auto node = mo->optionalCast<Node>() ) {
       idfObject.setString(CentralHeatPumpSystemFields::CoolingLoopInletNodeName,node->name().get());
     }
   }
 
   // CoolingLoopOutletNodeName
-  if( auto mo = modelObject.demandOutletModelObject() ) {
+  if( auto mo = modelObject.supplyOutletModelObject() ) {
     if( auto node = mo->optionalCast<Node>() ) {
       idfObject.setString(CentralHeatPumpSystemFields::CoolingLoopOutletNodeName,node->name().get());
     }
   }
 
+  // SourceLoopInletNodeName
+  if( auto mo = modelObject.demandInletModelObject() ) {
+    if( auto node = mo->optionalCast<Node>() ) {
+      idfObject.setString(CentralHeatPumpSystemFields::SourceLoopInletNodeName,node->name().get());
+    }
+  }
+
+  // SourceLoopOutletNodeName
+  if( auto mo = modelObject.demandOutletModelObject() ) {
+    if( auto node = mo->optionalCast<Node>() ) {
+      idfObject.setString(CentralHeatPumpSystemFields::SourceLoopOutletNodeName,node->name().get());
+    }
+  }
+
+
   // HeatingLoopInletNodeName
+  if ( auto mo = modelObject.tertiaryInletModelObject() ) {
+    if ( auto node = mo->optionalCast<Node>() ) {
+      idfObject.setString(CentralHeatPumpSystemFields::HeatingLoopInletNodeName, node->name().get());
+    }
+  }
   // HeatingLoopOutletNodeName
+  if ( auto mo = modelObject.tertiaryOutletModelObject() ) {
+    if ( auto node = mo->optionalCast<Node>() ) {
+      idfObject.setString(CentralHeatPumpSystemFields::HeatingLoopOutletNodeName, node->name().get());
+    }
+  }
 
   // ChillerHeaterModulesPerformanceComponentObjectType1
   // ChillerHeaterModulesPerformanceComponentName1
@@ -121,7 +134,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCentralHeatPumpSystem( Ce
     {
       auto schedule = module.chillerHeaterModulesControlSchedule();
       if( auto _schedule = translateAndMapModelObject(schedule) ) {
-        idfObject.setString(CentralHeatPumpSystemExtensibleFields::ChillerHeaterModulesControlScheduleName,_schedule->name().get());
+        group.setString(CentralHeatPumpSystemExtensibleFields::ChillerHeaterModulesControlScheduleName,_schedule->name().get());
      }
     }
     group.setInt(CentralHeatPumpSystemExtensibleFields::NumberofChillerHeaterModules, module.numberofChillerHeaterModules() );

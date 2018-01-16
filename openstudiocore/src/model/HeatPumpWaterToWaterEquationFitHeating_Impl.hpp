@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -63,9 +63,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
@@ -116,6 +116,18 @@ namespace detail {
     double sizingFactor() const;
 
     boost::optional<HeatPumpWaterToWaterEquationFitCooling> companionCoolingHeatPump() const;
+
+  boost::optional<double> autosizedReferenceLoadSideFlowRate() const ;
+
+  boost::optional<double> autosizedReferenceSourceSideFlowRate() const ;
+
+  boost::optional<double> autosizedRatedHeatingCapacity() const ;
+
+  boost::optional<double> autosizedRatedHeatingPowerConsumption() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
 
     //@}
     /** @name Setters */
@@ -171,13 +183,13 @@ namespace detail {
     /** @name Other */
     //@{
 
-    virtual unsigned supplyInletPort();
+    virtual unsigned supplyInletPort() override;
 
-    virtual unsigned supplyOutletPort();
+    virtual unsigned supplyOutletPort() override;
 
-    virtual unsigned demandInletPort();
+    virtual unsigned demandInletPort() override;
 
-    virtual unsigned demandOutletPort();
+    virtual unsigned demandOutletPort() override;
 
     //@}
    protected:

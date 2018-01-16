@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -79,6 +79,8 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirLoopHVAC_ZoneMixer).value()] = new QPixmap(":images/mixer.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirLoopHVAC_ZoneSplitter).value()] = new QPixmap(":images/splitter.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_DualDuct_VAV).value()] = new QPixmap(":images/airterminal_dualduct_vav.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume).value()] = new QPixmap(":images/airterminal_dualduct_constantvolume.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_DualDuct_VAV_OutdoorAir).value()] = new QPixmap(":images/airterminal_dualduct_vav_outdoorair.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam).value()] = new QPixmap(":images/chilled_beam.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_Reheat).value()] = new QPixmap(":images/cav_reheat.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction).value()] = new QPixmap(":images/single_ducts_constant_vol_4pipe.png");
@@ -303,6 +305,8 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem).value()] = new QPixmap(":images/mini_icons/mini_unitary_system.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass).value()] = new QPixmap(":images/mini_icons/mini_unitary_system.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_DualDuct_VAV).value()] = new QPixmap(":images/mini_icons/airterminal_dualduct_vav.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume).value()] = new QPixmap(":images/mini_icons/airterminal_dualduct_constantvolume.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_DualDuct_VAV_OutdoorAir).value()] = new QPixmap(":images/mini_icons/airterminal_dualduct_vav_outdoorair.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam).value()] = new QPixmap(":images/mini_icons/chilled_beam.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction).value()] = new QPixmap(":images/mini_icons/four_pipe_induction_terminal.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_Reheat).value()] = new QPixmap(":images/mini_icons/cav_reheat.png");

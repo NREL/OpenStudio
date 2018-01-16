@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -66,7 +66,20 @@ namespace detail {
   const std::vector<std::string>& HeatPumpWaterToWaterEquationFitCooling_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Water to Water Heat Pump Electric Energy");
+      result.push_back("Water to Water Heat Pump Load Side Heat Transfer Energy");
+      result.push_back("Water to Water Heat Pump Source Side Heat Transfer Energy");
+      result.push_back("Water to Water Heat Pump Electric Power");
+      result.push_back("Water to Water Heat Pump Load Side Heat Transfer Rate");
+      result.push_back("Water to Water Heat Pump Source Side Heat Transfer Rate");
+      result.push_back("Water to Water Heat Pump Load Side Outlet Temperature");
+      result.push_back("Water to Water Heat Pump Load Side Inlet Temperature");
+      result.push_back("Water to Water Heat Pump Source Side Outlet Temperature");
+      result.push_back("Water to Water Heat Pump Source Side Inlet Temperature");
+      result.push_back("Water to Water Heat Pump Load Side Mass Flow Rate");
+      result.push_back("Water to Water Heat Pump Source Side Mass Flow Rate");
     }
     return result;
   }
@@ -344,6 +357,53 @@ namespace detail {
     return OS_HeatPump_WaterToWater_EquationFit_CoolingFields::LoadSideOutletNodeName;
   }
 
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling_Impl::autosizedReferenceLoadSideFlowRate() const {
+    return getAutosizedValue("Design Size Load Side Volume Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling_Impl::autosizedReferenceSourceSideFlowRate() const {
+    return getAutosizedValue("Design Size Source Side Volume Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling_Impl::autosizedRatedCoolingCapacity() const {
+    return getAutosizedValue("Design Size Nominal Capacity", "W");
+  }
+
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling_Impl::autosizedRatedCoolingPowerConsumption() const {
+    return getAutosizedValue("Design Size Cooling Power Consumption", "W");
+  }
+
+  void HeatPumpWaterToWaterEquationFitCooling_Impl::autosize() {
+    autosizeReferenceLoadSideFlowRate();
+    autosizeReferenceSourceSideFlowRate();
+    autosizeRatedCoolingCapacity();
+    autosizeRatedCoolingPowerConsumption();
+  }
+
+  void HeatPumpWaterToWaterEquationFitCooling_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedReferenceLoadSideFlowRate();
+    if (val) {
+      setReferenceLoadSideFlowRate(val.get());
+    }
+
+    val = autosizedReferenceSourceSideFlowRate();
+    if (val) {
+      setReferenceSourceSideFlowRate(val.get());
+    }
+
+    val = autosizedRatedCoolingCapacity();
+    if (val) {
+      setRatedCoolingCapacity(val.get());
+    }
+
+    val = autosizedRatedCoolingPowerConsumption();
+    if (val) {
+      setRatedCoolingPowerConsumption(val.get());
+    }
+
+  }
+
 } // detail
 
 HeatPumpWaterToWaterEquationFitCooling::HeatPumpWaterToWaterEquationFitCooling(const Model& model)
@@ -564,6 +624,22 @@ HeatPumpWaterToWaterEquationFitCooling::HeatPumpWaterToWaterEquationFitCooling(s
   : WaterToWaterComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling::autosizedReferenceLoadSideFlowRate() const {
+    return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->autosizedReferenceLoadSideFlowRate();
+  }
+
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling::autosizedReferenceSourceSideFlowRate() const {
+    return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->autosizedReferenceSourceSideFlowRate();
+  }
+
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling::autosizedRatedCoolingCapacity() const {
+    return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->autosizedRatedCoolingCapacity();
+  }
+
+  boost::optional<double> HeatPumpWaterToWaterEquationFitCooling::autosizedRatedCoolingPowerConsumption() const {
+    return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->autosizedRatedCoolingPowerConsumption();
+  }
 
 } // model
 } // openstudio

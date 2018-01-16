@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -73,7 +73,25 @@ namespace detail {
   const std::vector<std::string>& HeaderedPumpsConstantSpeed_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Pump Electric Power");
+      result.push_back("Pump Electric Energy");
+      result.push_back("Pump Shaft Power");
+      result.push_back("Pump Fluid Heat Gain Rate");
+      result.push_back("Pump Fluid Heat Gain Energy");
+      result.push_back("Pump Outlet Temperature");
+      result.push_back("Pump Mass Flow Rate");
+      result.push_back("Number of Pumps Operating");
+      // The Key is the Pump, not the zone, so it's right to report here
+      // EnergyPlus/Pumps.cc::GetPumpInput()
+      // TODO: Implement this check and make not static above once ModelObject return type has changed
+      //if (! p.zone().empty() ) {
+        result.push_back("Pump Zone Total Heating Rate");
+        result.push_back("Pump Zone Total Heating Energy");
+        result.push_back("Pump Zone Convective Heating Rate");
+        result.push_back("Pump Zone Radiative Heating Rate");
+      // }
     }
     return result;
   }
@@ -278,6 +296,33 @@ namespace detail {
     return false;
   }
 
+  boost::optional<double> HeaderedPumpsConstantSpeed_Impl::autosizedTotalRatedFlowRate() const {
+    return getAutosizedValue("Design Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> HeaderedPumpsConstantSpeed_Impl::autosizedRatedPowerConsumption() const {
+    return getAutosizedValue("Design Power Consumption", "W");
+  }
+
+  void HeaderedPumpsConstantSpeed_Impl::autosize() {
+    autosizeTotalRatedFlowRate();
+    autosizeRatedPowerConsumption();
+  }
+
+  void HeaderedPumpsConstantSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedTotalRatedFlowRate();
+    if (val) {
+      setTotalRatedFlowRate(val.get());
+    }
+
+    val = autosizedRatedPowerConsumption();
+    if (val) {
+      setRatedPowerConsumption(val.get());
+    }
+
+  }
+
 } // detail
 
 HeaderedPumpsConstantSpeed::HeaderedPumpsConstantSpeed(const Model& model)
@@ -427,6 +472,14 @@ HeaderedPumpsConstantSpeed::HeaderedPumpsConstantSpeed(std::shared_ptr<detail::H
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> HeaderedPumpsConstantSpeed::autosizedTotalRatedFlowRate() const {
+    return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->autosizedTotalRatedFlowRate();
+  }
+
+  boost::optional<double> HeaderedPumpsConstantSpeed::autosizedRatedPowerConsumption() const {
+    return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->autosizedRatedPowerConsumption();
+  }
 
 } // model
 } // openstudio

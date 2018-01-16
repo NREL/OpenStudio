@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -28,6 +28,8 @@
 
 #include "AvailabilityManager.hpp"
 #include "AvailabilityManager_Impl.hpp"
+#include "AvailabilityManagerAssignmentList.hpp"
+#include "AvailabilityManagerAssignmentList_Impl.hpp"
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVAC_Impl.hpp"
 #include "Loop.hpp"
@@ -69,14 +71,13 @@ AvailabilityManager_Impl::AvailabilityManager_Impl(const AvailabilityManager_Imp
 
 boost::optional<Loop> AvailabilityManager_Impl::loop() const {
   auto t_handle = handle();
-  for( const auto & loop : model().getConcreteModelObjects<AirLoopHVAC>() ) {
-    if( auto availabilityManager = loop.availabilityManager() ) {
-      if( availabilityManager->handle() == t_handle ) {
-        return loop;
+  for( const auto & avmList : model().getConcreteModelObjects<AvailabilityManagerAssignmentList>() ) {
+    for( const auto & avm : avmList.availabilityManagers() ) {
+      if( avm.handle() == t_handle ) {
+        return avmList.loop();
       }
     }
   }
-
   return boost::none;
 }
 
