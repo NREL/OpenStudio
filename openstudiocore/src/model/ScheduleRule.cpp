@@ -723,33 +723,72 @@ bool ScheduleRule::setApplySunday(bool applySunday) {
   return getImpl<detail::ScheduleRule_Impl>()->setApplySunday(applySunday);
 }
 
+void ScheduleRule::setApplySundayNoFail(bool applySunday) {
+  bool result = getImpl<detail::ScheduleRule_Impl>()->setApplySunday(applySunday);
+  OS_ASSERT(result);
+}
+
 bool ScheduleRule::setApplyMonday(bool applyMonday) {
   return getImpl<detail::ScheduleRule_Impl>()->setApplyMonday(applyMonday);
+}
+
+void ScheduleRule::setApplyMondayNoFail(bool applyMonday) {
+  bool result = getImpl<detail::ScheduleRule_Impl>()->setApplyMonday(applyMonday);
+  OS_ASSERT(result);
 }
 
 bool ScheduleRule::setApplyTuesday(bool applyTuesday) {
   return getImpl<detail::ScheduleRule_Impl>()->setApplyTuesday(applyTuesday);
 }
 
+void ScheduleRule::setApplyTuesdayNoFail(bool applyTuesday) {
+  bool result = getImpl<detail::ScheduleRule_Impl>()->setApplyTuesday(applyTuesday);
+  OS_ASSERT(result);
+}
+
 bool ScheduleRule::setApplyWednesday(bool applyWednesday) {
   return getImpl<detail::ScheduleRule_Impl>()->setApplyWednesday(applyWednesday);
+}
+
+void ScheduleRule::setApplyWednesdayNoFail(bool applyWednesday) {
+  bool result = getImpl<detail::ScheduleRule_Impl>()->setApplyWednesday(applyWednesday);
+  OS_ASSERT(result);
 }
 
 bool ScheduleRule::setApplyThursday(bool applyThursday) {
   return getImpl<detail::ScheduleRule_Impl>()->setApplyThursday(applyThursday);
 }
 
+void ScheduleRule::setApplyThursdayNoFail(bool applyThursday) {
+  bool result = getImpl<detail::ScheduleRule_Impl>()->setApplyThursday(applyThursday);
+  OS_ASSERT(result);
+}
+
 bool ScheduleRule::setApplyFriday(bool applyFriday) {
   return getImpl<detail::ScheduleRule_Impl>()->setApplyFriday(applyFriday);
+}
+
+void ScheduleRule::setApplyFridayNoFail(bool applyFriday) {
+  bool result = getImpl<detail::ScheduleRule_Impl>()->setApplyFriday(applyFriday);
+  OS_ASSERT(result);
 }
 
 bool ScheduleRule::setApplySaturday(bool applySaturday) {
   return getImpl<detail::ScheduleRule_Impl>()->setApplySaturday(applySaturday);
 }
 
+void ScheduleRule::setApplySaturdayNoFail(bool applySaturday) {
+  bool result = getImpl<detail::ScheduleRule_Impl>()->setApplySaturday(applySaturday);
+  OS_ASSERT(result);
+}
+
 /*
 bool ScheduleRule::setApplyHoliday(bool applyHoliday) {
   return getImpl<detail::ScheduleRule_Impl>()->setApplyHoliday(applyHoliday);
+}
+
+void ScheduleRule::setApplyHolidayNoFail(bool applyHoliday) {
+  bool result = getImpl<detail::ScheduleRule_Impl>()->setApplyHoliday(applyHoliday);
 }
 */
 

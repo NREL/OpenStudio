@@ -921,6 +921,11 @@ bool StandardsInformationConstruction::setFenestrationLowEmissivityCoating(bool 
   return getImpl<detail::StandardsInformationConstruction_Impl>()->setFenestrationLowEmissivityCoating(fenestrationLowEmissivityCoating);
 }
 
+void StandardsInformationConstruction::setFenestrationLowEmissivityCoatingNoFail(bool fenestrationLowEmissivityCoating) {
+  bool result = getImpl<detail::StandardsInformationConstruction_Impl>()->setFenestrationLowEmissivityCoating(fenestrationLowEmissivityCoating);
+  OS_ASSERT(result);
+}
+
 void StandardsInformationConstruction::resetFenestrationLowEmissivityCoating() {
   getImpl<detail::StandardsInformationConstruction_Impl>()->resetFenestrationLowEmissivityCoating();
 }

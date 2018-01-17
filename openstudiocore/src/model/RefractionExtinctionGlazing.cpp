@@ -767,6 +767,11 @@ bool RefractionExtinctionGlazing::setSolarDiffusing(bool solarDiffusing) {
   return getImpl<detail::RefractionExtinctionGlazing_Impl>()->setSolarDiffusing(solarDiffusing);
 }
 
+void RefractionExtinctionGlazing::setSolarDiffusingNoFail(bool solarDiffusing) {
+  bool result = getImpl<detail::RefractionExtinctionGlazing_Impl>()->setSolarDiffusing(solarDiffusing);
+  OS_ASSERT(result);
+}
+
 void RefractionExtinctionGlazing::resetSolarDiffusing() {
   getImpl<detail::RefractionExtinctionGlazing_Impl>()->resetSolarDiffusing();
 }

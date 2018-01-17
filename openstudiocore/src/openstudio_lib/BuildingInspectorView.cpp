@@ -615,7 +615,7 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
   m_relocatable->bind(
     building,
     std::bind(&model::Building::relocatable, building),
-    boost::optional<BoolSetter>(std::bind(&model::Building::setRelocatable, building, std::placeholders::_1)),
+    boost::optional<BoolSetter>(std::bind(&model::Building::setRelocatableNoFail, building, std::placeholders::_1)),
     boost::optional<NoFailAction>(),
     boost::optional<BasicQuery>(std::bind(&model::Building::isRelocatableDefaulted, building))
   );

@@ -132,21 +132,31 @@ class MODEL_API SimulationControl : public ParentObject {
 
   bool setDoZoneSizingCalculation(bool doZoneSizingCalculation);
 
+  void setDoZoneSizingCalculationNoFail(bool doZoneSizingCalculation);
+
   void resetDoZoneSizingCalculation();
 
   bool setDoSystemSizingCalculation(bool doSystemSizingCalculation);
+
+  void setDoSystemSizingCalculationNoFail(bool doSystemSizingCalculation);
 
   void resetDoSystemSizingCalculation();
 
   bool setDoPlantSizingCalculation(bool doPlantSizingCalculation);
 
+  void setDoPlantSizingCalculationNoFail(bool doPlantSizingCalculation);
+
   void resetDoPlantSizingCalculation();
 
   bool setRunSimulationforSizingPeriods(bool runSimulationforSizingPeriods);
 
+  void setRunSimulationforSizingPeriodsNoFail(bool runSimulationforSizingPeriods);
+
   void resetRunSimulationforSizingPeriods();
 
   bool setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods);
+
+  void setRunSimulationforWeatherFileRunPeriodsNoFail(bool runSimulationforWeatherFileRunPeriods);
 
   void resetRunSimulationforWeatherFileRunPeriods();
 

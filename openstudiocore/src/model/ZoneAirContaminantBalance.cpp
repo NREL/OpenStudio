@@ -205,6 +205,11 @@ bool ZoneAirContaminantBalance::setCarbonDioxideConcentration(bool carbonDioxide
   return getImpl<detail::ZoneAirContaminantBalance_Impl>()->setCarbonDioxideConcentration(carbonDioxideConcentration);
 }
 
+void ZoneAirContaminantBalance::setCarbonDioxideConcentrationNoFail(bool carbonDioxideConcentration) {
+  bool result = getImpl<detail::ZoneAirContaminantBalance_Impl>()->setCarbonDioxideConcentration(carbonDioxideConcentration);
+  OS_ASSERT(result);
+}
+
 void ZoneAirContaminantBalance::resetCarbonDioxideConcentration() {
   getImpl<detail::ZoneAirContaminantBalance_Impl>()->resetCarbonDioxideConcentration();
 }

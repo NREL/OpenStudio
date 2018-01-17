@@ -1191,31 +1191,31 @@ void SimSettingsView::attachSimulationControl()
   m_doZoneSizingCalculation->bind(
       *m_simulationControl,
       std::bind(&model::SimulationControl::doZoneSizingCalculation,m_simulationControl.get_ptr()),
-      boost::optional<BoolSetter>(std::bind(&model::SimulationControl::setDoZoneSizingCalculation,m_simulationControl.get_ptr(),std::placeholders::_1)),
+      boost::optional<BoolSetter>(std::bind(&model::SimulationControl::setDoZoneSizingCalculationNoFail,m_simulationControl.get_ptr(),std::placeholders::_1)),
       boost::optional<NoFailAction>(std::bind(&model::SimulationControl::resetDoZoneSizingCalculation,m_simulationControl.get_ptr())),
       boost::optional<BasicQuery>(std::bind(&model::SimulationControl::isDoZoneSizingCalculationDefaulted,m_simulationControl.get_ptr())));
   m_doSystemSizingCalculation->bind(
       *m_simulationControl,
       std::bind(&model::SimulationControl::doSystemSizingCalculation,m_simulationControl.get_ptr()),
-      boost::optional<BoolSetter>(std::bind(&model::SimulationControl::setDoSystemSizingCalculation,m_simulationControl.get_ptr(),std::placeholders::_1)),
+      boost::optional<BoolSetter>(std::bind(&model::SimulationControl::setDoSystemSizingCalculationNoFail,m_simulationControl.get_ptr(),std::placeholders::_1)),
       boost::optional<NoFailAction>(std::bind(&model::SimulationControl::resetDoSystemSizingCalculation,m_simulationControl.get_ptr())),
       boost::optional<BasicQuery>(std::bind(&model::SimulationControl::isDoSystemSizingCalculationDefaulted,m_simulationControl.get_ptr())));
   m_doPlantSizingCalculation->bind(
       *m_simulationControl,
       std::bind(&model::SimulationControl::doPlantSizingCalculation,m_simulationControl.get_ptr()),
-      boost::optional<BoolSetter>(std::bind(&model::SimulationControl::setDoPlantSizingCalculation,m_simulationControl.get_ptr(),std::placeholders::_1)),
+      boost::optional<BoolSetter>(std::bind(&model::SimulationControl::setDoPlantSizingCalculationNoFail,m_simulationControl.get_ptr(),std::placeholders::_1)),
       boost::optional<NoFailAction>(std::bind(&model::SimulationControl::resetDoPlantSizingCalculation,m_simulationControl.get_ptr())),
       boost::optional<BasicQuery>(std::bind(&model::SimulationControl::isDoPlantSizingCalculationDefaulted,m_simulationControl.get_ptr())));
   m_runSimulationforSizingPeriods->bind(
       *m_simulationControl,
       std::bind(&model::SimulationControl::runSimulationforSizingPeriods,m_simulationControl.get_ptr()),
-      boost::optional<BoolSetter>(std::bind(&model::SimulationControl::setRunSimulationforSizingPeriods,m_simulationControl.get_ptr(),std::placeholders::_1)),
+      boost::optional<BoolSetter>(std::bind(&model::SimulationControl::setRunSimulationforSizingPeriodsNoFail,m_simulationControl.get_ptr(),std::placeholders::_1)),
       boost::optional<NoFailAction>(std::bind(&model::SimulationControl::resetRunSimulationforSizingPeriods,m_simulationControl.get_ptr())),
       boost::optional<BasicQuery>(std::bind(&model::SimulationControl::isRunSimulationforSizingPeriodsDefaulted,m_simulationControl.get_ptr())));
   m_runSimulationforWeatherFileRunPeriods->bind(
       *m_simulationControl,
       std::bind(&model::SimulationControl::runSimulationforWeatherFileRunPeriods,m_simulationControl.get_ptr()),
-      boost::optional<BoolSetter>(std::bind(&model::SimulationControl::setRunSimulationforWeatherFileRunPeriods,m_simulationControl.get_ptr(),std::placeholders::_1)),
+      boost::optional<BoolSetter>(std::bind(&model::SimulationControl::setRunSimulationforWeatherFileRunPeriodsNoFail,m_simulationControl.get_ptr(),std::placeholders::_1)),
       boost::optional<NoFailAction>(std::bind(&model::SimulationControl::resetRunSimulationforWeatherFileRunPeriods,m_simulationControl.get_ptr())),
       boost::optional<BasicQuery>(std::bind(&model::SimulationControl::isRunSimulationforWeatherFileRunPeriodsDefaulted,m_simulationControl.get_ptr())));
   m_maximumNumberofWarmupDays->bind(
@@ -1559,7 +1559,7 @@ void SimSettingsView::attachZoneAirContaminantBalance()
   m_carbonDioxideConcentration->bind(
     mo,
     std::bind(&model::ZoneAirContaminantBalance::carbonDioxideConcentration, mo),
-    boost::optional<BoolSetter>(std::bind(&model::ZoneAirContaminantBalance::setCarbonDioxideConcentration, mo, std::placeholders::_1)),
+    boost::optional<BoolSetter>(std::bind(&model::ZoneAirContaminantBalance::setCarbonDioxideConcentrationNoFail, mo, std::placeholders::_1)),
     boost::optional<NoFailAction>(std::bind(&model::ZoneAirContaminantBalance::resetCarbonDioxideConcentration, mo)),
     boost::optional<BasicQuery>(std::bind(&model::ZoneAirContaminantBalance::isCarbonDioxideConcentrationDefaulted, mo))
   );

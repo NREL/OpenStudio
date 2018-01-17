@@ -1114,6 +1114,11 @@ bool Building::setRelocatable(bool isRelocatable){
   return getImpl<detail::Building_Impl>()->setRelocatable(isRelocatable);
 }
 
+void Building::setRelocatableNoFail(bool isRelocatable){
+  bool result = getImpl<detail::Building_Impl>()->setRelocatable(isRelocatable);
+  OS_ASSERT(result);
+}
+
 void Building::resetRelocatable(){
   getImpl<detail::Building_Impl>()->resetRelocatable();
 }

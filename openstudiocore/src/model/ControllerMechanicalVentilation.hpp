@@ -66,6 +66,8 @@ class MODEL_API ControllerMechanicalVentilation : public ModelObject {
 
   bool setDemandControlledVentilation(bool demandControlledVentilation);
 
+  void setDemandControlledVentilationNoFail(bool demandControlledVentilation);
+
   void resetDemandControlledVentilation();
 
   std::string systemOutdoorAirMethod() const;

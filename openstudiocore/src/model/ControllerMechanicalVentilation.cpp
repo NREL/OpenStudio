@@ -253,6 +253,11 @@ bool ControllerMechanicalVentilation::setDemandControlledVentilation(bool demand
   return getImpl<detail::ControllerMechanicalVentilation_Impl>()->setDemandControlledVentilation(demandControlledVentilation);
 }
 
+void ControllerMechanicalVentilation::setDemandControlledVentilationNoFail(bool demandControlledVentilation) {
+  bool result = getImpl<detail::ControllerMechanicalVentilation_Impl>()->setDemandControlledVentilation(demandControlledVentilation);
+  OS_ASSERT(result);
+}
+
 void ControllerMechanicalVentilation::resetDemandControlledVentilation() {
   getImpl<detail::ControllerMechanicalVentilation_Impl>()->resetDemandControlledVentilation();
 }
