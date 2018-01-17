@@ -198,6 +198,8 @@ class MODEL_API RefractionExtinctionGlazing : public Glazing {
 
   bool setSolarDiffusing(bool solarDiffusing);
 
+  void setSolarDiffusingNoFail(bool solarDiffusing);
+
   void resetSolarDiffusing();
 
   //@}

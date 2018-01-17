@@ -401,7 +401,7 @@ void StandardsInformationConstructionWidget::enableFenestration()
     m_fenestrationLowEmissivityCoating->bind(
       *m_standardsInformation,
       std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationLowEmissivityCoating, m_standardsInformation.get_ptr()),
-      BoolSetter(std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationLowEmissivityCoating, m_standardsInformation.get_ptr(), std::placeholders::_1)),
+      BoolSetter(std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationLowEmissivityCoatingNoFail, m_standardsInformation.get_ptr(), std::placeholders::_1)),
       NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationLowEmissivityCoating, m_standardsInformation.get_ptr())));
   }
 }

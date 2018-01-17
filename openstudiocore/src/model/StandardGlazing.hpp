@@ -240,6 +240,8 @@ class MODEL_API StandardGlazing : public Glazing {
 
   bool setSolarDiffusing(bool solarDiffusing);
 
+  void setSolarDiffusingNoFail(bool solarDiffusing);
+
   void resetSolarDiffusing();
 
   //@}

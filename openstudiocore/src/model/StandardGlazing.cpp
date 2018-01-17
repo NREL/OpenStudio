@@ -1163,6 +1163,11 @@ bool StandardGlazing::setSolarDiffusing(bool solarDiffusing) {
   return getImpl<detail::StandardGlazing_Impl>()->setSolarDiffusing(solarDiffusing);
 }
 
+void StandardGlazing::setSolarDiffusingNoFail(bool solarDiffusing) {
+  bool result = getImpl<detail::StandardGlazing_Impl>()->setSolarDiffusing(solarDiffusing);
+  OS_ASSERT(result);
+}
+
 void StandardGlazing::resetSolarDiffusing() {
   getImpl<detail::StandardGlazing_Impl>()->resetSolarDiffusing();
 }

@@ -729,12 +729,22 @@ bool SimulationControl::setDoZoneSizingCalculation(bool doZoneSizingCalculation)
   return getImpl<detail::SimulationControl_Impl>()->setDoZoneSizingCalculation(doZoneSizingCalculation);
 }
 
+void SimulationControl::setDoZoneSizingCalculationNoFail(bool doZoneSizingCalculation) {
+  bool result = getImpl<detail::SimulationControl_Impl>()->setDoZoneSizingCalculation(doZoneSizingCalculation);
+  OS_ASSERT(result);
+}
+
 void SimulationControl::resetDoZoneSizingCalculation() {
   getImpl<detail::SimulationControl_Impl>()->resetDoZoneSizingCalculation();
 }
 
 bool SimulationControl::setDoSystemSizingCalculation(bool doSystemSizingCalculation) {
   return getImpl<detail::SimulationControl_Impl>()->setDoSystemSizingCalculation(doSystemSizingCalculation);
+}
+
+void SimulationControl::setDoSystemSizingCalculationNoFail(bool doSystemSizingCalculation) {
+  bool result = getImpl<detail::SimulationControl_Impl>()->setDoSystemSizingCalculation(doSystemSizingCalculation);
+  OS_ASSERT(result);
 }
 
 void SimulationControl::resetDoSystemSizingCalculation() {
@@ -745,6 +755,11 @@ bool SimulationControl::setDoPlantSizingCalculation(bool doPlantSizingCalculatio
   return getImpl<detail::SimulationControl_Impl>()->setDoPlantSizingCalculation(doPlantSizingCalculation);
 }
 
+void SimulationControl::setDoPlantSizingCalculationNoFail(bool doPlantSizingCalculation) {
+  bool result = getImpl<detail::SimulationControl_Impl>()->setDoPlantSizingCalculation(doPlantSizingCalculation);
+  OS_ASSERT(result);
+}
+
 void SimulationControl::resetDoPlantSizingCalculation() {
   getImpl<detail::SimulationControl_Impl>()->resetDoPlantSizingCalculation();
 }
@@ -753,12 +768,22 @@ bool SimulationControl::setRunSimulationforSizingPeriods(bool runSimulationforSi
   return getImpl<detail::SimulationControl_Impl>()->setRunSimulationforSizingPeriods(runSimulationforSizingPeriods);
 }
 
+void SimulationControl::setRunSimulationforSizingPeriodsNoFail(bool runSimulationforSizingPeriods) {
+  bool result = getImpl<detail::SimulationControl_Impl>()->setRunSimulationforSizingPeriods(runSimulationforSizingPeriods);
+  OS_ASSERT(result);
+}
+
 void SimulationControl::resetRunSimulationforSizingPeriods() {
   getImpl<detail::SimulationControl_Impl>()->resetRunSimulationforSizingPeriods();
 }
 
 bool SimulationControl::setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods) {
   return getImpl<detail::SimulationControl_Impl>()->setRunSimulationforWeatherFileRunPeriods(runSimulationforWeatherFileRunPeriods);
+}
+
+void SimulationControl::setRunSimulationforWeatherFileRunPeriodsNoFail(bool runSimulationforWeatherFileRunPeriods) {
+  bool result = getImpl<detail::SimulationControl_Impl>()->setRunSimulationforWeatherFileRunPeriods(runSimulationforWeatherFileRunPeriods);
+  OS_ASSERT(result);
 }
 
 void SimulationControl::resetRunSimulationforWeatherFileRunPeriods() {
@@ -878,4 +903,4 @@ std::vector<std::string> SimulationControl::repeatedIntervalEnvironmentPeriods()
 }
 
 }
-}
+}

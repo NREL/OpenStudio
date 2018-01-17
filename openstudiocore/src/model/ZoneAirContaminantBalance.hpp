@@ -70,6 +70,8 @@ class MODEL_API ZoneAirContaminantBalance : public ModelObject {
 
   bool setCarbonDioxideConcentration(bool carbonDioxideConcentration);
 
+  void setCarbonDioxideConcentrationNoFail(bool carbonDioxideConcentration);
+
   void resetCarbonDioxideConcentration();
 
   bool setOutdoorCarbonDioxideSchedule(Schedule& schedule);

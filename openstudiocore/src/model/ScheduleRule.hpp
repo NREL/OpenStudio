@@ -84,11 +84,11 @@ class MODEL_API ScheduleRule : public ParentObject {
   bool applyMonday() const;
 
   bool applyTuesday() const;
-
+ 
   bool applyWednesday() const;
 
   bool applyThursday() const;
-
+ 
   bool applyFriday() const;
 
   bool applySaturday() const;
@@ -114,19 +114,35 @@ class MODEL_API ScheduleRule : public ParentObject {
 
   bool setApplySunday(bool applySunday);
 
+  void setApplySundayNoFail(bool applySunday);
+
   bool setApplyMonday(bool applyMonday);
+
+  void setApplyMondayNoFail(bool applyMonday);
 
   bool setApplyTuesday(bool applyTuesday);
 
+  void setApplyTuesdayNoFail(bool applyTuesday);
+
   bool setApplyWednesday(bool applyWednesday);
+
+  void setApplyWednesdayNoFail(bool applyWednesday);
 
   bool setApplyThursday(bool applyThursday);
 
+  void setApplyThursdayNoFail(bool applyThursday);
+
   bool setApplyFriday(bool applyFriday);
+
+  void setApplyFridayNoFail(bool applyFriday);
 
   bool setApplySaturday(bool applySaturday);
 
+  void setApplySaturdayNoFail(bool applySaturday);
+
   //bool setApplyHoliday(bool applyHoliday);
+
+  //void setApplyHolidayNoFail(bool applyHoliday);
 
   /// Sets the start date of the date range, will delete any specific dates specified.
   /// A start date > end date indicates that the range wraps around the year.

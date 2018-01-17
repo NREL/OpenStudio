@@ -131,6 +131,7 @@ class MODEL_API Building : public ParentObject {
   void resetStandardsBuildingType();
 
   bool setRelocatable(bool isRelocatable);
+  void setRelocatableNoFail(bool isRelocatable);
   void resetRelocatable();
 
 
