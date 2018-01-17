@@ -5087,7 +5087,7 @@ OS:Surface,
        \key GroundBasementPreprocessorAverageWall
        \key GroundBasementPreprocessorAverageFloor
        \key GroundBasementPreprocessorUpperWall
-       \key GroundBasementPreprocessorLowerWall       
+       \key GroundBasementPreprocessorLowerWall
   A7, \field Outside Boundary Condition Object
        \note Non-blank only if the field Outside Boundary Condition is Surface,
        \note OtherSideCoefficients or OtherSideConditionsModel
@@ -5822,7 +5822,7 @@ OS:SurfaceProperty:ExposedFoundationPerimeter,
       \min-fields 4
   A1, \field Handle
       \type handle
-      \required-field  
+      \required-field
   A2, \field Surface Name
       \required-field
       \type object-list
@@ -5857,7 +5857,7 @@ OS:SurfaceProperty:ExposedFoundationPerimeter,
       \default Yes
       \key Yes
       \key No
-      
+
 OS:SurfaceProperty:OtherSideCoefficients,
       \memo This object sets the other side conditions for a surface in a variety of ways.
       \min-fields 9

@@ -1006,10 +1006,12 @@ TEST_F(ModelFixture,Surface_IddAssumptions) {
   // outside boundary condition is hand-mapped to similar enums in standardsinterface.
   // if this test starts failing, please re-map the standardsinterface
   StringVector keys = Surface::validOutsideBoundaryConditionValues();
-  EXPECT_EQ(14u, keys.size());
+
+  EXPECT_EQ(15u, keys.size());
   EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"Adiabatic",std::placeholders::_1)) == keys.end());
   EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"Surface",std::placeholders::_1)) == keys.end());
   EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"Outdoors",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"Foundation",std::placeholders::_1)) == keys.end());
   EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"Ground",std::placeholders::_1)) == keys.end());
   EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundFCfactorMethod",std::placeholders::_1)) == keys.end());
   EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"OtherSideCoefficients",std::placeholders::_1)) == keys.end());
