@@ -106,7 +106,7 @@ class MainWindow : public QMainWindow
 
   void osmDropped(QString path);
 
-  void loadLibraryClicked();
+  void changeDefaultLibrariesClicked();
 
   void saveAsFileClicked(); 
 

@@ -30,6 +30,7 @@
 #include <openstudio_app/AboutBox.hpp>
 #include "StartupMenu.hpp"
 #include "StartupView.hpp"
+#include "LibraryDialog.hpp"
 #include "../openstudio_lib/MainWindow.hpp"
 #include "../openstudio_lib/OSDocument.hpp"
 
@@ -225,7 +226,6 @@ void OpenStudioApp::onMeasureManagerAndLibraryReady() {
       if( model ){
 
         m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
-                                                                     hvacComponentLibrary(), 
                                                                      resourcesPath(), 
                                                                      model,
                                                                      fileName) );
@@ -297,7 +297,6 @@ bool OpenStudioApp::openFile(const QString& fileName, bool restoreTabs)
       processEvents();
 
       m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(),
-                                                                   hvacComponentLibrary(), 
                                                                    resourcesPath(), 
                                                                    model, 
                                                                    fileName, 
@@ -325,43 +324,31 @@ bool OpenStudioApp::openFile(const QString& fileName, bool restoreTabs)
 
 void OpenStudioApp::buildCompLibraries()
 {
-  osversion::VersionTranslator versionTranslator;
-  versionTranslator.setAllowNewerVersions(false);
-    
   QWidget * parent = nullptr;
   if( this->currentDocument() ){
     parent = this->currentDocument()->mainWindow();
   }
 
-  path p = resourcesPath() / toPath("MinimalTemplate.osm");
-  OS_ASSERT(exists(p));
-  boost::optional<Model> temp = versionTranslator.loadModel(p);
-  if (!temp){
-    LOG_FREE(Error, "OpenStudioApp", "Failed to load MinimalTemplate");
-    for (const auto& error : versionTranslator.errors()){
-      LOG_FREE(Error, "OpenStudioApp", error.logMessage());
-    }
-  }
-  if (!temp){
-    QMessageBox::critical(parent, QString("Failed to load MinimalTemplate"), QString("Failed to load MinimalTemplate, likely due to problem with VersionTranslator."));
-  }
-  OS_ASSERT(temp);
-  m_compLibrary = temp.get();
+  m_compLibrary = model::Model();
 
-  p = resourcesPath() / toPath("hvaclibrary/hvac_library.osm");
-  OS_ASSERT(exists(p));
-  temp = versionTranslator.loadModel(p);
-  if (!temp){
-    LOG_FREE(Error, "OpenStudioApp", "Failed to load hvaclibrary");
-    for (const auto& error : versionTranslator.errors()){
-      LOG_FREE(Error, "OpenStudioApp", error.logMessage());
+  for( auto path : libraryPaths() ) {
+    if ( exists(path) ) {
+      osversion::VersionTranslator versionTranslator;
+      versionTranslator.setAllowNewerVersions(false);
+      boost::optional<Model> temp = versionTranslator.loadModel(path);
+      if (temp) {
+        m_compLibrary.insertObjects(temp->objects());
+      } else {
+        LOG_FREE(Error, "OpenStudioApp", "Failed to load library");
+        for (const auto& error : versionTranslator.errors()){
+          LOG_FREE(Error, "OpenStudioApp", error.logMessage());
+        }
+        QMessageBox::critical(parent, QString("Failed to load library"), QString::fromStdString("Failed to load library at " + toString(path) + "." ));
+      }
+    } else {
+      QMessageBox::critical(parent, QString("Failed to locate library"), QString::fromStdString("Failed to locate library at " + toString(path) + "."));
     }
   }
-  if (!temp){
-    QMessageBox::critical(parent, QString("Failed to load hvaclibrary"), QString("Failed to load hvaclibrary, likely due to problem with VersionTranslator."));
-  }
-  OS_ASSERT(temp);
-  m_hvacCompLibrary = temp.get();
 }
 
 OpenStudioApp * OpenStudioApp::instance()
@@ -401,7 +388,7 @@ void OpenStudioApp::newFromEmptyTemplateSlot()
 
 void OpenStudioApp::newFromTemplateSlot( NewFromTemplateEnum newFromTemplateEnum )
 {
-  m_osDocument = std::shared_ptr<OSDocument>( new OSDocument( componentLibrary(), hvacComponentLibrary(), resourcesPath() ) );
+  m_osDocument = std::shared_ptr<OSDocument>( new OSDocument( componentLibrary(), resourcesPath() ) );
 
   connectOSDocumentSignals();
 
@@ -469,7 +456,6 @@ void OpenStudioApp::importIdf()
         }
 
         m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
-                                                                     hvacComponentLibrary(), 
                                                                      resourcesPath(), 
                                                                      model) );
         m_osDocument->markAsModified();
@@ -559,7 +545,6 @@ void OpenStudioApp::importIFC()
     }
 
     m_osDocument = std::shared_ptr<OSDocument>(new OSDocument(componentLibrary(),
-      hvacComponentLibrary(),
       resourcesPath(),
       *model));
 
@@ -634,7 +619,6 @@ void OpenStudioApp::import(OpenStudioApp::fileType type)
       }
 
       m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
-                                                                   hvacComponentLibrary(), 
                                                                    resourcesPath(), 
                                                                    *model) );
       m_osDocument->markAsModified();
@@ -1098,7 +1082,7 @@ void OpenStudioApp::connectOSDocumentSignals()
   connect(m_osDocument.get(), &OSDocument::importIFCClicked, this, &OpenStudioApp::importIFC);
   connect(m_osDocument.get(), &OSDocument::loadFileClicked, this, &OpenStudioApp::open);
   connect(m_osDocument.get(), &OSDocument::osmDropped, this, &OpenStudioApp::openFromDrag);
-  connect(m_osDocument.get(), &OSDocument::loadLibraryClicked, this, &OpenStudioApp::loadLibrary);
+  connect(m_osDocument.get(), &OSDocument::changeDefaultLibrariesClicked, this, &OpenStudioApp::changeDefaultLibraries);
   connect(m_osDocument.get(), &OSDocument::newClicked, this, &OpenStudioApp::newModel);
   connect(m_osDocument.get(), &OSDocument::helpClicked, this, &OpenStudioApp::showHelp);
   connect(m_osDocument.get(), &OSDocument::aboutClicked, this, &OpenStudioApp::showAbout);
@@ -1166,6 +1150,73 @@ void OpenStudioApp::startMeasureManagerProcess(){
   LOG(Debug, "Command: " << toString(openstudioCLIPath()) << " measure -s " << toString(portString));
   
   m_measureManagerProcess->start(program, arguments);
+}
+
+void OpenStudioApp::changeDefaultLibraries() {
+  auto defaultPaths = defaultLibraryPaths();
+  auto paths = libraryPaths();
+
+  LibraryDialog dialog(paths, defaultPaths);
+  auto code = dialog.exec();
+  auto newPaths = dialog.paths();
+
+  if ( (code == QDialog::Accepted) && (paths != newPaths) ) {
+    QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+
+    if ( newPaths == defaultPaths ) {
+      settings.remove("library");
+    } else {
+      settings.remove("library");
+      settings.beginWriteArray("library");
+      int i = 0;
+      for( const auto path : newPaths ) {
+        settings.setArrayIndex(i);
+        settings.setValue("path",QString::fromStdString(path.string()));
+        ++i;
+      }
+      settings.endArray();
+    }
+
+    auto future = QtConcurrent::run(this,&OpenStudioApp::buildCompLibraries);
+    m_changeLibrariesWatcher.setFuture(future);
+    connect(&m_changeLibrariesWatcher, &QFutureWatcher<void>::finished, this, &OpenStudioApp::onChangeDefaultLibrariesDone);
+  }
+}
+
+void OpenStudioApp::onChangeDefaultLibrariesDone() {
+  auto doc = currentDocument();
+  if( doc ) {
+    doc->setComponentLibrary(m_compLibrary);
+  }
+}
+
+std::vector<openstudio::path> OpenStudioApp::defaultLibraryPaths() const {
+  std::vector<openstudio::path> paths;
+
+  paths.push_back(resourcesPath() / toPath("hvaclibrary/hvac_library.osm"));
+  paths.push_back(resourcesPath() / toPath("MinimalTemplate.osm"));
+
+  return paths;
+}
+
+std::vector<openstudio::path> OpenStudioApp::libraryPaths() const {
+  std::vector<openstudio::path> paths;
+
+  QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+
+  int size = settings.beginReadArray("library");
+  for (int i = 0; i < size; ++i) {
+    settings.setArrayIndex(i);
+    auto path = toPath(settings.value("path").toString());
+    paths.push_back(path);
+  }
+  settings.endArray();
+
+  if( paths.empty() ) {
+    return defaultLibraryPaths();
+  } else {
+    return paths;
+  }
 }
 
 } // openstudio
