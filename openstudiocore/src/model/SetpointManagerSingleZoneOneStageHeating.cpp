@@ -137,11 +137,13 @@ namespace detail {
 
   bool SetpointManagerSingleZoneOneStageHeating_Impl::setHeatingStageOnSupplyAirSetpointTemperature(double heatingStageOnSupplyAirSetpointTemperature) {
     bool result = setDouble(OS_SetpointManager_SingleZone_OneStageHeatingFields::HeatingStageOnSupplyAirSetpointTemperature, heatingStageOnSupplyAirSetpointTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
   bool SetpointManagerSingleZoneOneStageHeating_Impl::setHeatingStageOffSupplyAirSetpointTemperature(double heatingStageOffSupplyAirSetpointTemperature) {
     bool result = setDouble(OS_SetpointManager_SingleZone_OneStageHeatingFields::HeatingStageOffSupplyAirSetpointTemperature, heatingStageOffSupplyAirSetpointTemperature);
+    OS_ASSERT(result);
     return result;
   }
 

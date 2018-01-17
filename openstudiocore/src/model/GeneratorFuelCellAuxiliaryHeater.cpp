@@ -222,6 +222,7 @@ namespace detail {
 
   bool GeneratorFuelCellAuxiliaryHeater_Impl::setExcessAirRatio(double excessAirRatio) {
     bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::ExcessAirRatio, excessAirRatio);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -232,6 +233,7 @@ namespace detail {
 
   bool GeneratorFuelCellAuxiliaryHeater_Impl::setAncillaryPowerConstantTerm(double ancillaryPowerConstantTerm) {
     bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::AncillaryPowerConstantTerm, ancillaryPowerConstantTerm);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -242,6 +244,7 @@ namespace detail {
 
   bool GeneratorFuelCellAuxiliaryHeater_Impl::setAncillaryPowerLinearTerm(double ancillaryPowerLinearTerm) {
     bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::AncillaryPowerLinearTerm, ancillaryPowerLinearTerm);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -252,6 +255,7 @@ namespace detail {
 
   bool GeneratorFuelCellAuxiliaryHeater_Impl::setSkinLossUFactorTimesAreaValue(double skinLossUFactorTimesAreaValue) {
     bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::SkinLossUFactorTimesAreaValue, skinLossUFactorTimesAreaValue);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -294,6 +298,7 @@ namespace detail {
 
   bool GeneratorFuelCellAuxiliaryHeater_Impl::setMaximumHeatingCapacityinWatts(double maximumHeatingCapacityinWatts) {
     bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::MaximumHeatingCapacityinWatts, maximumHeatingCapacityinWatts);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -304,6 +309,7 @@ namespace detail {
 
   bool GeneratorFuelCellAuxiliaryHeater_Impl::setMinimumHeatingCapacityinWatts(double minimumHeatingCapacityinWatts) {
     bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::MinimumHeatingCapacityinWatts, minimumHeatingCapacityinWatts);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -314,6 +320,7 @@ namespace detail {
 
   bool GeneratorFuelCellAuxiliaryHeater_Impl::setMaximumHeatingCapacityinKmolperSecond(double maximumHeatingCapacityinKmolperSecond) {
     bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::MaximumHeatingCapacityinKmolperSecond, maximumHeatingCapacityinKmolperSecond);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -324,6 +331,7 @@ namespace detail {
 
   bool GeneratorFuelCellAuxiliaryHeater_Impl::setMinimumHeatingCapacityinKmolperSecond(double minimumHeatingCapacityinKmolperSecond) {
     bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::MinimumHeatingCapacityinKmolperSecond, minimumHeatingCapacityinKmolperSecond);
+    OS_ASSERT(result);
     return result;
   }
 

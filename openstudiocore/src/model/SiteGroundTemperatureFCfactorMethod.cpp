@@ -266,6 +266,7 @@ namespace detail {
 
   bool SiteGroundTemperatureFCfactorMethod_Impl::setJanuaryGroundTemperature(double januaryGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::JanuaryGroundTemperature, januaryGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -276,6 +277,7 @@ namespace detail {
 
   bool SiteGroundTemperatureFCfactorMethod_Impl::setFebruaryGroundTemperature(double februaryGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::FebruaryGroundTemperature, februaryGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -286,6 +288,7 @@ namespace detail {
 
   bool SiteGroundTemperatureFCfactorMethod_Impl::setMarchGroundTemperature(double marchGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::MarchGroundTemperature, marchGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -296,6 +299,7 @@ namespace detail {
 
   bool SiteGroundTemperatureFCfactorMethod_Impl::setAprilGroundTemperature(double aprilGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::AprilGroundTemperature, aprilGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -306,6 +310,7 @@ namespace detail {
 
   bool SiteGroundTemperatureFCfactorMethod_Impl::setMayGroundTemperature(double mayGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::MayGroundTemperature, mayGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -316,6 +321,7 @@ namespace detail {
 
   bool SiteGroundTemperatureFCfactorMethod_Impl::setJuneGroundTemperature(double juneGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::JuneGroundTemperature, juneGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -326,6 +332,7 @@ namespace detail {
 
   bool SiteGroundTemperatureFCfactorMethod_Impl::setJulyGroundTemperature(double julyGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::JulyGroundTemperature, julyGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -336,6 +343,7 @@ namespace detail {
 
   bool SiteGroundTemperatureFCfactorMethod_Impl::setAugustGroundTemperature(double augustGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::AugustGroundTemperature, augustGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -346,6 +354,7 @@ namespace detail {
 
   bool SiteGroundTemperatureFCfactorMethod_Impl::setSeptemberGroundTemperature(double septemberGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::SeptemberGroundTemperature, septemberGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -356,6 +365,7 @@ namespace detail {
 
   bool SiteGroundTemperatureFCfactorMethod_Impl::setOctoberGroundTemperature(double octoberGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::OctoberGroundTemperature, octoberGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -366,6 +376,7 @@ namespace detail {
 
   bool SiteGroundTemperatureFCfactorMethod_Impl::setNovemberGroundTemperature(double novemberGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::NovemberGroundTemperature, novemberGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -376,6 +387,7 @@ namespace detail {
 
   bool SiteGroundTemperatureFCfactorMethod_Impl::setDecemberGroundTemperature(double decemberGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::DecemberGroundTemperature, decemberGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 

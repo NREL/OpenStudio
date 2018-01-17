@@ -1028,6 +1028,7 @@ namespace detail {
       resetDesignSupplyAirFlowRate();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

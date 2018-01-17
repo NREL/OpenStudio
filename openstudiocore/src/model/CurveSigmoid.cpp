@@ -168,36 +168,43 @@ namespace detail {
 
   bool CurveSigmoid_Impl::setCoefficient1C1(double coefficient1C1) {
     bool result = setDouble(OS_Curve_SigmoidFields::Coefficient1C1, coefficient1C1);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveSigmoid_Impl::setCoefficient2C2(double coefficient2C2) {
     bool result = setDouble(OS_Curve_SigmoidFields::Coefficient2C2, coefficient2C2);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveSigmoid_Impl::setCoefficient3C3(double coefficient3C3) {
     bool result = setDouble(OS_Curve_SigmoidFields::Coefficient3C3, coefficient3C3);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveSigmoid_Impl::setCoefficient4C4(double coefficient4C4) {
     bool result = setDouble(OS_Curve_SigmoidFields::Coefficient4C4, coefficient4C4);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveSigmoid_Impl::setCoefficient5C5(double coefficient5C5) {
     bool result = setDouble(OS_Curve_SigmoidFields::Coefficient5C5, coefficient5C5);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveSigmoid_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_SigmoidFields::MinimumValueofx, minimumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveSigmoid_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_SigmoidFields::MaximumValueofx, maximumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -208,6 +215,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_SigmoidFields::MinimumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -223,6 +231,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_SigmoidFields::MaximumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 

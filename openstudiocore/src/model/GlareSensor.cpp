@@ -140,21 +140,25 @@ namespace detail {
 
   bool GlareSensor_Impl::setPositionXCoordinate(double positionXCoordinate) {
     bool result = setDouble(OS_Glare_SensorFields::PositionXCoordinate, positionXCoordinate);
+    OS_ASSERT(result);
     return result;
   }
 
   bool GlareSensor_Impl::setPositionYCoordinate(double positionYCoordinate) {
     bool result = setDouble(OS_Glare_SensorFields::PositionYCoordinate, positionYCoordinate);
+    OS_ASSERT(result);
     return result;
   }
 
   bool GlareSensor_Impl::setPositionZCoordinate(double positionZCoordinate) {
     bool result = setDouble(OS_Glare_SensorFields::PositionZCoordinate, positionZCoordinate);
+    OS_ASSERT(result);
     return result;
   }
 
   bool GlareSensor_Impl::setPsiRotationAroundXAxis(double psiRotationAroundXAxis) {
     bool result = setDouble(OS_Glare_SensorFields::PsiRotationAroundXAxis, psiRotationAroundXAxis);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -165,6 +169,7 @@ namespace detail {
 
   bool GlareSensor_Impl::setThetaRotationAroundYAxis(double thetaRotationAroundYAxis) {
     bool result = setDouble(OS_Glare_SensorFields::ThetaRotationAroundYAxis, thetaRotationAroundYAxis);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -175,6 +180,7 @@ namespace detail {
 
   bool GlareSensor_Impl::setPhiRotationAroundZAxis(double phiRotationAroundZAxis) {
     bool result = setDouble(OS_Glare_SensorFields::PhiRotationAroundZAxis, phiRotationAroundZAxis);
+    OS_ASSERT(result);
     return result;
   }
 

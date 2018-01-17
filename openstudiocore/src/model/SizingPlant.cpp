@@ -128,6 +128,7 @@ namespace detail {
 
   bool SizingPlant_Impl::setDesignLoopExitTemperature(double designLoopExitTemperature) {
     bool result = setDouble(OS_Sizing_PlantFields::DesignLoopExitTemperature, designLoopExitTemperature);
+    OS_ASSERT(result);
     return result;
   }
 

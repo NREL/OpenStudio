@@ -229,6 +229,7 @@ namespace detail {
       resetUFactorTimesAreaValue();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -251,6 +252,7 @@ namespace detail {
       resetMaximumWaterFlowRate();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

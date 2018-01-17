@@ -180,6 +180,7 @@ bool ControllerWaterCoil_Impl::setControllerConvergenceTolerance(boost::optional
   } else {
     result = setString(OS_Controller_WaterCoilFields::ControllerConvergenceTolerance, "");
   }
+  OS_ASSERT(result);
   return result;
 }
 
@@ -200,6 +201,7 @@ bool ControllerWaterCoil_Impl::setMaximumActuatedFlow(boost::optional<double> ma
   } else {
     result = setString(OS_Controller_WaterCoilFields::MaximumActuatedFlow, "");
   }
+  OS_ASSERT(result);
   return result;
 }
 
@@ -215,6 +217,7 @@ void ControllerWaterCoil_Impl::autosizeMaximumActuatedFlow() {
 
 bool ControllerWaterCoil_Impl::setMinimumActuatedFlow(double minimumActuatedFlow) {
   bool result = setDouble(OS_Controller_WaterCoilFields::MinimumActuatedFlow, minimumActuatedFlow);
+  OS_ASSERT(result);
   return result;
 }
 
@@ -246,6 +249,7 @@ bool ControllerWaterCoil_Impl::setActuatorNode( Node & node )
 bool ControllerWaterCoil_Impl::setWaterCoil( const HVACComponent & comp )
 {
   auto result = setPointer(OS_Controller_WaterCoilFields::WaterCoilName,comp.handle());
+  OS_ASSERT(result);
   return result;
 }
 

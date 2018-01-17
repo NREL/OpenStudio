@@ -145,21 +145,25 @@ namespace detail {
 
   bool CurveLinear_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = setDouble(OS_Curve_LinearFields::Coefficient1Constant, coefficient1Constant);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveLinear_Impl::setCoefficient2x(double coefficient2x) {
     bool result = setDouble(OS_Curve_LinearFields::Coefficient2x, coefficient2x);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveLinear_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_LinearFields::MinimumValueofx, minimumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveLinear_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_LinearFields::MaximumValueofx, maximumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -170,6 +174,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_LinearFields::MinimumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -185,6 +190,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_LinearFields::MaximumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 

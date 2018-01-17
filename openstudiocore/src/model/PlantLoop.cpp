@@ -515,6 +515,7 @@ Mixer PlantLoop_Impl::supplyMixer() const
 bool PlantLoop_Impl::setSupplyMixer(Mixer const & mixer)
 {
   auto result = setPointer(OS_PlantLoopFields::SupplyMixerName,mixer.handle());
+  OS_ASSERT(result);
   return result;
 }
 
@@ -528,6 +529,7 @@ Splitter PlantLoop_Impl::supplySplitter() const
 bool PlantLoop_Impl::setSupplySplitter(Splitter const & splitter)
 {
   auto result = setPointer(OS_PlantLoopFields::SupplySplitterName,splitter.handle());
+  OS_ASSERT(result);
   return result;
 }
 
@@ -541,6 +543,7 @@ Mixer PlantLoop_Impl::demandMixer()
 bool PlantLoop_Impl::setDemandMixer(Mixer const & mixer)
 {
   auto result = setPointer(OS_PlantLoopFields::DemandMixerName,mixer.handle());
+  OS_ASSERT(result);
   return result;
 }
 
@@ -554,6 +557,7 @@ Splitter PlantLoop_Impl::demandSplitter()
 bool PlantLoop_Impl::setDemandSplitter(Splitter const & splitter)
 {
   auto result = setPointer(OS_PlantLoopFields::DemandSplitterName,splitter.handle());
+  OS_ASSERT(result);
   return result;
 }
 

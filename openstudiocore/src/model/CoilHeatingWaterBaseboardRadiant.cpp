@@ -229,6 +229,7 @@ namespace detail {
     if (maximumWaterFlowRate) {
       result = setDouble(OS_Coil_Heating_Water_Baseboard_RadiantFields::MaximumWaterFlowRate, maximumWaterFlowRate.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 

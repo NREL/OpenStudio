@@ -411,6 +411,7 @@ namespace detail {
 
   bool EvaporativeFluidCoolerTwoSpeed_Impl::setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor) {
     bool result = setDouble(OS_EvaporativeFluidCooler_TwoSpeedFields::LowFanSpeedAirFlowRateSizingFactor, lowFanSpeedAirFlowRateSizingFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -429,6 +430,7 @@ namespace detail {
 
   bool EvaporativeFluidCoolerTwoSpeed_Impl::setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor) {
     bool result = setDouble(OS_EvaporativeFluidCooler_TwoSpeedFields::LowFanSpeedFanPowerSizingFactor, lowFanSpeedFanPowerSizingFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -451,6 +453,7 @@ namespace detail {
       resetOutdoorAirInletNodeName();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -461,6 +464,7 @@ namespace detail {
 
   bool EvaporativeFluidCoolerTwoSpeed_Impl::setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio) {
     bool result = setDouble(OS_EvaporativeFluidCooler_TwoSpeedFields::HeatRejectionCapacityandNominalCapacitySizingRatio, heatRejectionCapacityandNominalCapacitySizingRatio);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -505,6 +509,7 @@ namespace detail {
 
   bool EvaporativeFluidCoolerTwoSpeed_Impl::setLowSpeedStandardCapacitySizingFactor(double lowSpeedStandardCapacitySizingFactor) {
     bool result = setDouble(OS_EvaporativeFluidCooler_TwoSpeedFields::LowSpeedStandardCapacitySizingFactor, lowSpeedStandardCapacitySizingFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -554,6 +559,7 @@ namespace detail {
 
   bool EvaporativeFluidCoolerTwoSpeed_Impl::setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor) {
     bool result = setDouble(OS_EvaporativeFluidCooler_TwoSpeedFields::LowFanSpeedUFactorTimesAreaSizingFactor, lowFanSpeedUFactorTimesAreaSizingFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -620,6 +626,7 @@ namespace detail {
 
   bool EvaporativeFluidCoolerTwoSpeed_Impl::setLowSpeedUserSpecifiedDesignCapacitySizingFactor(double lowSpeedUserSpecifiedDesignCapacitySizingFactor) {
     bool result = setDouble(OS_EvaporativeFluidCooler_TwoSpeedFields::LowSpeedUserSpecifiedDesignCapacitySizingFactor, lowSpeedUserSpecifiedDesignCapacitySizingFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -693,6 +700,7 @@ namespace detail {
       resetEvaporationLossFactor();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -703,6 +711,7 @@ namespace detail {
 
   bool EvaporativeFluidCoolerTwoSpeed_Impl::setDriftLossPercent(double driftLossPercent) {
     bool result = setDouble(OS_EvaporativeFluidCooler_TwoSpeedFields::DriftLossPercent, driftLossPercent);
+    OS_ASSERT(result);
     return result;
   }
 

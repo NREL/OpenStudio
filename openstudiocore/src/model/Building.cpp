@@ -346,6 +346,7 @@ namespace detail {
 
   bool Building_Impl::setNorthAxis(double northAxis) {
     bool result = setDouble(OS_BuildingFields::NorthAxis, northAxis);
+    OS_ASSERT(result);
     return result;
   }
 

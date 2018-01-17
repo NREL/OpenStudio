@@ -403,31 +403,37 @@ bool SizingSystem_Impl::setMinimumSystemAirFlowRatio(double minimumSystemAirFlow
 
 bool SizingSystem_Impl::setPreheatDesignTemperature(double preheatDesignTemperature) {
   bool result = setDouble(OS_Sizing_SystemFields::PreheatDesignTemperature, preheatDesignTemperature);
+  OS_ASSERT(result);
   return result;
 }
 
 bool SizingSystem_Impl::setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio) {
   bool result = setDouble(OS_Sizing_SystemFields::PreheatDesignHumidityRatio, preheatDesignHumidityRatio);
+  OS_ASSERT(result);
   return result;
 }
 
 bool SizingSystem_Impl::setPrecoolDesignTemperature(double precoolDesignTemperature) {
   bool result = setDouble(OS_Sizing_SystemFields::PrecoolDesignTemperature, precoolDesignTemperature);
+  OS_ASSERT(result);
   return result;
 }
 
 bool SizingSystem_Impl::setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio) {
   bool result = setDouble(OS_Sizing_SystemFields::PrecoolDesignHumidityRatio, precoolDesignHumidityRatio);
+  OS_ASSERT(result);
   return result;
 }
 
 bool SizingSystem_Impl::setCentralCoolingDesignSupplyAirTemperature(double centralCoolingDesignSupplyAirTemperature) {
   bool result = setDouble(OS_Sizing_SystemFields::CentralCoolingDesignSupplyAirTemperature, centralCoolingDesignSupplyAirTemperature);
+  OS_ASSERT(result);
   return result;
 }
 
 bool SizingSystem_Impl::setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature) {
   bool result = setDouble(OS_Sizing_SystemFields::CentralHeatingDesignSupplyAirTemperature, centralHeatingDesignSupplyAirTemperature);
+  OS_ASSERT(result);
   return result;
 }
 
@@ -448,6 +454,7 @@ bool SizingSystem_Impl::setAllOutdoorAirinCooling(bool allOutdoorAirinCooling) {
   } else {
     result = setString(OS_Sizing_SystemFields::AllOutdoorAirinCooling, "No");
   }
+  OS_ASSERT(result);
   return result;
 }
 
@@ -463,6 +470,7 @@ bool SizingSystem_Impl::setAllOutdoorAirinHeating(bool allOutdoorAirinHeating) {
   } else {
     result = setString(OS_Sizing_SystemFields::AllOutdoorAirinHeating, "No");
   }
+  OS_ASSERT(result);
   return result;
 }
 
@@ -473,6 +481,7 @@ void SizingSystem_Impl::resetAllOutdoorAirinHeating() {
 
 bool SizingSystem_Impl::setCentralCoolingDesignSupplyAirHumidityRatio(double centralCoolingDesignSupplyAirHumidityRatio) {
   bool result = setDouble(OS_Sizing_SystemFields::CentralCoolingDesignSupplyAirHumidityRatio, centralCoolingDesignSupplyAirHumidityRatio);
+  OS_ASSERT(result);
   return result;
 }
 
@@ -483,6 +492,7 @@ void SizingSystem_Impl::resetCentralCoolingDesignSupplyAirHumidityRatio() {
 
 bool SizingSystem_Impl::setCentralHeatingDesignSupplyAirHumidityRatio(double centralHeatingDesignSupplyAirHumidityRatio) {
   bool result = setDouble(OS_Sizing_SystemFields::CentralHeatingDesignSupplyAirHumidityRatio, centralHeatingDesignSupplyAirHumidityRatio);
+  OS_ASSERT(result);
   return result;
 }
 

@@ -85,6 +85,7 @@ namespace detail {
 
   bool ExternalInterfaceVariable_Impl::setInitialValue(double initialValue) {
     bool result = setDouble(OS_ExternalInterface_VariableFields::InitialValue, initialValue);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -105,6 +106,7 @@ namespace detail {
     } else {
       result = setString(OS_ExternalInterface_VariableFields::ExportToBCVTB, "False");
     }
+    OS_ASSERT(result);
     return result;
   }
 

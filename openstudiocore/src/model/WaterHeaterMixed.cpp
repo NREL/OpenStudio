@@ -668,6 +668,7 @@ namespace detail {
     } else {
       result = setString(OS_WaterHeater_MixedFields::MaximumTemperatureLimit, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -998,6 +999,7 @@ namespace detail {
     } else {
       result = setString(OS_WaterHeater_MixedFields::AmbientTemperatureOutdoorAirNodeName, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 

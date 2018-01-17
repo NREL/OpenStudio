@@ -203,6 +203,7 @@ namespace detail {
 
   bool HeaderedPumpsConstantSpeed_Impl::setNumberofPumpsinBank(int numberofPumpsinBank) {
     bool result = setInt(OS_HeaderedPumps_ConstantSpeedFields::NumberofPumpsinBank, numberofPumpsinBank);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -213,6 +214,7 @@ namespace detail {
 
   bool HeaderedPumpsConstantSpeed_Impl::setRatedPumpHead(double ratedPumpHead) {
     bool result = setDouble(OS_HeaderedPumps_ConstantSpeedFields::RatedPumpHead, ratedPumpHead);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -221,6 +223,7 @@ namespace detail {
     if (ratedPowerConsumption) {
       result = setDouble(OS_HeaderedPumps_ConstantSpeedFields::RatedPowerConsumption, ratedPowerConsumption.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 

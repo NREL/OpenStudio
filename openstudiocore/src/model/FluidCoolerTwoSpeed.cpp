@@ -290,6 +290,7 @@ namespace detail {
 
   bool FluidCoolerTwoSpeed_Impl::setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor) {
     bool result = setDouble(OS_FluidCooler_TwoSpeedFields::LowFanSpeedUFactorTimesAreaSizingFactor, lowFanSpeedUFactorTimesAreaSizingFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -313,6 +314,7 @@ namespace detail {
 
   bool FluidCoolerTwoSpeed_Impl::setLowSpeedNominalCapacitySizingFactor(double lowSpeedNominalCapacitySizingFactor) {
     bool result = setDouble(OS_FluidCooler_TwoSpeedFields::LowSpeedNominalCapacitySizingFactor, lowSpeedNominalCapacitySizingFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -385,6 +387,7 @@ namespace detail {
 
   bool FluidCoolerTwoSpeed_Impl::setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor) {
     bool result = setDouble(OS_FluidCooler_TwoSpeedFields::LowFanSpeedAirFlowRateSizingFactor, lowFanSpeedAirFlowRateSizingFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -403,6 +406,7 @@ namespace detail {
 
   bool FluidCoolerTwoSpeed_Impl::setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor) {
     bool result = setDouble(OS_FluidCooler_TwoSpeedFields::LowFanSpeedFanPowerSizingFactor, lowFanSpeedFanPowerSizingFactor);
+    OS_ASSERT(result);
     return result;
   }
 

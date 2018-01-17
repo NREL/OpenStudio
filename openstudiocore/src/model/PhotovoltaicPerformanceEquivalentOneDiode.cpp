@@ -390,6 +390,7 @@ namespace detail {
 
   bool PhotovoltaicPerformanceEquivalentOneDiode_Impl::setTemperatureCoefficientofShortCircuitCurrent(double temperatureCoefficientofShortCircuitCurrent) {
     bool result = setDouble(OS_PhotovoltaicPerformance_EquivalentOneDiodeFields::TemperatureCoefficientofShortCircuitCurrent, temperatureCoefficientofShortCircuitCurrent);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -400,6 +401,7 @@ namespace detail {
 
   bool PhotovoltaicPerformanceEquivalentOneDiode_Impl::setTemperatureCoefficientofOpenCircuitVoltage(double temperatureCoefficientofOpenCircuitVoltage) {
     bool result = setDouble(OS_PhotovoltaicPerformance_EquivalentOneDiodeFields::TemperatureCoefficientofOpenCircuitVoltage, temperatureCoefficientofOpenCircuitVoltage);
+    OS_ASSERT(result);
     return result;
   }
 

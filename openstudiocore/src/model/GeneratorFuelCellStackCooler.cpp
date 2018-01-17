@@ -272,6 +272,7 @@ namespace detail {
 
   bool GeneratorFuelCellStackCooler_Impl::setNominalStackTemperature(double nominalStackTemperature) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::NominalStackTemperature, nominalStackTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -282,6 +283,7 @@ namespace detail {
 
   bool GeneratorFuelCellStackCooler_Impl::setActualStackTemperature(double actualStackTemperature) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::ActualStackTemperature, actualStackTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -292,6 +294,7 @@ namespace detail {
 
   bool GeneratorFuelCellStackCooler_Impl::setCoefficientr0(double coefficientr0) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::Coefficientr0, coefficientr0);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -302,6 +305,7 @@ namespace detail {
 
   bool GeneratorFuelCellStackCooler_Impl::setCoefficientr1(double coefficientr1) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::Coefficientr1, coefficientr1);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -312,6 +316,7 @@ namespace detail {
 
   bool GeneratorFuelCellStackCooler_Impl::setCoefficientr2(double coefficientr2) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::Coefficientr2, coefficientr2);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -322,6 +327,7 @@ namespace detail {
 
   bool GeneratorFuelCellStackCooler_Impl::setCoefficientr3(double coefficientr3) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::Coefficientr3, coefficientr3);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -332,6 +338,7 @@ namespace detail {
 
   bool GeneratorFuelCellStackCooler_Impl::setStackCoolantFlowRate(double stackCoolantFlowRate) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCoolantFlowRate, stackCoolantFlowRate);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -342,6 +349,7 @@ namespace detail {
 
   bool GeneratorFuelCellStackCooler_Impl::setStackCoolerUFactorTimesAreaValue(double stackCoolerUFactorTimesAreaValue) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCoolerUFactorTimesAreaValue, stackCoolerUFactorTimesAreaValue);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -352,6 +360,7 @@ namespace detail {
 
   bool GeneratorFuelCellStackCooler_Impl::setFscogenAdjustmentFactor(double fscogenAdjustmentFactor) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::FscogenAdjustmentFactor, fscogenAdjustmentFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -362,6 +371,7 @@ namespace detail {
 
   bool GeneratorFuelCellStackCooler_Impl::setStackCogenerationExchangerArea(double stackCogenerationExchangerArea) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerArea, stackCogenerationExchangerArea);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -372,6 +382,7 @@ namespace detail {
 
   bool GeneratorFuelCellStackCooler_Impl::setStackCogenerationExchangerNominalFlowRate(double stackCogenerationExchangerNominalFlowRate) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalFlowRate, stackCogenerationExchangerNominalFlowRate);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -382,6 +393,7 @@ namespace detail {
 
   bool GeneratorFuelCellStackCooler_Impl::setStackCogenerationExchangerNominalHeatTransferCoefficient(double stackCogenerationExchangerNominalHeatTransferCoefficient) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalHeatTransferCoefficient, stackCogenerationExchangerNominalHeatTransferCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -392,6 +404,7 @@ namespace detail {
 
   bool GeneratorFuelCellStackCooler_Impl::setStackCogenerationExchangerNominalHeatTransferCoefficientExponent(double stackCogenerationExchangerNominalHeatTransferCoefficientExponent) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalHeatTransferCoefficientExponent, stackCogenerationExchangerNominalHeatTransferCoefficientExponent);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -402,6 +415,7 @@ namespace detail {
 
   bool GeneratorFuelCellStackCooler_Impl::setStackCoolerPumpPower(double stackCoolerPumpPower) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCoolerPumpPower, stackCoolerPumpPower);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -422,6 +436,7 @@ namespace detail {
 
   bool GeneratorFuelCellStackCooler_Impl::setStackAirCoolerFanCoefficientf0(double stackAirCoolerFanCoefficientf0) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf0, stackAirCoolerFanCoefficientf0);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -432,6 +447,7 @@ namespace detail {
 
   bool GeneratorFuelCellStackCooler_Impl::setStackAirCoolerFanCoefficientf1(double stackAirCoolerFanCoefficientf1) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf1, stackAirCoolerFanCoefficientf1);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -442,6 +458,7 @@ namespace detail {
 
   bool GeneratorFuelCellStackCooler_Impl::setStackAirCoolerFanCoefficientf2(double stackAirCoolerFanCoefficientf2) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf2, stackAirCoolerFanCoefficientf2);
+    OS_ASSERT(result);
     return result;
   }
 

@@ -301,6 +301,7 @@ namespace detail {
     } else {
       result = setString(OS_Lights_DefinitionFields::ReturnAirFractionCalculatedfromPlenumTemperature, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 

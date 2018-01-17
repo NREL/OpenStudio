@@ -134,6 +134,7 @@ namespace detail {
 
   bool ExternalInterfaceSchedule_Impl::setInitialValue(double initialValue) {
     bool result = setDouble(OS_ExternalInterface_ScheduleFields::InitialValue, initialValue);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -154,6 +155,7 @@ namespace detail {
     } else {
       result = setString(OS_ExternalInterface_ScheduleFields::ExportToBCVTB, "False");
     }
+    OS_ASSERT(result);
     return result;
   }
 

@@ -326,6 +326,7 @@ namespace detail {
     } else {
       result = setString(OS_Boiler_HotWaterFields::DesignWaterOutletTemperature, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -386,6 +387,7 @@ namespace detail {
 
   bool BoilerHotWater_Impl::setWaterOutletUpperTemperatureLimit(double waterOutletUpperTemperatureLimit) {
     bool result = setDouble(OS_Boiler_HotWaterFields::WaterOutletUpperTemperatureLimit, waterOutletUpperTemperatureLimit);
+    OS_ASSERT(result);
     return result;
   }
 

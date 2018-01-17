@@ -435,6 +435,7 @@ namespace detail {
       resetConductivityCoefficientA();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -469,6 +470,7 @@ namespace detail {
       resetConductivityCoefficientB();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -503,6 +505,7 @@ namespace detail {
       resetConductivityCoefficientC();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -569,6 +572,7 @@ namespace detail {
       resetViscosityCoefficientB();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -603,6 +607,7 @@ namespace detail {
       resetViscosityCoefficientC();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -669,6 +674,7 @@ namespace detail {
       resetSpecificHeatCoefficientB();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -703,6 +709,7 @@ namespace detail {
       resetSpecificHeatCoefficientC();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

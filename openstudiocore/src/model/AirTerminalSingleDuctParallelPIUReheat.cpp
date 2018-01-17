@@ -205,6 +205,7 @@ namespace detail {
     } else {
       result = setString(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::MaximumPrimaryAirFlowRate, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -220,6 +221,7 @@ namespace detail {
     } else {
       result = setString(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::MaximumSecondaryAirFlowRate, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -235,6 +237,7 @@ namespace detail {
     } else {
       result = setString(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::MinimumPrimaryAirFlowFraction, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -250,6 +253,7 @@ namespace detail {
     } else {
       result = setString(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::FanOnFlowFraction, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -265,6 +269,7 @@ namespace detail {
     } else {
       result = setString(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::MaximumHotWaterorSteamFlowRate, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 

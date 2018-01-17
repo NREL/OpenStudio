@@ -270,6 +270,7 @@ namespace detail {
 
   bool ChillerAbsorption_Impl::setDesignCondenserInletTemperature(double designCondenserInletTemperature) {
     bool result = setDouble(OS_Chiller_AbsorptionFields::DesignCondenserInletTemperature, designCondenserInletTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -301,36 +302,43 @@ namespace detail {
 
   bool ChillerAbsorption_Impl::setCoefficient1oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient1oftheHotWaterorSteamUsePartLoadRatioCurve) {
     bool result = setDouble(OS_Chiller_AbsorptionFields::Coefficient1oftheHotWaterorSteamUsePartLoadRatioCurve, coefficient1oftheHotWaterorSteamUsePartLoadRatioCurve);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ChillerAbsorption_Impl::setCoefficient2oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient2oftheHotWaterorSteamUsePartLoadRatioCurve) {
     bool result = setDouble(OS_Chiller_AbsorptionFields::Coefficient2oftheHotWaterorSteamUsePartLoadRatioCurve, coefficient2oftheHotWaterorSteamUsePartLoadRatioCurve);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ChillerAbsorption_Impl::setCoefficient3oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient3oftheHotWaterorSteamUsePartLoadRatioCurve) {
     bool result = setDouble(OS_Chiller_AbsorptionFields::Coefficient3oftheHotWaterorSteamUsePartLoadRatioCurve, coefficient3oftheHotWaterorSteamUsePartLoadRatioCurve);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ChillerAbsorption_Impl::setCoefficient1ofthePumpElectricUsePartLoadRatioCurve(double coefficient1ofthePumpElectricUsePartLoadRatioCurve) {
     bool result = setDouble(OS_Chiller_AbsorptionFields::Coefficient1ofthePumpElectricUsePartLoadRatioCurve, coefficient1ofthePumpElectricUsePartLoadRatioCurve);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ChillerAbsorption_Impl::setCoefficient2ofthePumpElectricUsePartLoadRatioCurve(double coefficient2ofthePumpElectricUsePartLoadRatioCurve) {
     bool result = setDouble(OS_Chiller_AbsorptionFields::Coefficient2ofthePumpElectricUsePartLoadRatioCurve, coefficient2ofthePumpElectricUsePartLoadRatioCurve);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ChillerAbsorption_Impl::setCoefficient3ofthePumpElectricUsePartLoadRatioCurve(double coefficient3ofthePumpElectricUsePartLoadRatioCurve) {
     bool result = setDouble(OS_Chiller_AbsorptionFields::Coefficient3ofthePumpElectricUsePartLoadRatioCurve, coefficient3ofthePumpElectricUsePartLoadRatioCurve);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ChillerAbsorption_Impl::setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit) {
     bool result = setDouble(OS_Chiller_AbsorptionFields::ChilledWaterOutletTemperatureLowerLimit, chilledWaterOutletTemperatureLowerLimit);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -359,6 +367,7 @@ namespace detail {
 
   bool ChillerAbsorption_Impl::setDegreeofSubcoolinginSteamGenerator(double degreeofSubcoolinginSteamGenerator) {
     bool result = setDouble(OS_Chiller_AbsorptionFields::DegreeofSubcoolinginSteamGenerator, degreeofSubcoolinginSteamGenerator);
+    OS_ASSERT(result);
     return result;
   }
 

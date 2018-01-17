@@ -248,6 +248,7 @@ namespace detail {
 
   bool GeneratorFuelCellAirSupply_Impl::setStoichiometricRatio(double stoichiometricRatio) {
     bool result = setDouble(OS_Generator_FuelCell_AirSupplyFields::StoichiometricRatio, stoichiometricRatio);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -268,6 +269,7 @@ namespace detail {
 
   bool GeneratorFuelCellAirSupply_Impl::setAirRateAirTemperatureCoefficient(double airRateAirTemperatureCoefficient) {
     bool result = setDouble(OS_Generator_FuelCell_AirSupplyFields::AirRateAirTemperatureCoefficient, airRateAirTemperatureCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 

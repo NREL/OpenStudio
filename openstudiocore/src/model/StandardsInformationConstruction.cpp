@@ -537,6 +537,7 @@ namespace detail {
 
   bool StandardsInformationConstruction_Impl::setOtherPerturbableLayerType(const std::string& otherPerturbableLayerType) {
     bool result = setString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType, otherPerturbableLayerType);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -547,6 +548,7 @@ namespace detail {
 
   bool StandardsInformationConstruction_Impl::setConstructionStandard(const std::string& constructionStandard) {
     bool result = setString(OS_StandardsInformation_ConstructionFields::ConstructionStandard, constructionStandard);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -557,6 +559,7 @@ namespace detail {
 
   bool StandardsInformationConstruction_Impl::setConstructionStandardSource(const std::string& constructionStandardSource) {
     bool result= setString(OS_StandardsInformation_ConstructionFields::ConstructionStandardSource, constructionStandardSource);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -642,6 +645,7 @@ namespace detail {
     } else {
       result = setString(OS_StandardsInformation_ConstructionFields::FenestrationLowEmissivityCoating, "False");
     }
+    OS_ASSERT(result);
     return result;
   }
 

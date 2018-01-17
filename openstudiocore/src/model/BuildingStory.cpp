@@ -100,6 +100,7 @@ namespace detail {
 
   bool BuildingStory_Impl::setNominalZCoordinate(double nominalZCoordinate) {
     bool result = setDouble(OS_BuildingStoryFields::NominalZCoordinate, nominalZCoordinate);
+    OS_ASSERT(result);
     return result;
   }
 

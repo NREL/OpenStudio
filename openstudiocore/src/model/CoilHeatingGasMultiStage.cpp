@@ -158,6 +158,7 @@ namespace detail {
       resetParasiticGasLoad();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

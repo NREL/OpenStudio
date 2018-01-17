@@ -132,6 +132,7 @@ namespace detail {
 
   bool RefrigerationCondenserCascade_Impl::setRatedCondensingTemperature(double ratedCondensingTemperature) {
     bool result = setDouble(OS_Refrigeration_Condenser_CascadeFields::RatedCondensingTemperature, ratedCondensingTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -169,6 +170,7 @@ namespace detail {
       resetCondenserRefrigerantOperatingChargeInventory();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -186,6 +188,7 @@ namespace detail {
       resetCondensateReceiverRefrigerantInventory();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -203,6 +206,7 @@ namespace detail {
       resetCondensatePipingRefrigerantInventory();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

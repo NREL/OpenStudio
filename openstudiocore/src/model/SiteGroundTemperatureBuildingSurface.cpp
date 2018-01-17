@@ -266,6 +266,7 @@ namespace detail {
 
   bool SiteGroundTemperatureBuildingSurface_Impl::setJanuaryGroundTemperature(double januaryGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::JanuaryGroundTemperature, januaryGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -276,6 +277,7 @@ namespace detail {
 
   bool SiteGroundTemperatureBuildingSurface_Impl::setFebruaryGroundTemperature(double februaryGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::FebruaryGroundTemperature, februaryGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -286,6 +288,7 @@ namespace detail {
 
   bool SiteGroundTemperatureBuildingSurface_Impl::setMarchGroundTemperature(double marchGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::MarchGroundTemperature, marchGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -296,6 +299,7 @@ namespace detail {
 
   bool SiteGroundTemperatureBuildingSurface_Impl::setAprilGroundTemperature(double aprilGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::AprilGroundTemperature, aprilGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -306,6 +310,7 @@ namespace detail {
 
   bool SiteGroundTemperatureBuildingSurface_Impl::setMayGroundTemperature(double mayGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::MayGroundTemperature, mayGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -316,6 +321,7 @@ namespace detail {
 
   bool SiteGroundTemperatureBuildingSurface_Impl::setJuneGroundTemperature(double juneGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::JuneGroundTemperature, juneGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -326,6 +332,7 @@ namespace detail {
 
   bool SiteGroundTemperatureBuildingSurface_Impl::setJulyGroundTemperature(double julyGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::JulyGroundTemperature, julyGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -336,6 +343,7 @@ namespace detail {
 
   bool SiteGroundTemperatureBuildingSurface_Impl::setAugustGroundTemperature(double augustGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::AugustGroundTemperature, augustGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -346,6 +354,7 @@ namespace detail {
 
   bool SiteGroundTemperatureBuildingSurface_Impl::setSeptemberGroundTemperature(double septemberGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::SeptemberGroundTemperature, septemberGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -356,6 +365,7 @@ namespace detail {
 
   bool SiteGroundTemperatureBuildingSurface_Impl::setOctoberGroundTemperature(double octoberGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::OctoberGroundTemperature, octoberGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -366,6 +376,7 @@ namespace detail {
 
   bool SiteGroundTemperatureBuildingSurface_Impl::setNovemberGroundTemperature(double novemberGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::NovemberGroundTemperature, novemberGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -376,6 +387,7 @@ namespace detail {
 
   bool SiteGroundTemperatureBuildingSurface_Impl::setDecemberGroundTemperature(double decemberGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::DecemberGroundTemperature, decemberGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 

@@ -97,11 +97,13 @@ namespace detail {
 
   bool SetpointManagerSingleZoneCooling_Impl::setMinimumSupplyAirTemperature(double minimumSupplyAirTemperature) {
     bool result = setDouble(OS_SetpointManager_SingleZone_CoolingFields::MinimumSupplyAirTemperature, minimumSupplyAirTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
   bool SetpointManagerSingleZoneCooling_Impl::setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature) {
     bool result = setDouble(OS_SetpointManager_SingleZone_CoolingFields::MaximumSupplyAirTemperature, maximumSupplyAirTemperature);
+    OS_ASSERT(result);
     return result;
   }
 

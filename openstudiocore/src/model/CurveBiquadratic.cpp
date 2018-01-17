@@ -196,51 +196,61 @@ namespace detail {
 
   bool CurveBiquadratic_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = setDouble(OS_Curve_BiquadraticFields::Coefficient1Constant, coefficient1Constant);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBiquadratic_Impl::setCoefficient2x(double coefficient2x) {
     bool result = setDouble(OS_Curve_BiquadraticFields::Coefficient2x, coefficient2x);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBiquadratic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
     bool result = setDouble(OS_Curve_BiquadraticFields::Coefficient3x_POW_2, coefficient3xPOW2);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBiquadratic_Impl::setCoefficient4y(double coefficient4y) {
     bool result = setDouble(OS_Curve_BiquadraticFields::Coefficient4y, coefficient4y);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBiquadratic_Impl::setCoefficient5yPOW2(double coefficient5yPOW2) {
     bool result = setDouble(OS_Curve_BiquadraticFields::Coefficient5y_POW_2, coefficient5yPOW2);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBiquadratic_Impl::setCoefficient6xTIMESY(double coefficient6xTIMESY) {
     bool result = setDouble(OS_Curve_BiquadraticFields::Coefficient6x_TIMES_y, coefficient6xTIMESY);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBiquadratic_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_BiquadraticFields::MinimumValueofx, minimumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBiquadratic_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_BiquadraticFields::MaximumValueofx, maximumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBiquadratic_Impl::setMinimumValueofy(double minimumValueofy) {
     bool result = setDouble(OS_Curve_BiquadraticFields::MinimumValueofy, minimumValueofy);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBiquadratic_Impl::setMaximumValueofy(double maximumValueofy) {
     bool result = setDouble(OS_Curve_BiquadraticFields::MaximumValueofy, maximumValueofy);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -251,6 +261,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_BiquadraticFields::MinimumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -266,6 +277,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_BiquadraticFields::MaximumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 

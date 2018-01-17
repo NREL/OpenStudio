@@ -315,6 +315,7 @@ namespace detail {
 
   bool DesignDay_Impl::setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb) {
     bool result = setDouble(OS_SizingPeriod_DesignDayFields::HumidityIndicatingConditionsatMaximumDryBulb, humidityIndicatingConditionsAtMaximumDryBulb);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -630,6 +631,7 @@ namespace detail {
     } else {
       result = setString(OS_SizingPeriod_DesignDayFields::DailyWetBulbTemperatureRange, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 

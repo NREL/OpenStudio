@@ -295,6 +295,7 @@ namespace detail {
 
   bool RefrigerationCondenserAirCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_Condenser_AirCooledFields::EndUseSubcategory, endUseSubcategory);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -305,6 +306,7 @@ namespace detail {
 
   bool RefrigerationCondenserAirCooled_Impl::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
     bool result = setDouble(OS_Refrigeration_Condenser_AirCooledFields::CondenserRefrigerantOperatingChargeInventory, condenserRefrigerantOperatingChargeInventory);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -315,6 +317,7 @@ namespace detail {
 
   bool RefrigerationCondenserAirCooled_Impl::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
     bool result = setDouble(OS_Refrigeration_Condenser_AirCooledFields::CondensateReceiverRefrigerantInventory, condensateReceiverRefrigerantInventory);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -325,6 +328,7 @@ namespace detail {
 
   bool RefrigerationCondenserAirCooled_Impl::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
     bool result = setDouble(OS_Refrigeration_Condenser_AirCooledFields::CondensatePipingRefrigerantInventory, condensatePipingRefrigerantInventory);
+    OS_ASSERT(result);
     return result;
   }
 

@@ -274,61 +274,73 @@ namespace detail {
 
   bool HeatPumpWaterToWaterEquationFitCooling_Impl::setCoolingCapacityCoefficient1(double coolingCapacityCoefficient1) {
     bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCapacityCoefficient1, coolingCapacityCoefficient1);
+    OS_ASSERT(result);
     return result;
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling_Impl::setCoolingCapacityCoefficient2(double coolingCapacityCoefficient2) {
     bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCapacityCoefficient2, coolingCapacityCoefficient2);
+    OS_ASSERT(result);
     return result;
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling_Impl::setCoolingCapacityCoefficient3(double coolingCapacityCoefficient3) {
     bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCapacityCoefficient3, coolingCapacityCoefficient3);
+    OS_ASSERT(result);
     return result;
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling_Impl::setCoolingCapacityCoefficient4(double coolingCapacityCoefficient4) {
     bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCapacityCoefficient4, coolingCapacityCoefficient4);
+    OS_ASSERT(result);
     return result;
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling_Impl::setCoolingCapacityCoefficient5(double coolingCapacityCoefficient5) {
     bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCapacityCoefficient5, coolingCapacityCoefficient5);
+    OS_ASSERT(result);
     return result;
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling_Impl::setCoolingCompressorPowerCoefficient1(double coolingCompressorPowerCoefficient1) {
     bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCompressorPowerCoefficient1, coolingCompressorPowerCoefficient1);
+    OS_ASSERT(result);
     return result;
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling_Impl::setCoolingCompressorPowerCoefficient2(double coolingCompressorPowerCoefficient2) {
     bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCompressorPowerCoefficient2, coolingCompressorPowerCoefficient2);
+    OS_ASSERT(result);
     return result;
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling_Impl::setCoolingCompressorPowerCoefficient3(double coolingCompressorPowerCoefficient3) {
     bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCompressorPowerCoefficient3, coolingCompressorPowerCoefficient3);
+    OS_ASSERT(result);
     return result;
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling_Impl::setCoolingCompressorPowerCoefficient4(double coolingCompressorPowerCoefficient4) {
     bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCompressorPowerCoefficient4, coolingCompressorPowerCoefficient4);
+    OS_ASSERT(result);
     return result;
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling_Impl::setCoolingCompressorPowerCoefficient5(double coolingCompressorPowerCoefficient5) {
     bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCompressorPowerCoefficient5, coolingCompressorPowerCoefficient5);
+    OS_ASSERT(result);
     return result;
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling_Impl::setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance) {
     bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoefficientofPerformance, referenceCoefficientofPerformance);
+    OS_ASSERT(result);
     return result;
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling_Impl::setSizingFactor(double sizingFactor) {
     bool result = setDouble(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::SizingFactor, sizingFactor);
+    OS_ASSERT(result);
     return result;
   }
 

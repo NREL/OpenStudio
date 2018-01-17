@@ -292,16 +292,19 @@ namespace detail {
 
   bool GroundHeatExchangerHorizontalTrench_Impl::setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature) {
     bool result = setDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::KusudaAchenbachAverageSurfaceTemperature, kusudaAchenbachAverageSurfaceTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
   bool GroundHeatExchangerHorizontalTrench_Impl::setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(double kusudaAchenbachAverageAmplitudeofSurfaceTemperature) {
     bool result = setDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::KusudaAchenbachAverageAmplitudeofSurfaceTemperature, kusudaAchenbachAverageAmplitudeofSurfaceTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
   bool GroundHeatExchangerHorizontalTrench_Impl::setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature) {
     bool result = setDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::KusudaAchenbachPhaseShiftofMinimumSurfaceTemperature, kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
+    OS_ASSERT(result);
     return result;
   }
 

@@ -151,26 +151,31 @@ namespace detail {
 
   bool CurveExponentialDecay_Impl::setCoefficient1C1(double coefficient1C1) {
     bool result = setDouble(OS_Curve_ExponentialDecayFields::Coefficient1C1, coefficient1C1);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveExponentialDecay_Impl::setCoefficient2C2(double coefficient2C2) {
     bool result = setDouble(OS_Curve_ExponentialDecayFields::Coefficient2C2, coefficient2C2);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveExponentialDecay_Impl::setCoefficient3C3(double coefficient3C3) {
     bool result = setDouble(OS_Curve_ExponentialDecayFields::Coefficient3C3, coefficient3C3);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveExponentialDecay_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_ExponentialDecayFields::MinimumValueofx, minimumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveExponentialDecay_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_ExponentialDecayFields::MaximumValueofx, maximumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -181,6 +186,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_ExponentialDecayFields::MinimumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -196,6 +202,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_ExponentialDecayFields::MaximumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 

@@ -154,6 +154,7 @@ namespace detail {
 
   bool LoadProfilePlant_Impl::setPeakFlowRate(double peakFlowRate) {
     bool result = setDouble(OS_LoadProfile_PlantFields::PeakFlowRate, peakFlowRate);
+    OS_ASSERT(result);
     return result;
   }
 

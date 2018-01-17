@@ -231,6 +231,7 @@ namespace detail {
 
   bool CoilHeatingDXVariableSpeed_Impl::setNominalSpeedLevel(int nominalSpeedLevel) {
     bool result = setInt(OS_Coil_Heating_DX_VariableSpeedFields::NominalSpeedLevel, nominalSpeedLevel);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -239,6 +240,7 @@ namespace detail {
     if (ratedHeatingCapacityAtSelectedNominalSpeedLevel) {
       result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::RatedHeatingCapacityAtSelectedNominalSpeedLevel, ratedHeatingCapacityAtSelectedNominalSpeedLevel.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -252,6 +254,7 @@ namespace detail {
     if (ratedAirFlowRateAtSelectedNominalSpeedLevel) {
       result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::RatedAirFlowRateAtSelectedNominalSpeedLevel, ratedAirFlowRateAtSelectedNominalSpeedLevel.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -296,6 +299,7 @@ namespace detail {
       resetOutdoorDryBulbTemperaturetoTurnOnCompressor();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

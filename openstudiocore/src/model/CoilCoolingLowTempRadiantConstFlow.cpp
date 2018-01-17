@@ -245,6 +245,7 @@ namespace detail {
 
   bool CoilCoolingLowTempRadiantConstFlow_Impl::setCondensationControlDewpointOffset(double condensationControlDewpointOffset) {
     bool result = setDouble(OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlowFields::CondensationControlDewpointOffset, condensationControlDewpointOffset);
+    OS_ASSERT(result);
     return result;
   }
 

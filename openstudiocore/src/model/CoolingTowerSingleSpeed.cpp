@@ -809,6 +809,7 @@ namespace detail {
 
   bool CoolingTowerSingleSpeed_Impl::setEvaporationLossFactor(double evaporationLossFactor) {
     bool result = setDouble(OS_CoolingTower_SingleSpeedFields::EvaporationLossFactor, evaporationLossFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -829,6 +830,7 @@ namespace detail {
 
   bool CoolingTowerSingleSpeed_Impl::setDriftLossPercent(double driftLossPercent) {
     bool result = setDouble(OS_CoolingTower_SingleSpeedFields::DriftLossPercent, driftLossPercent);
+    OS_ASSERT(result);
     return result;
   }
 

@@ -204,6 +204,7 @@ namespace detail {
       resetRatedMaximumContinuousOutputPower();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -221,6 +222,7 @@ namespace detail {
       resetNightTareLossPower();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -238,6 +240,7 @@ namespace detail {
       resetNominalVoltageInput();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

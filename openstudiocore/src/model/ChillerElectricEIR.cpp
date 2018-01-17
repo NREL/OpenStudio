@@ -375,6 +375,7 @@ namespace detail {
 
   bool ChillerElectricEIR_Impl::setReferenceLeavingChilledWaterTemperature(double referenceLeavingChilledWaterTemperature) {
     bool result = setDouble(OS_Chiller_Electric_EIRFields::ReferenceLeavingChilledWaterTemperature, referenceLeavingChilledWaterTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -385,6 +386,7 @@ namespace detail {
 
   bool ChillerElectricEIR_Impl::setReferenceEnteringCondenserFluidTemperature(double referenceEnteringCondenserFluidTemperature) {
     bool result = setDouble(OS_Chiller_Electric_EIRFields::ReferenceEnteringCondenserFluidTemperature, referenceEnteringCondenserFluidTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -509,17 +511,20 @@ namespace detail {
 
   bool ChillerElectricEIR_Impl::setChilledWaterInletNodeName(std::string chilledWaterInletNodeName) {
     bool result = setString(OS_Chiller_Electric_EIRFields::ChilledWaterInletNodeName, chilledWaterInletNodeName);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ChillerElectricEIR_Impl::setChilledWaterOutletNodeName(std::string chilledWaterOutletNodeName) {
     bool result = setString(OS_Chiller_Electric_EIRFields::ChilledWaterOutletNodeName, chilledWaterOutletNodeName);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ChillerElectricEIR_Impl::setCondenserInletNodeName(boost::optional<std::string> condenserInletNodeName) {
     if (condenserInletNodeName) {
       bool result = setString(OS_Chiller_Electric_EIRFields::CondenserInletNodeName, condenserInletNodeName.get());
+      OS_ASSERT(result);
       return result;
     }
   }
@@ -531,6 +536,7 @@ namespace detail {
 
   bool ChillerElectricEIR_Impl::setCondenserInletNodeName(std::string condenserInletNodeName) {
     bool result = setString(OS_Chiller_Electric_EIRFields::CondenserInletNodeName, condenserInletNodeName);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -538,6 +544,7 @@ namespace detail {
   bool ChillerElectricEIR_Impl::setCondenserOutletNodeName(boost::optional<std::string> condenserOutletNodeName) {
     if (condenserOutletNodeName) {
       bool result = setString(OS_Chiller_Electric_EIRFields::CondenserOutletNodeName, condenserOutletNodeName.get());
+      OS_ASSERT(result);
       return result;
     }
   }
@@ -549,6 +556,7 @@ namespace detail {
 
   bool ChillerElectricEIR_Impl::setCondenserOutletNodeName(std::string condenserOutletNodeName) {
     bool result = setString(OS_Chiller_Electric_EIRFields::CondenserOutletNodeName, condenserOutletNodeName);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -599,6 +607,7 @@ namespace detail {
 
   bool ChillerElectricEIR_Impl::setLeavingChilledWaterLowerTemperatureLimit(double leavingChilledWaterLowerTemperatureLimit) {
     bool result = setDouble(OS_Chiller_Electric_EIRFields::LeavingChilledWaterLowerTemperatureLimit, leavingChilledWaterLowerTemperatureLimit);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -639,6 +648,7 @@ namespace detail {
   bool ChillerElectricEIR_Impl::setHeatRecoveryInletNodeName(boost::optional<std::string> heatRecoveryInletNodeName) {
     if (heatRecoveryInletNodeName) {
       bool result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryInletNodeName, heatRecoveryInletNodeName.get());
+      OS_ASSERT(result);
       return result;
     }
   }
@@ -650,12 +660,14 @@ namespace detail {
 
   bool ChillerElectricEIR_Impl::setHeatRecoveryInletNodeName(std::string heatRecoveryInletNodeName) {
     bool result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryInletNodeName, heatRecoveryInletNodeName);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ChillerElectricEIR_Impl::setHeatRecoveryOutletNodeName(boost::optional<std::string> heatRecoveryOutletNodeName) {
     if (heatRecoveryOutletNodeName) {
       bool result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryOutletNodeName, heatRecoveryOutletNodeName.get());
+      OS_ASSERT(result);
       return result;
     }
   }
@@ -667,6 +679,7 @@ namespace detail {
 
   bool ChillerElectricEIR_Impl::setHeatRecoveryOutletNodeName(std::string heatRecoveryOutletNodeName) {
     bool result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryOutletNodeName, heatRecoveryOutletNodeName);
+    OS_ASSERT(result);
     return result;
   }
 

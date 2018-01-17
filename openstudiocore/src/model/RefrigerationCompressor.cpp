@@ -215,6 +215,7 @@ namespace detail {
       resetRatedSuperheat();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -233,6 +234,7 @@ namespace detail {
       resetRatedReturnGasTemperature();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -251,6 +253,7 @@ namespace detail {
       resetRatedLiquidTemperature();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -269,6 +272,7 @@ namespace detail {
       resetRatedSubcooling();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -279,6 +283,7 @@ namespace detail {
 
   bool RefrigerationCompressor_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_CompressorFields::EndUseSubcategory, endUseSubcategory);
+    OS_ASSERT(result);
     return result;
   }
 

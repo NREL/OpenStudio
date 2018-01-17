@@ -204,22 +204,26 @@ namespace detail {
 
   bool DaylightingControl_Impl::setPositionXCoordinate(double positionXCoordinate) {
     bool result = setDouble(OS_Daylighting_ControlFields::PositionXCoordinate, positionXCoordinate);
+    OS_ASSERT(result);
     return result;
   }
 
   bool DaylightingControl_Impl::setPositionYCoordinate(double positionYCoordinate) {
     bool result = setDouble(OS_Daylighting_ControlFields::PositionYCoordinate, positionYCoordinate);
+    OS_ASSERT(result);
     return result;
   }
 
   bool DaylightingControl_Impl::setPositionZCoordinate(double positionZCoordinate) {
     bool result = setDouble(OS_Daylighting_ControlFields::PositionZCoordinate, positionZCoordinate);
+    OS_ASSERT(result);
     return result;
   }
 
 
   bool DaylightingControl_Impl::setPsiRotationAroundXAxis(double psiRotationAroundXAxis) {
     bool result = setDouble(OS_Daylighting_ControlFields::PsiRotationAroundXAxis, psiRotationAroundXAxis);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -230,6 +234,7 @@ namespace detail {
 
   bool DaylightingControl_Impl::setThetaRotationAroundYAxis(double thetaRotationAroundYAxis) {
     bool result = setDouble(OS_Daylighting_ControlFields::ThetaRotationAroundYAxis, thetaRotationAroundYAxis);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -240,6 +245,7 @@ namespace detail {
 
   bool DaylightingControl_Impl::setPhiRotationAroundZAxis(double phiRotationAroundZAxis) {
     bool result = setDouble(OS_Daylighting_ControlFields::PhiRotationAroundZAxis, phiRotationAroundZAxis);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -290,6 +296,7 @@ namespace detail {
 
   bool DaylightingControl_Impl::setNumberofSteppedControlSteps(int numberofSteppedControlSteps) {
     bool result = setInt(OS_Daylighting_ControlFields::NumberofSteppedControlSteps, numberofSteppedControlSteps);
+    OS_ASSERT(result);
     return result;
   }
 

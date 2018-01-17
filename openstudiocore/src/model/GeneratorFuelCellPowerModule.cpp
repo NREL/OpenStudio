@@ -396,6 +396,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setNominalEfficiency(double nominalEfficiency) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::NominalEfficiency, nominalEfficiency);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -406,6 +407,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setNominalElectricalPower(double nominalElectricalPower) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::NominalElectricalPower, nominalElectricalPower);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -416,6 +418,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setNumberofStopsatStartofSimulation(double numberofStopsatStartofSimulation) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::NumberofStopsatStartofSimulation, numberofStopsatStartofSimulation);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -426,6 +429,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setCyclingPerformanceDegradationCoefficient(double cyclingPerformanceDegradationCoefficient) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::CyclingPerformanceDegradationCoefficient, cyclingPerformanceDegradationCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -436,6 +440,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setNumberofRunHoursatBeginningofSimulation(double numberofRunHoursatBeginningofSimulation) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::NumberofRunHoursatBeginningofSimulation, numberofRunHoursatBeginningofSimulation);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -446,6 +451,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setAccumulatedRunTimeDegradationCoefficient(double accumulatedRunTimeDegradationCoefficient) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::AccumulatedRunTimeDegradationCoefficient, accumulatedRunTimeDegradationCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -456,6 +462,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setRunTimeDegradationInitiationTimeThreshold(double runTimeDegradationInitiationTimeThreshold) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::RunTimeDegradationInitiationTimeThreshold, runTimeDegradationInitiationTimeThreshold);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -466,6 +473,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setPowerUpTransientLimit(double powerUpTransientLimit) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::PowerUpTransientLimit, powerUpTransientLimit);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -476,6 +484,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setPowerDownTransientLimit(double powerDownTransientLimit) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::PowerDownTransientLimit, powerDownTransientLimit);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -486,6 +495,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setStartUpTime(double startUpTime) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpTime, startUpTime);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -496,6 +506,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setStartUpFuel(double startUpFuel) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpFuel, startUpFuel);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -506,6 +517,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setStartUpElectricityConsumption(double startUpElectricityConsumption) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpElectricityConsumption, startUpElectricityConsumption);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -516,6 +528,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setStartUpElectricityProduced(double startUpElectricityProduced) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpElectricityProduced, startUpElectricityProduced);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -526,6 +539,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setShutDownTime(double shutDownTime) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::ShutDownTime, shutDownTime);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -536,6 +550,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setShutDownFuel(double shutDownFuel) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::ShutDownFuel, shutDownFuel);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -546,6 +561,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setShutDownElectricityConsumption(double shutDownElectricityConsumption) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::ShutDownElectricityConsumption, shutDownElectricityConsumption);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -556,6 +572,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setAncillaryElectricityConstantTerm(double ancillaryElectricityConstantTerm) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::AncillaryElectricityConstantTerm, ancillaryElectricityConstantTerm);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -566,6 +583,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setAncillaryElectricityLinearTerm(double ancillaryElectricityLinearTerm) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::AncillaryElectricityLinearTerm, ancillaryElectricityLinearTerm);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -606,6 +624,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setConstantSkinLossRate(double constantSkinLossRate) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::ConstantSkinLossRate, constantSkinLossRate);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -616,6 +635,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setSkinLossUFactorTimesAreaTerm(double skinLossUFactorTimesAreaTerm) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::SkinLossUFactorTimesAreaTerm, skinLossUFactorTimesAreaTerm);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -636,6 +656,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setDilutionAirFlowRate(double dilutionAirFlowRate) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::DilutionAirFlowRate, dilutionAirFlowRate);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -646,6 +667,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setStackHeatlosstoDilutionAir(double stackHeatlosstoDilutionAir) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::StackHeatlosstoDilutionAir, stackHeatlosstoDilutionAir);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -676,6 +698,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setMinimumOperatingPoint(double minimumOperatingPoint) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::MinimumOperatingPoint, minimumOperatingPoint);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -686,6 +709,7 @@ namespace detail {
 
   bool GeneratorFuelCellPowerModule_Impl::setMaximumOperatingPoint(double maximumOperatingPoint) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::MaximumOperatingPoint, maximumOperatingPoint);
+    OS_ASSERT(result);
     return result;
   }
 

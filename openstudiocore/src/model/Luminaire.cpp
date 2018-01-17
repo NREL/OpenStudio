@@ -262,6 +262,7 @@ namespace detail {
 
   bool Luminaire_Impl::setPositionXcoordinate(double positionXcoordinate) {
     bool result = setDouble(OS_LuminaireFields::PositionXcoordinate, positionXcoordinate);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -276,6 +277,7 @@ namespace detail {
 
   bool Luminaire_Impl::setPositionYcoordinate(double positionYcoordinate) {
     bool result = setDouble(OS_LuminaireFields::PositionYcoordinate, positionYcoordinate);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -290,6 +292,7 @@ namespace detail {
 
   bool Luminaire_Impl::setPositionZcoordinate(double positionZcoordinate) {
     bool result = setDouble(OS_LuminaireFields::PositionZcoordinate, positionZcoordinate);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -304,6 +307,7 @@ namespace detail {
 
   bool Luminaire_Impl::setPsiRotationAroundXaxis(double psiRotationAroundXaxis) {
     bool result = setDouble(OS_LuminaireFields::PsiRotationAroundXaxis, psiRotationAroundXaxis);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -323,6 +327,7 @@ namespace detail {
 
   bool Luminaire_Impl::setThetaRotationAroundYaxis(double thetaRotationAroundYaxis) {
     bool result = setDouble(OS_LuminaireFields::ThetaRotationAroundYaxis, thetaRotationAroundYaxis);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -342,6 +347,7 @@ namespace detail {
 
   bool Luminaire_Impl::setPhiRotationAroundZaxis(double phiRotationAroundZaxis) {
     bool result = setDouble(OS_LuminaireFields::PhiRotationAroundZaxis, phiRotationAroundZaxis);
+    OS_ASSERT(result);
     return result;
   }
 

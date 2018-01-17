@@ -164,6 +164,7 @@ namespace detail {
 
   bool GeneratorFuelCellElectricalStorage_Impl::setSimpleMaximumCapacity(double simpleMaximumCapacity) {
     bool result = setDouble(OS_Generator_FuelCell_ElectricalStorageFields::SimpleMaximumCapacity, simpleMaximumCapacity);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -174,6 +175,7 @@ namespace detail {
 
   bool GeneratorFuelCellElectricalStorage_Impl::setSimpleMaximumPowerDraw(double simpleMaximumPowerDraw) {
     bool result = setDouble(OS_Generator_FuelCell_ElectricalStorageFields::SimpleMaximumPowerDraw, simpleMaximumPowerDraw);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -184,6 +186,7 @@ namespace detail {
 
   bool GeneratorFuelCellElectricalStorage_Impl::setSimpleMaximumPowerStore(double simpleMaximumPowerStore) {
     bool result = setDouble(OS_Generator_FuelCell_ElectricalStorageFields::SimpleMaximumPowerStore, simpleMaximumPowerStore);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -194,6 +197,7 @@ namespace detail {
 
   bool GeneratorFuelCellElectricalStorage_Impl::setInitialChargeState(double initialChargeState) {
     bool result = setDouble(OS_Generator_FuelCell_ElectricalStorageFields::InitialChargeState, initialChargeState);
+    OS_ASSERT(result);
     return result;
   }
 

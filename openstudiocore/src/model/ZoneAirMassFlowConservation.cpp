@@ -120,6 +120,7 @@ namespace detail {
     } else {
       result = setString(OS_ZoneAirMassFlowConservationFields::AdjustZoneMixingForZoneAirMassFlowBalance, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 

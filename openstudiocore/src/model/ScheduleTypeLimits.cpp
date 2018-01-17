@@ -131,6 +131,7 @@ namespace detail {
     } else {
       result = setString(OS_ScheduleTypeLimitsFields::LowerLimitValue, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -163,6 +164,7 @@ namespace detail {
     } else {
       result = setString(OS_ScheduleTypeLimitsFields::UpperLimitValue, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 

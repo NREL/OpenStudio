@@ -270,6 +270,7 @@ namespace detail {
 
   bool ShadingSurfaceGroup_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
     bool result = setDouble(OS_ShadingSurfaceGroupFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -280,6 +281,7 @@ namespace detail {
 
   bool ShadingSurfaceGroup_Impl::setXOrigin(double xOrigin, bool driverMethod) {
     bool result = setDouble(OS_ShadingSurfaceGroupFields::XOrigin, xOrigin, driverMethod);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -290,6 +292,7 @@ namespace detail {
 
   bool ShadingSurfaceGroup_Impl::setYOrigin(double yOrigin, bool driverMethod) {
     bool result = setDouble(OS_ShadingSurfaceGroupFields::YOrigin, yOrigin, driverMethod);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -300,6 +303,7 @@ namespace detail {
 
   bool ShadingSurfaceGroup_Impl::setZOrigin(double zOrigin, bool driverMethod) {
     bool result = setDouble(OS_ShadingSurfaceGroupFields::ZOrigin, zOrigin, driverMethod);
+    OS_ASSERT(result);
     return result;
   }
 

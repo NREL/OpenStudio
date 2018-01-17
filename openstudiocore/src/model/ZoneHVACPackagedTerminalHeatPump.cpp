@@ -407,6 +407,7 @@ namespace detail {
 
   bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
     bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerName, outdoorAirMixerName);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -610,6 +611,7 @@ namespace detail {
     } else {
       result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 

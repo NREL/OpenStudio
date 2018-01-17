@@ -352,16 +352,19 @@ namespace detail {
 
   bool ChillerAbsorptionIndirect_Impl::setDesignCondenserInletTemperature(double designCondenserInletTemperature) {
     bool result = setDouble(OS_Chiller_Absorption_IndirectFields::DesignCondenserInletTemperature, designCondenserInletTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ChillerAbsorptionIndirect_Impl::setCondenserInletTemperatureLowerLimit(double condenserInletTemperatureLowerLimit) {
     bool result = setDouble(OS_Chiller_Absorption_IndirectFields::CondenserInletTemperatureLowerLimit, condenserInletTemperatureLowerLimit);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ChillerAbsorptionIndirect_Impl::setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit) {
     bool result = setDouble(OS_Chiller_Absorption_IndirectFields::ChilledWaterOutletTemperatureLowerLimit, chilledWaterOutletTemperatureLowerLimit);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -441,6 +444,7 @@ namespace detail {
     if (designGeneratorFluidFlowRate) {
       result = setDouble(OS_Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate, designGeneratorFluidFlowRate.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -451,6 +455,7 @@ namespace detail {
 
   bool ChillerAbsorptionIndirect_Impl::setTemperatureLowerLimitGeneratorInlet(double temperatureLowerLimitGeneratorInlet) {
     bool result = setDouble(OS_Chiller_Absorption_IndirectFields::TemperatureLowerLimitGeneratorInlet, temperatureLowerLimitGeneratorInlet);
+    OS_ASSERT(result);
     return result;
   }
 

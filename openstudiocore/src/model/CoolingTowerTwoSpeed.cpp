@@ -752,6 +752,7 @@ namespace detail {
 
   bool CoolingTowerTwoSpeed_Impl::setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio) {
     bool result = setDouble(OS_CoolingTower_TwoSpeedFields::HeatRejectionCapacityandNominalCapacitySizingRatio, heatRejectionCapacityandNominalCapacitySizingRatio);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -893,6 +894,7 @@ namespace detail {
 
   bool CoolingTowerTwoSpeed_Impl::setEvaporationLossFactor(double evaporationLossFactor) {
     bool result = setDouble(OS_CoolingTower_TwoSpeedFields::EvaporationLossFactor, evaporationLossFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -903,6 +905,7 @@ namespace detail {
 
   bool CoolingTowerTwoSpeed_Impl::setDriftLossPercent(double driftLossPercent) {
     bool result = setDouble(OS_CoolingTower_TwoSpeedFields::DriftLossPercent, driftLossPercent);
+    OS_ASSERT(result);
     return result;
   }
 

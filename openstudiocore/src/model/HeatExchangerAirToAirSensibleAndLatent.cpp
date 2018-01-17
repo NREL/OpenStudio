@@ -484,6 +484,7 @@ namespace detail {
 
   bool HeatExchangerAirToAirSensibleAndLatent_Impl::setThresholdTemperature(double thresholdTemperature) {
     bool result = setDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::ThresholdTemperature, thresholdTemperature);
+    OS_ASSERT(result);
     return result;
   }
 

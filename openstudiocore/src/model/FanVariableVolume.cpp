@@ -321,6 +321,7 @@ namespace detail {
 
   bool FanVariableVolume_Impl::setPressureRise(double pressureRise) {
     bool result = setDouble(OS_Fan_VariableVolumeFields::PressureRise, pressureRise);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -473,6 +474,7 @@ namespace detail {
       resetFanPowerCoefficient1();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -507,6 +509,7 @@ namespace detail {
       resetFanPowerCoefficient2();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -541,6 +544,7 @@ namespace detail {
       resetFanPowerCoefficient3();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -575,6 +579,7 @@ namespace detail {
       resetFanPowerCoefficient4();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -609,6 +614,7 @@ namespace detail {
       resetFanPowerCoefficient5();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -636,6 +642,7 @@ namespace detail {
 
   bool FanVariableVolume_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Fan_VariableVolumeFields::EndUseSubcategory, endUseSubcategory);
+    OS_ASSERT(result);
     return result;
   }
 

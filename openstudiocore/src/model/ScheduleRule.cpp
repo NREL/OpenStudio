@@ -278,6 +278,7 @@ namespace detail {
     } else {
       result = setString(OS_Schedule_RuleFields::ApplySunday, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -288,6 +289,7 @@ namespace detail {
     } else {
       result = setString(OS_Schedule_RuleFields::ApplyMonday, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -298,6 +300,7 @@ namespace detail {
     } else {
       result = setString(OS_Schedule_RuleFields::ApplyTuesday, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -308,6 +311,7 @@ namespace detail {
     } else {
       result = setString(OS_Schedule_RuleFields::ApplyWednesday, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -318,6 +322,7 @@ namespace detail {
     } else {
       result = setString(OS_Schedule_RuleFields::ApplyThursday, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -328,6 +333,7 @@ namespace detail {
     } else {
       result = setString(OS_Schedule_RuleFields::ApplyFriday, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -338,6 +344,7 @@ namespace detail {
     } else {
       result = setString(OS_Schedule_RuleFields::ApplySaturday, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 /*
@@ -348,6 +355,7 @@ namespace detail {
     } else {
       result = setString(OS_Schedule_RuleFields::ApplyHoliday, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 

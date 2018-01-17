@@ -132,11 +132,13 @@ namespace detail {
 
   bool AvailabilityManagerDifferentialThermostat_Impl::setTemperatureDifferenceOnLimit(double temperatureDifferenceOnLimit) {
     bool result = setDouble(OS_AvailabilityManager_DifferentialThermostatFields::TemperatureDifferenceOnLimit, temperatureDifferenceOnLimit);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AvailabilityManagerDifferentialThermostat_Impl::setTemperatureDifferenceOffLimit(double temperatureDifferenceOffLimit) {
     bool result = setDouble(OS_AvailabilityManager_DifferentialThermostatFields::TemperatureDifferenceOffLimit, temperatureDifferenceOffLimit);
+    OS_ASSERT(result);
     return result;
   }
 

@@ -285,6 +285,7 @@ namespace detail {
 
   bool RefrigerationGasCoolerAirCooled_Impl::setTransitionTemperature(double transitionTemperature) {
     bool result = setDouble(OS_Refrigeration_GasCooler_AirCooledFields::TransitionTemperature, transitionTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -295,6 +296,7 @@ namespace detail {
 
   bool RefrigerationGasCoolerAirCooled_Impl::setTranscriticalApproachTemperature(double transcriticalApproachTemperature) {
     bool result = setDouble(OS_Refrigeration_GasCooler_AirCooledFields::TranscriticalApproachTemperature, transcriticalApproachTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -305,6 +307,7 @@ namespace detail {
 
   bool RefrigerationGasCoolerAirCooled_Impl::setSubcriticalTemperatureDifference(double subcriticalTemperatureDifference) {
     bool result = setDouble(OS_Refrigeration_GasCooler_AirCooledFields::SubcriticalTemperatureDifference, subcriticalTemperatureDifference);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -315,6 +318,7 @@ namespace detail {
 
   bool RefrigerationGasCoolerAirCooled_Impl::setMinimumCondensingTemperature(double minimumCondensingTemperature) {
     bool result = setDouble(OS_Refrigeration_GasCooler_AirCooledFields::MinimumCondensingTemperature, minimumCondensingTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -342,6 +346,7 @@ namespace detail {
 
   bool RefrigerationGasCoolerAirCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_GasCooler_AirCooledFields::EndUseSubcategory, endUseSubcategory);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -352,6 +357,7 @@ namespace detail {
 
   bool RefrigerationGasCoolerAirCooled_Impl::setGasCoolerRefrigerantOperatingChargeInventory(double gasCoolerRefrigerantOperatingChargeInventory) {
     bool result = setDouble(OS_Refrigeration_GasCooler_AirCooledFields::GasCoolerRefrigerantOperatingChargeInventory, gasCoolerRefrigerantOperatingChargeInventory);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -362,6 +368,7 @@ namespace detail {
 
   bool RefrigerationGasCoolerAirCooled_Impl::setGasCoolerReceiverRefrigerantInventory(double gasCoolerReceiverRefrigerantInventory) {
     bool result = setDouble(OS_Refrigeration_GasCooler_AirCooledFields::GasCoolerReceiverRefrigerantInventory, gasCoolerReceiverRefrigerantInventory);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -372,6 +379,7 @@ namespace detail {
 
   bool RefrigerationGasCoolerAirCooled_Impl::setGasCoolerOutletPipingRefrigerantInventory(double gasCoolerOutletPipingRefrigerantInventory) {
     bool result = setDouble(OS_Refrigeration_GasCooler_AirCooledFields::GasCoolerOutletPipingRefrigerantInventory, gasCoolerOutletPipingRefrigerantInventory);
+    OS_ASSERT(result);
     return result;
   }
 

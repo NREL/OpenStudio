@@ -157,6 +157,7 @@ namespace detail {
     } else {
       result = setString(OS_Coil_Heating_ElectricFields::NominalCapacity, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 

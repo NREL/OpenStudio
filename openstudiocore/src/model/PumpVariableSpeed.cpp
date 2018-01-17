@@ -398,6 +398,7 @@ namespace detail {
       resetRatedFlowRate();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -430,6 +431,7 @@ namespace detail {
 
   bool PumpVariableSpeed_Impl::setRatedPumpHead(double ratedPumpHead) {
     bool result = setDouble(OS_Pump_VariableSpeedFields::RatedPumpHead, ratedPumpHead);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -456,6 +458,7 @@ namespace detail {
       resetRatedPowerConsumption();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -524,6 +527,7 @@ namespace detail {
 
   bool PumpVariableSpeed_Impl::setCoefficient1ofthePartLoadPerformanceCurve(double coefficient1ofthePartLoadPerformanceCurve) {
     bool result = setDouble(OS_Pump_VariableSpeedFields::Coefficient1ofthePartLoadPerformanceCurve, coefficient1ofthePartLoadPerformanceCurve);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -543,6 +547,7 @@ namespace detail {
 
   bool PumpVariableSpeed_Impl::setCoefficient2ofthePartLoadPerformanceCurve(double coefficient2ofthePartLoadPerformanceCurve) {
     bool result = setDouble(OS_Pump_VariableSpeedFields::Coefficient2ofthePartLoadPerformanceCurve, coefficient2ofthePartLoadPerformanceCurve);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -562,6 +567,7 @@ namespace detail {
 
   bool PumpVariableSpeed_Impl::setCoefficient3ofthePartLoadPerformanceCurve(double coefficient3ofthePartLoadPerformanceCurve) {
     bool result = setDouble(OS_Pump_VariableSpeedFields::Coefficient3ofthePartLoadPerformanceCurve, coefficient3ofthePartLoadPerformanceCurve);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -581,6 +587,7 @@ namespace detail {
 
   bool PumpVariableSpeed_Impl::setCoefficient4ofthePartLoadPerformanceCurve(double coefficient4ofthePartLoadPerformanceCurve) {
     bool result = setDouble(OS_Pump_VariableSpeedFields::Coefficient4ofthePartLoadPerformanceCurve, coefficient4ofthePartLoadPerformanceCurve);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -600,6 +607,7 @@ namespace detail {
 
   bool PumpVariableSpeed_Impl::setMinimumFlowRate(double minimumFlowRate) {
     bool result = setDouble(OS_Pump_VariableSpeedFields::MinimumFlowRate, minimumFlowRate);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -671,6 +679,7 @@ namespace detail {
       resetImpellerDiameter();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

@@ -403,6 +403,7 @@ namespace detail {
     if (maximumSupplyAirTemperaturefromSupplementalHeater) {
       result = setDouble(OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::MaximumSupplyAirTemperaturefromSupplementalHeater, maximumSupplyAirTemperaturefromSupplementalHeater.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 

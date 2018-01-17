@@ -197,6 +197,7 @@ namespace detail {
 
   bool AvailabilityManagerOptimumStart_Impl::setMaximumValueforOptimumStartTime(double maximumValueforOptimumStartTime) {
     bool result = setDouble(OS_AvailabilityManager_OptimumStartFields::MaximumValueforOptimumStartTime, maximumValueforOptimumStartTime);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -207,26 +208,31 @@ namespace detail {
 
   bool AvailabilityManagerOptimumStart_Impl::setConstantTemperatureGradientduringCooling(double constantTemperatureGradientduringCooling) {
     bool result = setDouble(OS_AvailabilityManager_OptimumStartFields::ConstantTemperatureGradientduringCooling, constantTemperatureGradientduringCooling);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AvailabilityManagerOptimumStart_Impl::setConstantTemperatureGradientduringHeating(double constantTemperatureGradientduringHeating) {
     bool result = setDouble(OS_AvailabilityManager_OptimumStartFields::ConstantTemperatureGradientduringHeating, constantTemperatureGradientduringHeating);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AvailabilityManagerOptimumStart_Impl::setInitialTemperatureGradientduringCooling(double initialTemperatureGradientduringCooling) {
     bool result = setDouble(OS_AvailabilityManager_OptimumStartFields::InitialTemperatureGradientduringCooling, initialTemperatureGradientduringCooling);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AvailabilityManagerOptimumStart_Impl::setInitialTemperatureGradientduringHeating(double initialTemperatureGradientduringHeating) {
     bool result = setDouble(OS_AvailabilityManager_OptimumStartFields::InitialTemperatureGradientduringHeating, initialTemperatureGradientduringHeating);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AvailabilityManagerOptimumStart_Impl::setConstantStartTime(double constantStartTime) {
     bool result = setDouble(OS_AvailabilityManager_OptimumStartFields::ConstantStartTime, constantStartTime);
+    OS_ASSERT(result);
     return result;
   }
 

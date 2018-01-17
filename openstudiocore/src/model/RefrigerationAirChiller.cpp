@@ -442,6 +442,7 @@ namespace detail {
       resetRatedUnitLoadFactor();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -459,6 +460,7 @@ namespace detail {
       resetRatedCapacity();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -506,6 +508,7 @@ namespace detail {
 
   bool RefrigerationAirChiller_Impl::setCoilMaterialCorrectionFactor(double coilMaterialCorrectionFactor) {
     bool result = setDouble(OS_Refrigeration_AirChillerFields::CoilMaterialCorrectionFactor, coilMaterialCorrectionFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -516,6 +519,7 @@ namespace detail {
 
   bool RefrigerationAirChiller_Impl::setRefrigerantCorrectionFactor(double refrigerantCorrectionFactor) {
     bool result = setDouble(OS_Refrigeration_AirChillerFields::RefrigerantCorrectionFactor, refrigerantCorrectionFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -563,6 +567,7 @@ namespace detail {
 
   bool RefrigerationAirChiller_Impl::setRatedTotalHeatingPower(double ratedTotalHeatingPower) {
     bool result = setDouble(OS_Refrigeration_AirChillerFields::RatedTotalHeatingPower, ratedTotalHeatingPower);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -601,6 +606,7 @@ namespace detail {
 
   bool RefrigerationAirChiller_Impl::setRatedAirFlow(double ratedAirFlow) {
     bool result = setDouble(OS_Refrigeration_AirChillerFields::RatedAirFlow, ratedAirFlow);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -701,6 +707,7 @@ namespace detail {
 
   bool RefrigerationAirChiller_Impl::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
     bool result = setDouble(OS_Refrigeration_AirChillerFields::AverageRefrigerantChargeInventory, averageRefrigerantChargeInventory);
+    OS_ASSERT(result);
     return result;
   }
 

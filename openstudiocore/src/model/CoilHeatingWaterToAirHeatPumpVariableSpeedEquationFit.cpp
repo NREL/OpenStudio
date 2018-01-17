@@ -185,6 +185,7 @@ namespace detail {
 
   bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::setNominalSpeedLevel(int nominalSpeedLevel) {
     bool result = setInt(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitFields::NominalSpeedLevel, nominalSpeedLevel);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -193,6 +194,7 @@ namespace detail {
     if (ratedHeatingCapacityAtSelectedNominalSpeedLevel) {
       result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitFields::RatedHeatingCapacityAtSelectedNominalSpeedLevel, ratedHeatingCapacityAtSelectedNominalSpeedLevel.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -206,6 +208,7 @@ namespace detail {
     if (ratedAirFlowRateAtSelectedNominalSpeedLevel) {
       result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitFields::RatedAirFlowRateAtSelectedNominalSpeedLevel, ratedAirFlowRateAtSelectedNominalSpeedLevel.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -219,6 +222,7 @@ namespace detail {
     if (ratedWaterFlowRateAtSelectedNominalSpeedLevel) {
       result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitFields::RatedWaterFlowRateAtSelectedNominalSpeedLevel, ratedWaterFlowRateAtSelectedNominalSpeedLevel.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 

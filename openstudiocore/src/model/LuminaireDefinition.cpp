@@ -202,6 +202,7 @@ namespace detail {
     } else {
       result = setString(OS_Luminaire_DefinitionFields::ReturnAirFractionCalculatedfromPlenumTemperature, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 

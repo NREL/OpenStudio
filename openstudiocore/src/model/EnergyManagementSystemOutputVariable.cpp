@@ -317,6 +317,7 @@ namespace detail {
     } else {
       result = setString(OS_EnergyManagementSystem_OutputVariableFields::ExportToBCVTB, "False");
     }
+    OS_ASSERT(result);
     return result;
   }
 

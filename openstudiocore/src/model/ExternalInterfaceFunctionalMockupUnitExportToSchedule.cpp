@@ -141,11 +141,13 @@ namespace detail {
 
   bool ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl::setFMUVariableName(const std::string& fMUVariableName) {
     bool result = setString(OS_ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::FMUVariableName, fMUVariableName);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl::setInitialValue(double initialValue) {
     bool result = setDouble(OS_ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::InitialValue, initialValue);
+    OS_ASSERT(result);
     return result;
   }
 

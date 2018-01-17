@@ -244,6 +244,7 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setHeatRecoveryWaterMaximumFlowRate(double heatRecoveryWaterMaximumFlowRate) {
     bool result = setDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterMaximumFlowRate, heatRecoveryWaterMaximumFlowRate);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -300,6 +301,7 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setMethod1HeatExchangerEffectiveness(double method1HeatExchangerEffectiveness) {
     bool result = setDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method1HeatExchangerEffectiveness, method1HeatExchangerEffectiveness);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -310,6 +312,7 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setMethod2Parameterhxs0(double method2Parameterhxs0) {
     bool result = setDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method2Parameterhxs0, method2Parameterhxs0);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -320,6 +323,7 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setMethod2Parameterhxs1(double method2Parameterhxs1) {
     bool result = setDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method2Parameterhxs1, method2Parameterhxs1);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -330,6 +334,7 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setMethod2Parameterhxs2(double method2Parameterhxs2) {
     bool result = setDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method2Parameterhxs2, method2Parameterhxs2);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -340,6 +345,7 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setMethod2Parameterhxs3(double method2Parameterhxs3) {
     bool result = setDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method2Parameterhxs3, method2Parameterhxs3);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -350,6 +356,7 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setMethod2Parameterhxs4(double method2Parameterhxs4) {
     bool result = setDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method2Parameterhxs4, method2Parameterhxs4);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -360,6 +367,7 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setMethod3h0GasCoefficient(double method3h0GasCoefficient) {
     bool result = setDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method3h0GasCoefficient, method3h0GasCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -370,6 +378,7 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setMethod3NdotGasRefCoefficient(double method3NdotGasRefCoefficient) {
     bool result = setDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method3NdotGasRefCoefficient, method3NdotGasRefCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -380,6 +389,7 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setMethod3nCoefficient(double method3nCoefficient) {
     bool result = setDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method3nCoefficient, method3nCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -390,6 +400,7 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setMethod3GasArea(double method3GasArea) {
     bool result = setDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method3GasArea, method3GasArea);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -400,6 +411,7 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setMethod3h0WaterCoefficient(double method3h0WaterCoefficient) {
     bool result = setDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method3h0WaterCoefficient, method3h0WaterCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -410,6 +422,7 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setMethod3NdotWaterrefCoefficient(double method3NdotWaterrefCoefficient) {
     bool result = setDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method3NdotWaterrefCoefficient, method3NdotWaterrefCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -420,6 +433,7 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setMethod3mCoefficient(double method3mCoefficient) {
     bool result = setDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method3mCoefficient, method3mCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -430,6 +444,7 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setMethod3WaterArea(double method3WaterArea) {
     bool result = setDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method3WaterArea, method3WaterArea);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -440,6 +455,7 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setMethod3FAdjustmentFactor(double method3FAdjustmentFactor) {
     bool result = setDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method3FAdjustmentFactor, method3FAdjustmentFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -450,6 +466,7 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setMethod4hxl1Coefficient(double method4hxl1Coefficient) {
     bool result = setDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method4hxl1Coefficient, method4hxl1Coefficient);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -460,6 +477,7 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setMethod4hxl2Coefficient(double method4hxl2Coefficient) {
     bool result = setDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method4hxl2Coefficient, method4hxl2Coefficient);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -470,6 +488,7 @@ namespace detail {
 
   bool GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::setMethod4CondensationThreshold(double method4CondensationThreshold) {
     bool result = setDouble(OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::Method4CondensationThreshold, method4CondensationThreshold);
+    OS_ASSERT(result);
     return result;
   }
 

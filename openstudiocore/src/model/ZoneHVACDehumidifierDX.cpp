@@ -258,11 +258,13 @@ namespace detail {
 
   bool ZoneHVACDehumidifierDX_Impl::setMinimumDryBulbTemperatureforDehumidifierOperation(double minimumDryBulbTemperatureforDehumidifierOperation) {
     bool result = setDouble(OS_ZoneHVAC_Dehumidifier_DXFields::MinimumDryBulbTemperatureforDehumidifierOperation, minimumDryBulbTemperatureforDehumidifierOperation);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ZoneHVACDehumidifierDX_Impl::setMaximumDryBulbTemperatureforDehumidifierOperation(double maximumDryBulbTemperatureforDehumidifierOperation) {
     bool result = setDouble(OS_ZoneHVAC_Dehumidifier_DXFields::MaximumDryBulbTemperatureforDehumidifierOperation, maximumDryBulbTemperatureforDehumidifierOperation);
+    OS_ASSERT(result);
     return result;
   }
 

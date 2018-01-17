@@ -251,6 +251,7 @@ namespace detail {
     } else {
       result = setString(OS_Output_VariableFields::ExportToBCVTB, "False");
     }
+    OS_ASSERT(result);
     return result;
   }
 

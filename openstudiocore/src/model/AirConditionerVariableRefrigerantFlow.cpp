@@ -629,11 +629,13 @@ namespace detail {
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setMinimumOutdoorTemperatureinCoolingMode(double minimumOutdoorTemperatureinCoolingMode) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::MinimumOutdoorTemperatureinCoolingMode, minimumOutdoorTemperatureinCoolingMode);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setMaximumOutdoorTemperatureinCoolingMode(double maximumOutdoorTemperatureinCoolingMode) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorTemperatureinCoolingMode, maximumOutdoorTemperatureinCoolingMode);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -812,6 +814,7 @@ namespace detail {
     if (ratedTotalHeatingCapacity) {
       result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::RatedTotalHeatingCapacity, ratedTotalHeatingCapacity.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -827,16 +830,19 @@ namespace detail {
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setRatedHeatingCOP(double ratedHeatingCOP) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::RatedHeatingCOP, ratedHeatingCOP);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setMinimumOutdoorTemperatureinHeatingMode(double minimumOutdoorTemperatureinHeatingMode) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::MinimumOutdoorTemperatureinHeatingMode, minimumOutdoorTemperatureinHeatingMode);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setMaximumOutdoorTemperatureinHeatingMode(double maximumOutdoorTemperatureinHeatingMode) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorTemperatureinHeatingMode, maximumOutdoorTemperatureinHeatingMode);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -1017,6 +1023,7 @@ namespace detail {
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setMinimumHeatPumpPartLoadRatio(double minimumHeatPumpPartLoadRatio) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::MinimumHeatPumpPartLoadRatio, minimumHeatPumpPartLoadRatio);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -1061,11 +1068,13 @@ namespace detail {
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setEquivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode(double equivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::EquivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode, equivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setVerticalHeightusedforPipingCorrectionFactor(double verticalHeightusedforPipingCorrectionFactor) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::VerticalHeightusedforPipingCorrectionFactor, verticalHeightusedforPipingCorrectionFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -1088,11 +1097,13 @@ namespace detail {
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setPipingCorrectionFactorforHeightinCoolingModeCoefficient(double pipingCorrectionFactorforHeightinCoolingModeCoefficient) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::PipingCorrectionFactorforHeightinCoolingModeCoefficient, pipingCorrectionFactorforHeightinCoolingModeCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setEquivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode(double equivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::EquivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode, equivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -1115,26 +1126,31 @@ namespace detail {
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setPipingCorrectionFactorforHeightinHeatingModeCoefficient(double pipingCorrectionFactorforHeightinHeatingModeCoefficient) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::PipingCorrectionFactorforHeightinHeatingModeCoefficient, pipingCorrectionFactorforHeightinHeatingModeCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setCrankcaseHeaterPowerperCompressor(double crankcaseHeaterPowerperCompressor) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::CrankcaseHeaterPowerperCompressor, crankcaseHeaterPowerperCompressor);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setNumberofCompressors(int numberofCompressors) {
     bool result = setInt(OS_AirConditioner_VariableRefrigerantFlowFields::NumberofCompressors, numberofCompressors);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setRatioofCompressorSizetoTotalCompressorCapacity(double ratioofCompressorSizetoTotalCompressorCapacity) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::RatioofCompressorSizetoTotalCompressorCapacity, ratioofCompressorSizetoTotalCompressorCapacity);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setMaximumOutdoorDrybulbTemperatureforCrankcaseHeater(double maximumOutdoorDrybulbTemperatureforCrankcaseHeater) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorDrybulbTemperatureforCrankcaseHeater, maximumOutdoorDrybulbTemperatureforCrankcaseHeater);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -1185,6 +1201,7 @@ namespace detail {
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setMaximumOutdoorDrybulbTemperatureforDefrostOperation(double maximumOutdoorDrybulbTemperatureforDefrostOperation) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorDrybulbTemperatureforDefrostOperation, maximumOutdoorDrybulbTemperatureforDefrostOperation);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -1193,6 +1210,7 @@ namespace detail {
     if (waterCondenserVolumeFlowRate) {
       result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::WaterCondenserVolumeFlowRate, waterCondenserVolumeFlowRate.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -1262,11 +1280,13 @@ namespace detail {
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setMinimumOutdoorTemperatureinHeatRecoveryMode(double minimumOutdoorTemperatureinHeatRecoveryMode) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::MinimumOutdoorTemperatureinHeatRecoveryMode, minimumOutdoorTemperatureinHeatRecoveryMode);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setMaximumOutdoorTemperatureinHeatRecoveryMode(double maximumOutdoorTemperatureinHeatRecoveryMode) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorTemperatureinHeatRecoveryMode, maximumOutdoorTemperatureinHeatRecoveryMode);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -1289,11 +1309,13 @@ namespace detail {
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setInitialHeatRecoveryCoolingCapacityFraction(double initialHeatRecoveryCoolingCapacityFraction) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::InitialHeatRecoveryCoolingCapacityFraction, initialHeatRecoveryCoolingCapacityFraction);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setHeatRecoveryCoolingCapacityTimeConstant(double heatRecoveryCoolingCapacityTimeConstant) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryCoolingCapacityTimeConstant, heatRecoveryCoolingCapacityTimeConstant);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -1316,11 +1338,13 @@ namespace detail {
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setInitialHeatRecoveryCoolingEnergyFraction(double initialHeatRecoveryCoolingEnergyFraction) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::InitialHeatRecoveryCoolingEnergyFraction, initialHeatRecoveryCoolingEnergyFraction);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setHeatRecoveryCoolingEnergyTimeConstant(double heatRecoveryCoolingEnergyTimeConstant) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryCoolingEnergyTimeConstant, heatRecoveryCoolingEnergyTimeConstant);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -1343,11 +1367,13 @@ namespace detail {
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setInitialHeatRecoveryHeatingCapacityFraction(double initialHeatRecoveryHeatingCapacityFraction) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::InitialHeatRecoveryHeatingCapacityFraction, initialHeatRecoveryHeatingCapacityFraction);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setHeatRecoveryHeatingCapacityTimeConstant(double heatRecoveryHeatingCapacityTimeConstant) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryHeatingCapacityTimeConstant, heatRecoveryHeatingCapacityTimeConstant);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -1370,11 +1396,13 @@ namespace detail {
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setInitialHeatRecoveryHeatingEnergyFraction(double initialHeatRecoveryHeatingEnergyFraction) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::InitialHeatRecoveryHeatingEnergyFraction, initialHeatRecoveryHeatingEnergyFraction);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setHeatRecoveryHeatingEnergyTimeConstant(double heatRecoveryHeatingEnergyTimeConstant) {
     bool result = setDouble(OS_AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryHeatingEnergyTimeConstant, heatRecoveryHeatingEnergyTimeConstant);
+    OS_ASSERT(result);
     return result;
   }
 

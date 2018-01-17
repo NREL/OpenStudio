@@ -658,11 +658,13 @@ namespace detail {
     } else {
       result = setString(OS_ThermalZoneFields::CeilingHeight, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
   bool ThermalZone_Impl::setCeilingHeight(double ceilingHeight) {
     bool result = setDouble(OS_ThermalZoneFields::CeilingHeight, ceilingHeight);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -693,11 +695,13 @@ namespace detail {
     } else {
       result = setString(OS_ThermalZoneFields::Volume, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
   bool ThermalZone_Impl::setVolume(double volume) {
     bool result = setDouble(OS_ThermalZoneFields::Volume, volume);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -763,6 +767,7 @@ namespace detail {
 
   bool ThermalZone_Impl::setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName) {
     bool result = setString(OS_ThermalZoneFields::ZoneConditioningEquipmentListName, zoneConditioningEquipmentListName);
+    OS_ASSERT(result);
     return result;
   }
 

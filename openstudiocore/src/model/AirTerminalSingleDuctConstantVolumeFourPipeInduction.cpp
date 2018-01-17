@@ -468,6 +468,7 @@ namespace detail {
       resetMaximumHotWaterFlowRate();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -527,6 +528,7 @@ namespace detail {
       resetMaximumColdWaterFlowRate();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

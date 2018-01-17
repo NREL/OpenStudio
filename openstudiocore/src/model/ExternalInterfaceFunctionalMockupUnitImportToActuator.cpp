@@ -136,11 +136,13 @@ namespace detail {
 
   bool ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::setActuatedComponentType(const std::string& actuatedComponentType) {
     bool result = setString(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::ActuatedComponentType, actuatedComponentType);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {
     bool result = setString(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::ActuatedComponentControlType, actuatedComponentControlType);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -152,16 +154,19 @@ namespace detail {
 
   bool ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::setFMUInstanceName(const std::string& fMUInstanceName) {
     bool result = setString(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::FMUInstanceName, fMUInstanceName);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::setFMUVariableName(const std::string& fMUVariableName) {
     bool result = setString(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::FMUVariableName, fMUVariableName);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl::setInitialValue(double initialValue) {
     bool result = setDouble(OS_ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::InitialValue, initialValue);
+    OS_ASSERT(result);
     return result;
   }
 

@@ -442,6 +442,7 @@ namespace detail {
       resetRatedFlowRate();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -465,6 +466,7 @@ namespace detail {
 
   bool ZoneHVACLowTempRadiantConstFlow_Impl::setRatedPumpHead(double ratedPumpHead) {
     bool result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedPumpHead, ratedPumpHead);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -482,6 +484,7 @@ namespace detail {
       resetRatedPowerConsumption();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -517,6 +520,7 @@ namespace detail {
 
   bool ZoneHVACLowTempRadiantConstFlow_Impl::setCircuitLength(double circuitLength) {
     bool result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::CircuitLength, circuitLength);
+    OS_ASSERT(result);
     return result;
   }
 

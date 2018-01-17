@@ -933,6 +933,7 @@ namespace detail {
 
   bool StandardsInformationMaterial_Impl::setMaterialStandard(const std::string& materialStandard) {
     bool result = setString(OS_StandardsInformation_MaterialFields::MaterialStandard, materialStandard);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -943,6 +944,7 @@ namespace detail {
 
   bool StandardsInformationMaterial_Impl::setMaterialStandardSource(const std::string& materialStandardSource) {
     bool result = setString(OS_StandardsInformation_MaterialFields::MaterialStandardSource, materialStandardSource);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -972,6 +974,7 @@ namespace detail {
 
   bool StandardsInformationMaterial_Impl::setStandardsIdentifier(const std::string& standardsIdentifier) {
     bool result = setString(OS_StandardsInformation_MaterialFields::StandardsIdentifier, standardsIdentifier);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -983,6 +986,7 @@ namespace detail {
   bool StandardsInformationMaterial_Impl::setCompositeFramingMaterial(const std::string& compositeFramingMaterial)
   {
     bool result = setString(OS_StandardsInformation_MaterialFields::CompositeFramingMaterial, compositeFramingMaterial);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -995,6 +999,7 @@ namespace detail {
   bool StandardsInformationMaterial_Impl::setCompositeFramingConfiguration(const std::string& compositeFramingConfiguration)
   {
     bool result = setString(OS_StandardsInformation_MaterialFields::CompositeFramingConfiguration, compositeFramingConfiguration);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -1007,6 +1012,7 @@ namespace detail {
   bool StandardsInformationMaterial_Impl::setCompositeFramingDepth(const std::string& compositeFramingDepth)
   {
     bool result = setString(OS_StandardsInformation_MaterialFields::CompositeFramingDepth, compositeFramingDepth);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -1019,6 +1025,7 @@ namespace detail {
   bool StandardsInformationMaterial_Impl::setCompositeFramingSize(const std::string& compositeFramingSize)
   {
     bool result = setString(OS_StandardsInformation_MaterialFields::CompositeFramingSize, compositeFramingSize);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -1031,6 +1038,7 @@ namespace detail {
   bool StandardsInformationMaterial_Impl::setCompositeCavityInsulation(const std::string& compositeFramingInsulation)
   {
     bool result = setString(OS_StandardsInformation_MaterialFields::CompositeCavityInsulation, compositeFramingInsulation);
+    OS_ASSERT(result);
     return result;
   }
 

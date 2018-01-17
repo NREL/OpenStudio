@@ -305,6 +305,7 @@ namespace detail{
     } else {
       result = setString(OS_SimulationControlFields::DoZoneSizingCalculation, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -320,6 +321,7 @@ namespace detail{
     } else {
       result = setString(OS_SimulationControlFields::DoSystemSizingCalculation, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -335,6 +337,7 @@ namespace detail{
     } else {
       result = setString(OS_SimulationControlFields::DoPlantSizingCalculation, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -350,6 +353,7 @@ namespace detail{
     } else {
       result = setString(OS_SimulationControlFields::RunSimulationforSizingPeriods, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -365,6 +369,7 @@ namespace detail{
     } else {
       result = setString(OS_SimulationControlFields::RunSimulationforWeatherFileRunPeriods, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 

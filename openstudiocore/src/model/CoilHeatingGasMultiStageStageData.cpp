@@ -121,6 +121,7 @@ namespace detail {
 
   bool CoilHeatingGasMultiStageStageData_Impl::setParasiticElectricLoad(double ParasiticElectricLoad) {
     bool result = setDouble(OS_Coil_Heating_Gas_MultiStage_StageDataFields::ParasiticElectricLoad, ParasiticElectricLoad);
+    OS_ASSERT(result);
     return result;
   }
 

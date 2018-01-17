@@ -166,36 +166,43 @@ namespace detail {
 
   bool CurveQuartic_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = setDouble(OS_Curve_QuarticFields::Coefficient1Constant, coefficient1Constant);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuartic_Impl::setCoefficient2x(double coefficient2x) {
     bool result = setDouble(OS_Curve_QuarticFields::Coefficient2x, coefficient2x);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuartic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
     bool result = setDouble(OS_Curve_QuarticFields::Coefficient3x_POW_2, coefficient3xPOW2);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuartic_Impl::setCoefficient4xPOW3(double coefficient4xPOW3) {
     bool result = setDouble(OS_Curve_QuarticFields::Coefficient4x_POW_3, coefficient4xPOW3);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuartic_Impl::setCoefficient5xPOW4(double coefficient5xPOW4) {
     bool result = setDouble(OS_Curve_QuarticFields::Coefficient5x_POW_4, coefficient5xPOW4);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuartic_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_QuarticFields::MinimumValueofx, minimumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuartic_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_QuarticFields::MaximumValueofx, maximumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -206,6 +213,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_QuarticFields::MinimumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -221,6 +229,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_QuarticFields::MaximumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 

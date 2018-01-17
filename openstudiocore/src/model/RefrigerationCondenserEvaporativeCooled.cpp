@@ -435,6 +435,7 @@ namespace detail {
 
   bool RefrigerationCondenserEvaporativeCooled_Impl::setMinimumCapacityFactor(double minimumCapacityFactor) {
     bool result = setDouble(OS_Refrigeration_Condenser_EvaporativeCooledFields::MinimumCapacityFactor, minimumCapacityFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -445,6 +446,7 @@ namespace detail {
 
   bool RefrigerationCondenserEvaporativeCooled_Impl::setMaximumCapacityFactor(double maximumCapacityFactor) {
     bool result = setDouble(OS_Refrigeration_Condenser_EvaporativeCooledFields::MaximumCapacityFactor, maximumCapacityFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -472,6 +474,7 @@ namespace detail {
       resetRatedAirFlowRate();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -514,6 +517,7 @@ namespace detail {
       resetRatedWaterPumpPower();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -559,6 +563,7 @@ namespace detail {
 
   bool RefrigerationCondenserEvaporativeCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_Condenser_EvaporativeCooledFields::EndUseSubcategory, endUseSubcategory);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -569,6 +574,7 @@ namespace detail {
 
   bool RefrigerationCondenserEvaporativeCooled_Impl::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
     bool result = setDouble(OS_Refrigeration_Condenser_EvaporativeCooledFields::CondenserRefrigerantOperatingChargeInventory, condenserRefrigerantOperatingChargeInventory);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -579,6 +585,7 @@ namespace detail {
 
   bool RefrigerationCondenserEvaporativeCooled_Impl::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
     bool result = setDouble(OS_Refrigeration_Condenser_EvaporativeCooledFields::CondensateReceiverRefrigerantInventory, condensateReceiverRefrigerantInventory);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -589,6 +596,7 @@ namespace detail {
 
   bool RefrigerationCondenserEvaporativeCooled_Impl::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
     bool result = setDouble(OS_Refrigeration_Condenser_EvaporativeCooledFields::CondensatePipingRefrigerantInventory, condensatePipingRefrigerantInventory);
+    OS_ASSERT(result);
     return result;
   }
 

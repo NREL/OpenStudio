@@ -295,6 +295,7 @@ namespace detail {
 
   bool GeneratorFuelSupply_Impl::setLiquidGenericFuelLowerHeatingValue(double liquidGenericFuelLowerHeatingValue) {
     bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelLowerHeatingValue, liquidGenericFuelLowerHeatingValue);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -305,6 +306,7 @@ namespace detail {
 
   bool GeneratorFuelSupply_Impl::setLiquidGenericFuelHigherHeatingValue(double liquidGenericFuelHigherHeatingValue) {
     bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelHigherHeatingValue, liquidGenericFuelHigherHeatingValue);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -315,6 +317,7 @@ namespace detail {
 
   bool GeneratorFuelSupply_Impl::setLiquidGenericFuelMolecularWeight(double liquidGenericFuelMolecularWeight) {
     bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelMolecularWeight, liquidGenericFuelMolecularWeight);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -325,6 +328,7 @@ namespace detail {
 
   bool GeneratorFuelSupply_Impl::setLiquidGenericFuelCO2EmissionFactor(double liquidGenericFuelCO2EmissionFactor) {
     bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelCO2EmissionFactor, liquidGenericFuelCO2EmissionFactor);
+    OS_ASSERT(result);
     return result;
   }
 

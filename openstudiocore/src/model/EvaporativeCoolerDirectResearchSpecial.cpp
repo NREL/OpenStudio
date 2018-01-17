@@ -302,6 +302,7 @@ namespace detail{
 
   bool EvaporativeCoolerDirectResearchSpecial_Impl::setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor) {
     bool result = setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::WaterPumpPowerSizingFactor, waterPumpPowerSizingFactor);
+    OS_ASSERT(result);
     return result;
   }
 

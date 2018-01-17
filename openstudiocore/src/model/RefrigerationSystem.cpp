@@ -597,6 +597,7 @@ namespace detail {
 
   bool RefrigerationSystem_Impl::setMinimumCondensingTemperature(double minimumCondensingTemperature) {
     bool result = setDouble(OS_Refrigeration_SystemFields::MinimumCondensingTemperature, minimumCondensingTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -651,6 +652,7 @@ namespace detail {
 
   bool RefrigerationSystem_Impl::setSumUASuctionPiping(double sumUASuctionPiping) {
     bool result = setDouble(OS_Refrigeration_SystemFields::SumUASuctionPiping, sumUASuctionPiping);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -678,6 +680,7 @@ namespace detail {
 
   bool RefrigerationSystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_SystemFields::EndUseSubcategory, endUseSubcategory);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -698,6 +701,7 @@ namespace detail {
 
   bool RefrigerationSystem_Impl::setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness) {
     bool result = setDouble(OS_Refrigeration_SystemFields::ShellandCoilIntercoolerEffectiveness, shellandCoilIntercoolerEffectiveness);
+    OS_ASSERT(result);
     return result;
   }
 

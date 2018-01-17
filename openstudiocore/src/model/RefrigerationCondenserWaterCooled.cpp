@@ -344,6 +344,7 @@ namespace detail {
 
   bool RefrigerationCondenserWaterCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::EndUseSubcategory, endUseSubcategory);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -361,6 +362,7 @@ namespace detail {
       resetCondenserRefrigerantOperatingChargeInventory();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -378,6 +380,7 @@ namespace detail {
       resetCondensateReceiverRefrigerantInventory();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -395,6 +398,7 @@ namespace detail {
       resetCondensatePipingRefrigerantInventory();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

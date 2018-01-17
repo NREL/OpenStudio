@@ -101,6 +101,7 @@ namespace detail {
 
   bool ExternalInterfaceFunctionalMockupUnitImport_Impl::setFMUTimeout(double fMUTimeout) {
     bool result = setDouble(OS_ExternalInterface_FunctionalMockupUnitImportFields::FMUTimeout, fMUTimeout);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -111,6 +112,7 @@ namespace detail {
 
   bool ExternalInterfaceFunctionalMockupUnitImport_Impl::setFMULoggingOn(int fMULoggingOn) {
     bool result = setInt(OS_ExternalInterface_FunctionalMockupUnitImportFields::FMULoggingOn, fMULoggingOn);
+    OS_ASSERT(result);
     return result;
   }
 

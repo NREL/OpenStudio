@@ -240,6 +240,7 @@ namespace detail {
     } else {
       result = setString(OS_Schedule_FixedIntervalFields::InterpolatetoTimestep, "No", driverMethod);
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -265,6 +266,7 @@ namespace detail {
 
   bool ScheduleFixedInterval_Impl::setOutOfRangeValue(double outOfRangeValue, bool driverMethod) {
     bool result = setDouble(OS_Schedule_FixedIntervalFields::OutOfRangeValue, outOfRangeValue, driverMethod);
+    OS_ASSERT(result);
     return result;
   }
 

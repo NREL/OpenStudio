@@ -593,6 +593,7 @@ namespace detail {
 
   bool RefrigerationWalkIn_Impl::setRatedCoilCoolingCapacity(double ratedCoilCoolingCapacity) {
     bool result = setDouble(OS_Refrigeration_WalkInFields::RatedCoilCoolingCapacity, ratedCoilCoolingCapacity);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -608,6 +609,7 @@ namespace detail {
 
   bool RefrigerationWalkIn_Impl::setRatedTotalHeatingPower(double ratedTotalHeatingPower) {
     bool result = setDouble(OS_Refrigeration_WalkInFields::RatedTotalHeatingPower, ratedTotalHeatingPower);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -646,6 +648,7 @@ namespace detail {
 
   bool RefrigerationWalkIn_Impl::setRatedTotalLightingPower(double ratedTotalLightingPower) {
     bool result = setDouble(OS_Refrigeration_WalkInFields::RatedTotalLightingPower, ratedTotalLightingPower);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -752,6 +755,7 @@ namespace detail {
 
   bool RefrigerationWalkIn_Impl::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
     bool result = setDouble(OS_Refrigeration_WalkInFields::AverageRefrigerantChargeInventory, averageRefrigerantChargeInventory);
+    OS_ASSERT(result);
     return result;
   }
 

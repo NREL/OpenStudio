@@ -98,6 +98,7 @@ namespace detail {
     } else {
       result = setString(OS_LightingSimulationControlFields::RunSimulationforDesignDays, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -113,6 +114,7 @@ namespace detail {
     } else {
       result = setString(OS_LightingSimulationControlFields::RunSimulationforWeatherFileRunPeriods, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 

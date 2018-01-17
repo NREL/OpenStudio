@@ -263,6 +263,7 @@ namespace detail {
     if (minimumOutdoorAirFlowRate) {
       result = setDouble(OS_Controller_OutdoorAirFields::MinimumOutdoorAirFlowRate, minimumOutdoorAirFlowRate.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -293,6 +294,7 @@ namespace detail {
     if (maximumOutdoorAirFlowRate) {
       result = setDouble(OS_Controller_OutdoorAirFields::MaximumOutdoorAirFlowRate, maximumOutdoorAirFlowRate.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 

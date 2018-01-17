@@ -490,6 +490,7 @@ namespace detail {
 
   bool GeneratorMicroTurbine_Impl::setReferenceCombustionAirInletTemperature(double referenceCombustionAirInletTemperature) {
     bool result = setDouble(OS_Generator_MicroTurbineFields::ReferenceCombustionAirInletTemperature, referenceCombustionAirInletTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -677,6 +678,7 @@ namespace detail {
 
   bool GeneratorMicroTurbine_Impl::setNominalExhaustAirOutletTemperature(double nominalExhaustAirOutletTemperature) {
     bool result = setDouble(OS_Generator_MicroTurbineFields::NominalExhaustAirOutletTemperature, nominalExhaustAirOutletTemperature);
+    OS_ASSERT(result);
     return result;
   }
 

@@ -158,11 +158,13 @@ namespace detail {
 
   bool SolarCollectorPerformanceFlatPlate_Impl::setCoefficient1ofEfficiencyEquation(double coefficient1ofEfficiencyEquation) {
     bool result = setDouble(OS_SolarCollectorPerformance_FlatPlateFields::Coefficient1ofEfficiencyEquation, coefficient1ofEfficiencyEquation);
+    OS_ASSERT(result);
     return result;
   }
 
   bool SolarCollectorPerformanceFlatPlate_Impl::setCoefficient2ofEfficiencyEquation(double coefficient2ofEfficiencyEquation) {
     bool result = setDouble(OS_SolarCollectorPerformance_FlatPlateFields::Coefficient2ofEfficiencyEquation, coefficient2ofEfficiencyEquation);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -175,6 +177,7 @@ namespace detail {
       resetCoefficient3ofEfficiencyEquation();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -192,6 +195,7 @@ namespace detail {
       resetCoefficient2ofIncidentAngleModifier();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -209,6 +213,7 @@ namespace detail {
       resetCoefficient3ofIncidentAngleModifier();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

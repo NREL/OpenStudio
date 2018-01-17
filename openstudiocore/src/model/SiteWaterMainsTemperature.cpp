@@ -167,6 +167,7 @@ namespace detail {
       resetAnnualAverageOutdoorAirTemperature();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

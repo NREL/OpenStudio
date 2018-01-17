@@ -159,31 +159,37 @@ namespace detail {
 
   bool CurveCubic_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = setDouble(OS_Curve_CubicFields::Coefficient1Constant, coefficient1Constant);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveCubic_Impl::setCoefficient2x(double coefficient2x) {
     bool result = setDouble(OS_Curve_CubicFields::Coefficient2x, coefficient2x);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveCubic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
     bool result = setDouble(OS_Curve_CubicFields::Coefficient3x_POW_2, coefficient3xPOW2);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveCubic_Impl::setCoefficient4xPOW3(double coefficient4xPOW3) {
     bool result = setDouble(OS_Curve_CubicFields::Coefficient4x_POW_3, coefficient4xPOW3);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveCubic_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_CubicFields::MinimumValueofx, minimumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveCubic_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_CubicFields::MaximumValueofx, maximumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -194,6 +200,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_CubicFields::MinimumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -209,6 +216,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_CubicFields::MaximumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 

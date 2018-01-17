@@ -234,6 +234,7 @@ namespace detail {
 
   bool HeaderedPumpsVariableSpeed_Impl::setNumberofPumpsinBank(int numberofPumpsinBank) {
     bool result = setInt(OS_HeaderedPumps_VariableSpeedFields::NumberofPumpsinBank, numberofPumpsinBank);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -244,6 +245,7 @@ namespace detail {
 
   bool HeaderedPumpsVariableSpeed_Impl::setRatedPumpHead(double ratedPumpHead) {
     bool result = setDouble(OS_HeaderedPumps_VariableSpeedFields::RatedPumpHead, ratedPumpHead);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -252,6 +254,7 @@ namespace detail {
     if (ratedPowerConsumption) {
       result = setDouble(OS_HeaderedPumps_VariableSpeedFields::RatedPowerConsumption, ratedPowerConsumption.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -272,21 +275,25 @@ namespace detail {
 
   bool HeaderedPumpsVariableSpeed_Impl::setCoefficient1ofthePartLoadPerformanceCurve(double coefficient1ofthePartLoadPerformanceCurve) {
     bool result = setDouble(OS_HeaderedPumps_VariableSpeedFields::Coefficient1ofthePartLoadPerformanceCurve, coefficient1ofthePartLoadPerformanceCurve);
+    OS_ASSERT(result);
     return result;
   }
 
   bool HeaderedPumpsVariableSpeed_Impl::setCoefficient2ofthePartLoadPerformanceCurve(double coefficient2ofthePartLoadPerformanceCurve) {
     bool result = setDouble(OS_HeaderedPumps_VariableSpeedFields::Coefficient2ofthePartLoadPerformanceCurve, coefficient2ofthePartLoadPerformanceCurve);
+    OS_ASSERT(result);
     return result;
   }
 
   bool HeaderedPumpsVariableSpeed_Impl::setCoefficient3ofthePartLoadPerformanceCurve(double coefficient3ofthePartLoadPerformanceCurve) {
     bool result = setDouble(OS_HeaderedPumps_VariableSpeedFields::Coefficient3ofthePartLoadPerformanceCurve, coefficient3ofthePartLoadPerformanceCurve);
+    OS_ASSERT(result);
     return result;
   }
 
   bool HeaderedPumpsVariableSpeed_Impl::setCoefficient4ofthePartLoadPerformanceCurve(double coefficient4ofthePartLoadPerformanceCurve) {
     bool result = setDouble(OS_HeaderedPumps_VariableSpeedFields::Coefficient4ofthePartLoadPerformanceCurve, coefficient4ofthePartLoadPerformanceCurve);
+    OS_ASSERT(result);
     return result;
   }
 

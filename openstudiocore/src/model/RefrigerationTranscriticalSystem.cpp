@@ -486,6 +486,7 @@ namespace detail {
 
   bool RefrigerationTranscriticalSystem_Impl::setReceiverPressure(double receiverPressure) {
     bool result = setDouble(OS_Refrigeration_TranscriticalSystemFields::ReceiverPressure, receiverPressure);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -496,6 +497,7 @@ namespace detail {
 
   bool RefrigerationTranscriticalSystem_Impl::setSubcoolerEffectiveness(double subcoolerEffectiveness) {
     bool result = setDouble(OS_Refrigeration_TranscriticalSystemFields::SubcoolerEffectiveness, subcoolerEffectiveness);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -511,6 +513,7 @@ namespace detail {
 
   bool RefrigerationTranscriticalSystem_Impl::setSumUASuctionPipingforMediumTemperatureLoads(double sumUASuctionPipingforMediumTemperatureLoads) {
     bool result = setDouble(OS_Refrigeration_TranscriticalSystemFields::SumUASuctionPipingforMediumTemperatureLoads, sumUASuctionPipingforMediumTemperatureLoads);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -538,6 +541,7 @@ namespace detail {
 
   bool RefrigerationTranscriticalSystem_Impl::setSumUASuctionPipingforLowTemperatureLoads(double sumUASuctionPipingforLowTemperatureLoads) {
     bool result = setDouble(OS_Refrigeration_TranscriticalSystemFields::SumUASuctionPipingforLowTemperatureLoads, sumUASuctionPipingforLowTemperatureLoads);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -565,6 +569,7 @@ namespace detail {
 
   bool RefrigerationTranscriticalSystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_TranscriticalSystemFields::EndUseSubcategory, endUseSubcategory);
+    OS_ASSERT(result);
     return result;
   }
 

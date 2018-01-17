@@ -360,6 +360,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient1Constant, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -375,6 +376,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient2x_POW_2, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -390,6 +392,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient3x, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -405,6 +408,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient4y_POW_2, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -420,6 +424,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient5y, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -435,6 +440,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient6z_POW_2, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -450,6 +456,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient7z, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -465,6 +472,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient8x_POW_2_TIMES_y_POW_2, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -480,6 +488,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient9x_TIMES_y, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -495,6 +504,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient10x_TIMES_y_POW_2, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -510,6 +520,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient11x_POW_2_TIMES_y, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -525,6 +536,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient12x_POW_2_TIMES_z_POW_2, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -540,6 +552,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient13x_TIMES_z, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -555,6 +568,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient14x_TIMES_z_POW_2, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -570,6 +584,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient15x_POW_2_TIMES_z, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -585,6 +600,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient16y_POW_2_TIMES_z_POW_2, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -600,6 +616,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient17y_TIMES_z, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -615,6 +632,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient18y_TIMES_z_POW_2, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -630,6 +648,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient19y_POW_2_TIMES_z, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -645,6 +664,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient20x_POW_2_TIMES_y_POW_2_TIMES_z_POW_2, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -660,6 +680,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient21x_POW_2_TIMES_y_POW_2_TIMES_z, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -675,6 +696,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient22x_POW_2_TIMES_y_TIMES_z_POW_2, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -690,6 +712,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient23x_TIMES_y_POW_2_TIMES_z_POW_2, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -705,6 +728,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient24x_POW_2_TIMES_y_TIMES_z, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -720,6 +744,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient25x_TIMES_y_POW_2_TIMES_z, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -735,6 +760,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient26x_TIMES_y_TIMES_z_POW_2, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -750,6 +776,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::Coefficient27x_TIMES_y_TIMES_z, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -765,6 +792,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::MinimumValueofx, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -780,6 +808,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::MaximumValueofx, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -795,6 +824,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::MinimumValueofy, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -810,6 +840,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::MaximumValueofy, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -825,6 +856,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::MinimumValueofz, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -840,6 +872,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::MaximumValueofz, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -855,6 +888,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::MinimumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -870,6 +904,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_TriquadraticFields::MaximumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 

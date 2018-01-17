@@ -152,26 +152,31 @@ namespace detail {
 
   bool CurveQuadratic_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = setDouble(OS_Curve_QuadraticFields::Coefficient1Constant, coefficient1Constant);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuadratic_Impl::setCoefficient2x(double coefficient2x) {
     bool result = setDouble(OS_Curve_QuadraticFields::Coefficient2x, coefficient2x);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuadratic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
     bool result = setDouble(OS_Curve_QuadraticFields::Coefficient3x_POW_2, coefficient3xPOW2);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuadratic_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_QuadraticFields::MinimumValueofx, minimumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuadratic_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_QuadraticFields::MaximumValueofx, maximumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -182,6 +187,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_QuadraticFields::MinimumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -197,6 +203,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_QuadraticFields::MaximumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 

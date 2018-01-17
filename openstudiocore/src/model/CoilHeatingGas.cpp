@@ -430,6 +430,7 @@ namespace detail{
       resetNominalCapacity();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

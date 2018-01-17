@@ -166,16 +166,19 @@ namespace detail {
 
   bool IlluminanceMap_Impl::setOriginXCoordinate(double originXCoordinate) {
     bool result = setDouble(OS_IlluminanceMapFields::OriginXCoordinate, originXCoordinate);
+    OS_ASSERT(result);
     return result;
   }
 
   bool IlluminanceMap_Impl::setOriginYCoordinate(double originYCoordinate) {
     bool result = setDouble(OS_IlluminanceMapFields::OriginYCoordinate, originYCoordinate);
+    OS_ASSERT(result);
     return result;
   }
 
   bool IlluminanceMap_Impl::setOriginZCoordinate(double originZCoordinate) {
     bool result = setDouble(OS_IlluminanceMapFields::OriginZCoordinate, originZCoordinate);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -211,6 +214,7 @@ namespace detail {
 
   bool IlluminanceMap_Impl::setXLength(double xLength) {
     bool result = setDouble(OS_IlluminanceMapFields::XLength, xLength);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -231,6 +235,7 @@ namespace detail {
 
   bool IlluminanceMap_Impl::setYLength(double yLength) {
     bool result = setDouble(OS_IlluminanceMapFields::YLength, yLength);
+    OS_ASSERT(result);
     return result;
   }
 

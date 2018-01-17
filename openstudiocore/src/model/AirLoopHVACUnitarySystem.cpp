@@ -1120,6 +1120,7 @@ namespace detail {
       resetMaximumSupplyAirTemperature();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -1135,6 +1136,7 @@ namespace detail {
 
   bool AirLoopHVACUnitarySystem_Impl::setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation) {
     bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation, maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -1152,6 +1154,7 @@ namespace detail {
       resetOutdoorDryBulbTemperatureSensorNodeName();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

@@ -494,11 +494,13 @@ namespace detail {
 
   bool RefrigerationSecondarySystem_Impl::setEvaporatorEvaporatingTemperature(double evaporatorEvaporatingTemperature) {
     bool result = setDouble(OS_Refrigeration_SecondarySystemFields::EvaporatorEvaporatingTemperature, evaporatorEvaporatingTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
   bool RefrigerationSecondarySystem_Impl::setEvaporatorApproachTemperatureDifference(double evaporatorApproachTemperatureDifference) {
     bool result = setDouble(OS_Refrigeration_SecondarySystemFields::EvaporatorApproachTemperatureDifference, evaporatorApproachTemperatureDifference);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -511,6 +513,7 @@ namespace detail {
       resetEvaporatorRangeTemperatureDifference();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -521,6 +524,7 @@ namespace detail {
 
   bool RefrigerationSecondarySystem_Impl::setNumberofPumpsinLoop(int numberofPumpsinLoop) {
     bool result = setInt(OS_Refrigeration_SecondarySystemFields::NumberofPumpsinLoop, numberofPumpsinLoop);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -629,6 +633,7 @@ namespace detail {
 
   bool RefrigerationSecondarySystem_Impl::setSumUADistributionPiping(double sumUADistributionPiping) {
     bool result = setDouble(OS_Refrigeration_SecondarySystemFields::SumUADistributionPiping, sumUADistributionPiping);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -656,6 +661,7 @@ namespace detail {
 
   bool RefrigerationSecondarySystem_Impl::setSumUAReceiverSeparatorShell(double sumUAReceiverSeparatorShell) {
     bool result = setDouble(OS_Refrigeration_SecondarySystemFields::SumUAReceiver_SeparatorShell, sumUAReceiverSeparatorShell);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -683,6 +689,7 @@ namespace detail {
 
   bool RefrigerationSecondarySystem_Impl::setEvaporatorRefrigerantInventory(double evaporatorRefrigerantInventory) {
     bool result = setDouble(OS_Refrigeration_SecondarySystemFields::EvaporatorRefrigerantInventory, evaporatorRefrigerantInventory);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -693,6 +700,7 @@ namespace detail {
 
   bool RefrigerationSecondarySystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_SecondarySystemFields::EndUseSubcategory, endUseSubcategory);
+    OS_ASSERT(result);
     return result;
   }
 

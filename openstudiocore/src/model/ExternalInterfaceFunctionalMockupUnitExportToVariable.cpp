@@ -93,11 +93,13 @@ namespace detail {
 
   bool ExternalInterfaceFunctionalMockupUnitExportToVariable_Impl::setFMUVariableName(const std::string& fMUVariableName) {
     bool result = setString(OS_ExternalInterface_FunctionalMockupUnitExport_To_VariableFields::FMUVariableName, fMUVariableName);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ExternalInterfaceFunctionalMockupUnitExportToVariable_Impl::setInitialValue(double initialValue) {
     bool result = setDouble(OS_ExternalInterface_FunctionalMockupUnitExport_To_VariableFields::InitialValue, initialValue);
+    OS_ASSERT(result);
     return result;
   }
 

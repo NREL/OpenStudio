@@ -292,181 +292,217 @@ namespace detail {
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setMinimumInletAirWetBulbTemperature(double minimumInletAirWetBulbTemperature) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::MinimumInletAirWetBulbTemperature, minimumInletAirWetBulbTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setMaximumInletAirWetBulbTemperature(double maximumInletAirWetBulbTemperature) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::MaximumInletAirWetBulbTemperature, maximumInletAirWetBulbTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setMinimumRangeTemperature(double minimumRangeTemperature) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::MinimumRangeTemperature, minimumRangeTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setMaximumRangeTemperature(double maximumRangeTemperature) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::MaximumRangeTemperature, maximumRangeTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setMinimumApproachTemperature(double minimumApproachTemperature) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::MinimumApproachTemperature, minimumApproachTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setMaximumApproachTemperature(double maximumApproachTemperature) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::MaximumApproachTemperature, maximumApproachTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setMinimumWaterFlowRateRatio(double minimumWaterFlowRateRatio) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::MinimumWaterFlowRateRatio, minimumWaterFlowRateRatio);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setMaximumWaterFlowRateRatio(double maximumWaterFlowRateRatio) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::MaximumWaterFlowRateRatio, maximumWaterFlowRateRatio);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setMaximumLiquidtoGasRatio(double maximumLiquidtoGasRatio) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::MaximumLiquidtoGasRatio, maximumLiquidtoGasRatio);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient1(double coefficient1) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient1, coefficient1);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient2(double coefficient2) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient2, coefficient2);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient3(double coefficient3) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient3, coefficient3);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient4(double coefficient4) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient4, coefficient4);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient5(double coefficient5) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient5, coefficient5);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient6(double coefficient6) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient6, coefficient6);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient7(double coefficient7) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient7, coefficient7);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient8(double coefficient8) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient8, coefficient8);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient9(double coefficient9) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient9, coefficient9);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient10(double coefficient10) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient10, coefficient10);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient11(double coefficient11) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient11, coefficient11);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient12(double coefficient12) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient12, coefficient12);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient13(double coefficient13) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient13, coefficient13);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient14(double coefficient14) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient14, coefficient14);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient15(double coefficient15) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient15, coefficient15);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient16(double coefficient16) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient16, coefficient16);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient17(double coefficient17) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient17, coefficient17);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient18(double coefficient18) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient18, coefficient18);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient19(double coefficient19) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient19, coefficient19);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient20(double coefficient20) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient20, coefficient20);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient21(double coefficient21) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient21, coefficient21);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient22(double coefficient22) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient22, coefficient22);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient23(double coefficient23) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient23, coefficient23);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient24(double coefficient24) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient24, coefficient24);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient25(double coefficient25) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient25, coefficient25);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient26(double coefficient26) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient26, coefficient26);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoolingTowerPerformanceYorkCalc_Impl::setCoefficient27(double coefficient27) {
     bool result = setDouble(OS_CoolingTowerPerformance_YorkCalcFields::Coefficient27, coefficient27);
+    OS_ASSERT(result);
     return result;
   }
 

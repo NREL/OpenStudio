@@ -515,6 +515,7 @@ namespace detail {
       resetEvaporationLossFactor();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -525,6 +526,7 @@ namespace detail {
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setDriftLossPercent(double driftLossPercent) {
     bool result = setDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DriftLossPercent, driftLossPercent);
+    OS_ASSERT(result);
     return result;
   }
 

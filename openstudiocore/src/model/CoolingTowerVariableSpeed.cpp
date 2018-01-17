@@ -553,6 +553,7 @@ namespace detail {
 
   bool CoolingTowerVariableSpeed_Impl::setEvaporationLossFactor(double evaporationLossFactor) {
     bool result = setDouble(OS_CoolingTower_VariableSpeedFields::EvaporationLossFactor, evaporationLossFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -570,6 +571,7 @@ namespace detail {
       resetDriftLossPercent();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

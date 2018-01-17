@@ -213,6 +213,7 @@ namespace detail {
 
   bool GeneratorFuelCellWaterSupply_Impl::setPumpHeatLossFactor(double pumpHeatLossFactor) {
     bool result = setDouble(OS_Generator_FuelCell_WaterSupplyFields::PumpHeatLossFactor, pumpHeatLossFactor);
+    OS_ASSERT(result);
     return result;
   }
 

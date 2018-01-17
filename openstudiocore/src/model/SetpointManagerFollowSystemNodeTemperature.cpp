@@ -155,16 +155,19 @@ namespace detail {
 
   bool SetpointManagerFollowSystemNodeTemperature_Impl::setOffsetTemperatureDifference(double offsetTemperatureDifference) {
     bool result = setDouble(OS_SetpointManager_FollowSystemNodeTemperatureFields::OffsetTemperatureDifference, offsetTemperatureDifference);
+    OS_ASSERT(result);
     return result;
   }
 
   bool SetpointManagerFollowSystemNodeTemperature_Impl::setMaximumLimitSetpointTemperature(double maximumLimitSetpointTemperature) {
     bool result = setDouble(OS_SetpointManager_FollowSystemNodeTemperatureFields::MaximumLimitSetpointTemperature, maximumLimitSetpointTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
   bool SetpointManagerFollowSystemNodeTemperature_Impl::setMinimumLimitSetpointTemperature(double minimumLimitSetpointTemperature) {
     bool result = setDouble(OS_SetpointManager_FollowSystemNodeTemperatureFields::MinimumLimitSetpointTemperature, minimumLimitSetpointTemperature);
+    OS_ASSERT(result);
     return result;
   }
 

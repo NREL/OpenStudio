@@ -229,6 +229,7 @@ namespace detail {
 
   bool CoilHeatingDXMultiSpeed_Impl::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
     bool result = setDouble(OS_Coil_Heating_DX_MultiSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, minimumOutdoorDryBulbTemperatureforCompressorOperation);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -241,6 +242,7 @@ namespace detail {
       resetOutdoorDryBulbTemperaturetoTurnOnCompressor();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

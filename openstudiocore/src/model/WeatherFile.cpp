@@ -173,26 +173,31 @@ namespace detail {
 
   bool WeatherFile_Impl::setCity(std::string city) {
     bool result = setString(OS_WeatherFileFields::City, city);
+    OS_ASSERT(result);
     return result;
   }
 
   bool WeatherFile_Impl::setStateProvinceRegion(std::string stateProvinceRegion) {
     bool result = setString(OS_WeatherFileFields::StateProvinceRegion, stateProvinceRegion);
+    OS_ASSERT(result);
     return result;
   }
 
   bool WeatherFile_Impl::setCountry(std::string country) {
     bool result = setString(OS_WeatherFileFields::Country, country);
+    OS_ASSERT(result);
     return result;
   }
 
   bool WeatherFile_Impl::setDataSource(std::string dataSource) {
     bool result = setString(OS_WeatherFileFields::DataSource, dataSource);
+    OS_ASSERT(result);
     return result;
   }
 
   bool WeatherFile_Impl::setWMONumber(std::string wMONumber) {
     bool result = setString(OS_WeatherFileFields::WMONumber, wMONumber);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -228,11 +233,13 @@ namespace detail {
     } else {
       result = setString(OS_WeatherFileFields::Url, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
   bool WeatherFile_Impl::setUrl(std::string url) {
     bool result = setString(OS_WeatherFileFields::Url, url);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -248,11 +255,13 @@ namespace detail {
     } else {
       result = setString(OS_WeatherFileFields::Checksum, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
   bool WeatherFile_Impl::setChecksum(std::string checksum) {
     bool result = setString(OS_WeatherFileFields::Checksum, checksum);
+    OS_ASSERT(result);
     return result;
   }
 

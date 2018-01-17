@@ -266,6 +266,7 @@ namespace detail {
 
   bool SiteGroundTemperatureShallow_Impl::setJanuarySurfaceGroundTemperature(double januarySurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::JanuarySurfaceGroundTemperature, januarySurfaceGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -276,6 +277,7 @@ namespace detail {
 
   bool SiteGroundTemperatureShallow_Impl::setFebruarySurfaceGroundTemperature(double februarySurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::FebruarySurfaceGroundTemperature, februarySurfaceGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -286,6 +288,7 @@ namespace detail {
 
   bool SiteGroundTemperatureShallow_Impl::setMarchSurfaceGroundTemperature(double marchSurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::MarchSurfaceGroundTemperature, marchSurfaceGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -296,6 +299,7 @@ namespace detail {
 
   bool SiteGroundTemperatureShallow_Impl::setAprilSurfaceGroundTemperature(double aprilSurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::AprilSurfaceGroundTemperature, aprilSurfaceGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -306,6 +310,7 @@ namespace detail {
 
   bool SiteGroundTemperatureShallow_Impl::setMaySurfaceGroundTemperature(double maySurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::MaySurfaceGroundTemperature, maySurfaceGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -316,6 +321,7 @@ namespace detail {
 
   bool SiteGroundTemperatureShallow_Impl::setJuneSurfaceGroundTemperature(double juneSurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::JuneSurfaceGroundTemperature, juneSurfaceGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -326,6 +332,7 @@ namespace detail {
 
   bool SiteGroundTemperatureShallow_Impl::setJulySurfaceGroundTemperature(double julySurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::JulySurfaceGroundTemperature, julySurfaceGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -336,6 +343,7 @@ namespace detail {
 
   bool SiteGroundTemperatureShallow_Impl::setAugustSurfaceGroundTemperature(double augustSurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::AugustSurfaceGroundTemperature, augustSurfaceGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -346,6 +354,7 @@ namespace detail {
 
   bool SiteGroundTemperatureShallow_Impl::setSeptemberSurfaceGroundTemperature(double septemberSurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::SeptemberSurfaceGroundTemperature, septemberSurfaceGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -356,6 +365,7 @@ namespace detail {
 
   bool SiteGroundTemperatureShallow_Impl::setOctoberSurfaceGroundTemperature(double octoberSurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::OctoberSurfaceGroundTemperature, octoberSurfaceGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -366,6 +376,7 @@ namespace detail {
 
   bool SiteGroundTemperatureShallow_Impl::setNovemberSurfaceGroundTemperature(double novemberSurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::NovemberSurfaceGroundTemperature, novemberSurfaceGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -376,6 +387,7 @@ namespace detail {
 
   bool SiteGroundTemperatureShallow_Impl::setDecemberSurfaceGroundTemperature(double decemberSurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::DecemberSurfaceGroundTemperature, decemberSurfaceGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 

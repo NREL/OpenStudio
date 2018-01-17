@@ -164,11 +164,13 @@ namespace detail {
 
   bool AvailabilityManagerNightVentilation_Impl::setVentilationTemperatureDifference(double ventilationTemperatureDifference) {
     bool result = setDouble(OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureDifference, ventilationTemperatureDifference);
+    OS_ASSERT(result);
     return result;
   }
 
   bool AvailabilityManagerNightVentilation_Impl::setVentilationTemperatureLowLimit(double ventilationTemperatureLowLimit) {
     bool result = setDouble(OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureLowLimit, ventilationTemperatureLowLimit);
+    OS_ASSERT(result);
     return result;
   }
 

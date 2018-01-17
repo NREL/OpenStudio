@@ -104,6 +104,7 @@ namespace detail {
       resetLiquidSuctionDesignSubcoolingTemperatureDifference();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -121,6 +122,7 @@ namespace detail {
       resetDesignLiquidInletTemperature();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -138,6 +140,7 @@ namespace detail {
       resetDesignVaporInletTemperature();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

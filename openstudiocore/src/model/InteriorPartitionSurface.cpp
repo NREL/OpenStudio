@@ -205,6 +205,7 @@ namespace detail {
     } else {
       result = setString(OS_InteriorPartitionSurfaceFields::ConverttoInternalMass, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 

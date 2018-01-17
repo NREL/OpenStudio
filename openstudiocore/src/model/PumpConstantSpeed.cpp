@@ -261,6 +261,7 @@ namespace detail {
       resetRatedFlowRate();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -294,6 +295,7 @@ namespace detail {
 
   bool PumpConstantSpeed_Impl::setRatedPumpHead(double ratedPumpHead) {
     bool result = setDouble(OS_Pump_ConstantSpeedFields::RatedPumpHead, ratedPumpHead);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -320,6 +322,7 @@ namespace detail {
       resetRatedPowerConsumption();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -438,6 +441,7 @@ namespace detail {
       resetImpellerDiameter();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -473,6 +477,7 @@ namespace detail {
       resetRotationalSpeed();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

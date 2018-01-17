@@ -647,6 +647,7 @@ namespace detail {
 
   bool WaterHeaterStratified_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_WaterHeater_StratifiedFields::EndUseSubcategory, endUseSubcategory);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -700,6 +701,7 @@ namespace detail {
 
   bool WaterHeaterStratified_Impl::setMaximumTemperatureLimit(double maximumTemperatureLimit) {
     bool result = setDouble(OS_WaterHeater_StratifiedFields::MaximumTemperatureLimit, maximumTemperatureLimit);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -856,6 +858,7 @@ namespace detail {
       resetAmbientTemperatureOutdoorAirNodeName();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -1045,61 +1048,73 @@ namespace detail {
 
   bool WaterHeaterStratified_Impl::setNode1AdditionalLossCoefficient(double node1AdditionalLossCoefficient) {
     bool result = setDouble(OS_WaterHeater_StratifiedFields::Node1AdditionalLossCoefficient, node1AdditionalLossCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
   bool WaterHeaterStratified_Impl::setNode2AdditionalLossCoefficient(double node2AdditionalLossCoefficient) {
     bool result = setDouble(OS_WaterHeater_StratifiedFields::Node2AdditionalLossCoefficient, node2AdditionalLossCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
   bool WaterHeaterStratified_Impl::setNode3AdditionalLossCoefficient(double node3AdditionalLossCoefficient) {
     bool result = setDouble(OS_WaterHeater_StratifiedFields::Node3AdditionalLossCoefficient, node3AdditionalLossCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
   bool WaterHeaterStratified_Impl::setNode4AdditionalLossCoefficient(double node4AdditionalLossCoefficient) {
     bool result = setDouble(OS_WaterHeater_StratifiedFields::Node4AdditionalLossCoefficient, node4AdditionalLossCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
   bool WaterHeaterStratified_Impl::setNode5AdditionalLossCoefficient(double node5AdditionalLossCoefficient) {
     bool result = setDouble(OS_WaterHeater_StratifiedFields::Node5AdditionalLossCoefficient, node5AdditionalLossCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
   bool WaterHeaterStratified_Impl::setNode6AdditionalLossCoefficient(double node6AdditionalLossCoefficient) {
     bool result = setDouble(OS_WaterHeater_StratifiedFields::Node6AdditionalLossCoefficient, node6AdditionalLossCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
   bool WaterHeaterStratified_Impl::setNode7AdditionalLossCoefficient(double node7AdditionalLossCoefficient) {
     bool result = setDouble(OS_WaterHeater_StratifiedFields::Node7AdditionalLossCoefficient, node7AdditionalLossCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
   bool WaterHeaterStratified_Impl::setNode8AdditionalLossCoefficient(double node8AdditionalLossCoefficient) {
     bool result = setDouble(OS_WaterHeater_StratifiedFields::Node8AdditionalLossCoefficient, node8AdditionalLossCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
   bool WaterHeaterStratified_Impl::setNode9AdditionalLossCoefficient(double node9AdditionalLossCoefficient) {
     bool result = setDouble(OS_WaterHeater_StratifiedFields::Node9AdditionalLossCoefficient, node9AdditionalLossCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
   bool WaterHeaterStratified_Impl::setNode10AdditionalLossCoefficient(double node10AdditionalLossCoefficient) {
     bool result = setDouble(OS_WaterHeater_StratifiedFields::Node10AdditionalLossCoefficient, node10AdditionalLossCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
   bool WaterHeaterStratified_Impl::setNode11AdditionalLossCoefficient(double node11AdditionalLossCoefficient) {
     bool result = setDouble(OS_WaterHeater_StratifiedFields::Node11AdditionalLossCoefficient, node11AdditionalLossCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
   bool WaterHeaterStratified_Impl::setNode12AdditionalLossCoefficient(double node12AdditionalLossCoefficient) {
     bool result = setDouble(OS_WaterHeater_StratifiedFields::Node12AdditionalLossCoefficient, node12AdditionalLossCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 

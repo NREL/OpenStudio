@@ -412,16 +412,19 @@ namespace detail {
 
   bool CoilWaterHeatingDesuperheater_Impl::setRatedInletWaterTemperature(double ratedInletWaterTemperature) {
     bool result = setDouble(OS_Coil_WaterHeating_DesuperheaterFields::RatedInletWaterTemperature, ratedInletWaterTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilWaterHeatingDesuperheater_Impl::setRatedOutdoorAirTemperature(double ratedOutdoorAirTemperature) {
     bool result = setDouble(OS_Coil_WaterHeating_DesuperheaterFields::RatedOutdoorAirTemperature, ratedOutdoorAirTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilWaterHeatingDesuperheater_Impl::setMaximumInletWaterTemperatureforHeatReclaim(double maximumInletWaterTemperatureforHeatReclaim) {
     bool result = setDouble(OS_Coil_WaterHeating_DesuperheaterFields::MaximumInletWaterTemperatureforHeatReclaim, maximumInletWaterTemperatureforHeatReclaim);
+    OS_ASSERT(result);
     return result;
   }
 

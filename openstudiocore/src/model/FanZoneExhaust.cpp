@@ -256,6 +256,7 @@ namespace detail {
 
   bool FanZoneExhaust_Impl::setPressureRise(double pressureRise) {
     bool result = setDouble(OS_Fan_ZoneExhaustFields::PressureRise, pressureRise);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -278,6 +279,7 @@ namespace detail {
 
   bool FanZoneExhaust_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Fan_ZoneExhaustFields::EndUseSubcategory, endUseSubcategory);
+    OS_ASSERT(result);
     return result;
   }
 

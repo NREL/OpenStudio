@@ -243,6 +243,7 @@ namespace detail {
 
   bool ThermochromicGlazing_Impl::setOpticalDataTemperature(double value) {
     bool result = setDouble(OS_WindowMaterial_GlazingGroup_ThermochromicExtensibleFields::OpticalDataTemperature,value);
+    OS_ASSERT(result);
     return result;
   }
 

@@ -255,6 +255,7 @@ namespace detail {
       resetMaximumOperatingPressure();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -322,6 +323,7 @@ namespace detail {
       resetDesignOutletSteamTemperature();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -357,6 +359,7 @@ namespace detail {
       resetNominalCapacity();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -493,6 +496,7 @@ namespace detail {
       resetCoefficient1ofFuelUseFunctionofPartLoadRatioCurve();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -528,6 +532,7 @@ namespace detail {
       resetCoefficient2ofFuelUseFunctionofPartLoadRatioCurve();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -563,6 +568,7 @@ namespace detail {
       resetCoefficient3ofFuelUseFunctionofPartLoadRatioCurve();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

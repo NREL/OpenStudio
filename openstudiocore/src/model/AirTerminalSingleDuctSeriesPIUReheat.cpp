@@ -272,6 +272,7 @@ namespace detail {
       resetMaximumHotWaterorSteamFlowRate();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

@@ -352,6 +352,7 @@ namespace detail {
 
   bool ZoneHVACPackagedTerminalAirConditioner_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
     bool result = setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirMixerName, outdoorAirMixerName);
+    OS_ASSERT(result);
     return result;
   }
 

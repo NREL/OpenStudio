@@ -425,6 +425,7 @@ namespace detail {
 
   bool RadianceParameters_Impl::setLimitWeightDMX(double LimitWeightDMX) {
     bool result = setDouble(OS_RadianceParametersFields::LimitWeightDMX, LimitWeightDMX);
+    OS_ASSERT(result);
     return result;
   }
 

@@ -152,6 +152,7 @@ namespace detail {
     if (nominalCapacity) {
       result = setDouble(OS_ZoneHVAC_Baseboard_Convective_ElectricFields::NominalCapacity, nominalCapacity.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 

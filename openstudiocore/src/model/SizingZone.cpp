@@ -416,6 +416,7 @@ namespace detail {
 
   bool SizingZone_Impl::setZoneCoolingDesignSupplyAirTemperature(double zoneCoolingDesignSupplyAirTemperature) {
     bool result = setDouble(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperature, zoneCoolingDesignSupplyAirTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -430,11 +431,13 @@ namespace detail {
 
   bool SizingZone_Impl::setZoneCoolingDesignSupplyAirTemperatureDifference(double value) {
     bool result = setDouble(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureDifference, value);
+    OS_ASSERT(result);
     return result;
   }
 
   bool SizingZone_Impl::setZoneHeatingDesignSupplyAirTemperature(double zoneHeatingDesignSupplyAirTemperature) {
     bool result = setDouble(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperature, zoneHeatingDesignSupplyAirTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -449,6 +452,7 @@ namespace detail {
 
   bool SizingZone_Impl::setZoneHeatingDesignSupplyAirTemperatureDifference(double value) {
     bool result = setDouble(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureDifference, value);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -920,6 +924,7 @@ namespace detail {
     if (dedicatedOutdoorAirLowSetpointTemperatureforDesign) {
       result = setDouble(OS_Sizing_ZoneFields::DedicatedOutdoorAirLowSetpointTemperatureforDesign, dedicatedOutdoorAirLowSetpointTemperatureforDesign.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -933,6 +938,7 @@ namespace detail {
     if (dedicatedOutdoorAirHighSetpointTemperatureforDesign) {
       result = setDouble(OS_Sizing_ZoneFields::DedicatedOutdoorAirHighSetpointTemperatureforDesign, dedicatedOutdoorAirHighSetpointTemperatureforDesign.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 

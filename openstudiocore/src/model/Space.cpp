@@ -434,6 +434,7 @@ namespace detail {
 
   bool Space_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
     bool result = setDouble(OS_SpaceFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -444,6 +445,7 @@ namespace detail {
 
   bool Space_Impl::setXOrigin(double xOrigin, bool driverMethod) {
     bool result = setDouble(OS_SpaceFields::XOrigin, xOrigin, driverMethod);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -454,6 +456,7 @@ namespace detail {
 
   bool Space_Impl::setYOrigin(double yOrigin, bool driverMethod) {
     bool result = setDouble(OS_SpaceFields::YOrigin, yOrigin, driverMethod);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -464,6 +467,7 @@ namespace detail {
 
   bool Space_Impl::setZOrigin(double zOrigin, bool driverMethod) {
     bool result = setDouble(OS_SpaceFields::ZOrigin, zOrigin, driverMethod);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -479,6 +483,7 @@ namespace detail {
     } else {
       result = setString(OS_SpaceFields::PartofTotalFloorArea, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 

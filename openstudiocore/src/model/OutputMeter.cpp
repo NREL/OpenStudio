@@ -257,6 +257,7 @@ namespace detail {
     } else {
       result = setString(OS_Output_MeterFields::MeterFileOnly, "False");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -272,6 +273,7 @@ namespace detail {
     } else {
       result = setString(OS_Output_MeterFields::Cumulative, "False");
     }
+    OS_ASSERT(result);
     return result;
   }
 

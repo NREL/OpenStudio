@@ -131,6 +131,7 @@ namespace detail {
       resetOutletControlTemperature();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

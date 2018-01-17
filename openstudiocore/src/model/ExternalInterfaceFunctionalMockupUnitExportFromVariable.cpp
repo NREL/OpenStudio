@@ -99,6 +99,7 @@ namespace detail {
 
   bool ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl::setOutputVariableIndexKeyName(const std::string& outputVariableIndexKeyName) {
     bool result = setString(OS_ExternalInterface_FunctionalMockupUnitExport_From_VariableFields::Output_VariableIndexKeyName, outputVariableIndexKeyName);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -109,6 +110,7 @@ namespace detail {
 
   bool ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl::setFMUVariableName(const std::string& fMUVariableName) {
     bool result = setString(OS_ExternalInterface_FunctionalMockupUnitExport_From_VariableFields::FMUVariableName, fMUVariableName);
+    OS_ASSERT(result);
     return result;
   }
 

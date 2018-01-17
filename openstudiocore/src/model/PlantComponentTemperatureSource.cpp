@@ -165,6 +165,7 @@ namespace detail {
       resetSourceTemperature();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

@@ -247,6 +247,7 @@ namespace detail {
 
   bool GeneratorPhotovoltaic_Impl::setRatedElectricPowerOutput(double ratedElectricPowerOutput) {
     bool result = setDouble(OS_Generator_PhotovoltaicFields::RatedElectricPowerOutput, ratedElectricPowerOutput);
+    OS_ASSERT(result);
     return result;
   }
 

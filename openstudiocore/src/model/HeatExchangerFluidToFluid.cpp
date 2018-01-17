@@ -386,6 +386,7 @@ namespace detail {
       resetOperationMinimumTemperatureLimit();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -403,6 +404,7 @@ namespace detail {
       resetOperationMaximumTemperatureLimit();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

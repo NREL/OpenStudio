@@ -788,6 +788,7 @@ namespace detail {
 
   bool RefrigerationCase_Impl::setStandardCaseLightingPowerperUnitLength(double standardCaseLightingPowerperUnitLength) {
     bool result = setDouble(OS_Refrigeration_CaseFields::StandardCaseLightingPowerperUnitLength, standardCaseLightingPowerperUnitLength);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -805,6 +806,7 @@ namespace detail {
       resetInstalledCaseLightingPowerperUnitLength();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -868,6 +870,7 @@ namespace detail {
 
   bool RefrigerationCase_Impl::setHumidityatZeroAntiSweatHeaterEnergy(double humidityatZeroAntiSweatHeaterEnergy) {
     bool result = setDouble(OS_Refrigeration_CaseFields::HumidityatZeroAntiSweatHeaterEnergy, humidityatZeroAntiSweatHeaterEnergy);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -1024,6 +1027,7 @@ namespace detail {
 
   bool RefrigerationCase_Impl::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
     bool result = setDouble(OS_Refrigeration_CaseFields::AverageRefrigerantChargeInventory, averageRefrigerantChargeInventory);
+    OS_ASSERT(result);
     return result;
   }
 

@@ -122,6 +122,7 @@ namespace detail {
 
   bool ExternalInterfaceActuator_Impl::setOptionalInitialValue(double optionalInitialValue) {
     bool result = setDouble(OS_ExternalInterface_ActuatorFields::OptionalInitialValue, optionalInitialValue);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -147,6 +148,7 @@ namespace detail {
     } else {
       result = setString(OS_ExternalInterface_ActuatorFields::ExportToBCVTB, "False");
     }
+    OS_ASSERT(result);
     return result;
   }
 

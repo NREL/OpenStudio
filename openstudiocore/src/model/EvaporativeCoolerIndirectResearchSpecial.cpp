@@ -188,6 +188,7 @@ namespace detail {
 
   bool EvaporativeCoolerIndirectResearchSpecial_Impl::setRecirculatingWaterPumpPowerConsumption(double recirculatingWaterPumpPowerConsumption) {
     bool result = setDouble(OS_EvaporativeCooler_Indirect_ResearchSpecialFields::RecirculatingWaterPumpPowerConsumption, recirculatingWaterPumpPowerConsumption);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -230,6 +231,7 @@ namespace detail {
 
   bool EvaporativeCoolerIndirectResearchSpecial_Impl::setDewpointEffectivenessFactor(double dewpointEffectivenessFactor) {
     bool result = setDouble(OS_EvaporativeCooler_Indirect_ResearchSpecialFields::DewpointEffectivenessFactor, dewpointEffectivenessFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -415,6 +417,7 @@ namespace detail {
 
   bool EvaporativeCoolerIndirectResearchSpecial_Impl::setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor) {
     bool result = setDouble(OS_EvaporativeCooler_Indirect_ResearchSpecialFields::WaterPumpPowerSizingFactor, waterPumpPowerSizingFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -437,6 +440,7 @@ namespace detail {
 
   bool EvaporativeCoolerIndirectResearchSpecial_Impl::setSecondaryAirFlowScalingFactor(double secondaryAirFlowScalingFactor) {
     bool result = setDouble(OS_EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryAirFlowScalingFactor, secondaryAirFlowScalingFactor);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -445,6 +449,7 @@ namespace detail {
     if (secondaryAirFanDesignPower) {
       result = setDouble(OS_EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryAirFanDesignPower, secondaryAirFanDesignPower.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 

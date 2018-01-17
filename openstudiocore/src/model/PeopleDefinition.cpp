@@ -271,6 +271,7 @@ namespace detail {
     } else {
       result = setString(OS_People_DefinitionFields::EnableASHRAE55ComfortWarnings, "No");
     }
+    OS_ASSERT(result);
     return result;
   }
 

@@ -266,6 +266,7 @@ namespace detail {
 
   bool SiteGroundTemperatureDeep_Impl::setJanuaryDeepGroundTemperature(double januaryDeepGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_DeepFields::JanuaryDeepGroundTemperature, januaryDeepGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -276,6 +277,7 @@ namespace detail {
 
   bool SiteGroundTemperatureDeep_Impl::setFebruaryDeepGroundTemperature(double februaryDeepGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_DeepFields::FebruaryDeepGroundTemperature, februaryDeepGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -286,6 +288,7 @@ namespace detail {
 
   bool SiteGroundTemperatureDeep_Impl::setMarchDeepGroundTemperature(double marchDeepGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_DeepFields::MarchDeepGroundTemperature, marchDeepGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -296,6 +299,7 @@ namespace detail {
 
   bool SiteGroundTemperatureDeep_Impl::setAprilDeepGroundTemperature(double aprilDeepGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_DeepFields::AprilDeepGroundTemperature, aprilDeepGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -306,6 +310,7 @@ namespace detail {
 
   bool SiteGroundTemperatureDeep_Impl::setMayDeepGroundTemperature(double mayDeepGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_DeepFields::MayDeepGroundTemperature, mayDeepGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -316,6 +321,7 @@ namespace detail {
 
   bool SiteGroundTemperatureDeep_Impl::setJuneDeepGroundTemperature(double juneDeepGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_DeepFields::JuneDeepGroundTemperature, juneDeepGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -326,6 +332,7 @@ namespace detail {
 
   bool SiteGroundTemperatureDeep_Impl::setJulyDeepGroundTemperature(double julyDeepGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_DeepFields::JulyDeepGroundTemperature, julyDeepGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -336,6 +343,7 @@ namespace detail {
 
   bool SiteGroundTemperatureDeep_Impl::setAugustDeepGroundTemperature(double augustDeepGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_DeepFields::AugustDeepGroundTemperature, augustDeepGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -346,6 +354,7 @@ namespace detail {
 
   bool SiteGroundTemperatureDeep_Impl::setSeptemberDeepGroundTemperature(double septemberDeepGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_DeepFields::SeptemberDeepGroundTemperature, septemberDeepGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -356,6 +365,7 @@ namespace detail {
 
   bool SiteGroundTemperatureDeep_Impl::setOctoberDeepGroundTemperature(double octoberDeepGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_DeepFields::OctoberDeepGroundTemperature, octoberDeepGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -366,6 +376,7 @@ namespace detail {
 
   bool SiteGroundTemperatureDeep_Impl::setNovemberDeepGroundTemperature(double novemberDeepGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_DeepFields::NovemberDeepGroundTemperature, novemberDeepGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -376,6 +387,7 @@ namespace detail {
 
   bool SiteGroundTemperatureDeep_Impl::setDecemberDeepGroundTemperature(double decemberDeepGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_DeepFields::DecemberDeepGroundTemperature, decemberDeepGroundTemperature);
+    OS_ASSERT(result);
     return result;
   }
 

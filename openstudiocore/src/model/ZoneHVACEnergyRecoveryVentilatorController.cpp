@@ -166,6 +166,7 @@ namespace detail {
       resetTemperatureHighLimit();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -183,6 +184,7 @@ namespace detail {
       resetTemperatureLowLimit();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -200,6 +202,7 @@ namespace detail {
       resetEnthalpyHighLimit();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -217,6 +220,7 @@ namespace detail {
       resetDewpointTemperatureLimit();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

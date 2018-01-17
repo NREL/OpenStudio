@@ -132,16 +132,19 @@ namespace detail {
 
   bool SetpointManagerFollowGroundTemperature_Impl::setOffsetTemperatureDifference(double offsetTemperatureDifference) {
     bool result = setDouble(OS_SetpointManager_FollowGroundTemperatureFields::OffsetTemperatureDifference, offsetTemperatureDifference);
+    OS_ASSERT(result);
     return result;
   }
 
   bool SetpointManagerFollowGroundTemperature_Impl::setMaximumSetpointTemperature(double maximumSetpointTemperature) {
     bool result = setDouble(OS_SetpointManager_FollowGroundTemperatureFields::MaximumSetpointTemperature, maximumSetpointTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
   bool SetpointManagerFollowGroundTemperature_Impl::setMinimumSetpointTemperature(double minimumSetpointTemperature) {
     bool result = setDouble(OS_SetpointManager_FollowGroundTemperatureFields::MinimumSetpointTemperature, minimumSetpointTemperature);
+    OS_ASSERT(result);
     return result;
   }
 

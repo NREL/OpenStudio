@@ -381,21 +381,25 @@ namespace detail {
 
   bool ZoneVentilationDesignFlowRate_Impl::setConstantTermCoefficient(double constantTermCoefficient) {
     bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::ConstantTermCoefficient, constantTermCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ZoneVentilationDesignFlowRate_Impl::setTemperatureTermCoefficient(double temperatureTermCoefficient) {
     bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::TemperatureTermCoefficient, temperatureTermCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ZoneVentilationDesignFlowRate_Impl::setVelocityTermCoefficient(double velocityTermCoefficient) {
     bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::VelocityTermCoefficient, velocityTermCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ZoneVentilationDesignFlowRate_Impl::setVelocitySquaredTermCoefficient(double velocitySquaredTermCoefficient) {
     bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::VelocitySquaredTermCoefficient, velocitySquaredTermCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 

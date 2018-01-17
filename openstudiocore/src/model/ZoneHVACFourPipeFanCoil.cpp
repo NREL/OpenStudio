@@ -457,6 +457,7 @@ namespace detail {
     if (maximumSupplyAirFlowRate) {
       result = setDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirFlowRate, maximumSupplyAirFlowRate.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -523,6 +524,7 @@ namespace detail {
     if (maximumOutdoorAirFlowRate) {
       result = setDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumOutdoorAirFlowRate, maximumOutdoorAirFlowRate.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -568,6 +570,7 @@ namespace detail {
 
   bool ZoneHVACFourPipeFanCoil_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
     bool result = setString(OS_ZoneHVAC_FourPipeFanCoilFields::OutdoorAirMixerName, outdoorAirMixerName);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -628,6 +631,7 @@ namespace detail {
     if (maximumColdWaterFlowRate) {
       result = setDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumColdWaterFlowRate, maximumColdWaterFlowRate.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -655,6 +659,7 @@ namespace detail {
 
   bool ZoneHVACFourPipeFanCoil_Impl::setMinimumColdWaterFlowRate(double minimumColdWaterFlowRate) {
     bool result = setDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumColdWaterFlowRate, minimumColdWaterFlowRate);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -700,6 +705,7 @@ namespace detail {
     if (maximumHotWaterFlowRate) {
       result = setDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumHotWaterFlowRate, maximumHotWaterFlowRate.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -727,6 +733,7 @@ namespace detail {
 
   bool ZoneHVACFourPipeFanCoil_Impl::setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate) {
     bool result = setDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumHotWaterFlowRate, minimumHotWaterFlowRate);
+    OS_ASSERT(result);
     return result;
   }
 

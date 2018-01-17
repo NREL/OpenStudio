@@ -192,6 +192,7 @@ namespace detail {
 
   bool ThermalStorageIceDetailed_Impl::setCapacity(double capacity) {
     bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::Capacity, capacity);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -207,26 +208,31 @@ namespace detail {
 
   bool ThermalStorageIceDetailed_Impl::setTimestepoftheCurveData(double timestepoftheCurveData) {
     bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::TimestepoftheCurveData, timestepoftheCurveData);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ThermalStorageIceDetailed_Impl::setParasiticElectricLoadDuringDischarging(double parasiticElectricLoadDuringDischarging) {
     bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::ParasiticElectricLoadDuringDischarging, parasiticElectricLoadDuringDischarging);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ThermalStorageIceDetailed_Impl::setParasiticElectricLoadDuringCharging(double parasiticElectricLoadDuringCharging) {
     bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::ParasiticElectricLoadDuringCharging, parasiticElectricLoadDuringCharging);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ThermalStorageIceDetailed_Impl::setTankLossCoefficient(double tankLossCoefficient) {
     bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::TankLossCoefficient, tankLossCoefficient);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ThermalStorageIceDetailed_Impl::setFreezingTemperatureofStorageMedium(double freezingTemperatureofStorageMedium) {
     bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::FreezingTemperatureofStorageMedium, freezingTemperatureofStorageMedium);
+    OS_ASSERT(result);
     return result;
   }
 

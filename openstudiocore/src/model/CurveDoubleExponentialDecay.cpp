@@ -162,36 +162,43 @@ namespace detail {
 
   bool CurveDoubleExponentialDecay_Impl::setCoefficient1C1(double coefficient1C1) {
     bool result = setDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient1C1, coefficient1C1);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveDoubleExponentialDecay_Impl::setCoefficient2C2(double coefficient2C2) {
     bool result = setDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient2C2, coefficient2C2);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveDoubleExponentialDecay_Impl::setCoefficient3C3(double coefficient3C3) {
     bool result = setDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient3C3, coefficient3C3);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveDoubleExponentialDecay_Impl::setCoefficient3C4(double coefficient3C4) {
     bool result = setDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient3C4, coefficient3C4);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveDoubleExponentialDecay_Impl::setCoefficient3C5(double coefficient3C5) {
     bool result = setDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient3C5, coefficient3C5);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveDoubleExponentialDecay_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_DoubleExponentialDecayFields::MinimumValueofx, minimumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveDoubleExponentialDecay_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_DoubleExponentialDecayFields::MaximumValueofx, maximumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -202,6 +209,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_DoubleExponentialDecayFields::MinimumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -217,6 +225,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_DoubleExponentialDecayFields::MaximumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 

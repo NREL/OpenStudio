@@ -336,55 +336,65 @@ namespace detail {
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient1, heatingCapacityCoefficient1);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient2, heatingCapacityCoefficient2);
+    OS_ASSERT(result);
     return result;
   }
 
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient3, heatingCapacityCoefficient3);
+    OS_ASSERT(result);
     return result;
   }
 
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient4, heatingCapacityCoefficient4);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient5, heatingCapacityCoefficient5);
+    OS_ASSERT(result);
     return result;
   }
 
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingPowerConsumptionCoefficient1(double heatingPowerConsumptionCoefficient1) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCoefficient1, heatingPowerConsumptionCoefficient1);
+    OS_ASSERT(result);
     return result;
   }
 
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingPowerConsumptionCoefficient2(double heatingPowerConsumptionCoefficient2) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCoefficient2, heatingPowerConsumptionCoefficient2);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingPowerConsumptionCoefficient3(double heatingPowerConsumptionCoefficient3) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCoefficient3, heatingPowerConsumptionCoefficient3);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingPowerConsumptionCoefficient4(double heatingPowerConsumptionCoefficient4) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCoefficient4, heatingPowerConsumptionCoefficient4);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingPowerConsumptionCoefficient5(double heatingPowerConsumptionCoefficient5) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCoefficient5, heatingPowerConsumptionCoefficient5);
+    OS_ASSERT(result);
     return result;
   }
 

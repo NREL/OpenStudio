@@ -338,6 +338,7 @@ namespace detail {
       resetExternalFileName();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -375,6 +376,7 @@ namespace detail {
       resetNormalizationReference();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -392,6 +394,7 @@ namespace detail {
       resetMinimumValueofX1();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -409,6 +412,7 @@ namespace detail {
       resetMaximumValueofX1();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -426,6 +430,7 @@ namespace detail {
       resetMinimumValueofX2();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -443,6 +448,7 @@ namespace detail {
       resetMaximumValueofX2();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -460,6 +466,7 @@ namespace detail {
       resetMinimumValueofX3();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -477,6 +484,7 @@ namespace detail {
       resetMaximumValueofX3();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -494,6 +502,7 @@ namespace detail {
       resetMinimumValueofX4();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -511,6 +520,7 @@ namespace detail {
       resetMaximumValueofX4();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -528,6 +538,7 @@ namespace detail {
       resetMinimumValueofX5();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -545,6 +556,7 @@ namespace detail {
       resetMaximumValueofX5();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -562,6 +574,7 @@ namespace detail {
       resetMinimumTableOutput();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -579,6 +592,7 @@ namespace detail {
       resetMaximumTableOutput();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

@@ -226,6 +226,7 @@ namespace detail {
 
   bool SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorLowTemperature(double setpointatOutdoorLowTemperature) {
     bool result = setDouble(OS_SetpointManager_OutdoorAirResetFields::SetpointatOutdoorLowTemperature, setpointatOutdoorLowTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -240,6 +241,7 @@ namespace detail {
 
   bool SetpointManagerOutdoorAirReset_Impl::setOutdoorLowTemperature(double outdoorLowTemperature) {
     bool result = setDouble(OS_SetpointManager_OutdoorAirResetFields::OutdoorLowTemperature, outdoorLowTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -254,6 +256,7 @@ namespace detail {
 
   bool SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorHighTemperature(double setpointatOutdoorHighTemperature) {
     bool result = setDouble(OS_SetpointManager_OutdoorAirResetFields::SetpointatOutdoorHighTemperature, setpointatOutdoorHighTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -268,6 +271,7 @@ namespace detail {
 
   bool SetpointManagerOutdoorAirReset_Impl::setOutdoorHighTemperature(double outdoorHighTemperature) {
     bool result = setDouble(OS_SetpointManager_OutdoorAirResetFields::OutdoorHighTemperature, outdoorHighTemperature);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -311,6 +315,7 @@ namespace detail {
       resetSetpointatOutdoorLowTemperature2();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -345,6 +350,7 @@ namespace detail {
       resetOutdoorLowTemperature2();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -380,6 +386,7 @@ namespace detail {
       resetSetpointatOutdoorHighTemperature2();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -415,6 +422,7 @@ namespace detail {
       resetOutdoorHighTemperature2();
       result = true;
     }
+    OS_ASSERT(result);
     return result;
   }
 

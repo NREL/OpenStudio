@@ -126,6 +126,7 @@ namespace detail {
     } else {
       result = setString(OS_Schedule_VariableIntervalFields::InterpolatetoTimestep, "No", driverMethod);
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -146,6 +147,7 @@ namespace detail {
 
   bool ScheduleVariableInterval_Impl::setOutOfRangeValue(double outOfRangeValue, bool driverMethod) {
     bool result = setDouble(OS_Schedule_VariableIntervalFields::OutOfRangeValue, outOfRangeValue, driverMethod);
+    OS_ASSERT(result);
     return result;
   }
 

@@ -151,26 +151,31 @@ namespace detail {
 
   bool CurveExponent_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = setDouble(OS_Curve_ExponentFields::Coefficient1Constant, coefficient1Constant);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveExponent_Impl::setCoefficient2Constant(double coefficient2Constant) {
     bool result = setDouble(OS_Curve_ExponentFields::Coefficient2Constant, coefficient2Constant);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveExponent_Impl::setCoefficient3Constant(double coefficient3Constant) {
     bool result = setDouble(OS_Curve_ExponentFields::Coefficient3Constant, coefficient3Constant);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveExponent_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_ExponentFields::MinimumValueofx, minimumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveExponent_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_ExponentFields::MaximumValueofx, maximumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -181,6 +186,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_ExponentFields::MinimumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -196,6 +202,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_ExponentFields::MaximumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 

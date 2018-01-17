@@ -227,71 +227,85 @@ namespace detail {
 
   bool CurveBicubic_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient1Constant, coefficient1Constant);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBicubic_Impl::setCoefficient2x(double coefficient2x) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient2x, coefficient2x);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBicubic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient3x_POW_2, coefficient3xPOW2);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBicubic_Impl::setCoefficient4y(double coefficient4y) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient4y, coefficient4y);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBicubic_Impl::setCoefficient5yPOW2(double coefficient5yPOW2) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient5y_POW_2, coefficient5yPOW2);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBicubic_Impl::setCoefficient6xTIMESY(double coefficient6xTIMESY) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient6x_TIMES_y, coefficient6xTIMESY);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBicubic_Impl::setCoefficient7xPOW3(double coefficient7xPOW3) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient7x_POW_3, coefficient7xPOW3);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBicubic_Impl::setCoefficient8yPOW3(double coefficient8yPOW3) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient8y_POW_3, coefficient8yPOW3);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBicubic_Impl::setCoefficient9xPOW2TIMESY(double coefficient9xPOW2TIMESY) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient9x_POW_2_TIMES_y, coefficient9xPOW2TIMESY);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBicubic_Impl::setCoefficient10xTIMESYPOW2(double coefficient10xTIMESYPOW2) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient10x_TIMES_y_POW_2, coefficient10xTIMESYPOW2);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBicubic_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_BicubicFields::MinimumValueofx, minimumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBicubic_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_BicubicFields::MaximumValueofx, maximumValueofx);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBicubic_Impl::setMinimumValueofy(double minimumValueofy) {
     bool result = setDouble(OS_Curve_BicubicFields::MinimumValueofy, minimumValueofy);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CurveBicubic_Impl::setMaximumValueofy(double maximumValueofy) {
     bool result = setDouble(OS_Curve_BicubicFields::MaximumValueofy, maximumValueofy);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -302,6 +316,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_BicubicFields::MinimumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -317,6 +332,7 @@ namespace detail {
     } else {
       result = setString(OS_Curve_BicubicFields::MaximumCurveOutput, "");
     }
+    OS_ASSERT(result);
     return result;
   }
 

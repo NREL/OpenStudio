@@ -116,16 +116,19 @@ namespace detail {
 
   bool ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl::setFMUInstanceName(const std::string& fMUInstanceName) {
     bool result = setString(OS_ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::FMUInstanceName, fMUInstanceName);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl::setFMUVariableName(const std::string& fMUVariableName) {
     bool result = setString(OS_ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::FMUVariableName, fMUVariableName);
+    OS_ASSERT(result);
     return result;
   }
 
   bool ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl::setInitialValue(double initialValue) {
     bool result = setDouble(OS_ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::InitialValue, initialValue);
+    OS_ASSERT(result);
     return result;
   }
 

@@ -489,96 +489,112 @@ namespace detail {
   bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setTotalCoolingCapacityCoefficient1(double totalCoolingCapacityCoefficient1)
   {
     bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient1, totalCoolingCapacityCoefficient1);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setTotalCoolingCapacityCoefficient2(double totalCoolingCapacityCoefficient2)
   {
     bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient2, totalCoolingCapacityCoefficient2);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setTotalCoolingCapacityCoefficient3(double totalCoolingCapacityCoefficient3)
   {
     bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient3, totalCoolingCapacityCoefficient3);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setTotalCoolingCapacityCoefficient4(double totalCoolingCapacityCoefficient4)
   {
     bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient4, totalCoolingCapacityCoefficient4);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setTotalCoolingCapacityCoefficient5(double totalCoolingCapacityCoefficient5)
   {
     bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient5, totalCoolingCapacityCoefficient5);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setSensibleCoolingCapacityCoefficient1(double sensibleCoolingCapacityCoefficient1)
   {
     bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient1, sensibleCoolingCapacityCoefficient1);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setSensibleCoolingCapacityCoefficient2(double sensibleCoolingCapacityCoefficient2)
   {
     bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient2, sensibleCoolingCapacityCoefficient2);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setSensibleCoolingCapacityCoefficient3(double sensibleCoolingCapacityCoefficient3)
   {
     bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient3, sensibleCoolingCapacityCoefficient3);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setSensibleCoolingCapacityCoefficient4(double sensibleCoolingCapacityCoefficient4)
   {
     bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient4, sensibleCoolingCapacityCoefficient4);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setSensibleCoolingCapacityCoefficient5(double sensibleCoolingCapacityCoefficient5)
   {
     bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient5, sensibleCoolingCapacityCoefficient5);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setSensibleCoolingCapacityCoefficient6(double sensibleCoolingCapacityCoefficient6)
   {
     bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient6, sensibleCoolingCapacityCoefficient6);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setCoolingPowerConsumptionCoefficient1(double coolingPowerConsumptionCoefficient1)
   {
     bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient1, coolingPowerConsumptionCoefficient1);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setCoolingPowerConsumptionCoefficient2(double coolingPowerConsumptionCoefficient2)
   {
     bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient2, coolingPowerConsumptionCoefficient2);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setCoolingPowerConsumptionCoefficient3(double coolingPowerConsumptionCoefficient3)
   {
     bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient3, coolingPowerConsumptionCoefficient3);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setCoolingPowerConsumptionCoefficient4(double coolingPowerConsumptionCoefficient4)
   {
     bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient4, coolingPowerConsumptionCoefficient4);
+    OS_ASSERT(result);
     return result;
   }
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setCoolingPowerConsumptionCoefficient5(double coolingPowerConsumptionCoefficient5)
   {
     bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient5, coolingPowerConsumptionCoefficient5);
+    OS_ASSERT(result);
     return result;
   }
 

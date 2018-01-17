@@ -267,6 +267,7 @@ namespace detail {
 
   bool CoilCoolingDXVariableSpeed_Impl::setNominalSpeedLevel(int nominalSpeedLevel) {
     bool result = setInt(OS_Coil_Cooling_DX_VariableSpeedFields::NominalSpeedLevel, nominalSpeedLevel);
+    OS_ASSERT(result);
     return result;
   }
 
@@ -275,6 +276,7 @@ namespace detail {
     if (grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel) {
       result = setDouble(OS_Coil_Cooling_DX_VariableSpeedFields::GrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel, grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 
@@ -288,6 +290,7 @@ namespace detail {
     if (ratedAirFlowRateAtSelectedNominalSpeedLevel) {
       result = setDouble(OS_Coil_Cooling_DX_VariableSpeedFields::RatedAirFlowRateAtSelectedNominalSpeedLevel, ratedAirFlowRateAtSelectedNominalSpeedLevel.get());
     }
+    OS_ASSERT(result);
     return result;
   }
 
