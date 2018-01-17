@@ -160,4 +160,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_AVAILABILITYMANAGERNIGHTCYCLE_IMPL_HPP
-

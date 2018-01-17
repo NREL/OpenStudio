@@ -103,7 +103,7 @@ qt5_wrap_ui(${target_name}_uis ${${target_name}_ui})
 qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
 # make the shared library
-add_library(${target_name} 
+add_library(${target_name}
   ${${target_name}_src}
   ${${target_name}_moc}
   ${${target_name}_mocs}

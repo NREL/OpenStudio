@@ -176,7 +176,7 @@ module Ruleset
     def initialize
       OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OptionalUserScriptArgument is deprecated, use OpenStudio::Measure::OptionalOSArgument instead.")
       super
-    end  
+    end
   end
 
   # support for name deprecated as of 0.10.1
@@ -184,7 +184,7 @@ module Ruleset
     def initialize
       OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "UserScriptArgumentVector is deprecated, use OpenStudio::Measure::OSArgumentVector instead.")
       super
-    end    
+    end
   end
 
   # support for name deprecated as of 0.10.1
@@ -192,88 +192,88 @@ module Ruleset
     def initialize
       OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "UserScriptArgumentMap is deprecated, use OpenStudio::Measure::OSArgumentMap instead.")
       super
-    end      
+    end
   end
-  
+
   # support for name deprecated as of 2.0.0
   class UserScript < OpenStudio::Measure::OSMeasure
     def initialize
       OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "UserScript is deprecated, use OpenStudio::Measure::OSMeasure instead.")
       super
-    end      
+    end
   end
-  
+
   # support for name deprecated as of 2.0.0
   class ModelUserScript < OpenStudio::Measure::ModelMeasure
     def initialize
       OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "ModelUserScript is deprecated, use OpenStudio::Measure::ModelMeasure instead.")
       super
-    end      
+    end
   end
-  
+
   # support for name deprecated as of 2.0.0
   class WorkspaceUserScript < OpenStudio::Measure::EnergyPlusMeasure
     def initialize
       OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "WorkspaceUserScript is deprecated, use OpenStudio::Measure::EnergyPlusMeasure instead.")
       super
-    end      
+    end
   end
-  
+
   # support for name deprecated as of 2.0.0
   class ReportingUserScript < OpenStudio::Measure::ReportingMeasure
     def initialize
       OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "ReportingUserScript is deprecated, use OpenStudio::Measure::ReportingMeasure instead.")
       super
-    end      
+    end
   end
-  
+
   # support for name deprecated as of 2.0.0
   class OSArgument < OpenStudio::Measure::OSArgument
     def initialize
       OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OSArgument is deprecated, use OpenStudio::Measure::OSArgument instead.")
       super
-    end      
+    end
   end
-  
+
   # support for name deprecated as of 2.0.0
   def self.convertOSArgumentVectorToMap(argument_vector)
     OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OpenStudio::Ruleset::convertOSArgumentVectorToMap is deprecated, use OpenStudio::Measure::convertOSArgumentVectorToMap instead.")
     return OpenStudio::Measure::convertOSArgumentVectorToMap(argument_vector)
-  end      
+  end
 
   # support for name deprecated as of 2.0.0
   class OSArgumentVector < OpenStudio::Measure::OSArgumentVector
     def initialize
       OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OSArgumentVector is deprecated, use OpenStudio::Measure::OSArgumentVector instead.")
       super
-    end      
+    end
   end
-  
+
   # support for name deprecated as of 2.0.0
   class OSArgumentMap < OpenStudio::Measure::OSArgumentMap
     def initialize
       OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OSArgumentMap is deprecated, use OpenStudio::Measure::OSArgumentMap instead.")
       super
-    end      
+    end
   end
-  
+
   # class was replaced by OpenStudio::WorkflowStepResult
 #  # support for name deprecated as of 2.0.0
 #  class OSResult < OpenStudio::Measure::OSResult
 #    def initialize
 #      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OSResult is deprecated, use OpenStudio::Measure::OSResult instead.")
 #      super
-#    end      
+#    end
 #  end
-#  
+#
 #  # support for name deprecated as of 2.0.0
 #  class OSResultVector < OpenStudio::Measure::OSResultVector
 #    def initialize
 #      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OSResultVector is deprecated, use OpenStudio::Measure::OSResultVector instead.")
 #      super
-#    end      
+#    end
 #  end
-  
+
   # support for name deprecated as of 2.0.0
   class OSRunner < OpenStudio::Measure::OSRunner
     def initialize(workflow_json = nil)
@@ -283,9 +283,9 @@ module Ruleset
         OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "No workflow provided, using empty WorkflowJSON.")
       end
       super(workflow_json)
-    end       
+    end
   end
-  
+
   # support for name deprecated as of 2.0.0
   class RubyUserScriptInfo < OpenStudio::Measure::OSMeasureInfo
     def initialize(*args)
@@ -295,27 +295,27 @@ module Ruleset
       elsif args.size == 8
         super(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8])
       end
-    end       
+    end
   end
-  
+
   # support for name deprecated as of 2.0.0
   def self.infoExtractorRubyFunction
     OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "Ruleset is deprecated, use OpenStudio::Measure::infoExtractorRubyFunction instead.")
     return OpenStudio::Measure.infoExtractorRubyFunction
   end
-  
+
   # support for name deprecated as of 2.0.0
   def self.getInfo(measure, model, workspace)
     OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "Ruleset is deprecated, use OpenStudio::Measure::getInfo instead.")
     return OpenStudio::Measure.getInfo(measure, model, workspace)
   end
-  
+
   # support for name deprecated as of 2.0.0
   def self.makeChoiceArgumentOfWorkspaceObjects(name, iddObjectType, workspace, required=true)
     OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "Ruleset is deprecated, use OpenStudio::Measure::makeChoiceArgumentOfWorkspaceObjects instead.")
     return OpenStudio::Measure.makeChoiceArgumentOfWorkspaceObjects(name, iddObjectType, workspace, required)
   end
-  
+
 end # module Ruleset
 end # module OpenStudio
 
@@ -350,7 +350,7 @@ class RubyException : public std::runtime_error
 
 };
 
-static VALUE evaluateSimpleImpl(VALUE arg) 
+static VALUE evaluateSimpleImpl(VALUE arg)
 {
   return rb_eval_string(StringValuePtr(arg));
 }
@@ -375,7 +375,7 @@ void evalString(const std::string &t_str)
     std::string loc(str);
 
     throw RubyException(err, loc);
-  } 
+  }
 }
 
 

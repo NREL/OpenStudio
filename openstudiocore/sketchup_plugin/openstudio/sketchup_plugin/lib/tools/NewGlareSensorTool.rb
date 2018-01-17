@@ -32,11 +32,11 @@ require("openstudio/sketchup_plugin/lib/interfaces/GlareSensor")
 module OpenStudio
 
   class NewGlareSensorTool < Tool
-  
+
     def initialize
       @cursor = UI.create_cursor(Plugin.dir + "/lib/resources/icons/OriginToolCursor-14x20.tiff", 3, 3)
     end
-    
+
     def onMouseMove(flags, x, y, view)
       super
       # Should apply user's precision setting here   --automatically done, I think
@@ -68,11 +68,11 @@ module OpenStudio
         Sketchup.send_action("selectSelectionTool:")
         return false
       end
-      
+
       had_observers = this_space.remove_observers
 
       begin
-      
+
         model_interface.start_operation("New Glare Sensor", true)
 
         initial_position = @ip.position
@@ -103,18 +103,18 @@ module OpenStudio
         glare_sensor.add_watcher
 
       ensure
-        
+
         model_interface.commit_operation
-      
+
       end
-      
+
       this_space.add_observers if had_observers
-      
+
       # selection observers will ignore signals because selection tool is not yet active
       model_interface.skp_model.selection.clear
       model_interface.skp_model.selection.add(glare_sensor.entity)
       Plugin.dialog_manager.selection_changed
-      
+
       # pick selection tool after changing selection
       Sketchup.send_action("selectSelectionTool:")
     end

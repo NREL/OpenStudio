@@ -48,7 +48,7 @@ namespace openstudio
     public:
 
       ThreeJSReverseTranslator();
-         
+
       /// Convert a ThreeJs Scene to OpenStudio Model format, scene must be in OpenStudio format
       boost::optional<Model> modelFromThreeJS(const ThreeScene& scene);
 

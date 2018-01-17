@@ -37,9 +37,9 @@ namespace model {
 namespace detail {
 
   class MODEL_API ParentObject_Impl : public ModelObject_Impl {
-    
 
-    
+
+
    public:
 
     // constructor
@@ -49,8 +49,8 @@ namespace detail {
     ParentObject_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    ParentObject_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                      Model_Impl* model, 
+    ParentObject_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                      Model_Impl* model,
                       bool keepHandle);
 
     // clone copy constructor

@@ -96,9 +96,9 @@ namespace detail {
 
     void resetVentilationTemperatureSchedule();
 
-    void setVentilationTemperatureDifference(double ventilationTemperatureDifference);
+    bool setVentilationTemperatureDifference(double ventilationTemperatureDifference);
 
-    void setVentilationTemperatureLowLimit(double ventilationTemperatureLowLimit);
+    bool setVentilationTemperatureLowLimit(double ventilationTemperatureLowLimit);
 
     bool setNightVentingFlowFraction(double nightVentingFlowFraction);
 
@@ -128,4 +128,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_AVAILABILITYMANAGERNIGHTVENTILATION_IMPL_HPP
-

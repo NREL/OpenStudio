@@ -114,7 +114,7 @@ namespace openstudio{
 
   private:
 
-    SpaceTypesGridView * spaceTypesGridView(); 
+    SpaceTypesGridView * spaceTypesGridView();
 
   public slots:
 

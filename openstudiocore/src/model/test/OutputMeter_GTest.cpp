@@ -345,7 +345,7 @@ TEST_F(ModelFixture, MeterFromModel)
 TEST_F(ModelFixture, MeterEnumValues)
 {
   Model model;
-    
+
   std::set<int> installLocationTypes = InstallLocationType::getValues();
   for (int installLocationType : installLocationTypes){
     OutputMeter meter(model);

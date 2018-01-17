@@ -42,8 +42,8 @@ class QWidget;
 namespace openstudio{
 
   /// \todo This class is currently a singleton implemented with a first use static
-  ///       this may cause problems with threading in the future and should be moved 
-  ///       into some other singleton implementation. ONE OPTION would be to 
+  ///       this may cause problems with threading in the future and should be moved
+  ///       into some other singleton implementation. ONE OPTION would be to
   ///       instantiate the singleton at the time of QApplication construction in the Application singleton
   ///       this would avoid all known problems with threading. The Singleton<> template cannot be used because
   ///       of static initialize and destruction order problems caused by statics used in the QDatabase stuff
@@ -62,7 +62,7 @@ namespace openstudio{
 
     /// Static method to retrieve the local BCL singleton at the given library path
     /// If a local BCL singleton does not exist, one will be created at the given library path
-    /// If a local BCL singleton does exist, but is not at the given path, 
+    /// If a local BCL singleton does exist, but is not at the given path,
     /// the current one will be closed and a new one will be created at the given library path
     static LocalBCL &instance(const path& libraryPath);
 
@@ -88,7 +88,7 @@ namespace openstudio{
 
     /// Get all components
     std::vector<BCLComponent> components() const;
-    
+
     /// Get all measures
     std::vector<BCLMeasure> measures() const;
 

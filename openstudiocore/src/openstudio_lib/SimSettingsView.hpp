@@ -126,9 +126,9 @@ private:
                 int row,
                 int column,
                 QString text,
-                const std::string& modelUnits, 
-                const std::string& siUnits, 
-                const std::string& ipUnits, 
+                const std::string& modelUnits,
+                const std::string& siUnits,
+                const std::string& ipUnits,
                 OSQuantityEdit2 * & quantityEdit);
 
   void addField(QGridLayout * gridLayout,
@@ -136,9 +136,9 @@ private:
                 int column,
                 QLabel * & label,
                 QString text,
-                const std::string& modelUnits, 
-                const std::string& siUnits, 
-                const std::string& ipUnits, 
+                const std::string& modelUnits,
+                const std::string& siUnits,
+                const std::string& ipUnits,
                 OSQuantityEdit2 * & quantityEdit);
 
   void addField(QGridLayout * gridLayout,
@@ -200,7 +200,7 @@ private:
 
   QButtonGroup * m_runPeriodGroup;
   QButtonGroup * m_radianceGroup;
-  
+
   QLineEdit * m_runPeriodName;
 
   bool m_isIP;

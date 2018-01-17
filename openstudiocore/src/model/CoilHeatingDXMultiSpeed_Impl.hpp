@@ -132,9 +132,9 @@ namespace detail {
 
     void resetAvailabilitySchedule();
 
-    void setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+    bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
-    void setOutdoorDryBulbTemperaturetoTurnOnCompressor(boost::optional<double> outdoorDryBulbTemperaturetoTurnOnCompressor);
+    bool setOutdoorDryBulbTemperaturetoTurnOnCompressor(boost::optional<double> outdoorDryBulbTemperaturetoTurnOnCompressor);
 
     void resetOutdoorDryBulbTemperaturetoTurnOnCompressor();
 
@@ -158,7 +158,7 @@ namespace detail {
 
     void autosizeResistiveDefrostHeaterCapacity();
 
-    void setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
+    bool setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
 
     bool setFuelType(std::string fuelType);
 
@@ -199,5 +199,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_COILHEATINGDXMULTISPEED_IMPL_HPP
-
+#endif // MODEL_COILHEATINGDXMULTISPEED_IMPL_HPP

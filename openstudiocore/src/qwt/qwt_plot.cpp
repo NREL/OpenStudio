@@ -27,23 +27,23 @@ static inline void qwtEnableLegendItems( QwtPlot *plot, bool on )
 {
     if ( on )
     {
-        QObject::connect( 
+        QObject::connect(
             plot, SIGNAL( legendDataChanged(
                 const QVariant &, const QList<QwtLegendData> & ) ),
-            plot, SLOT( updateLegendItems( 
+            plot, SLOT( updateLegendItems(
                 const QVariant &, const QList<QwtLegendData> & ) ) );
     }
     else
     {
-        QObject::disconnect( 
+        QObject::disconnect(
             plot, SIGNAL( legendDataChanged(
                 const QVariant &, const QList<QwtLegendData> & ) ),
-            plot, SLOT( updateLegendItems( 
+            plot, SLOT( updateLegendItems(
                 const QVariant &, const QList<QwtLegendData> & ) ) );
     }
 }
 
-static void qwtSetTabOrder( 
+static void qwtSetTabOrder(
     QWidget *first, QWidget *second, bool withChildren )
 {
     QList<QWidget *> tabChain;
@@ -195,7 +195,7 @@ void QwtPlot::initPlot( const QwtText &title )
 
   QwtPlot invokes methods of the canvas as meta methods ( see QMetaObject ).
   In opposite to using conventional C++ techniques like virtual methods
-  they allow to use canvas implementations that are derived from 
+  they allow to use canvas implementations that are derived from
   QWidget or QGLWidget.
 
   The following meta methods could be implemented:
@@ -209,7 +209,7 @@ void QwtPlot::initPlot( const QwtText &title )
     When the canvas doesn't have any special border ( f.e rounded corners )
     it is o.k. not to implement this method.
 
-  The default canvas is a QwtPlotCanvas 
+  The default canvas is a QwtPlotCanvas
 
   \param canvas Canvas Widget
   \sa canvas()
@@ -316,7 +316,7 @@ void QwtPlot::setAutoReplot( bool tf )
     d_data->autoReplot = tf;
 }
 
-/*! 
+/*!
   \return true if the autoReplot option is set.
   \sa setAutoReplot()
 */
@@ -370,7 +370,7 @@ const QwtTextLabel *QwtPlot::titleLabel() const
 }
 
 /*!
-  Change the text the footer 
+  Change the text the footer
   \param text New text of the footer
 */
 void QwtPlot::setFooter( const QString &text )
@@ -383,7 +383,7 @@ void QwtPlot::setFooter( const QString &text )
 }
 
 /*!
-  Change the text the footer 
+  Change the text the footer
   \param text New text of the footer
 */
 void QwtPlot::setFooter( const QwtText &text )
@@ -559,7 +559,7 @@ void QwtPlot::replot()
 
     if ( d_data->canvas )
     {
-        const bool ok = QMetaObject::invokeMethod( 
+        const bool ok = QMetaObject::invokeMethod(
             d_data->canvas, "replot", Qt::DirectConnection );
         if ( !ok )
         {
@@ -710,7 +710,7 @@ void QwtPlot::updateCanvasMargins()
     double margins[axisCnt];
     getCanvasMarginsHint( maps, canvas()->contentsRect(),
         margins[yLeft], margins[xTop], margins[yRight], margins[xBottom] );
-    
+
     bool doUpdate = false;
     for ( int axisId = 0; axisId < axisCnt; axisId++ )
     {
@@ -752,8 +752,8 @@ void QwtPlot::drawCanvas( QPainter *painter )
   \param maps QwtPlot::axisCnt maps, mapping between plot and paint device coordinates
 
   \note Usually canvasRect is contentsRect() of the plot canvas.
-        Due to a bug in Qt this rectangle might be wrong for certain 
-        frame styles ( f.e QFrame::Box ) and it might be necessary to 
+        Due to a bug in Qt this rectangle might be wrong for certain
+        frame styles ( f.e QFrame::Box ) and it might be necessary to
         fix the margins manually using QWidget::setContentsMargins()
 */
 
@@ -900,7 +900,7 @@ bool QwtPlot::axisValid( int axisId )
   with a best fit number of columns from left to right.
 
   insertLegend() will set the plot widget as parent for the legend.
-  The legend will be deleted in the destructor of the plot or when 
+  The legend will be deleted in the destructor of the plot or when
   another legend is inserted.
 
   Legends, that are not inserted into the layout of the plot widget
@@ -938,12 +938,12 @@ void QwtPlot::insertLegend( QwtAbstractLegend *legend,
 
         if ( d_data->legend )
         {
-            connect( this, 
-                SIGNAL( legendDataChanged( 
+            connect( this,
+                SIGNAL( legendDataChanged(
                     const QVariant &, const QList<QwtLegendData> & ) ),
-                d_data->legend, 
-                SLOT( updateLegend( 
-                    const QVariant &, const QList<QwtLegendData> & ) ) 
+                d_data->legend,
+                SLOT( updateLegend(
+                    const QVariant &, const QList<QwtLegendData> & ) )
             );
 
             if ( d_data->legend->parent() != this )
@@ -1074,7 +1074,7 @@ void QwtPlot::updateLegendItems( const QVariant &itemInfo,
 }
 
 /*!
-  \brief Attach/Detach a plot item 
+  \brief Attach/Detach a plot item
 
   \param plotItem Plot item
   \param on When true attach the item, otherwise detach it
@@ -1102,7 +1102,7 @@ void QwtPlot::attachItem( QwtPlotItem *plotItem, bool on )
 
     if ( on )
         insertItem( plotItem );
-    else 
+    else
         removeItem( plotItem );
 
     Q_EMIT itemAttached( plotItem, on );
@@ -1154,7 +1154,7 @@ QVariant QwtPlot::itemToInfo( QwtPlotItem *plotItem ) const
   \brief Identify the plot item according to an item info object,
          that has bee generated from itemToInfo().
 
-  The default implementation simply tries to unwrap a QwtPlotItem 
+  The default implementation simply tries to unwrap a QwtPlotItem
   pointer:
 
 \code

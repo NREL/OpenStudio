@@ -480,7 +480,17 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     }
   case openstudio::IddObjectType::Exterior_Lights :
     {
-      //modelObject = translateExteriorLights(workspaceObject);
+      modelObject = translateExteriorLights(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::Exterior_FuelEquipment :
+    {
+      modelObject = translateExteriorFuelEquipment(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::Exterior_WaterEquipment :
+    {
+      modelObject = translateExteriorWaterEquipment(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::ElectricLoadCenter_Storage_Simple :
@@ -492,7 +502,7 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     {
       modelObject = translateElectricLoadCenterStorageConverter(workspaceObject);
       break;
-    }  
+    }
   case openstudio::IddObjectType::EnergyManagementSystem_Actuator:
   {
     modelObject = translateEnergyManagementSystemActuator(workspaceObject);
@@ -942,7 +952,7 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
   case openstudio::IddObjectType::ZoneHVAC_EquipmentList :
     {
       //modelObject = translateZoneHVACEquipmentList(workspaceObject);
-      break; 
+      break;
     }
   case openstudio::IddObjectType::ZoneHVAC_IdealLoadsAirSystem :
     {

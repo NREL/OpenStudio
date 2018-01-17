@@ -36,7 +36,7 @@ using namespace std;
 #define TPPL_VERTEXTYPE_SPLIT 3
 #define TPPL_VERTEXTYPE_MERGE 4
 
-TPPLPoly::TPPLPoly() { 
+TPPLPoly::TPPLPoly() {
 	hole = false;
 	numpoints = 0;
 	points = NULL;
@@ -226,7 +226,7 @@ int TPPLPartition::RemoveHoles(list<TPPLPoly> *inpolys, list<TPPLPoly> *outpolys
 				if(!InCone(iter->GetPoint((i+iter->GetNumPoints()-1)%(iter->GetNumPoints())),
 					iter->GetPoint(i),
 					iter->GetPoint((i+1)%(iter->GetNumPoints())),
-					holepoint)) 
+					holepoint))
 					continue;
 				polypoint = iter->GetPoint(i);
 				if(pointfound) {
@@ -634,10 +634,10 @@ int TPPLPartition::Triangulate_OPT(TPPLPoly *poly, list<TPPLPoly> *triangles) {
 	for(gap = 2; gap<n; gap++) {
 		for(i=0; i<(n-gap); i++) {
 			j = i+gap;
-			if(!dpstates[j][i].visible) continue; 
+			if(!dpstates[j][i].visible) continue;
 			bestvertex = -1;
 			for(k=(i+1);k<j;k++) {
-				if(!dpstates[k][i].visible) continue; 
+				if(!dpstates[k][i].visible) continue;
 				if(!dpstates[j][k].visible) continue;
 
 				if(k<=(i+1)) d1=0;
@@ -1051,7 +1051,7 @@ int TPPLPartition::ConvexPartition_OPT(TPPLPoly *poly, list<TPPLPoly> *parts) {
 //triangulates a set of polygons by first partitioning them into monotone polygons
 //O(n*log(n)) time complexity, O(n) space complexity
 //the algorithm used here is outlined in the book
-//"Computational Geometry: Algorithms and Applications" 
+//"Computational Geometry: Algorithms and Applications"
 //by Mark de Berg, Otfried Cheong, Marc van Kreveld and Mark Overmars
 int TPPLPartition::MonotonePartition(list<TPPLPoly> *inpolys, list<TPPLPoly> *monotonePolys) {
 	list<TPPLPoly>::iterator iter;

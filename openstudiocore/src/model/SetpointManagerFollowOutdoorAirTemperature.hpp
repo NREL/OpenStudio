@@ -53,7 +53,7 @@ class SetpointManagerFollowOutdoorAirTemperature_Impl;
 class MODEL_API SetpointManagerFollowOutdoorAirTemperature : public SetpointManager {
  public:
   /** @name Constructors and Destructors */
-  //@{  
+  //@{
 
   /** Constructs a new SetpointManagerFollowOutdoorAirTemperature object and places it inside the
    *  model. */
@@ -79,19 +79,19 @@ class MODEL_API SetpointManagerFollowOutdoorAirTemperature : public SetpointMana
 
   std::string referenceTemperatureType() const;
 
-  void setReferenceTemperatureType(const std::string & value);
+  bool setReferenceTemperatureType(const std::string & value);
 
   double offsetTemperatureDifference() const;
 
-  void setOffsetTemperatureDifference(double value);
+  bool setOffsetTemperatureDifference(double value);
 
   double maximumSetpointTemperature() const;
 
-  void setMaximumSetpointTemperature(double value);
+  bool setMaximumSetpointTemperature(double value);
 
   double minimumSetpointTemperature() const;
 
-  void setMinimumSetpointTemperature(double value);
+  bool setMinimumSetpointTemperature(double value);
 
   //@}
  protected:

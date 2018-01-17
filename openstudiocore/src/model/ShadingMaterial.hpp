@@ -59,7 +59,7 @@ class MODEL_API ShadingMaterial : public FenestrationMaterial {
 
   ShadingMaterial(IddObjectType type,const Model& model);
 
-  explicit ShadingMaterial(std::shared_ptr<detail::ShadingMaterial_Impl> impl);  
+  explicit ShadingMaterial(std::shared_ptr<detail::ShadingMaterial_Impl> impl);
 
   /// @endcond
  private:

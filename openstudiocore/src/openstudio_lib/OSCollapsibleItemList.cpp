@@ -53,8 +53,8 @@ OSCollapsibleItemList::OSCollapsibleItemList(bool addScrollArea, QWidget * paren
   m_itemsRemoveable(false),
   m_showFilterLayout(false),
   m_itemsType(OSItemType::ListItem)
-{ 
-  this->setObjectName("GrayWidget"); 
+{
+  this->setObjectName("GrayWidget");
 
   auto outerVLayout = new QVBoxLayout();
   outerVLayout->setContentsMargins(0,0,0,0);

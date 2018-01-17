@@ -52,29 +52,29 @@ namespace detail {
 
   // derive PlanarSurface_Impl from ParentObject_Impl to override virtual methods
   class MODEL_API PlanarSurface_Impl : public ParentObject_Impl {
-    
-    
-    
-    
+
+
+
+
 
     // includes film coefficients. may require simulation results.
-    
+
     // does not include film coefficients. may require simulation results.
-    
 
-    
+
+
 
     // may require simulation results.
-    
+
     // may require simulation results.
-    
+
     // may require simulation results.
-    
+
 
     // relationships
-    
-    
-    
+
+
+
    public:
 
     /** @name Constructors and Destructors */
@@ -175,7 +175,7 @@ namespace detail {
     std::vector<ModelObject> solarCollectors() const;
 
     std::vector<GeneratorPhotovoltaic> generatorPhotovoltaics() const;
-    
+
     std::vector<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
     //@}

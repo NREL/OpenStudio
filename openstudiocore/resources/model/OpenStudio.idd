@@ -4211,19 +4211,53 @@ OS:OtherEquipment:Definition,
 OS:Exterior:Lights:Definition,
        \memo only used for Meter type reporting, does not affect building loads
        \min-fields 1
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
-  A2, \field Name
+  A2,  \field Name
        \type alpha
        \required-field
        \reference ExteriorLightsDefinitionNames
        \reference ExteriorEquipmentDefinitionNames
-  N1; \field Design Level
+  N1;  \field Design Level
        \type real
        \required-field
        \units W
        \ip-units W
+       \minimum 0
+
+OS:Exterior:FuelEquipment:Definition,
+       \memo only used for Meter type reporting, does not affect building loads
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference ExteriorFuelEquipmentDefinitionNames
+       \reference ExteriorEquipmentDefinitionNames
+  N1;  \field Design Level
+       \required-field
+       \units W
+       \type real
+       \minimum 0
+       \ip-units W
+
+OS:Exterior:WaterEquipment:Definition,
+       \memo only used for Meter type reporting, does not affect building loads
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference ExteriorWaterEquipmentDefinitionNames
+       \reference ExteriorEquipmentDefinitionNames
+  N1;  \field Design Level
+       \required-field
+       \units m3/s
+       \ip-units gal/min
+       \type real
        \minimum 0
 
 \group OpenStudio Schedules
@@ -4678,7 +4712,7 @@ OS:ScheduleTypeLimits,
        \key Availability
        \key Percent
        \key Control
-       \key Mode   
+       \key Mode
        \key ControlMode
        \key LinearPowerDensity
 
@@ -5020,6 +5054,7 @@ OS:Surface,
        \reference AllHeatTranAngFacNames
        \reference SurfGroupAndHTSurfNames
        \reference AllShadingAndHTSurfNames
+       \reference FloorSurfaceNames
   A3, \field Surface Type
        \type choice
        \required-field
@@ -5041,6 +5076,7 @@ OS:Surface,
        \key Adiabatic
        \key Surface
        \key Outdoors
+       \key Foundation
        \key Ground
        \key GroundFCfactorMethod
        \key OtherSideCoefficients
@@ -5056,6 +5092,8 @@ OS:Surface,
        \note Non-blank only if the field Outside Boundary Condition is Surface,
        \note OtherSideCoefficients or OtherSideConditionsModel
        \note If Surface, specify name of corresponding surface in adjacent space
+       \note If Foundation, specify the name of the corresponding Foundation object and
+       \note the program will calculate the heat transfer appropriately
        \note If OtherSideCoefficients, specify name of SurfaceProperty:OtherSideCoefficients
        \note If OtherSideConditionsModel, specify name of SurfaceProperty:OtherSideConditionsModel
        \type object-list
@@ -5774,6 +5812,52 @@ OS:SurfaceProperty:ConvectionCoefficients:MultipleSurface,
       \type object-list
       \object-list UserConvectionModels
 
+OS:SurfaceProperty:ExposedFoundationPerimeter,
+      \memo Defines the perimeter of a foundation floor that is exposed to the
+      \memo exterior environment through the floor. User may either define the
+      \memo total exposed perimeter, fraction of perimeter exposed or
+      \memo individually define which segments of the floor surface perimeter
+      \memo are exposed.
+      \extensible:1
+      \min-fields 4
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Surface Name
+      \required-field
+      \type object-list
+      \object-list FloorSurfaceNames
+  A3, \field Exposed Perimeter Calculation Method
+      \note Choices: TotalExposedPerimeter => total exposed perimeter in meters
+      \note ExposedPerimeterFraction => fraction of total perimeter that is
+      \note exposed. Value * Fraction = Total exposed perimeter
+      \note BySegment => define whether the segment between each set of
+      \note consecutive vertices of the floor surface is exposed.
+      \note SUM(exposed segement lengths) = Total exposed perimeter
+      \required-field
+      \type choice
+      \key TotalExposedPerimeter
+      \key ExposedPerimeterFraction
+      \key BySegment
+  N1, \field Total Exposed Perimeter
+      \type real
+      \units m
+      \minimum> 0.0
+  N2, \field Exposed Perimeter Fraction
+      \type real
+      \units dimensionless
+      \minimum 0.0
+      \maximum 1.0
+      \default 1.0
+  A4; \field Surface Segment Exposed 1
+      \note Surface Segment N is the perimeter between the Nth and (N+1)th
+      \note vertices
+      \begin-extensible
+      \type choice
+      \default Yes
+      \key Yes
+      \key No
+
 OS:SurfaceProperty:OtherSideCoefficients,
       \memo This object sets the other side conditions for a surface in a variety of ways.
       \min-fields 9
@@ -5869,6 +5953,187 @@ OS:SurfaceProperty:OtherSideConditionsModel,
       \note GroundCoupledSurface provides boundary conditions for surfaces
       \note  in contact with GroundDomain objects
       \default GapConvectionRadiation
+
+OS:Foundation:Kiva,
+       \memo Refined definition of the foundation surface construction used to
+       \memo inform two-dimensional heat transfer calculated using the Kiva
+       \memo ground heat transfer methodology.
+       \extensible:4
+       \min-fields 17
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference OutFaceEnvNames
+  A3,  \field Interior Horizontal Insulation Material Name
+       \type object-list
+       \object-list MaterialNames
+  N1,  \field Interior Horizontal Insulation Depth
+       \note Distance from the slab bottom to the top of interior horizontal
+       \note insulation
+       \units m
+       \type real
+       \minimum 0.0
+       \default 0.0
+  N2,  \field Interior Horizontal Insulation Width
+       \note Extent of insulation as measured from the wall interior
+       \units m
+       \type real
+       \minimum> 0.0
+  A4,  \field Interior Vertical Insulation Material Name
+       \type object-list
+       \object-list MaterialNames
+  N3,  \field Interior Vertical Insulation Depth
+       \note Extent of insulation as measured from the wall top to the bottom
+       \note edge of the interior vertical insulation
+       \units m
+       \type real
+       \minimum> 0.0
+  A5,  \field Exterior Horizontal Insulation Material Name
+       \type object-list
+       \object-list MaterialNames
+  N4,  \field Exterior Horizontal Insulation Depth
+       \note Distance from the exterior grade to the top of exterior horizontal
+       \note insulation
+       \units m
+       \type real
+       \minimum 0.0
+  N5,  \field Exterior Horizontal Insulation Width
+       \note Extent of insulation as measured from the wall exterior
+       \units m
+       \type real
+       \minimum 0.0
+       \default 0.0
+  A6,  \field Exterior Vertical Insulation Material Name
+       \type object-list
+       \object-list MaterialNames
+  N6,  \field Exterior Vertical Insulation Depth
+       \note Extent of insulation as measured from the wall top to the bottom
+       \note edge of the exterior vertical insulation
+       \units m
+       \type real
+       \minimum> 0.0
+  N7,  \field Wall Height Above Grade
+       \note Distance from the exterior grade to the wall top
+       \units m
+       \type real
+       \minimum 0.0
+       \default 0.2
+  N8,  \field Wall Depth Below Slab
+       \note Distance from the slab bottom to the bottom of the foundation wall
+       \units m
+       \type real
+       \minimum 0.0
+       \default 0.0
+  A7,  \field Footing Wall Construction Name
+       \note Defines the below-grade surface construction for slabs. Required
+       \note if foundation wall is not exposed to the zone.
+       \type object-list
+       \object-list ConstructionNames
+  A8,  \field Footing Material Name
+       \type object-list
+       \object-list MaterialNames
+  N9,  \field Footing Depth
+       \note Top-to-bottom dimension of the footing (not to be confused with its
+       \note depth in the ground). The width of the footing is defined by the
+       \note material's thickness.
+       \units m
+       \type real
+       \minimum> 0.0
+       \default 0.3
+  A9,  \field Custom Block Material Name 1
+       \begin-extensible
+       \type object-list
+       \object-list MaterialNames
+  N10, \field Custom Block Depth 1
+       \note Top-to-bottom dimension of the block downward.
+       \units m
+       \type real
+       \minimum> 0.0
+  N11, \field Custom Block X Position 1
+       \note Position outward (+) or inward (-) relative to the foundation wall
+       \note interior
+       \units m
+       \type real
+  N12; \field Custom Block Z Position 1
+       \note Position downward (+) relative to the foundation wall top
+       \units m
+       \type real
+
+OS:Foundation:Kiva:Settings,
+       \memo Settings applied across all Kiva foundation calculations.
+       \memo Object is not required. If not defined, defaults will be applied.
+       \min-fields 13
+  A1, \field Handle
+       \type handle
+       \required-field
+  N1,  \field Soil Conductivity
+       \type real
+       \default 1.73
+       \units W/m-K
+       \minimum> 0.0
+  N2,  \field Soil Density
+       \type real
+       \default 1842
+       \units kg/m3
+       \minimum> 0.0
+  N3,  \field Soil Specific Heat
+       \type real
+       \default 419
+       \units J/kg-K
+       \minimum> 0.0
+  N4,  \field Ground Solar Absorptivity
+       \type real
+       \default 0.9
+       \units dimensionless
+       \minimum 0.0
+       \maximum 1.0
+  N5,  \field Ground Thermal Absorptivity
+       \type real
+       \default 0.9
+       \units dimensionless
+       \minimum 0.0
+       \maximum 1.0
+  N6,  \field Ground Surface Roughness
+       \type real
+       \default 0.03
+       \units m
+       \minimum> 0.0
+  N7,  \field Far-Field Width
+       \type real
+       \default 40
+       \units m
+       \minimum> 0.0
+  A2,  \field Deep-Ground Boundary Condition
+       \type choice
+       \key ZeroFlux
+       \key GroundWater
+       \key Autoselect
+       \default Autoselect
+  N8,  \field Deep-Ground Depth
+       \type real
+       \default 40
+       \units m
+       \minimum> 0.0
+       \autocalculatable
+       \default autocalculate
+  N9,  \field Minimum Cell Dimension
+       \type real
+       \default 0.02
+       \units m
+       \minimum> 0.0
+  N10, \field Maximum Cell Growth Coefficient
+       \type real
+       \default 1.5
+       \units dimensionless
+       \minimum 1.0
+  A3;  \field Simulation Timestep
+       \type choice
+       \key Hourly
+       \key Timestep
+       \default Hourly
 
 \group OpenStudio Space Loads
 
@@ -6388,6 +6653,80 @@ OS:Exterior:Lights,
        \minimum 0.0
        \default 1.0
   A6; \field End-Use Subcategory
+       \type alpha
+       \retaincase
+       \default General
+
+OS:Exterior:FuelEquipment,
+       \memo only used for Meter type reporting, does not affect building loads
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference ExteriorFuelEquipmentNames
+       \reference ExteriorEquipmentNames
+  A3,  \field Exterior Fuel Equipment Definition Name
+       \type object-list
+       \required-field
+       \object-list ExteriorFuelEquipmentDefinitionNames
+  A4,  \field Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+       \note units in schedule should be fraction applied to capacity of the exterior fuel equipment, generally (0.0 - 1.0)
+  A5,  \field Fuel Use Type
+       \required-field
+       \type choice
+       \key Electricity
+       \key NaturalGas
+       \key PropaneGas
+       \key FuelOil#1
+       \key FuelOil#2
+       \key Diesel
+       \key Gasoline
+       \key Coal
+       \key OtherFuel1
+       \key OtherFuel2
+       \key Steam
+       \key DistrictHeating
+       \key DistrictCooling
+  N1,  \field Multiplier
+       \type real
+       \minimum 0.0
+       \default 1.0
+  A6;  \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
+
+OS:Exterior:WaterEquipment,
+       \memo only used for Meter type reporting, does not affect building loads
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference ExteriorWaterEquipmentNames
+       \reference ExteriorEquipmentNames
+  A3,  \field Exterior Water Equipment Definition Name
+       \type object-list
+       \required-field
+       \object-list ExteriorWaterEquipmentDefinitionNames
+  A4,  \field Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+       \note units in Schedule should be fraction applied to capacity of the exterior water equipment, generally (0.0 - 1.0)
+  N1,  \field Multiplier
+       \type real
+       \minimum 0.0
+       \default 1.0
+  A5;  \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
        \retaincase
        \default General

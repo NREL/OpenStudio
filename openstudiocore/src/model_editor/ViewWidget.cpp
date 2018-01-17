@@ -142,7 +142,7 @@ void ViewWidget::connectSignalsAndSlots()
 
   connect(mIG, &InspectorGadget::dirty, this, &ViewWidget::modelDirty);
 
- 
+
 }
 
 void ViewWidget::createLayout()
@@ -193,11 +193,11 @@ void ViewWidget::showPrecisionDlg(const bool showPrecisionDlg)
   {
     mIG->createAllFields();
   }
-  
+
   void ViewWidget::setRecursive(bool state)
   {
     mIG->setRecursive(state);
-  }                                  
+  }
 
 ///! Slots
 

@@ -109,7 +109,7 @@ class MODEL_API GeneratorPhotovoltaic : public Generator {
 
   void resetNumberOfModulesInSeries();
 
-  void setRatedElectricPowerOutput(double ratedElectricPowerOutput);
+  bool setRatedElectricPowerOutput(double ratedElectricPowerOutput);
 
   void resetRatedElectricPowerOutput();
 
@@ -149,4 +149,3 @@ typedef std::vector<GeneratorPhotovoltaic> GeneratorPhotovoltaicVector;
 } // openstudio
 
 #endif // MODEL_GENERATORPHOTOVOLTAIC_HPP
-

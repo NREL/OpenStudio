@@ -264,9 +264,10 @@ namespace detail {
     return monthly_temperatures;
   }
 
-  void SiteGroundTemperatureShallow_Impl::setJanuarySurfaceGroundTemperature(double januarySurfaceGroundTemperature) {
+  bool SiteGroundTemperatureShallow_Impl::setJanuarySurfaceGroundTemperature(double januarySurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::JanuarySurfaceGroundTemperature, januarySurfaceGroundTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   void SiteGroundTemperatureShallow_Impl::resetJanuarySurfaceGroundTemperature() {
@@ -274,9 +275,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureShallow_Impl::setFebruarySurfaceGroundTemperature(double februarySurfaceGroundTemperature) {
+  bool SiteGroundTemperatureShallow_Impl::setFebruarySurfaceGroundTemperature(double februarySurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::FebruarySurfaceGroundTemperature, februarySurfaceGroundTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   void SiteGroundTemperatureShallow_Impl::resetFebruarySurfaceGroundTemperature() {
@@ -284,9 +286,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureShallow_Impl::setMarchSurfaceGroundTemperature(double marchSurfaceGroundTemperature) {
+  bool SiteGroundTemperatureShallow_Impl::setMarchSurfaceGroundTemperature(double marchSurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::MarchSurfaceGroundTemperature, marchSurfaceGroundTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   void SiteGroundTemperatureShallow_Impl::resetMarchSurfaceGroundTemperature() {
@@ -294,9 +297,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureShallow_Impl::setAprilSurfaceGroundTemperature(double aprilSurfaceGroundTemperature) {
+  bool SiteGroundTemperatureShallow_Impl::setAprilSurfaceGroundTemperature(double aprilSurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::AprilSurfaceGroundTemperature, aprilSurfaceGroundTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   void SiteGroundTemperatureShallow_Impl::resetAprilSurfaceGroundTemperature() {
@@ -304,9 +308,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureShallow_Impl::setMaySurfaceGroundTemperature(double maySurfaceGroundTemperature) {
+  bool SiteGroundTemperatureShallow_Impl::setMaySurfaceGroundTemperature(double maySurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::MaySurfaceGroundTemperature, maySurfaceGroundTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   void SiteGroundTemperatureShallow_Impl::resetMaySurfaceGroundTemperature() {
@@ -314,9 +319,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureShallow_Impl::setJuneSurfaceGroundTemperature(double juneSurfaceGroundTemperature) {
+  bool SiteGroundTemperatureShallow_Impl::setJuneSurfaceGroundTemperature(double juneSurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::JuneSurfaceGroundTemperature, juneSurfaceGroundTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   void SiteGroundTemperatureShallow_Impl::resetJuneSurfaceGroundTemperature() {
@@ -324,9 +330,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureShallow_Impl::setJulySurfaceGroundTemperature(double julySurfaceGroundTemperature) {
+  bool SiteGroundTemperatureShallow_Impl::setJulySurfaceGroundTemperature(double julySurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::JulySurfaceGroundTemperature, julySurfaceGroundTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   void SiteGroundTemperatureShallow_Impl::resetJulySurfaceGroundTemperature() {
@@ -334,9 +341,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureShallow_Impl::setAugustSurfaceGroundTemperature(double augustSurfaceGroundTemperature) {
+  bool SiteGroundTemperatureShallow_Impl::setAugustSurfaceGroundTemperature(double augustSurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::AugustSurfaceGroundTemperature, augustSurfaceGroundTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   void SiteGroundTemperatureShallow_Impl::resetAugustSurfaceGroundTemperature() {
@@ -344,9 +352,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureShallow_Impl::setSeptemberSurfaceGroundTemperature(double septemberSurfaceGroundTemperature) {
+  bool SiteGroundTemperatureShallow_Impl::setSeptemberSurfaceGroundTemperature(double septemberSurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::SeptemberSurfaceGroundTemperature, septemberSurfaceGroundTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   void SiteGroundTemperatureShallow_Impl::resetSeptemberSurfaceGroundTemperature() {
@@ -354,9 +363,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureShallow_Impl::setOctoberSurfaceGroundTemperature(double octoberSurfaceGroundTemperature) {
+  bool SiteGroundTemperatureShallow_Impl::setOctoberSurfaceGroundTemperature(double octoberSurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::OctoberSurfaceGroundTemperature, octoberSurfaceGroundTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   void SiteGroundTemperatureShallow_Impl::resetOctoberSurfaceGroundTemperature() {
@@ -364,9 +374,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureShallow_Impl::setNovemberSurfaceGroundTemperature(double novemberSurfaceGroundTemperature) {
+  bool SiteGroundTemperatureShallow_Impl::setNovemberSurfaceGroundTemperature(double novemberSurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::NovemberSurfaceGroundTemperature, novemberSurfaceGroundTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   void SiteGroundTemperatureShallow_Impl::resetNovemberSurfaceGroundTemperature() {
@@ -374,9 +385,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureShallow_Impl::setDecemberSurfaceGroundTemperature(double decemberSurfaceGroundTemperature) {
+  bool SiteGroundTemperatureShallow_Impl::setDecemberSurfaceGroundTemperature(double decemberSurfaceGroundTemperature) {
     bool result = setDouble(OS_Site_GroundTemperature_ShallowFields::DecemberSurfaceGroundTemperature, decemberSurfaceGroundTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   void SiteGroundTemperatureShallow_Impl::resetDecemberSurfaceGroundTemperature() {
@@ -384,25 +396,25 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureShallow_Impl::setTemperatureByMonth(int month, double temperature) {
+  bool SiteGroundTemperatureShallow_Impl::setTemperatureByMonth(int month, double temperature) {
     switch(month) {
-      case 1 : setJanuarySurfaceGroundTemperature(temperature); break;
-      case 2 : setFebruarySurfaceGroundTemperature(temperature); break;
-      case 3 : setMarchSurfaceGroundTemperature(temperature); break;
-      case 4 : setAprilSurfaceGroundTemperature(temperature); break;
-      case 5 : setMaySurfaceGroundTemperature(temperature); break;
-      case 6 : setJuneSurfaceGroundTemperature(temperature); break;
-      case 7 : setJulySurfaceGroundTemperature(temperature); break;
-      case 8 : setAugustSurfaceGroundTemperature(temperature); break;
-      case 9 : setSeptemberSurfaceGroundTemperature(temperature); break;
-      case 10 : setOctoberSurfaceGroundTemperature(temperature); break;
-      case 11 : setNovemberSurfaceGroundTemperature(temperature); break;
-      case 12 : setDecemberSurfaceGroundTemperature(temperature); break;
-      default : LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month)); break;
+      case 1 : return setJanuarySurfaceGroundTemperature(temperature); break;
+      case 2 : return setFebruarySurfaceGroundTemperature(temperature); break;
+      case 3 : return setMarchSurfaceGroundTemperature(temperature); break;
+      case 4 : return setAprilSurfaceGroundTemperature(temperature); break;
+      case 5 : return setMaySurfaceGroundTemperature(temperature); break;
+      case 6 : return setJuneSurfaceGroundTemperature(temperature); break;
+      case 7 : return setJulySurfaceGroundTemperature(temperature); break;
+      case 8 : return setAugustSurfaceGroundTemperature(temperature); break;
+      case 9 : return setSeptemberSurfaceGroundTemperature(temperature); break;
+      case 10 : return setOctoberSurfaceGroundTemperature(temperature); break;
+      case 11 : return setNovemberSurfaceGroundTemperature(temperature); break;
+      case 12 : return setDecemberSurfaceGroundTemperature(temperature); break;
+      default : LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month)); return false; break;
     }
   }
 
-  void SiteGroundTemperatureShallow_Impl::setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature) {
+  bool SiteGroundTemperatureShallow_Impl::setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature) {
     return setTemperatureByMonth(month.value(), temperature);
   }
 
@@ -568,108 +580,108 @@ std::vector<double> SiteGroundTemperatureShallow::getAllMonthlyTemperatures() co
   return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->getAllMonthlyTemperatures();
 }
 
-void SiteGroundTemperatureShallow::setJanuarySurfaceGroundTemperature(double januarySurfaceGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setJanuarySurfaceGroundTemperature(januarySurfaceGroundTemperature);
+bool SiteGroundTemperatureShallow::setJanuarySurfaceGroundTemperature(double januarySurfaceGroundTemperature) {
+  return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setJanuarySurfaceGroundTemperature(januarySurfaceGroundTemperature);
 }
 
 void SiteGroundTemperatureShallow::resetJanuarySurfaceGroundTemperature() {
   getImpl<detail::SiteGroundTemperatureShallow_Impl>()->resetJanuarySurfaceGroundTemperature();
 }
 
-void SiteGroundTemperatureShallow::setFebruarySurfaceGroundTemperature(double februarySurfaceGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setFebruarySurfaceGroundTemperature(februarySurfaceGroundTemperature);
+bool SiteGroundTemperatureShallow::setFebruarySurfaceGroundTemperature(double februarySurfaceGroundTemperature) {
+  return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setFebruarySurfaceGroundTemperature(februarySurfaceGroundTemperature);
 }
 
 void SiteGroundTemperatureShallow::resetFebruarySurfaceGroundTemperature() {
   getImpl<detail::SiteGroundTemperatureShallow_Impl>()->resetFebruarySurfaceGroundTemperature();
 }
 
-void SiteGroundTemperatureShallow::setMarchSurfaceGroundTemperature(double marchSurfaceGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setMarchSurfaceGroundTemperature(marchSurfaceGroundTemperature);
+bool SiteGroundTemperatureShallow::setMarchSurfaceGroundTemperature(double marchSurfaceGroundTemperature) {
+  return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setMarchSurfaceGroundTemperature(marchSurfaceGroundTemperature);
 }
 
 void SiteGroundTemperatureShallow::resetMarchSurfaceGroundTemperature() {
   getImpl<detail::SiteGroundTemperatureShallow_Impl>()->resetMarchSurfaceGroundTemperature();
 }
 
-void SiteGroundTemperatureShallow::setAprilSurfaceGroundTemperature(double aprilSurfaceGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setAprilSurfaceGroundTemperature(aprilSurfaceGroundTemperature);
+bool SiteGroundTemperatureShallow::setAprilSurfaceGroundTemperature(double aprilSurfaceGroundTemperature) {
+  return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setAprilSurfaceGroundTemperature(aprilSurfaceGroundTemperature);
 }
 
 void SiteGroundTemperatureShallow::resetAprilSurfaceGroundTemperature() {
   getImpl<detail::SiteGroundTemperatureShallow_Impl>()->resetAprilSurfaceGroundTemperature();
 }
 
-void SiteGroundTemperatureShallow::setMaySurfaceGroundTemperature(double maySurfaceGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setMaySurfaceGroundTemperature(maySurfaceGroundTemperature);
+bool SiteGroundTemperatureShallow::setMaySurfaceGroundTemperature(double maySurfaceGroundTemperature) {
+  return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setMaySurfaceGroundTemperature(maySurfaceGroundTemperature);
 }
 
 void SiteGroundTemperatureShallow::resetMaySurfaceGroundTemperature() {
   getImpl<detail::SiteGroundTemperatureShallow_Impl>()->resetMaySurfaceGroundTemperature();
 }
 
-void SiteGroundTemperatureShallow::setJuneSurfaceGroundTemperature(double juneSurfaceGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setJuneSurfaceGroundTemperature(juneSurfaceGroundTemperature);
+bool SiteGroundTemperatureShallow::setJuneSurfaceGroundTemperature(double juneSurfaceGroundTemperature) {
+  return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setJuneSurfaceGroundTemperature(juneSurfaceGroundTemperature);
 }
 
 void SiteGroundTemperatureShallow::resetJuneSurfaceGroundTemperature() {
   getImpl<detail::SiteGroundTemperatureShallow_Impl>()->resetJuneSurfaceGroundTemperature();
 }
 
-void SiteGroundTemperatureShallow::setJulySurfaceGroundTemperature(double julySurfaceGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setJulySurfaceGroundTemperature(julySurfaceGroundTemperature);
+bool SiteGroundTemperatureShallow::setJulySurfaceGroundTemperature(double julySurfaceGroundTemperature) {
+  return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setJulySurfaceGroundTemperature(julySurfaceGroundTemperature);
 }
 
 void SiteGroundTemperatureShallow::resetJulySurfaceGroundTemperature() {
   getImpl<detail::SiteGroundTemperatureShallow_Impl>()->resetJulySurfaceGroundTemperature();
 }
 
-void SiteGroundTemperatureShallow::setAugustSurfaceGroundTemperature(double augustSurfaceGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setAugustSurfaceGroundTemperature(augustSurfaceGroundTemperature);
+bool SiteGroundTemperatureShallow::setAugustSurfaceGroundTemperature(double augustSurfaceGroundTemperature) {
+  return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setAugustSurfaceGroundTemperature(augustSurfaceGroundTemperature);
 }
 
 void SiteGroundTemperatureShallow::resetAugustSurfaceGroundTemperature() {
   getImpl<detail::SiteGroundTemperatureShallow_Impl>()->resetAugustSurfaceGroundTemperature();
 }
 
-void SiteGroundTemperatureShallow::setSeptemberSurfaceGroundTemperature(double septemberSurfaceGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setSeptemberSurfaceGroundTemperature(septemberSurfaceGroundTemperature);
+bool SiteGroundTemperatureShallow::setSeptemberSurfaceGroundTemperature(double septemberSurfaceGroundTemperature) {
+  return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setSeptemberSurfaceGroundTemperature(septemberSurfaceGroundTemperature);
 }
 
 void SiteGroundTemperatureShallow::resetSeptemberSurfaceGroundTemperature() {
   getImpl<detail::SiteGroundTemperatureShallow_Impl>()->resetSeptemberSurfaceGroundTemperature();
 }
 
-void SiteGroundTemperatureShallow::setOctoberSurfaceGroundTemperature(double octoberSurfaceGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setOctoberSurfaceGroundTemperature(octoberSurfaceGroundTemperature);
+bool SiteGroundTemperatureShallow::setOctoberSurfaceGroundTemperature(double octoberSurfaceGroundTemperature) {
+  return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setOctoberSurfaceGroundTemperature(octoberSurfaceGroundTemperature);
 }
 
 void SiteGroundTemperatureShallow::resetOctoberSurfaceGroundTemperature() {
   getImpl<detail::SiteGroundTemperatureShallow_Impl>()->resetOctoberSurfaceGroundTemperature();
 }
 
-void SiteGroundTemperatureShallow::setNovemberSurfaceGroundTemperature(double novemberSurfaceGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setNovemberSurfaceGroundTemperature(novemberSurfaceGroundTemperature);
+bool SiteGroundTemperatureShallow::setNovemberSurfaceGroundTemperature(double novemberSurfaceGroundTemperature) {
+  return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setNovemberSurfaceGroundTemperature(novemberSurfaceGroundTemperature);
 }
 
 void SiteGroundTemperatureShallow::resetNovemberSurfaceGroundTemperature() {
   getImpl<detail::SiteGroundTemperatureShallow_Impl>()->resetNovemberSurfaceGroundTemperature();
 }
 
-void SiteGroundTemperatureShallow::setDecemberSurfaceGroundTemperature(double decemberSurfaceGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setDecemberSurfaceGroundTemperature(decemberSurfaceGroundTemperature);
+bool SiteGroundTemperatureShallow::setDecemberSurfaceGroundTemperature(double decemberSurfaceGroundTemperature) {
+  return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setDecemberSurfaceGroundTemperature(decemberSurfaceGroundTemperature);
 }
 
 void SiteGroundTemperatureShallow::resetDecemberSurfaceGroundTemperature() {
   getImpl<detail::SiteGroundTemperatureShallow_Impl>()->resetDecemberSurfaceGroundTemperature();
 }
 
-void SiteGroundTemperatureShallow::setTemperatureByMonth(int month, double temperature) {
-  getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setTemperatureByMonth(month, temperature);
+bool SiteGroundTemperatureShallow::setTemperatureByMonth(int month, double temperature) {
+  return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setTemperatureByMonth(month, temperature);
 }
 
-void SiteGroundTemperatureShallow::setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature) {
-  getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setTemperatureByMonth(month, temperature);
+bool SiteGroundTemperatureShallow::setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature) {
+  return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setTemperatureByMonth(month, temperature);
 }
 
 void SiteGroundTemperatureShallow::resetTemperatureByMonth(int month) {

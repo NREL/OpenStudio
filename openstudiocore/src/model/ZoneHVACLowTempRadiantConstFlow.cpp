@@ -433,7 +433,7 @@ namespace detail {
     return result;
   }
 
-  void ZoneHVACLowTempRadiantConstFlow_Impl::setRatedFlowRate(boost::optional<double> ratedFlowRate) {
+  bool ZoneHVACLowTempRadiantConstFlow_Impl::setRatedFlowRate(boost::optional<double> ratedFlowRate) {
     bool result(false);
     if (ratedFlowRate) {
       result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedFlowRate, ratedFlowRate.get());
@@ -443,6 +443,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::resetRatedFlowRate() {
@@ -463,9 +464,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ZoneHVACLowTempRadiantConstFlow_Impl::setRatedPumpHead(double ratedPumpHead) {
+  bool ZoneHVACLowTempRadiantConstFlow_Impl::setRatedPumpHead(double ratedPumpHead) {
     bool result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedPumpHead, ratedPumpHead);
     OS_ASSERT(result);
+    return result;
   }
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::resetRatedPumpHead() {
@@ -473,7 +475,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ZoneHVACLowTempRadiantConstFlow_Impl::setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption) {
+  bool ZoneHVACLowTempRadiantConstFlow_Impl::setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption) {
     bool result(false);
     if (ratedPowerConsumption) {
       result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedPowerConsumption, ratedPowerConsumption.get());
@@ -483,6 +485,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::resetRatedPowerConsumption() {
@@ -515,9 +518,10 @@ namespace detail {
     return result;
   }
 
-  void ZoneHVACLowTempRadiantConstFlow_Impl::setCircuitLength(double circuitLength) {
+  bool ZoneHVACLowTempRadiantConstFlow_Impl::setCircuitLength(double circuitLength) {
     bool result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::CircuitLength, circuitLength);
     OS_ASSERT(result);
+    return result;
   }
 
   boost::optional<Schedule> ZoneHVACLowTempRadiantConstFlow_Impl::optionalAvailabilitySchedule() const {
@@ -755,8 +759,8 @@ bool ZoneHVACLowTempRadiantConstFlow::setCoolingCoil(HVACComponent& coolingCoil)
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setCoolingCoil(coolingCoil);
 }
 
-void ZoneHVACLowTempRadiantConstFlow::setRatedFlowRate(double ratedFlowRate) {
-  getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setRatedFlowRate(ratedFlowRate);
+bool ZoneHVACLowTempRadiantConstFlow::setRatedFlowRate(double ratedFlowRate) {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setRatedFlowRate(ratedFlowRate);
 }
 
 void ZoneHVACLowTempRadiantConstFlow::resetRatedFlowRate() {
@@ -771,16 +775,16 @@ void ZoneHVACLowTempRadiantConstFlow::resetPumpFlowRateSchedule() {
   getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->resetPumpFlowRateSchedule();
 }
 
-void ZoneHVACLowTempRadiantConstFlow::setRatedPumpHead(double ratedPumpHead) {
-  getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setRatedPumpHead(ratedPumpHead);
+bool ZoneHVACLowTempRadiantConstFlow::setRatedPumpHead(double ratedPumpHead) {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setRatedPumpHead(ratedPumpHead);
 }
 
 void ZoneHVACLowTempRadiantConstFlow::resetRatedPumpHead() {
   getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->resetRatedPumpHead();
 }
 
-void ZoneHVACLowTempRadiantConstFlow::setRatedPowerConsumption(double ratedPowerConsumption) {
-  getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setRatedPowerConsumption(ratedPowerConsumption);
+bool ZoneHVACLowTempRadiantConstFlow::setRatedPowerConsumption(double ratedPowerConsumption) {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setRatedPowerConsumption(ratedPowerConsumption);
 }
 
 void ZoneHVACLowTempRadiantConstFlow::resetRatedPowerConsumption() {
@@ -807,8 +811,8 @@ bool ZoneHVACLowTempRadiantConstFlow::setNumberofCircuits(std::string numberofCi
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setNumberofCircuits(numberofCircuits);
 }
 
-void ZoneHVACLowTempRadiantConstFlow::setCircuitLength(double circLength) {
-  getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setCircuitLength(circLength);
+bool ZoneHVACLowTempRadiantConstFlow::setCircuitLength(double circLength) {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setCircuitLength(circLength);
 }
 
 boost::optional<ThermalZone> ZoneHVACLowTempRadiantConstFlow::thermalZone() const
@@ -832,5 +836,4 @@ ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(std::shared_ptr
 /// @endcond
 
 } // model
-} // openstudio
-
+} // openstudio

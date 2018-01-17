@@ -1084,7 +1084,7 @@ void HVACControlsController::update()
         m_mechanicalVentilationView->dcvButton->bind(
           controllerMechanicalVentilation,
           std::bind(&model::ControllerMechanicalVentilation::demandControlledVentilation, controllerMechanicalVentilation),
-          boost::optional<BoolSetter>(std::bind(&model::ControllerMechanicalVentilation::setDemandControlledVentilation, controllerMechanicalVentilation, std::placeholders::_1)),
+          boost::optional<BoolSetter>(std::bind(&model::ControllerMechanicalVentilation::setDemandControlledVentilationNoFail, controllerMechanicalVentilation, std::placeholders::_1)),
           boost::optional<NoFailAction>(std::bind(&model::ControllerMechanicalVentilation::resetDemandControlledVentilation, controllerMechanicalVentilation)),
           boost::optional<BasicQuery>(std::bind(&model::ControllerMechanicalVentilation::isDemandControlledVentilationDefaulted, controllerMechanicalVentilation))
         );
@@ -1504,7 +1504,7 @@ void HVACLayoutController::updateLater()
   QTimer::singleShot(0,this,SLOT(update()));
 }
 
-SystemAvailabilityVectorController::SystemAvailabilityVectorController() 
+SystemAvailabilityVectorController::SystemAvailabilityVectorController()
   : ModelObjectVectorController()
 {
   m_reportItemsMutex = new QMutex();

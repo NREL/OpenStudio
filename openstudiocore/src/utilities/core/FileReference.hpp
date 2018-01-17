@@ -44,9 +44,9 @@
 namespace openstudio {
 
 /** \class FileReferenceType
- *  \brief Type of files we expect to handle with FileReference. 
- *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro 
- *  call is: 
+ *  \brief Type of files we expect to handle with FileReference.
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
+ *  call is:
  *  \code
 OPENSTUDIO_ENUM( FileReferenceType,
     ((Unknown)(unknown))
@@ -137,7 +137,7 @@ class UTILITIES_API FileReference {
 
   bool makePathAbsolute(const openstudio::path& searchDirectory);
 
-  /** Save the path as relative to basePath, or just keep the file name and extension if 
+  /** Save the path as relative to basePath, or just keep the file name and extension if
    *  basePath.empty(). */
   bool makePathRelative(const openstudio::path& basePath=openstudio::path());
 

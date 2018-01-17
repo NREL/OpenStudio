@@ -69,7 +69,7 @@ class MODEL_API CoolingTowerVariableSpeed : public StraightComponent {
 
   void resetModelType();
 
-  /** Returns CoolingTowerPerformanceYorkCalc, CoolingTowerPerformanceCoolTools, or boost::none 
+  /** Returns CoolingTowerPerformanceYorkCalc, CoolingTowerPerformanceCoolTools, or boost::none
    */
   boost::optional<ModelObject> modelCoefficient() const;
 
@@ -167,13 +167,13 @@ class MODEL_API CoolingTowerVariableSpeed : public StraightComponent {
 
   bool isEvaporationLossFactorDefaulted() const;
 
-  void setEvaporationLossFactor(double evaporationLossFactor);
+  bool setEvaporationLossFactor(double evaporationLossFactor);
 
   void resetEvaporationLossFactor();
 
   boost::optional<double> driftLossPercent() const;
 
-  void setDriftLossPercent(double driftLossPercent);
+  bool setDriftLossPercent(double driftLossPercent);
 
   void resetDriftLossPercent();
 
@@ -262,5 +262,4 @@ typedef std::vector<CoolingTowerVariableSpeed> CoolingTowerVariableSpeedVector;
 } // model
 } // openstudio
 
-#endif // MODEL_COOLINGTOWERVARIABLESPEED_HPP
-
+#endif // MODEL_COOLINGTOWERVARIABLESPEED_HPP

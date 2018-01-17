@@ -78,7 +78,7 @@ class MODEL_API CoilHeatingGasMultiStageStageData : public ModelObject {
 
   void autosizeNominalCapacity();
 
-  void setParasiticElectricLoad(double StageParasiticElectricLoad);
+  bool setParasiticElectricLoad(double StageParasiticElectricLoad);
 
   //@}
   /** @name Other */
@@ -121,4 +121,3 @@ typedef std::vector<CoilHeatingGasMultiStageStageData> CoilHeatingGasMultiStageS
 } // openstudio
 
 #endif // MODEL_COILHEATINGGASMULTISTAGESTAGEDATA_HPP
-

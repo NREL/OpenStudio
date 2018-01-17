@@ -85,8 +85,8 @@ bool Relationship::setRelatedModelObject(boost::optional<ModelObject> relatedMod
 {
   assertSingular(true);
 
-  bool result = false;  
-  if (isSettable()) { 
+  bool result = false;
+  if (isSettable()) {
 
     // handle ComponentData set
     if (relatedModelObject && relatedModelObject->optionalCast<ComponentData>()) {
@@ -99,7 +99,7 @@ bool Relationship::setRelatedModelObject(boost::optional<ModelObject> relatedMod
 
     QVariant value = QVariant::fromValue(relatedModelObject);
     m_object.getImpl<detail::ModelObject_Impl>()->setProperty(m_name.c_str(), value);
-    
+
     // check set
     boost::optional<ModelObject> newValue = this->relatedModelObject();
     if (relatedModelObject){
@@ -132,11 +132,11 @@ bool Relationship::setRelatedModelObjects(std::vector<ModelObject> relatedModelO
 {
   assertSingular(false);
 
-  bool result = false;  
-  if (isSettable()) { 
+  bool result = false;
+  if (isSettable()) {
     QVariant value = QVariant::fromValue(relatedModelObjects);
     m_object.getImpl<detail::ModelObject_Impl>()->setProperty(m_name.c_str(), value);
-    
+
     // check set
     std::vector<ModelObject> newValue = this->relatedModelObjects();
     if (newValue.size() == relatedModelObjects.size()){
@@ -159,7 +159,7 @@ bool Relationship::clearRelatedModelObjects()
 }
 
 // only called by ModelObject_Impl--no need to validate arguments
-Relationship::Relationship(const ModelObject& object,const std::string& name) 
+Relationship::Relationship(const ModelObject& object,const std::string& name)
   : m_object(object), m_name(name)
 {
   const QMetaObject* metaObject = m_object.getImpl<detail::ModelObject_Impl>()->metaObject();
@@ -169,14 +169,14 @@ Relationship::Relationship(const ModelObject& object,const std::string& name)
 void Relationship::assertSingular(bool singular) const {
   if (singular) {
     if (!isSingular()) {
-      LOG_AND_THROW("Relationship named '" << m_name << "', and associated with ModelObject" << 
+      LOG_AND_THROW("Relationship named '" << m_name << "', and associated with ModelObject" <<
         m_object.briefDescription() << ", is singular but is being used in a plural contex.");
     }
   } else {
     if (isSingular()) {
-      LOG_AND_THROW("Relationship named '" << m_name << "', and associated with ModelObject" << 
+      LOG_AND_THROW("Relationship named '" << m_name << "', and associated with ModelObject" <<
         m_object.briefDescription() << ", is plural but is being used in a singular contex.");
-    }    
+    }
   }
 }
 

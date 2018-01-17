@@ -47,7 +47,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateThermalStorageIceDetailed( 
+boost::optional<IdfObject> ForwardTranslator::translateThermalStorageIceDetailed(
     ThermalStorageIceDetailed & modelObject)
 {
   IdfObject idfObject(IddObjectType::ThermalStorage_Ice_Detailed);

@@ -125,7 +125,7 @@ namespace detail {
 
     void autocalculateRatedEvaporatorAirFlowRate();
 
-    void setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP);
+    bool setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP);
 
     bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
 
@@ -165,4 +165,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILWATERHEATINGAIRTOWATERHEATPUMPWRAPPED_IMPL_HPP
-

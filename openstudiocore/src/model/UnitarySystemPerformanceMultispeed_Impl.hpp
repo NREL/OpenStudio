@@ -36,7 +36,7 @@ namespace model {
 
 
 namespace detail {
-  
+
   /** UnitarySystemPerformanceMultispeed_Impl is a ModelObject_Impl that is the implementation class for UnitarySystemPerformanceMultispeed.*/
   class MODEL_API UnitarySystemPerformanceMultispeed_Impl : public ModelObject_Impl {
    public:

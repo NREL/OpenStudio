@@ -41,12 +41,12 @@ TEST_F(ModelFixture,CoilCoolingDXVariableSpeed)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
-     CoilCoolingDXVariableSpeed coil(m); 
+  ASSERT_EXIT (
+  {
+     Model m;
+     CoilCoolingDXVariableSpeed coil(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -63,12 +63,12 @@ TEST_F(ModelFixture, CoilCoolingDXVariableSpeed_Speeds)
   coil.addSpeed(speed2);
 
   ASSERT_EQ(2u,coil.speeds().size());
-  
+
 }
 
 TEST_F(ModelFixture,CoilCoolingDXVariableSpeed_Remove)
 {
-  Model m; 
+  Model m;
   auto count = m.modelObjects().size();
 
   CoilCoolingDXVariableSpeed coil(m);

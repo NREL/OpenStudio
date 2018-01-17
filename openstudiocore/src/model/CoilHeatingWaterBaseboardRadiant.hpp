@@ -99,7 +99,7 @@ class MODEL_API CoilHeatingWaterBaseboardRadiant : public StraightComponent {
 
   bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
 
-  void setMaximumWaterFlowRate(double maximumWaterFlowRate);
+  bool setMaximumWaterFlowRate(double maximumWaterFlowRate);
 
   void autosizeMaximumWaterFlowRate();
 
@@ -141,4 +141,3 @@ typedef std::vector<CoilHeatingWaterBaseboardRadiant> CoilHeatingWaterBaseboardR
 } // openstudio
 
 #endif // MODEL_COILHEATINGWATERBASEBOARDRADIANT_HPP
-

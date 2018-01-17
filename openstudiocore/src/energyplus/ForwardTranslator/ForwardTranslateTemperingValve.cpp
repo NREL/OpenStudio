@@ -43,7 +43,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateTemperingValve( 
+boost::optional<IdfObject> ForwardTranslator::translateTemperingValve(
     TemperingValve & modelObject)
 {
   IdfObject idfObject(IddObjectType::TemperingValve);
@@ -72,17 +72,17 @@ boost::optional<IdfObject> ForwardTranslator::translateTemperingValve(
 
   // Stream2SourceNodeName
   if( auto node = modelObject.stream2SourceNode() ) {
-    idfObject.setString(TemperingValveFields::Stream2SourceNodeName,node->name().get()); 
+    idfObject.setString(TemperingValveFields::Stream2SourceNodeName,node->name().get());
   }
 
   // TemperatureSetpointNodeName
   if( auto node = modelObject.temperatureSetpointNode() ) {
-    idfObject.setString(TemperingValveFields::TemperatureSetpointNodeName,node->name().get()); 
+    idfObject.setString(TemperingValveFields::TemperatureSetpointNodeName,node->name().get());
   }
 
   // PumpOutletNodeName
   if( auto node = modelObject.pumpOutletNode() ) {
-    idfObject.setString(TemperingValveFields::PumpOutletNodeName,node->name().get()); 
+    idfObject.setString(TemperingValveFields::PumpOutletNodeName,node->name().get());
   }
 
   return idfObject;

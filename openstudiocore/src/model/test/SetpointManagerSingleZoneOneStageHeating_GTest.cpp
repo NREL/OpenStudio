@@ -43,12 +43,12 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_DefaultConstructor
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model m;
     SetpointManagerSingleZoneOneStageHeating testObject(m);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }

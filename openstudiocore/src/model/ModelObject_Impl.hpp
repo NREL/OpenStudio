@@ -68,12 +68,12 @@ namespace detail {
    *  should provide an implementation class that derives from ModelObject_Impl. */
   class MODEL_API ModelObject_Impl : public openstudio::detail::WorkspaceObject_Impl {
 
-    // 
-    // 
-    // 
+    //
+    //
+    //
 
-    // 
-    // 
+    //
+    //
    public:
 
     /** @name Constructors and Destructors */
@@ -223,7 +223,7 @@ namespace detail {
     //@{
 
     /** Return the ScheduleTypeKeys indicating how schedule is used in this object. If schedule is not directly
-     *  used by this object, return value will be .empty(). 
+     *  used by this object, return value will be .empty().
      *
      *  REIMPLEMENT IN ALL CONCRETE MODELOBJECTS THAT CAN POINT TO SCHEDULES. */
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
@@ -241,12 +241,12 @@ namespace detail {
     //@{
 
     // Nano::Signal<void(const QVariantMap&)> reportProperties;
-    
+
     //@}
 
     // void requestProperties(const QStringList& names);
 
-    // void setProperties(const QVariantMap& properties);
+    // bool setProperties(const QVariantMap& properties);
 
     /** Gets the autosized component value from the sql file **/
     boost::optional<double> getAutosizedValue(std::string valueName, std::string unitString) const;
@@ -261,17 +261,17 @@ namespace detail {
      *  be used for defaulted or required boolean fields. */
     bool getBooleanFieldValue(unsigned index) const;
 
-    /** Set a bool for field index. Throws if unsuccessful. Should only be used for defaulted
+    /** Set a bool for field index. Throws if unsuccessful (and returns false). Should only be used for defaulted
      *  or required boolean fields. */
-    void setBooleanFieldValue(unsigned index, bool value);
+    bool setBooleanFieldValue(unsigned index, bool value);
 
     /** This is solely to prevent implicit conversion of types to bool. This will cause a link time
      *  error if anything other than a bool is used for value. This has no implementation. */
     template <class T>
-    void setBooleanFieldValue(unsigned index, const T& value);
+    bool setBooleanFieldValue(unsigned index, const T& value);
 
-    /** Sets index to point to schedule if schedule's ScheduleTypeLimits are compatible with the 
-     *  ScheduleType in the ScheduleTypeRegistry for (className,scheduleDisplayName), or if 
+    /** Sets index to point to schedule if schedule's ScheduleTypeLimits are compatible with the
+     *  ScheduleType in the ScheduleTypeRegistry for (className,scheduleDisplayName), or if
      *  schedule's ScheduleTypeLimits have not yet been set (in which case the ScheduleTypeRegistry
      *  is used to retrieve or create an appropriate one). */
     bool setSchedule(unsigned index,

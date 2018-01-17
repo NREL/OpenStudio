@@ -48,7 +48,7 @@ class LoadsView : public ModelSubTabView
   public:
 
     LoadsView(bool isIP,
-              const openstudio::model::Model& model, 
+              const openstudio::model::Model& model,
               QWidget * parent = nullptr);
 
     virtual ~LoadsView() {}
@@ -105,7 +105,7 @@ class LoadsInspectorView : public ModelObjectInspectorView
     void showDefaultView();
 
   private:
-    
+
     bool m_isIP;
 
   public slots:

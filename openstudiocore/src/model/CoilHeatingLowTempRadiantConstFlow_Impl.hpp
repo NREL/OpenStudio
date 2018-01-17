@@ -69,11 +69,11 @@ namespace detail {
     virtual IddObjectType iddObjectType() const override;
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
-    
+
     virtual unsigned inletPort() override;
 
-    virtual unsigned outletPort() override;    
-    
+    virtual unsigned outletPort() override;
+
     virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
 
@@ -112,7 +112,7 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-    
+
     bool addToNode(Node & node) override;
 
     //@}

@@ -46,7 +46,7 @@
 #include <ostream>
 #include <vector>
 
-namespace openstudio { 
+namespace openstudio {
 
 // forward declarations
 class IdfObject;
@@ -57,12 +57,12 @@ class ValidityReport;
 class DataError;
 class Quantity;
 class OSOptionalQuantity;
-  
+
 // private namespace
-namespace detail { 
+namespace detail {
 
   /** Implementation of IdfObject. */
-  class UTILITIES_API IdfObject_Impl : public std::enable_shared_from_this<IdfObject_Impl>, 
+  class UTILITIES_API IdfObject_Impl : public std::enable_shared_from_this<IdfObject_Impl>,
                                        public Nano::Observer {
    public:
 
@@ -90,7 +90,7 @@ namespace detail {
     //@}
     /** @name Getters */
     //@{
-      
+
     /** Returns the handle associated with the object. */
     Handle handle() const;
 
@@ -101,11 +101,11 @@ namespace detail {
     std::string comment() const;
 
     /** Returns the comment associated with field index, if one exists. Optionally, if returnDefault
-     *  is passed in as true, and no field comment exists for index, fieldComment will return a 
+     *  is passed in as true, and no field comment exists for index, fieldComment will return a
      *  comment-ized version of the IddField name, following a commonly used Idf convention. */
     boost::optional<std::string> fieldComment(unsigned index, bool returnDefault=false) const;
 
-    /** Get the name of the object, if it exists. Optionally, if returnDefault is passed in as true, 
+    /** Get the name of the object, if it exists. Optionally, if returnDefault is passed in as true,
      *  name will return the default name, if it exists. */
     boost::optional<std::string> name(bool returnDefault=false) const;
 
@@ -120,10 +120,10 @@ namespace detail {
     /** Returns true if the field is empty. */
     bool isEmpty(unsigned index) const;
 
-    /** Get the value of field index, if index < numFields(). Optionally, if returnDefault is 
-     *  passed in as true, getString will return the default value for non-existent 
-     *  (non-extensible) fields and fields with empty data, if a default exists. 
-     *  If the default does not exist or is not requested and the field is empty 
+    /** Get the value of field index, if index < numFields(). Optionally, if returnDefault is
+     *  passed in as true, getString will return the default value for non-existent
+     *  (non-extensible) fields and fields with empty data, if a default exists.
+     *  If the default does not exist or is not requested and the field is empty
      *  then returnUninitializedEmpty is used to determine if an uninitialized result is returned.
      */
     virtual boost::optional<std::string> getString(unsigned index,
@@ -166,8 +166,8 @@ namespace detail {
 
     /** Get value of the field at index, converted to qurl, if possible. Returns an
      *  uninitialized object if the conversion is unsuccessful for any reason. Logs a warning
-     *  if the conversion fails, the field is URLType. Optionally, if returnDefault is passed 
-     *  in as true, getURL will return the default value for non-existent (non-extensible) 
+     *  if the conversion fails, the field is URLType. Optionally, if returnDefault is passed
+     *  in as true, getURL will return the default value for non-existent (non-extensible)
      *  fields and fields with empty data, if a url default exists. */
     boost::optional<QUrl> getURL(unsigned index, bool returnDefault=false) const;
 
@@ -192,14 +192,14 @@ namespace detail {
     bool setFieldComment(unsigned index, const std::string& cmnt);
     bool setFieldComment(unsigned index, const std::string& cmnt, bool checkValidity);
 
-    /** Sets the name field if it exists, returning the actual name string set. Returns false 
+    /** Sets the name field if it exists, returning the actual name string set. Returns false
      *  otherwise. The return value and newName may differ (by an appended integer) if a
-     *  conflict with newName was detected. Name conflicts will not be automatically avoided 
+     *  conflict with newName was detected. Name conflicts will not be automatically avoided
      *  in IDF (text-only) mode. */
     virtual boost::optional<std::string> setName(const std::string& newName);
     virtual boost::optional<std::string> setName(const std::string& newName, bool checkValidity);
 
-    /** Sets the name field to a new, unique name, if the name field exists and (is empty or 
+    /** Sets the name field to a new, unique name, if the name field exists and (is empty or
      *  overwrite == true). Returns false otherwise. Created name is returned. */
     virtual boost::optional<std::string> createName();
     virtual boost::optional<std::string> createName(bool overwrite);
@@ -210,7 +210,7 @@ namespace detail {
     virtual bool setString(unsigned index, const std::string& value, bool checkValidity);
 
     /** Sets the field at index to value, if possible. Returns false if the value cannot be set for
-     *  any reason. (Perhaps index >= numFields(), the field is not RealType, or the value is out of 
+     *  any reason. (Perhaps index >= numFields(), the field is not RealType, or the value is out of
      *  bounds per IddField.properties()). */
     bool setDouble(unsigned index, double value);
     bool setDouble(unsigned index, double value, bool checkValidity);
@@ -221,13 +221,13 @@ namespace detail {
     bool setQuantity (unsigned index, const Quantity& q, bool checkValidity);
 
     /** Sets the field at index to value, if possible. Returns false if the value cannot be set for
-     *  any reasons. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out 
+     *  any reasons. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out
      *  of bounds per IddField.properties()). */
     bool setUnsigned(unsigned index, unsigned value);
     bool setUnsigned(unsigned index, unsigned value, bool checkValidity);
 
     /** Sets the field at index to value, if possible. Returns false if the value cannot be set for
-     *  any reasons. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out 
+     *  any reasons. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out
      *  of bounds per IddField.properties()). */
     bool setInt(unsigned index, int value);
     bool setInt(unsigned index, int value, bool checkValidity);
@@ -249,13 +249,13 @@ namespace detail {
     IdfExtensibleGroup insertExtensibleGroup(unsigned groupIndex, const std::vector<std::string>& values);
     IdfExtensibleGroup insertExtensibleGroup(unsigned groupIndex, const std::vector<std::string>& values, bool checkValidity);
 
-    /** Pops the final extensible group from the object, if possible. Returns the popped data if 
-     *  successful. Otherwise, the returned vector will be empty. Internally IdfObject might call 
+    /** Pops the final extensible group from the object, if possible. Returns the popped data if
+     *  successful. Otherwise, the returned vector will be empty. Internally IdfObject might call
      *  this function to rewind an operation that has gone bad half way through a calculation. */
     virtual std::vector<std::string> popExtensibleGroup();
     virtual std::vector<std::string> popExtensibleGroup(bool checkValidity);
 
-    /** Erases the extensible group at groupIndex, if possible. Returns the erased data, and 
+    /** Erases the extensible group at groupIndex, if possible. Returns the erased data, and
      *  preserves the relative order of the remaining data if successful. Otherwise, the returned
      *  vector will be empty. */
     std::vector<std::string> eraseExtensibleGroup(unsigned groupIndex);
@@ -297,7 +297,7 @@ namespace detail {
     bool isObjectListField(unsigned index) const;
 
     /** Returns the indices of all fields that can point to other objects. WorkspaceObject manages
-     *  all \object-list fields whose reference lists are unambiguously associated with an index-0 
+     *  all \object-list fields whose reference lists are unambiguously associated with an index-0
      *  name field. */
     std::vector<unsigned> objectListFields() const;
 
@@ -318,17 +318,17 @@ namespace detail {
     /** Returns a ValidityReport for this IdfObject containing all errors at or below level. */
     ValidityReport validityReport(StrictnessLevel level,bool checkNames) const;
 
-    /** Checks for equality of data (non-managedObjectList) fields. Prerequisite: iddObject()s 
-     *  must be equal. For objects with handle fields, checks for equality of handle OR equality 
+    /** Checks for equality of data (non-managedObjectList) fields. Prerequisite: iddObject()s
+     *  must be equal. For objects with handle fields, checks for equality of handle OR equality
      *  of name. */
     bool dataFieldsEqual(const IdfObject& other) const;
 
-    /** Checks for equality of objectListFields(). Prerequisite: iddObject()s must be 
+    /** Checks for equality of objectListFields(). Prerequisite: iddObject()s must be
      *  equal. */
     bool objectListFieldsEqual(const IdfObject& other) const;
 
-    /** Returns true if for all objectListFields() that for both objects are non-empty, 
-     *  the values are equal (using the same criteria as objectListFieldsEqual). 
+    /** Returns true if for all objectListFields() that for both objects are non-empty,
+     *  the values are equal (using the same criteria as objectListFieldsEqual).
      *  Prerequisite: iddObject()s must be equal. */
     bool objectListFieldsNonConflicting(const IdfObject& other) const;
 
@@ -347,12 +347,12 @@ namespace detail {
     /** Serialize this object to os as Idf text. */
     std::ostream& print(std::ostream& os) const;
 
-    /** Serialize just the preceding comments and name of this IdfObject in the format used by 
-     *  full object print. If hasFields, the name is followed by a ','. Otherwise, the name is 
+    /** Serialize just the preceding comments and name of this IdfObject in the format used by
+     *  full object print. If hasFields, the name is followed by a ','. Otherwise, the name is
      *  followed by a ';'. */
     std::ostream& printName(std::ostream& os, bool hasFields=true) const;
 
-    /** Serialize field index in the format used by full object print. If not isLastField, the 
+    /** Serialize field index in the format used by full object print. If not isLastField, the
      *  field value is followed by a ','. Otherwise, the object is ended by using a ';'. */
     std::ostream& printField(std::ostream& os, unsigned index, bool isLastField=false) const;
 
@@ -362,10 +362,10 @@ namespace detail {
 
     /** Get an object that wraps this impl. */
     template<typename T>
-    T getObject() const { 
+    T getObject() const {
       T result(std::dynamic_pointer_cast<typename T::ImplType>(
                  std::const_pointer_cast<IdfObject_Impl>(shared_from_this())));
-      return result; 
+      return result;
     }
 
     //@}
@@ -418,7 +418,7 @@ namespace detail {
     std::vector<std::string> fieldComments() const;
 
     virtual OSOptionalQuantity getQuantityFromDouble(unsigned index, boost::optional<double> value, bool returnIP) const;
-    
+
     virtual boost::optional<double> getDoubleFromQuantity(unsigned index, const Quantity& q) const;
 
     // QUERY HELPERS
@@ -431,7 +431,7 @@ namespace detail {
     virtual bool fieldDataIsCorrectType(unsigned index) const;
 
     virtual bool fieldIsNonnullIfRequired(unsigned index) const;
-    
+
    private:
 
     IdfObject_Impl(){}
@@ -441,12 +441,12 @@ namespace detail {
     /** Minimal constructor from iddObject for use by IdfObject_Impl::load. */
     IdfObject_Impl(const IddObject& iddObject, bool fastName, bool minimal);
 
-    // Resizes m_fields to m_iddObject.numFieldsInDefaultObject(). Called to make sure that 
+    // Resizes m_fields to m_iddObject.numFieldsInDefaultObject(). Called to make sure that
     // IdfObject satisfies Strictness::None.
     void resizeToMinFields();
 
-    /* Parse IdfObject text. If getIddFromFactory, will first search for the IddObject using the 
-     * IddFactory, otherwise, assumes that m_iddObject was provided and is correct. (Will log 
+    /* Parse IdfObject text. If getIddFromFactory, will first search for the IddObject using the
+     * IddFactory, otherwise, assumes that m_iddObject was provided and is correct. (Will log
      * warning if the names do not match.) */
     void parse(const std::string& text, bool getIddFromFactory);
 

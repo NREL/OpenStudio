@@ -217,11 +217,11 @@ namespace detail {
 
     void resetEvaporationLossMode();
 
-    void setEvaporationLossFactor(boost::optional<double> evaporationLossFactor);
+    bool setEvaporationLossFactor(boost::optional<double> evaporationLossFactor);
 
     void resetEvaporationLossFactor();
 
-    void setDriftLossPercent(double driftLossPercent);
+    bool setDriftLossPercent(double driftLossPercent);
 
     void resetDriftLossPercent();
 
@@ -259,5 +259,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_EVAPORATIVEFLUIDCOOLERSINGLESPEED_IMPL_HPP
-
+#endif // MODEL_EVAPORATIVEFLUIDCOOLERSINGLESPEED_IMPL_HPP

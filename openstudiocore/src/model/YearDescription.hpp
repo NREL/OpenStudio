@@ -82,7 +82,7 @@ class MODEL_API YearDescription : public ParentObject {
   /** @name Setters */
   //@{
 
-  void setCalendarYear(int calendarYear);
+  bool setCalendarYear(int calendarYear);
 
   void resetCalendarYear();
 
@@ -103,10 +103,10 @@ class MODEL_API YearDescription : public ParentObject {
   /// Will throw if dayOfMonth is not appropriate for monthOfYear.
   openstudio::Date makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth);
   openstudio::Date makeDate(unsigned monthOfYear, unsigned dayOfMonth);
-    
+
   /// nth weekday of month generators
   openstudio::Date makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear);
-  
+
   /// day of year
   openstudio::Date makeDate(unsigned dayOfYear);
 

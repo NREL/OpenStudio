@@ -53,7 +53,7 @@ class MODEL_API ZoneHVACWaterToAirHeatPump : public ZoneHVACComponent {
   /** @name Constructors and Destructors */
   //@{
 
-  ZoneHVACWaterToAirHeatPump(const Model& model,   
+  ZoneHVACWaterToAirHeatPump(const Model& model,
                                     Schedule & availabilitySchedule,
                                     HVACComponent & supplyAirFan,
                                     HVACComponent & heatingCoil,
@@ -151,15 +151,15 @@ class MODEL_API ZoneHVACWaterToAirHeatPump : public ZoneHVACComponent {
   bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
 
   void resetSupplyAirFlowRateDuringCoolingOperation();
-  
+
   void autosizeSupplyAirFlowRateDuringCoolingOperation();
 
   bool setSupplyAirFlowRateDuringHeatingOperation(boost::optional<double> supplyAirFlowRateDuringHeatingOperation);
 
   bool setSupplyAirFlowRateDuringHeatingOperation(double supplyAirFlowRateDuringHeatingOperation);
-  
+
   void resetSupplyAirFlowRateDuringHeatingOperation();
-  
+
   void autosizeSupplyAirFlowRateDuringHeatingOperation();
 
   bool setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisNeeded);
@@ -175,7 +175,7 @@ class MODEL_API ZoneHVACWaterToAirHeatPump : public ZoneHVACComponent {
   bool setOutdoorAirFlowRateDuringCoolingOperation(double outdoorAirFlowRateDuringCoolingOperation);
 
   void resetOutdoorAirFlowRateDuringCoolingOperation();
-  
+
   void autosizeOutdoorAirFlowRateDuringCoolingOperation();
 
   bool setOutdoorAirFlowRateDuringHeatingOperation(boost::optional<double> outdoorAirFlowRateDuringHeatingOperation);
@@ -183,7 +183,7 @@ class MODEL_API ZoneHVACWaterToAirHeatPump : public ZoneHVACComponent {
   bool setOutdoorAirFlowRateDuringHeatingOperation(double outdoorAirFlowRateDuringHeatingOperation);
 
   void resetOutdoorAirFlowRateDuringHeatingOperation();
-  
+
   void autosizeOutdoorAirFlowRateDuringHeatingOperation();
 
   bool setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(boost::optional<double> outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded);
@@ -229,9 +229,9 @@ class MODEL_API ZoneHVACWaterToAirHeatPump : public ZoneHVACComponent {
   bool setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater);
 
   bool setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
-  
+
   void resetMaximumSupplyAirTemperaturefromSupplementalHeater();
-  
+
   void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 
   bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(boost::optional<double> maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);

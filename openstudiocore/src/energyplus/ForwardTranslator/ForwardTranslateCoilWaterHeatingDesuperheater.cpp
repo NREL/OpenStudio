@@ -203,7 +203,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilWaterHeatingDesuperhe
   if (d) {
     idfObject.setDouble(Coil_WaterHeating_DesuperheaterFields::OffCycleParasiticElectricLoad,d.get());
   }
-  
+
   return idfObject;
 }
 

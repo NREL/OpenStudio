@@ -37,7 +37,7 @@
 
 #include <jsoncpp/json.h>
 
-#include <nano/nano_signal_slot.hpp> 
+#include <nano/nano_signal_slot.hpp>
 
 namespace openstudio{
 namespace detail {
@@ -72,7 +72,7 @@ namespace detail {
     Nano::Signal<void()> onChange;
 
   protected:
-    
+
     void onUpdate();
 
   private:

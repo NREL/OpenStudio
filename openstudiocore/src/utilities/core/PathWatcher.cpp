@@ -40,7 +40,7 @@ namespace openstudio {
   /// constructor
   PathWatcher::PathWatcher(const openstudio::path& p, int msec)
     : m_impl(new QFileSystemWatcher()),
-    m_enabled(true), m_isDirectory(openstudio::filesystem::is_directory(p) || toString(p.filename())=="." || toString(p.filename())=="/"), 
+    m_enabled(true), m_isDirectory(openstudio::filesystem::is_directory(p) || toString(p.filename())=="." || toString(p.filename())=="/"),
     m_exists(openstudio::filesystem::exists(p)), m_dirty(false),
     m_checksum(openstudio::checksum(p)), m_path(p), m_msec(msec)
   {

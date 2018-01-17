@@ -34,7 +34,7 @@
 
 using openstudio::commentRegex::commentWhitespaceOnlyBlock;
 
-TEST_F(IdfFixture, MultipleFieldsPerLine) 
+TEST_F(IdfFixture, MultipleFieldsPerLine)
 {
 
 }

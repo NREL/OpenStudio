@@ -21,12 +21,12 @@
 //  #include <model/Relationship.hpp>
   #include <model/GenericModelObject.hpp>
   #include <model/GenericModelObject_Impl.hpp>
-  
+
   #include <model/FileOperations.hpp>
 
   // central list of all concrete ModelObject header files (_Impl and non-_Impl)
   #include <model/ConcreteModelObjects.hpp>
-  
+
   #include <utilities/data/Attribute.hpp>
   #include <utilities/data/EndUses.hpp>
 
@@ -69,7 +69,7 @@
 
 #if defined SWIGRUBY
 
-  %define MODELOBJECT_EXTENSION(_name) 
+  %define MODELOBJECT_EXTENSION(_name)
   %init %{
     rb_eval_string("OpenStudio::IdfObject.class_eval { define_method(:to_" #_name ") { OpenStudio::Model::to" #_name "(self); } }");
     rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:get" #_name ") { |handle| OpenStudio::Model::get" #_name "(self, handle); } }");
@@ -79,7 +79,7 @@
   %}
   %enddef
 
-  %define UNIQUEMODELOBJECT_EXTENSION(_name) 
+  %define UNIQUEMODELOBJECT_EXTENSION(_name)
   %init %{
     rb_eval_string("OpenStudio::IdfObject.class_eval { define_method(:to_" #_name ") { OpenStudio::Model::to" #_name "(self); } }");
     rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:get" #_name ") { OpenStudio::Model::get" #_name "(self); } }");
@@ -87,7 +87,7 @@
   %}
   %enddef
 
-  %define MODELEXTENSIBLEGROUP_EXTENSION(_name) 
+  %define MODELEXTENSIBLEGROUP_EXTENSION(_name)
   %init %{
     rb_eval_string("OpenStudio::IdfExtensibleGroup.class_eval { define_method(:to_" #_name ") { OpenStudio::Model::to" #_name "(self); } }");
   %}
@@ -101,19 +101,19 @@
   // extensions in C# should probably not have to_name added to IdfObject
   // user should have to do idfObject.to_ModelObject.get.to_name
 
-  %define MODELOBJECT_EXTENSION(_name) 
+  %define MODELOBJECT_EXTENSION(_name)
     //%pragma(csharp) imclasscode=%{
     %typemap(csimports) openstudio::model::##_name %{
       using System;
       using System.Runtime.InteropServices;
-      
+
       public partial class IdfObject {
         public Optional##_name to_##_name()
         {
           return OpenStudio.##_csharp_module_name##.to##_name(this);
         }
       }
-      
+
       public partial class Model : Workspace {
         public _name##Vector get##_name##s()
         {
@@ -124,38 +124,38 @@
         {
           return OpenStudio.##_csharp_module_name##.get##_name##(this, handle);
         }
-        
+
         public Optional##_name get##_name##ByName(String name)
         {
           return OpenStudio.##_csharp_module_name##.get##_name##ByName(this, name);
         }
-        
+
         public _name##Vector get##_name##sByName(String name, bool exactMatch)
         {
           return OpenStudio.##_csharp_module_name##.get##_name##sByName(this, name, exactMatch);
-        } 
-      }      
+        }
+      }
     %}
   %enddef
 
-  %define UNIQUEMODELOBJECT_EXTENSION(_name) 
+  %define UNIQUEMODELOBJECT_EXTENSION(_name)
     %typemap(csimports) openstudio::model::##_name %{
       using System;
       using System.Runtime.InteropServices;
-      
+
       public partial class IdfObject {
         public Optional##_name to_##_name()
         {
           return OpenStudio.##_csharp_module_name##.to##_name(this);
         }
       }
-      
+
       public partial class Model : Workspace {
         public _name get##_name##()
         {
           return OpenStudio.##_csharp_module_name##.get##_name##(this);
         }
-        
+
         public Optional##_name getOptional##_name##() {
           return OpenStudio.##_csharp_module_name##.getOptional##_name##(this);
         }
@@ -163,25 +163,25 @@
     %}
   %enddef
 
-  %define MODELEXTENSIBLEGROUP_EXTENSION(_name) 
+  %define MODELEXTENSIBLEGROUP_EXTENSION(_name)
     %typemap(csimports) openstudio::model::##_name %{
       using System;
       using System.Runtime.InteropServices;
-        
+
       public partial class IdfExtensibleGroup {
         public Optional##_name to_##_name()
         {
           return OpenStudio.##_csharp_module_name##.to##_name(this);
         }
-      }  
+      }
     %}
   %enddef
 
 #else
 
-  #define MODELOBJECT_EXTENSION(_name) 
-  #define UNIQUEMODELOBJECT_EXTENSION(_name) 
-  #define MODELEXTENSIBLEGROUP_EXTENSION(_name) 
+  #define MODELOBJECT_EXTENSION(_name)
+  #define UNIQUEMODELOBJECT_EXTENSION(_name)
+  #define MODELEXTENSIBLEGROUP_EXTENSION(_name)
 
 #endif
 
@@ -196,11 +196,11 @@
     %typemap(csclassmodifiers) openstudio::model::##_name "public partial class"
     MODELOBJECT_EXTENSION(_name)
   #endif
-  
+
   %include <model/##_name##.hpp>
   namespace openstudio {
     namespace model {
-          
+
       boost::optional<_name> to##_name(const openstudio::IdfObject& idfObject);
       boost::optional<_name> get##_name(const Model &t_model, const openstudio::Handle &t_handle);
       std::vector<_name> get##_name##s(const Model &t_model);
@@ -231,7 +231,7 @@
           return t_model.getModelObjectByName<_name>(t_name);
         %#endif
       }
-      std::vector<_name> get##_name##sByName(const Model &t_model, const std::string &t_name, bool t_exactMatch) {        
+      std::vector<_name> get##_name##sByName(const Model &t_model, const std::string &t_name, bool t_exactMatch) {
         %#if _isConcrete
           if (t_exactMatch){
             return t_model.getModelObjectsByName<_name>(t_name, t_exactMatch);
@@ -244,13 +244,13 @@
     }
     }
   }
-  
+
   #if defined SWIGRUBY
     MODELOBJECT_EXTENSION(_name)
   #endif
-  
+
 %enddef
- 
+
 %define SWIG_UNIQUEMODELOBJECT(_name)
 
   #if defined SWIGJAVA
@@ -261,11 +261,11 @@
     %typemap(csclassmodifiers) openstudio::model::##_name "public partial class"
     UNIQUEMODELOBJECT_EXTENSION(_name)
   #endif
-  
+
   %include <model/##_name##.hpp>
   namespace openstudio {
     namespace model {
-      
+
       boost::optional<_name> to##_name(const openstudio::IdfObject& idfObject);
       _name get##_name(openstudio::model::Model& t_model);
       boost::optional<_name> getOptional##_name(const openstudio::model::Model& t_model);
@@ -286,24 +286,24 @@
     }
     }
   }
-  
+
   #if defined SWIGRUBY
     UNIQUEMODELOBJECT_EXTENSION(_name)
   #endif
-  
+
 %enddef
 
 %define SWIG_MODELEXTENSIBLEGROUP(_name)
 
   #if defined SWIGJAVA
-    
+
   #endif
 
   #if defined SWIGCSHARP
     %typemap(csclassmodifiers) openstudio::model::##_name "public partial class"
     MODELEXTENSIBLEGROUP_EXTENSION(_name)
   #endif
-  
+
   namespace openstudio {
   namespace model {
     boost::optional<_name> to##_name(const openstudio::IdfExtensibleGroup& extensibleGroup);
@@ -318,12 +318,12 @@
     }
     }
   }
-  
+
   #if defined SWIGRUBY
     MODELEXTENSIBLEGROUP_EXTENSION(_name)
   #endif
-  
+
 %enddef
 
 
-#endif //MODEL_I 
+#endif //MODEL_I

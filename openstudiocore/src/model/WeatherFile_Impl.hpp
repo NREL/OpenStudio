@@ -45,19 +45,19 @@ namespace detail {
 
   /** WeatherFile_Impl is a ModelObject_Impl that is the implementation class for WeatherFile.*/
   class MODEL_API WeatherFile_Impl : public ModelObject_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -120,15 +120,15 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setCity(std::string city);
+    bool setCity(std::string city);
 
-    void setStateProvinceRegion(std::string stateProvinceRegion);
+    bool setStateProvinceRegion(std::string stateProvinceRegion);
 
-    void setCountry(std::string country);
+    bool setCountry(std::string country);
 
-    void setDataSource(std::string dataSource);
+    bool setDataSource(std::string dataSource);
 
-    void setWMONumber(std::string wMONumber);
+    bool setWMONumber(std::string wMONumber);
 
     bool setLatitude(double latitude);
 
@@ -140,15 +140,15 @@ namespace detail {
 
     void resetElevation();
 
-    //void setUrl(boost::optional<std::string> url);
+    //bool setUrl(boost::optional<std::string> url);
 
-    //void setUrl(std::string url);
+    //bool setUrl(std::string url);
 
     //void resetUrl();
 
-    //void setChecksum(boost::optional<std::string> checksum);
+    //bool setChecksum(boost::optional<std::string> checksum);
 
-    //void setChecksum(std::string checksum);
+    //bool setChecksum(std::string checksum);
 
     //void resetChecksum();
 
@@ -159,8 +159,8 @@ namespace detail {
 
     /** Load and return the EpwFile, if it can be located. */
     boost::optional<EpwFile> file(const openstudio::path& dir=openstudio::path()) const;
-    
-    /** Save the url as relative to basePath, or just keep the file name and extension if 
+
+    /** Save the url as relative to basePath, or just keep the file name and extension if
     *  basePath.empty(). */
     bool makeUrlRelative(const openstudio::path& basePath=openstudio::path());
 
@@ -170,7 +170,7 @@ namespace detail {
     // get environment name as reported in the sql file
     // environment name = "City StateProvinceRegion Country DataSource WMO#=WMONumber"
     boost::optional<std::string> environmentName() const;
-   
+
 protected:
    private:
     REGISTER_LOGGER("openstudio.model.WeatherFile");
@@ -182,4 +182,3 @@ protected:
 } // openstudio
 
 #endif // MODEL_WEATHERFILE_IMPL_HPP
-

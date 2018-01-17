@@ -47,7 +47,7 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitExportFromVariable : public
   /** @name Constructors and Destructors */
   //@{
 
-   explicit ExternalInterfaceFunctionalMockupUnitExportFromVariable(const Model& model, 
+   explicit ExternalInterfaceFunctionalMockupUnitExportFromVariable(const Model& model,
                                                                     const std::string& outputVariableIndexKeyName,
                                                                     const std::string& outputVariableName,
                                                                     const std::string& fMUVariableName);
@@ -71,11 +71,11 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitExportFromVariable : public
   /** @name Setters */
   //@{
 
-  void setOutputVariableIndexKeyName(const std::string& outputVariableIndexKeyName);
+  bool setOutputVariableIndexKeyName(const std::string& outputVariableIndexKeyName);
 
   bool setOutputVariableName(const std::string& outputVariableName);
 
-  void setFMUVariableName(const std::string& fMUVariableName);
+  bool setFMUVariableName(const std::string& fMUVariableName);
 
   //@}
   /** @name Other */
@@ -107,4 +107,3 @@ typedef std::vector<ExternalInterfaceFunctionalMockupUnitExportFromVariable> Ext
 } // openstudio
 
 #endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITEXPORTFROMVARIABLE_HPP
-

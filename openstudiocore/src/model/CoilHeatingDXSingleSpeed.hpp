@@ -60,7 +60,7 @@ class MODEL_API CoilHeatingDXSingleSpeed : public StraightComponent {
   //@{
 
   explicit CoilHeatingDXSingleSpeed( const Model& model,
-                                       Schedule & availabilitySchedule, 
+                                       Schedule & availabilitySchedule,
                                        Curve& totalHeatingCapacityFunctionofTemperatureCurve,
                                        Curve& totalHeatingCapacityFunctionofFlowFractionCurve,
                                        Curve& energyInputRatioFunctionofTemperatureCurve,
@@ -195,7 +195,7 @@ class MODEL_API CoilHeatingDXSingleSpeed : public StraightComponent {
   // A6 , \field Total Heating Capacity Function of Flow Fraction Curve Name
   // \object-list QuadraticCubicCurves
   Curve totalHeatingCapacityFunctionofFlowFractionCurve() const;
-  bool setTotalHeatingCapacityFunctionofFlowFractionCurve( const Curve& curve );  
+  bool setTotalHeatingCapacityFunctionofFlowFractionCurve( const Curve& curve );
 
   // A7 ,  \field Energy Input Ratio Function of Temperature Curve Name
   // \object-list BiquadraticQuadraticCubicCurves
@@ -210,7 +210,7 @@ class MODEL_API CoilHeatingDXSingleSpeed : public StraightComponent {
   // A9 , \field Part Load Fraction Correlation Curve Name
   // \object-list QuadraticCubicCurves
   Curve partLoadFractionCorrelationCurve() const;
-  bool setPartLoadFractionCorrelationCurve( const Curve& curve );  
+  bool setPartLoadFractionCorrelationCurve( const Curve& curve );
 
   // A10, \field Defrost Energy Input Ratio Function of Temperature Curve Name
   // \object-list BiquadraticCurves

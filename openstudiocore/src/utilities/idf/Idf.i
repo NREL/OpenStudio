@@ -19,7 +19,7 @@
   #include <utilities/idf/ValidityReport.hpp>
   #include <utilities/idf/DataError.hpp>
   #include <utilities/idf/URLSearchPath.hpp>
-  
+
   #include <utilities/units/Quantity.hpp>
   #include <utilities/units/Unit.hpp>
   #include <utilities/units/BTUUnit.hpp>
@@ -34,18 +34,18 @@
   #include <utilities/units/ThermUnit.hpp>
   #include <utilities/units/WhUnit.hpp>
   #include <utilities/units/OSOptionalQuantity.hpp>
-  
+
   // to be ignored
   class QAction;
   class QDomNode;
   class QDomElement;
   class QDomDocument;
   class QNetworkAccessManager;
-  class QThread;   
+  class QThread;
   class QWidget;
   class QDialog;
   class QComboBox;
-  class QMainWindow; 
+  class QMainWindow;
   namespace openstudio{
     class RemoteBCL;
     class UpdateManager;
@@ -63,21 +63,21 @@
 %ignore QWidget;
 %ignore QDialog;
 %ignore QComboBox;
-%ignore QMainWindow; 
+%ignore QMainWindow;
 %ignore openstudio::PathWatcher;
 %ignore openstudio::RemoteBCL;
 %ignore openstudio::UpdateManager;
 
 // no default constructors
-%ignore std::vector<openstudio::IdfObject>::vector(size_type); 
+%ignore std::vector<openstudio::IdfObject>::vector(size_type);
 %ignore std::vector<openstudio::WorkspaceObject>::vector(size_type);
-%ignore std::vector<openstudio::WorkspaceObjectOrder>::vector(size_type); 
-%ignore std::vector<openstudio::IdfExtensibleGroup>::vector(size_type); 
+%ignore std::vector<openstudio::WorkspaceObjectOrder>::vector(size_type);
+%ignore std::vector<openstudio::IdfExtensibleGroup>::vector(size_type);
 
-%ignore std::vector<openstudio::IdfObject>::resize(size_type); 
+%ignore std::vector<openstudio::IdfObject>::resize(size_type);
 %ignore std::vector<openstudio::WorkspaceObject>::resize(size_type);
 %ignore std::vector<openstudio::WorkspaceObjectOrder>::resize(size_type);
-%ignore std::vector<openstudio::IdfExtensibleGroup>::resize(size_type); 
+%ignore std::vector<openstudio::IdfExtensibleGroup>::resize(size_type);
 
 // create an instantiation of the optional classes
 %template(OptionalIdfObject) boost::optional<openstudio::IdfObject>;
@@ -105,9 +105,9 @@
 #if defined(SWIGRUBY)
   // add mixins
   %mixin openstudio::IdfObject "Comparable, Marshal";
-  
+
   // alias methods
-  
+
   // for Array.uniq
   %alias openstudio::IdfObject::operator== "eql?";
 #endif
@@ -156,13 +156,13 @@
 %include <utilities/idf/WorkspaceObject.hpp>
 %include <utilities/idf/Workspace.hpp>
 
-%feature("director") IdfObjectWatcher;  
+%feature("director") IdfObjectWatcher;
 %include <utilities/idf/IdfObjectWatcher.hpp>
 
-%feature("director") WorkspaceObjectWatcher;  
+%feature("director") WorkspaceObjectWatcher;
 %include <utilities/idf/WorkspaceObjectWatcher.hpp>
 
-%feature("director") WorkspaceWatcher;  
+%feature("director") WorkspaceWatcher;
 %include <utilities/idf/WorkspaceWatcher.hpp>
 
 %extend openstudio::IdfObject{
@@ -171,7 +171,7 @@
     os << *self;
     return os.str();
   }
-  
+
   #if defined(SWIGRUBY)
 
   // for Comparable mixin
@@ -179,7 +179,7 @@
     if ((*self) == other){
       return 0;
     }
-    
+
     if (self->iddObject() == other.iddObject()){
       // sort by name
       openstudio::IdfObjectNameLess tester;
@@ -189,7 +189,7 @@
         return 1;
       }
     }
-    
+
     // sort by type
     openstudio::IdfObjectTypeLess tester;
     if (tester.operator()(*self, other)){
@@ -197,20 +197,20 @@
     }
     return 1;
   }
-  
+
   // for Array.uniq
   int __hash__() const {
     std::string uuid(openstudio::toString(self->handle()));
     return qChecksum(uuid.c_str(), uuid.size());
   }
-  
+
   // for Marshal mixin
   std::string _dump(int) const {
     std::ostringstream os;
     os << *self;
     return os.str();
   }
-  
+
   // for Marshal mixin
   static openstudio::IdfObject _load(const std::string& text) const {
     boost::optional<openstudio::IdfObject> result = openstudio::IdfObject::load(text);
@@ -219,9 +219,9 @@
     }
     return result.get();
   }
-  
+
   #endif
-  
+
 };
 
 %extend openstudio::IdfFile{
@@ -283,4 +283,4 @@
   }
 };
 
-#endif // UTILITIES_IDF_I 
+#endif // UTILITIES_IDF_I

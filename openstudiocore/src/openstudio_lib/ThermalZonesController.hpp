@@ -104,5 +104,5 @@ private slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_THERMALZONESCONTROLLER_HPP 
+#endif // OPENSTUDIO_THERMALZONESCONTROLLER_HPP
 

@@ -31,14 +31,14 @@ require 'openstudio'
 require 'minitest/autorun'
 
 class Space_Test < MiniTest::Unit::TestCase
-  
+
   def test_Space
     workspace = OpenStudio::Workspace.new
     model = OpenStudio::Model::Model.new
 
     # add a space
     space = OpenStudio::Model::Space.new(model)
-    
+
     # test name attributes
     space.setName("Space")
     attribute = space.getAttribute("name")

@@ -9,25 +9,25 @@
 
 #start the measure
 class IntersectSpaceGeometry < OpenStudio::Ruleset::ModelUserScript
-  
+
   #define the name that a user will see, this method may be deprecated as
   #the display name in PAT comes from the name field in measure.xml
   def name
     return "Intersect Space Geometry"
   end
-  
+
   #define the arguments that the user will input
   def arguments(model)
     args = OpenStudio::Ruleset::OSArgumentVector.new
-    
+
     return args
   end #end the arguments method
 
   #define what happens when the measure is run
   def run(model, runner, user_arguments)
     super(model, runner, user_arguments)
-    
-    #use the built-in error checking 
+
+    #use the built-in error checking
     if not runner.validateUserArguments(arguments(model), user_arguments)
       return false
     end
@@ -67,7 +67,7 @@ class IntersectSpaceGeometry < OpenStudio::Ruleset::ModelUserScript
     end
 
     return true
- 
+
   end #end the run method
 
 end #end the measure

@@ -188,7 +188,7 @@ namespace detail {
 
     bool setCapacityControlMethod(std::string capacityControlMethod);
 
-    void setMaximumSupplyAirFlowRate(boost::optional<double> maximumSupplyAirFlowRate);
+    bool setMaximumSupplyAirFlowRate(boost::optional<double> maximumSupplyAirFlowRate);
 
     bool setMaximumSupplyAirFlowRate(const OSOptionalQuantity& maximumSupplyAirFlowRate);
 
@@ -206,7 +206,7 @@ namespace detail {
 
     void resetMediumSpeedSupplyAirFlowRatio();
 
-    void setMaximumOutdoorAirFlowRate(boost::optional<double> maximumOutdoorAirFlowRate);
+    bool setMaximumOutdoorAirFlowRate(boost::optional<double> maximumOutdoorAirFlowRate);
 
     bool setMaximumOutdoorAirFlowRate(const OSOptionalQuantity& maximumOutdoorAirFlowRate);
 
@@ -218,19 +218,19 @@ namespace detail {
 
     bool setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType);
 
-    void setOutdoorAirMixerName(std::string outdoorAirMixerName);
+    bool setOutdoorAirMixerName(std::string outdoorAirMixerName);
 
     bool setSupplyAirFan( HVACComponent & fan );
 
     bool setCoolingCoil( HVACComponent & coolingCoil );
 
-    void setMaximumColdWaterFlowRate(boost::optional<double> maximumColdWaterFlowRate);
+    bool setMaximumColdWaterFlowRate(boost::optional<double> maximumColdWaterFlowRate);
 
     bool setMaximumColdWaterFlowRate(const OSOptionalQuantity& maximumColdWaterFlowRate);
 
     void autosizeMaximumColdWaterFlowRate();
 
-    void setMinimumColdWaterFlowRate(double minimumColdWaterFlowRate);
+    bool setMinimumColdWaterFlowRate(double minimumColdWaterFlowRate);
 
     bool setMinimumColdWaterFlowRate(const Quantity& minimumColdWaterFlowRate);
 
@@ -244,13 +244,13 @@ namespace detail {
 
     bool setHeatingCoil( HVACComponent & heatingCoil );
 
-    void setMaximumHotWaterFlowRate(boost::optional<double> maximumHotWaterFlowRate);
+    bool setMaximumHotWaterFlowRate(boost::optional<double> maximumHotWaterFlowRate);
 
     bool setMaximumHotWaterFlowRate(const OSOptionalQuantity& maximumHotWaterFlowRate);
 
     void autosizeMaximumHotWaterFlowRate();
 
-    void setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate);
+    bool setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate);
 
     bool setMinimumHotWaterFlowRate(const Quantity& minimumHotWaterFlowRate);
 
@@ -340,5 +340,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_ZONEHVACFOURPIPEFANCOIL_IMPL_HPP
-
+#endif // MODEL_ZONEHVACFOURPIPEFANCOIL_IMPL_HPP

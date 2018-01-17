@@ -49,7 +49,7 @@ class WorkspaceReciever  {
     // necessary because the NanoS&S are guarenteed to connect, else error on compile
 
     std::shared_ptr<openstudio::detail::Workspace_Impl> impl = workspace.getImpl<openstudio::detail::Workspace_Impl>();
-    
+
     impl->Workspace_Impl::removeWorkspaceObject.connect<WorkspaceReciever, &WorkspaceReciever::removeWorkspaceObject>(this);
 
     //test = connect(impl.get(), SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
@@ -80,14 +80,14 @@ class WorkspaceReciever  {
 
  public:
 
-  void removeWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) 
+  void removeWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
   {
     m_objectImpl = object.getImpl<detail::WorkspaceObject_Impl>();
     m_iddObjectType = iddObjectType;
     m_handle = handle;
   }
 
-  void addWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) 
+  void addWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
   {
     m_objectImpl = object.getImpl<detail::WorkspaceObject_Impl>();
     m_iddObjectType = iddObjectType;

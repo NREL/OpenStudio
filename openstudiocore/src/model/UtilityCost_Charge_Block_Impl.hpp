@@ -38,7 +38,7 @@ namespace model {
 namespace detail {
 
 class MODEL_API UtilityCost_Charge_Block_Impl : public ParentObject_Impl{
-  
+
 public:
   // constructor
   UtilityCost_Charge_Block_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
@@ -55,19 +55,19 @@ public:
   virtual ~UtilityCost_Charge_Block_Impl(){}
 
   OptionalString tariffName() const;
-  void setTariffName(const std::string& str);
+  bool setTariffName(const std::string& str);
 
   OptionalString sourceVariable() const;
-  void setSourceVariable(const std::string& str);
+  bool setSourceVariable(const std::string& str);
 
   OptionalString season() const;
-  void setSeason(const std::string& str);
+  bool setSeason(const std::string& str);
 
   OptionalString categoryVariableName() const;
-  void setCategoryVariableName(const std::string& str);
+  bool setCategoryVariableName(const std::string& str);
 
   OptionalString remainingIntoVariable() const;
-  void setRemainingIntoVariable(const std::string& str);
+  bool setRemainingIntoVariable(const std::string& str);
 
   /** Get the block size value or variable name at index. Indexing starts at 0. */
   boost::optional<std::string> blockSizeValueOrVariableName(unsigned index) const;
@@ -106,4 +106,4 @@ private:
 } // model
 } // openstudio
 
-#endif // MODEL_UTILITYCOST_CHARGE_BLOCK_IMPL_HPP
+#endif // MODEL_UTILITYCOST_CHARGE_BLOCK_IMPL_HPP

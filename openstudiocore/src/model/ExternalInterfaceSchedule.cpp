@@ -132,9 +132,10 @@ namespace detail {
     return false;
   }
 
-  void ExternalInterfaceSchedule_Impl::setInitialValue(double initialValue) {
+  bool ExternalInterfaceSchedule_Impl::setInitialValue(double initialValue) {
     bool result = setDouble(OS_ExternalInterface_ScheduleFields::InitialValue, initialValue);
     OS_ASSERT(result);
+    return result;
   }
 
   bool ExternalInterfaceSchedule_Impl::exportToBCVTB() const {
@@ -147,7 +148,7 @@ namespace detail {
     return isEmpty(OS_ExternalInterface_ScheduleFields::ExportToBCVTB);
   }
 
-  void ExternalInterfaceSchedule_Impl::setExportToBCVTB(bool exportToBCVTB) {
+  bool ExternalInterfaceSchedule_Impl::setExportToBCVTB(bool exportToBCVTB) {
     bool result = false;
     if (exportToBCVTB) {
       result = setString(OS_ExternalInterface_ScheduleFields::ExportToBCVTB, "True");
@@ -155,6 +156,7 @@ namespace detail {
       result = setString(OS_ExternalInterface_ScheduleFields::ExportToBCVTB, "False");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void ExternalInterfaceSchedule_Impl::resetExportToBCVTB() {
@@ -192,8 +194,8 @@ double ExternalInterfaceSchedule::initialValue() const {
 }
 
 
-void ExternalInterfaceSchedule::setInitialValue(double initialValue) {
-  getImpl<detail::ExternalInterfaceSchedule_Impl>()->setInitialValue(initialValue);
+bool ExternalInterfaceSchedule::setInitialValue(double initialValue) {
+  return getImpl<detail::ExternalInterfaceSchedule_Impl>()->setInitialValue(initialValue);
 }
 
 bool ExternalInterfaceSchedule::exportToBCVTB() const {
@@ -204,8 +206,8 @@ bool ExternalInterfaceSchedule::isExportToBCVTBDefaulted() const {
   return getImpl<detail::ExternalInterfaceSchedule_Impl>()->isExportToBCVTBDefaulted();
 }
 
-void ExternalInterfaceSchedule::setExportToBCVTB(bool exportToBCVTB) {
-  getImpl<detail::ExternalInterfaceSchedule_Impl>()->setExportToBCVTB(exportToBCVTB);
+bool ExternalInterfaceSchedule::setExportToBCVTB(bool exportToBCVTB) {
+  return getImpl<detail::ExternalInterfaceSchedule_Impl>()->setExportToBCVTB(exportToBCVTB);
 }
 
 void ExternalInterfaceSchedule::resetExportToBCVTB() {
@@ -219,5 +221,4 @@ ExternalInterfaceSchedule::ExternalInterfaceSchedule(std::shared_ptr<detail::Ext
 /// @endcond
 
 } // model
-} // openstudio
-
+} // openstudio

@@ -70,10 +70,10 @@ namespace openstudio {
 // "Utility Bills"
 
 UtilityBillsView::UtilityBillsView(const openstudio::model::Model& model, QWidget * parent)
-                     : ModelSubTabView(new UtilityBillAllFuelTypesListView(UtilityBillsView::utilityBillFuelTypesAndNames(), 
-                                                                           model, 
-                                                                           true, 
-                                                                           OSItemType::CollapsibleListHeader, 
+                     : ModelSubTabView(new UtilityBillAllFuelTypesListView(UtilityBillsView::utilityBillFuelTypesAndNames(),
+                                                                           model,
+                                                                           true,
+                                                                           OSItemType::CollapsibleListHeader,
                                                                            parent),
                                        new UtilityBillsInspectorView(model,parent),
                                        false,
@@ -163,7 +163,7 @@ boost::optional<QString> UtilityBillsInspectorView::runPeriodDates()
           if( (beginMonth > endMonth) || (beginMonth == endMonth && beginDayOfMonth > endDayOfMonth)){
             endYear++;
           }
-          
+
           QString string;
           QString number;
 
@@ -182,8 +182,8 @@ boost::optional<QString> UtilityBillsInspectorView::runPeriodDates()
 
           beginAndEndDates = string;
         }
-      } 
-    } 
+      }
+    }
   }
   return beginAndEndDates;
 }
@@ -222,7 +222,7 @@ void UtilityBillsInspectorView::createWidgets()
   m_buttonGroup = new QButtonGroup(this);
 
   connect(m_buttonGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &UtilityBillsInspectorView::deleteBillingPeriod);
-  
+
   // Name
 
   vLayout = new QVBoxLayout();
@@ -278,7 +278,7 @@ void UtilityBillsInspectorView::createWidgets()
 
   connect(m_peakDemandUnits, static_cast<void (OSComboBox2::*)(const QString &)>(&OSComboBox2::currentIndexChanged),
     this, static_cast<void (UtilityBillsInspectorView::*)(const QString &)>(&UtilityBillsInspectorView::updatePeakLabelText));
-  
+
   gridLayout->addLayout(vLayout,0,1,Qt::AlignLeft | Qt::AlignTop);
 
   vLayout = new QVBoxLayout();
@@ -296,7 +296,7 @@ void UtilityBillsInspectorView::createWidgets()
   gridLayout->addLayout(vLayout,0,2,Qt::AlignLeft | Qt::AlignTop);
 
   gridLayout->setColumnStretch(100,100);
-  
+
   mainLayout->addLayout(gridLayout);
 
   // Run Period
@@ -337,7 +337,7 @@ void UtilityBillsInspectorView::createWidgets()
   connect(buttonGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked),
           this, static_cast<void (UtilityBillsInspectorView::*)(int)>(&UtilityBillsInspectorView::setBillFormat));
 
-  QRadioButton * radioButton = nullptr; 
+  QRadioButton * radioButton = nullptr;
 
   radioButton = new QRadioButton("Start Date and End Date");
   buttonGroup->addButton(radioButton,0);
@@ -514,7 +514,7 @@ void UtilityBillsInspectorView::createBillingPeriodHeaderWidget()
   hLayout->setContentsMargins(0,0,0,0);
   hLayout->setSpacing(10);
   m_billingPeriodHeaderWidget->setLayout(hLayout);
-   
+
   QLabel * label = nullptr;
 
   if(m_billFormat == STARTDATE_ENDDATE){
@@ -526,33 +526,33 @@ void UtilityBillsInspectorView::createBillingPeriodHeaderWidget()
 
     label = new QLabel();
     label->setFixedWidth(CALENDER_WIDTH);
-    label->setObjectName("H2"); 
+    label->setObjectName("H2");
     label->setText("End Date");
     hLayout->addWidget(label, 0, Qt::AlignLeft | Qt::AlignTop);
   }
   else if(m_billFormat == STARTDATE_NUMDAYS){
     label = new QLabel();
     label->setFixedWidth(CALENDER_WIDTH);
-    label->setObjectName("H2"); 
+    label->setObjectName("H2");
     label->setText("Start Date");
     hLayout->addWidget(label, 0, Qt::AlignLeft | Qt::AlignTop);
 
     label = new QLabel();
     label->setFixedWidth(WIDTH);
-    label->setObjectName("H2"); 
+    label->setObjectName("H2");
     label->setText("Billing Period Days");
     hLayout->addWidget(label, 0, Qt::AlignLeft | Qt::AlignTop);
   }
   else if(m_billFormat == ENDDATE_NUMDAYS){
     label = new QLabel();
     label->setFixedWidth(CALENDER_WIDTH);
-    label->setObjectName("H2"); 
+    label->setObjectName("H2");
     label->setText("End Date");
     hLayout->addWidget(label, 0, Qt::AlignLeft | Qt::AlignTop);
 
     label = new QLabel();
     label->setFixedWidth(WIDTH);
-    label->setObjectName("H2"); 
+    label->setObjectName("H2");
     label->setText("Billing Period Days");
     hLayout->addWidget(label, 0, Qt::AlignLeft | Qt::AlignTop);
   }
@@ -562,14 +562,14 @@ void UtilityBillsInspectorView::createBillingPeriodHeaderWidget()
 
   m_energyUseLabel = new QLabel();
   m_energyUseLabel->setFixedWidth(WIDTH);
-  m_energyUseLabel->setObjectName("H2"); 
+  m_energyUseLabel->setObjectName("H2");
   updateEnergyUseLabelText();
   hLayout->addWidget(m_energyUseLabel, 0, Qt::AlignLeft | Qt::AlignTop);
 
   if(m_utilityBill.get().fuelType() == FuelType::Electricity){
     m_peakLabel = new QLabel();
     m_peakLabel->setFixedWidth(WIDTH);
-    m_peakLabel->setObjectName("H2"); 
+    m_peakLabel->setObjectName("H2");
     updatePeakLabelText();
     hLayout->addWidget(m_peakLabel, 0, Qt::AlignLeft | Qt::AlignTop);
   } else {
@@ -578,12 +578,12 @@ void UtilityBillsInspectorView::createBillingPeriodHeaderWidget()
 
   label = new QLabel();
   label->setFixedWidth(WIDTH);
-  label->setObjectName("H2"); 
+  label->setObjectName("H2");
   label->setText("Cost");
   hLayout->addWidget(label, 0, Qt::AlignLeft | Qt::AlignTop);
 
   label = new QLabel();
-  label->setObjectName("H2"); 
+  label->setObjectName("H2");
   label->setText("");
   hLayout->addWidget(label, 0, Qt::AlignLeft | Qt::AlignTop);
 }
@@ -838,7 +838,7 @@ void BillingPeriodWidget::createWidgets(FuelType fuelType,
   m_energyUseDoubleEdit = new OSDoubleEdit2();
   m_energyUseDoubleEdit->setFixedWidth(WIDTH);
   hLayout->addWidget(m_energyUseDoubleEdit, 0, Qt::AlignLeft | Qt::AlignTop);
-  
+
   if(fuelType == FuelType::Electricity){
     m_peakDoubleEdit = new OSDoubleEdit2();
     m_peakDoubleEdit->setFixedWidth(WIDTH);
@@ -951,7 +951,7 @@ void BillingPeriodWidget::modelObjectChanged()
 }
 
 void BillingPeriodWidget::startDateChanged(const QDate & newdate)
-{ 
+{
   OS_ASSERT(newdate.isValid());
   m_billingPeriod.get().setStartDate(Date(newdate.month(),newdate.day(),newdate.year()));
 }

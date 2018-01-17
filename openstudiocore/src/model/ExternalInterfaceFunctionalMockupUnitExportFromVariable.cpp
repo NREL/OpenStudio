@@ -97,9 +97,10 @@ namespace detail {
     return "";
   }
 
-  void ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl::setOutputVariableIndexKeyName(const std::string& outputVariableIndexKeyName) {
+  bool ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl::setOutputVariableIndexKeyName(const std::string& outputVariableIndexKeyName) {
     bool result = setString(OS_ExternalInterface_FunctionalMockupUnitExport_From_VariableFields::Output_VariableIndexKeyName, outputVariableIndexKeyName);
     OS_ASSERT(result);
+    return result;
   }
 
   bool ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl::setOutputVariableName(const std::string& outputVariableName) {
@@ -107,9 +108,10 @@ namespace detail {
     return result;
   }
 
-  void ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl::setFMUVariableName(const std::string& fMUVariableName) {
+  bool ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl::setFMUVariableName(const std::string& fMUVariableName) {
     bool result = setString(OS_ExternalInterface_FunctionalMockupUnitExport_From_VariableFields::FMUVariableName, fMUVariableName);
     OS_ASSERT(result);
+    return result;
   }
 
 } // detail
@@ -148,16 +150,16 @@ std::string ExternalInterfaceFunctionalMockupUnitExportFromVariable::fMUVariable
   return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl>()->fMUVariableName();
 }
 
-void ExternalInterfaceFunctionalMockupUnitExportFromVariable::setOutputVariableIndexKeyName(const std::string& outputVariableIndexKeyName) {
-  getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl>()->setOutputVariableIndexKeyName(outputVariableIndexKeyName);
+bool ExternalInterfaceFunctionalMockupUnitExportFromVariable::setOutputVariableIndexKeyName(const std::string& outputVariableIndexKeyName) {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl>()->setOutputVariableIndexKeyName(outputVariableIndexKeyName);
 }
 
 bool ExternalInterfaceFunctionalMockupUnitExportFromVariable::setOutputVariableName(const std::string& outputVariableName) {
   return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl>()->setOutputVariableName(outputVariableName);
 }
 
-void ExternalInterfaceFunctionalMockupUnitExportFromVariable::setFMUVariableName(const std::string& fMUVariableName) {
-  getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl>()->setFMUVariableName(fMUVariableName);
+bool ExternalInterfaceFunctionalMockupUnitExportFromVariable::setFMUVariableName(const std::string& fMUVariableName) {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl>()->setFMUVariableName(fMUVariableName);
 }
 
 /// @cond
@@ -168,4 +170,3 @@ ExternalInterfaceFunctionalMockupUnitExportFromVariable::ExternalInterfaceFuncti
 
 } // model
 } // openstudio
-

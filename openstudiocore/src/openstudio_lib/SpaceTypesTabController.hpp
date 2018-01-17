@@ -49,7 +49,7 @@ class SpaceTypesTabController : public MainTabController
   private:
 
     std::shared_ptr<SpaceTypesController> m_spaceTypesController;
- 
+
 };
 
 } // openstudio

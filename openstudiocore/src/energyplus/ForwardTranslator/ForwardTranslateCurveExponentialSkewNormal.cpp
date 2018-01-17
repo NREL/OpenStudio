@@ -42,7 +42,7 @@ using namespace std;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCurveExponentialSkewNormal( 
+boost::optional<IdfObject> ForwardTranslator::translateCurveExponentialSkewNormal(
     CurveExponentialSkewNormal& modelObject)
 {
   IdfObject idfObject(IddObjectType::Curve_ExponentialSkewNormal);

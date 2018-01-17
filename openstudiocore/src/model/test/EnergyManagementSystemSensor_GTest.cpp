@@ -104,7 +104,7 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor)
 
   EXPECT_EQ(zone1.name().get(), lights.keyName());
   EXPECT_EQ("Light_Sensor", lights.nameString());
-  
+
   // create meter
   OutputMeter meter(model);
   meter.setName("test meter");
@@ -173,7 +173,7 @@ TEST_F(ModelFixture, EMSSensorOutVar) {
 
   outvar1.remove();
   EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<EnergyManagementSystemSensor>().size());
-  
+
 }
 
 

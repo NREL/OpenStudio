@@ -54,13 +54,13 @@ class MODEL_API LifeCycleCostUsePriceEscalation_Impl : public ParentObject_Impl{
   virtual ~LifeCycleCostUsePriceEscalation_Impl(){}
 
   OptionalString resource() const;
-  void setResource(const std::string& str);
+  bool setResource(const std::string& str);
 
   OptionalString escalationStartMonth() const;
-  void setEscalationStartMonth(const std::string& str);
+  bool setEscalationStartMonth(const std::string& str);
 
   OptionalInt escalationStartYear() const;
-  void setEscalationStartYear(int num);
+  bool setEscalationStartYear(int num);
 
   boost::optional<double> yearEscalation(unsigned index) const;
   bool setYearEscalation(unsigned index, double num);
@@ -93,4 +93,4 @@ private:
 } // model
 } // openstudio
 
-#endif // MODEL_LIFECYCLECOSTUSEPRICEESCALATION_IMPL_HPP
+#endif // MODEL_LIFECYCLECOSTUSEPRICEESCALATION_IMPL_HPP

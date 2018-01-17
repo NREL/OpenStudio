@@ -49,17 +49,17 @@ class Model;
 class Schedule;
 class ScheduleTypeLimits;
 
-/** Data structure for registering and viewing a specific type of schedule that can exist in a 
+/** Data structure for registering and viewing a specific type of schedule that can exist in a
  *  Model. */
 struct MODEL_API ScheduleType {
   /** The name of a class that can point to a schedule. */
   std::string className;
-  /** The display name of that schedule (which is used as a key in ScheduleTypeRegistrySingleton, 
+  /** The display name of that schedule (which is used as a key in ScheduleTypeRegistrySingleton,
    *  and is also intented for use in UI displays). */
   std::string scheduleDisplayName;
   /** The name of the Relationship that points from the user (of type className) to the Schedule. */
   std::string scheduleRelationshipName;
-  /** Set to true if the schedule values are continuous (doubles); false if they are discrete 
+  /** Set to true if the schedule values are continuous (doubles); false if they are discrete
    *  (integers). Used to set or test the ScheduleTypeLimits field "Numeric Type". */
   bool isContinuous;
   /** Key into the ScheduleTypeLimits field "Unit Type". */
@@ -69,11 +69,11 @@ struct MODEL_API ScheduleType {
   /** Maximum value for this schedule type (or unbounded if == boost::none). */
   boost::optional<double> upperLimitValue;
 
-  /** Returns the lowerLimitValue as an OSOptionalQuantity by using static methods on 
+  /** Returns the lowerLimitValue as an OSOptionalQuantity by using static methods on
    *  ScheduleTypeLimits. */
   OSOptionalQuantity getLowerLimitValue(bool returnIP=false) const;
-  /** Returns the upperLimitValue as an OSOptionalQuantity by using static methods on 
-   *  ScheduleTypeLimits. */  
+  /** Returns the upperLimitValue as an OSOptionalQuantity by using static methods on
+   *  ScheduleTypeLimits. */
   OSOptionalQuantity getUpperLimitValue(bool returnIP=false) const;
 };
 
@@ -83,12 +83,12 @@ typedef std::vector<ScheduleType> ScheduleTypeVector;
 /** Returns true if candidate is consistent with scheduleType. \relates ScheduleType */
 MODEL_API bool isCompatible(const ScheduleType& scheduleType,
                             const ScheduleTypeLimits& candidate);
-                            
 
-/** Singleton class that contains a registry of all types of schedules that can exist in a Model. 
- *  Do not use directly, but rather, use the ScheduleTypeRegistry typedef (e.g. 
- *  \code 
- *  ScheduleType st = ScheduleTypeRegistry::instance().getScheduleType("Lights","Lighting") 
+
+/** Singleton class that contains a registry of all types of schedules that can exist in a Model.
+ *  Do not use directly, but rather, use the ScheduleTypeRegistry typedef (e.g.
+ *  \code
+ *  ScheduleType st = ScheduleTypeRegistry::instance().getScheduleType("Lights","Lighting")
  *  \endcode
  *  ). */
 class MODEL_API ScheduleTypeRegistrySingleton {
@@ -102,7 +102,7 @@ class MODEL_API ScheduleTypeRegistrySingleton {
   /** Returns all the \link ScheduleType ScheduleTypes \endlink registered for className. */
   std::vector<ScheduleType> getScheduleTypesByClassName(const std::string& className) const;
 
-  /** Returns a particular ScheduleType, based on the className and scheduleDisplayName keys. Throws 
+  /** Returns a particular ScheduleType, based on the className and scheduleDisplayName keys. Throws
    *  if there is no such ScheduleType registered. */
   ScheduleType getScheduleType(const std::string& className,
                                const std::string& scheduleDisplayName) const;
@@ -128,25 +128,25 @@ class MODEL_API ScheduleTypeRegistrySingleton {
 typedef openstudio::Singleton<ScheduleTypeRegistrySingleton> ScheduleTypeRegistry;
 
 /** Returns true if candidate is consistent with the ScheduleType that corresponds to className
- *  and scheduleRelationshipName. Throws if there is no such ScheduleType. 
+ *  and scheduleRelationshipName. Throws if there is no such ScheduleType.
  *  \relates ScheduleTypeRegistrySingleton */
 MODEL_API bool isCompatible(const std::string& className,
                             const std::string& scheduleDisplayName,
                             const ScheduleTypeLimits& candidate);
 
-/** If schedule.scheduleTypeLimtis(), returns true if that ScheduleTypeLimits isCompatible and 
- *  otherwise returns false. Otherwise, uses 
- *  ScheduleTypeRegistrySingleton::getOrCreateScheduleTypeLimits to find an appropriate 
- *  ScheduleTypeLimits and then calls Schedule::setScheduleTypeLimtis, which should succeed in 
- *  this case. This method is used by all of the ModelObject methods that set schedules.  
+/** If schedule.scheduleTypeLimtis(), returns true if that ScheduleTypeLimits isCompatible and
+ *  otherwise returns false. Otherwise, uses
+ *  ScheduleTypeRegistrySingleton::getOrCreateScheduleTypeLimits to find an appropriate
+ *  ScheduleTypeLimits and then calls Schedule::setScheduleTypeLimtis, which should succeed in
+ *  this case. This method is used by all of the ModelObject methods that set schedules.
  *  \relates ScheduleTypeRegistrySingleton */
 MODEL_API bool checkOrAssignScheduleTypeLimits(const std::string& className,
                                                const std::string& scheduleDisplayName,
                                                Schedule& schedule);
 
-/** Returns all of the ScheduleTypeLimtis already in model that are \link isCompatible 
- *  compatible\endlink with className and scheduleDisplayName. May be used instead of 
- *  ScheduleTypeRegistrySingleton::getOrCreateScheduleTypeLimits to reduce the number of 
+/** Returns all of the ScheduleTypeLimtis already in model that are \link isCompatible
+ *  compatible\endlink with className and scheduleDisplayName. May be used instead of
+ *  ScheduleTypeRegistrySingleton::getOrCreateScheduleTypeLimits to reduce the number of
  *  ScheduleTypeLimits that are ultimately created and present in a model.
  *  \relates ScheduleTypeRegistrySingleton */
 MODEL_API std::vector<ScheduleTypeLimits> getCompatibleScheduleTypeLimits(

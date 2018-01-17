@@ -238,7 +238,9 @@ class MODEL_API StandardGlazing : public Glazing {
 
   void resetDirtCorrectionFactorforSolarandVisibleTransmittance();
 
-  void setSolarDiffusing(bool solarDiffusing);
+  bool setSolarDiffusing(bool solarDiffusing);
+
+  void setSolarDiffusingNoFail(bool solarDiffusing);
 
   void resetSolarDiffusing();
 
@@ -294,4 +296,3 @@ typedef std::vector<StandardGlazing> StandardGlazingVector;
 } // openstudio
 
 #endif // MODEL_STANDARDGLAZING_HPP
-

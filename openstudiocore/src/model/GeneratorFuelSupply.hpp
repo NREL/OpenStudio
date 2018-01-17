@@ -131,19 +131,19 @@ class MODEL_API GeneratorFuelSupply : public ModelObject {
 
   void resetFuelType();
 
-  void setLiquidGenericFuelLowerHeatingValue(double liquidGenericFuelLowerHeatingValue);
+  bool setLiquidGenericFuelLowerHeatingValue(double liquidGenericFuelLowerHeatingValue);
 
   void resetLiquidGenericFuelLowerHeatingValue();
 
-  void setLiquidGenericFuelHigherHeatingValue(double liquidGenericFuelHigherHeatingValue);
+  bool setLiquidGenericFuelHigherHeatingValue(double liquidGenericFuelHigherHeatingValue);
 
   void resetLiquidGenericFuelHigherHeatingValue();
 
-  void setLiquidGenericFuelMolecularWeight(double liquidGenericFuelMolecularWeight);
+  bool setLiquidGenericFuelMolecularWeight(double liquidGenericFuelMolecularWeight);
 
   void resetLiquidGenericFuelMolecularWeight();
 
-  void setLiquidGenericFuelCO2EmissionFactor(double liquidGenericFuelCO2EmissionFactor);
+  bool setLiquidGenericFuelCO2EmissionFactor(double liquidGenericFuelCO2EmissionFactor);
 
   void resetLiquidGenericFuelCO2EmissionFactor();
 
@@ -182,4 +182,3 @@ typedef std::vector<GeneratorFuelSupply> GeneratorFuelSupplyVector;
 } // openstudio
 
 #endif // MODEL_GENERATORFUELSUPPLY_HPP
-

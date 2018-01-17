@@ -33,7 +33,7 @@
 #include <algorithm>
 
 namespace openstudio {
-  
+
 
 OSQObjectController::OSQObjectController()
   : QObject()
@@ -50,7 +50,7 @@ OSQObjectController::~OSQObjectController()
     {
       delete *it;
     }
-  }  
+  }
 }
 
 void OSQObjectController::addQObject(QObject * object)

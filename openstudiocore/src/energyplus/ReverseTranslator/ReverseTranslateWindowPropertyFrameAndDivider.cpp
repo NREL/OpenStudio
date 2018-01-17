@@ -171,7 +171,7 @@ OptionalModelObject ReverseTranslator::translateWindowPropertyFrameAndDivider( c
   if (d){
     result.setInsideRevealDepth(*d);
   }
-  
+
   d = workspaceObject.getDouble(WindowProperty_FrameAndDividerFields::InsideRevealSolarAbsorptance);
   if (d){
     result.setInsideRevealSolarAbsorptance(*d);

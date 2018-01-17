@@ -43,7 +43,7 @@ bool equal(T val1,T val2,T tol=std::numeric_limits<T>::epsilon()) {
 
 template<class T>
 bool lessThanOrEqual(T val1,T val2,T tol=std::numeric_limits<T>::epsilon()) {
-  return (val1 < val2) || equal(val1,val2,tol); 
+  return (val1 < val2) || equal(val1,val2,tol);
 }
 
 template<class T>

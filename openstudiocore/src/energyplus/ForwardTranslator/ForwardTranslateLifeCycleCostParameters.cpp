@@ -77,7 +77,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCostParameters( 
                                                        modelObject);
 
   idfObject.setString(LifeCycleCost_ParametersFields::DiscountingConvention, modelObject.discountingConvention());
-  
+
   idfObject.setString(LifeCycleCost_ParametersFields::InflationApproach, modelObject.inflationApproach());
 
   boost::optional<double> d = modelObject.realDiscountRate();
@@ -119,7 +119,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCostParameters( 
   }else{
     idfObject.setString(LifeCycleCost_ParametersFields::DepreciationMethod, modelObject.depreciationMethod());
   }
-  
+
   // if useNISTFuelEscalationRates then load idf obbjects from file in resources
   if (modelObject.useNISTFuelEscalationRates()){
 
