@@ -383,6 +383,28 @@ namespace detail {
       result.push_back("Zone Steam Equipment Total Heating Rate");
 
       /*
+       * Zone Outputs from Daylighting Controls
+       */
+
+      result.push_back("Daylighting Lighting Power Multiplier");
+
+      // DLM: this is a static list so no dynamic
+      //if (primaryDaylightingControl()){
+        result.push_back("Daylighting Reference Point 1 Illuminance");
+        result.push_back("Daylighting Reference Point 1 Glare Index");
+        result.push_back("Daylighting Reference Point 1 Glare Index Setpoint Exceeded Time");
+        result.push_back("Daylighting Reference Point 1 Daylight Illuminance Setpoint Exceeded Time");
+      //}
+      
+      //if (secondaryDaylightingControl()){
+        result.push_back("Daylighting Reference Point 2 Illuminance");
+        result.push_back("Daylighting Reference Point 2 Glare Index");
+        result.push_back("Daylighting Reference Point 2 Glare Index Setpoint Exceeded Time");
+        result.push_back("Daylighting Reference Point 2 Daylight Illuminance Setpoint Exceeded Time");
+      //}
+
+
+      /*
        * Zone Outputs from Surfaces
        */
 

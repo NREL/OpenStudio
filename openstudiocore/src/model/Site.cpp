@@ -191,6 +191,17 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
+      result.push_back("Site Outdoor Air Drybulb Temperature");
+      result.push_back("Site Outdoor Air Wetbulb Temperature");
+      result.push_back("Site Direct Solar Radiation Rate per Area");
+      result.push_back("Site Diffuse Solar Radiation Rate per Area");
+      result.push_back("Site Exterior Beam Normal Illuminance");
+      result.push_back("Site Exterior Horizontal Beam Illuminance");
+      result.push_back("Site Exterior Horizontal Sky Illuminance");
+      result.push_back("Site Beam Solar Radiation Luminous Efficacy");
+      result.push_back("Site Sky Diffuse Solar Radiation Luminous Efficacy");
+      result.push_back("Site Daylighting Model Sky Clearness");
+      result.push_back("Site Daylighting Model Sky Brightness");
     }
     return result;
   }
