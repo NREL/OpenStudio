@@ -36,7 +36,7 @@
 #include "../utilities/bcl/BCLMeasure.hpp"
 
 namespace openstudio{
-  
+
 LightHeaderToggleButton::LightHeaderToggleButton(QWidget * parent)
   : QPushButton(parent)
 {
@@ -51,7 +51,7 @@ LightHeaderToggleButton::LightHeaderToggleButton(QWidget * parent)
   style.append("QPushButton:checked { border: none; ");
   style.append("background-image: url(\":/shared_gui_components/images/toggle_arrow.png\"); ");
   style.append(" } ");
-  
+
   setStyleSheet(style);
 }
 
@@ -69,7 +69,7 @@ HeaderToggleButton::HeaderToggleButton(QWidget * parent)
   style.append("QPushButton:checked { border: none; ");
   style.append("background-image: url(\":/shared_gui_components/images/toggle_arrow.png\"); ");
   style.append(" } ");
-  
+
   setStyleSheet(style);
 }
 

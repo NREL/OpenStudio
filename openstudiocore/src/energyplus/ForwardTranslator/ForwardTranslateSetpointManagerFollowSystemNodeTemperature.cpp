@@ -39,7 +39,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerFollowSystemNodeTemperature( 
+boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerFollowSystemNodeTemperature(
                               SetpointManagerFollowSystemNodeTemperature & modelObject )
 {
   boost::optional<Node> node;
@@ -83,7 +83,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerFollowSyst
   {
     idfObject.setDouble(SetpointManager_FollowSystemNodeTemperatureFields::MaximumLimitSetpointTemperature,d.get());
   }
-  
+
   // MinimumLimitSetpointTemperature
   d = modelObject.minimumLimitSetpointTemperature();
   if( d )

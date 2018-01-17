@@ -42,7 +42,7 @@ using namespace std;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCurveRectangularHyperbola2( 
+boost::optional<IdfObject> ForwardTranslator::translateCurveRectangularHyperbola2(
     CurveRectangularHyperbola2& modelObject)
 {
   IdfObject idfObject(IddObjectType::Curve_RectangularHyperbola2);

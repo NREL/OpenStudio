@@ -149,39 +149,39 @@ namespace detail {
     return isEmpty(OS_Curve_ExponentialDecayFields::OutputUnitType);
   }
 
-  void CurveExponentialDecay_Impl::setCoefficient1C1(double coefficient1C1) {
+  bool CurveExponentialDecay_Impl::setCoefficient1C1(double coefficient1C1) {
     bool result = setDouble(OS_Curve_ExponentialDecayFields::Coefficient1C1, coefficient1C1);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveExponentialDecay_Impl::setCoefficient2C2(double coefficient2C2) {
+  bool CurveExponentialDecay_Impl::setCoefficient2C2(double coefficient2C2) {
     bool result = setDouble(OS_Curve_ExponentialDecayFields::Coefficient2C2, coefficient2C2);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveExponentialDecay_Impl::setCoefficient3C3(double coefficient3C3) {
+  bool CurveExponentialDecay_Impl::setCoefficient3C3(double coefficient3C3) {
     bool result = setDouble(OS_Curve_ExponentialDecayFields::Coefficient3C3, coefficient3C3);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveExponentialDecay_Impl::setMinimumValueofx(double minimumValueofx) {
+  bool CurveExponentialDecay_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_ExponentialDecayFields::MinimumValueofx, minimumValueofx);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveExponentialDecay_Impl::setMaximumValueofx(double maximumValueofx) {
+  bool CurveExponentialDecay_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_ExponentialDecayFields::MaximumValueofx, maximumValueofx);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveExponentialDecay_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
+  bool CurveExponentialDecay_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
     bool result = false;
     if (minimumCurveOutput) {
       result = setDouble(OS_Curve_ExponentialDecayFields::MinimumCurveOutput, minimumCurveOutput.get());
     } else {
       result = setString(OS_Curve_ExponentialDecayFields::MinimumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveExponentialDecay_Impl::resetMinimumCurveOutput() {
@@ -189,14 +189,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveExponentialDecay_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
+  bool CurveExponentialDecay_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
     bool result = false;
     if (maximumCurveOutput) {
       result = setDouble(OS_Curve_ExponentialDecayFields::MaximumCurveOutput, maximumCurveOutput.get());
     } else {
       result = setString(OS_Curve_ExponentialDecayFields::MaximumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveExponentialDecay_Impl::resetMaximumCurveOutput() {
@@ -296,36 +296,36 @@ bool CurveExponentialDecay::isOutputUnitTypeDefaulted() const {
   return getImpl<detail::CurveExponentialDecay_Impl>()->isOutputUnitTypeDefaulted();
 }
 
-void CurveExponentialDecay::setCoefficient1C1(double coefficient1C1) {
-  getImpl<detail::CurveExponentialDecay_Impl>()->setCoefficient1C1(coefficient1C1);
+bool CurveExponentialDecay::setCoefficient1C1(double coefficient1C1) {
+  return getImpl<detail::CurveExponentialDecay_Impl>()->setCoefficient1C1(coefficient1C1);
 }
 
-void CurveExponentialDecay::setCoefficient2C2(double coefficient2C2) {
-  getImpl<detail::CurveExponentialDecay_Impl>()->setCoefficient2C2(coefficient2C2);
+bool CurveExponentialDecay::setCoefficient2C2(double coefficient2C2) {
+  return getImpl<detail::CurveExponentialDecay_Impl>()->setCoefficient2C2(coefficient2C2);
 }
 
-void CurveExponentialDecay::setCoefficient3C3(double coefficient3C3) {
-  getImpl<detail::CurveExponentialDecay_Impl>()->setCoefficient3C3(coefficient3C3);
+bool CurveExponentialDecay::setCoefficient3C3(double coefficient3C3) {
+  return getImpl<detail::CurveExponentialDecay_Impl>()->setCoefficient3C3(coefficient3C3);
 }
 
-void CurveExponentialDecay::setMinimumValueofx(double minimumValueofx) {
-  getImpl<detail::CurveExponentialDecay_Impl>()->setMinimumValueofx(minimumValueofx);
+bool CurveExponentialDecay::setMinimumValueofx(double minimumValueofx) {
+  return getImpl<detail::CurveExponentialDecay_Impl>()->setMinimumValueofx(minimumValueofx);
 }
 
-void CurveExponentialDecay::setMaximumValueofx(double maximumValueofx) {
-  getImpl<detail::CurveExponentialDecay_Impl>()->setMaximumValueofx(maximumValueofx);
+bool CurveExponentialDecay::setMaximumValueofx(double maximumValueofx) {
+  return getImpl<detail::CurveExponentialDecay_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
-void CurveExponentialDecay::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveExponentialDecay_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+bool CurveExponentialDecay::setMinimumCurveOutput(double minimumCurveOutput) {
+  return getImpl<detail::CurveExponentialDecay_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveExponentialDecay::resetMinimumCurveOutput() {
   getImpl<detail::CurveExponentialDecay_Impl>()->resetMinimumCurveOutput();
 }
 
-void CurveExponentialDecay::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveExponentialDecay_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+bool CurveExponentialDecay::setMaximumCurveOutput(double maximumCurveOutput) {
+  return getImpl<detail::CurveExponentialDecay_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveExponentialDecay::resetMaximumCurveOutput() {
@@ -356,4 +356,3 @@ CurveExponentialDecay::CurveExponentialDecay(std::shared_ptr<detail::CurveExpone
 
 } // model
 } // openstudio
-

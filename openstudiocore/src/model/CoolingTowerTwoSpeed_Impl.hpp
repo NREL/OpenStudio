@@ -319,7 +319,7 @@ namespace detail {
 
     void resetPerformanceInputMethod();
 
-    void setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio);
+    bool setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio);
 
     void resetHeatRejectionCapacityandNominalCapacitySizingRatio();
 
@@ -363,11 +363,11 @@ namespace detail {
 
     void resetEvaporationLossMode();
 
-    void setEvaporationLossFactor(double evaporationLossFactor);
+    bool setEvaporationLossFactor(double evaporationLossFactor);
 
     void resetEvaporationLossFactor();
 
-    void setDriftLossPercent(double driftLossPercent);
+    bool setDriftLossPercent(double driftLossPercent);
 
     void resetDriftLossPercent();
 
@@ -442,4 +442,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COOLINGTOWERTWOSPEED_IMPL_HPP
-

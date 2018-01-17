@@ -62,7 +62,7 @@ OptionalModelObject ReverseTranslator::translatePeople( const WorkspaceObject & 
 
   // create the definition
   openstudio::model::PeopleDefinition definition(m_model);
-  
+
   OptionalString s = workspaceObject.name();
   if(s){
     definition.setName(*s + " Definition");
@@ -239,7 +239,7 @@ OptionalModelObject ReverseTranslator::translatePeople( const WorkspaceObject & 
       }
     }
   }
-       
+
   return people;
 }
 

@@ -150,10 +150,11 @@ boost::optional<Node> SetpointManagerMixedAir_Impl::referenceSetpointNode()
   return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_MixedAirFields::ReferenceSetpointNodeName);
 }
 
-void SetpointManagerMixedAir_Impl::setReferenceSetpointNode( Node & node )
+bool SetpointManagerMixedAir_Impl::setReferenceSetpointNode( Node & node )
 {
   bool result = setPointer(OS_SetpointManager_MixedAirFields::ReferenceSetpointNodeName,node.handle());
   OS_ASSERT(result);
+  return result;
 }
 
 void SetpointManagerMixedAir_Impl::resetReferenceSetpointNode()
@@ -167,10 +168,11 @@ boost::optional<Node> SetpointManagerMixedAir_Impl::fanInletNode()
   return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_MixedAirFields::FanInletNodeName);
 }
 
-void SetpointManagerMixedAir_Impl::setFanInletNode( Node & node )
+bool SetpointManagerMixedAir_Impl::setFanInletNode( Node & node )
 {
   bool result = setPointer(OS_SetpointManager_MixedAirFields::FanInletNodeName,node.handle());
   OS_ASSERT(result);
+  return result;
 }
 
 void SetpointManagerMixedAir_Impl::resetFanInletNode()
@@ -184,10 +186,11 @@ boost::optional<Node> SetpointManagerMixedAir_Impl::fanOutletNode()
   return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_MixedAirFields::FanOutletNodeName);
 }
 
-void SetpointManagerMixedAir_Impl::setFanOutletNode( Node & node )
+bool SetpointManagerMixedAir_Impl::setFanOutletNode( Node & node )
 {
   bool result = setPointer(OS_SetpointManager_MixedAirFields::FanOutletNodeName,node.handle());
   OS_ASSERT(result);
+  return result;
 }
 
 void SetpointManagerMixedAir_Impl::resetFanOutletNode()
@@ -246,9 +249,9 @@ boost::optional<Node> SetpointManagerMixedAir::referenceSetpointNode()
   return getImpl<detail::SetpointManagerMixedAir_Impl>()->referenceSetpointNode();
 }
 
-void SetpointManagerMixedAir::setReferenceSetpointNode( Node & node )
+bool SetpointManagerMixedAir::setReferenceSetpointNode( Node & node )
 {
-  getImpl<detail::SetpointManagerMixedAir_Impl>()->setReferenceSetpointNode(node);
+  return getImpl<detail::SetpointManagerMixedAir_Impl>()->setReferenceSetpointNode(node);
 }
 
 boost::optional<Node> SetpointManagerMixedAir::fanInletNode()
@@ -256,9 +259,9 @@ boost::optional<Node> SetpointManagerMixedAir::fanInletNode()
   return getImpl<detail::SetpointManagerMixedAir_Impl>()->fanInletNode();
 }
 
-void SetpointManagerMixedAir::setFanInletNode( Node & node )
+bool SetpointManagerMixedAir::setFanInletNode( Node & node )
 {
-  getImpl<detail::SetpointManagerMixedAir_Impl>()->setFanInletNode(node);
+  return getImpl<detail::SetpointManagerMixedAir_Impl>()->setFanInletNode(node);
 }
 
 boost::optional<Node> SetpointManagerMixedAir::fanOutletNode()
@@ -266,9 +269,9 @@ boost::optional<Node> SetpointManagerMixedAir::fanOutletNode()
   return getImpl<detail::SetpointManagerMixedAir_Impl>()->fanOutletNode();
 }
 
-void SetpointManagerMixedAir::setFanOutletNode( Node & node )
+bool SetpointManagerMixedAir::setFanOutletNode( Node & node )
 {
-  getImpl<detail::SetpointManagerMixedAir_Impl>()->setFanOutletNode(node);
+  return getImpl<detail::SetpointManagerMixedAir_Impl>()->setFanOutletNode(node);
 }
 
 boost::optional<Node> SetpointManagerMixedAir::setpointNode() const

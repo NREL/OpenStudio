@@ -44,9 +44,9 @@ class WaterUseEquipmentDefinition;
 namespace detail {
 
 class MODEL_API WaterUseEquipment_Impl : public SpaceLoadInstance_Impl {
-  
 
-  
+
+
 
   public:
 

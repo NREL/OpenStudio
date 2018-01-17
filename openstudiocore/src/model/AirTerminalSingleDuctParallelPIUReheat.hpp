@@ -109,19 +109,19 @@ class MODEL_API AirTerminalSingleDuctParallelPIUReheat : public StraightComponen
 
   bool setAvailabilitySchedule(Schedule & schedule);
 
-  void setMaximumPrimaryAirFlowRate(double maximumPrimaryAirFlowRate);
+  bool setMaximumPrimaryAirFlowRate(double maximumPrimaryAirFlowRate);
 
   void autosizeMaximumPrimaryAirFlowRate();
 
-  void setMaximumSecondaryAirFlowRate(double maximumSecondaryAirFlowRate);
+  bool setMaximumSecondaryAirFlowRate(double maximumSecondaryAirFlowRate);
 
   void autosizeMaximumSecondaryAirFlowRate();
 
-  void setMinimumPrimaryAirFlowFraction(double minimumPrimaryAirFlowFraction);
+  bool setMinimumPrimaryAirFlowFraction(double minimumPrimaryAirFlowFraction);
 
   void autosizeMinimumPrimaryAirFlowFraction();
 
-  void setFanOnFlowFraction(double fanOnFlowFraction);
+  bool setFanOnFlowFraction(double fanOnFlowFraction);
 
   void autosizeFanOnFlowFraction();
 
@@ -129,7 +129,7 @@ class MODEL_API AirTerminalSingleDuctParallelPIUReheat : public StraightComponen
 
   bool setReheatCoil( HVACComponent & hvacComponent );
 
-  void setMaximumHotWaterorSteamFlowRate(double maximumHotWaterorSteamFlowRate);
+  bool setMaximumHotWaterorSteamFlowRate(double maximumHotWaterorSteamFlowRate);
 
   void resetMaximumHotWaterorSteamFlowRate();
 
@@ -182,4 +182,3 @@ typedef std::vector<AirTerminalSingleDuctParallelPIUReheat> AirTerminalSingleDuc
 } // openstudio
 
 #endif // MODEL_AIRTERMINALSINGLEDUCTPARALLELPIUREHEAT_HPP
-

@@ -109,23 +109,23 @@ namespace detail {
 
     bool setRefrigerationCompressorCapacityCurve(const CurveBicubic& curveBicubic);
 
-    void setRatedSuperheat(boost::optional<double> ratedSuperheat);
+    bool setRatedSuperheat(boost::optional<double> ratedSuperheat);
 
     void resetRatedSuperheat();
 
-    void setRatedReturnGasTemperature(boost::optional<double> ratedReturnGasTemperature);
+    bool setRatedReturnGasTemperature(boost::optional<double> ratedReturnGasTemperature);
 
     void resetRatedReturnGasTemperature();
 
-    void setRatedLiquidTemperature(boost::optional<double> ratedLiquidTemperature);
+    bool setRatedLiquidTemperature(boost::optional<double> ratedLiquidTemperature);
 
     void resetRatedLiquidTemperature();
 
-    void setRatedSubcooling(boost::optional<double> ratedSubcooling);
+    bool setRatedSubcooling(boost::optional<double> ratedSubcooling);
 
     void resetRatedSubcooling();
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -163,4 +163,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONCOMPRESSOR_IMPL_HPP
-

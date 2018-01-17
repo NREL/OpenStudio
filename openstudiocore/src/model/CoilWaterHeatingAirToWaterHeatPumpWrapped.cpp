@@ -251,8 +251,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP) {
-    setBooleanFieldValue(OS_Coil_WaterHeating_AirToWaterHeatPump_WrappedFields::EvaporatorFanPowerIncludedinRatedCOP, evaporatorFanPowerIncludedinRatedCOP);
+  bool CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP) {
+    return setBooleanFieldValue(OS_Coil_WaterHeating_AirToWaterHeatPump_WrappedFields::EvaporatorFanPowerIncludedinRatedCOP, evaporatorFanPowerIncludedinRatedCOP);;
   }
 
   bool CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity) {
@@ -518,8 +518,8 @@ void CoilWaterHeatingAirToWaterHeatPumpWrapped::autocalculateRatedEvaporatorAirF
   getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl>()->autocalculateRatedEvaporatorAirFlowRate();
 }
 
-void CoilWaterHeatingAirToWaterHeatPumpWrapped::setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP) {
-  getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl>()->setEvaporatorFanPowerIncludedinRatedCOP(evaporatorFanPowerIncludedinRatedCOP);
+bool CoilWaterHeatingAirToWaterHeatPumpWrapped::setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP) {
+  return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl>()->setEvaporatorFanPowerIncludedinRatedCOP(evaporatorFanPowerIncludedinRatedCOP);
 }
 
 bool CoilWaterHeatingAirToWaterHeatPumpWrapped::setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity) {
@@ -562,4 +562,3 @@ CoilWaterHeatingAirToWaterHeatPumpWrapped::CoilWaterHeatingAirToWaterHeatPumpWra
 
 } // model
 } // openstudio
-

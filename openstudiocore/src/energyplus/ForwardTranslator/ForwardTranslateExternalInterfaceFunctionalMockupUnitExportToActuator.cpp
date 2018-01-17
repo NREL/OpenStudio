@@ -57,7 +57,7 @@ boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceFunction
   if (s) {
     idfObject.setName(*s);
   }
-  
+
   const ModelObject m = modelObject.actuatedComponentUnique();
   idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentUniqueName, m.nameString());
 

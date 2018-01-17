@@ -64,7 +64,7 @@ TEST_F(ModelFixture, DesignSpecificationOutdoorAir_SpaceType)
   Model model;
 
   DesignSpecificationOutdoorAir designSpecificationOutdoorAir(model);
-  
+
   SpaceType spaceType(model);
   EXPECT_FALSE(spaceType.designSpecificationOutdoorAir());
   EXPECT_TRUE(spaceType.setDesignSpecificationOutdoorAir(designSpecificationOutdoorAir));
@@ -117,7 +117,7 @@ TEST_F(ModelFixture, DesignSpecificationOutdoorAir_ThermalZone_2DifferentSpaces)
   points.push_back(Point3d(0, 1, 0));
   points.push_back(Point3d(1, 1, 0));
   points.push_back(Point3d(1, 0, 0));
-  
+
 
   ThermalZone thermalZone(model);
 
@@ -131,7 +131,7 @@ TEST_F(ModelFixture, DesignSpecificationOutdoorAir_ThermalZone_2DifferentSpaces)
   Space space1(model);
   EXPECT_TRUE(space1.setThermalZone(thermalZone));
   EXPECT_TRUE(space1.setDesignSpecificationOutdoorAir(designSpecificationOutdoorAir1));
-  
+
   Surface surface1(points, model);
   surface1.setParent(space1);
   EXPECT_EQ(1.0, space1.floorArea());
@@ -142,7 +142,7 @@ TEST_F(ModelFixture, DesignSpecificationOutdoorAir_ThermalZone_2DifferentSpaces)
   Space space2(model);
   EXPECT_TRUE(space2.setThermalZone(thermalZone));
   EXPECT_TRUE(space2.setDesignSpecificationOutdoorAir(designSpecificationOutdoorAir2));
-  
+
   Surface surface2(points, model);
   surface2.setParent(space2);
   EXPECT_EQ(1.0, space2.floorArea());

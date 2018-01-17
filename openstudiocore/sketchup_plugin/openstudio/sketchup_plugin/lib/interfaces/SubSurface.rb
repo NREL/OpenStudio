@@ -36,26 +36,26 @@ module OpenStudio
 
     def initialize
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       super
     end
-    
+
     def self.model_object_from_handle(handle)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       model_object = Plugin.model_manager.model_interface.openstudio_model.getSubSurface(handle)
       if not model_object.empty?
         model_object = model_object.get
       else
-        puts "SubSurface: model_object is empty for #{handle.class}, #{handle.to_s}, #{Plugin.model_manager.model_interface.openstudio_model}"                    
+        puts "SubSurface: model_object is empty for #{handle.class}, #{handle.to_s}, #{Plugin.model_manager.model_interface.openstudio_model}"
         model_object = nil
       end
       return model_object
     end
-    
+
     def self.new_from_handle(handle)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       drawing_interface = SubSurface.new
       model_object = model_object_from_handle(handle)
       drawing_interface.model_object = model_object
@@ -66,10 +66,10 @@ module OpenStudio
 
     def create_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-    
+
       # need to get parents transformation
       update_parent_from_entity
-      
+
       model_watcher_enabled = @model_interface.model_watcher.disable
       vertices = vertices_from_polygon(face_polygon)
 
@@ -80,20 +80,20 @@ module OpenStudio
         Plugin.log(Error, "Could not create SubSurface for vertices #{vertices}")
         return nil
       end
-      
+
       super
     end
-    
+
 
     def check_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       # All base surfaces should already be drawn.
 
       if (super)
 
         # This is the wrong place to do this, but no one else has set '@parent' yet, which is relied on by 'surface_polygon' later.
-        @parent = parent_from_model_object 
+        @parent = parent_from_model_object
         @parent.add_child(self) if @parent
 
         # Check the base surface
@@ -102,13 +102,13 @@ module OpenStudio
           @model_interface.add_error("This sub surface is missing its base surface, it cannot be drawn.\n\n")
           return(false)
         end
-        
+
         if @parent.face_polygon.nil?
           @model_interface.add_error("Error:  " + name + "\n")
           @model_interface.add_error("This sub surface's base surface '#{@parent.name}' does not have a face polygon, it cannot be drawn.\n\n")
           return(false)
         end
-        
+
         if @parent.face_polygon.points.size < 3
           @model_interface.add_error("Error:  " + name + "\n")
           @model_interface.add_error("This sub surface's base surface '#{@parent.name}' has less than 3 points, it cannot be drawn.\n\n")
@@ -179,9 +179,9 @@ module OpenStudio
         # Subsurface that subdivides a base surface...fix so that slightly inset.
 
         had_observers = @model_interface.remove_observers
-        
+
         begin
-        
+
           do_operation = @model_interface.start_operation("Test SubSurface", true)
 
           # add a temporary group at the top level
@@ -197,15 +197,15 @@ module OpenStudio
           end
 
           temp_group.erase!
-          
+
         ensure
-        
+
           @model_interface.commit_operation if do_operation
-          
+
         end
-        
+
         @model_interface.add_observers if had_observers
-        
+
         if num_temp_faces == 1
           @model_interface.add_error("Error:  " + name + "\n")
           @model_interface.add_error("This sub surface is the same as its base surface, it cannot be drawn.\n\n")
@@ -215,17 +215,17 @@ module OpenStudio
           @model_interface.add_error("This sub surface divides its base surface, it cannot be drawn.\n\n")
           return false
         end
-        
+
         # Check for coincident surfaces (check against other base surfaces)
-        
+
         # Check problems with boundary conditions
         adjacentSubSurface = @model_object.adjacentSubSurface
         if adjacentSubSurface.empty?
           if not @model_object.getSources("OS_SubSurface".to_IddObjectType).empty?
             @model_interface.add_error("Warning:  " + @model_object.name.to_s + "\n")
-            @model_interface.add_error("This SubSurface does not specify an adjacent sub surface but other sub surfaces specify this sub surface.\n")   
-            @model_interface.add_error("It has been automatically fixed.\n\n")   
-                      
+            @model_interface.add_error("This SubSurface does not specify an adjacent sub surface but other sub surfaces specify this sub surface.\n")
+            @model_interface.add_error("It has been automatically fixed.\n\n")
+
             watcher_enabled = @watcher.disable
             @model_object.resetAdjacentSubSurface
             @watcher.enable if watcher_enabled
@@ -234,26 +234,26 @@ module OpenStudio
           testSubSurface = adjacentSubSurface.get.adjacentSubSurface
           if testSubSurface.empty? or (testSubSurface.get.handle.to_s != @model_object.handle.to_s)
             @model_interface.add_error("Warning:  " + @model_object.name.to_s + "\n")
-            @model_interface.add_error("This SubSurface specifies an adjacent sub surface but that sub surface does not specify this sub surface.\n")   
-            @model_interface.add_error("It has been automatically fixed.\n\n")   
-            
+            @model_interface.add_error("This SubSurface specifies an adjacent sub surface but that sub surface does not specify this sub surface.\n")
+            @model_interface.add_error("It has been automatically fixed.\n\n")
+
             watcher_enabled = @watcher.disable
             if not @model_object.setAdjacentSubSurface(adjacentSubSurface.get)
               @model_object.resetAdjacentSubSurface
             end
-            @watcher.enable if watcher_enabled  
+            @watcher.enable if watcher_enabled
           end
         end
-        
+
         # if you get here you are good
         return(true)
 
       else
-        
+
         # super failed
         return(false)
       end
-      
+
     end
 
 
@@ -265,9 +265,9 @@ module OpenStudio
       if (valid_entity?)
         if (@parent.class == Surface)
           watcher_enabled = disable_watcher
-          
+
           @model_object.setSurface(@parent.model_object)  # Parent should already have been updated.
-          
+
           enable_watcher if watcher_enabled
         end
       end
@@ -277,7 +277,7 @@ module OpenStudio
     # Returns the parent drawing interface according to the input object.
     def parent_from_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       parent = nil
       if (@model_object)
         surface = @model_object.surface
@@ -285,28 +285,28 @@ module OpenStudio
           parent = surface.get.drawing_interface
         end
       end
-      return(parent)      
+      return(parent)
     end
 
     # Deletes the model object and marks the drawing interface when the SketchUp entity is erased.
     def delete_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       # duplicates code in SubSurface::remove
       if not @model_object.adjacentSubSurface.empty?
         @model_object.resetAdjacentSubSurface
       end
-      
+
       super
     end
-    
+
 ##### Begin override methods for the entity #####
 
 
     # Error checks, finalization, or cleanup needed after the entity is drawn.
     def confirm_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       return(super)
 
       # Check for overlapping sub surfaces in the same space.
@@ -317,27 +317,27 @@ module OpenStudio
 
       #points = @entity.full_polygon.reduce.points
       #if (points.length > 4)
-      
+
         #puts "Oops!  Too many vertices!"
-        
+
         # Draw an edge from the first vertex to the 4th
-        
+
         #@entity.parent.entities.add_line(points[0], points[3])
-        
+
         #Sketchup.undo  # oh yeah can't undo because observer has already assigned some things.
         #return(false)
       #end
     end
 
     # Erases the entity when the input object is deleted, or in preparation for a re-draw.
-    def erase_entity  
+    def erase_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       remove_observers(true)
       if (valid_entity?)
         if containing_entity
           entities = [@entity]
-          
+
           if @parent
             if parent_face = @parent.entity
               @entity.edges.each do |edge|
@@ -347,20 +347,20 @@ module OpenStudio
               end
             end
           end
-          
+
           containing_interface = containing_entity.drawing_interface
           had_observers = containing_interface.remove_observers if containing_interface
           containing_entity.entities.erase_entities(entities)
           containing_interface.add_observers if had_observers
-  
+
         end
       end
     end
-    
+
     # Returns the parent drawing interface according to the entity.
     def parent_from_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       if (valid_entity?)
         if (base_face = DrawingUtils.detect_base_face(@entity))
           return(base_face.drawing_interface)
@@ -374,14 +374,14 @@ module OpenStudio
 
     def containing_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       result = nil
       if @parent.parent
         result = @parent.parent.entity
       end
       return(result)
     end
-    
+
 ##### Begin override methods for the interface #####
 
 
@@ -389,13 +389,13 @@ module OpenStudio
 
     def in_selection?(selection)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       return (selection.contains?(@entity) or selection.contains?(@parent.entity) or (not @parent.parent.nil? and selection.contains?(@parent.parent.entity)))
     end
-    
-    def paint_surface_type(info=nil)  
+
+    def paint_surface_type(info=nil)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       if @model_object.isAirWall
         @entity.material = @model_interface.materials_interface.air_wall
         @entity.back_material = @model_interface.materials_interface.air_wall
@@ -413,7 +413,7 @@ module OpenStudio
 
     def paint_boundary(info=nil)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       if @model_object.adjacentSubSurface.empty?
         @entity.material = @model_interface.materials_interface.subext_ext
         @entity.back_material = @model_interface.materials_interface.subext_int
@@ -422,7 +422,7 @@ module OpenStudio
         @entity.back_material = @model_interface.materials_interface.subint_int
       end
     end
-    
+
   end
 
 end

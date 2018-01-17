@@ -45,8 +45,8 @@ namespace detail {
 
 } // detail
 
-OPENSTUDIO_ENUM(DefaultScheduleType, 
-  ((HoursofOperationSchedule)(Hours of Operation Schedule)(1)) 
+OPENSTUDIO_ENUM(DefaultScheduleType,
+  ((HoursofOperationSchedule)(Hours of Operation Schedule)(1))
   ((NumberofPeopleSchedule)(Number of People Schedule)(2))
   ((PeopleActivityLevelSchedule)(People Activity Level Schedule)(3))
   ((LightingSchedule)(Lighting Schedule)(4))

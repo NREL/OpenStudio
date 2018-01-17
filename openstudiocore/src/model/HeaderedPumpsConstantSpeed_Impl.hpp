@@ -116,13 +116,13 @@ namespace detail {
 
     void autosizeTotalRatedFlowRate();
 
-    void setNumberofPumpsinBank(int numberofPumpsinBank);
+    bool setNumberofPumpsinBank(int numberofPumpsinBank);
 
     bool setFlowSequencingControlScheme(std::string flowSequencingControlScheme);
 
-    void setRatedPumpHead(double ratedPumpHead);
+    bool setRatedPumpHead(double ratedPumpHead);
 
-    void setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
+    bool setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
 
     void autosizeRatedPowerConsumption();
 
@@ -165,4 +165,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_HEADEREDPUMPSCONSTANTSPEED_IMPL_HPP
-

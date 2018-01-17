@@ -108,19 +108,19 @@ class MODEL_API CoilHeatingGas : public StraightComponent {
   double gasBurnerEfficiency() const;
 
   /** Sets the value of the GasBurnerEfficiency field. **/
-  void setGasBurnerEfficiency(double value);
+  bool setGasBurnerEfficiency(double value);
 
   /** Returns the value of the ParasiticElectricLoad field. **/
   double parasiticElectricLoad() const;
 
   /** Sets the value of the ParasiticElectricLoad field. **/
-  void setParasiticElectricLoad(double value);
+  bool setParasiticElectricLoad(double value);
 
   /** Returns the value of the ParasiticGasLoad field. **/
   double parasiticGasLoad() const;
 
   /** Sets the value of the ParasiticGasLoad field. **/
-  void setParasiticGasLoad(double value);
+  bool setParasiticGasLoad(double value);
 
   boost::optional<double> nominalCapacity() const;
 
@@ -128,7 +128,7 @@ class MODEL_API CoilHeatingGas : public StraightComponent {
 
   bool isNominalCapacityAutosized() const;
 
-  void setNominalCapacity(double nominalCapacity);
+  bool setNominalCapacity(double nominalCapacity);
 
   bool setNominalCapacity(const Quantity& nominalCapacity);
 
@@ -176,4 +176,3 @@ typedef std::vector<CoilHeatingGas> CoilHeatingGasVector;
 } // openstudio
 
 #endif // MODEL_COILHEATINGGAS_HPP
-

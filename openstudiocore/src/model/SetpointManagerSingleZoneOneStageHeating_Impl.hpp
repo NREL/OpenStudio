@@ -92,9 +92,9 @@ namespace detail {
 
     virtual bool setControlVariable(const std::string& controlVariable) override;
 
-    void setHeatingStageOnSupplyAirSetpointTemperature(double heatingStageOnSupplyAirSetpointTemperature);
+    bool setHeatingStageOnSupplyAirSetpointTemperature(double heatingStageOnSupplyAirSetpointTemperature);
 
-    void setHeatingStageOffSupplyAirSetpointTemperature(double heatingStageOffSupplyAirSetpointTemperature);
+    bool setHeatingStageOffSupplyAirSetpointTemperature(double heatingStageOffSupplyAirSetpointTemperature);
 
     bool setControlZone(const ThermalZone& thermalZone);
 
@@ -120,4 +120,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SETPOINTMANAGERSINGLEZONEONESTAGEHEATING_IMPL_HPP
-

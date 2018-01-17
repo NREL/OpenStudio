@@ -36,7 +36,7 @@
 namespace openstudio {
 namespace contam {
 
-Reader::Reader( openstudio::filesystem::ifstream &file ) 
+Reader::Reader( openstudio::filesystem::ifstream &file )
   : m_stream(openstudio::filesystem::read_as_QByteArray(file)), m_lineNumber(0)
 {
 }

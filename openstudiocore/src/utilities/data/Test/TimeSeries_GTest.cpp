@@ -778,7 +778,7 @@ TEST_F(DataFixture,TimeSeries_IntervalConstructor_WrapAroundDates)
 
     // start date and time
   Date startDate(MonthOfYear(MonthOfYear::Jan),1);
-  DateTime startDateTime(startDate, Time(1,0,0,0)); 
+  DateTime startDateTime(startDate, Time(1,0,0,0));
 
   // interval
   Time interval = Time(1,0,0,0);
@@ -820,7 +820,7 @@ TEST_F(DataFixture,TimeSeries_IntervalConstructor_WrapAroundDates)
 
   // now change start date time to make a wrap around year
   startDate = Date(MonthOfYear(MonthOfYear::Apr),11);
-  startDateTime = DateTime(startDate, Time(1,0,0,0)); 
+  startDateTime = DateTime(startDate, Time(1,0,0,0));
 
   Vector wrappedValues(365);
   unsigned j = 0;
@@ -1223,7 +1223,7 @@ TEST_F(DataFixture, TimeSeries_Monthly)
 
   std::vector<double> daysFromFirstReport = { 0.0, 28.0, 59.0, 89.0, 120.0, 150.0, 181.0, 212.0, 242.0, 273.0, 303.0, 334.0 };
   std::vector<double> daysFromStart = { 31.0, 59.0, 90.0, 120.0, 151.0, 181.0, 212.0, 243.0, 273.0, 304.0, 334.0, 365.0 };
-  // 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 
+  // 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 
   ASSERT_THROW(TimeSeries firstTimeSeries(firstReportDateTime, daysFromFirstReport, values, units), openstudio::Exception);
   TimeSeries startTimeSeries(firstReportDateTime, daysFromStart, values, units);

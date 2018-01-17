@@ -84,9 +84,9 @@ class MODEL_API AvailabilityManagerNightVentilation : public AvailabilityManager
 
   void resetVentilationTemperatureSchedule();
 
-  void setVentilationTemperatureDifference(double ventilationTemperatureDifference);
+  bool setVentilationTemperatureDifference(double ventilationTemperatureDifference);
 
-  void setVentilationTemperatureLowLimit(double ventilationTemperatureLowLimit);
+  bool setVentilationTemperatureLowLimit(double ventilationTemperatureLowLimit);
 
   bool setNightVentingFlowFraction(double nightVentingFlowFraction);
 
@@ -124,4 +124,3 @@ typedef std::vector<AvailabilityManagerNightVentilation> AvailabilityManagerNigh
 } // openstudio
 
 #endif // MODEL_AVAILABILITYMANAGERNIGHTVENTILATION_HPP
-

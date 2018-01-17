@@ -32,7 +32,7 @@
 
 namespace openstudio {
 
-StartupMenu::StartupMenu(QWidget *parent) : 
+StartupMenu::StartupMenu(QWidget *parent) :
   QMenuBar(parent)
 {
 

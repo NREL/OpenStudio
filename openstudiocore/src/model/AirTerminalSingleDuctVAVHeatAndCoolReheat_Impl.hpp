@@ -124,7 +124,7 @@ namespace detail {
 
     bool setMinimumHotWaterorSteamFlowRate(double minimumHotWaterorSteamFlowRate);
 
-    void setAirOutlet(std::string airOutlet);
+    bool setAirOutlet(std::string airOutlet);
 
     bool setConvergenceTolerance(double convergenceTolerance);
 
@@ -162,4 +162,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_AIRTERMINALSINGLEDUCTVAVHEATANDCOOLREHEAT_IMPL_HPP
-

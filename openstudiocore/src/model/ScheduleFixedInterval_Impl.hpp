@@ -39,14 +39,14 @@ namespace detail {
 
   /** ScheduleFixedInterval_Impl is a ScheduleInterval_Impl that is the implementation class for ScheduleFixedInterval.*/
   class MODEL_API ScheduleFixedInterval_Impl : public ScheduleInterval_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
    public:
 
     /** @name Constructors and Destructors */
@@ -102,13 +102,13 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod = true);
+    bool setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod = true);
 
     void resetInterpolatetoTimestep(bool driverMethod = true);
 
     bool setIntervalLength(double intervalLength, bool driverMethod = true);
 
-    void setOutOfRangeValue(double outOfRangeValue, bool driverMethod = true);
+    bool setOutOfRangeValue(double outOfRangeValue, bool driverMethod = true);
 
     void resetOutOfRangeValue(bool driverMethod = true);
 
@@ -131,4 +131,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SCHEDULEFIXEDINTERVAL_IMPL_HPP
-

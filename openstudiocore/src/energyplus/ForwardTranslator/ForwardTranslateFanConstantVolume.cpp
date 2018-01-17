@@ -84,7 +84,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFanConstantVolume( FanCon
     }
   }
   catch (std::exception& e) {
-    LOG(Error,"Could not translate " << modelObject.briefDescription() << ", because " 
+    LOG(Error,"Could not translate " << modelObject.briefDescription() << ", because "
         << e.what() << ".");
     return boost::none;
   }

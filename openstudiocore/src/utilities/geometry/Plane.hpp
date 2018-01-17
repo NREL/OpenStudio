@@ -40,7 +40,7 @@ namespace openstudio{
   class Point3d;
   class Vector3d;
 
-  /** Plane defines an infinite plane in 3D space.  The equation of a plane is 
+  /** Plane defines an infinite plane in 3D space.  The equation of a plane is
    *  a*x + b*y + c*z = d, any point that satisfies this equation is on the plane.
    */
   class UTILITIES_API Plane{
@@ -100,7 +100,7 @@ namespace openstudio{
     double d() const;
 
   private:
-  
+
     // construct with coefficients
     Plane(double a, double b, double c, double d);
 

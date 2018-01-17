@@ -137,9 +137,9 @@ namespace detail {
     return getDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignWaterFlowRate );
   }
 
-  void CoilCoolingWater_Impl::setDesignWaterFlowRate( double value )
+  bool CoilCoolingWater_Impl::setDesignWaterFlowRate( double value )
   {
-    setDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignWaterFlowRate, value );
+    return setDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignWaterFlowRate, value );;
   }
 
   bool CoilCoolingWater_Impl::isDesignWaterFlowRateAutosized()
@@ -162,9 +162,9 @@ namespace detail {
     return getDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignAirFlowRate );
   }
 
-  void CoilCoolingWater_Impl::setDesignAirFlowRate( double value )
+  bool CoilCoolingWater_Impl::setDesignAirFlowRate( double value )
   {
-    setDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignAirFlowRate, value );
+    return setDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignAirFlowRate, value );;
   }
 
   bool CoilCoolingWater_Impl::isDesignAirFlowRateAutosized()
@@ -187,9 +187,9 @@ namespace detail {
     return getDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignInletWaterTemperature );
   }
 
-  void CoilCoolingWater_Impl::setDesignInletWaterTemperature( double value )
+  bool CoilCoolingWater_Impl::setDesignInletWaterTemperature( double value )
   {
-    setDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignInletWaterTemperature, value );
+    return setDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignInletWaterTemperature, value );;
   }
 
   bool CoilCoolingWater_Impl::isDesignInletWaterTemperatureAutosized()
@@ -212,9 +212,9 @@ namespace detail {
     return getDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignInletAirTemperature );
   }
 
-  void CoilCoolingWater_Impl::setDesignInletAirTemperature( double value )
+  bool CoilCoolingWater_Impl::setDesignInletAirTemperature( double value )
   {
-    setDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignInletAirTemperature, value );
+    return setDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignInletAirTemperature, value );;
   }
 
   bool CoilCoolingWater_Impl::isDesignInletAirTemperatureAutosized()
@@ -237,9 +237,9 @@ namespace detail {
     return getDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignOutletAirTemperature );
   }
 
-  void CoilCoolingWater_Impl::setDesignOutletAirTemperature( double value )
+  bool CoilCoolingWater_Impl::setDesignOutletAirTemperature( double value )
   {
-    setDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignOutletAirTemperature, value );
+    return setDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignOutletAirTemperature, value );;
   }
 
   bool CoilCoolingWater_Impl::isDesignOutletAirTemperatureAutosized()
@@ -262,9 +262,9 @@ namespace detail {
     return getDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignInletAirHumidityRatio );
   }
 
-  void CoilCoolingWater_Impl::setDesignInletAirHumidityRatio( double value )
+  bool CoilCoolingWater_Impl::setDesignInletAirHumidityRatio( double value )
   {
-    setDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignInletAirHumidityRatio, value );
+    return setDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignInletAirHumidityRatio, value );;
   }
 
   bool CoilCoolingWater_Impl::isDesignInletAirHumidityRatioAutosized()
@@ -287,9 +287,9 @@ namespace detail {
     return getDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignOutletAirHumidityRatio );
   }
 
-  void CoilCoolingWater_Impl::setDesignOutletAirHumidityRatio( double value )
+  bool CoilCoolingWater_Impl::setDesignOutletAirHumidityRatio( double value )
   {
-    setDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignOutletAirHumidityRatio, value );
+    return setDouble( openstudio::OS_Coil_Cooling_WaterFields::DesignOutletAirHumidityRatio, value );;
   }
 
   bool CoilCoolingWater_Impl::isDesignOutletAirHumidityRatioAutosized()
@@ -312,9 +312,9 @@ namespace detail {
     return getString( openstudio::OS_Coil_Cooling_WaterFields::TypeofAnalysis,true ).get();
   }
 
-  void CoilCoolingWater_Impl::setTypeOfAnalysis( std::string value )
+  bool CoilCoolingWater_Impl::setTypeOfAnalysis( std::string value )
   {
-    setString( openstudio::OS_Coil_Cooling_WaterFields::TypeofAnalysis, value );
+    return setString( openstudio::OS_Coil_Cooling_WaterFields::TypeofAnalysis, value );;
   }
 
   std::string CoilCoolingWater_Impl::heatExchangerConfiguration()
@@ -322,9 +322,9 @@ namespace detail {
     return getString( openstudio::OS_Coil_Cooling_WaterFields::HeatExchangerConfiguration,true ).get();
   }
 
-  void CoilCoolingWater_Impl::setHeatExchangerConfiguration( std::string value )
+  bool CoilCoolingWater_Impl::setHeatExchangerConfiguration( std::string value )
   {
-    setString( openstudio::OS_Coil_Cooling_WaterFields::HeatExchangerConfiguration, value );
+    return setString( openstudio::OS_Coil_Cooling_WaterFields::HeatExchangerConfiguration, value );;
   }
 
   bool CoilCoolingWater_Impl::addToNode(Node & node)
@@ -604,9 +604,9 @@ boost::optional<double> CoilCoolingWater::designWaterFlowRate()
   return getImpl<detail::CoilCoolingWater_Impl>()->designWaterFlowRate();
 }
 
-void CoilCoolingWater::setDesignWaterFlowRate( double value )
+bool CoilCoolingWater::setDesignWaterFlowRate( double value )
 {
-  getImpl<detail::CoilCoolingWater_Impl>()->setDesignWaterFlowRate( value );
+  return getImpl<detail::CoilCoolingWater_Impl>()->setDesignWaterFlowRate( value );
 }
 
 bool CoilCoolingWater::isDesignWaterFlowRateAutosized()
@@ -624,9 +624,9 @@ boost::optional<double> CoilCoolingWater::designAirFlowRate()
   return getImpl<detail::CoilCoolingWater_Impl>()->designAirFlowRate();
 }
 
-void CoilCoolingWater::setDesignAirFlowRate( double value )
+bool CoilCoolingWater::setDesignAirFlowRate( double value )
 {
-  getImpl<detail::CoilCoolingWater_Impl>()->setDesignAirFlowRate( value );
+  return getImpl<detail::CoilCoolingWater_Impl>()->setDesignAirFlowRate( value );
 }
 
 bool CoilCoolingWater::isDesignAirFlowRateAutosized()
@@ -644,9 +644,9 @@ boost::optional<double> CoilCoolingWater::designInletWaterTemperature()
   return getImpl<detail::CoilCoolingWater_Impl>()->designInletWaterTemperature();
 }
 
-void CoilCoolingWater::setDesignInletWaterTemperature( double value )
+bool CoilCoolingWater::setDesignInletWaterTemperature( double value )
 {
-  getImpl<detail::CoilCoolingWater_Impl>()->setDesignInletWaterTemperature( value );
+  return getImpl<detail::CoilCoolingWater_Impl>()->setDesignInletWaterTemperature( value );
 }
 
 bool CoilCoolingWater::isDesignInletWaterTemperatureAutosized()
@@ -664,9 +664,9 @@ boost::optional<double> CoilCoolingWater::designInletAirTemperature()
   return getImpl<detail::CoilCoolingWater_Impl>()->designInletAirTemperature();
 }
 
-void CoilCoolingWater::setDesignInletAirTemperature( double value )
+bool CoilCoolingWater::setDesignInletAirTemperature( double value )
 {
-  getImpl<detail::CoilCoolingWater_Impl>()->setDesignInletAirTemperature( value );
+  return getImpl<detail::CoilCoolingWater_Impl>()->setDesignInletAirTemperature( value );
 }
 
 bool CoilCoolingWater::isDesignInletAirTemperatureAutosized()
@@ -684,9 +684,9 @@ boost::optional<double> CoilCoolingWater::designOutletAirTemperature()
   return getImpl<detail::CoilCoolingWater_Impl>()->designOutletAirTemperature();
 }
 
-void CoilCoolingWater::setDesignOutletAirTemperature( double value )
+bool CoilCoolingWater::setDesignOutletAirTemperature( double value )
 {
-  getImpl<detail::CoilCoolingWater_Impl>()->setDesignOutletAirTemperature( value );
+  return getImpl<detail::CoilCoolingWater_Impl>()->setDesignOutletAirTemperature( value );
 }
 
 bool CoilCoolingWater::isDesignOutletAirTemperatureAutosized()
@@ -704,9 +704,9 @@ boost::optional<double> CoilCoolingWater::designInletAirHumidityRatio()
   return getImpl<detail::CoilCoolingWater_Impl>()->designInletAirHumidityRatio();
 }
 
-void CoilCoolingWater::setDesignInletAirHumidityRatio( double value )
+bool CoilCoolingWater::setDesignInletAirHumidityRatio( double value )
 {
-  getImpl<detail::CoilCoolingWater_Impl>()->setDesignInletAirHumidityRatio( value );
+  return getImpl<detail::CoilCoolingWater_Impl>()->setDesignInletAirHumidityRatio( value );
 }
 
 bool CoilCoolingWater::isDesignInletAirHumidityRatioAutosized()
@@ -724,9 +724,9 @@ boost::optional<double> CoilCoolingWater::designOutletAirHumidityRatio()
   return getImpl<detail::CoilCoolingWater_Impl>()->designOutletAirHumidityRatio();
 }
 
-void CoilCoolingWater::setDesignOutletAirHumidityRatio( double value )
+bool CoilCoolingWater::setDesignOutletAirHumidityRatio( double value )
 {
-  getImpl<detail::CoilCoolingWater_Impl>()->setDesignOutletAirHumidityRatio( value );
+  return getImpl<detail::CoilCoolingWater_Impl>()->setDesignOutletAirHumidityRatio( value );
 }
 
 bool CoilCoolingWater::isDesignOutletAirHumidityRatioAutosized()
@@ -744,9 +744,9 @@ std::string CoilCoolingWater::typeOfAnalysis()
   return getImpl<detail::CoilCoolingWater_Impl>()->typeOfAnalysis();
 }
 
-void CoilCoolingWater::setTypeOfAnalysis( std::string value )
+bool CoilCoolingWater::setTypeOfAnalysis( std::string value )
 {
-  getImpl<detail::CoilCoolingWater_Impl>()->setTypeOfAnalysis( value );
+  return getImpl<detail::CoilCoolingWater_Impl>()->setTypeOfAnalysis( value );
 }
 
 std::string CoilCoolingWater::heatExchangerConfiguration()
@@ -754,9 +754,9 @@ std::string CoilCoolingWater::heatExchangerConfiguration()
   return getImpl<detail::CoilCoolingWater_Impl>()->heatExchangerConfiguration();
 }
 
-void CoilCoolingWater::setHeatExchangerConfiguration( std::string value )
+bool CoilCoolingWater::setHeatExchangerConfiguration( std::string value )
 {
-  getImpl<detail::CoilCoolingWater_Impl>()->setHeatExchangerConfiguration( value );
+  return getImpl<detail::CoilCoolingWater_Impl>()->setHeatExchangerConfiguration( value );
 }
 
 IddObjectType CoilCoolingWater::iddObjectType() {
@@ -799,4 +799,3 @@ boost::optional<ControllerWaterCoil> CoilCoolingWater::controllerWaterCoil()
 
 } // model
 } // openstudio
-

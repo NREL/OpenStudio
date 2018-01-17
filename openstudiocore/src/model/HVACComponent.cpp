@@ -510,14 +510,14 @@ namespace detail {
 
   // default implementation does nothing.
   // should only be used by objects that have
-  // no autosized fields 
+  // no autosized fields
   void HVACComponent_Impl::autosize() {
     return;
   }
 
   // default implementation does nothing.
   // should only be used by objects that have
-  // no autosized fields 
+  // no autosized fields
   void HVACComponent_Impl::applySizingValues() {
     return;
   }

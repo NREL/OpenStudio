@@ -232,7 +232,7 @@ namespace modeleditor
       widget->showPrecisionDlg(showPrecision);
     }
   }
- 
+
   int ModelExplorer::currentIndex() const
   {
     return mStackedWidget->currentIndex();

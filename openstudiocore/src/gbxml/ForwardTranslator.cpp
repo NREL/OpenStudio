@@ -167,7 +167,7 @@ namespace gbxml {
     result.replace("\\", "_");
     //result.replace("-", "_"); // ok
     //result.replace(".", "_"); // ok
-    result.replace(":", "_"); 
+    result.replace(":", "_");
     result.replace(";", "_");
     return result;
   }
@@ -213,7 +213,7 @@ namespace gbxml {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Constructions"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum((int)constructionBases.size()); 
+      m_progressBar->setMaximum((int)constructionBases.size());
       m_progressBar->setValue(0);
     }
 
@@ -227,12 +227,12 @@ namespace gbxml {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
-    
+
     // do materials
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Materials"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum((int)2*m_materials.size()); 
+      m_progressBar->setMaximum((int)2*m_materials.size());
       m_progressBar->setValue(0);
     }
 
@@ -262,7 +262,7 @@ namespace gbxml {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Thermal Zones"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum((int)thermalZones.size()); 
+      m_progressBar->setMaximum((int)thermalZones.size());
       m_progressBar->setValue(0);
     }
 
@@ -319,7 +319,7 @@ namespace gbxml {
     QDomElement firstNameElement = doc.createElement("FirstName");
     personInfoElement.appendChild(firstNameElement);
     firstNameElement.appendChild(doc.createTextNode("Unknown"));
-        
+
     QDomElement lastNameElement = doc.createElement("LastName");
     personInfoElement.appendChild(lastNameElement);
     lastNameElement.appendChild(doc.createTextNode("Unknown"));
@@ -332,7 +332,7 @@ namespace gbxml {
       if (m_progressBar){
         m_progressBar->setWindowTitle(toString("Translating Thermal Zone Results"));
         m_progressBar->setMinimum(0);
-        m_progressBar->setMaximum((int)thermalZones.size()); 
+        m_progressBar->setMaximum((int)thermalZones.size());
         m_progressBar->setValue(0);
       }
 
@@ -342,7 +342,7 @@ namespace gbxml {
         boost::optional<double> coolingLoad;
         boost::optional<double> flow;
         QString thermalZoneId = escapeName(thermalZone.name().get());
-        
+
         // DLM: these queries are taken from the OpenStudio standards, should be ported to Model
         query = "SELECT Value ";
         query += "FROM tabulardatawithstrings ";
@@ -351,7 +351,7 @@ namespace gbxml {
         query += "AND TableName='Zone Sensible Heating' ";
         query += "AND ColumnName='User Design Load' ";
         query += "AND RowName='" + boost::to_upper_copy(thermalZone.name().get()) + "' ";
-        query += "AND Units='W'";         
+        query += "AND Units='W'";
         heatLoad = sqlFile->execAndReturnFirstDouble(query);
 
         query = "SELECT Value ";
@@ -361,7 +361,7 @@ namespace gbxml {
         query += "AND TableName='Zone Sensible Cooling' ";
         query += "AND ColumnName='User Design Load' ";
         query += "AND RowName='" + boost::to_upper_copy(thermalZone.name().get()) + "' ";
-        query += "AND Units='W'";         
+        query += "AND Units='W'";
         coolingLoad = sqlFile->execAndReturnFirstDouble(query);
 
         query = "SELECT Value ";
@@ -371,7 +371,7 @@ namespace gbxml {
         query += "AND TableName='Zone Sensible Cooling' ";
         query += "AND ColumnName='User Design Air Flow' ";
         query += "AND RowName='" + boost::to_upper_copy(thermalZone.name().get()) + "' ";
-        query += "AND Units='m3/s'";         
+        query += "AND Units='m3/s'";
         boost::optional<double> coolingFlow = sqlFile->execAndReturnFirstDouble(query);
 
         query = "SELECT Value ";
@@ -381,7 +381,7 @@ namespace gbxml {
         query += "AND TableName='Zone Sensible Heating' ";
         query += "AND ColumnName='User Design Air Flow' ";
         query += "AND RowName='" + boost::to_upper_copy(thermalZone.name().get()) + "' ";
-        query += "AND Units='m3/s'";         
+        query += "AND Units='m3/s'";
         boost::optional<double> heatingFlow = sqlFile->execAndReturnFirstDouble(query);
 
         if (heatingFlow && coolingFlow){
@@ -500,7 +500,7 @@ namespace gbxml {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
-  
+
     // translate shading surfaces
     std::vector<model::ShadingSurface> shadingSurfaces = model.getConcreteModelObjects<model::ShadingSurface>();
     if (m_progressBar){
@@ -562,7 +562,7 @@ namespace gbxml {
 
     // DLM: we want to use gbXML's definition of floor area which includes area from all spaces with people in them
     //double floorArea = building.floorArea();
-   
+
     std::vector<model::Space> spaces = building.spaces();
 
     double floorArea = 0;
@@ -572,7 +572,7 @@ namespace gbxml {
         floorArea += space.multiplier() * space.floorArea();
       }
     }
-    
+
     areaElement.appendChild(doc.createTextNode(QString::number(floorArea, 'f')));
 
     // translate spaces
@@ -678,7 +678,7 @@ namespace gbxml {
     QDomElement areaElement = doc.createElement("Area");
     areaElement.appendChild(doc.createTextNode(QString::number(area, 'f')));
     result.appendChild(areaElement);
-    
+
     // append volume
     double volume = space.volume();
     QDomElement volumeElement = doc.createElement("Volume");
@@ -747,13 +747,13 @@ namespace gbxml {
     result.appendChild(nameElement);
     nameElement.appendChild(doc.createTextNode(QString::fromStdString(name)));
 
-    return result;  
+    return result;
   }
 
   boost::optional<QDomElement> ForwardTranslator::translateBuildingStory(const openstudio::model::BuildingStory& story, QDomDocument& doc)
   {
     boost::optional<double> zLevel = story.nominalZCoordinate();
-    
+
     // z-level not set, attempt to find it
     if (!zLevel){
       for (const auto& space : story.spaces()){
@@ -773,7 +773,7 @@ namespace gbxml {
     if (!zLevel){
       zLevel = 0;
     }
-    
+
     QDomElement result = doc.createElement("BuildingStorey");
     m_translatedObjects[story.handle()] = result;
 
@@ -870,7 +870,7 @@ namespace gbxml {
       adjacentSpaceIdElement.setAttribute("spaceIdRef", escapeName(spaceName));
     }
 
-    // adjacent surface 
+    // adjacent surface
     boost::optional<model::Surface> adjacentSurface = surface.adjacentSurface();
     if (adjacentSurface){
       boost::optional<model::Space> adjacentSpace = adjacentSurface->space();
@@ -896,7 +896,7 @@ namespace gbxml {
         maxZ = std::max(maxZ, vertex.z());
       }
       if ((maxZ <= 0.01) && (minZ >= -0.01)){
-        result.setAttribute("surfaceType", "SlabOnGrade"); 
+        result.setAttribute("surfaceType", "SlabOnGrade");
       }
     }
 
@@ -913,8 +913,8 @@ namespace gbxml {
       // get azimuth, duplicate code in planar surface
       Vector3d north(0.0,1.0,0.0);
       double azimuthRadians = getAngle(*outwardNormal, north);
-      if (outwardNormal->x() < 0.0) { 
-        azimuthRadians = -azimuthRadians + 2.0*boost::math::constants::pi<double>(); 
+      if (outwardNormal->x() < 0.0) {
+        azimuthRadians = -azimuthRadians + 2.0*boost::math::constants::pi<double>();
       }
 
       // transform vertices to face coordinates
@@ -945,7 +945,7 @@ namespace gbxml {
       }
       Point3d vertex = vertices[llcIndex];
 
-      // rectangular geometry 
+      // rectangular geometry
       QDomElement rectangularGeometryElement = doc.createElement("RectangularGeometry");
       result.appendChild(rectangularGeometryElement);
 
@@ -1076,8 +1076,8 @@ namespace gbxml {
       // get azimuth, duplicate code in planar surface
       Vector3d north(0.0,1.0,0.0);
       double azimuthRadians = getAngle(*outwardNormal, north);
-      if (outwardNormal->x() < 0.0) { 
-        azimuthRadians = -azimuthRadians + 2.0*boost::math::constants::pi<double>(); 
+      if (outwardNormal->x() < 0.0) {
+        azimuthRadians = -azimuthRadians + 2.0*boost::math::constants::pi<double>();
       }
 
       // transform vertices to face coordinates
@@ -1108,7 +1108,7 @@ namespace gbxml {
       }
       Point3d vertex = vertices[llcIndex];
 
-      // rectangular geometry 
+      // rectangular geometry
       QDomElement rectangularGeometryElement = doc.createElement("RectangularGeometry");
       result.appendChild(rectangularGeometryElement);
 
@@ -1233,8 +1233,8 @@ namespace gbxml {
       // get azimuth, duplicate code in planar surface
       Vector3d north(0.0,1.0,0.0);
       double azimuthRadians = getAngle(*outwardNormal, north);
-      if (outwardNormal->x() < 0.0) { 
-        azimuthRadians = -azimuthRadians + 2.0*boost::math::constants::pi<double>(); 
+      if (outwardNormal->x() < 0.0) {
+        azimuthRadians = -azimuthRadians + 2.0*boost::math::constants::pi<double>();
       }
 
       // transform vertices to face coordinates
@@ -1265,7 +1265,7 @@ namespace gbxml {
       }
       Point3d vertex = vertices[llcIndex];
 
-      // rectangular geometry 
+      // rectangular geometry
       QDomElement rectangularGeometryElement = doc.createElement("RectangularGeometry");
       result.appendChild(rectangularGeometryElement);
 

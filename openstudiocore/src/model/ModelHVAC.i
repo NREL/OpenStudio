@@ -507,7 +507,7 @@ SWIG_MODELOBJECT(SolarCollectorPerformancePhotovoltaicThermalSimple, 1);
 #if defined(SWIGCSHARP)
   //%pragma(csharp) imclassimports=%{
   %pragma(csharp) moduleimports=%{
-  
+
     using System;
     using System.Runtime.InteropServices;
 
@@ -516,15 +516,15 @@ SWIG_MODELOBJECT(SolarCollectorPerformancePhotovoltaicThermalSimple, 1);
       {
         return OpenStudio.OpenStudioModelHVAC.getOutdoorAirNode(this);
       }
-    }  
+    }
 
     public partial class Building : ParentObject {
       public ThermalZoneVector thermalZones()
       {
         return OpenStudio.OpenStudioModelHVAC.getThermalZones(this);
       }
-    }  
-    
+    }
+
     public partial class Space : PlanarSurfaceGroup {
       public OptionalThermalZone thermalZone()
       {
@@ -534,10 +534,10 @@ SWIG_MODELOBJECT(SolarCollectorPerformancePhotovoltaicThermalSimple, 1);
       {
         return OpenStudio.OpenStudioModelHVAC.setThermalZone(this, thermalZone);
       }
-    }  
+    }
   %}
 #endif
 
 %include <model/HVACTemplates.hpp>
 
-#endif 
+#endif

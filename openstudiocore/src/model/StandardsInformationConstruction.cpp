@@ -449,9 +449,10 @@ namespace detail {
     OS_ASSERT(ok);
   }
 
-  void StandardsInformationConstruction_Impl::setStandardsConstructionType(const std::string& type) {
+  bool StandardsInformationConstruction_Impl::setStandardsConstructionType(const std::string& type) {
     bool ok = setString(OS_StandardsInformation_ConstructionFields::StandardsConstructionType,type);
     OS_ASSERT(ok);
+    return ok;
   }
 
   void StandardsInformationConstruction_Impl::resetStandardsConstructionType() {
@@ -499,7 +500,7 @@ namespace detail {
     OS_ASSERT(ok);
   }
 
-  void StandardsInformationConstruction_Impl::setPerturbableLayerType(const std::string& type)
+  bool StandardsInformationConstruction_Impl::setPerturbableLayerType(const std::string& type)
   {
     bool ok(true);
 
@@ -509,7 +510,7 @@ namespace detail {
       OS_ASSERT(ok);
       ok = setString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType,"");
       OS_ASSERT(ok);
-      return;
+      return ok;
     }
 
     ok = setString(OS_StandardsInformation_ConstructionFields::PerturbableLayerType,type);
@@ -523,6 +524,7 @@ namespace detail {
       ok = setString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType,"");
       OS_ASSERT(ok);
     }
+    return ok;
   }
 
   void StandardsInformationConstruction_Impl::resetPerturbableLayerType()
@@ -533,9 +535,9 @@ namespace detail {
     OS_ASSERT(ok);
   }
 
-  void StandardsInformationConstruction_Impl::setOtherPerturbableLayerType(const std::string& otherPerturbableLayerType) {
+  bool StandardsInformationConstruction_Impl::setOtherPerturbableLayerType(const std::string& otherPerturbableLayerType) {
     bool result = setString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType, otherPerturbableLayerType);
-    OS_ASSERT(result);
+    return result;
   }
 
   void StandardsInformationConstruction_Impl::resetOtherPerturbableLayerType() {
@@ -543,9 +545,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void StandardsInformationConstruction_Impl::setConstructionStandard(const std::string& constructionStandard) {
+  bool StandardsInformationConstruction_Impl::setConstructionStandard(const std::string& constructionStandard) {
     bool result = setString(OS_StandardsInformation_ConstructionFields::ConstructionStandard, constructionStandard);
-    OS_ASSERT(result);
+    return result;
   }
 
   void StandardsInformationConstruction_Impl::resetConstructionStandard() {
@@ -553,9 +555,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void StandardsInformationConstruction_Impl::setConstructionStandardSource(const std::string& constructionStandardSource) {
+  bool StandardsInformationConstruction_Impl::setConstructionStandardSource(const std::string& constructionStandardSource) {
     bool result= setString(OS_StandardsInformation_ConstructionFields::ConstructionStandardSource, constructionStandardSource);
-    OS_ASSERT(result);
+    return result;
   }
 
   void StandardsInformationConstruction_Impl::resetConstructionStandardSource() {
@@ -633,14 +635,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void StandardsInformationConstruction_Impl::setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating) {
+  bool StandardsInformationConstruction_Impl::setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating) {
     bool result;
     if (fenestrationLowEmissivityCoating) {
       result = setString(OS_StandardsInformation_ConstructionFields::FenestrationLowEmissivityCoating, "True");
     } else {
       result = setString(OS_StandardsInformation_ConstructionFields::FenestrationLowEmissivityCoating, "False");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void StandardsInformationConstruction_Impl::resetFenestrationLowEmissivityCoating() {
@@ -803,8 +805,8 @@ void StandardsInformationConstruction::resetIntendedSurfaceType() {
   getImpl<detail::StandardsInformationConstruction_Impl>()->resetIntendedSurfaceType();
 }
 
-void StandardsInformationConstruction::setStandardsConstructionType(const std::string& type) {
-  getImpl<detail::StandardsInformationConstruction_Impl>()->setStandardsConstructionType(type);
+bool StandardsInformationConstruction::setStandardsConstructionType(const std::string& type) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setStandardsConstructionType(type);
 }
 
 void StandardsInformationConstruction::resetStandardsConstructionType() {
@@ -823,32 +825,32 @@ void StandardsInformationConstruction::resetPerturbableLayer() {
   getImpl<detail::StandardsInformationConstruction_Impl>()->resetPerturbableLayer();
 }
 
-void StandardsInformationConstruction::setPerturbableLayerType(const std::string& type) {
-  getImpl<detail::StandardsInformationConstruction_Impl>()->setPerturbableLayerType(type);
+bool StandardsInformationConstruction::setPerturbableLayerType(const std::string& type) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setPerturbableLayerType(type);
 }
 
 void StandardsInformationConstruction::resetPerturbableLayerType() {
   getImpl<detail::StandardsInformationConstruction_Impl>()->resetPerturbableLayerType();
 }
 
-void StandardsInformationConstruction::setOtherPerturbableLayerType(const std::string& otherPerturbableLayerType) {
-  getImpl<detail::StandardsInformationConstruction_Impl>()->setOtherPerturbableLayerType(otherPerturbableLayerType);
+bool StandardsInformationConstruction::setOtherPerturbableLayerType(const std::string& otherPerturbableLayerType) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setOtherPerturbableLayerType(otherPerturbableLayerType);
 }
 
 void StandardsInformationConstruction::resetOtherPerturbableLayerType() {
   getImpl<detail::StandardsInformationConstruction_Impl>()->resetOtherPerturbableLayerType();
 }
 
-void StandardsInformationConstruction::setConstructionStandard(const std::string& constructionStandard) {
-  getImpl<detail::StandardsInformationConstruction_Impl>()->setConstructionStandard(constructionStandard);
+bool StandardsInformationConstruction::setConstructionStandard(const std::string& constructionStandard) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setConstructionStandard(constructionStandard);
 }
 
 void StandardsInformationConstruction::resetConstructionStandard() {
   getImpl<detail::StandardsInformationConstruction_Impl>()->resetConstructionStandard();
 }
 
-void StandardsInformationConstruction::setConstructionStandardSource(const std::string& constructionStandardSource) {
-  getImpl<detail::StandardsInformationConstruction_Impl>()->setConstructionStandardSource(constructionStandardSource);
+bool StandardsInformationConstruction::setConstructionStandardSource(const std::string& constructionStandardSource) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setConstructionStandardSource(constructionStandardSource);
 }
 
 void StandardsInformationConstruction::resetConstructionStandardSource() {
@@ -911,8 +913,8 @@ void StandardsInformationConstruction::resetFenestrationGasFill() {
   getImpl<detail::StandardsInformationConstruction_Impl>()->resetFenestrationGasFill();
 }
 
-void StandardsInformationConstruction::setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating) {
-  getImpl<detail::StandardsInformationConstruction_Impl>()->setFenestrationLowEmissivityCoating(fenestrationLowEmissivityCoating);
+bool StandardsInformationConstruction::setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setFenestrationLowEmissivityCoating(fenestrationLowEmissivityCoating);
 }
 
 void StandardsInformationConstruction::resetFenestrationLowEmissivityCoating() {
@@ -928,4 +930,3 @@ StandardsInformationConstruction::StandardsInformationConstruction(
 
 } // model
 } // openstudio
-

@@ -224,9 +224,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorLowTemperature(double setpointatOutdoorLowTemperature) {
+  bool SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorLowTemperature(double setpointatOutdoorLowTemperature) {
     bool result = setDouble(OS_SetpointManager_OutdoorAirResetFields::SetpointatOutdoorLowTemperature, setpointatOutdoorLowTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorLowTemperature(const Quantity& setpointatOutdoorLowTemperature) {
@@ -238,9 +238,9 @@ namespace detail {
     return true;
   }
 
-  void SetpointManagerOutdoorAirReset_Impl::setOutdoorLowTemperature(double outdoorLowTemperature) {
+  bool SetpointManagerOutdoorAirReset_Impl::setOutdoorLowTemperature(double outdoorLowTemperature) {
     bool result = setDouble(OS_SetpointManager_OutdoorAirResetFields::OutdoorLowTemperature, outdoorLowTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool SetpointManagerOutdoorAirReset_Impl::setOutdoorLowTemperature(const Quantity& outdoorLowTemperature) {
@@ -252,9 +252,9 @@ namespace detail {
     return true;
   }
 
-  void SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorHighTemperature(double setpointatOutdoorHighTemperature) {
+  bool SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorHighTemperature(double setpointatOutdoorHighTemperature) {
     bool result = setDouble(OS_SetpointManager_OutdoorAirResetFields::SetpointatOutdoorHighTemperature, setpointatOutdoorHighTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorHighTemperature(const Quantity& setpointatOutdoorHighTemperature) {
@@ -266,9 +266,9 @@ namespace detail {
     return true;
   }
 
-  void SetpointManagerOutdoorAirReset_Impl::setOutdoorHighTemperature(double outdoorHighTemperature) {
+  bool SetpointManagerOutdoorAirReset_Impl::setOutdoorHighTemperature(double outdoorHighTemperature) {
     bool result = setDouble(OS_SetpointManager_OutdoorAirResetFields::OutdoorHighTemperature, outdoorHighTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool SetpointManagerOutdoorAirReset_Impl::setOutdoorHighTemperature(const Quantity& outdoorHighTemperature) {
@@ -302,7 +302,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorLowTemperature2(boost::optional<double> setpointatOutdoorLowTemperature2) {
+  bool SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorLowTemperature2(boost::optional<double> setpointatOutdoorLowTemperature2) {
     bool result(false);
     if (setpointatOutdoorLowTemperature2) {
       result = setDouble(OS_SetpointManager_OutdoorAirResetFields::SetpointatOutdoorLowTemperature2, setpointatOutdoorLowTemperature2.get());
@@ -311,7 +311,7 @@ namespace detail {
       resetSetpointatOutdoorLowTemperature2();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorLowTemperature2(const OSOptionalQuantity& setpointatOutdoorLowTemperature2) {
@@ -336,7 +336,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SetpointManagerOutdoorAirReset_Impl::setOutdoorLowTemperature2(boost::optional<double> outdoorLowTemperature2) {
+  bool SetpointManagerOutdoorAirReset_Impl::setOutdoorLowTemperature2(boost::optional<double> outdoorLowTemperature2) {
     bool result(false);
     if (outdoorLowTemperature2) {
       result = setDouble(OS_SetpointManager_OutdoorAirResetFields::OutdoorLowTemperature2, outdoorLowTemperature2.get());
@@ -345,7 +345,7 @@ namespace detail {
       resetOutdoorLowTemperature2();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool SetpointManagerOutdoorAirReset_Impl::setOutdoorLowTemperature2(const OSOptionalQuantity& outdoorLowTemperature2) {
@@ -371,7 +371,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorHighTemperature2(boost::optional<double> setpointatOutdoorHighTemperature2) {
+  bool SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorHighTemperature2(boost::optional<double> setpointatOutdoorHighTemperature2) {
     bool result(false);
     if (setpointatOutdoorHighTemperature2) {
       result = setDouble(OS_SetpointManager_OutdoorAirResetFields::SetpointatOutdoorHighTemperature2, setpointatOutdoorHighTemperature2.get());
@@ -380,7 +380,7 @@ namespace detail {
       resetSetpointatOutdoorHighTemperature2();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorHighTemperature2(const OSOptionalQuantity& setpointatOutdoorHighTemperature2) {
@@ -406,7 +406,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SetpointManagerOutdoorAirReset_Impl::setOutdoorHighTemperature2(boost::optional<double> outdoorHighTemperature2) {
+  bool SetpointManagerOutdoorAirReset_Impl::setOutdoorHighTemperature2(boost::optional<double> outdoorHighTemperature2) {
     bool result(false);
     if (outdoorHighTemperature2) {
       result = setDouble(OS_SetpointManager_OutdoorAirResetFields::OutdoorHighTemperature2, outdoorHighTemperature2.get());
@@ -415,7 +415,7 @@ namespace detail {
       resetOutdoorHighTemperature2();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool SetpointManagerOutdoorAirReset_Impl::setOutdoorHighTemperature2(const OSOptionalQuantity& outdoorHighTemperature2) {
@@ -673,32 +673,32 @@ void SetpointManagerOutdoorAirReset::resetControlVariable() {
   getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->resetControlVariable();
 }
 
-void SetpointManagerOutdoorAirReset::setSetpointatOutdoorLowTemperature(double setpointatOutdoorLowTemperature) {
-  getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setSetpointatOutdoorLowTemperature(setpointatOutdoorLowTemperature);
+bool SetpointManagerOutdoorAirReset::setSetpointatOutdoorLowTemperature(double setpointatOutdoorLowTemperature) {
+  return getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setSetpointatOutdoorLowTemperature(setpointatOutdoorLowTemperature);
 }
 
 bool SetpointManagerOutdoorAirReset::setSetpointatOutdoorLowTemperature(const Quantity& setpointatOutdoorLowTemperature) {
   return getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setSetpointatOutdoorLowTemperature(setpointatOutdoorLowTemperature);
 }
 
-void SetpointManagerOutdoorAirReset::setOutdoorLowTemperature(double outdoorLowTemperature) {
-  getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setOutdoorLowTemperature(outdoorLowTemperature);
+bool SetpointManagerOutdoorAirReset::setOutdoorLowTemperature(double outdoorLowTemperature) {
+  return getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setOutdoorLowTemperature(outdoorLowTemperature);
 }
 
 bool SetpointManagerOutdoorAirReset::setOutdoorLowTemperature(const Quantity& outdoorLowTemperature) {
   return getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setOutdoorLowTemperature(outdoorLowTemperature);
 }
 
-void SetpointManagerOutdoorAirReset::setSetpointatOutdoorHighTemperature(double setpointatOutdoorHighTemperature) {
-  getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setSetpointatOutdoorHighTemperature(setpointatOutdoorHighTemperature);
+bool SetpointManagerOutdoorAirReset::setSetpointatOutdoorHighTemperature(double setpointatOutdoorHighTemperature) {
+  return getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setSetpointatOutdoorHighTemperature(setpointatOutdoorHighTemperature);
 }
 
 bool SetpointManagerOutdoorAirReset::setSetpointatOutdoorHighTemperature(const Quantity& setpointatOutdoorHighTemperature) {
   return getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setSetpointatOutdoorHighTemperature(setpointatOutdoorHighTemperature);
 }
 
-void SetpointManagerOutdoorAirReset::setOutdoorHighTemperature(double outdoorHighTemperature) {
-  getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setOutdoorHighTemperature(outdoorHighTemperature);
+bool SetpointManagerOutdoorAirReset::setOutdoorHighTemperature(double outdoorHighTemperature) {
+  return getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setOutdoorHighTemperature(outdoorHighTemperature);
 }
 
 bool SetpointManagerOutdoorAirReset::setOutdoorHighTemperature(const Quantity& outdoorHighTemperature) {
@@ -713,8 +713,8 @@ void SetpointManagerOutdoorAirReset::resetSchedule() {
   getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->resetSchedule();
 }
 
-void SetpointManagerOutdoorAirReset::setSetpointatOutdoorLowTemperature2(double setpointatOutdoorLowTemperature2) {
-  getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setSetpointatOutdoorLowTemperature2(setpointatOutdoorLowTemperature2);
+bool SetpointManagerOutdoorAirReset::setSetpointatOutdoorLowTemperature2(double setpointatOutdoorLowTemperature2) {
+  return getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setSetpointatOutdoorLowTemperature2(setpointatOutdoorLowTemperature2);
 }
 
 bool SetpointManagerOutdoorAirReset::setSetpointatOutdoorLowTemperature2(const Quantity& setpointatOutdoorLowTemperature2) {
@@ -725,8 +725,8 @@ void SetpointManagerOutdoorAirReset::resetSetpointatOutdoorLowTemperature2() {
   getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->resetSetpointatOutdoorLowTemperature2();
 }
 
-void SetpointManagerOutdoorAirReset::setOutdoorLowTemperature2(double outdoorLowTemperature2) {
-  getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setOutdoorLowTemperature2(outdoorLowTemperature2);
+bool SetpointManagerOutdoorAirReset::setOutdoorLowTemperature2(double outdoorLowTemperature2) {
+  return getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setOutdoorLowTemperature2(outdoorLowTemperature2);
 }
 
 bool SetpointManagerOutdoorAirReset::setOutdoorLowTemperature2(const Quantity& outdoorLowTemperature2) {
@@ -737,8 +737,8 @@ void SetpointManagerOutdoorAirReset::resetOutdoorLowTemperature2() {
   getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->resetOutdoorLowTemperature2();
 }
 
-void SetpointManagerOutdoorAirReset::setSetpointatOutdoorHighTemperature2(double setpointatOutdoorHighTemperature2) {
-  getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setSetpointatOutdoorHighTemperature2(setpointatOutdoorHighTemperature2);
+bool SetpointManagerOutdoorAirReset::setSetpointatOutdoorHighTemperature2(double setpointatOutdoorHighTemperature2) {
+  return getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setSetpointatOutdoorHighTemperature2(setpointatOutdoorHighTemperature2);
 }
 
 bool SetpointManagerOutdoorAirReset::setSetpointatOutdoorHighTemperature2(const Quantity& setpointatOutdoorHighTemperature2) {
@@ -749,8 +749,8 @@ void SetpointManagerOutdoorAirReset::resetSetpointatOutdoorHighTemperature2() {
   getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->resetSetpointatOutdoorHighTemperature2();
 }
 
-void SetpointManagerOutdoorAirReset::setOutdoorHighTemperature2(double outdoorHighTemperature2) {
-  getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setOutdoorHighTemperature2(outdoorHighTemperature2);
+bool SetpointManagerOutdoorAirReset::setOutdoorHighTemperature2(double outdoorHighTemperature2) {
+  return getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setOutdoorHighTemperature2(outdoorHighTemperature2);
 }
 
 bool SetpointManagerOutdoorAirReset::setOutdoorHighTemperature2(const Quantity& outdoorHighTemperature2) {
@@ -774,4 +774,3 @@ SetpointManagerOutdoorAirReset::SetpointManagerOutdoorAirReset(std::shared_ptr<d
 
 } // model
 } // openstudio
-

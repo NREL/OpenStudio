@@ -319,14 +319,14 @@ namespace detail {
     OS_ASSERT(ok);
   }
 
-  void BoilerHotWater_Impl::setDesignWaterOutletTemperature(boost::optional<double> designWaterOutletTemperature) {
+  bool BoilerHotWater_Impl::setDesignWaterOutletTemperature(boost::optional<double> designWaterOutletTemperature) {
     bool result = false;
     if (designWaterOutletTemperature) {
       result = setDouble(OS_Boiler_HotWaterFields::DesignWaterOutletTemperature, designWaterOutletTemperature.get());
     } else {
       result = setString(OS_Boiler_HotWaterFields::DesignWaterOutletTemperature, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void BoilerHotWater_Impl::resetDesignWaterOutletTemperature() {
@@ -384,9 +384,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void BoilerHotWater_Impl::setWaterOutletUpperTemperatureLimit(double waterOutletUpperTemperatureLimit) {
+  bool BoilerHotWater_Impl::setWaterOutletUpperTemperatureLimit(double waterOutletUpperTemperatureLimit) {
     bool result = setDouble(OS_Boiler_HotWaterFields::WaterOutletUpperTemperatureLimit, waterOutletUpperTemperatureLimit);
-    OS_ASSERT(result);
+    return result;
   }
 
   void BoilerHotWater_Impl::resetWaterOutletUpperTemperatureLimit() {
@@ -675,8 +675,8 @@ void BoilerHotWater::resetNormalizedBoilerEfficiencyCurve() {
   getImpl<detail::BoilerHotWater_Impl>()->resetNormalizedBoilerEfficiencyCurve();
 }
 
-void BoilerHotWater::setDesignWaterOutletTemperature(double designWaterOutletTemperature) {
-  getImpl<detail::BoilerHotWater_Impl>()->setDesignWaterOutletTemperature(designWaterOutletTemperature);
+bool BoilerHotWater::setDesignWaterOutletTemperature(double designWaterOutletTemperature) {
+  return getImpl<detail::BoilerHotWater_Impl>()->setDesignWaterOutletTemperature(designWaterOutletTemperature);
 }
 
 void BoilerHotWater::resetDesignWaterOutletTemperature() {
@@ -719,8 +719,8 @@ void BoilerHotWater::resetOptimumPartLoadRatio() {
   getImpl<detail::BoilerHotWater_Impl>()->resetOptimumPartLoadRatio();
 }
 
-void BoilerHotWater::setWaterOutletUpperTemperatureLimit(double waterOutletUpperTemperatureLimit) {
-  getImpl<detail::BoilerHotWater_Impl>()->setWaterOutletUpperTemperatureLimit(waterOutletUpperTemperatureLimit);
+bool BoilerHotWater::setWaterOutletUpperTemperatureLimit(double waterOutletUpperTemperatureLimit) {
+  return getImpl<detail::BoilerHotWater_Impl>()->setWaterOutletUpperTemperatureLimit(waterOutletUpperTemperatureLimit);
 }
 
 void BoilerHotWater::resetWaterOutletUpperTemperatureLimit() {
@@ -767,4 +767,3 @@ BoilerHotWater::BoilerHotWater(std::shared_ptr<detail::BoilerHotWater_Impl> impl
 
 } // model
 } // openstudio
-

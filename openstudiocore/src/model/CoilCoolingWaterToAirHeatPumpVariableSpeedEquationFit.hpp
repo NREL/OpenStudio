@@ -90,17 +90,17 @@ class MODEL_API CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit : public W
   /** @name Setters */
   //@{
 
-  void setNominalSpeedLevel(int nominalSpeedLevel);
+  bool setNominalSpeedLevel(int nominalSpeedLevel);
 
-  void setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(double grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel);
+  bool setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(double grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel);
 
   void autosizeGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
 
-  void setRatedAirFlowRateAtSelectedNominalSpeedLevel(double ratedAirFlowRateAtSelectedNominalSpeedLevel);
+  bool setRatedAirFlowRateAtSelectedNominalSpeedLevel(double ratedAirFlowRateAtSelectedNominalSpeedLevel);
 
   void autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
 
-  void setRatedWaterFlowRateAtSelectedNominalSpeedLevel(double ratedWaterFlowRateAtSelectedNominalSpeedLevel);
+  bool setRatedWaterFlowRateAtSelectedNominalSpeedLevel(double ratedWaterFlowRateAtSelectedNominalSpeedLevel);
 
   void autosizeRatedWaterFlowRateAtSelectedNominalSpeedLevel();
 
@@ -108,7 +108,7 @@ class MODEL_API CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit : public W
 
   bool setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(double initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity);
 
-  void setUseHotGasReheat(bool useHotGasReheat);
+  bool setUseHotGasReheat(bool useHotGasReheat);
 
   bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
@@ -158,4 +158,3 @@ typedef std::vector<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit> CoilC
 } // openstudio
 
 #endif // MODEL_COILCOOLINGWATERTOAIRHEATPUMPVARIABLESPEEDEQUATIONFIT_HPP
-

@@ -211,11 +211,11 @@ namespace detail {
 
     void resetEvaporationLossMode();
 
-    void setEvaporationLossFactor(double evaporationLossFactor);
+    bool setEvaporationLossFactor(double evaporationLossFactor);
 
     void resetEvaporationLossFactor();
 
-    void setDriftLossPercent(boost::optional<double> driftLossPercent);
+    bool setDriftLossPercent(boost::optional<double> driftLossPercent);
 
     void resetDriftLossPercent();
 
@@ -274,4 +274,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COOLINGTOWERVARIABLESPEED_IMPL_HPP
-

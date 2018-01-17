@@ -60,7 +60,7 @@ UtilityBillsController::UtilityBillsController(const model::Model& model)
 
 void UtilityBillsController::onAddObject(const openstudio::IddObjectType& iddObjectType)
 {
-  OSItemSelector* itemSelector = this->subTabView()->itemSelector(); 
+  OSItemSelector* itemSelector = this->subTabView()->itemSelector();
   UtilityBillAllFuelTypesListView * utilityBillAllFuelTypesListView = qobject_cast<UtilityBillAllFuelTypesListView *>(itemSelector);
   OS_ASSERT(utilityBillAllFuelTypesListView);
   FuelType fuelType = utilityBillAllFuelTypesListView->currentFuelType();

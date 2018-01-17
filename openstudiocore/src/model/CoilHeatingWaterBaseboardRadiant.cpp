@@ -224,12 +224,12 @@ namespace detail {
     return result;
   }
 
-  void CoilHeatingWaterBaseboardRadiant_Impl::setMaximumWaterFlowRate(boost::optional<double> maximumWaterFlowRate) {
+  bool CoilHeatingWaterBaseboardRadiant_Impl::setMaximumWaterFlowRate(boost::optional<double> maximumWaterFlowRate) {
     bool result(false);
     if (maximumWaterFlowRate) {
       result = setDouble(OS_Coil_Heating_Water_Baseboard_RadiantFields::MaximumWaterFlowRate, maximumWaterFlowRate.get());
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CoilHeatingWaterBaseboardRadiant_Impl::autosizeMaximumWaterFlowRate() {
@@ -382,8 +382,8 @@ bool CoilHeatingWaterBaseboardRadiant::setFractionofAutosizedHeatingDesignCapaci
   return getImpl<detail::CoilHeatingWaterBaseboardRadiant_Impl>()->setFractionofAutosizedHeatingDesignCapacity(fractionofAutosizedHeatingDesignCapacity);
 }
 
-void CoilHeatingWaterBaseboardRadiant::setMaximumWaterFlowRate(double maximumWaterFlowRate) {
-  getImpl<detail::CoilHeatingWaterBaseboardRadiant_Impl>()->setMaximumWaterFlowRate(maximumWaterFlowRate);
+bool CoilHeatingWaterBaseboardRadiant::setMaximumWaterFlowRate(double maximumWaterFlowRate) {
+  return getImpl<detail::CoilHeatingWaterBaseboardRadiant_Impl>()->setMaximumWaterFlowRate(maximumWaterFlowRate);
 }
 
 void CoilHeatingWaterBaseboardRadiant::autosizeMaximumWaterFlowRate() {
@@ -410,4 +410,3 @@ CoilHeatingWaterBaseboardRadiant::CoilHeatingWaterBaseboardRadiant(std::shared_p
 
 } // model
 } // openstudio
-

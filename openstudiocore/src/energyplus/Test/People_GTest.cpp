@@ -64,7 +64,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_People)
 
   People people(def);
   people.setSpace(space);
-  
+
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
 

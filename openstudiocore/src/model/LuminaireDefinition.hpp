@@ -41,7 +41,7 @@ namespace detail {
 
 } // detail
 
-/** LuminaireDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object 
+/** LuminaireDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object
  *  'OS_Luminaire_Definition'. \sa Luminaire */
 class MODEL_API LuminaireDefinition : public SpaceLoadDefinition {
  public:
@@ -114,7 +114,7 @@ class MODEL_API LuminaireDefinition : public SpaceLoadDefinition {
 
   void resetReturnAirFraction();
 
-  void setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature);
+  bool setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature);
 
   void resetReturnAirFractionCalculatedfromPlenumTemperature();
 
@@ -152,4 +152,3 @@ typedef std::vector<LuminaireDefinition> LuminaireDefinitionVector;
 } // openstudio
 
 #endif // MODEL_LUMINAIREDEFINITION_HPP
-

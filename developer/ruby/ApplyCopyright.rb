@@ -1,4 +1,4 @@
-# Inserts copyright at beginning of each 
+# Inserts copyright at beginning of each
 #
 # Inputs:
 #   ARGV[0] - path to top level cmake source directory (one level above 'src' directory)
@@ -62,7 +62,7 @@ files.each do |p|
 
   # start with copyright
   text = copyright
-  
+
   # read file
   File.open(p, "r") do |file|
     # read until end of current copyright
@@ -74,13 +74,13 @@ files.each do |p|
         break
       end
     end
-    
+
     # now keep rest of file
     while (line = file.gets)
       text += line
     end
   end
-  
+
   # write file
   File.open(p, "w") do |file|
     file << text
@@ -113,7 +113,7 @@ files.each do |p|
 
   # start with copyright
   text = ruby_copyright
-  
+
   # read file
   File.open(p, "r") do |file|
     # read until end of current copyright
@@ -125,13 +125,13 @@ files.each do |p|
         break
       end
     end
-    
+
     # now keep rest of file
     while (line = file.gets)
       text += line
     end
   end
-  
+
   # write file
   File.open(p, "w") do |file|
     file << text

@@ -42,10 +42,10 @@ namespace detail{
 
 /** UtilityCost_Tariff derives from ParentObject and is an interface to the OpenStudio IDD object named "OS:UtilityCost:Tariff".
  *
- *  UtilityCost_Tariff allows the modeling of utilities tariffs. 
+ *  UtilityCost_Tariff allows the modeling of utilities tariffs.
  */
 class MODEL_API UtilityCost_Tariff : public ParentObject{
- 
+
 public:
 
   /** @name Constructors and Destructors */
@@ -63,8 +63,6 @@ public:
   boost::optional<double> energyConversionFactor() const;
 
   boost::optional<double> demandConversionFactor() const;
-
-  boost::optional<std::string> name() const;
 
   boost::optional<std::string> outputMeterName() const;
 
@@ -94,35 +92,33 @@ public:
   /** @name Setters */
   //@{
 
-  void setEnergyConversionFactor(double energyConversionFactor);
-  
-  void setDemandConversionFactor(double demandConversionFactor);
-  
-  bool setName(const std::string& name);
+  bool setEnergyConversionFactor(double energyConversionFactor);
 
-  void setOutputMeterName(const std::string& outputMeterName);
+  bool setDemandConversionFactor(double demandConversionFactor);
 
-  void setConversionFactorChoice(const std::string& conversionFactorChoice);
+  bool setOutputMeterName(const std::string& outputMeterName);
 
-  void setTimeOfUsePeriodScheduleName(const std::string& timeOfUsePeriodScheduleName);
-  
-  void setSeasonScheduleName(const std::string& seasonScheduleName);
+  bool setConversionFactorChoice(const std::string& conversionFactorChoice);
 
-  void setMonthScheduleName(const std::string& monthScheduleName);
+  bool setTimeOfUsePeriodScheduleName(const std::string& timeOfUsePeriodScheduleName);
 
-  void setDemandWindowLength(const std::string& demandWindowLength);
-  
-  void setMonthlyChargeOrVariableName(const std::string& monthlyChargeOrVariableName);
-  
-  void setMinimumMonthlyChargeOrVariableName(const std::string& minimumMonthlyChargeOrVariableName);
+  bool setSeasonScheduleName(const std::string& seasonScheduleName);
 
-  void setRealTimePricingChargeScheduleName(const std::string& realTimePricingChargeScheduleName);
-  
-  void setCustomerBaselineLoadScheduleName(const std::string& customerBaselineLoadScheduleName);
-  
-  void setGroupName(const std::string& groupName);
+  bool setMonthScheduleName(const std::string& monthScheduleName);
 
-  void setBuyOrSell(const std::string& buyOrSell);
+  bool setDemandWindowLength(const std::string& demandWindowLength);
+
+  bool setMonthlyChargeOrVariableName(const std::string& monthlyChargeOrVariableName);
+
+  bool setMinimumMonthlyChargeOrVariableName(const std::string& minimumMonthlyChargeOrVariableName);
+
+  bool setRealTimePricingChargeScheduleName(const std::string& realTimePricingChargeScheduleName);
+
+  bool setCustomerBaselineLoadScheduleName(const std::string& customerBaselineLoadScheduleName);
+
+  bool setGroupName(const std::string& groupName);
+
+  bool setBuyOrSell(const std::string& buyOrSell);
 
   //@}
 

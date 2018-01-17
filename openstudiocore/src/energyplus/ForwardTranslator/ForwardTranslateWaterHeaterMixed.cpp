@@ -221,12 +221,12 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
   }
 
   // OnCycleParasiticFuelType
-  
+
   s = modelObject.onCycleParasiticFuelType();
   if( s )
   {
     idfObject.setString(WaterHeater_MixedFields::OnCycleParasiticFuelType,s.get());
-  } 
+  }
 
   // OnCycleParasiticHeatFractiontoTank
 
@@ -309,7 +309,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
   }
 
   // OffCycleLossFractiontoThermalZone
-  
+
   value = modelObject.offCycleLossFractiontoThermalZone();
   if( value )
   {
@@ -325,7 +325,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
   }
 
   // OnCycleLossFractiontoThermalZone
-  
+
   value = modelObject.onCycleLossFractiontoThermalZone();
   if( value )
   {

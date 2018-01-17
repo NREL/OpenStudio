@@ -79,7 +79,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemTrendVaria
       boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
       if (modelObject) {
         if (modelObject.get().cast<EnergyManagementSystemGlobalVariable>().name() == s) {
-          result = emsTrendVariable.setEMSVariableName(*s);          
+          result = emsTrendVariable.setEMSVariableName(*s);
           if (result) {
             return emsTrendVariable;
           } else {

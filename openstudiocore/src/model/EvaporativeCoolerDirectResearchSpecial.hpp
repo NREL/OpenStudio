@@ -82,14 +82,14 @@ class MODEL_API EvaporativeCoolerDirectResearchSpecial : public StraightComponen
   double coolerEffectiveness() const;
 
   /** Sets the value of the CoolerEffectiveness field. **/
-  void setCoolerEffectiveness( double value );
+  bool setCoolerEffectiveness( double value );
 
   /** Returns the value of the RecirculatingWaterPumpPowerConsumption field. **/
   /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Recirculating Water Pump Design Power" **/
   boost::optional<double> recirculatingWaterPumpPowerConsumption() const;
 
   /** Sets the value of the RecirculatingWaterPumpPowerConsumption field. **/
-  void setRecirculatingWaterPumpPowerConsumption( double value );
+  bool setRecirculatingWaterPumpPowerConsumption( double value );
 
   void autosizeRecirculatingWaterPumpPowerConsumption();
 
@@ -99,7 +99,7 @@ class MODEL_API EvaporativeCoolerDirectResearchSpecial : public StraightComponen
   boost::optional<double> primaryAirDesignFlowRate() const;
 
   /** Sets the value of the PrimaryAirDesignFlowRate field. **/
-  void setPrimaryAirDesignFlowRate( double value );
+  bool setPrimaryAirDesignFlowRate( double value );
 
   void autosizePrimaryAirDesignFlowRate();
 
@@ -109,19 +109,19 @@ class MODEL_API EvaporativeCoolerDirectResearchSpecial : public StraightComponen
   boost::optional<Node> sensorNode() const;
 
   /** Sets the Node referred to by the SensorNodeName field. **/
-  void setSensorNode( const Node & node );
+  bool setSensorNode( const Node & node );
 
   /** Returns the value of the DriftLossFraction field. **/
   double driftLossFraction() const;
 
   /** Sets the value of the DriftLossFraction field. **/
-  void setDriftLossFraction( double value );
+  bool setDriftLossFraction( double value );
 
   /** Returns the value of the BlowdownConcentrationRatio field. **/
   double blowdownConcentrationRatio() const;
 
   /** Sets the value of the BlowdownConcentrationRatio field. **/
-  void setBlowdownConcentrationRatio( double value );
+  bool setBlowdownConcentrationRatio( double value );
 
   boost::optional<Curve> effectivenessFlowRatioModifierCurve() const;
 
@@ -131,7 +131,7 @@ class MODEL_API EvaporativeCoolerDirectResearchSpecial : public StraightComponen
 
   double waterPumpPowerSizingFactor() const;
 
-  void setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
+  bool setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
 
   boost::optional<Curve> waterPumpPowerModifierCurve() const;
 
@@ -169,4 +169,3 @@ typedef std::vector<EvaporativeCoolerDirectResearchSpecial> EvaporativeCoolerDir
 } // openstudio
 
 #endif // MODEL_EVAPORATIVECOOLERDIRECTRESEARCHSPECIAL_HPP
-

@@ -4,37 +4,37 @@ def show_output(result)
   applicability = result.value.value
   if applicability ==  -1
     puts "#{applicability} = Not Applicable"
-  elsif applicability == 0 
+  elsif applicability == 0
     puts "#{applicability} = Success"
-  elsif applicability == 1 
+  elsif applicability == 1
     puts "#{applicability} = Fail"
   end
- 
+
   puts "**INITIAL CONDITION**"
   if result.stepInitialCondition.empty?
     #do nothing
   else
     puts result.stepInitialCondition.get
-  end  
-      
+  end
+
   puts "**FINAL CONDITION**"
   if result.stepFinalCondition.empty?
     #do nothing
   else
     puts result.stepFinalCondition.get
-  end    
-  
-  puts "**INFO MESSAGES**"  
+  end
+
+  puts "**INFO MESSAGES**"
   result.stepInfo.each do |info_msg|
     puts "#{info_msg}"
   end
 
-  puts "**WARNING MESSAGES**"  
+  puts "**WARNING MESSAGES**"
   result.stepWarnings.each do |info_msg|
     puts "#{info_msg}"
   end
 
-  puts "**ERROR MESSAGES**"  
+  puts "**ERROR MESSAGES**"
   result.stepErrors.each do |info_msg|
     puts "#{info_msg}"
   end
@@ -50,8 +50,8 @@ def show_output(result)
   result.stepFiles.each do |file|
     puts "#{file}"
   end
-  
+
   puts "" #space between measures for readability in output
   puts ""
-  
+
 end

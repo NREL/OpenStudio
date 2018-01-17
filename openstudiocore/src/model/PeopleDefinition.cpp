@@ -264,14 +264,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void PeopleDefinition_Impl::setEnableASHRAE55ComfortWarnings(bool enableASHRAE55ComfortWarnings) {
+  bool PeopleDefinition_Impl::setEnableASHRAE55ComfortWarnings(bool enableASHRAE55ComfortWarnings) {
     bool result = false;
     if (enableASHRAE55ComfortWarnings) {
       result = setString(OS_People_DefinitionFields::EnableASHRAE55ComfortWarnings, "Yes");
     } else {
       result = setString(OS_People_DefinitionFields::EnableASHRAE55ComfortWarnings, "No");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void PeopleDefinition_Impl::resetEnableASHRAE55ComfortWarnings() {
@@ -548,8 +548,8 @@ void PeopleDefinition::resetCarbonDioxideGenerationRate() {
   getImpl<detail::PeopleDefinition_Impl>()->resetCarbonDioxideGenerationRate();
 }
 
-void PeopleDefinition::setEnableASHRAE55ComfortWarnings(bool enableASHRAE55ComfortWarnings) {
-  getImpl<detail::PeopleDefinition_Impl>()->setEnableASHRAE55ComfortWarnings(enableASHRAE55ComfortWarnings);
+bool PeopleDefinition::setEnableASHRAE55ComfortWarnings(bool enableASHRAE55ComfortWarnings) {
+  return getImpl<detail::PeopleDefinition_Impl>()->setEnableASHRAE55ComfortWarnings(enableASHRAE55ComfortWarnings);
 }
 
 void PeopleDefinition::resetEnableASHRAE55ComfortWarnings() {
@@ -601,4 +601,3 @@ PeopleDefinition::PeopleDefinition(std::shared_ptr<detail::PeopleDefinition_Impl
 
 } // model
 } // openstudio
-

@@ -846,7 +846,7 @@ namespace detail {
     return true;
   }
 
- 
+
   boost::optional<double> ZoneHVACWaterToAirHeatPump_Impl::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
     return getAutosizedValue("Design Size Cooling Supply Air Flow Rate", "m3/s");
   }

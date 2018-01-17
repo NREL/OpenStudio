@@ -50,15 +50,15 @@ namespace detail {
     // Construct completely new object.
     FenestrationMaterial_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // Construct from existing workspace object (typically when Model is being constructed 
+    // Construct from existing workspace object (typically when Model is being constructed
     // from Workspace).
-    FenestrationMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                              Model_Impl* model, 
+    FenestrationMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                              Model_Impl* model,
                               bool keepHandle);
 
     // Clone copy constructor.
-    FenestrationMaterial_Impl(const FenestrationMaterial_Impl& other, 
-                              Model_Impl* model, 
+    FenestrationMaterial_Impl(const FenestrationMaterial_Impl& other,
+                              Model_Impl* model,
                               bool keepHandle);
 
     virtual ~FenestrationMaterial_Impl() {}

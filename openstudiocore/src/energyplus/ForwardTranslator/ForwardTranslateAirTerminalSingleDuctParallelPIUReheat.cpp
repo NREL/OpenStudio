@@ -151,7 +151,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctPara
     eg = _mixer.pushExtensibleGroup();
     eg.setString(AirLoopHVAC_ZoneMixerExtensibleFields::InletNodeName,inletNodeName.get());
   }
-  
+
   idfObject.setString(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::ZoneMixerName,_mixer.name().get());
 
   // FanName
@@ -165,7 +165,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctPara
     }
 
     _fan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,fanOutletNodeName);
-  } 
+  }
 
   // ReheatCoilName
   if( _reheatCoil && _reheatCoil->name() )
@@ -269,7 +269,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctPara
   {
     idfObject.setDouble(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::ConvergenceTolerance,value.get());
   }
-  
+
   return _airDistributionUnit;
 }
 

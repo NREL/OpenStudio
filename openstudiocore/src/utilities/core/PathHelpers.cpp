@@ -182,19 +182,19 @@ path relativePath(const path& p,const path& base) {
     ++wBaseIt;
   }
   // p is not an extension of base, try to complete, then return p
-  if (!((wBaseIt == wBaseEnd) || (toString(*wBaseIt) == "."))) { 
+  if (!((wBaseIt == wBaseEnd) || (toString(*wBaseIt) == "."))) {
     path completeP = openstudio::filesystem::complete(p);
     path completeBase = openstudio::filesystem::complete(base);
-    if ((completeP != wp) || (completeBase != wBase)) { 
-      LOG_FREE(Debug,"openstudio.utilities.core","Path '" << toString(p) 
-        << "' does not extend base '" << toString(base) 
+    if ((completeP != wp) || (completeBase != wBase)) {
+      LOG_FREE(Debug,"openstudio.utilities.core","Path '" << toString(p)
+        << "' does not extend base '" << toString(base)
         << "'. Try again after completing both paths.");
       return relativePath(completeP,completeBase);
     }
     else {
-      LOG_FREE(Debug,"openstudio.utilities.core","Path '" << toString(p) 
+      LOG_FREE(Debug,"openstudio.utilities.core","Path '" << toString(p)
         << "' does not extend base '" << toString(base) << "'.");
-      return path(); 
+      return path();
     }
   }
 
@@ -237,7 +237,7 @@ path relocatePath(const path& originalPath,
 {
   path result;
   path temp = relativePath(originalPath,originalBase);
-  LOG_FREE(Debug,"openstudio.utilities.core","Original path '" << toString(originalPath) 
+  LOG_FREE(Debug,"openstudio.utilities.core","Original path '" << toString(originalPath)
       << "', relative to '" << toString(originalBase) << "' is '" << toString(temp) << "'.");
   if (!temp.empty()) {
     result = newBase / temp;
@@ -279,7 +279,7 @@ bool removeDirectory(const path& dirName) {
 
 bool copyDirectory(const path& source, const path& destination) {
   // note : we are not using openstudio::filesystem::copy to copy recursively
-  // because that copies the entire directory into the destination, not just the 
+  // because that copies the entire directory into the destination, not just the
   // contents of the directory
   for (const auto &file : openstudio::filesystem::recursive_directory_files(source))
   {
@@ -337,7 +337,7 @@ bool isNetworkPath(const path& p)
     if (GetDriveType(pstring.c_str()) == DRIVE_REMOTE){
       return true;
     }
-  } 
+  }
 
   // check if path begins with \\, e.g. \\server\file
   QString q = toQString(p.string()); // toQString(p) converts backslashes to slashes
@@ -390,15 +390,15 @@ bool isNetworkPathAvailable(const path& p)
   LPTSTR pszSystem = NULL;          // variable-length strings
 
   // Set the block of memory to zero; then initialize
-  // the NETRESOURCE structure. 
+  // the NETRESOURCE structure.
   ZeroMemory(&nr, sizeof(nr));
 
   nr.dwScope = RESOURCE_GLOBALNET;
   nr.dwType = RESOURCETYPE_ANY;
   nr.lpRemoteName = &fullyQualifiedName[0];
 
-  // First call the WNetGetResourceInformation function with 
-  // memory allocated to hold only a NETRESOURCE structure. This 
+  // First call the WNetGetResourceInformation function with
+  // memory allocated to hold only a NETRESOURCE structure. This
   // method can succeed if all the NETRESOURCE pointers are NULL.
   // If the call fails because the buffer is too small, allocate
   // a larger buffer.

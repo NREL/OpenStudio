@@ -34,11 +34,11 @@
 namespace openstudio {
 
 WorkspaceObjectWatcher::WorkspaceObjectWatcher(const openstudio::WorkspaceObject& workspaceObject)
-  : IdfObjectWatcher(workspaceObject.cast<IdfObject>()), 
+  : IdfObjectWatcher(workspaceObject.cast<IdfObject>()),
     m_relationshipChanged(false), m_removedFromWorkspace(false)
 {
   detail::WorkspaceObject_ImplPtr objectImpl = workspaceObject.getImpl<detail::WorkspaceObject_Impl>();
- 
+
   objectImpl.get()->detail::WorkspaceObject_Impl::onRelationshipChange.connect<WorkspaceObjectWatcher, &WorkspaceObjectWatcher::relationshipChange>(this);
 
   objectImpl.get()->detail::WorkspaceObject_Impl::onRemoveFromWorkspace.connect<WorkspaceObjectWatcher, &WorkspaceObjectWatcher::removedFromWorkspace>(this);
@@ -46,34 +46,34 @@ WorkspaceObjectWatcher::WorkspaceObjectWatcher(const openstudio::WorkspaceObject
 
 WorkspaceObjectWatcher::~WorkspaceObjectWatcher() {}
 
-bool WorkspaceObjectWatcher::relationshipChanged() const 
+bool WorkspaceObjectWatcher::relationshipChanged() const
 {
   return m_relationshipChanged;
 }
 
-bool WorkspaceObjectWatcher::removedFromWorkspace() const 
+bool WorkspaceObjectWatcher::removedFromWorkspace() const
 {
   return m_removedFromWorkspace;
 }
 
-void WorkspaceObjectWatcher::clearState() 
+void WorkspaceObjectWatcher::clearState()
 {
   m_relationshipChanged = false;
   m_removedFromWorkspace = false;
   IdfObjectWatcher::clearState();
 }
 
-void WorkspaceObjectWatcher::onRelationshipChange(int index, Handle newHandle,  Handle oldHandle) 
+void WorkspaceObjectWatcher::onRelationshipChange(int index, Handle newHandle,  Handle oldHandle)
 {
   // onChange will be emitted with onRelationshipChange, that will set dirty
 }
 
-void WorkspaceObjectWatcher::onRemoveFromWorkspace(Handle handle) 
+void WorkspaceObjectWatcher::onRemoveFromWorkspace(Handle handle)
 {
   // onChange will not be emitted with onRemoveFromWorkspace, dirty will not be set
 }
 
-void WorkspaceObjectWatcher::relationshipChange(int index, Handle newHandle, Handle oldHandle) 
+void WorkspaceObjectWatcher::relationshipChange(int index, Handle newHandle, Handle oldHandle)
 {
   m_relationshipChanged = true;
 
@@ -86,7 +86,7 @@ void WorkspaceObjectWatcher::removedFromWorkspace(const Handle &handle)
 {
   m_removedFromWorkspace = true;
 
-  if (enabled()){  
+  if (enabled()){
     onRemoveFromWorkspace(handle);
   }
 }

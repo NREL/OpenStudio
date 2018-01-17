@@ -68,7 +68,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGasMultiStage(
   // AirInletNodeName
   if( auto node = modelObject.inletModelObject() ) {
     idfObject.setString(Coil_Heating_Gas_MultiStageFields::AirInletNodeName,node->name().get());
-  }  
+  }
 
   // AirOutletNodeName
   // TemperatureSetpointNodeName

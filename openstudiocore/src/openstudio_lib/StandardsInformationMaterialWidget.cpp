@@ -279,7 +279,7 @@ void StandardsInformationMaterialWidget::detach()
 {
   m_material.reset();
 
-  if (m_standardsInformation){ 
+  if (m_standardsInformation){
     // DLM: this was never attached to anything
     // disconnect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), nullptr, this, nullptr);
     m_standardsInformation.reset();
@@ -390,7 +390,7 @@ void StandardsInformationMaterialWidget::populateStandards()
   m_standard->blockSignals(true);
 
   m_standard->clear();
-  
+
   if (m_standardsInformation){
     unsigned i = 0;
     m_standard->addItem("");

@@ -49,7 +49,7 @@ class ScheduleDialog : public OSDialog
 
 public:
 
-  ScheduleDialog(bool isIP, 
+  ScheduleDialog(bool isIP,
                  const model::Model & model,
                  QWidget * parent = nullptr);
 
@@ -58,7 +58,7 @@ public:
   void setIsIP(bool isIP);
 
 private slots:
-  
+
   void onCurrentIndexChanged(int index);
 
 private:

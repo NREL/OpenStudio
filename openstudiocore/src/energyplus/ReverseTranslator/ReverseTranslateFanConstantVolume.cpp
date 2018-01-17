@@ -67,7 +67,7 @@ OptionalModelObject result,temp;
     LOG(Error, "Error importing object: "
              << workspaceObject.name().get()
              <<"Failed to convert iddObjects into model Objects. Maybe they do not exist in model yet");
-    
+
     return result;
   }
 

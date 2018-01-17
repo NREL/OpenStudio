@@ -77,7 +77,7 @@ openstudio::path getApplicationOutputDirectory(const std::string& outdir) {
     }
   }
 
-  std::cout << std::endl << "All output will be directed to " << dirStr << "." 
+  std::cout << std::endl << "All output will be directed to " << dirStr << "."
             << std::endl << std::endl;
   return result;
 }

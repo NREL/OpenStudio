@@ -335,219 +335,219 @@ namespace detail {
     return value.get();
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setMinimumInletAirWetBulbTemperature(double minimumInletAirWetBulbTemperature) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setMinimumInletAirWetBulbTemperature(double minimumInletAirWetBulbTemperature) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::MinimumInletAirWetBulbTemperature, minimumInletAirWetBulbTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setMaximumInletAirWetBulbTemperature(double maximumInletAirWetBulbTemperature) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setMaximumInletAirWetBulbTemperature(double maximumInletAirWetBulbTemperature) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::MaximumInletAirWetBulbTemperature, maximumInletAirWetBulbTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setMinimumRangeTemperature(double minimumRangeTemperature) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setMinimumRangeTemperature(double minimumRangeTemperature) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::MinimumRangeTemperature, minimumRangeTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setMaximumRangeTemperature(double maximumRangeTemperature) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setMaximumRangeTemperature(double maximumRangeTemperature) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::MaximumRangeTemperature, maximumRangeTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setMinimumApproachTemperature(double minimumApproachTemperature) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setMinimumApproachTemperature(double minimumApproachTemperature) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::MinimumApproachTemperature, minimumApproachTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setMaximumApproachTemperature(double maximumApproachTemperature) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setMaximumApproachTemperature(double maximumApproachTemperature) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::MaximumApproachTemperature, maximumApproachTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setMinimumWaterFlowRateRatio(double minimumWaterFlowRateRatio) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setMinimumWaterFlowRateRatio(double minimumWaterFlowRateRatio) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::MinimumWaterFlowRateRatio, minimumWaterFlowRateRatio);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setMaximumWaterFlowRateRatio(double maximumWaterFlowRateRatio) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setMaximumWaterFlowRateRatio(double maximumWaterFlowRateRatio) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::MaximumWaterFlowRateRatio, maximumWaterFlowRateRatio);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient1(double coefficient1) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient1(double coefficient1) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient1, coefficient1);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient2(double coefficient2) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient2(double coefficient2) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient2, coefficient2);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient3(double coefficient3) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient3(double coefficient3) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient3, coefficient3);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient4(double coefficient4) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient4(double coefficient4) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient4, coefficient4);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient5(double coefficient5) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient5(double coefficient5) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient5, coefficient5);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient6(double coefficient6) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient6(double coefficient6) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient6, coefficient6);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient7(double coefficient7) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient7(double coefficient7) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient7, coefficient7);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient8(double coefficient8) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient8(double coefficient8) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient8, coefficient8);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient9(double coefficient9) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient9(double coefficient9) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient9, coefficient9);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient10(double coefficient10) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient10(double coefficient10) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient10, coefficient10);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient11(double coefficient11) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient11(double coefficient11) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient11, coefficient11);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient12(double coefficient12) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient12(double coefficient12) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient12, coefficient12);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient13(double coefficient13) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient13(double coefficient13) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient13, coefficient13);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient14(double coefficient14) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient14(double coefficient14) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient14, coefficient14);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient15(double coefficient15) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient15(double coefficient15) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient15, coefficient15);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient16(double coefficient16) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient16(double coefficient16) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient16, coefficient16);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient17(double coefficient17) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient17(double coefficient17) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient17, coefficient17);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient18(double coefficient18) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient18(double coefficient18) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient18, coefficient18);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient19(double coefficient19) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient19(double coefficient19) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient19, coefficient19);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient20(double coefficient20) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient20(double coefficient20) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient20, coefficient20);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient21(double coefficient21) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient21(double coefficient21) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient21, coefficient21);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient22(double coefficient22) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient22(double coefficient22) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient22, coefficient22);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient23(double coefficient23) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient23(double coefficient23) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient23, coefficient23);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient24(double coefficient24) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient24(double coefficient24) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient24, coefficient24);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient25(double coefficient25) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient25(double coefficient25) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient25, coefficient25);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient26(double coefficient26) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient26(double coefficient26) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient26, coefficient26);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient27(double coefficient27) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient27(double coefficient27) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient27, coefficient27);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient28(double coefficient28) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient28(double coefficient28) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient28, coefficient28);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient29(double coefficient29) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient29(double coefficient29) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient29, coefficient29);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient30(double coefficient30) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient30(double coefficient30) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient30, coefficient30);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient31(double coefficient31) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient31(double coefficient31) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient31, coefficient31);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient32(double coefficient32) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient32(double coefficient32) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient32, coefficient32);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient33(double coefficient33) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient33(double coefficient33) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient33, coefficient33);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient34(double coefficient34) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient34(double coefficient34) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient34, coefficient34);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CoolingTowerPerformanceCoolTools_Impl::setCoefficient35(double coefficient35) {
+  bool CoolingTowerPerformanceCoolTools_Impl::setCoefficient35(double coefficient35) {
     bool result = setDouble(OS_CoolingTowerPerformance_CoolToolsFields::Coefficient35, coefficient35);
-    OS_ASSERT(result);
+    return result;
   }
 
 } // detail
@@ -778,176 +778,176 @@ double CoolingTowerPerformanceCoolTools::coefficient35() const {
   return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->coefficient35();
 }
 
-void CoolingTowerPerformanceCoolTools::setMinimumInletAirWetBulbTemperature(double minimumInletAirWetBulbTemperature) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setMinimumInletAirWetBulbTemperature(minimumInletAirWetBulbTemperature);
+bool CoolingTowerPerformanceCoolTools::setMinimumInletAirWetBulbTemperature(double minimumInletAirWetBulbTemperature) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setMinimumInletAirWetBulbTemperature(minimumInletAirWetBulbTemperature);
 }
 
-void CoolingTowerPerformanceCoolTools::setMaximumInletAirWetBulbTemperature(double maximumInletAirWetBulbTemperature) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setMaximumInletAirWetBulbTemperature(maximumInletAirWetBulbTemperature);
+bool CoolingTowerPerformanceCoolTools::setMaximumInletAirWetBulbTemperature(double maximumInletAirWetBulbTemperature) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setMaximumInletAirWetBulbTemperature(maximumInletAirWetBulbTemperature);
 }
 
-void CoolingTowerPerformanceCoolTools::setMinimumRangeTemperature(double minimumRangeTemperature) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setMinimumRangeTemperature(minimumRangeTemperature);
+bool CoolingTowerPerformanceCoolTools::setMinimumRangeTemperature(double minimumRangeTemperature) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setMinimumRangeTemperature(minimumRangeTemperature);
 }
 
-void CoolingTowerPerformanceCoolTools::setMaximumRangeTemperature(double maximumRangeTemperature) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setMaximumRangeTemperature(maximumRangeTemperature);
+bool CoolingTowerPerformanceCoolTools::setMaximumRangeTemperature(double maximumRangeTemperature) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setMaximumRangeTemperature(maximumRangeTemperature);
 }
 
-void CoolingTowerPerformanceCoolTools::setMinimumApproachTemperature(double minimumApproachTemperature) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setMinimumApproachTemperature(minimumApproachTemperature);
+bool CoolingTowerPerformanceCoolTools::setMinimumApproachTemperature(double minimumApproachTemperature) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setMinimumApproachTemperature(minimumApproachTemperature);
 }
 
-void CoolingTowerPerformanceCoolTools::setMaximumApproachTemperature(double maximumApproachTemperature) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setMaximumApproachTemperature(maximumApproachTemperature);
+bool CoolingTowerPerformanceCoolTools::setMaximumApproachTemperature(double maximumApproachTemperature) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setMaximumApproachTemperature(maximumApproachTemperature);
 }
 
-void CoolingTowerPerformanceCoolTools::setMinimumWaterFlowRateRatio(double minimumWaterFlowRateRatio) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setMinimumWaterFlowRateRatio(minimumWaterFlowRateRatio);
+bool CoolingTowerPerformanceCoolTools::setMinimumWaterFlowRateRatio(double minimumWaterFlowRateRatio) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setMinimumWaterFlowRateRatio(minimumWaterFlowRateRatio);
 }
 
-void CoolingTowerPerformanceCoolTools::setMaximumWaterFlowRateRatio(double maximumWaterFlowRateRatio) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setMaximumWaterFlowRateRatio(maximumWaterFlowRateRatio);
+bool CoolingTowerPerformanceCoolTools::setMaximumWaterFlowRateRatio(double maximumWaterFlowRateRatio) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setMaximumWaterFlowRateRatio(maximumWaterFlowRateRatio);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient1(double coefficient1) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient1(coefficient1);
+bool CoolingTowerPerformanceCoolTools::setCoefficient1(double coefficient1) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient1(coefficient1);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient2(double coefficient2) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient2(coefficient2);
+bool CoolingTowerPerformanceCoolTools::setCoefficient2(double coefficient2) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient2(coefficient2);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient3(double coefficient3) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient3(coefficient3);
+bool CoolingTowerPerformanceCoolTools::setCoefficient3(double coefficient3) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient3(coefficient3);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient4(double coefficient4) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient4(coefficient4);
+bool CoolingTowerPerformanceCoolTools::setCoefficient4(double coefficient4) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient4(coefficient4);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient5(double coefficient5) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient5(coefficient5);
+bool CoolingTowerPerformanceCoolTools::setCoefficient5(double coefficient5) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient5(coefficient5);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient6(double coefficient6) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient6(coefficient6);
+bool CoolingTowerPerformanceCoolTools::setCoefficient6(double coefficient6) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient6(coefficient6);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient7(double coefficient7) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient7(coefficient7);
+bool CoolingTowerPerformanceCoolTools::setCoefficient7(double coefficient7) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient7(coefficient7);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient8(double coefficient8) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient8(coefficient8);
+bool CoolingTowerPerformanceCoolTools::setCoefficient8(double coefficient8) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient8(coefficient8);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient9(double coefficient9) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient9(coefficient9);
+bool CoolingTowerPerformanceCoolTools::setCoefficient9(double coefficient9) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient9(coefficient9);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient10(double coefficient10) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient10(coefficient10);
+bool CoolingTowerPerformanceCoolTools::setCoefficient10(double coefficient10) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient10(coefficient10);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient11(double coefficient11) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient11(coefficient11);
+bool CoolingTowerPerformanceCoolTools::setCoefficient11(double coefficient11) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient11(coefficient11);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient12(double coefficient12) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient12(coefficient12);
+bool CoolingTowerPerformanceCoolTools::setCoefficient12(double coefficient12) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient12(coefficient12);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient13(double coefficient13) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient13(coefficient13);
+bool CoolingTowerPerformanceCoolTools::setCoefficient13(double coefficient13) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient13(coefficient13);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient14(double coefficient14) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient14(coefficient14);
+bool CoolingTowerPerformanceCoolTools::setCoefficient14(double coefficient14) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient14(coefficient14);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient15(double coefficient15) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient15(coefficient15);
+bool CoolingTowerPerformanceCoolTools::setCoefficient15(double coefficient15) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient15(coefficient15);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient16(double coefficient16) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient16(coefficient16);
+bool CoolingTowerPerformanceCoolTools::setCoefficient16(double coefficient16) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient16(coefficient16);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient17(double coefficient17) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient17(coefficient17);
+bool CoolingTowerPerformanceCoolTools::setCoefficient17(double coefficient17) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient17(coefficient17);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient18(double coefficient18) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient18(coefficient18);
+bool CoolingTowerPerformanceCoolTools::setCoefficient18(double coefficient18) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient18(coefficient18);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient19(double coefficient19) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient19(coefficient19);
+bool CoolingTowerPerformanceCoolTools::setCoefficient19(double coefficient19) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient19(coefficient19);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient20(double coefficient20) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient20(coefficient20);
+bool CoolingTowerPerformanceCoolTools::setCoefficient20(double coefficient20) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient20(coefficient20);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient21(double coefficient21) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient21(coefficient21);
+bool CoolingTowerPerformanceCoolTools::setCoefficient21(double coefficient21) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient21(coefficient21);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient22(double coefficient22) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient22(coefficient22);
+bool CoolingTowerPerformanceCoolTools::setCoefficient22(double coefficient22) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient22(coefficient22);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient23(double coefficient23) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient23(coefficient23);
+bool CoolingTowerPerformanceCoolTools::setCoefficient23(double coefficient23) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient23(coefficient23);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient24(double coefficient24) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient24(coefficient24);
+bool CoolingTowerPerformanceCoolTools::setCoefficient24(double coefficient24) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient24(coefficient24);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient25(double coefficient25) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient25(coefficient25);
+bool CoolingTowerPerformanceCoolTools::setCoefficient25(double coefficient25) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient25(coefficient25);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient26(double coefficient26) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient26(coefficient26);
+bool CoolingTowerPerformanceCoolTools::setCoefficient26(double coefficient26) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient26(coefficient26);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient27(double coefficient27) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient27(coefficient27);
+bool CoolingTowerPerformanceCoolTools::setCoefficient27(double coefficient27) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient27(coefficient27);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient28(double coefficient28) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient28(coefficient28);
+bool CoolingTowerPerformanceCoolTools::setCoefficient28(double coefficient28) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient28(coefficient28);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient29(double coefficient29) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient29(coefficient29);
+bool CoolingTowerPerformanceCoolTools::setCoefficient29(double coefficient29) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient29(coefficient29);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient30(double coefficient30) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient30(coefficient30);
+bool CoolingTowerPerformanceCoolTools::setCoefficient30(double coefficient30) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient30(coefficient30);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient31(double coefficient31) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient31(coefficient31);
+bool CoolingTowerPerformanceCoolTools::setCoefficient31(double coefficient31) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient31(coefficient31);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient32(double coefficient32) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient32(coefficient32);
+bool CoolingTowerPerformanceCoolTools::setCoefficient32(double coefficient32) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient32(coefficient32);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient33(double coefficient33) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient33(coefficient33);
+bool CoolingTowerPerformanceCoolTools::setCoefficient33(double coefficient33) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient33(coefficient33);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient34(double coefficient34) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient34(coefficient34);
+bool CoolingTowerPerformanceCoolTools::setCoefficient34(double coefficient34) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient34(coefficient34);
 }
 
-void CoolingTowerPerformanceCoolTools::setCoefficient35(double coefficient35) {
-  getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient35(coefficient35);
+bool CoolingTowerPerformanceCoolTools::setCoefficient35(double coefficient35) {
+  return getImpl<detail::CoolingTowerPerformanceCoolTools_Impl>()->setCoefficient35(coefficient35);
 }
 
 /// @cond
@@ -958,4 +958,3 @@ CoolingTowerPerformanceCoolTools::CoolingTowerPerformanceCoolTools(std::shared_p
 
 } // model
 } // openstudio
-

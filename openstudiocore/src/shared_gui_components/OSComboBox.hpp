@@ -108,7 +108,7 @@ class OSObjectListCBDS : public OSComboBoxDataSource
 class OSComboBox2 : public QComboBox, public Nano::Observer {
   Q_OBJECT
  public:
-  
+
   OSComboBox2( QWidget * parent = nullptr, bool editable = false );
 
   virtual ~OSComboBox2();
@@ -240,7 +240,7 @@ class OSComboBox2 : public QComboBox, public Nano::Observer {
 //   void onDataSourceChange(int);
 
 //   void onDataSourceAdd(int);
-  
+
 //   void onDataSourceRemove(int);
 
 //   void onModelObjectChanged();

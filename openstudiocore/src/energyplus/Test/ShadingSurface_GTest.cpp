@@ -66,13 +66,13 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ShadingSurface_Site)
   points.push_back(Point3d(1,1,0));
   points.push_back(Point3d(1,0,0));
   points.push_back(Point3d(0,0,0));
-    
+
   ShadingSurface shadingSurface(points, model);
   EXPECT_TRUE(shadingSurface.setShadingSurfaceGroup(shadingSurfaceGroup));
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  
+
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed).size());
 }
 
@@ -87,20 +87,20 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ShadingSurface_Building)
   points.push_back(Point3d(1,1,0));
   points.push_back(Point3d(1,0,0));
   points.push_back(Point3d(0,0,0));
-    
+
   ShadingSurface shadingSurface(points, model);
   EXPECT_TRUE(shadingSurface.setShadingSurfaceGroup(shadingSurfaceGroup));
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  
+
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed).size());
 }
 
 TEST_F(EnergyPlusFixture,ForwardTranslator_ShadingSurface_Space)
 {
   Model model;
-  
+
   ThermalZone thermalZone(model);
 
   Point3dVector points;
@@ -121,7 +121,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ShadingSurface_Space)
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  
+
   ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
   ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Shading_Zone_Detailed).size());
 

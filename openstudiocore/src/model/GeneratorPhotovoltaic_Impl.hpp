@@ -84,7 +84,7 @@ namespace detail {
 
     /// returns deletes reference to Surface from clone
     virtual ModelObject clone(Model model) const override;
-    
+
     virtual std::string generatorObjectType() const override;
 
     virtual boost::optional<double> ratedElectricPowerOutput() const override;
@@ -133,7 +133,7 @@ namespace detail {
 
     void resetNumberOfModulesInSeries();
 
-    void setRatedElectricPowerOutput(double ratedElectricPowerOutput);
+    bool setRatedElectricPowerOutput(double ratedElectricPowerOutput);
 
     void resetRatedElectricPowerOutput();
 
@@ -157,4 +157,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_GENERATORPHOTOVOLTAIC_IMPL_HPP
-

@@ -1,11 +1,11 @@
 
 messages = []
 Dir.glob( File.dirname(__FILE__) + "/../../openstudiocore/src/**/*.hpp") do |p|
-  
+
   if /litesql/.match(p)
     next
   end
-  
+
   file_messages = []
   File.open(p) do |f|
     while line = f.gets
@@ -27,7 +27,7 @@ Dir.glob( File.dirname(__FILE__) + "/../../openstudiocore/src/**/*.hpp") do |p|
         end
       end
     end
-    
+
     if !file_messages.empty?
       messages << p
       messages.concat(file_messages)

@@ -118,11 +118,11 @@ class MODEL_API RefrigerationWalkInZoneBoundary : public ModelObject {
 
   void resetInsulatedSurfaceUValueFacingZone();
 
-  void setAreaofGlassReachInDoorsFacingZone(double areaofGlassReachInDoorsFacingZone);
+  bool setAreaofGlassReachInDoorsFacingZone(double areaofGlassReachInDoorsFacingZone);
 
   void resetAreaofGlassReachInDoorsFacingZone();
 
-  void setHeightofGlassReachInDoorsFacingZone(double heightofGlassReachInDoorsFacingZone);
+  bool setHeightofGlassReachInDoorsFacingZone(double heightofGlassReachInDoorsFacingZone);
 
   void resetHeightofGlassReachInDoorsFacingZone();
 
@@ -134,11 +134,11 @@ class MODEL_API RefrigerationWalkInZoneBoundary : public ModelObject {
 
   void resetGlassReachInDoorOpeningScheduleFacingZone();
 
-  void setAreaofStockingDoorsFacingZone(double areaofStockingDoorsFacingZone);
+  bool setAreaofStockingDoorsFacingZone(double areaofStockingDoorsFacingZone);
 
   void resetAreaofStockingDoorsFacingZone();
 
-  void setHeightofStockingDoorsFacingZone(double heightofStockingDoorsFacingZone);
+  bool setHeightofStockingDoorsFacingZone(double heightofStockingDoorsFacingZone);
 
   void resetHeightofStockingDoorsFacingZone();
 
@@ -184,4 +184,3 @@ typedef std::vector<RefrigerationWalkInZoneBoundary> RefrigerationWalkInZoneBoun
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONWALKINZONEBOUNDARY_HPP
-

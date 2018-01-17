@@ -492,17 +492,17 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationSecondarySystem_Impl::setEvaporatorEvaporatingTemperature(double evaporatorEvaporatingTemperature) {
+  bool RefrigerationSecondarySystem_Impl::setEvaporatorEvaporatingTemperature(double evaporatorEvaporatingTemperature) {
     bool result = setDouble(OS_Refrigeration_SecondarySystemFields::EvaporatorEvaporatingTemperature, evaporatorEvaporatingTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void RefrigerationSecondarySystem_Impl::setEvaporatorApproachTemperatureDifference(double evaporatorApproachTemperatureDifference) {
+  bool RefrigerationSecondarySystem_Impl::setEvaporatorApproachTemperatureDifference(double evaporatorApproachTemperatureDifference) {
     bool result = setDouble(OS_Refrigeration_SecondarySystemFields::EvaporatorApproachTemperatureDifference, evaporatorApproachTemperatureDifference);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void RefrigerationSecondarySystem_Impl::setEvaporatorRangeTemperatureDifference(boost::optional<double> evaporatorRangeTemperatureDifference) {
+  bool RefrigerationSecondarySystem_Impl::setEvaporatorRangeTemperatureDifference(boost::optional<double> evaporatorRangeTemperatureDifference) {
     bool result(false);
     if (evaporatorRangeTemperatureDifference) {
       result = setDouble(OS_Refrigeration_SecondarySystemFields::EvaporatorRangeTemperatureDifference, evaporatorRangeTemperatureDifference.get());
@@ -511,7 +511,7 @@ namespace detail {
       resetEvaporatorRangeTemperatureDifference();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSecondarySystem_Impl::resetEvaporatorRangeTemperatureDifference() {
@@ -519,9 +519,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationSecondarySystem_Impl::setNumberofPumpsinLoop(int numberofPumpsinLoop) {
+  bool RefrigerationSecondarySystem_Impl::setNumberofPumpsinLoop(int numberofPumpsinLoop) {
     bool result = setInt(OS_Refrigeration_SecondarySystemFields::NumberofPumpsinLoop, numberofPumpsinLoop);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSecondarySystem_Impl::resetNumberofPumpsinLoop() {
@@ -627,9 +627,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationSecondarySystem_Impl::setSumUADistributionPiping(double sumUADistributionPiping) {
+  bool RefrigerationSecondarySystem_Impl::setSumUADistributionPiping(double sumUADistributionPiping) {
     bool result = setDouble(OS_Refrigeration_SecondarySystemFields::SumUADistributionPiping, sumUADistributionPiping);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSecondarySystem_Impl::resetSumUADistributionPiping() {
@@ -654,9 +654,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationSecondarySystem_Impl::setSumUAReceiverSeparatorShell(double sumUAReceiverSeparatorShell) {
+  bool RefrigerationSecondarySystem_Impl::setSumUAReceiverSeparatorShell(double sumUAReceiverSeparatorShell) {
     bool result = setDouble(OS_Refrigeration_SecondarySystemFields::SumUAReceiver_SeparatorShell, sumUAReceiverSeparatorShell);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSecondarySystem_Impl::resetSumUAReceiverSeparatorShell() {
@@ -681,9 +681,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationSecondarySystem_Impl::setEvaporatorRefrigerantInventory(double evaporatorRefrigerantInventory) {
+  bool RefrigerationSecondarySystem_Impl::setEvaporatorRefrigerantInventory(double evaporatorRefrigerantInventory) {
     bool result = setDouble(OS_Refrigeration_SecondarySystemFields::EvaporatorRefrigerantInventory, evaporatorRefrigerantInventory);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSecondarySystem_Impl::resetEvaporatorRefrigerantInventory() {
@@ -691,9 +691,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationSecondarySystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationSecondarySystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_SecondarySystemFields::EndUseSubcategory, endUseSubcategory);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSecondarySystem_Impl::resetEndUseSubcategory() {
@@ -942,24 +942,24 @@ void RefrigerationSecondarySystem::resetEvaporatorFlowRateforSecondaryFluid() {
   getImpl<detail::RefrigerationSecondarySystem_Impl>()->resetEvaporatorFlowRateforSecondaryFluid();
 }
 
-void RefrigerationSecondarySystem::setEvaporatorEvaporatingTemperature(double evaporatorEvaporatingTemperature) {
-  getImpl<detail::RefrigerationSecondarySystem_Impl>()->setEvaporatorEvaporatingTemperature(evaporatorEvaporatingTemperature);
+bool RefrigerationSecondarySystem::setEvaporatorEvaporatingTemperature(double evaporatorEvaporatingTemperature) {
+  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setEvaporatorEvaporatingTemperature(evaporatorEvaporatingTemperature);
 }
 
-void RefrigerationSecondarySystem::setEvaporatorApproachTemperatureDifference(double evaporatorApproachTemperatureDifference) {
-  getImpl<detail::RefrigerationSecondarySystem_Impl>()->setEvaporatorApproachTemperatureDifference(evaporatorApproachTemperatureDifference);
+bool RefrigerationSecondarySystem::setEvaporatorApproachTemperatureDifference(double evaporatorApproachTemperatureDifference) {
+  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setEvaporatorApproachTemperatureDifference(evaporatorApproachTemperatureDifference);
 }
 
-void RefrigerationSecondarySystem::setEvaporatorRangeTemperatureDifference(double evaporatorRangeTemperatureDifference) {
-  getImpl<detail::RefrigerationSecondarySystem_Impl>()->setEvaporatorRangeTemperatureDifference(evaporatorRangeTemperatureDifference);
+bool RefrigerationSecondarySystem::setEvaporatorRangeTemperatureDifference(double evaporatorRangeTemperatureDifference) {
+  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setEvaporatorRangeTemperatureDifference(evaporatorRangeTemperatureDifference);
 }
 
 void RefrigerationSecondarySystem::resetEvaporatorRangeTemperatureDifference() {
   getImpl<detail::RefrigerationSecondarySystem_Impl>()->resetEvaporatorRangeTemperatureDifference();
 }
 
-void RefrigerationSecondarySystem::setNumberofPumpsinLoop(int numberofPumpsinLoop) {
-  getImpl<detail::RefrigerationSecondarySystem_Impl>()->setNumberofPumpsinLoop(numberofPumpsinLoop);
+bool RefrigerationSecondarySystem::setNumberofPumpsinLoop(int numberofPumpsinLoop) {
+  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setNumberofPumpsinLoop(numberofPumpsinLoop);
 }
 
 void RefrigerationSecondarySystem::resetNumberofPumpsinLoop() {
@@ -1022,8 +1022,8 @@ void RefrigerationSecondarySystem::resetPumpMotorHeattoFluid() {
   getImpl<detail::RefrigerationSecondarySystem_Impl>()->resetPumpMotorHeattoFluid();
 }
 
-void RefrigerationSecondarySystem::setSumUADistributionPiping(double sumUADistributionPiping) {
-  getImpl<detail::RefrigerationSecondarySystem_Impl>()->setSumUADistributionPiping(sumUADistributionPiping);
+bool RefrigerationSecondarySystem::setSumUADistributionPiping(double sumUADistributionPiping) {
+  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setSumUADistributionPiping(sumUADistributionPiping);
 }
 
 void RefrigerationSecondarySystem::resetSumUADistributionPiping() {
@@ -1038,8 +1038,8 @@ void RefrigerationSecondarySystem::resetDistributionPipingZone() {
   getImpl<detail::RefrigerationSecondarySystem_Impl>()->resetDistributionPipingZone();
 }
 
-void RefrigerationSecondarySystem::setSumUAReceiverSeparatorShell(double sumUAReceiverSeparatorShell) {
-  getImpl<detail::RefrigerationSecondarySystem_Impl>()->setSumUAReceiverSeparatorShell(sumUAReceiverSeparatorShell);
+bool RefrigerationSecondarySystem::setSumUAReceiverSeparatorShell(double sumUAReceiverSeparatorShell) {
+  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setSumUAReceiverSeparatorShell(sumUAReceiverSeparatorShell);
 }
 
 void RefrigerationSecondarySystem::resetSumUAReceiverSeparatorShell() {
@@ -1054,16 +1054,16 @@ void RefrigerationSecondarySystem::resetReceiverSeparatorZone() {
   getImpl<detail::RefrigerationSecondarySystem_Impl>()->resetReceiverSeparatorZone();
 }
 
-void RefrigerationSecondarySystem::setEvaporatorRefrigerantInventory(double evaporatorRefrigerantInventory) {
-  getImpl<detail::RefrigerationSecondarySystem_Impl>()->setEvaporatorRefrigerantInventory(evaporatorRefrigerantInventory);
+bool RefrigerationSecondarySystem::setEvaporatorRefrigerantInventory(double evaporatorRefrigerantInventory) {
+  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setEvaporatorRefrigerantInventory(evaporatorRefrigerantInventory);
 }
 
 void RefrigerationSecondarySystem::resetEvaporatorRefrigerantInventory() {
   getImpl<detail::RefrigerationSecondarySystem_Impl>()->resetEvaporatorRefrigerantInventory();
 }
 
-void RefrigerationSecondarySystem::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::RefrigerationSecondarySystem_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool RefrigerationSecondarySystem::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void RefrigerationSecondarySystem::resetEndUseSubcategory() {
@@ -1078,4 +1078,3 @@ RefrigerationSecondarySystem::RefrigerationSecondarySystem(std::shared_ptr<detai
 
 } // model
 } // openstudio
-

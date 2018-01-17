@@ -125,7 +125,7 @@ namespace detail {
     bool setEMSVariableName(const EnergyManagementSystemCurveOrTableIndexVariable& object);
     bool setEMSVariableName(const EnergyManagementSystemConstructionIndexVariable& object);
 
-    void setExportToBCVTB(bool exportToBCVTB);
+    bool setExportToBCVTB(bool exportToBCVTB);
 
     void resetExportToBCVTB();
 
@@ -145,4 +145,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_ENERGYMANAGEMENTSYSTEMOUTPUTVARIABLE_IMPL_HPP
-

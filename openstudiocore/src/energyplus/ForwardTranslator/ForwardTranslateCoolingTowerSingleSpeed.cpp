@@ -80,7 +80,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerSingleSpeed( 
     idfObject.setString(openstudio::CoolingTower_SingleSpeedFields::WaterOutletNodeName,temp->name().get());
   }
 
-  // DesignWaterFlowRate 
+  // DesignWaterFlowRate
 
   if( istringEqual(modelObject.performanceInputMethod(),"NominalCapacity") )
   {
@@ -98,7 +98,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerSingleSpeed( 
     }
   }
 
-  // DesignAirFlowRate 
+  // DesignAirFlowRate
 
   if( (d = modelObject.designAirFlowRate()) )
   {
@@ -110,7 +110,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerSingleSpeed( 
   }
 
   // FanPoweratDesignAirFlowRate
-  
+
   if( (d = modelObject.fanPoweratDesignAirFlowRate()) )
   {
     idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::DesignFanPower,d.get());
@@ -168,7 +168,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerSingleSpeed( 
   }
 
   // FreeConvectionCapacity
-  
+
   if( (d = modelObject.freeConvectionCapacity()) )
   {
     idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::FreeConvectionCapacity,d.get());
@@ -225,9 +225,9 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerSingleSpeed( 
   {
     idfObject.setString(openstudio::CoolingTower_SingleSpeedFields::BlowdownCalculationMode,s.get());
   }
-  
+
   // BlowdownConcentrationRatio
-  
+
   if( (d = modelObject.blowdownConcentrationRatio()) )
   {
     idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::BlowdownConcentrationRatio,d.get());
@@ -277,7 +277,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerSingleSpeed( 
   {
     idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::CellMaximumWaterFlowRateFraction,d.get());
   }
-  
+
   // SizingFactor
 
   if( (d = modelObject.sizingFactor()) )

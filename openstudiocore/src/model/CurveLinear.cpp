@@ -143,34 +143,34 @@ namespace detail {
     return isEmpty(OS_Curve_LinearFields::OutputUnitType);
   }
 
-  void CurveLinear_Impl::setCoefficient1Constant(double coefficient1Constant) {
+  bool CurveLinear_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = setDouble(OS_Curve_LinearFields::Coefficient1Constant, coefficient1Constant);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveLinear_Impl::setCoefficient2x(double coefficient2x) {
+  bool CurveLinear_Impl::setCoefficient2x(double coefficient2x) {
     bool result = setDouble(OS_Curve_LinearFields::Coefficient2x, coefficient2x);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveLinear_Impl::setMinimumValueofx(double minimumValueofx) {
+  bool CurveLinear_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_LinearFields::MinimumValueofx, minimumValueofx);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveLinear_Impl::setMaximumValueofx(double maximumValueofx) {
+  bool CurveLinear_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_LinearFields::MaximumValueofx, maximumValueofx);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveLinear_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
+  bool CurveLinear_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
     bool result = false;
     if (minimumCurveOutput) {
       result = setDouble(OS_Curve_LinearFields::MinimumCurveOutput, minimumCurveOutput.get());
     } else {
       result = setString(OS_Curve_LinearFields::MinimumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveLinear_Impl::resetMinimumCurveOutput() {
@@ -178,14 +178,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveLinear_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
+  bool CurveLinear_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
     bool result = false;
     if (maximumCurveOutput) {
       result = setDouble(OS_Curve_LinearFields::MaximumCurveOutput, maximumCurveOutput.get());
     } else {
       result = setString(OS_Curve_LinearFields::MaximumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveLinear_Impl::resetMaximumCurveOutput() {
@@ -280,32 +280,32 @@ bool CurveLinear::isOutputUnitTypeDefaulted() const {
   return getImpl<detail::CurveLinear_Impl>()->isOutputUnitTypeDefaulted();
 }
 
-void CurveLinear::setCoefficient1Constant(double coefficient1Constant) {
-  getImpl<detail::CurveLinear_Impl>()->setCoefficient1Constant(coefficient1Constant);
+bool CurveLinear::setCoefficient1Constant(double coefficient1Constant) {
+  return getImpl<detail::CurveLinear_Impl>()->setCoefficient1Constant(coefficient1Constant);
 }
 
-void CurveLinear::setCoefficient2x(double coefficient2x) {
-  getImpl<detail::CurveLinear_Impl>()->setCoefficient2x(coefficient2x);
+bool CurveLinear::setCoefficient2x(double coefficient2x) {
+  return getImpl<detail::CurveLinear_Impl>()->setCoefficient2x(coefficient2x);
 }
 
-void CurveLinear::setMinimumValueofx(double minimumValueofx) {
-  getImpl<detail::CurveLinear_Impl>()->setMinimumValueofx(minimumValueofx);
+bool CurveLinear::setMinimumValueofx(double minimumValueofx) {
+  return getImpl<detail::CurveLinear_Impl>()->setMinimumValueofx(minimumValueofx);
 }
 
-void CurveLinear::setMaximumValueofx(double maximumValueofx) {
-  getImpl<detail::CurveLinear_Impl>()->setMaximumValueofx(maximumValueofx);
+bool CurveLinear::setMaximumValueofx(double maximumValueofx) {
+  return getImpl<detail::CurveLinear_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
-void CurveLinear::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveLinear_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+bool CurveLinear::setMinimumCurveOutput(double minimumCurveOutput) {
+  return getImpl<detail::CurveLinear_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveLinear::resetMinimumCurveOutput() {
   getImpl<detail::CurveLinear_Impl>()->resetMinimumCurveOutput();
 }
 
-void CurveLinear::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveLinear_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+bool CurveLinear::setMaximumCurveOutput(double maximumCurveOutput) {
+  return getImpl<detail::CurveLinear_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveLinear::resetMaximumCurveOutput() {
@@ -336,4 +336,3 @@ CurveLinear::CurveLinear(std::shared_ptr<detail::CurveLinear_Impl> impl)
 
 } // model
 } // openstudio
-

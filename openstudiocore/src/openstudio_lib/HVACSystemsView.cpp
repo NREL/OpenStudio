@@ -79,7 +79,7 @@ HVACToolbarView::HVACToolbarView()
 
   auto labelWidget = new QWidget();
   auto labelLayout = new QHBoxLayout();
-  labelLayout->setContentsMargins(0,0,0,0); 
+  labelLayout->setContentsMargins(0,0,0,0);
   labelLayout->setSpacing(5);
   labelLayout->setAlignment(Qt::AlignLeft);
   labelWidget->setLayout(labelLayout);
@@ -212,7 +212,7 @@ HVACSystemsView::HVACSystemsView()
   hvacToolbarView = new HVACToolbarView();
   mainVLayout->addWidget(hvacToolbarView);
 
-  mainViewSwitcher = new OSViewSwitcher();  
+  mainViewSwitcher = new OSViewSwitcher();
   mainVLayout->addWidget(mainViewSwitcher);
 }
 

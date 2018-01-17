@@ -88,9 +88,9 @@ namespace detail {
 
     virtual bool resetScheduleTypeLimits() override;
 
-    void setFMUVariableName(const std::string& fMUVariableName);
+    bool setFMUVariableName(const std::string& fMUVariableName);
 
-    void setInitialValue(double initialValue);
+    bool setInitialValue(double initialValue);
 
     // ensure that this object does not contain the date 2/29
     virtual void ensureNoLeapDays() override;
@@ -111,4 +111,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITEXPORTTOSCHEDULE_IMPL_HPP
-

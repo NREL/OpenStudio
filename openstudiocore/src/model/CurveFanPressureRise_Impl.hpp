@@ -39,17 +39,17 @@ namespace detail {
 
   /** CurveFanPressureRise_Impl is a Curve_Impl that is the implementation class for CurveFanPressureRise.*/
   class MODEL_API CurveFanPressureRise_Impl : public Curve_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
    public:
 
     /** @name Constructors and Destructors */
@@ -107,27 +107,27 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setCoefficient1C1(double coefficient1C1);
+    bool setCoefficient1C1(double coefficient1C1);
 
-    void setCoefficient2C2(double coefficient2C2);
+    bool setCoefficient2C2(double coefficient2C2);
 
-    void setCoefficient3C3(double coefficient3C3);
+    bool setCoefficient3C3(double coefficient3C3);
 
-    void setCoefficient4C4(double coefficient4C4);
+    bool setCoefficient4C4(double coefficient4C4);
 
-    void setMinimumValueofQfan(double minimumValueofQfan);
+    bool setMinimumValueofQfan(double minimumValueofQfan);
 
-    void setMaximumValueofQfan(double maximumValueofQfan);
+    bool setMaximumValueofQfan(double maximumValueofQfan);
 
-    void setMinimumValueofPsm(double minimumValueofPsm);
+    bool setMinimumValueofPsm(double minimumValueofPsm);
 
-    void setMaximumValueofPsm(double maximumValueofPsm);
+    bool setMaximumValueofPsm(double maximumValueofPsm);
 
-    void setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
+    bool setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
 
     void resetMinimumCurveOutput();
 
-    void setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
+    bool setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
 
     void resetMaximumCurveOutput();
 
@@ -147,4 +147,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_CURVEFANPRESSURERISE_IMPL_HPP
-

@@ -49,14 +49,14 @@ TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeFourPipeInduction_AirTerm
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-    Model m; 
+  ASSERT_EXIT (
+  {
+    Model m;
     Schedule s = m.alwaysOnDiscreteSchedule();
     CoilHeatingWater heatingCoil(m,s);
     AirTerminalSingleDuctConstantVolumeFourPipeInduction testObject(m,heatingCoil);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -131,7 +131,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_remove
   EXPECT_TRUE(thermalZone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
 
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
-  EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());  
+  EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_clone)

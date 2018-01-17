@@ -60,7 +60,7 @@ OptionalModelObject ReverseTranslator::translateFenestrationSurfaceDetailed( con
   }
 
   openstudio::Point3dVector vertices = getVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, workspaceObject);
- 
+
   boost::optional<SubSurface> subSurface;
   try{
     subSurface = SubSurface(vertices, m_model);
@@ -157,7 +157,7 @@ OptionalModelObject ReverseTranslator::translateFenestrationSurfaceDetailed( con
           return subSurface.get();
         }
       }
-    }else{  
+    }else{
       LOG(Error, "OutsideBoundaryConditionObject not yet mapped for object of type " << target->iddObject().name());
     }
   }

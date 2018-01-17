@@ -10,7 +10,7 @@
 #define UTILITIES_TEMPLATE_EXT
 
 %include <utilities/core/CommonInclude.i>
-%import <utilities/core/CommonImport.i> 
+%import <utilities/core/CommonImport.i>
 %import <utilities/UtilitiesTime.i>
 %import <utilities/UtilitiesUnits.i>
 

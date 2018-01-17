@@ -342,9 +342,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserWaterCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationCondenserWaterCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::EndUseSubcategory, endUseSubcategory);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserWaterCooled_Impl::resetEndUseSubcategory() {
@@ -352,7 +352,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserWaterCooled_Impl::setCondenserRefrigerantOperatingChargeInventory(boost::optional<double> condenserRefrigerantOperatingChargeInventory) {
+  bool RefrigerationCondenserWaterCooled_Impl::setCondenserRefrigerantOperatingChargeInventory(boost::optional<double> condenserRefrigerantOperatingChargeInventory) {
     bool result(false);
     if (condenserRefrigerantOperatingChargeInventory) {
       result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::CondenserRefrigerantOperatingChargeInventory, condenserRefrigerantOperatingChargeInventory.get());
@@ -361,7 +361,7 @@ namespace detail {
       resetCondenserRefrigerantOperatingChargeInventory();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserWaterCooled_Impl::resetCondenserRefrigerantOperatingChargeInventory() {
@@ -369,7 +369,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserWaterCooled_Impl::setCondensateReceiverRefrigerantInventory(boost::optional<double> condensateReceiverRefrigerantInventory) {
+  bool RefrigerationCondenserWaterCooled_Impl::setCondensateReceiverRefrigerantInventory(boost::optional<double> condensateReceiverRefrigerantInventory) {
     bool result(false);
     if (condensateReceiverRefrigerantInventory) {
       result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::CondensateReceiverRefrigerantInventory, condensateReceiverRefrigerantInventory.get());
@@ -378,7 +378,7 @@ namespace detail {
       resetCondensateReceiverRefrigerantInventory();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserWaterCooled_Impl::resetCondensateReceiverRefrigerantInventory() {
@@ -386,7 +386,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserWaterCooled_Impl::setCondensatePipingRefrigerantInventory(boost::optional<double> condensatePipingRefrigerantInventory) {
+  bool RefrigerationCondenserWaterCooled_Impl::setCondensatePipingRefrigerantInventory(boost::optional<double> condensatePipingRefrigerantInventory) {
     bool result(false);
     if (condensatePipingRefrigerantInventory) {
       result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::CondensatePipingRefrigerantInventory, condensatePipingRefrigerantInventory.get());
@@ -395,7 +395,7 @@ namespace detail {
       resetCondensatePipingRefrigerantInventory();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserWaterCooled_Impl::resetCondensatePipingRefrigerantInventory() {
@@ -595,32 +595,32 @@ void RefrigerationCondenserWaterCooled::resetWaterMinimumWaterInletTemperature()
   getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetWaterMinimumWaterInletTemperature();
 }
 
-void RefrigerationCondenserWaterCooled::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool RefrigerationCondenserWaterCooled::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void RefrigerationCondenserWaterCooled::resetEndUseSubcategory() {
   getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetEndUseSubcategory();
 }
 
-void RefrigerationCondenserWaterCooled::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
-  getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setCondenserRefrigerantOperatingChargeInventory(condenserRefrigerantOperatingChargeInventory);
+bool RefrigerationCondenserWaterCooled::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
+  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setCondenserRefrigerantOperatingChargeInventory(condenserRefrigerantOperatingChargeInventory);
 }
 
 void RefrigerationCondenserWaterCooled::resetCondenserRefrigerantOperatingChargeInventory() {
   getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetCondenserRefrigerantOperatingChargeInventory();
 }
 
-void RefrigerationCondenserWaterCooled::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
-  getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setCondensateReceiverRefrigerantInventory(condensateReceiverRefrigerantInventory);
+bool RefrigerationCondenserWaterCooled::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
+  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setCondensateReceiverRefrigerantInventory(condensateReceiverRefrigerantInventory);
 }
 
 void RefrigerationCondenserWaterCooled::resetCondensateReceiverRefrigerantInventory() {
   getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetCondensateReceiverRefrigerantInventory();
 }
 
-void RefrigerationCondenserWaterCooled::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
-  getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setCondensatePipingRefrigerantInventory(condensatePipingRefrigerantInventory);
+bool RefrigerationCondenserWaterCooled::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
+  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setCondensatePipingRefrigerantInventory(condensatePipingRefrigerantInventory);
 }
 
 void RefrigerationCondenserWaterCooled::resetCondensatePipingRefrigerantInventory() {
@@ -635,4 +635,3 @@ RefrigerationCondenserWaterCooled::RefrigerationCondenserWaterCooled(std::shared
 
 } // model
 } // openstudio
-

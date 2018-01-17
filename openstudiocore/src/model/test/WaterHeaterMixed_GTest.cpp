@@ -38,13 +38,13 @@ TEST(WaterHeaterMixed,WaterHeaterMixed_WaterHeaterMixed)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     model::Model m; 
+  ASSERT_EXIT (
+  {
+     model::Model m;
 
      model::WaterHeaterMixed waterHeaterMixed(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }

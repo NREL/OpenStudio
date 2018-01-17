@@ -38,7 +38,7 @@ namespace model {
 namespace detail {
 
 class MODEL_API UtilityCost_Variable_Impl : public ParentObject_Impl{
-  
+
  public:
   // constructor
   UtilityCost_Variable_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
@@ -55,46 +55,46 @@ class MODEL_API UtilityCost_Variable_Impl : public ParentObject_Impl{
   virtual ~UtilityCost_Variable_Impl(){}
 
   boost::optional<double> januaryValue() const;
-  void setJanuaryValue(double num);
+  bool setJanuaryValue(double num);
 
   boost::optional<double> februaryValue() const;
-  void setFebruaryValue(double num);
+  bool setFebruaryValue(double num);
 
   boost::optional<double> marchValue() const;
-  void setMarchValue(double num);
+  bool setMarchValue(double num);
 
   boost::optional<double> aprilValue() const;
-  void setAprilValue(double num);
+  bool setAprilValue(double num);
 
   boost::optional<double> mayValue() const;
-  void setMayValue(double num);
+  bool setMayValue(double num);
 
   boost::optional<double> juneValue() const;
-  void setJuneValue(double num);
+  bool setJuneValue(double num);
 
   boost::optional<double> julyValue() const;
-  void setJulyValue(double num);
+  bool setJulyValue(double num);
 
   boost::optional<double> augustValue() const;
-  void setAugustValue(double num);
+  bool setAugustValue(double num);
 
   boost::optional<double> septemberValue() const;
-  void setSeptemberValue(double num);
+  bool setSeptemberValue(double num);
 
   boost::optional<double> octoberValue() const;
-  void setOctoberValue(double num);
+  bool setOctoberValue(double num);
 
   boost::optional<double> novemberValue() const;
-  void setNovemberValue(double num);
+  bool setNovemberValue(double num);
 
   boost::optional<double> decemberValue() const;
-  void setDecemberValue(double num);
+  bool setDecemberValue(double num);
 
   OptionalString tariffName() const;
-  void setTariffName(const std::string& str);
+  bool setTariffName(const std::string& str);
 
   OptionalString variableType() const;
-  void setVariableType(const std::string& str);
+  bool setVariableType(const std::string& str);
 
   // return the parent object in the hierarchy
   virtual boost::optional<ParentObject> parent() const override;

@@ -40,10 +40,10 @@
 #include <boost/geometry/geometries/ring.hpp>
 #include <boost/geometry/multi/geometries/multi_polygon.hpp>
 #include <boost/geometry/geometries/adapted/boost_tuple.hpp>
-#include <boost/geometry/strategies/cartesian/point_in_poly_franklin.hpp> 
-#include <boost/geometry/strategies/cartesian/point_in_poly_crossings_multiply.hpp> 
-#include <boost/geometry/algorithms/within.hpp> 
-#include <boost/geometry/algorithms/simplify.hpp> 
+#include <boost/geometry/strategies/cartesian/point_in_poly_franklin.hpp>
+#include <boost/geometry/strategies/cartesian/point_in_poly_crossings_multiply.hpp>
+#include <boost/geometry/algorithms/within.hpp>
+#include <boost/geometry/algorithms/simplify.hpp>
 
 typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
 typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
@@ -54,7 +54,7 @@ typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
 
 #include <list>
 
-// remove_spikes 
+// remove_spikes
 // adapted from https://github.com/boostorg/geometry/commits/develop/include/boost/geometry/algorithms/remove_spikes.hpp eb3260708eb241d8da337f4be73b41d69d33cd09
 
 /*
@@ -84,10 +84,10 @@ namespace openstudio {
 
     double normTol = 0.001; // 1 mm
     double tol = 0.001; // relative to 1
-      
+
     double diff1_x = last_point.x()-segment_b.x();
     double diff1_y = last_point.y()-segment_b.y();
-    double norm1 = sqrt(pow(diff1_x, 2) + pow(diff1_y, 2)); 
+    double norm1 = sqrt(pow(diff1_x, 2) + pow(diff1_y, 2));
     if (norm1 > normTol){
       diff1_x = diff1_x/norm1;
       diff1_y = diff1_y/norm1;
@@ -314,7 +314,7 @@ inline void remove_spikes(Geometry& geometry)
 
 
 }} // namespace boost::geometry
-// remove_spikes 
+// remove_spikes
 
 
 namespace openstudio{
@@ -413,7 +413,7 @@ namespace openstudio{
         // DLM: might also want to partition if this polygon is self intersecting?
         result.push_back(polygon);
       }else{
-        std::vector<BoostPolygon> temp = removeHoles(polygon); 
+        std::vector<BoostPolygon> temp = removeHoles(polygon);
         result.insert(result.end(), temp.begin(), temp.end());
       }
     }
@@ -545,11 +545,11 @@ namespace openstudio{
     if (outer.empty()){
       return result;
     }
-    
+
     // add point for each vertex except final vertex
     for(unsigned i = 0; i < outer.size() - 1; ++i){
       Point3d point3d(outer[i].x(), outer[i].y(), 0.0);
-      
+
       // try to combine points within tolerance
       Point3d resultPoint = getCombinedPoint(point3d, allPoints, tol);
 
@@ -625,10 +625,10 @@ namespace openstudio{
   };
 
   // Public functions
-  
-  IntersectionResult::IntersectionResult(const std::vector<Point3d>& polygon1, 
-                                         const std::vector<Point3d>& polygon2, 
-                                         const std::vector< std::vector<Point3d> >& newPolygons1, 
+
+  IntersectionResult::IntersectionResult(const std::vector<Point3d>& polygon1,
+                                         const std::vector<Point3d>& polygon2,
+                                         const std::vector< std::vector<Point3d> >& newPolygons1,
                                          const std::vector< std::vector<Point3d> >& newPolygons2)
     : m_polygon1(polygon1), m_polygon2(polygon2), m_newPolygons1(newPolygons1), m_newPolygons2(newPolygons2)
   {
@@ -653,12 +653,12 @@ namespace openstudio{
   {
     return m_newPolygons2;
   }
-  
+
   std::vector<Point3d> removeSpikes(const std::vector<Point3d>& polygon, double tol)
   {
     // convert vertices to boost rings
     std::vector<Point3d> allPoints;
-    
+
     boost::optional<BoostPolygon> boostPolygon = boostPolygonFromVertices(polygon, allPoints, tol);
     if (!boostPolygon){
       return std::vector<Point3d>();
@@ -670,12 +670,12 @@ namespace openstudio{
 
     return result;
   }
-  
+
   bool pointInPolygon(const Point3d& point, const std::vector<Point3d>& polygon, double tol)
   {
     // convert vertices to boost rings
     std::vector<Point3d> allPoints;
-    
+
     boost::optional<BoostRing> boostPolygon = nonIntersectingBoostRingFromVertices(polygon, allPoints, tol);
     if (!boostPolygon){
       return false;
@@ -700,15 +700,15 @@ namespace openstudio{
     double distance = boost::geometry::distance(boostPoint, *boostPolygon);
     bool result = (distance <= 0.0001);
 
-    return result; 
-      
+    return result;
+
   }
 
   boost::optional<std::vector<Point3d> > join(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol)
   {
     // convert vertices to boost rings
     std::vector<Point3d> allPoints;
-    
+
     boost::optional<BoostRing> boostPolygon1 = nonIntersectingBoostRingFromVertices(polygon1, allPoints, tol);
     if (!boostPolygon1){
       return boost::none;
@@ -719,7 +719,7 @@ namespace openstudio{
       return boost::none;
     }
 
-    // union the points in face coordinates, 
+    // union the points in face coordinates,
     std::vector<BoostPolygon> unionResult;
     try{
       boost::geometry::union_(*boostPolygon1, *boostPolygon2, unionResult);
@@ -788,7 +788,7 @@ namespace openstudio{
       }
     }
 
-    
+
 
     std::vector<std::vector<unsigned> > connectedComponents = findConnectedComponents(A);
     for (const std::vector<unsigned>& component : connectedComponents){
@@ -820,7 +820,7 @@ namespace openstudio{
 
     // convert vertices to boost rings
     std::vector<Point3d> allPoints;
-    
+
     boost::optional<BoostRing> boostPolygon1 = nonIntersectingBoostRingFromVertices(polygon1, allPoints, tol);
     if (!boostPolygon1){
       return boost::none;
@@ -831,7 +831,7 @@ namespace openstudio{
       return boost::none;
     }
 
-    // intersect the points in face coordinates, 
+    // intersect the points in face coordinates,
     std::vector<BoostPolygon> intersectionResult;
     try{
       boost::geometry::intersection(*boostPolygon1, *boostPolygon2, intersectionResult);
@@ -854,7 +854,7 @@ namespace openstudio{
       LOG_FREE(Info, "utilities.geometry.intersect", "Intersection has " << intersectionResult.size() << " elements");
       std::sort(intersectionResult.begin(), intersectionResult.end(), BoostPolygonAreaGreater());
     }
-    
+
     // check that largest intersection is ok
     std::vector<Point3d> intersectionVertices = verticesFromBoostPolygon(intersectionResult[0], allPoints, tol);
     boost::optional<double> testArea = boost::geometry::area(intersectionResult[0]);
@@ -913,7 +913,7 @@ namespace openstudio{
     boost::geometry::difference(*boostPolygon1, *boostPolygon2, differenceResult1);
     differenceResult1 = removeSpikes(differenceResult1);
     differenceResult1 = removeHoles(differenceResult1);
-    
+
     // create new polygon for each difference
     for (unsigned i = 0; i < differenceResult1.size(); ++i){
 
@@ -990,7 +990,7 @@ namespace openstudio{
       if (!boostHole){
         return result;
       }
-      
+
       for (const BoostPolygon& boostPolygon : boostPolygons){
         std::vector<BoostPolygon> diffResult;
         boost::geometry::difference(boostPolygon, *boostHole, diffResult);
@@ -1132,7 +1132,7 @@ namespace openstudio{
 
     return boost::none;
   }
-  
+
   std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeCollinear, double tol)
   {
     std::vector<Point3d> allPoints;
@@ -1155,7 +1155,7 @@ namespace openstudio{
     if (!bp){
       return std::vector<Point3d>();
     }
- 
+
     BoostPolygon out;
 
     // this uses the Douglas-Peucker algorithm with a max difference of 0 so no non-collinear points will be removed

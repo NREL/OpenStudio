@@ -88,7 +88,7 @@ namespace detail {
     void resetViewFactortoOutsideShelf();
 
     //@}
-      
+
     /// Get the related sub surface.
     SubSurface subSurface() const;
 

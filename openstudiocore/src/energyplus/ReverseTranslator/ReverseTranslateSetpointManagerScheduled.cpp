@@ -100,7 +100,7 @@ OptionalModelObject ReverseTranslator::translateSetpointManagerScheduled( const 
     if( s )
     {
       boost::optional<Node> node = m_model.getModelObjectByName<Node>(s.get());
-    
+
       if( node )
       {
         mo.addToNode(node.get());

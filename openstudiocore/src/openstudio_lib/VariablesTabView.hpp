@@ -48,7 +48,7 @@ namespace openstudio {
     Q_OBJECT;
 
     public:
-      VariableListItem(const std::string &t_name, 
+      VariableListItem(const std::string &t_name,
           const std::string& t_keyValue,
           const boost::optional<openstudio::model::OutputVariable> &t_variable,
           const openstudio::model::Model &t_model);
@@ -99,7 +99,7 @@ namespace openstudio {
       QPushButton *m_allOffBtn;
       QVBoxLayout *m_listLayout;
       bool m_dirty;
-      std::vector<VariableListItem *> m_variables; 
+      std::vector<VariableListItem *> m_variables;
   };
 
 

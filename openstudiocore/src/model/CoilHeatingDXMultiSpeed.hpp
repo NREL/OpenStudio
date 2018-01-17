@@ -107,9 +107,9 @@ class MODEL_API CoilHeatingDXMultiSpeed : public StraightComponent {
 
   void resetAvailabilitySchedule();
 
-  void setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+  bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
-  void setOutdoorDryBulbTemperaturetoTurnOnCompressor(double outdoorDryBulbTemperaturetoTurnOnCompressor);
+  bool setOutdoorDryBulbTemperaturetoTurnOnCompressor(double outdoorDryBulbTemperaturetoTurnOnCompressor);
 
   void resetOutdoorDryBulbTemperaturetoTurnOnCompressor();
 
@@ -133,7 +133,7 @@ class MODEL_API CoilHeatingDXMultiSpeed : public StraightComponent {
 
   void autosizeResistiveDefrostHeaterCapacity();
 
-  void setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
+  bool setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
 
   bool setFuelType(std::string fuelType);
 
@@ -185,4 +185,3 @@ typedef std::vector<CoilHeatingDXMultiSpeed> CoilHeatingDXMultiSpeedVector;
 } // openstudio
 
 #endif // MODEL_COILHEATINGDXMULTISPEED_HPP
-

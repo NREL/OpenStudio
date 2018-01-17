@@ -63,7 +63,7 @@ class MODEL_API CoilHeatingWaterBaseboard : public StraightComponent {
 
   /** @name Getters */
   //@{
- 
+
   unsigned inletPort();
 
   unsigned outletPort();
@@ -85,7 +85,7 @@ class MODEL_API CoilHeatingWaterBaseboard : public StraightComponent {
 
  /** Returns true if the UFactorTimesAreaValue field is set to autosize **/
   bool isUFactorTimesAreaValueAutosized() const;
- 
+
   /** Returns the value of the MaximumWaterFlowRate field. **/
   boost::optional<double> maximumWaterFlowRate() const;
 
@@ -112,13 +112,13 @@ class MODEL_API CoilHeatingWaterBaseboard : public StraightComponent {
 
   bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
 
-  void setUFactorTimesAreaValue(double uFactorTimesAreaValue);
+  bool setUFactorTimesAreaValue(double uFactorTimesAreaValue);
 
   void resetUFactorTimesAreaValue();
 
   void autosizeUFactorTimesAreaValue();
 
-  void setMaximumWaterFlowRate(double maximumWaterFlowRate);
+  bool setMaximumWaterFlowRate(double maximumWaterFlowRate);
 
   void resetMaximumWaterFlowRate();
 
@@ -166,4 +166,3 @@ typedef std::vector<CoilHeatingWaterBaseboard> CoilHeatingWaterBaseboardVector;
 } // openstudio
 
 #endif // MODEL_COILHEATINGWATERBASEBOARD_HPP
-

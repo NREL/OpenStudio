@@ -57,7 +57,7 @@ class MODEL_API SpaceLoad : public SpaceItem {
 
   /// Converts space load levels to absolute values rather than by per area, etc.
   /// Also hard sizes any costs associated with this load.
-  /// Only possible if this space load is parented by a space, returns false if 
+  /// Only possible if this space load is parented by a space, returns false if
   /// parented by a space type.
   bool hardSize();
 

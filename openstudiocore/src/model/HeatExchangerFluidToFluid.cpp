@@ -377,7 +377,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void HeatExchangerFluidToFluid_Impl::setOperationMinimumTemperatureLimit(boost::optional<double> operationMinimumTemperatureLimit) {
+  bool HeatExchangerFluidToFluid_Impl::setOperationMinimumTemperatureLimit(boost::optional<double> operationMinimumTemperatureLimit) {
     bool result(false);
     if (operationMinimumTemperatureLimit) {
       result = setDouble(OS_HeatExchanger_FluidToFluidFields::OperationMinimumTemperatureLimit, operationMinimumTemperatureLimit.get());
@@ -386,7 +386,7 @@ namespace detail {
       resetOperationMinimumTemperatureLimit();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void HeatExchangerFluidToFluid_Impl::resetOperationMinimumTemperatureLimit() {
@@ -394,7 +394,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void HeatExchangerFluidToFluid_Impl::setOperationMaximumTemperatureLimit(boost::optional<double> operationMaximumTemperatureLimit) {
+  bool HeatExchangerFluidToFluid_Impl::setOperationMaximumTemperatureLimit(boost::optional<double> operationMaximumTemperatureLimit) {
     bool result(false);
     if (operationMaximumTemperatureLimit) {
       result = setDouble(OS_HeatExchanger_FluidToFluidFields::OperationMaximumTemperatureLimit, operationMaximumTemperatureLimit.get());
@@ -403,7 +403,7 @@ namespace detail {
       resetOperationMaximumTemperatureLimit();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void HeatExchangerFluidToFluid_Impl::resetOperationMaximumTemperatureLimit() {
@@ -700,16 +700,16 @@ void HeatExchangerFluidToFluid::resetSizingFactor() {
   getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetSizingFactor();
 }
 
-void HeatExchangerFluidToFluid::setOperationMinimumTemperatureLimit(double operationMinimumTemperatureLimit) {
-  getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setOperationMinimumTemperatureLimit(operationMinimumTemperatureLimit);
+bool HeatExchangerFluidToFluid::setOperationMinimumTemperatureLimit(double operationMinimumTemperatureLimit) {
+  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setOperationMinimumTemperatureLimit(operationMinimumTemperatureLimit);
 }
 
 void HeatExchangerFluidToFluid::resetOperationMinimumTemperatureLimit() {
   getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetOperationMinimumTemperatureLimit();
 }
 
-void HeatExchangerFluidToFluid::setOperationMaximumTemperatureLimit(double operationMaximumTemperatureLimit) {
-  getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setOperationMaximumTemperatureLimit(operationMaximumTemperatureLimit);
+bool HeatExchangerFluidToFluid::setOperationMaximumTemperatureLimit(double operationMaximumTemperatureLimit) {
+  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setOperationMaximumTemperatureLimit(operationMaximumTemperatureLimit);
 }
 
 void HeatExchangerFluidToFluid::resetOperationMaximumTemperatureLimit() {
@@ -736,4 +736,3 @@ HeatExchangerFluidToFluid::HeatExchangerFluidToFluid(std::shared_ptr<detail::Hea
 
 } // model
 } // openstudio
-

@@ -429,8 +429,8 @@ namespace detail {
     return result;
   }
 
-  void ZoneHVACLowTempRadiantVarFlow_Impl::setCircuitLength(double circuitLength) {
-    setDouble(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CircuitLength, circuitLength);
+  bool ZoneHVACLowTempRadiantVarFlow_Impl::setCircuitLength(double circuitLength) {
+    return setDouble(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CircuitLength, circuitLength);;
   }
 
   boost::optional<Schedule> ZoneHVACLowTempRadiantVarFlow_Impl::optionalAvailabilitySchedule() const
@@ -699,8 +699,8 @@ bool ZoneHVACLowTempRadiantVarFlow::setNumberofCircuits(std::string numCircs) {
   return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->setNumberofCircuits(numCircs);
 }
 
-void ZoneHVACLowTempRadiantVarFlow::setCircuitLength(double circLength) {
-  getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->setCircuitLength(circLength);
+bool ZoneHVACLowTempRadiantVarFlow::setCircuitLength(double circLength) {
+  return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->setCircuitLength(circLength);
 }
 
 boost::optional<ThermalZone> ZoneHVACLowTempRadiantVarFlow::thermalZone() const
@@ -729,4 +729,3 @@ ZoneHVACLowTempRadiantVarFlow::ZoneHVACLowTempRadiantVarFlow(std::shared_ptr<det
 
 } // model
 } // openstudio
-

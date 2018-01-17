@@ -125,7 +125,7 @@ void VRFSystemView::adjustLayout()
       it != m_terminalViews.end();
       ++it)
   {
-    (*it)->setPos(terminalX,y); 
+    (*it)->setPos(terminalX,y);
     y = y + (*it)->boundingRect().height() + margin;
   }
 
@@ -177,8 +177,8 @@ void VRFSystemView::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
   }
 }
 
-void VRFSystemView::paint( QPainter *painter, 
-                           const QStyleOptionGraphicsItem *option, 
+void VRFSystemView::paint( QPainter *painter,
+                           const QStyleOptionGraphicsItem *option,
                            QWidget *widget )
 {
   // Background and Border
@@ -304,8 +304,8 @@ QRectF VRFTerminalView::terminalPixmapRect() const
                 m_terminalPixmap.width(),m_terminalPixmap.height());
 }
 
-void VRFTerminalView::paint( QPainter *painter, 
-                           const QStyleOptionGraphicsItem *option, 
+void VRFTerminalView::paint( QPainter *painter,
+                           const QStyleOptionGraphicsItem *option,
                            QWidget *widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -328,8 +328,8 @@ void VRFThermalZoneDropZoneView::setHasZone(bool hasZone)
   update();
 }
 
-void VRFThermalZoneDropZoneView::paint( QPainter *painter, 
-                                        const QStyleOptionGraphicsItem *option, 
+void VRFThermalZoneDropZoneView::paint( QPainter *painter,
+                                        const QStyleOptionGraphicsItem *option,
                                         QWidget *widget )
 {
   if( m_hasZone )
@@ -433,8 +433,8 @@ void VRFSystemMiniView::setNumberOfTerminals(int terminals)
   m_terminals = terminals;
 }
 
-void VRFSystemMiniView::paint( QPainter *painter, 
-                           const QStyleOptionGraphicsItem *option, 
+void VRFSystemMiniView::paint( QPainter *painter,
+                           const QStyleOptionGraphicsItem *option,
                            QWidget *widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -474,7 +474,7 @@ void VRFSystemMiniView::paint( QPainter *painter,
   painter->drawText(QRectF(x,y + m_length / 2.0,m_length,m_length / 2.0),Qt::AlignCenter,QString("Terminals"));
   x = x + m_length;
 
-  painter->drawPixmap(x,y,m_vrfZonePix); 
+  painter->drawPixmap(x,y,m_vrfZonePix);
   x = x + m_vrfZonePix.width();
 
   font.setPointSize(24);
@@ -493,8 +493,8 @@ QRectF VRFSystemDropZoneView::boundingRect() const
   return QRectF(QPoint(0,0),VRFSystemMiniView::cellSize());
 }
 
-void VRFSystemDropZoneView::paint( QPainter *painter, 
-                                                 const QStyleOptionGraphicsItem *option, 
+void VRFSystemDropZoneView::paint( QPainter *painter,
+                                                 const QStyleOptionGraphicsItem *option,
                                                  QWidget *widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);

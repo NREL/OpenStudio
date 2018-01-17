@@ -70,7 +70,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSurfacePropertyConvection
 
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SurfaceProperty_ConvectionCoefficients_MultipleSurface,
                                                        modelObject);
- 
+
   if (surfaceType){
     idfObject.setString(SurfaceProperty_ConvectionCoefficients_MultipleSurfaceFields::SurfaceType, *surfaceType);
   }

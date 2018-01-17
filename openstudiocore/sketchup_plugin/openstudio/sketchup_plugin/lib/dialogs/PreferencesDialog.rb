@@ -98,5 +98,5 @@ module OpenStudio
     end
 
   end
-  
+
 end

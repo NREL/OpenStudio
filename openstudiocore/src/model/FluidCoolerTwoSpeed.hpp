@@ -129,7 +129,7 @@ class MODEL_API FluidCoolerTwoSpeed : public StraightComponent {
 
   void autosizeLowFanSpeedUfactorTimesAreaValue();
 
-  void setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor);
+  bool setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor);
 
   bool setHighSpeedNominalCapacity(double highSpeedNominalCapacity);
 
@@ -137,7 +137,7 @@ class MODEL_API FluidCoolerTwoSpeed : public StraightComponent {
 
   void autosizeLowSpeedNominalCapacity();
 
-  void setLowSpeedNominalCapacitySizingFactor(double lowSpeedNominalCapacitySizingFactor);
+  bool setLowSpeedNominalCapacitySizingFactor(double lowSpeedNominalCapacitySizingFactor);
 
   bool setDesignEnteringWaterTemperature(double designEnteringWaterTemperature);
 
@@ -161,13 +161,13 @@ class MODEL_API FluidCoolerTwoSpeed : public StraightComponent {
 
   void autosizeLowFanSpeedAirFlowRate();
 
-  void setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor);
+  bool setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor);
 
   bool setLowFanSpeedFanPower(double lowFanSpeedFanPower);
 
   void autosizeLowFanSpeedFanPower();
 
-  void setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor);
+  bool setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor);
 
   bool setOutdoorAirInletNode(const Node& node);
 
