@@ -44,14 +44,14 @@ TEST_F(ModelFixture,WaterUseConnections_WaterUseConnections)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     //create a model to use in testing this code.
-    Model m; 
+    Model m;
 
     WaterUseConnections waterUseConnections(m);
 
-    exit(0); 
+    exit(0);
   } ,
   ::testing::ExitedWithCode(0), "" );
 }
@@ -70,11 +70,11 @@ TEST_F(ModelFixture,WaterUseConnections_addRemoveEquipment) {
   waterUseConnections.addWaterUseEquipment(e2);
   waterUseConnections.addWaterUseEquipment(e3);
 
-  EXPECT_EQ(3u,waterUseConnections.waterUseEquipment().size()); 
+  EXPECT_EQ(3u,waterUseConnections.waterUseEquipment().size());
 
   waterUseConnections.removeWaterUseEquipment(e2);
 
-  EXPECT_EQ(2u,waterUseConnections.waterUseEquipment().size()); 
+  EXPECT_EQ(2u,waterUseConnections.waterUseEquipment().size());
 }
 
 TEST_F(ModelFixture,WaterUseConnections_addToNode) {

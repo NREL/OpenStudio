@@ -105,7 +105,7 @@ namespace detail {
 
     bool setTemperatureSpecificationType(std::string temperatureSpecificationType);
 
-    void setSourceTemperature(boost::optional<double> sourceTemperature);
+    bool setSourceTemperature(boost::optional<double> sourceTemperature);
 
     void resetSourceTemperature();
 
@@ -133,4 +133,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_PLANTCOMPONENTTEMPERATURESOURCE_IMPL_HPP
-

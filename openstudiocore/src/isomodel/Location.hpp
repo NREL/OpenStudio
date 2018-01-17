@@ -33,7 +33,7 @@
 
 namespace openstudio {
 namespace isomodel {
-  
+
   class Location
   {
   public:
@@ -44,7 +44,7 @@ namespace isomodel {
 
   private:
     double _terrain;
-    std::shared_ptr<WeatherData> _weather;    
+    std::shared_ptr<WeatherData> _weather;
   };
 
 } // isomodel

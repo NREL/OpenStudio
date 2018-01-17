@@ -84,17 +84,17 @@ class MODEL_API CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit : public W
   /** @name Setters */
   //@{
 
-  void setNominalSpeedLevel(int nominalSpeedLevel);
+  bool setNominalSpeedLevel(int nominalSpeedLevel);
 
-  void setRatedHeatingCapacityAtSelectedNominalSpeedLevel(double ratedHeatingCapacityAtSelectedNominalSpeedLevel);
+  bool setRatedHeatingCapacityAtSelectedNominalSpeedLevel(double ratedHeatingCapacityAtSelectedNominalSpeedLevel);
 
   void autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel();
 
-  void setRatedAirFlowRateAtSelectedNominalSpeedLevel(double ratedAirFlowRateAtSelectedNominalSpeedLevel);
+  bool setRatedAirFlowRateAtSelectedNominalSpeedLevel(double ratedAirFlowRateAtSelectedNominalSpeedLevel);
 
   void autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
 
-  void setRatedWaterFlowRateAtSelectedNominalSpeedLevel(double ratedWaterFlowRateAtSelectedNominalSpeedLevel);
+  bool setRatedWaterFlowRateAtSelectedNominalSpeedLevel(double ratedWaterFlowRateAtSelectedNominalSpeedLevel);
 
   void autosizeRatedWaterFlowRateAtSelectedNominalSpeedLevel();
 
@@ -146,4 +146,3 @@ typedef std::vector<CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit> CoilH
 } // openstudio
 
 #endif // MODEL_COILHEATINGWATERTOAIRHEATPUMPVARIABLESPEEDEQUATIONFIT_HPP
-

@@ -48,10 +48,10 @@ namespace detail {
     // Construct completely new object.
     ResourceObject_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // Construct from existing workspace object (typically when Model is being constructed 
+    // Construct from existing workspace object (typically when Model is being constructed
     // from Workspace).
-    ResourceObject_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                        Model_Impl* model, 
+    ResourceObject_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                        Model_Impl* model,
                         bool keepHandle);
 
     // Clone copy constructor.

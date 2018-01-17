@@ -61,14 +61,14 @@ TEST(Time, FracDaysConstructor)
 TEST(Time, MixedConstructor)
 {
   EXPECT_EQ(Time(0,1,0,0), Time(0,0,60,0));
-  EXPECT_EQ(Time(0,-1,0,0), Time(0,0,-60,0)); 
+  EXPECT_EQ(Time(0,-1,0,0), Time(0,0,-60,0));
   EXPECT_EQ(Time(0,1,30,0), Time(0,0,90,0));
-  EXPECT_EQ(Time(0,-1,-30,0), Time(0,0,-90,0)); 
-  EXPECT_EQ(Time(0,1,0,0), Time(0,1,1,-60)); 
-  EXPECT_EQ(Time(0,1,0,0), Time(0,1,-1,60)); 
-  EXPECT_EQ(Time(0,0,59,0), Time(0,1,-1,0)); 
-  EXPECT_EQ(Time(0,1,30,0), Time(1.5/24.0)); 
-  EXPECT_EQ(Time(0,-1,-30,0), Time(-1.5/24.0)); 
+  EXPECT_EQ(Time(0,-1,-30,0), Time(0,0,-90,0));
+  EXPECT_EQ(Time(0,1,0,0), Time(0,1,1,-60));
+  EXPECT_EQ(Time(0,1,0,0), Time(0,1,-1,60));
+  EXPECT_EQ(Time(0,0,59,0), Time(0,1,-1,0));
+  EXPECT_EQ(Time(0,1,30,0), Time(1.5/24.0));
+  EXPECT_EQ(Time(0,-1,-30,0), Time(-1.5/24.0));
 }
 
 TEST(Time, StringConstructor)

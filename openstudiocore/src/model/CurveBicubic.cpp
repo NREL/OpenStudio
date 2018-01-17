@@ -225,84 +225,84 @@ namespace detail {
     return isEmpty(OS_Curve_BicubicFields::OutputUnitType);
   }
 
-  void CurveBicubic_Impl::setCoefficient1Constant(double coefficient1Constant) {
+  bool CurveBicubic_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient1Constant, coefficient1Constant);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBicubic_Impl::setCoefficient2x(double coefficient2x) {
+  bool CurveBicubic_Impl::setCoefficient2x(double coefficient2x) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient2x, coefficient2x);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBicubic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
+  bool CurveBicubic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient3x_POW_2, coefficient3xPOW2);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBicubic_Impl::setCoefficient4y(double coefficient4y) {
+  bool CurveBicubic_Impl::setCoefficient4y(double coefficient4y) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient4y, coefficient4y);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBicubic_Impl::setCoefficient5yPOW2(double coefficient5yPOW2) {
+  bool CurveBicubic_Impl::setCoefficient5yPOW2(double coefficient5yPOW2) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient5y_POW_2, coefficient5yPOW2);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBicubic_Impl::setCoefficient6xTIMESY(double coefficient6xTIMESY) {
+  bool CurveBicubic_Impl::setCoefficient6xTIMESY(double coefficient6xTIMESY) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient6x_TIMES_y, coefficient6xTIMESY);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBicubic_Impl::setCoefficient7xPOW3(double coefficient7xPOW3) {
+  bool CurveBicubic_Impl::setCoefficient7xPOW3(double coefficient7xPOW3) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient7x_POW_3, coefficient7xPOW3);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBicubic_Impl::setCoefficient8yPOW3(double coefficient8yPOW3) {
+  bool CurveBicubic_Impl::setCoefficient8yPOW3(double coefficient8yPOW3) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient8y_POW_3, coefficient8yPOW3);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBicubic_Impl::setCoefficient9xPOW2TIMESY(double coefficient9xPOW2TIMESY) {
+  bool CurveBicubic_Impl::setCoefficient9xPOW2TIMESY(double coefficient9xPOW2TIMESY) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient9x_POW_2_TIMES_y, coefficient9xPOW2TIMESY);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBicubic_Impl::setCoefficient10xTIMESYPOW2(double coefficient10xTIMESYPOW2) {
+  bool CurveBicubic_Impl::setCoefficient10xTIMESYPOW2(double coefficient10xTIMESYPOW2) {
     bool result = setDouble(OS_Curve_BicubicFields::Coefficient10x_TIMES_y_POW_2, coefficient10xTIMESYPOW2);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBicubic_Impl::setMinimumValueofx(double minimumValueofx) {
+  bool CurveBicubic_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_BicubicFields::MinimumValueofx, minimumValueofx);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBicubic_Impl::setMaximumValueofx(double maximumValueofx) {
+  bool CurveBicubic_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_BicubicFields::MaximumValueofx, maximumValueofx);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBicubic_Impl::setMinimumValueofy(double minimumValueofy) {
+  bool CurveBicubic_Impl::setMinimumValueofy(double minimumValueofy) {
     bool result = setDouble(OS_Curve_BicubicFields::MinimumValueofy, minimumValueofy);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBicubic_Impl::setMaximumValueofy(double maximumValueofy) {
+  bool CurveBicubic_Impl::setMaximumValueofy(double maximumValueofy) {
     bool result = setDouble(OS_Curve_BicubicFields::MaximumValueofy, maximumValueofy);
-    OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBicubic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
+  bool CurveBicubic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
     bool result = false;
     if (minimumCurveOutput) {
       result = setDouble(OS_Curve_BicubicFields::MinimumCurveOutput, minimumCurveOutput.get());
     } else {
       result = setString(OS_Curve_BicubicFields::MinimumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveBicubic_Impl::resetMinimumCurveOutput() {
@@ -310,14 +310,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveBicubic_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
+  bool CurveBicubic_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
     bool result = false;
     if (maximumCurveOutput) {
       result = setDouble(OS_Curve_BicubicFields::MaximumCurveOutput, maximumCurveOutput.get());
     } else {
       result = setString(OS_Curve_BicubicFields::MaximumCurveOutput, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CurveBicubic_Impl::resetMaximumCurveOutput() {
@@ -485,72 +485,72 @@ bool CurveBicubic::isOutputUnitTypeDefaulted() const {
   return getImpl<detail::CurveBicubic_Impl>()->isOutputUnitTypeDefaulted();
 }
 
-void CurveBicubic::setCoefficient1Constant(double coefficient1Constant) {
-  getImpl<detail::CurveBicubic_Impl>()->setCoefficient1Constant(coefficient1Constant);
+bool CurveBicubic::setCoefficient1Constant(double coefficient1Constant) {
+  return getImpl<detail::CurveBicubic_Impl>()->setCoefficient1Constant(coefficient1Constant);
 }
 
-void CurveBicubic::setCoefficient2x(double coefficient2x) {
-  getImpl<detail::CurveBicubic_Impl>()->setCoefficient2x(coefficient2x);
+bool CurveBicubic::setCoefficient2x(double coefficient2x) {
+  return getImpl<detail::CurveBicubic_Impl>()->setCoefficient2x(coefficient2x);
 }
 
-void CurveBicubic::setCoefficient3xPOW2(double coefficient3xPOW2) {
-  getImpl<detail::CurveBicubic_Impl>()->setCoefficient3xPOW2(coefficient3xPOW2);
+bool CurveBicubic::setCoefficient3xPOW2(double coefficient3xPOW2) {
+  return getImpl<detail::CurveBicubic_Impl>()->setCoefficient3xPOW2(coefficient3xPOW2);
 }
 
-void CurveBicubic::setCoefficient4y(double coefficient4y) {
-  getImpl<detail::CurveBicubic_Impl>()->setCoefficient4y(coefficient4y);
+bool CurveBicubic::setCoefficient4y(double coefficient4y) {
+  return getImpl<detail::CurveBicubic_Impl>()->setCoefficient4y(coefficient4y);
 }
 
-void CurveBicubic::setCoefficient5yPOW2(double coefficient5yPOW2) {
-  getImpl<detail::CurveBicubic_Impl>()->setCoefficient5yPOW2(coefficient5yPOW2);
+bool CurveBicubic::setCoefficient5yPOW2(double coefficient5yPOW2) {
+  return getImpl<detail::CurveBicubic_Impl>()->setCoefficient5yPOW2(coefficient5yPOW2);
 }
 
-void CurveBicubic::setCoefficient6xTIMESY(double coefficient6xTIMESY) {
-  getImpl<detail::CurveBicubic_Impl>()->setCoefficient6xTIMESY(coefficient6xTIMESY);
+bool CurveBicubic::setCoefficient6xTIMESY(double coefficient6xTIMESY) {
+  return getImpl<detail::CurveBicubic_Impl>()->setCoefficient6xTIMESY(coefficient6xTIMESY);
 }
 
-void CurveBicubic::setCoefficient7xPOW3(double coefficient7xPOW3) {
-  getImpl<detail::CurveBicubic_Impl>()->setCoefficient7xPOW3(coefficient7xPOW3);
+bool CurveBicubic::setCoefficient7xPOW3(double coefficient7xPOW3) {
+  return getImpl<detail::CurveBicubic_Impl>()->setCoefficient7xPOW3(coefficient7xPOW3);
 }
 
-void CurveBicubic::setCoefficient8yPOW3(double coefficient8yPOW3) {
-  getImpl<detail::CurveBicubic_Impl>()->setCoefficient8yPOW3(coefficient8yPOW3);
+bool CurveBicubic::setCoefficient8yPOW3(double coefficient8yPOW3) {
+  return getImpl<detail::CurveBicubic_Impl>()->setCoefficient8yPOW3(coefficient8yPOW3);
 }
 
-void CurveBicubic::setCoefficient9xPOW2TIMESY(double coefficient9xPOW2TIMESY) {
-  getImpl<detail::CurveBicubic_Impl>()->setCoefficient9xPOW2TIMESY(coefficient9xPOW2TIMESY);
+bool CurveBicubic::setCoefficient9xPOW2TIMESY(double coefficient9xPOW2TIMESY) {
+  return getImpl<detail::CurveBicubic_Impl>()->setCoefficient9xPOW2TIMESY(coefficient9xPOW2TIMESY);
 }
 
-void CurveBicubic::setCoefficient10xTIMESYPOW2(double coefficient10xTIMESYPOW2) {
-  getImpl<detail::CurveBicubic_Impl>()->setCoefficient10xTIMESYPOW2(coefficient10xTIMESYPOW2);
+bool CurveBicubic::setCoefficient10xTIMESYPOW2(double coefficient10xTIMESYPOW2) {
+  return getImpl<detail::CurveBicubic_Impl>()->setCoefficient10xTIMESYPOW2(coefficient10xTIMESYPOW2);
 }
 
-void CurveBicubic::setMinimumValueofx(double minimumValueofx) {
-  getImpl<detail::CurveBicubic_Impl>()->setMinimumValueofx(minimumValueofx);
+bool CurveBicubic::setMinimumValueofx(double minimumValueofx) {
+  return getImpl<detail::CurveBicubic_Impl>()->setMinimumValueofx(minimumValueofx);
 }
 
-void CurveBicubic::setMaximumValueofx(double maximumValueofx) {
-  getImpl<detail::CurveBicubic_Impl>()->setMaximumValueofx(maximumValueofx);
+bool CurveBicubic::setMaximumValueofx(double maximumValueofx) {
+  return getImpl<detail::CurveBicubic_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
-void CurveBicubic::setMinimumValueofy(double minimumValueofy) {
-  getImpl<detail::CurveBicubic_Impl>()->setMinimumValueofy(minimumValueofy);
+bool CurveBicubic::setMinimumValueofy(double minimumValueofy) {
+  return getImpl<detail::CurveBicubic_Impl>()->setMinimumValueofy(minimumValueofy);
 }
 
-void CurveBicubic::setMaximumValueofy(double maximumValueofy) {
-  getImpl<detail::CurveBicubic_Impl>()->setMaximumValueofy(maximumValueofy);
+bool CurveBicubic::setMaximumValueofy(double maximumValueofy) {
+  return getImpl<detail::CurveBicubic_Impl>()->setMaximumValueofy(maximumValueofy);
 }
 
-void CurveBicubic::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveBicubic_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+bool CurveBicubic::setMinimumCurveOutput(double minimumCurveOutput) {
+  return getImpl<detail::CurveBicubic_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveBicubic::resetMinimumCurveOutput() {
   getImpl<detail::CurveBicubic_Impl>()->resetMinimumCurveOutput();
 }
 
-void CurveBicubic::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveBicubic_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+bool CurveBicubic::setMaximumCurveOutput(double maximumCurveOutput) {
+  return getImpl<detail::CurveBicubic_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveBicubic::resetMaximumCurveOutput() {
@@ -589,4 +589,3 @@ CurveBicubic::CurveBicubic(std::shared_ptr<detail::CurveBicubic_Impl> impl)
 
 } // model
 } // openstudio
-

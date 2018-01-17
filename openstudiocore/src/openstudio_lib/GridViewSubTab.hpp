@@ -47,7 +47,7 @@ namespace openstudio {
   class OSGridView;
 
   class OSItemSelectorButtons;
-  
+
 class GridViewSubTab : public QWidget
 {
   Q_OBJECT
@@ -61,7 +61,7 @@ class GridViewSubTab : public QWidget
     openstudio::IddObjectType m_iddObjectType;
 
   protected:
-    
+
     void setGridView(OSGridView * gridView);
 
     void setGridController(OSGridController * gridController);

@@ -42,8 +42,8 @@ namespace detail{
 }
 
 /** SpaceLoadInstance is an abstract class derived from SpaceLoad. \link SpaceLoadInstance
- *  SpaceLoadInstances \endlink instantiate a given SpaceLoadDefinition in a Space or SpaceType 
- *  by defining a multiplier and a schedule. 
+ *  SpaceLoadInstances \endlink instantiate a given SpaceLoadDefinition in a Space or SpaceType
+ *  by defining a multiplier and a schedule.
  */
 class MODEL_API SpaceLoadInstance : public SpaceLoad {
  public:
@@ -64,13 +64,13 @@ class MODEL_API SpaceLoadInstance : public SpaceLoad {
   /** Returns true if the multiplier is defaulted. **/
   bool isMultiplierDefaulted() const;
 
-  /** Returns the floor area associated with this space load instance.  
+  /** Returns the floor area associated with this space load instance.
   If this space load is associated with a single space then that space's floor area is returned.
   If this space load is associated with a space type then the sum of all space floor area in that space type is returned.
   Space and SpaceLoadInstance multipliers are included in the result **/
   double floorArea() const;
 
-  /** Returns the number of instances this space load instance represents.  
+  /** Returns the number of instances this space load instance represents.
   Space and SpaceLoadInstance multipliers are included in the result **/
   int quantity() const;
 

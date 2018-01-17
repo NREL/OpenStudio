@@ -52,12 +52,12 @@ namespace boost {
       {
         return boost::any_cast<int>(*self);
       }
-     
+
       unsigned toUnsigned()
       {
         return boost::any_cast<unsigned>(*self);
       }
- 
+
       float toFloat()
       {
         return boost::any_cast<float>(*self);
@@ -67,47 +67,47 @@ namespace boost {
       {
         return boost::any_cast<double>(*self);
       }
-      
+
       std::string __str__() const{
         return boost::any_cast<std::string>(*self);
       }
-      
+
       int __int__() const{
         return boost::any_cast<int>(*self);
       }
-      
+
       float __float__() const{
         return boost::any_cast<float>(*self);
-      }          
+      }
     }
   };
 
   template <class T>
   class optional {
-    #if defined(SWIGRUBY) 
+    #if defined(SWIGRUBY)
       %alias isNull "empty?";
     #endif
 
   public:
-    
+
     optional();
     optional(const T& t);
     optional(const boost::optional<T>& t);
     void reset();
-#ifndef SWIGPYTHON    
+#ifndef SWIGPYTHON
     operator bool() const;
-#endif    
+#endif
     //bool operator!() const; // SWIG ignores this
 //    T get();
 //    T* operator->();
     T operator*();
     bool is_initialized() const;
-   
+
     %extend {
       bool isNull() {
         return !(self->is_initialized());
       }
-      
+
       T get() {
         if (self->is_initialized())
         {
@@ -122,26 +122,26 @@ namespace boost {
 
     }
   };
-  
+
   // Stubbing of std::function
   template<typename R>
   class function0
   {
     R operator()();
   };
-  
+
   template<typename R, typename P1>
   class function1
   {
     R operator()(P1);
   };
-  
+
   template<typename R, typename P1, typename P2>
   class function2
   {
     R operator()(P1, P2);
   };
-  
+
 };
 
 // create instantiations of the optional classes
@@ -178,7 +178,7 @@ namespace boost {
       result = static_cast<float>(self->get());
     }
     return result;
-  }    
+  }
 };
 
 %extend boost::optional<unsigned>{
@@ -202,7 +202,7 @@ namespace boost {
       result = static_cast<float>(self->get());
     }
     return result;
-  }  
+  }
 };
 
 %extend boost::optional<double>{
@@ -292,7 +292,7 @@ namespace boost
 
 namespace boost
 {
-  template<typename T1, typename T2, typename T3, typename T4> 
+  template<typename T1, typename T2, typename T3, typename T4>
   class variant
   {
   };
@@ -315,7 +315,7 @@ namespace std {
   class ostream
   {
   };
-  
+
   class istream
   {
   };

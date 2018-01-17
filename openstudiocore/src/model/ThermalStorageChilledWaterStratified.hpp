@@ -176,11 +176,11 @@ class MODEL_API ThermalStorageChilledWaterStratified : public WaterToWaterCompon
 
   void resetTemperatureSensorHeight();
 
-  void setMinimumTemperatureLimit(double minimumTemperatureLimit);
+  bool setMinimumTemperatureLimit(double minimumTemperatureLimit);
 
   void resetMinimumTemperatureLimit();
 
-  void setNominalCoolingCapacity(double nominalCoolingCapacity);
+  bool setNominalCoolingCapacity(double nominalCoolingCapacity);
 
   void resetNominalCoolingCapacity();
 
@@ -194,7 +194,7 @@ class MODEL_API ThermalStorageChilledWaterStratified : public WaterToWaterCompon
 
   void resetAmbientTemperatureThermalZone();
 
-  void setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName);
+  bool setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName);
 
   void resetAmbientTemperatureOutdoorAirNodeName();
 
@@ -242,25 +242,25 @@ class MODEL_API ThermalStorageChilledWaterStratified : public WaterToWaterCompon
 
   bool setAdditionalDestratificationConductivity(double additionalDestratificationConductivity);
 
-  void setNode1AdditionalLossCoefficient(double node1AdditionalLossCoefficient);
+  bool setNode1AdditionalLossCoefficient(double node1AdditionalLossCoefficient);
 
-  void setNode2AdditionalLossCoefficient(double node2AdditionalLossCoefficient);
+  bool setNode2AdditionalLossCoefficient(double node2AdditionalLossCoefficient);
 
-  void setNode3AdditionalLossCoefficient(double node3AdditionalLossCoefficient);
+  bool setNode3AdditionalLossCoefficient(double node3AdditionalLossCoefficient);
 
-  void setNode4AdditionalLossCoefficient(double node4AdditionalLossCoefficient);
+  bool setNode4AdditionalLossCoefficient(double node4AdditionalLossCoefficient);
 
-  void setNode5AdditionalLossCoefficient(double node5AdditionalLossCoefficient);
+  bool setNode5AdditionalLossCoefficient(double node5AdditionalLossCoefficient);
 
-  void setNode6AdditionalLossCoefficient(double node6AdditionalLossCoefficient);
+  bool setNode6AdditionalLossCoefficient(double node6AdditionalLossCoefficient);
 
-  void setNode7AdditionalLossCoefficient(double node7AdditionalLossCoefficient);
+  bool setNode7AdditionalLossCoefficient(double node7AdditionalLossCoefficient);
 
-  void setNode8AdditionalLossCoefficient(double node8AdditionalLossCoefficient);
+  bool setNode8AdditionalLossCoefficient(double node8AdditionalLossCoefficient);
 
-  void setNode9AdditionalLossCoefficient(double node9AdditionalLossCoefficient);
+  bool setNode9AdditionalLossCoefficient(double node9AdditionalLossCoefficient);
 
-  void setNode10AdditionalLossCoefficient(double node10AdditionalLossCoefficient);
+  bool setNode10AdditionalLossCoefficient(double node10AdditionalLossCoefficient);
 
   //@}
   /** @name Other */
@@ -298,4 +298,3 @@ typedef std::vector<ThermalStorageChilledWaterStratified> ThermalStorageChilledW
 } // openstudio
 
 #endif // MODEL_THERMALSTORAGECHILLEDWATERSTRATIFIED_HPP
-

@@ -551,9 +551,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoolingTowerVariableSpeed_Impl::setEvaporationLossFactor(double evaporationLossFactor) {
+  bool CoolingTowerVariableSpeed_Impl::setEvaporationLossFactor(double evaporationLossFactor) {
     bool result = setDouble(OS_CoolingTower_VariableSpeedFields::EvaporationLossFactor, evaporationLossFactor);
-    OS_ASSERT(result);
+    return result;
   }
 
   void CoolingTowerVariableSpeed_Impl::resetEvaporationLossFactor() {
@@ -561,7 +561,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoolingTowerVariableSpeed_Impl::setDriftLossPercent(boost::optional<double> driftLossPercent) {
+  bool CoolingTowerVariableSpeed_Impl::setDriftLossPercent(boost::optional<double> driftLossPercent) {
     bool result(false);
     if (driftLossPercent) {
       result = setDouble(OS_CoolingTower_VariableSpeedFields::DriftLossPercent, driftLossPercent.get());
@@ -570,7 +570,7 @@ namespace detail {
       resetDriftLossPercent();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void CoolingTowerVariableSpeed_Impl::resetDriftLossPercent() {
@@ -732,13 +732,13 @@ namespace detail {
 
     return false;
   }
-  
+
   std::string CoolingTowerVariableSpeed_Impl::endUseSubcategory() const {
     auto value = getString(OS_CoolingTower_VariableSpeedFields::EndUseSubcategory,true);
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   bool CoolingTowerVariableSpeed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
     return setString(OS_CoolingTower_VariableSpeedFields::EndUseSubcategory,endUseSubcategory);
   }
@@ -1078,16 +1078,16 @@ void CoolingTowerVariableSpeed::resetEvaporationLossMode() {
   getImpl<detail::CoolingTowerVariableSpeed_Impl>()->resetEvaporationLossMode();
 }
 
-void CoolingTowerVariableSpeed::setEvaporationLossFactor(double evaporationLossFactor) {
-  getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
+bool CoolingTowerVariableSpeed::setEvaporationLossFactor(double evaporationLossFactor) {
+  return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
 }
 
 void CoolingTowerVariableSpeed::resetEvaporationLossFactor() {
   getImpl<detail::CoolingTowerVariableSpeed_Impl>()->resetEvaporationLossFactor();
 }
 
-void CoolingTowerVariableSpeed::setDriftLossPercent(double driftLossPercent) {
-  getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setDriftLossPercent(driftLossPercent);
+bool CoolingTowerVariableSpeed::setDriftLossPercent(double driftLossPercent) {
+  return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setDriftLossPercent(driftLossPercent);
 }
 
 void CoolingTowerVariableSpeed::resetDriftLossPercent() {
@@ -1186,4 +1186,3 @@ CoolingTowerVariableSpeed::CoolingTowerVariableSpeed(std::shared_ptr<detail::Coo
 
 } // model
 } // openstudio
-

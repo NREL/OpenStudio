@@ -72,7 +72,7 @@ TEST_F(IdfFixture, IdfFile_BasicTests_LoadedFile)
   ValidityReport report = epIdfFile.validityReport(StrictnessLevel::Final);
   EXPECT_EQ(static_cast<unsigned>(0),report.numErrors());
   if (report.numErrors() > 0) {
-    LOG(Error,"epIdfFile is not valid at Strictness Final. The ValidityReport follows." 
+    LOG(Error,"epIdfFile is not valid at Strictness Final. The ValidityReport follows."
         << std::endl << report);
   }
 
@@ -125,7 +125,7 @@ TEST_F(IdfFixture, IdfFile_DosLineEndings) {
   EXPECT_EQ(static_cast<unsigned>(5),oFile->objects().size());
   EXPECT_EQ(static_cast<unsigned>(0),oFile->getObjectsByType(IddObjectType::Catchall).size());
 }
- 
+
 TEST_F(IdfFixture, IdfFile_ObjectComments) {
   OptionalIdfFile oFile = IdfFile::load(resourcesPath()/toPath("utilities/Idf/CommentTest.idf"));
   ASSERT_TRUE(oFile);
@@ -137,12 +137,12 @@ TEST_F(IdfFixture, IdfFile_ObjectComments) {
   // RunPeriod w/ comment
   // Building w/ comment
   std::stringstream ss;
-  
+
   // check header
   ss << "! File Header" << std::endl
      << "! Written by Elaine T. Hale, 15 September 2010";
   EXPECT_EQ(ss.str(),oFile->header());
-  
+
   // check objects
   IdfObjectVector objects = oFile->objects();
   EXPECT_EQ(static_cast<unsigned>(5),objects.size());

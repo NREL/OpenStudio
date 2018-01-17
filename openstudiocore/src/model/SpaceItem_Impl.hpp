@@ -43,9 +43,9 @@ class SpaceItem;
 namespace detail {
 
   class MODEL_API SpaceItem_Impl : public ModelObject_Impl {
-    
 
-    
+
+
    public:
 
     // Construct completely new object.

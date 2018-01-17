@@ -661,14 +661,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void WaterHeaterMixed_Impl::setMaximumTemperatureLimit(boost::optional<double> maximumTemperatureLimit) {
+  bool WaterHeaterMixed_Impl::setMaximumTemperatureLimit(boost::optional<double> maximumTemperatureLimit) {
     bool result = false;
     if (maximumTemperatureLimit) {
       result = setDouble(OS_WaterHeater_MixedFields::MaximumTemperatureLimit, maximumTemperatureLimit.get());
     } else {
       result = setString(OS_WaterHeater_MixedFields::MaximumTemperatureLimit, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool WaterHeaterMixed_Impl::setMaximumTemperatureLimit(const OSOptionalQuantity& maximumTemperatureLimit) {
@@ -991,14 +991,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void WaterHeaterMixed_Impl::setAmbientTemperatureOutdoorAirNodeName(boost::optional<std::string> ambientTemperatureOutdoorAirNodeName) {
+  bool WaterHeaterMixed_Impl::setAmbientTemperatureOutdoorAirNodeName(boost::optional<std::string> ambientTemperatureOutdoorAirNodeName) {
     bool result = false;
     if (ambientTemperatureOutdoorAirNodeName) {
       result = setString(OS_WaterHeater_MixedFields::AmbientTemperatureOutdoorAirNodeName, ambientTemperatureOutdoorAirNodeName.get());
     } else {
       result = setString(OS_WaterHeater_MixedFields::AmbientTemperatureOutdoorAirNodeName, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void WaterHeaterMixed_Impl::resetAmbientTemperatureOutdoorAirNodeName() {
@@ -2117,8 +2117,8 @@ void WaterHeaterMixed::resetDeadbandTemperatureDifference() {
   getImpl<detail::WaterHeaterMixed_Impl>()->resetDeadbandTemperatureDifference();
 }
 
-void WaterHeaterMixed::setMaximumTemperatureLimit(double maximumTemperatureLimit) {
-  getImpl<detail::WaterHeaterMixed_Impl>()->setMaximumTemperatureLimit(maximumTemperatureLimit);
+bool WaterHeaterMixed::setMaximumTemperatureLimit(double maximumTemperatureLimit) {
+  return getImpl<detail::WaterHeaterMixed_Impl>()->setMaximumTemperatureLimit(maximumTemperatureLimit);
 }
 
 bool WaterHeaterMixed::setMaximumTemperatureLimit(const Quantity& maximumTemperatureLimit) {
@@ -2297,8 +2297,8 @@ void WaterHeaterMixed::resetAmbientTemperatureThermalZone() {
   getImpl<detail::WaterHeaterMixed_Impl>()->resetAmbientTemperatureThermalZone();
 }
 
-void WaterHeaterMixed::setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName) {
-  getImpl<detail::WaterHeaterMixed_Impl>()->setAmbientTemperatureOutdoorAirNodeName(ambientTemperatureOutdoorAirNodeName);
+bool WaterHeaterMixed::setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName) {
+  return getImpl<detail::WaterHeaterMixed_Impl>()->setAmbientTemperatureOutdoorAirNodeName(ambientTemperatureOutdoorAirNodeName);
 }
 
 void WaterHeaterMixed::resetAmbientTemperatureOutdoorAirNodeName() {
@@ -2473,4 +2473,3 @@ WaterHeaterMixed::WaterHeaterMixed(std::shared_ptr<detail::WaterHeaterMixed_Impl
 
 } // model
 } // openstudio
-

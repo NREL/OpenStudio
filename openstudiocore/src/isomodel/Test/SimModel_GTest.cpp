@@ -134,19 +134,19 @@ void testGenericFunctions() {
   }
 
   results = maximum(vTest2,10);
-  EXPECT_DOUBLE_EQ(11, results[0]);  
+  EXPECT_DOUBLE_EQ(11, results[0]);
   for(unsigned int i = 1;i<vTest2.size();i++){
     EXPECT_DOUBLE_EQ(10, results[i]);
   }
-  
+
   EXPECT_DOUBLE_EQ(0, openstudio::isomodel::minimum(vTest));
 
   results = minimum(vTest,1);
-  EXPECT_DOUBLE_EQ(0, results[0]);  
+  EXPECT_DOUBLE_EQ(0, results[0]);
   for(unsigned int i = 1;i<vTest.size();i++){
     EXPECT_DOUBLE_EQ(1, results[i]);
   }
-  
+
   results = pow(vTest, 3);
   for(unsigned int i = 0;i<vTest.size();i++){
     EXPECT_DOUBLE_EQ(i*i*i, results[i]);
@@ -160,7 +160,7 @@ void testGenericFunctions() {
   for(unsigned int i = 0;i<vTest.size();i++){
     EXPECT_DOUBLE_EQ(i, results[i]);
   }
-  
+
 }
 TEST_F(ISOModelFixture, SimModel)
 {
@@ -168,7 +168,7 @@ TEST_F(ISOModelFixture, SimModel)
   UserModel userModel;
   userModel.load(resourcesPath() / openstudio::toPath("isomodel/exampleModel.ISO"));
   ASSERT_TRUE(userModel.valid());
-  SimModel simModel = userModel.toSimModel();    
+  SimModel simModel = userModel.toSimModel();
   ISOResults results = simModel.simulate();
 
 

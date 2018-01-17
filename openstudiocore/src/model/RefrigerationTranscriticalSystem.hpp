@@ -153,17 +153,17 @@ class MODEL_API RefrigerationTranscriticalSystem : public ModelObject {
 
   bool setRefrigerationGasCooler(const RefrigerationGasCoolerAirCooled& refrigerationGasCoolerAirCooled);
 
-  void setReceiverPressure(double receiverPressure);
+  bool setReceiverPressure(double receiverPressure);
 
   void resetReceiverPressure();
 
-  void setSubcoolerEffectiveness(double subcoolerEffectiveness);
+  bool setSubcoolerEffectiveness(double subcoolerEffectiveness);
 
   void resetSubcoolerEffectiveness();
 
   bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
 
-  void setSumUASuctionPipingforMediumTemperatureLoads(double sumUASuctionPipingforMediumTemperatureLoads);
+  bool setSumUASuctionPipingforMediumTemperatureLoads(double sumUASuctionPipingforMediumTemperatureLoads);
 
   void resetSumUASuctionPipingforMediumTemperatureLoads();
 
@@ -171,7 +171,7 @@ class MODEL_API RefrigerationTranscriticalSystem : public ModelObject {
 
   void resetMediumTemperatureSuctionPipingZone();
 
-  void setSumUASuctionPipingforLowTemperatureLoads(double sumUASuctionPipingforLowTemperatureLoads);
+  bool setSumUASuctionPipingforLowTemperatureLoads(double sumUASuctionPipingforLowTemperatureLoads);
 
   void resetSumUASuctionPipingforLowTemperatureLoads();
 
@@ -179,7 +179,7 @@ class MODEL_API RefrigerationTranscriticalSystem : public ModelObject {
 
   void resetLowTemperatureSuctionPipingZone();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 
@@ -213,4 +213,3 @@ typedef std::vector<RefrigerationTranscriticalSystem> RefrigerationTranscritical
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONTRANSCRITICALSYSTEM_HPP
-

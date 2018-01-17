@@ -394,9 +394,9 @@ namespace detail {
     return result;
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setNominalEfficiency(double nominalEfficiency) {
+  bool GeneratorFuelCellPowerModule_Impl::setNominalEfficiency(double nominalEfficiency) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::NominalEfficiency, nominalEfficiency);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetNominalEfficiency() {
@@ -404,9 +404,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setNominalElectricalPower(double nominalElectricalPower) {
+  bool GeneratorFuelCellPowerModule_Impl::setNominalElectricalPower(double nominalElectricalPower) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::NominalElectricalPower, nominalElectricalPower);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetNominalElectricalPower() {
@@ -414,9 +414,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setNumberofStopsatStartofSimulation(double numberofStopsatStartofSimulation) {
+  bool GeneratorFuelCellPowerModule_Impl::setNumberofStopsatStartofSimulation(double numberofStopsatStartofSimulation) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::NumberofStopsatStartofSimulation, numberofStopsatStartofSimulation);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetNumberofStopsatStartofSimulation() {
@@ -424,9 +424,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setCyclingPerformanceDegradationCoefficient(double cyclingPerformanceDegradationCoefficient) {
+  bool GeneratorFuelCellPowerModule_Impl::setCyclingPerformanceDegradationCoefficient(double cyclingPerformanceDegradationCoefficient) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::CyclingPerformanceDegradationCoefficient, cyclingPerformanceDegradationCoefficient);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetCyclingPerformanceDegradationCoefficient() {
@@ -434,9 +434,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setNumberofRunHoursatBeginningofSimulation(double numberofRunHoursatBeginningofSimulation) {
+  bool GeneratorFuelCellPowerModule_Impl::setNumberofRunHoursatBeginningofSimulation(double numberofRunHoursatBeginningofSimulation) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::NumberofRunHoursatBeginningofSimulation, numberofRunHoursatBeginningofSimulation);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetNumberofRunHoursatBeginningofSimulation() {
@@ -444,9 +444,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setAccumulatedRunTimeDegradationCoefficient(double accumulatedRunTimeDegradationCoefficient) {
+  bool GeneratorFuelCellPowerModule_Impl::setAccumulatedRunTimeDegradationCoefficient(double accumulatedRunTimeDegradationCoefficient) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::AccumulatedRunTimeDegradationCoefficient, accumulatedRunTimeDegradationCoefficient);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetAccumulatedRunTimeDegradationCoefficient() {
@@ -454,9 +454,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setRunTimeDegradationInitiationTimeThreshold(double runTimeDegradationInitiationTimeThreshold) {
+  bool GeneratorFuelCellPowerModule_Impl::setRunTimeDegradationInitiationTimeThreshold(double runTimeDegradationInitiationTimeThreshold) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::RunTimeDegradationInitiationTimeThreshold, runTimeDegradationInitiationTimeThreshold);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetRunTimeDegradationInitiationTimeThreshold() {
@@ -464,9 +464,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setPowerUpTransientLimit(double powerUpTransientLimit) {
+  bool GeneratorFuelCellPowerModule_Impl::setPowerUpTransientLimit(double powerUpTransientLimit) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::PowerUpTransientLimit, powerUpTransientLimit);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetPowerUpTransientLimit() {
@@ -474,9 +474,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setPowerDownTransientLimit(double powerDownTransientLimit) {
+  bool GeneratorFuelCellPowerModule_Impl::setPowerDownTransientLimit(double powerDownTransientLimit) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::PowerDownTransientLimit, powerDownTransientLimit);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetPowerDownTransientLimit() {
@@ -484,9 +484,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setStartUpTime(double startUpTime) {
+  bool GeneratorFuelCellPowerModule_Impl::setStartUpTime(double startUpTime) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpTime, startUpTime);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetStartUpTime() {
@@ -494,9 +494,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setStartUpFuel(double startUpFuel) {
+  bool GeneratorFuelCellPowerModule_Impl::setStartUpFuel(double startUpFuel) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpFuel, startUpFuel);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetStartUpFuel() {
@@ -504,9 +504,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setStartUpElectricityConsumption(double startUpElectricityConsumption) {
+  bool GeneratorFuelCellPowerModule_Impl::setStartUpElectricityConsumption(double startUpElectricityConsumption) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpElectricityConsumption, startUpElectricityConsumption);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetStartUpElectricityConsumption() {
@@ -514,9 +514,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setStartUpElectricityProduced(double startUpElectricityProduced) {
+  bool GeneratorFuelCellPowerModule_Impl::setStartUpElectricityProduced(double startUpElectricityProduced) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::StartUpElectricityProduced, startUpElectricityProduced);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetStartUpElectricityProduced() {
@@ -524,9 +524,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setShutDownTime(double shutDownTime) {
+  bool GeneratorFuelCellPowerModule_Impl::setShutDownTime(double shutDownTime) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::ShutDownTime, shutDownTime);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetShutDownTime() {
@@ -534,9 +534,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setShutDownFuel(double shutDownFuel) {
+  bool GeneratorFuelCellPowerModule_Impl::setShutDownFuel(double shutDownFuel) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::ShutDownFuel, shutDownFuel);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetShutDownFuel() {
@@ -544,9 +544,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setShutDownElectricityConsumption(double shutDownElectricityConsumption) {
+  bool GeneratorFuelCellPowerModule_Impl::setShutDownElectricityConsumption(double shutDownElectricityConsumption) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::ShutDownElectricityConsumption, shutDownElectricityConsumption);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetShutDownElectricityConsumption() {
@@ -554,9 +554,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setAncillaryElectricityConstantTerm(double ancillaryElectricityConstantTerm) {
+  bool GeneratorFuelCellPowerModule_Impl::setAncillaryElectricityConstantTerm(double ancillaryElectricityConstantTerm) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::AncillaryElectricityConstantTerm, ancillaryElectricityConstantTerm);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetAncillaryElectricityConstantTerm() {
@@ -564,9 +564,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setAncillaryElectricityLinearTerm(double ancillaryElectricityLinearTerm) {
+  bool GeneratorFuelCellPowerModule_Impl::setAncillaryElectricityLinearTerm(double ancillaryElectricityLinearTerm) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::AncillaryElectricityLinearTerm, ancillaryElectricityLinearTerm);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetAncillaryElectricityLinearTerm() {
@@ -604,9 +604,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setConstantSkinLossRate(double constantSkinLossRate) {
+  bool GeneratorFuelCellPowerModule_Impl::setConstantSkinLossRate(double constantSkinLossRate) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::ConstantSkinLossRate, constantSkinLossRate);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetConstantSkinLossRate() {
@@ -614,9 +614,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setSkinLossUFactorTimesAreaTerm(double skinLossUFactorTimesAreaTerm) {
+  bool GeneratorFuelCellPowerModule_Impl::setSkinLossUFactorTimesAreaTerm(double skinLossUFactorTimesAreaTerm) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::SkinLossUFactorTimesAreaTerm, skinLossUFactorTimesAreaTerm);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetSkinLossUFactorTimesAreaTerm() {
@@ -634,9 +634,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setDilutionAirFlowRate(double dilutionAirFlowRate) {
+  bool GeneratorFuelCellPowerModule_Impl::setDilutionAirFlowRate(double dilutionAirFlowRate) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::DilutionAirFlowRate, dilutionAirFlowRate);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetDilutionAirFlowRate() {
@@ -644,9 +644,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setStackHeatlosstoDilutionAir(double stackHeatlosstoDilutionAir) {
+  bool GeneratorFuelCellPowerModule_Impl::setStackHeatlosstoDilutionAir(double stackHeatlosstoDilutionAir) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::StackHeatlosstoDilutionAir, stackHeatlosstoDilutionAir);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetStackHeatlosstoDilutionAir() {
@@ -674,9 +674,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setMinimumOperatingPoint(double minimumOperatingPoint) {
+  bool GeneratorFuelCellPowerModule_Impl::setMinimumOperatingPoint(double minimumOperatingPoint) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::MinimumOperatingPoint, minimumOperatingPoint);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetMinimumOperatingPoint() {
@@ -684,9 +684,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellPowerModule_Impl::setMaximumOperatingPoint(double maximumOperatingPoint) {
+  bool GeneratorFuelCellPowerModule_Impl::setMaximumOperatingPoint(double maximumOperatingPoint) {
     bool result = setDouble(OS_Generator_FuelCell_PowerModuleFields::MaximumOperatingPoint, maximumOperatingPoint);
-    OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellPowerModule_Impl::resetMaximumOperatingPoint() {
@@ -1169,144 +1169,144 @@ bool GeneratorFuelCellPowerModule::setEfficiencyCurve(const CurveQuadratic& quad
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setEfficiencyCurve(quadraticCurve);
 }
 
-void GeneratorFuelCellPowerModule::setNominalEfficiency(double nominalEfficiency) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setNominalEfficiency(nominalEfficiency);
+bool GeneratorFuelCellPowerModule::setNominalEfficiency(double nominalEfficiency) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setNominalEfficiency(nominalEfficiency);
 }
 
 void GeneratorFuelCellPowerModule::resetNominalEfficiency() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetNominalEfficiency();
 }
 
-void GeneratorFuelCellPowerModule::setNominalElectricalPower(double nominalElectricalPower) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setNominalElectricalPower(nominalElectricalPower);
+bool GeneratorFuelCellPowerModule::setNominalElectricalPower(double nominalElectricalPower) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setNominalElectricalPower(nominalElectricalPower);
 }
 
 void GeneratorFuelCellPowerModule::resetNominalElectricalPower() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetNominalElectricalPower();
 }
 
-void GeneratorFuelCellPowerModule::setNumberofStopsatStartofSimulation(double numberofStopsatStartofSimulation) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setNumberofStopsatStartofSimulation(numberofStopsatStartofSimulation);
+bool GeneratorFuelCellPowerModule::setNumberofStopsatStartofSimulation(double numberofStopsatStartofSimulation) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setNumberofStopsatStartofSimulation(numberofStopsatStartofSimulation);
 }
 
 void GeneratorFuelCellPowerModule::resetNumberofStopsatStartofSimulation() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetNumberofStopsatStartofSimulation();
 }
 
-void GeneratorFuelCellPowerModule::setCyclingPerformanceDegradationCoefficient(double cyclingPerformanceDegradationCoefficient) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setCyclingPerformanceDegradationCoefficient(cyclingPerformanceDegradationCoefficient);
+bool GeneratorFuelCellPowerModule::setCyclingPerformanceDegradationCoefficient(double cyclingPerformanceDegradationCoefficient) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setCyclingPerformanceDegradationCoefficient(cyclingPerformanceDegradationCoefficient);
 }
 
 void GeneratorFuelCellPowerModule::resetCyclingPerformanceDegradationCoefficient() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetCyclingPerformanceDegradationCoefficient();
 }
 
-void GeneratorFuelCellPowerModule::setNumberofRunHoursatBeginningofSimulation(double numberofRunHoursatBeginningofSimulation) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setNumberofRunHoursatBeginningofSimulation(numberofRunHoursatBeginningofSimulation);
+bool GeneratorFuelCellPowerModule::setNumberofRunHoursatBeginningofSimulation(double numberofRunHoursatBeginningofSimulation) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setNumberofRunHoursatBeginningofSimulation(numberofRunHoursatBeginningofSimulation);
 }
 
 void GeneratorFuelCellPowerModule::resetNumberofRunHoursatBeginningofSimulation() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetNumberofRunHoursatBeginningofSimulation();
 }
 
-void GeneratorFuelCellPowerModule::setAccumulatedRunTimeDegradationCoefficient(double accumulatedRunTimeDegradationCoefficient) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setAccumulatedRunTimeDegradationCoefficient(accumulatedRunTimeDegradationCoefficient);
+bool GeneratorFuelCellPowerModule::setAccumulatedRunTimeDegradationCoefficient(double accumulatedRunTimeDegradationCoefficient) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setAccumulatedRunTimeDegradationCoefficient(accumulatedRunTimeDegradationCoefficient);
 }
 
 void GeneratorFuelCellPowerModule::resetAccumulatedRunTimeDegradationCoefficient() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetAccumulatedRunTimeDegradationCoefficient();
 }
 
-void GeneratorFuelCellPowerModule::setRunTimeDegradationInitiationTimeThreshold(double runTimeDegradationInitiationTimeThreshold) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setRunTimeDegradationInitiationTimeThreshold(runTimeDegradationInitiationTimeThreshold);
+bool GeneratorFuelCellPowerModule::setRunTimeDegradationInitiationTimeThreshold(double runTimeDegradationInitiationTimeThreshold) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setRunTimeDegradationInitiationTimeThreshold(runTimeDegradationInitiationTimeThreshold);
 }
 
 void GeneratorFuelCellPowerModule::resetRunTimeDegradationInitiationTimeThreshold() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetRunTimeDegradationInitiationTimeThreshold();
 }
 
-void GeneratorFuelCellPowerModule::setPowerUpTransientLimit(double powerUpTransientLimit) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setPowerUpTransientLimit(powerUpTransientLimit);
+bool GeneratorFuelCellPowerModule::setPowerUpTransientLimit(double powerUpTransientLimit) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setPowerUpTransientLimit(powerUpTransientLimit);
 }
 
 void GeneratorFuelCellPowerModule::resetPowerUpTransientLimit() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetPowerUpTransientLimit();
 }
 
-void GeneratorFuelCellPowerModule::setPowerDownTransientLimit(double powerDownTransientLimit) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setPowerDownTransientLimit(powerDownTransientLimit);
+bool GeneratorFuelCellPowerModule::setPowerDownTransientLimit(double powerDownTransientLimit) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setPowerDownTransientLimit(powerDownTransientLimit);
 }
 
 void GeneratorFuelCellPowerModule::resetPowerDownTransientLimit() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetPowerDownTransientLimit();
 }
 
-void GeneratorFuelCellPowerModule::setStartUpTime(double startUpTime) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setStartUpTime(startUpTime);
+bool GeneratorFuelCellPowerModule::setStartUpTime(double startUpTime) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setStartUpTime(startUpTime);
 }
 
 void GeneratorFuelCellPowerModule::resetStartUpTime() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetStartUpTime();
 }
 
-void GeneratorFuelCellPowerModule::setStartUpFuel(double startUpFuel) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setStartUpFuel(startUpFuel);
+bool GeneratorFuelCellPowerModule::setStartUpFuel(double startUpFuel) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setStartUpFuel(startUpFuel);
 }
 
 void GeneratorFuelCellPowerModule::resetStartUpFuel() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetStartUpFuel();
 }
 
-void GeneratorFuelCellPowerModule::setStartUpElectricityConsumption(double startUpElectricityConsumption) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setStartUpElectricityConsumption(startUpElectricityConsumption);
+bool GeneratorFuelCellPowerModule::setStartUpElectricityConsumption(double startUpElectricityConsumption) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setStartUpElectricityConsumption(startUpElectricityConsumption);
 }
 
 void GeneratorFuelCellPowerModule::resetStartUpElectricityConsumption() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetStartUpElectricityConsumption();
 }
 
-void GeneratorFuelCellPowerModule::setStartUpElectricityProduced(double startUpElectricityProduced) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setStartUpElectricityProduced(startUpElectricityProduced);
+bool GeneratorFuelCellPowerModule::setStartUpElectricityProduced(double startUpElectricityProduced) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setStartUpElectricityProduced(startUpElectricityProduced);
 }
 
 void GeneratorFuelCellPowerModule::resetStartUpElectricityProduced() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetStartUpElectricityProduced();
 }
 
-void GeneratorFuelCellPowerModule::setShutDownTime(double shutDownTime) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setShutDownTime(shutDownTime);
+bool GeneratorFuelCellPowerModule::setShutDownTime(double shutDownTime) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setShutDownTime(shutDownTime);
 }
 
 void GeneratorFuelCellPowerModule::resetShutDownTime() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetShutDownTime();
 }
 
-void GeneratorFuelCellPowerModule::setShutDownFuel(double shutDownFuel) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setShutDownFuel(shutDownFuel);
+bool GeneratorFuelCellPowerModule::setShutDownFuel(double shutDownFuel) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setShutDownFuel(shutDownFuel);
 }
 
 void GeneratorFuelCellPowerModule::resetShutDownFuel() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetShutDownFuel();
 }
 
-void GeneratorFuelCellPowerModule::setShutDownElectricityConsumption(double shutDownElectricityConsumption) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setShutDownElectricityConsumption(shutDownElectricityConsumption);
+bool GeneratorFuelCellPowerModule::setShutDownElectricityConsumption(double shutDownElectricityConsumption) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setShutDownElectricityConsumption(shutDownElectricityConsumption);
 }
 
 void GeneratorFuelCellPowerModule::resetShutDownElectricityConsumption() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetShutDownElectricityConsumption();
 }
 
-void GeneratorFuelCellPowerModule::setAncillaryElectricityConstantTerm(double ancillaryElectricityConstantTerm) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setAncillaryElectricityConstantTerm(ancillaryElectricityConstantTerm);
+bool GeneratorFuelCellPowerModule::setAncillaryElectricityConstantTerm(double ancillaryElectricityConstantTerm) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setAncillaryElectricityConstantTerm(ancillaryElectricityConstantTerm);
 }
 
 void GeneratorFuelCellPowerModule::resetAncillaryElectricityConstantTerm() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetAncillaryElectricityConstantTerm();
 }
 
-void GeneratorFuelCellPowerModule::setAncillaryElectricityLinearTerm(double ancillaryElectricityLinearTerm) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setAncillaryElectricityLinearTerm(ancillaryElectricityLinearTerm);
+bool GeneratorFuelCellPowerModule::setAncillaryElectricityLinearTerm(double ancillaryElectricityLinearTerm) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setAncillaryElectricityLinearTerm(ancillaryElectricityLinearTerm);
 }
 
 void GeneratorFuelCellPowerModule::resetAncillaryElectricityLinearTerm() {
@@ -1337,16 +1337,16 @@ void GeneratorFuelCellPowerModule::resetSkinLossRadiativeFraction() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetSkinLossRadiativeFraction();
 }
 
-void GeneratorFuelCellPowerModule::setConstantSkinLossRate(double constantSkinLossRate) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setConstantSkinLossRate(constantSkinLossRate);
+bool GeneratorFuelCellPowerModule::setConstantSkinLossRate(double constantSkinLossRate) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setConstantSkinLossRate(constantSkinLossRate);
 }
 
 void GeneratorFuelCellPowerModule::resetConstantSkinLossRate() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetConstantSkinLossRate();
 }
 
-void GeneratorFuelCellPowerModule::setSkinLossUFactorTimesAreaTerm(double skinLossUFactorTimesAreaTerm) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setSkinLossUFactorTimesAreaTerm(skinLossUFactorTimesAreaTerm);
+bool GeneratorFuelCellPowerModule::setSkinLossUFactorTimesAreaTerm(double skinLossUFactorTimesAreaTerm) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setSkinLossUFactorTimesAreaTerm(skinLossUFactorTimesAreaTerm);
 }
 
 void GeneratorFuelCellPowerModule::resetSkinLossUFactorTimesAreaTerm() {
@@ -1361,16 +1361,16 @@ void GeneratorFuelCellPowerModule::resetSkinLossQuadraticCurve() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetSkinLossQuadraticCurve();
 }
 
-void GeneratorFuelCellPowerModule::setDilutionAirFlowRate(double dilutionAirFlowRate) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setDilutionAirFlowRate(dilutionAirFlowRate);
+bool GeneratorFuelCellPowerModule::setDilutionAirFlowRate(double dilutionAirFlowRate) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setDilutionAirFlowRate(dilutionAirFlowRate);
 }
 
 void GeneratorFuelCellPowerModule::resetDilutionAirFlowRate() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetDilutionAirFlowRate();
 }
 
-void GeneratorFuelCellPowerModule::setStackHeatlosstoDilutionAir(double stackHeatlosstoDilutionAir) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setStackHeatlosstoDilutionAir(stackHeatlosstoDilutionAir);
+bool GeneratorFuelCellPowerModule::setStackHeatlosstoDilutionAir(double stackHeatlosstoDilutionAir) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setStackHeatlosstoDilutionAir(stackHeatlosstoDilutionAir);
 }
 
 void GeneratorFuelCellPowerModule::resetStackHeatlosstoDilutionAir() {
@@ -1393,16 +1393,16 @@ void GeneratorFuelCellPowerModule::resetDilutionOutletAirNode() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetDilutionOutletAirNode();
 }
 
-void GeneratorFuelCellPowerModule::setMinimumOperatingPoint(double minimumOperatingPoint) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setMinimumOperatingPoint(minimumOperatingPoint);
+bool GeneratorFuelCellPowerModule::setMinimumOperatingPoint(double minimumOperatingPoint) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setMinimumOperatingPoint(minimumOperatingPoint);
 }
 
 void GeneratorFuelCellPowerModule::resetMinimumOperatingPoint() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetMinimumOperatingPoint();
 }
 
-void GeneratorFuelCellPowerModule::setMaximumOperatingPoint(double maximumOperatingPoint) {
-  getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setMaximumOperatingPoint(maximumOperatingPoint);
+bool GeneratorFuelCellPowerModule::setMaximumOperatingPoint(double maximumOperatingPoint) {
+  return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->setMaximumOperatingPoint(maximumOperatingPoint);
 }
 
 void GeneratorFuelCellPowerModule::resetMaximumOperatingPoint() {
@@ -1421,4 +1421,3 @@ GeneratorFuelCellPowerModule::GeneratorFuelCellPowerModule(std::shared_ptr<detai
 
 } // model
 } // openstudio
-

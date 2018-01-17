@@ -470,7 +470,7 @@ namespace detail {
     return boost::none;
   }
 
-  void AirLoopHVAC_Impl::setPlantForAirTerminal( HVACComponent & airTerminal, PlantLoop & plantLoop )
+  bool AirLoopHVAC_Impl::setPlantForAirTerminal( HVACComponent & airTerminal, PlantLoop & plantLoop )
   {
     std::vector<WaterToAirComponent> comps = airTerminal.model().getModelObjects<WaterToAirComponent>();
 
@@ -480,12 +480,11 @@ namespace detail {
       {
         if( comp.get() == airTerminal )
         {
-          plantLoop.addDemandBranchForComponent(elem);
-
-          return;
+          return plantLoop.addDemandBranchForComponent(elem);
         }
       }
     }
+    return false;
   }
 
   bool AirLoopHVAC_Impl::removeBranchForZone(ThermalZone & thermalZone)
@@ -1020,7 +1019,7 @@ namespace detail {
     return result;
   }
 
-  void AirLoopHVAC_Impl::setDesignSupplyAirFlowRate(boost::optional<double> designSupplyAirFlowRate) {
+  bool AirLoopHVAC_Impl::setDesignSupplyAirFlowRate(boost::optional<double> designSupplyAirFlowRate) {
     bool result(false);
     if (designSupplyAirFlowRate) {
       result = setDouble(OS_AirLoopHVACFields::DesignSupplyAirFlowRate, designSupplyAirFlowRate.get());
@@ -1029,7 +1028,7 @@ namespace detail {
       resetDesignSupplyAirFlowRate();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   bool AirLoopHVAC_Impl::setDesignSupplyAirFlowRate(const OSOptionalQuantity& designSupplyAirFlowRate) {
@@ -1069,7 +1068,7 @@ namespace detail {
     return result.get();
   }
 
-  void AirLoopHVAC_Impl::setAvailabilitySchedule(Schedule & schedule)
+  bool AirLoopHVAC_Impl::setAvailabilitySchedule(Schedule & schedule)
   {
     // TODO: deal with this in regards to the new AvailabilityManagerAssignmentList
     // Actually, no, this is going to end up in the Fan Schedule
@@ -1078,13 +1077,15 @@ namespace detail {
 
     auto seriesPIUs = subsetCastVector<AirTerminalSingleDuctSeriesPIUReheat>(demandComponents(AirTerminalSingleDuctSeriesPIUReheat::iddObjectType()));
     for( auto & piu : seriesPIUs ) {
-      piu.getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setFanAvailabilitySchedule(schedule);
+      result &= piu.getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setFanAvailabilitySchedule(schedule);
     }
 
     auto parallelPIUs = subsetCastVector<AirTerminalSingleDuctParallelPIUReheat>(demandComponents(AirTerminalSingleDuctParallelPIUReheat::iddObjectType()));
     for( auto & piu : parallelPIUs ) {
-      piu.getImpl<detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->setFanAvailabilitySchedule(schedule);
+      result &= piu.getImpl<detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->setFanAvailabilitySchedule(schedule);
     }
+
+    return result;
   }
 
   bool AirLoopHVAC_Impl::setNightCycleControlType(std::string const & controlType)
@@ -1980,8 +1981,8 @@ bool AirLoopHVAC::isDesignSupplyAirFlowRateAutosized() const {
   return getImpl<detail::AirLoopHVAC_Impl>()->isDesignSupplyAirFlowRateAutosized();
 }
 
-void AirLoopHVAC::setDesignSupplyAirFlowRate(double designSupplyAirFlowRate) {
-  getImpl<detail::AirLoopHVAC_Impl>()->setDesignSupplyAirFlowRate(designSupplyAirFlowRate);
+bool AirLoopHVAC::setDesignSupplyAirFlowRate(double designSupplyAirFlowRate) {
+  return getImpl<detail::AirLoopHVAC_Impl>()->setDesignSupplyAirFlowRate(designSupplyAirFlowRate);
 }
 
 bool AirLoopHVAC::setDesignSupplyAirFlowRate(const Quantity& designSupplyAirFlowRate) {
@@ -2001,9 +2002,9 @@ Schedule AirLoopHVAC::availabilitySchedule() const
   return getImpl<detail::AirLoopHVAC_Impl>()->availabilitySchedule();
 }
 
-void AirLoopHVAC::setAvailabilitySchedule(Schedule & schedule)
+bool AirLoopHVAC::setAvailabilitySchedule(Schedule & schedule)
 {
-  getImpl<detail::AirLoopHVAC_Impl>()->setAvailabilitySchedule(schedule);
+  return getImpl<detail::AirLoopHVAC_Impl>()->setAvailabilitySchedule(schedule);
 }
 
 bool AirLoopHVAC::setNightCycleControlType(std::string const & controlType)

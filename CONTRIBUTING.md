@@ -6,7 +6,7 @@ We'd love for you to contribute to OpenStudio to make it better than it is today
  - [Issues and Bugs](#issue)
  - [Feature Requests](#feature)
  - [Code Submission](#submit)
- 
+
 ## <a name="question"></a> Got a Question or Problem?
 
 Please direct questions about how to use OpenStudio to [unmethours](https://unmethours.com).  This is a community moderated resource and will provide the fastest answers to your questions.

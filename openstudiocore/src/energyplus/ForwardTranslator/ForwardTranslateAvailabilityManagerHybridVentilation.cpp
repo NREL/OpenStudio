@@ -49,7 +49,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerHybridVentilation( 
+boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerHybridVentilation(
     AvailabilityManagerHybridVentilation & modelObject)
 {
   IdfObject idfObject(IddObjectType::AvailabilityManager_HybridVentilation);
@@ -75,7 +75,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerHybrid
     idfObject.setString(AvailabilityManager_HybridVentilationFields::ControlZoneName,zone->name().get());
   } else {
     if( airLoopHVAC ) {
-      auto zones = airLoopHVAC->thermalZones(); 
+      auto zones = airLoopHVAC->thermalZones();
       if( ! zones.empty() ) {
         auto default_zone = zones.front();
         LOG(Info,modelObject.briefDescription() << " is missing Control Zone Name, defaulting to " << default_zone.briefDescription() << ".");
@@ -87,7 +87,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerHybrid
   // VentilationControlModeScheduleName
   {
     auto schedule = modelObject.ventilationControlModeSchedule();
-    idfObject.setString(AvailabilityManager_HybridVentilationFields::VentilationControlModeScheduleName,schedule.name().get());    
+    idfObject.setString(AvailabilityManager_HybridVentilationFields::VentilationControlModeScheduleName,schedule.name().get());
   }
 
   // UseWeatherFileRainIndicators
@@ -142,7 +142,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerHybrid
   }
 
   // MinimumOutdoorVentilationAirScheduleName
-  { 
+  {
     auto schedule = modelObject.minimumOutdoorVentilationAirSchedule();
     idfObject.setString(AvailabilityManager_HybridVentilationFields::MinimumOutdoorVentilationAirScheduleName,schedule.name().get());
   }

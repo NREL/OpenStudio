@@ -35,12 +35,12 @@ require("openstudio/sketchup_plugin/lib/observers/SurfaceGroupEntitiesObserver")
 module OpenStudio
 
   class SurfaceGroup < DrawingInterface
-  
+
     attr_accessor :instance_observer, :entities_observer
 
     def initialize
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       super
       @observer = SurfaceGroupObserver.new(self)
       @instance_observer = InstanceObserver.new(self)  # get onOpen and onClose callbacks for the Group.
@@ -57,9 +57,9 @@ module OpenStudio
       super
 
       if (valid_entity?)
-        
+
         watcher_enabled = disable_watcher
-        
+
         # set the transfomation
 #puts "update_model_object, self.coordinate_transformation = #{self.coordinate_transformation.to_a.join(',')}"
 #puts "update_model_object, @entity.transformation = #{@entity.transformation.to_a.join(',')}"
@@ -69,16 +69,16 @@ module OpenStudio
           # reject the changes and go back to ModelObject's origin and rotation
           puts "Surface group cannot be rotated about any axis other than z"
           update_entity(false)
-        end      
-      
+        end
+
         # All enclosed entities must be transformed.
         update_child_model_objects
-        
+
         enable_watcher if watcher_enabled
       end
 #puts "********************"
     end
-    
+
     def update_child_model_objects
       if @entity.is_a? Sketchup::Group
         for entity in @entity.entities
@@ -113,12 +113,12 @@ module OpenStudio
     def update_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       super
-      
+
       if (valid_entity?)
-      
+
         # do not want to trigger update_model_object in here
         had_observers = remove_observers
-        
+
         set_entity_name
 #puts "update_entity, @model_object.transformation = #{@model_object.transformation.to_a}"
 #puts "update_entity, @entity.transformation = #{@entity.transformation.to_a.join(',')}"
@@ -129,11 +129,11 @@ module OpenStudio
 
         # update children
         update_child_entities
-        
+
         add_observers if had_observers
       end
     end
-    
+
     def update_child_entities
       @entity.entities.each do |entity|
         if drawing_interface = entity.drawing_interface
@@ -141,12 +141,12 @@ module OpenStudio
           drawing_interface.update_entity
         end
       end
-    end 
-    
+    end
+
     #def paint_entity(info = nil)
     #  # do not want to trigger update_model_object in here
     #  had_observers = remove_observers
-    #    
+    #
     #  # find if have visible children
     #  has_child_interface = false
     #  @entity.entities.each do |entity|
@@ -155,7 +155,7 @@ module OpenStudio
     #      break
     #    end
     #  end
-    #    
+    #
     #  if has_child_interface
     #    if @cpoint2
     #      if not @cpoint2.deleted?
@@ -169,16 +169,16 @@ module OpenStudio
     #    #  @cpoint2.hidden = true
     #    #end
     #  end
-    #  
+    #
     #  add_observers if had_observers
-    #end    
-    
+    #end
+
     def create_from_entity_copy(entity)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       super
 
       had_observers = remove_observers
-      
+
       # function call says deprecated but this is still needed as of SU8
       entity.make_unique
 
@@ -188,9 +188,9 @@ module OpenStudio
         if (child_entity.drawing_interface)
           original_interface = child_entity.drawing_interface
           original_class = original_interface.class
-          
+
           drawing_interface = original_class.new_from_entity_copy(child_entity)
-          
+
           child_entity.drawing_interface = drawing_interface
           drawing_interface.entity = child_entity
         end
@@ -201,52 +201,52 @@ module OpenStudio
 
       return(self)
     end
-    
+
     def create_initial_box(path)
       definition = Sketchup.active_model.definitions.load(path)
       @initial_box = @entity.entities.add_instance(definition, Geom::Transformation.new)
       #@initial_box.make_unique
     end
-    
+
     def delete_initial_box
       # do not want to trigger update_model_object in here
       had_observers = remove_observers
-      
+
       if @initial_box
         if not @initial_box.deleted?
           @entity.entities.erase_entities(@initial_box)
           @initial_box = nil
         end
       end
-      
+
       add_observers if had_observers
     end
-    
+
     def create_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       if (@parent.nil?)
         # how did this happen?
         Plugin.log(OpenStudio::Error, "Parent #{@parent} is nil, cannot create entity for #{@model_object.name}")
         return nil
       end
-      
+
       if @parent.class == Space
         @entity = @parent.entity.entities.add_group
       else
         @entity = Sketchup.active_model.entities.add_group
       end
-      
+
       # set the name
       set_entity_name
-      
+
 #puts "create_entity, @entity.transformation = #{@entity.transformation.to_a.join(',')}"
 #puts "create_entity, self.coordinate_transformation. = #{self.coordinate_transformation.to_a.join(',')}"
       self.coordinate_transformation = Geom::transformation_from_openstudio(@model_object.transformation)
 #puts "create_entity, @entity.transformation = #{@entity.transformation.to_a.join(',')}"
 #puts "********************"
 
-      # There was warning here that construction point cannot be drawn at 0, 0, 0 but 
+      # There was warning here that construction point cannot be drawn at 0, 0, 0 but
       # I have not experienced problems with that
 
       # WARNING:  From the Edit menu, the Delete Guides option will delete all construction points.
@@ -259,7 +259,7 @@ module OpenStudio
       layers = model.layers
       new_layer = layers.add "#{@model_object.class}"
       # put entity onto new layer
-      @entity.layer = new_layer       
+      @entity.layer = new_layer
     end
 
 
@@ -267,7 +267,7 @@ module OpenStudio
     # Return false if the entity cannot be used.
     def check_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       if (super)
         if (@entity.class == Sketchup::Group)
           return(true)
@@ -284,7 +284,7 @@ module OpenStudio
     # Error checks, finalization, or cleanup needed after the entity is drawn.
     def confirm_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       if (super)
         return(true)
       else
@@ -300,20 +300,20 @@ module OpenStudio
     # If anyone wants the edges to persist, this could be a user preference.
     def cleanup_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       super
-      
+
       if @entity.deleted?
       # how did this happen?
         return nil
       end
-      
+
       orphan_edges = []
       for this_entity in @entity.entities
         if (this_entity.class == Sketchup::Edge)
           if (this_entity.faces.empty?)
             # Be careful: looks like calling edge.find_faces will make edge.faces become non-empty
-            orphan_edges << this_entity 
+            orphan_edges << this_entity
           end
         end
       end
@@ -326,10 +326,10 @@ module OpenStudio
       super
       @entity.name = @model_object.name.to_s
     end
-  
-    def parent_from_entity  
+
+    def parent_from_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       parent = nil
       if @entity.parent.is_a?(Sketchup::Model)
         # space or shading group
@@ -343,7 +343,7 @@ module OpenStudio
 
     def containing_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       result = nil
       if @entity.parent.is_a?(Sketchup::Model)
         # space or shading group
@@ -354,7 +354,7 @@ module OpenStudio
       end
       return(result)
     end
-    
+
     # Undelete happens when an entity is restored after an Undo event.
     def on_undelete_entity(entity)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
@@ -377,9 +377,9 @@ module OpenStudio
 
     def add_observers(recursive = false)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       super(recursive) # takes care of @observer only, also handles recursive argument
-      
+
       if (valid_entity?)
         if $OPENSTUDIO_SKETCHUPPLUGIN_DISABLE_OBSERVERS
           if not @instance_observer_added
@@ -401,11 +401,11 @@ module OpenStudio
 
     def remove_observers(recursive = false)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       had_observers = super(recursive) # takes care of @observer only, also handles recursive argument
-      
+
       if (valid_entity?)
-        if $OPENSTUDIO_SKETCHUPPLUGIN_DISABLE_OBSERVERS 
+        if $OPENSTUDIO_SKETCHUPPLUGIN_DISABLE_OBSERVERS
           if @instance_observer_added
             @instance_observer.disable
             @entities_observer.disable
@@ -418,15 +418,15 @@ module OpenStudio
           @instance_observer_added = false
         end
       end
-      
+
       return had_observers
     end
-    
+
     def destroy_observers(recursive = false)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       result = super(recursive) # takes care of @observer only, also handles recursive argument
-      
+
       if @instance_observer
         if (valid_entity?)
           if $OPENSTUDIO_SKETCHUPPLUGIN_DISABLE_OBSERVERS
@@ -444,18 +444,18 @@ module OpenStudio
             @instance_observer_added = false
           end
         end
-        
+
         @instance_observer.destroy
         @instance_observer = nil
         @entities_observer.destroy
         @entities_observer = nil
       end
-      
+
       return result
     end
-    
+
 ##### Begin new methods for the interface #####
-      
+
     # override in subclasses
     def set_entity_name
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")

@@ -39,7 +39,7 @@
 
 namespace openstudio{
 
-  /// Matrix 
+  /// Matrix
   typedef boost::numeric::ublas::matrix<double> Matrix;
 
 //////////////////////////////////////////////////////////////////////////

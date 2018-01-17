@@ -181,13 +181,13 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
 
   void resetAvailabilitySchedule();
 
-  void setRatedCoilCoolingCapacity(double ratedCoilCoolingCapacity);
+  bool setRatedCoilCoolingCapacity(double ratedCoilCoolingCapacity);
 
   bool setOperatingTemperature(double operatingTemperature);
 
   bool setRatedCoolingSourceTemperature(double ratedCoolingSourceTemperature);
 
-  void setRatedTotalHeatingPower(double ratedTotalHeatingPower);
+  bool setRatedTotalHeatingPower(double ratedTotalHeatingPower);
 
   bool setHeatingPowerSchedule(Schedule& schedule);
 
@@ -201,7 +201,7 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
 
   void resetRatedCirculationFanPower();
 
-  void setRatedTotalLightingPower(double ratedTotalLightingPower);
+  bool setRatedTotalLightingPower(double ratedTotalLightingPower);
 
   bool setLightingSchedule(Schedule& schedule);
 
@@ -233,7 +233,7 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
 
   void resetRestockingSchedule();
 
-  void setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
+  bool setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
 
   void resetAverageRefrigerantChargeInventory();
 
@@ -293,13 +293,13 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
 
   bool setZoneBoundaryTotalInsulatedSurfaceAreaFacingZone(double zoneBoundaryTotalInsulatedSurfaceAreaFacingZone);
 
-  void setZoneBoundaryAreaofGlassReachInDoorsFacingZone(double zoneBoundaryAreaofGlassReachInDoorsFacingZone);
+  bool setZoneBoundaryAreaofGlassReachInDoorsFacingZone(double zoneBoundaryAreaofGlassReachInDoorsFacingZone);
 
-  void setZoneBoundaryHeightofGlassReachInDoorsFacingZone(double zoneBoundaryHeightofGlassReachInDoorsFacingZone);
+  bool setZoneBoundaryHeightofGlassReachInDoorsFacingZone(double zoneBoundaryHeightofGlassReachInDoorsFacingZone);
 
-  void setZoneBoundaryAreaofStockingDoorsFacingZone(double zoneBoundaryAreaofStockingDoorsFacingZone);
+  bool setZoneBoundaryAreaofStockingDoorsFacingZone(double zoneBoundaryAreaofStockingDoorsFacingZone);
 
-  void setZoneBoundaryHeightofStockingDoorsFacingZone(double zoneBoundaryHeightofStockingDoorsFacingZone);
+  bool setZoneBoundaryHeightofStockingDoorsFacingZone(double zoneBoundaryHeightofStockingDoorsFacingZone);
 
   bool setZoneBoundaryInsulatedSurfaceUValueFacingZone(double zoneBoundaryInsulatedSurfaceUValueFacingZone);
 
@@ -341,4 +341,3 @@ typedef std::vector<RefrigerationWalkIn> RefrigerationWalkInVector;
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONWALKIN_HPP
-

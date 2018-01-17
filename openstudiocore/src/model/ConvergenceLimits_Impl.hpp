@@ -38,14 +38,14 @@ namespace detail {
 
   /** ConvergenceLimits_Impl is a ModelObject_Impl that is the implementation class for ConvergenceLimits.*/
   class MODEL_API ConvergenceLimits_Impl : public ModelObject_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{

@@ -313,9 +313,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void DesignDay_Impl::setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb) {
+  bool DesignDay_Impl::setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb) {
     bool result = setDouble(OS_SizingPeriod_DesignDayFields::HumidityIndicatingConditionsatMaximumDryBulb, humidityIndicatingConditionsAtMaximumDryBulb);
-    OS_ASSERT(result);
+    return result;
   }
 
   void DesignDay_Impl::resetHumidityIndicatingConditionsAtMaximumDryBulb() {
@@ -623,14 +623,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void DesignDay_Impl::setDailyWetBulbTemperatureRange(boost::optional<double> dailyWetBulbTemperatureRange) {
+  bool DesignDay_Impl::setDailyWetBulbTemperatureRange(boost::optional<double> dailyWetBulbTemperatureRange) {
     bool result = false;
     if (dailyWetBulbTemperatureRange) {
       result = setDouble(OS_SizingPeriod_DesignDayFields::DailyWetBulbTemperatureRange, dailyWetBulbTemperatureRange.get());
     } else {
       result = setString(OS_SizingPeriod_DesignDayFields::DailyWetBulbTemperatureRange, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void DesignDay_Impl::resetDailyWetBulbTemperatureRange() {
@@ -887,9 +887,9 @@ void DesignDay::resetDailyDryBulbTemperatureRange() {
   getImpl<detail::DesignDay_Impl>()->resetDailyDryBulbTemperatureRange();
 }
 
-void DesignDay::setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb)
+bool DesignDay::setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb)
 {
-  getImpl<detail::DesignDay_Impl>()->setHumidityIndicatingConditionsAtMaximumDryBulb(humidityIndicatingConditionsAtMaximumDryBulb);
+  return getImpl<detail::DesignDay_Impl>()->setHumidityIndicatingConditionsAtMaximumDryBulb(humidityIndicatingConditionsAtMaximumDryBulb);
 }
 
 void DesignDay::resetHumidityIndicatingConditionsAtMaximumDryBulb() {
@@ -1048,8 +1048,8 @@ void DesignDay::resetAshraeTaud() {
   getImpl<detail::DesignDay_Impl>()->resetAshraeTaud();
 }
 
-void DesignDay::setDailyWetBulbTemperatureRange(double dailyWetBulbTemperatureRange) {
-  getImpl<detail::DesignDay_Impl>()->setDailyWetBulbTemperatureRange(dailyWetBulbTemperatureRange);
+bool DesignDay::setDailyWetBulbTemperatureRange(double dailyWetBulbTemperatureRange) {
+  return getImpl<detail::DesignDay_Impl>()->setDailyWetBulbTemperatureRange(dailyWetBulbTemperatureRange);
 }
 
 void DesignDay::resetDailyWetBulbTemperatureRange() {

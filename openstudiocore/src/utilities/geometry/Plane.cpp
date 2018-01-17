@@ -64,11 +64,11 @@ namespace openstudio{
 
   double det3x3(const Matrix& m)
   {
-    double det = m(0,0)*m(1,1)*m(2,2) + 
+    double det = m(0,0)*m(1,1)*m(2,2) +
                  m(0,1)*m(1,2)*m(2,0) +
                  m(0,2)*m(1,0)*m(2,1) -
                  m(0,2)*m(1,1)*m(2,0) -
-                 m(0,1)*m(1,0)*m(2,2) - 
+                 m(0,1)*m(1,0)*m(2,2) -
                  m(0,0)*m(1,2)*m(2,1);
     return det;
   }
@@ -110,15 +110,15 @@ namespace openstudio{
         Matrix At(3,N);
         Vector b(N);
         for (unsigned i = 0; i < N; ++i){
-          A(i,0) = points[i].x() - points[0].x(); 
+          A(i,0) = points[i].x() - points[0].x();
           A(i,1) = points[i].y() - points[0].y();
           A(i,2) = 1.0;
-          At(0,i) = A(i,0); 
+          At(0,i) = A(i,0);
           At(1,i) = A(i,1);
           At(2,i) = A(i,2);
           b[i] = -(points[i].z() - points[0].z());
         }
-      
+
         Matrix AtA = prod(At, A);
         double det = det3x3(AtA); // always positive for A'*A
         if (det > maxDet){
@@ -152,15 +152,15 @@ namespace openstudio{
         Matrix At(3,N);
         Vector b(N);
         for (unsigned i = 0; i < N; ++i){
-          A(i,0) = points[i].x() - points[0].x(); 
+          A(i,0) = points[i].x() - points[0].x();
           A(i,1) = points[i].z() - points[0].z();
           A(i,2) = 1.0;
-          At(0,i) = A(i,0); 
+          At(0,i) = A(i,0);
           At(1,i) = A(i,1);
           At(2,i) = A(i,2);
           b[i] = -(points[i].y() - points[0].y());
         }
-      
+
         Matrix AtA = prod(At, A);
         double det = det3x3(AtA); // always positive for A'*A
         if (det > maxDet){
@@ -194,15 +194,15 @@ namespace openstudio{
         Matrix At(3,N);
         Vector b(N);
         for (unsigned i = 0; i < N; ++i){
-          A(i,0) = points[i].y() - points[0].y(); 
+          A(i,0) = points[i].y() - points[0].y();
           A(i,1) = points[i].z() - points[0].z();
           A(i,2) = 1.0;
-          At(0,i) = A(i,0); 
+          At(0,i) = A(i,0);
           At(1,i) = A(i,1);
           At(2,i) = A(i,2);
           b[i] = -(points[i].x() - points[0].x());
         }
-      
+
         Matrix AtA = prod(At, A);
         double det = det3x3(AtA); // always positive for A'*A
         if (det > maxDet){

@@ -127,7 +127,7 @@ void HorizontalTabWidget::select()
     {
       index++;
     }
-  } 
+  }
 
   setCurrentIndex(index);
 }
@@ -149,7 +149,7 @@ void HorizontalTabWidget::setCurrentIndex(int index)
   int xPos = 0;
 
   for(unsigned i = 0; i < m_tabButtons.size(); i++)
-  {  
+  {
     QPushButton * button = m_tabButtons[i];
 
     if(button->isHidden()){
@@ -172,7 +172,7 @@ void HorizontalTabWidget::setCurrentIndex(int index)
     }
     style.append("}");
 
-    button->setStyleSheet(style); 
+    button->setStyleSheet(style);
 
     button->adjustSize();
 
@@ -200,7 +200,7 @@ void HorizontalTabWidget::setCurrentIndex(int index)
   }
   style.append("}");
 
-  button->setStyleSheet(style); 
+  button->setStyleSheet(style);
   button->raise();
 
   m_pageStack->setCurrentIndex(index);
@@ -225,7 +225,7 @@ void HorizontalTabWidget::hideTab(QWidget * widget, bool hide)
 {
   int index = m_pageStack->indexOf(widget);
   OS_ASSERT(index >= 0);
-  
+
   int currentIndex = m_pageStack->currentIndex();
   if(currentIndex == index){
     if(currentIndex + 1 < m_pageStack->count()){

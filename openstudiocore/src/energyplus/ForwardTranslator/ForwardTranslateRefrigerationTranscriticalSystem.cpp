@@ -86,7 +86,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationTranscritica
       {
         IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
 
-        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_case->name().get()); 
+        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_case->name().get());
       }
     }
 
@@ -98,7 +98,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationTranscritica
       {
         IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
 
-        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_walkin->name().get()); 
+        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_walkin->name().get());
       }
     }
   }
@@ -127,7 +127,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationTranscritica
       {
         IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
 
-        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_case->name().get()); 
+        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_case->name().get());
       }
     }
 
@@ -139,7 +139,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationTranscritica
       {
         IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
 
-        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_walkin->name().get()); 
+        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_walkin->name().get());
       }
     }
   }
@@ -187,7 +187,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationTranscritica
       {
         IdfExtensibleGroup eg = _compressorList.pushExtensibleGroup();
 
-        eg.setString(Refrigeration_CompressorListExtensibleFields::RefrigerationCompressorName,_compressor->name().get()); 
+        eg.setString(Refrigeration_CompressorListExtensibleFields::RefrigerationCompressorName,_compressor->name().get());
       }
     }
   }
@@ -215,7 +215,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationTranscritica
       {
         IdfExtensibleGroup eg = _compressorList.pushExtensibleGroup();
 
-        eg.setString(Refrigeration_CompressorListExtensibleFields::RefrigerationCompressorName,_compressor->name().get()); 
+        eg.setString(Refrigeration_CompressorListExtensibleFields::RefrigerationCompressorName,_compressor->name().get());
       }
     }
   }

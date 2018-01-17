@@ -42,7 +42,7 @@ namespace detail {
 /** AirLoopHVACZoneMixer is an interface to the EnergyPlus IDD object named "AirLoopHVAC:ZoneMixer"
  *
  *  The purpose of this class is to simplify the construction and manipulation
- *  of zone mixer objects in EnergyPlus.  Methods are built around the 
+ *  of zone mixer objects in EnergyPlus.  Methods are built around the
  *  acts of getting the inlet and outlet ports to the mixer.  Branch indexes
  *  are used to refer to the many inlet ports of the mixer
  */
@@ -58,7 +58,7 @@ class MODEL_API AirLoopHVACZoneMixer : public Mixer {
   unsigned outletPort() const override;
 
   unsigned inletPort(unsigned branchIndex) const override;
-  
+
   unsigned nextInletPort() const override;
 
   bool addToNode(Node & node);
@@ -77,7 +77,7 @@ class MODEL_API AirLoopHVACZoneMixer : public Mixer {
 
   friend class openstudio::IdfObject;
 
-  /// @cond 
+  /// @cond
 
   typedef detail::AirLoopHVACZoneMixer_Impl ImplType;
 

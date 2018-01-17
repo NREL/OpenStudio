@@ -49,7 +49,7 @@ boost::optional<IdfObject> ForwardTranslator::translateDistrictHeating( District
   OptionalDouble d;
   OptionalModelObject temp;
   boost::optional<double> value;
-  
+
   IdfObject idfObject(IddObjectType::DistrictHeating);
 
   m_idfObjects.push_back(idfObject);
@@ -99,9 +99,9 @@ boost::optional<IdfObject> ForwardTranslator::translateDistrictHeating( District
   }
   //
   ////////////////////////////////////////////////////////////////////////
-  
-  
-  
+
+
+
   return boost::optional<IdfObject>(idfObject);
 }
 

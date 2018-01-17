@@ -139,7 +139,7 @@ TEST_F(GeometryFixture, BoostGeometry_Polygon1)
     std::cout << i++ << ": " << printPolygon(p) << std::endl;
   }
 
-  
+
   output.clear();
   boost::geometry::difference(blue, yellow, output);
 
@@ -343,7 +343,7 @@ TEST_F(GeometryFixture, Intersect_False)
   // non intersecting, sense is up
   points1 = makeRectangleUp(0, 0, 1, 1);
   points2 = makeRectangleUp(3, 0, 1, 1);
-  
+
   test = intersect(points1, points2, tol);
   EXPECT_FALSE(test);
 
@@ -362,7 +362,7 @@ TEST_F(GeometryFixture, Intersect_False)
   points2.push_back(Point3d(1, 0, 3));
   points2.push_back(Point3d(0, 0, 3));
   points2.push_back(Point3d(0, 1, 3));
-  
+
   test = intersect(points1, points2, tol);
   EXPECT_FALSE(test);
 
@@ -381,7 +381,7 @@ TEST_F(GeometryFixture, Intersect_False)
   points2.push_back(Point3d(1, 0, 3));
   points2.push_back(Point3d(1, 1, 3));
   points2.push_back(Point3d(0, 1, 3));
-  
+
   test = intersect(points1, points2, tol);
   EXPECT_FALSE(test);
 
@@ -400,7 +400,7 @@ TEST_F(GeometryFixture, Intersect_False)
   points2.push_back(Point3d(0, 0, 1));
   points2.push_back(Point3d(0, 1, 1));
   points2.push_back(Point3d(0, 1, 0));
-  
+
   test = intersect(points1, points2, tol);
   EXPECT_FALSE(test);
 
@@ -437,7 +437,7 @@ TEST_F(GeometryFixture, Intersect_SamePoints)
   // sense is up
   points1 = makeRectangleUp(0, 0, 1, 1);
   points2 = makeRectangleUp(0, 0, 1, 1);
-  
+
   test = intersect(points1, points2, tol);
   EXPECT_FALSE(test);
 
@@ -447,7 +447,7 @@ TEST_F(GeometryFixture, Intersect_SamePoints)
   // opposite sense, points1 is up, points2 is down
   points1 = makeRectangleUp(0, 0, 1, 1);
   points2 = makeRectangleDown(0, 0, 1, 1);
-  
+
   test = intersect(points1, points2, tol);
   EXPECT_FALSE(test);
 
@@ -579,7 +579,7 @@ TEST_F(GeometryFixture, Intersect_Within_Up)
 
   test = intersect(points1, points2, tol);
   EXPECT_FALSE(test);
-  
+
   test = intersect(points2, points1, tol);
   EXPECT_FALSE(test);
 }
@@ -605,7 +605,7 @@ TEST_F(GeometryFixture, Join_False)
   // non intersecting, sense is up
   points1 = makeRectangleUp(0, 0, 1, 1);
   points2 = makeRectangleUp(3, 0, 1, 1);
-  
+
   test = join(points1, points2, tol);
   EXPECT_FALSE(test);
 
@@ -624,7 +624,7 @@ TEST_F(GeometryFixture, Join_False)
   points2.push_back(Point3d(1, 0, 3));
   points2.push_back(Point3d(0, 0, 3));
   points2.push_back(Point3d(0, 1, 3));
-  
+
   test = join(points1, points2, tol);
   EXPECT_FALSE(test);
 
@@ -643,7 +643,7 @@ TEST_F(GeometryFixture, Join_False)
   points2.push_back(Point3d(1, 0, 3));
   points2.push_back(Point3d(1, 1, 3));
   points2.push_back(Point3d(0, 1, 3));
-  
+
   test = join(points1, points2, tol);
   EXPECT_FALSE(test);
 
@@ -662,7 +662,7 @@ TEST_F(GeometryFixture, Join_False)
   points2.push_back(Point3d(0, 0, 1));
   points2.push_back(Point3d(0, 1, 1));
   points2.push_back(Point3d(0, 1, 0));
-  
+
   test = join(points1, points2, tol);
   EXPECT_FALSE(test);
 
@@ -693,7 +693,7 @@ TEST_F(GeometryFixture, Join_SamePoints)
   // sense is up
   points1 = makeRectangleUp(0, 0, 1, 1);
   points2 = makeRectangleUp(0, 0, 1, 1);
-  
+
   test = join(points1, points2, tol);
   EXPECT_FALSE(test);
 
@@ -703,7 +703,7 @@ TEST_F(GeometryFixture, Join_SamePoints)
   // opposite sense, points1 is up, points2 is down
   points1 = makeRectangleUp(0, 0, 1, 1);
   points2 = makeRectangleDown(0, 0, 1, 1);
-  
+
   test = join(points1, points2, tol);
   EXPECT_FALSE(test);
 
@@ -868,7 +868,7 @@ TEST_F(GeometryFixture, RemoveSpikes_Down)
   std::vector<Point3d> result;
 
   // spike at beginning
-  { 
+  {
     // sense is down
     points.clear();
     points.push_back(Point3d(10, 10, 0)); // the spike
@@ -878,7 +878,7 @@ TEST_F(GeometryFixture, RemoveSpikes_Down)
     points.push_back(Point3d(10, 5, 0));
 
     expected.clear();
-    expected.push_back(Point3d(10, 5, 0)); 
+    expected.push_back(Point3d(10, 5, 0));
     expected.push_back(Point3d(10, 0, 0));
     expected.push_back(Point3d(0, 0, 0));
     expected.push_back(Point3d(0, 5, 0));
@@ -888,7 +888,7 @@ TEST_F(GeometryFixture, RemoveSpikes_Down)
   }
 
   // spike at beginning 2
-  { 
+  {
     // sense is down
     points.clear();
     points.push_back(Point3d(10, 5, 0));
@@ -898,7 +898,7 @@ TEST_F(GeometryFixture, RemoveSpikes_Down)
     points.push_back(Point3d(0, 5, 0));
 
     expected.clear();
-    expected.push_back(Point3d(10, 5, 0)); 
+    expected.push_back(Point3d(10, 5, 0));
     expected.push_back(Point3d(10, 0, 0));
     expected.push_back(Point3d(0, 0, 0));
     expected.push_back(Point3d(0, 5, 0));
@@ -908,7 +908,7 @@ TEST_F(GeometryFixture, RemoveSpikes_Down)
   }
 
   // spike in middle
-  { 
+  {
     // sense is down
     points.clear();
     points.push_back(Point3d(10, 5, 0));
@@ -918,7 +918,7 @@ TEST_F(GeometryFixture, RemoveSpikes_Down)
     points.push_back(Point3d(0, 5, 0));
 
     expected.clear();
-    expected.push_back(Point3d(10, 5, 0)); 
+    expected.push_back(Point3d(10, 5, 0));
     expected.push_back(Point3d(10, 0, 0));
     expected.push_back(Point3d(0, 0, 0));
     expected.push_back(Point3d(0, 5, 0));
@@ -1191,7 +1191,7 @@ TEST_F(GeometryFixture, Subtract_Overlap)
   //EXPECT_TRUE(circularEqual(makeRectangleDown(0, 0, 1, 1), test->newPolygons1()[0])) << test->newPolygons1()[0];
   //ASSERT_EQ(1, test->newPolygons2().size());
   //EXPECT_TRUE(circularEqual(makeRectangleDown(2, 0, 1, 1), test->newPolygons2()[0])) << test->newPolygons2()[0];
-  
+
   holes.clear();
   holes.push_back(points1);
   test = subtract(points2, holes, tol);
@@ -1398,7 +1398,7 @@ TEST_F(GeometryFixture, simplify)
 
   auto area = getArea(points);
   ASSERT_TRUE(area);
-  
+
   Point3dVector points2 = simplify(points, false, tol);
 
   auto area2 = getArea(points2);
@@ -1505,7 +1505,7 @@ TEST_F(GeometryFixture, simplify2)
 
   auto area = getArea(points);
   ASSERT_TRUE(area);
-  
+
   Point3dVector points2 = simplify(points, false, tol);
 
   auto area2 = getArea(points2);
@@ -1523,7 +1523,7 @@ TEST_F(GeometryFixture, simplify2)
   expectedPoints.push_back(Point3d(158, 98, 0));
   expectedPoints.push_back(Point3d(158, 70, 0));
   expectedPoints.push_back(Point3d(158, 40, 0));
-  
+
   auto area3 = getArea(expectedPoints);
   ASSERT_TRUE(area3);
 
@@ -1570,7 +1570,7 @@ TEST_F(GeometryFixture, simplify3)
 
   auto area = getArea(points);
   ASSERT_TRUE(area);
-  
+
   Point3dVector points2 = simplify(points, false, tol);
 
   auto area2 = getArea(points2);
@@ -1599,7 +1599,7 @@ TEST_F(GeometryFixture, simplify3)
   expectedPoints.push_back(Point3d(158, 120, 0));
   expectedPoints.push_back(Point3d(158, 108, 0));
   expectedPoints.push_back(Point3d(158, 89, 0));
-  
+
   auto area3 = getArea(expectedPoints);
   ASSERT_TRUE(area3);
 
@@ -1631,9 +1631,9 @@ TEST_F(GeometryFixture, simplify4)
 
   auto area = getArea(points);
   ASSERT_TRUE(area);
-  
+
   Point3dVector points2 = simplify(points, false, tol);
-  
+
   std::cout << points2 << std::endl << std::endl;
 
   auto area2 = getArea(points2);
@@ -1648,7 +1648,7 @@ TEST_F(GeometryFixture, simplify4)
   expectedPoints.push_back(Point3d(158, 21, 0));
   expectedPoints.push_back(Point3d(113, 21, 0));
   expectedPoints.push_back(Point3d(113, 120, 0));
-  
+
   auto area3 = getArea(expectedPoints);
   ASSERT_TRUE(area3);
 

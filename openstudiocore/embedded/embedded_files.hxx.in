@@ -49,7 +49,7 @@ inline int inf(const EmbeddedFile & file, std::vector<uint8_t> & result)
   z_stream strm;
   unsigned char in[CHUNK];
   unsigned char out[CHUNK];
-  
+
   /* allocate inflate state */
   strm.zalloc = Z_NULL;
   strm.zfree = Z_NULL;
@@ -59,15 +59,15 @@ inline int inf(const EmbeddedFile & file, std::vector<uint8_t> & result)
   ret = inflateInit(&strm);
   if (ret != Z_OK)
       return ret;
-  
+
   auto chars = file.second;
   auto size = file.first;
-  
+
   // point or location where we are at moving through the data array
   auto begin = chars;
-  auto end = chars + size; 
+  auto end = chars + size;
   auto chunk_end = begin;
-  
+
   /* decompress until deflate stream ends or end of file */
   while( begin != end ) {
     if( (begin + CHUNK) != end ) {
@@ -76,11 +76,11 @@ inline int inf(const EmbeddedFile & file, std::vector<uint8_t> & result)
     } else {
       std::copy(begin, end, in);
       chunk_end = end;
-    } 
+    }
 
     strm.next_in = const_cast<unsigned char *>(begin);
     strm.avail_in = static_cast<uInt>(chunk_end - begin);
-  
+
     /* run inflate() on input until output buffer not full */
     do {
         strm.avail_out = CHUNK;
@@ -98,23 +98,23 @@ inline int inf(const EmbeddedFile & file, std::vector<uint8_t> & result)
         have = CHUNK - strm.avail_out;
         result.insert(result.end(),out,out + have);
     } while (strm.avail_out == 0);
-  
+
     if( ret == Z_STREAM_END ) {
       break;
     }
 
     begin = chunk_end;
   }
-  
+
   /* clean up and return */
   (void)inflateEnd(&strm);
   return ret == Z_STREAM_END ? Z_OK : Z_DATA_ERROR;
 }
 
 
-namespace embedded_files { 
+namespace embedded_files {
   std::map<std::string, EmbeddedFile > files();
-  
+
   std::vector<std::string> fileNames();
 
   inline std::string allFileNamesAsString(){
@@ -124,7 +124,7 @@ namespace embedded_files {
     }
     return result;
   }
-  
+
   inline std::string findFirstFileByName(const std::string &t_filename) {
     for (const auto& path : fileNames()){
       if (t_filename.size() > path.size()){

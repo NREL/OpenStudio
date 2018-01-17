@@ -391,9 +391,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setControllingZone( ThermalZone & zone )
+  bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setControllingZone( ThermalZone & zone )
   {
-    setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::ControllingZoneorThermostatLocation,zone.handle());
+    return setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::ControllingZoneorThermostatLocation,zone.handle());;
   }
 
   void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::resetControllingZone()
@@ -401,28 +401,28 @@ namespace detail {
     setString(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::ControllingZoneorThermostatLocation,"");
   }
 
-  void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setSupplyAirFan( HVACComponent & hvacComponent )
+  bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setSupplyAirFan( HVACComponent & hvacComponent )
   {
-    if( ! hvacComponent.optionalCast<FanConstantVolume>() && ! hvacComponent.optionalCast<FanOnOff>() ) { return; };
+    if( ! hvacComponent.optionalCast<FanConstantVolume>() && ! hvacComponent.optionalCast<FanOnOff>() ) { return false; };
 
-    setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplyAirFanName,hvacComponent.handle());
+    return setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplyAirFanName,hvacComponent.handle());;
   }
 
-  void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setHeatingCoil( HVACComponent & hvacComponent )
+  bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setHeatingCoil( HVACComponent & hvacComponent )
   {
-    if( ! hvacComponent.optionalCast<CoilHeatingDXSingleSpeed>() ) { return; };
+    if( ! hvacComponent.optionalCast<CoilHeatingDXSingleSpeed>() ) { return false; };
 
-    setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::HeatingCoilName,hvacComponent.handle());
+    return setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::HeatingCoilName,hvacComponent.handle());;
   }
 
-  void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setCoolingCoil( HVACComponent & hvacComponent )
+  bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setCoolingCoil( HVACComponent & hvacComponent )
   {
-    if( ! hvacComponent.optionalCast<CoilCoolingDXSingleSpeed>() ) { return; };
+    if( ! hvacComponent.optionalCast<CoilCoolingDXSingleSpeed>() ) { return false; };
 
-    setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingCoilName,hvacComponent.handle());
+    return setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingCoilName,hvacComponent.handle());;
   }
 
-  void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setSupplementalHeatingCoil( HVACComponent & hvacComponent )
+  bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setSupplementalHeatingCoil( HVACComponent & hvacComponent )
   {
     bool isTypeOK = false;
 
@@ -437,18 +437,19 @@ namespace detail {
 
     if( isTypeOK )
     {
-      setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplementalHeatingCoilName,hvacComponent.handle());
+      return setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplementalHeatingCoilName,hvacComponent.handle());
     }
+    return false;
   }
 
-  void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater) {
+  bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater) {
     bool result = false;
     if (maximumSupplyAirTemperaturefromSupplementalHeater) {
       result = setDouble(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::MaximumSupplyAirTemperaturefromSupplementalHeater, maximumSupplyAirTemperaturefromSupplementalHeater.get());
     } else {
       result = setString(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::MaximumSupplyAirTemperaturefromSupplementalHeater, "");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::autosizeMaximumSupplyAirTemperaturefromSupplementalHeater() {
@@ -796,8 +797,8 @@ void AirLoopHVACUnitaryHeatPumpAirToAir::autosizeSupplyAirFlowRateWhenNoCoolingo
   getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
 }
 
-void AirLoopHVACUnitaryHeatPumpAirToAir::setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater) {
-  getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setMaximumSupplyAirTemperaturefromSupplementalHeater(maximumSupplyAirTemperaturefromSupplementalHeater);
+bool AirLoopHVACUnitaryHeatPumpAirToAir::setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater) {
+  return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setMaximumSupplyAirTemperaturefromSupplementalHeater(maximumSupplyAirTemperaturefromSupplementalHeater);
 }
 
 void AirLoopHVACUnitaryHeatPumpAirToAir::autosizeMaximumSupplyAirTemperaturefromSupplementalHeater() {
@@ -820,9 +821,9 @@ void AirLoopHVACUnitaryHeatPumpAirToAir::resetFanPlacement() {
   getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->resetFanPlacement();
 }
 
-void AirLoopHVACUnitaryHeatPumpAirToAir::setSupplyAirFanOperatingModeSchedule( Schedule & schedule )
+bool AirLoopHVACUnitaryHeatPumpAirToAir::setSupplyAirFanOperatingModeSchedule( Schedule & schedule )
 {
-  getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setSupplyAirFanOperatingModeSchedule(schedule);
+  return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setSupplyAirFanOperatingModeSchedule(schedule);
 }
 
 void AirLoopHVACUnitaryHeatPumpAirToAir::resetSupplyAirFanOperatingModeSchedule() {
@@ -842,9 +843,9 @@ bool AirLoopHVACUnitaryHeatPumpAirToAir::setAvailabilitySchedule( Schedule & sch
   return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setAvailabilitySchedule(schedule);
 }
 
-void AirLoopHVACUnitaryHeatPumpAirToAir::setControllingZone( ThermalZone & zone )
+bool AirLoopHVACUnitaryHeatPumpAirToAir::setControllingZone( ThermalZone & zone )
 {
-  getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setControllingZone(zone);
+  return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setControllingZone(zone);
 }
 
 void AirLoopHVACUnitaryHeatPumpAirToAir::resetControllingZone()
@@ -852,24 +853,24 @@ void AirLoopHVACUnitaryHeatPumpAirToAir::resetControllingZone()
   getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->resetControllingZone();
 }
 
-void AirLoopHVACUnitaryHeatPumpAirToAir::setSupplyAirFan( HVACComponent & hvacComponent )
+bool AirLoopHVACUnitaryHeatPumpAirToAir::setSupplyAirFan( HVACComponent & hvacComponent )
 {
-  getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setSupplyAirFan(hvacComponent);
+  return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setSupplyAirFan(hvacComponent);
 }
 
-void AirLoopHVACUnitaryHeatPumpAirToAir::setHeatingCoil( HVACComponent & hvacComponent )
+bool AirLoopHVACUnitaryHeatPumpAirToAir::setHeatingCoil( HVACComponent & hvacComponent )
 {
-  getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setHeatingCoil(hvacComponent);
+  return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setHeatingCoil(hvacComponent);
 }
 
-void AirLoopHVACUnitaryHeatPumpAirToAir::setCoolingCoil( HVACComponent & hvacComponent )
+bool AirLoopHVACUnitaryHeatPumpAirToAir::setCoolingCoil( HVACComponent & hvacComponent )
 {
-  getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setCoolingCoil(hvacComponent);
+  return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setCoolingCoil(hvacComponent);
 }
 
-void AirLoopHVACUnitaryHeatPumpAirToAir::setSupplementalHeatingCoil( HVACComponent & hvacComponent )
+bool AirLoopHVACUnitaryHeatPumpAirToAir::setSupplementalHeatingCoil( HVACComponent & hvacComponent )
 {
-  getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setSupplementalHeatingCoil(hvacComponent);
+  return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setSupplementalHeatingCoil(hvacComponent);
 }
 
 boost::optional<Schedule> AirLoopHVACUnitaryHeatPumpAirToAir::supplyAirFanOperatingModeSchedule() const
@@ -931,4 +932,3 @@ AirLoopHVACUnitaryHeatPumpAirToAir::AirLoopHVACUnitaryHeatPumpAirToAir(std::shar
 
 } // model
 } // openstudio
-

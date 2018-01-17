@@ -90,7 +90,7 @@ namespace openstudio{
     virtual void onSelectItem() override;
 
     virtual void onClearSelection() override;
-    
+
   private slots :
 
     void tiltFilterChanged();

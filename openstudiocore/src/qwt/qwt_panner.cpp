@@ -128,7 +128,7 @@ void QwtPanner::getMouseButton( Qt::MouseButton &button,
    \param key Key ( See Qt::Keycode )
    \param modifiers Keyboard modifiers
 */
-void QwtPanner::setAbortKey( int key, 
+void QwtPanner::setAbortKey( int key,
     Qt::KeyboardModifiers modifiers )
 {
     d_data->abortKey = key;
@@ -136,7 +136,7 @@ void QwtPanner::setAbortKey( int key,
 }
 
 //! Get the abort key and modifiers
-void QwtPanner::getAbortKey( int &key, 
+void QwtPanner::getAbortKey( int &key,
     Qt::KeyboardModifiers &modifiers ) const
 {
     key = d_data->abortKey;

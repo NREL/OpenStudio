@@ -268,7 +268,7 @@ class MODEL_API AirLoopHVACUnitarySystem : public ZoneHVACComponent {
 
   void resetCoolingCoil();
 
-  void setUseDOASDXCoolingCoil(bool useDOASDXCoolingCoil);
+  bool setUseDOASDXCoolingCoil(bool useDOASDXCoolingCoil);
 
   void resetUseDOASDXCoolingCoil();
 
@@ -359,17 +359,17 @@ class MODEL_API AirLoopHVACUnitarySystem : public ZoneHVACComponent {
 
   void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
 
-  void setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
+  bool setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
 
   void resetMaximumSupplyAirTemperature();
 
   void autosizeMaximumSupplyAirTemperature();
 
-  void setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+  bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
 
   void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
 
-  void setOutdoorDryBulbTemperatureSensorNodeName(std::string outdoorDryBulbTemperatureSensorNodeName);
+  bool setOutdoorDryBulbTemperatureSensorNodeName(std::string outdoorDryBulbTemperatureSensorNodeName);
 
   void resetOutdoorDryBulbTemperatureSensorNodeName();
 
@@ -449,4 +449,3 @@ typedef std::vector<AirLoopHVACUnitarySystem> AirLoopHVACUnitarySystemVector;
 } // openstudio
 
 #endif // MODEL_AIRLOOPHVACUNITARYSYSTEM_HPP
-

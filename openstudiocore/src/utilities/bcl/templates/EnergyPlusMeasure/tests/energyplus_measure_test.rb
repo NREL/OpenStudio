@@ -94,7 +94,7 @@ class EnergyPlusMeasureName_Test < MiniTest::Unit::TestCase
     zone = workspace.getObjectsByType("Zone".to_IddObjectType)[0]
     assert(!zone.getString(0).empty?)
     assert_equal("New Zone", zone.getString(0).get)
-    
+
     # save the workspace to output directory
     output_file_path = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/test_output.idf")
     workspace.save(output_file_path,true)

@@ -38,25 +38,25 @@ module OpenStudio
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       super
     end
-    
+
 ##### Begin override methods for the input object #####
 
     def self.model_object_from_handle(handle)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       model_object = Plugin.model_manager.model_interface.openstudio_model.getSpace(handle)
       if not model_object.empty?
         model_object = model_object.get
       else
-        puts "Space: model_object is empty for #{handle.class}, #{handle.to_s}, #{Plugin.model_manager.model_interface.openstudio_model}"                    
+        puts "Space: model_object is empty for #{handle.class}, #{handle.to_s}, #{Plugin.model_manager.model_interface.openstudio_model}"
         model_object = nil
       end
       return model_object
     end
-    
+
     def self.new_from_handle(handle)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       drawing_interface = Space.new
       model_object = model_object_from_handle(handle)
       drawing_interface.model_object = model_object
@@ -64,31 +64,31 @@ module OpenStudio
       drawing_interface.add_watcher
       return(drawing_interface)
     end
-    
-    def create_model_object 
+
+    def create_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       model_watcher_enabled = @model_interface.model_watcher.disable
       @model_object = OpenStudio::Model::Space.new(@model_interface.openstudio_model)
-      
+
       @model_interface.model_watcher.enable
       if Plugin.read_pref("New Zone for Space")
         if @model_object.thermalZone.empty?
           thermal_zone = OpenStudio::Model::ThermalZone.new(@model_interface.openstudio_model)
           @model_object.setThermalZone(thermal_zone)
         end
-      end      
-      
+      end
+
       @model_interface.model_watcher.disable if not model_watcher_enabled
-      
+
       super
     end
-    
-    
+
+
     # The parent interface is the model interface.
     def parent_from_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       return @model_interface.building
     end
 
@@ -102,14 +102,14 @@ module OpenStudio
     # For spaces, check for any problems with its faces.
     def cleanup_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       super
-      
+
       if @entity.deleted?
         # how did this happen?
         return nil
       end
-      
+
       faces = @entity.entities.find_all { |this_entity| this_entity.class == Sketchup::Face }
 
       for face in faces
@@ -192,7 +192,7 @@ module OpenStudio
 
             if (found)
               # Fix the faces
-              # The 'intended_face' has the wrong geometry (not connected to base face properly) but the correct drawing interface.                  
+              # The 'intended_face' has the wrong geometry (not connected to base face properly) but the correct drawing interface.
               # The 'inferred_face' has the correct geometry, but the wrong drawing interface.
 
               #puts "intended" + intended_face.to_s + " " + intended_face.vertices.length.to_s
@@ -236,15 +236,15 @@ module OpenStudio
 
     def add_watcher
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       if (@model_object)
         @watcher = RenderableModelObjectWatcher.new(self, self, [2, 3, 9, 10], [RenderBySpaceType, RenderByConstruction, RenderByBuildingStory, RenderByThermalZone])
       end
     end
-    
+
     def set_entity_name
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       @entity.name = "Space:  " + @model_object.name.get
     end
 

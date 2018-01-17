@@ -41,11 +41,11 @@ namespace detail {
 
 } // detail
 
-/** SteamEquipmentDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object 
- *  'OS:SteamEquipment:Definition'. Its fields are derived from the EnergyPlus IDD object 
- *  'SteamEquipment'. Note that this object is not tied into any plant loop or water system, so 
- *  it should not be used in models for which water use is an important output. 
- *  \sa SteamEquipment 
+/** SteamEquipmentDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object
+ *  'OS:SteamEquipment:Definition'. Its fields are derived from the EnergyPlus IDD object
+ *  'SteamEquipment'. Note that this object is not tied into any plant loop or water system, so
+ *  it should not be used in models for which water use is an important output.
+ *  \sa SteamEquipment
  */
 class MODEL_API SteamEquipmentDefinition : public SpaceLoadDefinition {
  public:
@@ -118,23 +118,23 @@ class MODEL_API SteamEquipmentDefinition : public SpaceLoadDefinition {
   /** @name Other */
   //@{
 
-  /** Returns the design level represented by this definition, assuming floorArea (m^2) and 
+  /** Returns the design level represented by this definition, assuming floorArea (m^2) and
    *  numPeople. */
   double getDesignLevel(double floorArea, double numPeople) const;
 
-  /** Returns the watts/m^2 represented by this definition, assuming floorArea (m^2) and 
+  /** Returns the watts/m^2 represented by this definition, assuming floorArea (m^2) and
    *  numPeople. */
   double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-  /** Returns the watts/person represented by this definition, assuming floorArea (m^2) and 
+  /** Returns the watts/person represented by this definition, assuming floorArea (m^2) and
    *  numPeople. */
   double getPowerPerPerson(double floorArea, double numPeople) const;
- 
-  /** If method is a \link validDesignLevelCalculationMethodValues valid design level 
-   *  calculation method \endlink, changes this definition to an equivalent power level, under 
+
+  /** If method is a \link validDesignLevelCalculationMethodValues valid design level
+   *  calculation method \endlink, changes this definition to an equivalent power level, under
    *  the assumptions of floorArea (m^2) and numPeople. */
-  bool setDesignLevelCalculationMethod(const std::string& method, 
-                                       double floorArea, 
+  bool setDesignLevelCalculationMethod(const std::string& method,
+                                       double floorArea,
                                        double numPeople);
 
   //@}

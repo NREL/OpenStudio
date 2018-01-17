@@ -233,14 +233,14 @@ namespace detail {
     return isEmpty(OS_Schedule_FixedIntervalFields::OutOfRangeValue);
   }
 
-  void ScheduleFixedInterval_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod) {
+  bool ScheduleFixedInterval_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod) {
     bool result = false;
     if (interpolatetoTimestep) {
       result = setString(OS_Schedule_FixedIntervalFields::InterpolatetoTimestep, "Yes", driverMethod);
     } else {
       result = setString(OS_Schedule_FixedIntervalFields::InterpolatetoTimestep, "No", driverMethod);
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void ScheduleFixedInterval_Impl::resetInterpolatetoTimestep(bool driverMethod) {
@@ -263,9 +263,9 @@ namespace detail {
     return result;
   }
 
-  void ScheduleFixedInterval_Impl::setOutOfRangeValue(double outOfRangeValue, bool driverMethod) {
+  bool ScheduleFixedInterval_Impl::setOutOfRangeValue(double outOfRangeValue, bool driverMethod) {
     bool result = setDouble(OS_Schedule_FixedIntervalFields::OutOfRangeValue, outOfRangeValue, driverMethod);
-    OS_ASSERT(result);
+    return result;
   }
 
   void ScheduleFixedInterval_Impl::resetOutOfRangeValue(bool driverMethod) {
@@ -329,8 +329,8 @@ bool ScheduleFixedInterval::isOutOfRangeValueDefaulted() const {
   return getImpl<detail::ScheduleFixedInterval_Impl>()->isOutOfRangeValueDefaulted();
 }
 
-void ScheduleFixedInterval::setInterpolatetoTimestep(bool interpolatetoTimestep) {
-  getImpl<detail::ScheduleFixedInterval_Impl>()->setInterpolatetoTimestep(interpolatetoTimestep);
+bool ScheduleFixedInterval::setInterpolatetoTimestep(bool interpolatetoTimestep) {
+  return getImpl<detail::ScheduleFixedInterval_Impl>()->setInterpolatetoTimestep(interpolatetoTimestep);
 }
 
 void ScheduleFixedInterval::resetInterpolatetoTimestep() {
@@ -349,8 +349,8 @@ bool ScheduleFixedInterval::setIntervalLength(double intervalLength) {
   return getImpl<detail::ScheduleFixedInterval_Impl>()->setIntervalLength(intervalLength);
 }
 
-void ScheduleFixedInterval::setOutOfRangeValue(double outOfRangeValue) {
-  getImpl<detail::ScheduleFixedInterval_Impl>()->setOutOfRangeValue(outOfRangeValue);
+bool ScheduleFixedInterval::setOutOfRangeValue(double outOfRangeValue) {
+  return getImpl<detail::ScheduleFixedInterval_Impl>()->setOutOfRangeValue(outOfRangeValue);
 }
 
 void ScheduleFixedInterval::resetOutOfRangeValue() {
@@ -366,4 +366,3 @@ ScheduleFixedInterval::ScheduleFixedInterval(std::shared_ptr<detail::ScheduleFix
 
 } // model
 } // openstudio
-

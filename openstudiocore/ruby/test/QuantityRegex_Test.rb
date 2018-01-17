@@ -36,11 +36,11 @@ class QuantityRegex_Test < MiniTest::Unit::TestCase
 
   # def teardown
   # end
-  
+
   def test_stringsAre
-    assert(OpenStudio::isFixedPrecisionValue("3.012"))    
+    assert(OpenStudio::isFixedPrecisionValue("3.012"))
   end
-  
+
   def test_stringsContain
     assert(OpenStudio::containsScientificNotationValue(" .1D-1 "))
   end

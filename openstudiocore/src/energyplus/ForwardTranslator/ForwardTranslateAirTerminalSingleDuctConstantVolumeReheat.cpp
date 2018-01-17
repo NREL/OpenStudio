@@ -152,7 +152,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 
   // MaximumHotWaterOrSteamFlowRate
   value = modelObject.maximumHotWaterorSteamFlowRate();
-  
+
   if( value )
   {
     idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumHotWaterorSteamFlowRate,value.get());

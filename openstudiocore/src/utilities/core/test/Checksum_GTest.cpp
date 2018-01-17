@@ -119,7 +119,7 @@ TEST(Checksum, UUIDs) {
   }
   auto itStart = checksums.begin();
   ++itStart;
-  for (auto it = checksums.begin(), itEnd = checksums.end(); 
+  for (auto it = checksums.begin(), itEnd = checksums.end();
        itStart != itEnd; ++it, ++itStart) {
     EXPECT_TRUE(std::find(itStart,itEnd,*it) == itEnd);
   }

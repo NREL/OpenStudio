@@ -9,7 +9,7 @@
 %include <utilities/core/EnumBase.hpp>
 
 #if defined(SWIGRUBY)
-%define ENUM_CONVERSION(_name) 
+%define ENUM_CONVERSION(_name)
 %init %{
   rb_eval_string("String.class_eval { define_method(:to_" #_name ") { " SWIG_name "::" #_name ".new(self); } }");
 %}
@@ -44,6 +44,6 @@
     static std::set<int> getValues(); \
   };  \
   ENUM_CONVERSION(_name);
-  
+
 
 #endif // UTILITIES_CORE_ENUM_I

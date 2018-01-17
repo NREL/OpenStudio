@@ -409,10 +409,8 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
           if ((primaryFrac + secondaryFrac) > 1) {
             // Reset secondary to 1 - Primary
             secondaryFrac = std::max(1.0 - primaryFrac, 0.0);
-
             LOG(Warn, "Fraction of Zone Controlled by Primary Daylight Control is " << primaryFrac << " while Secondary Fraction is "
                   << secondaryFrac << ". Reseting Secondary Fraction to " << secondaryFrac);
-            
           }
         }
         std::string fractionofZoneControlledbySecondReferencePoint = toString(secondaryFrac);

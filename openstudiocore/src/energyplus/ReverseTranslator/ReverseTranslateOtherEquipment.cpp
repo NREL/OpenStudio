@@ -64,7 +64,7 @@ OptionalModelObject ReverseTranslator::translateOtherEquipment(
 
   // create the definition
   openstudio::model::OtherEquipmentDefinition definition(m_model);
-  
+
   OptionalString s = workspaceObject.name();
   if(s){
     definition.setName(*s + " Definition");
@@ -158,7 +158,7 @@ OptionalModelObject ReverseTranslator::translateOtherEquipment(
   if (s) {
     otherEquipment.setEndUseSubcategory(*s);
   }
-       
+
   return otherEquipment;
 }
 

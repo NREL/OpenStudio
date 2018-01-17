@@ -207,9 +207,9 @@ namespace detail {
     return isEmpty(OS_InteriorPartitionSurfaceGroupFields::Multiplier);
   }
 
-  void InteriorPartitionSurfaceGroup_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
+  bool InteriorPartitionSurfaceGroup_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
     bool result = setDouble(OS_InteriorPartitionSurfaceGroupFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
-    OS_ASSERT(result);
+    return result;
   }
 
   void InteriorPartitionSurfaceGroup_Impl::resetDirectionofRelativeNorth() {
@@ -217,9 +217,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void InteriorPartitionSurfaceGroup_Impl::setXOrigin(double xOrigin, bool driverMethod) {
+  bool InteriorPartitionSurfaceGroup_Impl::setXOrigin(double xOrigin, bool driverMethod) {
     bool result = setDouble(OS_InteriorPartitionSurfaceGroupFields::XOrigin, xOrigin, driverMethod);
-    OS_ASSERT(result);
+    return result;
   }
 
   void InteriorPartitionSurfaceGroup_Impl::resetXOrigin() {
@@ -227,9 +227,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void InteriorPartitionSurfaceGroup_Impl::setYOrigin(double yOrigin, bool driverMethod) {
+  bool InteriorPartitionSurfaceGroup_Impl::setYOrigin(double yOrigin, bool driverMethod) {
     bool result = setDouble(OS_InteriorPartitionSurfaceGroupFields::YOrigin, yOrigin, driverMethod);
-    OS_ASSERT(result);
+    return result;
   }
 
   void InteriorPartitionSurfaceGroup_Impl::resetYOrigin() {
@@ -237,9 +237,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void InteriorPartitionSurfaceGroup_Impl::setZOrigin(double zOrigin, bool driverMethod) {
+  bool InteriorPartitionSurfaceGroup_Impl::setZOrigin(double zOrigin, bool driverMethod) {
     bool result = setDouble(OS_InteriorPartitionSurfaceGroupFields::ZOrigin, zOrigin, driverMethod);
-    OS_ASSERT(result);
+    return result;
   }
 
   void InteriorPartitionSurfaceGroup_Impl::resetZOrigin() {
@@ -365,4 +365,3 @@ InteriorPartitionSurfaceGroup::InteriorPartitionSurfaceGroup(std::shared_ptr<det
 
 } // model
 } // openstudio
-

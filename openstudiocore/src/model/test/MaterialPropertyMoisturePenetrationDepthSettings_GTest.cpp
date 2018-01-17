@@ -52,20 +52,20 @@ TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_MaterialPr
 
       // create a material object to use
       StandardOpaqueMaterial material(model);
-      
+
       exit(0);
     },
     ::testing::ExitedWithCode(0),
     ""
   );
-    
+
   // create a model to use
   Model model;
-  
+
   // create a material object to use
   StandardOpaqueMaterial material(model);
   EXPECT_EQ(1, model.modelObjects().size());
-  
+
   // new material does not have material property moisture penetration depth settings yet
   EXPECT_TRUE(!material.materialPropertyMoisturePenetrationDepthSettings());
 
@@ -76,7 +76,7 @@ TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_MaterialPr
 
   // now the material has material property moisture penetration depth settings
   EXPECT_TRUE(material.materialPropertyMoisturePenetrationDepthSettings());
-  
+
   // check to make sure the surface layer penetration depth and deep layer penetration depth fields are defaulted as expected
   auto empd = optempd.get();
   EXPECT_TRUE(empd.isSurfaceLayerPenetrationDepthAutocalculated());
@@ -127,7 +127,7 @@ TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_SetGetFiel
   auto surfacelayerpenetrationdepth = optsurfacelayerpenetrationdepth.get();
   auto deeplayerpenetrationdepth = optdeeplayerpenetrationdepth.get();
   EXPECT_EQ(0.1, surfacelayerpenetrationdepth);
-  EXPECT_EQ(0, deeplayerpenetrationdepth);  
+  EXPECT_EQ(0, deeplayerpenetrationdepth);
   EXPECT_EQ(0, empd.coatingLayerThickness());
   EXPECT_EQ(0, empd.coatingLayerWaterVaporDiffusionResistanceFactor());
 

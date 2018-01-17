@@ -47,7 +47,7 @@
   /// #endif
   /// Some code
   /// #if defined(_MSC_VER)
-  ///   #pragma warning( pop ) 
+  ///   #pragma warning( pop )
   /// #endif
 
   #define OS_DEPRECATED __declspec(deprecated)

@@ -127,7 +127,7 @@ TEST_F(MeasureFixture, EmbeddedRubyTest) {
       rsc(new openstudio::measure::EmbeddedRubyMeasureInfoGetter<openstudio::detail::RubyInterpreter>(ri));
 
     // Test calling the actual function we are concerned about
-    
+
     Model someModel;
     Workspace someWorkspace(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
@@ -147,7 +147,7 @@ TEST_F(MeasureFixture, EmbeddedRubyTest) {
     info = rsc->getInfo(measure, someModel, someWorkspace);
     EXPECT_EQ(3u, info.arguments().size());
   }
-  
+
 }
 
 

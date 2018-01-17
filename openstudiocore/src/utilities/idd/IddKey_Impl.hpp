@@ -62,7 +62,7 @@ namespace detail {
     /// load by parsing text
     static std::shared_ptr<IddKey_Impl> load(const std::string& name, const std::string& text);
 
-    /// print idd 
+    /// print idd
     std::ostream& print(std::ostream& os) const;
 
    private:
@@ -70,7 +70,7 @@ namespace detail {
     /// partial constructor used by load
     IddKey_Impl(const std::string& name);
 
-    // parse 
+    // parse
     void parse(const std::string& text);
 
     // name

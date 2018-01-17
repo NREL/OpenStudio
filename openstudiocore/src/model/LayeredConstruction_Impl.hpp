@@ -51,10 +51,10 @@ class ModelPartitionMaterial;
 namespace detail {
 
   class MODEL_API LayeredConstruction_Impl : public ConstructionBase_Impl {
-    
-    
 
-    
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -62,15 +62,15 @@ namespace detail {
     // Construct completely new object.
     LayeredConstruction_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // Construct from existing workspace object (typically when Model is being constructed 
+    // Construct from existing workspace object (typically when Model is being constructed
     // from Workspace).
-    LayeredConstruction_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                             Model_Impl* model, 
+    LayeredConstruction_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                             Model_Impl* model,
                              bool keepHandle);
 
     // Clone copy constructor.
-    LayeredConstruction_Impl(const LayeredConstruction_Impl& other, 
-                             Model_Impl* model, 
+    LayeredConstruction_Impl(const LayeredConstruction_Impl& other,
+                             Model_Impl* model,
                              bool keepHandle);
 
     virtual ~LayeredConstruction_Impl() {}
@@ -79,8 +79,8 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    /** Returns the material layers that make up this construction. Listed in order from outside in, 
-     *  that is, the Material at index 0 faces out, from the point of view of the Zone, should this 
+    /** Returns the material layers that make up this construction. Listed in order from outside in,
+     *  that is, the Material at index 0 faces out, from the point of view of the Zone, should this
      *  LayeredConstruction be associated with a PlanarSurface. */
     std::vector<Material> layers() const;
 
@@ -100,20 +100,20 @@ namespace detail {
 
     virtual bool setLayer(const ModelPartitionMaterial& modelPartitionMaterial);
 
-    /** Set the u-factor of this surface in W/m^2*K, if possible. value should already include 
-     *  appropriate film coefficients. By default, assumes still air indoors and 15 mph outdoor air 
+    /** Set the u-factor of this surface in W/m^2*K, if possible. value should already include
+     *  appropriate film coefficients. By default, assumes still air indoors and 15 mph outdoor air
      *  speed. */
     virtual bool setUFactor(double value) override;
 
-    /** Set the u-factor of this surface in W/m^2*K, if possible. filmResistance (m^2*K/W) may be 
+    /** Set the u-factor of this surface in W/m^2*K, if possible. filmResistance (m^2*K/W) may be
      *  used to convert value to a conductance. */
     virtual bool setUFactor(double value,double filmResistance) override;
 
-    /** Set the conductance of this surface in W/m^2*K, if possible. value should not include any film 
+    /** Set the conductance of this surface in W/m^2*K, if possible. value should not include any film
      *  coefficients. */
     virtual bool setThermalConductance(double value);
 
-    /** Set the conductance of this surface in W/m^2*K, if possible. filmResistance (m^2*K/W) may be 
+    /** Set the conductance of this surface in W/m^2*K, if possible. filmResistance (m^2*K/W) may be
      *  used to convert value to a u-factor. */
     virtual bool setThermalConductance(double value,double filmResistance);
 
@@ -149,7 +149,7 @@ namespace detail {
     /** Returns true if this construction has the same layers but in reverse order as other one. */
     bool reverseEqualLayers(const LayeredConstruction& other) const;
 
-    /** Returns layer indices that do not actually point to a Material. Before simulation, the 
+    /** Returns layer indices that do not actually point to a Material. Before simulation, the
      *  returned vector should be empty. */
     std::vector<unsigned> nullLayers() const;
 
@@ -171,7 +171,7 @@ namespace detail {
      *  thermalResistance if necessary. */
     virtual boost::optional<double> thermalConductance(double filmResistance) const override;
 
-    /** Get the heat capacity of this construction (J/m^2*K). Only works for 
+    /** Get the heat capacity of this construction (J/m^2*K). Only works for
      *  \link LayeredConstruction LayeredConstructions \endlink of \link StandardOpaqueMaterial
      *  StandardOpaqueMaterials \endlink. */
     virtual boost::optional<double> heatCapacity() const override;
@@ -192,15 +192,15 @@ namespace detail {
     /** Returns the layer designated as insulation, if such a designation has been made. */
     boost::optional<OpaqueMaterial> insulation() const;
 
-    /** Notes that insulationLayer is the perturbable insulation layer. Only works if 
+    /** Notes that insulationLayer is the perturbable insulation layer. Only works if
      *  insulationLayer is already in this construction. */
     bool setInsulation(const OpaqueMaterial& insulationLayer);
 
-    /** Removes any existing insulation layer designations. Does not touch the actual composition 
+    /** Removes any existing insulation layer designations. Does not touch the actual composition
      *  of the construction. */
     void resetInsulation();
 
-    void ensureUniqueLayers(); 
+    void ensureUniqueLayers();
 
     //@}
 
@@ -209,7 +209,7 @@ namespace detail {
     friend class LayeredConstruction;
 
     // Erase all nullLayers, and return the new value for layerIndex, if it is affected by erasures.
-    // If layerIndex was originally pointing to a nullLayer, upon return it will point to the first 
+    // If layerIndex was originally pointing to a nullLayer, upon return it will point to the first
     // non-null layer after its original position.
     unsigned mf_clearNullLayers(unsigned layerIndex = 0);
 

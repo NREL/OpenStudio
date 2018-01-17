@@ -47,9 +47,9 @@ namespace openstudio {
       for download.
   **/
   class UTILITIES_API UpdateManager : public QObject{
-    
+
     Q_OBJECT;
-  
+
   public:
 
     /// Constructor with application name
@@ -91,10 +91,10 @@ namespace openstudio {
     /// finished checking for updates with no errors
     std::string mostRecentDownloadUrl() const;
 
-    /// returns the description of each update since the current release with the most recent first, 
+    /// returns the description of each update since the current release with the most recent first,
     /// manager must have finished checking for updates with no errors
     std::vector<std::string> updateMessages() const;
-    
+
   public slots:
 
     void replyFinished(QNetworkReply* reply);
@@ -103,9 +103,9 @@ namespace openstudio {
     virtual void replyProcessed();
 
   signals:
-  
+
     void processed();
-      
+
   private:
 
     REGISTER_LOGGER("openstudio.utilities.UpdateManager");

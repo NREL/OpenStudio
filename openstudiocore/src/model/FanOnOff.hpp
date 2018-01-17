@@ -102,7 +102,7 @@ class MODEL_API FanOnOff : public StraightComponent {
 
   void resetFanEfficiency();
 
-  void setPressureRise(double pressureRise);
+  bool setPressureRise(double pressureRise);
 
   bool setMaximumFlowRate(double maximumFlowRate);
 
@@ -118,20 +118,20 @@ class MODEL_API FanOnOff : public StraightComponent {
 
   void resetMotorInAirstreamFraction();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 
   //@}
-  
+
   /** @name Curves */
-  
+
   Curve fanPowerRatioFunctionofSpeedRatioCurve() const;
   bool setFanPowerRatioFunctionofSpeedRatioCurve( const Curve& curve );
-  
+
   Curve fanEfficiencyRatioFunctionofSpeedRatioCurve() const;
   bool setFanEfficiencyRatioFunctionofSpeedRatioCurve( const Curve& curve );
-  
+
   //@{
 
   boost::optional<double> autosizedMaximumFlowRate() const ;
@@ -164,4 +164,3 @@ typedef std::vector<FanOnOff> FanOnOffVector;
 } // openstudio
 
 #endif // MODEL_FANONOFF_HPP
-

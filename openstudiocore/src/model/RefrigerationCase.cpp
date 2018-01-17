@@ -786,9 +786,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCase_Impl::setStandardCaseLightingPowerperUnitLength(double standardCaseLightingPowerperUnitLength) {
+  bool RefrigerationCase_Impl::setStandardCaseLightingPowerperUnitLength(double standardCaseLightingPowerperUnitLength) {
     bool result = setDouble(OS_Refrigeration_CaseFields::StandardCaseLightingPowerperUnitLength, standardCaseLightingPowerperUnitLength);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCase_Impl::resetStandardCaseLightingPowerperUnitLength() {
@@ -796,7 +796,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCase_Impl::setInstalledCaseLightingPowerperUnitLength(boost::optional<double> installedCaseLightingPowerperUnitLength) {
+  bool RefrigerationCase_Impl::setInstalledCaseLightingPowerperUnitLength(boost::optional<double> installedCaseLightingPowerperUnitLength) {
     bool result(false);
     if (installedCaseLightingPowerperUnitLength) {
       result = setDouble(OS_Refrigeration_CaseFields::InstalledCaseLightingPowerperUnitLength, installedCaseLightingPowerperUnitLength.get());
@@ -805,7 +805,7 @@ namespace detail {
       resetInstalledCaseLightingPowerperUnitLength();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCase_Impl::resetInstalledCaseLightingPowerperUnitLength() {
@@ -866,9 +866,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCase_Impl::setHumidityatZeroAntiSweatHeaterEnergy(double humidityatZeroAntiSweatHeaterEnergy) {
+  bool RefrigerationCase_Impl::setHumidityatZeroAntiSweatHeaterEnergy(double humidityatZeroAntiSweatHeaterEnergy) {
     bool result = setDouble(OS_Refrigeration_CaseFields::HumidityatZeroAntiSweatHeaterEnergy, humidityatZeroAntiSweatHeaterEnergy);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCase_Impl::resetHumidityatZeroAntiSweatHeaterEnergy() {
@@ -1022,9 +1022,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCase_Impl::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
+  bool RefrigerationCase_Impl::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
     bool result = setDouble(OS_Refrigeration_CaseFields::AverageRefrigerantChargeInventory, averageRefrigerantChargeInventory);
-    OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCase_Impl::resetAverageRefrigerantChargeInventory() {
@@ -1804,16 +1804,16 @@ void RefrigerationCase::resetOperatingCaseFanPowerperUnitLength() {
   getImpl<detail::RefrigerationCase_Impl>()->resetOperatingCaseFanPowerperUnitLength();
 }
 
-void RefrigerationCase::setStandardCaseLightingPowerperUnitLength(double standardCaseLightingPowerperUnitLength) {
-  getImpl<detail::RefrigerationCase_Impl>()->setStandardCaseLightingPowerperUnitLength(standardCaseLightingPowerperUnitLength);
+bool RefrigerationCase::setStandardCaseLightingPowerperUnitLength(double standardCaseLightingPowerperUnitLength) {
+  return getImpl<detail::RefrigerationCase_Impl>()->setStandardCaseLightingPowerperUnitLength(standardCaseLightingPowerperUnitLength);
 }
 
 void RefrigerationCase::resetStandardCaseLightingPowerperUnitLength() {
   getImpl<detail::RefrigerationCase_Impl>()->resetStandardCaseLightingPowerperUnitLength();
 }
 
-void RefrigerationCase::setInstalledCaseLightingPowerperUnitLength(double installedCaseLightingPowerperUnitLength) {
-  getImpl<detail::RefrigerationCase_Impl>()->setInstalledCaseLightingPowerperUnitLength(installedCaseLightingPowerperUnitLength);
+bool RefrigerationCase::setInstalledCaseLightingPowerperUnitLength(double installedCaseLightingPowerperUnitLength) {
+  return getImpl<detail::RefrigerationCase_Impl>()->setInstalledCaseLightingPowerperUnitLength(installedCaseLightingPowerperUnitLength);
 }
 
 void RefrigerationCase::resetInstalledCaseLightingPowerperUnitLength() {
@@ -1860,8 +1860,8 @@ void RefrigerationCase::resetAntiSweatHeaterControlType() {
   getImpl<detail::RefrigerationCase_Impl>()->resetAntiSweatHeaterControlType();
 }
 
-void RefrigerationCase::setHumidityatZeroAntiSweatHeaterEnergy(double humidityatZeroAntiSweatHeaterEnergy) {
-  getImpl<detail::RefrigerationCase_Impl>()->setHumidityatZeroAntiSweatHeaterEnergy(humidityatZeroAntiSweatHeaterEnergy);
+bool RefrigerationCase::setHumidityatZeroAntiSweatHeaterEnergy(double humidityatZeroAntiSweatHeaterEnergy) {
+  return getImpl<detail::RefrigerationCase_Impl>()->setHumidityatZeroAntiSweatHeaterEnergy(humidityatZeroAntiSweatHeaterEnergy);
 }
 
 void RefrigerationCase::resetHumidityatZeroAntiSweatHeaterEnergy() {
@@ -1964,8 +1964,8 @@ void RefrigerationCase::resetDesignEvaporatorTemperatureorBrineInletTemperature(
   getImpl<detail::RefrigerationCase_Impl>()->resetDesignEvaporatorTemperatureorBrineInletTemperature();
 }
 
-void RefrigerationCase::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
-  getImpl<detail::RefrigerationCase_Impl>()->setAverageRefrigerantChargeInventory(averageRefrigerantChargeInventory);
+bool RefrigerationCase::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
+  return getImpl<detail::RefrigerationCase_Impl>()->setAverageRefrigerantChargeInventory(averageRefrigerantChargeInventory);
 }
 
 void RefrigerationCase::resetAverageRefrigerantChargeInventory() {
@@ -2148,4 +2148,3 @@ RefrigerationCase::RefrigerationCase(std::shared_ptr<detail::RefrigerationCase_I
 
 } // model
 } // openstudio
-

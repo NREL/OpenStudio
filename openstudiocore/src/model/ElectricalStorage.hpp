@@ -66,7 +66,7 @@ class MODEL_API ElectricalStorage : public ParentObject {
 
     friend class openstudio::IdfObject;
 
-    /// @cond 
+    /// @cond
 
     typedef detail::ElectricalStorage_Impl ImplType;
 
@@ -76,7 +76,7 @@ class MODEL_API ElectricalStorage : public ParentObject {
 
     REGISTER_LOGGER("openstudio.model.ElectricalStorage");
 
-  /// @endcond 
+  /// @endcond
 
 };
 

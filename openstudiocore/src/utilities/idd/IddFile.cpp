@@ -193,13 +193,13 @@ namespace detail {
   std::shared_ptr<IddFile_Impl> IddFile_Impl::load(std::istream& is) {
     std::shared_ptr<IddFile_Impl> result;
     IddFile_Impl iddFileImpl;
-    
+
     try {
       iddFileImpl.parse(is);
     }
     catch (...) { return result; }
 
-    result = std::shared_ptr<IddFile_Impl>(new IddFile_Impl(iddFileImpl)); 
+    result = std::shared_ptr<IddFile_Impl>(new IddFile_Impl(iddFileImpl));
     return result;
 
   }
@@ -240,9 +240,9 @@ namespace detail {
     std::string currentGroup = "";
 
     // fake a comment only object and put it in the object list and object map
-    OptionalIddObject commentOnlyObject = IddObject::load(iddRegex::commentOnlyObjectName(), 
-                                                          currentGroup, 
-                                                          iddRegex::commentOnlyObjectText(), 
+    OptionalIddObject commentOnlyObject = IddObject::load(iddRegex::commentOnlyObjectName(),
+                                                          currentGroup,
+                                                          iddRegex::commentOnlyObjectText(),
                                                           IddObjectType::CommentOnly);
     OS_ASSERT(commentOnlyObject);
     m_objects.push_back(*commentOnlyObject);
@@ -276,7 +276,7 @@ namespace detail {
       boost::trim(line);
 
       if (line.empty()){
-        
+
         headerClosed = true;
 
         // empty line
@@ -314,7 +314,7 @@ namespace detail {
 
         // a valid idd object to parse
         ++objectNum;
-  
+
         // peek at the object name for indexing in map
         std::string objectName;
         if (boost::regex_search(line, matches, iddRegex::line())){
@@ -338,7 +338,7 @@ namespace detail {
           foundClosingLine = true;
         }
 
-        // continue reading until we have seen the entire object 
+        // continue reading until we have seen the entire object
         // last line will be thrown away, requires empty line between objects in idd
         while(getline(is, line)){
           ++lineNum;
@@ -368,7 +368,7 @@ namespace detail {
 
         // construct a new object and put it in the object vector
         if (object) { m_objects.push_back(*object); }
-        else { 
+        else {
           LOG_AND_THROW("Unable to construct IddObject from text: " << std::endl << text);
         }
 
@@ -482,8 +482,8 @@ std::pair<VersionString, std::string> IddFile::parseVersionBuild(const openstudi
 {
   std::ifstream ifs(openstudio::toString(p));
 
-  if (!ifs.good()) { 
-    throw std::runtime_error("Unable to open file for reading: " + openstudio::toString(p)); 
+  if (!ifs.good()) {
+    throw std::runtime_error("Unable to open file for reading: " + openstudio::toString(p));
   }
 
   ifs.seekg(0, std::ios_base::end);
@@ -504,15 +504,15 @@ std::pair<VersionString, std::string> IddFile::parseVersionBuild(const openstudi
 
   if (boost::regex_search(strdata, matches, iddRegex::version())) {
     return std::make_pair(VersionString(std::string(matches[1].first, matches[1].second)), build);
-  } 
+  }
 
   throw std::runtime_error("Unable to parse version from IDD: " + openstudio::toString(p));
 }
 
 bool IddFile::save(const openstudio::path& p, bool overwrite) {
   path wp = completePathToFile(p,path(),"idd",true);
-  if (!wp.empty() && (overwrite == false)) { 
-    LOG(Info,"IddFile save method failed because instructed not to overwrite path '" 
+  if (!wp.empty() && (overwrite == false)) {
+    LOG(Info,"IddFile save method failed because instructed not to overwrite path '"
         << toString(p) << "'.");
     return false;
   }
@@ -531,7 +531,7 @@ bool IddFile::save(const openstudio::path& p, bool overwrite) {
     }
   }
 
-  LOG(Error,"Unable to write IddFile to path '" << toString(p) 
+  LOG(Error,"Unable to write IddFile to path '" << toString(p)
       << "', because parent directory could not be created.");
   return false;
 }

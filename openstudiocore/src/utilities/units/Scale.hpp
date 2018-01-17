@@ -37,9 +37,9 @@
 
 namespace openstudio{
 
-  /** Structure for holding scale prefixes such as kilo and centi. Logical operators and 
-   *  some other related typedefs and functions are declared in Scale.hpp. Scale arithmetic is 
-   *  declared in ScaleFactory.hpp, since openstudio::ScaleFactory is the object that makes such 
+  /** Structure for holding scale prefixes such as kilo and centi. Logical operators and
+   *  some other related typedefs and functions are declared in Scale.hpp. Scale arithmetic is
+   *  declared in ScaleFactory.hpp, since openstudio::ScaleFactory is the object that makes such
    *  operations possible by keeping track of what scales are available. */
   struct UTILITIES_API Scale {
     std::string abbr; ///< abbreviation, such as "k", as in kN = kilo-Newtons.
@@ -48,15 +48,15 @@ namespace openstudio{
     double value;     ///< full value of the scale. For instance, 1000 for kilo.
   };
 
-  /** Function pointer to a constant scale object. Implemented as function 
+  /** Function pointer to a constant scale object. Implemented as function
    *  pointer to ensure timely instantiation. */
   typedef std::function<const Scale& ()> ScaleConstant;
 
-  /** Outputs all information about Scale s. Examples: \verbatim 
+  /** Outputs all information about Scale s. Examples: \verbatim
       Scale s = {"T", "tera",12,1.0E12};
-      std::cout << s; 
-      boost::ofstream f(path); 
-      f << s; 
+      std::cout << s;
+      boost::ofstream f(path);
+      f << s;
       LOG_FREE(Info,"channel",s); \endverbatim */
   UTILITIES_API std::ostream& operator<<(std::ostream& os,const Scale& s);
 

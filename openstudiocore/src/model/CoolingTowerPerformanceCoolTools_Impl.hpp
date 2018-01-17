@@ -160,91 +160,91 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setMinimumInletAirWetBulbTemperature(double minimumInletAirWetBulbTemperature);
+    bool setMinimumInletAirWetBulbTemperature(double minimumInletAirWetBulbTemperature);
 
-    void setMaximumInletAirWetBulbTemperature(double maximumInletAirWetBulbTemperature);
+    bool setMaximumInletAirWetBulbTemperature(double maximumInletAirWetBulbTemperature);
 
-    void setMinimumRangeTemperature(double minimumRangeTemperature);
+    bool setMinimumRangeTemperature(double minimumRangeTemperature);
 
-    void setMaximumRangeTemperature(double maximumRangeTemperature);
+    bool setMaximumRangeTemperature(double maximumRangeTemperature);
 
-    void setMinimumApproachTemperature(double minimumApproachTemperature);
+    bool setMinimumApproachTemperature(double minimumApproachTemperature);
 
-    void setMaximumApproachTemperature(double maximumApproachTemperature);
+    bool setMaximumApproachTemperature(double maximumApproachTemperature);
 
-    void setMinimumWaterFlowRateRatio(double minimumWaterFlowRateRatio);
+    bool setMinimumWaterFlowRateRatio(double minimumWaterFlowRateRatio);
 
-    void setMaximumWaterFlowRateRatio(double maximumWaterFlowRateRatio);
+    bool setMaximumWaterFlowRateRatio(double maximumWaterFlowRateRatio);
 
-    void setCoefficient1(double coefficient1);
+    bool setCoefficient1(double coefficient1);
 
-    void setCoefficient2(double coefficient2);
+    bool setCoefficient2(double coefficient2);
 
-    void setCoefficient3(double coefficient3);
+    bool setCoefficient3(double coefficient3);
 
-    void setCoefficient4(double coefficient4);
+    bool setCoefficient4(double coefficient4);
 
-    void setCoefficient5(double coefficient5);
+    bool setCoefficient5(double coefficient5);
 
-    void setCoefficient6(double coefficient6);
+    bool setCoefficient6(double coefficient6);
 
-    void setCoefficient7(double coefficient7);
+    bool setCoefficient7(double coefficient7);
 
-    void setCoefficient8(double coefficient8);
+    bool setCoefficient8(double coefficient8);
 
-    void setCoefficient9(double coefficient9);
+    bool setCoefficient9(double coefficient9);
 
-    void setCoefficient10(double coefficient10);
+    bool setCoefficient10(double coefficient10);
 
-    void setCoefficient11(double coefficient11);
+    bool setCoefficient11(double coefficient11);
 
-    void setCoefficient12(double coefficient12);
+    bool setCoefficient12(double coefficient12);
 
-    void setCoefficient13(double coefficient13);
+    bool setCoefficient13(double coefficient13);
 
-    void setCoefficient14(double coefficient14);
+    bool setCoefficient14(double coefficient14);
 
-    void setCoefficient15(double coefficient15);
+    bool setCoefficient15(double coefficient15);
 
-    void setCoefficient16(double coefficient16);
+    bool setCoefficient16(double coefficient16);
 
-    void setCoefficient17(double coefficient17);
+    bool setCoefficient17(double coefficient17);
 
-    void setCoefficient18(double coefficient18);
+    bool setCoefficient18(double coefficient18);
 
-    void setCoefficient19(double coefficient19);
+    bool setCoefficient19(double coefficient19);
 
-    void setCoefficient20(double coefficient20);
+    bool setCoefficient20(double coefficient20);
 
-    void setCoefficient21(double coefficient21);
+    bool setCoefficient21(double coefficient21);
 
-    void setCoefficient22(double coefficient22);
+    bool setCoefficient22(double coefficient22);
 
-    void setCoefficient23(double coefficient23);
+    bool setCoefficient23(double coefficient23);
 
-    void setCoefficient24(double coefficient24);
+    bool setCoefficient24(double coefficient24);
 
-    void setCoefficient25(double coefficient25);
+    bool setCoefficient25(double coefficient25);
 
-    void setCoefficient26(double coefficient26);
+    bool setCoefficient26(double coefficient26);
 
-    void setCoefficient27(double coefficient27);
+    bool setCoefficient27(double coefficient27);
 
-    void setCoefficient28(double coefficient28);
+    bool setCoefficient28(double coefficient28);
 
-    void setCoefficient29(double coefficient29);
+    bool setCoefficient29(double coefficient29);
 
-    void setCoefficient30(double coefficient30);
+    bool setCoefficient30(double coefficient30);
 
-    void setCoefficient31(double coefficient31);
+    bool setCoefficient31(double coefficient31);
 
-    void setCoefficient32(double coefficient32);
+    bool setCoefficient32(double coefficient32);
 
-    void setCoefficient33(double coefficient33);
+    bool setCoefficient33(double coefficient33);
 
-    void setCoefficient34(double coefficient34);
+    bool setCoefficient34(double coefficient34);
 
-    void setCoefficient35(double coefficient35);
+    bool setCoefficient35(double coefficient35);
 
     //@}
     /** @name Other */
@@ -262,4 +262,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COOLINGTOWERPERFORMANCECOOLTOOLS_IMPL_HPP
-

@@ -51,7 +51,7 @@ class MODEL_API TableMultiVariableLookup : public Curve {
   /** @name Constructors and Destructors */
   //@{
 
-  /** Create a TableMultiVariableLookup object with the specified number 
+  /** Create a TableMultiVariableLookup object with the specified number
     * of independent variables.
     */
   explicit TableMultiVariableLookup(const Model& model,
@@ -176,55 +176,55 @@ class MODEL_API TableMultiVariableLookup : public Curve {
 
   void resetTableDataFormat();
 
-  void setNormalizationReference(double normalizationReference);
+  bool setNormalizationReference(double normalizationReference);
 
   void resetNormalizationReference();
 
-  void setMinimumValueofX1(double minimumValueofX1);
+  bool setMinimumValueofX1(double minimumValueofX1);
 
   void resetMinimumValueofX1();
 
-  void setMaximumValueofX1(double maximumValueofX1);
+  bool setMaximumValueofX1(double maximumValueofX1);
 
   void resetMaximumValueofX1();
 
-  void setMinimumValueofX2(double minimumValueofX2);
+  bool setMinimumValueofX2(double minimumValueofX2);
 
   void resetMinimumValueofX2();
 
-  void setMaximumValueofX2(double maximumValueofX2);
+  bool setMaximumValueofX2(double maximumValueofX2);
 
   void resetMaximumValueofX2();
 
-  void setMinimumValueofX3(double minimumValueofX3);
+  bool setMinimumValueofX3(double minimumValueofX3);
 
   void resetMinimumValueofX3();
 
-  void setMaximumValueofX3(double maximumValueofX3);
+  bool setMaximumValueofX3(double maximumValueofX3);
 
   void resetMaximumValueofX3();
 
-  void setMinimumValueofX4(double minimumValueofX4);
+  bool setMinimumValueofX4(double minimumValueofX4);
 
   void resetMinimumValueofX4();
 
-  void setMaximumValueofX4(double maximumValueofX4);
+  bool setMaximumValueofX4(double maximumValueofX4);
 
   void resetMaximumValueofX4();
 
-  void setMinimumValueofX5(double minimumValueofX5);
+  bool setMinimumValueofX5(double minimumValueofX5);
 
   void resetMinimumValueofX5();
 
-  void setMaximumValueofX5(double maximumValueofX5);
+  bool setMaximumValueofX5(double maximumValueofX5);
 
   void resetMaximumValueofX5();
 
-  void setMinimumTableOutput(double minimumTableOutput);
+  bool setMinimumTableOutput(double minimumTableOutput);
 
   void resetMinimumTableOutput();
 
-  void setMaximumTableOutput(double maximumTableOutput);
+  bool setMaximumTableOutput(double maximumTableOutput);
 
   void resetMaximumTableOutput();
 
@@ -322,4 +322,3 @@ typedef std::vector<TableMultiVariableLookup> TableMultiVariableLookupVector;
 } // openstudio
 
 #endif // MODEL_TABLEMULTIVARIABLELOOKUP_HPP
-

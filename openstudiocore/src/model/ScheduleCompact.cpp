@@ -151,7 +151,7 @@ namespace detail {
     return false;
   }
 
-  void ScheduleCompact_Impl::setToConstantValue(double value) {
+  bool ScheduleCompact_Impl::setToConstantValue(double value) {
     clearExtensibleGroups();
     StringVector values;
     values.push_back("Through: 12/31");
@@ -168,6 +168,7 @@ namespace detail {
     OS_ASSERT(!eg.empty());
     bool ok = eg.setDouble(0,value);
     OS_ASSERT(ok);
+    return true;
   }
 
   bool ScheduleCompact_Impl::setToConstantValue(const Quantity& value) {
@@ -236,8 +237,8 @@ ScheduleCompact::ScheduleCompact(std::shared_ptr<detail::ScheduleCompact_Impl> i
   : Schedule(std::move(impl))
 {}
 
-void ScheduleCompact::setToConstantValue(double value) {
-  getImpl<detail::ScheduleCompact_Impl>()->setToConstantValue(value);
+bool ScheduleCompact::setToConstantValue(double value) {
+  return getImpl<detail::ScheduleCompact_Impl>()->setToConstantValue(value);
 }
 
 bool ScheduleCompact::setToConstantValue(const Quantity& value) {

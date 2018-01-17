@@ -209,7 +209,7 @@ class MODEL_API RefrigerationCase : public ParentObject {
   boost::optional<double> caseDefrostPowerperDoor() const;
 
   /** Read the method for defining loads.
-  * Options are UnitLength and NumberOfDoors.  If UnitLength values will be used 
+  * Options are UnitLength and NumberOfDoors.  If UnitLength values will be used
   * from the *perUnitLength methods.  If NumberOfDoors, the values will be used
   * from the *perDoor methods.
   */
@@ -293,11 +293,11 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   void resetOperatingCaseFanPowerperUnitLength();
 
-  void setStandardCaseLightingPowerperUnitLength(double standardCaseLightingPowerperUnitLength);
+  bool setStandardCaseLightingPowerperUnitLength(double standardCaseLightingPowerperUnitLength);
 
   void resetStandardCaseLightingPowerperUnitLength();
 
-  void setInstalledCaseLightingPowerperUnitLength(double installedCaseLightingPowerperUnitLength);
+  bool setInstalledCaseLightingPowerperUnitLength(double installedCaseLightingPowerperUnitLength);
 
   void resetInstalledCaseLightingPowerperUnitLength();
 
@@ -321,7 +321,7 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   void resetAntiSweatHeaterControlType();
 
-  void setHumidityatZeroAntiSweatHeaterEnergy(double humidityatZeroAntiSweatHeaterEnergy);
+  bool setHumidityatZeroAntiSweatHeaterEnergy(double humidityatZeroAntiSweatHeaterEnergy);
 
   void resetHumidityatZeroAntiSweatHeaterEnergy();
 
@@ -373,7 +373,7 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   void resetDesignEvaporatorTemperatureorBrineInletTemperature();
 
-  void setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
+  bool setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
 
   void resetAverageRefrigerantChargeInventory();
 
@@ -414,7 +414,7 @@ class MODEL_API RefrigerationCase : public ParentObject {
   void resetCaseDefrostPowerperDoor();
 
   /** Set the method for defining loads.
-  * Options are UnitLength and NumberOfDoors.  If UnitLength values will be used 
+  * Options are UnitLength and NumberOfDoors.  If UnitLength values will be used
   * from the *perUnitLength methods.  If NumberOfDoors, the values will be used
   * from the *perDoor methods.
   */
@@ -497,4 +497,3 @@ typedef std::vector<RefrigerationCase> RefrigerationCaseVector;
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONCASE_HPP
-

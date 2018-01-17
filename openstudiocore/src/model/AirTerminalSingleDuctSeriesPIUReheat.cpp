@@ -263,7 +263,7 @@ namespace detail {
     return result;
   }
 
-  void AirTerminalSingleDuctSeriesPIUReheat_Impl::setMaximumHotWaterorSteamFlowRate(boost::optional<double> maximumHotWaterorSteamFlowRate) {
+  bool AirTerminalSingleDuctSeriesPIUReheat_Impl::setMaximumHotWaterorSteamFlowRate(boost::optional<double> maximumHotWaterorSteamFlowRate) {
     bool result(false);
     if (maximumHotWaterorSteamFlowRate) {
       result = setDouble(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::MaximumHotWaterorSteamFlowRate, maximumHotWaterorSteamFlowRate.get());
@@ -272,7 +272,7 @@ namespace detail {
       resetMaximumHotWaterorSteamFlowRate();
       result = true;
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void AirTerminalSingleDuctSeriesPIUReheat_Impl::resetMaximumHotWaterorSteamFlowRate() {
@@ -488,14 +488,18 @@ namespace detail {
     return result;
   }
 
-  void AirTerminalSingleDuctSeriesPIUReheat_Impl::setFanAvailabilitySchedule(Schedule & schedule) {
+  bool AirTerminalSingleDuctSeriesPIUReheat_Impl::setFanAvailabilitySchedule(Schedule & schedule) {
     auto component = fan();
     if( auto constantFan = component.optionalCast<FanConstantVolume>() ) {
-      constantFan->setAvailabilitySchedule(schedule);
+      return constantFan->setAvailabilitySchedule(schedule);
     } else if(  auto onOffFan = component.optionalCast<FanOnOff>() ) {
-      onOffFan->setAvailabilitySchedule(schedule);
+      return onOffFan->setAvailabilitySchedule(schedule);
     } else if( auto variableFan = component.optionalCast<FanVariableVolume>() ) {
-      variableFan->setAvailabilitySchedule(schedule);
+      return variableFan->setAvailabilitySchedule(schedule);
+    } else {
+      // Should never get here!
+      LOG(Error, "Unknown assigned Fan Type ('" << component.iddObjectType().valueName() << "') for " << briefDescription());
+      return false;
     }
   }
 
@@ -733,8 +737,8 @@ bool AirTerminalSingleDuctSeriesPIUReheat::setReheatCoil(const HVACComponent& co
   return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setReheatCoil(coil);
 }
 
-void AirTerminalSingleDuctSeriesPIUReheat::setMaximumHotWaterorSteamFlowRate(double maximumHotWaterorSteamFlowRate) {
-  getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setMaximumHotWaterorSteamFlowRate(maximumHotWaterorSteamFlowRate);
+bool AirTerminalSingleDuctSeriesPIUReheat::setMaximumHotWaterorSteamFlowRate(double maximumHotWaterorSteamFlowRate) {
+  return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setMaximumHotWaterorSteamFlowRate(maximumHotWaterorSteamFlowRate);
 }
 
 void AirTerminalSingleDuctSeriesPIUReheat::resetMaximumHotWaterorSteamFlowRate() {
@@ -787,4 +791,3 @@ AirTerminalSingleDuctSeriesPIUReheat::AirTerminalSingleDuctSeriesPIUReheat(std::
 
 } // model
 } // openstudio
-

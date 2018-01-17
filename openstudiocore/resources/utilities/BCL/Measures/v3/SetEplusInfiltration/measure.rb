@@ -12,13 +12,13 @@
 
 #start the measure
 class SetEnergyPlusInfiltrationFlowRatePerFloorArea < OpenStudio::Ruleset::WorkspaceUserScript
-  
+
   #define the name that a user will see, this method may be deprecated as
   #the display name in PAT comes from the name field in measure.xml
   def name
     return "SetEnergyPlusInfiltrationFlowRatePerFloorArea"
   end
-  
+
   #define the arguments that the user will input
   def arguments(workspace)
     args = OpenStudio::Ruleset::OSArgumentVector.new
@@ -28,15 +28,15 @@ class SetEnergyPlusInfiltrationFlowRatePerFloorArea < OpenStudio::Ruleset::Works
     flowPerZoneFloorArea.setDisplayName("Flow per Zone Floor Area (m^3/s-m^2).")
     #flowPerZoneFloorArea.setDefaultValue(10.76)
     args << flowPerZoneFloorArea
-    
+
     return args
   end #end the arguments method
 
   #define what happens when the measure is run
   def run(workspace, runner, user_arguments)
     super(workspace, runner, user_arguments)
-    
-    #use the built-in error checking 
+
+    #use the built-in error checking
     if not runner.validateUserArguments(arguments(workspace), user_arguments)
       return false
     end
@@ -99,7 +99,7 @@ class SetEnergyPlusInfiltrationFlowRatePerFloorArea < OpenStudio::Ruleset::Works
     runner.registerFinalCondition("The building finished with flow per zone floor area values ranging from #{final_flowPerZoneFloorArea_values.min} to #{final_flowPerZoneFloorArea_values.max}.")
 
     return true
- 
+
   end #end the run method
 
 end #end the measure

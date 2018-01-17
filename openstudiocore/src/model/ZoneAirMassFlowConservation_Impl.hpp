@@ -76,7 +76,7 @@ namespace detail {
     std::string sourceZoneInfiltrationTreatment() const;
 
     bool isSourceZoneInfiltrationTreatmentDefaulted() const;
-    
+
     std::string infiltrationBalancingMethod() const;
 
     bool isInfiltrationBalancingMethodDefaulted() const;
@@ -89,7 +89,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance);
+    bool setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance);
 
     void resetAdjustZoneMixingForZoneAirMassFlowBalance();
 
@@ -121,4 +121,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_ZONEAIRMASSFLOWCONSERVATION_IMPL_HPP
-

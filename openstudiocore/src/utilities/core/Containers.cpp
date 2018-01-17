@@ -40,4 +40,4 @@ namespace openstudio {
     return result;
   }
 
-} // openstudio 
+} // openstudio

@@ -148,4 +148,3 @@ typedef std::vector<AvailabilityManagerNightCycle> AvailabilityManagerNightCycle
 } // openstudio
 
 #endif // MODEL_AVAILABILITYMANAGERNIGHTCYCLE_HPP
-

@@ -39,7 +39,7 @@
 
 namespace openstudio {
 
-  SpacesTabController::SpacesTabController(bool isIP, const model::Model& model) 
+  SpacesTabController::SpacesTabController(bool isIP, const model::Model& model)
     : MainTabController(new SpacesTabView()),
     m_model(model),
     m_isIP(isIP)

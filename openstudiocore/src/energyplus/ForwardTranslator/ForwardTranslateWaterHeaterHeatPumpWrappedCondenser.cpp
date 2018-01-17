@@ -61,7 +61,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPumpWrappedCondenser( 
+boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPumpWrappedCondenser(
     WaterHeaterHeatPumpWrappedCondenser & modelObject)
 {
   IdfObject idfObject(IddObjectType::WaterHeater_HeatPump_WrappedCondenser);
@@ -161,7 +161,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPumpWrappe
         auto outletNode = modelObject.outletNode();
         OS_ASSERT(outletNode);
         airOutletNodeName = outletNode->name().get();
-        
+
         inletAirZoneName = thermalZone->name().get();
         fanInletNodeName = modelObject.name().get() + " Evap Outlet - Fan Inlet";
         fanOutletNodeName = airOutletNodeName;
@@ -216,7 +216,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPumpWrappe
         auto outletNode = modelObject.outletNode();
         OS_ASSERT(outletNode);
         airOutletNodeName = outletNode->name().get();
-        
+
         inletAirZoneName = thermalZone->name().get();
         fanInletNodeName = airInletNodeName;
         fanOutletNodeName = modelObject.name().get() + " Fan Outlet - Evap Inlet";

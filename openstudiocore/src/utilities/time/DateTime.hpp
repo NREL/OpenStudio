@@ -143,10 +143,10 @@ class UTILITIES_API DateTime {
 
   /// convert to epoch time_t in UTC time
   time_t toEpoch() const;
-  
+
   /// construct from ISO 8601 string
   static boost::optional<DateTime> fromISO8601(const std::string& str);
-    
+
   /// construct from xsd:dateTime string
   static boost::optional<DateTime> fromXsdDateTime(const std::string& str);
 

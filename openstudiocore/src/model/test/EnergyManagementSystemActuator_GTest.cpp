@@ -78,12 +78,12 @@ TEST_F(ModelFixture, EMSActuator_EMSActuator)
 
   std::string fanName = fan.name().get() + "Press Actuator";
   fanActuator.setName(fanName);
-  
+
   fanActuator.setActuatedComponentControlType(fanControlType);
 
   EXPECT_EQ(fan, fanActuator.actuatedComponent().get());
   EXPECT_EQ(fanControlType, fanActuator.actuatedComponentControlType());
- 
+
   fanActuator.setActuatedComponentType(ComponentType);
   EXPECT_EQ(ComponentType, fanActuator.actuatedComponentType());
 

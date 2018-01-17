@@ -37,7 +37,7 @@ namespace openstudio{
   namespace radiance{
 
     /** MaterialProperties represents the color, texture, transmittance, reflectance of opaque and glazing materials.
-    */ 
+    */
     class RADIANCE_API MaterialProperties{
       public:
     };

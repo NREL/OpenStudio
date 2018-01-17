@@ -144,7 +144,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerDirectRe
     auto _curve = translateAndMapModelObject(curve.get());
     OS_ASSERT(_curve);
     idfObject.setString(EvaporativeCooler_Direct_ResearchSpecialFields::WaterPumpPowerModifierCurveName,_curve->name().get());
-  } 
+  }
 
   return boost::optional<IdfObject>(idfObject);
 }

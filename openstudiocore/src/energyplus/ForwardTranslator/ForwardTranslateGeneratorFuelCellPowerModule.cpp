@@ -52,7 +52,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellPowerMod
   boost::optional<Node> node;
   boost::optional<CurveQuadratic> curve;
   boost::optional<ThermalZone> tz;
-  
+
   IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_PowerModule, modelObject);
   //Name
   s = modelObject.name();
@@ -191,7 +191,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellPowerMod
   if (tz) {
     pcm.setString(Generator_FuelCell_PowerModuleFields::ZoneName, tz.get().nameString());
   }
-  
+
   //skinLossRadiativeFraction
   d = modelObject.skinLossRadiativeFraction();
   if (d) {
@@ -264,7 +264,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellPowerMod
   }
 
   return pcm;
-  
+
 }
 
 } // energyplus

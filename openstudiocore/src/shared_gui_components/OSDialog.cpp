@@ -54,7 +54,7 @@ OSDialog::OSDialog(bool isIP,
   _move(false)
 {
   setStyleSheet("openstudio--OSDialog { background: #E6E6E6; }");
-  
+
 #ifdef Q_OS_MAC
   setWindowFlags(Qt::FramelessWindowHint);
 #else
@@ -175,12 +175,12 @@ void OSDialog::paintEvent(QPaintEvent *event)
   painter.setRenderHint(QPainter::Antialiasing);
 
   QImage leftHeader = QImage(":/images/image_header.png");
-  painter.drawImage(0,0,leftHeader);  
+  painter.drawImage(0,0,leftHeader);
 
   QImage centerHeader = QImage(":/images/header-backgnd-1px-wide.png");
 
   for(int i = leftHeader.width();i < width();i++ ){
-    painter.drawImage(i,0,centerHeader);  
+    painter.drawImage(i,0,centerHeader);
   }
 }
 

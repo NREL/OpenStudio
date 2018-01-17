@@ -66,9 +66,9 @@ namespace detail {
     return getString(OS_CurrencyTypeFields::MonetaryUnit);
   }
 
-  void CurrencyType_Impl::setMonetaryUnit(const std::string& str)
+  bool CurrencyType_Impl::setMonetaryUnit(const std::string& str)
   {
-    setString(OS_CurrencyTypeFields::MonetaryUnit,str);
+    return setString(OS_CurrencyTypeFields::MonetaryUnit,str);;
   }
 
   // return the parent object in the hierarchy

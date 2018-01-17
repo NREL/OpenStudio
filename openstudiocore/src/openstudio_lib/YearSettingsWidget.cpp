@@ -255,7 +255,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   // Connect
 
   m_yearDescription->getImpl<model::detail::YearDescription_Impl>().get()->onChange.connect<YearSettingsWidget, &YearSettingsWidget::scheduleRefresh>(this);
-  
+
   connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &YearSettingsWidget::onWorkspaceObjectAdd, Qt::QueuedConnection);
 
   m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<YearSettingsWidget, &YearSettingsWidget::onWorkspaceObjectRemove>(this);

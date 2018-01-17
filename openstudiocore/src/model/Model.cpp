@@ -1271,13 +1271,13 @@ if (_className::iddObjectType() == typeToCreate) { \
     return m_cachedYearDescription->isIsLeapYearDefaulted();
   }
 
-  void Model_Impl::setCalendarYear(int calendarYear)
+  bool Model_Impl::setCalendarYear(int calendarYear)
   {
     if (!m_cachedYearDescription){
       m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
     }
     OS_ASSERT(m_cachedYearDescription);
-    m_cachedYearDescription->setCalendarYear(calendarYear);
+    return m_cachedYearDescription->setCalendarYear(calendarYear);
   }
 
   void Model_Impl::resetCalendarYear()
@@ -2113,9 +2113,9 @@ bool Model::isIsLeapYearDefaulted() const
   return getImpl<detail::Model_Impl>()->isIsLeapYearDefaulted();
 }
 
-void Model::setCalendarYear(int calendarYear)
+bool Model::setCalendarYear(int calendarYear)
 {
-  getImpl<detail::Model_Impl>()->setCalendarYear(calendarYear);
+  return getImpl<detail::Model_Impl>()->setCalendarYear(calendarYear);
 }
 
 void Model::resetCalendarYear()

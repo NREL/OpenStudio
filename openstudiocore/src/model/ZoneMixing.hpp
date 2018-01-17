@@ -77,7 +77,7 @@ class MODEL_API ZoneMixing : public ModelObject {
   boost::optional<double> flowRateperPerson() const;
 
   boost::optional<double> airChangesperHour() const;
-  
+
   /// Returns the ThermalZone which supplies air to this mixing object.
   boost::optional<ThermalZone> sourceZone() const;
 
@@ -127,7 +127,7 @@ class MODEL_API ZoneMixing : public ModelObject {
   void resetSourceZone();
 
   /// Sets the constant temperature differential between source and receiving zones below which mixing is shutoff.
-  void setDeltaTemperature(double deltaTemperature);
+  bool setDeltaTemperature(double deltaTemperature);
 
   void resetDeltaTemperature();
 

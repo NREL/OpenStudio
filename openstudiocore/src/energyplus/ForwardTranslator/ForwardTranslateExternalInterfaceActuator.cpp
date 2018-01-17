@@ -67,7 +67,7 @@ boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceActuator
   if (s.is_initialized()) {
     idfObject.setString(ExternalInterface_ActuatorFields::ActuatedComponentType, s.get());
   }
- 
+
   s = modelObject.actuatedComponentControlType();
   if (s.is_initialized()) {
     idfObject.setString(ExternalInterface_ActuatorFields::ActuatedComponentControlType, s.get());
@@ -77,7 +77,7 @@ boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceActuator
   if (d.is_initialized()) {
     idfObject.setDouble(ExternalInterface_ActuatorFields::OptionalInitialValue, d.get());
   }
-  
+
   return idfObject;
 }
 

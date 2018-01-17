@@ -195,11 +195,11 @@ namespace detail {
 
     void resetApproachTemperatureCoefficient4();
 
-    void setMinimumCapacityFactor(double minimumCapacityFactor);
+    bool setMinimumCapacityFactor(double minimumCapacityFactor);
 
     void resetMinimumCapacityFactor();
 
-    void setMaximumCapacityFactor(double maximumCapacityFactor);
+    bool setMaximumCapacityFactor(double maximumCapacityFactor);
 
     void resetMaximumCapacityFactor();
 
@@ -207,7 +207,7 @@ namespace detail {
 
     //void resetAirInletNode();
 
-    void setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate);
+    bool setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate);
 
     void resetRatedAirFlowRate();
 
@@ -221,7 +221,7 @@ namespace detail {
 
     void resetBasinHeaterSetpointTemperature();
 
-    void setRatedWaterPumpPower(boost::optional<double> ratedWaterPumpPower);
+    bool setRatedWaterPumpPower(boost::optional<double> ratedWaterPumpPower);
 
     void resetRatedWaterPumpPower();
 
@@ -235,19 +235,19 @@ namespace detail {
 
     void resetEvaporativeCondenserAvailabilitySchedule();
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
 
-    void setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
+    bool setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
 
     void resetCondenserRefrigerantOperatingChargeInventory();
 
-    void setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
+    bool setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
 
     void resetCondensateReceiverRefrigerantInventory();
 
-    void setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
+    bool setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
 
     void resetCondensatePipingRefrigerantInventory();
 
@@ -267,4 +267,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONCONDENSEREVAPORATIVECOOLED_IMPL_HPP
-

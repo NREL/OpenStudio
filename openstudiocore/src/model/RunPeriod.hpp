@@ -42,7 +42,7 @@ namespace detail {
 
 /** RunPeriod derives from ParentObject and is an interface to the unique OpenStudio IDD object named "RunPeriod".
  *
- *  RunPeriod defines a period of time over which to run an EnergyPlus weather file simulation.  Some applications 
+ *  RunPeriod defines a period of time over which to run an EnergyPlus weather file simulation.  Some applications
  *  require a full annual EnergyPlus simulation, others do not.
  */
 class MODEL_API RunPeriod : public ParentObject {
@@ -77,16 +77,16 @@ class MODEL_API RunPeriod : public ParentObject {
 
   // DLM@20110607: should all these sets return bool?
 
-  void setBeginMonth(int month);
-  void setBeginDayOfMonth(int day);
-  void setEndMonth(int month);
-  void setEndDayOfMonth(int day);
-  void setUseWeatherFileHolidays(bool use);
-  void setUseWeatherFileDaylightSavings(bool use);
-  void setApplyWeekendHolidayRule(bool apply);
-  void setUseWeatherFileRainInd(bool rainInd);
-  void setUseWeatherFileSnowInd(bool snowInd);
-  void setNumTimePeriodRepeats(int numRepeats);
+  bool setBeginMonth(int month);
+  bool setBeginDayOfMonth(int day);
+  bool setEndMonth(int month);
+  bool setEndDayOfMonth(int day);
+  bool setUseWeatherFileHolidays(bool use);
+  bool setUseWeatherFileDaylightSavings(bool use);
+  bool setApplyWeekendHolidayRule(bool apply);
+  bool setUseWeatherFileRainInd(bool rainInd);
+  bool setUseWeatherFileSnowInd(bool snowInd);
+  bool setNumTimePeriodRepeats(int numRepeats);
 
   // ensure that this object does not contain the date 2/29
   void ensureNoLeapDays();

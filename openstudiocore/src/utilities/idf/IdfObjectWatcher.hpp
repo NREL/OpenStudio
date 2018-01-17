@@ -36,17 +36,17 @@
 
 namespace openstudio{
 
-/** IdfObjectWatcher watches an IdfObject for signals emitted on changes.  These signals will cause 
- *  the watcher to mark the IdfObject as dirty.  The dirty flag will persist until reset by the 
- *  user.  Virtual methods onChangeIdfObject and onDataFieldChange are also available to override. 
- *  The former is called every time the IdfObject changes in any way; the latter is called whenever 
- *  a data field changes (not triggered by comment changes, and is superceded by 
- *  onRelationshipChange for WorkspaceObject pointer fields.) The virtual method onBecomeDirty is 
- *  called only after dirty transitions from false to true.  Alternatively, the virtual method 
+/** IdfObjectWatcher watches an IdfObject for signals emitted on changes.  These signals will cause
+ *  the watcher to mark the IdfObject as dirty.  The dirty flag will persist until reset by the
+ *  user.  Virtual methods onChangeIdfObject and onDataFieldChange are also available to override.
+ *  The former is called every time the IdfObject changes in any way; the latter is called whenever
+ *  a data field changes (not triggered by comment changes, and is superceded by
+ *  onRelationshipChange for WorkspaceObject pointer fields.) The virtual method onBecomeDirty is
+ *  called only after dirty transitions from false to true.  Alternatively, the virtual method
  *  onBecomeClean is called only after dirty transitions from true to false.
  *
- *  IdfObjectWatcher is an atypical QObject because it is designed to be stack allocated.  In many 
- *  cases it would be preferred to connect your own heap allocated QObject to the Workspace signals 
+ *  IdfObjectWatcher is an atypical QObject because it is designed to be stack allocated.  In many
+ *  cases it would be preferred to connect your own heap allocated QObject to the Workspace signals
  *  directly rather than using this convenience class. **/
 class UTILITIES_API IdfObjectWatcher : public Nano::Observer {
 

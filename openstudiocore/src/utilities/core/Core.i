@@ -12,10 +12,10 @@
   #include <utilities/core/FileReference.hpp>
   #include <utilities/core/Compare.hpp>
   #include <utilities/core/Optional.hpp>
-  #include <utilities/core/ApplicationPathHelpers.hpp>  
-  
+  #include <utilities/core/ApplicationPathHelpers.hpp>
+
   #include <utilities/math/FloatCompare.hpp>
-  
+
   #include <OpenStudio.hxx>
   #include <QAction>
 %}

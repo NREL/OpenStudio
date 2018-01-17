@@ -51,7 +51,6 @@ namespace detail {
 
   /** Facility_Impl is a ParentObject_Impl that is the implementation class for Facility.*/
   class MODEL_API Facility_Impl : public ParentObject_Impl {
-
    public:
 
     /** @name Constructors and Destructors */

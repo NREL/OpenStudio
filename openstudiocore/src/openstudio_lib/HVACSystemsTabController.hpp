@@ -55,7 +55,7 @@ class HVACSystemsTabController : public MainTabController
   bool m_isIP;
 
   signals:
-  
+
   void toggleUnitsClicked(bool displayIP);
 
 private slots:

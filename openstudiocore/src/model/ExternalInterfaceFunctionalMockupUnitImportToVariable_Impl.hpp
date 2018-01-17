@@ -86,11 +86,11 @@ namespace detail {
 
     bool setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFileName);
 
-    void setFMUInstanceName(const std::string& fMUInstanceName);
+    bool setFMUInstanceName(const std::string& fMUInstanceName);
 
-    void setFMUVariableName(const std::string& fMUVariableName);
+    bool setFMUVariableName(const std::string& fMUVariableName);
 
-    void setInitialValue(double initialValue);
+    bool setInitialValue(double initialValue);
 
     //@}
     /** @name Other */
@@ -109,4 +109,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOVARIABLE_IMPL_HPP
-
