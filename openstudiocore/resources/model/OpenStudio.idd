@@ -1,4 +1,4 @@
-!IDD_Version 1.12.3
+!IDD_Version 1.14.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -1979,6 +1979,39 @@ OS:BuildingStory,
        \type real
        \units m
        \minimum> 0
+
+OS:BuildingUnit,
+       \min-fields 4
+       \extensible:3
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \type alpha
+       \reference BuildingUnitNames
+       \required-field
+  A3,  \field Rendering Color
+       \type object-list
+       \object-list GroupRenderingNames
+  A4,  \field Building Unit Type
+       \type choice
+       \key Residential
+       \key NonResidential
+       \default Residential
+  A5,  \field Building Unit Feature Name
+       \type alpha
+       \begin-extensible
+       \required-field
+  A6,  \field Building Unit Feature Data Type
+       \type choice
+       \key String
+       \key Double
+       \key Boolean
+       \key Integer
+       \required-field
+  A7;  \field Building Unit Feature Value
+       \type alpha
+       \required-field
 
 OS:DefaultConstructionSet,
        \min-fields 11
@@ -4893,9 +4926,12 @@ OS:Space,
        \default Yes
        \key Yes
        \key No
-  A9; \field Design Specification Outdoor Air Object Name
+  A9, \field Design Specification Outdoor Air Object Name
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
+  A10; \field Building Unit Name
+       \type object-list
+       \object-list BuildingUnitNames
 
 OS:Surface,
        \extensible:3
@@ -5956,7 +5992,7 @@ OS:OtherEquipment,
        \reference SpaceItemNames
        \reference SpaceLoadNames
        \reference SpaceComponentInstanceNames
-  A3, \field Other Equipment Definition Name
+  A3,  \field Other Equipment Definition Name
        \type object-list
        \required-field
        \object-list OtherEquipmentDefinitionNames
@@ -5968,10 +6004,35 @@ OS:OtherEquipment,
        \note units in Schedule should be fraction applied to design level of other equipment, generally (0.0 - 1.0)
        \type object-list
        \object-list ScheduleNames
-  N1; \field Multiplier
+  N1, \field Multiplier
        \type real
        \minimum 0.0
        \default 1.0
+  A6,  \field Fuel Type
+       \type choice
+       \key None
+       \key Electricity
+       \key NaturalGas
+       \key PropaneGas
+       \key FuelOil#1
+       \key FuelOil#2
+       \key Diesel
+       \key Gasoline
+       \key Coal
+       \key OtherFuel1
+       \key OtherFuel2
+       \key Steam
+       \key DistrictHeating
+       \key DistrictCooling
+       \default None
+  A7;  \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \note The following special tags will also place the end-use in specific rows in the LEED Summary table
+       \note EAp2-4/5. Performance Rating Method Compliance:
+       \note Fans-Parking Garage, Interior Lighting-Process, Cooking, Industrial Process, Elevators and Escalators.
+       \type alpha
+       \retaincase
+       \default General
 
 OS:SpaceInfiltration:DesignFlowRate,
        \memo Infiltration is specified as a design level which is modified by a Schedule fraction, temperature difference and wind speed:
@@ -10102,6 +10163,7 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
        \default Normal
        \key Normal
        \key Reverse
+       \key ReverseWithLimits
   N7, \field Maximum Flow per Zone Floor Area During Reheat
        \note Used only when Reheat Coil Object Type = Coil:Heating:Water and Damper Heating Action = Reverse
        \note When autocalculating, the maximum flow per zone is set to 0.002032 m3/s-m2 (0.4 cfm/sqft)
@@ -14529,10 +14591,21 @@ OS:Coil:Heating:Gas,
        \note increase the gas consumption of the coil due to transient coil operation.
        \type object-list
        \object-list QuadraticCubicCurves
-  N4; \field Parasitic Gas Load
+  N4, \field Parasitic Gas Load
        \note parasitic gas load associated with the gas coil operation (i.e., standing pilot)
        \type real
        \units W
+  A8;  \field Fuel Type
+       \type choice
+       \key NaturalGas
+       \key PropaneGas
+       \key Diesel
+       \key Gasoline
+       \key FuelOil#1
+       \key FuelOil#2
+       \key OtherFuel1
+       \key OtherFuel2
+       \default NaturalGas
 
 OS:Coil:Heating:Gas:MultiStage,
        \extensible:1
@@ -16221,6 +16294,7 @@ OS:Curve:Linear,
        \required-field
        \reference LinearCurves
        \reference LinearOrQuadraticCurves
+       \reference UniVariateCurves
        \reference AllCurves
   N1, \field Coefficient1 Constant
        \type real
@@ -16269,6 +16343,7 @@ OS:Curve:Quadratic,
        \required-field
        \reference QuadraticCurves
        \reference LinearOrQuadraticCurves
+       \reference UniVariateCurves
        \reference AllCurves
        \reference QuadraticCubicCurves
        \reference BiquadraticQuadraticCubicCurves
@@ -16321,6 +16396,7 @@ OS:Curve:Cubic,
        \required-field
        \reference CubicCurves
        \reference AllCurves
+       \reference UniVariateCurves
        \reference QuadraticCubicCurves
        \reference BiquadraticCubicCurves
        \reference BiquadraticQuadraticCubicCurves
@@ -16375,6 +16451,7 @@ OS:Curve:Quartic,
        \type alpha
        \required-field
        \reference QuarticCurves
+       \reference UniVariateCurves
        \reference AllCurves
   N1, \field Coefficient1 Constant
        \type real
@@ -16431,6 +16508,7 @@ OS:Curve:Exponent,
        \type alpha
        \required-field
        \reference ExponentCurves
+       \reference UniVariateCurves
        \reference AllCurves
   N1, \field Coefficient1 Constant
        \type real
@@ -16846,6 +16924,7 @@ OS:Curve:Functional:PressureDrop,
        \type alpha
        \required-field
        \reference AllCurves
+       \reference UniVariateCurves
        \reference PressureDropCurves
   N1, \field Diameter
        \note "D" in above expression, used to also calculate local velocity
@@ -16938,6 +17017,7 @@ OS:Curve:ExponentialSkewNormal,
        \type alpha
        \required-field
        \reference ExponentialSkewNormalCurves
+       \reference UniVariateCurves
        \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
@@ -16982,6 +17062,7 @@ OS:Curve:Sigmoid,
        \type alpha
        \required-field
        \reference SigmoidCurves
+       \reference UniVariateCurves
        \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
@@ -17029,6 +17110,7 @@ OS:Curve:RectangularHyperbola1,
        \type alpha
        \required-field
        \reference RectangularHyperbola1Curves
+       \reference UniVariateCurves
        \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
@@ -17070,6 +17152,7 @@ OS:Curve:RectangularHyperbola2,
        \type alpha
        \required-field
        \reference RectangularHyperbola2Curves
+       \reference UniVariateCurves
        \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
@@ -17111,6 +17194,7 @@ OS:Curve:ExponentialDecay,
        \type alpha
        \required-field
        \reference ExponentialDecayCurves
+       \reference UniVariateCurves
        \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
@@ -17151,6 +17235,8 @@ OS:Curve:DoubleExponentialDecay,
        \type alpha
        \required-field
        \reference DoubleExponentialDecayCurves
+       \reference UniVariateCurves
+       \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
        \required-field
@@ -23356,6 +23442,384 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
        \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
        \note due to variations in part load ratio.
 
+OS:WaterHeater:HeatPump:WrappedCondenser,
+       \min-fields 30
+       \memo This object models an air-source heat pump for water heating where the heating coil is wrapped around
+       \memo the tank, which is typical of residential HPWHs. 
+       \memo For pumped condenser HPWHs, see WaterHeater:HeatPump:PumpedCondenser.
+       \memo WaterHeater:HeatPump:WrappedCondenser is a compound object that references other component objects -
+       \memo Coil:WaterHeating:AirToWaterHeatPump:Pumped, Fan:OnOff, WaterHeater:Mixed
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \note Unique name for this instance of a heat pump water heater.
+       \reference ConnectionObject
+  A3 , \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values of 0 denote the heat pump compressor is off and the parasitic electric
+       \note energy is also off.
+  A4,  \field Compressor Setpoint Temperature Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+       \note Defines the cut-out temperature where the heat pump compressor turns off.
+       \note The heat pump compressor setpoint temperature should always be greater
+       \note than the water tank's heater (element or burner) setpoint temperature.
+  N1 , \field Dead Band Temperature Difference
+       \type real
+       \units deltaC
+       \minimum> 0.0
+       \maximum 20
+       \required-field
+       \note Setpoint temperature minus the dead band temperature difference defines
+       \note the cut-in temperature where the heat pump compressor turns on.
+       \note The water tank's heater (element or burner) setpoint temperature
+       \note should always be less than the heat pump compressor cut-in temperature.
+  N2,  \field Condenser Bottom Location
+       \type real
+       \units m
+       \minimum 0
+       \required-field
+       \note Distance from the bottom of the tank to the bottom of the wrapped condenser.
+  N3,  \field Condenser Top Location
+       \required-field
+       \type real
+       \units m
+       \minimum 0
+       \note Distance from the bottom of the tank to the top of the wrapped condenser.
+  N4 , \field Evaporator Air Flow Rate
+       \type real
+       \units m3/s
+       \minimum> 0
+       \autocalculatable
+       \required-field
+       \note Actual air flow rate across the heat pump's air coil (evaporator).
+       \note If autocalculated, the air flow rate is set equal to 5.035E-5 m3/s/W times
+       \note the rated heating capacity of the heat pump's DX coil.
+  A5 , \field Inlet Air Configuration
+       \required-field
+       \type choice
+       \key Schedule
+       \key ZoneAirOnly
+       \key OutdoorAirOnly
+       \key ZoneAndOutdoorAir
+       \note Defines the configuration of the airflow path through the air coil and fan section.
+  A6 , \field Air Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \note Zone air exhaust node name if Inlet Air Configuration is ZoneAirOnly or
+       \note ZoneAndOutdoorAir.
+       \note Simply a unique Node Name if Inlet Air Configuration is Schedule.
+       \note Otherwise, leave field blank.
+  A7 , \field Air Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \note Zone Air Inlet Node Name if Inlet Air Configuration is ZoneAirOnly or
+       \note ZoneAndOutdoorAir.
+       \note Simply a unique Node Name if Inlet Air Configuration is Schedule.
+       \note Otherwise, leave field blank.
+  A8 , \field Outdoor Air Node Name
+       \type object-list
+       \object-list Node
+       \note Outdoor air node name if inlet air configuration is ZoneAndOutdoorAir
+       \note or OutdoorAirOnly, otherwise leave field blank.
+  A9 , \field Inlet Air Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Used only if Inlet Air Configuration is Schedule, otherwise leave blank.
+       \note Schedule values should be degrees C.
+  A10, \field Inlet Air Humidity Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Used only if Inlet Air Configuration is Schedule, otherwise leave blank.
+       \note Schedule values are entered as a fraction (e.g. 0.5 is equal to 50%RH)
+  A11, \field Tank Name
+       \required-field
+       \type object-list
+       \object-list WaterHeaterStratifiedNames
+       \note Needs to match the name used in the corresponding Water Heater object. 
+       \note Must be a WaterHeater:Stratified tank.
+  A12, \field DX Coil Name
+       \required-field
+       \type object-list
+       \object-list HeatPumpWaterHeaterDXCoilsWrapped
+       \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:Wrapped object.
+  N5 , \field Minimum Inlet Air Temperature for Compressor Operation
+       \type real
+       \units C
+       \minimum -5
+       \required-field
+       \note Heat pump compressor will not operate when the inlet air dry-bulb temperature
+       \note is below this value.
+  N6 , \field Maximum Inlet Air Temperature for Compressor Operation
+       \type real
+       \units C
+       \required-field
+       \minimum 26
+       \maximum 94
+       \note Heat pump compressor will not operate when the inlet air dry-bulb temperature
+       \note is above this value.
+  A13, \field Compressor Location
+       \required-field
+       \type choice
+       \key Schedule
+       \key Zone
+       \key Outdoors
+       \note If Zone is selected, Inlet Air Configuration must be ZoneAirOnly or
+       \note ZoneAndOutdoorAir. If Schedule is selected, then you must provide a
+       \note Compressor Ambient Temperature Schedule Name below.
+  A14, \field Compressor Ambient Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Used only if Compressor Location is Schedule, otherwise leave field blank.
+  A15, \field Fan Name
+       \required-field
+       \type object-list
+       \object-list FansOnOff
+       \note Needs to match the name used in the corresponding Fan:OnOff object.
+  A16, \field Fan Placement
+       \type choice
+       \key BlowThrough
+       \key DrawThrough
+       \required-field
+       \note BlowThrough means the fan is located before the air coil (upstream).
+       \note DrawThrough means the fan is located after the air coil (downstream).
+  N7 , \field On Cycle Parasitic Electric Load
+       \type real
+       \units W
+       \minimum 0.0
+       \required-field
+       \note Parasitic electric power consumed when the heat pump compressor operates.
+       \note Does not contribute to water heating but can impact the zone air heat balance.
+  N8 , \field Off Cycle Parasitic Electric Load
+       \type real
+       \units W
+       \minimum 0.0
+       \required-field
+       \note Parasitic electric power consumed when the heat pump compressor is off.
+       \note Does not contribute to water heating but can impact the zone air heat balance.
+       \note Off-cycle parasitic power is 0 when the availability schedule is 0.
+  A17, \field Parasitic Heat Rejection Location
+       \type choice
+       \key Zone
+       \key Outdoors
+       \required-field
+       \note This field determines if the parasitic electric load impacts the zone air
+       \note heat balance. If Zone is selected, Inlet Air Configuration must be
+       \note ZoneAirOnly or ZoneAndOutdoorAir.
+  A18, \field Inlet Air Mixer Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Required only if Inlet Air Configuration is ZoneAndOutdoorAir, otherwise
+       \note leave field blank. Schedule values define whether the heat pump draws its
+       \note inlet air from the zone, outdoors or a combination of zone and outdoor air.
+       \note A schedule value of 0 denotes inlet air is drawn only from the zone.
+       \note A schedule value of 1 denotes inlet air is drawn only from outdoors.
+       \note Schedule values between 0 and 1 denote a mixture of zone and outdoor air
+       \note proportional to the schedule value.
+  A19, \field Tank Element Control Logic
+       \type choice
+       \key MutuallyExclusive
+       \key Simultaneous
+       \required-field
+       \note MutuallyExclusive means that once the tank heating element is active the
+       \note heat pump is shut down until setpoint is reached.
+       \note Simultaneous (default) means that both the tank heating element and
+       \note heat pump are used at the same time recover the tank temperature.
+  N9,  \field Control Sensor 1 Height In Stratified Tank
+       \note Used to indicate height of control sensor if Tank Object Type is WaterHeater:Stratified
+       \note If left blank, it will default to the height of Heater1
+       \type real
+       \units m
+       \minimum 0.0
+  N10, \field Control Sensor 1 Weight
+       \note Weight to give Control Sensor 1 temperature
+       \units dimensionless
+       \minimum 0.0
+       \maximum 1.0
+       \required-field
+  N11; \field Control Sensor 2 Height In Stratified Tank
+       \note Used to indicate height of control sensor if Tank Object Type is WaterHeater:Stratified
+       \note If left blank, it will default to the height of Heater2
+       \note The weight of this control sensor will be 1 - (wt. of control sensor 1)
+       \type real
+       \units m
+       \minimum 0.0
+
+OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
+       \memo Heat pump water heater (HPWH) heating coil, air-to-water direct-expansion (DX)
+       \memo system which includes a water heating coil, evaporator air coil, evaporator
+       \memo fan, electric compressor, and water pump. Part of a WaterHeater:HeatPump:WrappedCondenser system.
+       \min-fields 20
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference HeatPumpWaterHeaterDXCoilsWrapped
+       \note Unique name for this instance of a heat pump water heater DX coil.
+  N1 , \field Rated Heating Capacity
+       \required-field
+       \type real
+       \units W
+       \minimum> 0
+       \note Heating capacity at the rated inlet air temperatures, rated condenser inlet
+       \note water temperature, rated air flow rate, and rated water flow rate.
+       \note Can optionally include condenser pump heat.
+  N2 , \field Rated COP
+       \type real
+       \units W/W
+       \minimum> 0
+       \required-field
+       \note Heating coefficient of performance at the rated inlet air temperatures,
+       \note rated condenser inlet water temperature, rated air flow rate, and rated water flow rate.
+       \note Can optionally include condenser pump power and evaporator fan power (see fields below).
+  N3 , \field Rated Sensible Heat Ratio
+       \type real
+       \minimum 0.5
+       \maximum 1
+       \required-field
+       \note Gross air-side sensible heat ratio at the rated inlet air temperatures,
+       \note rated condenser inlet water temperature, rated air flow rate, and rated water flow rate.
+       \note Sensible heat ratio equals gross sensible cooling capacity divided by gross total cooling
+       \note capacity. Rated SHR (gross) should not include evaporator fan heat, only sensible cooling
+       \note and dehumidification by the coil alone.
+  N4 , \field Rated Evaporator Inlet Air Dry-Bulb Temperature
+       \type real
+       \units C
+       \minimum> 5
+       \required-field
+       \note Evaporator inlet air dry-bulb temperature corresponding to rated coil performance
+       \note (heating capacity, COP and SHR).
+  N5 , \field Rated Evaporator Inlet Air Wet-Bulb Temperature
+       \type real
+       \units C
+       \minimum> 5
+       \required-field
+       \note Evaporator inlet air wet-bulb temperature corresponding to rated coil performance
+       \note (heating capacity, COP and SHR).
+  N6 , \field Rated Condenser Water Temperature
+       \type real
+       \units C
+       \minimum> 25
+       \required-field
+       \note Condenser inlet water temperature corresponding to rated coil performance
+       \note (heating capacity, COP and SHR).
+  N7 , \field Rated Evaporator Air Flow Rate
+       \type real
+       \units m3/s
+       \minimum> 0
+       \autocalculatable
+       \required-field
+       \note Evaporator air flow rate corresponding to rated coil performance
+       \note (heating capacity, COP and SHR).
+       \note Default is 5.035E-5 m3/s/W (31.25 cfm/MBH) of rated heating capacity when autocalculated.
+  A3 , \field Evaporator Fan Power Included in Rated COP
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+       \note Select Yes if the evaporator fan power is included in the rated COP. This choice field
+       \note impacts the calculation of compressor electric power.
+  A4,  \field Evaporator Air Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \note The node from which the DX coil draws its inlet air.
+  A5,  \field Evaporator Air Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \note The node to which the DX coil sends its outlet air.
+  N8,  \field Crankcase Heater Capacity
+       \type real
+       \minimum 0
+       \required-field
+       \units W
+       \note The compressor crankcase heater only operates when the dry-bulb temperature of air
+       \note surrounding the compressor is below the Maximum Ambient Temperature for Crankcase
+       \note Heater Operation and the DX coil is off.  The ambient temperature surrounding the
+       \note compressor is set by the WaterHeater:HeatPump:WrappedCondenser parent object (field Compressor Location).
+  N9,  \field Maximum Ambient Temperature for Crankcase Heater Operation
+       \type real
+       \minimum 0
+       \required-field
+       \units C
+       \note The compressor crankcase heater only operates when the dry-bulb temperature of air
+       \note surrounding the compressor is below the Maximum Outdoor Temperature for Crankcase
+       \note Heater Operation and the unit is off. The ambient temperature surrounding the
+       \note compressor is set by the WaterHeater:HeatPump:WrappedCondenser parent object (field Compressor Location).
+  A6,  \field Evaporator Air Temperature Type for Curve Objects
+       \type choice
+       \key DryBulbTemperature
+       \key WetBulbTemperature
+       \required-field
+       \note Determines temperature type for heating capacity curves and
+       \note heating COP curves. This input determines whether
+       \note the inlet air dry-bulb or wet-bulb temperature is used to evaluate these curves.
+  A7,  \field Heating Capacity Function of Temperature Curve Name
+       \type object-list
+       \object-list BiquadraticCubicCurves
+       \object-list BiVariateTables
+       \required-field
+       \note Heating capacity modifier curve (function of temperature) should be biquadratic or cubic.
+       \note Biquadratic curve = a + b(ta) + c(ta)^2 + d(tw) + e(tw)^2 + f(ta)(tw).
+       \note Cubic curve = a + b(ta) + c(ta)^2 + d(ta)^3.
+       \note ta = evaporator inlet air [dry-bulb or wet-bulb] temperature (C).
+       \note tw = condenser inlet water temperature (C).
+       \note The field Evaporator Air Temperature Type for Curve Objects determines if dry-bulb or wet-bulb
+       \note is used as the evaporator inlet air temperature (ta).
+  A8,  \field Heating Capacity Function of Air Flow Fraction Curve Name
+       \type object-list
+       \required-field
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+       \note Heating capacity modifier curve (function of air flow fraction) should be quadratic or cubic.
+       \note Quadratic curve = a + b(ff) + c(ff)^2.
+       \note Cubic curve = a + b(ff) + c(ff)^2 + d(ff)^3.
+       \note ff = fraction of the rated evaporator air flow rate.
+       \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
+       \note due to variations in air flow rate fraction.
+  A9,  \field Heating COP Function of Temperature Curve Name
+       \type object-list
+       \required-field
+       \object-list BiquadraticCubicCurves
+       \object-list BiVariateTables
+       \note Heating COP modifier curve (function of temperature) should be biquadratic or cubic.
+       \note Biquadratic curve = a + b(ta) + c(ta)^2 + d(tw) + e(tw)^2 + f(ta)(tw).
+       \note Cubic curve = a + b(ta) + c(ta)^2 + d(ta)^3.
+       \note ta = evaporator inlet air [dry-bulb or wet-bulb] temperature (C).
+       \note tw = condenser inlet water temperature (C).
+       \note The field Evaporator Air Temperature Type for Curve Objects determines if dry-bulb or wet-bulb
+       \note is used as the evaporator inlet air temperature (ta).
+  A10,  \field Heating COP Function of Air Flow Fraction Curve Name
+       \type object-list
+       \required-field
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+       \note Heating COP modifier curve (function of air flow fraction) should be quadratic or cubic.
+       \note Quadratic curve = a + b(ff) + c(ff)^2.
+       \note Cubic curve = a + b(ff) + c(ff)^2 + d(ff)^3.
+       \note ff = fraction of the rated evaporator air flow rate.
+       \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
+       \note due to variations in air flow rate fraction.
+  A11; \field Part Load Fraction Correlation Curve Name
+       \type object-list
+       \required-field
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+       \note Part Load Fraction Correlation (function of part load ratio) should be quadratic or cubic.
+       \note Quadratic curve = a + b(PLR) + c(PLR)^2.
+       \note Cubic curve = a + b(PLR) + c(PLR)^2 + d(PLR)^3.
+       \note PLR = part load ratio (heating delivered/steady state heating capacity).
+       \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
+       \note due to variations in part load ratio.
+
 OS:WaterHeater:Stratified,
   A1,  \field Handle
        \type handle
@@ -23364,6 +23828,7 @@ OS:WaterHeater:Stratified,
        \required-field
        \type alpha
        \reference WaterHeaterNames
+       \reference WaterHeaterStratifiedNames
        \reference ConnectionObject
   A3,  \field End-Use Subcategory
        \required-field
@@ -24970,7 +25435,6 @@ OS:Generator:MicroTurbine:HeatRecovery,
       \units C
  A5 , \field Heat Recovery Water Flow Operating Mode
       \type choice
-      \required-field
       \key PlantControl
       \key InternalControl
       \default PlantControl
@@ -25034,13 +25498,12 @@ OS:Generator:MicroTurbine:HeatRecovery,
       \default 0.0
  N8, \field Maximum Heat Recovery Water Flow Rate
       \type real
-      \required-field
       \units m3/s
       \ip-units gal/min
       \minimum 0.0
       \default 0.0
       \note Eplus defaults to 0 but here it would be moot to have a Heat
-      \note Recovery module with a max flow of 0 so it is a required field
+      \note Recovery module with a max flow of 0 
  N9, \field Maximum Heat Recovery Water Temperature
       \type real
       \units C
@@ -25547,7 +26010,7 @@ OS:ElectricLoadCenter:Storage:Converter,
         \note enter name of zone to receive converter losses as heat
         \note if blank then converter is assumed to be outdoors
         \type object-list
-        \object-list ZoneNames
+        \object-list ThermalZoneNames
    N4 ; \field Radiative Fraction
         \note fraction of zone heat gains treated as thermal radiation
         \note Only used if a Zone Name is entered.
@@ -26361,4 +26824,368 @@ OS:Meter:CustomDecrement,
    A5,  \field Key Name
         \begin-extensible
    A6;  \field Output Variable or Meter Name
+
+OS:Output:EnergyManagementSystem,
+   \memo This object is used to control the output produced by the Energy Management System
+   \unique-object
+   A1, \field Handle
+       \type handle
+       \required-field 
+   A2, \field Name
+       \required-field
+       \type alpha
+   A3, \field Actuator Availability Dictionary Reporting
+       \type choice
+       \key None
+       \key NotByUniqueKeyNames
+       \key Verbose
+       \default None
+   A4, \field Internal Variable Availability Dictionary Reporting
+       \type choice
+       \key None
+       \key NotByUniqueKeyNames
+       \key Verbose
+       \default None
+   A5; \field EMS Runtime Language Debug Output Level
+       \type choice
+       \key None
+       \key ErrorsOnly
+       \key Verbose
+       \default None
+
+\group Energy Management System (EMS)
+
+OS:EnergyManagementSystem:Sensor,
+       \memo Declares EMS variable as a sensor
+       \memo a list of output variables and meters that can be reported are available after a run on
+       \memo the report (.rdd) or meter dictionary file (.mdd) if the Output:VariableDictionary
+       \memo has been requested.
+       \min-fields 4
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \required-field
+       \type alpha
+       \note This name becomes a variable for use in Erl programs
+       \note No spaces allowed in names for ErlVariableNames
+       \reference ErlVariableNames
+       \reference AllObjects
+  A3, \field Output Variable or Output Meter Index Key Name
+       \type alpha
+       \note key name listed here will override key name in Output:Variable or Output:Meter
+  A4; \field Output Variable or Output Meter Name
+       \required-field
+       \type alpha
+
+OS:EnergyManagementSystem:Actuator,
+       \memo Hardware portion of EMS used to set up actuators in the model
+       \min-fields 4
+  A1, \field Handle
+       \type handle
+       \required-field 
+  A2, \field Name
+       \required-field
+       \type alpha
+       \note This name becomes a variable for use in Erl programs
+       \note No spaces allowed in names for ErlVariableNames
+       \reference ErlVariableNames
+       \reference AllObjects
+  A3, \field Actuated Component Name
+       \required-field
+       \type object-list
+       \object-list AllObjects
+  A4, \field Actuated Component Type
+       \required-field
+       \type alpha
+  A5; \field Actuated Component Control Type
+       \required-field
+       \type alpha
+
+OS:EnergyManagementSystem:ProgramCallingManager,
+       \extensible:1 - repeat last field, remembering to remove ; from "inner" fields.
+       \memo Input EMS program. a program needs a name
+       \memo a description of when it should be called
+       \memo and then lines of program code for EMS Runtime language
+       \min-fields 4
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \required-field
+       \type alpha
+       \reference ErlProgramCallingManagerNames
+       \note No spaces allowed in names for ErlProgramCallingManagerNames
+  A3, \field EnergyPlus Model Calling Point
+       \type choice
+       \key BeginNewEnvironment
+       \key AfterNewEnvironmentWarmUpIsComplete
+       \key BeginTimestepBeforePredictor
+       \key AfterPredictorBeforeHVACManagers
+       \key AfterPredictorAfterHVACManagers
+       \key InsideHVACSystemIterationLoop
+       \key EndOfZoneTimestepBeforeZoneReporting
+       \key EndOfZoneTimestepAfterZoneReporting
+       \key EndOfSystemTimestepBeforeHVACReporting
+       \key EndOfSystemTimestepAfterHVACReporting
+       \key EndOfZoneSizing
+       \key EndOfSystemSizing
+       \key AfterComponentInputReadIn
+       \key UserDefinedComponentModel
+       \key UnitarySystemSizing
+  A4; \field Program Name
+       \begin-extensible
+       \required-field
+       \type object-list
+       \note no spaces allowed in name
+       \object-list ErlProgramNames
+
+OS:EnergyManagementSystem:Program,
+       \extensible:1 - repeat last field, remembering to remove ; from "inner" fields.
+       \memo This input defines an Erl program
+       \memo Each field after the name is a line of EMS Runtime Language
+       \min-fields 3
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \required-field
+       \type alpha
+       \reference ErlProgramNames
+       \reference ErlProgramSubroutineNames
+       \note No spaces allowed in names for ErlProgramNames
+  A3; \field Program Line
+       \begin-extensible
+       \type alpha
+       \required-field
+
+OS:EnergyManagementSystem:Subroutine,
+       \extensible:1 - repeat last field, remembering to remove ; from "inner" fields.
+       \memo This input defines an Erl program subroutine
+       \memo Each field after the name is a line of EMS Runtime Language
+       \min-fields 3
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \required-field
+       \type alpha
+       \reference ErlSubroutineNames
+       \reference ErlProgramSubroutineNames
+       \note No spaces allowed in names for ErlSubroutineNames
+  A3; \field Program Line
+       \begin-extensible
+       \type alpha
+       \required-field
+
+OS:EnergyManagementSystem:GlobalVariable,
+       \memo Declares Erl variable as having global scope
+       \memo No spaces allowed in names used for Erl variables
+       \min-fields 2
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2; \field Name
+       \required-field
+       \type alpha
+       \reference ErlVariableNames
+       \note no spaces allowed in name
+
+OS:EnergyManagementSystem:OutputVariable,
+       \memo This object sets up an EnergyPlus output variable from an Erl variable
+       \min-fields 5
+  A1, \field Handle
+       \type handle
+       \required-field 
+  A2, \field Name
+       \required-field
+       \type alpha
+       \retaincase
+  A3, \field EMS Variable Name
+       \required-field
+       \type alpha
+       \note must be an acceptable EMS variable
+  A4, \field Type of Data in Variable
+       \required-field
+       \type choice
+       \key Averaged
+       \key Summed
+  A5, \field Update Frequency
+       \required-field
+       \type choice
+       \key ZoneTimestep
+       \key SystemTimestep
+  A6, \field EMS Program or Subroutine Name
+       \type object-list
+       \object-list ErlProgramSubroutineNames
+       \note optional for global scope variables, required for local scope variables
+  A7; \field Units
+       \note optional but will result in dimensionless units for blank
+       \note EnergyPlus units are standard SI units
+       \type alpha
+
+OS:EnergyManagementSystem:MeteredOutputVariable,
+       \memo This object sets up an EnergyPlus output variable from an Erl variable
+       \min-fields 8
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \required-field
+       \type alpha
+       \retaincase
+  A3, \field EMS Variable Name
+       \required-field
+       \type alpha
+       \note must be an acceptable EMS variable, no spaces
+  A4, \field Update Frequency
+       \required-field
+       \type choice
+       \key ZoneTimestep
+       \key SystemTimestep
+  A5, \field EMS Program or Subroutine Name
+       \type object-list
+       \object-list ErlProgramSubroutineNames
+       \note optional for global scope variables, required for local scope variables
+  A6, \field Resource Type
+       \required-field
+       \note choose the type of fuel, water, electricity, pollution or heat rate that should be metered.
+       \type choice
+       \key Electricity
+       \key NaturalGas
+       \key Gasoline
+       \key Diesel
+       \key Coal
+       \key FuelOil#1
+       \key FuelOil#2
+       \key Propane
+       \key OtherFuel1
+       \key OtherFuel2
+       \key WaterUse
+       \key OnSiteWaterProduced
+       \key MainsWaterSupply
+       \key RainWaterCollected
+       \key WellWaterDrawn
+       \key CondensateWaterCollected
+       \key EnergyTransfer
+       \key Steam
+       \key DistrictCooling
+       \key DistrictHeating
+       \key ElectricityProducedOnSite
+       \key SolarWaterHeating
+       \key SolarAirHeating
+  A7, \field Group Type
+       \note choose a general classification, building (internal services), HVAC (air systems), or plant (hydronic systems), or system
+       \type choice
+       \required-field
+       \key Building
+       \key HVAC
+       \key Plant
+       \key System
+  A8, \field End-Use Category
+       \note choose how the metered output should be classified for end-use category
+       \required-field
+       \type choice
+       \key Heating
+       \key Cooling
+       \key InteriorLights
+       \key ExteriorLights
+       \key InteriorEquipment
+       \key ExteriorEquipment
+       \key Fans
+       \key Pumps
+       \key HeatRejection
+       \key Humidifier
+       \key HeatRecovery
+       \key WaterSystems
+       \key Refrigeration
+       \key OnSiteGeneration
+       \key HeatingCoils
+       \key CoolingCoils
+       \key Chillers
+       \key Boilers
+       \key Baseboard
+       \key HeatRecoveryForCooling
+       \key HeatRecoveryForHeating
+  A9, \field End-Use Subcategory
+       \type alpha
+       \note enter a user-defined subcategory for this metered output
+  A10; \field Units
+       \note optional but will result in dimensionless units for blank
+       \note EnergyPlus units are standard SI units
+       \type alpha
+
+OS:EnergyManagementSystem:TrendVariable,
+       \memo This object sets up an EMS trend variable from an Erl variable
+       \memo A trend variable logs values across timesteps
+       \min-fields 4
+  A1, \field Handle
+       \type handle
+       \required-field      
+  A2, \field Name
+       \required-field
+       \type alpha
+       \note No spaces allowed in names for ErlVariableNames
+       \reference ErlVariableNames
+  A3, \field EMS Variable Name
+       \required-field
+       \type object-list
+       \object-list ErlVariableNames
+       \note must be a global scope EMS variable
+  N1; \field Number of Timesteps to be Logged
+       \required-field
+       \type integer
+       \minimum 1
+
+OS:EnergyManagementSystem:InternalVariable,
+       \memo Declares EMS variable as an internal data variable
+       \min-fields 4
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \required-field
+       \type alpha
+       \note This name becomes a variable for use in Erl programs
+       \note No spaces allowed in names for ErlVariableNames
+       \reference ErlVariableNames
+  A3, \field Internal Data Index Key Name
+       \type alpha
+  A4; \field Internal Data Type
+       \required-field
+       \type alpha
+
+OS:EnergyManagementSystem:CurveOrTableIndexVariable,
+       \memo Declares EMS variable that identifies a curve or table
+       \min-fields 3
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \required-field
+       \type alpha
+       \note This name becomes a variable for use in Erl programs
+       \note No spaces allowed in names for ErlVariableNames
+       \reference ErlVariableNames
+  A3; \field Curve or Table Object Name
+       \type object-list
+       \object-list AllCurves
+       \required-field
+
+OS:EnergyManagementSystem:ConstructionIndexVariable,
+       \memo Declares EMS variable that identifies a construction
+       \min-fields 3
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \required-field
+       \type alpha
+       \note This name becomes a variable for use in Erl programs
+       \note No spaces allowed in names for ErlVariableNames
+       \reference ErlVariableNames
+  A3; \field Construction Object Name
+       \type object-list
+       \object-list ConstructionNames
+       \required-field
 

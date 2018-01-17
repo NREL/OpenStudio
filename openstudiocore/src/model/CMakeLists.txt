@@ -143,6 +143,9 @@ set(${target_name}_src
   BuildingStory.hpp
   BuildingStory_Impl.hpp
   BuildingStory.cpp
+  BuildingUnit.hpp
+  BuildingUnit_Impl.hpp
+  BuildingUnit.cpp
 ##  CentralHeatPumpSystem.hpp
 ##  CentralHeatPumpSystem_Impl.hpp
 ##  CentralHeatPumpSystem.cpp
@@ -281,6 +284,9 @@ set(${target_name}_src
   CoilWaterHeatingAirToWaterHeatPump.hpp
   CoilWaterHeatingAirToWaterHeatPump_Impl.hpp
   CoilWaterHeatingAirToWaterHeatPump.cpp
+  CoilWaterHeatingAirToWaterHeatPumpWrapped.hpp
+  CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl.hpp
+  CoilWaterHeatingAirToWaterHeatPumpWrapped.cpp
   CoilWaterHeatingDesuperheater.hpp
   CoilWaterHeatingDesuperheater_Impl.hpp
   CoilWaterHeatingDesuperheater.cpp
@@ -452,6 +458,45 @@ set(${target_name}_src
   ElectricLoadCenterStorageSimple.hpp
   ElectricLoadCenterStorageSimple_Impl.hpp
   ElectricLoadCenterStorageSimple.cpp
+  ElectricLoadCenterStorageConverter.hpp
+  ElectricLoadCenterStorageConverter_Impl.hpp
+  ElectricLoadCenterStorageConverter.cpp
+  EnergyManagementSystemActuator.cpp
+  EnergyManagementSystemActuator.hpp
+  EnergyManagementSystemActuator_Impl.hpp
+  EnergyManagementSystemConstructionIndexVariable.cpp
+  EnergyManagementSystemConstructionIndexVariable.hpp
+  EnergyManagementSystemConstructionIndexVariable_Impl.hpp
+  EnergyManagementSystemCurveOrTableIndexVariable.cpp
+  EnergyManagementSystemCurveOrTableIndexVariable.hpp
+  EnergyManagementSystemCurveOrTableIndexVariable_Impl.hpp
+  EnergyManagementSystemGlobalVariable.cpp
+  EnergyManagementSystemGlobalVariable.hpp
+  EnergyManagementSystemGlobalVariable_Impl.hpp
+  EnergyManagementSystemInternalVariable.cpp
+  EnergyManagementSystemInternalVariable.hpp
+  EnergyManagementSystemInternalVariable_Impl.hpp
+  EnergyManagementSystemMeteredOutputVariable.cpp
+  EnergyManagementSystemMeteredOutputVariable.hpp
+  EnergyManagementSystemMeteredOutputVariable_Impl.hpp
+  EnergyManagementSystemOutputVariable.cpp
+  EnergyManagementSystemOutputVariable.hpp
+  EnergyManagementSystemOutputVariable_Impl.hpp
+  EnergyManagementSystemProgram.cpp
+  EnergyManagementSystemProgram.hpp
+  EnergyManagementSystemProgram_Impl.hpp
+  EnergyManagementSystemProgramCallingManager.cpp
+  EnergyManagementSystemProgramCallingManager.hpp
+  EnergyManagementSystemProgramCallingManager_Impl.hpp
+  EnergyManagementSystemSensor.cpp
+  EnergyManagementSystemSensor.hpp
+  EnergyManagementSystemSensor_Impl.hpp
+  EnergyManagementSystemSubroutine.cpp
+  EnergyManagementSystemSubroutine.hpp
+  EnergyManagementSystemSubroutine_Impl.hpp
+  EnergyManagementSystemTrendVariable.cpp
+  EnergyManagementSystemTrendVariable.hpp
+  EnergyManagementSystemTrendVariable_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial.cpp
@@ -673,6 +718,9 @@ set(${target_name}_src
   OutputControlReportingTolerances.hpp
   OutputControlReportingTolerances_Impl.hpp
   OutputControlReportingTolerances.cpp
+  OutputEnergyManagementSystem.cpp
+  OutputEnergyManagementSystem.hpp
+  OutputEnergyManagementSystem_Impl.hpp
   OutputMeter.hpp
   OutputMeter_Impl.hpp
   OutputMeter.cpp
@@ -1156,6 +1204,9 @@ set(${target_name}_src
   WaterHeaterMixed.hpp
   WaterHeaterMixed_Impl.hpp
   WaterHeaterMixed.cpp
+  WaterHeaterHeatPumpWrappedCondenser.hpp
+  WaterHeaterHeatPumpWrappedCondenser_Impl.hpp
+  WaterHeaterHeatPumpWrappedCondenser.cpp
   WaterHeaterHeatPump.hpp
   WaterHeaterHeatPump_Impl.hpp
   WaterHeaterHeatPump.cpp
@@ -1531,6 +1582,7 @@ set(${target_name}_test_src
   test/BoilerHotWater_GTest.cpp
   test/BoilerSteam_GTest.cpp
   test/BuildingStory_GTest.cpp
+  test/BuildingUnit_GTest.cpp
   test/Building_GTest.cpp
 ##  test/CentralHeatPumpSystem_GTest.cpp
 ##  test/CentralHeatPumpSystemModule_GTest.cpp
@@ -1600,6 +1652,19 @@ set(${target_name}_test_src
   test/ElectricLoadCenterInverterSimple_GTest.cpp
   test/ElectricLoadCenterInverterLookUpTable_GTest.cpp
   test/ElectricLoadCenterStorageSimple_GTest.cpp
+  test/ElectricLoadCenterStorageConverter_GTest.cpp
+  test/EnergyManagementSystemActuator_GTest.cpp
+  test/EnergyManagementSystemConstructionIndexVariable_GTest.cpp
+  test/EnergyManagementSystemCurveOrTableIndexVariable_GTest.cpp
+  test/EnergyManagementSystemGlobalVariable_GTest.cpp
+  test/EnergyManagementSystemInternalVariable_GTest.cpp
+  test/EnergyManagementSystemMeteredOutputVariable_GTest.cpp
+  test/EnergyManagementSystemOutputVariable_GTest.cpp
+  test/EnergyManagementSystemProgram_GTest.cpp
+  test/EnergyManagementSystemProgramCallingManager_GTest.cpp
+  test/EnergyManagementSystemSensor_GTest.cpp
+  test/EnergyManagementSystemSubroutine_GTest.cpp
+  test/EnergyManagementSystemTrendVariable_GTest.cpp
   test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
   test/EvaporativeCoolerIndirectResearchSpecial_GTest.cpp
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
@@ -1654,6 +1719,7 @@ set(${target_name}_test_src
   test/OpaqueMaterial_GTest.cpp
   test/OtherEquipment_GTest.cpp
   test/OutputControlReportingTolerances_GTest.cpp
+  test/OutputEnergyManagementSystem_GTest.cpp
   test/OutputMeter_GTest.cpp
   test/OutputVariable_GTest.cpp
   test/ParentObject_GTest.cpp

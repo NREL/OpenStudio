@@ -1,0 +1,44 @@
+
+OS:Version,
+  {4f5d5813-90a9-4e69-85ee-24c20cfb256b}, !- Handle
+  1.13.0;                                 !- Version Identifier
+
+OS:Construction,
+  {7a1125d3-95f5-48de-bc41-3cd81d62d5da}, !- Handle
+  Slab,                                   !- Name
+  ,                                       !- Surface Rendering Name
+  {8c66ab5d-e927-4672-9d7d-dee05c2a988c}, !- Layer 1
+  {f68dee4a-f093-4cef-ab5d-3fe1813eb4b7}; !- Layer 2
+
+OS:Material,
+  {8c66ab5d-e927-4672-9d7d-dee05c2a988c}, !- Handle
+  MAT-CC05 8 HW CONCRETE,                 !- Name
+  Rough,                                  !- Roughness
+  0.2032,                                 !- Thickness {m}
+  1.311,                                  !- Conductivity {W/m-K}
+  2240,                                   !- Density {kg/m3}
+  836.8,                                  !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+OS:Material:NoMass,
+  {f68dee4a-f093-4cef-ab5d-3fe1813eb4b7}, !- Handle
+  CP02 CARPET PAD,                        !- Name
+  VeryRough,                              !- Roughness
+  0.2165,                                 !- Thermal Resistance {m2-K/W}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.8;                                    !- Visible Absorptance
+
+OS:ComponentData,
+  {762f77bd-c2f3-4562-8a6a-3fd2ad839606}, !- Handle
+  Component Data 1,                       !- Name
+  {e023eaae-ef61-4f0a-a97e-d3a2feed55c6}, !- UUID
+  {4e99f3f5-e51e-4b43-8438-fd71c9e824f9}, !- Version UUID
+  1475097879,                             !- Creation Timestamp
+  1475097879,                             !- Version Timestamp
+  {7a1125d3-95f5-48de-bc41-3cd81d62d5da}, !- Name of Object 1
+  {8c66ab5d-e927-4672-9d7d-dee05c2a988c}, !- Name of Object 2
+  {f68dee4a-f093-4cef-ab5d-3fe1813eb4b7}; !- Name of Object 3
+

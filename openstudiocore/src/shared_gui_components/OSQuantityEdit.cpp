@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
- *  All rights reserved.
- *  
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- *  
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- *  
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
+ *
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
+ *
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "OSQuantityEdit.hpp"
 
@@ -68,7 +77,7 @@ OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::strin
   hLayout->addWidget(m_units);
 
   m_doubleValidator = new QDoubleValidator();
-  m_lineEdit->setValidator(m_doubleValidator);
+  //m_lineEdit->setValidator(m_doubleValidator);
 
   m_lineEdit->setMinimumWidth(60);
 
@@ -222,34 +231,57 @@ void OSQuantityEdit2::onEditingFinished() {
   emit inFocus(true, hasData());
 
   QString text = m_lineEdit->text();
-  if (text.isEmpty() || m_text == text) return;
+  if (m_text == text) return;
 
+  int pos = 0;
+  QValidator::State state = m_doubleValidator->validate(text, pos);
+  bool isAuto = false;
+  if (state != QValidator::Acceptable){
+    if (text.isEmpty()){
+      // ok
+    } else{
+      boost::regex autore("[aA][uU][tT][oO]");
+      isAuto = boost::regex_search(text.toStdString(), autore);
+      if (isAuto){
+        // ok
+      } else{
+        // not ok
+        refreshTextAndLabel();
+        return;
+      }
+    }
+  }
   if (m_modelObject) {
-    std::string str = m_lineEdit->text().toStdString();
-    boost::regex autore("[aA][uU][tT][oO]");
+    std::string str = text.toStdString();
     ModelObject modelObject = m_modelObject.get();
 
     if (str.empty()) {
       if (m_reset) {
         (*m_reset)();
+      } else{
+        refreshTextAndLabel();
       }
     }
-    else if (boost::regex_search(str,autore)) {
+    else if (isAuto) {
       if (m_isAutosized) {
         if (m_autosize) {
           (*m_autosize)();
-        }
-        else if (m_reset) {
+        } else if (m_reset) {
           (*m_reset)();
+        } else {
+          refreshTextAndLabel();
         }
-      }
-      if (m_isAutocalculated) {
+      }else if (m_isAutocalculated) {
         if (m_autocalculate) {
           (*m_autocalculate)();
         }
         else if (m_reset) {
           (*m_reset)();
+        } else {
+          refreshTextAndLabel();
         }
+      } else {
+        refreshTextAndLabel();
       }
     }
     else {
@@ -269,16 +301,12 @@ void OSQuantityEdit2::onEditingFinished() {
         OS_ASSERT(modelValue);
 
         if (m_set) {
-          QString text = m_lineEdit->text();
-          if (text.isEmpty() || m_text == text) return;
           bool result = (*m_set)(*modelValue);
           if (!result){
             // restore
             refreshTextAndLabel();
           }
         } else if (m_setVoidReturn){
-          QString text = m_lineEdit->text();
-          if (text.isEmpty() || m_text == text) return;
           (*m_setVoidReturn)(*modelValue);
         }
       }
@@ -292,6 +320,13 @@ void OSQuantityEdit2::onEditingFinished() {
 }
 
 void OSQuantityEdit2::onModelObjectChange() {
+  //if (m_modelExtensibleGroup){
+  //  if (m_modelExtensibleGroup->empty()){
+  //    // this is equivalent to onModelObjectRemove for the extensible group
+  //    unbind();
+  //    return;
+  //  }
+  //}  
   refreshTextAndLabel();
 }
 
@@ -315,7 +350,7 @@ void OSQuantityEdit2::refreshTextAndLabel() {
     units = m_siUnits;
   }
 
-  if (m_text == text && m_unitsStr == units) return;
+  //if (m_text == text && m_unitsStr == units) return;
 
   if (m_modelObject) {
     QString textValue;
@@ -372,15 +407,12 @@ void OSQuantityEdit2::refreshTextAndLabel() {
       m_units->setStyleSheet("color:grey");
     }
 
-    if ( (!textValue.isEmpty() && m_text != textValue) || m_unitsStr != units){
+    if (m_text != textValue || text != textValue || m_unitsStr != units){
       m_text = textValue;
       m_unitsStr = units;
       m_lineEdit->blockSignals(true);
       m_lineEdit->setText(textValue);
       m_lineEdit->blockSignals(false);
-    }
-    else {
-      return;
     }
 
     ss << units;
@@ -388,6 +420,7 @@ void OSQuantityEdit2::refreshTextAndLabel() {
     m_units->setTextFormat(Qt::RichText);
     m_units->setText(toQString(formatUnitString(ss.str(),DocumentFormat::XHTML)));
     m_units->blockSignals(false);
+  
     if (m_isDefaulted) {
       if ((*m_isDefaulted)()) {
         m_lineEdit->setStyleSheet("color:green");

@@ -147,50 +147,75 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
 
     # create a array of sections to loop through in erb file
     @sections = []
+    # check units of tabular E+ results
+    column_units_query = "SELECT DISTINCT  units FROM tabulardatawithstrings WHERE ReportName='AnnualBuildingUtilityPerformanceSummary' and TableName='Building Area'"
+    energy_plus_area_units = sql_file.execAndReturnVectorOfString(column_units_query)
+    if energy_plus_area_units.is_initialized
+      if energy_plus_area_units.get.size == 0
+        runner.registerError("Can't find any contents in Building Area Table to get tabular units. Measure can't run")
+        return false
+      end
+    else
+      runner.registerError("Can't find Building Area to get tabular units. Measure can't run")
+      return false
+    end
 
-    # generate data for requested sections
-    sections_made = 0
-    possible_sections.each do |method_name|
+    if energy_plus_area_units.get.first.to_s == "m2"
 
-      begin
-        next unless args[method_name]
-        section = false
-        eval("section = OsLib_Reporting.#{method_name}(model,sql_file,runner,false)")
-        display_name = eval("OsLib_Reporting.#{method_name}(nil,nil,nil,true)[:title]")
-        if section
-          @sections << section
-          sections_made += 1
-          # look for emtpy tables and warn if skipped because returned empty
-          section[:tables].each do |table|
-            if not table
-              runner.registerWarning("A table in #{display_name} section returned false and was skipped.")
-              section[:messages] = ["One or more tables in #{display_name} section returned false and was skipped."]
+      # generate data for requested sections
+      sections_made = 0
+      possible_sections.each do |method_name|
+
+        begin
+          next unless args[method_name]
+          section = false
+          eval("section = OsLib_Reporting.#{method_name}(model,sql_file,runner,false)")
+          display_name = eval("OsLib_Reporting.#{method_name}(nil,nil,nil,true)[:title]")
+          if section
+            @sections << section
+            sections_made += 1
+            # look for emtpy tables and warn if skipped because returned empty
+            section[:tables].each do |table|
+              if not table
+                runner.registerWarning("A table in #{display_name} section returned false and was skipped.")
+                section[:messages] = ["One or more tables in #{display_name} section returned false and was skipped."]
+              end
             end
+          else
+            runner.registerWarning("#{display_name} section returned false and was skipped.")
+            section = {}
+            section[:title] = "#{display_name}"
+            section[:tables] = []
+            section[:messages] = []
+            section[:messages] << "#{display_name} section returned false and was skipped."
+            @sections << section
           end
-        else
-          runner.registerWarning("#{display_name} section returned false and was skipped.")
-          section = {}
-          section[:title] = "#{display_name}"
-          section[:tables] = []
-          section[:messages] = []
-          section[:messages] << "#{display_name} section returned false and was skipped."
-          @sections << section
-        end
-      rescue => e
-        display_name = eval("OsLib_Reporting.#{method_name}(nil,nil,nil,true)[:title]")
-        if display_name == nil then display_name == method_name end
-        runner.registerWarning("#{display_name} section failed and was skipped because: #{e}. Detail on error follows.")
-        runner.registerWarning("#{e.backtrace.join("\n")}")
+        rescue => e
+          display_name = eval("OsLib_Reporting.#{method_name}(nil,nil,nil,true)[:title]")
+          if display_name == nil then display_name == method_name end
+          runner.registerWarning("#{display_name} section failed and was skipped because: #{e}. Detail on error follows.")
+          runner.registerWarning("#{e.backtrace.join("\n")}")
 
-        # add in section heading with message if section fails
-        section = eval("OsLib_Reporting.#{method_name}(nil,nil,nil,true)")
-        section[:messages] = []
-        section[:messages] << "#{display_name} section failed and was skipped because: #{e}. Detail on error follows."
-        section[:messages] << ["#{e.backtrace.join("\n")}"]
-        @sections << section
+          # add in section heading with message if section fails
+          section = {}
+          section[:messages] = []
+          section[:messages] << "#{display_name} section failed and was skipped because: #{e}. Detail on error follows."
+          section[:messages] << ["#{e.backtrace.join("\n")}"]
+          @sections << section
+
+        end
 
       end
 
+    else
+      wrong_tabular_units_string = "IP units were provided, SI units were expected. Leave EnergyPlus tabular results in SI units to run this report."
+      runner.registerWarning(wrong_tabular_units_string)
+      section = {}
+      section[:title] = "Tabular EnergyPlus results provided in wrong units."
+      section[:tables] = []
+      section[:messages] = []
+      section[:messages] << wrong_tabular_units_string
+      @sections << section
     end
 
     # read in template
@@ -220,6 +245,34 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
         file.flush
       end
     end
+
+    # adding additional runner.registerValues needed for project scripts in 2.x PAT
+    # note: these are not in begin rescue like individual sections. Won't fail gracefully if any SQL query's can't be found
+
+    # annual_peak_electric_demand
+    annual_peak_electric_demand_k_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='DemandEndUseComponentsSummary' and ReportForString='Entire Facility' and TableName='End Uses' and RowName= 'Total End Uses' and ColumnName='Electricity' and Units='W'"
+    annual_peak_electric_demand_kw = OpenStudio.convert(sql_file.execAndReturnFirstDouble(annual_peak_electric_demand_k_query).get, 'W', 'kW').get
+    runner.registerValue('annual_peak_electric_demand',annual_peak_electric_demand_kw,'kW')
+
+    # get base year for use in first_year_cap_cost
+    baseYrString_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' and ReportForString='Entire Facility' and TableName='Life-Cycle Cost Parameters' and RowName= 'Base Date' and ColumnName= 'Value'"
+    baseYrString = sql_file.execAndReturnFirstString(baseYrString_query).get
+    # get first_year_cap_cost
+    first_year_cap_cost_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' and ReportForString='Entire Facility' and TableName='Capital Cash Flow by Category (Without Escalation)' and RowName= '#{baseYrString}' and ColumnName= 'Total'"
+    first_year_cap_cost = sql_file.execAndReturnFirstDouble(first_year_cap_cost_query).get
+    runner.registerValue('first_year_capital_cost',first_year_cap_cost,'$')
+
+    # annual_utility_cost
+    annual_utility_cost = sql_file.annualTotalUtilityCost
+    if annual_utility_cost.is_initialized
+      runner.registerValue('annual_utility_cost',annual_utility_cost.get,'$')
+    else
+      runner.registerValue('annual_utility_cost',0.0,'$')
+    end
+
+    # total_lifecycle_cost
+    total_lifecycle_cost_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' and ReportForString='Entire Facility' and TableName='Present Value by Year' and RowName= 'TOTAL' and ColumnName= 'Present Value of Costs'"
+    runner.registerValue('total_lifecycle_cost',sql_file.execAndReturnFirstDouble(total_lifecycle_cost_query).get,'$')
 
     # closing the sql file
     sql_file.close

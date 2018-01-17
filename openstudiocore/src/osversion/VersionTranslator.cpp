@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "VersionTranslator.hpp"
 
@@ -107,7 +116,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.11.4")] = &VersionTranslator::update_1_11_3_to_1_11_4;
   m_updateMethods[VersionString("1.11.5")] = &VersionTranslator::update_1_11_4_to_1_11_5;
   m_updateMethods[VersionString("1.12.1")] = &VersionTranslator::update_1_12_0_to_1_12_1;
-  m_updateMethods[VersionString("1.12.3")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.13.4")] = &VersionTranslator::update_1_12_3_to_1_12_4;
+  m_updateMethods[VersionString("1.14.0")] = &VersionTranslator::defaultUpdate;
 
 
   // List of previous versions that may be updated to this one.
@@ -219,6 +229,15 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.12.0"));
   m_startVersions.push_back(VersionString("1.12.1"));
   m_startVersions.push_back(VersionString("1.12.2"));
+  m_startVersions.push_back(VersionString("1.12.3"));
+  m_startVersions.push_back(VersionString("1.12.4"));
+  m_startVersions.push_back(VersionString("1.12.5"));
+  m_startVersions.push_back(VersionString("1.12.6"));
+  m_startVersions.push_back(VersionString("1.13.0"));
+  m_startVersions.push_back(VersionString("1.13.1"));
+  m_startVersions.push_back(VersionString("1.13.2"));
+  m_startVersions.push_back(VersionString("1.13.3"));
+  m_startVersions.push_back(VersionString("1.13.4"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -3261,14 +3280,19 @@ std::string VersionTranslator::update_1_11_4_to_1_11_5(const IdfFile& idf_1_11_4
 
       size_t newi = 0;
       for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        
+        if( i == 6 ) {
+          newObject.setDouble(i,773.3);
+          newi = i + 1;
+        } else if (i > 6) {
+          newi = i + 1;
+        } else {
+          newi = i;
+        }
+
         if( auto s = object.getString(i) ) {
           newObject.setString(newi,s.get());
-          if( i == 6 ) {
-            newObject.setDouble(newi,773.3);
-            ++newi;
-          }
         }
-        ++newi;
       }
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
@@ -3303,6 +3327,44 @@ std::string VersionTranslator::update_1_12_0_to_1_12_1(const IdfFile& idf_1_12_0
           newObject.setString(newi,s.get());
         }
         ++newi;
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_12_3_to_1_12_4(const IdfFile& idf_1_12_3, const IddFileAndFactoryWrapper& idd_1_12_4) {
+  std::stringstream ss;
+
+  ss << idf_1_12_3.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_1_12_4.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_12_3.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:AirTerminal:SingleDuct:VAV:Reheat") {
+      auto iddObject = idd_1_12_4.getObject("OS:AirTerminal:SingleDuct:VAV:Reheat");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if ( auto s = object.getString(i) ) {
+          if( i == 14u ) {
+            if ( istringEqual("Reverse",s.get()) ) {
+              newObject.setString(i,"ReverseWithLimits");
+            } else {
+              newObject.setString(i,s.get());
+            }
+          } else {
+            newObject.setString(i,s.get());
+          }
+        }
       }
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );

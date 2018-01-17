@@ -1,9 +1,11 @@
 ! WILMINGTON_NC_USA Annual Heating Wind 99% Design Conditions WS=>MCDB, WS=9.7m/s
 !  Version,
 !    7.2.0.002;              !- Version Identifier
-
 !  Version,
 !    8.5;                    !- Version Identifier
+
+!  Version,
+!    8.6;                    !- Version Identifier
 
   SizingPeriod:DesignDay,
     WILMINGTON Ann Htg Wind 99% Condns WS=>MCDB,  !- Name

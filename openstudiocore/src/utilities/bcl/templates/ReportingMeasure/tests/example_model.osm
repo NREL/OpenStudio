@@ -1,7 +1,7 @@
 
 OS:Version,
-  {6355fac6-f177-4e66-b3c6-157ca94b9fae}, !- Handle
-  1.1.3;                                  !- Version Identifier
+  {0ab440c6-3d07-4226-be46-8a7544614205}, !- Handle
+  1.13.0;                                 !- Version Identifier
 
 OS:SimulationControl,
   {41f65c43-2dc9-4d82-a6e4-a562bae08803}, !- Handle
@@ -26,7 +26,7 @@ OS:SurfaceConvectionAlgorithm:Outside,
 OS:HeatBalanceAlgorithm,
   {fb07df21-178f-40a0-868e-360603ea5cfc}, !- Handle
   ConductionTransferFunction,             !- Algorithm
-  200;                                    !- Surface Temperature Upper Limit {F}
+  200;                                    !- Surface Temperature Upper Limit {C}
 
 OS:ZoneAirHeatBalanceAlgorithm,
   {82730f22-7533-4ae2-85c6-69dbcc9f2cda}, !- Handle
@@ -76,7 +76,7 @@ OS:SizingPeriod:DesignDay,
   Sizing Period Design Day 1,             !- Name
   -20.6,                                  !- Maximum Dry-Bulb Temperature {C}
   0,                                      !- Daily Dry-Bulb Temperature Range {deltaC}
-  -20.6,                                  !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
+  -20.6,                                  !- Humidity Indicating Conditions at Maximum Dry-Bulb
   99063,                                  !- Barometric Pressure {Pa}
   4.9,                                    !- Wind Speed {m/s}
   270,                                    !- Wind Direction {deg}
@@ -98,7 +98,7 @@ OS:SizingPeriod:DesignDay,
   Sizing Period Design Day 2,             !- Name
   33.2,                                   !- Maximum Dry-Bulb Temperature {C}
   10.7,                                   !- Daily Dry-Bulb Temperature Range {deltaC}
-  23.8,                                   !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
+  23.8,                                   !- Humidity Indicating Conditions at Maximum Dry-Bulb
   99063,                                  !- Barometric Pressure {Pa}
   5.3,                                    !- Wind Speed {m/s}
   230,                                    !- Wind Direction {deg}
@@ -118,8 +118,8 @@ OS:SizingPeriod:DesignDay,
 OS:ScheduleTypeLimits,
   {5c6ddcc6-ada7-47e2-bf93-0c9e8ff94915}, !- Handle
   Temperature,                            !- Name
-  -60,                                    !- Lower Limit Value {BasedOnField A4}
-  200,                                    !- Upper Limit Value {BasedOnField A4}
+  -60,                                    !- Lower Limit Value
+  200,                                    !- Upper Limit Value
   CONTINUOUS,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -270,8 +270,8 @@ OS:Schedule:Day,
 OS:ScheduleTypeLimits,
   {5fd8c602-e708-4659-b6b9-f4780954b948}, !- Handle
   Fractional,                             !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
   Continuous;                             !- Numeric Type
 
 OS:Schedule:Ruleset,
@@ -292,8 +292,8 @@ OS:Schedule:Day,
 OS:ScheduleTypeLimits,
   {08da3382-abbe-41ff-a4b8-b8c1ccc07f52}, !- Handle
   ActivityLevel,                          !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   ActivityLevel;                          !- Unit Type
 
@@ -1572,7 +1572,7 @@ OS:StandardsInformation:Construction,
   {0fed2599-a9fb-49a7-9f6d-9314e62bc523}, !- Handle
   {caa58376-d24d-4bc4-8d0f-3a92bce53f09}, !- Construction Name
   ,                                       !- Intended Surface Type
-  ,                                       !- Construction Type
+  ,                                       !- Standards Construction Type
   2,                                      !- Perturbable Layer
   Insulation,                             !- Perturbable Layer Type
   ;                                       !- Other Perturbable Layer Type
@@ -1727,7 +1727,7 @@ OS:StandardsInformation:Construction,
   {ff76aeec-55d5-437c-8a1c-05739ffb4d98}, !- Handle
   {c6c2add5-aa1f-4e15-bd7a-0492aa07a418}, !- Construction Name
   ,                                       !- Intended Surface Type
-  ,                                       !- Construction Type
+  ,                                       !- Standards Construction Type
   1,                                      !- Perturbable Layer
   Insulation,                             !- Perturbable Layer Type
   ;                                       !- Other Perturbable Layer Type
@@ -1812,16 +1812,6 @@ OS:People,
 OS:Facility,
   {a6468ea3-4188-4667-86f7-1a35b777f6ce}; !- Handle
 
-OS:Building,
-  {e11b34af-2bb6-4f16-8082-cbd61ee7679e}, !- Handle
-  Building 1,                             !- Name
-  ,                                       !- Building Type
-  ,                                       !- North Axis {deg}
-  ,                                       !- Nominal Floor to Floor Height {m}
-  {53148cd3-f7e8-45bd-becf-46361d6848b4}, !- Space Type Name
-  {c50911a9-e76e-4759-bb87-25716b1a78da}, !- Default Construction Set Name
-  {530f9623-af4a-491d-9109-39cfa4e2ff70}; !- Default Schedule Set Name
-
 OS:ThermalZone,
   {fc71e57a-151a-46b8-a678-25e6fe6f7b47}, !- Handle
   Thermal Zone 1,                         !- Name
@@ -1873,8 +1863,12 @@ OS:PortList,
 OS:Sizing:Zone,
   {1e5b3711-ee35-4ea7-bf3f-eb606c99e312}, !- Handle
   {fc71e57a-151a-46b8-a678-25e6fe6f7b47}, !- Zone or ZoneList Name
+  SupplyAirTemperature,                   !- Zone Cooling Design Supply Air Temperature Input Method
   14,                                     !- Zone Cooling Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
+  SupplyAirTemperature,                   !- Zone Heating Design Supply Air Temperature Input Method
   40,                                     !- Zone Heating Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Heating Design Supply Air Temperature Difference {deltaC}
   0.0085,                                 !- Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
   0.008,                                  !- Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
   ,                                       !- Zone Heating Sizing Factor
@@ -1890,7 +1884,11 @@ OS:Sizing:Zone,
   ,                                       !- Heating Maximum Air Flow {m3/s}
   ,                                       !- Heating Maximum Air Flow Fraction
   ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
-  ;                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
+  ,                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
+  No,                                     !- Account for Dedicated Outdoor Air System
+  NeutralSupplyAir,                       !- Dedicated Outdoor Air System Control Strategy
+  Autosize,                               !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+  Autosize;                               !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
 OS:ZoneHVAC:EquipmentList,
   {a3a4ffbe-860b-49d8-b8c6-f4f70dfdef0f}, !- Handle
@@ -2550,8 +2548,8 @@ OS:Fan:ConstantVolume,
 OS:ScheduleTypeLimits,
   {995b1994-deb2-4ea9-a031-5c4654526dbb}, !- Handle
   OnOff,                                  !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
   Discrete,                               !- Numeric Type
   Availability;                           !- Unit Type
 
@@ -2577,12 +2575,12 @@ OS:Curve:Biquadratic,
   0.00333,                                !- Coefficient4 y
   -8e-005,                                !- Coefficient5 y**2
   -0.00021,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46,                                     !- Maximum Value of y {BasedOnField A3}
-  -1000,                                  !- Minimum Curve Output {BasedOnField A4}
-  1000;                                   !- Maximum Curve Output {BasedOnField A4}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46,                                     !- Maximum Value of y
+  -1000,                                  !- Minimum Curve Output
+  1000;                                   !- Maximum Curve Output
 
 OS:Curve:Quadratic,
   {82b43c6a-6e37-4b90-834e-f8cba1665253}, !- Handle
@@ -2590,10 +2588,10 @@ OS:Curve:Quadratic,
   0.77136,                                !- Coefficient1 Constant
   0.34053,                                !- Coefficient2 x
   -0.11088,                               !- Coefficient3 x**2
-  0.75918,                                !- Minimum Value of x {BasedOnField A2}
-  1.13877,                                !- Maximum Value of x {BasedOnField A2}
-  -1000,                                  !- Minimum Curve Output {BasedOnField A3}
-  1000;                                   !- Maximum Curve Output {BasedOnField A3}
+  0.75918,                                !- Minimum Value of x
+  1.13877,                                !- Maximum Value of x
+  -1000,                                  !- Minimum Curve Output
+  1000;                                   !- Maximum Curve Output
 
 OS:Curve:Biquadratic,
   {5719ccca-1a04-47b0-b10d-2a65d8e6322c}, !- Handle
@@ -2604,12 +2602,12 @@ OS:Curve:Biquadratic,
   -0.01434,                               !- Coefficient4 y
   0.00063,                                !- Coefficient5 y**2
   -0.00038,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  0,                                      !- Minimum Value of y {BasedOnField A3}
-  46,                                     !- Maximum Value of y {BasedOnField A3}
-  -1000,                                  !- Minimum Curve Output {BasedOnField A4}
-  1000;                                   !- Maximum Curve Output {BasedOnField A4}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  46,                                     !- Maximum Value of y
+  -1000,                                  !- Minimum Curve Output
+  1000;                                   !- Maximum Curve Output
 
 OS:Curve:Quadratic,
   {02817041-348a-40cf-a190-456fd8128ebb}, !- Handle
@@ -2617,10 +2615,10 @@ OS:Curve:Quadratic,
   1.2055,                                 !- Coefficient1 Constant
   -0.32953,                               !- Coefficient2 x
   0.12308,                                !- Coefficient3 x**2
-  0.75918,                                !- Minimum Value of x {BasedOnField A2}
-  1.13877,                                !- Maximum Value of x {BasedOnField A2}
-  -1000,                                  !- Minimum Curve Output {BasedOnField A3}
-  1000;                                   !- Maximum Curve Output {BasedOnField A3}
+  0.75918,                                !- Minimum Value of x
+  1.13877,                                !- Maximum Value of x
+  -1000,                                  !- Minimum Curve Output
+  1000;                                   !- Maximum Curve Output
 
 OS:Curve:Quadratic,
   {d8786894-f31c-4ee9-b6f8-79dd44685dfc}, !- Handle
@@ -2628,10 +2626,10 @@ OS:Curve:Quadratic,
   0.771,                                  !- Coefficient1 Constant
   0.229,                                  !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  0.71,                                   !- Minimum Curve Output {BasedOnField A3}
-  1;                                      !- Maximum Curve Output {BasedOnField A3}
+  0,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  0.71,                                   !- Minimum Curve Output
+  1;                                      !- Maximum Curve Output
 
 OS:Coil:Cooling:DX:SingleSpeed,
   {50f83082-71db-4dac-acfb-03b5a65b2623}, !- Handle
@@ -2672,11 +2670,14 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
   {ac27bd9e-96a8-4fed-b7aa-06b830184239}, !- Availability Schedule Name
   1,                                      !- Cooler Effectiveness
   0,                                      !- Recirculating Water Pump Power Consumption {W}
+  Autosize,                               !- Primary Air Design Flow Rate {m3/s}
   {b201c597-5991-47c6-a451-c8c9e15214eb}, !- Air Inlet Node Name
   {2fce10f1-d607-4e07-adcb-2af994cc2cce}, !- Air Outlet Node Name
   {8608f700-2023-4277-b10a-277f68b863fe}, !- Sensor Node Name
   0,                                      !- Drift Loss Fraction
-  0;                                      !- Blowdown Concentration Ratio
+  0,                                      !- Blowdown Concentration Ratio
+  ,                                       !- Effectiveness Flow Ratio Modifier Curve Name
+  0.1;                                    !- Water Pump Power Sizing Factor {W/(m3/s)}
 
 OS:AirTerminal:SingleDuct:Uncontrolled,
   {e95eecc2-55c3-4de1-99bb-7a31dd48c1ff}, !- Handle
@@ -2731,8 +2732,8 @@ OS:Schedule:Constant,
 OS:ScheduleTypeLimits,
   {86f21575-3513-4183-a4c6-8da255be4706}, !- Handle
   Schedule Type Limits 1,                 !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
   Discrete,                               !- Numeric Type
   Availability;                           !- Unit Type
 
@@ -2771,34 +2772,17 @@ OS:AirLoopHVAC,
   {85cf90c9-9555-4437-9e91-1210fbc84bdd}, !- Handle
   Air Loop HVAC 1,                        !- Name
   ,                                       !- Controller List Name
-  {a6e9c929-fec9-4cf4-b78b-32345f6fb2a9}, !- Availability Manager List Name
+  {2a10bc52-cb2d-4a4a-a91e-d59204a88546}, !- Availability Schedule
+  ,                                       !- Availability Manager
   AutoSize,                               !- Design Supply Air Flow Rate {m3/s}
   ,                                       !- Branch List Name
   ,                                       !- Connector List Name
   {904dbc49-5b4a-45e5-8bbd-e4f75a22607f}, !- Supply Side Inlet Node Name
   {16266f96-6637-4945-89cc-89054b9eab85}, !- Demand Side Outlet Node Name
-  {718e601b-a6a4-4e69-ba90-1c6aeee6daa8}, !- Demand Side Inlet Node Names
-  {2a7e1904-be9e-4447-939d-5ac0f0fdc167}; !- Supply Side Outlet Node Names
-
-OS:AvailabilityManagerAssignmentList,
-  {a6e9c929-fec9-4cf4-b78b-32345f6fb2a9}, !- Handle
-  Availability Manager Assignment List 1, !- Name
-  {4cc3cfed-69eb-4c47-b66a-7b9c03b3fa4a}, !- Availability Manager Name 1
-  {e746611a-47a1-4979-a6b7-d1a12e5551c4}; !- Availability Manager Name 2
-
-OS:AvailabilityManager:Scheduled,
-  {4cc3cfed-69eb-4c47-b66a-7b9c03b3fa4a}, !- Handle
-  Availability Manager Scheduled 1,       !- Name
-  {2a10bc52-cb2d-4a4a-a91e-d59204a88546}; !- Schedule Name
-
-OS:AvailabilityManager:NightCycle,
-  {e746611a-47a1-4979-a6b7-d1a12e5551c4}, !- Handle
-  Availability Manager Night Cycle 1,     !- Name
-  ,                                       !- Applicability Schedule
-  ,                                       !- Fan Schedule
-  ,                                       !- Control Type
-  ,                                       !- Thermostat Tolerance {deltaC}
-  ;                                       !- Cycling Run Time {s}
+  {718e601b-a6a4-4e69-ba90-1c6aeee6daa8}, !- Demand Side Inlet Node A
+  {2a7e1904-be9e-4447-939d-5ac0f0fdc167}, !- Supply Side Outlet Node A
+  ,                                       !- Demand Side Inlet Node B
+  ;                                       !- Supply Side Outlet Node B
 
 OS:Node,
   {d23ccc0d-2206-4d45-ba97-61cd457755fa}, !- Handle
@@ -2911,7 +2895,24 @@ OS:Sizing:System,
   0,                                      !- Cooling Design Air Flow Rate {m3/s}
   DesignDay,                              !- Heating Design Air Flow Method
   0,                                      !- Heating Design Air Flow Rate {m3/s}
-  ZoneSum;                                !- System Outdoor Air Method
+  ZoneSum,                                !- System Outdoor Air Method
+  1,                                      !- Zone Maximum Outdoor Air Fraction {dimensionless}
+  0.0099676501,                           !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+  1,                                      !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+  3.9475456e-05,                          !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+  0.0099676501,                           !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+  1,                                      !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+  1,                                      !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+  3.1588213e-05,                          !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+  CoolingDesignCapacity,                  !- Cooling Design Capacity Method
+  Autosize,                               !- Cooling Design Capacity {W}
+  234.7,                                  !- Cooling Design Capacity Per Floor Area {W/m2}
+  1,                                      !- Fraction of Autosized Cooling Design Capacity
+  HeatingDesignCapacity,                  !- Heating Design Capacity Method
+  Autosize,                               !- Heating Design Capacity {W}
+  157,                                    !- Heating Design Capacity Per Floor Area {W/m2}
+  1,                                      !- Fraction of Autosized Heating Design Capacity
+  OnOff;                                  !- Central Cooling Capacity Control Method
 
 OS:Node,
   {1f57ab27-7640-49b5-8eb2-d9f55018c20c}, !- Handle
@@ -3139,17 +3140,17 @@ OS:Output:Variable,
   *,                                      !- Key Value
   Surface Outside Face Temperature;       !- Variable Name
 
-OS:Meter,
+OS:Output:Meter,
   {a60ebd85-57b3-471b-a95f-21bda9b0dc8a}, !- Handle
   Electricity:Facility,                   !- Name
   Hourly;                                 !- Reporting Frequency
 
-OS:Meter,
+OS:Output:Meter,
   {47503b76-9590-4fa7-95f3-d730ed27e9fc}, !- Handle
   Gas:Facility,                           !- Name
   Hourly;                                 !- Reporting Frequency
 
-OS:Meter,
+OS:Output:Meter,
   {46cc5b2e-bbf7-48a5-9ee1-89b94a4d6cb9}, !- Handle
   Propane:Facility,                       !- Name
   Hourly;                                 !- Reporting Frequency
@@ -3223,4 +3224,41 @@ OS:Rendering:Color,
   0,                                      !- Rendering Red Value
   0,                                      !- Rendering Green Value
   255;                                    !- Rendering Blue Value
+
+OS:Building,
+  {e11b34af-2bb6-4f16-8082-cbd61ee7679e}, !- Handle
+  Building 1,                             !- Name
+  ,                                       !- Building Sector Type
+  ,                                       !- North Axis {deg}
+  ,                                       !- Nominal Floor to Floor Height {m}
+  {53148cd3-f7e8-45bd-becf-46361d6848b4}, !- Space Type Name
+  {c50911a9-e76e-4759-bb87-25716b1a78da}, !- Default Construction Set Name
+  {530f9623-af4a-491d-9109-39cfa4e2ff70}; !- Default Schedule Set Name
+
+OS:ClimateZones,
+  {02f686a8-1787-4936-9a5f-61184b34e123}, !- Handle
+  ,                                       !- Active Institution
+  ,                                       !- Active Year
+  ASHRAE,                                 !- Climate Zone Institution Name 1
+  ANSI/ASHRAE Standard 169,               !- Climate Zone Document Name 1
+  2006,                                   !- Climate Zone Document Year 1
+  ,                                       !- Climate Zone Value 1
+  CEC,                                    !- Climate Zone Institution Name 2
+  California Climate Zone Descriptions,   !- Climate Zone Document Name 2
+  1995,                                   !- Climate Zone Document Year 2
+  ;                                       !- Climate Zone Value 2
+
+OS:LifeCycleCost:Parameters,
+  {0f852ce9-009e-4255-b97a-a1c416d8367d}, !- Handle
+  ,                                       !- Analysis Type
+  ,                                       !- Discounting Convention
+  ,                                       !- Inflation Approach
+  ,                                       !- Real Discount Rate
+  ,                                       !- Nominal Discount Rate
+  ,                                       !- Inflation
+  ,                                       !- Base Date Month
+  ,                                       !- Base Date Year
+  ,                                       !- Service Date Month
+  ,                                       !- Service Date Year
+  ;                                       !- Length of Study Period in Years
 

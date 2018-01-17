@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
@@ -223,6 +232,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(BoilerSteam);
     REGISTER_CONSTRUCTOR(Building);
     REGISTER_CONSTRUCTOR(BuildingStory);
+    REGISTER_CONSTRUCTOR(BuildingUnit);
     // REGISTER_CONSTRUCTOR(CentralHeatPumpSystem);
     // REGISTER_CONSTRUCTOR(CentralHeatPumpSystemModule);
     REGISTER_CONSTRUCTOR(CFactorUndergroundWallConstruction);
@@ -269,6 +279,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(CoilSystemCoolingWaterHeatExchangerAssisted);
     REGISTER_CONSTRUCTOR(CoilSystemCoolingDXHeatExchangerAssisted);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPump);
+    REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPumpWrapped);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingDesuperheater);
     REGISTER_CONSTRUCTOR(ComponentCostAdjustments);
     REGISTER_CONSTRUCTOR(ComponentData);
@@ -323,6 +334,19 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterLookUpTable);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterSimple);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageSimple);
+    REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageConverter);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemActuator);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemConstructionIndexVariable);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemCurveOrTableIndexVariable);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemGlobalVariable);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemInternalVariable);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemMeteredOutputVariable);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemOutputVariable);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemProgram);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemProgramCallingManager);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemSensor);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemSubroutine);
+    REGISTER_CONSTRUCTOR(EnergyManagementSystemTrendVariable);
     REGISTER_CONSTRUCTOR(EvaporativeCoolerDirectResearchSpecial);
     REGISTER_CONSTRUCTOR(EvaporativeCoolerIndirectResearchSpecial);
     REGISTER_CONSTRUCTOR(EvaporativeFluidCoolerSingleSpeed);
@@ -384,6 +408,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(OtherEquipment);
     REGISTER_CONSTRUCTOR(OtherEquipmentDefinition);
     REGISTER_CONSTRUCTOR(OutputControlReportingTolerances);
+    REGISTER_CONSTRUCTOR(OutputEnergyManagementSystem);
     REGISTER_CONSTRUCTOR(OutputMeter);
     REGISTER_CONSTRUCTOR(OutputVariable);
     REGISTER_CONSTRUCTOR(OutsideSurfaceConvectionAlgorithm);
@@ -524,6 +549,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(Version);
     REGISTER_CONSTRUCTOR(WaterHeaterMixed);
     REGISTER_CONSTRUCTOR(WaterHeaterHeatPump);
+    REGISTER_CONSTRUCTOR(WaterHeaterHeatPumpWrappedCondenser);
     REGISTER_CONSTRUCTOR(WaterHeaterStratified);
     REGISTER_CONSTRUCTOR(WaterUseConnections);
     REGISTER_CONSTRUCTOR(WaterUseEquipment);
@@ -633,6 +659,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(BoilerSteam);
     REGISTER_COPYCONSTRUCTORS(Building);
     REGISTER_COPYCONSTRUCTORS(BuildingStory);
+    REGISTER_COPYCONSTRUCTORS(BuildingUnit);
     // REGISTER_COPYCONSTRUCTORS(CentralHeatPumpSystem);
     // REGISTER_COPYCONSTRUCTORS(CentralHeatPumpSystemModule);
     REGISTER_COPYCONSTRUCTORS(CFactorUndergroundWallConstruction);
@@ -679,6 +706,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingWaterHeatExchangerAssisted);
     REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingDXHeatExchangerAssisted);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPump);
+    REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPumpWrapped);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingDesuperheater);
     REGISTER_COPYCONSTRUCTORS(ComponentCostAdjustments);
     REGISTER_COPYCONSTRUCTORS(ComponentData);
@@ -733,6 +761,19 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterLookUpTable);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterSimple);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageSimple);
+    REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageConverter);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemActuator);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemConstructionIndexVariable);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemCurveOrTableIndexVariable);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemGlobalVariable);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemInternalVariable);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemMeteredOutputVariable);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemOutputVariable);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemProgram);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemProgramCallingManager);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemSensor);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemSubroutine);
+    REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemTrendVariable);
     REGISTER_COPYCONSTRUCTORS(EvaporativeCoolerDirectResearchSpecial);
     REGISTER_COPYCONSTRUCTORS(EvaporativeCoolerIndirectResearchSpecial);
     REGISTER_COPYCONSTRUCTORS(EvaporativeFluidCoolerSingleSpeed);
@@ -794,6 +835,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(OtherEquipment);
     REGISTER_COPYCONSTRUCTORS(OtherEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(OutputControlReportingTolerances);
+    REGISTER_COPYCONSTRUCTORS(OutputEnergyManagementSystem);
     REGISTER_COPYCONSTRUCTORS(OutputMeter);
     REGISTER_COPYCONSTRUCTORS(OutputVariable);
     REGISTER_COPYCONSTRUCTORS(OutsideSurfaceConvectionAlgorithm);
@@ -934,6 +976,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(Version);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterMixed);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterHeatPump);
+    REGISTER_COPYCONSTRUCTORS(WaterHeaterHeatPumpWrappedCondenser);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterStratified);
     REGISTER_COPYCONSTRUCTORS(WaterUseConnections);
     REGISTER_COPYCONSTRUCTORS(WaterUseEquipment);

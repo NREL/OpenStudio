@@ -1,9 +1,9 @@
 <measure>
   <schema_version>3.0</schema_version>
-  <name>open_studio_results</name>
-  <uid>a6b9a024-0912-4be3-a55d-57dfe0b8586c</uid>
-  <version_id>54c5c464-8235-45bd-9859-9461e43abe05</version_id>
-  <version_modified>20160429T151606Z</version_modified>
+  <name>openstudio_results</name>
+  <uid>675e0a1f-d1f9-4639-aed5-3fd8b21d5503</uid>
+  <version_id>0b4efec3-3802-4665-9e8b-2dacbe9a468c</version_id>
+  <version_modified>20161230T213925Z</version_modified>
   <xml_checksum>557BF06F</xml_checksum>
   <class_name>OpenStudioResults</class_name>
   <display_name>OpenStudio Results</display_name>
@@ -445,29 +445,6 @@
       <checksum>BDF687C1</checksum>
     </file>
     <file>
-      <filename>OpenStudioResults_Test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>83A917C2</checksum>
-    </file>
-    <file>
-      <version>
-        <software_program>OpenStudio</software_program>
-        <identifier>1.10.5</identifier>
-        <min_compatible>1.10.5</min_compatible>
-      </version>
-      <filename>measure.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>script</usage_type>
-      <checksum>4650F490</checksum>
-    </file>
-    <file>
-      <filename>report.html.erb</filename>
-      <filetype>erb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>463388F8</checksum>
-    </file>
-    <file>
       <filename>EmptyModel.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
@@ -486,16 +463,57 @@
       <checksum>5B277247</checksum>
     </file>
     <file>
+      <filename>1004_SmallHotel_a.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>C62949E8</checksum>
+    </file>
+    <file>
+      <filename>PeriodInConstName.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>D67C186D</checksum>
+    </file>
+    <file>
       <filename>ExampleModel.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
-      <checksum>E7812BB5</checksum>
+      <checksum>6EBB9908</checksum>
+    </file>
+    <file>
+      <filename>report.html.erb</filename>
+      <filetype>erb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>7DC1F0A7</checksum>
+    </file>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>1.10.5</identifier>
+        <min_compatible>1.10.5</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>6E91E4F2</checksum>
     </file>
     <file>
       <filename>os_lib_reporting.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>DCCD722E</checksum>
+      <checksum>0F9C02BF</checksum>
+    </file>
+    <file>
+      <filename>OpenStudioResults_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>50A163F9</checksum>
+    </file>
+    <file>
+      <filename>HeatingOnly.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>99A21A4F</checksum>
     </file>
   </files>
 </measure>

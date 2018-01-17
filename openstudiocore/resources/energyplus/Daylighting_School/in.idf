@@ -33,7 +33,7 @@
 ! WeatherFileName=USA_CO_Boulder_TMY2.epw
 ! End SimMetaData
 
-  Version,8.5;
+  Version,8.6;
 
   Timestep,6;
 
@@ -1369,28 +1369,23 @@
 
   Branch,
     PSZ-AC:1 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     PSZ-AC:1_OA,             !- Component 1 Name
     PSZ-AC:1 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     PSZ-AC:1_OA-PSZ-AC:1_CoolCNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     PSZ-AC:1_CoolC,          !- Component 2 Name
     PSZ-AC:1_OA-PSZ-AC:1_CoolCNode,  !- Component 2 Inlet Node Name
     PSZ-AC:1_CoolC-PSZ-AC:1_HeatCNode,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
-    Coil:Heating:Gas,        !- Component 3 Object Type
+    Coil:Heating:Fuel,       !- Component 3 Object Type
     PSZ-AC:1_HeatC,          !- Component 3 Name
     PSZ-AC:1_CoolC-PSZ-AC:1_HeatCNode,  !- Component 3 Inlet Node Name
     PSZ-AC:1_HeatC-PSZ-AC:1_FanNode,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:ConstantVolume,      !- Component 4 Object Type
     PSZ-AC:1_Fan,            !- Component 4 Name
     PSZ-AC:1_HeatC-PSZ-AC:1_FanNode,  !- Component 4 Inlet Node Name
-    PSZ-AC:1 Supply Equipment Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    PSZ-AC:1 Supply Equipment Outlet Node;  !- Component 4 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     PSZ-AC:1_OA_Controllers, !- Name
@@ -1529,10 +1524,11 @@
   OutdoorAir:Node,
     PSZ-AC:1_CoolCOA Ref node;  !- Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     PSZ-AC:1_HeatC,          !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     PSZ-AC:1_CoolC-PSZ-AC:1_HeatCNode,  !- Air Inlet Node Name
     PSZ-AC:1_HeatC-PSZ-AC:1_FanNode,  !- Air Outlet Node Name
@@ -2402,25 +2398,39 @@
     0.0;                     !- Airflow Permeability {dimensionless}
 
   Daylighting:Controls,
+    Classroom_DaylCtrl,      !- Name
     Classroom,               !- Zone Name
-    2,                       !- Total Daylighting Reference Points
-    4.572,                   !- X-Coordinate of First Reference Point {m}
-    2.286,                   !- Y-Coordinate of First Reference Point {m}
-    0.762,                   !- Z-Coordinate of First Reference Point {m}
-    4.572,                   !- X-Coordinate of Second Reference Point {m}
-    6.858,                   !- Y-Coordinate of Second Reference Point {m}
-    0.762,                   !- Z-Coordinate of Second Reference Point {m}
-    0.5,                     !- Fraction of Zone Controlled by First Reference Point
-    0.5,                     !- Fraction of Zone Controlled by Second Reference Point
-    400,                     !- Illuminance Setpoint at First Reference Point {lux}
-    400,                     !- Illuminance Setpoint at Second Reference Point {lux}
-    3,                       !- Lighting Control Type
+    SplitFlux,               !- Daylighting Method
+    ,                        !- Availability Schedule Name
+    ContinuousOff,           !- Lighting Control Type
+    0.2,                     !- Minimum Input Power Fraction for Continuous or ContinuousOff Dimming Control
+    0.01,                    !- Minimum Light Output Fraction for Continuous or ContinuousOff Dimming Control
+    ,                        !- Number of Stepped Control Steps
+    0,                       !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    Classroom_DaylRefPt1,    !- Glare Calculation Daylighting Reference Point Name
     180,                     !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
     20,                      !- Maximum Allowable Discomfort Glare Index
-    0.2,                     !- Minimum Input Power Fraction for Continuous Dimming Control
-    0.01,                    !- Minimum Light Output Fraction for Continuous Dimming Control
-    0,                       !- Number of Stepped Control Steps
-    0;                       !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ,                        !- DElight Gridding Resolution {m2}
+    Classroom_DaylRefPt1,    !- Daylighting Reference Point 1 Name
+    0.5,                     !- Fraction of Zone Controlled by Reference Point 1
+    400,                     !- Illuminance Setpoint at Reference Point 1 {lux}
+    Classroom_DaylRefPt2,    !- Daylighting Reference Point 2 Name
+    0.5,                     !- Fraction of Zone Controlled by Reference Point 2
+    400;                     !- Illuminance Setpoint at Reference Point 2 {lux}
+
+  Daylighting:ReferencePoint,
+    Classroom_DaylRefPt1,    !- Name
+    Classroom,               !- Zone Name
+    4.572,                   !- X-Coordinate of Reference Point {m}
+    2.286,                   !- Y-Coordinate of Reference Point {m}
+    0.762;                   !- Z-Coordinate of Reference Point {m}
+
+  Daylighting:ReferencePoint,
+    Classroom_DaylRefPt2,    !- Name
+    Classroom,               !- Zone Name
+    4.572,                   !- X-Coordinate of Reference Point {m}
+    6.858,                   !- Y-Coordinate of Reference Point {m}
+    0.762;                   !- Z-Coordinate of Reference Point {m}
 
   Output:IlluminanceMap,
     Classroom Illuminance Map,  !- Name
@@ -2478,7 +2488,4 @@
 
   Output:SQLite,
     SimpleAndTabular;        !- Option Type
-
-  ProgramControl,
-    1;                       !- Number of Threads Allowed
 

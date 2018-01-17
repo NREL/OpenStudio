@@ -22,6 +22,7 @@ If this is a major release, release notes must be written.
 - Incorporate the developers notes previously obtained.
 - Have the release notes reviewed for accuracy.
 - Generate a PDF from the word doc.
+- Update openstudiocore\cmakelists.txt to package the latest release notes pdf.
 - With Git, commit above files (Commit Message = `Updating release notes X.Y.Z`) to the develop branch
 - Generate a markdown document from the word doc.
 
@@ -36,6 +37,14 @@ If this is a major release
 
 - With Git, merge `develop` into `master`.
 
+
+Updating HVAC lib
+=================
+If this is a major release, the HVAC library must be updated.
+
+Run `developer/ruby/UpdateHVACLibrary.rb` (ruby -I E:\Git\OS1\build\OSCore-prefix\src\OSCore-build\ruby\Release UpdateHVACLibrary.rb)
+
+Commit the updated files to develop.
 
 Updating EnergyPlus
 ===================
@@ -402,17 +411,21 @@ With Git, commit above files (Commit Message = `Updating version to X.Y.Z+1`) to
 
 SketchUp Extension Signature
 =========
-If either of the files '/openstudiocore/ruby/openstudio/sketchup_plugin/OpenStudio.rb' or '/openstudiocore/ruby/openstudio/sketchup_plugin/Startup.rb' change, then the SketchUp Extension Signature in '/openstudiocore/ruby/openstudio/sketchup_plugin/OpenStudio.hash' must be updated.  To do this:
+Check if either file below has been updated:
+- `openstudiocore/ruby/openstudio/sketchup_plugin/OpenStudio.rb`
+- `openstudiocore/ruby/openstudio/sketchup_plugin/Startup.rb` 
 
+If either file was updated, the SketchUp Extension Signature must be updated in
+- `openstudiocore/ruby/openstudio/sketchup_plugin/OpenStudio.hash`
+ 
+To do this:
 - Build an OpenStudio package
-- Copy all the files in '\Ruby\Plugins' to another directory (you should see OpenStudio.rb and an OpenStudio folder)
-- Delete the 'OpenStudio.hash' file in the copied directory
-- Zip the OpenStudio.rb and OpenStudio folders (with OpenStudio.rb being at the top level of the zip archive)
+- Zip the contents (OpenStudio.rb and OpenStudio folder) in `build\_CPack_Packages\win64\NSIS\OpenStudio-x.y.z.sha-Win64\Ruby\Plugins`
 - Change the extension of the zip file from .zip to .rbz
 - Login to https://extensions.sketchup.com/en/developer_center/extension_signature as openstudio@nrel.gov
-- Drag the .rbz file into the upload box, upload the file, push the 'Sign The Extension' button (do not select any options to encrypt the ruby files)
-- Download the signed .rbz file, extract all the files
-- Copy the new OpenStudio.hash file over the existing one in the source tree, commit the new OpenStudio.hash file
+- Drag the .rbz file into the upload box, upload the file, click 'Sign The Extension' (do not select any options to encrypt the ruby files)
+- Download the signed .rbz file, and extract the files over the originals in `build\_CPack_Packages\win64\NSIS\OpenStudio-x.y.z.sha-Win64\Ruby\Plugins`
+- Copy the new OpenStudio.hash file over the existing one in `openstudiocore/ruby/openstudio/sketchup_plugin`, and commit the new OpenStudio.hash file
 - Rebuild the OpenStudio package
 
 AMI BUILD

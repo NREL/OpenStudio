@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #include "OutputMeter.hpp"
 #include "OutputMeter_Impl.hpp"
@@ -25,6 +34,8 @@
 #include "Facility_Impl.hpp"
 #include "Building.hpp"
 #include "Building_Impl.hpp"
+#include "EnergyManagementSystemSensor.hpp"
+#include "EnergyManagementSystemSensor_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -95,6 +106,22 @@ namespace detail {
 
     }
     return result;
+  }
+
+  std::vector<openstudio::IdfObject> OutputMeter_Impl::remove() {
+    //Note: Cant do /object-list implementation for EMS Sensor since Auto Naming of Objects causes issues.
+    //      Instead, doing an /alpha getString implementation so we need to manually remove any referring Sensors
+    const Model m = this->model();
+
+    std::vector<EnergyManagementSystemSensor> objects = m.getConcreteModelObjects<EnergyManagementSystemSensor>();
+    for (auto & sensor : objects) {
+      if (sensor.outputMeter()) {
+        if (sensor.outputMeter().get().name() == this->name()) {
+          sensor.remove();
+        }
+      }
+    }
+    return ModelObject_Impl::remove();
   }
 
   std::string OutputMeter_Impl::name() const {
@@ -623,6 +650,10 @@ openstudio::OptionalTimeSeries OutputMeter::getData(const std::string& envPeriod
 openstudio::OptionalTimeSeries OutputMeter::getData(const std::string& envPeriod, const OptionalString& specificInstallLocation) const
 {
   return getImpl<detail::OutputMeter_Impl>()->getData(envPeriod, specificInstallLocation);
+}
+
+std::vector<IdfObject> OutputMeter::remove() {
+  return getImpl<detail::OutputMeter_Impl>()->remove();
 }
 
 bool MeterFuelTypeEquals(const OutputMeter& meter,const FuelType& ft) {

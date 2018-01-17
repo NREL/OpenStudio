@@ -458,6 +458,33 @@ set(osversion_resources_src
   osversion/1_12_2/OpenStudio.idd
   osversion/1_12_2/example.osm
   osversion/1_12_2/example.osc
+  osversion/1_12_3/OpenStudio.idd
+  osversion/1_12_3/example.osm
+  osversion/1_12_3/example.osc
+  osversion/1_12_4/OpenStudio.idd
+  osversion/1_12_4/example.osm
+  osversion/1_12_4/example.osc
+  osversion/1_12_5/OpenStudio.idd
+  osversion/1_12_5/example.osm
+  osversion/1_12_5/example.osc
+  osversion/1_12_6/OpenStudio.idd
+  osversion/1_12_6/example.osm
+  osversion/1_12_6/example.osc
+  osversion/1_13_0/OpenStudio.idd
+  osversion/1_13_0/example.osm
+  osversion/1_13_0/example.osc
+  osversion/1_13_1/OpenStudio.idd
+  osversion/1_13_1/example.osm
+  osversion/1_13_1/example.osc
+  osversion/1_13_2/OpenStudio.idd
+  osversion/1_13_2/example.osm
+  osversion/1_13_2/example.osc
+  osversion/1_13_3/OpenStudio.idd
+  osversion/1_13_3/example.osm
+  osversion/1_13_3/example.osc
+  osversion/1_13_4/OpenStudio.idd
+  osversion/1_13_4/example.osm
+  osversion/1_13_4/example.osc
   osversion/unknown.osc
 )
 

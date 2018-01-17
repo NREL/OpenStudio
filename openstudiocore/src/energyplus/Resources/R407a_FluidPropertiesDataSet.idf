@@ -5,9 +5,11 @@
 !                Property Data for Refrigerant R407a
 !
 ! =============================================================================
-
 !  Version,
 !    8.5;                    !- Version Identifier
+
+!  Version,
+!    8.6;                    !- Version Identifier
 
   FluidProperties:Name,
     R407a,                   !- Fluid Name

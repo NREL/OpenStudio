@@ -1,3 +1,105 @@
+## OpenStudio v1.14.0
+###### 2016-12-09 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.4...v1.14.0 )
+
+- ![Fixed:][fixed] [#1519]( https://github.com/NREL/OpenStudio/issues/1519 ), People Def can have values for multiple unit types, other loads can't
+- ![Fixed:][fixed] [#2178]( https://github.com/NREL/OpenStudio/issues/2178 ), Plenum Space Type - space.spaceType.is_initialized not functioning as expected
+- ![Fixed:][fixed] [#2179]( https://github.com/NREL/OpenStudio/issues/2179 ), Plenum Space Type - Odd behavior when rename space type
+- ![Fixed:][fixed] [#2299]( https://github.com/NREL/OpenStudio/issues/2299 ), Issue with Zone Sensible Cooling and Heating when heating or cooling only system
+- ![Fixed:][fixed] [#2370]( https://github.com/NREL/OpenStudio/issues/2370 ), Error in intersectSurfaces
+- ![Fixed:][fixed] [#2372]( https://github.com/NREL/OpenStudio/issues/2372 ), Conversion issues from 1.12.0 to 1.13.0
+- ![Fixed:][fixed] [#2376]( https://github.com/NREL/OpenStudio/issues/2376 ), ScheduleRuleset.remove orphans winter and summer profiles
+
+## OpenStudio v1.13.4
+###### 2016-12-01 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.3...v1.13.4 )
+
+- ![Fixed:][fixed] [#105]( https://github.com/NREL/OpenStudio/issues/105 ), Deleting Schedule Ruleset object leaves Schedule Day objects behind (Bugzilla #662)
+- ![Fixed:][fixed] [#1459]( https://github.com/NREL/OpenStudio/issues/1459 ), LowTemperatureRadiant system input 'Radiant Surface Type' translates unexpected surfaces to SurfaceGroup
+- ![Fixed:][fixed] [#1597]( https://github.com/NREL/OpenStudio/issues/1597 ), API allows you to enter invalid object names
+- ![Fixed:][fixed] [#2195]( https://github.com/NREL/OpenStudio/issues/2195 ), Timeseries Not Found is being thrown on template reporting measure
+- ![Fixed:][fixed] [#2216]( https://github.com/NREL/OpenStudio/issues/2216 ), Spectral Data Set name doesn't forward translate to IDF
+- ![Fixed:][fixed] [#2217]( https://github.com/NREL/OpenStudio/issues/2217 ), BCLMeasure should force update if measure.xml missing class_name or other required fields
+- ![Fixed:][fixed] [#2241]( https://github.com/NREL/OpenStudio/issues/2241 ), Bad data in energyPlusOutputRequests of reporting measure can break simulation
+- ![Fixed:][fixed] [#2251]( https://github.com/NREL/OpenStudio/issues/2251 ), Cannot load openstudio-standards in SketchUp user scripts
+- ![Fixed:][fixed] [#2304]( https://github.com/NREL/OpenStudio/issues/2304 ), Missing Objects in EnergyPlus Forward Translator
+- ![Fixed:][fixed] [#2312]( https://github.com/NREL/OpenStudio/issues/2312 ), Cannot create custom window construction
+- ![Fixed:][fixed] [#2328]( https://github.com/NREL/OpenStudio/issues/2328 ), Need backwards compatible shim for require 'openstudio/ruleset/ShowRunnerOutput'
+- ![Fixed:][fixed] [#2331]( https://github.com/NREL/OpenStudio/issues/2331 ), Clean up and embed ruby files in openstudiocore/ruby/openstudio
+- ![Fixed:][fixed] [#2332]( https://github.com/NREL/OpenStudio/issues/2332 ), Export zone loads to gbXML
+- ![Fixed:][fixed] [#2354]( https://github.com/NREL/OpenStudio/issues/2354 ), ZoneCapacitanceMultiplierResearchSpecial not translated to E+
+- ![Fixed:][fixed] [#2362]( https://github.com/NREL/OpenStudio/issues/2362 ), files missing
+- ![Fixed:][fixed] [#2368]( https://github.com/NREL/OpenStudio/issues/2368 ), OpenStudio Measure test templates don't work in 2.x
+- ![Fixed:][fixed] [#2369]( https://github.com/NREL/OpenStudio/issues/2369 ), OpenStudio 2.x not backwards compatible with 1.x measure tests
+- ![Fixed:][fixed] [#2383]( https://github.com/NREL/OpenStudio/issues/2383 ), Refrigeration missing from monthly peak demand
+- ![Fixed:][fixed] [#2393]( https://github.com/NREL/OpenStudio/issues/2393 ), Cash flow for fuels not populating because of E+ query change
+- ![Fixed:][fixed] [#2394]( https://github.com/NREL/OpenStudio/issues/2394 ), Allow more zone hvac to be drag and dropped from the airloophvac view
+- ![Fixed:][fixed] [#2396]( https://github.com/NREL/OpenStudio/issues/2396 ), GeneratorPhotovoltaic::simple constructor makes incomplete object
+
+## OpenStudio v1.13.3
+###### 2016-11-10 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.2...v1.13.3 )
+
+- ![Fixed:][fixed] [#2388]( https://github.com/NREL/OpenStudio/pull/2388 ), 131770395 reporting measure 2x support
+
+## OpenStudio v1.13.2
+###### 2016-10-29 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.1...v1.13.2 )
+
+- ![Added:][added] [#2382]( https://github.com/NREL/OpenStudio/pull/2382 ), Added support for EMS functionality.
+- ![Added:][added] [#2230]( https://github.com/NREL/OpenStudio/pull/2230 ), Added OS:WaterHeater:HeatPump:WrappedCondenser and OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped objects.
+- ![Added:][added] [#2375]( https://github.com/NREL/OpenStudio/pull/2375 ), Added Fuel Type to OS:OtherEquipment:Definition and OS:Coil:Heating:Gas.
+- ![Fixed:][fixed] [#2230]( https://github.com/NREL/OpenStudio/pull/2230 ), 2091 wrapped hpwh
+- ![Fixed:][fixed] [#2366]( https://github.com/NREL/OpenStudio/pull/2366 ), Set PreferredToolArchitecture = x64 when possible.
+- ![Fixed:][fixed] [#2367]( https://github.com/NREL/OpenStudio/pull/2367 ), Updating standard report in pat_app dir
+- ![Fixed:][fixed] [#2375]( https://github.com/NREL/OpenStudio/pull/2375 ), Adding Fuel Type to OtherEquipment and Coil:Heating:Gas
+- ![Fixed:][fixed] [#2377]( https://github.com/NREL/OpenStudio/issues/2377 ), remove limit on number of fans on air loops
+- ![Fixed:][fixed] [#2380]( https://github.com/NREL/OpenStudio/pull/2380 ), removed CAV and VAV fan limit from air loops
+- ![Fixed:][fixed] [#2381]( https://github.com/NREL/OpenStudio/pull/2381 ), Pull request for EMS
+- ![Fixed:][fixed] [#2382]( https://github.com/NREL/OpenStudio/pull/2382 ), EMS
+- ![Fixed:][fixed] [#2386]( https://github.com/NREL/OpenStudio/pull/2386 ), Updates openstudio-standards to 0.1.8 to fix issue hit during PSD tra…
+
+## OpenStudio v1.13.1
+###### 2016-10-15 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.13.0...v1.13.1 )
+
+- ![Added:][added] [#2363]( https://github.com/NREL/OpenStudio/pull/2363 ), Add a BuildingUnit object that is optionally referenced by a space such that it can group together spaces into a unit such as an apartment in a multifamily building
+- ![Fixed:][fixed] [#2247]( https://github.com/NREL/OpenStudio/issues/2247 ), Update class generator
+- ![Fixed:][fixed] [#2360]( https://github.com/NREL/OpenStudio/issues/2360 ), Incorrect Zone Volume in Outdoor Air - OpenStudio report
+- ![Fixed:][fixed] [#2371]( https://github.com/NREL/OpenStudio/issues/2371 ), OpenStudio 2.0: Importing C# library in IronPython threw 'OpenStudio.OpenStudioModelCorePINVOKE'
+- ![Fixed:][fixed] [#2374]( https://github.com/NREL/OpenStudio/pull/2374 ), Make OpenStudio 2.X more backwards compatible with 1.X measure tests
+- ![Fixed:][fixed] [#2378]( https://github.com/NREL/OpenStudio/pull/2378 ), Updates openstudio-standards to 0.1.7
+
+## OpenStudio v1.13.0
+###### 2016-10-01 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.6...v1.13.0 )
+
+- ![Fixed:][fixed] [#2308]( https://github.com/NREL/OpenStudio/issues/2308 ), OS App crashes when switching to Measures tab with specific model
+- ![Fixed:][fixed] [#2355]( https://github.com/NREL/OpenStudio/pull/2355 ), Updates openstudio-standards gem to 0.1.5, which supports baseline au…
+- ![Fixed:][fixed] [#2356]( https://github.com/NREL/OpenStudio/pull/2356 ), Os 2 0 fix static build
+- ![Fixed:][fixed] [#2359]( https://github.com/NREL/OpenStudio/pull/2359 ), License update
+- ![Fixed:][fixed] [#2361]( https://github.com/NREL/OpenStudio/pull/2361 ), Updates openstudio-standards to 0.1.6
+
+## OpenStudio v1.12.6
+###### 2016-09-21 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.5...v1.12.6 )
+
+- ![Fixed:][fixed] [#2353]( https://github.com/NREL/OpenStudio/pull/2353 ), Os 2 0 develop linux
+
+## OpenStudio v1.12.5
+###### 2016-09-09 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.4...v1.12.5 )
+
+- ![Fixed:][fixed] [#2293]( https://github.com/NREL/OpenStudio/issues/2293 ), User model crashes when delete Zone
+
+## OpenStudio v1.12.4
+###### 2016-08-18 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.3...v1.12.4 )
+
+## OpenStudio v1.12.3
+###### 2016-08-10 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.2...v1.12.3 )
+
+- ![Fixed:][fixed] [#561]( https://github.com/NREL/OpenStudio/issues/561 ), Adjacent stacked spaces in same zones may result in incorrect area and likely loads as well.
+- ![Fixed:][fixed] [#1361]( https://github.com/NREL/OpenStudio/issues/1361 ), gbXML does not import WindowType elements
+- ![Fixed:][fixed] [#2298]( https://github.com/NREL/OpenStudio/issues/2298 ), gbxml import makes bad OS:Schedule:Week
+- ![Fixed:][fixed] [#2303]( https://github.com/NREL/OpenStudio/issues/2303 ), gbXML import/export should properly use names and ids
+- ![Fixed:][fixed] [#2310]( https://github.com/NREL/OpenStudio/issues/2310 ), Fenestration related "impedance mismatch" between OS and JEPlus
+- ![Fixed:][fixed] [#2313]( https://github.com/NREL/OpenStudio/issues/2313 ), Coil:Cooling:DX:TwoStageWithHumidityControl not working
+- ![Fixed:][fixed] [#2314]( https://github.com/NREL/OpenStudio/issues/2314 ), OS 1.12.1 to 1.12.2 Conversion Error
+- ![Fixed:][fixed] [#2316]( https://github.com/NREL/OpenStudio/issues/2316 ), Year Schedules appears twice in Schedules tab Library pane
+- ![Fixed:][fixed] [#2320]( https://github.com/NREL/OpenStudio/issues/2320 ), PAT select measures 
+
 ## OpenStudio v1.12.2
 ###### 2016-07-25 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.1...v1.12.2 )
 
@@ -11,9 +113,9 @@ Closed Issues: 12 (#93, #94, #273, #275, #398, #399, #1362, #1925, #1991, #2172,
 - ![Fixed:][fixed] [#1362]( https://github.com/NREL/OpenStudio/issues/1362 ), OpenStudio GUI does not show ScheduleYear objects where it should
 - ![Fixed:][fixed] [#1925]( https://github.com/NREL/OpenStudio/issues/1925 ), GBXML Export Uses wrong Coordinate Geometry
 - ![Fixed:][fixed] [#1991]( https://github.com/NREL/OpenStudio/issues/1991 ), Shading surfaces not exported to gbXML
-- ![Improved:][improved] [#2172]( https://github.com/NREL/OpenStudio/issues/2172 ), Translate all coils supported by the IDD in AirLoopHVACUnitarySystem
 - ![Fixed:][fixed] [#2278]( https://github.com/NREL/OpenStudio/issues/2278 ), UnitarySystemPerformance:Multispeed is not cloning correctly
 - ![Fixed:][fixed] [#2306]( https://github.com/NREL/OpenStudio/issues/2306 ), Zone overview bug in open studio results
+- ![Improved:][improved] [#2172]( https://github.com/NREL/OpenStudio/issues/2172 ), Translate all coils supported by the IDD in AirLoopHVACUnitarySystem
 
 ## OpenStudio v1.12.1
 ###### 2016-07-07 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.12.0...v1.12.1 )

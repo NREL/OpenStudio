@@ -1,21 +1,30 @@
-/**********************************************************************
- *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
- *  All rights reserved.
+/***********************************************************************************************************************
+ *  OpenStudio(R), Copyright (c) 2008-2016, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
+ *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *  following conditions are met:
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *  disclaimer.
  *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+ *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *  products derived from this software without specific prior written permission from the respective party.
+ *
+ *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********************************************************************************************************************/
 
 #ifndef ENERGYPLUS_FORWARDTRANSLATOR_HPP
 #define ENERGYPLUS_FORWARDTRANSLATOR_HPP
@@ -101,6 +110,7 @@ class CoilSystemCoolingDXHeatExchangerAssisted;
 class CoilSystemCoolingWaterHeatExchangerAssisted;
 class CoilWaterHeatingDesuperheater;
 class CoilWaterHeatingAirToWaterHeatPump;
+class CoilWaterHeatingAirToWaterHeatPumpWrapped;
 class Construction;
 class ConstructionWithInternalSource;
 class ControllerOutdoorAir;
@@ -143,6 +153,19 @@ class ElectricLoadCenterDistribution;
 class ElectricLoadCenterInverterLookUpTable;
 class ElectricLoadCenterInverterSimple;
 class ElectricLoadCenterStorageSimple;
+class ElectricLoadCenterStorageConverter;
+class EnergyManagementSystemActuator;
+class EnergyManagementSystemConstructionIndexVariable;
+class EnergyManagementSystemCurveOrTableIndexVariable;
+class EnergyManagementSystemGlobalVariable;
+class EnergyManagementSystemInternalVariable;
+class EnergyManagementSystemMeteredOutputVariable;
+class EnergyManagementSystemOutputVariable;
+class EnergyManagementSystemProgram;
+class EnergyManagementSystemProgramCallingManager;
+class EnergyManagementSystemSensor;
+class EnergyManagementSystemSubroutine;
+class EnergyManagementSystemTrendVariable;
 class EvaporativeCoolerDirectResearchSpecial;
 class EvaporativeCoolerIndirectResearchSpecial;
 class EvaporativeFluidCoolerSingleSpeed;
@@ -192,6 +215,7 @@ class OutsideSurfaceConvectionAlgorithm;
 class OutputControlReportingTolerances;
 class OutputMeter;
 class OutputVariable;
+class OutputEnergyManagementSystem;
 class People;
 class PhotovoltaicPerformanceEquivalentOneDiode;
 class PhotovoltaicPerformanceSimple;
@@ -311,6 +335,7 @@ class Timestep;
 class Version;
 class WaterHeaterMixed;
 class WaterHeaterHeatPump;
+class WaterHeaterHeatPumpWrappedCondenser;
 class WaterHeaterStratified;
 class WaterUseConnections;
 class WaterUseEquipment;
@@ -318,6 +343,7 @@ class WindowPropertyFrameAndDivider;
 class ZoneAirContaminantBalance;
 class ZoneAirHeatBalanceAlgorithm;
 class ZoneAirMassFlowConservation;
+class ZoneCapacitanceMultiplierResearchSpecial;
 class ZoneControlContaminantController;
 class ZoneControlHumidistat;
 class ZoneControlThermostatStagedDualSetpoint;
@@ -352,7 +378,7 @@ namespace detail
   struct ForwardTranslatorInitializer;
 };
 
-#define ENERGYPLUS_VERSION "8.5"
+#define ENERGYPLUS_VERSION "8.6"
 
 class ENERGYPLUS_API ForwardTranslator {
  public:
@@ -556,6 +582,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateCoilWaterHeatingAirToWaterHeatPump( model::CoilWaterHeatingAirToWaterHeatPump & modelObject );
 
+  boost::optional<IdfObject> translateCoilWaterHeatingAirToWaterHeatPumpWrapped( model::CoilWaterHeatingAirToWaterHeatPumpWrapped & modelObject );
+
   boost::optional<IdfObject> translateConstruction( model::Construction & modelObject );
 
   boost::optional<IdfObject> translateConstructionWithInternalSource( model::ConstructionWithInternalSource & modelObject );
@@ -639,12 +667,38 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateElectricLoadCenterInverterSimple( model::ElectricLoadCenterInverterSimple & modelObject );
   
   boost::optional<IdfObject> translateElectricLoadCenterStorageSimple( model::ElectricLoadCenterStorageSimple & modelObject );
+  
+  boost::optional<IdfObject> translateElectricLoadCenterStorageConverter( model::ElectricLoadCenterStorageConverter & modelObject );
+
+  boost::optional<IdfObject> translateEnergyManagementSystemActuator(model::EnergyManagementSystemActuator & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemConstructionIndexVariable(model::EnergyManagementSystemConstructionIndexVariable & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemCurveOrTableIndexVariable(model::EnergyManagementSystemCurveOrTableIndexVariable & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemGlobalVariable(model::EnergyManagementSystemGlobalVariable & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemInternalVariable(model::EnergyManagementSystemInternalVariable & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemMeteredOutputVariable(model::EnergyManagementSystemMeteredOutputVariable & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemOutputVariable(model::EnergyManagementSystemOutputVariable & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemProgram(model::EnergyManagementSystemProgram & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemProgramCallingManager(model::EnergyManagementSystemProgramCallingManager & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemSensor(model::EnergyManagementSystemSensor & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemSubroutine(model::EnergyManagementSystemSubroutine & modelObject);
+
+  boost::optional<IdfObject> translateEnergyManagementSystemTrendVariable(model::EnergyManagementSystemTrendVariable & modelObject);
 
   boost::optional<IdfObject> translateEvaporativeFluidCoolerSingleSpeed( model::EvaporativeFluidCoolerSingleSpeed & modelObject );
 
   boost::optional<IdfObject> translateEvaporativeFluidCoolerTwoSpeed( model::EvaporativeFluidCoolerTwoSpeed & modelObject  );
 
-  boost::optional<IdfObject> translateExteriorLights(model::ExteriorLights& modelObject);
+  boost::optional<IdfObject> translateExteriorLights(model::ExteriorLights& modelObject );
 
   boost::optional<IdfObject> translateFanConstantVolume( model::FanConstantVolume & modelObject );
 
@@ -737,6 +791,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateOutputMeter( model::OutputMeter & modelObject );
 
   boost::optional<IdfObject> translateOutputVariable( model::OutputVariable & modelObject );
+
+  boost::optional<IdfObject> translateOutputEnergyManagementSystem(model::OutputEnergyManagementSystem & modelObject );
 
   boost::optional<IdfObject> translatePeople( model::People & modelObject );
 
@@ -976,6 +1032,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateWaterHeaterHeatPump( model::WaterHeaterHeatPump & modelObject );
 
+  boost::optional<IdfObject> translateWaterHeaterHeatPumpWrappedCondenser( model::WaterHeaterHeatPumpWrappedCondenser & modelObject );
+
   boost::optional<IdfObject> translateWaterHeaterStratified( model::WaterHeaterStratified & modelObject );
 
   boost::optional<IdfObject> translateWaterUseConnections( model::WaterUseConnections & modelObject );
@@ -989,6 +1047,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateZoneAirContaminantBalance( model::ZoneAirContaminantBalance & modelObject );
 
   boost::optional<IdfObject> translateZoneAirMassFlowConservation(model::ZoneAirMassFlowConservation & modelObject);
+
+  boost::optional<IdfObject> translateZoneCapacitanceMultiplierResearchSpecial( model::ZoneCapacitanceMultiplierResearchSpecial & modelObject );
 
   boost::optional<IdfObject> translateZoneControlContaminantController( model::ZoneControlContaminantController& modelObject );
 

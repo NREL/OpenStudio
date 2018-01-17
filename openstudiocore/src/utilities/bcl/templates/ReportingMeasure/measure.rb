@@ -80,8 +80,6 @@ class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
     output << "Floor to Floor Height = " << model.getBuilding.nominalFloortoFloorHeight.to_s << " (m)<br>" # double variable
     output << "Net Site Energy = " << sqlFile.netSiteEnergy.to_s << " (GJ)<br>" # double variable
 
-    web_asset_path = OpenStudio.getSharedResourcesPath() / OpenStudio::Path.new("web_assets")
-
     # read in template
     html_in_path = "#{File.dirname(__FILE__)}/resources/report.html.in"
     if File.exist?(html_in_path)

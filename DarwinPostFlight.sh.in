@@ -7,8 +7,8 @@ ln -sf "$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/Ruby/openstu
 ln -sFf "$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/Ruby/openstudio" /Library/Ruby/Site/
 
 #---------- Create Symbolic Links to the openstudio-standards gem ----------
-ln -sFf "$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/ruby-2.0.0-aws-Darwin/lib/ruby/gems/2.0.0/gems/openstudio-standards-0.1.4" /Library/Ruby/Gems/2.0.0/gems/
-ln -sf "$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/ruby-2.0.0-aws-Darwin/lib/ruby/gems/2.0.0/specifications/openstudio-standards-0.1.4.gemspec"  /Library/Ruby/Gems/2.0.0/specifications/
+ln -sFf "$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/ruby-2.0.0-aws-Darwin/lib/ruby/gems/2.0.0/gems/openstudio-standards-0.1.8" /Library/Ruby/Gems/2.0.0/gems/
+ln -sf "$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/ruby-2.0.0-aws-Darwin/lib/ruby/gems/2.0.0/specifications/openstudio-standards-0.1.8.gemspec"  /Library/Ruby/Gems/2.0.0/specifications/
 
 #---------- Write a plugin-config.rb file for later installation ----------
 # And put it in the install folder for later reuse by the user if needed
@@ -18,7 +18,7 @@ chmod 755 "$config_file"
 chown $USER "$config_file"
 
 
-#---------- Install plugin for SketchUp 201 ----------
+#---------- Install plugin for SketchUp 2016 ----------
 # Check for the SketchUp 16 Application Support directory
 SU16_support_dir="/Library/Application Support/SketchUp 2016"
 mkdir -p "$SU16_support_dir/SketchUp/Plugins/OpenStudio"
