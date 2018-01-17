@@ -194,17 +194,17 @@ namespace detail {
 
     void resetLowPressureCompressorList();
 
-    void setReceiverPressure(double receiverPressure);
+    bool setReceiverPressure(double receiverPressure);
 
     void resetReceiverPressure();
 
-    void setSubcoolerEffectiveness(double subcoolerEffectiveness);
+    bool setSubcoolerEffectiveness(double subcoolerEffectiveness);
 
     void resetSubcoolerEffectiveness();
 
     bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
 
-    void setSumUASuctionPipingforMediumTemperatureLoads(double sumUASuctionPipingforMediumTemperatureLoads);
+    bool setSumUASuctionPipingforMediumTemperatureLoads(double sumUASuctionPipingforMediumTemperatureLoads);
 
     void resetSumUASuctionPipingforMediumTemperatureLoads();
 
@@ -212,7 +212,7 @@ namespace detail {
 
     void resetMediumTemperatureSuctionPipingZone();
 
-    void setSumUASuctionPipingforLowTemperatureLoads(double sumUASuctionPipingforLowTemperatureLoads);
+    bool setSumUASuctionPipingforLowTemperatureLoads(double sumUASuctionPipingforLowTemperatureLoads);
 
     void resetSumUASuctionPipingforLowTemperatureLoads();
 
@@ -220,7 +220,7 @@ namespace detail {
 
     void resetLowTemperatureSuctionPipingZone();
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -247,4 +247,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONTRANSCRITICALSYSTEM_IMPL_HPP
-

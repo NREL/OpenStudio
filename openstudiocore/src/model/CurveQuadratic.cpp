@@ -150,32 +150,37 @@ namespace detail {
     return isEmpty(OS_Curve_QuadraticFields::OutputUnitType);
   }
 
-  void CurveQuadratic_Impl::setCoefficient1Constant(double coefficient1Constant) {
+  bool CurveQuadratic_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = setDouble(OS_Curve_QuadraticFields::Coefficient1Constant, coefficient1Constant);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuadratic_Impl::setCoefficient2x(double coefficient2x) {
+  bool CurveQuadratic_Impl::setCoefficient2x(double coefficient2x) {
     bool result = setDouble(OS_Curve_QuadraticFields::Coefficient2x, coefficient2x);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuadratic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
+  bool CurveQuadratic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
     bool result = setDouble(OS_Curve_QuadraticFields::Coefficient3x_POW_2, coefficient3xPOW2);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuadratic_Impl::setMinimumValueofx(double minimumValueofx) {
+  bool CurveQuadratic_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_QuadraticFields::MinimumValueofx, minimumValueofx);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuadratic_Impl::setMaximumValueofx(double maximumValueofx) {
+  bool CurveQuadratic_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_QuadraticFields::MaximumValueofx, maximumValueofx);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveQuadratic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
+  bool CurveQuadratic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
     bool result = false;
     if (minimumCurveOutput) {
       result = setDouble(OS_Curve_QuadraticFields::MinimumCurveOutput, minimumCurveOutput.get());
@@ -183,6 +188,7 @@ namespace detail {
       result = setString(OS_Curve_QuadraticFields::MinimumCurveOutput, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveQuadratic_Impl::resetMinimumCurveOutput() {
@@ -190,7 +196,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveQuadratic_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
+  bool CurveQuadratic_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
     bool result = false;
     if (maximumCurveOutput) {
       result = setDouble(OS_Curve_QuadraticFields::MaximumCurveOutput, maximumCurveOutput.get());
@@ -198,6 +204,7 @@ namespace detail {
       result = setString(OS_Curve_QuadraticFields::MaximumCurveOutput, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveQuadratic_Impl::resetMaximumCurveOutput() {
@@ -297,36 +304,36 @@ bool CurveQuadratic::isOutputUnitTypeDefaulted() const {
   return getImpl<detail::CurveQuadratic_Impl>()->isOutputUnitTypeDefaulted();
 }
 
-void CurveQuadratic::setCoefficient1Constant(double coefficient1Constant) {
-  getImpl<detail::CurveQuadratic_Impl>()->setCoefficient1Constant(coefficient1Constant);
+bool CurveQuadratic::setCoefficient1Constant(double coefficient1Constant) {
+  return getImpl<detail::CurveQuadratic_Impl>()->setCoefficient1Constant(coefficient1Constant);
 }
 
-void CurveQuadratic::setCoefficient2x(double coefficient2x) {
-  getImpl<detail::CurveQuadratic_Impl>()->setCoefficient2x(coefficient2x);
+bool CurveQuadratic::setCoefficient2x(double coefficient2x) {
+  return getImpl<detail::CurveQuadratic_Impl>()->setCoefficient2x(coefficient2x);
 }
 
-void CurveQuadratic::setCoefficient3xPOW2(double coefficient3xPOW2) {
-  getImpl<detail::CurveQuadratic_Impl>()->setCoefficient3xPOW2(coefficient3xPOW2);
+bool CurveQuadratic::setCoefficient3xPOW2(double coefficient3xPOW2) {
+  return getImpl<detail::CurveQuadratic_Impl>()->setCoefficient3xPOW2(coefficient3xPOW2);
 }
 
-void CurveQuadratic::setMinimumValueofx(double minimumValueofx) {
-  getImpl<detail::CurveQuadratic_Impl>()->setMinimumValueofx(minimumValueofx);
+bool CurveQuadratic::setMinimumValueofx(double minimumValueofx) {
+  return getImpl<detail::CurveQuadratic_Impl>()->setMinimumValueofx(minimumValueofx);
 }
 
-void CurveQuadratic::setMaximumValueofx(double maximumValueofx) {
-  getImpl<detail::CurveQuadratic_Impl>()->setMaximumValueofx(maximumValueofx);
+bool CurveQuadratic::setMaximumValueofx(double maximumValueofx) {
+  return getImpl<detail::CurveQuadratic_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
-void CurveQuadratic::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveQuadratic_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+bool CurveQuadratic::setMinimumCurveOutput(double minimumCurveOutput) {
+  return getImpl<detail::CurveQuadratic_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveQuadratic::resetMinimumCurveOutput() {
   getImpl<detail::CurveQuadratic_Impl>()->resetMinimumCurveOutput();
 }
 
-void CurveQuadratic::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveQuadratic_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+bool CurveQuadratic::setMaximumCurveOutput(double maximumCurveOutput) {
+  return getImpl<detail::CurveQuadratic_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveQuadratic::resetMaximumCurveOutput() {

@@ -40,9 +40,9 @@ class Geom::Point3d
   def on_line_segment?(line)
 
     # In the SketchUp API:
-    # A line can be represented as either an Array of a point and a vector, or as an Array of two points. 
-    # line = [Geom::Point3d.new(0,0,0), Geom::Vector3d.new(0,0,1)] 
-    # line = [Geom::Point3d.new(0,0,0), Geom::Point3d.new(0,0,100)] 
+    # A line can be represented as either an Array of a point and a vector, or as an Array of two points.
+    # line = [Geom::Point3d.new(0,0,0), Geom::Vector3d.new(0,0,1)]
+    # line = [Geom::Point3d.new(0,0,0), Geom::Point3d.new(0,0,100)]
 
     # For the purposes of this method, the line MUST be defined as an array of two Point3d objects.
     # The Point3d/Vector3d version will not work.
@@ -131,7 +131,7 @@ class Geom::BoundingBox
     else
       intersects_in_y = false
     end
-    
+
     # Check z dimension
     if ( (self.corner(0).z >= other.corner(0).z and self.corner(0).z <= other.corner(7).z) \
       or (other.corner(0).z >= self.corner(0).z and other.corner(0).z <= self.corner(7).z) )
@@ -140,7 +140,7 @@ class Geom::BoundingBox
     else
       intersects_in_z = false
     end
-  
+
     return(intersects_in_x and intersects_in_y and intersects_in_z)
   end
 
@@ -152,7 +152,7 @@ end
 class Geom::PolygonLoop
   # This is a surrogate class for things I can't do directly with the regular Sketchup::Loop class.
   # The pure geometric analog of the Sketchup::Loop class.
-  
+
   attr_writer :outer
   attr_reader :points
 
@@ -163,15 +163,15 @@ class Geom::PolygonLoop
     else
       @points = []
     end
-    
+
     if (arg2 == true)
       @outer = true
     else
       @outer = false
     end
   end
-  
-  
+
+
   def inspect
     return(self)
   end
@@ -181,15 +181,15 @@ class Geom::PolygonLoop
   #def vertices=(arg)
   #
   #end
-  
+
 
   def points=(arg)
     # must be an array or a Sketchup::Loop
     if (arg.class == Array)
       @points = arg
-      
+
       # check to make sure this is an array of Point3d objects?
-      
+
       return(arg)
     else
       # Or better: raise an exception
@@ -212,7 +212,7 @@ class Geom::PolygonLoop
   def empty?
     return(@points.empty?)
   end
-  
+
 
   def valid?
     reduced_points = self.reduce
@@ -234,7 +234,7 @@ class Geom::PolygonLoop
 
   def reduce
     # Returns a loop with all consecutive collinear and coincident points deleted
-    
+
     if (@points.empty?)
       return(@points)
     end
@@ -320,7 +320,7 @@ class Geom::PolygonLoop
       # The algorithm below fails for concave polygons!
       #normal_vector = reduced_points[0].vector_to(reduced_points[1]) * reduced_points[1].vector_to(reduced_points[2])
       #return(normal_vector.normalize)
-      
+
       coefficients = self.plane  # self method already corrects for strange API precision error
       return(Geom::Vector3d.new(coefficients[0..2]))
     else
@@ -343,11 +343,11 @@ class Geom::PolygonLoop
 
   def plane
     # Assume the loop is valid
-    
+
     # Something strange can happen here where the z component of the vector comes out as 1, not 1.0
     # And this 1 is not equal to 1.0, yet both claim to be of class Float.
     # That's why I'm using fit_plane_to_points instead.
-    
+
     #normal_vector = self.normal
     #a = normal_vector.x.to_f
     #b = normal_vector.y.to_f
@@ -369,7 +369,7 @@ class Geom::PolygonLoop
 
   def transform(transformation)
     new_points = []
-    @points.each { |point| new_points << point.transform(transformation) } 
+    @points.each { |point| new_points << point.transform(transformation) }
     return(Geom::PolygonLoop.new(new_points, @outer))
   end
 
@@ -422,23 +422,23 @@ class Geom::Polygon
     else
       raise ArgumentError
     end
-    
+
     # Check to make sure this loop is not already present?
-    
-    
+
+
     if (@loops.empty?)
       new_loop.outer = true
       @outer_loop = new_loop
     end
-    
+
     @loops << new_loop
-    
+
     return(new_loop)
   end
 
 
   def clear
-    @outer_loop = nil  
+    @outer_loop = nil
     @loops = []
   end
 
@@ -454,13 +454,13 @@ class Geom::Polygon
     @loops.each { |polygon_loop| polygon_loop.reduce! }
     return(self)
   end
-  
-  
+
+
   def empty?
     return(@loops.empty?)
   end
-  
-  
+
+
   def valid?
     # check each loop, but then also check that inner loops are correct
     @loops.each { |polygon_loop| polygon_loop.valid? }  # Raises an ArgumentError if not valid
@@ -515,12 +515,12 @@ class Geom::Polygon
 
 
   def eql?(other)
-  
+
     result = false
-    
+
     points1 = points
     points2 = other.points
-    
+
     if (points1.length == points2.length)
       result = true
       points1.each_index do |i|
@@ -530,14 +530,14 @@ class Geom::Polygon
         end
       end
     end
-    
+
     return result
   end
-  
+
   def ==(other)
     return self.eql?(other)
   end
-  
+
   def circular_eql?(other)
     result = false
 
@@ -562,10 +562,10 @@ class Geom::Polygon
         end
       end
     end
-      
+
     return result
   end
-  
+
   def intersect(other_polygon)
     return(Geom.intersect_polygon_polygon(self, other_polygon))  # array of polygons
   end
@@ -594,7 +594,7 @@ class Geom::Transformation
     os_matrix[1,3] = skp_array[13].to_f.to_m
     os_matrix[2,3] = skp_array[14].to_f.to_m
     os_matrix[3,3] = skp_array[15].to_f
-    return OpenStudio::Transformation.new(os_matrix)  
+    return OpenStudio::Transformation.new(os_matrix)
   end
 
 end
@@ -624,26 +624,26 @@ module Geom
   def Geom.point_in_polygon_loop(point, polygon_loop, include_border = false)
 
     # tests that everything is in the plane, and has >3 vertices
-    if (not polygon_loop.valid?)  
+    if (not polygon_loop.valid?)
       return(false)
     end
-    
+
     # Other argument testing?  make sure point is a Point3d?  make sure points is an array?
 
     # Check if the point is on the same plane as the polygon
     if (not point.on_plane?(polygon_loop.plane))
       return(false)
     end
-    
+
     # DLM: wondering if point_in_polygon_2D is sufficiently solid to use now?
     return Geom.point_in_polygon_2D(point, polygon_loop.points, include_border)
-    
+
     # DLM: this is legacy code that was written when point_in_polygon_2D was not working right
 
     # This is a substitute for point_in_polygon_2D, which does not seem to be functional.
-    
+
     # TO DO:  The looping-over-points can probably be condensed into a fewer number of loops
-    
+
     # Check if the point is on a vertex, i.e., on the border
     polygon_loop.points.each { |p|
       if (p == point)  # Automatically uses the standard SketchUp tolerance to compare
@@ -712,7 +712,7 @@ module Geom
           if (crossing_vector.samedirection?(ray_vector))
 
             # Check to make sure the intersection point is not a duplicate (usually generated by crossing a vertex)
-            duplicate = false          
+            duplicate = false
             crossing_points.each { |p|
               if (intersection_point == p)
                 duplicate = true
@@ -727,7 +727,7 @@ module Geom
         end
       end
     end
-    
+
     #puts "unique crossing points in ray direction=" + crossing_points.length.to_s
 
     #puts crossing_points
@@ -736,7 +736,7 @@ module Geom
     if (crossing_points.length.modulo(2) == 0)
       return(false)  # Even:  According to Crossing Number Algorithm => outside of polygon
     else
-      return(true)  # Odd:  According to Crossing Number Algorithm => inside of polygon 
+      return(true)  # Odd:  According to Crossing Number Algorithm => inside of polygon
     end
   end
 
@@ -744,7 +744,7 @@ module Geom
 
 
   def Geom.point_in_polygon(point, polygon, include_border = false)
-   
+
     # Check if point is contained by the outer loop
     if (Geom.point_in_polygon_loop(point, polygon.outer_loop, include_border))
 
@@ -760,19 +760,19 @@ module Geom
     else
       return(false)
     end
-    
+
   end
 
 
- 
- 
- 
+
+
+
   # Crossing Number version
   # This version is computationally faster, but has problems with multiple vertices on a shared edge.
   # That's why I'm trying the Midpoint Test version
   def Geom.find_shared_line_segments_old(points1, points2)
     # If necessary, performance can be improved by doing only 2 point_in_polygon checks for the whole method,
-    # one per polygon.  Right now, doing one per vertex of each polygon.  
+    # one per polygon.  Right now, doing one per vertex of each polygon.
 
     line_segments = []
 
@@ -804,7 +804,7 @@ module Geom
         if (not intersection_point.nil?)  # nil means the lines are parallel
           if (intersection_point.on_line_segment?(line1) and intersection_point.on_line_segment?(line2))
             puts "intersection found"
-            intersections << [start_point.distance(intersection_point), intersection_point] 
+            intersections << [start_point.distance(intersection_point), intersection_point]
           end
         end
       end
@@ -841,14 +841,14 @@ module Geom
     return(line_segments)
 
   end
-    
+
 
 
   # Midpoint Test version
   #
   def Geom.find_shared_line_segments(polygon1, polygon2)
     # Find all the line segments from polygon 1 that are inside of polygon 2, works with holes
-    
+
     line_segments = []
 
     # Circulate around polygon 1
@@ -945,7 +945,7 @@ module Geom
 
     line_segments += line_segments1
     line_segments += line_segments2
-    
+
     puts "segments 1-2:"
     line_segments1.each { |s| puts s[0].to_s + "  " + s[1].to_s }
     puts "end"
@@ -971,7 +971,7 @@ module Geom
 
     loops = []
     #return
-   
+
     # Process the line segments into an array of loops by connecting start points to end points
     this_loop = []
     while (line_segments.length > 0)
@@ -1053,19 +1053,19 @@ loops.each { |lp| puts "loop:"; puts lp }
       puts "face2.area=" + f2.area.to_s
 
       polygons = f1.intersect(f2)
-      
+
       $polys = polygons
-      
+
       if (polygons.length > 0)
         puts "intersection"
-        
+
         Sketchup.active_model.selection.clear
-        
+
         for this_polygon in polygons
 
           new_polygon = this_polygon.transform(Geom::Transformation.translation(Geom::Vector3d.new(0,0,1.0)))
           # floats the intersection like 1" above...
-          
+
           new_face = Sketchup.active_model.entities.add_face(new_polygon.points)
           Sketchup.active_model.selection.add(new_face.all_connected)
         end
@@ -1079,14 +1079,14 @@ loops.each { |lp| puts "loop:"; puts lp }
 
 
   def Geom.test2
-  
+
     polygon1 = Geom::Polygon.new( [ Point3d.new(0,0,0), Point3d.new(0,5,0), Point3d.new(5,5,0), Point3d.new(5,0,0) ] )
     #points2 = [ Point3d.new(5,0,0), Point3d.new(5,5,0), Point3d.new(10,5,0), Point3d.new(10,0,0) ]
 
     return(Geom.intersect_polygon_polygon(polygon1, polygon1).points)
 
   end
-  
+
   # return a Geom::Transformation from a OpenStudio::Transformation
   def Geom.transformation_from_openstudio(t)
     os_array = t.vector
@@ -1096,7 +1096,7 @@ loops.each { |lp| puts "loop:"; puts lp }
     skp_array[15] = os_array[15].to_f
     return Geom::Transformation.new(skp_array)
   end
-  
+
   # convert a Geom::Transformation to a OpenStudio::Transformation
   def Geom.transformation_to_openstudio(t)
     os_array = OpenStudio::Vector.new(16)
@@ -1106,5 +1106,5 @@ loops.each { |lp| puts "loop:"; puts lp }
     os_array[15] = skp_array[15].to_f
     return OpenStudio::Transformation.new(os_array)
   end
-  
+
 end

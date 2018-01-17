@@ -132,7 +132,7 @@ namespace detail{
     std::string m_header;
 
     /// The vector of IddObjects that constitute this IddFile.
-    std::vector<IddObject> m_objects; 
+    std::vector<IddObject> m_objects;
 
     /// Cache the Version IddObject
     mutable boost::optional<IddObject> m_versionObject;

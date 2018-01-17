@@ -58,51 +58,51 @@ class MODEL_API FoundationKivaSettings : public ModelObject {
   //@{
 
   double soilConductivity() const;
-  
+
   bool isSoilConductivityDefaulted() const;
-  
+
   double soilDensity() const;
-  
+
   bool isSoilDensityDefaulted() const;
-  
+
   double soilSpecificHeat() const;
-  
+
   bool isSoilSpecificHeatDefaulted() const;
-  
+
   double groundSolarAbsorptivity() const;
-  
+
   bool isGroundSolarAbsorptivityDefaulted() const;
-  
+
   double groundThermalAbsorptivity() const;
-  
+
   bool isGroundThermalAbsorptivityDefaulted() const;
-  
+
   double groundSurfaceRoughness() const;
-  
+
   bool isGroundSurfaceRoughnessDefaulted() const;
-  
+
   double farFieldWidth() const;
-  
+
   bool isFarFieldWidthDefaulted() const;
-  
+
   std::string deepGroundBoundaryCondition() const;
-  
+
   bool isDeepGroundBoundaryConditionAutoselected();
-  
+
   boost::optional<double> deepGroundDepth();
-  
+
   bool isDeepGroundDepthAutocalculated();
-  
+
   double minimumCellDimension() const;
-  
+
   bool isMinimumCellDimensionDefaulted() const;
-  
+
   double maximumCellGrowthCoefficient() const;
-  
+
   bool isMaximumCellGrowthCoefficientDefaulted() const;
-  
+
   std::string simulationTimestep() const;
-  
+
   bool isSimulationTimestepDefaulted() const;
 
   //@}
@@ -110,51 +110,51 @@ class MODEL_API FoundationKivaSettings : public ModelObject {
   //@{
 
   bool setSoilConductivity(double soilConductivity);
-  
+
   void resetSoilConductivity();
-  
+
   bool setSoilDensity(double soilDensity);
-  
+
   void resetSoilDensity();
-  
+
   bool setSoilSpecificHeat(double soilSpecificHeat);
-  
+
   void resetSoilSpecificHeat();
-  
+
   bool setGroundSolarAbsorptivity(double groundSolarAbsorptivity);
-  
+
   void resetGroundSolarAbsorptivity();
-  
+
   bool setGroundThermalAbsorptivity(double groundThermalAbsorptivity);
-  
+
   void resetGroundThermalAbsorptivity();
-  
+
   bool setGroundSurfaceRoughness(double groundSurfaceRoughness);
-  
+
   void resetGroundSurfaceRoughness();
-  
+
   bool setFarFieldWidth(double farFieldWidth);
-  
+
   void resetFarFieldWidth();
-  
+
   bool setDeepGroundBoundaryCondition(std::string deepGroundBoundaryCondition);
-  
+
   void resetDeepGroundBoundaryCondition();
-  
+
   bool setDeepGroundDepth(double deepGroundDepth);
-  
+
   void autocalculateDeepGroundDepth();
-  
+
   bool setMinimumCellDimension(double minimumCellDimension);
-  
+
   void resetMinimumCellDimension();
-  
+
   bool setMaximumCellGrowthCoefficient(double maximumCellGrowthCoefficient);
-  
+
   void resetMaximumCellGrowthCoefficient();
-  
+
   bool setSimulationTimestep(std::string simulationTimestep);
-  
+
   void resetSimulationTimestep();
 
   //@}
@@ -163,9 +163,9 @@ class MODEL_API FoundationKivaSettings : public ModelObject {
 
   //@}
  protected:
- 
+
   explicit FoundationKivaSettings(Model& model);
- 
+
   /// @cond
   typedef detail::FoundationKivaSettings_Impl ImplType;
 

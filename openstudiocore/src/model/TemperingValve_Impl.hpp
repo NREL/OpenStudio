@@ -104,7 +104,7 @@ namespace detail {
     bool addToNode(Node & node) override;
 
     // Set pumpOutletNode, temperatureSetpointNode, and stream2SourceNode to reasonable values if they are not set
-    void setControlNodes();
+    bool setControlNodes();
 
     //@}
    protected:

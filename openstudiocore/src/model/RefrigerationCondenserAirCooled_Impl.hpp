@@ -142,19 +142,19 @@ namespace detail {
 
     void resetAirInletZone();
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
 
-    void setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
+    bool setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
 
     void resetCondenserRefrigerantOperatingChargeInventory();
 
-    void setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
+    bool setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
 
     void resetCondensateReceiverRefrigerantInventory();
 
-    void setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
+    bool setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
 
     void resetCondensatePipingRefrigerantInventory();
 
@@ -174,4 +174,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONCONDENSERAIRCOOLED_IMPL_HPP
-

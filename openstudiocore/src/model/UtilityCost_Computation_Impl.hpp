@@ -38,7 +38,7 @@ namespace model {
 namespace detail {
 
 class MODEL_API UtilityCost_Computation_Impl : public ParentObject_Impl{
-  
+
 public:
   // constructor
   UtilityCost_Computation_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
@@ -55,7 +55,7 @@ public:
   virtual ~UtilityCost_Computation_Impl(){}
 
   OptionalString tariffName() const;
-  void setTariffName(const std::string& str);
+  bool setTariffName(const std::string& str);
 
   /** Compute step index. Index starts at 0. */
   boost::optional<std::string> computeStep(unsigned index) const;

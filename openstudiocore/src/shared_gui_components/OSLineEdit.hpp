@@ -65,7 +65,7 @@ public:
             boost::optional<NoFailAction> reset=boost::none,
             boost::optional<BasicQuery> isDefaulted=boost::none);
 
-  void bind(model::ModelObject& modelObject, 
+  void bind(model::ModelObject& modelObject,
             OptionalStringGetter get,
             boost::optional<StringSetter> set=boost::none,
             boost::optional<NoFailAction> reset=boost::none,

@@ -104,7 +104,7 @@ namespace openstudio{
     /// get the last date in the calendar
     Date endDate() const;
 
-    
+
   private:
 
     Date m_startDate;

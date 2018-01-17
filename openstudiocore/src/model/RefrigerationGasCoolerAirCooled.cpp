@@ -283,9 +283,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationGasCoolerAirCooled_Impl::setTransitionTemperature(double transitionTemperature) {
+  bool RefrigerationGasCoolerAirCooled_Impl::setTransitionTemperature(double transitionTemperature) {
     bool result = setDouble(OS_Refrigeration_GasCooler_AirCooledFields::TransitionTemperature, transitionTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationGasCoolerAirCooled_Impl::resetTransitionTemperature() {
@@ -293,9 +294,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationGasCoolerAirCooled_Impl::setTranscriticalApproachTemperature(double transcriticalApproachTemperature) {
+  bool RefrigerationGasCoolerAirCooled_Impl::setTranscriticalApproachTemperature(double transcriticalApproachTemperature) {
     bool result = setDouble(OS_Refrigeration_GasCooler_AirCooledFields::TranscriticalApproachTemperature, transcriticalApproachTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationGasCoolerAirCooled_Impl::resetTranscriticalApproachTemperature() {
@@ -303,9 +305,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationGasCoolerAirCooled_Impl::setSubcriticalTemperatureDifference(double subcriticalTemperatureDifference) {
+  bool RefrigerationGasCoolerAirCooled_Impl::setSubcriticalTemperatureDifference(double subcriticalTemperatureDifference) {
     bool result = setDouble(OS_Refrigeration_GasCooler_AirCooledFields::SubcriticalTemperatureDifference, subcriticalTemperatureDifference);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationGasCoolerAirCooled_Impl::resetSubcriticalTemperatureDifference() {
@@ -313,9 +316,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationGasCoolerAirCooled_Impl::setMinimumCondensingTemperature(double minimumCondensingTemperature) {
+  bool RefrigerationGasCoolerAirCooled_Impl::setMinimumCondensingTemperature(double minimumCondensingTemperature) {
     bool result = setDouble(OS_Refrigeration_GasCooler_AirCooledFields::MinimumCondensingTemperature, minimumCondensingTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationGasCoolerAirCooled_Impl::resetMinimumCondensingTemperature() {
@@ -340,9 +344,10 @@ namespace detail {
   //   OS_ASSERT(result);
   // }
 
-  void RefrigerationGasCoolerAirCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationGasCoolerAirCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_GasCooler_AirCooledFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationGasCoolerAirCooled_Impl::resetEndUseSubcategory() {
@@ -350,9 +355,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationGasCoolerAirCooled_Impl::setGasCoolerRefrigerantOperatingChargeInventory(double gasCoolerRefrigerantOperatingChargeInventory) {
+  bool RefrigerationGasCoolerAirCooled_Impl::setGasCoolerRefrigerantOperatingChargeInventory(double gasCoolerRefrigerantOperatingChargeInventory) {
     bool result = setDouble(OS_Refrigeration_GasCooler_AirCooledFields::GasCoolerRefrigerantOperatingChargeInventory, gasCoolerRefrigerantOperatingChargeInventory);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationGasCoolerAirCooled_Impl::resetGasCoolerRefrigerantOperatingChargeInventory() {
@@ -360,9 +366,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationGasCoolerAirCooled_Impl::setGasCoolerReceiverRefrigerantInventory(double gasCoolerReceiverRefrigerantInventory) {
+  bool RefrigerationGasCoolerAirCooled_Impl::setGasCoolerReceiverRefrigerantInventory(double gasCoolerReceiverRefrigerantInventory) {
     bool result = setDouble(OS_Refrigeration_GasCooler_AirCooledFields::GasCoolerReceiverRefrigerantInventory, gasCoolerReceiverRefrigerantInventory);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationGasCoolerAirCooled_Impl::resetGasCoolerReceiverRefrigerantInventory() {
@@ -370,9 +377,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationGasCoolerAirCooled_Impl::setGasCoolerOutletPipingRefrigerantInventory(double gasCoolerOutletPipingRefrigerantInventory) {
+  bool RefrigerationGasCoolerAirCooled_Impl::setGasCoolerOutletPipingRefrigerantInventory(double gasCoolerOutletPipingRefrigerantInventory) {
     bool result = setDouble(OS_Refrigeration_GasCooler_AirCooledFields::GasCoolerOutletPipingRefrigerantInventory, gasCoolerOutletPipingRefrigerantInventory);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationGasCoolerAirCooled_Impl::resetGasCoolerOutletPipingRefrigerantInventory() {
@@ -539,32 +547,32 @@ void RefrigerationGasCoolerAirCooled::resetMinimumFanAirFlowRatio() {
   getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->resetMinimumFanAirFlowRatio();
 }
 
-void RefrigerationGasCoolerAirCooled::setTransitionTemperature(double transitionTemperature) {
-  getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setTransitionTemperature(transitionTemperature);
+bool RefrigerationGasCoolerAirCooled::setTransitionTemperature(double transitionTemperature) {
+  return getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setTransitionTemperature(transitionTemperature);
 }
 
 void RefrigerationGasCoolerAirCooled::resetTransitionTemperature() {
   getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->resetTransitionTemperature();
 }
 
-void RefrigerationGasCoolerAirCooled::setTranscriticalApproachTemperature(double transcriticalApproachTemperature) {
-  getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setTranscriticalApproachTemperature(transcriticalApproachTemperature);
+bool RefrigerationGasCoolerAirCooled::setTranscriticalApproachTemperature(double transcriticalApproachTemperature) {
+  return getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setTranscriticalApproachTemperature(transcriticalApproachTemperature);
 }
 
 void RefrigerationGasCoolerAirCooled::resetTranscriticalApproachTemperature() {
   getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->resetTranscriticalApproachTemperature();
 }
 
-void RefrigerationGasCoolerAirCooled::setSubcriticalTemperatureDifference(double subcriticalTemperatureDifference) {
-  getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setSubcriticalTemperatureDifference(subcriticalTemperatureDifference);
+bool RefrigerationGasCoolerAirCooled::setSubcriticalTemperatureDifference(double subcriticalTemperatureDifference) {
+  return getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setSubcriticalTemperatureDifference(subcriticalTemperatureDifference);
 }
 
 void RefrigerationGasCoolerAirCooled::resetSubcriticalTemperatureDifference() {
   getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->resetSubcriticalTemperatureDifference();
 }
 
-void RefrigerationGasCoolerAirCooled::setMinimumCondensingTemperature(double minimumCondensingTemperature) {
-  getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setMinimumCondensingTemperature(minimumCondensingTemperature);
+bool RefrigerationGasCoolerAirCooled::setMinimumCondensingTemperature(double minimumCondensingTemperature) {
+  return getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setMinimumCondensingTemperature(minimumCondensingTemperature);
 }
 
 void RefrigerationGasCoolerAirCooled::resetMinimumCondensingTemperature() {
@@ -579,32 +587,32 @@ void RefrigerationGasCoolerAirCooled::resetMinimumCondensingTemperature() {
 //   getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->resetAirInletNode();
 // }
 
-void RefrigerationGasCoolerAirCooled::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool RefrigerationGasCoolerAirCooled::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void RefrigerationGasCoolerAirCooled::resetEndUseSubcategory() {
   getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->resetEndUseSubcategory();
 }
 
-void RefrigerationGasCoolerAirCooled::setGasCoolerRefrigerantOperatingChargeInventory(double gasCoolerRefrigerantOperatingChargeInventory) {
-  getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setGasCoolerRefrigerantOperatingChargeInventory(gasCoolerRefrigerantOperatingChargeInventory);
+bool RefrigerationGasCoolerAirCooled::setGasCoolerRefrigerantOperatingChargeInventory(double gasCoolerRefrigerantOperatingChargeInventory) {
+  return getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setGasCoolerRefrigerantOperatingChargeInventory(gasCoolerRefrigerantOperatingChargeInventory);
 }
 
 void RefrigerationGasCoolerAirCooled::resetGasCoolerRefrigerantOperatingChargeInventory() {
   getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->resetGasCoolerRefrigerantOperatingChargeInventory();
 }
 
-void RefrigerationGasCoolerAirCooled::setGasCoolerReceiverRefrigerantInventory(double gasCoolerReceiverRefrigerantInventory) {
-  getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setGasCoolerReceiverRefrigerantInventory(gasCoolerReceiverRefrigerantInventory);
+bool RefrigerationGasCoolerAirCooled::setGasCoolerReceiverRefrigerantInventory(double gasCoolerReceiverRefrigerantInventory) {
+  return getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setGasCoolerReceiverRefrigerantInventory(gasCoolerReceiverRefrigerantInventory);
 }
 
 void RefrigerationGasCoolerAirCooled::resetGasCoolerReceiverRefrigerantInventory() {
   getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->resetGasCoolerReceiverRefrigerantInventory();
 }
 
-void RefrigerationGasCoolerAirCooled::setGasCoolerOutletPipingRefrigerantInventory(double gasCoolerOutletPipingRefrigerantInventory) {
-  getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setGasCoolerOutletPipingRefrigerantInventory(gasCoolerOutletPipingRefrigerantInventory);
+bool RefrigerationGasCoolerAirCooled::setGasCoolerOutletPipingRefrigerantInventory(double gasCoolerOutletPipingRefrigerantInventory) {
+  return getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setGasCoolerOutletPipingRefrigerantInventory(gasCoolerOutletPipingRefrigerantInventory);
 }
 
 void RefrigerationGasCoolerAirCooled::resetGasCoolerOutletPipingRefrigerantInventory() {
@@ -619,4 +627,3 @@ RefrigerationGasCoolerAirCooled::RefrigerationGasCoolerAirCooled(std::shared_ptr
 
 } // model
 } // openstudio
-

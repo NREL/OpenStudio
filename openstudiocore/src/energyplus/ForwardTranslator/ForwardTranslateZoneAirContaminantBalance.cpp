@@ -51,7 +51,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneAirContaminantBalance
   m_idfObjects.push_back(idfObject);
 
   {
-    if( modelObject.carbonDioxideConcentration() ) { 
+    if( modelObject.carbonDioxideConcentration() ) {
       idfObject.setString(ZoneAirContaminantBalanceFields::CarbonDioxideConcentration,"Yes");
     } else {
       idfObject.setString(ZoneAirContaminantBalanceFields::CarbonDioxideConcentration,"No");

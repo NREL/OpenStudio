@@ -643,7 +643,7 @@ set(${target_name}_src
   FluidCoolerTwoSpeed.cpp
   FoundationKiva.hpp
   FoundationKiva_Impl.hpp
-  FoundationKiva.cpp  
+  FoundationKiva.cpp
   FoundationKivaSettings.hpp
   FoundationKivaSettings_Impl.hpp
   FoundationKivaSettings.cpp
@@ -828,7 +828,7 @@ set(${target_name}_src
   MaterialPropertyGlazingSpectralData.cpp
   MaterialPropertyMoisturePenetrationDepthSettings.hpp
   MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp
-  MaterialPropertyMoisturePenetrationDepthSettings.cpp  
+  MaterialPropertyMoisturePenetrationDepthSettings.cpp
   MeterCustom.hpp
   MeterCustom_Impl.hpp
   MeterCustom.cpp
@@ -1281,10 +1281,10 @@ set(${target_name}_src
   SurfacePropertyConvectionCoefficients_Impl.hpp
   SurfacePropertyConvectionCoefficientsMultipleSurface.cpp
   SurfacePropertyConvectionCoefficientsMultipleSurface.hpp
-  SurfacePropertyConvectionCoefficientsMultipleSurface_Impl.hpp  
+  SurfacePropertyConvectionCoefficientsMultipleSurface_Impl.hpp
   SurfacePropertyExposedFoundationPerimeter.cpp
   SurfacePropertyExposedFoundationPerimeter.hpp
-  SurfacePropertyExposedFoundationPerimeter_Impl.hpp  
+  SurfacePropertyExposedFoundationPerimeter_Impl.hpp
   SurfacePropertyOtherSideCoefficients.cpp
   SurfacePropertyOtherSideCoefficients.hpp
   SurfacePropertyOtherSideCoefficients_Impl.hpp

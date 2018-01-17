@@ -68,8 +68,8 @@ TEST_F(ModelFixture, ZoneHVACWaterToAirHeatPump_FanOnOff)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model model;
     Schedule availabilitySched = model.alwaysOnDiscreteSchedule();
     CurveExponent fanPowerFtSpeedCurve(model);
@@ -98,7 +98,7 @@ TEST_F(ModelFixture, ZoneHVACWaterToAirHeatPump_FanOnOff)
     CoilHeatingElectric supplementalHC(model,availabilitySched);
     ZoneHVACWaterToAirHeatPump testHP(model,availabilitySched,supplyFan,coilHeatingWaterToAirHP,coilCoolingWaterToAirHP,supplementalHC);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -118,7 +118,7 @@ TEST_F(ModelFixture, ZoneHVACWaterToAirHeatPump_FanConstantVolume)
     CoilHeatingElectric supplementalHC(model,availabilitySched);
 
     ZoneHVACWaterToAirHeatPump testHP(model,availabilitySched,supplyFan,coilHeatingWaterToAirHP,coilCoolingWaterToAirHP,supplementalHC);
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -146,7 +146,7 @@ TEST_F(ModelFixture, ZoneHVACWaterToAirHeatPump_SetGetFields) {
   fanEfficiencyFtSpeedCurve.setMaximumValueofx(1.5);
   fanEfficiencyFtSpeedCurve.setMinimumCurveOutput(0.3);
   fanEfficiencyFtSpeedCurve.setMaximumCurveOutput(1.0);
- 
+
   ScheduleConstant availabilitySched(model);
   availabilitySched.setValue(1.0);
   FanOnOff supplyFan(model,availabilitySched,fanPowerFtSpeedCurve,fanEfficiencyFtSpeedCurve);
@@ -252,35 +252,35 @@ TEST_F(ModelFixture, ZoneHVACWaterToAirHeatPump_SetGetFields) {
   EXPECT_TRUE(testHP.isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized());
 
 //test heat pump maximum cycling rate
-  EXPECT_TRUE(testHP.setMaximumCyclingRate(5.0)); 
+  EXPECT_TRUE(testHP.setMaximumCyclingRate(5.0));
   boost::optional<double> value7 = testHP.maximumCyclingRate();
   EXPECT_EQ(*value7,5.0);
   testHP.resetMaximumCyclingRate();
   EXPECT_TRUE(testHP.isMaximumCyclingRateDefaulted());
 
 //test heat pump time constant
-  EXPECT_TRUE(testHP.setHeatPumpTimeConstant(60)); 
+  EXPECT_TRUE(testHP.setHeatPumpTimeConstant(60));
   boost::optional<double> value8 = testHP.heatPumpTimeConstant();
   EXPECT_EQ(*value8,60);
   testHP.resetHeatPumpTimeConstant();
   EXPECT_TRUE(testHP.isHeatPumpTimeConstantDefaulted());
 
 //test heat pump fraction of On cycle power use
-  EXPECT_TRUE(testHP.setFractionofOnCyclePowerUse(0.02)); 
+  EXPECT_TRUE(testHP.setFractionofOnCyclePowerUse(0.02));
   boost::optional<double> value9 = testHP.fractionofOnCyclePowerUse();
   EXPECT_EQ(*value9,0.02);
   testHP.resetFractionofOnCyclePowerUse();
   EXPECT_TRUE(testHP.isFractionofOnCyclePowerUseDefaulted());
 
 //test heat pump fan delay time
-  EXPECT_TRUE(testHP.setHeatPumpFanDelayTime(60)); 
+  EXPECT_TRUE(testHP.setHeatPumpFanDelayTime(60));
   boost::optional<double> value10 = testHP.heatPumpFanDelayTime();
   EXPECT_EQ(*value10,60);
   testHP.resetHeatPumpFanDelayTime();
   EXPECT_TRUE(testHP.isHeatPumpFanDelayTimeDefaulted());
 
 //test heat pump maximum supply air temperature from supplemental heater
-  EXPECT_TRUE(testHP.setMaximumSupplyAirTemperaturefromSupplementalHeater(90)); 
+  EXPECT_TRUE(testHP.setMaximumSupplyAirTemperaturefromSupplementalHeater(90));
   boost::optional<double> value11 = testHP.maximumSupplyAirTemperaturefromSupplementalHeater();
   EXPECT_EQ(*value11,90);
   testHP.resetMaximumSupplyAirTemperaturefromSupplementalHeater();
@@ -288,7 +288,7 @@ TEST_F(ModelFixture, ZoneHVACWaterToAirHeatPump_SetGetFields) {
   EXPECT_TRUE(testHP.isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized());
 
 //test heat pump maximum outdoor air temperature for supplemental heater operation
-  EXPECT_TRUE(testHP.setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(21)); 
+  EXPECT_TRUE(testHP.setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(21));
   boost::optional<double> value12 = testHP.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
   EXPECT_EQ(*value12,21);
   testHP.resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
@@ -299,7 +299,7 @@ TEST_F(ModelFixture, ZoneHVACWaterToAirHeatPump_SetGetFields) {
   EXPECT_EQ(0u,thermalZone.equipment().size());
 
   EXPECT_TRUE(testHP.addToThermalZone(thermalZone));
-  
+
   EXPECT_TRUE(testHP.inletNode());
   EXPECT_TRUE(testHP.outletNode());
 

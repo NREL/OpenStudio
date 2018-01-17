@@ -54,14 +54,14 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateZoneHVACBaseboardConvectiveElectric(
     ZoneHVACBaseboardConvectiveElectric & modelObject )
 {
-  // Makes sure the modelObject gets put in the map, and that the new idfObject gets put in 
+  // Makes sure the modelObject gets put in the map, and that the new idfObject gets put in
   // the final file. Also set's the idfObject's name.
   IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneHVAC_Baseboard_Convective_Electric,modelObject);
 
   boost::optional<std::string> s;
   boost::optional<double> value;
   boost::optional<ModelObject> temp;
-  
+
   // AvailabilityScheduleName
   Schedule availabilitySchedule = modelObject.availabilitySchedule();
   translateAndMapModelObject(availabilitySchedule);

@@ -153,7 +153,7 @@ class MODEL_API BillingPeriod : public ModelExtensibleGroup {
 typedef std::vector<BillingPeriod> BillingPeriodVector;
 
 
-/** UtilityBill is a ModelObject that wraps the OpenStudio IDD object 'OS:UtilityBill'. 
+/** UtilityBill is a ModelObject that wraps the OpenStudio IDD object 'OS:UtilityBill'.
     This object allows the user to enter in actual fuel usage for model calibration.
 */
 class MODEL_API UtilityBill : public ModelObject {

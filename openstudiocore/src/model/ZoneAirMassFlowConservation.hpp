@@ -85,7 +85,7 @@ class MODEL_API ZoneAirMassFlowConservation : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance);
+  bool setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance);
 
   void resetAdjustZoneMixingForZoneAirMassFlowBalance();
 
@@ -96,7 +96,7 @@ class MODEL_API ZoneAirMassFlowConservation : public ModelObject {
   void resetSourceZoneInfiltrationTreatment();
 
   bool setInfiltrationBalancingMethod(const std::string& infiltrationBalancingMethod);
-  
+
   void resetInfiltrationBalancingMethod();
 
   bool setInfiltrationBalancingZones(const std::string& infiltrationBalancingZones);
@@ -135,4 +135,3 @@ typedef std::vector<ZoneAirMassFlowConservation> ZoneAirMassFlowConservationVect
 } // openstudio
 
 #endif // MODEL_ZONEAIRMASSFLOWCONSERVATION_HPP
-

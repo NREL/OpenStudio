@@ -71,7 +71,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemTre
   if (i.is_initialized()) {
     idfObject.setInt(EnergyManagementSystem_TrendVariableFields::NumberofTimestepstobeLogged, i.get());
   }
- 
+
   return idfObject;
 }
 

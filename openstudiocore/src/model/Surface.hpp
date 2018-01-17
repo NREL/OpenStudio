@@ -90,7 +90,7 @@ class MODEL_API Surface : public PlanarSurface {
 
   /** Returns true if the surface has outsideBoundaryCondition of Ground, GroundFCfactorMethod
    *  GroundSlabPreprocessorAverage, GroundSlabPreprocessorCore, GroundSlabPreprocessorPerimeter,
-   *  GroundBasementPreprocessorAverageWall, GroundBasementPreprocessorAverageFloor, 
+   *  GroundBasementPreprocessorAverageWall, GroundBasementPreprocessorAverageFloor,
    *  GroundBasementPreprocessorUpperWall, or GroundBasementPreprocessorLowerWall */
   bool isGroundSurface() const;
 
@@ -193,7 +193,7 @@ class MODEL_API Surface : public PlanarSurface {
   bool intersect(Surface& otherSurface);
   boost::optional<SurfaceIntersection> computeIntersection(Surface& otherSurface);
 
-  /** Creates an adjacent Surface in another Space, also create adjacent SubSurface objects if needed.  
+  /** Creates an adjacent Surface in another Space, also create adjacent SubSurface objects if needed.
       Returns the new Surface if created. */
   boost::optional<Surface> createAdjacentSurface(const Space& otherSpace);
 
@@ -216,38 +216,38 @@ class MODEL_API Surface : public PlanarSurface {
    *  air, and 15 mph wind outside. Does not consider any custom SurfacePropertyConvectionCoefficients. */
   double filmResistance() const;
 
-  /** Get the window to wall ratio for this surface. Calculated as 
+  /** Get the window to wall ratio for this surface. Calculated as
   sum(surface.windows.netArea)/surface.grossArea if this surface is a wall, returns
   0 if this surface is not a wall. */
   double windowToWallRatio() const;
 
-  /** Get the skylight to roof ratio for this surface. Calculated as 
+  /** Get the skylight to roof ratio for this surface. Calculated as
   sum(surface.skylights.netArea)/surface.grossArea if this surface is a roof, returns
   0 if this surface is not a roof. */
   double skylightToRoofRatio() const;
 
-  /** Get the skylight to projected floor ratio for this surface. Calculated as 
+  /** Get the skylight to projected floor ratio for this surface. Calculated as
   sum(surface.skylights.netArea)/project(surface to z=0 plane).grossArea if this surface is a roof, returns
   0 if this surface is not a roof. */
   double skylightToProjectedFloorRatio() const;
 
-  /** Sets the window to wall ratio for this surface using a single banded window.  
+  /** Sets the window to wall ratio for this surface using a single banded window.
    *  Uses applyViewAndDaylightingGlassRatios for implementation. */
   boost::optional<SubSurface> setWindowToWallRatio(double wwr);
-  
+
   /** Same as setWindowToWallRatio but with extra parameters desiredHeightOffset and heightOffsetFromFloor.
    *  If heightOffsetFromFloor is true then desiredHeightOffset is the desired sill height, otherwise it is the
    *  offset from the ceiling. Uses applyViewAndDaylightingGlassRatios for implementation. */
   boost::optional<SubSurface> setWindowToWallRatio(double wwr, double desiredHeightOffset, bool heightOffsetFromFloor);
 
   /** Applies banded view and daylighting windows to the surface with optional exterior shading and interior light shelf.
-   * 
+   *
    *  Assumes that this surface spans the entire height of the space, this method should not be used if the wall is broken
    *  into multiple vertical pieces.
-   * 
-   *  Returns false if the surface is not a wall, if the surface is not rectangular in face coordinates, 
-   *  if requested ratio is too large (window area ~= surface area), or if surface has any doors.  
-   *  
+   *
+   *  Returns false if the surface is not a wall, if the surface is not rectangular in face coordinates,
+   *  if requested ratio is too large (window area ~= surface area), or if surface has any doors.
+   *
    *  Otherwise, removes all existing windows and adds new windows to meet requested ratio.
    *
    *  viewGlassToWallRatio - the ratio of view glass to wall area, if 0 no view glass will be created
@@ -261,10 +261,10 @@ class MODEL_API Surface : public PlanarSurface {
    *
    *  If successful returns a vector of sub surfaces created, view window will be the first in the vector if viewGlassToWallRatio > 0
   */
-  std::vector<SubSurface> applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio, 
+  std::vector<SubSurface> applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio,
                                                              double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
-                                                             double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor, 
-                                                             const boost::optional<ConstructionBase>& viewGlassConstruction, 
+                                                             double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor,
+                                                             const boost::optional<ConstructionBase>& viewGlassConstruction,
                                                              const boost::optional<ConstructionBase>& daylightingGlassConstruction);
 
 
@@ -272,7 +272,7 @@ class MODEL_API Surface : public PlanarSurface {
   std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
 
   /** Splits this surface vertically surrounding any sub surfaces.
-   *  This surface must be a wall and must not have an adjacent surface. 
+   *  This surface must be a wall and must not have an adjacent surface.
    *  Returns any new surfaces created in this routine.
    *  Typically this is called on a surface that has doors but no windows before applying banded windows. */
   std::vector<Surface> splitSurfaceForSubSurfaces();
@@ -284,11 +284,11 @@ class MODEL_API Surface : public PlanarSurface {
   std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
 
   bool setAdjacentFoundation(const FoundationKiva& kiva);
-  
+
   boost::optional<FoundationKiva> adjacentFoundation() const;
-  
+
   void resetAdjacentFoundation();
-  
+
   // if surface property exposed foundation perimeter already exists, do nothing and return nil; creates the surface property exposed foundation perimeter if it does not already exist and return it;
   boost::optional<SurfacePropertyExposedFoundationPerimeter> createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double exposedPerimeter);
 
@@ -297,7 +297,7 @@ class MODEL_API Surface : public PlanarSurface {
 
   // resets the surface property exposed foundation perimeter
   void resetSurfacePropertyExposedFoundationPerimeter();
-  
+
  protected:
   /// @cond
   typedef detail::Surface_Impl ImplType;
@@ -324,9 +324,9 @@ typedef std::vector<Surface> SurfaceVector;
 /** SurfaceIntersection contains detailed information about a surface intersection. */
 class MODEL_API SurfaceIntersection {
 public:
-  SurfaceIntersection(const Surface& surface1, 
+  SurfaceIntersection(const Surface& surface1,
                       const Surface& surface2,
-                      const std::vector<Surface>& newSurfaces1, 
+                      const std::vector<Surface>& newSurfaces1,
                       const std::vector<Surface>& newSurfaces2);
 
   // first surface post intersection

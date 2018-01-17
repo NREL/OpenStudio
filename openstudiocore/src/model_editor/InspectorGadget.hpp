@@ -60,7 +60,7 @@ class ComboHighlightBridge;
 class MODELEDITOR_API IGWidget : public QWidget, public Nano::Observer
 {
   public:
-  
+
   IGWidget(QWidget * parent = nullptr);
 
   QSize sizeHint() const override;
@@ -92,7 +92,7 @@ class IGComboBox : public QComboBox
 
 /*! \brief InspectorGadget will take a ModelObejct (or WorkspaceObject) and display it attributes
  *
- * InsepctorGadget interrogates objects and displays their fields/attributes based on the values 
+ * InsepctorGadget interrogates objects and displays their fields/attributes based on the values
  * contained in the AccessPolicyStore. When a new model is passed into the IG, it will delete all
  * its old QWidgets and create new ones.
  *
@@ -121,7 +121,7 @@ public:
    * \param indent The indentation for IGChildFrame
    * \param bridge pass in a bridge here if you need signals to get out of the IG (or the IG's children)
    *
-   * 
+   *
    * \sa IGChildFrame
    * \sa layoutModel
    */
@@ -129,7 +129,7 @@ public:
   /*! destructor
    *
    * The really shouldn't need to call this, the parent Widget ought to delete the IG.
-   * 
+   *
    */
   virtual ~InspectorGadget();
 
@@ -193,7 +193,7 @@ public slots:
   /*! \brief removes everything from the IG
    *
    *\param recursive if true, deletes the children.
-   * Removes all the information from the IG. Call this if the object being inspected 
+   * Removes all the information from the IG. Call this if the object being inspected
    * gets deleted.
    *
    */
@@ -220,7 +220,7 @@ public slots:
    * \param showComments if true, show comments, if false, hide them
    *
    * IdfObjects have comments about their fields. (and about themselves)
-   * This function allows you to toggle weather or not you wish IG to show those comments. 
+   * This function allows you to toggle weather or not you wish IG to show those comments.
    * The Default is not to show them.
    */
   void commentConfig(bool showComments);
@@ -232,7 +232,7 @@ public slots:
   void removeExtensible();
   /*!
    * Create all fields in the IDD. IDFObjects can be instantiated with some
-   * IDD fields null. (they are not 'required' fields. Once you call this function, 
+   * IDD fields null. (they are not 'required' fields. Once you call this function,
    * all fields possible will be created and presented to the user.
    */
   void createAllFields();
@@ -255,7 +255,7 @@ public slots:
   void dirty();
 
   void workspaceObjectRemoved(const openstudio::Handle &);
-  
+
 
 protected slots:
 
@@ -293,12 +293,12 @@ protected:
     \param layout the layout to attach the items to
     \param parent the widget that owns all the items that will be created.
     \param hideChildren show or hide children (hidden by default)
-    
-    
-    This function is a big loop over the attributes or fields*, it does the core of the work for 
+
+
+    This function is a big loop over the attributes or fields*, it does the core of the work for
     deciding what exact widgets we should build. IGChildFrame uses this function to fill
     out its child frame.
-    
+
     *It depends on weather or not you called layoutModel with a ModelObject or a WorkspaceObj
     */
   virtual void layoutItems( QVBoxLayout* layout,

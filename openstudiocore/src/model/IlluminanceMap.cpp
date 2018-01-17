@@ -164,19 +164,22 @@ namespace detail {
     return isEmpty(OS_IlluminanceMapFields::NumberofYGridPoints);
   }
 
-  void IlluminanceMap_Impl::setOriginXCoordinate(double originXCoordinate) {
+  bool IlluminanceMap_Impl::setOriginXCoordinate(double originXCoordinate) {
     bool result = setDouble(OS_IlluminanceMapFields::OriginXCoordinate, originXCoordinate);
     OS_ASSERT(result);
+    return result;
   }
 
-  void IlluminanceMap_Impl::setOriginYCoordinate(double originYCoordinate) {
+  bool IlluminanceMap_Impl::setOriginYCoordinate(double originYCoordinate) {
     bool result = setDouble(OS_IlluminanceMapFields::OriginYCoordinate, originYCoordinate);
     OS_ASSERT(result);
+    return result;
   }
 
-  void IlluminanceMap_Impl::setOriginZCoordinate(double originZCoordinate) {
+  bool IlluminanceMap_Impl::setOriginZCoordinate(double originZCoordinate) {
     bool result = setDouble(OS_IlluminanceMapFields::OriginZCoordinate, originZCoordinate);
     OS_ASSERT(result);
+    return result;
   }
 
   bool IlluminanceMap_Impl::setPsiRotationAroundXAxis(double psiRotationAroundXAxis) {
@@ -209,9 +212,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void IlluminanceMap_Impl::setXLength(double xLength) {
+  bool IlluminanceMap_Impl::setXLength(double xLength) {
     bool result = setDouble(OS_IlluminanceMapFields::XLength, xLength);
     OS_ASSERT(result);
+    return result;
   }
 
   void IlluminanceMap_Impl::resetXLength() {
@@ -229,9 +233,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void IlluminanceMap_Impl::setYLength(double yLength) {
+  bool IlluminanceMap_Impl::setYLength(double yLength) {
     bool result = setDouble(OS_IlluminanceMapFields::YLength, yLength);
     OS_ASSERT(result);
+    return result;
   }
 
   void IlluminanceMap_Impl::resetYLength() {
@@ -393,16 +398,16 @@ bool IlluminanceMap::isNumberofYGridPointsDefaulted() const {
   return getImpl<detail::IlluminanceMap_Impl>()->isNumberofYGridPointsDefaulted();
 }
 
-void IlluminanceMap::setOriginXCoordinate(double originXCoordinate) {
-  getImpl<detail::IlluminanceMap_Impl>()->setOriginXCoordinate(originXCoordinate);
+bool IlluminanceMap::setOriginXCoordinate(double originXCoordinate) {
+  return getImpl<detail::IlluminanceMap_Impl>()->setOriginXCoordinate(originXCoordinate);
 }
 
-void IlluminanceMap::setOriginYCoordinate(double originYCoordinate) {
-  getImpl<detail::IlluminanceMap_Impl>()->setOriginYCoordinate(originYCoordinate);
+bool IlluminanceMap::setOriginYCoordinate(double originYCoordinate) {
+  return getImpl<detail::IlluminanceMap_Impl>()->setOriginYCoordinate(originYCoordinate);
 }
 
-void IlluminanceMap::setOriginZCoordinate(double originZCoordinate) {
-  getImpl<detail::IlluminanceMap_Impl>()->setOriginZCoordinate(originZCoordinate);
+bool IlluminanceMap::setOriginZCoordinate(double originZCoordinate) {
+  return getImpl<detail::IlluminanceMap_Impl>()->setOriginZCoordinate(originZCoordinate);
 }
 
 bool IlluminanceMap::setPsiRotationAroundXAxis(double psiRotationAroundXAxis) {
@@ -429,8 +434,8 @@ void IlluminanceMap::resetPhiRotationAroundZAxis() {
   getImpl<detail::IlluminanceMap_Impl>()->resetPhiRotationAroundZAxis();
 }
 
-void IlluminanceMap::setXLength(double xLength) {
-  getImpl<detail::IlluminanceMap_Impl>()->setXLength(xLength);
+bool IlluminanceMap::setXLength(double xLength) {
+  return getImpl<detail::IlluminanceMap_Impl>()->setXLength(xLength);
 }
 
 void IlluminanceMap::resetXLength() {
@@ -445,8 +450,8 @@ void IlluminanceMap::resetNumberofXGridPoints() {
   getImpl<detail::IlluminanceMap_Impl>()->resetNumberofXGridPoints();
 }
 
-void IlluminanceMap::setYLength(double yLength) {
-  getImpl<detail::IlluminanceMap_Impl>()->setYLength(yLength);
+bool IlluminanceMap::setYLength(double yLength) {
+  return getImpl<detail::IlluminanceMap_Impl>()->setYLength(yLength);
 }
 
 void IlluminanceMap::resetYLength() {
@@ -491,4 +496,3 @@ IlluminanceMap::IlluminanceMap(std::shared_ptr<detail::IlluminanceMap_Impl> impl
 
 } // model
 } // openstudio
-

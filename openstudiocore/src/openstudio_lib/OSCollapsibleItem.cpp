@@ -140,7 +140,7 @@ OSCollapsibleItem::OSCollapsibleItem(OSCollapsibleItemHeader * collapsibleItemHe
 
   // item list
   m_mainLayout->addWidget(m_itemList);
-  
+
   connect(itemList, &OSItemList::itemSelected, this, &OSCollapsibleItem::itemSelected);
 
   connect(itemList, &OSItemList::itemRemoveClicked, this, &OSCollapsibleItem::itemRemoveClicked);
@@ -148,7 +148,7 @@ OSCollapsibleItem::OSCollapsibleItem(OSCollapsibleItemHeader * collapsibleItemHe
   connect(itemList, &OSItemList::itemReplacementDropped, this, &OSCollapsibleItem::itemReplacementDropped);
 
   connect(itemList, &OSItemList::selectionCleared, this, &OSCollapsibleItem::selectionCleared);
-  
+
   m_mainLayout->addStretch();
 
   setShowFilterWidgets(m_showFilterLayout);

@@ -67,7 +67,7 @@ MeasureDragData::MeasureDragData(const QByteArray & data)
 
   QDomElement idElement = measureDragDataElement.firstChildElement("ID");
   QString idString = idElement.text();
-  
+
   m_id = toUUID(idString);
 }
 

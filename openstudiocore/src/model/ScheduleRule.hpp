@@ -72,7 +72,7 @@ class MODEL_API ScheduleRule : public ParentObject {
 
   /** @name Getters */
   //@{
-  
+
   ScheduleRuleset scheduleRuleset() const;
 
   int ruleIndex() const;
@@ -112,21 +112,21 @@ class MODEL_API ScheduleRule : public ParentObject {
   /** @name Setters */
   //@{
 
-  void setApplySunday(bool applySunday);
+  bool setApplySunday(bool applySunday);
 
-  void setApplyMonday(bool applyMonday);
+  bool setApplyMonday(bool applyMonday);
 
-  void setApplyTuesday(bool applyTuesday);
+  bool setApplyTuesday(bool applyTuesday);
 
-  void setApplyWednesday(bool applyWednesday);
+  bool setApplyWednesday(bool applyWednesday);
 
-  void setApplyThursday(bool applyThursday);
+  bool setApplyThursday(bool applyThursday);
 
-  void setApplyFriday(bool applyFriday);
+  bool setApplyFriday(bool applyFriday);
 
-  void setApplySaturday(bool applySaturday);
+  bool setApplySaturday(bool applySaturday);
 
-  //void setApplyHoliday(bool applyHoliday);
+  //bool setApplyHoliday(bool applyHoliday);
 
   /// Sets the start date of the date range, will delete any specific dates specified.
   /// A start date > end date indicates that the range wraps around the year.
@@ -151,7 +151,7 @@ class MODEL_API ScheduleRule : public ParentObject {
 
   /// Returns whether or not this rule covers each given date.
   std::vector<bool> containsDates(const std::vector<openstudio::Date>& dates);
-  
+
   //@}
  protected:
 
@@ -184,4 +184,3 @@ typedef std::vector<ScheduleRule> ScheduleRuleVector;
 } // openstudio
 
 #endif // MODEL_SCHEDULERULE_HPP
-

@@ -99,9 +99,10 @@ namespace detail {
     return isEmpty(OS_ExternalInterface_FunctionalMockupUnitImportFields::FMULoggingOn);
   }
 
-  void ExternalInterfaceFunctionalMockupUnitImport_Impl::setFMUTimeout(double fMUTimeout) {
+  bool ExternalInterfaceFunctionalMockupUnitImport_Impl::setFMUTimeout(double fMUTimeout) {
     bool result = setDouble(OS_ExternalInterface_FunctionalMockupUnitImportFields::FMUTimeout, fMUTimeout);
     OS_ASSERT(result);
+    return result;
   }
 
   void ExternalInterfaceFunctionalMockupUnitImport_Impl::resetFMUTimeout() {
@@ -109,9 +110,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ExternalInterfaceFunctionalMockupUnitImport_Impl::setFMULoggingOn(int fMULoggingOn) {
+  bool ExternalInterfaceFunctionalMockupUnitImport_Impl::setFMULoggingOn(int fMULoggingOn) {
     bool result = setInt(OS_ExternalInterface_FunctionalMockupUnitImportFields::FMULoggingOn, fMULoggingOn);
     OS_ASSERT(result);
+    return result;
   }
 
   void ExternalInterfaceFunctionalMockupUnitImport_Impl::resetFMULoggingOn() {
@@ -167,16 +169,16 @@ bool ExternalInterfaceFunctionalMockupUnitImport::isFMULoggingOnDefaulted() cons
   return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->isFMULoggingOnDefaulted();
 }
 
-void ExternalInterfaceFunctionalMockupUnitImport::setFMUTimeout(double fMUTimeout) {
-  getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->setFMUTimeout(fMUTimeout);
+bool ExternalInterfaceFunctionalMockupUnitImport::setFMUTimeout(double fMUTimeout) {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->setFMUTimeout(fMUTimeout);
 }
 
 void ExternalInterfaceFunctionalMockupUnitImport::resetFMUTimeout() {
   getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->resetFMUTimeout();
 }
 
-void ExternalInterfaceFunctionalMockupUnitImport::setFMULoggingOn(int fMULoggingOn) {
-  getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->setFMULoggingOn(fMULoggingOn);
+bool ExternalInterfaceFunctionalMockupUnitImport::setFMULoggingOn(int fMULoggingOn) {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->setFMULoggingOn(fMULoggingOn);
 }
 
 void ExternalInterfaceFunctionalMockupUnitImport::resetFMULoggingOn() {
@@ -199,4 +201,3 @@ ExternalInterfaceFunctionalMockupUnitImport::ExternalInterfaceFunctionalMockupUn
 
 } // model
 } // openstudio
-

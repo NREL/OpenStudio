@@ -234,9 +234,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationWalkInZoneBoundary_Impl::setAreaofGlassReachInDoorsFacingZone(double areaofGlassReachInDoorsFacingZone) {
+  bool RefrigerationWalkInZoneBoundary_Impl::setAreaofGlassReachInDoorsFacingZone(double areaofGlassReachInDoorsFacingZone) {
     bool result = setDouble(OS_Refrigeration_WalkIn_ZoneBoundaryFields::AreaofGlassReachInDoorsFacingZone, areaofGlassReachInDoorsFacingZone);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationWalkInZoneBoundary_Impl::resetAreaofGlassReachInDoorsFacingZone() {
@@ -244,9 +245,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationWalkInZoneBoundary_Impl::setHeightofGlassReachInDoorsFacingZone(double heightofGlassReachInDoorsFacingZone) {
+  bool RefrigerationWalkInZoneBoundary_Impl::setHeightofGlassReachInDoorsFacingZone(double heightofGlassReachInDoorsFacingZone) {
     bool result = setDouble(OS_Refrigeration_WalkIn_ZoneBoundaryFields::HeightofGlassReachInDoorsFacingZone, heightofGlassReachInDoorsFacingZone);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationWalkInZoneBoundary_Impl::resetHeightofGlassReachInDoorsFacingZone() {
@@ -277,9 +279,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationWalkInZoneBoundary_Impl::setAreaofStockingDoorsFacingZone(double areaofStockingDoorsFacingZone) {
+  bool RefrigerationWalkInZoneBoundary_Impl::setAreaofStockingDoorsFacingZone(double areaofStockingDoorsFacingZone) {
     bool result = setDouble(OS_Refrigeration_WalkIn_ZoneBoundaryFields::AreaofStockingDoorsFacingZone, areaofStockingDoorsFacingZone);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationWalkInZoneBoundary_Impl::resetAreaofStockingDoorsFacingZone() {
@@ -287,9 +290,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationWalkInZoneBoundary_Impl::setHeightofStockingDoorsFacingZone(double heightofStockingDoorsFacingZone) {
+  bool RefrigerationWalkInZoneBoundary_Impl::setHeightofStockingDoorsFacingZone(double heightofStockingDoorsFacingZone) {
     bool result = setDouble(OS_Refrigeration_WalkIn_ZoneBoundaryFields::HeightofStockingDoorsFacingZone, heightofStockingDoorsFacingZone);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationWalkInZoneBoundary_Impl::resetHeightofStockingDoorsFacingZone() {
@@ -456,16 +460,16 @@ void RefrigerationWalkInZoneBoundary::resetInsulatedSurfaceUValueFacingZone() {
   getImpl<detail::RefrigerationWalkInZoneBoundary_Impl>()->resetInsulatedSurfaceUValueFacingZone();
 }
 
-void RefrigerationWalkInZoneBoundary::setAreaofGlassReachInDoorsFacingZone(double areaofGlassReachInDoorsFacingZone) {
-  getImpl<detail::RefrigerationWalkInZoneBoundary_Impl>()->setAreaofGlassReachInDoorsFacingZone(areaofGlassReachInDoorsFacingZone);
+bool RefrigerationWalkInZoneBoundary::setAreaofGlassReachInDoorsFacingZone(double areaofGlassReachInDoorsFacingZone) {
+  return getImpl<detail::RefrigerationWalkInZoneBoundary_Impl>()->setAreaofGlassReachInDoorsFacingZone(areaofGlassReachInDoorsFacingZone);
 }
 
 void RefrigerationWalkInZoneBoundary::resetAreaofGlassReachInDoorsFacingZone() {
   getImpl<detail::RefrigerationWalkInZoneBoundary_Impl>()->resetAreaofGlassReachInDoorsFacingZone();
 }
 
-void RefrigerationWalkInZoneBoundary::setHeightofGlassReachInDoorsFacingZone(double heightofGlassReachInDoorsFacingZone) {
-  getImpl<detail::RefrigerationWalkInZoneBoundary_Impl>()->setHeightofGlassReachInDoorsFacingZone(heightofGlassReachInDoorsFacingZone);
+bool RefrigerationWalkInZoneBoundary::setHeightofGlassReachInDoorsFacingZone(double heightofGlassReachInDoorsFacingZone) {
+  return getImpl<detail::RefrigerationWalkInZoneBoundary_Impl>()->setHeightofGlassReachInDoorsFacingZone(heightofGlassReachInDoorsFacingZone);
 }
 
 void RefrigerationWalkInZoneBoundary::resetHeightofGlassReachInDoorsFacingZone() {
@@ -488,16 +492,16 @@ void RefrigerationWalkInZoneBoundary::resetGlassReachInDoorOpeningScheduleFacing
   getImpl<detail::RefrigerationWalkInZoneBoundary_Impl>()->resetGlassReachInDoorOpeningScheduleFacingZone();
 }
 
-void RefrigerationWalkInZoneBoundary::setAreaofStockingDoorsFacingZone(double areaofStockingDoorsFacingZone) {
-  getImpl<detail::RefrigerationWalkInZoneBoundary_Impl>()->setAreaofStockingDoorsFacingZone(areaofStockingDoorsFacingZone);
+bool RefrigerationWalkInZoneBoundary::setAreaofStockingDoorsFacingZone(double areaofStockingDoorsFacingZone) {
+  return getImpl<detail::RefrigerationWalkInZoneBoundary_Impl>()->setAreaofStockingDoorsFacingZone(areaofStockingDoorsFacingZone);
 }
 
 void RefrigerationWalkInZoneBoundary::resetAreaofStockingDoorsFacingZone() {
   getImpl<detail::RefrigerationWalkInZoneBoundary_Impl>()->resetAreaofStockingDoorsFacingZone();
 }
 
-void RefrigerationWalkInZoneBoundary::setHeightofStockingDoorsFacingZone(double heightofStockingDoorsFacingZone) {
-  getImpl<detail::RefrigerationWalkInZoneBoundary_Impl>()->setHeightofStockingDoorsFacingZone(heightofStockingDoorsFacingZone);
+bool RefrigerationWalkInZoneBoundary::setHeightofStockingDoorsFacingZone(double heightofStockingDoorsFacingZone) {
+  return getImpl<detail::RefrigerationWalkInZoneBoundary_Impl>()->setHeightofStockingDoorsFacingZone(heightofStockingDoorsFacingZone);
 }
 
 void RefrigerationWalkInZoneBoundary::resetHeightofStockingDoorsFacingZone() {
@@ -536,4 +540,3 @@ RefrigerationWalkInZoneBoundary::RefrigerationWalkInZoneBoundary(std::shared_ptr
 
 } // model
 } // openstudio
-

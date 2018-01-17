@@ -72,7 +72,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleDay( ScheduleDay 
 
   std::vector<double> values = modelObject.values();
   std::vector<openstudio::Time> times = modelObject.times();
-  
+
   unsigned N = values.size();
   OS_ASSERT(N == times.size());
 

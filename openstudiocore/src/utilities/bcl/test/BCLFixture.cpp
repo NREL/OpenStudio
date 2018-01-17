@@ -36,7 +36,7 @@ using openstudio::toPath;
 using openstudio::FileLogSink;
 
 void BCLFixture::SetUp() {
-  
+
   if (LocalBCL::instance().prodAuthKey().empty()){
     prodAuthKey = defaultProdAuthKey;
     LocalBCL::instance().setProdAuthKey(prodAuthKey);

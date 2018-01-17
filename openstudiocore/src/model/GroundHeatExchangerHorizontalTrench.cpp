@@ -290,19 +290,22 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GroundHeatExchangerHorizontalTrench_Impl::setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature) {
+  bool GroundHeatExchangerHorizontalTrench_Impl::setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature) {
     bool result = setDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::KusudaAchenbachAverageSurfaceTemperature, kusudaAchenbachAverageSurfaceTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
-  void GroundHeatExchangerHorizontalTrench_Impl::setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(double kusudaAchenbachAverageAmplitudeofSurfaceTemperature) {
+  bool GroundHeatExchangerHorizontalTrench_Impl::setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(double kusudaAchenbachAverageAmplitudeofSurfaceTemperature) {
     bool result = setDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::KusudaAchenbachAverageAmplitudeofSurfaceTemperature, kusudaAchenbachAverageAmplitudeofSurfaceTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
-  void GroundHeatExchangerHorizontalTrench_Impl::setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature) {
+  bool GroundHeatExchangerHorizontalTrench_Impl::setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature) {
     bool result = setDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::KusudaAchenbachPhaseShiftofMinimumSurfaceTemperature, kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   bool GroundHeatExchangerHorizontalTrench_Impl::setEvapotranspirationGroundCoverParameter(double evapotranspirationGroundCoverParameter) {
@@ -519,16 +522,16 @@ void GroundHeatExchangerHorizontalTrench::resetGroundTemperatureModel() {
   getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->resetGroundTemperatureModel();
 }
 
-void GroundHeatExchangerHorizontalTrench::setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature) {
-  getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->setKusudaAchenbachAverageSurfaceTemperature(kusudaAchenbachAverageSurfaceTemperature);
+bool GroundHeatExchangerHorizontalTrench::setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature) {
+  return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->setKusudaAchenbachAverageSurfaceTemperature(kusudaAchenbachAverageSurfaceTemperature);
 }
 
-void GroundHeatExchangerHorizontalTrench::setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(double kusudaAchenbachAverageAmplitudeofSurfaceTemperature) {
-  getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(kusudaAchenbachAverageAmplitudeofSurfaceTemperature);
+bool GroundHeatExchangerHorizontalTrench::setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(double kusudaAchenbachAverageAmplitudeofSurfaceTemperature) {
+  return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(kusudaAchenbachAverageAmplitudeofSurfaceTemperature);
 }
 
-void GroundHeatExchangerHorizontalTrench::setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature) {
-  getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
+bool GroundHeatExchangerHorizontalTrench::setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature) {
+  return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
 }
 
 bool GroundHeatExchangerHorizontalTrench::setEvapotranspirationGroundCoverParameter(double evapotranspirationGroundCoverParameter) {
@@ -543,4 +546,3 @@ GroundHeatExchangerHorizontalTrench::GroundHeatExchangerHorizontalTrench(std::sh
 
 } // model
 } // openstudio
-

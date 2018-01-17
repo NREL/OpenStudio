@@ -86,12 +86,12 @@ class VRFSystemMiniView : public QGraphicsObject
 
   public slots:
 
-  void setName( const QString & name); 
+  void setName( const QString & name);
 
   protected:
 
-  void paint( QPainter *painter, 
-              const QStyleOptionGraphicsItem *option, 
+  void paint( QPainter *painter,
+              const QStyleOptionGraphicsItem *option,
               QWidget *widget ) override;
 
   private:
@@ -156,8 +156,8 @@ class VRFSystemView : public QGraphicsObject
 
   protected:
 
-  void paint( QPainter *painter, 
-              const QStyleOptionGraphicsItem *option, 
+  void paint( QPainter *painter,
+              const QStyleOptionGraphicsItem *option,
               QWidget *widget = nullptr ) override;
 
   void mousePressEvent(QGraphicsSceneMouseEvent * event) override;
@@ -205,18 +205,18 @@ class VRFTerminalView : public QGraphicsObject
 
   signals:
 
-  void componentDroppedOnZone(const OSItemId & zoneHVACTerminalID, const OSItemId & dropComponentID); 
+  void componentDroppedOnZone(const OSItemId & zoneHVACTerminalID, const OSItemId & dropComponentID);
 
-  void removeZoneClicked(const OSItemId & zoneHVACTerminalID); 
+  void removeZoneClicked(const OSItemId & zoneHVACTerminalID);
 
-  void terminalIconClicked(const OSItemId & zoneHVACTerminalID); 
+  void terminalIconClicked(const OSItemId & zoneHVACTerminalID);
 
-  void removeTerminalClicked(const OSItemId & zoneHVACTerminalID); 
+  void removeTerminalClicked(const OSItemId & zoneHVACTerminalID);
 
   protected:
 
-  void paint( QPainter *painter, 
-              const QStyleOptionGraphicsItem *option, 
+  void paint( QPainter *painter,
+              const QStyleOptionGraphicsItem *option,
               QWidget *widget ) override;
 
   private slots:
@@ -252,8 +252,8 @@ class VRFThermalZoneDropZoneView : public OSDropZoneItem
 
   protected:
 
-  void paint( QPainter *painter, 
-              const QStyleOptionGraphicsItem *option, 
+  void paint( QPainter *painter,
+              const QStyleOptionGraphicsItem *option,
               QWidget *widget ) override;
 
   private:
@@ -271,8 +271,8 @@ class VRFSystemDropZoneView : public OSDropZoneItem
 
   protected:
 
-  void paint( QPainter *painter, 
-              const QStyleOptionGraphicsItem *option, 
+  void paint( QPainter *painter,
+              const QStyleOptionGraphicsItem *option,
               QWidget *widget ) override;
 };
 

@@ -322,7 +322,7 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript2) {
   EXPECT_FALSE(result.initialCondition());
   EXPECT_FALSE(result.finalCondition());
   EXPECT_EQ(2u,result.stepValues().size()); // registers argument values
- 
+
   // call properly using default multiplier, but lights definition not Watts/Area
   runner.reset();
   lightsDef = LightsDefinition(model);
@@ -343,7 +343,7 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript2) {
   EXPECT_FALSE(result.initialCondition());
   EXPECT_FALSE(result.finalCondition());
   EXPECT_EQ(3u,result.stepValues().size()); // Registers lights definition name, then fails
-  
+
   // call properly using default multiplier
   runner.reset();
   lightsDef.setWattsperSpaceFloorArea(10.0);
@@ -358,9 +358,9 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript2) {
   EXPECT_TRUE(result.initialCondition()); // describes original state
   EXPECT_TRUE(result.finalCondition());   // describes changes
   EXPECT_EQ(8u,result.stepValues().size());
-  
+
   EXPECT_DOUBLE_EQ(8.0,lightsDef.wattsperSpaceFloorArea().get());
-  
+
   // call properly using different multiplier
   runner.reset();
   arg = definitions[1];

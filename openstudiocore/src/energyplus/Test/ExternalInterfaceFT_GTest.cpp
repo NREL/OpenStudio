@@ -273,7 +273,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUni
   std::string fMUVariableName = "fMUVariableName";
 
   ExternalInterfaceFunctionalMockupUnitExportFromVariable variable(model, outputVariableIndexKeyName, outputVariableName, fMUVariableName);
-  
+
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
@@ -391,7 +391,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUni
   std::string fMUInstanceName = "fMUInstanceName";
 
   ExternalInterfaceFunctionalMockupUnitImportFromVariable variable(model, outputVariableIndexKeyName, outputVariableName, eifmui, fMUInstanceName, fMUVariableName);
- 
+
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
@@ -453,7 +453,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUni
 TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUnitImportToSchedule) {
 
   Model model;
-  
+
   ExternalInterfaceFunctionalMockupUnitImport eifmui(model, "test name");
 
   ExternalInterfaceFunctionalMockupUnitImportToSchedule schedule(model, eifmui, "FMU", "FMU name", 10);

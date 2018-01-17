@@ -154,7 +154,7 @@ TEST_F(ModelFixture, Construction_InsertLayers)
     EXPECT_TRUE(construction.insertLayer(1, air));
     EXPECT_TRUE(construction.insertLayer(2, interior));
   }catch(const std::exception&){
-    
+
   }
 
   // Get layers

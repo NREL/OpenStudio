@@ -49,73 +49,73 @@ namespace detail {
 
   /** HeatExchangerAirToAirSensibleAndLatent_Impl is a AirToAirComponent_Impl that is the implementation class for HeatExchangerAirToAirSensibleAndLatent.*/
   class MODEL_API HeatExchangerAirToAirSensibleAndLatent_Impl : public AirToAirComponent_Impl {
-    
 
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
 
-    
-    
 
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
    public:
 
@@ -272,13 +272,13 @@ namespace detail {
 
     bool setNominalElectricPower(const Quantity& nominalElectricPower);
 
-    void setSupplyAirOutletTemperatureControl(bool supplyAirOutletTemperatureControl);
+    bool setSupplyAirOutletTemperatureControl(bool supplyAirOutletTemperatureControl);
 
     bool setHeatExchangerType(std::string heatExchangerType);
 
     bool setFrostControlType(std::string frostControlType);
 
-    void setThresholdTemperature(double thresholdTemperature);
+    bool setThresholdTemperature(double thresholdTemperature);
 
     bool setThresholdTemperature(const Quantity& thresholdTemperature);
 
@@ -296,7 +296,7 @@ namespace detail {
 
     void resetRateofDefrostTimeFractionIncrease();
 
-    void setEconomizerLockout(bool economizerLockout);
+    bool setEconomizerLockout(bool economizerLockout);
 
     //@}
     /** @name Other */
@@ -362,4 +362,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_HEATEXCHANGERAIRTOAIRSENSIBLEANDLATENT_IMPL_HPP
-

@@ -268,9 +268,10 @@ namespace detail {
     return result;
   }
 
-  void ShadingSurfaceGroup_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
+  bool ShadingSurfaceGroup_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
     bool result = setDouble(OS_ShadingSurfaceGroupFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
     OS_ASSERT(result);
+    return result;
   }
 
   void ShadingSurfaceGroup_Impl::resetDirectionofRelativeNorth() {
@@ -278,9 +279,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ShadingSurfaceGroup_Impl::setXOrigin(double xOrigin, bool driverMethod) {
+  bool ShadingSurfaceGroup_Impl::setXOrigin(double xOrigin, bool driverMethod) {
     bool result = setDouble(OS_ShadingSurfaceGroupFields::XOrigin, xOrigin, driverMethod);
     OS_ASSERT(result);
+    return result;
   }
 
   void ShadingSurfaceGroup_Impl::resetXOrigin() {
@@ -288,9 +290,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ShadingSurfaceGroup_Impl::setYOrigin(double yOrigin, bool driverMethod) {
+  bool ShadingSurfaceGroup_Impl::setYOrigin(double yOrigin, bool driverMethod) {
     bool result = setDouble(OS_ShadingSurfaceGroupFields::YOrigin, yOrigin, driverMethod);
     OS_ASSERT(result);
+    return result;
   }
 
   void ShadingSurfaceGroup_Impl::resetYOrigin() {
@@ -298,9 +301,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ShadingSurfaceGroup_Impl::setZOrigin(double zOrigin, bool driverMethod) {
+  bool ShadingSurfaceGroup_Impl::setZOrigin(double zOrigin, bool driverMethod) {
     bool result = setDouble(OS_ShadingSurfaceGroupFields::ZOrigin, zOrigin, driverMethod);
     OS_ASSERT(result);
+    return result;
   }
 
   void ShadingSurfaceGroup_Impl::resetZOrigin() {
@@ -543,4 +547,3 @@ ShadingSurfaceGroup::ShadingSurfaceGroup(std::shared_ptr<detail::ShadingSurfaceG
 
 } // model
 } // openstudio
-

@@ -42,7 +42,7 @@ class QWheelEvent;
 class MODELEDITOR_API IGSpinBox : public QSpinBox
 {
   Q_OBJECT;
-  
+
  public:
   IGSpinBox(QWidget* parent);
 
@@ -50,7 +50,7 @@ class MODELEDITOR_API IGSpinBox : public QSpinBox
 
   public slots:
   void triggered(bool);//the radio button got triggered and calls this slot
-  
+
 };
 
 class MODELEDITOR_API IGDSpinBox : public QDoubleSpinBox

@@ -298,7 +298,7 @@ namespace detail{
     return isEmpty(OS_SimulationControlFields::MinimumNumberofWarmupDays);
   }
 
-  void SimulationControl_Impl::setDoZoneSizingCalculation(bool doZoneSizingCalculation) {
+  bool SimulationControl_Impl::setDoZoneSizingCalculation(bool doZoneSizingCalculation) {
     bool result = false;
     if (doZoneSizingCalculation) {
       result = setString(OS_SimulationControlFields::DoZoneSizingCalculation, "Yes");
@@ -306,6 +306,7 @@ namespace detail{
       result = setString(OS_SimulationControlFields::DoZoneSizingCalculation, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void SimulationControl_Impl::resetDoZoneSizingCalculation() {
@@ -313,7 +314,7 @@ namespace detail{
     OS_ASSERT(result);
   }
 
-  void SimulationControl_Impl::setDoSystemSizingCalculation(bool doSystemSizingCalculation) {
+  bool SimulationControl_Impl::setDoSystemSizingCalculation(bool doSystemSizingCalculation) {
     bool result = false;
     if (doSystemSizingCalculation) {
       result = setString(OS_SimulationControlFields::DoSystemSizingCalculation, "Yes");
@@ -321,6 +322,7 @@ namespace detail{
       result = setString(OS_SimulationControlFields::DoSystemSizingCalculation, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void SimulationControl_Impl::resetDoSystemSizingCalculation() {
@@ -328,7 +330,7 @@ namespace detail{
     OS_ASSERT(result);
   }
 
-  void SimulationControl_Impl::setDoPlantSizingCalculation(bool doPlantSizingCalculation) {
+  bool SimulationControl_Impl::setDoPlantSizingCalculation(bool doPlantSizingCalculation) {
     bool result = false;
     if (doPlantSizingCalculation) {
       result = setString(OS_SimulationControlFields::DoPlantSizingCalculation, "Yes");
@@ -336,6 +338,7 @@ namespace detail{
       result = setString(OS_SimulationControlFields::DoPlantSizingCalculation, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void SimulationControl_Impl::resetDoPlantSizingCalculation() {
@@ -343,7 +346,7 @@ namespace detail{
     OS_ASSERT(result);
   }
 
-  void SimulationControl_Impl::setRunSimulationforSizingPeriods(bool runSimulationforSizingPeriods) {
+  bool SimulationControl_Impl::setRunSimulationforSizingPeriods(bool runSimulationforSizingPeriods) {
     bool result = false;
     if (runSimulationforSizingPeriods) {
       result = setString(OS_SimulationControlFields::RunSimulationforSizingPeriods, "Yes");
@@ -351,6 +354,7 @@ namespace detail{
       result = setString(OS_SimulationControlFields::RunSimulationforSizingPeriods, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void SimulationControl_Impl::resetRunSimulationforSizingPeriods() {
@@ -358,7 +362,7 @@ namespace detail{
     OS_ASSERT(result);
   }
 
-  void SimulationControl_Impl::setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods) {
+  bool SimulationControl_Impl::setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods) {
     bool result = false;
     if (runSimulationforWeatherFileRunPeriods) {
       result = setString(OS_SimulationControlFields::RunSimulationforWeatherFileRunPeriods, "Yes");
@@ -366,6 +370,7 @@ namespace detail{
       result = setString(OS_SimulationControlFields::RunSimulationforWeatherFileRunPeriods, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void SimulationControl_Impl::resetRunSimulationforWeatherFileRunPeriods() {
@@ -720,40 +725,40 @@ bool SimulationControl::isMinimumNumberofWarmupDaysDefaulted() const {
   return getImpl<detail::SimulationControl_Impl>()->isMinimumNumberofWarmupDaysDefaulted();
 }
 
-void SimulationControl::setDoZoneSizingCalculation(bool doZoneSizingCalculation) {
-  getImpl<detail::SimulationControl_Impl>()->setDoZoneSizingCalculation(doZoneSizingCalculation);
+bool SimulationControl::setDoZoneSizingCalculation(bool doZoneSizingCalculation) {
+  return getImpl<detail::SimulationControl_Impl>()->setDoZoneSizingCalculation(doZoneSizingCalculation);
 }
 
 void SimulationControl::resetDoZoneSizingCalculation() {
   getImpl<detail::SimulationControl_Impl>()->resetDoZoneSizingCalculation();
 }
 
-void SimulationControl::setDoSystemSizingCalculation(bool doSystemSizingCalculation) {
-  getImpl<detail::SimulationControl_Impl>()->setDoSystemSizingCalculation(doSystemSizingCalculation);
+bool SimulationControl::setDoSystemSizingCalculation(bool doSystemSizingCalculation) {
+  return getImpl<detail::SimulationControl_Impl>()->setDoSystemSizingCalculation(doSystemSizingCalculation);
 }
 
 void SimulationControl::resetDoSystemSizingCalculation() {
   getImpl<detail::SimulationControl_Impl>()->resetDoSystemSizingCalculation();
 }
 
-void SimulationControl::setDoPlantSizingCalculation(bool doPlantSizingCalculation) {
-  getImpl<detail::SimulationControl_Impl>()->setDoPlantSizingCalculation(doPlantSizingCalculation);
+bool SimulationControl::setDoPlantSizingCalculation(bool doPlantSizingCalculation) {
+  return getImpl<detail::SimulationControl_Impl>()->setDoPlantSizingCalculation(doPlantSizingCalculation);
 }
 
 void SimulationControl::resetDoPlantSizingCalculation() {
   getImpl<detail::SimulationControl_Impl>()->resetDoPlantSizingCalculation();
 }
 
-void SimulationControl::setRunSimulationforSizingPeriods(bool runSimulationforSizingPeriods) {
-  getImpl<detail::SimulationControl_Impl>()->setRunSimulationforSizingPeriods(runSimulationforSizingPeriods);
+bool SimulationControl::setRunSimulationforSizingPeriods(bool runSimulationforSizingPeriods) {
+  return getImpl<detail::SimulationControl_Impl>()->setRunSimulationforSizingPeriods(runSimulationforSizingPeriods);
 }
 
 void SimulationControl::resetRunSimulationforSizingPeriods() {
   getImpl<detail::SimulationControl_Impl>()->resetRunSimulationforSizingPeriods();
 }
 
-void SimulationControl::setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods) {
-  getImpl<detail::SimulationControl_Impl>()->setRunSimulationforWeatherFileRunPeriods(runSimulationforWeatherFileRunPeriods);
+bool SimulationControl::setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods) {
+  return getImpl<detail::SimulationControl_Impl>()->setRunSimulationforWeatherFileRunPeriods(runSimulationforWeatherFileRunPeriods);
 }
 
 void SimulationControl::resetRunSimulationforWeatherFileRunPeriods() {

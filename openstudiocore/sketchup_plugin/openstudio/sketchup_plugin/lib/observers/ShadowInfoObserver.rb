@@ -37,31 +37,31 @@ module OpenStudio
       @shadow_time = @shadow_info.time
       @enabled = false
     end
-    
+
     def disable
       was_enabled = @enabled
       @enabled = false
       return was_enabled
     end
-    
+
     def enable
       @enabled = true
     end
-    
+
     def destroy
       @drawing_interface = nil
       @shadow_info = nil
       @north_angle = nil
       @shadow_time = nil
       @enabled = false
-    end  
-    
+    end
+
     def onShadowInfoChanged(shadow_info, arg2)
-    
+
       Plugin.log(OpenStudio::Trace, "#{current_method_name}, @enabled = #{@enabled}")
-      
+
       return if not @enabled
-      
+
       # arg2 is a flag that returns 1 when shadows are displayed.
 
       proc = Proc.new {
@@ -86,34 +86,34 @@ module OpenStudio
 
         # does not call paint
         @drawing_interface.on_change_entity
-        
+
         if (@drawing_interface.class == Site)
-       
+
           # Only repaint if shadow_time has changed
           if (@shadow_time != @shadow_info.time)
-            @shadow_time = @shadow_info.time 
+            @shadow_time = @shadow_info.time
             if (@drawing_interface.model_interface.materials_interface.rendering_mode == RenderByDataValue)
               @drawing_interface.model_interface.request_paint
             end
           end
-        
-        
+
+
         elsif (@drawing_interface.class == Building)
-        
+
           # Only repaint if north_angle has changed
           if (@north_angle != @shadow_info.north_angle)
             @north_angle = @shadow_info.north_angle
             @drawing_interface.model_interface.request_paint
           end
-        
+
         end
 
       } # Proc
-      
+
       Plugin.add_event( proc )
 
     end
 
   end
-  
+
 end

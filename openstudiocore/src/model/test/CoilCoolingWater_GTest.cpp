@@ -41,26 +41,26 @@ TEST(CoilCoolingWater,CoilCoolingWater_CoilCoolingWater)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     model::Model m; 
+  ASSERT_EXIT (
+  {
+     model::Model m;
 
      model::ScheduleCompact s(m);
 
-     model::CoilCoolingWater coil(m,s); 
+     model::CoilCoolingWater coil(m,s);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
 TEST(CoilCoolingWater,CoilCoolingWater_addToNode)
 {
-  model::Model m; 
+  model::Model m;
 
   model::ScheduleCompact s(m);
-  
-  model::CoilCoolingWater coil(m,s); 
+
+  model::CoilCoolingWater coil(m,s);
 
   model::AirLoopHVAC airLoop(m);
 

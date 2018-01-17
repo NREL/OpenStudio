@@ -121,8 +121,8 @@ class StandardReports < OpenStudio::Ruleset::ReportingUserScript
     html_out_path = "./report.html"
     File.open(html_out_path, 'w') do |file|
       file << html_out
-      
-      # make sure data is written to the disk one way or the other      
+
+      # make sure data is written to the disk one way or the other
       begin
         file.fsync
       rescue

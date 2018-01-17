@@ -395,7 +395,7 @@ namespace detail {
         result.push_back("Daylighting Reference Point 1 Glare Index Setpoint Exceeded Time");
         result.push_back("Daylighting Reference Point 1 Daylight Illuminance Setpoint Exceeded Time");
       //}
-      
+
       //if (secondaryDaylightingControl()){
         result.push_back("Daylighting Reference Point 2 Illuminance");
         result.push_back("Daylighting Reference Point 2 Glare Index");
@@ -673,7 +673,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ThermalZone_Impl::setCeilingHeight(boost::optional<double> ceilingHeight) {
+  bool ThermalZone_Impl::setCeilingHeight(boost::optional<double> ceilingHeight) {
     bool result = false;
     if (ceilingHeight) {
       result = setDouble(OS_ThermalZoneFields::CeilingHeight, ceilingHeight.get());
@@ -681,11 +681,13 @@ namespace detail {
       result = setString(OS_ThermalZoneFields::CeilingHeight, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
-  void ThermalZone_Impl::setCeilingHeight(double ceilingHeight) {
+  bool ThermalZone_Impl::setCeilingHeight(double ceilingHeight) {
     bool result = setDouble(OS_ThermalZoneFields::CeilingHeight, ceilingHeight);
     OS_ASSERT(result);
+    return result;
   }
 
   bool ThermalZone_Impl::setCeilingHeight(const OSOptionalQuantity& ceilingHeight) {
@@ -708,7 +710,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ThermalZone_Impl::setVolume(boost::optional<double> volume) {
+  bool ThermalZone_Impl::setVolume(boost::optional<double> volume) {
     bool result = false;
     if (volume) {
       result = setDouble(OS_ThermalZoneFields::Volume, volume.get());
@@ -716,11 +718,13 @@ namespace detail {
       result = setString(OS_ThermalZoneFields::Volume, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
-  void ThermalZone_Impl::setVolume(double volume) {
+  bool ThermalZone_Impl::setVolume(double volume) {
     bool result = setDouble(OS_ThermalZoneFields::Volume, volume);
     OS_ASSERT(result);
+    return result;
   }
 
   bool ThermalZone_Impl::setVolume(const OSOptionalQuantity& volume) {
@@ -783,9 +787,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ThermalZone_Impl::setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName) {
+  bool ThermalZone_Impl::setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName) {
     bool result = setString(OS_ThermalZoneFields::ZoneConditioningEquipmentListName, zoneConditioningEquipmentListName);
     OS_ASSERT(result);
+    return result;
   }
 
   bool ThermalZone_Impl::setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl) {
@@ -1861,11 +1866,13 @@ namespace detail {
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
-  void ThermalZone_Impl::setUseIdealAirLoads(bool useIdealAirLoads)
+  bool ThermalZone_Impl::setUseIdealAirLoads(bool useIdealAirLoads)
   {
+    bool result = true;
+
     if (useIdealAirLoads)
     {
-      setString(OS_ThermalZoneFields::UseIdealAirLoads, "Yes");
+      result &= setString(OS_ThermalZoneFields::UseIdealAirLoads, "Yes");
 
       std::vector<ModelObject> comps = this->equipment();
 
@@ -1878,13 +1885,15 @@ namespace detail {
       {
         ThermalZone thisObject = this->getObject<ThermalZone>();
 
-        airLoop->removeBranchForZone(thisObject);
+        result &= airLoop->removeBranchForZone(thisObject);
       }
+
     }
     else
     {
-      setString(OS_ThermalZoneFields::UseIdealAirLoads, "No");
+      result &= setString(OS_ThermalZoneFields::UseIdealAirLoads, "No");
     }
+    return result;
   }
 
   openstudio::OSOptionalQuantity ThermalZone_Impl::ceilingHeight_SI() const {
@@ -2279,24 +2288,24 @@ namespace detail {
     }
   }
 
-  void ThermalZone_Impl::addEquipment(const ModelObject & equipment)
+  bool ThermalZone_Impl::addEquipment(const ModelObject & equipment)
   {
-    zoneHVACEquipmentList().addEquipment(equipment);
+    return zoneHVACEquipmentList().addEquipment(equipment);
   }
 
-  void ThermalZone_Impl::removeEquipment(const ModelObject & equipment)
+  bool ThermalZone_Impl::removeEquipment(const ModelObject & equipment)
   {
-    zoneHVACEquipmentList().removeEquipment(equipment);
+    return zoneHVACEquipmentList().removeEquipment(equipment);
   }
 
-  void ThermalZone_Impl::setCoolingPriority(const ModelObject & equipment, unsigned priority)
+  bool ThermalZone_Impl::setCoolingPriority(const ModelObject & equipment, unsigned priority)
   {
-    zoneHVACEquipmentList().setCoolingPriority(equipment,priority);
+    return zoneHVACEquipmentList().setCoolingPriority(equipment,priority);
   }
 
-  void ThermalZone_Impl::setHeatingPriority(const ModelObject & equipment, unsigned priority)
+  bool ThermalZone_Impl::setHeatingPriority(const ModelObject & equipment, unsigned priority)
   {
-    zoneHVACEquipmentList().setHeatingPriority(equipment,priority);
+    return zoneHVACEquipmentList().setHeatingPriority(equipment,priority);
   }
 
   std::vector<ModelObject> ThermalZone_Impl::equipment() const
@@ -2856,12 +2865,12 @@ void ThermalZone::resetMultiplier() {
   getImpl<detail::ThermalZone_Impl>()->resetMultiplier();
 }
 
-void ThermalZone::setCeilingHeight(boost::optional<double> ceilingHeight) {
-  getImpl<detail::ThermalZone_Impl>()->setCeilingHeight(ceilingHeight);
+bool ThermalZone::setCeilingHeight(boost::optional<double> ceilingHeight) {
+  return getImpl<detail::ThermalZone_Impl>()->setCeilingHeight(ceilingHeight);
 }
 
-void ThermalZone::setCeilingHeight(double ceilingHeight) {
-  getImpl<detail::ThermalZone_Impl>()->setCeilingHeight(ceilingHeight);
+bool ThermalZone::setCeilingHeight(double ceilingHeight) {
+  return getImpl<detail::ThermalZone_Impl>()->setCeilingHeight(ceilingHeight);
 }
 
 bool ThermalZone::setCeilingHeight(const Quantity& ceilingHeight) {
@@ -2876,12 +2885,12 @@ void ThermalZone::autocalculateCeilingHeight() {
   getImpl<detail::ThermalZone_Impl>()->autocalculateCeilingHeight();
 }
 
-void ThermalZone::setVolume(boost::optional<double> volume) {
-  getImpl<detail::ThermalZone_Impl>()->setVolume(volume);
+bool ThermalZone::setVolume(boost::optional<double> volume) {
+  return getImpl<detail::ThermalZone_Impl>()->setVolume(volume);
 }
 
-void ThermalZone::setVolume(double volume) {
-  getImpl<detail::ThermalZone_Impl>()->setVolume(volume);
+bool ThermalZone::setVolume(double volume) {
+  return getImpl<detail::ThermalZone_Impl>()->setVolume(volume);
 }
 
 bool ThermalZone::setVolume(const Quantity& volume) {
@@ -2920,8 +2929,8 @@ void ThermalZone::resetZoneOutsideConvectionAlgorithm() {
   getImpl<detail::ThermalZone_Impl>()->resetZoneOutsideConvectionAlgorithm();
 }
 
-void ThermalZone::setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName) {
-  getImpl<detail::ThermalZone_Impl>()->setZoneConditioningEquipmentListName(zoneConditioningEquipmentListName);
+bool ThermalZone::setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName) {
+  return getImpl<detail::ThermalZone_Impl>()->setZoneConditioningEquipmentListName(zoneConditioningEquipmentListName);
 }
 
 bool ThermalZone::setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl) {
@@ -3190,9 +3199,9 @@ bool ThermalZone::useIdealAirLoads() const
   return getImpl<detail::ThermalZone_Impl>()->useIdealAirLoads();
 }
 
-void ThermalZone::setUseIdealAirLoads(bool useIdealAirLoads)
+bool ThermalZone::setUseIdealAirLoads(bool useIdealAirLoads)
 {
-  getImpl<detail::ThermalZone_Impl>()->setUseIdealAirLoads(useIdealAirLoads);
+  return getImpl<detail::ThermalZone_Impl>()->setUseIdealAirLoads(useIdealAirLoads);
 }
 
 SizingZone ThermalZone::sizingZone() const
@@ -3215,19 +3224,19 @@ PortList ThermalZone::exhaustPortList() const
   return getImpl<detail::ThermalZone_Impl>()->exhaustPortList();
 }
 
-void ThermalZone::addEquipment(const ModelObject & equipment)
+bool ThermalZone::addEquipment(const ModelObject & equipment)
 {
-  getImpl<detail::ThermalZone_Impl>()->addEquipment(equipment);
+  return getImpl<detail::ThermalZone_Impl>()->addEquipment(equipment);
 }
 
-void ThermalZone::setCoolingPriority(const ModelObject & equipment, unsigned priority)
+bool ThermalZone::setCoolingPriority(const ModelObject & equipment, unsigned priority)
 {
-  getImpl<detail::ThermalZone_Impl>()->setCoolingPriority(equipment,priority);
+  return getImpl<detail::ThermalZone_Impl>()->setCoolingPriority(equipment,priority);
 }
 
-void ThermalZone::setHeatingPriority(const ModelObject & equipment, unsigned priority)
+bool ThermalZone::setHeatingPriority(const ModelObject & equipment, unsigned priority)
 {
-  getImpl<detail::ThermalZone_Impl>()->setHeatingPriority(equipment,priority);
+  return getImpl<detail::ThermalZone_Impl>()->setHeatingPriority(equipment,priority);
 }
 
 std::vector<ModelObject> ThermalZone::equipment() const
@@ -3245,9 +3254,9 @@ std::vector<ModelObject> ThermalZone::equipmentInCoolingOrder()
   return getImpl<detail::ThermalZone_Impl>()->equipmentInCoolingOrder();
 }
 
-void ThermalZone::removeEquipment(const ModelObject & equipment)
+bool ThermalZone::removeEquipment(const ModelObject & equipment)
 {
-  getImpl<detail::ThermalZone_Impl>()->removeEquipment(equipment);
+  return getImpl<detail::ThermalZone_Impl>()->removeEquipment(equipment);
 }
 
 bool ThermalZone::isPlenum() const

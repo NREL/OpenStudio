@@ -69,37 +69,37 @@ class MODEL_API StandardOpaqueMaterial : public OpaqueMaterial {
   /** @name Getters */
   //@{
 
-  /** Thermal conductivity of the OpaqueMaterial in W/m*K. Throws openstudio::Exception if unavailable. 
+  /** Thermal conductivity of the OpaqueMaterial in W/m*K. Throws openstudio::Exception if unavailable.
    *
    *  Attribute name: 'thermalConductivity' */
   double thermalConductivity() const;
 
-  /** Thermal conductance of the OpaqueMaterial in W/m^2*K. Throws openstudio::Exception if unavailable. 
+  /** Thermal conductance of the OpaqueMaterial in W/m^2*K. Throws openstudio::Exception if unavailable.
    *
-   *  Attribute name: 'thermalConductance' */ 
+   *  Attribute name: 'thermalConductance' */
   double thermalConductance() const;
 
-  /** Thermal resistivity of the OpaqueMaterial in m*K/W. Throws openstudio::Exception if unavailable. 
+  /** Thermal resistivity of the OpaqueMaterial in m*K/W. Throws openstudio::Exception if unavailable.
    *
    *  Attribute name: 'thermalResistivity'. */
   double thermalResistivity() const;
 
-  /** Thermal resistance of the OpaqueMaterial in m^2*K/W. Throws openstudio::Exception if unavailable. 
+  /** Thermal resistance of the OpaqueMaterial in m^2*K/W. Throws openstudio::Exception if unavailable.
    *
    *  Attribute name: 'thermalResistance'. */
   double thermalResistance() const;
 
-  /** Thermal reflectance of the OpaqueMaterial (dimensionless fraction). 
+  /** Thermal reflectance of the OpaqueMaterial (dimensionless fraction).
    *
    *  Attribute name: 'thermalReflectance' */
   boost::optional<double> thermalReflectance() const;
 
-  /** Solar reflectance of the OpaqueMaterial (dimensionless fraction). 
+  /** Solar reflectance of the OpaqueMaterial (dimensionless fraction).
    *
    *  Attribute name: 'solarReflectance' */
   boost::optional<double> solarReflectance() const;
 
-  /** Visible reflectance of the OpaqueMaterial (dimensionless fraction). 
+  /** Visible reflectance of the OpaqueMaterial (dimensionless fraction).
    *
    *  Attribute name: 'visibleReflectance' */
   boost::optional<double> visibleReflectance() const;
@@ -144,7 +144,7 @@ class MODEL_API StandardOpaqueMaterial : public OpaqueMaterial {
   /** @name Setters */
   //@{
 
-  /** Set the thermal conductivity (W/m*K). 
+  /** Set the thermal conductivity (W/m*K).
    *
    *  Attribute name: 'thermalConductivity' */
   bool setThermalConductivity(double value);
@@ -159,12 +159,12 @@ class MODEL_API StandardOpaqueMaterial : public OpaqueMaterial {
    *  Attribute name: 'thermalResistivity' */
   bool setThermalResistivity(double value);
 
-  /** Set the thermal resistance (m^2*K/W). 
+  /** Set the thermal resistance (m^2*K/W).
    *
    *  Attribute name: 'thermalResistance' */
   bool setThermalResistance(double value);
 
-  /** Set the thermal absorptance (dimensionless fraction). 
+  /** Set the thermal absorptance (dimensionless fraction).
    *
    *  Attribute name: 'thermalAbsorptance' */
   bool setThermalAbsorptance(boost::optional<double> value);
@@ -234,8 +234,8 @@ class MODEL_API StandardOpaqueMaterial : public OpaqueMaterial {
   /** @name Queries */
   //@{
 
-  /** Energy it takes to raise the temperature of this material 1 K (J/m^2*K). Equal to 
-   *  specificHeat() * density() * thickness(). 
+  /** Energy it takes to raise the temperature of this material 1 K (J/m^2*K). Equal to
+   *  specificHeat() * density() * thickness().
    *
    *  Attribute name: 'heatCapacity' */
   boost::optional<double> heatCapacity() const;

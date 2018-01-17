@@ -77,7 +77,7 @@ void OSSwitch2::bind(model::ModelObject & modelObject,
 
   m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<OSSwitch2, &OSSwitch2::onModelObjectChange>(this);
   m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onRemoveFromWorkspace.connect<OSSwitch2, &OSSwitch2::onModelObjectRemove>(this);
-  
+
   connect(this, &OSSwitch2::clicked, this, &OSSwitch2::onClicked);
 
   onModelObjectChange();

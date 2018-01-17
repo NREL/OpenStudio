@@ -76,7 +76,7 @@ namespace detail {
     //@{
 
     ThermalZone zone() const;
-    
+
     Schedule schedule() const;
 
     std::string designFlowRateCalculationMethod() const;
@@ -125,7 +125,7 @@ namespace detail {
 
     void resetSourceZone();
 
-    void setDeltaTemperature(double deltaTemperature);
+    bool setDeltaTemperature(double deltaTemperature);
 
     void resetDeltaTemperature();
 

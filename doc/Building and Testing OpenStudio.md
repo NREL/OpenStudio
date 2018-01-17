@@ -116,7 +116,7 @@ Point CMake to the top folder for source, and buildMeta folder for binaries
 
 In CMake check the following:
 
-- BUILD\_DVIEW 
+- BUILD\_DVIEW
 
 Press `Configure` and `Generate` in CMake
 
@@ -213,7 +213,7 @@ In CMake check the following:
 
 - BUILD\_CSHARP\_BINDINGS
 - BUILD\_DOCUMENTATION
-- BUILD\_DVIEW 
+- BUILD\_DVIEW
 - BUILD\_OS\_APP
 - BUILD\_PACKAGE
 - BUILD\_PAT
@@ -454,11 +454,11 @@ SketchUp Extension Signature
 =========
 Check if either file below has been updated:
 - `openstudiocore/ruby/openstudio/sketchup_plugin/OpenStudio.rb` (Note: not valid in OS2.x)
-- `openstudiocore/sketchup_plugin/plugin/OpenStudio/Startup.rb` 
+- `openstudiocore/sketchup_plugin/plugin/OpenStudio/Startup.rb`
 
 If either file was updated, the SketchUp Extension Signature must be updated in
 - `openstudiocore/sketchup_plugin/plugin/OpenStudio/OpenStudio.hash`
- 
+
 To do this: (Note: not valid in OS2.x)
 - Build an OpenStudio package
 - Zip the contents (OpenStudio.rb and OpenStudio folder) in `build\_CPack_Packages\win64\NSIS\OpenStudio-x.y.z.sha-Win64\Ruby\Plugins`
@@ -484,7 +484,7 @@ With Git, make feature branch of OpenStudio-server develop, and name it "OS.x.y.
 
 - In `server\lib\openstudio_server\version.rb`, update VERSION_EXT to `-OS.x.y.z.sha` (ex: `-OS.1.12.2.462ae9e746`).
 - In `CHANGELOG.md`, add new server and openstudio versions (ex: `Version 1.19.1-OS.1.12.2.462ae9e746`, `OpenStudio 1.12.2.462ae9e746`).
-- In `vagrant\chef\roles\openstudio.rb`, update version and version_revision (ex: `1.12.2`, `462ae9e746`) 
+- In `vagrant\chef\roles\openstudio.rb`, update version and version_revision (ex: `1.12.2`, `462ae9e746`)
 
 With Git, commit above files to new branch (Commit Message = `Bump OpenStudio version to OS.x.y.z.sha`)
 With Git, submit pull request
@@ -510,7 +510,7 @@ In the top level of your docker-openstudio folder, modify `Dockerfile`
 - (optional) test that the new Dockerfile works by running `docker build -t test-openstudio .` after starting the docker-machine to make sure that it completes successfully
 
 With Git, commit Dockerfile (Commit Message = Bump OpenStudio version to OS.x.y.z.sha)
- 
+
 Verify master branch built successfully at https://hub.docker.com/r/nrel/openstudio/builds/
 
 In a command window:

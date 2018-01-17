@@ -298,7 +298,7 @@ namespace detail {
     boost::optional<CoilHeatingDXMultiSpeed> parentCoil;
     auto coilCoolingDXMultiSpeeds = this->model().getConcreteModelObjects<CoilHeatingDXMultiSpeed>();
     for (const auto & coilInModel : coilCoolingDXMultiSpeeds) {
-      // Check the coil performance objects in this coil to see if one of them is this object       
+      // Check the coil performance objects in this coil to see if one of them is this object
       std::vector<CoilHeatingDXMultiSpeedStageData> perfStages = coilInModel.stages();
       int i = 1;
       for (auto perfStage : perfStages) {

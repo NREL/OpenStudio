@@ -59,7 +59,7 @@ class MODEL_API SetpointManagerFollowGroundTemperature : public SetpointManager 
   static IddObjectType iddObjectType();
 
   static std::vector<std::string> controlVariableValues();
-    
+
   static std::vector<std::string> referenceGroundTemperatureObjectTypeValues();
 
   /** @name Getters */
@@ -82,14 +82,14 @@ class MODEL_API SetpointManagerFollowGroundTemperature : public SetpointManager 
   //@{
 
   bool setControlVariable(const std::string& controlVariable);
-  
+
   bool setReferenceGroundTemperatureObjectType(const std::string& groundTemperatureObjType);
 
-  void setOffsetTemperatureDifference(double offsetTemperatureDifference);
+  bool setOffsetTemperatureDifference(double offsetTemperatureDifference);
 
-  void setMaximumSetpointTemperature(double maximumSetpointTemperature);
+  bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
 
-  void setMinimumSetpointTemperature(double minimumSetpointTemperature);
+  bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
   //@}
   /** @name Other */
@@ -121,4 +121,3 @@ typedef std::vector<SetpointManagerFollowGroundTemperature> SetpointManagerFollo
 } // openstudio
 
 #endif // MODEL_SETPOINTMANAGERFOLLOWGROUNDTEMPERATURE_HPP
-

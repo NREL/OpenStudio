@@ -42,12 +42,12 @@ TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_DefaultConstructors)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model m;
     UnitarySystemPerformanceMultispeed testObject = UnitarySystemPerformanceMultispeed(m);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }

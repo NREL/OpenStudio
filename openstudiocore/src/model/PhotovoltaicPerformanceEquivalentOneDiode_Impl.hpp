@@ -197,11 +197,11 @@ namespace detail {
 
     void resetModuleVoltageatMaximumPower();
 
-    void setTemperatureCoefficientofShortCircuitCurrent(double temperatureCoefficientofShortCircuitCurrent);
+    bool setTemperatureCoefficientofShortCircuitCurrent(double temperatureCoefficientofShortCircuitCurrent);
 
     void resetTemperatureCoefficientofShortCircuitCurrent();
 
-    void setTemperatureCoefficientofOpenCircuitVoltage(double temperatureCoefficientofOpenCircuitVoltage);
+    bool setTemperatureCoefficientofOpenCircuitVoltage(double temperatureCoefficientofOpenCircuitVoltage);
 
     void resetTemperatureCoefficientofOpenCircuitVoltage();
 
@@ -241,4 +241,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_PHOTOVOLTAICPERFORMANCEEQUIVALENTONEDIODE_IMPL_HPP
-

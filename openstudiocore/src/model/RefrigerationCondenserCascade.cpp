@@ -130,9 +130,10 @@ namespace detail {
     return getDouble(OS_Refrigeration_Condenser_CascadeFields::CondensatePipingRefrigerantInventory,true);
   }
 
-  void RefrigerationCondenserCascade_Impl::setRatedCondensingTemperature(double ratedCondensingTemperature) {
+  bool RefrigerationCondenserCascade_Impl::setRatedCondensingTemperature(double ratedCondensingTemperature) {
     bool result = setDouble(OS_Refrigeration_Condenser_CascadeFields::RatedCondensingTemperature, ratedCondensingTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   bool RefrigerationCondenserCascade_Impl::setRatedApproachTemperatureDifference(double ratedApproachTemperatureDifference) {
@@ -160,7 +161,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserCascade_Impl::setCondenserRefrigerantOperatingChargeInventory(boost::optional<double> condenserRefrigerantOperatingChargeInventory) {
+  bool RefrigerationCondenserCascade_Impl::setCondenserRefrigerantOperatingChargeInventory(boost::optional<double> condenserRefrigerantOperatingChargeInventory) {
     bool result(false);
     if (condenserRefrigerantOperatingChargeInventory) {
       result = setDouble(OS_Refrigeration_Condenser_CascadeFields::CondenserRefrigerantOperatingChargeInventory, condenserRefrigerantOperatingChargeInventory.get());
@@ -170,6 +171,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserCascade_Impl::resetCondenserRefrigerantOperatingChargeInventory() {
@@ -177,7 +179,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserCascade_Impl::setCondensateReceiverRefrigerantInventory(boost::optional<double> condensateReceiverRefrigerantInventory) {
+  bool RefrigerationCondenserCascade_Impl::setCondensateReceiverRefrigerantInventory(boost::optional<double> condensateReceiverRefrigerantInventory) {
     bool result(false);
     if (condensateReceiverRefrigerantInventory) {
       result = setDouble(OS_Refrigeration_Condenser_CascadeFields::CondensateReceiverRefrigerantInventory, condensateReceiverRefrigerantInventory.get());
@@ -187,6 +189,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserCascade_Impl::resetCondensateReceiverRefrigerantInventory() {
@@ -194,7 +197,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserCascade_Impl::setCondensatePipingRefrigerantInventory(boost::optional<double> condensatePipingRefrigerantInventory) {
+  bool RefrigerationCondenserCascade_Impl::setCondensatePipingRefrigerantInventory(boost::optional<double> condensatePipingRefrigerantInventory) {
     bool result(false);
     if (condensatePipingRefrigerantInventory) {
       result = setDouble(OS_Refrigeration_Condenser_CascadeFields::CondensatePipingRefrigerantInventory, condensatePipingRefrigerantInventory.get());
@@ -204,6 +207,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserCascade_Impl::resetCondensatePipingRefrigerantInventory() {
@@ -276,8 +280,8 @@ boost::optional<double> RefrigerationCondenserCascade::condensatePipingRefrigera
   return getImpl<detail::RefrigerationCondenserCascade_Impl>()->condensatePipingRefrigerantInventory();
 }
 
-void RefrigerationCondenserCascade::setRatedCondensingTemperature(double ratedCondensingTemperature) {
-  getImpl<detail::RefrigerationCondenserCascade_Impl>()->setRatedCondensingTemperature(ratedCondensingTemperature);
+bool RefrigerationCondenserCascade::setRatedCondensingTemperature(double ratedCondensingTemperature) {
+  return getImpl<detail::RefrigerationCondenserCascade_Impl>()->setRatedCondensingTemperature(ratedCondensingTemperature);
 }
 
 bool RefrigerationCondenserCascade::setRatedApproachTemperatureDifference(double ratedApproachTemperatureDifference) {
@@ -300,24 +304,24 @@ void RefrigerationCondenserCascade::resetCondensingTemperatureControlType() {
   getImpl<detail::RefrigerationCondenserCascade_Impl>()->resetCondensingTemperatureControlType();
 }
 
-void RefrigerationCondenserCascade::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
-  getImpl<detail::RefrigerationCondenserCascade_Impl>()->setCondenserRefrigerantOperatingChargeInventory(condenserRefrigerantOperatingChargeInventory);
+bool RefrigerationCondenserCascade::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
+  return getImpl<detail::RefrigerationCondenserCascade_Impl>()->setCondenserRefrigerantOperatingChargeInventory(condenserRefrigerantOperatingChargeInventory);
 }
 
 void RefrigerationCondenserCascade::resetCondenserRefrigerantOperatingChargeInventory() {
   getImpl<detail::RefrigerationCondenserCascade_Impl>()->resetCondenserRefrigerantOperatingChargeInventory();
 }
 
-void RefrigerationCondenserCascade::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
-  getImpl<detail::RefrigerationCondenserCascade_Impl>()->setCondensateReceiverRefrigerantInventory(condensateReceiverRefrigerantInventory);
+bool RefrigerationCondenserCascade::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
+  return getImpl<detail::RefrigerationCondenserCascade_Impl>()->setCondensateReceiverRefrigerantInventory(condensateReceiverRefrigerantInventory);
 }
 
 void RefrigerationCondenserCascade::resetCondensateReceiverRefrigerantInventory() {
   getImpl<detail::RefrigerationCondenserCascade_Impl>()->resetCondensateReceiverRefrigerantInventory();
 }
 
-void RefrigerationCondenserCascade::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
-  getImpl<detail::RefrigerationCondenserCascade_Impl>()->setCondensatePipingRefrigerantInventory(condensatePipingRefrigerantInventory);
+bool RefrigerationCondenserCascade::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
+  return getImpl<detail::RefrigerationCondenserCascade_Impl>()->setCondensatePipingRefrigerantInventory(condensatePipingRefrigerantInventory);
 }
 
 void RefrigerationCondenserCascade::resetCondensatePipingRefrigerantInventory() {
@@ -332,4 +336,3 @@ RefrigerationCondenserCascade::RefrigerationCondenserCascade(std::shared_ptr<det
 
 } // model
 } // openstudio
-

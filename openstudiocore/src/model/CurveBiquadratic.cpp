@@ -194,57 +194,67 @@ namespace detail {
     return isEmpty(OS_Curve_BiquadraticFields::OutputUnitType);
   }
 
-  void CurveBiquadratic_Impl::setCoefficient1Constant(double coefficient1Constant) {
+  bool CurveBiquadratic_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = setDouble(OS_Curve_BiquadraticFields::Coefficient1Constant, coefficient1Constant);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBiquadratic_Impl::setCoefficient2x(double coefficient2x) {
+  bool CurveBiquadratic_Impl::setCoefficient2x(double coefficient2x) {
     bool result = setDouble(OS_Curve_BiquadraticFields::Coefficient2x, coefficient2x);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBiquadratic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
+  bool CurveBiquadratic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
     bool result = setDouble(OS_Curve_BiquadraticFields::Coefficient3x_POW_2, coefficient3xPOW2);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBiquadratic_Impl::setCoefficient4y(double coefficient4y) {
+  bool CurveBiquadratic_Impl::setCoefficient4y(double coefficient4y) {
     bool result = setDouble(OS_Curve_BiquadraticFields::Coefficient4y, coefficient4y);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBiquadratic_Impl::setCoefficient5yPOW2(double coefficient5yPOW2) {
+  bool CurveBiquadratic_Impl::setCoefficient5yPOW2(double coefficient5yPOW2) {
     bool result = setDouble(OS_Curve_BiquadraticFields::Coefficient5y_POW_2, coefficient5yPOW2);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBiquadratic_Impl::setCoefficient6xTIMESY(double coefficient6xTIMESY) {
+  bool CurveBiquadratic_Impl::setCoefficient6xTIMESY(double coefficient6xTIMESY) {
     bool result = setDouble(OS_Curve_BiquadraticFields::Coefficient6x_TIMES_y, coefficient6xTIMESY);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBiquadratic_Impl::setMinimumValueofx(double minimumValueofx) {
+  bool CurveBiquadratic_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_BiquadraticFields::MinimumValueofx, minimumValueofx);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBiquadratic_Impl::setMaximumValueofx(double maximumValueofx) {
+  bool CurveBiquadratic_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_BiquadraticFields::MaximumValueofx, maximumValueofx);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBiquadratic_Impl::setMinimumValueofy(double minimumValueofy) {
+  bool CurveBiquadratic_Impl::setMinimumValueofy(double minimumValueofy) {
     bool result = setDouble(OS_Curve_BiquadraticFields::MinimumValueofy, minimumValueofy);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBiquadratic_Impl::setMaximumValueofy(double maximumValueofy) {
+  bool CurveBiquadratic_Impl::setMaximumValueofy(double maximumValueofy) {
     bool result = setDouble(OS_Curve_BiquadraticFields::MaximumValueofy, maximumValueofy);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveBiquadratic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
+  bool CurveBiquadratic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
     bool result = false;
     if (minimumCurveOutput) {
       result = setDouble(OS_Curve_BiquadraticFields::MinimumCurveOutput, minimumCurveOutput.get());
@@ -252,6 +262,7 @@ namespace detail {
       result = setString(OS_Curve_BiquadraticFields::MinimumCurveOutput, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveBiquadratic_Impl::resetMinimumCurveOutput() {
@@ -259,7 +270,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveBiquadratic_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
+  bool CurveBiquadratic_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
     bool result = false;
     if (maximumCurveOutput) {
       result = setDouble(OS_Curve_BiquadraticFields::MaximumCurveOutput, maximumCurveOutput.get());
@@ -267,6 +278,7 @@ namespace detail {
       result = setString(OS_Curve_BiquadraticFields::MaximumCurveOutput, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveBiquadratic_Impl::resetMaximumCurveOutput() {
@@ -414,56 +426,56 @@ bool CurveBiquadratic::isOutputUnitTypeDefaulted() const {
   return getImpl<detail::CurveBiquadratic_Impl>()->isOutputUnitTypeDefaulted();
 }
 
-void CurveBiquadratic::setCoefficient1Constant(double coefficient1Constant) {
-  getImpl<detail::CurveBiquadratic_Impl>()->setCoefficient1Constant(coefficient1Constant);
+bool CurveBiquadratic::setCoefficient1Constant(double coefficient1Constant) {
+  return getImpl<detail::CurveBiquadratic_Impl>()->setCoefficient1Constant(coefficient1Constant);
 }
 
-void CurveBiquadratic::setCoefficient2x(double coefficient2x) {
-  getImpl<detail::CurveBiquadratic_Impl>()->setCoefficient2x(coefficient2x);
+bool CurveBiquadratic::setCoefficient2x(double coefficient2x) {
+  return getImpl<detail::CurveBiquadratic_Impl>()->setCoefficient2x(coefficient2x);
 }
 
-void CurveBiquadratic::setCoefficient3xPOW2(double coefficient3xPOW2) {
-  getImpl<detail::CurveBiquadratic_Impl>()->setCoefficient3xPOW2(coefficient3xPOW2);
+bool CurveBiquadratic::setCoefficient3xPOW2(double coefficient3xPOW2) {
+  return getImpl<detail::CurveBiquadratic_Impl>()->setCoefficient3xPOW2(coefficient3xPOW2);
 }
 
-void CurveBiquadratic::setCoefficient4y(double coefficient4y) {
-  getImpl<detail::CurveBiquadratic_Impl>()->setCoefficient4y(coefficient4y);
+bool CurveBiquadratic::setCoefficient4y(double coefficient4y) {
+  return getImpl<detail::CurveBiquadratic_Impl>()->setCoefficient4y(coefficient4y);
 }
 
-void CurveBiquadratic::setCoefficient5yPOW2(double coefficient5yPOW2) {
-  getImpl<detail::CurveBiquadratic_Impl>()->setCoefficient5yPOW2(coefficient5yPOW2);
+bool CurveBiquadratic::setCoefficient5yPOW2(double coefficient5yPOW2) {
+  return getImpl<detail::CurveBiquadratic_Impl>()->setCoefficient5yPOW2(coefficient5yPOW2);
 }
 
-void CurveBiquadratic::setCoefficient6xTIMESY(double coefficient6xTIMESY) {
-  getImpl<detail::CurveBiquadratic_Impl>()->setCoefficient6xTIMESY(coefficient6xTIMESY);
+bool CurveBiquadratic::setCoefficient6xTIMESY(double coefficient6xTIMESY) {
+  return getImpl<detail::CurveBiquadratic_Impl>()->setCoefficient6xTIMESY(coefficient6xTIMESY);
 }
 
-void CurveBiquadratic::setMinimumValueofx(double minimumValueofx) {
-  getImpl<detail::CurveBiquadratic_Impl>()->setMinimumValueofx(minimumValueofx);
+bool CurveBiquadratic::setMinimumValueofx(double minimumValueofx) {
+  return getImpl<detail::CurveBiquadratic_Impl>()->setMinimumValueofx(minimumValueofx);
 }
 
-void CurveBiquadratic::setMaximumValueofx(double maximumValueofx) {
-  getImpl<detail::CurveBiquadratic_Impl>()->setMaximumValueofx(maximumValueofx);
+bool CurveBiquadratic::setMaximumValueofx(double maximumValueofx) {
+  return getImpl<detail::CurveBiquadratic_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
-void CurveBiquadratic::setMinimumValueofy(double minimumValueofy) {
-  getImpl<detail::CurveBiquadratic_Impl>()->setMinimumValueofy(minimumValueofy);
+bool CurveBiquadratic::setMinimumValueofy(double minimumValueofy) {
+  return getImpl<detail::CurveBiquadratic_Impl>()->setMinimumValueofy(minimumValueofy);
 }
 
-void CurveBiquadratic::setMaximumValueofy(double maximumValueofy) {
-  getImpl<detail::CurveBiquadratic_Impl>()->setMaximumValueofy(maximumValueofy);
+bool CurveBiquadratic::setMaximumValueofy(double maximumValueofy) {
+  return getImpl<detail::CurveBiquadratic_Impl>()->setMaximumValueofy(maximumValueofy);
 }
 
-void CurveBiquadratic::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveBiquadratic_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+bool CurveBiquadratic::setMinimumCurveOutput(double minimumCurveOutput) {
+  return getImpl<detail::CurveBiquadratic_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveBiquadratic::resetMinimumCurveOutput() {
   getImpl<detail::CurveBiquadratic_Impl>()->resetMinimumCurveOutput();
 }
 
-void CurveBiquadratic::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveBiquadratic_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+bool CurveBiquadratic::setMaximumCurveOutput(double maximumCurveOutput) {
+  return getImpl<detail::CurveBiquadratic_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveBiquadratic::resetMaximumCurveOutput() {

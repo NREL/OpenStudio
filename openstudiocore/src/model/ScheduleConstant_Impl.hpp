@@ -27,7 +27,7 @@
  **********************************************************************************************************************/
 
 #ifndef MODEL_SCHEDULECONSTANT_IMPL_HPP
-#define MODEL_SCHEDULECONSTANT_IMPL_HPP 
+#define MODEL_SCHEDULECONSTANT_IMPL_HPP
 
 #include "Schedule_Impl.hpp"
 
@@ -39,8 +39,8 @@ class ScheduleConstant;
 namespace detail {
 
   class MODEL_API ScheduleConstant_Impl : public Schedule_Impl {
-    
-    
+
+
     // ETH@20120724 Could have value_SI, value_IP properties, but these should be
     // boost::optional<Quantity>, not OSOptionalQuantity. The latter is currently supported
     // by Qt + Attribute, but the former is not.
@@ -53,8 +53,8 @@ namespace detail {
     ScheduleConstant_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    ScheduleConstant_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                         Model_Impl* model, 
+    ScheduleConstant_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                         Model_Impl* model,
                          bool keepHandle);
 
     ScheduleConstant_Impl(const ScheduleConstant_Impl& other, Model_Impl* model,bool keepHandle);
@@ -97,7 +97,7 @@ namespace detail {
 
     virtual bool resetScheduleTypeLimits() override;
 
-    void setValue(double value);
+    bool setValue(double value);
 
     bool setValue(const Quantity& value);
 

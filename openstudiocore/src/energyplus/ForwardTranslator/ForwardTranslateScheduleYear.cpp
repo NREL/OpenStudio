@@ -62,7 +62,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleYear( ScheduleYea
 
   std::vector<ScheduleWeek> scheduleWeeks = modelObject.scheduleWeeks();
   std::vector<openstudio::Date> dates = modelObject.dates();
-  
+
   unsigned N = scheduleWeeks.size();
 
   if( N != dates.size() )

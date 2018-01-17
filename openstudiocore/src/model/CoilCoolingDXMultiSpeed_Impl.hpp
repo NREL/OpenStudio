@@ -106,9 +106,9 @@ namespace detail {
 
     bool setCondenserType(std::string condenserType);
 
-    void setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
+    bool setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
 
-    void setApplyLatentDegradationtoSpeedsGreaterthan1(bool applyLatentDegradationtoSpeedsGreaterthan1);
+    bool setApplyLatentDegradationtoSpeedsGreaterthan1(bool applyLatentDegradationtoSpeedsGreaterthan1);
 
     void resetApplyLatentDegradationtoSpeedsGreaterthan1();
 
@@ -129,7 +129,7 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-    
+
     unsigned inletPort() override;
 
     unsigned outletPort() override;
@@ -161,4 +161,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILCOOLINGDXMULTISPEED_IMPL_HPP
-

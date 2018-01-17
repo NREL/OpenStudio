@@ -6,14 +6,14 @@ Add icon:
 
   You probably need two icons, a full size icon that is 100 x 100, and
   a mini icon that is 24 x 24.  Marjory is really excellent at making these.
-  
+
   Copy the full size icon to openstudiocore/src/openstudio_lib/images/, and
   the mini icon to openstudiocore/src/openstudio_lib/images/mini_icons/.
-  
+
   Add two entries to the file openstudiocore/src/openstudio_lib/openstudio.qrc.
   This file registers the image files so that they become resources in the exectuable.
   Add one entry for the full size icon and one for the mini icon.
-  
+
   Add two entries to the file openstudio/src/openstudio_lib/IconLibrary.cpp.
   This file contains a big map of the new OS type to the proper icon.
 
@@ -26,7 +26,7 @@ Make the library aware of the new type:
   In the function MainRightColumnController::configureForHVACSystemsSubTab(int subTabID),
   add an entry to libraryWidget->addModelObjectType(...
 
-  This will make a new category in the library chooser on the right so that you 
+  This will make a new category in the library chooser on the right so that you
   can drag and drop instances of the new type into the HVAC scene.
 
 Add one or more instances of the new model object to the HVAC library:
@@ -35,12 +35,12 @@ Add one or more instances of the new model object to the HVAC library:
   Add new osm text for the model object.  The trick is creating this text.  Perhaps
   the easiest way is to use the ruby bindings for the new model object.
 
-  Assuming you have built ruby bindings for the new type fire up irb and point it to the 
+  Assuming you have built ruby bindings for the new type fire up irb and point it to the
   ruby bindings in your build directory.  Somethin similar to this...
   irb -I path/to/openstucio/build/ruby
 
   require 'openstudio'
-  
+
   m = OpenStudio::Model::Model.new
   c = OpenStudio::Model::NewComponentFoo.new(m)
 

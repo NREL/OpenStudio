@@ -150,7 +150,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilHeatingElectric_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
+  bool CoilHeatingElectric_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
     bool result = false;
     if (nominalCapacity) {
       result = setDouble(OS_Coil_Heating_ElectricFields::NominalCapacity, nominalCapacity.get());
@@ -158,6 +158,7 @@ namespace detail {
       result = setString(OS_Coil_Heating_ElectricFields::NominalCapacity, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CoilHeatingElectric_Impl::resetNominalCapacity() {
@@ -170,8 +171,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilHeatingElectric_Impl::setTemperatureSetpointNode(Node & temperatureSetpointNode) {
-    setPointer(OS_Coil_Heating_ElectricFields::TemperatureSetpointNodeName, temperatureSetpointNode.handle());
+  bool CoilHeatingElectric_Impl::setTemperatureSetpointNode(Node & temperatureSetpointNode) {
+    return setPointer(OS_Coil_Heating_ElectricFields::TemperatureSetpointNodeName, temperatureSetpointNode.handle());;
   }
 
   void CoilHeatingElectric_Impl::resetTemperatureSetpointNode() {
@@ -468,8 +469,8 @@ void CoilHeatingElectric::resetEfficiency() {
   getImpl<detail::CoilHeatingElectric_Impl>()->resetEfficiency();
 }
 
-void CoilHeatingElectric::setNominalCapacity(double nominalCapacity) {
-  getImpl<detail::CoilHeatingElectric_Impl>()->setNominalCapacity(nominalCapacity);
+bool CoilHeatingElectric::setNominalCapacity(double nominalCapacity) {
+  return getImpl<detail::CoilHeatingElectric_Impl>()->setNominalCapacity(nominalCapacity);
 }
 
 void CoilHeatingElectric::resetNominalCapacity() {
@@ -480,8 +481,8 @@ void CoilHeatingElectric::autosizeNominalCapacity() {
   getImpl<detail::CoilHeatingElectric_Impl>()->autosizeNominalCapacity();
 }
 
-void CoilHeatingElectric::setTemperatureSetpointNode(Node & temperatureSetpointNode) {
-  getImpl<detail::CoilHeatingElectric_Impl>()->setTemperatureSetpointNode(temperatureSetpointNode);
+bool CoilHeatingElectric::setTemperatureSetpointNode(Node & temperatureSetpointNode) {
+  return getImpl<detail::CoilHeatingElectric_Impl>()->setTemperatureSetpointNode(temperatureSetpointNode);
 }
 
 void CoilHeatingElectric::resetTemperatureSetpointNode() {
@@ -511,4 +512,3 @@ CoilHeatingElectric::CoilHeatingElectric(std::shared_ptr<detail::CoilHeatingElec
 } // model
 
 } // openstudio
-

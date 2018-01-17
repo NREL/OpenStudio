@@ -591,9 +591,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationWalkIn_Impl::setRatedCoilCoolingCapacity(double ratedCoilCoolingCapacity) {
+  bool RefrigerationWalkIn_Impl::setRatedCoilCoolingCapacity(double ratedCoilCoolingCapacity) {
     bool result = setDouble(OS_Refrigeration_WalkInFields::RatedCoilCoolingCapacity, ratedCoilCoolingCapacity);
     OS_ASSERT(result);
+    return result;
   }
 
   bool RefrigerationWalkIn_Impl::setOperatingTemperature(double operatingTemperature) {
@@ -606,9 +607,10 @@ namespace detail {
     return result;
   }
 
-  void RefrigerationWalkIn_Impl::setRatedTotalHeatingPower(double ratedTotalHeatingPower) {
+  bool RefrigerationWalkIn_Impl::setRatedTotalHeatingPower(double ratedTotalHeatingPower) {
     bool result = setDouble(OS_Refrigeration_WalkInFields::RatedTotalHeatingPower, ratedTotalHeatingPower);
     OS_ASSERT(result);
+    return result;
   }
 
   bool RefrigerationWalkIn_Impl::setHeatingPowerSchedule(Schedule& schedule) {
@@ -644,9 +646,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationWalkIn_Impl::setRatedTotalLightingPower(double ratedTotalLightingPower) {
+  bool RefrigerationWalkIn_Impl::setRatedTotalLightingPower(double ratedTotalLightingPower) {
     bool result = setDouble(OS_Refrigeration_WalkInFields::RatedTotalLightingPower, ratedTotalLightingPower);
     OS_ASSERT(result);
+    return result;
   }
 
   bool RefrigerationWalkIn_Impl::setLightingSchedule(Schedule& schedule) {
@@ -750,9 +753,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationWalkIn_Impl::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
+  bool RefrigerationWalkIn_Impl::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
     bool result = setDouble(OS_Refrigeration_WalkInFields::AverageRefrigerantChargeInventory, averageRefrigerantChargeInventory);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationWalkIn_Impl::resetAverageRefrigerantChargeInventory() {
@@ -909,24 +913,24 @@ namespace detail {
     return zoneBoundary.setTotalInsulatedSurfaceAreaFacingZone(zoneBoundaryTotalInsulatedSurfaceAreaFacingZone);
   }
 
-  void RefrigerationWalkIn_Impl::setZoneBoundaryAreaofGlassReachInDoorsFacingZone(double zoneBoundaryAreaofGlassReachInDoorsFacingZone) {
+  bool RefrigerationWalkIn_Impl::setZoneBoundaryAreaofGlassReachInDoorsFacingZone(double zoneBoundaryAreaofGlassReachInDoorsFacingZone) {
     RefrigerationWalkInZoneBoundary zoneBoundary = frontZoneBoundary();
-    zoneBoundary.setAreaofGlassReachInDoorsFacingZone(zoneBoundaryAreaofGlassReachInDoorsFacingZone);
+    return zoneBoundary.setAreaofGlassReachInDoorsFacingZone(zoneBoundaryAreaofGlassReachInDoorsFacingZone);
   }
 
-  void RefrigerationWalkIn_Impl::setZoneBoundaryHeightofGlassReachInDoorsFacingZone(double zoneBoundaryHeightofGlassReachInDoorsFacingZone) {
+  bool RefrigerationWalkIn_Impl::setZoneBoundaryHeightofGlassReachInDoorsFacingZone(double zoneBoundaryHeightofGlassReachInDoorsFacingZone) {
     RefrigerationWalkInZoneBoundary zoneBoundary = frontZoneBoundary();
-    zoneBoundary.setHeightofGlassReachInDoorsFacingZone(zoneBoundaryHeightofGlassReachInDoorsFacingZone);
+    return zoneBoundary.setHeightofGlassReachInDoorsFacingZone(zoneBoundaryHeightofGlassReachInDoorsFacingZone);
   }
 
-  void RefrigerationWalkIn_Impl::setZoneBoundaryAreaofStockingDoorsFacingZone(double zoneBoundaryAreaofStockingDoorsFacingZone) {
+  bool RefrigerationWalkIn_Impl::setZoneBoundaryAreaofStockingDoorsFacingZone(double zoneBoundaryAreaofStockingDoorsFacingZone) {
     RefrigerationWalkInZoneBoundary zoneBoundary = frontZoneBoundary();
-    zoneBoundary.setAreaofStockingDoorsFacingZone(zoneBoundaryAreaofStockingDoorsFacingZone);
+    return zoneBoundary.setAreaofStockingDoorsFacingZone(zoneBoundaryAreaofStockingDoorsFacingZone);
   }
 
-  void RefrigerationWalkIn_Impl::setZoneBoundaryHeightofStockingDoorsFacingZone(double zoneBoundaryHeightofStockingDoorsFacingZone) {
+  bool RefrigerationWalkIn_Impl::setZoneBoundaryHeightofStockingDoorsFacingZone(double zoneBoundaryHeightofStockingDoorsFacingZone) {
     RefrigerationWalkInZoneBoundary zoneBoundary = frontZoneBoundary();
-    zoneBoundary.setHeightofStockingDoorsFacingZone(zoneBoundaryHeightofStockingDoorsFacingZone);
+    return zoneBoundary.setHeightofStockingDoorsFacingZone(zoneBoundaryHeightofStockingDoorsFacingZone);
   }
 
   bool RefrigerationWalkIn_Impl::setZoneBoundaryInsulatedSurfaceUValueFacingZone(double zoneBoundaryInsulatedSurfaceUValueFacingZone) {
@@ -1233,8 +1237,8 @@ void RefrigerationWalkIn::resetAvailabilitySchedule() {
   getImpl<detail::RefrigerationWalkIn_Impl>()->resetAvailabilitySchedule();
 }
 
-void RefrigerationWalkIn::setRatedCoilCoolingCapacity(double ratedCoilCoolingCapacity) {
-  getImpl<detail::RefrigerationWalkIn_Impl>()->setRatedCoilCoolingCapacity(ratedCoilCoolingCapacity);
+bool RefrigerationWalkIn::setRatedCoilCoolingCapacity(double ratedCoilCoolingCapacity) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setRatedCoilCoolingCapacity(ratedCoilCoolingCapacity);
 }
 
 bool RefrigerationWalkIn::setOperatingTemperature(double operatingTemperature) {
@@ -1245,8 +1249,8 @@ bool RefrigerationWalkIn::setRatedCoolingSourceTemperature(double ratedCoolingSo
   return getImpl<detail::RefrigerationWalkIn_Impl>()->setRatedCoolingSourceTemperature(ratedCoolingSourceTemperature);
 }
 
-void RefrigerationWalkIn::setRatedTotalHeatingPower(double ratedTotalHeatingPower) {
-  getImpl<detail::RefrigerationWalkIn_Impl>()->setRatedTotalHeatingPower(ratedTotalHeatingPower);
+bool RefrigerationWalkIn::setRatedTotalHeatingPower(double ratedTotalHeatingPower) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setRatedTotalHeatingPower(ratedTotalHeatingPower);
 }
 
 bool RefrigerationWalkIn::setHeatingPowerSchedule(Schedule& schedule) {
@@ -1273,8 +1277,8 @@ void RefrigerationWalkIn::resetRatedCirculationFanPower() {
   getImpl<detail::RefrigerationWalkIn_Impl>()->resetRatedCirculationFanPower();
 }
 
-void RefrigerationWalkIn::setRatedTotalLightingPower(double ratedTotalLightingPower) {
-  getImpl<detail::RefrigerationWalkIn_Impl>()->setRatedTotalLightingPower(ratedTotalLightingPower);
+bool RefrigerationWalkIn::setRatedTotalLightingPower(double ratedTotalLightingPower) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setRatedTotalLightingPower(ratedTotalLightingPower);
 }
 
 bool RefrigerationWalkIn::setLightingSchedule(Schedule& schedule) {
@@ -1337,8 +1341,8 @@ void RefrigerationWalkIn::resetRestockingSchedule() {
   getImpl<detail::RefrigerationWalkIn_Impl>()->resetRestockingSchedule();
 }
 
-void RefrigerationWalkIn::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
-  getImpl<detail::RefrigerationWalkIn_Impl>()->setAverageRefrigerantChargeInventory(averageRefrigerantChargeInventory);
+bool RefrigerationWalkIn::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setAverageRefrigerantChargeInventory(averageRefrigerantChargeInventory);
 }
 
 void RefrigerationWalkIn::resetAverageRefrigerantChargeInventory() {
@@ -1457,20 +1461,20 @@ bool RefrigerationWalkIn::setZoneBoundaryTotalInsulatedSurfaceAreaFacingZone(dou
   return getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryTotalInsulatedSurfaceAreaFacingZone(zoneBoundaryTotalInsulatedSurfaceAreaFacingZone);
 }
 
-void RefrigerationWalkIn::setZoneBoundaryAreaofGlassReachInDoorsFacingZone(double zoneBoundaryAreaofGlassReachInDoorsFacingZone) {
-  getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryAreaofGlassReachInDoorsFacingZone(zoneBoundaryAreaofGlassReachInDoorsFacingZone);
+bool RefrigerationWalkIn::setZoneBoundaryAreaofGlassReachInDoorsFacingZone(double zoneBoundaryAreaofGlassReachInDoorsFacingZone) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryAreaofGlassReachInDoorsFacingZone(zoneBoundaryAreaofGlassReachInDoorsFacingZone);
 }
 
-void RefrigerationWalkIn::setZoneBoundaryHeightofGlassReachInDoorsFacingZone(double zoneBoundaryHeightofGlassReachInDoorsFacingZone) {
-  getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryHeightofGlassReachInDoorsFacingZone(zoneBoundaryHeightofGlassReachInDoorsFacingZone);
+bool RefrigerationWalkIn::setZoneBoundaryHeightofGlassReachInDoorsFacingZone(double zoneBoundaryHeightofGlassReachInDoorsFacingZone) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryHeightofGlassReachInDoorsFacingZone(zoneBoundaryHeightofGlassReachInDoorsFacingZone);
 }
 
-void RefrigerationWalkIn::setZoneBoundaryAreaofStockingDoorsFacingZone(double zoneBoundaryAreaofStockingDoorsFacingZone) {
-  getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryAreaofStockingDoorsFacingZone(zoneBoundaryAreaofStockingDoorsFacingZone);
+bool RefrigerationWalkIn::setZoneBoundaryAreaofStockingDoorsFacingZone(double zoneBoundaryAreaofStockingDoorsFacingZone) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryAreaofStockingDoorsFacingZone(zoneBoundaryAreaofStockingDoorsFacingZone);
 }
 
-void RefrigerationWalkIn::setZoneBoundaryHeightofStockingDoorsFacingZone(double zoneBoundaryHeightofStockingDoorsFacingZone) {
-  getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryHeightofStockingDoorsFacingZone(zoneBoundaryHeightofStockingDoorsFacingZone);
+bool RefrigerationWalkIn::setZoneBoundaryHeightofStockingDoorsFacingZone(double zoneBoundaryHeightofStockingDoorsFacingZone) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryHeightofStockingDoorsFacingZone(zoneBoundaryHeightofStockingDoorsFacingZone);
 }
 
 bool RefrigerationWalkIn::setZoneBoundaryInsulatedSurfaceUValueFacingZone(double zoneBoundaryInsulatedSurfaceUValueFacingZone) {
@@ -1501,4 +1505,3 @@ RefrigerationWalkIn::RefrigerationWalkIn(std::shared_ptr<detail::RefrigerationWa
 
 } // model
 } // openstudio
-

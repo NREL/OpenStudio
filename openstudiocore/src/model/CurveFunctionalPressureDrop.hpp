@@ -41,8 +41,8 @@ namespace detail {
 
 } // detail
 
-/** CurveFunctionalPressureDrop is a Curve that wraps the OpenStudio IDD object 
- *  'OS:Curve:Functional:PressureDrop'. The functional form is 
+/** CurveFunctionalPressureDrop is a Curve that wraps the OpenStudio IDD object
+ *  'OS:Curve:Functional:PressureDrop'. The functional form is
  *  \f[\displaystyle \begin{array}{lll}
  *  \Delta P = \left(K + f \cdot \frac{L}{D} \right) \cdot \frac{\rho V^2}{2}\\\\
  *  \text{Where:}\\\\
@@ -84,21 +84,21 @@ class MODEL_API CurveFunctionalPressureDrop : public Curve {
   /** @name Setters */
   //@{
 
-  void setDiameter(double diameter);
+  bool setDiameter(double diameter);
 
-  void setMinorLossCoefficient(double minorLossCoefficient);
+  bool setMinorLossCoefficient(double minorLossCoefficient);
 
   void resetMinorLossCoefficient();
 
-  void setLength(double length);
+  bool setLength(double length);
 
   void resetLength();
 
-  void setRoughness(double roughness);
+  bool setRoughness(double roughness);
 
   void resetRoughness();
 
-  void setFixedFrictionFactor(double fixedFrictionFactor);
+  bool setFixedFrictionFactor(double fixedFrictionFactor);
 
   void resetFixedFrictionFactor();
 
@@ -134,4 +134,3 @@ typedef std::vector<CurveFunctionalPressureDrop> CurveFunctionalPressureDropVect
 } // openstudio
 
 #endif // MODEL_CURVEFUNCTIONALPRESSUREDROP_HPP
-

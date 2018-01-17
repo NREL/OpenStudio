@@ -42,7 +42,7 @@ if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
       back << p
     end
   end
-  
+
   ENV['PATH'] = "#{front.join(';')};#{File.dirname(__FILE__)};#{back.join(';')}"
 
 else

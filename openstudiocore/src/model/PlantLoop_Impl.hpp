@@ -82,21 +82,21 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   bool setFluidType( const std::string & value );
 
-  void setGlycolConcentration(int glycolConcentration);
+  bool setGlycolConcentration(int glycolConcentration);
 
   int glycolConcentration() const;
 
   double maximumLoopTemperature();
 
-  void setMaximumLoopTemperature( double value );
+  bool setMaximumLoopTemperature( double value );
 
   double minimumLoopTemperature();
 
-  void setMinimumLoopTemperature( double value );
+  bool setMinimumLoopTemperature( double value );
 
   boost::optional<double> maximumLoopFlowRate();
 
-  void setMaximumLoopFlowRate( double value );
+  bool setMaximumLoopFlowRate( double value );
 
   bool isMaximumLoopFlowRateAutosized();
 
@@ -104,7 +104,7 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   boost::optional<double> minimumLoopFlowRate();
 
-  void setMinimumLoopFlowRate( double value );
+  bool setMinimumLoopFlowRate( double value );
 
   bool isMinimumLoopFlowRateAutosized();
 
@@ -112,7 +112,7 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   boost::optional<double> plantLoopVolume();
 
-  void setPlantLoopVolume( double value );
+  bool setPlantLoopVolume( double value );
 
   bool isPlantLoopVolumeAutocalculated();
 
@@ -192,19 +192,19 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   Mixer supplyMixer() const;
 
-  void setSupplyMixer(Mixer const & mixer);
+  bool setSupplyMixer(Mixer const & mixer);
 
   Splitter supplySplitter() const;
 
-  void setSupplySplitter(Splitter const & splitter);
+  bool setSupplySplitter(Splitter const & splitter);
 
   Mixer demandMixer() override;
 
-  void setDemandMixer(Mixer const & mixer);
+  bool setDemandMixer(Mixer const & mixer);
 
   Splitter demandSplitter() override;
 
-  void setDemandSplitter(Splitter const & splitter);
+  bool setDemandSplitter(Splitter const & splitter);
 
   bool addSupplyBranchForComponent( HVACComponent component );
 
@@ -216,7 +216,7 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   Node loopTemperatureSetpointNode();
 
-  void setLoopTemperatureSetpointNode( Node & node );
+  bool setLoopTemperatureSetpointNode( Node & node );
 
   std::vector<ModelObject> children() const override;
 
@@ -265,4 +265,3 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 } // openstudio
 
 #endif // MODEL_PLANTLOOP_IMPL_HPP
-

@@ -75,16 +75,16 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_DaylightingDeviceShelf)
   surface.setSpace(space);
   EXPECT_EQ("Wall", surface.surfaceType());
 
-  double viewGlassToWallRatio = 0.3; 
+  double viewGlassToWallRatio = 0.3;
   double daylightingGlassToWallRatio = 0.2;
   double desiredViewGlassSillHeight = 1.0;
   double desiredDaylightingGlassHeaderHeight = 1.0;
   double exteriorShadingProjectionFactor = 0.5;
   double interiorShelfProjectionFactor = 0.5;
 
-  std::vector<SubSurface> result = surface.applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio, 
+  std::vector<SubSurface> result = surface.applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio,
                                                                               desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
-                                                                              exteriorShadingProjectionFactor, interiorShelfProjectionFactor, 
+                                                                              exteriorShadingProjectionFactor, interiorShelfProjectionFactor,
                                                                               construction, construction);
   ASSERT_EQ(2u, result.size());
   EXPECT_EQ(1u, result[0].shadingSurfaceGroups().size());

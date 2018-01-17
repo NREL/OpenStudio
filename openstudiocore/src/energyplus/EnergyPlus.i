@@ -29,7 +29,7 @@
   #include <energyplus/ForwardTranslator.hpp>
   #include <energyplus/ReverseTranslator.hpp>
   #include <energyplus/ErrorFile.hpp>
-  
+
   using namespace openstudio;
   using namespace openstudio::model;
   using namespace openstudio::energyplus;
@@ -50,5 +50,5 @@
 %include <energyplus/ForwardTranslator.hpp>
 %include <energyplus/ReverseTranslator.hpp>
 
-#endif //ENERGYPLUS_I 
+#endif //ENERGYPLUS_I
 

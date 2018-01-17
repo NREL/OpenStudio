@@ -49,7 +49,7 @@ namespace openstudio
 
       std::string location() const {return m_location;}
 
-      std::string shortLocation() const 
+      std::string shortLocation() const
       {
         std::string result;
 
@@ -58,7 +58,7 @@ namespace openstudio
         if (pos > -1) {
           result = regex.cap(1).toStdString();
         }
-        
+
         return result;
       }
 

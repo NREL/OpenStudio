@@ -41,12 +41,12 @@ TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_DefaultConstructor)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model m;
     SetpointManagerFollowGroundTemperature testObject(m);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -178,7 +178,7 @@ TEST_F (ModelFixture, SetpointManagerFollowGroundTemperature_referenceObjectType
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
-  
+
   SetpointManagerFollowGroundTemperature testObject(m);
   EXPECT_EQ(testObject.referenceGroundTemperatureObjectType(), "Site:GroundTemperature:BuildingSurface");
   EXPECT_TRUE(testObject.setReferenceGroundTemperatureObjectType("Site:GroundTemperature:Deep"));

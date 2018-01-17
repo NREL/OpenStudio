@@ -94,7 +94,7 @@ namespace detail {
 
     boost::optional<double> designWaterFlowRate();
 
-    void setDesignWaterFlowRate( double value );
+    bool setDesignWaterFlowRate( double value );
 
     bool isDesignWaterFlowRateAutosized();
 
@@ -102,7 +102,7 @@ namespace detail {
 
     boost::optional<double> designAirFlowRate();
 
-    void setDesignAirFlowRate( double value );
+    bool setDesignAirFlowRate( double value );
 
     bool isDesignAirFlowRateAutosized();
 
@@ -110,7 +110,7 @@ namespace detail {
 
     boost::optional<double> designInletWaterTemperature();
 
-    void setDesignInletWaterTemperature( double value );
+    bool setDesignInletWaterTemperature( double value );
 
     bool isDesignInletWaterTemperatureAutosized();
 
@@ -118,7 +118,7 @@ namespace detail {
 
     boost::optional<double> designInletAirTemperature();
 
-    void setDesignInletAirTemperature( double value );
+    bool setDesignInletAirTemperature( double value );
 
     bool isDesignInletAirTemperatureAutosized();
 
@@ -126,7 +126,7 @@ namespace detail {
 
     boost::optional<double> designOutletAirTemperature();
 
-    void setDesignOutletAirTemperature( double value );
+    bool setDesignOutletAirTemperature( double value );
 
     bool isDesignOutletAirTemperatureAutosized();
 
@@ -134,7 +134,7 @@ namespace detail {
 
     boost::optional<double> designInletAirHumidityRatio();
 
-    void setDesignInletAirHumidityRatio( double value );
+    bool setDesignInletAirHumidityRatio( double value );
 
     bool isDesignInletAirHumidityRatioAutosized();
 
@@ -142,7 +142,7 @@ namespace detail {
 
     boost::optional<double> designOutletAirHumidityRatio();
 
-    void setDesignOutletAirHumidityRatio( double value );
+    bool setDesignOutletAirHumidityRatio( double value );
 
     bool isDesignOutletAirHumidityRatioAutosized();
 
@@ -150,11 +150,11 @@ namespace detail {
 
     std::string typeOfAnalysis();
 
-    void setTypeOfAnalysis( std::string value );
+    bool setTypeOfAnalysis( std::string value );
 
     std::string heatExchangerConfiguration();
 
-    void setHeatExchangerConfiguration( std::string value );
+    bool setHeatExchangerConfiguration( std::string value );
 
     boost::optional<double> autosizedDesignWaterFlowRate() const ;
 
@@ -174,7 +174,7 @@ namespace detail {
 
     virtual void applySizingValues() override;
 
-  private:    
+  private:
 
     REGISTER_LOGGER("openstudio.model.CoilCoolingWater");
 

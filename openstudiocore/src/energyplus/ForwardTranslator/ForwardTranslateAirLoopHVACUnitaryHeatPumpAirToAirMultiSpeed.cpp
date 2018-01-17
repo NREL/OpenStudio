@@ -71,7 +71,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
   // Name
   std::string baseName = modelObject.name().get();
   idfObject.setName(baseName);
- 
+
 
   // AvailabilityScheduleName
   if( boost::optional<Schedule> schedule = modelObject.availabilitySchedule() )
@@ -163,7 +163,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
     idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplementalHeatingCoilObjectType,
       _supplementalHeatingCoil->iddObject().name());
 
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplementalHeatingCoilName,_supplementalHeatingCoil->name().get()); 
+    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplementalHeatingCoilName,_supplementalHeatingCoil->name().get());
   }
 
   // FanPlacement
@@ -192,11 +192,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
   } else if( (value = modelObject.maximumSupplyAirTemperaturefromSupplementalHeater()) ) {
     idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::MaximumSupplyAirTemperaturefromSupplementalHeater,value.get());
   }
-  
+
   // MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation
   if( (value = modelObject.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation()) ) {
     idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation,value.get());
-  } 
+  }
 
   // AuxiliaryOnCycleElectricPower
   if( (value = modelObject.auxiliaryOnCycleElectricPower()) ) {
@@ -320,7 +320,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
     coolingCoilInletNodeName = airInletNodeName;
     coolingCoilOutletNodeName = baseName + " Cool Coil Outlet";
 
-    heatingCoilInletNodeName = coolingCoilOutletNodeName; 
+    heatingCoilInletNodeName = coolingCoilOutletNodeName;
     heatingCoilOutletNodeName = baseName + " Heat Coil Outlet";
 
     fanInletNodeName = heatingCoilOutletNodeName;

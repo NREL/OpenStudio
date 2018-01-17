@@ -50,7 +50,7 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
   m_idfObjects.push_back(idfObject);
 
   idfObject.setString(WindowProperty_ShadingControlFields::Name, modelObject.name().get());
-  
+
   std::string shadingType = modelObject.shadingType();
   if (istringEqual("InteriorDaylightRedirectionDevice", shadingType)){
     idfObject.setString(WindowProperty_ShadingControlFields::ShadingType, "InteriorBlind");
@@ -65,10 +65,10 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
   }else if (shadingMaterial){
     idfObject.setString(WindowProperty_ShadingControlFields::ShadingDeviceMaterialName, shadingMaterial->name().get());
   }
-  
+
   std::string shadingControlType = modelObject.shadingControlType();
   idfObject.setString(WindowProperty_ShadingControlFields::ShadingControlType, shadingControlType);
-  
+
   boost::optional<Schedule> schedule = modelObject.schedule();
   if (schedule){
     idfObject.setString(WindowProperty_ShadingControlFields::ScheduleName, schedule->name().get());

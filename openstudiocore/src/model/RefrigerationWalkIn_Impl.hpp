@@ -200,13 +200,13 @@ namespace detail {
 
     void resetAvailabilitySchedule();
 
-    void setRatedCoilCoolingCapacity(double ratedCoilCoolingCapacity);
+    bool setRatedCoilCoolingCapacity(double ratedCoilCoolingCapacity);
 
     bool setOperatingTemperature(double operatingTemperature);
 
     bool setRatedCoolingSourceTemperature(double ratedCoolingSourceTemperature);
 
-    void setRatedTotalHeatingPower(double ratedTotalHeatingPower);
+    bool setRatedTotalHeatingPower(double ratedTotalHeatingPower);
 
     bool setHeatingPowerSchedule(Schedule& schedule);
 
@@ -220,7 +220,7 @@ namespace detail {
 
     void resetRatedCirculationFanPower();
 
-    void setRatedTotalLightingPower(double ratedTotalLightingPower);
+    bool setRatedTotalLightingPower(double ratedTotalLightingPower);
 
     bool setLightingSchedule(Schedule& schedule);
 
@@ -252,7 +252,7 @@ namespace detail {
 
     void resetRestockingSchedule();
 
-    void setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
+    bool setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
 
     void resetAverageRefrigerantChargeInventory();
 
@@ -314,13 +314,13 @@ namespace detail {
 
     bool setZoneBoundaryTotalInsulatedSurfaceAreaFacingZone(double zoneBoundaryTotalInsulatedSurfaceAreaFacingZone);
 
-    void setZoneBoundaryAreaofGlassReachInDoorsFacingZone(double zoneBoundaryAreaofGlassReachInDoorsFacingZone);
+    bool setZoneBoundaryAreaofGlassReachInDoorsFacingZone(double zoneBoundaryAreaofGlassReachInDoorsFacingZone);
 
-    void setZoneBoundaryHeightofGlassReachInDoorsFacingZone(double zoneBoundaryHeightofGlassReachInDoorsFacingZone);
+    bool setZoneBoundaryHeightofGlassReachInDoorsFacingZone(double zoneBoundaryHeightofGlassReachInDoorsFacingZone);
 
-    void setZoneBoundaryAreaofStockingDoorsFacingZone(double zoneBoundaryAreaofStockingDoorsFacingZone);
+    bool setZoneBoundaryAreaofStockingDoorsFacingZone(double zoneBoundaryAreaofStockingDoorsFacingZone);
 
-    void setZoneBoundaryHeightofStockingDoorsFacingZone(double zoneBoundaryHeightofStockingDoorsFacingZone);
+    bool setZoneBoundaryHeightofStockingDoorsFacingZone(double zoneBoundaryHeightofStockingDoorsFacingZone);
 
     bool setZoneBoundaryInsulatedSurfaceUValueFacingZone(double zoneBoundaryInsulatedSurfaceUValueFacingZone);
 
@@ -357,4 +357,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONWALKIN_IMPL_HPP
-

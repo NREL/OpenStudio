@@ -241,9 +241,10 @@ namespace detail {
     return result;
   }
 
-  void ThermochromicGlazing_Impl::setOpticalDataTemperature(double value) {
+  bool ThermochromicGlazing_Impl::setOpticalDataTemperature(double value) {
     bool result = setDouble(OS_WindowMaterial_GlazingGroup_ThermochromicExtensibleFields::OpticalDataTemperature,value);
     OS_ASSERT(result);
+    return result;
   }
 
 } // detail
@@ -276,10 +277,9 @@ double ThermochromicGlazing::opticalDataTemperature() const {
   return getImpl<detail::ThermochromicGlazing_Impl>()->opticalDataTemperature();
 }
 
-void ThermochromicGlazing::setOpticalDataTemperature(double value) {
+bool ThermochromicGlazing::setOpticalDataTemperature(double value) {
   return getImpl<detail::ThermochromicGlazing_Impl>()->setOpticalDataTemperature(value);
 }
 
 } // model
 } // openstudio
-

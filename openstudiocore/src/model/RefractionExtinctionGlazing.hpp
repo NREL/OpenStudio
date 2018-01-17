@@ -196,7 +196,7 @@ class MODEL_API RefractionExtinctionGlazing : public Glazing {
 
   void resetDirtCorrectionFactorforSolarandVisibleTransmittance();
 
-  void setSolarDiffusing(bool solarDiffusing);
+  bool setSolarDiffusing(bool solarDiffusing);
 
   void resetSolarDiffusing();
 
@@ -230,4 +230,3 @@ typedef std::vector<RefractionExtinctionGlazing> RefractionExtinctionGlazingVect
 } // openstudio
 
 #endif // MODEL_REFRACTIONEXTINCTIONGLAZING_HPP
-

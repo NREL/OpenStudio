@@ -34,7 +34,7 @@ require_relative 'measure_manager'
 class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
 
   @@instance = nil
-  
+
   def initialize(server)
     super
     @mutex = Mutex.new
@@ -45,47 +45,47 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
   def print_message(message)
     puts message
   end
-  
+
   def self.get_instance(server, *options)
     @@instance = self.new(server, *options) if @@instance.nil?
     return @@instance
   end
-  
+
   def do_GET(request, response)
-  
+
     begin
       #print_message("waiting for @mutex = #{@mutex}")
       @mutex.lock
       #print_message("locked @mutex = #{@mutex}")
-        
+
       response.status = 200
       response.content_type = 'application/json'
-      
+
       result = {:status => "running", :my_measures_dir => OpenStudio::BCLMeasure.userMeasuresDir}
-      
+
       case request.path
       when "/"
-      
+
         response.body = JSON.generate(result)
-        
+
       when "/internal_state"
-        
+
         osms = []
-        @measure_manager.osms.each_pair do |osm_path, value|  
+        @measure_manager.osms.each_pair do |osm_path, value|
           if value
             osms << {:osm_path => osm_path, :checksum => value[:checksum]}
           end
         end
-        
+
         measures = []
-        @measure_manager.measures.each_pair do |measure_dir, measure|  
+        @measure_manager.measures.each_pair do |measure_dir, measure|
           if measure
             measures << @measure_manager.measure_hash(measure_dir, measure)
           end
         end
-        
+
         measure_info = []
-        @measure_manager.measure_info.each_pair do |measure_dir, value|  
+        @measure_manager.measure_info.each_pair do |measure_dir, value|
           measure = @measure_manager.measures[measure_dir]
           if measure && value
             value.each_pair do |osm_path, info|
@@ -96,68 +96,68 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
             end
           end
         end
-        
+
         result[:osms] = osms
         result[:measures] = measures
         result[:measure_info] = measure_info
-        
+
         response.body = JSON.generate(result)
-        
+
       else
         response.body = "Error, unknown path #{request.path}"
         response.status = 400
       end
-      
-    rescue Exception => e  
+
+    rescue Exception => e
       response.body = JSON.generate({:error=>e.message, :backtrace=>e.backtrace.inspect})
       response.status = 400
-      
+
       print_message(e.message)
       print_message(e.backtrace.inspect)
     ensure
       @mutex.unlock
     end
   end
-  
+
   def do_POST (request, response)
-  
+
     begin
       #print_message("waiting for @mutex = #{@mutex}")
       @mutex.lock
       #print_message("locked @mutex = #{@mutex}")
-        
+
       response.status = 200
       response.content_type = 'application/json'
-      
+
       case request.path
       when "/reset"
-        @measure_manager.reset   
-        
+        @measure_manager.reset
+
         print_message("Reseting internal state")
-        
+
         response.body = JSON.generate({})
-        
+
       when "/set"
 
         result = {}
-        
+
         data = JSON.parse(request.body, {:symbolize_names=>true})
         my_measures_dir = data[:my_measures_dir]
-        
+
         if my_measures_dir
           test = OpenStudio::BCLMeasure.setUserMeasuresDir(OpenStudio::toPath(my_measures_dir))
           raise "Failed to set my_measures_dir = '#{my_measures_dir}'" if not test
         end
-        
+
         response.body = JSON.generate(result)
-        
+
       when "/download_bcl_measure"
 
         result = []
-        
+
         data = JSON.parse(request.body, {:symbolize_names=>true})
         uid = data[:uid]
-        
+
         if uid
           # each request is handled on a separate thread, need to construct RemoteBCL here
           remote_bcl = OpenStudio::RemoteBCL.new
@@ -172,13 +172,13 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
         else
           raise "Missing required argument 'uid'"
         end
-        
+
         response.body = JSON.generate(result)
-        
+
       when "/bcl_measures"
 
         result = []
-        
+
         data = JSON.parse(request.body, {:symbolize_names=>true})
         force_reload = false
 
@@ -188,7 +188,7 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
           #print_message("measure_dir = #{measure_dir}")
           measure_dir = File.expand_path(measure_dir)
           if File.directory?(measure_dir)
-         
+
             measure = @measure_manager.get_measure(measure_dir, force_reload)
             if measure.nil?
               print_message("Directory #{measure_dir} is not a measure")
@@ -199,11 +199,11 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
         end
 
         response.body = JSON.generate(result)
-    
+
       when "/update_measures"
-      
+
         result = []
-        
+
         data = JSON.parse(request.body, {:symbolize_names=>true})
         measures_dir = data[:measures_dir] ? data[:measures_dir] : OpenStudio::BCLMeasure.userMeasuresDir.to_s
         force_reload = data[:force_reload] ? data[:force_reload] : false
@@ -211,10 +211,10 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
         # loop over all directories
         measure_dirs = Dir.glob("#{measures_dir}/*/")
         measure_dirs.each do |measure_dir|
-        
+
           measure_dir = File.expand_path(measure_dir)
           if File.directory?(measure_dir)
-         
+
             measure = @measure_manager.get_measure(measure_dir, force_reload)
             if measure.nil?
               print_message("Directory #{measure_dir} is not a measure")
@@ -238,7 +238,7 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
         if measure.nil?
           raise "Cannot load measure at '#{measure_dir}'"
         end
-        
+
         model = OpenStudio::Model::OptionalModel.new()
         workspace = OpenStudio::OptionalWorkspace.new()
         if osm_path
@@ -253,18 +253,18 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
         else
           osm_path = ""
         end
-        
+
         info = @measure_manager.get_measure_info(measure_dir, measure, osm_path, model, workspace)
-   
+
         result = @measure_manager.measure_hash(measure_dir, measure, info)
 
         response.body = JSON.generate(result)
-        
+
       when "/create_measure"
 
         data = JSON.parse(request.body, {:symbolize_names=>true})
         measure_dir = data[:measure_dir]
-        
+
         # name = data[:name] # we do not take name as input
         # the measure's name method actually maps to display name
         display_name = data[:display_name]
@@ -273,14 +273,14 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
         measure_type = data[:measure_type]
         description = data[:description]
         modeler_description = data[:modeler_description]
-        
+
         # creating measure will throw if directory exists but is not empty
         measure_dir = File.expand_path(measure_dir)
         OpenStudio::BCLMeasure.new(display_name, class_name, measure_dir, taxonomy_tag, measure_type.to_MeasureType, description, modeler_description)
 
         measure = @measure_manager.get_measure(measure_dir, true)
         result = @measure_manager.measure_hash(measure_dir, measure)
-        
+
         response.body = JSON.generate(result)
 
       when "/duplicate_measure"
@@ -304,22 +304,22 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
         if old_measure.nil?
           raise "Cannot load measure at '#{old_measure_dir}'"
         end
-        
-        display_name = old_measure.displayName if display_name.nil? 
-        class_name = old_measure.className if class_name.nil? 
-        taxonomy_tag = old_measure.taxonomyTag if taxonomy_tag.nil? 
-        measure_type = old_measure.measureType.valueName if measure_type.nil? 
-        description = old_measure.description if description.nil? 
-        modeler_description = old_measure.modelerDescription if modeler_description.nil?        
+
+        display_name = old_measure.displayName if display_name.nil?
+        class_name = old_measure.className if class_name.nil?
+        taxonomy_tag = old_measure.taxonomyTag if taxonomy_tag.nil?
+        measure_type = old_measure.measureType.valueName if measure_type.nil?
+        description = old_measure.description if description.nil?
+        modeler_description = old_measure.modelerDescription if modeler_description.nil?
         name = OpenStudio::toUnderscoreCase(class_name)
-        
+
         measure_dir = File.expand_path(measure_dir)
         new_measure = old_measure.clone(measure_dir)
         if new_measure.empty?
           raise "Cannot copy measure from '#{old_measure_dir}' to '#{measure_dir}'"
         end
         new_measure = new_measure.get
-        
+
         new_measure.changeUID
         new_measure.incrementVersionId
 
@@ -340,24 +340,24 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
 
         measure = @measure_manager.get_measure(measure_dir, true)
         result = @measure_manager.measure_hash(measure_dir, measure)
-        
+
         response.body = JSON.generate(result)
 
       else
         response.body = "Error, unknown path #{request.path}"
         response.status = 400
       end
-      
-    rescue Exception => e  
+
+    rescue Exception => e
       response.body = JSON.generate({:error=>e.message, :backtrace=>e.backtrace.inspect})
       response.status = 400
-      
+
       print_message(e.message)
       print_message(e.backtrace.inspect)
-      
+
     ensure
       @mutex.unlock
     end
   end
-  
+
 end

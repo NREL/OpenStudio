@@ -60,7 +60,7 @@ TEST_F(CoreFixture, Unzip_DirListTest)
   std::vector<openstudio::path> list = uf.listFiles();
 
   ASSERT_EQ(list.size(), 6u);
-  
+
   EXPECT_EQ(list[0], openstudio::toPath("file1.txt"));
   EXPECT_EQ(list[1], openstudio::toPath("file2.txt"));
 }
@@ -136,8 +136,8 @@ TEST_F(CoreFixture, Zip_CreateFile)
     zf.addFile(p, openstudio::toPath("added.zip"));
   }
 
- 
-  openstudio::UnzipFile uf(outzip); 
+
+  openstudio::UnzipFile uf(outzip);
   std::vector<openstudio::path> createdFiles = uf.extractAllFiles(outpath);
 
   ASSERT_EQ(1u, createdFiles.size());
@@ -165,8 +165,8 @@ TEST_F(CoreFixture, Zip_AppendFile)
     zf.addFile(p, openstudio::toPath("in/some/subdir/added2.zip"));
   }
 
- 
-  openstudio::UnzipFile uf(outzip); 
+
+  openstudio::UnzipFile uf(outzip);
   std::vector<openstudio::path> createdFiles = uf.extractAllFiles(outpath);
 
   ASSERT_EQ(2u, createdFiles.size());

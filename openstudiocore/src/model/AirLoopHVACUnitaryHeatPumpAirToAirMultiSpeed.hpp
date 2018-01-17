@@ -51,9 +51,9 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed : public StraightCo
   /** @name Constructors and Destructors */
   //@{
 
-  explicit AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed(const Model& model, 
-    const HVACComponent& fan, 
-    const HVACComponent& heatingCoil, 
+  explicit AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed(const Model& model,
+    const HVACComponent& fan,
+    const HVACComponent& heatingCoil,
     const HVACComponent& supplementalHeatingCoil,
     const HVACComponent& coolingCoil);
 
@@ -175,7 +175,7 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed : public StraightCo
 
   bool setSupplementalHeatingCoil(const HVACComponent& coil);
 
-  void setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
+  bool setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
 
   void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 
@@ -281,4 +281,3 @@ typedef std::vector<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed> AirLoopHVACUni
 } // openstudio
 
 #endif // MODEL_AIRLOOPHVACUNITARYHEATPUMPAIRTOAIRMULTISPEED_HPP
-

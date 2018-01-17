@@ -76,7 +76,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCost( LifeCycleC
 
   // check for field types of LifeCycleCost:NonrecurringCost {Construction, Salvage, OtherCapital}
   if (istringEqual("Construction", category) ||
-      istringEqual("Salvage", category) || 
+      istringEqual("Salvage", category) ||
       istringEqual("OtherCapital", category)){
 
     if (lengthOfStudyPeriodInMonths >= 12*yearsFromStart + monthsFromStart){
@@ -110,7 +110,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCost( LifeCycleC
       category = "Replacement";
       yearsFromStart += repeatPeriodYears;
       monthsFromStart += repeatPeriodMonths;
-    
+
     }else{
       //LOG(Warn, "LifeCycleCost '" << name << "' occurs outside the study period, will not be translated");
     }

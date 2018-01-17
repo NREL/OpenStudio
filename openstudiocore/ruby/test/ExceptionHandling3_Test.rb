@@ -4,13 +4,13 @@ require 'openstudio'
 require 'minitest/autorun'
 
 class Exceptions3_Test < MiniTest::Unit::TestCase
-  
+
   # def setup
   # end
 
   # def teardown
   # end
-  
+
   def test_exceptions3
 
     # all it has to do is finish

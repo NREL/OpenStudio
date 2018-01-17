@@ -81,8 +81,8 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingElectric( Coil
     idfObject.setDouble(Coil_Heating_ElectricFields::Efficiency,value.get());
   }
 
-  // Nominal Capacity 
-  
+  // Nominal Capacity
+
   if( modelObject.isNominalCapacityAutosized() )
   {
     idfObject.setString(Coil_Heating_ElectricFields::NominalCapacity,"Autosize");
@@ -93,7 +93,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingElectric( Coil
   }
 
   // Air Inlet Node Name
- 
+
   if( boost::optional<ModelObject> mo = modelObject.inletModelObject() )
   {
     if( boost::optional<Node> node = mo->optionalCast<Node>() )
@@ -103,7 +103,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingElectric( Coil
   }
 
   // Air Outlet Node Name
- 
+
   if( boost::optional<ModelObject> mo = modelObject.outletModelObject() )
   {
     if( boost::optional<Node> node = mo->optionalCast<Node>() )
@@ -112,8 +112,8 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingElectric( Coil
     }
   }
 
-  // Temperature Setpoint Node Name 
- 
+  // Temperature Setpoint Node Name
+
   if( boost::optional<Node> node = modelObject.temperatureSetpointNode() )
   {
     idfObject.setString(Coil_Heating_ElectricFields::TemperatureSetpointNodeName,node->name().get());

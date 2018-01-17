@@ -122,7 +122,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationSubcoolerMechanical_Impl::setOutletControlTemperature(boost::optional<double> outletControlTemperature) {
+  bool RefrigerationSubcoolerMechanical_Impl::setOutletControlTemperature(boost::optional<double> outletControlTemperature) {
     bool result(false);
     if (outletControlTemperature) {
       result = setDouble(OS_Refrigeration_Subcooler_MechanicalFields::OutletControlTemperature, outletControlTemperature.get());
@@ -132,6 +132,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSubcoolerMechanical_Impl::resetOutletControlTemperature() {
@@ -169,8 +170,8 @@ void RefrigerationSubcoolerMechanical::resetCapacityProvidingSystem() {
   getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->resetCapacityProvidingSystem();
 }
 
-void RefrigerationSubcoolerMechanical::setOutletControlTemperature(double outletControlTemperature) {
-  getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->setOutletControlTemperature(outletControlTemperature);
+bool RefrigerationSubcoolerMechanical::setOutletControlTemperature(double outletControlTemperature) {
+  return getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->setOutletControlTemperature(outletControlTemperature);
 }
 
 void RefrigerationSubcoolerMechanical::resetOutletControlTemperature() {
@@ -185,4 +186,3 @@ RefrigerationSubcoolerMechanical::RefrigerationSubcoolerMechanical(std::shared_p
 
 } // model
 } // openstudio
-

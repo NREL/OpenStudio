@@ -72,37 +72,37 @@ TEST_F(ModelFixture, FanOnOff_DefaultConstructors)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model m;
     Schedule s = m.alwaysOnDiscreteSchedule();
     FanOnOff testObject = FanOnOff(m, s);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model m;
     Schedule s = m.alwaysOnDiscreteSchedule();
     CurveExponent fanPowerFuncSpeedCurve(m);
     CurveCubic fanEfficiencyFuncSpeedCurve(m);
     FanOnOff testObject = FanOnOff(m, s, fanPowerFuncSpeedCurve, fanEfficiencyFuncSpeedCurve);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model m;
     Schedule s = m.alwaysOnDiscreteSchedule();
     CurveExponent fanPowerFuncSpeedCurve(m);
     CurveQuadratic fanEfficiencyFuncSpeedCurve(m);
     FanOnOff testObject = FanOnOff(m, s, fanPowerFuncSpeedCurve, fanEfficiencyFuncSpeedCurve);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -208,7 +208,7 @@ TEST_F(ModelFixture, FanOnOff_CloneOneModelWithCustomData)
 
   CurveExponent fanPowerFuncSpeedCurve(m);
   CurveCubic fanEfficiencyFuncSpeedCurve(m);
-  
+
   testObject.setFanPowerRatioFunctionofSpeedRatioCurve(fanPowerFuncSpeedCurve);
   testObject.setFanEfficiencyRatioFunctionofSpeedRatioCurve(fanEfficiencyFuncSpeedCurve);
 
@@ -287,7 +287,7 @@ TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithCustomData)
 
   CurveExponent fanPowerFuncSpeedCurve(m);
   CurveCubic fanEfficiencyFuncSpeedCurve(m);
-  
+
   testObject.setFanPowerRatioFunctionofSpeedRatioCurve(fanPowerFuncSpeedCurve);
   testObject.setFanEfficiencyRatioFunctionofSpeedRatioCurve(fanEfficiencyFuncSpeedCurve);
 

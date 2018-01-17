@@ -53,7 +53,7 @@ public:
   {
     clear();
   }
-  
+
   virtual void clear() override
   {
     interiorSurface = 0;

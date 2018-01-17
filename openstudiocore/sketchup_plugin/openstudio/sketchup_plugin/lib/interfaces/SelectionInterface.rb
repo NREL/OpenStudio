@@ -29,30 +29,30 @@
 require("openstudio/sketchup_plugin/lib/observers/SelectionObserver.rb")
 
 module OpenStudio
-  
+
   class SelectionInterface
-  
+
     # for debugging
     attr_reader :model_interface, :observer, :selection
 
     def initialize(model_interface)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       @model_interface = model_interface
       @selection = @model_interface.skp_model.selection
-      
-      @observer = SelectionObserver.new(self)    
+
+      @observer = SelectionObserver.new(self)
       @observer_added = false # true if observer has been added to the entity
     end
-    
+
     def destroy
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       @model_interface = nil
       @selection = nil
       @observer = nil
     end
-    
+
     def add_observers(recursive = false)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
 
@@ -71,7 +71,7 @@ module OpenStudio
 
     def remove_observers(recursive = false)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       had_observers = false
       if $OPENSTUDIO_SKETCHUPPLUGIN_DISABLE_OBSERVERS
         if @observer_added
@@ -82,13 +82,13 @@ module OpenStudio
         @observer.disable
         @observer_added = false
       end
-      
+
       return had_observers
     end
-    
+
     def destroy_observers(recursive = false)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       result = false
       if @observer
         if $OPENSTUDIO_SKETCHUPPLUGIN_DISABLE_OBSERVERS
@@ -105,28 +105,28 @@ module OpenStudio
         @observer = nil
         result = true
       end
-      
+
       return result
     end
-    
+
     # gets the drawing_interface which is actually selected, not render mode aware
     # render mode is applied in DialogManager::selection_changed
     def selected_drawing_interface
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       drawing_interface = nil
       if (@selection.empty?)
         Plugin.log(OpenStudio::Debug, "selection is empty")
-        
+
         parent = @model_interface.skp_model.active_entities.parent
         if (parent.class == Sketchup::ComponentDefinition)
           # Gets the SurfaceGroup interface that is currently open for editing
           drawing_interface = parent.instances.first.drawing_interface
-          
+
           Plugin.log(OpenStudio::Debug, "selected_drawing_interface = #{drawing_interface}")
         else
           drawing_interface = @model_interface.building
-          
+
           Plugin.log(OpenStudio::Debug, "selected_drawing_interface = #{drawing_interface}")
         end
 
@@ -142,75 +142,75 @@ module OpenStudio
 
             if drawing_interface.nil?
               drawing_interface = entity.drawing_interface
-              
+
               Plugin.log(OpenStudio::Debug, "selected_drawing_interface = #{drawing_interface}")
             else
               drawing_interface = nil
-              
+
               Plugin.log(OpenStudio::Debug, "reseting selected_drawing_interface")
-              
+
               # try to revert back to group or building here
               parent = @model_interface.skp_model.active_entities.parent
               if (parent.class == Sketchup::ComponentDefinition)
                 # Gets the SurfaceGroup interface that is currently open for editing
                 drawing_interface = parent.instances.first.drawing_interface
-                
+
                 Plugin.log(OpenStudio::Debug, "selected_drawing_interface = #{drawing_interface}")
               else
                 drawing_interface = @model_interface.building
-                
+
                 Plugin.log(OpenStudio::Debug, "selected_drawing_interface = #{drawing_interface}")
               end
 
               break
-            end  
+            end
           end
         end
       end
 
       return(drawing_interface)
     end
-    
+
     def select_drawing_interfaces(handles)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
 
       @selection.clear
-      
+
       active_path = @model_interface.skp_model.active_path
       if active_path.nil?
-        active_path = [] 
+        active_path = []
       end
-      
+
       for child in @model_interface.recurse_children
-        
-        if child.class == DaylightingControl or 
-           child.class == IlluminanceMap or 
-           child.class == InteriorPartitionSurface or 
-           child.class == InteriorPartitionSurfaceGroup or 
-           child.class == Luminaire or 
-           child.class == ShadingSurface or 
+
+        if child.class == DaylightingControl or
+           child.class == IlluminanceMap or
+           child.class == InteriorPartitionSurface or
+           child.class == InteriorPartitionSurfaceGroup or
+           child.class == Luminaire or
+           child.class == ShadingSurface or
            child.class == ShadingSurfaceGroup or
            child.class == Space or
            child.class == SubSurface or
            child.class == Surface
-           
+
           if child.model_object
             if handles.include?(child.model_object.handle)
               # do not select nil or deleted entities
               if child.valid_entity?
-              
+
                 #do not select object in active path
                 if not active_path.include?(child.entity)
                   @selection.add(child.entity)
                 end
               end
-            end          
+            end
           end
         end
       end
-    
+
     end
-    
+
   end
 
 end

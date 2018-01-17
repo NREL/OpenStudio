@@ -107,8 +107,8 @@ class UTILITIES_API ImfFile
   /// print file to std::stream
   std::ostream& print(std::ostream& os) const;
 
-  /** Save IddFile to path. Will construct parent folder, but no further up the chain. Will 
-   *  only overwrite an existing file if overwrite==true. If no extension is provided will use 
+  /** Save IddFile to path. Will construct parent folder, but no further up the chain. Will
+   *  only overwrite an existing file if overwrite==true. If no extension is provided will use
    *  'imf'. */
   bool save(const openstudio::path& p, bool overwrite=false);
 

@@ -68,10 +68,10 @@ boost::optional<IdfObject> ForwardTranslator::translateLoadProfilePlant( LoadPro
       idfObject.setString(LoadProfile_PlantFields::LoadScheduleName,_schedule->name().get());
     }
   }
-  
+
   // PeakFlowRate
   if( (value = modelObject.peakFlowRate()) ) {
-    idfObject.setDouble(LoadProfile_PlantFields::PeakFlowRate,value.get()); 
+    idfObject.setDouble(LoadProfile_PlantFields::PeakFlowRate,value.get());
   }
 
   // FlowRateFractionScheduleName

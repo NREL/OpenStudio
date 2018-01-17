@@ -139,14 +139,16 @@ namespace detail {
     return false;
   }
 
-  void ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl::setFMUVariableName(const std::string& fMUVariableName) {
+  bool ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl::setFMUVariableName(const std::string& fMUVariableName) {
     bool result = setString(OS_ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::FMUVariableName, fMUVariableName);
     OS_ASSERT(result);
+    return result;
   }
 
-  void ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl::setInitialValue(double initialValue) {
+  bool ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl::setInitialValue(double initialValue) {
     bool result = setDouble(OS_ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::InitialValue, initialValue);
     OS_ASSERT(result);
+    return result;
   }
 
 } // detail
@@ -174,12 +176,12 @@ double ExternalInterfaceFunctionalMockupUnitExportToSchedule::initialValue() con
   return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl>()->initialValue();
 }
 
-void ExternalInterfaceFunctionalMockupUnitExportToSchedule::setFMUVariableName(const std::string& fMUVariableName) {
-  getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl>()->setFMUVariableName(fMUVariableName);
+bool ExternalInterfaceFunctionalMockupUnitExportToSchedule::setFMUVariableName(const std::string& fMUVariableName) {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl>()->setFMUVariableName(fMUVariableName);
 }
 
-void ExternalInterfaceFunctionalMockupUnitExportToSchedule::setInitialValue(double initialValue) {
-  getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl>()->setInitialValue(initialValue);
+bool ExternalInterfaceFunctionalMockupUnitExportToSchedule::setInitialValue(double initialValue) {
+  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl>()->setInitialValue(initialValue);
 }
 
 /// @cond
@@ -190,4 +192,3 @@ ExternalInterfaceFunctionalMockupUnitExportToSchedule::ExternalInterfaceFunction
 
 } // model
 } // openstudio
-

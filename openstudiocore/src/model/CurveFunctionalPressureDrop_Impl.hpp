@@ -39,12 +39,12 @@ namespace detail {
 
   /** CurveFunctionalPressureDrop_Impl is a Curve_Impl that is the implementation class for CurveFunctionalPressureDrop.*/
   class MODEL_API CurveFunctionalPressureDrop_Impl : public Curve_Impl {
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
    public:
 
     /** @name Constructors and Destructors */
@@ -92,21 +92,21 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setDiameter(double diameter);
+    bool setDiameter(double diameter);
 
-    void setMinorLossCoefficient(boost::optional<double> minorLossCoefficient);
+    bool setMinorLossCoefficient(boost::optional<double> minorLossCoefficient);
 
     void resetMinorLossCoefficient();
 
-    void setLength(boost::optional<double> length);
+    bool setLength(boost::optional<double> length);
 
     void resetLength();
 
-    void setRoughness(boost::optional<double> roughness);
+    bool setRoughness(boost::optional<double> roughness);
 
     void resetRoughness();
 
-    void setFixedFrictionFactor(boost::optional<double> fixedFrictionFactor);
+    bool setFixedFrictionFactor(boost::optional<double> fixedFrictionFactor);
 
     void resetFixedFrictionFactor();
 
@@ -126,4 +126,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_CURVEFUNCTIONALPRESSUREDROP_IMPL_HPP
-

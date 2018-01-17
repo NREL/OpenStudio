@@ -100,9 +100,8 @@ namespace detail {
 
     void resetAvailabilitySchedule();
 
-    void setAirOutlet(std::string airOutlet);
-
-    void setAirInlet(std::string airInlet);
+    // bool setAirOutlet(std::string airOutlet);
+    // bool setAirInlet(std::string airInlet);
 
     bool setMaximumAirFlowRate(boost::optional<double> maximumAirFlowRate);
 

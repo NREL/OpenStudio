@@ -93,7 +93,7 @@ namespace detail {
 
     void resetPartLoadFractionCorrelationCurve();
 
-    void setParasiticGasLoad(boost::optional<double> parasiticGasLoad);
+    bool setParasiticGasLoad(boost::optional<double> parasiticGasLoad);
 
     void resetParasiticGasLoad();
 
@@ -130,4 +130,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILHEATINGGASMULTISTAGE_IMPL_HPP
-

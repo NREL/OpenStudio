@@ -66,7 +66,7 @@ public:
   std::string uid() const;
   std::string versionId() const;
   void setChecked(bool checked);
-  
+
 protected:
   void paintEvent(QPaintEvent * event) override;
 

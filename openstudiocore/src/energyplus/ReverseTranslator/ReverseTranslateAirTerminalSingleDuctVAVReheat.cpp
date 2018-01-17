@@ -150,7 +150,7 @@ OptionalModelObject ReverseTranslator::translateAirTerminalSingleDuctVAVReheat( 
         }
       }
     }
-  
+
     // MaximumHotWaterorSteamFlowRate
     value = workspaceObject.getDouble(AirTerminal_SingleDuct_VAV_ReheatFields::MaximumHotWaterorSteamFlowRate);
     s = workspaceObject.getString(AirTerminal_SingleDuct_VAV_ReheatFields::MaximumHotWaterorSteamFlowRate);
@@ -203,7 +203,7 @@ OptionalModelObject ReverseTranslator::translateAirTerminalSingleDuctVAVReheat( 
     {
       airTerminal->autosizeMaximumFlowPerZoneFloorAreaDuringReheat();
     }
-    
+
     // MaximumFlowFractionDuringReheat
     value = workspaceObject.getDouble(AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowFractionDuringReheat);
     s = workspaceObject.getString(AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowFractionDuringReheat);

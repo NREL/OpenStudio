@@ -1165,7 +1165,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 
     return m_cachedBuilding;
   }
-  
+
   boost::optional<FoundationKivaSettings> Model_Impl::foundationKivaSettings() const
   {
     if (m_cachedFoundationKivaSettings){
@@ -1179,7 +1179,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     }
 
     return m_cachedFoundationKivaSettings;
-  }  
+  }
 
   boost::optional<LifeCycleCostParameters> Model_Impl::lifeCycleCostParameters() const
   {
@@ -1271,13 +1271,13 @@ if (_className::iddObjectType() == typeToCreate) { \
     return m_cachedYearDescription->isIsLeapYearDefaulted();
   }
 
-  void Model_Impl::setCalendarYear(int calendarYear)
+  bool Model_Impl::setCalendarYear(int calendarYear)
   {
     if (!m_cachedYearDescription){
       m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
     }
     OS_ASSERT(m_cachedYearDescription);
-    m_cachedYearDescription->setCalendarYear(calendarYear);
+    return m_cachedYearDescription->setCalendarYear(calendarYear);
   }
 
   void Model_Impl::resetCalendarYear()
@@ -1891,11 +1891,11 @@ if (_className::iddObjectType() == typeToCreate) { \
   {
     m_cachedBuilding.reset();
   }
-  
+
   void Model_Impl::clearCachedFoundationKivaSettings(const Handle &)
   {
     m_cachedFoundationKivaSettings.reset();
-  }  
+  }
 
   void Model_Impl::clearCachedLifeCycleCostParameters(const Handle &handle)
   {
@@ -2113,9 +2113,9 @@ bool Model::isIsLeapYearDefaulted() const
   return getImpl<detail::Model_Impl>()->isIsLeapYearDefaulted();
 }
 
-void Model::setCalendarYear(int calendarYear)
+bool Model::setCalendarYear(int calendarYear)
 {
-  getImpl<detail::Model_Impl>()->setCalendarYear(calendarYear);
+  return getImpl<detail::Model_Impl>()->setCalendarYear(calendarYear);
 }
 
 void Model::resetCalendarYear()

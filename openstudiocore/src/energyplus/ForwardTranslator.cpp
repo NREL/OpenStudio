@@ -2760,7 +2760,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     model::SurfacePropertyExposedFoundationPerimeter obj = modelObject.cast<SurfacePropertyExposedFoundationPerimeter>();
     retVal = translateSurfacePropertyExposedFoundationPerimeter(obj);
     break;
-  }  
+  }
   case openstudio::IddObjectType::OS_SurfaceProperty_OtherSideCoefficients:
   {
     model::SurfacePropertyOtherSideCoefficients obj = modelObject.cast<SurfacePropertyOtherSideCoefficients>();

@@ -54,7 +54,7 @@ class MODEL_API Generator : public ParentObject {
   virtual ~Generator() {}
 
   std::string generatorObjectType() const;
-  
+
   boost::optional<double> ratedElectricPowerOutput() const;
 
   boost::optional<Schedule> availabilitySchedule() const;
@@ -70,7 +70,7 @@ class MODEL_API Generator : public ParentObject {
   friend class openstudio::detail::IdfObject_Impl;
   friend class detail::Generator_Impl;
 
-  /// @cond 
+  /// @cond
 
   typedef detail::Generator_Impl ImplType;
 
@@ -80,7 +80,7 @@ class MODEL_API Generator : public ParentObject {
 
   REGISTER_LOGGER("openstudio.model.Generator");
 
-  /// @endcond 
+  /// @endcond
 
 };
 

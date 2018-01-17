@@ -157,7 +157,7 @@ class MODEL_API Site : public ParentObject {
 
   /** Set the active climate zone institution to institution. */
   //bool setActiveClimateZoneInstitution(const std::string& institution);
-  
+
  protected:
   /// @cond
   typedef detail::Site_Impl ImplType;

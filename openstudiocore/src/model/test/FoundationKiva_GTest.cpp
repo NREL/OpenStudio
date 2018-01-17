@@ -56,13 +56,13 @@ TEST_F(ModelFixture, FoundationKiva_FoundationKiva) {
 
       // create a foundation kiva object to use
       FoundationKiva kiva(model);
-      
+
       exit(0);
     },
     ::testing::ExitedWithCode(0),
     ""
   );
-    
+
   // create a model to use
   Model model;
 

@@ -107,16 +107,16 @@ module OpenStudio
   input = UI.inputbox(prompts, defaults, list, "Set Attributes for Selected Spaces")
 
   if input
-    
+
     # pause event processing
     event_processing_stopped = Plugin.stop_event_processing
-    
+
     # store starting render mode
     starting_rendermode = model_interface.materials_interface.rendering_mode
 
     # switch render mode to speed things up
     model_interface.materials_interface.rendering_mode = RenderWaiting
-      
+
     begin
       progress_dialog = ProgressDialog.new("Applying Attributes to Selected Spaces")
 
@@ -225,7 +225,7 @@ module OpenStudio
         num_complete += 1
 
         progress_dialog.setValue((100*num_complete)/num_total)
-        
+
       end
 
     ensure
@@ -236,10 +236,10 @@ module OpenStudio
     # switch render mode back to original
     proc = Proc.new { model_interface.materials_interface.rendering_mode = starting_rendermode }
     Plugin.add_event( proc )
-    
+
     # resume event processing
     Plugin.start_event_processing if event_processing_stopped
-    
+
   else
     #puts "User clicked Cancel - do nothing"
   end

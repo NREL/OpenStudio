@@ -65,11 +65,11 @@ class DiagnosticScript < OpenStudio::Ruleset::ModelUserScript
   # model is an OpenStudio::Model::Model, runner is a OpenStudio::Ruleset::UserScriptRunner
   def run(model, runner, user_arguments)
     super(model, runner, user_arguments)
-    
-    if not runner.validateUserArguments(arguments(model),user_arguments)  
+
+    if not runner.validateUserArguments(arguments(model),user_arguments)
       return false
     end
-    
+
     open_path = runner.getStringArgumentValue("open_path",user_arguments)
     remove_errors = runner.getBoolArgumentValue("remove_errors",user_arguments)
     remove_warnings = runner.getBoolArgumentValue("remove_warnings",user_arguments)
@@ -117,7 +117,7 @@ class DiagnosticScript < OpenStudio::Ruleset::ModelUserScript
     # number of surfaces
     partition_surfaces = model.getInteriorPartitionSurfaces
     puts "Model has " + partition_surfaces.size.to_s + " interior partition surfaces"
-    
+
 #    puts ""
 #    puts "Outputting Draft Validity Report"
 #    puts workspace.validityReport("Draft".to_StrictnessLevel)
@@ -293,7 +293,7 @@ class DiagnosticScript < OpenStudio::Ruleset::ModelUserScript
 
           p1 = all_surfaces[i]
           p2 = all_surfaces[j]
-       
+
           if p1.equalVertices(p2) or p1.reverseEqualVertices(p2)
             switch = 1
             puts "*(error) '#{p1.name.to_s}' has similar geometry to '#{p2.name.to_s}' in the surface group named '#{planar_surface_group.name.to_s}'"
@@ -310,7 +310,7 @@ class DiagnosticScript < OpenStudio::Ruleset::ModelUserScript
 
     end
     if switch == 0 then puts "none" end
-  
+
     # Find duplicate vertices within surface
     puts ""
     puts "Surfaces and SubSurfaces which have duplicate vertices"
@@ -347,7 +347,7 @@ class DiagnosticScript < OpenStudio::Ruleset::ModelUserScript
     all_surfaces.each do |surface|
     # make array of vertices
     vertices = surface.vertices
-    
+
       # loop through looking for duplicates
       n2 = vertices.size
       switch2 = 0
@@ -357,16 +357,16 @@ class DiagnosticScript < OpenStudio::Ruleset::ModelUserScript
 
         p1 = vertices[i]
         p2 = vertices[j]
-       
+
        # set flag if surface needs be removed
-            
+
        if p1.x == p2.x and p1.y == p2.y and p1.z == p2.z
         switch2 = 1
         end
 
       end
       end
-    
+
       if switch2 == 1
         switch == 1
         puts "*(error) '#{surface.name.to_s}' has duplicate vertices"
@@ -376,12 +376,12 @@ class DiagnosticScript < OpenStudio::Ruleset::ModelUserScript
           savediagnostic = true
         end
       end
-    
+
     end
 
     end
     if switch == 0 then puts "none" end
-    
+
     # find and remove orphan sizing:zone objects
     puts ""
     puts "Removing sizing:zone objects that are not connected to any thermal zone"
@@ -408,7 +408,7 @@ class DiagnosticScript < OpenStudio::Ruleset::ModelUserScript
     else
       puts "no orphaned sizing:zone objects were found"
     end
-    
+
     # find and remove orphan ZoneHVAC:EquipmentList objects
     puts ""
     puts "Removing ZoneHVAC:EquipmentList objects that are not connected to any thermal zone"
@@ -434,7 +434,7 @@ class DiagnosticScript < OpenStudio::Ruleset::ModelUserScript
     else
       puts "no orphaned ZoneHVAC:EquipmentList objects were found"
     end
-    
+
     # find and remove orphan PortList objects
     puts ""
     puts "Removing PortList objects that are not connected to any equipment"
@@ -460,7 +460,7 @@ class DiagnosticScript < OpenStudio::Ruleset::ModelUserScript
     else
       puts "no orphaned PortList objects were found"
     end
-  
+
     # find and remove orphan LifeCycleCost objects
     puts ""
     puts "Removing LifeCycleCost objects that are not connected to any model object"
@@ -486,7 +486,7 @@ class DiagnosticScript < OpenStudio::Ruleset::ModelUserScript
     else
       puts "no orphaned LifeCycleCost objects were found"
     end
-    
+
     puts ""
     puts ">>diagnostic test complete"
 

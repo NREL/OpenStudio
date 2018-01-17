@@ -102,16 +102,16 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
   }
 
   // SupplyAirFlowRateDuringCoolingOperation
-  
+
   if( modelObject.isSupplyAirFlowRateDuringCoolingOperationAutosized() )
   {
     idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::CoolingSupplyAirFlowRate,"Autosize");
   }
   else if( (value = modelObject.supplyAirFlowRateDuringCoolingOperation()) )
   {
-    idfObject.setDouble(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::CoolingSupplyAirFlowRate,value.get()); 
+    idfObject.setDouble(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::CoolingSupplyAirFlowRate,value.get());
   }
-  
+
   // SupplyAirFlowRateWhenNoCoolingisNeeded
 
   if( modelObject.isSupplyAirFlowRateWhenNoCoolingisNeededAutosized() )
@@ -124,16 +124,16 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
   }
 
   // SupplyAirFlowRateDuringHeatingOperation
-  
+
   if( modelObject.isSupplyAirFlowRateDuringHeatingOperationAutosized() )
   {
     idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingSupplyAirFlowRate,"Autosize");
   }
   else if( (value = modelObject.supplyAirFlowRateDuringHeatingOperation()) )
   {
-    idfObject.setDouble(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingSupplyAirFlowRate,value.get()); 
+    idfObject.setDouble(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingSupplyAirFlowRate,value.get());
   }
-  
+
   // SupplyAirFlowRateWhenNoHeatingisNeeded
 
   if( modelObject.isSupplyAirFlowRateWhenNoHeatingisNeededAutosized() )
@@ -208,8 +208,8 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
 
   if( boost::optional<model::Node> node = modelObject.inletNode() )
   {
-    inletNodeName = node->name().get();      
-  } 
+    inletNodeName = node->name().get();
+  }
 
   if( boost::optional<model::Node> node = modelObject.outletNode() )
   {
@@ -290,7 +290,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
       idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::CoolingCoilObjectType,_coolingCoil->iddObject().name());
 
       // CoolingCoilObjectName
-      
+
       idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::CoolingCoilObjectName,_coolingCoil->name().get());
 
       std::string coolingCoilInletNodeName;
@@ -314,7 +314,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
       idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingCoilObjectType,_heatingCoil->iddObject().name());
 
       // HeatingCoilObjectName
-      
+
       idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingCoilObjectName,_heatingCoil->name().get());
 
       if( coolingCoil ) {

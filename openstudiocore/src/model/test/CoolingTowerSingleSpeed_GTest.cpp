@@ -44,13 +44,13 @@ TEST_F(ModelFixture,CoolingTowerSingleSpeed_CoolingTowerSingleSpeed)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     //create a model to use in testing this code.
     Model m;
     CoolingTowerSingleSpeed coolingTowerSingleSpeed(m);
 
-    exit(0); 
+    exit(0);
   } ,
   ::testing::ExitedWithCode(0), "" );
 }

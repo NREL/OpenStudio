@@ -56,13 +56,13 @@ class MODEL_API Connection : public ModelObject {
 
   boost::optional<unsigned> targetObjectPort();
 
-  void setSourceObject(ModelObject object);
+  bool setSourceObject(ModelObject object);
 
-  void setSourceObjectPort(unsigned port);
+  bool setSourceObjectPort(unsigned port);
 
-  void setTargetObject(ModelObject object);
+  bool setTargetObject(ModelObject object);
 
-  void setTargetObjectPort(unsigned port);
+  bool setTargetObjectPort(unsigned port);
 
   static IddObjectType iddObjectType();
 

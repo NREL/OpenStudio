@@ -71,9 +71,9 @@ namespace detail {
   typedef boost::multi_index_container <
     DataDictionaryItem,
     boost::multi_index::indexed_by <
-    boost::multi_index::ordered_unique < boost::multi_index::tag<id>, 
+    boost::multi_index::ordered_unique < boost::multi_index::tag<id>,
       boost::multi_index::composite_key <
-        DataDictionaryItem, 
+        DataDictionaryItem,
         boost::multi_index::member < DataDictionaryItem, int, &DataDictionaryItem::recordIndex>,
         boost::multi_index::member < DataDictionaryItem, int, &DataDictionaryItem::envPeriodIndex>
       >
@@ -82,16 +82,16 @@ namespace detail {
     boost::multi_index::ordered_non_unique < boost::multi_index::tag<keyValue>, BOOST_MULTI_INDEX_MEMBER(DataDictionaryItem, std::string, keyValue)>,
     boost::multi_index::ordered_non_unique < boost::multi_index::tag<reportingFrequency>, BOOST_MULTI_INDEX_MEMBER(DataDictionaryItem, std::string, reportingFrequency)>,
     boost::multi_index::ordered_non_unique < boost::multi_index::tag<envPeriod>, BOOST_MULTI_INDEX_MEMBER(DataDictionaryItem, std::string, envPeriod)>,
-    boost::multi_index::ordered_non_unique < boost::multi_index::tag<envPeriodReportingFrequencyNameKeyValue>, 
+    boost::multi_index::ordered_non_unique < boost::multi_index::tag<envPeriodReportingFrequencyNameKeyValue>,
       boost::multi_index::composite_key <
-      DataDictionaryItem, 
+      DataDictionaryItem,
         boost::multi_index::member<DataDictionaryItem, std::string, &DataDictionaryItem::envPeriod>,
         boost::multi_index::member<DataDictionaryItem, std::string, &DataDictionaryItem::reportingFrequency>,
         boost::multi_index::member<DataDictionaryItem, std::string, &DataDictionaryItem::name>,
         boost::multi_index::member<DataDictionaryItem, std::string, &DataDictionaryItem::keyValue>
-      > 
-    > 
-    > 
+      >
+    >
+    >
   > DataDictionaryTable;
 
 } // detail

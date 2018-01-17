@@ -59,7 +59,7 @@ class MODEL_API FanZoneExhaust : public ZoneHVACComponent {
   static IddObjectType iddObjectType();
 
   static std::vector<std::string> systemAvailabilityManagerCouplingModeValues();
-  
+
   /** @name Getters */
   //@{
 
@@ -91,13 +91,13 @@ class MODEL_API FanZoneExhaust : public ZoneHVACComponent {
 
   bool setFanEfficiency(double fanEfficiency);
 
-  void setPressureRise(double pressureRise);
+  bool setPressureRise(double pressureRise);
 
   bool setMaximumFlowRate(double maximumFlowRate);
 
   void resetMaximumFlowRate();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   bool setFlowFractionSchedule(Schedule& schedule);
 
@@ -143,4 +143,3 @@ typedef std::vector<FanZoneExhaust> FanZoneExhaustVector;
 } // openstudio
 
 #endif // MODEL_FANZONEEXHAUST_HPP
-

@@ -206,7 +206,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Desi
 
   ElectricEquipmentDefinition definition2(model);
   definition2.setDesignLevel(100);
-  
+
   ElectricEquipment electricEquipment2(definition2);
   electricEquipment2.setSpaceType(spaceType2);
   electricEquipment2.setMultiplier(2);

@@ -42,7 +42,7 @@ using namespace std;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCurveQuadraticLinear( 
+boost::optional<IdfObject> ForwardTranslator::translateCurveQuadraticLinear(
     CurveQuadraticLinear & modelObject)
 {
   IdfObject idfObject(IddObjectType::Curve_QuadraticLinear);

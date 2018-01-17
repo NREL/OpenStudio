@@ -156,17 +156,19 @@ namespace detail {
     return result;
   }
 
-  void SolarCollectorPerformanceFlatPlate_Impl::setCoefficient1ofEfficiencyEquation(double coefficient1ofEfficiencyEquation) {
+  bool SolarCollectorPerformanceFlatPlate_Impl::setCoefficient1ofEfficiencyEquation(double coefficient1ofEfficiencyEquation) {
     bool result = setDouble(OS_SolarCollectorPerformance_FlatPlateFields::Coefficient1ofEfficiencyEquation, coefficient1ofEfficiencyEquation);
     OS_ASSERT(result);
+    return result;
   }
 
-  void SolarCollectorPerformanceFlatPlate_Impl::setCoefficient2ofEfficiencyEquation(double coefficient2ofEfficiencyEquation) {
+  bool SolarCollectorPerformanceFlatPlate_Impl::setCoefficient2ofEfficiencyEquation(double coefficient2ofEfficiencyEquation) {
     bool result = setDouble(OS_SolarCollectorPerformance_FlatPlateFields::Coefficient2ofEfficiencyEquation, coefficient2ofEfficiencyEquation);
     OS_ASSERT(result);
+    return result;
   }
 
-  void SolarCollectorPerformanceFlatPlate_Impl::setCoefficient3ofEfficiencyEquation(boost::optional<double> coefficient3ofEfficiencyEquation) {
+  bool SolarCollectorPerformanceFlatPlate_Impl::setCoefficient3ofEfficiencyEquation(boost::optional<double> coefficient3ofEfficiencyEquation) {
     bool result(false);
     if (coefficient3ofEfficiencyEquation) {
       result = setDouble(OS_SolarCollectorPerformance_FlatPlateFields::Coefficient3ofEfficiencyEquation, coefficient3ofEfficiencyEquation.get());
@@ -176,6 +178,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void SolarCollectorPerformanceFlatPlate_Impl::resetCoefficient3ofEfficiencyEquation() {
@@ -183,7 +186,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SolarCollectorPerformanceFlatPlate_Impl::setCoefficient2ofIncidentAngleModifier(boost::optional<double> coefficient2ofIncidentAngleModifier) {
+  bool SolarCollectorPerformanceFlatPlate_Impl::setCoefficient2ofIncidentAngleModifier(boost::optional<double> coefficient2ofIncidentAngleModifier) {
     bool result(false);
     if (coefficient2ofIncidentAngleModifier) {
       result = setDouble(OS_SolarCollectorPerformance_FlatPlateFields::Coefficient2ofIncidentAngleModifier, coefficient2ofIncidentAngleModifier.get());
@@ -193,6 +196,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void SolarCollectorPerformanceFlatPlate_Impl::resetCoefficient2ofIncidentAngleModifier() {
@@ -200,7 +204,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SolarCollectorPerformanceFlatPlate_Impl::setCoefficient3ofIncidentAngleModifier(boost::optional<double> coefficient3ofIncidentAngleModifier) {
+  bool SolarCollectorPerformanceFlatPlate_Impl::setCoefficient3ofIncidentAngleModifier(boost::optional<double> coefficient3ofIncidentAngleModifier) {
     bool result(false);
     if (coefficient3ofIncidentAngleModifier) {
       result = setDouble(OS_SolarCollectorPerformance_FlatPlateFields::Coefficient3ofIncidentAngleModifier, coefficient3ofIncidentAngleModifier.get());
@@ -210,6 +214,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void SolarCollectorPerformanceFlatPlate_Impl::resetCoefficient3ofIncidentAngleModifier() {
@@ -315,32 +320,32 @@ bool SolarCollectorPerformanceFlatPlate::setTestCorrelationType(std::string test
   return getImpl<detail::SolarCollectorPerformanceFlatPlate_Impl>()->setTestCorrelationType(testCorrelationType);
 }
 
-void SolarCollectorPerformanceFlatPlate::setCoefficient1ofEfficiencyEquation(double coefficient1ofEfficiencyEquation) {
-  getImpl<detail::SolarCollectorPerformanceFlatPlate_Impl>()->setCoefficient1ofEfficiencyEquation(coefficient1ofEfficiencyEquation);
+bool SolarCollectorPerformanceFlatPlate::setCoefficient1ofEfficiencyEquation(double coefficient1ofEfficiencyEquation) {
+  return getImpl<detail::SolarCollectorPerformanceFlatPlate_Impl>()->setCoefficient1ofEfficiencyEquation(coefficient1ofEfficiencyEquation);
 }
 
-void SolarCollectorPerformanceFlatPlate::setCoefficient2ofEfficiencyEquation(double coefficient2ofEfficiencyEquation) {
-  getImpl<detail::SolarCollectorPerformanceFlatPlate_Impl>()->setCoefficient2ofEfficiencyEquation(coefficient2ofEfficiencyEquation);
+bool SolarCollectorPerformanceFlatPlate::setCoefficient2ofEfficiencyEquation(double coefficient2ofEfficiencyEquation) {
+  return getImpl<detail::SolarCollectorPerformanceFlatPlate_Impl>()->setCoefficient2ofEfficiencyEquation(coefficient2ofEfficiencyEquation);
 }
 
-void SolarCollectorPerformanceFlatPlate::setCoefficient3ofEfficiencyEquation(double coefficient3ofEfficiencyEquation) {
-  getImpl<detail::SolarCollectorPerformanceFlatPlate_Impl>()->setCoefficient3ofEfficiencyEquation(coefficient3ofEfficiencyEquation);
+bool SolarCollectorPerformanceFlatPlate::setCoefficient3ofEfficiencyEquation(double coefficient3ofEfficiencyEquation) {
+  return getImpl<detail::SolarCollectorPerformanceFlatPlate_Impl>()->setCoefficient3ofEfficiencyEquation(coefficient3ofEfficiencyEquation);
 }
 
 void SolarCollectorPerformanceFlatPlate::resetCoefficient3ofEfficiencyEquation() {
   getImpl<detail::SolarCollectorPerformanceFlatPlate_Impl>()->resetCoefficient3ofEfficiencyEquation();
 }
 
-void SolarCollectorPerformanceFlatPlate::setCoefficient2ofIncidentAngleModifier(double coefficient2ofIncidentAngleModifier) {
-  getImpl<detail::SolarCollectorPerformanceFlatPlate_Impl>()->setCoefficient2ofIncidentAngleModifier(coefficient2ofIncidentAngleModifier);
+bool SolarCollectorPerformanceFlatPlate::setCoefficient2ofIncidentAngleModifier(double coefficient2ofIncidentAngleModifier) {
+  return getImpl<detail::SolarCollectorPerformanceFlatPlate_Impl>()->setCoefficient2ofIncidentAngleModifier(coefficient2ofIncidentAngleModifier);
 }
 
 void SolarCollectorPerformanceFlatPlate::resetCoefficient2ofIncidentAngleModifier() {
   getImpl<detail::SolarCollectorPerformanceFlatPlate_Impl>()->resetCoefficient2ofIncidentAngleModifier();
 }
 
-void SolarCollectorPerformanceFlatPlate::setCoefficient3ofIncidentAngleModifier(double coefficient3ofIncidentAngleModifier) {
-  getImpl<detail::SolarCollectorPerformanceFlatPlate_Impl>()->setCoefficient3ofIncidentAngleModifier(coefficient3ofIncidentAngleModifier);
+bool SolarCollectorPerformanceFlatPlate::setCoefficient3ofIncidentAngleModifier(double coefficient3ofIncidentAngleModifier) {
+  return getImpl<detail::SolarCollectorPerformanceFlatPlate_Impl>()->setCoefficient3ofIncidentAngleModifier(coefficient3ofIncidentAngleModifier);
 }
 
 void SolarCollectorPerformanceFlatPlate::resetCoefficient3ofIncidentAngleModifier() {
@@ -355,4 +360,3 @@ SolarCollectorPerformanceFlatPlate::SolarCollectorPerformanceFlatPlate(std::shar
 
 } // model
 } // openstudio
-

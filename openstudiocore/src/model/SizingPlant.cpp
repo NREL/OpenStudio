@@ -126,9 +126,10 @@ namespace detail {
     return result;
   }
 
-  void SizingPlant_Impl::setDesignLoopExitTemperature(double designLoopExitTemperature) {
+  bool SizingPlant_Impl::setDesignLoopExitTemperature(double designLoopExitTemperature) {
     bool result = setDouble(OS_Sizing_PlantFields::DesignLoopExitTemperature, designLoopExitTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   bool SizingPlant_Impl::setDesignLoopExitTemperature(const Quantity& designLoopExitTemperature) {
@@ -284,8 +285,8 @@ bool SizingPlant::setLoopType(std::string loopType) {
   return getImpl<detail::SizingPlant_Impl>()->setLoopType(loopType);
 }
 
-void SizingPlant::setDesignLoopExitTemperature(double designLoopExitTemperature) {
-  getImpl<detail::SizingPlant_Impl>()->setDesignLoopExitTemperature(designLoopExitTemperature);
+bool SizingPlant::setDesignLoopExitTemperature(double designLoopExitTemperature) {
+  return getImpl<detail::SizingPlant_Impl>()->setDesignLoopExitTemperature(designLoopExitTemperature);
 }
 
 bool SizingPlant::setDesignLoopExitTemperature(const Quantity& designLoopExitTemperature) {
@@ -342,4 +343,3 @@ SizingPlant::SizingPlant(std::shared_ptr<detail::SizingPlant_Impl> impl)
 
 } // model
 } // openstudio
-

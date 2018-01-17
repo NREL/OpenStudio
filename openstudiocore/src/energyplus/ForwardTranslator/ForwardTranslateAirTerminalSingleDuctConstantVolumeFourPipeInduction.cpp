@@ -149,7 +149,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
       idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::CoolingCoilName,_coolingCoil->name().get());
     }
   }
-  
+
   // Maximum Cold Water Flow Rate
   if( (d = modelObject.maximumColdWaterFlowRate()) )
   {

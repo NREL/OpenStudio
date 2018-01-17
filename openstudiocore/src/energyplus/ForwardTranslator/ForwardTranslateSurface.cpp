@@ -68,9 +68,9 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateSurface( model::Surface & modelObject )
 {
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::BuildingSurface_Detailed, 
+  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::BuildingSurface_Detailed,
                                                        modelObject);
-  
+
   std::string surfaceType = modelObject.surfaceType();
   if (istringEqual("RoofCeiling", surfaceType)){
     if (modelObject.isPartOfEnvelope()){
@@ -101,7 +101,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSurface( model::Surface &
   std::string outsideBoundaryCondition = modelObject.outsideBoundaryCondition();
   if (istringEqual("Surface", outsideBoundaryCondition)){
     if (!adjacentSurface){
-      LOG(Warn, "Surface '" << modelObject.name().get() << "' has blank Outside Boundary Condition Object.  " 
+      LOG(Warn, "Surface '" << modelObject.name().get() << "' has blank Outside Boundary Condition Object.  "
                 "Changing Outside Boundary Condition from 'Surface' to 'Adiabatic'");
 
       outsideBoundaryCondition = "Adiabatic";
@@ -142,8 +142,8 @@ boost::optional<IdfObject> ForwardTranslator::translateSurface( model::Surface &
   if (adjacentFoundation){
     // do not translate and map here, wait for adjacent foundation to be translated on its own
     idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, adjacentFoundation->name().get());
-  }  
-  
+  }
+
   if (surfacePropertyOtherSideCoefficients){
     boost::optional<IdfObject> osc = translateAndMapModelObject(*surfacePropertyOtherSideCoefficients);
     if (osc && osc->name()){

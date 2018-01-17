@@ -46,7 +46,7 @@ using std::string;
 TEST_F(ModelFixture, WindowPropertyFrameAndDivider)
 {
   Model model;
-  
+
   WindowPropertyFrameAndDivider frameAndDivider(model);
 
   std::vector<Point3d> vertices;

@@ -69,7 +69,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFoundationKiva( Foundatio
   if( (value = modelObject.interiorHorizontalInsulationWidth()) ) {
     idfObject.setDouble(Foundation_KivaFields::InteriorHorizontalInsulationWidth, value.get());
   }
-  
+
   boost::optional<Material> interiorVerticalInsulationMaterial = modelObject.interiorVerticalInsulationMaterial();
   if( interiorVerticalInsulationMaterial ) {
     idfObject.setString(Foundation_KivaFields::InteriorVerticalInsulationMaterialName, interiorVerticalInsulationMaterial->name().get());

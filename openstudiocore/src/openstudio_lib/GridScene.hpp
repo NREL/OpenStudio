@@ -45,13 +45,13 @@ class GridScene : public QGraphicsScene, public Nano::Observer
   Q_OBJECT
 
   public:
-  
+
   GridScene( QObject *parent = nullptr );
 
   virtual ~GridScene() {}
 
   signals:
-  
+
   void modelObjectSelected( model::OptionalModelObject &, bool readOnly );
 
   void removeModelObjectClicked( model::ModelObject & );

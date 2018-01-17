@@ -79,7 +79,7 @@ ModelObjectInspectorView* ModelSubTabView::modelObjectInspectorView()
 }
 
 void ModelSubTabView::onDropZoneItemClicked(OSItem* item)
-{ 
+{
   std::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
   if (currentDocument){
     if (!item) {

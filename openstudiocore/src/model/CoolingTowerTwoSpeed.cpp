@@ -750,9 +750,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoolingTowerTwoSpeed_Impl::setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio) {
+  bool CoolingTowerTwoSpeed_Impl::setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio) {
     bool result = setDouble(OS_CoolingTower_TwoSpeedFields::HeatRejectionCapacityandNominalCapacitySizingRatio, heatRejectionCapacityandNominalCapacitySizingRatio);
     OS_ASSERT(result);
+    return result;
   }
 
   void CoolingTowerTwoSpeed_Impl::resetHeatRejectionCapacityandNominalCapacitySizingRatio() {
@@ -891,9 +892,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoolingTowerTwoSpeed_Impl::setEvaporationLossFactor(double evaporationLossFactor) {
+  bool CoolingTowerTwoSpeed_Impl::setEvaporationLossFactor(double evaporationLossFactor) {
     bool result = setDouble(OS_CoolingTower_TwoSpeedFields::EvaporationLossFactor, evaporationLossFactor);
     OS_ASSERT(result);
+    return result;
   }
 
   void CoolingTowerTwoSpeed_Impl::resetEvaporationLossFactor() {
@@ -901,9 +903,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoolingTowerTwoSpeed_Impl::setDriftLossPercent(double driftLossPercent) {
+  bool CoolingTowerTwoSpeed_Impl::setDriftLossPercent(double driftLossPercent) {
     bool result = setDouble(OS_CoolingTower_TwoSpeedFields::DriftLossPercent, driftLossPercent);
     OS_ASSERT(result);
+    return result;
   }
 
   void CoolingTowerTwoSpeed_Impl::resetDriftLossPercent() {
@@ -1705,8 +1708,8 @@ void CoolingTowerTwoSpeed::resetPerformanceInputMethod() {
   getImpl<detail::CoolingTowerTwoSpeed_Impl>()->resetPerformanceInputMethod();
 }
 
-void CoolingTowerTwoSpeed::setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio) {
-  getImpl<detail::CoolingTowerTwoSpeed_Impl>()->setHeatRejectionCapacityandNominalCapacitySizingRatio(heatRejectionCapacityandNominalCapacitySizingRatio);
+bool CoolingTowerTwoSpeed::setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio) {
+  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->setHeatRejectionCapacityandNominalCapacitySizingRatio(heatRejectionCapacityandNominalCapacitySizingRatio);
 }
 
 void CoolingTowerTwoSpeed::resetHeatRejectionCapacityandNominalCapacitySizingRatio() {
@@ -1793,16 +1796,16 @@ void CoolingTowerTwoSpeed::resetEvaporationLossMode() {
   getImpl<detail::CoolingTowerTwoSpeed_Impl>()->resetEvaporationLossMode();
 }
 
-void CoolingTowerTwoSpeed::setEvaporationLossFactor(double evaporationLossFactor) {
-  getImpl<detail::CoolingTowerTwoSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
+bool CoolingTowerTwoSpeed::setEvaporationLossFactor(double evaporationLossFactor) {
+  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
 }
 
 void CoolingTowerTwoSpeed::resetEvaporationLossFactor() {
   getImpl<detail::CoolingTowerTwoSpeed_Impl>()->resetEvaporationLossFactor();
 }
 
-void CoolingTowerTwoSpeed::setDriftLossPercent(double driftLossPercent) {
-  getImpl<detail::CoolingTowerTwoSpeed_Impl>()->setDriftLossPercent(driftLossPercent);
+bool CoolingTowerTwoSpeed::setDriftLossPercent(double driftLossPercent) {
+  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->setDriftLossPercent(driftLossPercent);
 }
 
 void CoolingTowerTwoSpeed::resetDriftLossPercent() {
@@ -1997,4 +2000,3 @@ CoolingTowerTwoSpeed::CoolingTowerTwoSpeed(std::shared_ptr<detail::CoolingTowerT
 
 } // model
 } // openstudio
-

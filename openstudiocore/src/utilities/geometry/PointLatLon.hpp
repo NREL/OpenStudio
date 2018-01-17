@@ -47,11 +47,11 @@ namespace openstudio{
   class Point3d;
 
   /* PointLatLon represents a point on the Earth's (reference ellipsoid) surface, an optional height parameter is available
-  ** for points above or below the geoid surface.  Currently only the WGS84 ellipsoid is supported, 
-  ** other systems may be added in the future. When one PointLatLon is taken as an origin, it can be used to 
+  ** for points above or below the geoid surface.  Currently only the WGS84 ellipsoid is supported,
+  ** other systems may be added in the future. When one PointLatLon is taken as an origin, it can be used to
   ** translate other PointLatLon's into either a local Cartesian coordinate system (centered on the origin, with z up and y oriented North)
-  ** or the UTM (Universal Transverse Mercator) zone which contains the origin. The origin PointLatLon can be used to 
-  ** translate Point3d's in either local Cartesian or UTM coordinate systems back to lat/lon.  
+  ** or the UTM (Universal Transverse Mercator) zone which contains the origin. The origin PointLatLon can be used to
+  ** translate Point3d's in either local Cartesian or UTM coordinate systems back to lat/lon.
   */
   class UTILITIES_API PointLatLon{
   public:

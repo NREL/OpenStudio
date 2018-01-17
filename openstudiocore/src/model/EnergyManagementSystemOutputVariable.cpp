@@ -310,7 +310,7 @@ namespace detail {
     return isEmpty(OS_EnergyManagementSystem_OutputVariableFields::ExportToBCVTB);
   }
 
-  void EnergyManagementSystemOutputVariable_Impl::setExportToBCVTB(bool exportToBCVTB) {
+  bool EnergyManagementSystemOutputVariable_Impl::setExportToBCVTB(bool exportToBCVTB) {
     bool result = false;
     if (exportToBCVTB) {
       result = setString(OS_EnergyManagementSystem_OutputVariableFields::ExportToBCVTB, "True");
@@ -318,6 +318,7 @@ namespace detail {
       result = setString(OS_EnergyManagementSystem_OutputVariableFields::ExportToBCVTB, "False");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void EnergyManagementSystemOutputVariable_Impl::resetExportToBCVTB() {
@@ -581,8 +582,8 @@ bool EnergyManagementSystemOutputVariable::isExportToBCVTBDefaulted() const {
   return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->isExportToBCVTBDefaulted();
 }
 
-void EnergyManagementSystemOutputVariable::setExportToBCVTB(bool exportToBCVTB) {
-  getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setExportToBCVTB(exportToBCVTB);
+bool EnergyManagementSystemOutputVariable::setExportToBCVTB(bool exportToBCVTB) {
+  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setExportToBCVTB(exportToBCVTB);
 }
 
 void EnergyManagementSystemOutputVariable::resetExportToBCVTB() {
@@ -597,4 +598,3 @@ EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(std::
 
 } // model
 } // openstudio
-

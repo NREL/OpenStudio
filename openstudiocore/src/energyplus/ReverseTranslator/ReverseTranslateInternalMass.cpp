@@ -58,7 +58,7 @@ OptionalModelObject ReverseTranslator::translateInternalMass( const WorkspaceObj
 
   // create the definition
   openstudio::model::InternalMassDefinition definition(m_model);
-  
+
   OptionalString s = workspaceObject.name();
   if(s){
     definition.setName(*s + " Definition");

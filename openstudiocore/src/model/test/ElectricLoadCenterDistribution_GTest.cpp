@@ -189,7 +189,7 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_Inverters2) {
 }
 
 TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
-  
+
   Model model;
 
   ElectricLoadCenterDistribution elcd(model);
@@ -295,7 +295,7 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
   EXPECT_EQ(inverter.handle(), elcd.inverter()->handle());
   elcd.resetInverter();
   ASSERT_FALSE(elcd.inverter());
-  
+
   // Test Storage
   ElectricLoadCenterStorageSimple battery(model);
   ASSERT_FALSE(elcd.electricalStorage());
