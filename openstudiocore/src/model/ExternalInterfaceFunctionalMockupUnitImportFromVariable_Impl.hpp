@@ -85,15 +85,15 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setOutputVariableIndexKeyName(const std::string& outputVariableIndexKeyName);
+    bool setOutputVariableIndexKeyName(const std::string& outputVariableIndexKeyName);
 
     bool setOutputVariableName(const std::string& outputVariableName);
 
     bool setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile);
 
-    void setFMUInstanceName(const std::string& fMUInstanceName);
+    bool setFMUInstanceName(const std::string& fMUInstanceName);
 
-    void setFMUVariableName(const std::string& fMUVariableName);
+    bool setFMUVariableName(const std::string& fMUVariableName);
 
     //@}
     /** @name Other */
@@ -112,4 +112,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTFROMVARIABLE_IMPL_HPP
-

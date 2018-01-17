@@ -50,7 +50,7 @@ namespace idfRegex {
   // matches[2], after new line
   UTILITIES_API const boost::regex & commentOnlyLine();
 
-  // Match content and comment 
+  // Match content and comment
   // matches[1], the content
   // matches[2], the comment
   UTILITIES_API const boost::regex & contentAndCommentLine();

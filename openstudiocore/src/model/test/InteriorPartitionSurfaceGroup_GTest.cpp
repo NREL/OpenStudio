@@ -112,9 +112,9 @@ TEST_F(ModelFixture, InteriorPartitionSurface_DefaultConstruction)
   points.push_back(Point3d(0, 0, 0));
   points.push_back(Point3d(1, 0, 0));
   InteriorPartitionSurface surface(points, model);
-  
+
   EXPECT_FALSE(surface.construction());
-  
+
   surface.setInteriorPartitionSurfaceGroup(group);
 
   ASSERT_TRUE(surface.construction());

@@ -42,11 +42,11 @@ namespace detail{
 
 /** UtilityCost_Computation derives from ParentObject and is an interface to the OpenStudio IDD object named "OS:UtilityCost:Computation".
  *
- *  UtilityCost_Computation lists a series of computations that are used to perform the bill calculation. 
+ *  UtilityCost_Computation lists a series of computations that are used to perform the bill calculation.
  *  This object is only used for complex tariffs that cannot be modeled any other way.
  */
 class MODEL_API UtilityCost_Computation : public ParentObject{
- 
+
  public:
 
   /** @name Constructors and Destructors */
@@ -61,8 +61,6 @@ class MODEL_API UtilityCost_Computation : public ParentObject{
   /** @name Getters */
   //@{
 
-  boost::optional<std::string> name() const;
-
   boost::optional<std::string> tariffName() const;
 
   /** Get compute step at index. Index starts at 0. */
@@ -72,9 +70,7 @@ class MODEL_API UtilityCost_Computation : public ParentObject{
   /** @name Setters */
   //@{
 
-  void setName(const std::string& name);
-
-  void setTariffName(const std::string& tariffName);
+  bool setTariffName(const std::string& tariffName);
 
   /** Set compute step at index. Index starts at 0. */
   bool setComputeStep(unsigned index, const std::string& computeStep);

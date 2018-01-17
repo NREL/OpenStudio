@@ -183,11 +183,11 @@ namespace detail {
 
     void resetSizingFactor();
 
-    void setOperationMinimumTemperatureLimit(boost::optional<double> operationMinimumTemperatureLimit);
+    bool setOperationMinimumTemperatureLimit(boost::optional<double> operationMinimumTemperatureLimit);
 
     void resetOperationMinimumTemperatureLimit();
 
-    void setOperationMaximumTemperatureLimit(boost::optional<double> operationMaximumTemperatureLimit);
+    bool setOperationMaximumTemperatureLimit(boost::optional<double> operationMaximumTemperatureLimit);
 
     void resetOperationMaximumTemperatureLimit();
 
@@ -215,4 +215,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_HEATEXCHANGERFLUIDTOFLUID_IMPL_HPP
-

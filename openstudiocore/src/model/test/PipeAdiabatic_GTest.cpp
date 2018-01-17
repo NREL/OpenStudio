@@ -42,12 +42,12 @@ TEST_F(ModelFixture,PipeAdiabatic_PipeAdiabatic)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
-     PipeAdiabatic pipe(m); 
+  ASSERT_EXIT (
+  {
+     Model m;
+     PipeAdiabatic pipe(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }

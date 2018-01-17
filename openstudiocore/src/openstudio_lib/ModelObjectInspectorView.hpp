@@ -123,7 +123,7 @@ class DefaultInspectorView : public ModelObjectInspectorView
     virtual void onUpdate() override;
 
   private:
-    
+
     QLabel * m_mainLabel;
 };
 

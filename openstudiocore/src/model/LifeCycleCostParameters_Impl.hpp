@@ -96,7 +96,7 @@ namespace detail {
     bool isConstantDollarAnalysis() const;
 
     boost::optional<double> realDiscountRate() const;
-    
+
     boost::optional<double> nominalDiscountRate() const;
 
     boost::optional<double> inflation() const;
@@ -190,7 +190,7 @@ namespace detail {
 
     /// This cannot be set when analysis type is FEMP or when inflation approach is "ConstantDollar"
     bool setInflation(double inflation);
-    
+
     bool setBaseDateMonth(const MonthOfYear& baseDateMonth);
 
     void resetBaseDateMonth();

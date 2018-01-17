@@ -36,106 +36,106 @@ module OpenStudio
       @drawing_interface = drawing_interface
       @enabled = false
     end
-    
+
     def disable
       was_enabled = @enabled
       @enabled = false
       return was_enabled
     end
-    
+
     def enable
       @enabled = true
     end
-    
+
     def destroy
       @drawing_interface = nil
       @enabled = false
-    end  
-    
+    end
+
     def onElementAdded(entities, entity)
-    
+
       Plugin.log(OpenStudio::Trace, "#{current_method_name}, @enabled = #{@enabled}")
-      
+
       return if not @enabled
 
       proc = Proc.new {
 
-        Plugin.log(OpenStudio::Info, "SurfaceGroupEntitiesObserver.onElementAdded: adding #{entity} to #{@drawing_interface.entity}")  
+        Plugin.log(OpenStudio::Info, "SurfaceGroupEntitiesObserver.onElementAdded: adding #{entity} to #{@drawing_interface.entity}")
 
         if (!entity.deleted? and entity.class == Sketchup::Face)  # In SU7, deleted entities get passed in sometimes.
-        
-          Plugin.log(OpenStudio::Info, "entityID = #{entity.entityID}")  
+
+          Plugin.log(OpenStudio::Info, "entityID = #{entity.entityID}")
 
           # Prevent copy-paste between a space group and a detached shading group, etc
           # Clean any entities that appear with the wrong class for this group.
           if (entity.drawing_interface)
             if (@drawing_interface.class == Space)
               if (entity.drawing_interface.class != Surface and entity.drawing_interface.class != SubSurface)
-                Plugin.log(OpenStudio::Info, "Cleaning entity " + entity.to_s + " pasted in Space")  
+                Plugin.log(OpenStudio::Info, "Cleaning entity " + entity.to_s + " pasted in Space")
                 DrawingUtils.clean_entity(entity)
               end
             elsif (@drawing_interface.class == ShadingSurfaceGroup)
               if (entity.drawing_interface.class != ShadingSurface)
-                Plugin.log(OpenStudio::Info, "Cleaning entity " + entity.to_s + " pasted in ShadingSurfaceGroup")  
+                Plugin.log(OpenStudio::Info, "Cleaning entity " + entity.to_s + " pasted in ShadingSurfaceGroup")
                 DrawingUtils.clean_entity(entity)
               end
             elsif (@drawing_interface.class == InteriorPartitionSurfaceGroup)
               if (entity.drawing_interface.class != InteriorPartitionSurface)
-                Plugin.log(OpenStudio::Info, "Cleaning entity " + entity.to_s + " pasted in InteriorPartitionSurfaceGroup")  
+                Plugin.log(OpenStudio::Info, "Cleaning entity " + entity.to_s + " pasted in InteriorPartitionSurfaceGroup")
                 DrawingUtils.clean_entity(entity)
-              end  
+              end
             end
           end
 
           if (entity.drawing_interface.nil?)
             #  This is a brand new surface or a copy that had to be cleaned.
             if (@drawing_interface.class == Space)
-            
+
               base_face = DrawingUtils.detect_base_face(entity)
-            
+
               if (base_face.nil?)
-                Plugin.log(OpenStudio::Info, "New Surface in Space")  
+                Plugin.log(OpenStudio::Info, "New Surface in Space")
                 surface = Surface.new_from_entity(entity)
-                
+
                 if not surface.model_object
                   # model object was not created
                   surface.on_delete_model_object
                 end
               else
-              
+
                 # add a second proc to ensure that surfaces will be drawn before sub surfaces
                 proc2 = Proc.new {
                   surface = base_face.drawing_interface
                   if not surface
-                    Plugin.log(OpenStudio::Error, "New SubSurface in Space, no Surface found!")  
+                    Plugin.log(OpenStudio::Error, "New SubSurface in Space, no Surface found!")
                   else
-                    Plugin.log(OpenStudio::Info, "New SubSurface in Space") 
+                    Plugin.log(OpenStudio::Info, "New SubSurface in Space")
                     subSurface = SubSurface.new_from_entity(entity)
-                    
+
                     if not subSurface.model_object
                       # model object was not created
                       subSurface.on_delete_model_object
                     end
-                  
+
                     # Must trigger the base surface to recalculate vertices to account for the new sub surface.
                     surface.on_change_entity
                   end
                 }
                 Plugin.add_event( proc2 )
-                
+
               end
 
             elsif (@drawing_interface.class == ShadingSurfaceGroup)
-              Plugin.log(OpenStudio::Info, "New ShadingSurface in ShadingSurfaceGroup")  
+              Plugin.log(OpenStudio::Info, "New ShadingSurface in ShadingSurfaceGroup")
               ShadingSurface.new_from_entity(entity)
             elsif (@drawing_interface.class == InteriorPartitionSurfaceGroup)
-              Plugin.log(OpenStudio::Info, "New InteriorPartitionSurface in InteriorPartitionSurfaceGroup")  
-              InteriorPartitionSurface.new_from_entity(entity)              
+              Plugin.log(OpenStudio::Info, "New InteriorPartitionSurface in InteriorPartitionSurfaceGroup")
+              InteriorPartitionSurface.new_from_entity(entity)
             else
-              Plugin.log(OpenStudio::Info, "Face added to unknown SurfaceGroup subclass")  
+              Plugin.log(OpenStudio::Info, "Face added to unknown SurfaceGroup subclass")
             end
 
-            # DLM: The following lines of code were added r6581 to fix Fixing bug 231 Creating surfaces while in render mode other than class or boundary stops model objects from being made 
+            # DLM: The following lines of code were added r6581 to fix Fixing bug 231 Creating surfaces while in render mode other than class or boundary stops model objects from being made
             # However, I think they are unneccesary and the cause of Bug 874 - Surface classification is much slower when you paste it into a space vs. building it within a space
             # # reparent any subsurfaces to the new surface
             # @drawing_interface.update_child_model_objects
@@ -144,11 +144,11 @@ module OpenStudio
             # @drawing_interface.update_child_entities
 
           elsif (entity.drawing_interface.deleted?)
-          
+
             case (Sketchup.active_model.tools.active_tool_id)
             when (21041)  # PushPullTool
               # if a surface is pushed until it cuts through the space, sometimes the new surface will have been swapped with the old one
-              Plugin.log(OpenStudio::Info, "Push-pull surface:  new surface, ignoring deleted_interface")  
+              Plugin.log(OpenStudio::Info, "Push-pull surface:  new surface, ignoring deleted_interface")
               surface_class = entity.drawing_interface.class
               surface_class.new_from_entity(entity)
             #when (21020)  # SketchTool (Line/Pencil)
@@ -157,14 +157,14 @@ module OpenStudio
             #when (21048)  # MoveTool  (also gets called when doing a multi-copy/paste)
             else
               # This is a cut/paste or undo of a previous delete of this surface.
-              Plugin.log(OpenStudio::Info, "Cut-paste/delete-undo of surface")  
+              Plugin.log(OpenStudio::Info, "Cut-paste/delete-undo of surface")
               entity.drawing_interface.on_undelete_entity(entity)
             end
 
             # May have to handle swapping in here too?
             # DLM: I don't think so, the object should get the correct drawing interface back from stored idf object
             #swapped = DrawingUtils.swapped_face_on_divide?(entity)
-            #Plugin.log(OpenStudio::Info, "swapped = " + swapped.to_s)  
+            #Plugin.log(OpenStudio::Info, "swapped = " + swapped.to_s)
 
           else
             # This is a divide of an existing surface.
@@ -172,11 +172,11 @@ module OpenStudio
             # This also gets called for a copy and paste.
             # If this is a divide, the parent face vertices have already changed.
             # This could be a divide of a base surface, or a new window or door subsurface.
-            Plugin.log(OpenStudio::Info, "Copy-paste/divide/push-pull of surface")  
+            Plugin.log(OpenStudio::Info, "Copy-paste/divide/push-pull of surface")
 
             # This falsely detects a copy-paste of a base surface in the same space as a swap.  It's not.
             swapped = DrawingUtils.swapped_face_on_divide?(entity)
-            Plugin.log(OpenStudio::Info, "swapped = " + swapped.to_s)  
+            Plugin.log(OpenStudio::Info, "swapped = " + swapped.to_s)
 
             base_face = nil
             if (@drawing_interface.class == Space)
@@ -197,28 +197,28 @@ module OpenStudio
 
               case (Sketchup.active_model.tools.active_tool_id)
               when (21041)  # PushPullTool
-                Plugin.log(OpenStudio::Info, "Push-pull surface:  new surface")  
+                Plugin.log(OpenStudio::Info, "Push-pull surface:  new surface")
                 surface_class.new_from_entity(entity)
               #when (21020)  # SketchTool (Line/Pencil)
               #when (21094)  # RectangleTool
               #when (21013)  # PasteTool
               #when (21048)  # MoveTool  (also gets called when doing a multi-copy/paste)
               else
-                Plugin.log(OpenStudio::Info, "Copy-paste/divide surface:  copy surface")  
+                Plugin.log(OpenStudio::Info, "Copy-paste/divide surface:  copy surface")
                 surface_class.new_from_entity_copy(entity)
               end
-              
+
               # add a second proc to ensure that surfaces will be drawn before sub surfaces
               proc2 = Proc.new {
                 # update any children of the original interface that may need to switch to the new interface
                 original_interface.children.each do |child|
                   child.update_parent_from_entity
                   child.update_model_object
-                end     
+                end
               }
               Plugin.add_event( proc2 )
 
-            else  
+            else
               # This is a new sub surface located on a base surface.
 
               # NEED SEPARATE TOOL HANDLER HERE
@@ -228,7 +228,7 @@ module OpenStudio
               if (swapped)
                 # Original face and new face were swapped!
                 # Fix the original surface drawing interface so that it points to the new face.
-                Plugin.log(OpenStudio::Info, "Copy-paste/divide surface:  new sub surface with swap") 
+                Plugin.log(OpenStudio::Info, "Copy-paste/divide surface:  new sub surface with swap")
 
                 # Save the original entity to become the *new* surface below.
                 original_entity = entity.drawing_interface.entity
@@ -246,19 +246,19 @@ module OpenStudio
                 new_surface = SubSurface.new_from_entity(original_entity)
                 #puts "new_surface = #{new_surface}, #{new_surface.model_object.name}, #{new_surface.entity}"
                 #puts "new_surface.parent = #{new_surface.parent}, #{new_surface.parent.model_object.name}, #{new_surface.parent.entity}"
-                
+
                 # Must trigger the base surface to recalculate vertices to account for the new sub surface.
                 original_surface.on_change_entity
-                
+
               else
                 # Normal sub surface--no swapping.
-                Plugin.log(OpenStudio::Info, "Copy-paste/divide surface:  new sub surface no swap") 
+                Plugin.log(OpenStudio::Info, "Copy-paste/divide surface:  new sub surface no swap")
                 original_surface = entity.drawing_interface
 
                 new_surface = SubSurface.new_from_entity(entity)
                 #puts "new_surface = #{new_surface}, #{new_surface.model_object.name}, #{new_surface.entity}"
                 #puts "new_surface.parent = #{new_surface.parent}, #{new_surface.parent.model_object.name}, #{new_surface.parent.entity}"
-                
+
                 # Must trigger the base surface to recalculate vertices to account for the new sub surface.
                 original_surface.on_change_entity
 
@@ -276,103 +276,103 @@ module OpenStudio
             error_message = ""
 
             if (drawing_interface.class == DaylightingControl)
-              Plugin.log(OpenStudio::Info, "New DaylightingControl") 
+              Plugin.log(OpenStudio::Info, "New DaylightingControl")
 
               if (@drawing_interface.class == Space)
                 # see if we already have this object
-                Plugin.model_manager.model_interface.daylighting_controls.each do |daylighting_control| 
+                Plugin.model_manager.model_interface.daylighting_controls.each do |daylighting_control|
                   if daylighting_control.entity == entity
                     already_exists = true
                     break
                   end
                 end
-              else 
+              else
                 # not added to a space
                 need_to_remove = true
                 error_message = "Can only add DaylightingControl to a Space"
               end
 
             elsif(drawing_interface.class == IlluminanceMap)
-              Plugin.log(OpenStudio::Info, "New IlluminanceMap") 
+              Plugin.log(OpenStudio::Info, "New IlluminanceMap")
 
               if (@drawing_interface.class == Space)
                 # see if we already have this object
-                Plugin.model_manager.model_interface.illuminance_maps.each do |illuminance_map| 
+                Plugin.model_manager.model_interface.illuminance_maps.each do |illuminance_map|
                   if illuminance_map.entity == entity
                     already_exists = true
                     break
                   end
-                end                  
-              else 
+                end
+              else
                 # not added to a space
                 need_to_remove = true
                 error_message = "Can only add IlluminanceMap to a Space"
               end
 
             elsif(drawing_interface.class == Luminaire)
-              Plugin.log(OpenStudio::Info, "New Luminaire") 
+              Plugin.log(OpenStudio::Info, "New Luminaire")
 
               if (@drawing_interface.class == Space)
                 # see if we already have this object
-                Plugin.model_manager.model_interface.luminaires.each do |luminaire| 
+                Plugin.model_manager.model_interface.luminaires.each do |luminaire|
                   if luminaire.entity == entity
                     already_exists = true
                     break
                   end
                 end
-              else 
+              else
                 # not added to a space
                 need_to_remove = true
                 error_message = "Can only add Luminaire to a Space"
               end
 
             elsif(drawing_interface.class == ShadingSurfaceGroup)
-              Plugin.log(OpenStudio::Info, "New ShadingSurfaceGroup") 
+              Plugin.log(OpenStudio::Info, "New ShadingSurfaceGroup")
 
               has_children = true
 
-              if (@drawing_interface.class == Space) 
+              if (@drawing_interface.class == Space)
                 # see if we already have this object
-                Plugin.model_manager.model_interface.shading_surface_groups.each do |shading_surface_group| 
+                Plugin.model_manager.model_interface.shading_surface_groups.each do |shading_surface_group|
                   if shading_surface_group.entity == entity
                     already_exists = true
                     break
                   end
                 end
-              else 
+              else
                 # not added to a space
                 need_to_remove = true
                 error_message = "Can only add ShadingSurfaceGroup at Space or Building level"
               end
 
             elsif(drawing_interface.class == InteriorPartitionSurfaceGroup)
-              Plugin.log(OpenStudio::Info, "New InteriorPartitionSurfaceGroup") 
+              Plugin.log(OpenStudio::Info, "New InteriorPartitionSurfaceGroup")
 
               has_children = true
 
               if (@drawing_interface.class == Space)
                 # see if we already have this object
-                Plugin.model_manager.model_interface.interior_partition_surface_groups.each do |interior_partition_surface_group| 
+                Plugin.model_manager.model_interface.interior_partition_surface_groups.each do |interior_partition_surface_group|
                   if interior_partition_surface_group.entity == entity
                     already_exists = true
                     break
                   end
                 end
-              else 
+              else
                 # not added to a space
                 need_to_remove = true
                 error_message = "Can only add InteriorPartitionSurfaceGroup at Space level"
               end
 
             elsif(drawing_interface.class == Space)
-              Plugin.log(OpenStudio::Info, "New Space") 
+              Plugin.log(OpenStudio::Info, "New Space")
 
               has_children = true
 
               need_to_remove = true
               error_message = "Can only add Space at Building level"
             else
-              Plugin.log(OpenStudio::Info, "New #{drawing_interface.class}") 
+              Plugin.log(OpenStudio::Info, "New #{drawing_interface.class}")
 
               need_to_remove = true
               error_message = "Unknown object of type #{drawing_interface.class} added"
@@ -390,35 +390,35 @@ module OpenStudio
             end
 
           else
-            Plugin.log(OpenStudio::Info, "Unknown object added") 
+            Plugin.log(OpenStudio::Info, "Unknown object added")
           end
 
         end
 
       }  # Proc
-      
+
       Plugin.add_event( proc )
-      
+
     end
 
 
     def onElementRemoved(entities, entity)
-      
+
       Plugin.log(OpenStudio::Trace, "#{current_method_name}, @enabled = #{@enabled}")
-      
+
       return if not @enabled
-      
-      Plugin.log(OpenStudio::Info, "SurfaceGroupEntitiesObserver.onElementRemoved: removing #{entity.class} #{entity.to_s} from #{@drawing_interface.entity}")  
-      
+
+      Plugin.log(OpenStudio::Info, "SurfaceGroupEntitiesObserver.onElementRemoved: removing #{entity.class} #{entity.to_s} from #{@drawing_interface.entity}")
+
       # sometimes fixnum objects are passed in for entity
       if entity.respond_to?("drawing_interface")
-        
+
         proc = Proc.new {
           @drawing_interface.paint_entity
         }
-        
+
         Plugin.add_event( proc )
-        
+
       end
     end
 
@@ -428,7 +428,7 @@ module OpenStudio
     #  Plugin.log(OpenStudio::Trace, "#{current_method_name}, @enabled = #{@enabled}")
     #
     #  return if not @enabled
-    #  
+    #
     #end
 
 

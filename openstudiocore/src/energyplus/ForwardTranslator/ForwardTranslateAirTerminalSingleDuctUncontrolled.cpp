@@ -61,7 +61,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctUnco
                          modelObject.availabilitySchedule().name().get() );
   }
   catch (std::exception& e) {
-    LOG(Error,"Could not translate " << modelObject.briefDescription() << ", because " 
+    LOG(Error,"Could not translate " << modelObject.briefDescription() << ", because "
         << e.what() << ".");
     return boost::none;
   }

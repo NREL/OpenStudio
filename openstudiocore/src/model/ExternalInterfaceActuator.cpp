@@ -120,9 +120,10 @@ namespace detail {
     return result;
   }
 
-  void ExternalInterfaceActuator_Impl::setOptionalInitialValue(double optionalInitialValue) {
+  bool ExternalInterfaceActuator_Impl::setOptionalInitialValue(double optionalInitialValue) {
     bool result = setDouble(OS_ExternalInterface_ActuatorFields::OptionalInitialValue, optionalInitialValue);
     OS_ASSERT(result);
+    return result;
   }
 
   void ExternalInterfaceActuator_Impl::resetOptionalInitialValue() {
@@ -140,7 +141,7 @@ namespace detail {
     return isEmpty(OS_ExternalInterface_ActuatorFields::ExportToBCVTB);
   }
 
-  void ExternalInterfaceActuator_Impl::setExportToBCVTB(bool exportToBCVTB) {
+  bool ExternalInterfaceActuator_Impl::setExportToBCVTB(bool exportToBCVTB) {
     bool result = false;
     if (exportToBCVTB) {
       result = setString(OS_ExternalInterface_ActuatorFields::ExportToBCVTB, "True");
@@ -148,6 +149,7 @@ namespace detail {
       result = setString(OS_ExternalInterface_ActuatorFields::ExportToBCVTB, "False");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void ExternalInterfaceActuator_Impl::resetExportToBCVTB() {
@@ -229,8 +231,8 @@ bool ExternalInterfaceActuator::setActuatedComponentControlType(const std::strin
   return getImpl<detail::ExternalInterfaceActuator_Impl>()->setActuatedComponentControlType(actuatedComponentControlType);
 }
 
-void ExternalInterfaceActuator::setOptionalInitialValue(double optionalInitialValue) {
-  getImpl<detail::ExternalInterfaceActuator_Impl>()->setOptionalInitialValue(optionalInitialValue);
+bool ExternalInterfaceActuator::setOptionalInitialValue(double optionalInitialValue) {
+  return getImpl<detail::ExternalInterfaceActuator_Impl>()->setOptionalInitialValue(optionalInitialValue);
 }
 
 void ExternalInterfaceActuator::resetOptionalInitialValue() {
@@ -245,8 +247,8 @@ bool ExternalInterfaceActuator::isExportToBCVTBDefaulted() const {
   return getImpl<detail::ExternalInterfaceActuator_Impl>()->isExportToBCVTBDefaulted();
 }
 
-void ExternalInterfaceActuator::setExportToBCVTB(bool exportToBCVTB) {
-  getImpl<detail::ExternalInterfaceActuator_Impl>()->setExportToBCVTB(exportToBCVTB);
+bool ExternalInterfaceActuator::setExportToBCVTB(bool exportToBCVTB) {
+  return getImpl<detail::ExternalInterfaceActuator_Impl>()->setExportToBCVTB(exportToBCVTB);
 }
 
 void ExternalInterfaceActuator::resetExportToBCVTB() {
@@ -260,5 +262,4 @@ ExternalInterfaceActuator::ExternalInterfaceActuator(std::shared_ptr<detail::Ext
 /// @endcond
 
 } // model
-} // openstudio
-
+} // openstudio

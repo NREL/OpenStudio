@@ -61,8 +61,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCostParameters)
   const char *c_regions[] = {"U.S. Avg", "NorthEast", "MidWest", "South", "West"};
   const char *c_sectors[] = {"Commercial", "Residential", "Industrial"};
 
-  std::vector<std::string> regions(c_regions, c_regions + 5); 
-  std::vector<std::string> sectors(c_sectors, c_sectors + 3); 
+  std::vector<std::string> regions(c_regions, c_regions + 5);
+  std::vector<std::string> sectors(c_sectors, c_sectors + 3);
   EXPECT_EQ(5u, regions.size());
   EXPECT_EQ(3u, sectors.size());
 

@@ -64,7 +64,7 @@ namespace openstudio{
 
     QLineEdit *  m_lessThanFilter = nullptr;
 
-    QLineEdit *  m_greaterThanFilter = nullptr; 
+    QLineEdit *  m_greaterThanFilter = nullptr;
 
   protected slots :
 

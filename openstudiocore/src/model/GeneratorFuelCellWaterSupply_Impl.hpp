@@ -100,7 +100,7 @@ namespace detail {
 
     bool setReformerWaterPumpPowerFunctionofFuelRateCurve(const CurveCubic& cubicCurves);
 
-    void setPumpHeatLossFactor(double pumpHeatLossFactor);
+    bool setPumpHeatLossFactor(double pumpHeatLossFactor);
 
     void resetPumpHeatLossFactor();
 
@@ -136,4 +136,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_GENERATORFUELCELLWATERSUPPLY_IMPL_HPP
-

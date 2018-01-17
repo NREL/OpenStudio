@@ -112,7 +112,7 @@ TEST_F(UnitsFixture, QuantityConverter_IPandSIUsingSystem)
   }
 }
 
-TEST_F(UnitsFixture,QuantityConverter_BTUandIPUsingSystem) 
+TEST_F(UnitsFixture,QuantityConverter_BTUandIPUsingSystem)
 {
   LOG(Debug, "QuantityConverter_BTUandIPUsingSystem");
 
@@ -180,7 +180,7 @@ TEST_F(UnitsFixture,QuantityConverter_BTUandIPUsingSystem)
   }
 }
 
-TEST_F(UnitsFixture,QuantityConverter_CFMandSIUsingSystem) 
+TEST_F(UnitsFixture,QuantityConverter_CFMandSIUsingSystem)
 {
   LOG(Debug, "QuantityConverter_CFMandSIUsingSystem");
 

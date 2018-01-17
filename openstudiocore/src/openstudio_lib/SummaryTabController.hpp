@@ -35,7 +35,7 @@
 
 namespace openstudio {
 
-class SummaryTabController : public MainTabController 
+class SummaryTabController : public MainTabController
 {
   Q_OBJECT
 

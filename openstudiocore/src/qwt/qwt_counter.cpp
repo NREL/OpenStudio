@@ -50,7 +50,7 @@ public:
 };
 
 /*!
-  The counter is initialized with a range is set to [0.0, 1.0] with 
+  The counter is initialized with a range is set to [0.0, 1.0] with
   0.01 as single step size. The value is invalid.
 
   The default number of buttons is set to 2. The default increments are:
@@ -130,13 +130,13 @@ QwtCounter::~QwtCounter()
     delete d_data;
 }
 
-/*! 
+/*!
   Set the counter to be in valid/invalid state
 
   When the counter is set to invalid, no numbers are displayed and
   the buttons are disabled.
 
-  \param on If true the counter will be set as valid 
+  \param on If true the counter will be set as valid
 
   \sa setValue(), isValid()
 */
@@ -157,17 +157,17 @@ void QwtCounter::setValid( bool on )
         {
             d_data->valueEdit->setText( QString::null );
         }
-    }   
-}   
+    }
+}
 
-/*! 
+/*!
   \return True, if the value is valid
   \sa setValid(), setValue()
  */
 bool QwtCounter::isValid() const
 {
     return d_data->isValid;
-}   
+}
 
 /*!
   \brief Allow/disallow the user to manually edit the value
@@ -180,7 +180,7 @@ void QwtCounter::setReadOnly( bool on )
     d_data->valueEdit->setReadOnly( on );
 }
 
-/*! 
+/*!
    \return True, when the line line edit is read only. (default is no)
   \sa setReadOnly()
  */
@@ -334,8 +334,8 @@ double QwtCounter::singleStep() const
 /*!
   \brief En/Disable wrapping
 
-  If wrapping is true stepping up from maximum() value will take 
-  you to the minimum() value and vice versa. 
+  If wrapping is true stepping up from maximum() value will take
+  you to the minimum() value and vice versa.
 
   \param on En/Disable wrapping
   \sa wrapping()

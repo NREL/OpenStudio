@@ -75,25 +75,25 @@ namespace openstudio {
  * Both IdfFile and Workspace contain member functions for helping users modify their data so it
  * complies with the underlying IDD. \link IdfFile IdfFiles\endlink only maintain their data to
  * StrictnessLevel::None; users can set the StrictnessLevel of their \link Workspace
- * Workspaces\endlink. IdfFile does provide a method for generating \link ValidityReport 
+ * Workspaces\endlink. IdfFile does provide a method for generating \link ValidityReport
  * ValidityReports\endlink for higher levels of strictness. Most work should be done in Workspace,
- * whose default StrictnessLevel is Draft. IDF should typically be brought up to 
+ * whose default StrictnessLevel is Draft. IDF should typically be brought up to
  * StrictnessLevel::Final prior to simulation.
  *
  * \section parsing_idf Parsing and Printing
  *
  * \link IdfFile IdfFiles\endlink, \link ImfFile ImfFiles\endlink, \link IdfObject
- * IdfObjects\endlink, and \link Workspace Workspaces\endlink can all be constructed from text 
- * input provided as a path or string. Behind the scenes, IdfFile, ImfFile, and IdfObject parse 
- * the inputted text, creating headers, objects, CommentOnly objects, fields, and fieldComments. 
- * If no IddFile or IddObject is provided explicitly, IdfObject looks for the necessary 
- * IddObjects in the IddFactory. If nothing appropriate is found, the default Catchall 
- * IddObject, which preserves the object type name and all fields, but places the data under 
+ * IdfObjects\endlink, and \link Workspace Workspaces\endlink can all be constructed from text
+ * input provided as a path or string. Behind the scenes, IdfFile, ImfFile, and IdfObject parse
+ * the inputted text, creating headers, objects, CommentOnly objects, fields, and fieldComments.
+ * If no IddFile or IddObject is provided explicitly, IdfObject looks for the necessary
+ * IddObjects in the IddFactory. If nothing appropriate is found, the default Catchall
+ * IddObject, which preserves the object type name and all fields, but places the data under
  * the Catchall type name and sets IddObjectType::Catchall, is used.
  *
  * \link IdfFile IdfFiles\endlink, \link ImfFile ImfFiles\endlink, and \link IdfObject
  * IdfObjects\endlink can all be printed to std::ostream. IdfFile, ImfFile, and Workspace use
- * this facility to save themselves to an openstudio::path. 
+ * this facility to save themselves to an openstudio::path.
  *
  * \section modeling Modeling
  *
@@ -142,8 +142,8 @@ namespace openstudio {
  * if (report.numErrors() > 0) {
  *   OptionalDataError oError = report.nextError();
  *   while (oError) {
- *     if ((oError->scope() == Scope::Collection) && 
- *         (oError->type() == DataErrorType::NullAndRequired)) 
+ *     if ((oError->scope() == Scope::Collection) &&
+ *         (oError->type() == DataErrorType::NullAndRequired))
  *     {
  *       OptionalIddObjectType oType = oError->objectType();
  *       OS_ASSERT(oType);

@@ -41,7 +41,7 @@ namespace detail {
 
 } // detail
 
-/** ScheduleFixedInterval is a ScheduleInterval that wraps the OpenStudio IDD object 
+/** ScheduleFixedInterval is a ScheduleInterval that wraps the OpenStudio IDD object
  *  'OS_Schedule_FixedInterval'. */
 class MODEL_API ScheduleFixedInterval : public ScheduleInterval {
  public:
@@ -77,13 +77,13 @@ class MODEL_API ScheduleFixedInterval : public ScheduleInterval {
   /** @name Setters */
   //@{
 
-  void setInterpolatetoTimestep(bool interpolatetoTimestep);
+  bool setInterpolatetoTimestep(bool interpolatetoTimestep);
 
   void resetInterpolatetoTimestep();
 
   bool setIntervalLength(double intervalLength);
 
-  void setOutOfRangeValue(double outOfRangeValue);
+  bool setOutOfRangeValue(double outOfRangeValue);
 
   void resetOutOfRangeValue();
 
@@ -116,5 +116,4 @@ typedef std::vector<ScheduleFixedInterval> ScheduleFixedIntervalVector;
 } // model
 } // openstudio
 
-#endif // MODEL_SCHEDULEFIXEDINTERVAL_HPP
-
+#endif // MODEL_SCHEDULEFIXEDINTERVAL_HPP

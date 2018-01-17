@@ -32,7 +32,7 @@
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
-namespace openstudio {  
+namespace openstudio {
 
 namespace model {
 
@@ -75,7 +75,7 @@ class MODEL_API BuildingStory : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setNominalZCoordinate(double nominalZCoordinate);
+  bool setNominalZCoordinate(double nominalZCoordinate);
   void resetNominalZCoordinate();
 
   bool setNominalFloortoFloorHeight(double nominalFloortoFloorHeight);
@@ -141,4 +141,3 @@ typedef std::vector<BuildingStory> BuildingStoryVector;
 } // openstudio
 
 #endif // MODEL_BUILDINGSTORY_HPP
-

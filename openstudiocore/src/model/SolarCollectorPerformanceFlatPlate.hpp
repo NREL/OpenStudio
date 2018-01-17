@@ -98,19 +98,19 @@ class MODEL_API SolarCollectorPerformanceFlatPlate : public ModelObject {
 
   bool setTestCorrelationType(std::string testCorrelationType);
 
-  void setCoefficient1ofEfficiencyEquation(double coefficient1ofEfficiencyEquation);
+  bool setCoefficient1ofEfficiencyEquation(double coefficient1ofEfficiencyEquation);
 
-  void setCoefficient2ofEfficiencyEquation(double coefficient2ofEfficiencyEquation);
+  bool setCoefficient2ofEfficiencyEquation(double coefficient2ofEfficiencyEquation);
 
-  void setCoefficient3ofEfficiencyEquation(double coefficient3ofEfficiencyEquation);
+  bool setCoefficient3ofEfficiencyEquation(double coefficient3ofEfficiencyEquation);
 
   void resetCoefficient3ofEfficiencyEquation();
 
-  void setCoefficient2ofIncidentAngleModifier(double coefficient2ofIncidentAngleModifier);
+  bool setCoefficient2ofIncidentAngleModifier(double coefficient2ofIncidentAngleModifier);
 
   void resetCoefficient2ofIncidentAngleModifier();
 
-  void setCoefficient3ofIncidentAngleModifier(double coefficient3ofIncidentAngleModifier);
+  bool setCoefficient3ofIncidentAngleModifier(double coefficient3ofIncidentAngleModifier);
 
   void resetCoefficient3ofIncidentAngleModifier();
 
@@ -120,9 +120,9 @@ class MODEL_API SolarCollectorPerformanceFlatPlate : public ModelObject {
 
   //@}
  protected:
- 
+
   explicit SolarCollectorPerformanceFlatPlate(const Model& model);
-  
+
   /// @cond
   typedef detail::SolarCollectorPerformanceFlatPlate_Impl ImplType;
 
@@ -148,5 +148,4 @@ typedef std::vector<SolarCollectorPerformanceFlatPlate> SolarCollectorPerformanc
 } // model
 } // openstudio
 
-#endif // MODEL_SOLARCOLLECTORPERFORMANCEFLATPLATE_HPP
-
+#endif // MODEL_SOLARCOLLECTORPERFORMANCEFLATPLATE_HPP

@@ -46,8 +46,8 @@ class MODEL_API WaterToAirComponent_Impl : public HVACComponent_Impl {
 
   WaterToAirComponent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  WaterToAirComponent_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                         Model_Impl* model, 
+  WaterToAirComponent_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                         Model_Impl* model,
                          bool keepHandle);
 
   WaterToAirComponent_Impl(const WaterToAirComponent_Impl& other, Model_Impl* model, bool keepHandles);
@@ -71,11 +71,11 @@ class MODEL_API WaterToAirComponent_Impl : public HVACComponent_Impl {
   virtual boost::optional<Loop> loop() const override;
 
   virtual unsigned airInletPort() = 0;
-   
+
   virtual unsigned airOutletPort() = 0;
-   
+
   virtual unsigned waterInletPort() = 0;
-   
+
   virtual unsigned waterOutletPort() = 0;
 
   virtual bool addToNode(Node & node) override;

@@ -25,10 +25,10 @@
   int __int__() const{
     return self->valueAsInteger();
   }
-      
+
   float __float__() const{
     return self->valueAsDouble();
-  }       
+  }
 };
 
-#endif //UTILITIES_DATA_ATTRIBUTE_I 
+#endif //UTILITIES_DATA_ATTRIBUTE_I

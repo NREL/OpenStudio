@@ -32,7 +32,7 @@ namespace openstudio{
 
 IddKeyProperties::IddKeyProperties() {}
 
-IddKeyProperties::IddKeyProperties(const IddKeyProperties& other) 
+IddKeyProperties::IddKeyProperties(const IddKeyProperties& other)
   : note(other.note)
 {}
 

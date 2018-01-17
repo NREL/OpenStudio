@@ -44,7 +44,7 @@ new_idd.objects.each do |object|
   new_object_hash[object.name] = object
 end
 
-puts 
+puts
 
 # things in old that are not in new
 old_object_hash.each_key do |name|
@@ -68,11 +68,11 @@ puts
 old_object_hash.each_pair do |name, old_object|
 
   new_object = new_object_hash[name]
-  
+
   next if not new_object
-  
+
   if new_object != old_object
     puts "Object '#{name}' has changed"
   end
-  
+
 end

@@ -41,7 +41,7 @@ public:
   unsigned size1() const;
   unsigned size2() const;
   void resize(unsigned M, unsigned N, bool preserve);
-  
+
 };
 
 %extend Matrix{
@@ -53,7 +53,7 @@ public:
   void __setitem__(unsigned i, unsigned j, double x) {
     (*self)(i,j) = x;
   }
-  
+
   bool __eq__(const Matrix& other) {
     return operator==((*self), other);
   }
@@ -65,7 +65,7 @@ public:
   Matrix __add__(double d) const {
     return ((*self) + Matrix(self->size1(), self->size2(), d));
   }
- 
+
   Matrix __sub__(const Matrix& m) const {
     return ((*self) - m);
   }
@@ -73,7 +73,7 @@ public:
   Matrix __sub__(double d) const {
     return ((*self) - Matrix(self->size1(), self->size2(), d));
   }
-  
+
   Matrix __mul__(const Matrix& m) const {
     return prod(*self, m);
   }
@@ -85,11 +85,11 @@ public:
   Matrix __mul__(double d) const {
     return ((*self) * d);
   }
-  
+
   Matrix __div__(double d) const {
     return ((*self) / d);
   }
- 
+
   std::string __str__() const{
     std::ostringstream os;
     os << *self;
@@ -142,5 +142,5 @@ double mean(const Matrix& matrix);
 
 } // openstudio
 
-#endif //UTILITIES_DATA_MATRIX_I 
+#endif //UTILITIES_DATA_MATRIX_I
 

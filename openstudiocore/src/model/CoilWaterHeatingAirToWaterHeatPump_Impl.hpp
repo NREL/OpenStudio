@@ -153,11 +153,11 @@ namespace detail {
 
     void autosizeRatedCondenserWaterFlowRate();
 
-    void setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP);
+    bool setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP);
 
-    void setCondenserPumpPowerIncludedinRatedCOP(bool condenserPumpPowerIncludedinRatedCOP);
+    bool setCondenserPumpPowerIncludedinRatedCOP(bool condenserPumpPowerIncludedinRatedCOP);
 
-    void setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(bool condenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP);
+    bool setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(bool condenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP);
 
     bool setCondenserWaterPumpPower(double condenserWaterPumpPower);
 
@@ -210,4 +210,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILWATERHEATINGAIRTOWATERHEATPUMP_IMPL_HPP
-

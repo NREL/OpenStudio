@@ -196,7 +196,7 @@ namespace detail {
 
     bool setSupplementalHeatingCoil(const HVACComponent& coil);
 
-    void setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater);
+    bool setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater);
 
     void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 
@@ -275,4 +275,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_AIRLOOPHVACUNITARYHEATPUMPAIRTOAIRMULTISPEED_IMPL_HPP
-

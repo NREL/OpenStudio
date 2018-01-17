@@ -158,7 +158,7 @@ namespace detail {
 
     ///// Sets designLevelCalculationMethod to 'EquipmentLevel', clears wattsperSpaceFloorArea
     ///// and wattsperPerson, and sets designLevel.
-    //void setDesignLevel(boost::optional<double> designLevel);
+    //bool setDesignLevel(boost::optional<double> designLevel);
 
     ///// Sets designLevelCalculationMethod to 'Watts/Area', clears designLevel
     ///// and wattsperPerson, and sets wattsperSpaceFloorArea.

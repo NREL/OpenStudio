@@ -690,4 +690,3 @@ AvailabilityManagerNightCycle::AvailabilityManagerNightCycle(std::shared_ptr<det
 
 } // model
 } // openstudio
-

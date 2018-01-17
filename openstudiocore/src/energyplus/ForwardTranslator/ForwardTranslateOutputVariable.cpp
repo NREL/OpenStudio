@@ -60,7 +60,7 @@ boost::optional<IdfObject> ForwardTranslator::translateOutputVariable( OutputVar
   if (!modelObject.isReportingFrequencyDefaulted()){
     idfObject.setString(Output_VariableFields::ReportingFrequency, modelObject.reportingFrequency());
   }
- 
+
   if (modelObject.schedule()){
     idfObject.setString(Output_VariableFields::ScheduleName, modelObject.schedule()->name().get());
   }

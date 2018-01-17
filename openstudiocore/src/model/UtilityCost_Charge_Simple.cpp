@@ -66,9 +66,9 @@ OptionalString UtilityCost_Charge_Simple_Impl::tariffName() const
   return getString(OS_UtilityCost_Charge_SimpleFields::TariffName);
 }
 
-void UtilityCost_Charge_Simple_Impl::setTariffName(const std::string& str)
+bool UtilityCost_Charge_Simple_Impl::setTariffName(const std::string& str)
 {
-  setString(OS_UtilityCost_Charge_SimpleFields::TariffName,str);
+  return setString(OS_UtilityCost_Charge_SimpleFields::TariffName,str);;
 }
 
 OptionalString UtilityCost_Charge_Simple_Impl::sourceVariable() const
@@ -76,9 +76,9 @@ OptionalString UtilityCost_Charge_Simple_Impl::sourceVariable() const
   return getString(OS_UtilityCost_Charge_SimpleFields::SourceVariable);
 }
 
-void UtilityCost_Charge_Simple_Impl::setSourceVariable(const std::string& str)
+bool UtilityCost_Charge_Simple_Impl::setSourceVariable(const std::string& str)
 {
-  setString(OS_UtilityCost_Charge_SimpleFields::SourceVariable,str);
+  return setString(OS_UtilityCost_Charge_SimpleFields::SourceVariable,str);;
 }
 
 OptionalString UtilityCost_Charge_Simple_Impl::season() const
@@ -86,9 +86,9 @@ OptionalString UtilityCost_Charge_Simple_Impl::season() const
   return getString(OS_UtilityCost_Charge_SimpleFields::Season);
 }
 
-void UtilityCost_Charge_Simple_Impl::setSeason(const std::string& str)
+bool UtilityCost_Charge_Simple_Impl::setSeason(const std::string& str)
 {
-  setString(OS_UtilityCost_Charge_SimpleFields::Season,str);
+  return setString(OS_UtilityCost_Charge_SimpleFields::Season,str);;
 }
 
 OptionalString UtilityCost_Charge_Simple_Impl::categoryVariableName() const
@@ -96,9 +96,9 @@ OptionalString UtilityCost_Charge_Simple_Impl::categoryVariableName() const
   return getString(OS_UtilityCost_Charge_SimpleFields::CategoryVariableName);
 }
 
-void UtilityCost_Charge_Simple_Impl::setCategoryVariableName(const std::string& str)
+bool UtilityCost_Charge_Simple_Impl::setCategoryVariableName(const std::string& str)
 {
-  setString(OS_UtilityCost_Charge_SimpleFields::CategoryVariableName,str);
+  return setString(OS_UtilityCost_Charge_SimpleFields::CategoryVariableName,str);;
 }
 
 OptionalString UtilityCost_Charge_Simple_Impl::costPerUnitValueOrVariableName() const
@@ -106,9 +106,9 @@ OptionalString UtilityCost_Charge_Simple_Impl::costPerUnitValueOrVariableName() 
   return getString(OS_UtilityCost_Charge_SimpleFields::CostperUnitValueorVariableName);
 }
 
-void UtilityCost_Charge_Simple_Impl::setCostPerUnitValueOrVariableName(const std::string& str)
+bool UtilityCost_Charge_Simple_Impl::setCostPerUnitValueOrVariableName(const std::string& str)
 {
-  setString(OS_UtilityCost_Charge_SimpleFields::CostperUnitValueorVariableName,str);
+  return setString(OS_UtilityCost_Charge_SimpleFields::CostperUnitValueorVariableName,str);;
 }
 
 // return the parent object in the hierarchy
@@ -166,9 +166,9 @@ OptionalString UtilityCost_Charge_Simple::tariffName() const
   return getImpl<detail::UtilityCost_Charge_Simple_Impl>()->tariffName();
 }
 
-void UtilityCost_Charge_Simple::setTariffName(const std::string& str)
+bool UtilityCost_Charge_Simple::setTariffName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Charge_Simple_Impl>()->setTariffName(str);
+  return getImpl<detail::UtilityCost_Charge_Simple_Impl>()->setTariffName(str);
 }
 
 OptionalString UtilityCost_Charge_Simple::sourceVariable() const
@@ -176,9 +176,9 @@ OptionalString UtilityCost_Charge_Simple::sourceVariable() const
   return getImpl<detail::UtilityCost_Charge_Simple_Impl>()->sourceVariable();
 }
 
-void UtilityCost_Charge_Simple::setSourceVariable(const std::string& str)
+bool UtilityCost_Charge_Simple::setSourceVariable(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Charge_Simple_Impl>()->setSourceVariable(str);
+  return getImpl<detail::UtilityCost_Charge_Simple_Impl>()->setSourceVariable(str);
 }
 
 OptionalString UtilityCost_Charge_Simple::season() const
@@ -186,9 +186,9 @@ OptionalString UtilityCost_Charge_Simple::season() const
   return getImpl<detail::UtilityCost_Charge_Simple_Impl>()->season();
 }
 
-void UtilityCost_Charge_Simple::setSeason(const std::string& str)
+bool UtilityCost_Charge_Simple::setSeason(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Charge_Simple_Impl>()->setSeason(str);
+  return getImpl<detail::UtilityCost_Charge_Simple_Impl>()->setSeason(str);
 }
 
 OptionalString UtilityCost_Charge_Simple::categoryVariableName() const
@@ -196,9 +196,9 @@ OptionalString UtilityCost_Charge_Simple::categoryVariableName() const
   return getImpl<detail::UtilityCost_Charge_Simple_Impl>()->categoryVariableName();
 }
 
-void UtilityCost_Charge_Simple::setCategoryVariableName(const std::string& str)
+bool UtilityCost_Charge_Simple::setCategoryVariableName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Charge_Simple_Impl>()->setCategoryVariableName(str);
+  return getImpl<detail::UtilityCost_Charge_Simple_Impl>()->setCategoryVariableName(str);
 }
 
 OptionalString UtilityCost_Charge_Simple::costPerUnitValueOrVariableName() const
@@ -206,9 +206,9 @@ OptionalString UtilityCost_Charge_Simple::costPerUnitValueOrVariableName() const
   return getImpl<detail::UtilityCost_Charge_Simple_Impl>()->costPerUnitValueOrVariableName();
 }
 
-void UtilityCost_Charge_Simple::setCostPerUnitValueOrVariableName(const std::string& str)
+bool UtilityCost_Charge_Simple::setCostPerUnitValueOrVariableName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Charge_Simple_Impl>()->setCostPerUnitValueOrVariableName(str);
+  return getImpl<detail::UtilityCost_Charge_Simple_Impl>()->setCostPerUnitValueOrVariableName(str);
 }
 
 IddObjectType UtilityCost_Charge_Simple::iddObjectType()
@@ -218,4 +218,4 @@ IddObjectType UtilityCost_Charge_Simple::iddObjectType()
 }
 
 } // model
-} // openstudio
+} // openstudio

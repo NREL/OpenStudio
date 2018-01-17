@@ -5,4 +5,4 @@ Copy the contents of the Visualizers directory to `C:\Program Files (x86)\Micros
 ######To debug visualizer entries
 Add the following registry setting:
 [HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\12.0_Config\Debugger]
-"EnableNatvisDiagnostics"=dword:00000001  
+"EnableNatvisDiagnostics"=dword:00000001

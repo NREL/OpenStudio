@@ -82,7 +82,7 @@ class MODEL_API CoilHeatingGasMultiStage : public StraightComponent {
 
   void resetPartLoadFractionCorrelationCurve();
 
-  void setParasiticGasLoad(double parasiticGasLoad);
+  bool setParasiticGasLoad(double parasiticGasLoad);
 
   void resetParasiticGasLoad();
 
@@ -120,4 +120,3 @@ typedef std::vector<CoilHeatingGasMultiStage> CoilHeatingGasMultiStageVector;
 } // openstudio
 
 #endif // MODEL_COILHEATINGGASMULTISTAGE_HPP
-

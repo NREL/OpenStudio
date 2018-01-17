@@ -50,7 +50,7 @@ public:
   FacilityTabView(QWidget * parent = nullptr);
 
   virtual ~FacilityTabView() {}
- 
+
 public slots:
 
   void toggleUnits(bool displayIP);

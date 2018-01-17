@@ -43,8 +43,8 @@ namespace detail {
     SizingPeriod_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    SizingPeriod_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                   Model_Impl* model, 
+    SizingPeriod_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                   Model_Impl* model,
                    bool keepHandle);
 
     // clone copy constructor
@@ -67,7 +67,7 @@ namespace detail {
 
     /// get a vector of allowable children types
     virtual std::vector<IddObjectType> allowableChildTypes() const override;
-  
+
    private:
 
     REGISTER_LOGGER("openstudio.model.SizingPeriod");

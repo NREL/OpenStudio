@@ -84,7 +84,7 @@ void OSViewSwitcher::clear()
 {
   if( m_view )
   {
-    m_stack->removeWidget(m_view);    
+    m_stack->removeWidget(m_view);
   }
 
   m_view = nullptr;

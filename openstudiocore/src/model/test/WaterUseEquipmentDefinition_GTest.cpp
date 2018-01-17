@@ -39,13 +39,13 @@ using namespace openstudio::model;
 TEST_F(ModelFixture,WaterUseEquipmentDefinition_WaterUseEquipmentDefinition) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-    model::Model m; 
+  ASSERT_EXIT (
+  {
+    model::Model m;
 
     model::WaterUseEquipmentDefinition definition(m);
 
-    exit(0); 
+    exit(0);
   } ,
   ::testing::ExitedWithCode(0), "" );
 }

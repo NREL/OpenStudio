@@ -80,8 +80,8 @@
     passed on to the QWidget constructor. The widget has by default
     no background.
 
-    \warning You cannot change the parent widget of the QWinHost instance 
-    after the native window has been created, i.e. do not call 
+    \warning You cannot change the parent widget of the QWinHost instance
+    after the native window has been created, i.e. do not call
     QWidget::setParent or move the QWinHost into a different layout.
 */
 QWinHost::QWinHost(QWidget *parent, Qt::WindowFlags f)
@@ -162,8 +162,8 @@ void QWinHost::fixParent()
 }
 
 /*!
-    Sets the native Win32 window to \a window. If \a window is not a child 
-    window of this widget, then it is reparented to become one. If \a window 
+    Sets the native Win32 window to \a window. If \a window is not a child
+    window of this widget, then it is reparented to become one. If \a window
     is not a child window (i.e. WS_OVERLAPPED is set), then this function does nothing.
 
     The lifetime of the window handle will be managed by Windows, QWinHost does not

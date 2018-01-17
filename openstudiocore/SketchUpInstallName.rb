@@ -9,5 +9,5 @@
     `install_name_tool -add_rpath /System/Library/Frameworks/Ruby.framework/Versions/2.0/usr/lib/ #{ARGV[0]}` # fall back to system ruby
     `install_name_tool -add_rpath /usr/lib #{ARGV[0]}` # fall back to system ruby
   end
-  
+
 end

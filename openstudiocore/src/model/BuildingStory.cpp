@@ -98,9 +98,10 @@ namespace detail {
     return value;
   }
 
-  void BuildingStory_Impl::setNominalZCoordinate(double nominalZCoordinate) {
+  bool BuildingStory_Impl::setNominalZCoordinate(double nominalZCoordinate) {
     bool result = setDouble(OS_BuildingStoryFields::NominalZCoordinate, nominalZCoordinate);
     OS_ASSERT(result);
+    return result;
   }
 
   void BuildingStory_Impl::resetNominalZCoordinate() {
@@ -278,8 +279,8 @@ boost::optional<double> BuildingStory::nominalFloortoCeilingHeight() const {
   return getImpl<detail::BuildingStory_Impl>()->nominalFloortoCeilingHeight();
 }
 
-void BuildingStory::setNominalZCoordinate(double nominalZCoordinate) {
-  getImpl<detail::BuildingStory_Impl>()->setNominalZCoordinate(nominalZCoordinate);
+bool BuildingStory::setNominalZCoordinate(double nominalZCoordinate) {
+  return getImpl<detail::BuildingStory_Impl>()->setNominalZCoordinate(nominalZCoordinate);
 }
 
 void BuildingStory::resetNominalZCoordinate() {
@@ -361,4 +362,3 @@ BuildingStory::BuildingStory(std::shared_ptr<detail::BuildingStory_Impl> impl)
 
 } // model
 } // openstudio
-

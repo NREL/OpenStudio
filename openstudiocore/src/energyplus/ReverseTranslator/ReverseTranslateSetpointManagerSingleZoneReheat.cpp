@@ -95,7 +95,7 @@ OptionalModelObject ReverseTranslator::translateSetpointManagerSingleZoneReheat(
     boost::optional<ModelObject> modelObject;
     boost::optional<Space> space;
 
-    if( boost::optional<WorkspaceObject> _zone = 
+    if( boost::optional<WorkspaceObject> _zone =
           workspaceObject.workspace().getObjectByTypeAndName(IddObjectType::Zone,s.get()) )
     {
       modelObject = translateAndMapWorkspaceObject(_zone.get());

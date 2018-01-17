@@ -50,7 +50,7 @@ public:
   const Vector &mdbt() const {return _mdbt;}
   void setMdbt(Vector val){_mdbt = val;}
   /**
-   * mean monthly wind speed; (m/s) 
+   * mean monthly wind speed; (m/s)
    */
   const Vector &mwind() const {return _mwind;}
   void setMwind(Vector val){_mwind = val;}

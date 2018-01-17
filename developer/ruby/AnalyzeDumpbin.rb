@@ -11,19 +11,19 @@ excludes = [/boost-log/, /expat/, /gtest/, /libssh/, /litesql/, /qwt/, /sqlite/]
 Dir.glob("**/#{buildType}/*.obj").each do |file|
 
   excludeThis = false
-  excludes.each do |exclude| 
+  excludes.each do |exclude|
     if exclude.match(file)
       excludeThis = true
       break
     end
   end
-  
+
   next if excludeThis
 
   puts file
   system("dumpbin/directives #{file} > #{tmpout1}")
   system("undname #{tmpout1} > #{tmpout2}")
-  
+
   File.open(tmpout2, 'r') do |f|
     while line = f.gets
       if matchdata = /\/EXPORT:(.*)/.match(line)

@@ -47,7 +47,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScreen( Screen & modelObj
   m_idfObjects.push_back(idfObject);
 
   idfObject.setString(WindowMaterial_ScreenFields::Name, modelObject.name().get());
-  
+
   OptionalString s = modelObject.getString(OS_WindowMaterial_ScreenFields::ReflectedBeamTransmittanceAccountingMethod, true, true);
   if (s){
     idfObject.setString(WindowMaterial_ScreenFields::ReflectedBeamTransmittanceAccountingMethod, *s);

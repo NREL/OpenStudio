@@ -31,10 +31,10 @@ require("openstudio/sketchup_plugin/lib/watchers/PluginModelObjectWatcher")
 module OpenStudio
 
   class RenderableModelObjectWatcher < PluginModelObjectWatcher
-  
+
     def initialize(drawing_interface, interface_to_paint, rendering_indices, rendering_modes)
       super(drawing_interface)
-      
+
       @interface_to_paint = interface_to_paint
       @rendering_indices = rendering_indices
       @rendering_modes = rendering_modes
@@ -42,17 +42,17 @@ module OpenStudio
 
     #def onChangeIdfObject
     #  Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-    #  super 
+    #  super
     #end
-    
+
     #def onDataFieldChange
     #  Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-    #  super 
+    #  super
     #end
-    
+
     #def onNameChange
     #  Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-    #  super 
+    #  super
     #end
 
     #def onBecomeDirty
@@ -62,14 +62,14 @@ module OpenStudio
 
     #def onBecomeClean
     #  Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-    #  super 
+    #  super
     #end
 
     #def clearState
     #  Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-    #  super   
+    #  super
     #end
-  
+
     def onRelationshipChange(index, newHandle, oldHandle)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       super
@@ -80,12 +80,12 @@ module OpenStudio
         end
       end
     end
-    
+
     #def onRemoveFromWorkspace(handle)
     #  Plugin.log(OpenStudio::Trace, "#{current_method_name}")
     #  super
     #end
-    
+
   end
 end
 

@@ -36,7 +36,7 @@ namespace model {
 
 /// @cond
 ModelExtensibleGroup::ModelExtensibleGroup(std::shared_ptr<detail::ModelObject_Impl> impl,
-                                           unsigned index) 
+                                           unsigned index)
   : WorkspaceExtensibleGroup(impl,index) {}
 /// @endcond
 

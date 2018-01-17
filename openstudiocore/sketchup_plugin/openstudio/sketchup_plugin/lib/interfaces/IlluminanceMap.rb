@@ -35,19 +35,19 @@ module OpenStudio
   # entity for this class is a component instance with one child
   # the child is locked and transformation from child to entity is identity
   class IlluminanceMap < DrawingInterface
-    
+
     def initialize
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       super
       @observer = ComponentObserver.new(self)
     end
-    
+
 ##### Begin override methods for the input object #####
 
     def self.model_object_from_handle(handle)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       model_object = Plugin.model_manager.model_interface.openstudio_model.getIlluminanceMap(handle)
       if not model_object.empty?
         model_object = model_object.get
@@ -57,10 +57,10 @@ module OpenStudio
       end
       return model_object
     end
-    
+
     def self.new_from_handle(handle)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       drawing_interface = IlluminanceMap.new
       model_object = model_object_from_handle(handle)
       drawing_interface.model_object = model_object
@@ -68,46 +68,46 @@ module OpenStudio
       drawing_interface.add_watcher
       return(drawing_interface)
     end
-    
+
     def create_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       model_watcher_enabled = @model_interface.model_watcher.disable
       @model_object = OpenStudio::Model::IlluminanceMap.new(@model_interface.openstudio_model)
       @model_interface.model_watcher.enable if model_watcher_enabled
       super
     end
-    
+
     def check_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       # Look up the Space drawing interface (might fail if the reference is bad)
       if (not parent_from_model_object)
         @model_interface.add_error("Error:  " + @model_object.name.to_s + "\n")
         @model_interface.add_error("The space referenced by this illuminance map does not exist, it cannot be drawn.\n\n")
         return false
       end
-        
+
       return(super)
     end
-    
+
     # Updates the ModelObject with new information from the SketchUp entity.
     def update_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       super
-      
+
       if (valid_entity?)
         if (@parent.class == Space)
           watcher_enabled = disable_watcher
 
           @model_object.setSpace(@parent.model_object)  # Parent should already have been updated.
-          
+
           entity_transformation = self.coordinate_transformation
-          
+
           self.model_object_transformation = entity_transformation
 
           # find the current x and y scaling relative to 1m x 1m original size
-          scalex = entity_transformation.to_a[0] 
+          scalex = entity_transformation.to_a[0]
           scaley = entity_transformation.to_a[5]
 
           # set lengths
@@ -118,76 +118,76 @@ module OpenStudio
         end
       end
     end
-    
+
     # Returns the parent drawing interface according to the model object.
     def parent_from_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       parent = nil
       if (@model_object)
         space = @model_object.space
         if (not space.empty?)
           parent = space.get.drawing_interface
-        end  
+        end
       end
-      return(parent)  
+      return(parent)
     end
 
 ##### Begin override methods for the entity #####
 
-    def create_entity     
+    def create_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-    
-      if (@parent.nil?)     
+
+      if (@parent.nil?)
       #  # Create a new space just for this IlluminanceMap.
       #  Plugin.log(OpenStudio::Warn, "Creating containing Space for IlluminanceMap #{@model_object.name}")
-      #  
+      #
       #  @parent = Space.new
       #  @parent.create_model_object
       #  @model_object.setParent(@parent.model_object)
       #  @parent.draw_entity
       #  @parent.add_child(self)  # Would be nice to not have to call this
-      
+
         # how did this happen?
         Plugin.log(OpenStudio::Error, "Parent #{@parent} is nil, cannot create entity for illuminance map #{@model_object.name}")
         return nil
-      end    
-    
+      end
+
       # add the component definition
       path = "#{$OPENSTUDIO_SKETCHUPPLUGIN_DIR}/resources/components/OpenStudio_IlluminanceMap.skp"
       definition = Sketchup.active_model.definitions.load(path)
-      
+
       # parent entity is first a Sketchup::Group corresponding to a space
       # do an identity transformation here as this transformation seems to act on child component axes twice
       @entity = @parent.entity.entities.add_instance(definition, Geom::Transformation.new)
-      
+
       # make it unique as we will be messing with the definition
       @entity.make_unique
-      
+
       # have to make the interior component unique too
       @entity.definition.entities[0].make_unique
-      
+
       # create or confirm layer for class"
       model = Sketchup.active_model
       layers = model.layers
       new_layer = layers.add "#{@model_object.class}"
       # put entity onto new layer
-      @entity.layer = new_layer       
+      @entity.layer = new_layer
     end
 
     def create_from_entity(entity)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       super
-      
+
       # make it unique as we will be messing with the definition
       @entity.make_unique
-            
+
       # make the interior component unique too
       @entity.definition.entities[0].make_unique
-      
+
       return(self)
     end
-    
+
 
     # Error checks, finalization, or cleanup needed after the entity is drawn.
     def confirm_entity
@@ -195,28 +195,28 @@ module OpenStudio
       return(super)
     end
 
-    
+
     # Updates the SketchUp entity with new information from the ModelObject.
     def update_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       super
-      
+
       if(valid_entity?)
-      
+
         # do not want to trigger update_model_object in here
         had_observers = remove_observers
-        
+
         # need to make unique
         @entity.make_unique
-        
+
         set_entity_name
-        
+
         scalex = @model_object.xLength
         scaley = @model_object.yLength
-        
+
         self.coordinate_transformation = self.model_object_transformation*Geom::Transformation.scaling([0,0,0], scalex, scaley, 1)
-        
-        # get number of grid points        
+
+        # get number of grid points
         numx = @model_object.numberofXGridPoints
         numy = @model_object.numberofYGridPoints
         numx_draw = [numx-1, 0.5].max
@@ -253,7 +253,7 @@ module OpenStudio
         pts[5] = [numx_draw, numy_draw, 0]
         pts[6] = [0, 1.m, 0]
         pts[7] = [0, numy_draw, 0]
-        
+
         # find the face
         @entity.definition.entities[0].definition.entities.each do |entity|
           if entity.is_a? Sketchup::Face
@@ -262,9 +262,9 @@ module OpenStudio
             break
           end
         end
-        
+
         add_observers if had_observers
-        
+
       end
     end
 
@@ -278,7 +278,7 @@ module OpenStudio
     # Returns the parent drawing interface according to the entity.
     def parent_from_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       parent = nil
       if (valid_entity?)
         # @entity class will be a ComponentInstance
@@ -291,14 +291,14 @@ module OpenStudio
       end
       return(parent)
     end
-    
+
 ##### Begin override methods for the interface #####
 
 ##### Begin new methods for the interface #####
-    
+
     def set_entity_name
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       if (@model_object.name.empty?)
         @entity.name = "Illuminance Map:  " + "(Untitled)"
       else
@@ -318,8 +318,8 @@ module OpenStudio
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
 
       @model_object.setTransformation(transform.to_openstudio_transformation)
-    end 
-    
+    end
+
   end
 
 end

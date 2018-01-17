@@ -44,10 +44,10 @@ namespace detail {
 
   /** LightingDesignDay_Impl is a ModelObject_Impl that is the implementation class for LightingDesignDay.*/
   class MODEL_API LightingDesignDay_Impl : public ModelObject_Impl {
-    
-    
-    
-    
+
+
+
+
    public:
 
     /** @name Constructors and Destructors */
@@ -102,7 +102,7 @@ namespace detail {
     bool setDate(const openstudio::Date& date);
 
     std::vector<openstudio::Time> simulationTimes() const;
-  
+
     std::vector<openstudio::DateTime> simulationDateTimes() const;
 
     bool addSimulationTime(const openstudio::Time& time);

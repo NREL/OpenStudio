@@ -150,7 +150,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemMeteredOut
             return emsOutputVariable;
           } else {
             return boost::none;
-          } 
+          }
         }
       }
     }
@@ -167,7 +167,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemMeteredOut
       }
     }
   }
-  
+
   return emsOutputVariable;
 }
 

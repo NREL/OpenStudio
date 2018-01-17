@@ -59,7 +59,7 @@ class MODEL_API Version : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setVersionIdentifier(const std::string& s);
+  bool setVersionIdentifier(const std::string& s);
 
   //@}
 
@@ -85,4 +85,4 @@ typedef boost::optional<Version> OptionalVersion;
 }
 }
 
-#endif
+#endif

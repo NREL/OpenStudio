@@ -66,7 +66,7 @@ TEST_F(ModelFixture, ModelMerger_Initial) {
   // first model is empty
 
   // second model has spaces
-  
+
   // object#_model#
   std::vector<Point3d> floorprint1_2;
   floorprint1_2.push_back(Point3d(0, 10, 0));
@@ -162,7 +162,7 @@ TEST_F(ModelFixture, ModelMerger_Merge) {
   // first model is empty
 
   // second model has spaces
-  
+
   // object#_model#
   std::vector<Point3d> floorprint1_1;
   floorprint1_1.push_back(Point3d(0, 10, 0));
@@ -319,7 +319,7 @@ TEST_F(ModelFixture, ModelMerger_Clobber) {
   // first model is empty
 
   // second model has spaces
-  
+
   // object#_model#
   std::vector<Point3d> floorprint1_1;
   floorprint1_1.push_back(Point3d(0, 10, 0));
@@ -476,7 +476,7 @@ TEST_F(ModelFixture, ModelMerger_Remove) {
   // first model has spaces
 
   // second model is empty
-  
+
   // object#_model#
   std::vector<Point3d> floorprint1_1;
   floorprint1_1.push_back(Point3d(0, 10, 0));

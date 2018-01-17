@@ -204,8 +204,8 @@ boost::optional<IdfObject> ForwardTranslator::translateHeatExchangerAirToAirSens
     idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::HeatExchangerType,*s);
   }
 
-  // FrostControlType 
-  s = modelObject.frostControlType();  
+  // FrostControlType
+  s = modelObject.frostControlType();
   if( s )
   {
     idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::FrostControlType,*s);

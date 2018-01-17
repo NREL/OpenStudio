@@ -68,7 +68,7 @@ protected:
   }
 
   // tear down static members
-  static void TearDownTestCase() 
+  static void TearDownTestCase()
   {
     logFile->disable();
   }

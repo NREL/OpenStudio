@@ -33,14 +33,14 @@ class RemoveLoadsDirectlyAssignedToSpaces < OpenStudio::Ruleset::ModelUserScript
   def name
     return "Remove Loads Directly Assigned to Spaces"
   end
-  
+
   # returns a vector of arguments, the runner will present these arguments to the user
   # then pass in the results on run
   def arguments(model)
     result = OpenStudio::Ruleset::OSArgumentVector.new
     return result
   end
-    
+
   # override run to implement the functionality of your script
   # model is an OpenStudio::Model::Model, runner is a OpenStudio::Ruleset::UserScriptRunner
   def run(model, runner, user_arguments)
@@ -53,11 +53,11 @@ class RemoveLoadsDirectlyAssignedToSpaces < OpenStudio::Ruleset::ModelUserScript
       runner.registerAsNotApplicable("Operation canceled, your model was not altered.")
       return true
     end
-    
+
     spaces = model.getSpaces
-    
+
     spaces.each do |space|
-  
+
       # removing or detaching loads directly assigned to space objects.
       space.internalMass.each {|instance| instance.remove }
       space.people.each {|instance| instance.remove }
@@ -69,12 +69,12 @@ class RemoveLoadsDirectlyAssignedToSpaces < OpenStudio::Ruleset::ModelUserScript
       space.steamEquipment.each {|instance| instance.remove }
       space.otherEquipment.each {|instance| instance.remove }
       space.spaceInfiltrationDesignFlowRates.each {|object| object.remove }
-      space.spaceInfiltrationEffectiveLeakageAreas.each {|object| object.remove }   
-    
+      space.spaceInfiltrationEffectiveLeakageAreas.each {|object| object.remove }
+
       space.resetDesignSpecificationOutdoorAir
-  
+
     end
-    
+
   end
 
 end

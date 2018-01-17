@@ -18,10 +18,10 @@
   #include <bimserver/ProjectImportation.hpp>
   using namespace openstudio::bimserver;
   using namespace openstudio;
-  
+
   #include <model/Model.hpp>
   #include <model/ModelObject.hpp>
-  
+
 %}
 
 // #ifdef SWIGCSHARP
@@ -30,4 +30,4 @@
 
 %include bimserver/ProjectImportation.hpp>
 
-#endif //BIMSERVER_I 
+#endif //BIMSERVER_I

@@ -114,15 +114,15 @@ namespace detail {
 
     void resetRadiativeFraction();
 
-    void setRatedMaximumContinuousOutputPower(boost::optional<double> ratedMaximumContinuousOutputPower);
+    bool setRatedMaximumContinuousOutputPower(boost::optional<double> ratedMaximumContinuousOutputPower);
 
     void resetRatedMaximumContinuousOutputPower();
 
-    void setNightTareLossPower(boost::optional<double> nightTareLossPower);
+    bool setNightTareLossPower(boost::optional<double> nightTareLossPower);
 
     void resetNightTareLossPower();
 
-    void setNominalVoltageInput(boost::optional<double> nominalVoltageInput);
+    bool setNominalVoltageInput(boost::optional<double> nominalVoltageInput);
 
     void resetNominalVoltageInput();
 
@@ -166,4 +166,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_ELECTRICLOADCENTERINVERTERLOOKUPTABLE_IMPL_HPP
-

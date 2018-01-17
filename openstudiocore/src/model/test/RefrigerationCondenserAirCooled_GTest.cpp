@@ -44,12 +44,12 @@ TEST_F(ModelFixture, RefrigerationCondenserAirCooled_DefaultConstructor)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model model;
     RefrigerationCondenserAirCooled testObject = RefrigerationCondenserAirCooled(model);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -104,7 +104,7 @@ TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneOneModelWithCustomData
   heatRejectionCurve.setCoefficient2x(22000.0);
   heatRejectionCurve.setMinimumValueofx(5.0);
   heatRejectionCurve.setMaximumValueofx(22.2);
-  
+
   testObject.setRatedEffectiveTotalHeatRejectionRateCurve(heatRejectionCurve);
 
   RefrigerationCondenserAirCooled testObjectClone = testObject.clone(model).cast<RefrigerationCondenserAirCooled>();

@@ -106,13 +106,13 @@ class MODEL_API CoilHeatingDXVariableSpeed : public StraightComponent {
   /** @name Setters */
   //@{
 
-  void setNominalSpeedLevel(int nominalSpeedLevel);
+  bool setNominalSpeedLevel(int nominalSpeedLevel);
 
-  void setRatedHeatingCapacityAtSelectedNominalSpeedLevel(double ratedHeatingCapacityAtSelectedNominalSpeedLevel);
+  bool setRatedHeatingCapacityAtSelectedNominalSpeedLevel(double ratedHeatingCapacityAtSelectedNominalSpeedLevel);
 
   void autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel();
 
-  void setRatedAirFlowRateAtSelectedNominalSpeedLevel(double ratedAirFlowRateAtSelectedNominalSpeedLevel);
+  bool setRatedAirFlowRateAtSelectedNominalSpeedLevel(double ratedAirFlowRateAtSelectedNominalSpeedLevel);
 
   void autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
 
@@ -124,7 +124,7 @@ class MODEL_API CoilHeatingDXVariableSpeed : public StraightComponent {
 
   bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
-  void setOutdoorDryBulbTemperaturetoTurnOnCompressor(double outdoorDryBulbTemperaturetoTurnOnCompressor);
+  bool setOutdoorDryBulbTemperaturetoTurnOnCompressor(double outdoorDryBulbTemperaturetoTurnOnCompressor);
 
   void resetOutdoorDryBulbTemperaturetoTurnOnCompressor();
 
@@ -189,5 +189,4 @@ typedef std::vector<CoilHeatingDXVariableSpeed> CoilHeatingDXVariableSpeedVector
 } // model
 } // openstudio
 
-#endif // MODEL_COILHEATINGDXVARIABLESPEED_HPP
-
+#endif // MODEL_COILHEATINGDXVARIABLESPEED_HPP

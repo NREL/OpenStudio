@@ -44,7 +44,7 @@ namespace detail {
 
 } // detail
 
-/** BoilerHotWater is a StraightComponent that wraps the OpenStudio IDD object 
+/** BoilerHotWater is a StraightComponent that wraps the OpenStudio IDD object
  *  'OS:Boiler:HotWater'. */
 class MODEL_API BoilerHotWater : public StraightComponent {
  public:
@@ -140,7 +140,7 @@ class MODEL_API BoilerHotWater : public StraightComponent {
 
   void resetNormalizedBoilerEfficiencyCurve();
 
-  void setDesignWaterOutletTemperature(double designWaterOutletTemperature);
+  bool setDesignWaterOutletTemperature(double designWaterOutletTemperature);
 
   void resetDesignWaterOutletTemperature();
 
@@ -166,7 +166,7 @@ class MODEL_API BoilerHotWater : public StraightComponent {
 
   // TODO: Handle Non-Extensible IddField Boiler Water Outlet Node Name.
 
-  void setWaterOutletUpperTemperatureLimit(double waterOutletUpperTemperatureLimit);
+  bool setWaterOutletUpperTemperatureLimit(double waterOutletUpperTemperatureLimit);
 
   void resetWaterOutletUpperTemperatureLimit();
 
@@ -215,5 +215,4 @@ typedef std::vector<BoilerHotWater> BoilerHotWaterVector;
 } // model
 } // openstudio
 
-#endif // MODEL_BOILERHOTWATER_HPP
-
+#endif // MODEL_BOILERHOTWATER_HPP

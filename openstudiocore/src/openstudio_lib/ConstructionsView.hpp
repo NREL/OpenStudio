@@ -89,7 +89,7 @@ class ConstructionsInspectorView : public ModelObjectInspectorView
     void showDefaultView();
 
     void showInspector(QWidget * widget);
-    
+
     std::map<openstudio::IddObjectType, int> m_inspectorIndexMap;
 
     bool m_isIP;

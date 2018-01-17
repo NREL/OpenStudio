@@ -45,10 +45,10 @@ namespace detail {
 
 /** WaterUseConnections_Impl is a StraightComponent_Impl that is the implementation class for WaterUseConnections.*/
 class MODEL_API WaterUseConnections_Impl : public StraightComponent_Impl {
-  
 
-  
-  
+
+
+
 
   public:
 

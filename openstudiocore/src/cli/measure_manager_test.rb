@@ -40,9 +40,9 @@ require 'fileutils'
 @measure_dir = 'E:/test/measures'
 
 def reset()
-  
-  result = {}  
-  
+
+  result = {}
+
   begin
     json_request = JSON.generate({})
     request = RestClient::Resource.new("#{@host}/reset", user: @user, password: @pass)
@@ -52,14 +52,14 @@ def reset()
     puts "reset failed"
     puts e.message
   end
-  
+
   return result
 end
 
 def set(payload)
 
   result = []
-         
+
   begin
     json_request = JSON.generate(payload)
     request = RestClient::Resource.new("#{@host}/set", user: @user, password: @pass)
@@ -69,13 +69,13 @@ def set(payload)
     puts "set #{payload} failed"
     puts e.message
   end
-  
+
   return result
 end
 
 def download_bcl_measure(uid)
   result = []
-         
+
   begin
     json_request = JSON.generate({:uid => uid})
     request = RestClient::Resource.new("#{@host}/download_bcl_measure", user: @user, password: @pass)
@@ -85,14 +85,14 @@ def download_bcl_measure(uid)
     puts "download_bcl_measure #{uid} failed"
     puts e.message
   end
-  
+
   return result
 end
 
 def bcl_measures
 
   result = []
-         
+
   begin
     json_request = JSON.generate({})
     request = RestClient::Resource.new("#{@host}/bcl_measures", user: @user, password: @pass)
@@ -102,7 +102,7 @@ def bcl_measures
     puts "bcl_measures failed"
     puts e.message
   end
-  
+
   return result
 end
 
@@ -113,9 +113,9 @@ def update_measures(measures_dir = nil)
     measures_dir = File.absolute_path(measures_dir)
     payload[:measures_dir] = measures_dir
   end
-  
+
   result = []
-         
+
   begin
     json_request = JSON.generate(payload)
     request = RestClient::Resource.new("#{@host}/update_measures", user: @user, password: @pass)
@@ -125,7 +125,7 @@ def update_measures(measures_dir = nil)
     puts "update_measures(#{measures_dir}) failed"
     puts e.message
   end
-  
+
   return result
 end
 
@@ -133,9 +133,9 @@ end
 def compute_arguments(measure_dir, osm_path = nil)
   measure_dir = File.absolute_path(measure_dir)
   osm_path = File.absolute_path(osm_path) if osm_path
-  
+
   result = {}
-  
+
   begin
     json_request = JSON.generate({:measure_dir => measure_dir, :osm_path => osm_path})
     request = RestClient::Resource.new("#{@host}/compute_arguments", user: @user, password: @pass)
@@ -145,15 +145,15 @@ def compute_arguments(measure_dir, osm_path = nil)
     puts "compute_arguments(#{measure_dir}, #{osm_path}) failed"
     puts e.message
   end
-  
+
   return result
 end
 
 def create_measure(measure_dir, display_name, class_name, taxonomy_tag, measure_type, description, modeler_description)
   measure_dir = File.absolute_path(measure_dir)
-  
+
   result = {}
-  
+
   begin
     json_request = JSON.generate({:measure_dir => measure_dir, :display_name => display_name, :class_name => class_name, :taxonomy_tag => taxonomy_tag,:measure_type => measure_type, :description => description, :modeler_description => modeler_description})
     request = RestClient::Resource.new("#{@host}/create_measure", user: @user, password: @pass)
@@ -163,16 +163,16 @@ def create_measure(measure_dir, display_name, class_name, taxonomy_tag, measure_
     puts "create_measure(#{measure_dir}) failed"
     puts e.message
   end
-  
+
   return result
 end
 
 def duplicate_measure(old_measure_dir, measure_dir, name, class_name, taxonomy_tag, measure_type, description, modeler_description)
   old_measure_dir = File.absolute_path(old_measure_dir)
   measure_dir = File.absolute_path(measure_dir)
-  
-  result = {}       
-  
+
+  result = {}
+
   begin
     json_request = JSON.generate({:old_measure_dir => old_measure_dir, :measure_dir => measure_dir, :name => name, :class_name => class_name, :taxonomy_tag => taxonomy_tag,:measure_type => measure_type, :description => description, :modeler_description => modeler_description})
     request = RestClient::Resource.new("#{@host}/duplicate_measure", user: @user, password: @pass)
@@ -182,7 +182,7 @@ def duplicate_measure(old_measure_dir, measure_dir, name, class_name, taxonomy_t
     puts "duplicate_measure(#{old_measure_dir}, #{measure_dir}) failed"
     puts e.message
   end
-  
+
   return result
 end
 
@@ -196,9 +196,9 @@ model = OpenStudio::Model::exampleModel
 model.save(osm_path, true)
 
 # these will succeed
-measures = bcl_measures 
+measures = bcl_measures
 download_bcl_measure('05e20922-6fe4-48a4-bddb-411f8167e757')
-measures = bcl_measures 
+measures = bcl_measures
 measures = update_measures # defaults to 'My Measure' dir
 set({:my_measures_dir => @measure_dir})
 measures = update_measures # defaults to 'My Measure' dir
@@ -224,7 +224,7 @@ info = compute_arguments('./output/MissingMeasure')
 #puts info
 info = compute_arguments('./output/MissingMeasure', osm_path)
 #puts info
-  
+
 # this will succeed
 measure_dir = './output/NewMeasure'
 result = create_measure(measure_dir, "NewMeasure", "NewMeasure", "Envelope.Form", "ModelMeasure", "No description", "No modeler description")

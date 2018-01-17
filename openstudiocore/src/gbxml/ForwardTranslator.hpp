@@ -70,7 +70,7 @@ namespace gbxml {
 
   class GBXML_API ForwardTranslator {
   public:
-    
+
     ForwardTranslator();
 
     virtual ~ForwardTranslator();

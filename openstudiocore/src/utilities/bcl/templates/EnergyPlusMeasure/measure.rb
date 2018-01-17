@@ -30,13 +30,13 @@ class EnergyPlusMeasureName < OpenStudio::Measure::EnergyPlusMeasure
     args << zone_name
 
     return args
-  end 
+  end
 
   # define what happens when the measure is run
   def run(workspace, runner, user_arguments)
     super(workspace, runner, user_arguments)
 
-    # use the built-in error checking 
+    # use the built-in error checking
     if !runner.validateUserArguments(arguments(workspace), user_arguments)
       return false
     end
@@ -49,7 +49,7 @@ class EnergyPlusMeasureName < OpenStudio::Measure::EnergyPlusMeasure
       runner.registerError("Empty zone name was entered.")
       return false
     end
-    
+
     # get all thermal zones in the starting model
     zones = workspace.getObjectsByType("Zone".to_IddObjectType)
 
@@ -58,7 +58,7 @@ class EnergyPlusMeasureName < OpenStudio::Measure::EnergyPlusMeasure
 
     # add a new zone to the model with the new name
     # http://apps1.eere.energy.gov/buildings/energyplus/pdfs/inputoutputreference.pdf#nameddest=Zone
-    new_zone_string = "    
+    new_zone_string = "
     Zone,
       #{zone_name},            !- Name
       0,                       !- Direction of Relative North {deg}
@@ -81,12 +81,12 @@ class EnergyPlusMeasureName < OpenStudio::Measure::EnergyPlusMeasure
     # report final condition of model
     finishing_zones = workspace.getObjectsByType("Zone".to_IddObjectType)
     runner.registerFinalCondition("The building finished with #{finishing_zones.size} zones.")
-    
+
     return true
- 
+
   end
 
-end 
+end
 
 # register the measure to be used by the application
 EnergyPlusMeasureName.new.registerWithApplication

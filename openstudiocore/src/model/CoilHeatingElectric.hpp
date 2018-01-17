@@ -88,13 +88,13 @@ class MODEL_API CoilHeatingElectric : public StraightComponent {
 
   void resetEfficiency();
 
-  void setNominalCapacity(double nominalCapacity);
+  bool setNominalCapacity(double nominalCapacity);
 
   void resetNominalCapacity();
 
   void autosizeNominalCapacity();
 
-  void setTemperatureSetpointNode(Node & temperatureSetpointNode);
+  bool setTemperatureSetpointNode(Node & temperatureSetpointNode);
 
   void resetTemperatureSetpointNode();
 
@@ -134,5 +134,4 @@ typedef std::vector<CoilHeatingElectric> CoilHeatingElectricVector;
 
 } // openstudio
 
-#endif // MODEL_COILHEATINGELECTRIC_HPP
-
+#endif // MODEL_COILHEATINGELECTRIC_HPP

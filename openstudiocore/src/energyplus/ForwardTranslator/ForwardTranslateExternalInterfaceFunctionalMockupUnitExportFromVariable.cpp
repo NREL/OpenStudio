@@ -56,7 +56,7 @@ boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceFunction
   if (s) {
     idfObject.setName(*s);
   }
-  
+
   s = modelObject.outputVariableIndexKeyName();
   if (s.is_initialized()) {
     idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_From_VariableFields::Output_VariableIndexKeyName, s.get());

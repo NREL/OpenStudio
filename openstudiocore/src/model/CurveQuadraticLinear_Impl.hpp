@@ -39,25 +39,25 @@ namespace detail {
 
   /** CurveQuadraticLinear_Impl is a Curve_Impl that is the implementation class for CurveQuadraticLinear.*/
   class MODEL_API CurveQuadraticLinear_Impl : public Curve_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
 
     /** @name Constructors and Destructors */
@@ -131,31 +131,31 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setCoefficient1Constant(double coefficient1Constant);
+    bool setCoefficient1Constant(double coefficient1Constant);
 
-    void setCoefficient2x(double coefficient2x);
+    bool setCoefficient2x(double coefficient2x);
 
-    void setCoefficient3xPOW2(double coefficient3xPOW2);
+    bool setCoefficient3xPOW2(double coefficient3xPOW2);
 
-    void setCoefficient4y(double coefficient4y);
+    bool setCoefficient4y(double coefficient4y);
 
-    void setCoefficient5xTIMESY(double coefficient5xTIMESY);
+    bool setCoefficient5xTIMESY(double coefficient5xTIMESY);
 
-    void setCoefficient6xPOW2TIMESY(double coefficient6xPOW2TIMESY);
+    bool setCoefficient6xPOW2TIMESY(double coefficient6xPOW2TIMESY);
 
-    void setMinimumValueofx(double minimumValueofx);
+    bool setMinimumValueofx(double minimumValueofx);
 
-    void setMaximumValueofx(double maximumValueofx);
+    bool setMaximumValueofx(double maximumValueofx);
 
-    void setMinimumValueofy(double minimumValueofy);
+    bool setMinimumValueofy(double minimumValueofy);
 
-    void setMaximumValueofy(double maximumValueofy);
+    bool setMaximumValueofy(double maximumValueofy);
 
-    void setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
+    bool setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
 
     void resetMinimumCurveOutput();
 
-    void setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
+    bool setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
 
     void resetMaximumCurveOutput();
 
@@ -186,5 +186,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEQUADRATICLINEAR_IMPL_HPP
-
+#endif // MODEL_CURVEQUADRATICLINEAR_IMPL_HPP

@@ -55,7 +55,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SetpointManagerFollowGroundTemperatu
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
-  
+
   SetpointManagerFollowGroundTemperature testObject(m);
   testObject.setControlVariable("MinimumTemperature");
   testObject.setReferenceGroundTemperatureObjectType("Site:GroundTemperature:Shallow");
@@ -67,17 +67,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SetpointManagerFollowGroundTemperatu
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(m);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
-  
+
   WorkspaceObjectVector spmIdfs = workspace.getObjectsByType(IddObjectType::SetpointManager_FollowGroundTemperature);
   ASSERT_EQ(1u, spmIdfs.size());
   WorkspaceObject &spmIdf(spmIdfs[0]);
-  
+
   EXPECT_EQ("MinimumTemperature", spmIdf.getString(SetpointManager_FollowGroundTemperatureFields::ControlVariable, true).get());
   EXPECT_EQ("Site:GroundTemperature:Shallow", spmIdf.getString(SetpointManager_FollowGroundTemperatureFields::ReferenceGroundTemperatureObjectType, true).get());
   EXPECT_DOUBLE_EQ(999.9, spmIdf.getDouble(SetpointManager_FollowGroundTemperatureFields::OffsetTemperatureDifference, true).get());
   EXPECT_DOUBLE_EQ(999.9, spmIdf.getDouble(SetpointManager_FollowGroundTemperatureFields::MaximumSetpointTemperature, true).get());
   EXPECT_DOUBLE_EQ(999.9, spmIdf.getDouble(SetpointManager_FollowGroundTemperatureFields::MinimumSetpointTemperature, true).get());
-  
+
 }
 
 

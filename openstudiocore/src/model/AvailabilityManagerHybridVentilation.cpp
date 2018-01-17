@@ -211,7 +211,7 @@ namespace detail {
     return result;
   }
 
-  void AvailabilityManagerHybridVentilation_Impl::setUseWeatherFileRainIndicators(bool useWeatherFileRainIndicators) {
+  bool AvailabilityManagerHybridVentilation_Impl::setUseWeatherFileRainIndicators(bool useWeatherFileRainIndicators) {
     return setBooleanFieldValue(OS_AvailabilityManager_HybridVentilationFields::UseWeatherFileRainIndicators, useWeatherFileRainIndicators);
   }
 
@@ -390,8 +390,8 @@ bool AvailabilityManagerHybridVentilation::setVentilationControlModeSchedule(Sch
   return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setVentilationControlModeSchedule(schedule);
 }
 
-void AvailabilityManagerHybridVentilation::setUseWeatherFileRainIndicators(bool useWeatherFileRainIndicators) {
-  getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setUseWeatherFileRainIndicators(useWeatherFileRainIndicators);
+bool AvailabilityManagerHybridVentilation::setUseWeatherFileRainIndicators(bool useWeatherFileRainIndicators) {
+  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setUseWeatherFileRainIndicators(useWeatherFileRainIndicators);
 }
 
 bool AvailabilityManagerHybridVentilation::setMaximumWindSpeed(double maximumWindSpeed) {

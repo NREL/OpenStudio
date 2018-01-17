@@ -50,7 +50,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirGap( AirGap & modelObj
 
   idfObject.setDouble(Material_AirGapFields::ThermalResistance, modelObject.thermalResistance());
 
-  
+
   return boost::optional<IdfObject>(idfObject);
 }
 

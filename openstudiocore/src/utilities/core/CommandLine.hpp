@@ -36,7 +36,7 @@
 #include <vector>
 
 /** Extend boost::program_options namespace to include platform specific functions for parsing
-*   command line arguments.  Assume UTF-16LE on Windows and UTF-8 elsewhere. 
+*   command line arguments.  Assume UTF-16LE on Windows and UTF-8 elsewhere.
 **/
 
 namespace boost{

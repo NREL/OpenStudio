@@ -45,40 +45,7 @@ namespace detail {
   /** ZoneHVACPackagedTerminalHeatPump_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACPackagedTerminalHeatPump.*/
   class MODEL_API ZoneHVACPackagedTerminalHeatPump_Impl : public ZoneHVACComponent_Impl
   {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
-    
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -207,7 +174,7 @@ namespace detail {
 
     bool setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType);
 
-    void setOutdoorAirMixerName(std::string outdoorAirMixerName);
+    bool setOutdoorAirMixerName(std::string outdoorAirMixerName);
 
     bool setSupplyAirFlowRateDuringCoolingOperation(boost::optional<double> supplyAirFlowRateDuringCoolingOperation);
 
@@ -237,9 +204,9 @@ namespace detail {
 
     void autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
-    void setSupplyAirFan( HVACComponent & hvacComponent );
+    bool setSupplyAirFan( HVACComponent & hvacComponent );
 
-    void setHeatingCoil( HVACComponent & hvacComponent );
+    bool setHeatingCoil( HVACComponent & hvacComponent );
 
     bool setHeatingConvergenceTolerance(double heatingConvergenceTolerance);
 
@@ -249,15 +216,15 @@ namespace detail {
 
     void resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
 
-    void setCoolingCoil( HVACComponent & hvacComponent );
+    bool setCoolingCoil( HVACComponent & hvacComponent );
 
     bool setCoolingConvergenceTolerance(double coolingConvergenceTolerance);
 
     void resetCoolingConvergenceTolerance();
 
-    void setSupplementalHeatingCoil( HVACComponent & hvacComponent );
+    bool setSupplementalHeatingCoil( HVACComponent & hvacComponent );
 
-    void setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater);
+    bool setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater);
 
     void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 
@@ -310,4 +277,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_ZONEHVACPACKAGEDTERMINALHEATPUMP_IMPL_HPP
-

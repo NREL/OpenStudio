@@ -610,7 +610,7 @@ set(${target_name}_depends
   openstudio_model
 )
 
-set(FILES 
+set(FILES
   "${CMAKE_CURRENT_SOURCE_DIR}/Resources/LCCusePriceEscalationDataSet2011.idf"
   "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R11_FluidPropertiesDataSet.idf"
   "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R12_FluidPropertiesDataSet.idf"
@@ -625,7 +625,7 @@ set(FILES
   "${CMAKE_CURRENT_SOURCE_DIR}/Resources/R744_FluidPropertiesDataSet.idf"
 )
 
-set(EMBEDDED_PATHS 
+set(EMBEDDED_PATHS
   Resources/LCCusePriceEscalationDataSet2011.idf
   Resources/R11_FluidPropertiesDataSet.idf
   Resources/R12_FluidPropertiesDataSet.idf

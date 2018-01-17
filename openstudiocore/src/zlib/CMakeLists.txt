@@ -137,7 +137,7 @@ add_library(miniziplib STATIC ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HD
 #if(NOT APPLE)
 #  install(TARGETS miniziplib
 #    RUNTIME DESTINATION bin
-#    LIBRARY DESTINATION lib 
+#    LIBRARY DESTINATION lib
 #  )
 #endif()
 

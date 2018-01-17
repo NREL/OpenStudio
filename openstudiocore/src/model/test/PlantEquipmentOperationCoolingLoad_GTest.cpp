@@ -72,7 +72,7 @@ TEST_F(ModelFixture,PlantEquipmentOperationCoolingLoad) {
     EXPECT_EQ(1u,plantOperationScheme.equipment(upperLimits[0]).size());
     EXPECT_EQ(1u,plantOperationScheme.equipment(upperLimits[1]).size());
 
-    auto result = plantOperationScheme.removeLoadRange(1000.0); 
+    auto result = plantOperationScheme.removeLoadRange(1000.0);
     EXPECT_EQ(equipment,result);
     upperLimits = plantOperationScheme.loadRangeUpperLimits();
     EXPECT_EQ(1u,upperLimits.size());
