@@ -30,7 +30,7 @@
 #define MODEL_EXTERIORLIGHTS_IMPL_HPP
 
 #include "ModelAPI.hpp"
-#include "ModelObject_Impl.hpp"
+#include "ExteriorLoadInstance_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -41,21 +41,8 @@ class Facility;
 
 namespace detail {
 
-  /** ExteriorLights_Impl is a ModelObject_Impl that is the implementation class for ExteriorLights.*/
-  class MODEL_API ExteriorLights_Impl : public ModelObject_Impl {
-
-
-
-
-
-
-
-
-
-
-
-
-
+  /** ExteriorLights_Impl is a ExteriorLoadInstance_Impl that is the implementation class for ExteriorLights.*/
+  class MODEL_API ExteriorLights_Impl : public ExteriorLoadInstance_Impl {
 
    public:
     /** @name Constructors and Destructors */
@@ -85,6 +72,13 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    virtual double multiplier() const override;
+
+    virtual bool isMultiplierDefaulted() const override;
+
+    virtual bool setDefinition(const ExteriorLoadDefinition& definition) override;
+
+
     //@}
     /** @name Getters */
     //@{
@@ -96,10 +90,6 @@ namespace detail {
     std::string controlOption() const;
 
     bool isControlOptionDefaulted() const;
-
-    double multiplier() const;
-
-    bool isMultiplierDefaulted() const;
 
     std::string endUseSubcategory() const;
 
@@ -134,6 +124,10 @@ namespace detail {
 
     //@}
    protected:
+
+    // index of the definition name
+    virtual int definitionIndex() const override;
+
    private:
     REGISTER_LOGGER("openstudio.model.ExteriorLights");
 

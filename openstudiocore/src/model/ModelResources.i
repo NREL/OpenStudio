@@ -29,6 +29,8 @@
   // ignore space load instance for now
   %ignore openstudio::model::SpaceLoadDefinition::instances;
 
+  %ignore openstudio::model::ExteriorLoadDefinition::instances;
+
   // ignore schedule type
   %ignore openstudio::model::ScheduleType;
 
@@ -125,7 +127,11 @@ MODELOBJECT_TEMPLATES(HotWaterEquipmentDefinition);
 MODELOBJECT_TEMPLATES(SteamEquipmentDefinition);
 MODELOBJECT_TEMPLATES(OtherEquipmentDefinition);
 MODELOBJECT_TEMPLATES(InternalMassDefinition);
+
+MODELOBJECT_TEMPLATES(ExteriorLoadDefinition);
 MODELOBJECT_TEMPLATES(ExteriorLightsDefinition)
+MODELOBJECT_TEMPLATES(ExteriorFuelEquipmentDefinition)
+MODELOBJECT_TEMPLATES(ExteriorWaterEquipmentDefinition)
 MODELOBJECT_TEMPLATES(RenderingColor);
 MODELOBJECT_TEMPLATES(DesignSpecificationOutdoorAir);
 
@@ -202,7 +208,10 @@ SWIG_MODELOBJECT(HotWaterEquipmentDefinition, 1);
 SWIG_MODELOBJECT(SteamEquipmentDefinition, 1);
 SWIG_MODELOBJECT(OtherEquipmentDefinition, 1);
 SWIG_MODELOBJECT(InternalMassDefinition, 1);
+SWIG_MODELOBJECT(ExteriorLoadDefinition, 0);
 SWIG_MODELOBJECT(ExteriorLightsDefinition, 1);
+SWIG_MODELOBJECT(ExteriorFuelEquipmentDefinition, 1);
+SWIG_MODELOBJECT(ExteriorWaterEquipmentDefinition, 1);
 SWIG_MODELOBJECT(RenderingColor, 1);
 SWIG_MODELOBJECT(DesignSpecificationOutdoorAir, 1);
 

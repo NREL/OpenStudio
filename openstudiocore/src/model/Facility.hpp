@@ -44,6 +44,8 @@ namespace model {
 class Building;
 class OutputMeter;
 class ExteriorLights;
+class ExteriorFuelEquipment;
+class ExteriorWaterEquipment;
 
 namespace detail {
 
@@ -62,6 +64,7 @@ namespace detail {
  *  To get the Facility object for a Model but not create one if it does not yet exist use model.getOptionalUniqueObject<Facility>().
  */
 class MODEL_API Facility : public ParentObject {
+
  public:
   virtual ~Facility() {}
 
@@ -95,6 +98,12 @@ class MODEL_API Facility : public ParentObject {
 
   /// Returns all ExteriorLights.
   std::vector<ExteriorLights> exteriorLights() const;
+
+  /// Returns all ExteriorFuelEquipment.
+  std::vector<ExteriorFuelEquipment> exteriorFuelEquipments() const;
+
+  /// Returns all ExteriorWaterEquipment.
+  std::vector<ExteriorWaterEquipment> exteriorWaterEquipments() const;
 
   //@}
   /** @name Other */

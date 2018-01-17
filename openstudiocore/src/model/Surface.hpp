@@ -32,6 +32,9 @@
 #include "ModelAPI.hpp"
 #include "PlanarSurface.hpp"
 
+#include "SurfacePropertyExposedFoundationPerimeter.hpp"
+#include "SurfacePropertyExposedFoundationPerimeter_Impl.hpp"
+
 namespace openstudio {
 namespace model {
 
@@ -42,6 +45,8 @@ class ConstructionBase;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
 class SurfacePropertyConvectionCoefficients;
+class FoundationKiva;
+class SurfacePropertyExposedFoundationPerimeter;
 
 namespace detail {
 
@@ -278,6 +283,21 @@ class MODEL_API Surface : public PlanarSurface {
    *  Returns false is this surface has any current sub surfaces or if there is an adjacent surface.*/
   std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
 
+  bool setAdjacentFoundation(const FoundationKiva& kiva);
+  
+  boost::optional<FoundationKiva> adjacentFoundation() const;
+  
+  void resetAdjacentFoundation();
+  
+  // if surface property exposed foundation perimeter already exists, do nothing and return nil; creates the surface property exposed foundation perimeter if it does not already exist and return it;
+  boost::optional<SurfacePropertyExposedFoundationPerimeter> createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double exposedPerimeter);
+
+  // returns the surface property exposed foundation perimeter if set
+  boost::optional<SurfacePropertyExposedFoundationPerimeter> surfacePropertyExposedFoundationPerimeter() const;
+
+  // resets the surface property exposed foundation perimeter
+  void resetSurfacePropertyExposedFoundationPerimeter();
+  
  protected:
   /// @cond
   typedef detail::Surface_Impl ImplType;

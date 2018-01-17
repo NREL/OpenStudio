@@ -1534,6 +1534,31 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       break;
     }
+
+  case openstudio::IddObjectType::OS_Exterior_FuelEquipment :
+    {
+      model::ExteriorFuelEquipment mo = modelObject.cast<ExteriorFuelEquipment>();
+      retVal = translateExteriorFuelEquipment(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Exterior_FuelEquipment_Definition:
+    {
+      // no-op
+      break;
+    }
+
+  case openstudio::IddObjectType::OS_Exterior_WaterEquipment :
+    {
+      model::ExteriorWaterEquipment mo = modelObject.cast<ExteriorWaterEquipment>();
+      retVal = translateExteriorWaterEquipment(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Exterior_WaterEquipment_Definition:
+    {
+      // no-op
+      break;
+    }
+
   case openstudio::IddObjectType::OS_ExternalInterface :
     {
       model::ExternalInterface ei = modelObject.cast<ExternalInterface>();
@@ -1652,6 +1677,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   {
     model::FluidCoolerTwoSpeed fluidCoolerTwoSpeed = modelObject.cast<FluidCoolerTwoSpeed>();
     retVal = translateFluidCoolerTwoSpeed(fluidCoolerTwoSpeed);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Foundation_Kiva:
+  {
+    model::FoundationKiva kiva = modelObject.cast<FoundationKiva>();
+    retVal = translateFoundationKiva(kiva);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Foundation_Kiva_Settings:
+  {
+    model::FoundationKivaSettings kivaSettings = modelObject.cast<FoundationKivaSettings>();
+    retVal = translateFoundationKivaSettings(kivaSettings);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_MicroTurbine:
@@ -2718,6 +2755,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateSurfacePropertyConvectionCoefficientsMultipleSurface(obj);
     break;
   }
+  case openstudio::IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter:
+  {
+    model::SurfacePropertyExposedFoundationPerimeter obj = modelObject.cast<SurfacePropertyExposedFoundationPerimeter>();
+    retVal = translateSurfacePropertyExposedFoundationPerimeter(obj);
+    break;
+  }  
   case openstudio::IddObjectType::OS_SurfaceProperty_OtherSideCoefficients:
   {
     model::SurfacePropertyOtherSideCoefficients obj = modelObject.cast<SurfacePropertyOtherSideCoefficients>();
@@ -3175,6 +3218,8 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_SizingPeriod_DesignDay);
   result.push_back(IddObjectType::OS_SizingPeriod_WeatherFileConditionType);
   result.push_back(IddObjectType::OS_SizingPeriod_WeatherFileDays);
+  result.push_back(IddObjectType::OS_Foundation_Kiva);
+  result.push_back(IddObjectType::OS_Foundation_Kiva_Settings);
 
   result.push_back(IddObjectType::OS_UtilityCost_Charge_Block);
   result.push_back(IddObjectType::OS_UtilityCost_Charge_Simple);
@@ -3223,6 +3268,9 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_SpaceInfiltration_DesignFlowRate);
   result.push_back(IddObjectType::OS_SpaceInfiltration_EffectiveLeakageArea);
   result.push_back(IddObjectType::OS_Exterior_Lights);
+  result.push_back(IddObjectType::OS_Exterior_FuelEquipment);
+  result.push_back(IddObjectType::OS_Exterior_WaterEquipment);
+
 
   result.push_back(IddObjectType::OS_AirLoopHVAC);
   result.push_back(IddObjectType::OS_AirLoopHVAC_ControllerList);
@@ -3391,6 +3439,7 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
 
   iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);
   iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);
+  iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter);
   iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);
 
   for (const IddObjectType& iddObjectType : iddObjectTypes){

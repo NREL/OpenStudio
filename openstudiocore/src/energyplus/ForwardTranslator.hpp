@@ -181,6 +181,8 @@ class EvaporativeCoolerIndirectResearchSpecial;
 class EvaporativeFluidCoolerSingleSpeed;
 class EvaporativeFluidCoolerTwoSpeed;
 class ExteriorLights;
+class ExteriorFuelEquipment;
+class ExteriorWaterEquipment;
 class ExternalInterface;
 class ExternalInterfaceActuator;
 class ExternalInterfaceFunctionalMockupUnitExportFromVariable;
@@ -201,6 +203,8 @@ class FanZoneExhaust;
 class FFactorGroundFloorConstruction;
 class FluidCoolerSingleSpeed;
 class FluidCoolerTwoSpeed;
+class FoundationKiva;
+class FoundationKivaSettings;
 class Gas;
 class GasEquipment;
 class GasMixture;
@@ -360,6 +364,7 @@ class SubSurface;
 class Surface;
 class SurfacePropertyConvectionCoefficients;
 class SurfacePropertyConvectionCoefficientsMultipleSurface;
+class SurfacePropertyExposedFoundationPerimeter;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
 class TableMultiVariableLookup;
@@ -758,6 +763,10 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateExteriorLights(model::ExteriorLights& modelObject );
 
+  boost::optional<IdfObject> translateExteriorFuelEquipment(model::ExteriorFuelEquipment& modelObject );
+
+  boost::optional<IdfObject> translateExteriorWaterEquipment(model::ExteriorWaterEquipment& modelObject );
+
   boost::optional<IdfObject> translateExternalInterface(model::ExternalInterface& modelObject );
 
   boost::optional<IdfObject> translateExternalInterfaceActuator(model::ExternalInterfaceActuator& modelObject );
@@ -801,6 +810,10 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateFluidCoolerSingleSpeed(model::FluidCoolerSingleSpeed & modelObject);
 
   boost::optional<IdfObject> translateFluidCoolerTwoSpeed(model::FluidCoolerTwoSpeed & modelObject);
+  
+  boost::optional<IdfObject> translateFoundationKiva(model::FoundationKiva & modelObject);
+
+  boost::optional<IdfObject> translateFoundationKivaSettings(model::FoundationKivaSettings & modelObject);
 
   boost::optional<IdfObject> translateGas( model::Gas & modelObject );
 
@@ -1112,6 +1125,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateSurfacePropertyConvectionCoefficients(model::SurfacePropertyConvectionCoefficients & modelObject);
 
   boost::optional<IdfObject> translateSurfacePropertyConvectionCoefficientsMultipleSurface(model::SurfacePropertyConvectionCoefficientsMultipleSurface & modelObject);
+  
+  boost::optional<IdfObject> translateSurfacePropertyExposedFoundationPerimeter(model::SurfacePropertyExposedFoundationPerimeter & modelObject);
 
   boost::optional<IdfObject> translateSurfacePropertyOtherSideCoefficients(model::SurfacePropertyOtherSideCoefficients & modelObject);
 

@@ -58,6 +58,7 @@ class ComponentData;
 class Schedule;
 class Node;
 class SpaceType;
+class FoundationKivaSettings;
 
 namespace detail {
   class Model_Impl;
@@ -111,6 +112,10 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Get the Building object if there is one, this implementation uses a cached reference to the Building
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<Building>(). */
   boost::optional<Building> building() const;
+  
+  /** Get the FoundationKivaSettings object if there is one, this implementation uses a cached reference to the FoundationKivaSettings
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<FoundationKivaSettings>(). */
+  boost::optional<FoundationKivaSettings> foundationKivaSettings() const;  
 
   /** Get the LifeCycleCostParameters object if there is one, this implementation uses a cached reference to the LifeCycleCostParameters
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<LifeCycleCostParameters>(). */

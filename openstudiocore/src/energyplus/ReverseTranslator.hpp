@@ -180,6 +180,10 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateExteriorLights(const WorkspaceObject& workspaceObject);
 
+  boost::optional<model::ModelObject> translateExteriorFuelEquipment(const WorkspaceObject& workspaceObject);
+
+  boost::optional<model::ModelObject> translateExteriorWaterEquipment(const WorkspaceObject& workspaceObject);
+
   boost::optional<model::ModelObject> translateFanConstantVolume(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateFenestrationSurfaceDetailed(const WorkspaceObject & workspaceObject);

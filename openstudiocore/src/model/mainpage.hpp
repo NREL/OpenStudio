@@ -61,6 +61,8 @@ namespace model {
  *  \li LuminaireDefinition
  *  \li PeopleDefinition
  *  \li ExteriorLightsDefinition
+ *  \li ExteriorFuelEquipmentDefinition
+ *  \li ExteriorWaterEquipmentDefinition
  *
  *  \subsection site_location_classes Site and Location
  *
@@ -94,6 +96,8 @@ namespace model {
  *  \li SpaceInfiltrationDesignFlowRate
  *  \li DesignSpecificationOutdoorAir
  *  \li ExteriorLights
+ *  \li ExteriorFuelEquipment
+ *  \li ExteriorWaterEquipment
  *
  *  \subsection advanced_daylighting_classes Advanced Daylighting
  *
@@ -690,7 +694,9 @@ namespace model {
  *    <li> Facility (ParentObject, unique)
  *      <ul>
  *        <li> Meter (ModelObject)
- *        <li> ExteriorLights (ModelObject)
+ *        <li> ExteriorLights (ExteriorLoadInstance)
+ *        <li> ExteriorFuelEquipment (ExteriorLoadInstance)
+ *        <li> ExteriorWaterEquipment (ExteriorLoadInstance)
  *        <li> Building (ParentObject, unique)
  *          <ul>
  *            <li> BuildingStandardsInformation (ModelObject, unique)
@@ -904,7 +910,9 @@ namespace model {
  *    <li> LightsDefinition (SpaceLoadDefinition)
  *    <li> LuminaireDefinition (SpaceLoadDefinition)
  *    <li> PeopleDefinition (SpaceLoadDefinition)
- *    <li> ExteriorLightsDefinition (ResourceObject)
+ *    <li> ExteriorLightsDefinition (ExteriorLoadDefinition)
+ *    <li> ExteriorFuelEquipmentDefinition (ExteriorLoadDefinition)
+ *    <li> ExteriorWaterEquipmentDefinition (ExteriorLoadDefinition)
  *    <li> DesignSpecificationOutdoorAir (ResourceObject)
  *    <li> CurrencyType (ParentObject)
  *    <li> LifeCycleCost_UsePriceEscalation (ParentObject)

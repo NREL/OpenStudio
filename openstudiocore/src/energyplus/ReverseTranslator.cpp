@@ -480,7 +480,17 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     }
   case openstudio::IddObjectType::Exterior_Lights :
     {
-      //modelObject = translateExteriorLights(workspaceObject);
+      modelObject = translateExteriorLights(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::Exterior_FuelEquipment :
+    {
+      modelObject = translateExteriorFuelEquipment(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::Exterior_WaterEquipment :
+    {
+      modelObject = translateExteriorWaterEquipment(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::ElectricLoadCenter_Storage_Simple :

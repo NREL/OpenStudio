@@ -43,6 +43,10 @@
 #include "../../model/SurfacePropertyOtherSideConditionsModel.hpp"
 #include "../../model/SurfacePropertyConvectionCoefficients.hpp"
 #include "../../model/PlanarSurface.hpp"
+#include "../../model/FoundationKiva.hpp"
+#include "../../model/FoundationKiva_Impl.hpp"
+#include "../../model/SurfacePropertyExposedFoundationPerimeter.hpp"
+#include "../../model/SurfacePropertyExposedFoundationPerimeter_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -91,6 +95,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSurface( model::Surface &
   }
 
   boost::optional<Surface> adjacentSurface = modelObject.adjacentSurface();
+  boost::optional<FoundationKiva> adjacentFoundation = modelObject.adjacentFoundation();
   boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients = modelObject.surfacePropertyOtherSideCoefficients();
   boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel = modelObject.surfacePropertyOtherSideConditionsModel();
   std::string outsideBoundaryCondition = modelObject.outsideBoundaryCondition();
@@ -134,6 +139,11 @@ boost::optional<IdfObject> ForwardTranslator::translateSurface( model::Surface &
     idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, adjacentSurface->name().get());
   }
 
+  if (adjacentFoundation){
+    // do not translate and map here, wait for adjacent foundation to be translated on its own
+    idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, adjacentFoundation->name().get());
+  }  
+  
   if (surfacePropertyOtherSideCoefficients){
     boost::optional<IdfObject> osc = translateAndMapModelObject(*surfacePropertyOtherSideCoefficients);
     if (osc && osc->name()){
@@ -179,6 +189,14 @@ boost::optional<IdfObject> ForwardTranslator::translateSurface( model::Surface &
   std::sort(subSurfaces.begin(), subSurfaces.end(), WorkspaceObjectNameLess());
   for (SubSurface& subSurface : subSurfaces){
     translateAndMapModelObject(subSurface);
+  }
+
+  // create a defaulted SurfacePropertyExposedFoundationPerimeter object if it doesn't exist
+  if ((adjacentFoundation) && (surfaceType == "Floor")) {
+    if (!modelObject.surfacePropertyExposedFoundationPerimeter()) {
+      boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop = modelObject.createSurfacePropertyExposedFoundationPerimeter("ExposedPerimeterFraction", 1);
+      translateAndMapModelObject(optprop.get());
+    }
   }
 
   return idfObject;

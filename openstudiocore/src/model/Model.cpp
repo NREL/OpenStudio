@@ -372,6 +372,10 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(EvaporativeFluidCoolerTwoSpeed);
     REGISTER_CONSTRUCTOR(ExteriorLights);
     REGISTER_CONSTRUCTOR(ExteriorLightsDefinition);
+    REGISTER_CONSTRUCTOR(ExteriorFuelEquipment);
+    REGISTER_CONSTRUCTOR(ExteriorFuelEquipmentDefinition);
+    REGISTER_CONSTRUCTOR(ExteriorWaterEquipment);
+    REGISTER_CONSTRUCTOR(ExteriorWaterEquipmentDefinition);
     REGISTER_CONSTRUCTOR(ExternalInterface);
     REGISTER_CONSTRUCTOR(ExternalInterfaceActuator);
     REGISTER_CONSTRUCTOR(ExternalInterfaceFunctionalMockupUnitExportFromVariable);
@@ -393,6 +397,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(FFactorGroundFloorConstruction);
     REGISTER_CONSTRUCTOR(FluidCoolerSingleSpeed);
     REGISTER_CONSTRUCTOR(FluidCoolerTwoSpeed);
+    REGISTER_CONSTRUCTOR(FoundationKiva);
+    REGISTER_CONSTRUCTOR(FoundationKivaSettings);
     REGISTER_CONSTRUCTOR(Gas);
     REGISTER_CONSTRUCTOR(GasEquipment);
     REGISTER_CONSTRUCTOR(GasEquipmentDefinition);
@@ -574,6 +580,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(Surface);
     REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficients)
     REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficientsMultipleSurface);
+    REGISTER_CONSTRUCTOR(SurfacePropertyExposedFoundationPerimeter);
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideCoefficients);
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideConditionsModel);
     REGISTER_CONSTRUCTOR(TableMultiVariableLookup);
@@ -837,6 +844,10 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(EvaporativeFluidCoolerTwoSpeed);
     REGISTER_COPYCONSTRUCTORS(ExteriorLights);
     REGISTER_COPYCONSTRUCTORS(ExteriorLightsDefinition);
+    REGISTER_COPYCONSTRUCTORS(ExteriorFuelEquipment);
+    REGISTER_COPYCONSTRUCTORS(ExteriorFuelEquipmentDefinition);
+    REGISTER_COPYCONSTRUCTORS(ExteriorWaterEquipment);
+    REGISTER_COPYCONSTRUCTORS(ExteriorWaterEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(ExternalInterface);
     REGISTER_COPYCONSTRUCTORS(ExternalInterfaceActuator);
     REGISTER_COPYCONSTRUCTORS(ExternalInterfaceFunctionalMockupUnitExportFromVariable);
@@ -858,6 +869,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(FFactorGroundFloorConstruction);
     REGISTER_COPYCONSTRUCTORS(FluidCoolerSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(FluidCoolerTwoSpeed);
+    REGISTER_COPYCONSTRUCTORS(FoundationKiva);
+    REGISTER_COPYCONSTRUCTORS(FoundationKivaSettings);
     REGISTER_COPYCONSTRUCTORS(Gas);
     REGISTER_COPYCONSTRUCTORS(GasEquipment);
     REGISTER_COPYCONSTRUCTORS(GasEquipmentDefinition);
@@ -1039,6 +1052,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(Surface);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyConvectionCoefficients);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyConvectionCoefficientsMultipleSurface);
+    REGISTER_COPYCONSTRUCTORS(SurfacePropertyExposedFoundationPerimeter);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideCoefficients);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideConditionsModel);
     REGISTER_COPYCONSTRUCTORS(TableMultiVariableLookup);
@@ -1151,6 +1165,21 @@ if (_className::iddObjectType() == typeToCreate) { \
 
     return m_cachedBuilding;
   }
+  
+  boost::optional<FoundationKivaSettings> Model_Impl::foundationKivaSettings() const
+  {
+    if (m_cachedFoundationKivaSettings){
+      return m_cachedFoundationKivaSettings;
+    }
+
+    boost::optional<FoundationKivaSettings> result = this->model().getOptionalUniqueModelObject<FoundationKivaSettings>();
+    if (result){
+      m_cachedFoundationKivaSettings = result;
+      result->getImpl<FoundationKivaSettings_Impl>().get()->FoundationKivaSettings_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedFoundationKivaSettings>(const_cast<openstudio::model::detail::Model_Impl *>(this));
+    }
+
+    return m_cachedFoundationKivaSettings;
+  }  
 
   boost::optional<LifeCycleCostParameters> Model_Impl::lifeCycleCostParameters() const
   {
@@ -1851,6 +1880,7 @@ if (_className::iddObjectType() == typeToCreate) { \
   {
     Handle dummy;
     clearCachedBuilding(dummy);
+    clearCachedFoundationKivaSettings(dummy);
     clearCachedLifeCycleCostParameters(dummy);
     clearCachedRunPeriod(dummy);
     clearCachedYearDescription(dummy);
@@ -1861,6 +1891,11 @@ if (_className::iddObjectType() == typeToCreate) { \
   {
     m_cachedBuilding.reset();
   }
+  
+  void Model_Impl::clearCachedFoundationKivaSettings(const Handle &)
+  {
+    m_cachedFoundationKivaSettings.reset();
+  }  
 
   void Model_Impl::clearCachedLifeCycleCostParameters(const Handle &handle)
   {
@@ -2031,6 +2066,11 @@ Model::Model(std::shared_ptr<detail::Model_Impl> p)
 boost::optional<Building> Model::building() const
 {
   return getImpl<detail::Model_Impl>()->building();
+}
+
+boost::optional<FoundationKivaSettings> Model::foundationKivaSettings() const
+{
+  return getImpl<detail::Model_Impl>()->foundationKivaSettings();
 }
 
 boost::optional<LifeCycleCostParameters> Model::lifeCycleCostParameters() const

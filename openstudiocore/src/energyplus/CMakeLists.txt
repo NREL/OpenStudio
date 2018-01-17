@@ -151,6 +151,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateEvaporativeFluidCoolerSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateEvaporativeFluidCoolerTwoSpeed.cpp
   ForwardTranslator/ForwardTranslateExteriorLights.cpp
+  ForwardTranslator/ForwardTranslateExteriorFuelEquipment.cpp
+  ForwardTranslator/ForwardTranslateExteriorWaterEquipment.cpp
   ForwardTranslator/ForwardTranslateExternalInterface.cpp
   ForwardTranslator/ForwardTranslateExternalInterfaceActuator.cpp
   ForwardTranslator/ForwardTranslateExternalInterfaceFunctionalMockupUnitExportFromVariable.cpp
@@ -171,6 +173,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateFFactorGroundFloorConstruction.cpp
   ForwardTranslator/ForwardTranslateFluidCoolerSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateFluidCoolerTwoSpeed.cpp
+  ForwardTranslator/ForwardTranslateFoundationKiva.cpp
+  ForwardTranslator/ForwardTranslateFoundationKivaSettings.cpp
   ForwardTranslator/ForwardTranslateGas.cpp
   ForwardTranslator/ForwardTranslateGasEquipment.cpp
   ForwardTranslator/ForwardTranslateGasMixture.cpp
@@ -330,6 +334,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSurface.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyConvectionCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyConvectionCoefficientsMultipleSurface.cpp
+  ForwardTranslator/ForwardTranslateSurfacePropertyExposedFoundationPerimeter.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideConditionsModel.cpp
   ForwardTranslator/ForwardTranslateTableMultiVariableLookup.cpp
@@ -434,6 +439,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateEvaporativeCoolerDirectResearchSpecial.cpp
   ReverseTranslator/ReverseTranslateEvaporativeFluidCoolerSingleSpeed.cpp
   ReverseTranslator/ReverseTranslateExteriorLights.cpp
+  ReverseTranslator/ReverseTranslateExteriorFuelEquipment.cpp
+  ReverseTranslator/ReverseTranslateExteriorWaterEquipment.cpp
   ReverseTranslator/ReverseTranslateFanConstantVolume.cpp
   ReverseTranslator/ReverseTranslateFenestrationSurfaceDetailed.cpp
   ReverseTranslator/ReverseTranslateGasEquipment.cpp
@@ -549,6 +556,8 @@ set(${target_name}_test_src
   Test/EMS_GTest.cpp
   Test/FuelCell_GTest.cpp
   Test/ExteriorLights_GTest.cpp
+  Test/ExteriorFuelEquipment_GTest.cpp
+  Test/ExteriorWaterEquipment_GTest.cpp
   Test/ExternalInterfaceFT_GTest.cpp
   Test/GasEquipment_GTest.cpp
   Test/GeneratorMicroTurbine_GTest.cpp

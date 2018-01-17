@@ -551,12 +551,30 @@ set(${target_name}_src
   EvaporativeFluidCoolerTwoSpeed.hpp
   EvaporativeFluidCoolerTwoSpeed_Impl.hpp
   EvaporativeFluidCoolerTwoSpeed.cpp
+  ExteriorLoadInstance.hpp
+  ExteriorLoadInstance_Impl.hpp
+  ExteriorLoadInstance.cpp
+  ExteriorLoadDefinition.hpp
+  ExteriorLoadDefinition_Impl.hpp
+  ExteriorLoadDefinition.cpp
   ExteriorLights.hpp
   ExteriorLights_Impl.hpp
   ExteriorLights.cpp
   ExteriorLightsDefinition.hpp
   ExteriorLightsDefinition_Impl.hpp
   ExteriorLightsDefinition.cpp
+  ExteriorFuelEquipment.hpp
+  ExteriorFuelEquipment_Impl.hpp
+  ExteriorFuelEquipment.cpp
+  ExteriorFuelEquipmentDefinition.hpp
+  ExteriorFuelEquipmentDefinition_Impl.hpp
+  ExteriorFuelEquipmentDefinition.cpp
+  ExteriorWaterEquipment.hpp
+  ExteriorWaterEquipment_Impl.hpp
+  ExteriorWaterEquipment.cpp
+  ExteriorWaterEquipmentDefinition.hpp
+  ExteriorWaterEquipmentDefinition_Impl.hpp
+  ExteriorWaterEquipmentDefinition.cpp
   ExternalInterface.cpp
   ExternalInterface.hpp
   ExternalInterface_Impl.hpp
@@ -623,6 +641,12 @@ set(${target_name}_src
   FluidCoolerTwoSpeed.hpp
   FluidCoolerTwoSpeed_Impl.hpp
   FluidCoolerTwoSpeed.cpp
+  FoundationKiva.hpp
+  FoundationKiva_Impl.hpp
+  FoundationKiva.cpp  
+  FoundationKivaSettings.hpp
+  FoundationKivaSettings_Impl.hpp
+  FoundationKivaSettings.cpp
   Gas.hpp
   Gas_Impl.hpp
   Gas.cpp
@@ -1257,7 +1281,10 @@ set(${target_name}_src
   SurfacePropertyConvectionCoefficients_Impl.hpp
   SurfacePropertyConvectionCoefficientsMultipleSurface.cpp
   SurfacePropertyConvectionCoefficientsMultipleSurface.hpp
-  SurfacePropertyConvectionCoefficientsMultipleSurface_Impl.hpp
+  SurfacePropertyConvectionCoefficientsMultipleSurface_Impl.hpp  
+  SurfacePropertyExposedFoundationPerimeter.cpp
+  SurfacePropertyExposedFoundationPerimeter.hpp
+  SurfacePropertyExposedFoundationPerimeter_Impl.hpp  
   SurfacePropertyOtherSideCoefficients.cpp
   SurfacePropertyOtherSideCoefficients.hpp
   SurfacePropertyOtherSideCoefficients_Impl.hpp
@@ -1638,6 +1665,9 @@ set(${target_name}_test_src
   test/EvaporativeCoolerIndirectResearchSpecial_GTest.cpp
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
   test/EvaporativeFluidCoolerTwoSpeed_GTest.cpp
+  test/ExteriorLights_GTest.cpp
+  test/ExteriorFuelEquipment_GTest.cpp
+  test/ExteriorWaterEquipment_GTest.cpp
   test/ExternalInterface_GTest.cpp
   test/ExternalInterfaceActuator_GTest.cpp
   test/ExternalInterfaceFunctionalMockupUnitExportFromVariable_GTest.cpp
@@ -1660,6 +1690,8 @@ set(${target_name}_test_src
   test/FloorplanJSForwardTranslator_GTest.cpp
   test/FluidCoolerSingleSpeed_GTest.cpp
   test/FluidCoolerTwoSpeed_GTest.cpp
+  test/FoundationKiva_GTest.cpp
+  test/FoundationKivaSettings_GTest.cpp
   test/GasEquipment_GTest.cpp
   test/GasMixture_GTest.cpp
   test/Gas_GTest.cpp
@@ -1819,6 +1851,7 @@ set(${target_name}_test_src
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
   test/SurfacePropertyConvectionCoefficientsMultipleSurface_GTest.cpp
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
+  test/SurfacePropertyExposedFoundationPerimeter_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
   test/ThermalStorageIceDetailed_GTest.cpp

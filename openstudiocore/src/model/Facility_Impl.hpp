@@ -44,137 +44,13 @@ namespace model {
 class Building;
 class OutputMeter;
 class ExteriorLights;
+class ExteriorFuelEquipment;
+class ExteriorWaterEquipment;
 
 namespace detail {
 
   /** Facility_Impl is a ParentObject_Impl that is the implementation class for Facility.*/
   class MODEL_API Facility_Impl : public ParentObject_Impl {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
    public:
 
@@ -234,6 +110,13 @@ namespace detail {
 
     /// Returns all ExteriorLights.
     std::vector<ExteriorLights> exteriorLights() const;
+
+    /// Returns all ExteriorFuelEquipment.
+    std::vector<ExteriorFuelEquipment> exteriorFuelEquipments() const;
+
+    /// Returns all ExteriorWaterEquipment.
+    std::vector<ExteriorWaterEquipment> exteriorWaterEquipments() const;
+
 
     //@}
     /** @name Other */
@@ -387,6 +270,9 @@ namespace detail {
     boost::optional<ModelObject> buildingAsModelObject() const;
     std::vector<ModelObject> metersAsModelObjects() const;
     std::vector<ModelObject> exteriorLightsAsModelObjects() const;
+    std::vector<ModelObject> exteriorFuelEquipmentAsModelObjects() const;
+    std::vector<ModelObject> exteriorWaterEquipmentAsModelObjects() const;
+
   };
 
 } // detail
