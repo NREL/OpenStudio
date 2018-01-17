@@ -1168,4 +1168,71 @@ void OpenStudioApp::startMeasureManagerProcess(){
   m_measureManagerProcess->start(program, arguments);
 }
 
+void OpenStudioApp::changeDefaultLibraries() {
+  auto defaultPaths = defaultLibraryPaths();
+  auto paths = libraryPaths();
+
+  LibraryDialog dialog(paths, defaultPaths);
+  auto code = dialog.exec();
+  auto newPaths = dialog.paths();
+
+  if ( (code == QDialog::Accepted) && (paths != newPaths) ) {
+    QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+
+    if ( newPaths == defaultPaths ) {
+      settings.remove("library");
+    } else {
+      settings.remove("library");
+      settings.beginWriteArray("library");
+      int i = 0;
+      for( const auto path : newPaths ) {
+        settings.setArrayIndex(i);
+        settings.setValue("path",QString::fromStdString(path.string()));
+        ++i;
+      }
+      settings.endArray();
+    }
+
+    auto future = QtConcurrent::run(this,&OpenStudioApp::buildCompLibraries);
+    m_changeLibrariesWatcher.setFuture(future);
+    connect(&m_changeLibrariesWatcher, &QFutureWatcher<void>::finished, this, &OpenStudioApp::onChangeDefaultLibrariesDone);
+  }
+}
+
+void OpenStudioApp::onChangeDefaultLibrariesDone() {
+  auto doc = currentDocument();
+  if( doc ) {
+    doc->setComponentLibrary(m_compLibrary);
+  }
+}
+
+std::vector<openstudio::path> OpenStudioApp::defaultLibraryPaths() const {
+  std::vector<openstudio::path> paths;
+
+  paths.push_back(resourcesPath() / toPath("default/hvac_library.osm"));
+  paths.push_back(resourcesPath() / toPath("default/office_default.osm"));
+
+  return paths;
+}
+
+std::vector<openstudio::path> OpenStudioApp::libraryPaths() const {
+  std::vector<openstudio::path> paths;
+
+  QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+
+  int size = settings.beginReadArray("library");
+  for (int i = 0; i < size; ++i) {
+    settings.setArrayIndex(i);
+    auto path = toPath(settings.value("path").toString());
+    paths.push_back(path);
+  }
+  settings.endArray();
+
+  if( paths.empty() ) {
+    return defaultLibraryPaths();
+  } else {
+    return paths;
+  }
+}
+
 } // openstudio
