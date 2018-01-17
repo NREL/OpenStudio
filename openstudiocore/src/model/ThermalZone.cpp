@@ -395,7 +395,7 @@ namespace detail {
         result.push_back("Daylighting Reference Point 1 Glare Index Setpoint Exceeded Time");
         result.push_back("Daylighting Reference Point 1 Daylight Illuminance Setpoint Exceeded Time");
       //}
-      
+
       //if (secondaryDaylightingControl()){
         result.push_back("Daylighting Reference Point 2 Illuminance");
         result.push_back("Daylighting Reference Point 2 Glare Index");

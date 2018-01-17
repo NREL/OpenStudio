@@ -44,7 +44,7 @@ namespace detail {
 
   /** FoundationKiva_Impl is a ModelObject_Impl that is the implementation class for FoundationKiva.*/
   class MODEL_API FoundationKiva_Impl : public ModelObject_Impl {
-  
+
   public:
 
     /** @name Constructors and Destructors */
@@ -71,7 +71,7 @@ namespace detail {
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
-    
+
     //@}
     /** @name Getters */
     //@{
@@ -82,7 +82,7 @@ namespace detail {
 
     bool isInteriorHorizontalInsulationDepthDefaulted() const;
 
-    boost::optional<double> interiorHorizontalInsulationWidth();    
+    boost::optional<double> interiorHorizontalInsulationWidth();
 
     boost::optional<Material> interiorVerticalInsulationMaterial() const;
 
@@ -116,7 +116,7 @@ namespace detail {
 
     bool isFootingDepthDefaulted() const;
 
-    std::vector<Surface> surfaces() const; 
+    std::vector<Surface> surfaces() const;
 
     //@}
     /** @name Setters */
@@ -130,7 +130,7 @@ namespace detail {
 
     void resetInteriorHorizontalInsulationDepth();
 
-    bool setInteriorHorizontalInsulationWidth(double interiorHorizontalInsulationWidth);    
+    bool setInteriorHorizontalInsulationWidth(double interiorHorizontalInsulationWidth);
 
     bool setInteriorVerticalInsulationMaterial(const Material& material);
 

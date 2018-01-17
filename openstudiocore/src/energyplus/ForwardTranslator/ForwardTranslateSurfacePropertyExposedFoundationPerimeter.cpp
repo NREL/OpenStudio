@@ -54,14 +54,14 @@ boost::optional<IdfObject> ForwardTranslator::translateSurfacePropertyExposedFou
   idfObject.setString(SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName, modelObject.surfaceName());
 
   idfObject.setString(SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterCalculationMethod, modelObject.exposedPerimeterCalculationMethod());
-  
+
   boost::optional<double> value;
 
   if( (value = modelObject.totalExposedPerimeter()) )
   {
     idfObject.setDouble(SurfaceProperty_ExposedFoundationPerimeterFields::TotalExposedPerimeter, value.get());
   }
-  else 
+  else
   {
     idfObject.setString(SurfaceProperty_ExposedFoundationPerimeterFields::TotalExposedPerimeter, "");
   }

@@ -100,7 +100,7 @@ namespace detail {
   boost::optional<double> FoundationKiva_Impl::interiorHorizontalInsulationWidth() {
     return getDouble(OS_Foundation_KivaFields::InteriorHorizontalInsulationWidth);
   }
-  
+
   boost::optional<Material> FoundationKiva_Impl::interiorVerticalInsulationMaterial() const {
     return getObject<ModelObject>().getModelObjectTarget<Material>(OS_Foundation_KivaFields::InteriorVerticalInsulationMaterialName);
   }

@@ -142,8 +142,8 @@ namespace detail {
 
     /** Get the FoundationKivaSettings object if there is one, this implementation uses a cached reference to the FoundationKivaSettings
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<FoundationKivaSettings>(). */
-    boost::optional<FoundationKivaSettings> foundationKivaSettings() const;    
-    
+    boost::optional<FoundationKivaSettings> foundationKivaSettings() const;
+
     /** Get the LifeCycleCostParameters object if there is one, this implementation uses a cached reference to the LifeCycleCostParameters
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<LifeCycleCostParameters>(). */
     boost::optional<LifeCycleCostParameters> lifeCycleCostParameters() const;

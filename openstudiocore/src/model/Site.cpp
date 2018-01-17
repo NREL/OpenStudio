@@ -164,7 +164,7 @@ namespace detail {
     // shading surface groups
     std::vector<ShadingSurfaceGroup> shadingSurfaceGroups = this->shadingSurfaceGroups();
     result.insert(result.end(),shadingSurfaceGroups.begin(),shadingSurfaceGroups.end());
-    
+
     return result;
   }
 

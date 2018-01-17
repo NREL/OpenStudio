@@ -273,11 +273,11 @@ namespace detail {
     std::vector<Surface> splitSurfaceForSubSurfaces();
 
     std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
-    
+
     bool setAdjacentFoundation(const FoundationKiva& kiva);
-    
+
     boost::optional<FoundationKiva> adjacentFoundation() const;
-    
+
     void resetAdjacentFoundation();
 
     // if surface property exposed foundation perimeter already exists, do nothing and return nil; creates the surface property exposed foundation perimeter if it does not already exist and return it;
@@ -288,7 +288,7 @@ namespace detail {
 
     // resets the surface property exposed foundation perimeter
     void resetSurfacePropertyExposedFoundationPerimeter();
-    
+
    protected:
    private:
     friend class openstudio::model::Surface;

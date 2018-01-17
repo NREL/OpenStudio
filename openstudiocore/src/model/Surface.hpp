@@ -284,11 +284,11 @@ class MODEL_API Surface : public PlanarSurface {
   std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
 
   bool setAdjacentFoundation(const FoundationKiva& kiva);
-  
+
   boost::optional<FoundationKiva> adjacentFoundation() const;
-  
+
   void resetAdjacentFoundation();
-  
+
   // if surface property exposed foundation perimeter already exists, do nothing and return nil; creates the surface property exposed foundation perimeter if it does not already exist and return it;
   boost::optional<SurfacePropertyExposedFoundationPerimeter> createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double exposedPerimeter);
 
@@ -297,7 +297,7 @@ class MODEL_API Surface : public PlanarSurface {
 
   // resets the surface property exposed foundation perimeter
   void resetSurfacePropertyExposedFoundationPerimeter();
-  
+
  protected:
   /// @cond
   typedef detail::Surface_Impl ImplType;

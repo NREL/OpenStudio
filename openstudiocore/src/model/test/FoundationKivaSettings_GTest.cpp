@@ -47,22 +47,22 @@ TEST_F(ModelFixture, FoundationKivaSettings_FoundationKivaSettings) {
     {
       // create a model to use
       Model model;
-      
+
       // create a foundation kiva settings object to use
       FoundationKivaSettings kivaSettings = model.getUniqueModelObject<FoundationKivaSettings>();
-      
+
       exit(0);
     },
     ::testing::ExitedWithCode(0),
     ""
   );
-    
+
   // create a model to use
   Model model;
-  
+
   // create a foundation kiva settings object to use
   FoundationKivaSettings kivaSettings = model.getUniqueModelObject<FoundationKivaSettings>();
-  
+
   EXPECT_TRUE(kivaSettings.isSoilConductivityDefaulted());
   EXPECT_TRUE(kivaSettings.isSoilDensityDefaulted());
   EXPECT_TRUE(kivaSettings.isSoilSpecificHeatDefaulted());
@@ -91,13 +91,13 @@ TEST_F(ModelFixture, FoundationKivaSettings_FoundationKivaSettings) {
 }
 
 // test setting and getting
-TEST_F(ModelFixture, FoundationKivaSettings_SetGetFields) {    
+TEST_F(ModelFixture, FoundationKivaSettings_SetGetFields) {
   // create a model to use
   Model model;
-  
+
   // create a foundation kiva settings object to use
   FoundationKivaSettings kivaSettings = model.getUniqueModelObject<FoundationKivaSettings>();
-  
+
   // set the fields
   kivaSettings.setSoilConductivity(1.75);
   kivaSettings.setSoilDensity(1850);
@@ -111,7 +111,7 @@ TEST_F(ModelFixture, FoundationKivaSettings_SetGetFields) {
   kivaSettings.setMinimumCellDimension(0.02);
   kivaSettings.setMaximumCellGrowthCoefficient(1.2);
   kivaSettings.setSimulationTimestep("Timestep");
-  
+
   // check the fields
   ASSERT_FALSE(kivaSettings.isSoilConductivityDefaulted());
   ASSERT_EQ(1.75, kivaSettings.soilConductivity());
@@ -140,7 +140,7 @@ TEST_F(ModelFixture, FoundationKivaSettings_SetGetFields) {
   ASSERT_EQ(1.2, kivaSettings.maximumCellGrowthCoefficient());
   ASSERT_FALSE(kivaSettings.isSimulationTimestepDefaulted());
   ASSERT_EQ("Timestep", kivaSettings.simulationTimestep());
-  
+
   // reset them one by one
   kivaSettings.resetSoilConductivity();
   kivaSettings.resetSoilDensity();
@@ -154,7 +154,7 @@ TEST_F(ModelFixture, FoundationKivaSettings_SetGetFields) {
   kivaSettings.resetMinimumCellDimension();
   kivaSettings.resetMaximumCellGrowthCoefficient();
   kivaSettings.resetSimulationTimestep();
-  
+
   EXPECT_TRUE(kivaSettings.isSoilConductivityDefaulted());
   EXPECT_TRUE(kivaSettings.isSoilDensityDefaulted());
   EXPECT_TRUE(kivaSettings.isSoilSpecificHeatDefaulted());

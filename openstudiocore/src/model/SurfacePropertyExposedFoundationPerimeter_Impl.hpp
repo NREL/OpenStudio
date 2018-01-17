@@ -40,7 +40,7 @@ namespace detail {
 
   /** SurfacePropertyExposedFoundationPerimeter_Impl is a ModelObject_Impl that is the implementation class for SurfacePropertyExposedFoundationPerimeter.*/
   class MODEL_API SurfacePropertyExposedFoundationPerimeter_Impl : public ModelObject_Impl {
-  
+
   public:
 
     /** @name Constructors and Destructors */
@@ -73,13 +73,13 @@ namespace detail {
     //@{
 
     std::string surfaceName() const;
-    
+
     std::string exposedPerimeterCalculationMethod() const;
-    
+
     boost::optional<double> totalExposedPerimeter();
-    
+
     double exposedPerimeterFraction() const;
-    
+
     bool isExposedPerimeterFractionDefaulted() const;
 
     //@}
@@ -87,11 +87,11 @@ namespace detail {
     //@{
 
     bool setExposedPerimeterCalculationMethod(std::string exposedPerimeterCalculationMethod);
-    
+
     bool setTotalExposedPerimeter(double totalExposedPerimeter);
-    
+
     bool setExposedPerimeterFraction(double exposedPerimeterFraction);
-    
+
     void resetExposedPerimeterFraction();
 
     //@}

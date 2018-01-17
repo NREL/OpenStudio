@@ -55,18 +55,18 @@ TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_SurfacePropertyEx
       points.clear();
       points.push_back(Point3d(0, 2, 0));
       points.push_back(Point3d(0, 0, 0));
-      points.push_back(Point3d(1, 0, 0));      
+      points.push_back(Point3d(1, 0, 0));
       Surface surface(points, model);
-      
+
       exit(0);
     },
     ::testing::ExitedWithCode(0),
     ""
   );
-    
+
   // create a model to use
   Model model;
-  
+
   // create a surface object to use
   Point3dVector points;
   points.clear();
@@ -75,7 +75,7 @@ TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_SurfacePropertyEx
   points.push_back(Point3d(1, 0, 0));
   Surface surface(points, model);
   EXPECT_EQ(1, model.modelObjects().size());
-  
+
   // new surface does not have surface property exposed foundation perimeter yet
   EXPECT_TRUE(!surface.surfacePropertyExposedFoundationPerimeter());
 
@@ -86,10 +86,10 @@ TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_SurfacePropertyEx
 
   // now the surface has surface property exposed foundation perimeter
   EXPECT_TRUE(surface.surfacePropertyExposedFoundationPerimeter());
-  
+
   // check perimeter properties were defaulted properly
   auto prop = optprop.get();
-  EXPECT_EQ("TotalExposedPerimeter", prop.exposedPerimeterCalculationMethod());  
+  EXPECT_EQ("TotalExposedPerimeter", prop.exposedPerimeterCalculationMethod());
   boost::optional<double> opttotalexposedperimeter = prop.totalExposedPerimeter();
   EXPECT_TRUE(opttotalexposedperimeter);
   EXPECT_TRUE(prop.isExposedPerimeterFractionDefaulted());

@@ -40,7 +40,7 @@ namespace detail {
 
   /** FoundationKivaSettings_Impl is a ModelObject_Impl that is the implementation class for FoundationKivaSettings.*/
   class MODEL_API FoundationKivaSettings_Impl : public ModelObject_Impl {
-  
+
   public:
 
     /** @name Constructors and Destructors */
@@ -68,58 +68,58 @@ namespace detail {
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override; 
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
     //@{
 
     double soilConductivity() const;
-    
+
     bool isSoilConductivityDefaulted() const;
-    
+
     double soilDensity() const;
-    
+
     bool isSoilDensityDefaulted() const;
-    
+
     double soilSpecificHeat() const;
-    
+
     bool isSoilSpecificHeatDefaulted() const;
-    
+
     double groundSolarAbsorptivity() const;
-    
+
     bool isGroundSolarAbsorptivityDefaulted() const;
-    
+
     double groundThermalAbsorptivity() const;
-    
+
     bool isGroundThermalAbsorptivityDefaulted() const;
-    
+
     double groundSurfaceRoughness() const;
-    
+
     bool isGroundSurfaceRoughnessDefaulted() const;
-    
+
     double farFieldWidth() const;
-    
+
     bool isFarFieldWidthDefaulted() const;
-    
+
     std::string deepGroundBoundaryCondition() const;
-    
+
     bool isDeepGroundBoundaryConditionAutoselected();
-    
+
     boost::optional<double> deepGroundDepth();
-    
+
     bool isDeepGroundDepthAutocalculated();
-    
+
     double minimumCellDimension() const;
-    
+
     bool isMinimumCellDimensionDefaulted() const;
-    
+
     double maximumCellGrowthCoefficient() const;
-    
+
     bool isMaximumCellGrowthCoefficientDefaulted() const;
-    
+
     std::string simulationTimestep() const;
-    
+
     bool isSimulationTimestepDefaulted() const;
 
     //@}
@@ -127,51 +127,51 @@ namespace detail {
     //@{
 
     bool setSoilConductivity(double soilConductivity);
-    
+
     void resetSoilConductivity();
-    
+
     bool setSoilDensity(double soilDensity);
-    
+
     void resetSoilDensity();
-    
+
     bool setSoilSpecificHeat(double soilSpecificHeat);
-    
+
     void resetSoilSpecificHeat();
-    
+
     bool setGroundSolarAbsorptivity(double groundSolarAbsorptivity);
-    
+
     void resetGroundSolarAbsorptivity();
-    
+
     bool setGroundThermalAbsorptivity(double groundThermalAbsorptivity);
-    
+
     void resetGroundThermalAbsorptivity();
-    
+
     bool setGroundSurfaceRoughness(double groundSurfaceRoughness);
-    
+
     void resetGroundSurfaceRoughness();
-    
+
     bool setFarFieldWidth(double farFieldWidth);
-    
+
     void resetFarFieldWidth();
-    
+
     bool setDeepGroundBoundaryCondition(std::string deepGroundBoundaryCondition);
-    
+
     void resetDeepGroundBoundaryCondition();
-    
+
     bool setDeepGroundDepth(double deepGroundDepth);
-    
+
     void autocalculateDeepGroundDepth();
-    
+
     bool setMinimumCellDimension(double minimumCellDimension);
-    
+
     void resetMinimumCellDimension();
-    
+
     bool setMaximumCellGrowthCoefficient(double maximumCellGrowthCoefficient);
-    
+
     void resetMaximumCellGrowthCoefficient();
-    
+
     bool setSimulationTimestep(std::string simulationTimestep);
-    
+
     void resetSimulationTimestep();
 
     //@}

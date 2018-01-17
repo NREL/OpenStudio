@@ -49,7 +49,7 @@ class MODEL_API SurfacePropertyExposedFoundationPerimeter : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
-                                                     
+
   explicit SurfacePropertyExposedFoundationPerimeter(Surface& surface,
                                                      std::string exposedPerimeterCalculationMethod,
                                                      double exposedPerimeter);
@@ -64,13 +64,13 @@ class MODEL_API SurfacePropertyExposedFoundationPerimeter : public ModelObject {
   //@{
 
   std::string surfaceName() const;
-  
+
   std::string exposedPerimeterCalculationMethod() const;
-  
+
   boost::optional<double> totalExposedPerimeter();
-  
+
   double exposedPerimeterFraction() const;
-  
+
   bool isExposedPerimeterFractionDefaulted() const;
 
   //@}
@@ -78,11 +78,11 @@ class MODEL_API SurfacePropertyExposedFoundationPerimeter : public ModelObject {
   //@{
 
   bool setExposedPerimeterCalculationMethod(std::string exposedPerimeterCalculationMethod);
-  
+
   bool setTotalExposedPerimeter(double totalExposedPerimeter);
-  
+
   bool setExposedPerimeterFraction(double exposedPerimeterFraction);
-  
+
   void resetExposedPerimeterFraction();
 
   //@}

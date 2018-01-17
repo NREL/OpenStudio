@@ -90,39 +90,39 @@ namespace detail {
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   boost::optional<double> SurfacePropertyExposedFoundationPerimeter_Impl::totalExposedPerimeter() {
     return getDouble(OS_SurfaceProperty_ExposedFoundationPerimeterFields::TotalExposedPerimeter, true);
   }
-  
+
   double SurfacePropertyExposedFoundationPerimeter_Impl::exposedPerimeterFraction() const {
     boost::optional<double> value = getDouble(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction, true);
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   bool SurfacePropertyExposedFoundationPerimeter_Impl::isExposedPerimeterFractionDefaulted() const {
     return isEmpty(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction);
   }
-  
+
   bool SurfacePropertyExposedFoundationPerimeter_Impl::setExposedPerimeterCalculationMethod(std::string exposedPerimeterCalculationMethod) {
     bool result = setString(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterCalculationMethod, exposedPerimeterCalculationMethod);
     OS_ASSERT(result);
     return result;
   }
-  
+
   bool SurfacePropertyExposedFoundationPerimeter_Impl::setTotalExposedPerimeter(double totalExposedPerimeter) {
     bool result = setDouble(OS_SurfaceProperty_ExposedFoundationPerimeterFields::TotalExposedPerimeter, totalExposedPerimeter);
     OS_ASSERT(result);
     return result;
   }
-  
+
   bool SurfacePropertyExposedFoundationPerimeter_Impl::setExposedPerimeterFraction(double exposedPerimeterFraction) {
     bool result = setDouble(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction, exposedPerimeterFraction);
     OS_ASSERT(result);
     return result;
   }
-  
+
   void SurfacePropertyExposedFoundationPerimeter_Impl::resetExposedPerimeterFraction() {
     bool result = setString(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction, "");
     OS_ASSERT(result);
@@ -149,12 +149,12 @@ SurfacePropertyExposedFoundationPerimeter::SurfacePropertyExposedFoundationPerim
   ok = setExposedPerimeterCalculationMethod(exposedPerimeterCalculationMethod);
   OS_ASSERT(ok);
 
-  if (exposedPerimeterCalculationMethod=="TotalExposedPerimeter") 
+  if (exposedPerimeterCalculationMethod=="TotalExposedPerimeter")
   {
     ok = setTotalExposedPerimeter(exposedPerimeter);
     OS_ASSERT(ok);
-  } 
-  else if (exposedPerimeterCalculationMethod=="ExposedPerimeterFraction") 
+  }
+  else if (exposedPerimeterCalculationMethod=="ExposedPerimeterFraction")
   {
     ok = setExposedPerimeterFraction(exposedPerimeter);
     OS_ASSERT(ok);

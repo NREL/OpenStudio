@@ -142,8 +142,8 @@ boost::optional<IdfObject> ForwardTranslator::translateSurface( model::Surface &
   if (adjacentFoundation){
     // do not translate and map here, wait for adjacent foundation to be translated on its own
     idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, adjacentFoundation->name().get());
-  }  
-  
+  }
+
   if (surfacePropertyOtherSideCoefficients){
     boost::optional<IdfObject> osc = translateAndMapModelObject(*surfacePropertyOtherSideCoefficients);
     if (osc && osc->name()){

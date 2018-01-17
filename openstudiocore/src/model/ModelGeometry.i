@@ -139,7 +139,7 @@ MODELOBJECT_TEMPLATES(LightingSimulationZone);
 MODELOBJECT_TEMPLATES(FoundationKiva);
 MODELOBJECT_TEMPLATES(SurfacePropertyExposedFoundationPerimeter);
 
-MODELOBJECT_TEMPLATES(ExteriorLoadInstance);   
+MODELOBJECT_TEMPLATES(ExteriorLoadInstance);
 MODELOBJECT_TEMPLATES(ExteriorLights);
 MODELOBJECT_TEMPLATES(ExteriorFuelEquipment);
 MODELOBJECT_TEMPLATES(ExteriorWaterEquipment);
@@ -186,7 +186,7 @@ SWIG_MODELOBJECT(LightingSimulationZone, 1);
 SWIG_MODELOBJECT(FoundationKiva, 1);
 SWIG_MODELOBJECT(SurfacePropertyExposedFoundationPerimeter, 1);
 
-SWIG_MODELOBJECT(ExteriorLoadInstance, 0); 
+SWIG_MODELOBJECT(ExteriorLoadInstance, 0);
 SWIG_MODELOBJECT(ExteriorLights, 1);
 SWIG_MODELOBJECT(ExteriorFuelEquipment, 1);
 SWIG_MODELOBJECT(ExteriorWaterEquipment, 1);
