@@ -1193,8 +1193,8 @@ void OpenStudioApp::onChangeDefaultLibrariesDone() {
 std::vector<openstudio::path> OpenStudioApp::defaultLibraryPaths() const {
   std::vector<openstudio::path> paths;
 
-  paths.push_back(resourcesPath() / toPath("hvaclibrary/hvac_library.osm"));
-  paths.push_back(resourcesPath() / toPath("MinimalTemplate.osm"));
+  paths.push_back(resourcesPath() / toPath("default/hvac_library.osm"));
+  paths.push_back(resourcesPath() / toPath("default/office_default.osm"));
 
   return paths;
 }
