@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,10 +44,10 @@ namespace detail {
   class ComponentWatcher_Impl;
 }
 
-/** ComponentWatcher uses Qt signals and slots to monitor the data associated with a Component. 
- *  \link ComponentWatcher ComponentWatchers \endlink are constructed by \link Model Models 
- *  \endlink and \link Component Components\endlink. They are not for general (public) use. 
- *  If data changes, ComponentWatcher calls componentData.createVersionUUID. The Component is 
+/** ComponentWatcher uses Qt signals and slots to monitor the data associated with a Component.
+ *  \link ComponentWatcher ComponentWatchers \endlink are constructed by \link Model Models
+ *  \endlink and \link Component Components\endlink. They are not for general (public) use.
+ *  If data changes, ComponentWatcher calls componentData.createVersionUUID. The Component is
  *  destroyed (ComponentData is removed from the model) if the user removes ComponentData or
  *  the primary object, or if the relationship between objects in the component changes. */
 class MODEL_API ComponentWatcher {
@@ -78,7 +78,7 @@ class MODEL_API ComponentWatcher {
  protected:
   /// @cond
   typedef detail::ComponentWatcher_Impl ImplType;
-  
+
   friend class detail::Model_Impl;
   friend class detail::ComponentWatcher_Impl;
 

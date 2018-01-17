@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -48,11 +48,11 @@ namespace detail {
  *  IDD object named "OS:Output:Variable".
  *
  *  OutputVariable is used to request output data from EnergyPlus simulations.  Each ModelObject defines
- *  a list of available output variable names which can be used to create OutputVariable requests.  An 
- *  OutputVariable request can apply to all objects (e.g. if the 'Key Value' field is set to '*') or only 
+ *  a list of available output variable names which can be used to create OutputVariable requests.  An
+ *  OutputVariable request can apply to all objects (e.g. if the 'Key Value' field is set to '*') or only
  *  a particular object (e.g. if the 'Key Value' field is set to an object's name).  If an OutputVariable object
  *  refers to a particular ModelObject then it is parented by that ModelObject, otherwise it is unparented.
- *  If an OutputVariable object is present when a Model is simulated in EnergyPlus, the OutputVariable can be 
+ *  If an OutputVariable object is present when a Model is simulated in EnergyPlus, the OutputVariable can be
  *  used to access simulation results for its parent ModelObject.
  */
 class MODEL_API OutputVariable : public ModelObject {
@@ -110,14 +110,14 @@ class MODEL_API OutputVariable : public ModelObject {
 
   void resetSchedule();
 
-  void setExportToBCVTB(bool exportToBCVTB);
+  bool setExportToBCVTB(bool exportToBCVTB);
 
   void resetExportToBCVTB();
 
   //@}
  protected:
 
-  /// @cond 
+  /// @cond
 
   typedef detail::OutputVariable_Impl ImplType;
 
@@ -144,4 +144,4 @@ typedef std::vector<OutputVariable> OutputVariableVector;
 } // model
 } // openstudio
 
-#endif // MODEL_VARIABLE_HPP
+#endif // MODEL_VARIABLE_HPP

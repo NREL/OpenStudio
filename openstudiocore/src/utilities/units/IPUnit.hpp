@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -53,7 +53,7 @@ struct UTILITIES_API IPExpnt {
           int deg=0,
           int sr=0,
           int people=0,
-          int cycle=0, 
+          int cycle=0,
           int dollar=0)
     : m_lbm(lbm),
       m_ft(ft),

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -51,21 +51,21 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat_AirTerminalSingleDuct
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-    Model m; 
+  ASSERT_EXIT (
+  {
+    Model m;
     Schedule s = m.alwaysOnDiscreteSchedule();
     FanConstantVolume piuFan = FanConstantVolume(m,s);
     CoilHeatingElectric piuReheatCoil = CoilHeatingElectric(m,s);
     AirTerminalSingleDuctParallelPIUReheat testObject(m,s,piuFan,piuReheatCoil);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
 TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat_addToNode) {
-  Model m; 
+  Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanConstantVolume piuFan = FanConstantVolume(m,s);
   CoilHeatingElectric piuReheatCoil = CoilHeatingElectric(m,s);
@@ -103,7 +103,7 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat_addToNode) {
 TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat) {
   // test that setAvailabilitySchedule also set PIU fan schedule
   {
-    Model m; 
+    Model m;
     Schedule schedule = m.alwaysOnDiscreteSchedule();
     FanConstantVolume fan(m,schedule);
     CoilHeatingElectric coil(m,schedule);
@@ -116,12 +116,12 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat) {
     airLoopHVAC.setAvailabilitySchedule(hvacSchedule);
 
     auto fanSchedule = fan.availabilitySchedule();
-    ASSERT_EQ(hvacSchedule.handle(),fanSchedule.handle()); 
+    ASSERT_EQ(hvacSchedule.handle(),fanSchedule.handle());
   }
 
   // test that addToNode (by proxy addBranchForZone) sets the fan schedule to match system availabilitySchedule
   {
-    Model m; 
+    Model m;
     Schedule schedule = m.alwaysOnDiscreteSchedule();
     FanConstantVolume fan(m,schedule);
     CoilHeatingElectric coil(m,schedule);
@@ -140,7 +140,7 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat) {
 
     airLoopHVAC.addBranchForZone(zone,terminal);
     auto fanSchedule = fan.availabilitySchedule();
-    ASSERT_EQ(hvacSchedule.handle(),fanSchedule.handle()); 
+    ASSERT_EQ(hvacSchedule.handle(),fanSchedule.handle());
 
     EXPECT_TRUE(zone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
     EXPECT_TRUE(zone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -48,19 +48,19 @@ namespace detail {
 
 } // detail
 
-/** ScheduleRuleset is a Schedule that wraps the OpenStudio IDD object 'OS_Schedule_Ruleset'. 
- *  ScheduleRuleset is the parent of its default day schedule, any non-default summer or winter 
+/** ScheduleRuleset is a Schedule that wraps the OpenStudio IDD object 'OS_Schedule_Ruleset'.
+ *  ScheduleRuleset is the parent of its default day schedule, any non-default summer or winter
  *  design day schedules, and its \link ScheduleRule ScheduleRules\endlink. */
 class MODEL_API ScheduleRuleset : public Schedule {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  /** Constructs a new ScheduleRuleset, and also constructs a new ScheduleDay and assigns it to 
+  /** Constructs a new ScheduleRuleset, and also constructs a new ScheduleDay and assigns it to
    *  be the defaultDaySchedule(). */
   explicit ScheduleRuleset(const Model& model);
 
-  /** Constructs a new ScheduleRuleset, constructs a new ScheduleDay with value at all times 
+  /** Constructs a new ScheduleRuleset, constructs a new ScheduleDay with value at all times
   *  and assigns it to be the defaultDaySchedule(). */
   ScheduleRuleset(const Model& model, double value);
 
@@ -76,14 +76,14 @@ class MODEL_API ScheduleRuleset : public Schedule {
   /// Returns the default day schedule.
   ScheduleDay defaultDaySchedule() const;
 
-  /// Returns the summer design day schedule, which may be the same ScheduleDay as 
+  /// Returns the summer design day schedule, which may be the same ScheduleDay as
   /// defaultDaySchedule().
   ScheduleDay summerDesignDaySchedule() const;
 
   /// Returns true if the summer design day is defaulted; false if it is explicitly set.
   bool isSummerDesignDayScheduleDefaulted() const;
 
-  /// Returns the winter design day schedule, which may be the same ScheduleDay as 
+  /// Returns the winter design day schedule, which may be the same ScheduleDay as
   /// defaultDaySchedule().
   ScheduleDay winterDesignDaySchedule() const;
 
@@ -94,22 +94,22 @@ class MODEL_API ScheduleRuleset : public Schedule {
   /** @name Setters */
   //@{
 
-  /// Sets the summer design day schedule if ScheduleTypeLimits are compatible. Calls remove 
-  /// on any existing non-default summer design day schedule. Clones schedule and parents the 
+  /// Sets the summer design day schedule if ScheduleTypeLimits are compatible. Calls remove
+  /// on any existing non-default summer design day schedule. Clones schedule and parents the
   /// clone, but does not call remove on the original schedule.
   bool setSummerDesignDaySchedule(const ScheduleDay& schedule);
-  
+
   /// Resets the summer design day schedule. Calls remove on any existing non-default summer
-  /// design day schedule. 
+  /// design day schedule.
   void resetSummerDesignDaySchedule();
 
-  /// Sets the winter design day schedule if ScheduleTypeLimits are compatible. Calls remove 
-  /// on any existing non-default winter design day schedule. Clones schedule and parents the 
+  /// Sets the winter design day schedule if ScheduleTypeLimits are compatible. Calls remove
+  /// on any existing non-default winter design day schedule. Clones schedule and parents the
   /// clone, but does not call remove on the original schedule.
   bool setWinterDesignDaySchedule(const ScheduleDay& schedule);
-  
+
   /// Resets the winter design day schedule. Calls remove on any existing non-default winter
-  /// design day schedule. 
+  /// design day schedule.
   void resetWinterDesignDaySchedule();
 
   //@}
@@ -121,18 +121,18 @@ class MODEL_API ScheduleRuleset : public Schedule {
   std::vector<ScheduleRule> scheduleRules() const;
 
   /// Sets the index of the given rule; 0 is the highest priority.
-  /// Returns false if this rule is not a child of this rule set or if index > number of 
+  /// Returns false if this rule is not a child of this rule set or if index > number of
   /// rules - 1.
   bool setScheduleRuleIndex(ScheduleRule& scheduleRule, unsigned index);
 
-  /// Returns a vector of indices into the result of scheduleRules() between start date 
-  /// (inclusive) and end date (inclusive). If no rule is in place on a given day then -1 is 
+  /// Returns a vector of indices into the result of scheduleRules() between start date
+  /// (inclusive) and end date (inclusive). If no rule is in place on a given day then -1 is
   /// returned.
-  std::vector<int> getActiveRuleIndices(const openstudio::Date& startDate, 
+  std::vector<int> getActiveRuleIndices(const openstudio::Date& startDate,
                                         const openstudio::Date& endDate) const;
 
   /// Returns a vector of day schedules between start date (inclusive) and end date (inclusive).
-  std::vector<ScheduleDay> getDaySchedules(const openstudio::Date& startDate, 
+  std::vector<ScheduleDay> getDaySchedules(const openstudio::Date& startDate,
                                            const openstudio::Date& endDate) const;
 
   //@}

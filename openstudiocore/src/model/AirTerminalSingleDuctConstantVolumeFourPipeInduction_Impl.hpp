@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -157,7 +157,7 @@ namespace detail {
 
     bool setHeatingCoil(const HVACComponent& heatingCoil);
 
-    void setMaximumHotWaterFlowRate(boost::optional<double> maximumHotWaterFlowRate);
+    bool setMaximumHotWaterFlowRate(boost::optional<double> maximumHotWaterFlowRate);
 
     void resetMaximumHotWaterFlowRate();
 
@@ -175,7 +175,7 @@ namespace detail {
 
     void resetCoolingCoil();
 
-    void setMaximumColdWaterFlowRate(boost::optional<double> maximumColdWaterFlowRate);
+    bool setMaximumColdWaterFlowRate(boost::optional<double> maximumColdWaterFlowRate);
 
     void resetMaximumColdWaterFlowRate();
 
@@ -211,4 +211,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMEFOURPIPEINDUCTION_IMPL_HPP
-

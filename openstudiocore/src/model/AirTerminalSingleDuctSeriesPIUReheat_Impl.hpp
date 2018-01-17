@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -136,7 +136,7 @@ namespace detail {
 
     bool setReheatCoil(const HVACComponent& coil);
 
-    void setMaximumHotWaterorSteamFlowRate(boost::optional<double> maximumHotWaterorSteamFlowRate);
+    bool setMaximumHotWaterorSteamFlowRate(boost::optional<double> maximumHotWaterorSteamFlowRate);
 
     void resetMaximumHotWaterorSteamFlowRate();
 
@@ -157,7 +157,7 @@ namespace detail {
     bool addToNode(Node & node) override;
     std::vector<ModelObject> children() const override;
     ModelObject clone(Model model) const override;
-    void setFanAvailabilitySchedule(Schedule & schedule);
+    bool setFanAvailabilitySchedule(Schedule & schedule);
 
     // This is a non publlic method to draw recirculation air from a plenum
     // Use carefully.  Removing (or moving) plenum will leave model in invalid state
@@ -183,4 +183,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_AIRTERMINALSINGLEDUCTSERIESPIUREHEAT_IMPL_HPP
-

@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -33,36 +33,36 @@ require 'minitest/autorun'
 class ElectricLoadCenterDistribution_Test < MiniTest::Unit::TestCase
 
   def test_ElectricLoadCenterDistribution_Photovoltaics
-  
+
     model = OpenStudio::Model::Model.new
-    
+
     elcd = OpenStudio::Model::ElectricLoadCenterDistribution.new(model)
     assert_equal(elcd.generators.size, 0)
     assert(elcd.inverter.empty?)
 
     simple_panel = OpenStudio::Model::GeneratorPhotovoltaic::simple(model)
     assert(simple_panel.electricLoadCenterDistribution.empty?)
-    
+
     elcd.addGenerator(simple_panel)
     assert(!simple_panel.electricLoadCenterDistribution.empty?)
     assert_equal(elcd.generators.size, 1)
     assert(elcd.inverter.empty?)
-    
+
     eod_panel = OpenStudio::Model::GeneratorPhotovoltaic::equivalentOneDiode(model)
     assert(eod_panel.electricLoadCenterDistribution.empty?)
-    
+
     elcd.addGenerator(eod_panel)
     assert(!eod_panel.electricLoadCenterDistribution.empty?)
     assert_equal(elcd.generators.size, 2)
     assert(elcd.inverter.empty?)
-    
+
     inverter = OpenStudio::Model::ElectricLoadCenterInverterSimple.new(model)
     assert(inverter.electricLoadCenterDistribution.empty?)
-    
+
     elcd.setInverter(inverter)
     assert(!inverter.electricLoadCenterDistribution.empty?)
     assert(!elcd.inverter.empty?)
 
   end
-    
+
 end

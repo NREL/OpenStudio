@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -194,17 +194,17 @@ namespace detail {
 
     void resetLowPressureCompressorList();
 
-    void setReceiverPressure(double receiverPressure);
+    bool setReceiverPressure(double receiverPressure);
 
     void resetReceiverPressure();
 
-    void setSubcoolerEffectiveness(double subcoolerEffectiveness);
+    bool setSubcoolerEffectiveness(double subcoolerEffectiveness);
 
     void resetSubcoolerEffectiveness();
 
     bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
 
-    void setSumUASuctionPipingforMediumTemperatureLoads(double sumUASuctionPipingforMediumTemperatureLoads);
+    bool setSumUASuctionPipingforMediumTemperatureLoads(double sumUASuctionPipingforMediumTemperatureLoads);
 
     void resetSumUASuctionPipingforMediumTemperatureLoads();
 
@@ -212,7 +212,7 @@ namespace detail {
 
     void resetMediumTemperatureSuctionPipingZone();
 
-    void setSumUASuctionPipingforLowTemperatureLoads(double sumUASuctionPipingforLowTemperatureLoads);
+    bool setSumUASuctionPipingforLowTemperatureLoads(double sumUASuctionPipingforLowTemperatureLoads);
 
     void resetSumUASuctionPipingforLowTemperatureLoads();
 
@@ -220,7 +220,7 @@ namespace detail {
 
     void resetLowTemperatureSuctionPipingZone();
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -246,5 +246,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONTRANSCRITICALSYSTEM_IMPL_HPP
-
+#endif // MODEL_REFRIGERATIONTRANSCRITICALSYSTEM_IMPL_HPP

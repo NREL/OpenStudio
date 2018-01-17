@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -80,7 +80,7 @@ bool WorkspaceExtensibleGroup::isSource() const {
     result = getImpl<detail::WorkspaceObject_Impl>()->isSource(mf_toIndex(fieldIndex));
     if (result) { break; }
   }
-  return result; 
+  return result;
 }
 
 bool WorkspaceExtensibleGroup::canBeSource() const {
@@ -90,12 +90,12 @@ bool WorkspaceExtensibleGroup::canBeSource() const {
     result = getImpl<detail::WorkspaceObject_Impl>()->canBeSource(mf_toIndex(fieldIndex));
     if (result) { break; }
   }
-  return result; 
+  return result;
 }
 
 // PROTECTED
 WorkspaceExtensibleGroup::WorkspaceExtensibleGroup(
-    std::shared_ptr<detail::WorkspaceObject_Impl> impl,unsigned index) 
+    std::shared_ptr<detail::WorkspaceObject_Impl> impl,unsigned index)
   : IdfExtensibleGroup(impl,index) {}
 
 } // openstudio

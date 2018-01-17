@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -54,7 +54,7 @@ TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_addToNode) {
   AirLoopHVAC loop = addSystemType3(model).cast<AirLoopHVAC>();
 
   AirLoopHVACOutdoorAirSystem oaSystem = loop.airLoopHVACOutdoorAirSystem().get();
-  
+
   Node oaNode = oaSystem.outboardOANode().get();
   Node reliefNode = oaSystem.outboardReliefNode().get();
 
@@ -66,7 +66,7 @@ TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_addToNode) {
 
   HeatExchangerAirToAirSensibleAndLatent hx3(model);
   EXPECT_TRUE(hx3.addToNode(reliefNode));
-  
+
   oaNode = oaSystem.outdoorAirModelObject()->cast<Node>();
   reliefNode = oaSystem.reliefAirModelObject()->cast<Node>();
 
@@ -108,7 +108,7 @@ TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_remove) {
   AirLoopHVAC loop = addSystemType3(model).cast<AirLoopHVAC>();
 
   AirLoopHVACOutdoorAirSystem oaSystem = loop.airLoopHVACOutdoorAirSystem().get();
-  
+
   Node oaNode = oaSystem.outboardOANode().get();
   Node reliefNode = oaSystem.outboardReliefNode().get();
 
@@ -120,7 +120,7 @@ TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_remove) {
 
   HeatExchangerAirToAirSensibleAndLatent hx3(model);
   EXPECT_TRUE(hx3.addToNode(reliefNode));
-  
+
   oaNode = oaSystem.outdoorAirModelObject()->cast<Node>();
   reliefNode = oaSystem.reliefAirModelObject()->cast<Node>();
 

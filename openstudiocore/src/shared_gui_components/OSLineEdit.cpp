@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -63,7 +63,7 @@ OSLineEdit2::OSLineEdit2( QWidget * parent )
 }
 
 OSLineEdit2::~OSLineEdit2()
-{ 
+{
   unbind();
 }
 
@@ -82,7 +82,7 @@ void OSLineEdit2::bind(model::ModelObject& modelObject,
   completeBind();
 }
 
-void OSLineEdit2::bind(model::ModelObject& modelObject, 
+void OSLineEdit2::bind(model::ModelObject& modelObject,
                        OptionalStringGetter get,
                        boost::optional<StringSetter> set,
                        boost::optional<NoFailAction> reset,
@@ -381,7 +381,7 @@ void OSLineEdit2::focusOutEvent(QFocusEvent * e)
 
 //       m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(),ovar);
 //     }
-    
+
 //   }
 // }
 

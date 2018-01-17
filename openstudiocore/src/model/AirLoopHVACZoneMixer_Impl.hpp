@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -37,7 +37,7 @@ namespace model {
 
 namespace detail{
 
-class MODEL_API AirLoopHVACZoneMixer_Impl : public Mixer_Impl 
+class MODEL_API AirLoopHVACZoneMixer_Impl : public Mixer_Impl
 {
   public:
 
@@ -45,13 +45,13 @@ class MODEL_API AirLoopHVACZoneMixer_Impl : public Mixer_Impl
   AirLoopHVACZoneMixer_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
   // construct from workspace
-  AirLoopHVACZoneMixer_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                            Model_Impl* model, 
+  AirLoopHVACZoneMixer_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                            Model_Impl* model,
                             bool keepHandle);
 
   // copy constructor
-  AirLoopHVACZoneMixer_Impl(const AirLoopHVACZoneMixer_Impl& other, 
-                            Model_Impl* model, 
+  AirLoopHVACZoneMixer_Impl(const AirLoopHVACZoneMixer_Impl& other,
+                            Model_Impl* model,
                             bool keepHandle);
 
   // virtual destructor
@@ -67,7 +67,7 @@ class MODEL_API AirLoopHVACZoneMixer_Impl : public Mixer_Impl
   unsigned outletPort() const override;
 
   unsigned inletPort(unsigned branchIndex) const override;
-  
+
   unsigned nextInletPort() const override;
 
   virtual bool addToNode(Node & node) override;

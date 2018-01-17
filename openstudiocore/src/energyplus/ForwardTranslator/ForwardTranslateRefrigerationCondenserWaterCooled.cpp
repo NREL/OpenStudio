@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -63,13 +63,13 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCondenserWat
   if (d) {
     waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::RatedCondensingTemperature,d.get());
   }
-        
+
   // Rated Subcooling Temperature Difference
   d = modelObject.ratedSubcoolingTemperatureDifference();
   if (d) {
     waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::RatedSubcoolingTemperatureDifference,d.get());
   }
-   
+
   // Rated Water Inlet Temperature
   d = modelObject.ratedWaterInletTemperature();
   if (d) {
@@ -84,7 +84,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCondenserWat
       waterCooled.setString(Refrigeration_Condenser_WaterCooledFields::WaterInletNodeName,temp->name().get());
     }
   }
-  
+
   // Water Outlet Node Name
   if( (temp = modelObject.outletModelObject()) )
   {
@@ -112,7 +112,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCondenserWat
       waterCooled.setString(Refrigeration_Condenser_WaterCooledFields::WaterOutletTemperatureScheduleName,_waterOutletTemperatureSchedule->name().get());
     }
   }
-  
+
 
   // Water Design Flow Rate
   d = modelObject.waterDesignFlowRate();
@@ -161,7 +161,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCondenserWat
   if (d) {
     waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::CondensatePipingRefrigerantInventory,d.get());
   }
-  
+
   return waterCooled;
 
 }

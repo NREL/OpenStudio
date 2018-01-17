@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -57,7 +57,7 @@ void OSVersionFixture::SetUpTestCase() {
     openstudio::filesystem::create_directories(thisVersionPath);
   }
 
-  // ETH@20120514 Eventually this cpp file should be configured by CMake so OpenStudio.idd can be 
+  // ETH@20120514 Eventually this cpp file should be configured by CMake so OpenStudio.idd can be
   // directly copied over, and so all these items can be copied back into source.
   model::Model model = openstudio::model::exampleModel();
   model.save(thisVersionPath / toPath("example.osm"),true);
@@ -73,7 +73,7 @@ void OSVersionFixture::TearDownTestCase() {
 
 openstudio::path OSVersionFixture::versionResourcesPath(const openstudio::VersionString& version)
 {
-  return resourcesPath() / toPath("osversion") / 
+  return resourcesPath() / toPath("osversion") /
          toPath(boost::regex_replace(version.str(),boost::regex("\\."),"_"));
 }
 

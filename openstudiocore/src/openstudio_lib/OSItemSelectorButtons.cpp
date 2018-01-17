@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -71,7 +71,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
   this->setLayout(m_vLayout);
 
   // drop zone
-  
+
   m_dropZoneLayout = new QHBoxLayout();
   m_dropZoneController = new AlwaysEmptyDropZoneVectorController();
   m_dropZone = new OSDropZone(m_dropZoneController);
@@ -81,7 +81,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
   m_dropZoneLayout->setContentsMargins(10,10,10,10);
 
   connect(m_dropZone, &OSDropZone::itemDropped, this, &OSItemSelectorButtons::itemDropped);
-    
+
   // buttons
   auto buttonBox = new QWidget();
   buttonBox->setObjectName("ButtonBox");
@@ -99,7 +99,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
   m_addButton->setToolTip("Add new object");
   m_addButton->setFixedSize(24,24);
   buttonLayout->addWidget(m_addButton);
-  
+
   connect(m_addButton, &QPushButton::clicked, this, &OSItemSelectorButtons::addClicked);
 
   m_copyButton = new QPushButton();
@@ -109,7 +109,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
   m_copyButton->setToolTip("Copy selected object");
   m_copyButton->setFixedSize(24,24);
   buttonLayout->addWidget(m_copyButton);
-  
+
   connect(m_copyButton, &QPushButton::clicked, this, &OSItemSelectorButtons::copyClicked);
 
   m_removeButton = new QPushButton();
@@ -119,7 +119,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
   m_removeButton->setToolTip("Remove selected objects");
   m_removeButton->setFixedSize(24,24);
   buttonLayout->addWidget(m_removeButton);
-  
+
   connect(m_removeButton, &QPushButton::clicked, this, &OSItemSelectorButtons::removeClicked);
 
   buttonLayout->addStretch();
@@ -130,7 +130,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
   m_purgeButton->setToolTip("Purge unused objects");
   m_purgeButton->setFixedSize(24,24);
   buttonLayout->addWidget(m_purgeButton);
-  
+
   connect(m_purgeButton, &QPushButton::clicked, this, &OSItemSelectorButtons::purgeClicked);
 
   //m_openBclDlgButton = new QPushButton(this);
@@ -160,7 +160,7 @@ void OSItemSelectorButtons::disableDropZone()
 {
   m_dropZone->setEnabled(false);
 }
-   
+
 void OSItemSelectorButtons::showAddButton()
 {
   m_addButton->show();
@@ -228,7 +228,7 @@ void OSItemSelectorButtons::disablePurgeButton()
 {
   m_purgeButton->setEnabled(false);
 }
-  
+
 void OSItemSelectorButtons::showBclDlgButton()
 {
   if(m_openBclDlgButton) m_openBclDlgButton->show();

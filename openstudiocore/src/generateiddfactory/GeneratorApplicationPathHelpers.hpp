@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -36,8 +36,8 @@ namespace openstudio {
 
 typedef openstudio::filesystem::path path;
 
-/** If possible, creates an openstudio::path to a system directory from outdir, otherwise throws 
- *  a std::runtime_error. For use by auto-generation applications that are writing files for 
+/** If possible, creates an openstudio::path to a system directory from outdir, otherwise throws
+ *  a std::runtime_error. For use by auto-generation applications that are writing files for
  *  OpenStudio. Requires that the path represented by outdir exist up to the parent level of the
  *  final directory. Outputs informative messages to std::cout. */
 path getApplicationOutputDirectory(const std::string& outdir);

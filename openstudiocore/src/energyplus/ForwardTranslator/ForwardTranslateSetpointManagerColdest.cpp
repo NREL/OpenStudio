@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -53,19 +53,19 @@ boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerColdest( S
   s = modelObject.controlVariable();
   idfObject.setString(SetpointManager_ColdestFields::ControlVariable,s);
 
-  // MinimumSetpointTemperature 
+  // MinimumSetpointTemperature
   value = modelObject.minimumSetpointTemperature();
   if( value )
   {
     idfObject.setDouble(SetpointManager_ColdestFields::MinimumSetpointTemperature,value.get());
-  } 
+  }
 
-  // MaximumSetpointTemperature 
+  // MaximumSetpointTemperature
   value = modelObject.maximumSetpointTemperature();
   if( value )
   {
     idfObject.setDouble(SetpointManager_ColdestFields::MaximumSetpointTemperature,value.get());
-  } 
+  }
 
   // Strategy
   s = modelObject.strategy();

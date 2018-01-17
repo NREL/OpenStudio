@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -152,7 +152,7 @@ bool ObjectOrderBase::less(IddObjectType left, IddObjectType right) const {
   }
 }
 
-bool ObjectOrderBase::less(boost::optional<IddObjectType> left, 
+bool ObjectOrderBase::less(boost::optional<IddObjectType> left,
                            boost::optional<IddObjectType> right) const {
   if (left && right) { return less(*left,*right); }
   if (left) { return true; }
@@ -173,7 +173,7 @@ bool ObjectOrderBase::inOrder(const IddObjectType& type) const {
 
 OptionalUnsigned ObjectOrderBase::indexInOrder(const IddObjectType& type) const {
   if (m_orderByIddEnum) { return static_cast<unsigned>(type.value()); }
-  if (m_iddOrder) { 
+  if (m_iddOrder) {
     auto it = getIterator(type);
     return (it - m_iddOrder->begin());
   }

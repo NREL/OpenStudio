@@ -83,9 +83,10 @@ namespace detail {
     return -9999;
   }
 
-  void ExternalInterfaceVariable_Impl::setInitialValue(double initialValue) {
+  bool ExternalInterfaceVariable_Impl::setInitialValue(double initialValue) {
     bool result = setDouble(OS_ExternalInterface_VariableFields::InitialValue, initialValue);
     OS_ASSERT(result);
+    return result;
   }
 
   bool ExternalInterfaceVariable_Impl::exportToBCVTB() const {
@@ -98,7 +99,7 @@ namespace detail {
     return isEmpty(OS_ExternalInterface_VariableFields::ExportToBCVTB);
   }
 
-  void ExternalInterfaceVariable_Impl::setExportToBCVTB(bool exportToBCVTB) {
+  bool ExternalInterfaceVariable_Impl::setExportToBCVTB(bool exportToBCVTB) {
     bool result = false;
     if (exportToBCVTB) {
       result = setString(OS_ExternalInterface_VariableFields::ExportToBCVTB, "True");
@@ -106,6 +107,7 @@ namespace detail {
       result = setString(OS_ExternalInterface_VariableFields::ExportToBCVTB, "False");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void ExternalInterfaceVariable_Impl::resetExportToBCVTB() {
@@ -135,8 +137,8 @@ double ExternalInterfaceVariable::initialValue() const {
   return getImpl<detail::ExternalInterfaceVariable_Impl>()->initialValue();
 }
 
-void ExternalInterfaceVariable::setInitialValue(double initialValue) {
-  getImpl<detail::ExternalInterfaceVariable_Impl>()->setInitialValue(initialValue);
+bool ExternalInterfaceVariable::setInitialValue(double initialValue) {
+  return getImpl<detail::ExternalInterfaceVariable_Impl>()->setInitialValue(initialValue);
 }
 
 bool ExternalInterfaceVariable::exportToBCVTB() const {
@@ -147,8 +149,8 @@ bool ExternalInterfaceVariable::isExportToBCVTBDefaulted() const {
   return getImpl<detail::ExternalInterfaceVariable_Impl>()->isExportToBCVTBDefaulted();
 }
 
-void ExternalInterfaceVariable::setExportToBCVTB(bool exportToBCVTB) {
-  getImpl<detail::ExternalInterfaceVariable_Impl>()->setExportToBCVTB(exportToBCVTB);
+bool ExternalInterfaceVariable::setExportToBCVTB(bool exportToBCVTB) {
+  return getImpl<detail::ExternalInterfaceVariable_Impl>()->setExportToBCVTB(exportToBCVTB);
 }
 
 void ExternalInterfaceVariable::resetExportToBCVTB() {
@@ -162,5 +164,4 @@ ExternalInterfaceVariable::ExternalInterfaceVariable(std::shared_ptr<detail::Ext
 /// @endcond
 
 } // model
-} // openstudio
-
+} // openstudio

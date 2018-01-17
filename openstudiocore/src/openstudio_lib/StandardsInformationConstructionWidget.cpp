@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -88,7 +88,7 @@ StandardsInformationConstructionWidget::StandardsInformationConstructionWidget(b
   mainGridLayout->addLayout(vLayout, row, 0);
 
   //test = connect(m_standard, &QComboBox::editTextChanged, this, &openstudio::StandardsInformationConstructionWidget::standardChanged);
-  //OS_ASSERT(test); 
+  //OS_ASSERT(test);
   test = connect(m_standard, &QComboBox::currentTextChanged, this, &openstudio::StandardsInformationConstructionWidget::standardChanged);
   OS_ASSERT(test);
 
@@ -243,7 +243,7 @@ StandardsInformationConstructionWidget::StandardsInformationConstructionWidget(b
 
   mainGridLayout->addLayout(vLayout, row, 1);
 
-  ++row;    
+  ++row;
 
   // Fenestration Gas Fill
   vLayout = new QVBoxLayout();
@@ -401,7 +401,7 @@ void StandardsInformationConstructionWidget::enableFenestration()
     m_fenestrationLowEmissivityCoating->bind(
       *m_standardsInformation,
       std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationLowEmissivityCoating, m_standardsInformation.get_ptr()),
-      BoolSetter(std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationLowEmissivityCoating, m_standardsInformation.get_ptr(), std::placeholders::_1)),
+      BoolSetter(std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationLowEmissivityCoatingNoFail, m_standardsInformation.get_ptr(), std::placeholders::_1)),
       NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationLowEmissivityCoating, m_standardsInformation.get_ptr())));
   }
 }
@@ -471,7 +471,7 @@ void StandardsInformationConstructionWidget::attach(openstudio::model::Construct
 
 void StandardsInformationConstructionWidget::detach()
 {
-  m_construction.reset(); 
+  m_construction.reset();
 
   if (m_standardsInformation){
     // disconnect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), nullptr, this, nullptr);
@@ -576,7 +576,7 @@ void StandardsInformationConstructionWidget::standardsConstructionTypeChanged(co
     }else{
       m_standardsInformation->setStandardsConstructionType(standardsConstructionType);
     }
-    
+
   }
 }
 

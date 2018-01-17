@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -45,20 +45,20 @@ using namespace openstudio::model;
 TEST_F(ModelFixture,AirTerminalDualDuctVAV) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
-     AirTerminalDualDuctVAV terminal(m); 
+  ASSERT_EXIT (
+  {
+     Model m;
+     AirTerminalDualDuctVAV terminal(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 
   // Add terminal
   {
-    Model m; 
-    AirTerminalDualDuctVAV terminal(m); 
-    
+    Model m;
+    AirTerminalDualDuctVAV terminal(m);
+
     AirLoopHVAC airLoopHVAC(m);
     {
       auto t_zoneSplitters = airLoopHVAC.zoneSplitters();
@@ -76,9 +76,9 @@ TEST_F(ModelFixture,AirTerminalDualDuctVAV) {
 
   {
     // Add terminal with zone
-    Model m; 
-    AirTerminalDualDuctVAV terminal(m); 
-    
+    Model m;
+    AirTerminalDualDuctVAV terminal(m);
+
     AirLoopHVAC airLoopHVAC(m);
     {
       auto t_zoneSplitters = airLoopHVAC.zoneSplitters();
@@ -105,7 +105,7 @@ TEST_F(ModelFixture,AirTerminalDualDuctVAV) {
     // Make sure we cant add the same zone again
     EXPECT_FALSE(airLoopHVAC.addBranchForZone(zone));
 
-    // Remove the whole branch 
+    // Remove the whole branch
     EXPECT_TRUE(airLoopHVAC.removeBranchForZone(zone));
     EXPECT_EQ(5u,airLoopHVAC.demandComponents().size());
 

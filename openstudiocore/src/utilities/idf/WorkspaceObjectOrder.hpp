@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -50,7 +50,7 @@ namespace detail {
 
     WorkspaceObjectOrder_Impl(const ObjectGetter& objectGetter);
 
-    WorkspaceObjectOrder_Impl(const std::vector<Handle>& directOrder, 
+    WorkspaceObjectOrder_Impl(const std::vector<Handle>& directOrder,
                               const ObjectGetter& objectGetter);
 
     WorkspaceObjectOrder_Impl(const std::vector<IddObjectType>& iddOrder,
@@ -93,7 +93,7 @@ namespace detail {
 
     /** Predicate for external sorters (for instance, std::set). */
     bool less(const WorkspaceObject& left, const WorkspaceObject& right) const;
-    
+
     /** Predicate for external sorters (for instance, std::set). */
     bool less(IddObjectType left, IddObjectType right) const override;
 
@@ -162,9 +162,9 @@ class Workspace; // forward declaration
  *  WorkspaceObjectOrder orderer = workspace.order();
  *  \endcode
  *
- *  This interface is provided to let users specify the order in which objects and 
- *  handles are returned by Workspace. Sorting is accessed through the workspace itself. 
- *  For instance, 
+ *  This interface is provided to let users specify the order in which objects and
+ *  handles are returned by Workspace. Sorting is accessed through the workspace itself.
+ *  For instance,
  *
  *  \code
  *  ws.objects(true)
@@ -193,12 +193,12 @@ class UTILITIES_API WorkspaceObjectOrder {
   bool insert(IddObjectType type, IddObjectType insertBeforeType);
   /** returns false if not ordering by user-specified IddObjectType order. */
   bool insert(IddObjectType type, unsigned index);
-  /** move type from current location and place before 'insertBeforeType'. returns 
-   *  false if not ordering by user-specified IddObjectType order, or request is otherwise 
+  /** move type from current location and place before 'insertBeforeType'. returns
+   *  false if not ordering by user-specified IddObjectType order, or request is otherwise
    *  invalid. type must already be in the order. if insertBeforeType is not in the ordering,
    *  places type at the end. */
   bool move(IddObjectType type, IddObjectType insertBeforeType);
-  /** move type from current location to index. returns false if not ordering by 
+  /** move type from current location to index. returns false if not ordering by
    *  user-specified IddObjectType order, or request is otherwise invalid. type must already
    *  be in the order. if index is invalid, places type at the end. */
   bool move(IddObjectType type, unsigned index);

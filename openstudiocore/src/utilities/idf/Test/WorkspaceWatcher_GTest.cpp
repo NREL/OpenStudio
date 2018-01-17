@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -58,7 +58,7 @@ TEST_F(IdfFixture,WorkspaceWatcher_ObjectChanges)
   EXPECT_FALSE(watcher.objectRemoved());
   watcher.clearState();
   EXPECT_FALSE(watcher.dirty());
-  
+
   EXPECT_TRUE(eg.setDouble(0,4.3));
   EXPECT_TRUE(watcher.dirty());
   EXPECT_FALSE(watcher.objectAdded());

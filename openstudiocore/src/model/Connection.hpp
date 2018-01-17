@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -56,13 +56,13 @@ class MODEL_API Connection : public ModelObject {
 
   boost::optional<unsigned> targetObjectPort();
 
-  void setSourceObject(ModelObject object);
+  bool setSourceObject(ModelObject object);
 
-  void setSourceObjectPort(unsigned port);
+  bool setSourceObjectPort(unsigned port);
 
-  void setTargetObject(ModelObject object);
+  bool setTargetObject(ModelObject object);
 
-  void setTargetObjectPort(unsigned port);
+  bool setTargetObjectPort(unsigned port);
 
   static IddObjectType iddObjectType();
 
@@ -91,4 +91,4 @@ typedef std::vector<Connection> ConnectionVector;
   } // model
 } // openstudio
 
-#endif // MODEL_CONNECTION_HPP
+#endif // MODEL_CONNECTION_HPP

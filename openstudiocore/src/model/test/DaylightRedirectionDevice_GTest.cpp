@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -72,16 +72,16 @@ TEST_F(ModelFixture, DaylightRedirectionDevice_Construction) {
 
     EXPECT_THROW(ShadingControl shadingControl(construction), openstudio::Exception);
   }
-  
+
   {
     // don't allow exterior daylight redirection
     Construction construction(model);
     EXPECT_TRUE(construction.insertLayer(0, drd));
     EXPECT_TRUE(construction.insertLayer(1, glazing));
-    
+
     EXPECT_THROW(ShadingControl shadingControl(construction), openstudio::Exception);
   }
-  
+
 
   // proper placement inside the glass
   Construction construction(model);
@@ -89,7 +89,7 @@ TEST_F(ModelFixture, DaylightRedirectionDevice_Construction) {
   EXPECT_TRUE(construction.insertLayer(1, drd));
 
   ShadingControl shadingControl(construction);
-  
+
   EXPECT_FALSE(shadingControl.shadingMaterial());
   ASSERT_TRUE(shadingControl.construction());
   EXPECT_EQ(construction.handle(), shadingControl.construction()->handle());

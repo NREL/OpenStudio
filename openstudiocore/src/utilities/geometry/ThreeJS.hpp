@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -70,7 +70,7 @@ namespace openstudio{
 
   /// ThreeGeometryData holds the geometry data for an object
   class UTILITIES_API ThreeGeometryData{
-  public: 
+  public:
     ThreeGeometryData(const std::vector<double>& vertices, const std::vector<size_t>& faces);
     std::vector<double> vertices() const;
     std::vector<size_t> normals() const;
@@ -100,7 +100,7 @@ namespace openstudio{
 
   /// ThreeGeometry holds the geometry for an object
   class UTILITIES_API ThreeGeometry{
-  public: 
+  public:
     ThreeGeometry(const std::string& uuid, const::std::string& type, const ThreeGeometryData& data);
     std::string uuid() const;
     std::string type() const;
@@ -115,7 +115,7 @@ namespace openstudio{
     std::string m_type;
     ThreeGeometryData m_data;
   };
- 
+
   /// ThreeMaterial defines a rendering material
   class UTILITIES_API ThreeMaterial{
   public:
@@ -133,7 +133,7 @@ namespace openstudio{
     double opacity() const;
     bool transparent() const;
     bool wireframe() const;
-    unsigned side() const;   
+    unsigned side() const;
 
   private:
     friend class ThreeScene;
@@ -151,12 +151,12 @@ namespace openstudio{
     double m_opacity;
     bool m_transparent;
     bool m_wireframe;
-    unsigned m_side; 
+    unsigned m_side;
   };
 
   /// ThreeUserData decorates a ThreeSceneChild with additional information
   class UTILITIES_API ThreeUserData{
-  public: 
+  public:
     ThreeUserData();
     std::string handle() const;
     std::string name() const;
@@ -167,7 +167,7 @@ namespace openstudio{
     /// ShadingSurfaces {"SiteShading", "BuildingShading", "SpaceShading"}
     /// InteriorPartitionSurfaces {"InteriorPartitionSurface"}
     /// DaylightingControl {"DaylightingControl"}
-    std::string surfaceType() const; 
+    std::string surfaceType() const;
     std::string surfaceTypeMaterialName() const;
 
     /// Construction name if any
@@ -309,10 +309,10 @@ namespace openstudio{
     //bool m_aboveCeilingPlenum;
   };
 
-  
+
   /// ThreeSceneChild is a child object of a ThreeSceneObject
   class UTILITIES_API ThreeSceneChild{
-  public: 
+  public:
     ThreeSceneChild(const std::string& uuid, const std::string& name, const std::string& type,
                     const std::string& geometryId, const std::string& materialId, const ThreeUserData& userData);
     std::string uuid() const;
@@ -339,7 +339,7 @@ namespace openstudio{
 
   /// ThreeSceneObject is the root object in a ThreeScene
   class UTILITIES_API ThreeSceneObject{
-  public: 
+  public:
     ThreeSceneObject(const std::string& uuid, const std::vector<ThreeSceneChild>& children);
     std::string uuid() const;
     std::string type() const;
@@ -357,10 +357,10 @@ namespace openstudio{
     std::vector<ThreeSceneChild> m_children;
   };
 
-  /// ThreeBoundingBox includes information about a bounding box 
+  /// ThreeBoundingBox includes information about a bounding box
   class UTILITIES_API ThreeBoundingBox{
-  public: 
-    ThreeBoundingBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, 
+  public:
+    ThreeBoundingBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ,
                      double lookAtX, double lookAtY, double lookAtZ, double lookAtR);
     double minX() const;
     double minY() const;
@@ -392,9 +392,9 @@ namespace openstudio{
 
   /// ThreeModelObjectMetadata includes metadata about an OpenStudio ModelObject
   class UTILITIES_API ThreeModelObjectMetadata{
-  public: 
+  public:
 
-    // DLM: public default ctor seems to be only to make SWIG happy, normal tricks of ignoring vector resize did not work 
+    // DLM: public default ctor seems to be only to make SWIG happy, normal tricks of ignoring vector resize did not work
     // additionally private default ctor with template<class _Ty> friend class std::allocator; also did not work
     ThreeModelObjectMetadata();
 
@@ -416,7 +416,7 @@ namespace openstudio{
 
   /// ThreeSceneMetadata includes metadata about an OpenStudio Model Object
   class UTILITIES_API ThreeSceneMetadata{
-  public: 
+  public:
     ThreeSceneMetadata(const std::vector<std::string>& buildingStoryNames, const ThreeBoundingBox& boundingBox, const std::vector<ThreeModelObjectMetadata>& modelObjectMetadata);
     std::string version() const;
     std::string type() const;
@@ -446,7 +446,7 @@ namespace openstudio{
   class UTILITIES_API ThreeScene{
   public:
 
-    /// constructor 
+    /// constructor
     ThreeScene(const ThreeSceneMetadata& metadata, const std::vector<ThreeGeometry>& geometries, const std::vector<ThreeMaterial>& materials, const ThreeSceneObject& sceneObject);
 
     /// constructor from JSON formatted string, will throw if error
@@ -457,7 +457,7 @@ namespace openstudio{
 
     /// print to JSON
     std::string toJSON(bool prettyPrint = false) const;
-  
+
     ThreeSceneMetadata metadata() const;
     std::vector<ThreeGeometry> geometries() const;
     boost::optional<ThreeGeometry> getGeometry(const std::string& geometryId) const;

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -27,7 +27,7 @@
  **********************************************************************************************************************/
 
 #ifndef MODEL_CONSTRUCTIONWITHINTERNALSOURCE_IMPL_HPP
-#define MODEL_CONSTRUCTIONWITHINTERNALSOURCE_IMPL_HPP 
+#define MODEL_CONSTRUCTIONWITHINTERNALSOURCE_IMPL_HPP
 
 #include "LayeredConstruction_Impl.hpp"
 
@@ -38,19 +38,19 @@ namespace openstudio {
 namespace model {
 namespace detail {
 
-  class MODEL_API ConstructionWithInternalSource_Impl : public LayeredConstruction_Impl 
+  class MODEL_API ConstructionWithInternalSource_Impl : public LayeredConstruction_Impl
   {
-    
 
-    
 
-    
-    
-    
 
-    
-    
-        
+
+
+
+
+
+
+
+
 
   public:
 
@@ -58,8 +58,8 @@ namespace detail {
     ConstructionWithInternalSource_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    ConstructionWithInternalSource_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                                        Model_Impl* model, 
+    ConstructionWithInternalSource_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                        Model_Impl* model,
                                         bool keepHandle);
 
     ConstructionWithInternalSource_Impl(const ConstructionWithInternalSource_Impl& other,
@@ -107,7 +107,7 @@ namespace detail {
   private:
 
     REGISTER_LOGGER("openstudio.model.ConstructionWithInternalSource");
-    
+
     openstudio::Quantity tubeSpacing_SI() const;
     openstudio::Quantity tubeSpacing_IP() const;
 

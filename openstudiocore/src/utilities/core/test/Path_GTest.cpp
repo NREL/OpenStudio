@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -51,11 +51,11 @@ using openstudio::isNetworkPathAvailable;
 void logBeforeAndAfterPathInformation(const std::string& functionName,
                                       const path& before,const path& after) {
   std::stringstream ssb,ssa;
-  
+
   printPathInformation(ssb,before);
   printPathInformation(ssa,after);
-  
-  LOG_FREE(Debug,"CoreFixture","Before " << functionName << ": " << ssb.str() << std::endl 
+
+  LOG_FREE(Debug,"CoreFixture","Before " << functionName << ": " << ssb.str() << std::endl
            << "After " << functionName << ": " << ssa.str() << std::endl);
 }
 
@@ -82,10 +82,10 @@ TEST_F(CoreFixture, Path_CompletePathToFile)
   result = completePathToFile(p);
   logBeforeAndAfterPathInformation("completePathToFile",p,result);
   EXPECT_TRUE(result.empty());
-  
+
 }
 
-TEST_F(CoreFixture, Path_toString) 
+TEST_F(CoreFixture, Path_toString)
 {
   EXPECT_EQ("energyplus/5ZoneAirCooled/eplusout.sql", toString(toPath("energyplus/5ZoneAirCooled/eplusout.sql")));
   EXPECT_EQ("energyplus/5ZoneAirCooled/eplusout.sql", toString(toPath("energyplus\\5ZoneAirCooled\\eplusout.sql")));
@@ -101,7 +101,7 @@ TEST_F(CoreFixture, Path_toString)
   EXPECT_EQ("/energyplus/5ZoneAirCooled", toString(toPath("\\energyplus\\5ZoneAirCooled")));
 }
 
-TEST_F(CoreFixture, Path_RelativePathToFile) 
+TEST_F(CoreFixture, Path_RelativePathToFile)
 {
   path relPath = toPath("energyplus/5ZoneAirCooled/eplusout.sql");
   path fullPath = resourcesPath() / relPath;
@@ -199,7 +199,7 @@ TEST_F(CoreFixture, Path_MakeParentFolder)
 
 TEST_F(CoreFixture, Path_WindowsPathOnUnix)
 {
-  // want to make sure we do not end up with "/E:/test/CloudTest/scripts/StandardReports/measure.rb" 
+  // want to make sure we do not end up with "/E:/test/CloudTest/scripts/StandardReports/measure.rb"
   openstudio::path file = openstudio::toPath("E:/test/CloudTest/scripts/StandardReports/measure.rb");
   EXPECT_FALSE(file.empty());
   EXPECT_EQ("E:/test/CloudTest/scripts/StandardReports/measure.rb", openstudio::toString(file));
@@ -211,65 +211,65 @@ TEST_F(CoreFixture, Path_WindowsPathOnUnix)
   EXPECT_TRUE(file.has_extension());
   EXPECT_EQ(".rb", openstudio::toString(file.extension()));
 #ifdef _WINDOWS
-  EXPECT_TRUE(file.has_root_name()); 
-  EXPECT_EQ("E:", openstudio::toString(file.root_name())); 
-  EXPECT_TRUE(file.has_root_directory()); 
-  EXPECT_EQ("/", openstudio::toString(file.root_directory())); 
-  EXPECT_TRUE(file.has_root_path()); 
-  EXPECT_EQ("E:/", openstudio::toString(file.root_path())); 
+  EXPECT_TRUE(file.has_root_name());
+  EXPECT_EQ("E:", openstudio::toString(file.root_name()));
+  EXPECT_TRUE(file.has_root_directory());
+  EXPECT_EQ("/", openstudio::toString(file.root_directory()));
+  EXPECT_TRUE(file.has_root_path());
+  EXPECT_EQ("E:/", openstudio::toString(file.root_path()));
   EXPECT_TRUE(file.has_relative_path());
   EXPECT_EQ("test/CloudTest/scripts/StandardReports/measure.rb", openstudio::toString(file.relative_path()));
-  EXPECT_TRUE(file.is_absolute()); 
-  EXPECT_FALSE(file.is_relative()); 
+  EXPECT_TRUE(file.is_absolute());
+  EXPECT_FALSE(file.is_relative());
 #else
-  EXPECT_FALSE(file.has_root_name()); 
+  EXPECT_FALSE(file.has_root_name());
   EXPECT_EQ("", openstudio::toString(file.root_name()));
   EXPECT_FALSE(file.has_root_directory());
-  EXPECT_EQ("", openstudio::toString(file.root_directory())); 
+  EXPECT_EQ("", openstudio::toString(file.root_directory()));
   EXPECT_FALSE(file.has_root_path());
-  EXPECT_EQ("", openstudio::toString(file.root_path())); 
+  EXPECT_EQ("", openstudio::toString(file.root_path()));
   EXPECT_TRUE(file.has_relative_path());
-  EXPECT_EQ("E:/test/CloudTest/scripts/StandardReports/measure.rb", openstudio::toString(file.relative_path())); 
-  EXPECT_FALSE(file.is_absolute()); 
-  EXPECT_TRUE(file.is_relative()); 
+  EXPECT_EQ("E:/test/CloudTest/scripts/StandardReports/measure.rb", openstudio::toString(file.relative_path()));
+  EXPECT_FALSE(file.is_absolute());
+  EXPECT_TRUE(file.is_relative());
 #endif
- 
+
   file = openstudio::toPath("E:\\test\\CloudTest\\scripts\\StandardReports\\measure.rb");
   EXPECT_FALSE(file.empty());
   EXPECT_TRUE(file.has_extension());
   EXPECT_EQ(".rb", openstudio::toString(file.extension()));
 #ifdef _WINDOWS
-  EXPECT_EQ("E:/test/CloudTest/scripts/StandardReports/measure.rb", openstudio::toString(file)); 
-  EXPECT_EQ("measure.rb", openstudio::toString(file.filename())); 
+  EXPECT_EQ("E:/test/CloudTest/scripts/StandardReports/measure.rb", openstudio::toString(file));
+  EXPECT_EQ("measure.rb", openstudio::toString(file.filename()));
   EXPECT_TRUE(file.has_root_name());
-  EXPECT_EQ("E:", openstudio::toString(file.root_name())); 
+  EXPECT_EQ("E:", openstudio::toString(file.root_name()));
   EXPECT_TRUE(file.has_root_directory());
-  EXPECT_EQ("/", openstudio::toString(file.root_directory())); 
-  EXPECT_TRUE(file.has_root_path()); 
-  EXPECT_EQ("E:/", openstudio::toString(file.root_path())); 
+  EXPECT_EQ("/", openstudio::toString(file.root_directory()));
+  EXPECT_TRUE(file.has_root_path());
+  EXPECT_EQ("E:/", openstudio::toString(file.root_path()));
   EXPECT_TRUE(file.has_relative_path());
   EXPECT_EQ("test/CloudTest/scripts/StandardReports/measure.rb", openstudio::toString(file.relative_path()));
-  EXPECT_TRUE(file.has_parent_path()); 
-  EXPECT_EQ("E:/test/CloudTest/scripts/StandardReports", openstudio::toString(file.parent_path()));  
+  EXPECT_TRUE(file.has_parent_path());
+  EXPECT_EQ("E:/test/CloudTest/scripts/StandardReports", openstudio::toString(file.parent_path()));
   EXPECT_TRUE(file.has_stem());
-  EXPECT_EQ("measure", openstudio::toString(file.stem())); 
-  EXPECT_TRUE(file.is_absolute()); 
-  EXPECT_FALSE(file.is_relative()); 
+  EXPECT_EQ("measure", openstudio::toString(file.stem()));
+  EXPECT_TRUE(file.is_absolute());
+  EXPECT_FALSE(file.is_relative());
 #else
-  EXPECT_EQ("E:\\test\\CloudTest\\scripts\\StandardReports\\measure.rb", openstudio::toString(file)); 
-  EXPECT_EQ("E:\\test\\CloudTest\\scripts\\StandardReports\\measure.rb", openstudio::toString(file.filename())); 
+  EXPECT_EQ("E:\\test\\CloudTest\\scripts\\StandardReports\\measure.rb", openstudio::toString(file));
+  EXPECT_EQ("E:\\test\\CloudTest\\scripts\\StandardReports\\measure.rb", openstudio::toString(file.filename()));
   EXPECT_FALSE(file.has_root_name());
   EXPECT_EQ("", openstudio::toString(file.root_name()));
   EXPECT_FALSE(file.has_root_directory());
-  EXPECT_EQ("", openstudio::toString(file.root_directory())); 
-  EXPECT_FALSE(file.has_root_path());  
-  EXPECT_EQ("", openstudio::toString(file.root_path())); 
+  EXPECT_EQ("", openstudio::toString(file.root_directory()));
+  EXPECT_FALSE(file.has_root_path());
+  EXPECT_EQ("", openstudio::toString(file.root_path()));
   EXPECT_TRUE(file.has_relative_path());
-  EXPECT_EQ("E:\\test\\CloudTest\\scripts\\StandardReports\\measure.rb", openstudio::toString(file.relative_path())); 
+  EXPECT_EQ("E:\\test\\CloudTest\\scripts\\StandardReports\\measure.rb", openstudio::toString(file.relative_path()));
   EXPECT_FALSE(file.has_parent_path());
-  EXPECT_EQ("", openstudio::toString(file.parent_path())); 
+  EXPECT_EQ("", openstudio::toString(file.parent_path()));
   EXPECT_TRUE(file.has_stem());
-  EXPECT_EQ("E:\\test\\CloudTest\\scripts\\StandardReports\\measure", openstudio::toString(file.stem())); 
+  EXPECT_EQ("E:\\test\\CloudTest\\scripts\\StandardReports\\measure", openstudio::toString(file.stem()));
   EXPECT_FALSE(file.is_absolute());
   EXPECT_TRUE(file.is_relative());
 #endif
@@ -279,7 +279,7 @@ TEST_F(CoreFixture, Path_WindowsPathOnUnix)
 TEST_F(CoreFixture, OriginalPath_FromUrl)
 {
   // mimics code in ToolBasedJob::acquireRequiredFiles
-  // want to make sure we do not end up with "/E:/test/CloudTest/scripts/StandardReports/measure.rb" 
+  // want to make sure we do not end up with "/E:/test/CloudTest/scripts/StandardReports/measure.rb"
   openstudio::Url url("file:///E:/test/CloudTest/scripts/StandardReports/measure.rb");
   openstudio::path file = openstudio::getOriginalPath(url);
   std::string str = openstudio::toString(file);

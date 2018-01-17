@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -31,6 +31,7 @@
 
 #include "ComponentWatcher.hpp"
 #include "Building.hpp"
+#include "FoundationKivaSettings.hpp"
 #include "LifeCycleCostParameters.hpp"
 #include "RunPeriod.hpp"
 #include "YearDescription.hpp"
@@ -139,6 +140,10 @@ namespace detail {
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<Building>(). */
     boost::optional<Building> building() const;
 
+    /** Get the FoundationKivaSettings object if there is one, this implementation uses a cached reference to the FoundationKivaSettings
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<FoundationKivaSettings>(). */
+    boost::optional<FoundationKivaSettings> foundationKivaSettings() const;    
+    
     /** Get the LifeCycleCostParameters object if there is one, this implementation uses a cached reference to the LifeCycleCostParameters
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<LifeCycleCostParameters>(). */
     boost::optional<LifeCycleCostParameters> lifeCycleCostParameters() const;
@@ -158,7 +163,7 @@ namespace detail {
     bool isDayofWeekforStartDayDefaulted() const;
     bool isLeapYear() const;
     bool isIsLeapYearDefaulted() const;
-    void setCalendarYear(int calendarYear);
+    bool setCalendarYear(int calendarYear);
     void resetCalendarYear();
     bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
     void resetDayofWeekforStartDay();
@@ -291,6 +296,7 @@ namespace detail {
   private:
 
     mutable boost::optional<Building> m_cachedBuilding;
+    mutable boost::optional<FoundationKivaSettings> m_cachedFoundationKivaSettings;
     mutable boost::optional<LifeCycleCostParameters> m_cachedLifeCycleCostParameters;
     mutable boost::optional<RunPeriod> m_cachedRunPeriod;
     mutable boost::optional<YearDescription> m_cachedYearDescription;
@@ -299,6 +305,7 @@ namespace detail {
   // private slots:
     void clearCachedData();
     void clearCachedBuilding(const Handle& handle);
+    void clearCachedFoundationKivaSettings(const Handle& handle);
     void clearCachedLifeCycleCostParameters(const Handle& handle);
     void clearCachedRunPeriod(const Handle& handle);
     void clearCachedYearDescription(const Handle& handle);

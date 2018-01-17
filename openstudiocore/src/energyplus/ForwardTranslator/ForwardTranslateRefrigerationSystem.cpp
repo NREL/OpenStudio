@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -95,7 +95,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
       {
         IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
 
-        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_case->name().get()); 
+        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_case->name().get());
       }
     }
 
@@ -107,7 +107,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
       {
         IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
 
-        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_walkin->name().get()); 
+        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_walkin->name().get());
       }
     }
 
@@ -119,7 +119,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
       {
         IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
 
-        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_airChiller->name().get()); 
+        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_airChiller->name().get());
       }
     }
   }
@@ -148,7 +148,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
       {
         IdfExtensibleGroup eg = _transferLoadList.pushExtensibleGroup();
 
-        eg.setString(Refrigeration_TransferLoadListExtensibleFields::CascadeCondenserNameorSecondarySystemName,_secondarySystemLoad->name().get()); 
+        eg.setString(Refrigeration_TransferLoadListExtensibleFields::CascadeCondenserNameorSecondarySystemName,_secondarySystemLoad->name().get());
       }
     }
 
@@ -160,7 +160,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
       {
         IdfExtensibleGroup eg = _transferLoadList.pushExtensibleGroup();
 
-        eg.setString(Refrigeration_TransferLoadListExtensibleFields::CascadeCondenserNameorSecondarySystemName,_cascadeCondenserLoad->name().get()); 
+        eg.setString(Refrigeration_TransferLoadListExtensibleFields::CascadeCondenserNameorSecondarySystemName,_cascadeCondenserLoad->name().get());
       }
     }
   }
@@ -201,7 +201,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
       {
         IdfExtensibleGroup eg = _compressorList.pushExtensibleGroup();
 
-        eg.setString(Refrigeration_CompressorListExtensibleFields::RefrigerationCompressorName,_compressor->name().get()); 
+        eg.setString(Refrigeration_CompressorListExtensibleFields::RefrigerationCompressorName,_compressor->name().get());
       }
     }
   }
@@ -281,19 +281,19 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
     refrigerationSystem.setString(Refrigeration_SystemFields::EndUseSubcategory,s.get());
   }
 
-//Number of Compressor Stages 
+//Number of Compressor Stages
   s = modelObject.numberofCompressorStages();
   if (s) {
     refrigerationSystem.setString(Refrigeration_SystemFields::NumberofCompressorStages,s.get());
   }
 
-//Intercooler Type 
+//Intercooler Type
   s = modelObject.intercoolerType();
   if (s) {
     refrigerationSystem.setString(Refrigeration_SystemFields::IntercoolerType,s.get());
   }
 
-//Shell-and-Coil Intercooler Effectiveness 
+//Shell-and-Coil Intercooler Effectiveness
   d = modelObject.shellandCoilIntercoolerEffectiveness();
   if (d) {
     refrigerationSystem.setDouble(Refrigeration_SystemFields::ShellandCoilIntercoolerEffectiveness,d.get());
@@ -322,7 +322,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
       {
         IdfExtensibleGroup eg = _highStageCompressorList.pushExtensibleGroup();
 
-        eg.setString(Refrigeration_CompressorListExtensibleFields::RefrigerationCompressorName,_highStageCompressor->name().get()); 
+        eg.setString(Refrigeration_CompressorListExtensibleFields::RefrigerationCompressorName,_highStageCompressor->name().get());
       }
     }
   }

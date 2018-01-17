@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -50,7 +50,7 @@ namespace openstudio{
 
 class OSListView;
 class OSDragPixmapData;
-  
+
 
 class LocalLibraryView;
 class LibraryTypeListController;
@@ -218,7 +218,7 @@ class LibrarySubGroupItem : public OSListItem
 
   public:
 
-  LibrarySubGroupItem(const QString & name, const QString & taxonomyTag, 
+  LibrarySubGroupItem(const QString & name, const QString & taxonomyTag,
                       LocalLibrary::LibrarySource source,
                       BaseApp *t_app,
                       bool onlyShowModelMeasures);
@@ -322,7 +322,7 @@ class LibraryItem : public OSListItem
 
   bool m_available;
   BaseApp *m_app;
-  
+
 };
 
 class LibraryItemDelegate : public OSItemDelegate
@@ -350,7 +350,7 @@ class LibraryListController : public OSListController
 
   public:
 
-  LibraryListController(const QString & taxonomyTag, 
+  LibraryListController(const QString & taxonomyTag,
                         LocalLibrary::LibrarySource source,
                         BaseApp *t_app,
                         bool onlyShowModelMeasures);

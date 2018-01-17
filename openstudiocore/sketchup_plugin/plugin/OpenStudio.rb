@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -43,7 +43,7 @@ if new_plugin
       end
     end
   end
-  
+
   $OPENSTUDIO_SKETCHUPPLUGIN_NAME = "OpenStudio"
   $OPENSTUDIO_SKETCHUPPLUGIN_VERSION_BRIEF = new_version
   $OPENSTUDIO_SKETCHUPPLUGIN_LAUNCH_GETTING_STARTED_ON_START = false
@@ -53,7 +53,7 @@ end
 old_plugin = Sketchup.find_support_file("Energy+.idd", "Plugins/OpenStudio")
 old_version = nil
 if old_plugin
-  
+
   # peek at Idd to figure out version
   old_version = "Unknown"
   File.open(old_plugin, 'r') do |file|
@@ -67,16 +67,16 @@ if old_plugin
     elsif /IDD_Version 7\.0\.0/.match(line)
       old_version = "1.0.7"
      elsif /IDD_Version 7\.1\.0/.match(line)
-      old_version = "1.0.8"     
+      old_version = "1.0.8"
      elsif /IDD_Version 7\.2\.0/.match(line)
-      old_version = "1.0.9"     
+      old_version = "1.0.9"
      elsif /IDD_Version 8\.0\.0/.match(line)
-      old_version = "1.0.10"     
+      old_version = "1.0.10"
      elsif /IDD_Version 8\.1\.0/.match(line)
-      old_version = "1.0.11"     
+      old_version = "1.0.11"
     end
   end
-  
+
   OPENSTUDIO_PLUGIN_NAME = "Legacy OpenStudio"
   OPENSTUDIO_PLUGIN_VERSION = old_version
 end
@@ -84,7 +84,7 @@ end
 # class for selecting version of OpenStudio
 module OpenStudio
   class VersionSelector
-  
+
     def VersionSelector.select_version
 
       current_load_old_plugin = Sketchup.read_default("OpenStudio", "Load Old Plugin")
@@ -111,7 +111,7 @@ module OpenStudio
           load_old_plugin = Sketchup.write_default("OpenStudio", "Load Old Plugin", false)
           if current_load_old_plugin
             UI.messagebox("Restart SketchUp for changes to take effect", MB_OK)
-          end            
+          end
         end
       end
     end
@@ -123,7 +123,7 @@ load_old_plugin = Sketchup.read_default("OpenStudio", "Load Old Plugin")
 first_launch = load_old_plugin.nil?
 if first_launch
   load_old_plugin = false
-  
+
   result = UI.messagebox("Welcome to OpenStudio SketchUp Plug-in #{$OPENSTUDIO_SKETCHUPPLUGIN_VERSION}\nSwitch between the new and legacy versions of the plug-in using 'Plugins->Select OpenStudio Version'\nYes to see the getting started guide now.\nNo to skip this message next time.\nCancel to do nothing.\n", MB_YESNOCANCEL )
   if result == 2 # CANCEL
     # nothing
@@ -132,12 +132,12 @@ if first_launch
   elsif result == 7 # NO
     Sketchup.write_default("OpenStudio", "Load Old Plugin", false)
   end
-  
+
 end
 
 # if have both plugins, add menu item for switching
 if new_plugin and old_plugin
-    
+
   # add menu item to switch versions
   switch_version_cmd = UI::Command.new("Select OpenStudio Version") { OpenStudio::VersionSelector::select_version }
   switch_version_cmd.set_validation_proc { MF_ENABLED }
@@ -158,19 +158,19 @@ if load_old_plugin and old_plugin
   ext.description = "Adds building energy modeling capabilities by coupling SketchUp to the EnergyPlus simulation engine.  \r\n\r\nVisit www.energyplus.gov for more information."
   ext.version = old_version
   ext.creator = "National Renewable Energy Laboratory"
-  ext.copyright = "2008-2017, Alliance for Sustainable Energy"
+  ext.copyright = "2008-2018, Alliance for Sustainable Energy"
 
   # 'true' automatically loads the extension the first time it is registered, e.g., after install
   Sketchup.register_extension(ext, true)
-  
+
 elsif new_plugin
-  
+
   ext = SketchupExtension.new($OPENSTUDIO_SKETCHUPPLUGIN_NAME, "OpenStudio/Startup.rb")
   ext.name = $OPENSTUDIO_SKETCHUPPLUGIN_NAME
   ext.description = "Adds building energy modeling capabilities by coupling SketchUp to the OpenStudio suite of tools.  \r\n\r\nVisit openstudio.net for more information."
   ext.version = new_version
   ext.creator = "National Renewable Energy Laboratory"
-  ext.copyright = "2008-2017, Alliance for Sustainable Energy"
+  ext.copyright = "2008-2018, Alliance for Sustainable Energy"
 
   # 'true' automatically loads the extension the first time it is registered, e.g., after install
   Sketchup.register_extension(ext, true)

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -49,21 +49,21 @@ namespace openstudio{
 
   /** \class BCLXMLType
    *  \brief Enumeration of the BCL XML file types.
-   *  \details The Building Component Library (BCL) hosts both components and measures. The 
+   *  \details The Building Component Library (BCL) hosts both components and measures. The
    *  meta-data for individual instances of these two types of items are transmitted using XML
-   *  files that with slightly different structures. Thus, this enum helps distinguish between the 
-   *  expected schema. 
+   *  files that with slightly different structures. Thus, this enum helps distinguish between the
+   *  expected schema.
    *
-   *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is: 
+   *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is:
    *  \code
   OPENSTUDIO_ENUM( BCLXMLType,
-    ((ComponentXML)(ComponentXML)) 
-    ((MeasureXML)(MeasureXML)) 
+    ((ComponentXML)(ComponentXML))
+    ((MeasureXML)(MeasureXML))
   );
    *  \endcode */
   OPENSTUDIO_ENUM( BCLXMLType,
-    ((ComponentXML)(ComponentXML)) 
-    ((MeasureXML)(MeasureXML)) 
+    ((ComponentXML)(ComponentXML))
+    ((MeasureXML)(MeasureXML))
   );
 
   /** BCLXML is a class for accessing the common XML structures of BCLComponent and BCLMeasure.
@@ -212,7 +212,7 @@ namespace openstudio{
     void incrementVersionId();
 
     /// Check for updates to the xml, will increment versionID and xmlChecksum then return true
-    /// if any xml fields (other than uid, version id, or xml checksum) have changed 
+    /// if any xml fields (other than uid, version id, or xml checksum) have changed
     /// The xml file must still be saved to disk to preserve the new versionID
     bool checkForUpdatesXML();
 
@@ -220,7 +220,7 @@ namespace openstudio{
 
   private:
     // configure logging
-    REGISTER_LOGGER("utilities.bcl.BCLXML"); 
+    REGISTER_LOGGER("utilities.bcl.BCLXML");
 
     /// Compute the current xml checksum
     std::string computeXMLChecksum() const;
@@ -239,7 +239,7 @@ namespace openstudio{
     std::string m_modelerDescription; // only for measures
     std::vector<BCLMeasureArgument> m_arguments; // only for measures
     std::vector<BCLMeasureOutput> m_outputs; // only for measures
-    std::vector<BCLFileReference> m_files; 
+    std::vector<BCLFileReference> m_files;
     std::vector<std::string> m_filetypes;
     std::vector<Attribute> m_attributes;
     std::vector<std::string> m_tags;

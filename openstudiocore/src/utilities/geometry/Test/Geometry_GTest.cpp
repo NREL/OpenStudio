@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -174,7 +174,7 @@ TEST_F(GeometryFixture, Centroid)
   points.push_back(Point3d(0,0,0));
   points.push_back(Point3d(1,0,0));
   points.push_back(Point3d(1,0,1));
-  
+
   c = getCentroid(points);
   ASSERT_TRUE(c);
   EXPECT_EQ(0.5, c->x());
@@ -187,7 +187,7 @@ TEST_F(GeometryFixture, Centroid)
   points.push_back(Point3d(3,0,1));
   points.push_back(Point3d(3,100,1));
   points.push_back(Point3d(3,100,2));
-  
+
   c = getCentroid(points);
   ASSERT_TRUE(c);
   EXPECT_EQ(3.0, c->x());
@@ -202,7 +202,7 @@ TEST_F(GeometryFixture, Centroid)
   points.push_back(Point3d(2,0,1));
   points.push_back(Point3d(1,0,1));
   points.push_back(Point3d(1,0,2));
-  
+
   c = getCentroid(points);
   ASSERT_TRUE(c);
   EXPECT_EQ(2.5/3.0, c->x());
@@ -221,7 +221,7 @@ TEST_F(GeometryFixture, Centroid)
   points.push_back(Point3d(2,1,1));
   points.push_back(Point3d(1,1,1));
   points.push_back(Point3d(1,3,1));
-  
+
   c = getCentroid(points);
   ASSERT_TRUE(c);
   EXPECT_EQ(1.5, c->x());
@@ -232,7 +232,7 @@ TEST_F(GeometryFixture, Centroid)
 TEST_F(GeometryFixture, ReorderULC)
 {
   Point3dVector points(4);
-  
+
   points[0] = Point3d(0, 0, 1);
   points[1] = Point3d(0, 0, 0);
   points[2] = Point3d(1, 0, 0);
@@ -735,7 +735,7 @@ TEST_F(GeometryFixture, PointLatLon)
   //EXPECT_TRUE(origin == origin2);
 
   EXPECT_DOUBLE_EQ(0, (origin - origin2));
-  
+
   PointLatLonVector footprint;
   footprint.push_back(PointLatLon(45.521272355398, -122.686472758865));
   footprint.push_back(PointLatLon(45.5214185583437, -122.687017007901));
@@ -747,7 +747,7 @@ TEST_F(GeometryFixture, PointLatLon)
 
   Point3dVector localFootprint = origin.toLocalCartesian(footprint);
   ASSERT_EQ(footprint.size(), localFootprint.size());
-  
+
   double expectedArea = 1853.0906095305727; // from GIS
   boost::optional<double> calcArea = getArea(localFootprint);
   ASSERT_TRUE(calcArea);

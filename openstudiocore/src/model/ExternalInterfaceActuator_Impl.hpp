@@ -91,11 +91,11 @@ namespace detail {
 
     bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
 
-    void setOptionalInitialValue(double optionalInitialValue);
+    bool setOptionalInitialValue(double optionalInitialValue);
 
     void resetOptionalInitialValue();
 
-    void setExportToBCVTB(bool exportToBCVTB);
+    bool setExportToBCVTB(bool exportToBCVTB);
 
     void resetExportToBCVTB();
 
@@ -114,5 +114,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACEACTUATOR_IMPL_HPP
-
+#endif // MODEL_EXTERNALINTERFACEACTUATOR_IMPL_HPP

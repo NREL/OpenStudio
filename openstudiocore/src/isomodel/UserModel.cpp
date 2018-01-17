@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -32,7 +32,7 @@ using namespace std;
 namespace openstudio {
 namespace isomodel {
 
- 
+
   SimModel UserModel::toSimModel()
   {
     _valid = true;
@@ -54,7 +54,7 @@ namespace isomodel {
     pop->setHoursEnd(_equivFullLoadOccupancyTo);
     pop->setHoursStart(_equivFullLoadOccupancyFrom);
     pop->setDensityOccupied(_peopleDensityOccupied);
-    
+
     pop->setDensityUnoccupied(_peopleDensityUnoccupied);
     pop->setHeatGainPerPerson(_heatGainPerPerson);
     sim.setPop(pop);
@@ -82,7 +82,7 @@ namespace isomodel {
     cooling->setTemperatureSetPointOccupied(_coolingOccupiedSetpoint);
     cooling->setTemperatureSetPointUnoccupied(_coolingUnoccupiedSetpoint);
     sim.setCooling(cooling);
-    
+
     std::shared_ptr<Heating> heating(new Heating);
     heating->setEfficiency(_heatingSystemEfficiency);
     heating->setEnergyType(_heatingEnergyCarrier);
@@ -183,7 +183,7 @@ namespace isomodel {
     winSHGC[7] = _windowSHGCSW;
     winSHGC[8] = _skylightSHGC;
     structure->setWindowNormalIncidenceSolarEnergyTransmittance(winSHGC);//vector
-    
+
     Vector winSCF(9);
     winSCF[0] = _windowSCFS ;
     winSCF[1] = _windowSCFSE;
@@ -277,7 +277,7 @@ namespace isomodel {
   }
 
   void UserModel::parseStructure(const std::string &attributeName, const char* attributeValue){
-    //Window&Wall Values    
+    //Window&Wall Values
     if(attributeName == "windowuvaluen"){
       _windowUvalueN = (atof(attributeValue));
     } else if(attributeName == "windowshgcn"){
@@ -293,7 +293,7 @@ namespace isomodel {
     } else if(attributeName == "wallthermalemissivityn"){
       _wallThermalEmissivityN = (atof(attributeValue));
     }
-  
+
     else if(attributeName == "windowuvaluene"){
       _windowUvalueNE = (atof(attributeValue));
     } else if(attributeName == "windowshgcne"){
@@ -308,8 +308,8 @@ namespace isomodel {
       _wallSolarAbsorptionNE = (atof(attributeValue));
     } else if(attributeName == "wallthermalemissivityne"){
       _wallThermalEmissivityNE = (atof(attributeValue));
-    } 
-  
+    }
+
     else if(attributeName == "windowuvaluee"){
       _windowUvalueE = (atof(attributeValue));
     } else if(attributeName == "windowshgce"){
@@ -324,8 +324,8 @@ namespace isomodel {
       _wallSolarAbsorptionE = (atof(attributeValue));
     } else if(attributeName == "wallthermalemissivitye"){
       _wallThermalEmissivityE = (atof(attributeValue));
-    } 
-  
+    }
+
     else if(attributeName == "windowuvaluese"){
       _windowUvalueSE =  (atof(attributeValue));
     } else if(attributeName == "windowshgcse"){
@@ -340,8 +340,8 @@ namespace isomodel {
       _wallSolarAbsorptionSE =  (atof(attributeValue));
     } else if(attributeName == "wallthermalemissivityse"){
       _wallThermalEmissivitySE =  (atof(attributeValue));
-    } 
-  
+    }
+
     else if(attributeName == "windowuvalues"){
       _windowUvalueS =  (atof(attributeValue));
     } else if(attributeName == "windowshgcs"){
@@ -356,7 +356,7 @@ namespace isomodel {
       _wallSolarAbsorptionS =  (atof(attributeValue));
     } else if(attributeName == "wallthermalemissivitys"){
       _wallThermalEmissivityS =  (atof(attributeValue));
-    } 
+    }
 
     else if(attributeName == "windowuvaluesw"){
       _windowUvalueSW =  (atof(attributeValue));
@@ -372,8 +372,8 @@ namespace isomodel {
       _wallSolarAbsorptionSW =  (atof(attributeValue));
     } else if(attributeName == "wallthermalemissivitysw"){
       _wallThermalEmissivitySW =  (atof(attributeValue));
-    } 
-  
+    }
+
     else if(attributeName == "windowuvaluew"){
       _windowUvalueW =  (atof(attributeValue));
     } else if(attributeName == "windowshgcw"){
@@ -388,7 +388,7 @@ namespace isomodel {
       _wallSolarAbsorptionW =  (atof(attributeValue));
     } else if(attributeName == "wallthermalemissivityw"){
       _wallThermalEmissivityW =  (atof(attributeValue));
-    } 
+    }
 
     else if(attributeName == "windowuvaluenw"){
       _windowUvalueNW =  (atof(attributeValue));
@@ -404,7 +404,7 @@ namespace isomodel {
       _wallSolarAbsorptionNW =  (atof(attributeValue));
     } else if(attributeName == "wallthermalemissivitynw"){
       _wallThermalEmissivityNW =  (atof(attributeValue));
-    } 
+    }
   }
 
   void UserModel::parseLine(const string &line){
@@ -417,7 +417,7 @@ namespace isomodel {
     if(linesplit[0].at(0) == '#')
       return;
     string attributeName = lcase(linesplit[0]);
-    
+
     const char* attributeValue = linesplit[1].c_str();
     if(attributeName == "terrainclass"){
       setTerrainClass(atof(attributeValue));
@@ -564,13 +564,13 @@ namespace isomodel {
       setHeatingUnoccupiedSetpoint(atof(attributeValue));
     } else if(attributeName == "weatherfilepath"){//weatherFilePath
       setWeatherFilePath(openstudio::toPath(linesplit[1]));
-    } else if(boost::starts_with(attributeName.c_str(),"window") || 
+    } else if(boost::starts_with(attributeName.c_str(),"window") ||
               boost::starts_with(attributeName.c_str(),"wall") ) {
       parseStructure(attributeName,attributeValue);//avoid max nested ifs.  Might be better to change to a map eventually
-    }    
+    }
     else {
       LOG(Error, "Unknown Attribute: "<< attributeName << " = " << attributeValue);
-    }    
+    }
   }
   void UserModel::loadBuilding(const openstudio::path &buildingFile){
     string line;
@@ -601,7 +601,7 @@ namespace isomodel {
       return 5;
     else if(header == "mwind")
       return 6;
-    else 
+    else
       return -1;
   }
 
@@ -611,7 +611,7 @@ namespace isomodel {
     //if so, use it, else assemble relative path
     if(openstudio::filesystem::exists( _weatherFilePath ))
     {
-      weatherFilename = _weatherFilePath;      
+      weatherFilename = _weatherFilePath;
     }
     else
     {
@@ -641,7 +641,7 @@ namespace isomodel {
     wdata->setMhEgh(_mhEgh);
     wdata->setMsolar(_msolar);
     wdata->setMwind(_mwind);
-    
+
     return wdata;
   }
 
@@ -659,7 +659,7 @@ namespace isomodel {
   }
 
 
-  void UserModel::save(const openstudio::path &t_buildingFile) const 
+  void UserModel::save(const openstudio::path &t_buildingFile) const
   {
 
     std::ofstream ofile(openstudio::toString(t_buildingFile).c_str());
@@ -716,7 +716,7 @@ namespace isomodel {
     ofile << "wallAreaW = " << _wallAreaW << std::endl;
     ofile << "wallAreaSW = " << _wallAreaSW << std::endl;
     ofile << "roofArea = " << _roofArea << std::endl;
-    
+
     ofile << "wallUvalueS = " << _wallUvalueS << std::endl;
     ofile << "wallUvalueSE = " << _wallUvalueSE << std::endl;
     ofile << "wallUvalueE = " << _wallUvalueE << std::endl;
@@ -726,7 +726,7 @@ namespace isomodel {
     ofile << "wallUvalueW = " << _wallUvalueW << std::endl;
     ofile << "wallUvalueSW = " << _wallUvalueSW << std::endl;
     ofile << "roofUValue = " << _roofUValue << std::endl;
-    
+
     ofile << "wallSolarAbsorptionS = " << _wallSolarAbsorptionS << std::endl;
     ofile << "wallSolarAbsorptionSE = " << _wallSolarAbsorptionSE << std::endl;
     ofile << "wallSolarAbsorptionE = " << _wallSolarAbsorptionE << std::endl;

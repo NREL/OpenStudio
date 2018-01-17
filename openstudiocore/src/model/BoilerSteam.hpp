@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -69,7 +69,7 @@ class MODEL_API BoilerSteam : public StraightComponent {
 
   OSOptionalQuantity getMaximumOperatingPressure(bool returnIP=false) const;
 
-  void setMaximumOperatingPressure(double maximumOperatingPressure);
+  bool setMaximumOperatingPressure(double maximumOperatingPressure);
 
   bool setMaximumOperatingPressure(const Quantity& maximumOperatingPressure);
 
@@ -89,7 +89,7 @@ class MODEL_API BoilerSteam : public StraightComponent {
 
   OSOptionalQuantity getDesignOutletSteamTemperature(bool returnIP=false) const;
 
-  void setDesignOutletSteamTemperature(double designOutletSteamTemperature);
+  bool setDesignOutletSteamTemperature(double designOutletSteamTemperature);
 
   bool setDesignOutletSteamTemperature(const Quantity& designOutletSteamTemperature);
 
@@ -101,7 +101,7 @@ class MODEL_API BoilerSteam : public StraightComponent {
 
   bool isNominalCapacityAutosized() const;
 
-  void setNominalCapacity(double nominalCapacity);
+  bool setNominalCapacity(double nominalCapacity);
 
   bool setNominalCapacity(const Quantity& nominalCapacity);
 
@@ -143,7 +143,7 @@ class MODEL_API BoilerSteam : public StraightComponent {
 
   OSOptionalQuantity getCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(bool returnIP=false) const;
 
-  void setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(double coefficient1ofFuelUseFunctionofPartLoadRatioCurve);
+  bool setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(double coefficient1ofFuelUseFunctionofPartLoadRatioCurve);
 
   bool setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(const Quantity& coefficient1ofFuelUseFunctionofPartLoadRatioCurve);
 
@@ -153,7 +153,7 @@ class MODEL_API BoilerSteam : public StraightComponent {
 
   OSOptionalQuantity getCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(bool returnIP=false) const;
 
-  void setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(double coefficient2ofFuelUseFunctionofPartLoadRatioCurve);
+  bool setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(double coefficient2ofFuelUseFunctionofPartLoadRatioCurve);
 
   bool setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(const Quantity& coefficient2ofFuelUseFunctionofPartLoadRatioCurve);
 
@@ -163,7 +163,7 @@ class MODEL_API BoilerSteam : public StraightComponent {
 
   OSOptionalQuantity getCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(bool returnIP=false) const;
 
-  void setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(double coefficient3ofFuelUseFunctionofPartLoadRatioCurve);
+  bool setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(double coefficient3ofFuelUseFunctionofPartLoadRatioCurve);
 
   bool setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(const Quantity& coefficient3ofFuelUseFunctionofPartLoadRatioCurve);
 
@@ -220,4 +220,3 @@ typedef std::vector<BoilerSteam> BoilerSteamVector;
 } // openstudio
 
 #endif // MODEL_BOILERSTEAM_HPP
-

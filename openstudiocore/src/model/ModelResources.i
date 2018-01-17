@@ -25,13 +25,15 @@
 
   // ignore space for now
   %ignore openstudio::model::SpaceType::spaces;
-    
+
   // ignore space load instance for now
   %ignore openstudio::model::SpaceLoadDefinition::instances;
-  
+
+  %ignore openstudio::model::ExteriorLoadDefinition::instances;
+
   // ignore schedule type
   %ignore openstudio::model::ScheduleType;
-  
+
 #endif
 
 #if defined(SWIGJAVA)
@@ -52,14 +54,14 @@ class ShadingControl;
 }
 }
 
-MODELOBJECT_TEMPLATES(ScheduleInterval); 
-MODELOBJECT_TEMPLATES(ScheduleFixedInterval); 
+MODELOBJECT_TEMPLATES(ScheduleInterval);
+MODELOBJECT_TEMPLATES(ScheduleFixedInterval);
 MODELOBJECT_TEMPLATES(ScheduleVariableInterval);
-MODELOBJECT_TEMPLATES(ScheduleCompact); 
-MODELOBJECT_TEMPLATES(ScheduleConstant); 
-MODELOBJECT_TEMPLATES(DefaultScheduleSet); 
-MODELOBJECT_TEMPLATES(MaterialPropertyGlazingSpectralData); 
-MODELOBJECT_TEMPLATES(MaterialPropertyMoisturePenetrationDepthSettings); 
+MODELOBJECT_TEMPLATES(ScheduleCompact);
+MODELOBJECT_TEMPLATES(ScheduleConstant);
+MODELOBJECT_TEMPLATES(DefaultScheduleSet);
+MODELOBJECT_TEMPLATES(MaterialPropertyGlazingSpectralData);
+MODELOBJECT_TEMPLATES(MaterialPropertyMoisturePenetrationDepthSettings);
 MODELOBJECT_TEMPLATES(Material);
 MODELOBJECT_TEMPLATES(FenestrationMaterial);
 MODELOBJECT_TEMPLATES(GasLayer);
@@ -93,8 +95,8 @@ MODELOBJECT_TEMPLATES(FFactorGroundFloorConstruction);
 MODELOBJECT_TEMPLATES(StandardsInformationConstruction);
 MODELOBJECT_TEMPLATES(WindowDataFile);
 MODELOBJECT_TEMPLATES(WindowPropertyFrameAndDivider);
-MODELOBJECT_TEMPLATES(DefaultSubSurfaceConstructions); 
-MODELOBJECT_TEMPLATES(DefaultSurfaceConstructions); 
+MODELOBJECT_TEMPLATES(DefaultSubSurfaceConstructions);
+MODELOBJECT_TEMPLATES(DefaultSurfaceConstructions);
 MODELOBJECT_TEMPLATES(ShadingControl);
 MODELOBJECT_TEMPLATES(Curve);
 MODELOBJECT_TEMPLATES(CurveBicubic);
@@ -117,7 +119,7 @@ MODELOBJECT_TEMPLATES(CurveTriquadratic);
 MODELOBJECT_TEMPLATES(TableMultiVariableLookup);
 MODELOBJECT_TEMPLATES(SpaceLoadDefinition);
 MODELOBJECT_TEMPLATES(PeopleDefinition);
-MODELOBJECT_TEMPLATES(LightsDefinition); 
+MODELOBJECT_TEMPLATES(LightsDefinition);
 MODELOBJECT_TEMPLATES(LuminaireDefinition);
 MODELOBJECT_TEMPLATES(ElectricEquipmentDefinition);
 MODELOBJECT_TEMPLATES(GasEquipmentDefinition);
@@ -125,16 +127,20 @@ MODELOBJECT_TEMPLATES(HotWaterEquipmentDefinition);
 MODELOBJECT_TEMPLATES(SteamEquipmentDefinition);
 MODELOBJECT_TEMPLATES(OtherEquipmentDefinition);
 MODELOBJECT_TEMPLATES(InternalMassDefinition);
-MODELOBJECT_TEMPLATES(ExteriorLightsDefinition)
-MODELOBJECT_TEMPLATES(RenderingColor); 
-MODELOBJECT_TEMPLATES(DesignSpecificationOutdoorAir); 
 
-SWIG_MODELOBJECT(ScheduleInterval, 0); 
-SWIG_MODELOBJECT(ScheduleFixedInterval, 1); 
+MODELOBJECT_TEMPLATES(ExteriorLoadDefinition);
+MODELOBJECT_TEMPLATES(ExteriorLightsDefinition)
+MODELOBJECT_TEMPLATES(ExteriorFuelEquipmentDefinition)
+MODELOBJECT_TEMPLATES(ExteriorWaterEquipmentDefinition)
+MODELOBJECT_TEMPLATES(RenderingColor);
+MODELOBJECT_TEMPLATES(DesignSpecificationOutdoorAir);
+
+SWIG_MODELOBJECT(ScheduleInterval, 0);
+SWIG_MODELOBJECT(ScheduleFixedInterval, 1);
 SWIG_MODELOBJECT(ScheduleVariableInterval, 1);
-SWIG_MODELOBJECT(ScheduleCompact, 1); 
-SWIG_MODELOBJECT(ScheduleConstant, 1); 
-SWIG_MODELOBJECT(DefaultScheduleSet, 1); 
+SWIG_MODELOBJECT(ScheduleCompact, 1);
+SWIG_MODELOBJECT(ScheduleConstant, 1);
+SWIG_MODELOBJECT(DefaultScheduleSet, 1);
 SWIG_MODELOBJECT(MaterialPropertyGlazingSpectralData, 1);
 SWIG_MODELOBJECT(MaterialPropertyMoisturePenetrationDepthSettings, 1);
 SWIG_MODELOBJECT(Material, 0);
@@ -170,8 +176,8 @@ SWIG_MODELOBJECT(FFactorGroundFloorConstruction, 1);
 SWIG_MODELOBJECT(StandardsInformationConstruction, 1);
 SWIG_MODELOBJECT(WindowDataFile, 1);
 SWIG_MODELOBJECT(WindowPropertyFrameAndDivider, 1);
-SWIG_MODELOBJECT(DefaultSubSurfaceConstructions, 1); 
-SWIG_MODELOBJECT(DefaultSurfaceConstructions, 1); 
+SWIG_MODELOBJECT(DefaultSubSurfaceConstructions, 1);
+SWIG_MODELOBJECT(DefaultSurfaceConstructions, 1);
 SWIG_MODELOBJECT(ShadingControl, 1);
 SWIG_MODELOBJECT(Curve, 0);
 SWIG_MODELOBJECT(CurveBicubic, 1);
@@ -192,9 +198,9 @@ SWIG_MODELOBJECT(CurveRectangularHyperbola2, 1);
 SWIG_MODELOBJECT(CurveSigmoid, 1);
 SWIG_MODELOBJECT(CurveTriquadratic, 1);
 SWIG_MODELOBJECT(TableMultiVariableLookup, 1);
-SWIG_MODELOBJECT(SpaceLoadDefinition, 0);  
+SWIG_MODELOBJECT(SpaceLoadDefinition, 0);
 SWIG_MODELOBJECT(PeopleDefinition, 1);
-SWIG_MODELOBJECT(LightsDefinition, 1); 
+SWIG_MODELOBJECT(LightsDefinition, 1);
 SWIG_MODELOBJECT(LuminaireDefinition, 1);
 SWIG_MODELOBJECT(ElectricEquipmentDefinition, 1);
 SWIG_MODELOBJECT(GasEquipmentDefinition, 1);
@@ -202,13 +208,16 @@ SWIG_MODELOBJECT(HotWaterEquipmentDefinition, 1);
 SWIG_MODELOBJECT(SteamEquipmentDefinition, 1);
 SWIG_MODELOBJECT(OtherEquipmentDefinition, 1);
 SWIG_MODELOBJECT(InternalMassDefinition, 1);
+SWIG_MODELOBJECT(ExteriorLoadDefinition, 0);
 SWIG_MODELOBJECT(ExteriorLightsDefinition, 1);
+SWIG_MODELOBJECT(ExteriorFuelEquipmentDefinition, 1);
+SWIG_MODELOBJECT(ExteriorWaterEquipmentDefinition, 1);
 SWIG_MODELOBJECT(RenderingColor, 1);
-SWIG_MODELOBJECT(DesignSpecificationOutdoorAir, 1); 
+SWIG_MODELOBJECT(DesignSpecificationOutdoorAir, 1);
 
 %include <model/ScheduleTypeRegistry.hpp>
 
-#endif 
+#endif
 
 
 

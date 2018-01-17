@@ -67,7 +67,7 @@ class ModelMeasureName < OpenStudio::Measure::ModelMeasure
     return true
 
   end
-  
+
 end
 
 # register the measure to be used by the application

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -79,7 +79,7 @@ class MODEL_API MaterialPropertyMoisturePenetrationDepthSettings : public ModelO
   double moistureEquationCoefficientC() const;
 
   double moistureEquationCoefficientD() const;
-  
+
   std::vector<double> moistureEquationCoefficients() const;
 
   boost::optional<double> surfaceLayerPenetrationDepth();
@@ -107,7 +107,7 @@ class MODEL_API MaterialPropertyMoisturePenetrationDepthSettings : public ModelO
   bool setMoistureEquationCoefficientC(double moistureEquationCoefficientC);
 
   bool setMoistureEquationCoefficientD(double moistureEquationCoefficientD);
-  
+
   bool setMoistureEquationCoefficients(double moistureEquationCoefficientA, double moistureEquationCoefficientB, double moistureEquationCoefficientC, double moistureEquationCoefficientD);
 
   bool setSurfaceLayerPenetrationDepth(double surfaceLayerPenetrationDepth);

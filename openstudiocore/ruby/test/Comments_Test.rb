@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -37,23 +37,23 @@ class Comments_Test < MiniTest::Unit::TestCase
 
   # def teardown
   # end
-  
+
   def test_makeComment
-  
+
     str = "One line without endl"
     comment = OpenStudio::makeComment(str)
     assert_equal("! One line without endl",comment)
-    
+
     str = "One line with endl\n"
     comment = OpenStudio::makeComment(str)
     assert_equal("! One line with endl\n",comment)
-       
+
     str = "Comment block has two lines \n and no comment marks."
     comment = OpenStudio::makeComment(str)
     editorComment = OpenStudio::makeIdfEditorComment(str)
     assert_equal("! Comment block has two lines \n! and no comment marks.",comment);
     assert_equal("!- Comment block has two lines \n!- and no comment marks.",editorComment);
-  
+
   end
 
 end

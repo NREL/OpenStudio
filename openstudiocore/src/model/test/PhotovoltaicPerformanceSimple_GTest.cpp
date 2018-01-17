@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -45,7 +45,7 @@ TEST_F(ModelFixture, PhotovoltaicPerformanceSimple_Instantiate) {
 
   PhotovoltaicPerformanceSimple photovoltaicPerformanceSimple(model);
 
-  EXPECT_EQ("Fixed", photovoltaicPerformanceSimple.conversionEfficiencyInputMode());  
+  EXPECT_EQ("Fixed", photovoltaicPerformanceSimple.conversionEfficiencyInputMode());
   EXPECT_TRUE(photovoltaicPerformanceSimple.fixedEfficiency());
   EXPECT_EQ(0.12, photovoltaicPerformanceSimple.fixedEfficiency().get());
   EXPECT_EQ(photovoltaicPerformanceSimple.fractionOfSurfaceAreaWithActiveSolarCells(),0.89);

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -33,25 +33,25 @@
 namespace openstudio {
 
   /// default constructor
-  IddObjectProperties::IddObjectProperties(): 
-    unique(false), 
-    required(false), 
-    obsolete(false), 
+  IddObjectProperties::IddObjectProperties():
+    unique(false),
+    required(false),
+    obsolete(false),
     hasURL(false),
-    extensible(false), 
+    extensible(false),
     numExtensible(0),
-    numExtensibleGroupsRequired(0), 
+    numExtensibleGroupsRequired(0),
     minFields(0)
   {}
 
   // ETH@20100329 Is the purpose to identify exactly equal properties, or objects that behave
-  // the same? If the latter, might ignore memo, and even numExtensibleGroupsRequired, and 
+  // the same? If the latter, might ignore memo, and even numExtensibleGroupsRequired, and
   // minFields. Keeping it simple for now.
   /// equality operator
-  bool IddObjectProperties::operator==(const IddObjectProperties& other) const 
+  bool IddObjectProperties::operator==(const IddObjectProperties& other) const
   {
- 
-    return ((this == &other) || 
+
+    return ((this == &other) ||
             ((memo == other.memo) &&
              (unique == other.unique) &&
              (required == other.required) &&
@@ -102,15 +102,15 @@ namespace openstudio {
     }
 
     if (!format.empty()){
-      os << "       \\format " << format << std::endl; 
+      os << "       \\format " << format << std::endl;
     }
 
     if (minFields > 0){
-      os << "       \\min-fields " << minFields << std::endl; 
-    } 
+      os << "       \\min-fields " << minFields << std::endl;
+    }
 
     if (maxFields) {
-      os << "       \\max-fields " << *maxFields << std::endl; 
+      os << "       \\max-fields " << *maxFields << std::endl;
     }
 
     return os;

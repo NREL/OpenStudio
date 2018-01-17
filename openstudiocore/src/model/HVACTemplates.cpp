@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -115,7 +115,7 @@ Schedule deckTempSchedule( Model & model )
 {
   //Make a time stamp to use in multiple places
   Time osTime = Time(0,24,0,0);
-  
+
   //Schedule Ruleset
   ScheduleRuleset deckTempSchedule = ScheduleRuleset(model);
   deckTempSchedule.setName("Deck_Temperature");
@@ -130,7 +130,7 @@ Schedule deckTempSchedule( Model & model )
   ScheduleDay deckTempScheduleSummer = ScheduleDay(model);
   deckTempSchedule.setSummerDesignDaySchedule(deckTempScheduleSummer);
   deckTempSchedule.summerDesignDaySchedule().setName("Deck_Temperature_Summer_Design_Day");
-  deckTempSchedule.summerDesignDaySchedule().addValue(osTime,12.8);  
+  deckTempSchedule.summerDesignDaySchedule().addValue(osTime,12.8);
 
   //All other days
   deckTempSchedule.defaultDaySchedule().setName("Deck_Temperature_Default");
@@ -143,7 +143,7 @@ Schedule hotWaterTempSchedule( Model & model )
 {
  //Make a time stamp to use in multiple places
   Time osTime = Time(0,24,0,0);
-  
+
   //Schedule Ruleset
   ScheduleRuleset hotWaterTempSchedule = ScheduleRuleset(model);
   hotWaterTempSchedule.setName("Hot_Water_Temperature");
@@ -158,7 +158,7 @@ Schedule hotWaterTempSchedule( Model & model )
   ScheduleDay hotWaterTempScheduleSummer = ScheduleDay(model);
   hotWaterTempSchedule.setSummerDesignDaySchedule(hotWaterTempScheduleSummer);
   hotWaterTempSchedule.summerDesignDaySchedule().setName("Hot_Water_Temperature_Summer_Design_Day");
-  hotWaterTempSchedule.summerDesignDaySchedule().addValue(osTime,67);  
+  hotWaterTempSchedule.summerDesignDaySchedule().addValue(osTime,67);
 
   //All other days
   hotWaterTempSchedule.defaultDaySchedule().setName("Hot_Water_Temperature_Default");
@@ -186,7 +186,7 @@ Schedule chilledWaterTempSchedule( Model & model )
   ScheduleDay chilledWaterScheduleSummer = ScheduleDay(model);
   chilledWaterSchedule.setSummerDesignDaySchedule(chilledWaterScheduleSummer);
   chilledWaterSchedule.summerDesignDaySchedule().setName("Chilled_Water_Temperature_Summer_Design_Day");
-  chilledWaterSchedule.summerDesignDaySchedule().addValue(osTime,6.7);  
+  chilledWaterSchedule.summerDesignDaySchedule().addValue(osTime,6.7);
 
   //All other days
   chilledWaterSchedule.defaultDaySchedule().setName("Chilled_Water_Temperature_Default");
@@ -199,7 +199,7 @@ ZoneHVACPackagedTerminalAirConditioner addSystemType1(Model & model)
 {
   Model tempModel;
   Schedule availabilitySchedule = model.alwaysOnDiscreteSchedule();
-    
+
   model::FanConstantVolume fan(model,availabilitySchedule);
   fan.setPressureRise(500);
 
@@ -209,7 +209,7 @@ ZoneHVACPackagedTerminalAirConditioner addSystemType1(Model & model)
 
 
   model::ZoneHVACPackagedTerminalAirConditioner ptac( model,
-                                                      availabilitySchedule, 
+                                                      availabilitySchedule,
                                                       fan,
                                                       heatingCoil,
                                                       coolingCoil );
@@ -256,7 +256,7 @@ void addSystemType1(Model & model, std::vector<ThermalZone> zones)
 
     boiler.setNormalizedBoilerEfficiencyCurve(boilerCurve);
     boiler.setEfficiencyCurveTemperatureEvaluationVariable("LeavingBoiler");
-    
+
     pump.addToNode(hotWaterInletNode);
 
     Node node = hotWaterPlant.supplySplitter().lastOutletModelObject()->cast<Node>();
@@ -302,7 +302,7 @@ ZoneHVACPackagedTerminalHeatPump addSystemType2(Model & model)
   CoilHeatingDXSingleSpeed heatingCoil(model);
 
   model::ZoneHVACPackagedTerminalHeatPump pthp( model,
-                                                availabilitySchedule, 
+                                                availabilitySchedule,
                                                 fan,
                                                 heatingCoil,
                                                 coolingCoil,
@@ -382,7 +382,7 @@ Loop addSystemType3(Model & model)
   Node node1 = fan.outletModelObject()->cast<Node>();
   setpointMSZR.addToNode(node1);
 
-  AirTerminalSingleDuctUncontrolled terminal(model,_alwaysOnSchedule); 
+  AirTerminalSingleDuctUncontrolled terminal(model,_alwaysOnSchedule);
 
   airLoopHVAC.addBranchForHVACComponent(terminal);
 
@@ -444,8 +444,8 @@ Loop addSystemType4(Model & model)
   heatingCoil.addToNode(supplyOutletNode);
   coilHeatingElectric.addToNode(supplyOutletNode);
   supplyFan.addToNode(supplyOutletNode);
-  
-  AirTerminalSingleDuctUncontrolled terminal(model,_alwaysOnSchedule); 
+
+  AirTerminalSingleDuctUncontrolled terminal(model,_alwaysOnSchedule);
 
   airLoopHVAC.addBranchForHVACComponent(terminal);
 
@@ -531,7 +531,7 @@ Loop addSystemType5(Model & model)
 
   PipeAdiabatic pipe(model);
   hotWaterPlant.addSupplyBranchForComponent(pipe);
-  
+
   PipeAdiabatic pipe2(model);
   pipe2.addToNode(hotWaterOutletNode);
 
@@ -682,7 +682,7 @@ Loop addSystemType7(Model & model)
 
   hotWaterDemandOutlet.addToNode(hotWaterDemandOutletNode);
   hotWaterDemandInlet.addToNode(hotWaterDemandInletNode);
-  
+
   PipeAdiabatic pipe2(model);
   pipe2.addToNode(hotWaterOutletNode);
 
@@ -747,7 +747,7 @@ Loop addSystemType7(Model & model)
 
   PipeAdiabatic pipe3(model);
   chilledWaterPlant.addSupplyBranchForComponent(pipe3);
-  
+
   PipeAdiabatic pipe4(model);
   pipe4.addToNode(chilledWaterOutletNode);
 
@@ -771,7 +771,7 @@ Loop addSystemType7(Model & model)
 
   PipeAdiabatic chilledWaterDemandOutlet(model);
   chilledWaterDemandOutlet.addToNode(chilledWaterDemandOutletNode);
-  
+
   // Condenser System
 
   PlantLoop condenserSystem(model);
@@ -953,7 +953,7 @@ Loop addSystemType9(Model & model)
   Node node1 = fan.outletModelObject()->cast<Node>();
   setpointMSZR.addToNode(node1);
 
-  AirTerminalSingleDuctUncontrolled terminal(model,_alwaysOnSchedule); 
+  AirTerminalSingleDuctUncontrolled terminal(model,_alwaysOnSchedule);
 
   airLoopHVAC.addBranchForHVACComponent(terminal);
 
@@ -1015,7 +1015,7 @@ Loop addSystemType10(Model & model)
   Node node1 = fan.outletModelObject()->cast<Node>();
   setpointMSZR.addToNode(node1);
 
-  AirTerminalSingleDuctUncontrolled terminal(model,_alwaysOnSchedule); 
+  AirTerminalSingleDuctUncontrolled terminal(model,_alwaysOnSchedule);
 
   airLoopHVAC.addBranchForHVACComponent(terminal);
 

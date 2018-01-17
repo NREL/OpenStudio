@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -56,7 +56,7 @@ namespace openstudio{
     /// check if the application has GUI enabled
     bool hasGUI() const;
 
-    /// set the QApplication, this should be done before calling application(), 
+    /// set the QApplication, this should be done before calling application(),
     /// no op if it has already been set.  Returns true if set succeeded.
     bool setApplication(QCoreApplication *qApplication);
 
@@ -74,7 +74,7 @@ namespace openstudio{
 
     /// Remove setting
     void removeSetting(const std::string& key);
-    
+
     /// Check if the application is headless
     bool isDefaultInstance();
 

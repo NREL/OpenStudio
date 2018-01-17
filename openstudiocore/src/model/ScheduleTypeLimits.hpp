@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -43,8 +43,8 @@ namespace detail {
 
 } // detail
 
-/** ScheduleTypeLimits is a ResourceObject that wraps the OpenStudio IDD object 'OS:ScheduleTypeLimits'. 
- *  Once attached to an object of type ScheduleBase, it defines the units and bounds for that object's 
+/** ScheduleTypeLimits is a ResourceObject that wraps the OpenStudio IDD object 'OS:ScheduleTypeLimits'.
+ *  Once attached to an object of type ScheduleBase, it defines the units and bounds for that object's
  *  values. */
 class MODEL_API ScheduleTypeLimits : public ResourceObject {
  public:
@@ -87,17 +87,17 @@ class MODEL_API ScheduleTypeLimits : public ResourceObject {
   //@}
   /** @name Setters */
   //@{
-  
-  // ETH@20120919 TODO: Have these setters fail if they are going to invalidate the current 
-  // use of a ScheduleBase object. 
 
-  void setLowerLimitValue(double lowerLimitValue);
+  // ETH@20120919 TODO: Have these setters fail if they are going to invalidate the current
+  // use of a ScheduleBase object.
+
+  bool setLowerLimitValue(double lowerLimitValue);
 
   bool setLowerLimitValue(const Quantity& lowerLimitValue);
 
   void resetLowerLimitValue();
 
-  void setUpperLimitValue(double upperLimitValue);
+  bool setUpperLimitValue(double upperLimitValue);
 
   bool setUpperLimitValue(const Quantity& upperLimitValue);
 
@@ -134,7 +134,7 @@ typedef boost::optional<ScheduleTypeLimits> OptionalScheduleTypeLimits;
 typedef std::vector<ScheduleTypeLimits> ScheduleTypeLimitsVector;
 
 /** Returns true if candidate is compatible with parentLimits, that is, if it is the same
- *  type and has bounds that are as least as strict as parentLimits's. 
+ *  type and has bounds that are as least as strict as parentLimits's.
  *  \relates ScheduleTypeLimits */
 MODEL_API bool isCompatible(const ScheduleTypeLimits& parentLimits,
                             const ScheduleTypeLimits& candidate);
@@ -143,4 +143,3 @@ MODEL_API bool isCompatible(const ScheduleTypeLimits& parentLimits,
 } // openstudio
 
 #endif // MODEL_SCHEDULETYPELIMITS_HPP
-

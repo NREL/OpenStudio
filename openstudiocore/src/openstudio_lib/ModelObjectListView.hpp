@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -43,7 +43,7 @@ class ModelObjectListController : public OSVectorController
 
 public:
 
-  ModelObjectListController(const openstudio::IddObjectType& iddObjectType, 
+  ModelObjectListController(const openstudio::IddObjectType& iddObjectType,
                             const model::Model& model,
                             bool showLocalBCL = false);
 
@@ -70,7 +70,7 @@ class ModelObjectListView : public OSItemList
 
 public:
 
-  ModelObjectListView(const openstudio::IddObjectType& iddObjectType, 
+  ModelObjectListView(const openstudio::IddObjectType& iddObjectType,
                       const model::Model& model,
                       bool addScrollArea,
                       bool showLocalBCL = false,

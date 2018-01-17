@@ -19,19 +19,19 @@
 %include <utilities/time/DateTime.hpp>
 
 %extend openstudio::DateTime{
- 
+
   std::string __str__() const{
     std::ostringstream os;
     os << *self;
     return os.str();
   }
-  
+
   std::string __hash__() const{
     std::ostringstream os;
     os << *self;
     return os.str();
   }
-  
+
   int __cmp__(const DateTime& other) const{
     if (*self < other){
         return -1;
@@ -40,12 +40,12 @@
     }
     return 0;
   }
-  
+
   long toEpochLong() const{
     return static_cast<long>(self->toEpoch());
   }
- 
+
 };
 
-#endif //UTILITIES_TIME_DATETIME_I 
+#endif //UTILITIES_TIME_DATETIME_I
 

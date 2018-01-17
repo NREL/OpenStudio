@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -310,8 +310,8 @@ double SchedulesTabController::defaultStartingValue(const model::ScheduleDay& sc
       OptionalQuantity siQ;
       switch (firstLetter) {
       case 'a' :
-        { 
-          if (unitType == "activitylevel") {          
+        {
+          if (unitType == "activitylevel") {
             siQ = Quantity(100.0,*siU);
           }
           else if (unitType == "angle") {

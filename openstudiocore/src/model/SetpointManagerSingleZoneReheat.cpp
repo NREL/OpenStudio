@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -117,9 +117,9 @@ namespace detail{
     return getDouble(OS_SetpointManager_SingleZone_ReheatFields::MinimumSupplyAirTemperature).get();
   }
 
-  void SetpointManagerSingleZoneReheat_Impl::setMinimumSupplyAirTemperature( double value )
+  bool SetpointManagerSingleZoneReheat_Impl::setMinimumSupplyAirTemperature( double value )
   {
-    setDouble(OS_SetpointManager_SingleZone_ReheatFields::MinimumSupplyAirTemperature,value);
+    return setDouble(OS_SetpointManager_SingleZone_ReheatFields::MinimumSupplyAirTemperature,value);;
   }
 
   double SetpointManagerSingleZoneReheat_Impl::maximumSupplyAirTemperature()
@@ -127,9 +127,9 @@ namespace detail{
     return getDouble(OS_SetpointManager_SingleZone_ReheatFields::MaximumSupplyAirTemperature).get();
   }
 
-  void SetpointManagerSingleZoneReheat_Impl::setMaximumSupplyAirTemperature( double value )
+  bool SetpointManagerSingleZoneReheat_Impl::setMaximumSupplyAirTemperature( double value )
   {
-    setDouble(OS_SetpointManager_SingleZone_ReheatFields::MaximumSupplyAirTemperature,value);
+    return setDouble(OS_SetpointManager_SingleZone_ReheatFields::MaximumSupplyAirTemperature,value);;
   }
 
   boost::optional<Node> SetpointManagerSingleZoneReheat_Impl::setpointNode() const
@@ -155,11 +155,11 @@ namespace detail{
     return thisModelObject.getModelObjectTarget<ThermalZone>(OS_SetpointManager_SingleZone_ReheatFields::ControlZoneName);
   }
 
-  void SetpointManagerSingleZoneReheat_Impl::setControlZone(ThermalZone & thermalZone)
+  bool SetpointManagerSingleZoneReheat_Impl::setControlZone(ThermalZone & thermalZone)
   {
     SetpointManagerSingleZoneReheat thisModelObject = this->getObject<SetpointManagerSingleZoneReheat>();
 
-    thisModelObject.setPointer(OS_SetpointManager_SingleZone_ReheatFields::ControlZoneName,thermalZone.handle());
+    return thisModelObject.setPointer(OS_SetpointManager_SingleZone_ReheatFields::ControlZoneName,thermalZone.handle());
   }
 
   bool SetpointManagerSingleZoneReheat_Impl::setControlVariable(const std::string& controlVariable) {
@@ -223,9 +223,9 @@ double SetpointManagerSingleZoneReheat::minimumSupplyAirTemperature()
   return getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->minimumSupplyAirTemperature();
 }
 
-void SetpointManagerSingleZoneReheat::setMinimumSupplyAirTemperature( double value )
+bool SetpointManagerSingleZoneReheat::setMinimumSupplyAirTemperature( double value )
 {
-  getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->setMinimumSupplyAirTemperature(value);
+  return getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->setMinimumSupplyAirTemperature(value);
 }
 
 double SetpointManagerSingleZoneReheat::maximumSupplyAirTemperature()
@@ -233,9 +233,9 @@ double SetpointManagerSingleZoneReheat::maximumSupplyAirTemperature()
   return getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->maximumSupplyAirTemperature();
 }
 
-void SetpointManagerSingleZoneReheat::setMaximumSupplyAirTemperature( double value )
+bool SetpointManagerSingleZoneReheat::setMaximumSupplyAirTemperature( double value )
 {
-  getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->setMaximumSupplyAirTemperature(value);
+  return getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->setMaximumSupplyAirTemperature(value);
 }
 
 boost::optional<Node> SetpointManagerSingleZoneReheat::setpointNode() const
@@ -248,9 +248,9 @@ boost::optional<ThermalZone> SetpointManagerSingleZoneReheat::controlZone()
   return getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->controlZone();
 }
 
-void SetpointManagerSingleZoneReheat::setControlZone(ThermalZone & thermalZone)
+bool SetpointManagerSingleZoneReheat::setControlZone(ThermalZone & thermalZone)
 {
-  getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->setControlZone(thermalZone);
+  return getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->setControlZone(thermalZone);
 }
 
 void SetpointManagerSingleZoneReheat::resetControlZone()

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -54,7 +54,7 @@ namespace openstudio {
     ((LaTeX))
     ((XHTML)));
 
-  /** Replace all non-letters and digits with spaces, and then remove spaces by to make camel 
+  /** Replace all non-letters and digits with spaces, and then remove spaces by to make camel
    *  case. */
   UTILITIES_API std::string toCamelCase(const std::string& s);
 
@@ -73,13 +73,13 @@ namespace openstudio {
   /** Convert IDD object name to default name for IDF objects of this type. */
   UTILITIES_API std::string iddObjectNameToIdfObjectName(const std::string& s);
 
-  /** Prints value with numFractionalDigits, inserting commas to separate into 
+  /** Prints value with numFractionalDigits, inserting commas to separate into
    *  thousands, millions, etc. if desired. */
-  UTILITIES_API std::string toNeatString(double value, 
-                                         unsigned numFractionalDigits = 0, 
+  UTILITIES_API std::string toNeatString(double value,
+                                         unsigned numFractionalDigits = 0,
                                          bool applyCommas = true);
 
-  /** Prints value in numSigFigs, inserting commas to separate into thousands, 
+  /** Prints value in numSigFigs, inserting commas to separate into thousands,
   millions, etc. if desired. */
   UTILITIES_API std::string toNeatStringBySigFigs(double value,
                                                   unsigned numSigFigs = 3,
@@ -88,11 +88,11 @@ namespace openstudio {
   /** Returns the number of digits past the decimal point in str. */
   UTILITIES_API unsigned numFractionalDigits(const std::string& str);
 
-  /** Returns the number of significant digits past the decimal point in value, given numSigFigs. 
+  /** Returns the number of significant digits past the decimal point in value, given numSigFigs.
    *  Throws if numSigFigs == 0. */
   UTILITIES_API unsigned numFractionalDigits(double value,unsigned numSigFigs);
 
-  /** Returns the minimum and maximum number of significant digits past the decimal 
+  /** Returns the minimum and maximum number of significant digits past the decimal
    *  point in values, given numSigFigs. Throws if numSigFigs == 0. */
   UTILITIES_API std::pair<unsigned,unsigned> numFractionalDigits(const std::vector<double>& values,
                                                                  unsigned numSigFigs);

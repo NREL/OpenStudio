@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -51,7 +51,7 @@ namespace detail {
  *  of the EnergyPlus SetpointManager:SingleZone:Reheat object.
  */
 class MODEL_API SetpointManagerSingleZoneReheat : public SetpointManager {
-  
+
   public:
   virtual ~SetpointManagerSingleZoneReheat() {}
 
@@ -64,13 +64,13 @@ class MODEL_API SetpointManagerSingleZoneReheat : public SetpointManager {
   double minimumSupplyAirTemperature();
 
   /** Sets the value of the MinimumSupplyAirTemperature field. **/
-  void setMinimumSupplyAirTemperature( double value );
+  bool setMinimumSupplyAirTemperature( double value );
 
   /** Returns the value of the MaximumSupplyAirTemperature field. **/
   double maximumSupplyAirTemperature();
 
   /** Sets the value of the MaximumSupplyAirTemperature field. **/
-  void setMaximumSupplyAirTemperature( double value );
+  bool setMaximumSupplyAirTemperature( double value );
 
   /** Returns the Node referred to by the SetpointNodeName field. **/
   boost::optional<Node> setpointNode() const;
@@ -81,7 +81,7 @@ class MODEL_API SetpointManagerSingleZoneReheat : public SetpointManager {
 
   boost::optional<ThermalZone> controlZone();
 
-  void setControlZone(ThermalZone & thermalZone);
+  bool setControlZone(ThermalZone & thermalZone);
 
   void resetControlZone();
 
@@ -122,4 +122,3 @@ typedef std::vector<SetpointManagerSingleZoneReheat> SetpointManagerSingleZoneRe
 } // openstudio
 
 #endif // MODEL_SETPOINTMANAGERSINGLEZONEREHEAT_HPP
-

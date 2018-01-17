@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -49,7 +49,7 @@ namespace detail {
 
 } // detail
 
-/** WaterHeaterMixed is a WaterToWaterComponent that wraps the OpenStudio IDD object 
+/** WaterHeaterMixed is a WaterToWaterComponent that wraps the OpenStudio IDD object
  *  'OS:WaterHeater:Mixed'. */
 class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
  public:
@@ -251,7 +251,7 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   void resetDeadbandTemperatureDifference();
 
-  void setMaximumTemperatureLimit(double maximumTemperatureLimit);
+  bool setMaximumTemperatureLimit(double maximumTemperatureLimit);
 
   bool setMaximumTemperatureLimit(const Quantity& maximumTemperatureLimit);
 
@@ -341,7 +341,7 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   void resetAmbientTemperatureThermalZone();
 
-  void setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName);
+  bool setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName);
 
   void resetAmbientTemperatureOutdoorAirNodeName();
 
@@ -456,5 +456,4 @@ typedef std::vector<WaterHeaterMixed> WaterHeaterMixedVector;
 } // model
 } // openstudio
 
-#endif // MODEL_WATERHEATERMIXED_HPP
-
+#endif // MODEL_WATERHEATERMIXED_HPP

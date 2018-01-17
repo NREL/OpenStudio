@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -305,11 +305,11 @@ namespace detail {
 
     void resetOperatingCaseFanPowerperUnitLength();
 
-    void setStandardCaseLightingPowerperUnitLength(double standardCaseLightingPowerperUnitLength);
+    bool setStandardCaseLightingPowerperUnitLength(double standardCaseLightingPowerperUnitLength);
 
     void resetStandardCaseLightingPowerperUnitLength();
 
-    void setInstalledCaseLightingPowerperUnitLength(boost::optional<double> installedCaseLightingPowerperUnitLength);
+    bool setInstalledCaseLightingPowerperUnitLength(boost::optional<double> installedCaseLightingPowerperUnitLength);
 
     void resetInstalledCaseLightingPowerperUnitLength();
 
@@ -333,7 +333,7 @@ namespace detail {
 
     void resetAntiSweatHeaterControlType();
 
-    void setHumidityatZeroAntiSweatHeaterEnergy(double humidityatZeroAntiSweatHeaterEnergy);
+    bool setHumidityatZeroAntiSweatHeaterEnergy(double humidityatZeroAntiSweatHeaterEnergy);
 
     void resetHumidityatZeroAntiSweatHeaterEnergy();
 
@@ -385,7 +385,7 @@ namespace detail {
 
     void resetDesignEvaporatorTemperatureorBrineInletTemperature();
 
-    void setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
+    bool setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
 
     void resetAverageRefrigerantChargeInventory();
 
@@ -495,5 +495,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONCASE_IMPL_HPP
-
+#endif // MODEL_REFRIGERATIONCASE_IMPL_HPP

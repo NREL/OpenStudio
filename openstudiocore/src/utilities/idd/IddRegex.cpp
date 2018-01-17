@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -47,28 +47,28 @@ namespace iddRegex{
   /// matches[1], version identifier
   const boost::regex &version(){
     const static boost::regex result("^!IDD_Version ([0-9\\.]+)");
-    return result; 
+    return result;
   }
 
   /// Search for IDD build in line
   /// matches[1], build identifier
   const boost::regex &build(){
     const static boost::regex result("^!IDD_BUILD (\\S+)");
-    return result; 
+    return result;
   }
 
   /// Search for IDD header, each line must start with '!', no preceding whitespace
   /// matches[1], header
   const boost::regex &header(){
     const static boost::regex result("^(^!.*?^[^!])");
-    return result; 
+    return result;
   }
 
   /// Match comment only line
   /// matches[1], comment
   const boost::regex &commentOnlyLine(){
     const static boost::regex result("^[\\s\\t]*[!](.*)");
-    return result; 
+    return result;
   }
 
   /// Match content then comment
@@ -76,14 +76,14 @@ namespace iddRegex{
   /// matches[2], comment if any
   const boost::regex &contentAndCommentLine(){
     const static boost::regex result("^([^!]*)[!]?(.*)");
-    return result; 
+    return result;
   }
 
   /// Match group identifier
   /// matches[1], group name
   const boost::regex &group(){
     const static boost::regex result("^[\\\\][gG]roup(.*)");
-    return result; 
+    return result;
   }
 
   /// Match include-file identifier
@@ -215,7 +215,7 @@ namespace iddRegex{
     return result;
   }
 
-  /// Match a field name 
+  /// Match a field name
   /// matches[1], the field name
   const boost::regex &name(){
     const static boost::regex result("[\\\\][fF]ield([^\\\\^!]*)");
@@ -303,7 +303,7 @@ namespace iddRegex{
   }
 
   /// Match a field default property
-  /// matches[1], default value 
+  /// matches[1], default value
   const boost::regex &defaultProperty(){
     const static boost::regex result("^[dD]efault([^!]*)");
     return result;
@@ -324,14 +324,14 @@ namespace iddRegex{
   }
 
   /// Match a field key property
-  /// matches[1], key value 
+  /// matches[1], key value
   const boost::regex &keyProperty(){
     const static boost::regex result("^[kK]ey(.*)");
     return result;
   }
 
   /// Match a field object-list property
-  /// matches[1], object-list value 
+  /// matches[1], object-list value
   const boost::regex &objectListProperty(){
     const static boost::regex result("^[oO]bject-[lL]ist([^!]*)");
     return result;
@@ -343,14 +343,14 @@ namespace iddRegex{
   }
 
   /// Match a field reference property
-  /// matches[1], reference value 
+  /// matches[1], reference value
   const boost::regex &referenceProperty(){
     const static boost::regex result("^[rR]eference([^!]*)");
     return result;
   }
 
   /// Match a field reference-class-name property
-  /// matches[1], reference-class-name value 
+  /// matches[1], reference-class-name value
   const boost::regex & referenceClassNameProperty(){
     const static boost::regex result("^[rR]eference-[cC]lass-[nN]ame([^!]*)");
     return result;

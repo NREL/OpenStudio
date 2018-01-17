@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -57,7 +57,7 @@ class MODEL_API AirLoopHVACSupplyPlenum : public Splitter {
 
   /** Establish thermalZone as the plenum zone.
    *  If thermalZone is already conditioned by ThermalZone::equipment(),
-   *  then this method will return false.  A ThermalZone cannot be conditioned 
+   *  then this method will return false.  A ThermalZone cannot be conditioned
    *  by equipment and and be a plenum zone.  Remove any existing ZoneHVACComponent objects,
    *  and associated AirLoopHVAC objects before using this method on thermalZone.
   **/

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -160,9 +160,9 @@ namespace detail {
     return this->getDouble(OS_Fan_ConstantVolumeFields::FanEfficiency,true).get();
   }
 
-  void FanConstantVolume_Impl::setFanEfficiency(double val)
+  bool FanConstantVolume_Impl::setFanEfficiency(double val)
   {
-    this->setDouble(OS_Fan_ConstantVolumeFields::FanEfficiency,val);
+    return this->setDouble(OS_Fan_ConstantVolumeFields::FanEfficiency,val);
   }
 
   double FanConstantVolume_Impl::pressureRise() const
@@ -170,9 +170,9 @@ namespace detail {
     return this->getDouble(OS_Fan_ConstantVolumeFields::PressureRise,true).get();
   }
 
-  void FanConstantVolume_Impl::setPressureRise(double val)
+  bool FanConstantVolume_Impl::setPressureRise(double val)
   {
-    this->setDouble(OS_Fan_ConstantVolumeFields::PressureRise,val);
+    return this->setDouble(OS_Fan_ConstantVolumeFields::PressureRise,val);
   }
 
   double FanConstantVolume_Impl::motorEfficiency() const
@@ -180,9 +180,9 @@ namespace detail {
     return this->getDouble(OS_Fan_ConstantVolumeFields::MotorEfficiency,true).get();
   }
 
-  void FanConstantVolume_Impl::setMotorEfficiency(double val)
+  bool FanConstantVolume_Impl::setMotorEfficiency(double val)
   {
-    this->setDouble(OS_Fan_ConstantVolumeFields::MotorEfficiency,val);
+    return this->setDouble(OS_Fan_ConstantVolumeFields::MotorEfficiency,val);
   }
 
   double FanConstantVolume_Impl::motorInAirstreamFraction() const
@@ -190,9 +190,9 @@ namespace detail {
     return this->getDouble(OS_Fan_ConstantVolumeFields::MotorInAirstreamFraction,true).get();
   }
 
-  void FanConstantVolume_Impl::setMotorInAirstreamFraction(double val)
+  bool FanConstantVolume_Impl::setMotorInAirstreamFraction(double val)
   {
-    this->setDouble(OS_Fan_ConstantVolumeFields::MotorInAirstreamFraction,val);
+    return this->setDouble(OS_Fan_ConstantVolumeFields::MotorInAirstreamFraction,val);
   }
 
   std::string FanConstantVolume_Impl::endUseSubcategory() const
@@ -200,9 +200,9 @@ namespace detail {
     return this->getString(OS_Fan_ConstantVolumeFields::EndUseSubcategory).get();
   }
 
-  void FanConstantVolume_Impl::setEndUseSubcategory(std::string val)
+  bool FanConstantVolume_Impl::setEndUseSubcategory(std::string val)
   {
-    this->setString(OS_Fan_ConstantVolumeFields::EndUseSubcategory,val);
+    return this->setString(OS_Fan_ConstantVolumeFields::EndUseSubcategory,val);
   }
 
   bool FanConstantVolume_Impl::addToNode(Node & node)
@@ -517,9 +517,9 @@ double FanConstantVolume::fanEfficiency() const
   return getImpl<detail::FanConstantVolume_Impl>()->fanEfficiency();
 }
 
-void FanConstantVolume::setFanEfficiency(double val)
+bool FanConstantVolume::setFanEfficiency(double val)
 {
-  getImpl<detail::FanConstantVolume_Impl>()->setFanEfficiency(val);
+  return getImpl<detail::FanConstantVolume_Impl>()->setFanEfficiency(val);
 }
 
 double FanConstantVolume::pressureRise() const
@@ -527,9 +527,9 @@ double FanConstantVolume::pressureRise() const
   return getImpl<detail::FanConstantVolume_Impl>()->pressureRise();
 }
 
-void FanConstantVolume::setPressureRise(double val)
+bool FanConstantVolume::setPressureRise(double val)
 {
-  getImpl<detail::FanConstantVolume_Impl>()->setPressureRise(val);
+  return getImpl<detail::FanConstantVolume_Impl>()->setPressureRise(val);
 }
 
 double FanConstantVolume::motorEfficiency() const
@@ -537,9 +537,9 @@ double FanConstantVolume::motorEfficiency() const
   return getImpl<detail::FanConstantVolume_Impl>()->motorEfficiency();
 }
 
-void FanConstantVolume::setMotorEfficiency(double val)
+bool FanConstantVolume::setMotorEfficiency(double val)
 {
-  getImpl<detail::FanConstantVolume_Impl>()->setMotorEfficiency(val);
+  return getImpl<detail::FanConstantVolume_Impl>()->setMotorEfficiency(val);
 }
 
 double FanConstantVolume::motorInAirstreamFraction() const
@@ -547,9 +547,9 @@ double FanConstantVolume::motorInAirstreamFraction() const
   return getImpl<detail::FanConstantVolume_Impl>()->motorInAirstreamFraction();
 }
 
-void FanConstantVolume::setMotorInAirstreamFraction(double val)
+bool FanConstantVolume::setMotorInAirstreamFraction(double val)
 {
-  getImpl<detail::FanConstantVolume_Impl>()->setMotorInAirstreamFraction(val);
+  return getImpl<detail::FanConstantVolume_Impl>()->setMotorInAirstreamFraction(val);
 }
 
 std::string FanConstantVolume::endUseSubcategory() const
@@ -557,9 +557,9 @@ std::string FanConstantVolume::endUseSubcategory() const
   return getImpl<detail::FanConstantVolume_Impl>()->endUseSubcategory();
 }
 
-void FanConstantVolume::setEndUseSubcategory(std::string val)
+bool FanConstantVolume::setEndUseSubcategory(std::string val)
 {
-  getImpl<detail::FanConstantVolume_Impl>()->setEndUseSubcategory(val);
+  return getImpl<detail::FanConstantVolume_Impl>()->setEndUseSubcategory(val);
 }
 
 IddObjectType FanConstantVolume::iddObjectType() {

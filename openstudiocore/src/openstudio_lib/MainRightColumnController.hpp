@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -82,7 +82,7 @@ class MainRightColumnController : public OSQObjectController
   SystemItem * systemItem(const Handle & systemHandle) const;
 
   signals:
-  
+
   void toggleUnitsClicked(bool displayIP);
 
   void itemRemoveClicked(OSItem *);
@@ -143,7 +143,7 @@ class MainRightColumnController : public OSQObjectController
 
   void setEditView(QWidget * widget);
 
-  HorizontalTabWidget * m_horizontalTabWidget; 
+  HorizontalTabWidget * m_horizontalTabWidget;
 
   std::shared_ptr<InspectorController> m_inspectorController;
 

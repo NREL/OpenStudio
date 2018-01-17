@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -80,7 +80,7 @@ namespace detail {
     virtual std::vector<IdfObject> remove() override;
 
     virtual unsigned inletPort() const override;
-   
+
     virtual unsigned outletPort() const override;
 
     virtual bool addToNode(Node & node) override;
@@ -271,7 +271,7 @@ namespace detail {
 
     void resetCoolingCoil();
 
-    void setUseDOASDXCoolingCoil(bool useDOASDXCoolingCoil);
+    bool setUseDOASDXCoolingCoil(bool useDOASDXCoolingCoil);
 
     void resetUseDOASDXCoolingCoil();
 
@@ -361,17 +361,17 @@ namespace detail {
 
     void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
 
-    void setMaximumSupplyAirTemperature(boost::optional<double> maximumSupplyAirTemperature);
+    bool setMaximumSupplyAirTemperature(boost::optional<double> maximumSupplyAirTemperature);
 
     void resetMaximumSupplyAirTemperature();
 
     void autosizeMaximumSupplyAirTemperature();
 
-    void setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+    bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
 
     void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
 
-    void setOutdoorDryBulbTemperatureSensorNodeName(boost::optional<std::string> outdoorDryBulbTemperatureSensorNodeName);
+    bool setOutdoorDryBulbTemperatureSensorNodeName(boost::optional<std::string> outdoorDryBulbTemperatureSensorNodeName);
 
     void resetOutdoorDryBulbTemperatureSensorNodeName();
 
@@ -427,5 +427,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_AIRLOOPHVACUNITARYSYSTEM_IMPL_HPP
-
+#endif // MODEL_AIRLOOPHVACUNITARYSYSTEM_IMPL_HPP

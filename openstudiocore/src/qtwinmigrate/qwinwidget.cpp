@@ -121,7 +121,7 @@ QWinWidget::QWinWidget(CWnd *parentWnd, QObject *parent, Qt::WindowFlags f)
 #endif
 
 
-void QWinWidget::init() 
+void QWinWidget::init()
 {
     Q_ASSERT(hParent);
 
@@ -193,7 +193,7 @@ void QWinWidget::saveFocus()
 
 /*!
     Shows this widget. Overrides QWidget::show().
-    
+
     \sa showCentered()
 */
 void QWinWidget::show()
@@ -320,7 +320,7 @@ bool QWinWidget::eventFilter(QObject *o, QEvent *e)
     default:
 	break;
     }
-    
+
     return QWidget::eventFilter(o, e);
 }
 

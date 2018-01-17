@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -655,7 +655,7 @@ namespace detail {
       boost::optional<CoilCoolingDXTwoStageWithHumidityControlMode> parentCoil;
       auto coilTwoSpdHumCtrls = this->model().getConcreteModelObjects<CoilCoolingDXTwoStageWithHumidityControlMode>();
       for (const auto & coilInModel : coilTwoSpdHumCtrls) {
-        // Check the coil performance objects in this coil to see if one of them is this object       
+        // Check the coil performance objects in this coil to see if one of them is this object
         auto coilPerf = coilInModel.normalModeStage1CoilPerformance();
         if (coilPerf) {
           if (coilPerf->handle() == this->handle()) {
@@ -688,7 +688,7 @@ namespace detail {
           }
         }
       }
-      
+
       if (!parentCoil) {
         LOG(Warn, "The CoilPerformance:DX:Cooling object called " + sqlName + " does not have a parent CoilCoolingDXTwoStageWithHumidityControlMode, cannot retrieve the autosized value.");
         return result;
@@ -707,7 +707,7 @@ namespace detail {
       return result;
     }
 
-    // Query the Intialization Summary -> Component Sizing table to get 
+    // Query the Intialization Summary -> Component Sizing table to get
     // the row names that contains information for this component.
     std::stringstream rowsQuery;
     rowsQuery << "SELECT RowName ";
@@ -1073,7 +1073,7 @@ namespace detail {
     return false;
   }
 
-  void ModelObject_Impl::setBooleanFieldValue(unsigned index, bool value) {
+  bool ModelObject_Impl::setBooleanFieldValue(unsigned index, bool value) {
     bool ok(true);
     if (value) {
       ok = setString(index,"Yes");
@@ -1084,6 +1084,7 @@ namespace detail {
     if (!ok) {
       LOG_AND_THROW("Unable to set boolean field " << index << " in " << briefDescription() << ".");
     }
+    return true;
   }
 
   bool ModelObject_Impl::setSchedule(unsigned index,

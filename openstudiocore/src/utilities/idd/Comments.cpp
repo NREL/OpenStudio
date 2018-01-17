@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,7 +39,7 @@ namespace detail {
 
   std::string makeCommentHelper(const std::string& str,
                                 const std::string& linePrefix,
-                                int indentSize) 
+                                int indentSize)
   {
     // istream for parsing, ostream for composing comment
     std::stringstream ss(str), comment;
@@ -63,12 +63,12 @@ namespace detail {
       // handle blank lines separately
       if (boost::regex_match(line,commentRegex::whitespaceOnlyLine())) {
         if (commentStarted) { ++blankLineQueue; } // may need to prepend with linePrefix
-        else { 
+        else {
           // no comment yet--leave as pure blank line
-          if (!first) { comment << std::endl; } 
+          if (!first) { comment << std::endl; }
         }
       }
-      else { 
+      else {
         // line has non-whitespace characters. prepend each queued blank line with linePrefix
         for (unsigned i = 0; i < blankLineQueue; ++i) {
           comment << std::endl << linePrefix;
@@ -95,8 +95,8 @@ namespace detail {
     // append std::endl if str ends with \n or \r
     if (!str.empty()) {
       boost::regex re("[\\n\\r]");
-      if (boost::regex_match(str.end()-1,str.end(),re)) { 
-        comment << std::endl; 
+      if (boost::regex_match(str.end()-1,str.end(),re)) {
+        comment << std::endl;
       }
     }
 
@@ -114,7 +114,7 @@ std::string makeComment(const std::string& str) {
     // already does, return as-is
     return str;
   }
-  
+
   // prepend '! ' to each line, as needed
   return detail::makeCommentHelper(str,"! ",2);
 }
@@ -126,7 +126,7 @@ std::string makeIdfEditorComment(const std::string& str) {
     // already does, return as-is
     return str;
   }
-  
+
   // prepend '!- ' to each line, as needed
   return detail::makeCommentHelper(str,"!- ",2);
 }

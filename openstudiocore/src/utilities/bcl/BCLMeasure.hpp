@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,23 +44,23 @@ namespace openstudio{
 
   /** \class MeasureType
    *  \brief Enumeration of the types of BCLMeasure, by input file type.
-   *  \details ModelMeasures accept OpenStudio Models as input; EnergyPlusMeasures accept 
+   *  \details ModelMeasures accept OpenStudio Models as input; EnergyPlusMeasures accept
    *  EnergyPlus IDF files as input; and UtilityMeasures do not operate on any sort of energy
-   *  model. See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro 
-   *  call is: 
+   *  model. See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
+   *  call is:
    *  \code
   OPENSTUDIO_ENUM( MeasureType,
-    ((ModelMeasure)(Model Measure)) 
-    ((EnergyPlusMeasure)(EnergyPlus Measure)) 
+    ((ModelMeasure)(Model Measure))
+    ((EnergyPlusMeasure)(EnergyPlus Measure))
     ((UtilityMeasure)(Utility Measure))
-    ((ReportingMeasure)(Reporting Measure)) 
+    ((ReportingMeasure)(Reporting Measure))
   );
    *  \endcode */
   OPENSTUDIO_ENUM( MeasureType,
-    ((ModelMeasure)(Model Measure)) 
-    ((EnergyPlusMeasure)(EnergyPlus Measure)) 
+    ((ModelMeasure)(Model Measure))
+    ((EnergyPlusMeasure)(EnergyPlus Measure))
     ((UtilityMeasure)(Utility Measure))
-    ((ReportingMeasure)(Reporting Measure)) 
+    ((ReportingMeasure)(Reporting Measure))
   );
 
   OPENSTUDIO_ENUM( MeasureBadgeType,
@@ -85,7 +85,7 @@ namespace openstudio{
                const std::string& className,
                const openstudio::path& dir,
                const std::string& taxonomyTag,
-               MeasureType measureType, 
+               MeasureType measureType,
                const std::string& description,
                const std::string& modelerDescription);
 
@@ -275,7 +275,7 @@ namespace openstudio{
     bool checkForUpdatesFiles();
 
     /// Check for updates to the xml, will increment versionID and xmlChecksum then return true
-    /// if any xml fields (other than uid, version id, or xml checksum) have changed 
+    /// if any xml fields (other than uid, version id, or xml checksum) have changed
     /// The xml file must still be saved to disk to preserve the new versionID
     bool checkForUpdatesXML();
 

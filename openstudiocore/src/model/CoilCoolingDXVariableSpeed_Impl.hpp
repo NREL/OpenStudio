@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -143,13 +143,13 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setNominalSpeedLevel(int nominalSpeedLevel);
+    bool setNominalSpeedLevel(int nominalSpeedLevel);
 
-    void setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel);
+    bool setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel);
 
     void autosizeGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
 
-    void setRatedAirFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel);
+    bool setRatedAirFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel);
 
     void autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
 
@@ -159,7 +159,7 @@ namespace detail {
 
     bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
-    // void setCondenserAirInletNodeName(boost::optional<std::string> condenserAirInletNodeName);
+    // bool setCondenserAirInletNodeName(boost::optional<std::string> condenserAirInletNodeName);
 
     // void resetCondenserAirInletNodeName();
 
@@ -226,4 +226,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILCOOLINGDXVARIABLESPEED_IMPL_HPP
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -116,7 +116,7 @@ namespace detail{
   }
   */
 
-  std::string MeasureStep_Impl::string() const 
+  std::string MeasureStep_Impl::string() const
   {
     Json::Value result;
     result["measure_dir_name"] = m_measureDirName;
@@ -124,11 +124,11 @@ namespace detail{
     if (m_name){
       result["name"] = m_name.get();
     }
-    
+
     if (m_description){
       result["description"] = m_description.get();
     }
-        
+
     if (m_modelerDescription){
       result["modeler_description"] = m_modelerDescription.get();
     }

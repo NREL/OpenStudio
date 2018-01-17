@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -36,11 +36,11 @@ class QuantityRegex_Test < MiniTest::Unit::TestCase
 
   # def teardown
   # end
-  
+
   def test_stringsAre
-    assert(OpenStudio::isFixedPrecisionValue("3.012"))    
+    assert(OpenStudio::isFixedPrecisionValue("3.012"))
   end
-  
+
   def test_stringsContain
     assert(OpenStudio::containsScientificNotationValue(" .1D-1 "))
   end

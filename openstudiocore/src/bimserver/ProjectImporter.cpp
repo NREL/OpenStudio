@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -46,7 +46,7 @@ namespace openstudio {
 namespace bimserver {
 
   ProjectImporter::ProjectImporter(QWidget *parent) :
-    QDialog(parent) 
+    QDialog(parent)
   {
     auto subLayout = new QGridLayout;
     auto mainLayout = new QVBoxLayout;
@@ -64,7 +64,7 @@ namespace bimserver {
     QPushButton *cancelButton = new QPushButton(tr("Cancel"), this);
     QPushButton *settingButton = new QPushButton(tr("Setting"), this);
     m_statusBar = new QStatusBar(this);
-    
+
     connect(m_okButton, SIGNAL(clicked()), this, SLOT(okButton_clicked()));
     connect(newButton, SIGNAL(clicked()),this, SLOT(newButton_clicked()));
     connect(m_loadButton, SIGNAL(clicked()), this, SLOT(loadButton_clicked()));
@@ -96,11 +96,11 @@ namespace bimserver {
     m_bimserverConnection = nullptr;
   }
 
-  ProjectImporter::~ProjectImporter() 
+  ProjectImporter::~ProjectImporter()
   {
   }
 
-  boost::optional<model::Model> ProjectImporter::run() 
+  boost::optional<model::Model> ProjectImporter::run()
   {
     if (m_settings->contains("addr") && m_settings->contains("port") && m_settings->contains("usrname") && m_settings->contains("psw")) {
       QString addr = m_settings->value("addr").toString();
@@ -140,7 +140,7 @@ namespace bimserver {
     }
   }
 
-  void ProjectImporter::processProjectList(QStringList pList) 
+  void ProjectImporter::processProjectList(QStringList pList)
   {
 
     m_proList->clear();
@@ -152,7 +152,7 @@ namespace bimserver {
     m_selectButton->setEnabled(true);
   }
 
-  void ProjectImporter::processIFCList(QStringList iList) 
+  void ProjectImporter::processIFCList(QStringList iList)
   {
 
     m_ifcList->clear();
@@ -165,7 +165,7 @@ namespace bimserver {
     m_okButton->setEnabled(true);
   }
 
-  void ProjectImporter::processSucessCases(QString sucessCase) 
+  void ProjectImporter::processSucessCases(QString sucessCase)
   {
     if (sucessCase == "createProject") {
       m_statusBar->showMessage(tr("Project created, showing updated project list."), 2000);
@@ -182,24 +182,24 @@ namespace bimserver {
     }
   }
 
-  void ProjectImporter::processFailureCases(QString failureCase) 
+  void ProjectImporter::processFailureCases(QString failureCase)
   {
 
     m_statusBar->showMessage(failureCase, 2000);
-  } 
+  }
 
   void ProjectImporter::processBIMserverErrors() {
     this->hide();
 
     QMessageBox messageBox(this);
-    messageBox.setText(tr("BIMserver disconnected")); 
+    messageBox.setText(tr("BIMserver disconnected"));
     messageBox.setDetailedText(tr("BIMserver is not connected correctly. Please check if BIMserver is running and make sure your username and password are valid.\n"));
     messageBox.exec();
 
     settingButton_clicked();
   }
 
-  void ProjectImporter::okButton_clicked() 
+  void ProjectImporter::okButton_clicked()
   {
     if (m_ifcList->currentItem()) {
       m_ifcID = m_ifcList->currentItem()->text().section(":", 0, 0);
@@ -211,7 +211,7 @@ namespace bimserver {
     }
   }
 
-  void ProjectImporter::selectButton_clicked() 
+  void ProjectImporter::selectButton_clicked()
   {
     if (m_proList->currentItem()) {
       m_proID = m_proList->currentItem()->text().section(":", 0, 0);
@@ -223,7 +223,7 @@ namespace bimserver {
     }
   }
 
-  void ProjectImporter::newButton_clicked() 
+  void ProjectImporter::newButton_clicked()
   {
     m_statusBar->showMessage(tr("Create a new project and upload it to the server."), 2000);
     QDialog newDialog(this);
@@ -255,7 +255,7 @@ namespace bimserver {
     }
   }
 
-  void ProjectImporter::loadButton_clicked() 
+  void ProjectImporter::loadButton_clicked()
   {
 
     m_statusBar->showMessage(tr("Check in a new version IFC file for the selected project."), 2000);
@@ -268,7 +268,7 @@ namespace bimserver {
         tr("Open IFC File"), ".",
         tr("IFC files (*.ifc)"));
 
-    
+
       if (!new_ifcString.isEmpty()) {
         m_statusBar->showMessage("IFC File " + new_ifcString + " loaded.", 2000);
         m_bimserverConnection->checkInIFCFile(m_proID, new_ifcString);
@@ -278,13 +278,13 @@ namespace bimserver {
     }
   }
 
-  void ProjectImporter::processOSMRetrieved(QString osmString) 
+  void ProjectImporter::processOSMRetrieved(QString osmString)
   {
     m_OSM = osmString;
     emit finished();
   }
 
-  void ProjectImporter::settingButton_clicked() 
+  void ProjectImporter::settingButton_clicked()
   {
 
     m_statusBar->showMessage(tr("Please specify the bimserver address/port and user credentials."), 2000);
@@ -353,7 +353,7 @@ namespace bimserver {
       QString psw = set_upassEdit->text();
 
       if (!address.isEmpty() && !port.isEmpty() && !usrname.isEmpty() && !psw.isEmpty())
-      { 
+      {
         //in debug mode, this pointer is 0xCDCDCDCD, and is not null, creates an error
         //if (m_bimserverConnection != nullptr) {
         //  delete m_bimserverConnection;
@@ -382,7 +382,7 @@ namespace bimserver {
       else {
         m_proList->clear();
         m_ifcList->clear();
-        
+
         QMessageBox messageBox(this);
         messageBox.setText(tr("BIMserver not set up"));
         messageBox.setDetailedText(tr("Please provide valid BIMserver address, port, your username and password. You may ask your BIMserver manager for such information.\n"));
@@ -393,7 +393,7 @@ namespace bimserver {
 
     } else {
       m_statusBar->showMessage("Settings configuration terminated.", 2000);
-      
+
       if (this->isHidden()) {
         emit finished();
       }
@@ -401,7 +401,7 @@ namespace bimserver {
     }
   }
 
-  void ProjectImporter::app_ended() 
+  void ProjectImporter::app_ended()
   {
     emit finished();
   }

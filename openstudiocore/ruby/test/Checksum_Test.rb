@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -31,7 +31,7 @@ require 'openstudio'
 require 'minitest/autorun'
 
 class Checksum_Test < MiniTest::Unit::TestCase
-  
+
   # def setup
   # end
 
@@ -45,12 +45,12 @@ class Checksum_Test < MiniTest::Unit::TestCase
   end
 
   def test_paths
-    
+
     # write a file
     File.open("./Checksum.txt", 'w') do |f|
       f.write("Hi there")
     end
-  
+
     p = OpenStudio::Path.new("./Checksum.txt")
     assert_equal("1AD514BA",  OpenStudio::checksum(p))
 

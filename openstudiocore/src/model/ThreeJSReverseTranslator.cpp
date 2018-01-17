@@ -1,6 +1,6 @@
 
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -126,7 +126,7 @@ namespace openstudio
     {
       m_logSink.setLogLevel(Warn);
       //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSReverseTranslator"));
-      m_logSink.setThreadId(QThread::currentThread());    
+      m_logSink.setThreadId(QThread::currentThread());
     }
 
     std::vector<LogMessage> ThreeJSReverseTranslator::warnings() const
@@ -178,17 +178,17 @@ namespace openstudio
       return typeOrder;
     }
 
-    bool sortModelObjectMetadata(const ThreeModelObjectMetadata &lhs, const ThreeModelObjectMetadata &rhs) { 
+    bool sortModelObjectMetadata(const ThreeModelObjectMetadata &lhs, const ThreeModelObjectMetadata &rhs) {
       unsigned leftTypeOrder = getIddObjectTypeOrder(lhs.iddObjectType());
       unsigned rightTypeOrder = getIddObjectTypeOrder(rhs.iddObjectType());
 
       if (leftTypeOrder == rightTypeOrder){
         return lhs.name() < rhs.name();
       }
-      return leftTypeOrder < rightTypeOrder; 
+      return leftTypeOrder < rightTypeOrder;
     }
 
-    
+
     unsigned getUserDataSurfaceTypeOrder(const std::string& userDataSurfaceType){
 
     /// surfaceType is overloaded as a more general type:
@@ -215,18 +215,18 @@ namespace openstudio
       return typeOrder;
     }
 
-    bool sortSceneChildren(const ThreeSceneChild &lhs, const ThreeSceneChild &rhs) { 
+    bool sortSceneChildren(const ThreeSceneChild &lhs, const ThreeSceneChild &rhs) {
       unsigned leftTypeOrder = getIddObjectTypeOrder(lhs.userData().surfaceType());
       unsigned rightTypeOrder = getIddObjectTypeOrder(rhs.userData().surfaceType());
 
       if (leftTypeOrder == rightTypeOrder){
         return lhs.userData().name() < rhs.userData().name();
       }
-      return leftTypeOrder < rightTypeOrder; 
+      return leftTypeOrder < rightTypeOrder;
     }
 
-    
-    
+
+
     boost::optional<Model> ThreeJSReverseTranslator::modelFromThreeJS(const ThreeScene& scene)
     {
       m_logSink.setThreadId(QThread::currentThread());
@@ -257,7 +257,7 @@ namespace openstudio
         std::string iddObjectType = m.iddObjectType();
         UUID handle = toUUID(m.handle());
         std::string name = m.name();
-        
+
         boost::optional<ModelObject> modelObject;
 
         if (istringEqual(iddObjectType, "OS:Space")){
@@ -654,6 +654,6 @@ namespace openstudio
       return model;
     }
 
-    
+
   }//model
 }//openstudio

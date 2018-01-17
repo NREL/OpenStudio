@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -50,51 +50,51 @@ boost::optional<IdfObject> ForwardTranslator::translateSiteGroundReflectance( Si
   m_idfObjects.push_back(idfObject);
 
   if (!modelObject.isJanuaryGroundReflectanceDefaulted()){
-    idfObject.setDouble(Site_GroundReflectanceFields::JanuaryGroundReflectance, modelObject.januaryGroundReflectance()); 
+    idfObject.setDouble(Site_GroundReflectanceFields::JanuaryGroundReflectance, modelObject.januaryGroundReflectance());
   }
 
   if (!modelObject.isFebruaryGroundReflectanceDefaulted()){
-    idfObject.setDouble(Site_GroundReflectanceFields::FebruaryGroundReflectance, modelObject.februaryGroundReflectance()); 
+    idfObject.setDouble(Site_GroundReflectanceFields::FebruaryGroundReflectance, modelObject.februaryGroundReflectance());
   }
 
   if (!modelObject.isMarchGroundReflectanceDefaulted()){
-    idfObject.setDouble(Site_GroundReflectanceFields::MarchGroundReflectance, modelObject.marchGroundReflectance()); 
+    idfObject.setDouble(Site_GroundReflectanceFields::MarchGroundReflectance, modelObject.marchGroundReflectance());
   }
 
   if (!modelObject.isAprilGroundReflectanceDefaulted()){
-    idfObject.setDouble(Site_GroundReflectanceFields::AprilGroundReflectance, modelObject.aprilGroundReflectance()); 
+    idfObject.setDouble(Site_GroundReflectanceFields::AprilGroundReflectance, modelObject.aprilGroundReflectance());
   }
 
   if (!modelObject.isMayGroundReflectanceDefaulted()){
-    idfObject.setDouble(Site_GroundReflectanceFields::MayGroundReflectance, modelObject.mayGroundReflectance()); 
+    idfObject.setDouble(Site_GroundReflectanceFields::MayGroundReflectance, modelObject.mayGroundReflectance());
   }
 
   if (!modelObject.isJuneGroundReflectanceDefaulted()){
-    idfObject.setDouble(Site_GroundReflectanceFields::JuneGroundReflectance, modelObject.juneGroundReflectance()); 
+    idfObject.setDouble(Site_GroundReflectanceFields::JuneGroundReflectance, modelObject.juneGroundReflectance());
   }
 
   if (!modelObject.isJulyGroundReflectanceDefaulted()){
-    idfObject.setDouble(Site_GroundReflectanceFields::JulyGroundReflectance, modelObject.julyGroundReflectance()); 
+    idfObject.setDouble(Site_GroundReflectanceFields::JulyGroundReflectance, modelObject.julyGroundReflectance());
   }
 
   if (!modelObject.isAugustGroundReflectanceDefaulted()){
-    idfObject.setDouble(Site_GroundReflectanceFields::AugustGroundReflectance, modelObject.augustGroundReflectance()); 
+    idfObject.setDouble(Site_GroundReflectanceFields::AugustGroundReflectance, modelObject.augustGroundReflectance());
   }
 
   if (!modelObject.isSeptemberGroundReflectanceDefaulted()){
-    idfObject.setDouble(Site_GroundReflectanceFields::SeptemberGroundReflectance, modelObject.septemberGroundReflectance()); 
+    idfObject.setDouble(Site_GroundReflectanceFields::SeptemberGroundReflectance, modelObject.septemberGroundReflectance());
   }
 
   if (!modelObject.isOctoberGroundReflectanceDefaulted()){
-    idfObject.setDouble(Site_GroundReflectanceFields::OctoberGroundReflectance, modelObject.octoberGroundReflectance()); 
+    idfObject.setDouble(Site_GroundReflectanceFields::OctoberGroundReflectance, modelObject.octoberGroundReflectance());
   }
 
   if (!modelObject.isNovemberGroundReflectanceDefaulted()){
-    idfObject.setDouble(Site_GroundReflectanceFields::NovemberGroundReflectance, modelObject.novemberGroundReflectance()); 
+    idfObject.setDouble(Site_GroundReflectanceFields::NovemberGroundReflectance, modelObject.novemberGroundReflectance());
   }
 
   if (!modelObject.isDecemberGroundReflectanceDefaulted()){
-    idfObject.setDouble(Site_GroundReflectanceFields::DecemberGroundReflectance, modelObject.decemberGroundReflectance()); 
+    idfObject.setDouble(Site_GroundReflectanceFields::DecemberGroundReflectance, modelObject.decemberGroundReflectance());
   }
 
   return idfObject;

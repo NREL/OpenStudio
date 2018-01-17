@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -94,7 +94,7 @@ boost::optional<IdfObject> ForwardTranslator::translateControllerOutdoorAir( Con
 
   ///////////////////////////////////////////////////////////////////////////
   // Field: Minimum Outdoor Air Flow Rate ///////////////////////////////////
-  if( modelObject.controllerMechanicalVentilation().demandControlledVentilation() && 
+  if( modelObject.controllerMechanicalVentilation().demandControlledVentilation() &&
       modelObject.isMinimumOutdoorAirFlowRateAutosized() )
   {
     idfObject.setDouble(openstudio::Controller_OutdoorAirFields::MinimumOutdoorAirFlowRate,0.0);
@@ -232,7 +232,7 @@ boost::optional<IdfObject> ForwardTranslator::translateControllerOutdoorAir( Con
   }
 
   // Controller Mechanical Ventilation
-  model::ControllerMechanicalVentilation controllerMechanicalVentilation = modelObject.controllerMechanicalVentilation(); 
+  model::ControllerMechanicalVentilation controllerMechanicalVentilation = modelObject.controllerMechanicalVentilation();
 
   boost::optional<IdfObject> controllerMechanicalVentilationIdf = translateAndMapModelObject(controllerMechanicalVentilation);
   if( controllerMechanicalVentilationIdf )
@@ -248,7 +248,7 @@ boost::optional<IdfObject> ForwardTranslator::translateControllerOutdoorAir( Con
     if( boost::optional<IdfObject> _s = translateAndMapModelObject(s.get()) )
     {
       idfObject.setString(openstudio::Controller_OutdoorAirFields::MinimumOutdoorAirScheduleName,_s->name().get());
-    } 
+    }
   }
 
   // MinimumFractionofOutdoorAirSchedule
@@ -258,9 +258,9 @@ boost::optional<IdfObject> ForwardTranslator::translateControllerOutdoorAir( Con
     if( boost::optional<IdfObject> _s = translateAndMapModelObject(s.get()) )
     {
       idfObject.setString(openstudio::Controller_OutdoorAirFields::MinimumFractionofOutdoorAirScheduleName,_s->name().get());
-    } 
+    }
   }
-  
+
   // MaximumFractionofOutdoorAirSchedule
 
   if( boost::optional<Schedule> s = modelObject.maximumFractionofOutdoorAirSchedule() )
@@ -268,9 +268,9 @@ boost::optional<IdfObject> ForwardTranslator::translateControllerOutdoorAir( Con
     if( boost::optional<IdfObject> _s = translateAndMapModelObject(s.get()) )
     {
       idfObject.setString(openstudio::Controller_OutdoorAirFields::MaximumFractionofOutdoorAirScheduleName,_s->name().get());
-    } 
+    }
   }
-  
+
   // TimeofDayEconomizerControlSchedule
 
   if( boost::optional<Schedule> s = modelObject.timeofDayEconomizerControlSchedule() )
@@ -278,7 +278,7 @@ boost::optional<IdfObject> ForwardTranslator::translateControllerOutdoorAir( Con
     if( boost::optional<IdfObject> _s = translateAndMapModelObject(s.get()) )
     {
       idfObject.setString(openstudio::Controller_OutdoorAirFields::TimeofDayEconomizerControlScheduleName,_s->name().get());
-    } 
+    }
   }
 
   return boost::optional<IdfObject>(idfObject);

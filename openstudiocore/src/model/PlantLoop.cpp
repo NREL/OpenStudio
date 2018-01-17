@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -512,10 +512,11 @@ Mixer PlantLoop_Impl::supplyMixer() const
   return supplyComponents( IddObjectType::OS_Connector_Mixer ).front().cast<Mixer>();
 }
 
-void PlantLoop_Impl::setSupplyMixer(Mixer const & mixer)
+bool PlantLoop_Impl::setSupplyMixer(Mixer const & mixer)
 {
   auto result = setPointer(OS_PlantLoopFields::SupplyMixerName,mixer.handle());
   OS_ASSERT(result);
+  return result;
 }
 
 Splitter PlantLoop_Impl::supplySplitter() const
@@ -525,10 +526,11 @@ Splitter PlantLoop_Impl::supplySplitter() const
   return supplyComponents( IddObjectType::OS_Connector_Splitter ).front().cast<Splitter>();
 }
 
-void PlantLoop_Impl::setSupplySplitter(Splitter const & splitter)
+bool PlantLoop_Impl::setSupplySplitter(Splitter const & splitter)
 {
   auto result = setPointer(OS_PlantLoopFields::SupplySplitterName,splitter.handle());
   OS_ASSERT(result);
+  return result;
 }
 
 Mixer PlantLoop_Impl::demandMixer()
@@ -538,10 +540,11 @@ Mixer PlantLoop_Impl::demandMixer()
   return demandComponents( IddObjectType::OS_Connector_Mixer ).front().cast<Mixer>();
 }
 
-void PlantLoop_Impl::setDemandMixer(Mixer const & mixer)
+bool PlantLoop_Impl::setDemandMixer(Mixer const & mixer)
 {
   auto result = setPointer(OS_PlantLoopFields::DemandMixerName,mixer.handle());
   OS_ASSERT(result);
+  return result;
 }
 
 Splitter PlantLoop_Impl::demandSplitter()
@@ -551,10 +554,11 @@ Splitter PlantLoop_Impl::demandSplitter()
   return demandComponents( IddObjectType::OS_Connector_Splitter ).front().cast<Splitter>();
 }
 
-void PlantLoop_Impl::setDemandSplitter(Splitter const & splitter)
+bool PlantLoop_Impl::setDemandSplitter(Splitter const & splitter)
 {
   auto result = setPointer(OS_PlantLoopFields::DemandSplitterName,splitter.handle());
   OS_ASSERT(result);
+  return result;
 }
 
 std::string PlantLoop_Impl::loadDistributionScheme()
@@ -579,9 +583,9 @@ double PlantLoop_Impl::maximumLoopTemperature()
   return getDouble(OS_PlantLoopFields::MaximumLoopTemperature,true).get();
 }
 
-void PlantLoop_Impl::setMaximumLoopTemperature( double value )
+bool PlantLoop_Impl::setMaximumLoopTemperature( double value )
 {
-  setDouble(OS_PlantLoopFields::MaximumLoopTemperature,value);
+  return setDouble(OS_PlantLoopFields::MaximumLoopTemperature,value);;
 }
 
 double PlantLoop_Impl::minimumLoopTemperature()
@@ -589,9 +593,9 @@ double PlantLoop_Impl::minimumLoopTemperature()
   return getDouble(OS_PlantLoopFields::MinimumLoopTemperature,true).get();
 }
 
-void PlantLoop_Impl::setMinimumLoopTemperature( double value )
+bool PlantLoop_Impl::setMinimumLoopTemperature( double value )
 {
-  setDouble(OS_PlantLoopFields::MinimumLoopTemperature,value);
+  return setDouble(OS_PlantLoopFields::MinimumLoopTemperature,value);;
 }
 
 boost::optional<double> PlantLoop_Impl::maximumLoopFlowRate()
@@ -599,9 +603,9 @@ boost::optional<double> PlantLoop_Impl::maximumLoopFlowRate()
   return getDouble(OS_PlantLoopFields::MaximumLoopFlowRate,true);
 }
 
-void PlantLoop_Impl::setMaximumLoopFlowRate( double value )
+bool PlantLoop_Impl::setMaximumLoopFlowRate( double value )
 {
-  setDouble(OS_PlantLoopFields::MaximumLoopFlowRate,value);
+  return setDouble(OS_PlantLoopFields::MaximumLoopFlowRate,value);;
 }
 
 bool PlantLoop_Impl::isMaximumLoopFlowRateAutosized()
@@ -624,9 +628,9 @@ boost::optional<double> PlantLoop_Impl::minimumLoopFlowRate()
   return getDouble(OS_PlantLoopFields::MinimumLoopFlowRate,true);
 }
 
-void PlantLoop_Impl::setMinimumLoopFlowRate( double value )
+bool PlantLoop_Impl::setMinimumLoopFlowRate( double value )
 {
-  setDouble(OS_PlantLoopFields::MinimumLoopFlowRate,value);
+  return setDouble(OS_PlantLoopFields::MinimumLoopFlowRate,value);;
 }
 
 bool PlantLoop_Impl::isMinimumLoopFlowRateAutosized()
@@ -649,9 +653,9 @@ boost::optional<double> PlantLoop_Impl::plantLoopVolume()
   return getDouble(OS_PlantLoopFields::PlantLoopVolume,true);
 }
 
-void PlantLoop_Impl::setPlantLoopVolume( double value )
+bool PlantLoop_Impl::setPlantLoopVolume( double value )
 {
-  setDouble(OS_PlantLoopFields::PlantLoopVolume,value);
+  return setDouble(OS_PlantLoopFields::PlantLoopVolume,value);;
 }
 
 bool PlantLoop_Impl::isPlantLoopVolumeAutocalculated()
@@ -683,8 +687,8 @@ int PlantLoop_Impl::glycolConcentration() const {
   return getInt(OS_PlantLoopFields::GlycolConcentration,true).get();
 }
 
-void PlantLoop_Impl::setGlycolConcentration(int glycolConcentration) {
-  setInt(OS_PlantLoopFields::GlycolConcentration, glycolConcentration);
+bool PlantLoop_Impl::setGlycolConcentration(int glycolConcentration) {
+  return setInt(OS_PlantLoopFields::GlycolConcentration, glycolConcentration);;
 }
 
 Node PlantLoop_Impl::loopTemperatureSetpointNode()
@@ -698,12 +702,13 @@ Node PlantLoop_Impl::loopTemperatureSetpointNode()
   return node.get();
 }
 
-void PlantLoop_Impl::setLoopTemperatureSetpointNode( Node & node )
+bool PlantLoop_Impl::setLoopTemperatureSetpointNode( Node & node )
 {
   if( node.model() == this->model() )
   {
-    setPointer(OS_PlantLoopFields::LoopTemperatureSetpointNodeName,node.handle());
+    return setPointer(OS_PlantLoopFields::LoopTemperatureSetpointNodeName,node.handle());
   }
+  return false;
 }
 
 std::vector<ModelObject> PlantLoop_Impl::children() const
@@ -1177,9 +1182,9 @@ double PlantLoop::maximumLoopTemperature()
   return getImpl<detail::PlantLoop_Impl>()->maximumLoopTemperature();
 }
 
-void PlantLoop::setMaximumLoopTemperature( double value )
+bool PlantLoop::setMaximumLoopTemperature( double value )
 {
-  getImpl<detail::PlantLoop_Impl>()->setMaximumLoopTemperature( value );
+  return getImpl<detail::PlantLoop_Impl>()->setMaximumLoopTemperature( value );
 }
 
 double PlantLoop::minimumLoopTemperature()
@@ -1187,9 +1192,9 @@ double PlantLoop::minimumLoopTemperature()
   return getImpl<detail::PlantLoop_Impl>()->minimumLoopTemperature();
 }
 
-void PlantLoop::setMinimumLoopTemperature( double value )
+bool PlantLoop::setMinimumLoopTemperature( double value )
 {
-  getImpl<detail::PlantLoop_Impl>()->setMinimumLoopTemperature( value );
+  return getImpl<detail::PlantLoop_Impl>()->setMinimumLoopTemperature( value );
 }
 
 boost::optional<double> PlantLoop::maximumLoopFlowRate()
@@ -1197,9 +1202,9 @@ boost::optional<double> PlantLoop::maximumLoopFlowRate()
   return getImpl<detail::PlantLoop_Impl>()->maximumLoopFlowRate();
 }
 
-void PlantLoop::setMaximumLoopFlowRate( double value )
+bool PlantLoop::setMaximumLoopFlowRate( double value )
 {
-  getImpl<detail::PlantLoop_Impl>()->setMaximumLoopFlowRate( value );
+  return getImpl<detail::PlantLoop_Impl>()->setMaximumLoopFlowRate( value );
 }
 
 bool PlantLoop::isMaximumLoopFlowRateAutosized()
@@ -1217,9 +1222,9 @@ boost::optional<double> PlantLoop::minimumLoopFlowRate()
   return getImpl<detail::PlantLoop_Impl>()->minimumLoopFlowRate();
 }
 
-void PlantLoop::setMinimumLoopFlowRate( double value )
+bool PlantLoop::setMinimumLoopFlowRate( double value )
 {
-  getImpl<detail::PlantLoop_Impl>()->setMinimumLoopFlowRate( value );
+  return getImpl<detail::PlantLoop_Impl>()->setMinimumLoopFlowRate( value );
 }
 
 bool PlantLoop::isMinimumLoopFlowRateAutosized()
@@ -1237,9 +1242,9 @@ boost::optional<double> PlantLoop::plantLoopVolume()
   return getImpl<detail::PlantLoop_Impl>()->plantLoopVolume();
 }
 
-void PlantLoop::setPlantLoopVolume( double value )
+bool PlantLoop::setPlantLoopVolume( double value )
 {
-  getImpl<detail::PlantLoop_Impl>()->setPlantLoopVolume( value );
+  return getImpl<detail::PlantLoop_Impl>()->setPlantLoopVolume( value );
 }
 
 bool PlantLoop::isPlantLoopVolumeAutocalculated()
@@ -1272,8 +1277,8 @@ int PlantLoop::glycolConcentration() const {
   return getImpl<detail::PlantLoop_Impl>()->glycolConcentration();
 }
 
-void PlantLoop::setGlycolConcentration(int glycolConcentration) {
-  getImpl<detail::PlantLoop_Impl>()->setGlycolConcentration(glycolConcentration);
+bool PlantLoop::setGlycolConcentration(int glycolConcentration) {
+  return getImpl<detail::PlantLoop_Impl>()->setGlycolConcentration(glycolConcentration);
 }
 
 Node PlantLoop::loopTemperatureSetpointNode()
@@ -1281,9 +1286,9 @@ Node PlantLoop::loopTemperatureSetpointNode()
   return getImpl<detail::PlantLoop_Impl>()->loopTemperatureSetpointNode();
 }
 
-void PlantLoop::setLoopTemperatureSetpointNode( Node & node )
+bool PlantLoop::setLoopTemperatureSetpointNode( Node & node )
 {
-  getImpl<detail::PlantLoop_Impl>()->setLoopTemperatureSetpointNode( node );
+  return getImpl<detail::PlantLoop_Impl>()->setLoopTemperatureSetpointNode( node );
 }
 
 SizingPlant PlantLoop::sizingPlant() const
@@ -1488,4 +1493,3 @@ bool PlantLoop::removeAvailabilityManager(const unsigned priority)
 
 } // model
 } // openstudio
-

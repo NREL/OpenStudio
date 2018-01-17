@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -50,7 +50,7 @@ using namespace openstudio::model;
 using namespace openstudio;
 
 TEST_F(EnergyPlusFixture,ReverseTranslator_GlassDoorToSubSurface) {
-  
+
   std::string text = "\
   FenestrationSurface:Detailed,\n\
     Perimeter_ZN_1_wall_south_door,  !- Name\n\
@@ -72,7 +72,7 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_GlassDoorToSubSurface) {
   Workspace ws(StrictnessLevel::Draft,IddFileType::EnergyPlus);
   OptionalWorkspaceObject owo = ws.addObject(idfObject);
   ASSERT_TRUE(owo);
-  
+
   ReverseTranslator rt;
   Model model = rt.translateWorkspace(ws);
   SubSurfaceVector subSurfaces = model.getModelObjects<SubSurface>();

@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -29,7 +29,7 @@
 module OpenStudio
 
   class PluginUpdateManager < UpdateManager
-  
+
     def initialize(appName, verbose)
       super(appName)
       @verbose = verbose
@@ -37,7 +37,7 @@ module OpenStudio
     end
 
     def replyProcessed()
-    
+
       if not self.error
         if (self.newMajorRelease or self.newMinorRelease)
           mostRecentVersion = self.mostRecentVersion
@@ -62,11 +62,11 @@ module OpenStudio
       else
         puts "Error occurred while checking for update."
       end
-      
+
       Plugin.update_manager = nil
-      
+
     end
-    
+
   end
 
 end

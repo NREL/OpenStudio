@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -70,8 +70,8 @@ class MODEL_API StraightComponent : public HVACComponent {
   /** Returns the optional ModelObject connected to the outlet port. **/
    boost::optional<ModelObject> outletModelObject();
 
-  /** Returns the optional AirLoopHVAC object that this AirToAirComponent is attached to.  
-   *  
+  /** Returns the optional AirLoopHVAC object that this AirToAirComponent is attached to.
+   *
    *  Reimplemented from HVACComponent.
    */
   boost::optional<AirLoopHVAC> airLoopHVAC() const;
@@ -88,7 +88,7 @@ class MODEL_API StraightComponent : public HVACComponent {
 
   friend class openstudio::IdfObject;
 
-  /// @cond 
+  /// @cond
 
   typedef detail::StraightComponent_Impl ImplType;
 
@@ -98,7 +98,7 @@ class MODEL_API StraightComponent : public HVACComponent {
 
   REGISTER_LOGGER("openstudio.model.StraightComponent");
 
-  /// @endcond 
+  /// @endcond
 
 };
 

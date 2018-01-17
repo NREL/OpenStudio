@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,22 +42,22 @@ TEST_F(ModelFixture,CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
-     CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit coil(m); 
+  ASSERT_EXIT (
+  {
+     Model m;
+     CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit coil(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
 TEST_F(ModelFixture,CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Remove)
 {
-  Model m; 
+  Model m;
   auto count = m.modelObjects().size();
 
-  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit coil(m); 
+  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit coil(m);
   CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData speed(m);
   coil.addSpeed(speed);
   coil.remove();

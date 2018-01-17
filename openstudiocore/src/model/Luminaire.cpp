@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -260,9 +260,10 @@ namespace detail {
     return isEmpty(OS_LuminaireFields::EndUseSubcategory);
   }
 
-  void Luminaire_Impl::setPositionXcoordinate(double positionXcoordinate) {
+  bool Luminaire_Impl::setPositionXcoordinate(double positionXcoordinate) {
     bool result = setDouble(OS_LuminaireFields::PositionXcoordinate, positionXcoordinate);
     OS_ASSERT(result);
+    return result;
   }
 
   bool Luminaire_Impl::setPositionXcoordinate(const Quantity& positionXcoordinate) {
@@ -274,9 +275,10 @@ namespace detail {
     return true;
   }
 
-  void Luminaire_Impl::setPositionYcoordinate(double positionYcoordinate) {
+  bool Luminaire_Impl::setPositionYcoordinate(double positionYcoordinate) {
     bool result = setDouble(OS_LuminaireFields::PositionYcoordinate, positionYcoordinate);
     OS_ASSERT(result);
+    return result;
   }
 
   bool Luminaire_Impl::setPositionYcoordinate(const Quantity& positionYcoordinate) {
@@ -288,9 +290,10 @@ namespace detail {
     return true;
   }
 
-  void Luminaire_Impl::setPositionZcoordinate(double positionZcoordinate) {
+  bool Luminaire_Impl::setPositionZcoordinate(double positionZcoordinate) {
     bool result = setDouble(OS_LuminaireFields::PositionZcoordinate, positionZcoordinate);
     OS_ASSERT(result);
+    return result;
   }
 
   bool Luminaire_Impl::setPositionZcoordinate(const Quantity& positionZcoordinate) {
@@ -302,9 +305,10 @@ namespace detail {
     return true;
   }
 
-  void Luminaire_Impl::setPsiRotationAroundXaxis(double psiRotationAroundXaxis) {
+  bool Luminaire_Impl::setPsiRotationAroundXaxis(double psiRotationAroundXaxis) {
     bool result = setDouble(OS_LuminaireFields::PsiRotationAroundXaxis, psiRotationAroundXaxis);
     OS_ASSERT(result);
+    return result;
   }
 
   bool Luminaire_Impl::setPsiRotationAroundXaxis(const Quantity& psiRotationAroundXaxis) {
@@ -321,9 +325,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void Luminaire_Impl::setThetaRotationAroundYaxis(double thetaRotationAroundYaxis) {
+  bool Luminaire_Impl::setThetaRotationAroundYaxis(double thetaRotationAroundYaxis) {
     bool result = setDouble(OS_LuminaireFields::ThetaRotationAroundYaxis, thetaRotationAroundYaxis);
     OS_ASSERT(result);
+    return result;
   }
 
   bool Luminaire_Impl::setThetaRotationAroundYaxis(const Quantity& thetaRotationAroundYaxis) {
@@ -340,9 +345,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void Luminaire_Impl::setPhiRotationAroundZaxis(double phiRotationAroundZaxis) {
+  bool Luminaire_Impl::setPhiRotationAroundZaxis(double phiRotationAroundZaxis) {
     bool result = setDouble(OS_LuminaireFields::PhiRotationAroundZaxis, phiRotationAroundZaxis);
     OS_ASSERT(result);
+    return result;
   }
 
   bool Luminaire_Impl::setPhiRotationAroundZaxis(const Quantity& phiRotationAroundZaxis) {
@@ -732,32 +738,32 @@ bool Luminaire::isEndUseSubcategoryDefaulted() const {
   return getImpl<detail::Luminaire_Impl>()->isEndUseSubcategoryDefaulted();
 }
 
-void Luminaire::setPositionXcoordinate(double positionXcoordinate) {
-  getImpl<detail::Luminaire_Impl>()->setPositionXcoordinate(positionXcoordinate);
+bool Luminaire::setPositionXcoordinate(double positionXcoordinate) {
+  return getImpl<detail::Luminaire_Impl>()->setPositionXcoordinate(positionXcoordinate);
 }
 
 bool Luminaire::setPositionXcoordinate(const Quantity& positionXcoordinate) {
   return getImpl<detail::Luminaire_Impl>()->setPositionXcoordinate(positionXcoordinate);
 }
 
-void Luminaire::setPositionYcoordinate(double positionYcoordinate) {
-  getImpl<detail::Luminaire_Impl>()->setPositionYcoordinate(positionYcoordinate);
+bool Luminaire::setPositionYcoordinate(double positionYcoordinate) {
+  return getImpl<detail::Luminaire_Impl>()->setPositionYcoordinate(positionYcoordinate);
 }
 
 bool Luminaire::setPositionYcoordinate(const Quantity& positionYcoordinate) {
   return getImpl<detail::Luminaire_Impl>()->setPositionYcoordinate(positionYcoordinate);
 }
 
-void Luminaire::setPositionZcoordinate(double positionZcoordinate) {
-  getImpl<detail::Luminaire_Impl>()->setPositionZcoordinate(positionZcoordinate);
+bool Luminaire::setPositionZcoordinate(double positionZcoordinate) {
+  return getImpl<detail::Luminaire_Impl>()->setPositionZcoordinate(positionZcoordinate);
 }
 
 bool Luminaire::setPositionZcoordinate(const Quantity& positionZcoordinate) {
   return getImpl<detail::Luminaire_Impl>()->setPositionZcoordinate(positionZcoordinate);
 }
 
-void Luminaire::setPsiRotationAroundXaxis(double psiRotationAroundXaxis) {
-  getImpl<detail::Luminaire_Impl>()->setPsiRotationAroundXaxis(psiRotationAroundXaxis);
+bool Luminaire::setPsiRotationAroundXaxis(double psiRotationAroundXaxis) {
+  return getImpl<detail::Luminaire_Impl>()->setPsiRotationAroundXaxis(psiRotationAroundXaxis);
 }
 
 bool Luminaire::setPsiRotationAroundXaxis(const Quantity& psiRotationAroundXaxis) {
@@ -768,8 +774,8 @@ void Luminaire::resetPsiRotationAroundXaxis() {
   getImpl<detail::Luminaire_Impl>()->resetPsiRotationAroundXaxis();
 }
 
-void Luminaire::setThetaRotationAroundYaxis(double thetaRotationAroundYaxis) {
-  getImpl<detail::Luminaire_Impl>()->setThetaRotationAroundYaxis(thetaRotationAroundYaxis);
+bool Luminaire::setThetaRotationAroundYaxis(double thetaRotationAroundYaxis) {
+  return getImpl<detail::Luminaire_Impl>()->setThetaRotationAroundYaxis(thetaRotationAroundYaxis);
 }
 
 bool Luminaire::setThetaRotationAroundYaxis(const Quantity& thetaRotationAroundYaxis) {
@@ -780,8 +786,8 @@ void Luminaire::resetThetaRotationAroundYaxis() {
   getImpl<detail::Luminaire_Impl>()->resetThetaRotationAroundYaxis();
 }
 
-void Luminaire::setPhiRotationAroundZaxis(double phiRotationAroundZaxis) {
-  getImpl<detail::Luminaire_Impl>()->setPhiRotationAroundZaxis(phiRotationAroundZaxis);
+bool Luminaire::setPhiRotationAroundZaxis(double phiRotationAroundZaxis) {
+  return getImpl<detail::Luminaire_Impl>()->setPhiRotationAroundZaxis(phiRotationAroundZaxis);
 }
 
 bool Luminaire::setPhiRotationAroundZaxis(const Quantity& phiRotationAroundZaxis) {
@@ -890,4 +896,3 @@ Luminaire::Luminaire(std::shared_ptr<detail::Luminaire_Impl> impl)
 
 } // model
 } // openstudio
-

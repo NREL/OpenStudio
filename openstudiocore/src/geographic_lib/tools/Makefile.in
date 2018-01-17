@@ -113,7 +113,7 @@ CartConvert_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
-am__v_lt_1 = 
+am__v_lt_1 =
 am_ConicProj_OBJECTS = ConicProj.$(OBJEXT)
 ConicProj_OBJECTS = $(am_ConicProj_OBJECTS)
 ConicProj_LDADD = $(LDADD)
@@ -190,11 +190,11 @@ am__v_P_1 = :
 AM_V_GEN = $(am__v_GEN_@AM_V@)
 am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
 am__v_GEN_0 = @echo "  GEN     " $@;
-am__v_GEN_1 = 
+am__v_GEN_1 =
 AM_V_at = $(am__v_at_@AM_V@)
 am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
 am__v_at_0 = @
-am__v_at_1 = 
+am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/include/GeographicLib
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -208,7 +208,7 @@ LTCXXCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 AM_V_CXX = $(am__v_CXX_@AM_V@)
 am__v_CXX_ = $(am__v_CXX_@AM_DEFAULT_V@)
 am__v_CXX_0 = @echo "  CXX     " $@;
-am__v_CXX_1 = 
+am__v_CXX_1 =
 CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
@@ -216,7 +216,7 @@ CXXLINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
-am__v_CXXLD_1 = 
+am__v_CXXLD_1 =
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
@@ -226,7 +226,7 @@ LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 AM_V_CC = $(am__v_CC_@AM_V@)
 am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
 am__v_CC_0 = @echo "  CC      " $@;
-am__v_CC_1 = 
+am__v_CC_1 =
 CCLD = $(CC)
 LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
@@ -234,7 +234,7 @@ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
-am__v_CCLD_1 = 
+am__v_CCLD_1 =
 SOURCES = $(CartConvert_SOURCES) $(ConicProj_SOURCES) \
 	$(GeoConvert_SOURCES) $(GeodSolve_SOURCES) \
 	$(GeodesicProj_SOURCES) $(GeoidEval_SOURCES) \
@@ -635,47 +635,47 @@ clean-binPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
-CartConvert$(EXEEXT): $(CartConvert_OBJECTS) $(CartConvert_DEPENDENCIES) $(EXTRA_CartConvert_DEPENDENCIES) 
+CartConvert$(EXEEXT): $(CartConvert_OBJECTS) $(CartConvert_DEPENDENCIES) $(EXTRA_CartConvert_DEPENDENCIES)
 	@rm -f CartConvert$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(CartConvert_OBJECTS) $(CartConvert_LDADD) $(LIBS)
 
-ConicProj$(EXEEXT): $(ConicProj_OBJECTS) $(ConicProj_DEPENDENCIES) $(EXTRA_ConicProj_DEPENDENCIES) 
+ConicProj$(EXEEXT): $(ConicProj_OBJECTS) $(ConicProj_DEPENDENCIES) $(EXTRA_ConicProj_DEPENDENCIES)
 	@rm -f ConicProj$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(ConicProj_OBJECTS) $(ConicProj_LDADD) $(LIBS)
 
-GeoConvert$(EXEEXT): $(GeoConvert_OBJECTS) $(GeoConvert_DEPENDENCIES) $(EXTRA_GeoConvert_DEPENDENCIES) 
+GeoConvert$(EXEEXT): $(GeoConvert_OBJECTS) $(GeoConvert_DEPENDENCIES) $(EXTRA_GeoConvert_DEPENDENCIES)
 	@rm -f GeoConvert$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(GeoConvert_OBJECTS) $(GeoConvert_LDADD) $(LIBS)
 
-GeodSolve$(EXEEXT): $(GeodSolve_OBJECTS) $(GeodSolve_DEPENDENCIES) $(EXTRA_GeodSolve_DEPENDENCIES) 
+GeodSolve$(EXEEXT): $(GeodSolve_OBJECTS) $(GeodSolve_DEPENDENCIES) $(EXTRA_GeodSolve_DEPENDENCIES)
 	@rm -f GeodSolve$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(GeodSolve_OBJECTS) $(GeodSolve_LDADD) $(LIBS)
 
-GeodesicProj$(EXEEXT): $(GeodesicProj_OBJECTS) $(GeodesicProj_DEPENDENCIES) $(EXTRA_GeodesicProj_DEPENDENCIES) 
+GeodesicProj$(EXEEXT): $(GeodesicProj_OBJECTS) $(GeodesicProj_DEPENDENCIES) $(EXTRA_GeodesicProj_DEPENDENCIES)
 	@rm -f GeodesicProj$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(GeodesicProj_OBJECTS) $(GeodesicProj_LDADD) $(LIBS)
 
-GeoidEval$(EXEEXT): $(GeoidEval_OBJECTS) $(GeoidEval_DEPENDENCIES) $(EXTRA_GeoidEval_DEPENDENCIES) 
+GeoidEval$(EXEEXT): $(GeoidEval_OBJECTS) $(GeoidEval_DEPENDENCIES) $(EXTRA_GeoidEval_DEPENDENCIES)
 	@rm -f GeoidEval$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(GeoidEval_OBJECTS) $(GeoidEval_LDADD) $(LIBS)
 
-Gravity$(EXEEXT): $(Gravity_OBJECTS) $(Gravity_DEPENDENCIES) $(EXTRA_Gravity_DEPENDENCIES) 
+Gravity$(EXEEXT): $(Gravity_OBJECTS) $(Gravity_DEPENDENCIES) $(EXTRA_Gravity_DEPENDENCIES)
 	@rm -f Gravity$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(Gravity_OBJECTS) $(Gravity_LDADD) $(LIBS)
 
-MagneticField$(EXEEXT): $(MagneticField_OBJECTS) $(MagneticField_DEPENDENCIES) $(EXTRA_MagneticField_DEPENDENCIES) 
+MagneticField$(EXEEXT): $(MagneticField_OBJECTS) $(MagneticField_DEPENDENCIES) $(EXTRA_MagneticField_DEPENDENCIES)
 	@rm -f MagneticField$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(MagneticField_OBJECTS) $(MagneticField_LDADD) $(LIBS)
 
-Planimeter$(EXEEXT): $(Planimeter_OBJECTS) $(Planimeter_DEPENDENCIES) $(EXTRA_Planimeter_DEPENDENCIES) 
+Planimeter$(EXEEXT): $(Planimeter_OBJECTS) $(Planimeter_DEPENDENCIES) $(EXTRA_Planimeter_DEPENDENCIES)
 	@rm -f Planimeter$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(Planimeter_OBJECTS) $(Planimeter_LDADD) $(LIBS)
 
-RhumbSolve$(EXEEXT): $(RhumbSolve_OBJECTS) $(RhumbSolve_DEPENDENCIES) $(EXTRA_RhumbSolve_DEPENDENCIES) 
+RhumbSolve$(EXEEXT): $(RhumbSolve_OBJECTS) $(RhumbSolve_DEPENDENCIES) $(EXTRA_RhumbSolve_DEPENDENCIES)
 	@rm -f RhumbSolve$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(RhumbSolve_OBJECTS) $(RhumbSolve_LDADD) $(LIBS)
 
-TransverseMercatorProj$(EXEEXT): $(TransverseMercatorProj_OBJECTS) $(TransverseMercatorProj_DEPENDENCIES) $(EXTRA_TransverseMercatorProj_DEPENDENCIES) 
+TransverseMercatorProj$(EXEEXT): $(TransverseMercatorProj_OBJECTS) $(TransverseMercatorProj_DEPENDENCIES) $(EXTRA_TransverseMercatorProj_DEPENDENCIES)
 	@rm -f TransverseMercatorProj$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(TransverseMercatorProj_OBJECTS) $(TransverseMercatorProj_LDADD) $(LIBS)
 install-sbinSCRIPTS: $(sbin_SCRIPTS)

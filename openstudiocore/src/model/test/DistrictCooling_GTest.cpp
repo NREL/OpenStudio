@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -48,10 +48,10 @@ TEST_F(ModelFixture,DistrictCooling_DistrictCooling)
 
   ASSERT_EXIT (
   {
-    Model m; 
+    Model m;
     DistrictCooling testObject(m);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -117,7 +117,7 @@ TEST_F(ModelFixture,DistrictCooling_Clone){
   Model m;
   //make an object to clone, and edit some property to make sure the clone worked
   DistrictCooling testObject(m);
-  
+
   testObject.setNominalCapacity(1234);
 
   //clone into the same model

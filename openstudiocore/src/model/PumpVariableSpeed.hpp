@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -47,7 +47,7 @@ namespace detail {
 
 /** PumpVariableSpeed is a StraightComponent that wraps the OpenStudio IDD object
  *  'OS:Pump:VariableSpeed'. */
-class MODEL_API PumpVariableSpeed : public StraightComponent 
+class MODEL_API PumpVariableSpeed : public StraightComponent
 {
   public:
 
@@ -170,7 +170,7 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
   /** @name Setters */
   //@{
 
-  void setRatedFlowRate(double ratedFlowRate);
+  bool setRatedFlowRate(double ratedFlowRate);
 
   bool setRatedFlowRate(const Quantity& ratedFlowRate);
 
@@ -178,13 +178,13 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
 
   void autosizeRatedFlowRate();
 
-  void setRatedPumpHead(double ratedPumpHead);
+  bool setRatedPumpHead(double ratedPumpHead);
 
   bool setRatedPumpHead(const Quantity& ratedPumpHead);
 
   void resetRatedPumpHead();
 
-  void setRatedPowerConsumption(double ratedPowerConsumption);
+  bool setRatedPowerConsumption(double ratedPowerConsumption);
 
   bool setRatedPowerConsumption(const Quantity& ratedPowerConsumption);
 
@@ -204,31 +204,31 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
 
   void resetFractionofMotorInefficienciestoFluidStream();
 
-  void setCoefficient1ofthePartLoadPerformanceCurve(double coefficient1ofthePartLoadPerformanceCurve);
+  bool setCoefficient1ofthePartLoadPerformanceCurve(double coefficient1ofthePartLoadPerformanceCurve);
 
   bool setCoefficient1ofthePartLoadPerformanceCurve(const Quantity& coefficient1ofthePartLoadPerformanceCurve);
 
   void resetCoefficient1ofthePartLoadPerformanceCurve();
 
-  void setCoefficient2ofthePartLoadPerformanceCurve(double coefficient2ofthePartLoadPerformanceCurve);
+  bool setCoefficient2ofthePartLoadPerformanceCurve(double coefficient2ofthePartLoadPerformanceCurve);
 
   bool setCoefficient2ofthePartLoadPerformanceCurve(const Quantity& coefficient2ofthePartLoadPerformanceCurve);
 
   void resetCoefficient2ofthePartLoadPerformanceCurve();
 
-  void setCoefficient3ofthePartLoadPerformanceCurve(double coefficient3ofthePartLoadPerformanceCurve);
+  bool setCoefficient3ofthePartLoadPerformanceCurve(double coefficient3ofthePartLoadPerformanceCurve);
 
   bool setCoefficient3ofthePartLoadPerformanceCurve(const Quantity& coefficient3ofthePartLoadPerformanceCurve);
 
   void resetCoefficient3ofthePartLoadPerformanceCurve();
 
-  void setCoefficient4ofthePartLoadPerformanceCurve(double coefficient4ofthePartLoadPerformanceCurve);
+  bool setCoefficient4ofthePartLoadPerformanceCurve(double coefficient4ofthePartLoadPerformanceCurve);
 
   bool setCoefficient4ofthePartLoadPerformanceCurve(const Quantity& coefficient4ofthePartLoadPerformanceCurve);
 
   void resetCoefficient4ofthePartLoadPerformanceCurve();
 
-  void setMinimumFlowRate(double minimumFlowRate);
+  bool setMinimumFlowRate(double minimumFlowRate);
 
   bool setMinimumFlowRate(const Quantity& minimumFlowRate);
 
@@ -247,7 +247,7 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
 
   void resetPumpCurve();
 
-  void setImpellerDiameter(double impellerDiameter);
+  bool setImpellerDiameter(double impellerDiameter);
 
   bool setImpellerDiameter(const Quantity& impellerDiameter);
 
@@ -304,7 +304,7 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
   bool setSkinLossRadiativeFraction(double skinLossRadiativeFraction);
 
   double designMinimumFlowRateFraction() const;
-  
+
   bool setDesignMinimumFlowRateFraction(double designMinimumFlowRateFraction);
 
   //@}
@@ -334,5 +334,4 @@ typedef std::vector<PumpVariableSpeed> PumpVariableSpeedVector;
 } // model
 } // openstudio
 
-#endif // MODEL_PUMPVARIABLESPEED_HPP
-
+#endif // MODEL_PUMPVARIABLESPEED_HPP

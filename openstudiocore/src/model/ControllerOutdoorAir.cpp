@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -258,12 +258,13 @@ namespace detail {
     return result;
   }
 
-  void ControllerOutdoorAir_Impl::setMinimumOutdoorAirFlowRate(boost::optional<double> minimumOutdoorAirFlowRate) {
+  bool ControllerOutdoorAir_Impl::setMinimumOutdoorAirFlowRate(boost::optional<double> minimumOutdoorAirFlowRate) {
     bool result(false);
     if (minimumOutdoorAirFlowRate) {
       result = setDouble(OS_Controller_OutdoorAirFields::MinimumOutdoorAirFlowRate, minimumOutdoorAirFlowRate.get());
     }
     OS_ASSERT(result);
+    return result;
   }
 
   bool ControllerOutdoorAir_Impl::setMinimumOutdoorAirFlowRate(const OSOptionalQuantity& minimumOutdoorAirFlowRate) {
@@ -288,12 +289,13 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ControllerOutdoorAir_Impl::setMaximumOutdoorAirFlowRate(boost::optional<double> maximumOutdoorAirFlowRate) {
+  bool ControllerOutdoorAir_Impl::setMaximumOutdoorAirFlowRate(boost::optional<double> maximumOutdoorAirFlowRate) {
     bool result(false);
     if (maximumOutdoorAirFlowRate) {
       result = setDouble(OS_Controller_OutdoorAirFields::MaximumOutdoorAirFlowRate, maximumOutdoorAirFlowRate.get());
     }
     OS_ASSERT(result);
+    return result;
   }
 
   bool ControllerOutdoorAir_Impl::setMaximumOutdoorAirFlowRate(const OSOptionalQuantity& maximumOutdoorAirFlowRate) {
@@ -323,9 +325,9 @@ namespace detail {
     return getString(openstudio::OS_Controller_OutdoorAirFields::EconomizerControlType).get();
   }
 
-  void ControllerOutdoorAir_Impl::setEconomizerControlType( const std::string& value )
+  bool ControllerOutdoorAir_Impl::setEconomizerControlType( const std::string& value )
   {
-    setString(openstudio::OS_Controller_OutdoorAirFields::EconomizerControlType, value);
+    return setString(openstudio::OS_Controller_OutdoorAirFields::EconomizerControlType, value);;
   }
 
   std::string ControllerOutdoorAir_Impl::getEconomizerControlActionType() const
@@ -333,9 +335,9 @@ namespace detail {
     return getString(openstudio::OS_Controller_OutdoorAirFields::EconomizerControlActionType).get();
   }
 
-  void ControllerOutdoorAir_Impl::setEconomizerControlActionType( const std::string& value )
+  bool ControllerOutdoorAir_Impl::setEconomizerControlActionType( const std::string& value )
   {
-    setString(openstudio::OS_Controller_OutdoorAirFields::EconomizerControlActionType, value);
+    return setString(openstudio::OS_Controller_OutdoorAirFields::EconomizerControlActionType, value);;
   }
 
 
@@ -431,9 +433,9 @@ namespace detail {
     return getString(openstudio::OS_Controller_OutdoorAirFields::LockoutType).get();
   }
 
-  void ControllerOutdoorAir_Impl::setLockoutType( const std::string& value )
+  bool ControllerOutdoorAir_Impl::setLockoutType( const std::string& value )
   {
-    setString(openstudio::OS_Controller_OutdoorAirFields::LockoutType,value);
+    return setString(openstudio::OS_Controller_OutdoorAirFields::LockoutType,value);;
   }
 
   std::string ControllerOutdoorAir_Impl::getMinimumLimitType() const
@@ -441,9 +443,9 @@ namespace detail {
     return getString(openstudio::OS_Controller_OutdoorAirFields::MinimumLimitType).get();
   }
 
-  void ControllerOutdoorAir_Impl::setMinimumLimitType( const std::string& value )
+  bool ControllerOutdoorAir_Impl::setMinimumLimitType( const std::string& value )
   {
-    setString(openstudio::OS_Controller_OutdoorAirFields::MinimumLimitType,value);
+    return setString(openstudio::OS_Controller_OutdoorAirFields::MinimumLimitType,value);;
   }
 
   boost::optional<bool> ControllerOutdoorAir_Impl::getHighHumidityControl() const
@@ -465,15 +467,15 @@ namespace detail {
     return retVal;
   }
 
-  void ControllerOutdoorAir_Impl::setHighHumidityControl(bool val)
+  bool ControllerOutdoorAir_Impl::setHighHumidityControl(bool val)
   {
     if(val)
     {
-      setString(OS_Controller_OutdoorAirFields::HighHumidityControl,"Yes");
+      return setString(OS_Controller_OutdoorAirFields::HighHumidityControl,"Yes");
     }
     else
     {
-      setString(OS_Controller_OutdoorAirFields::HighHumidityControl,"No");
+      return setString(OS_Controller_OutdoorAirFields::HighHumidityControl,"No");
     }
   }
 
@@ -481,9 +483,9 @@ namespace detail {
   {
     return getDouble(openstudio::OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio);
   }
-  void ControllerOutdoorAir_Impl::setHighHumidityOutdoorAirFlowRatio(double v)
+  bool ControllerOutdoorAir_Impl::setHighHumidityOutdoorAirFlowRatio(double v)
   {
-    setDouble(openstudio::OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio,v);
+    return setDouble(openstudio::OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio,v);;
   }
 
   boost::optional<bool> ControllerOutdoorAir_Impl::getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const
@@ -506,15 +508,15 @@ namespace detail {
     }
     return retVal;
   }
-  void ControllerOutdoorAir_Impl::setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(bool v)
+  bool ControllerOutdoorAir_Impl::setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(bool v)
   {
     if(v)
     {
-      setString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio,"No");
+      return setString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio,"No");
     }
     else
     {
-      setString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio,"Yes");
+      return setString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio,"Yes");
     }
   }
 
@@ -523,9 +525,9 @@ namespace detail {
     return getString(openstudio::OS_Controller_OutdoorAirFields::HeatRecoveryBypassControlType);
   }
 
-  void ControllerOutdoorAir_Impl::setHeatRecoveryBypassControlType(const std::string& v)
+  bool ControllerOutdoorAir_Impl::setHeatRecoveryBypassControlType(const std::string& v)
   {
-    setString(openstudio::OS_Controller_OutdoorAirFields::HeatRecoveryBypassControlType,v);
+    return setString(openstudio::OS_Controller_OutdoorAirFields::HeatRecoveryBypassControlType,v);;
   }
 
   ControllerMechanicalVentilation ControllerOutdoorAir_Impl::controllerMechanicalVentilation() const {
@@ -774,9 +776,9 @@ std::string ControllerOutdoorAir::getEconomizerControlType() const
   return getImpl<detail::ControllerOutdoorAir_Impl>()->getEconomizerControlType();
 }
 
-void ControllerOutdoorAir::setEconomizerControlType( const std::string& value )
+bool ControllerOutdoorAir::setEconomizerControlType( const std::string& value )
 {
-  getImpl<detail::ControllerOutdoorAir_Impl>()->setEconomizerControlType(value);
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->setEconomizerControlType(value);
 }
 
 std::string ControllerOutdoorAir::getEconomizerControlActionType() const
@@ -784,9 +786,9 @@ std::string ControllerOutdoorAir::getEconomizerControlActionType() const
   return getImpl<detail::ControllerOutdoorAir_Impl>()->getEconomizerControlActionType();
 }
 
-void ControllerOutdoorAir::setEconomizerControlActionType( const std::string& value )
+bool ControllerOutdoorAir::setEconomizerControlActionType( const std::string& value )
 {
-  getImpl<detail::ControllerOutdoorAir_Impl>()->setEconomizerControlActionType(value);
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->setEconomizerControlActionType(value);
 }
 
 boost::optional<double> ControllerOutdoorAir::getEconomizerMaximumLimitDryBulbTemperature() const
@@ -858,9 +860,9 @@ std::string ControllerOutdoorAir::getLockoutType() const
   return getImpl<detail::ControllerOutdoorAir_Impl>()->getLockoutType();
 }
 
-void ControllerOutdoorAir::setLockoutType( const std::string& value )
+bool ControllerOutdoorAir::setLockoutType( const std::string& value )
 {
-  getImpl<detail::ControllerOutdoorAir_Impl>()->setLockoutType(value);
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->setLockoutType(value);
 }
 
 std::string ControllerOutdoorAir::getMinimumLimitType() const
@@ -868,45 +870,45 @@ std::string ControllerOutdoorAir::getMinimumLimitType() const
   return getImpl<detail::ControllerOutdoorAir_Impl>()->getMinimumLimitType();
 }
 
-void ControllerOutdoorAir::setMinimumLimitType( const std::string& value )
+bool ControllerOutdoorAir::setMinimumLimitType( const std::string& value )
 {
-  getImpl<detail::ControllerOutdoorAir_Impl>()->setMinimumLimitType(value);
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->setMinimumLimitType(value);
 }
 
 boost::optional<bool> ControllerOutdoorAir::getHighHumidityControl() const
 {
   return getImpl<detail::ControllerOutdoorAir_Impl>()->getHighHumidityControl();
 }
-void ControllerOutdoorAir::setHighHumidityControl(bool val)
+bool ControllerOutdoorAir::setHighHumidityControl(bool val)
 {
-  getImpl<detail::ControllerOutdoorAir_Impl>()->setHighHumidityControl(val);
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->setHighHumidityControl(val);
 }
 
 OptionalDouble ControllerOutdoorAir::getHighHumidityOutdoorAirFlowRatio() const
 {
   return getImpl<detail::ControllerOutdoorAir_Impl>()->getHighHumidityOutdoorAirFlowRatio();
 }
-void ControllerOutdoorAir::setHighHumidityOutdoorAirFlowRatio(double v)
+bool ControllerOutdoorAir::setHighHumidityOutdoorAirFlowRatio(double v)
 {
-  getImpl<detail::ControllerOutdoorAir_Impl>()->setHighHumidityOutdoorAirFlowRatio(v);
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->setHighHumidityOutdoorAirFlowRatio(v);
 }
 
 boost::optional<bool> ControllerOutdoorAir::getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const
 {
   return getImpl<detail::ControllerOutdoorAir_Impl>()->getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio();
 }
-void ControllerOutdoorAir::setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(bool v)
+bool ControllerOutdoorAir::setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(bool v)
 {
-  getImpl<detail::ControllerOutdoorAir_Impl>()->setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(v);
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(v);
 }
 
 OptionalString ControllerOutdoorAir::getHeatRecoveryBypassControlType() const
 {
   return getImpl<detail::ControllerOutdoorAir_Impl>()->getHeatRecoveryBypassControlType();
 }
-void ControllerOutdoorAir::setHeatRecoveryBypassControlType(const std::string& v)
+bool ControllerOutdoorAir::setHeatRecoveryBypassControlType(const std::string& v)
 {
-  getImpl<detail::ControllerOutdoorAir_Impl>()->setHeatRecoveryBypassControlType(v);
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->setHeatRecoveryBypassControlType(v);
 }
 
 IddObjectType ControllerOutdoorAir::iddObjectType()
@@ -939,8 +941,8 @@ bool ControllerOutdoorAir::isMaximumOutdoorAirFlowRateAutosized() const {
   return getImpl<detail::ControllerOutdoorAir_Impl>()->isMaximumOutdoorAirFlowRateAutosized();
 }
 
-void ControllerOutdoorAir::setMinimumOutdoorAirFlowRate(double minimumOutdoorAirFlowRate) {
-  getImpl<detail::ControllerOutdoorAir_Impl>()->setMinimumOutdoorAirFlowRate(minimumOutdoorAirFlowRate);
+bool ControllerOutdoorAir::setMinimumOutdoorAirFlowRate(double minimumOutdoorAirFlowRate) {
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->setMinimumOutdoorAirFlowRate(minimumOutdoorAirFlowRate);
 }
 
 bool ControllerOutdoorAir::setMinimumOutdoorAirFlowRate(const Quantity& minimumOutdoorAirFlowRate) {
@@ -951,8 +953,8 @@ void ControllerOutdoorAir::autosizeMinimumOutdoorAirFlowRate() {
   getImpl<detail::ControllerOutdoorAir_Impl>()->autosizeMinimumOutdoorAirFlowRate();
 }
 
-void ControllerOutdoorAir::setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate) {
-  getImpl<detail::ControllerOutdoorAir_Impl>()->setMaximumOutdoorAirFlowRate(maximumOutdoorAirFlowRate);
+bool ControllerOutdoorAir::setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate) {
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->setMaximumOutdoorAirFlowRate(maximumOutdoorAirFlowRate);
 }
 
 bool ControllerOutdoorAir::setMaximumOutdoorAirFlowRate(const Quantity& maximumOutdoorAirFlowRate) {

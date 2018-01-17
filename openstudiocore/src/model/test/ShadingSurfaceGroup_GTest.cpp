@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -226,7 +226,7 @@ TEST_F(ModelFixture, ShadingSurfaceGroup_Hierarchy)
   points.push_back(Point3d(0, 0, 0));
   points.push_back(Point3d(1, 0, 0));
 
-  // add site shading surface 
+  // add site shading surface
   ShadingSurface siteSurface(points, model);
   EXPECT_TRUE(siteSurface.setShadingSurfaceGroup(siteGroup));
   ASSERT_TRUE(siteSurface.shadingSurfaceGroup());
@@ -236,7 +236,7 @@ TEST_F(ModelFixture, ShadingSurfaceGroup_Hierarchy)
   EXPECT_EQ(0u, buildingGroup.shadingSurfaces().size());
   EXPECT_EQ(0u, spaceGroup.shadingSurfaces().size());
 
-  // add building shading surface 
+  // add building shading surface
   ShadingSurface buildingSurface(points, model);
   EXPECT_TRUE(buildingSurface.setShadingSurfaceGroup(buildingGroup));
   ASSERT_TRUE(buildingSurface.shadingSurfaceGroup());
@@ -246,7 +246,7 @@ TEST_F(ModelFixture, ShadingSurfaceGroup_Hierarchy)
   EXPECT_EQ(1u, buildingGroup.shadingSurfaces().size());
   EXPECT_EQ(0u, spaceGroup.shadingSurfaces().size());
 
-   // add space shading surface 
+   // add space shading surface
   ShadingSurface spaceSurface(points, model);
   EXPECT_TRUE(spaceSurface.setShadingSurfaceGroup(spaceGroup));
   ASSERT_TRUE(spaceSurface.shadingSurfaceGroup());

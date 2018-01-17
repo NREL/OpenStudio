@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -61,7 +61,7 @@ class HorizontalTabWidget : public QWidget
   void setCurrentId(int id);
 
   void setCurrentWidget(QWidget * widget);
-  
+
   protected:
 
   void paintEvent( QPaintEvent * event ) override;
@@ -86,7 +86,7 @@ class HorizontalTabWidget : public QWidget
 
   std::vector<QString> m_unSelectedPixmaps;
 
-  std::vector<QPushButton *> m_tabButtons; 
+  std::vector<QPushButton *> m_tabButtons;
 
   std::vector<int> m_ids;
 

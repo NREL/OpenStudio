@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -91,7 +91,7 @@ namespace detail {
     return isEmpty(OS_LightingSimulationControlFields::RunSimulationforWeatherFileRunPeriods);
   }
 
-  void LightingSimulationControl_Impl::setRunSimulationforDesignDays(bool runSimulationforDesignDays) {
+  bool LightingSimulationControl_Impl::setRunSimulationforDesignDays(bool runSimulationforDesignDays) {
     bool result = false;
     if (runSimulationforDesignDays) {
       result = setString(OS_LightingSimulationControlFields::RunSimulationforDesignDays, "Yes");
@@ -99,6 +99,7 @@ namespace detail {
       result = setString(OS_LightingSimulationControlFields::RunSimulationforDesignDays, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void LightingSimulationControl_Impl::resetRunSimulationforDesignDays() {
@@ -106,7 +107,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void LightingSimulationControl_Impl::setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods) {
+  bool LightingSimulationControl_Impl::setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods) {
     bool result = false;
     if (runSimulationforWeatherFileRunPeriods) {
       result = setString(OS_LightingSimulationControlFields::RunSimulationforWeatherFileRunPeriods, "Yes");
@@ -114,6 +115,7 @@ namespace detail {
       result = setString(OS_LightingSimulationControlFields::RunSimulationforWeatherFileRunPeriods, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void LightingSimulationControl_Impl::resetRunSimulationforWeatherFileRunPeriods() {
@@ -144,16 +146,16 @@ bool LightingSimulationControl::isRunSimulationforWeatherFileRunPeriodsDefaulted
   return getImpl<detail::LightingSimulationControl_Impl>()->isRunSimulationforWeatherFileRunPeriodsDefaulted();
 }
 
-void LightingSimulationControl::setRunSimulationforDesignDays(bool runSimulationforDesignDays) {
-  getImpl<detail::LightingSimulationControl_Impl>()->setRunSimulationforDesignDays(runSimulationforDesignDays);
+bool LightingSimulationControl::setRunSimulationforDesignDays(bool runSimulationforDesignDays) {
+  return getImpl<detail::LightingSimulationControl_Impl>()->setRunSimulationforDesignDays(runSimulationforDesignDays);
 }
 
 void LightingSimulationControl::resetRunSimulationforDesignDays() {
   getImpl<detail::LightingSimulationControl_Impl>()->resetRunSimulationforDesignDays();
 }
 
-void LightingSimulationControl::setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods) {
-  getImpl<detail::LightingSimulationControl_Impl>()->setRunSimulationforWeatherFileRunPeriods(runSimulationforWeatherFileRunPeriods);
+bool LightingSimulationControl::setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods) {
+  return getImpl<detail::LightingSimulationControl_Impl>()->setRunSimulationforWeatherFileRunPeriods(runSimulationforWeatherFileRunPeriods);
 }
 
 void LightingSimulationControl::resetRunSimulationforWeatherFileRunPeriods() {
@@ -173,4 +175,3 @@ LightingSimulationControl::LightingSimulationControl(Model& model)
 
 } // model
 } // openstudio
-

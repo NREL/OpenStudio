@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -92,21 +92,21 @@ class MODEL_API ThermalStorageIceDetailed : public StraightComponent {
 
   void resetAvailabilitySchedule();
 
-  void setCapacity(double capacity);
+  bool setCapacity(double capacity);
 
   bool setDischargingCurve(const Curve& dischargingCurve);
 
   bool setChargingCurve(const Curve& chargingCurve);
 
-  void setTimestepoftheCurveData(double timestepoftheCurveData);
+  bool setTimestepoftheCurveData(double timestepoftheCurveData);
 
-  void setParasiticElectricLoadDuringDischarging(double parasiticElectricLoadDuringDischarging);
+  bool setParasiticElectricLoadDuringDischarging(double parasiticElectricLoadDuringDischarging);
 
-  void setParasiticElectricLoadDuringCharging(double parasiticElectricLoadDuringCharging);
+  bool setParasiticElectricLoadDuringCharging(double parasiticElectricLoadDuringCharging);
 
-  void setTankLossCoefficient(double tankLossCoefficient);
+  bool setTankLossCoefficient(double tankLossCoefficient);
 
-  void setFreezingTemperatureofStorageMedium(double freezingTemperatureofStorageMedium);
+  bool setFreezingTemperatureofStorageMedium(double freezingTemperatureofStorageMedium);
 
   bool setThawProcessIndicator(std::string thawProcessIndicator);
 
@@ -140,4 +140,3 @@ typedef std::vector<ThermalStorageIceDetailed> ThermalStorageIceDetailedVector;
 } // openstudio
 
 #endif // MODEL_THERMALSTORAGEICEDETAILED_HPP
-

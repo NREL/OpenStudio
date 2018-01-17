@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -515,7 +515,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWeatherActuator2_EMS) {
   model.save(toPath("./EMS_weatheractuator2.osm"), true);
   workspace.save(toPath("./EMS_weatheractuator2.idf"), true);
 }
-TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_EMS) {
+TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_Space_EMS) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -531,6 +531,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_EMS) {
   GasEquipmentDefinition gasEquipDef(model);
   GasEquipment gasEquip(gasEquipDef);
   gasEquip.setName("Gas Equip");
+  //add to space and not spacetype
   space.setGasEquipmentPower(10, gasEquip);
 
   // add actuator
@@ -551,6 +552,56 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
   EXPECT_EQ("Gas_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
+  //Should not have TZ in the name since the load is attached to a single space
+  EXPECT_EQ("Gas Equip", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+  //EXPECT_EQ("Thermal Zone Gas Equip", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
+  EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
+  EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+
+  model.save(toPath("./EMS_example.osm"), true);
+  workspace.save(toPath("./EMS_example.idf"), true);
+}
+TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceType_EMS) {
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  ThermalZone zone1(model);
+  zone1.setName("Thermal Zone");
+
+  Space space(model);
+  SpaceType spaceType(model);
+  space.setThermalZone(zone1);
+  space.setSpaceType(spaceType);
+
+  GasEquipmentDefinition gasEquipDef(model);
+  GasEquipment gasEquip(gasEquipDef);
+  gasEquip.setName("Gas Equip");
+  gasEquipDef.setDesignLevel(10);
+  //add to spacetype and not space
+  gasEquip.setSpaceType(spaceType);
+
+  // add actuator
+  std::string ControlType = "Gas Power Level";
+  std::string ComponentType = "GasEquipment";
+  EnergyManagementSystemActuator fanActuator(gasEquip, ComponentType, ControlType);
+  std::string actName = "Gas Equip Actuator";
+  fanActuator.setName(actName);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+
+
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
+  EXPECT_EQ("Gas_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
+  //Should have TZ in the name since the load is attached to a spacetype with only 1 space
   EXPECT_EQ("Thermal Zone Gas Equip", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
   EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
@@ -560,7 +611,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_EMS) {
   model.save(toPath("./EMS_example.osm"), true);
   workspace.save(toPath("./EMS_example.idf"), true);
 }
-TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad2_EMS) {
+TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_Space2_EMS) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -576,6 +627,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad2_EMS) {
   ElectricEquipmentDefinition elecEquipDef(model);
   ElectricEquipment elecEquip(elecEquipDef);
   elecEquip.setName("Electric Equip");
+  //add to space and not spacetype
   space.setElectricEquipmentPower(10, elecEquip);
 
   // add actuator
@@ -596,6 +648,55 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad2_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
   EXPECT_EQ("Electric_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
+  //Should not have TZ in the name since the load is attached to a single space
+  EXPECT_EQ("Electric Equip", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
+  EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
+  EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+
+  model.save(toPath("./EMS_example.osm"), true);
+  workspace.save(toPath("./EMS_example.idf"), true);
+}
+TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceType2_EMS) {
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  ThermalZone zone1(model);
+  zone1.setName("Thermal Zone");
+
+  Space space(model);
+  SpaceType spaceType(model);
+  space.setThermalZone(zone1);
+  space.setSpaceType(spaceType);
+
+  ElectricEquipmentDefinition elecEquipDef(model);
+  ElectricEquipment elecEquip(elecEquipDef);
+  elecEquip.setName("Electric Equip");
+  elecEquipDef.setDesignLevel(10);
+  //add to spacetype and not space
+  elecEquip.setSpaceType(spaceType);
+
+  // add actuator
+  std::string ControlType = "Electric Level";
+  std::string ComponentType = "ElectricEquipment";
+  EnergyManagementSystemActuator fanActuator(elecEquip, ComponentType, ControlType);
+  std::string actName = "Electric Equip Actuator";
+  fanActuator.setName(actName);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+
+
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
+  EXPECT_EQ("Electric_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
+  //Should have TZ in the name since the load is attached to a spacetype with only 1 space
   EXPECT_EQ("Thermal Zone Electric Equip", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
   EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
@@ -639,6 +740,63 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad3_EMS) {
 
   model.save(toPath("./EMS_example.osm"), true);
   workspace.save(toPath("./EMS_example.idf"), true);
+}
+TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceTypes_EMS) {
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  ThermalZone zone1(model);
+  zone1.setName("Thermal Zone 1");
+  ThermalZone zone2(model);
+  zone2.setName("Thermal Zone 2");
+
+  SpaceType spaceType(model);
+
+  Space space1(model);
+  space1.setThermalZone(zone1);
+  space1.setSpaceType(spaceType);
+
+  Space space2(model);
+  space2.setThermalZone(zone2);
+  space2.setSpaceType(spaceType);
+
+  ElectricEquipmentDefinition elecEquipDef(model);
+  ElectricEquipment elecEquip(elecEquipDef);
+  elecEquip.setName("Electric Equip");
+  elecEquipDef.setDesignLevel(10);
+  //set SpaceLoad object to the SpaceType
+  elecEquip.setSpaceType(spaceType);
+
+  // add actuator
+  std::string ControlType = "Electric Level";
+  std::string ComponentType = "ElectricEquipment";
+  EnergyManagementSystemActuator fanActuator(elecEquip, ComponentType, ControlType);
+  std::string actName = "Electric Equip Actuator";
+  fanActuator.setName(actName);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  //expect a warning since there are 2 spaces with the same spaceType
+  EXPECT_EQ(1u, forwardTranslator.warnings().size());
+  //expect 1 actuator since there are 2 spaces with the same spaceType but only 1 will get translated right now
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
+
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
+  EXPECT_EQ("Electric_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
+  // cannot guarantee the order of which TZ gets translated first
+  //EXPECT_EQ("Thermal Zone 2 Electric Equip", object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false));
+  EXPECT_EQ(ComponentType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
+  EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
+
+  model.save(toPath("./EMS_multi_spaces_spacetypes.osm"), true);
+  workspace.save(toPath("./EMS_multi_spaces_spacetypes.idf"), true);
 }
 /*
 TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad4_EMS) {

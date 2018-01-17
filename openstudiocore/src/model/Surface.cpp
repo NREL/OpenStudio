@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -46,13 +46,16 @@
 #include "ShadingSurface.hpp"
 #include "InteriorPartitionSurfaceGroup.hpp"
 #include "InteriorPartitionSurface.hpp"
-#include "SurfacePropertyConvectionCoefficients.hpp"
 #include "SurfacePropertyOtherSideCoefficients.hpp"
 #include "SurfacePropertyOtherSideCoefficients_Impl.hpp"
 #include "SurfacePropertyOtherSideConditionsModel.hpp"
 #include "SurfacePropertyOtherSideConditionsModel_Impl.hpp"
 #include "SurfacePropertyConvectionCoefficients.hpp"
 #include "SurfacePropertyConvectionCoefficients_Impl.hpp"
+#include "FoundationKiva.hpp"
+#include "FoundationKiva_Impl.hpp"
+#include "SurfacePropertyExposedFoundationPerimeter.hpp"
+#include "SurfacePropertyExposedFoundationPerimeter_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -125,6 +128,10 @@ namespace detail {
    SubSurfaceVector subSurfaces = this->subSurfaces();
    result.insert(result.end(), subSurfaces.begin(), subSurfaces.end());
 
+   if (boost::optional<SurfacePropertyExposedFoundationPerimeter> prop = this->surfacePropertyExposedFoundationPerimeter()) {
+     result.push_back(prop.get());
+   }   
+   
    return result;
  }
 
@@ -318,7 +325,8 @@ namespace detail {
         istringEqual("GroundBasementPreprocessorAverageWall", outsideBoundaryCondition) ||
         istringEqual("GroundBasementPreprocessorAverageFloor", outsideBoundaryCondition) ||
         istringEqual("GroundBasementPreprocessorUpperWall", outsideBoundaryCondition) ||
-        istringEqual("GroundBasementPreprocessorLowerWall", outsideBoundaryCondition)){
+        istringEqual("GroundBasementPreprocessorLowerWall", outsideBoundaryCondition) ||
+        istringEqual("Foundation", outsideBoundaryCondition)){
           return true;
     }
 
@@ -1198,6 +1206,9 @@ namespace detail {
     } else if (this->surfacePropertyOtherSideConditionsModel()){
       bool test = this->setOutsideBoundaryCondition("OtherSideConditionsModel", driverMethod);
       OS_ASSERT(test);
+    }else if (this->adjacentFoundation()){
+      bool test = this->setOutsideBoundaryCondition("Foundation", driverMethod);
+      OS_ASSERT(test);      
     }else if (istringEqual("Floor", this->surfaceType())){
       bool test = this->setOutsideBoundaryCondition("Ground", driverMethod);
       OS_ASSERT(test);
@@ -1228,7 +1239,8 @@ namespace detail {
               istringEqual("GroundBasementPreprocessorAverageWall", this->outsideBoundaryCondition()) ||
               istringEqual("GroundBasementPreprocessorAverageFloor", this->outsideBoundaryCondition()) ||
               istringEqual("GroundBasementPreprocessorUpperWall", this->outsideBoundaryCondition()) ||
-              istringEqual("GroundBasementPreprocessorLowerWall", this->outsideBoundaryCondition())){
+              istringEqual("GroundBasementPreprocessorLowerWall", this->outsideBoundaryCondition()) ||
+              istringEqual("Foundation", this->outsideBoundaryCondition())){
       bool test = this->setSunExposure("NoSun", driverMethod);
       OS_ASSERT(test);
     }else{
@@ -1264,7 +1276,8 @@ namespace detail {
                istringEqual("GroundBasementPreprocessorAverageWall", this->outsideBoundaryCondition()) ||
                istringEqual("GroundBasementPreprocessorAverageFloor", this->outsideBoundaryCondition()) ||
                istringEqual("GroundBasementPreprocessorUpperWall", this->outsideBoundaryCondition()) ||
-               istringEqual("GroundBasementPreprocessorLowerWall", this->outsideBoundaryCondition())){
+               istringEqual("GroundBasementPreprocessorLowerWall", this->outsideBoundaryCondition()) ||
+               istringEqual("Foundation", this->outsideBoundaryCondition())){
       bool test = this->setWindExposure("NoWind", driverMethod);
       OS_ASSERT(test);
     } else{
@@ -1829,8 +1842,60 @@ namespace detail {
 
     return result;
   }
+  
+  bool Surface_Impl::setAdjacentFoundation(const FoundationKiva& kiva) {
+    bool result = this->setPointer(OS_SurfaceFields::OutsideBoundaryConditionObject, kiva.handle());
+    OS_ASSERT(result);
+    result = this->setString(OS_SurfaceFields::OutsideBoundaryCondition, "Foundation");
+    OS_ASSERT(result);
+    return result;    
+  }
+  
+  boost::optional<FoundationKiva> Surface_Impl::adjacentFoundation() const {
+    return getObject<ModelObject>().getModelObjectTarget<FoundationKiva>(OS_SurfaceFields::OutsideBoundaryConditionObject);
+  }
+  
+  void Surface_Impl::resetAdjacentFoundation() {
+    boost::optional<FoundationKiva> adjacentFoundation = this->adjacentFoundation();
+    if (adjacentFoundation){
+      bool result = setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
+      OS_ASSERT(result);
+      this->assignDefaultBoundaryCondition();
+      this->assignDefaultSunExposure();
+      this->assignDefaultWindExposure();
+    }    
+  }
 
+  boost::optional<SurfacePropertyExposedFoundationPerimeter> Surface_Impl::createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double exposedPerimeter) {
+    Surface thisSurface = getObject<Surface>();
+    std::vector<SurfacePropertyExposedFoundationPerimeter> props = thisSurface.getModelObjectSources<SurfacePropertyExposedFoundationPerimeter>(SurfacePropertyExposedFoundationPerimeter::iddObjectType());
+    if (!props.empty()) {
+      return boost::none;
+    }    
+    
+    SurfacePropertyExposedFoundationPerimeter prop(thisSurface, exposedPerimeterCalculationMethod, exposedPerimeter);
+    return prop;
+  }
+  
+  boost::optional<SurfacePropertyExposedFoundationPerimeter> Surface_Impl::surfacePropertyExposedFoundationPerimeter() const {
+    std::vector<SurfacePropertyExposedFoundationPerimeter> props = getObject<ModelObject>().getModelObjectSources<SurfacePropertyExposedFoundationPerimeter>(SurfacePropertyExposedFoundationPerimeter::iddObjectType());
+    if (props.empty()) {
+      // no error
+    } else if (props.size() == 1) {
+      return props[0];
+    } else {
+      // error
+    }
+    return boost::none;
+  }
 
+  void Surface_Impl::resetSurfacePropertyExposedFoundationPerimeter() {
+    boost::optional<SurfacePropertyExposedFoundationPerimeter> prop = this->surfacePropertyExposedFoundationPerimeter();
+    if (prop) {
+      prop->remove();
+    }
+  }
+  
 } // detail
 
 Surface::Surface(const std::vector<Point3d>& vertices, const Model& model)
@@ -2114,6 +2179,30 @@ std::vector<ShadingSurfaceGroup> Surface::shadingSurfaceGroups() const
 std::vector<Surface> Surface::splitSurfaceForSubSurfaces()
 {
   return getImpl<detail::Surface_Impl>()->splitSurfaceForSubSurfaces();
+}
+
+bool Surface::setAdjacentFoundation(const FoundationKiva& kiva) {
+  return getImpl<detail::Surface_Impl>()->setAdjacentFoundation(kiva);
+}
+
+boost::optional<FoundationKiva> Surface::adjacentFoundation() const {
+  return getImpl<detail::Surface_Impl>()->adjacentFoundation();
+}
+
+void Surface::resetAdjacentFoundation() {
+  return getImpl<detail::Surface_Impl>()->resetAdjacentFoundation();
+}
+
+boost::optional<SurfacePropertyExposedFoundationPerimeter> Surface::createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double exposedPerimeter) {
+  return getImpl<detail::Surface_Impl>()->createSurfacePropertyExposedFoundationPerimeter(exposedPerimeterCalculationMethod, exposedPerimeter);
+}
+
+boost::optional<SurfacePropertyExposedFoundationPerimeter> Surface::surfacePropertyExposedFoundationPerimeter() const {
+  return getImpl<detail::Surface_Impl>()->surfacePropertyExposedFoundationPerimeter();
+}
+
+void Surface::resetSurfacePropertyExposedFoundationPerimeter() {
+  getImpl<detail::Surface_Impl>()->resetSurfacePropertyExposedFoundationPerimeter();
 }
 
 /// @cond

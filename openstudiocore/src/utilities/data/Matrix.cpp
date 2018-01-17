@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -362,7 +362,7 @@ namespace openstudio{
     double tol = 0.001;
 
     std::vector<std::vector<unsigned> > result;
-    
+
     unsigned N = matrix.size1();
     if (N != matrix.size2()){
       return result;
@@ -395,7 +395,7 @@ namespace openstudio{
     // raise A to the Nth power, maximum distance between two nodes
     for (unsigned i = 0; i < N; ++i){
       A = prod(A,A);
-    } 
+    }
 
     std::set<unsigned> added;
     for (unsigned i = 0; i < N; ++i){

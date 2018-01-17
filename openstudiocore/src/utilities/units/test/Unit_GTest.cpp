@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -141,7 +141,7 @@ TEST_F(UnitsFixture,Unit_StringOutput)
   Unit u4(3);
   u4.setBaseUnitExponent("s",-1);
   testStreamOutput("1/ms",u4);
-  
+
   // pull scale into numerator for prettyString, and into denominator for standardString
   Unit u5(3,"Hz");
   u5.setBaseUnitExponent("s",-1);
@@ -248,6 +248,6 @@ TEST_F(UnitsFixture,Unit_ArithmeticOperators)
 TEST_F(UnitsFixture,UnitString_Tests)
 {
    IddUnitString s1 (std::string ("m3/s"));
-   
+
    EXPECT_TRUE(s1.toStandardUnitString () == "m^3/s");
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -299,43 +299,43 @@ namespace openstudio{
     double e = E1.dot(BminusP);
     // double f = BminusP.dot(BminusP); // unused
 
-    double det = a*c-b*b; 
-    double s = b*e-c*d; 
+    double det = a*c-b*b;
+    double s = b*e-c*d;
     double t = b*d-a*e;
 
     Point3d closestPoint;
 
     if ( s+t <= det ) {
-      if ( s < 0 ) {  
-        if ( t < 0 ) { 
-          //region 4, closest to point triangle[0] 
+      if ( s < 0 ) {
+        if ( t < 0 ) {
+          //region 4, closest to point triangle[0]
           return getDistance(point, triangle[0]);
-        } else { 
-          //region 3, closest to line triangle[0] to triangle[2] 
+        } else {
+          //region 3, closest to line triangle[0] to triangle[2]
           std::vector<Point3d> line;
           line.push_back(triangle[0]);
           line.push_back(triangle[2]);
-          return getDistancePointToLineSegment(point, line); 
-        } 
-      } else if ( t < 0 ) { 
-        //region 5, closest to line triangle[0] to triangle[1] 
+          return getDistancePointToLineSegment(point, line);
+        }
+      } else if ( t < 0 ) {
+        //region 5, closest to line triangle[0] to triangle[1]
         std::vector<Point3d> line;
         line.push_back(triangle[0]);
         line.push_back(triangle[1]);
         return getDistancePointToLineSegment(point, line);
-      } else { 
+      } else {
         //region 0, closest point is inside triangle
         double invDet = 1.0/det;
         closestPoint = B + invDet*s*E0 + invDet*t*E1;
       }
     } else {
-      if ( s < 0 ) { 
+      if ( s < 0 ) {
         //region 2, closest to point triangle[2]
         return getDistance(point, triangle[2]);
-      } else if ( t < 0 ) { 
+      } else if ( t < 0 ) {
         //region 6, closest to point triangle[1]
         return getDistance(point, triangle[1]);
-      } else { 
+      } else {
         //region 1, closest to line triangle[1] to triangle[2]
         std::vector<Point3d> line;
         line.push_back(triangle[1]);
@@ -343,7 +343,7 @@ namespace openstudio{
         return getDistancePointToLineSegment(point, line);
       }
     }
-  
+
     Vector3d diff = point-closestPoint;
     return diff.length();
   }
@@ -552,7 +552,7 @@ namespace openstudio{
     }
     return result;
   }
-  
+
   std::vector<Point3d> reverse(const Point3dVector& vertices)
   {
     std::vector<Point3d> result(vertices);
@@ -763,7 +763,7 @@ namespace openstudio{
         }
       }
     }
-    
+
     if (doDaylightGlass){
       daylightingVertices.push_back(Point3d(daylightingMinX, daylightingMinY + daylightingHeight, 0));
       daylightingVertices.push_back(Point3d(daylightingMinX, daylightingMinY, 0));

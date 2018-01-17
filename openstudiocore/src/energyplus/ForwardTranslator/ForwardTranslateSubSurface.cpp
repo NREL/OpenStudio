@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -64,7 +64,7 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateSubSurface( model::SubSurface & modelObject )
 {
   IdfObject idfObject(openstudio::IddObjectType::FenestrationSurface_Detailed);
-  
+
   idfObject.setString(FenestrationSurface_DetailedFields::Name, modelObject.name().get());
 
   std::string subSurfaceType = modelObject.subSurfaceType();
@@ -150,7 +150,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSubSurface( model::SubSur
   for (const Point3d& point : modelObject.vertices()){
     IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
     if (group.empty()) {
-      LOG(Error,"Currently unable to translate " << modelObject.briefDescription() 
+      LOG(Error,"Currently unable to translate " << modelObject.briefDescription()
           << ", because it has more vertices than allowed by EnergyPlus.");
       return boost::none;
     }
@@ -161,7 +161,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSubSurface( model::SubSur
     group.setDouble(1, newPoint.y());
     group.setDouble(2, newPoint.z());
   }
-  
+
   m_idfObjects.push_back(idfObject);
 
   return idfObject;

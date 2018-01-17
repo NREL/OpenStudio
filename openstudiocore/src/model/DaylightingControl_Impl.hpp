@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -45,31 +45,31 @@ namespace detail {
 
   /** DaylightingControl_Impl is a SpaceItem_Impl that is the implementation class for DaylightingControl.*/
   class MODEL_API DaylightingControl_Impl : public SpaceItem_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -147,22 +147,22 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setPositionXCoordinate(double positionXCoordinate);
+    bool setPositionXCoordinate(double positionXCoordinate);
 
-    void setPositionYCoordinate(double positionYCoordinate);
+    bool setPositionYCoordinate(double positionYCoordinate);
 
-    void setPositionZCoordinate(double positionZCoordinate);
+    bool setPositionZCoordinate(double positionZCoordinate);
 
 
-    void setPsiRotationAroundXAxis(double psiRotationAroundXAxis);
+    bool setPsiRotationAroundXAxis(double psiRotationAroundXAxis);
 
     void resetPsiRotationAroundXAxis();
 
-    void setThetaRotationAroundYAxis(double thetaRotationAroundYAxis);
+    bool setThetaRotationAroundYAxis(double thetaRotationAroundYAxis);
 
     void resetThetaRotationAroundYAxis();
 
-    void setPhiRotationAroundZAxis(double phiRotationAroundZAxis);
+    bool setPhiRotationAroundZAxis(double phiRotationAroundZAxis);
 
     void resetPhiRotationAroundZAxis();
 
@@ -182,7 +182,7 @@ namespace detail {
 
     void resetMinimumLightOutputFractionforContinuousDimmingControl();
 
-    void setNumberofSteppedControlSteps(int numberofSteppedControlSteps);
+    bool setNumberofSteppedControlSteps(int numberofSteppedControlSteps);
 
     void resetNumberofSteppedControlSteps();
 
@@ -214,7 +214,7 @@ namespace detail {
 
     bool aimAt(const Point3d& point);
 
-   protected: 
+   protected:
 
     // index of the space name
     virtual int spaceIndex() const override;
@@ -228,5 +228,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_DAYLIGHTINGCONTROL_IMPL_HPP
-
+#endif // MODEL_DAYLIGHTINGCONTROL_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,13 +44,13 @@ namespace detail {
 
 } // detail
 
-/** CoilHeatingLowTempRadiantConstFlow is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow'. 
+/** CoilHeatingLowTempRadiantConstFlow is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow'.
    The object has following four schedules: heating high and low water temperature schedules, heating high and low control temperature schedules. These schedules
-   define the high and low limits of a zone radiant system's desired inlet/supply heating water temperatures and the high and low limits of a zone's heating control temperature setpoints. 
-   If the space radiant heating control temperature drops below the heating control temperature setpoint low limit, the inlet heating water temperature is increased to its high limit. If the space 
+   define the high and low limits of a zone radiant system's desired inlet/supply heating water temperatures and the high and low limits of a zone's heating control temperature setpoints.
+   If the space radiant heating control temperature drops below the heating control temperature setpoint low limit, the inlet heating water temperature is increased to its high limit. If the space
    radiant heating control temperature exceeds its heating control temperature high limit, the radiant heating loop is shut off. If the space radiant heating control temperature varies between
    the heating control temperature high and low limits, the desired inlet heating water temperature is linearly interpolated between the high and low heating water temperature limits. The desired water
-   temperature is achieved by the zone 3-way valve for mixing/bypassing controls.  
+   temperature is achieved by the zone 3-way valve for mixing/bypassing controls.
   */
 
 class MODEL_API CoilHeatingLowTempRadiantConstFlow : public StraightComponent {
@@ -58,7 +58,7 @@ class MODEL_API CoilHeatingLowTempRadiantConstFlow : public StraightComponent {
   /** @name Constructors and Destructors */
   //@{
 
-  CoilHeatingLowTempRadiantConstFlow(const Model& model, 
+  CoilHeatingLowTempRadiantConstFlow(const Model& model,
                                      Schedule& heatingHighWaterTemperatureSchedule,
                                      Schedule& heatingLowWaterTemperatureSchedule,
                                      Schedule& heatingHighControlTemperatureSchedule,
@@ -73,7 +73,7 @@ class MODEL_API CoilHeatingLowTempRadiantConstFlow : public StraightComponent {
   /** @name Getters */
   //@{
 
-  
+
   boost::optional<Schedule> heatingHighWaterTemperatureSchedule() const;
 
   boost::optional<Schedule> heatingLowWaterTemperatureSchedule() const;

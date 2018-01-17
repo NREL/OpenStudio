@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -59,7 +59,7 @@ typedef std::pair<std::string,std::string> StringPair;
 UTILITIES_API std::vector<std::string> eraseEmptyElements(const std::vector<std::string>& sv);
 
 /** Helper function to cast a whole vector of objects. \relates IdfObject */
-template<typename T, typename U> 
+template<typename T, typename U>
 std::vector<T> castVector(const std::vector<U>& objects) {
   std::vector<T> result;
   for (auto & object : objects) {

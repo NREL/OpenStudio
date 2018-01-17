@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -275,7 +275,7 @@ std::vector<openstudio::IddObjectType> TreeViewWidget::getAllowableChildTypes()
     TreeModel * model = static_cast<TreeModel *>(mTreeView->model());
     OptionalModelObject temp = model->modelAtIndex(rowList.at(0));
     OptionalParentObject tempParent;
-    if( temp && 
+    if( temp &&
         ( tempParent = temp->optionalCast<ParentObject>() ) )
     {
       allowableChildTypes = tempParent->allowableChildTypes();
@@ -299,7 +299,7 @@ void TreeViewWidget::setExpandedIndexHandles()
   mExpandedIndexHandles.clear();
 
   std::pair<QModelIndex, openstudio::Handle> expandedIndexHandle;
-  
+
   QModelIndex index;
   QModelIndexList persistentIndexList = mTreeModel->getPersistentIndexList();
 

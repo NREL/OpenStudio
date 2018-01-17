@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -43,20 +43,20 @@ namespace detail {
 
   /** SizingPlant_Impl is a ModelObject_Impl that is the implementation class for SizingPlant.*/
   class MODEL_API SizingPlant_Impl : public ModelObject_Impl {
-    
 
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
+
+
+
+
+
+
+
+
+
+
 
     public:
 
@@ -100,7 +100,7 @@ namespace detail {
 
     bool setLoopType(std::string loopType);
 
-    void setDesignLoopExitTemperature(double designLoopExitTemperature);
+    bool setDesignLoopExitTemperature(double designLoopExitTemperature);
 
     bool setDesignLoopExitTemperature(const Quantity& designLoopExitTemperature);
 
@@ -143,4 +143,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SIZINGPLANT_IMPL_HPP
-

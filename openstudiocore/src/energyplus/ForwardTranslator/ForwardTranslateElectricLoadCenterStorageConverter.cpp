@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -53,9 +53,9 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterStorageConverter(model::ElectricLoadCenterStorageConverter & modelObject)
 {
-  
+
   boost::optional<double> optD;
-  
+
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Storage_Converter, modelObject);
 
   if (modelObject.name()) {
@@ -72,20 +72,20 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterStorage
 
   // PowerConversionEfficiencyMethod, string
   idfObject.setString(ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod, modelObject.powerConversionEfficiencyMethod());
-  
-  
+
+
   // SimpleFixedEfficiency, optD
   optD = modelObject.simpleFixedEfficiency();
   if (optD) {
     idfObject.setDouble(ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency, *optD);
   }
-  
+
   // designMaximumContinuousInputPower, optD
   optD = modelObject.designMaximumContinuousInputPower();
   if (optD) {
     idfObject.setDouble(ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency, *optD);
   }
-  
+
   // efficiencyFunctionofPowerCurveName, optCurve
   boost::optional<Curve> effFPower = modelObject.efficiencyFunctionofPowerCurve();
   if (effFPower) {
@@ -93,13 +93,13 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterStorage
       idfObject.setString(ElectricLoadCenter_Storage_ConverterFields::EfficiencyFunctionofPowerCurveName, _curve->name().get());
     }
   }
-  
+
   // ancillaryPowerConsumedInStandby, double
   {
     double value = modelObject.ancillaryPowerConsumedInStandby();
     idfObject.setDouble(ElectricLoadCenter_Storage_ConverterFields::AncillaryPowerConsumedInStandby, value);
   }
-  
+
   // ZoneName
   if (modelObject.thermalZone() && modelObject.thermalZone().get().name()) {
     idfObject.setString(ElectricLoadCenter_Storage_ConverterFields::ZoneName, modelObject.thermalZone().get().name().get());
@@ -110,7 +110,7 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterStorage
     double value = modelObject.radiativeFraction();
     idfObject.setDouble(ElectricLoadCenter_Storage_ConverterFields::RadiativeFraction, value);
   }
-  
+
   return idfObject;
 }
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -129,8 +129,8 @@ void ScheduleDialog::createLayout()
 
   // DLM: put all schedule types in the model or just the ones found by the registry
   //scheduleTypeLimits = m_model.getConcreteModelObjects<model::ScheduleTypeLimits>();
-  //scheduleTypeLimits.insert(scheduleTypeLimits.end(), scheduleTypeLimitsSet.begin(), scheduleTypeLimitsSet.end()); 
-  
+  //scheduleTypeLimits.insert(scheduleTypeLimits.end(), scheduleTypeLimitsSet.begin(), scheduleTypeLimitsSet.end());
+
   //std::sort(scheduleTypeLimits.begin(), scheduleTypeLimits.end(), WorkspaceObjectNameLess());
   //OS_ASSERT(!scheduleTypeLimits.empty());
 
@@ -174,7 +174,7 @@ void ScheduleDialog::createLayout()
 
     hLayout->addWidget(m_scheduleTypeComboBox);
     hLayout->addStretch();
-   
+
     vLayout->addLayout(hLayout);
 
     vertLayout->addLayout(vLayout);
@@ -260,7 +260,7 @@ void ScheduleDialog::onCurrentIndexChanged(int index)
     } else if (!units->standardString().empty()){
       temp = toQString(units->standardString());
     }
-    
+
     if (temp.isEmpty()){
       unitsLabel.append(" (");
       unitsLabel.append("unitless");

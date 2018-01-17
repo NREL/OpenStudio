@@ -25,8 +25,8 @@ public:
         penWidth( 0 ),
         minExtent( 0.0 )
     {
-        components = QwtAbstractScaleDraw::Backbone 
-            | QwtAbstractScaleDraw::Ticks 
+        components = QwtAbstractScaleDraw::Backbone
+            | QwtAbstractScaleDraw::Ticks
             | QwtAbstractScaleDraw::Labels;
 
         tickLength[QwtScaleDiv::MinorTick] = 4.0;

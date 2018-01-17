@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -46,7 +46,7 @@
  * of value / string mappings
  * Basic Result:
  * \code
- *   "String" 
+ *   "String"
  * \endcode
  *
  * "String" will be the description of the element if it exists
@@ -68,7 +68,7 @@
  * Helper macro used by OPENSTUDIO_ENUM to convert a string value into an enumeration domain value.
  * The "" empty string is used in case no description exists. The C compiler has no problem with a string
  * constant like "" "Description" it just concatenates the two strings.
- * 
+ *
  * Basic Result:
  * \code
  *   { _enum_name::BOOST_PP_SEQ_ELEM(0, _elem), BOOST_PP_STRINGIZE(BOOST_PP_SEQ_ELEM(0, _elem)), "" OPENSTUDIO_ENUM_BUILD_ARRAY_PART(0, _elem, 1)  },
@@ -94,7 +94,7 @@
  *
  * It takes 1 or two calls to piece the parts together. See OPENSTUDIO_ENUM_DOMAIN_ELEM for the
  * macro that calls this macro.
- * \sa OPENSTUDIO_ENUM_DOMAIN_ELEM 
+ * \sa OPENSTUDIO_ENUM_DOMAIN_ELEM
  */
 #define OPENSTUDIO_ENUM_DOMAIN_ELEM_PART(_r, _enum_name, _i, _elem) \
     BOOST_PP_EXPR_IF(BOOST_PP_EQUAL(_i, 0), _elem) \
@@ -105,14 +105,14 @@
  * (Item)(Description)(Value) and calling OPENSTUDIO_ENUM_DOMAIN_ELEM_PART
  * on each element
  * Basic Result:
- *   OPENSTUDIO_ENUM_DOMAIN_ELEM_PART(_elem, 0) OPENSTUDIO_ENUM_DOMAIN_ELEM_PART(_elem, 2) , 
+ *   OPENSTUDIO_ENUM_DOMAIN_ELEM_PART(_elem, 0) OPENSTUDIO_ENUM_DOMAIN_ELEM_PART(_elem, 2) ,
  */
 #define OPENSTUDIO_ENUM_DOMAIN_ELEM(_r, _enum_name, _elem) \
   BOOST_PP_SEQ_FOR_EACH_I(OPENSTUDIO_ENUM_DOMAIN_ELEM_PART, _enum_name, _elem) \
-  BOOST_PP_COMMA() 
+  BOOST_PP_COMMA()
 
 
-/** OPENSTUDIO_ENUM main implementation. The possible inputs are broken into 7 sets 
+/** OPENSTUDIO_ENUM main implementation. The possible inputs are broken into 7 sets
  *  due to compiler limitations for how long a macro parameter may be and our use
  *  of extremely long enumerations. See OPENSTUDIO_ENUM comments for detailed usage.
  */
@@ -175,14 +175,14 @@ class _enum_name : public ::EnumBase<_enum_name> \
     } \
   }; \
   inline std::ostream &operator<<(std::ostream &os, const _enum_name &e) { return os << e.valueName() << "(" << e.value() << ")";} \
-  typedef boost::optional<_enum_name> Optional##_enum_name; 
+  typedef boost::optional<_enum_name> Optional##_enum_name;
 
 /**
- * OPENSTUDIO_ENUM provides a mechanism for defining strongly typed enumeration classes with built-in 
+ * OPENSTUDIO_ENUM provides a mechanism for defining strongly typed enumeration classes with built-in
  * string conversion. The first argument to the macro is _enum_name, which becomes the name of a class
- * deriving from \link EnumBase EnumBase<_enum_name> \endlink (whose public member functions are 
- * directly available to the generated class). The second (and final) macro argument is a list of 
- * element names. Each item in that list is itself a list. The simplest example is a list of 
+ * deriving from \link EnumBase EnumBase<_enum_name> \endlink (whose public member functions are
+ * directly available to the generated class). The second (and final) macro argument is a list of
+ * element names. Each item in that list is itself a list. The simplest example is a list of
  * elements that only have one piece of information provided:
  * \code
  * OPENSTUDIO_ENUM(MyEnumeration,
@@ -190,16 +190,16 @@ class _enum_name : public ::EnumBase<_enum_name> \
  *   ((Item2))
  *   ((Item3))
  * );
- * \endcode   
+ * \endcode
  *
- * This example defines a class, MyEnumeration, containing a C++ enum that naturally provides named 
+ * This example defines a class, MyEnumeration, containing a C++ enum that naturally provides named
  * integer constants corresponding to each element in the list, for example
  * \code
  * assert(MyEnumeration::Item1 == 0)
  * assert(MyEnumeration::Item2 == 1)
  * assert(MyEnumeration::item3 == 1)
  * \endcode
- * The base class EnumBase<MyEnumeration> provides methods for converting between these integers 
+ * The base class EnumBase<MyEnumeration> provides methods for converting between these integers
  * and their associated strings, and provides class introspection:
  * \code
  * MyEnumeration myEnumValue("item1");
@@ -209,16 +209,16 @@ class _enum_name : public ::EnumBase<_enum_name> \
  *
  * std::cout << "List of possible values for class " << MyEnumeration::enumName() << ":" << std::endl
  * std::set<int> allValues = MyEnumeration::getValues();
- * for (std::set<int>::const_iterator it = allValues.begin(), itEnd = allValues.end(); 
- *      it != itEnd; ++it) 
+ * for (std::set<int>::const_iterator it = allValues.begin(), itEnd = allValues.end();
+ *      it != itEnd; ++it)
  * {
  *   MyEnumeration nextValue(*it);
  *   std::cout << "  " << nextValue << std::endl;
  * }
  * \endcode
- * 
- * To specify non-default description strings and integer values, provide an expanded list for 
- * each enumeration element: 
+ *
+ * To specify non-default description strings and integer values, provide an expanded list for
+ * each enumeration element:
  * \code
  * OPENSTUDIO_ENUM(MyEnumerationComplex,
  *   ((Item1)(First Item)(-1))
@@ -227,7 +227,7 @@ class _enum_name : public ::EnumBase<_enum_name> \
  *   ((Item4)(Fourth Item)(100))
  * );
  * \endcode
- * (As shown in the MyEnumeration example, if a description is not provided, the description 
+ * (As shown in the MyEnumeration example, if a description is not provided, the description
  * string defaults to the element's name.)
  *
  * Note that some compilers do not allow you to leave a blank item in a list, so, if you want to provide
@@ -240,13 +240,13 @@ class _enum_name : public ::EnumBase<_enum_name> \
  *
  * If a value is not provided, normal compiler rules for how enumeration values are assigned apply. They start
  * at 0, and automatically increment by one for each value not explicitly defined. See your compiler
- * documentation for more details. 
+ * documentation for more details.
  *
  * Taking our earlier example, "MyEnumerationComplex", the compiler generates the following code,
  * which defines a class in the current namespace called MyEnumerationComplex, with the structure:
  * \code
  * class MyEnumerationComplex : public EnumBase<MyEnumerationComplex> {
- *  public: 
+ *  public:
  *   enum domain
  *   {
  *     Item1 = -1 , Item2 , Item3 , Item4 = 100 ,
@@ -281,7 +281,7 @@ class _enum_name : public ::EnumBase<_enum_name> \
  *   friend class EnumBase<MyEnumerationComplex>;
  *   typedef std::pair<std::string, int> PT;
  *   typedef std::vector<PT> VecType;
- * 
+ *
  *   static VecType buildStringVec(bool isd)
  *   {
  *     struct evalue
@@ -303,7 +303,7 @@ class _enum_name : public ::EnumBase<_enum_name> \
  *     {
  *       if (isd)
  *       {
- *         std::string description = a[i].description; 
+ *         std::string description = a[i].description;
  *         if (!description.empty())
  *         {
  *           v.push_back(PT(description, a[i].value));
@@ -330,7 +330,7 @@ class _enum_name : public ::EnumBase<_enum_name> \
  *
  * typedef boost::optional<MyEnumerationComplex> OptionalMyEnumerationComplex;
  * \endcode
- * 
+ *
  * The implementation of OPENSTUDIO_ENUM is heavily dependent on the Boost Preprocessor library.
  * \sa http://www.boost.org/doc/libs/1_40_0/libs/preprocessor/doc/index.html
  */

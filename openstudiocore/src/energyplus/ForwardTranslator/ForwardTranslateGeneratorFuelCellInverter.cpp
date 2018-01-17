@@ -48,7 +48,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellInverter
   boost::optional<std::string> s;
   boost::optional<double> d;
   boost::optional<CurveQuadratic> curvequad;
-  
+
   IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_Inverter, modelObject);
   //Name
   s = modelObject.name();
@@ -75,7 +75,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellInverter
   }
 
   return pcm;
-  
+
 }
 
 } // energyplus

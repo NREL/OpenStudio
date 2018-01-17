@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -650,8 +650,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void StandardGlazing_Impl::setSolarDiffusing(bool solarDiffusing) {
-    setBooleanFieldValue(OS_WindowMaterial_GlazingFields::SolarDiffusing, solarDiffusing);
+  bool StandardGlazing_Impl::setSolarDiffusing(bool solarDiffusing) {
+    return setBooleanFieldValue(OS_WindowMaterial_GlazingFields::SolarDiffusing, solarDiffusing);;
   }
 
   void StandardGlazing_Impl::resetSolarDiffusing() {
@@ -1159,8 +1159,13 @@ void StandardGlazing::resetDirtCorrectionFactorforSolarandVisibleTransmittance()
   getImpl<detail::StandardGlazing_Impl>()->resetDirtCorrectionFactorforSolarandVisibleTransmittance();
 }
 
-void StandardGlazing::setSolarDiffusing(bool solarDiffusing) {
-  getImpl<detail::StandardGlazing_Impl>()->setSolarDiffusing(solarDiffusing);
+bool StandardGlazing::setSolarDiffusing(bool solarDiffusing) {
+  return getImpl<detail::StandardGlazing_Impl>()->setSolarDiffusing(solarDiffusing);
+}
+
+void StandardGlazing::setSolarDiffusingNoFail(bool solarDiffusing) {
+  bool result = getImpl<detail::StandardGlazing_Impl>()->setSolarDiffusing(solarDiffusing);
+  OS_ASSERT(result);
 }
 
 void StandardGlazing::resetSolarDiffusing() {
@@ -1207,4 +1212,3 @@ StandardGlazing::StandardGlazing(std::shared_ptr<detail::StandardGlazing_Impl> i
 
 } // model
 } // openstudio
-

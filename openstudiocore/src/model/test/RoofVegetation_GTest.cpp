@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -151,7 +151,7 @@ TEST_F(ModelFixture,RoofVegetation_ConductivityofDrySoil_Quantity) {
 
   Unit siUnits = roofVegetation.getConductivityofDrySoil(false).units(); // Get SI units.
   Unit ipUnits = roofVegetation.getConductivityofDrySoil(true).units(); // Get IP units.
-  
+
   // \units W / m - K
   // \ip - units Btu - in / hr - ft2 - R
   // Bounds: 0.2 <= value <= 1.5 W / m - K
@@ -162,7 +162,7 @@ TEST_F(ModelFixture,RoofVegetation_ConductivityofDrySoil_Quantity) {
 
   Quantity testQ(value, siUnits);
   EXPECT_TRUE(roofVegetation.setConductivityofDrySoil(testQ));
-  
+
   testQ = Quantity(value, ipUnits);
   EXPECT_FALSE(roofVegetation.setConductivityofDrySoil(testQ));
 
@@ -201,16 +201,16 @@ TEST_F(ModelFixture,RoofVegetation_SpecificHeatofDrySoil_Quantity) {
   // TODO: Check constructor.
   RoofVegetation roofVegetation(model);
 
-  boost::optional<Unit> osiUnits = createUnit("m^2/s^2*K"); 
+  boost::optional<Unit> osiUnits = createUnit("m^2/s^2*K");
   ASSERT_TRUE(osiUnits);
   Unit siUnits = roofVegetation.getSpecificHeatofDrySoil(false).units(); // Get SI units.
   EXPECT_EQ(osiUnits->standardString(),siUnits.standardString());
 
   // m^2/s^2*K is equivalent to J/kg*K
-  osiUnits = createUnit("J/kg*K"); 
+  osiUnits = createUnit("J/kg*K");
   ASSERT_TRUE(osiUnits);
   EXPECT_EQ(osiUnits->standardString(),siUnits.standardString());
-  
+
   boost::optional<Unit> oipUnits = createUnit("Btu/R*lb_m");
   ASSERT_TRUE(oipUnits);
   Unit ipUnits = roofVegetation.getSpecificHeatofDrySoil(true).units(); // Get IP units.
@@ -362,7 +362,7 @@ TEST_F(ModelFixture,RoofVegetation_InitialVolumetricMoistureContentoftheSoilLaye
 
 TEST_F(ModelFixture, RoofVegetation_StandardsInformation) {
   Model model;
-  
+
   RoofVegetation roofVegetation(model);
   StandardsInformationMaterial info = roofVegetation.standardsInformation();
 

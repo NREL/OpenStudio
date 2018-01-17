@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,13 +42,13 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateWindowPropertyFrameAndDivider( 
+boost::optional<IdfObject> ForwardTranslator::translateWindowPropertyFrameAndDivider(
   WindowPropertyFrameAndDivider & modelObject)
 {
   IdfObject idfObject(IddObjectType::WindowProperty_FrameAndDivider);
   m_idfObjects.push_back(idfObject);
 
-  // DLM: do we need to make sure this is unique? not empty?  
+  // DLM: do we need to make sure this is unique? not empty?
   boost::optional<std::string> s = modelObject.name();
   if (s){
     idfObject.setName(*s);

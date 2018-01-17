@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -127,7 +127,7 @@ class MODEL_API EvaporativeCoolerIndirectResearchSpecial : public StraightCompon
 
   bool setCoolerMaximumEffectiveness(double coolerMaximumEffectiveness);
 
-  void setRecirculatingWaterPumpPowerConsumption(double recirculatingWaterPumpPowerConsumption);
+  bool setRecirculatingWaterPumpPowerConsumption(double recirculatingWaterPumpPowerConsumption);
 
   void autosizeRecirculatingWaterPumpPowerConsumption();
 
@@ -141,7 +141,7 @@ class MODEL_API EvaporativeCoolerIndirectResearchSpecial : public StraightCompon
 
   bool setSecondaryFanDeltaPressure(double secondaryFanDeltaPressure);
 
-  void setDewpointEffectivenessFactor(double dewpointEffectivenessFactor);
+  bool setDewpointEffectivenessFactor(double dewpointEffectivenessFactor);
 
   bool setDriftLossFraction(double driftLossFraction);
 
@@ -163,15 +163,15 @@ class MODEL_API EvaporativeCoolerIndirectResearchSpecial : public StraightCompon
 
   void resetDrybulbEffectivenessFlowRatioModifierCurve();
 
-  void setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
+  bool setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
 
   bool setWaterPumpPowerModifierCurve(const Curve& curve);
 
   void resetWaterPumpPowerModifierCurve();
 
-  void setSecondaryAirFlowScalingFactor(double secondaryAirFlowScalingFactor);
+  bool setSecondaryAirFlowScalingFactor(double secondaryAirFlowScalingFactor);
 
-  void setSecondaryAirFanDesignPower(double secondaryAirFanDesignPower);
+  bool setSecondaryAirFanDesignPower(double secondaryAirFanDesignPower);
 
   void autosizeSecondaryAirFanDesignPower();
 
@@ -224,5 +224,4 @@ typedef std::vector<EvaporativeCoolerIndirectResearchSpecial> EvaporativeCoolerI
 } // model
 } // openstudio
 
-#endif // MODEL_EVAPORATIVECOOLERINDIRECTRESEARCHSPECIAL_HPP
-
+#endif // MODEL_EVAPORATIVECOOLERINDIRECTRESEARCHSPECIAL_HPP

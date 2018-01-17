@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -31,32 +31,32 @@ require 'openstudio'
 require 'minitest/autorun'
 
 class Workspace_Test < MiniTest::Unit::TestCase
-  
+
   # def setup
   # end
 
   # def teardown
   # end
-  
+
   def test_Workspace
-  
+
     # load IdfFile
     idfPath = OpenStudio::Path.new($OpenStudio_ResourcePath + "resultsviewer/SmallOffice/SmallOffice.idf")
     puts idfPath
     assert(OpenStudio::exists(idfPath))
-    
+
     oIdfFile = OpenStudio::IdfFile.load(idfPath,"EnergyPlus".to_IddFileType)
     assert(oIdfFile.empty? == false)
     idfFile = oIdfFile.get
     assert(idfFile.objects().size() > 0)
-  
+
     # Construct workspace
     workspace = OpenStudio::Workspace.new(idfFile)
-    
+
     # get zones
     zones = workspace.getObjectsByType("Zone".to_IddObjectType)
     assert_equal(6, zones.size())
-    
+
   end
 
 end

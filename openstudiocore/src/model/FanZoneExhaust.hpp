@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -59,7 +59,7 @@ class MODEL_API FanZoneExhaust : public ZoneHVACComponent {
   static IddObjectType iddObjectType();
 
   static std::vector<std::string> systemAvailabilityManagerCouplingModeValues();
-  
+
   /** @name Getters */
   //@{
 
@@ -91,13 +91,13 @@ class MODEL_API FanZoneExhaust : public ZoneHVACComponent {
 
   bool setFanEfficiency(double fanEfficiency);
 
-  void setPressureRise(double pressureRise);
+  bool setPressureRise(double pressureRise);
 
   bool setMaximumFlowRate(double maximumFlowRate);
 
   void resetMaximumFlowRate();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   bool setFlowFractionSchedule(Schedule& schedule);
 
@@ -142,5 +142,4 @@ typedef std::vector<FanZoneExhaust> FanZoneExhaustVector;
 } // model
 } // openstudio
 
-#endif // MODEL_FANZONEEXHAUST_HPP
-
+#endif // MODEL_FANZONEEXHAUST_HPP

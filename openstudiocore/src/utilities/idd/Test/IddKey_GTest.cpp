@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -45,7 +45,7 @@ TEST_F(IddFixture,IddKey_Getters) {
   EXPECT_TRUE(f->properties().type == IddFieldType::ChoiceType);
   IddKeyVector keys = f->keys();
   EXPECT_EQ(static_cast<unsigned>(8),keys.size());
-  LOG(Info,"Keys for field " << Controller_OutdoorAirFields::EconomizerControlType 
+  LOG(Info,"Keys for field " << Controller_OutdoorAirFields::EconomizerControlType
       << ", " << f->name() << ", of IddObject " << obj.name() << ":");
   unsigned i = 0;
   for (IddKey& key : keys) {

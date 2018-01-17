@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -77,7 +77,7 @@ namespace sdd {
 
     model::ScheduleDay scheduleDay(model);
     scheduleDay.setName(name);
-   
+
     boost::optional<model::ScheduleTypeLimits> scheduleTypeLimits = model.getModelObjectByName<model::ScheduleTypeLimits>(type);
     bool isTemperature = false;
     if (type == "Temperature"){
@@ -224,7 +224,7 @@ namespace sdd {
         LOG(Error, "No Saturday schedule found for week schedule '" << name << "'");
       }
     }
-   
+
     if (!schDayHolRefElement.isNull()){
       boost::optional<model::ScheduleDay> scheduleDay = model.getModelObjectByName<model::ScheduleDay>(escapeName(schDayHolRefElement.text()));
       if (scheduleDay){
@@ -291,7 +291,7 @@ namespace sdd {
 
     model::ScheduleYear scheduleYear(model);
     scheduleYear.setName(name);
-    
+
     boost::optional<model::ScheduleTypeLimits> scheduleTypeLimits = model.getModelObjectByName<model::ScheduleTypeLimits>(type);
     if (scheduleTypeLimits){
       scheduleYear.setScheduleTypeLimits(*scheduleTypeLimits);

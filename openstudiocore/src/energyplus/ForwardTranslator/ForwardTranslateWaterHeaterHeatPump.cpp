@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -61,7 +61,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPump( 
+boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPump(
     WaterHeaterHeatPump & modelObject)
 {
   IdfObject idfObject(IddObjectType::WaterHeater_HeatPump_PumpedCondenser);
@@ -188,7 +188,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPump(
   std::string condOutletTankInletNodeName =
     modelObject.name().get() + " Condenser Outlet - Tank Inlet";
 
-  std::string tankOutletCondInletNodeName = 
+  std::string tankOutletCondInletNodeName =
     modelObject.name().get() + " Tank Outlet - Condenser Inlet";
 
   idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::CondenserWaterInletNodeName,tankOutletCondInletNodeName);
@@ -218,7 +218,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPump(
         auto outletNode = modelObject.outletNode();
         OS_ASSERT(outletNode);
         airOutletNodeName = outletNode->name().get();
-        
+
         inletAirZoneName = thermalZone->name().get();
         fanInletNodeName = modelObject.name().get() + " Evap Outlet - Fan Inlet";
         fanOutletNodeName = airOutletNodeName;
@@ -272,7 +272,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPump(
         auto outletNode = modelObject.outletNode();
         OS_ASSERT(outletNode);
         airOutletNodeName = outletNode->name().get();
-        
+
         inletAirZoneName = thermalZone->name().get();
         fanInletNodeName = airInletNodeName;
         fanOutletNodeName = modelObject.name().get() + " Fan Outlet - Evap Inlet";

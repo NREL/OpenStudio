@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -54,13 +54,13 @@ TEST_F(ModelFixture,ZoneHVACBaseboardConvectiveWater_Test) {
   CoilHeatingWaterBaseboard HCBaseboard(model);
    // test constructor
   ZoneHVACBaseboardConvectiveWater zoneHVACBBConv(model,sched,HCBaseboard);
-  
+
   // test set and get availibility schedule
   ScheduleConstant sched1(model);
   sched1.setValue(1.0);
   EXPECT_TRUE(zoneHVACBBConv.setAvailabilitySchedule(sched1));
   EXPECT_EQ(zoneHVACBBConv.availabilitySchedule(),sched1);
-  
+
   // test if ZoneHVACBaseboardConvectiveWater has a hot water coil
   CoilHeatingWaterBaseboard HCBaseboard1(model);
   zoneHVACBBConv.setHeatingCoil(HCBaseboard1);
@@ -74,7 +74,7 @@ TEST_F(ModelFixture,ZoneHVACBaseboardConvectiveWater_Test) {
   zoneHVACBBConv.addToThermalZone(thermalZone1);
   boost::optional<ThermalZone> test_ThermalZone = zoneHVACBBConv.thermalZone();
   EXPECT_EQ(*test_ThermalZone,thermalZone1);
-  
+
   //test remove a thermal zone
   //check to see it should have a thermal zone
   EXPECT_TRUE(zoneHVACBBConv.thermalZone());

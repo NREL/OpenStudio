@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -168,11 +168,11 @@ namespace detail {
 
     bool setOptimumPartLoadRatio(double optimumPartLoadRatio);
 
-    void setDesignCondenserInletTemperature(double designCondenserInletTemperature);
+    bool setDesignCondenserInletTemperature(double designCondenserInletTemperature);
 
-    void setCondenserInletTemperatureLowerLimit(double condenserInletTemperatureLowerLimit);
+    bool setCondenserInletTemperatureLowerLimit(double condenserInletTemperatureLowerLimit);
 
-    void setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit);
+    bool setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit);
 
     bool setDesignChilledWaterFlowRate(boost::optional<double> designChilledWaterFlowRate);
 
@@ -201,11 +201,11 @@ namespace detail {
     // TODO: This needs to be set automatically based on plant loop connected to it
     bool setGeneratorHeatSourceType(std::string generatorHeatSourceType);
 
-    void setDesignGeneratorFluidFlowRate(boost::optional<double> designGeneratorFluidFlowRate);
+    bool setDesignGeneratorFluidFlowRate(boost::optional<double> designGeneratorFluidFlowRate);
 
     void autosizeDesignGeneratorFluidFlowRate();
 
-    void setTemperatureLowerLimitGeneratorInlet(double temperatureLowerLimitGeneratorInlet);
+    bool setTemperatureLowerLimitGeneratorInlet(double temperatureLowerLimitGeneratorInlet);
 
     bool setDegreeofSubcoolinginSteamGenerator(double degreeofSubcoolinginSteamGenerator);
 
@@ -239,5 +239,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_CHILLERABSORPTIONINDIRECT_IMPL_HPP
-
+#endif // MODEL_CHILLERABSORPTIONINDIRECT_IMPL_HPP

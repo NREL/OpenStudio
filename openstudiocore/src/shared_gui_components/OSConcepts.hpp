@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -189,7 +189,7 @@ RetType OneConstParamOptionalProxy(FromDataType *t_from, const Param1 & t_param1
 //  std::string foo()
 // };
 //
-// class A 
+// class A
 // {
 //  B b();
 // };
@@ -1147,7 +1147,7 @@ class NameLineEditConcept : public BaseConcept
 {
   public:
 
-    NameLineEditConcept(const Heading &t_heading, 
+    NameLineEditConcept(const Heading &t_heading,
       bool t_isInspectable,
       bool t_deleteObject,
       bool t_hasClickFocus = true)
@@ -1703,7 +1703,7 @@ class DropZoneConcept : public BaseConcept
 };
 
 template<typename ValueType, typename DataSourceType>
-class DropZoneConceptImpl : public DropZoneConcept 
+class DropZoneConceptImpl : public DropZoneConcept
 {
   public:
 

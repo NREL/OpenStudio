@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -34,7 +34,7 @@
 #if defined __APPLE__
 #include <mach-o/dyld.h> /* _NSGetExecutablePath */
 #include <limits.h> /* PATH_MAX */
-#elif defined _WIN32 
+#elif defined _WIN32
 #include <windows.h>
 #endif
 #include "../utilities/core/Filesystem.hpp"
@@ -52,7 +52,7 @@ inline std::string applicationFilePath() {
   if (_NSGetExecutablePath(path, &size) == 0) {
     return std::string(path);
   }
-#elif defined _WIN32 
+#elif defined _WIN32
  TCHAR szPath[MAX_PATH];
  if( GetModuleFileName( nullptr, szPath, MAX_PATH ) ) {
    return std::string(szPath);

@@ -46,7 +46,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellAuxiliar
   boost::optional<std::string> s;
   boost::optional<double> d;
   boost::optional<ThermalZone> tz;
-  
+
   IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_AuxiliaryHeater, modelObject);
   //Name
   s = modelObject.name();
@@ -77,7 +77,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellAuxiliar
   if (d) {
     pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::SkinLossUFactorTimesAreaValue, d.get());
   }
-  
+
   //SkinLossDestination
   s = modelObject.skinLossDestination();
   if (s) {
@@ -121,7 +121,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellAuxiliar
   }
 
   return pcm;
-  
+
 }
 
 } // energyplus

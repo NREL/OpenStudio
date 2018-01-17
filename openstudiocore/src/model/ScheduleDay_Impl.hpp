@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,9 +44,9 @@ namespace detail {
 
   /** ScheduleDay_Impl is a ResourceObject_Impl that is the implementation class for ScheduleDay.*/
   class MODEL_API ScheduleDay_Impl : public ScheduleBase_Impl {
-    
-    
-    
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -110,7 +110,7 @@ namespace detail {
 
     virtual bool resetScheduleTypeLimits() override;
 
-    void setInterpolatetoTimestep(bool interpolatetoTimestep);
+    bool setInterpolatetoTimestep(bool interpolatetoTimestep);
 
     void resetInterpolatetoTimestep();
 
@@ -153,4 +153,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SCHEDULEDAY_IMPL_HPP
-

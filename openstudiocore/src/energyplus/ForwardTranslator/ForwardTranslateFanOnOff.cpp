@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -59,12 +59,12 @@ boost::optional<IdfObject> ForwardTranslator::translateFanOnOff( FanOnOff & mode
   boost::optional<double> value;
   boost::optional<Node> node;
   OptionalModelObject mo;
-  
+
   // Make sure the modelObject gets ut into the map, and the new idfObject gets put into the final file.
   // Also sets the idfObjects name
 
   IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::Fan_OnOff,modelObject);
-  
+
   // Model Name
   //std::string baseName = modelObject.name().get();
 
@@ -80,25 +80,25 @@ boost::optional<IdfObject> ForwardTranslator::translateFanOnOff( FanOnOff & mode
       idfObject.setString(Fan_OnOffFields::AvailabilityScheduleName, _availabilitySchedule->name().get());
     }
   }
-  
+
   //  N1 ,Field Fan Efficiency
-  
+
   value = modelObject.fanEfficiency();
-  
+
   if( value )
   {
     idfObject.setDouble(Fan_OnOffFields::FanTotalEfficiency, *value);
   }
-  
+
   //  N2 Pressure Rise
-  
+
   value = modelObject.pressureRise();
-  
+
   if( value )
   {
     idfObject.setDouble(Fan_OnOffFields::PressureRise, *value);
   }
-  
+
   // N3,  Field Maximum Flow Rate
 
   value = modelObject.maximumFlowRate();
@@ -110,25 +110,25 @@ boost::optional<IdfObject> ForwardTranslator::translateFanOnOff( FanOnOff & mode
   {
     idfObject.setString(Fan_OnOffFields::MaximumFlowRate,"Autosize");
   }
-  
+
   // N4,  Field Motor Efficiency
-  
+
   value = modelObject.motorEfficiency();
-  
+
   if( value )
   {
     idfObject.setDouble(Fan_OnOffFields::MotorEfficiency,*value);
   }
-  
+
   //   N5, Field Motor In Airstream Fraction
 
   value = modelObject.motorInAirstreamFraction();
-  
+
   if( value )
   {
     idfObject.setDouble(Fan_OnOffFields::MotorInAirstreamFraction, *value);
   }
-  
+
   // A4 Air Inlet Node Name
 
   if( boost::optional<ModelObject> inletModelObject = modelObject.inletModelObject() )
@@ -140,7 +140,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFanOnOff( FanOnOff & mode
   }
 
   // A5 , Field Air Outlet Node Name
-  
+
   if( boost::optional<ModelObject> ouletModelObject = modelObject.inletModelObject() )
   {
     if( boost::optional<Node> ouletNode = ouletModelObject->optionalCast<Node>() )
@@ -162,7 +162,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFanOnOff( FanOnOff & mode
       idfObject.setString(Fan_OnOffFields::FanPowerRatioFunctionofSpeedRatioCurveName, _fanPowerRatioFunctionofSpeedRatioCurve->name().get());
     }
   }
-  
+
   // A7 , Field Fan Efficiency Ratio Function of Speed Ratio Curve Name
 
   boost::optional<Curve> fanEfficiencyRatioFunctionofSpeedRatioCurve = modelObject.fanEfficiencyRatioFunctionofSpeedRatioCurve();
@@ -176,7 +176,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFanOnOff( FanOnOff & mode
       idfObject.setString(Fan_OnOffFields::FanEfficiencyRatioFunctionofSpeedRatioCurveName, _fanEfficiencyRatioFunctionofSpeedRatioCurve->name().get());
     }
   }
-  
+
   // A8 , Field End-Use Subcategory
 
    idfObject.setString(Fan_OnOffFields::EndUseSubcategory, modelObject.endUseSubcategory());

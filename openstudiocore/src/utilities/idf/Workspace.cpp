@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -2732,13 +2732,13 @@ namespace detail {
 
 Workspace::Workspace() :
     m_impl(new detail::Workspace_Impl(StrictnessLevel(StrictnessLevel::Draft),
-                                      IddFileType(IddFileType::OpenStudio)))
+                                      IddFileType(IddFileType::EnergyPlus)))
 {
   addVersionObject();
 }
 
 Workspace::Workspace(StrictnessLevel level) :
-    m_impl(new detail::Workspace_Impl(level,IddFileType(IddFileType::OpenStudio)))
+    m_impl(new detail::Workspace_Impl(level,IddFileType(IddFileType::EnergyPlus)))
 {
   addVersionObject();
 }

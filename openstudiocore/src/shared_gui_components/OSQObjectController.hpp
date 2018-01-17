@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -35,7 +35,7 @@
 #include <vector>
 
 namespace openstudio{
-  
+
 
 class OSQObjectController : public QObject, public Nano::Observer
 {
@@ -45,7 +45,7 @@ class OSQObjectController : public QObject, public Nano::Observer
 
   /** OSQObjectController manages the life cycle of dynamically allocated QObjects when they
    *  are not part of a parent child hierarchy.  This is the case for top level QWidgets
-   *  owned by a controller.  
+   *  owned by a controller.
    **/
   OSQObjectController();
 

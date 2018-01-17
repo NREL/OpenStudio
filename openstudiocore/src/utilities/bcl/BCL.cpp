@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -53,7 +53,7 @@ namespace openstudio{
     OS_ASSERT(!itemElement.isNull());
 
     m_field = fieldElement.firstChild().nodeValue().toStdString();
-  
+
     m_label = labelElement.firstChild().nodeValue().toStdString();
 
     while (!itemElement.isNull())
@@ -91,7 +91,7 @@ namespace openstudio{
     OS_ASSERT(!numResultsElement.isNull());
 
     m_name = nameElement.firstChild().nodeValue().toStdString();
-  
+
     m_tid = tidElement.firstChild().nodeValue().toUInt();
 
     m_numResults = numResultsElement.firstChild().nodeValue().toUInt();
@@ -141,17 +141,17 @@ namespace openstudio{
     }
   }
 
-  unsigned BCLMetaSearchResult::numResults() const  
+  unsigned BCLMetaSearchResult::numResults() const
   {
     return m_numResults;
   }
 
-  std::vector<BCLFacet> BCLMetaSearchResult::facets() const  
+  std::vector<BCLFacet> BCLMetaSearchResult::facets() const
   {
     return m_facets;
   }
 
-  std::vector<BCLTaxonomyTerm> BCLMetaSearchResult::taxonomyTerms() const  
+  std::vector<BCLTaxonomyTerm> BCLMetaSearchResult::taxonomyTerms() const
   {
     return m_taxonomyTerms;
   }
@@ -195,7 +195,7 @@ namespace openstudio{
     m_usageType = usageTypeElement.firstChild().nodeValue().toStdString();
     m_checksum = checksumElement.firstChild().nodeValue().toStdString();
   }
-  
+
   std::string BCLFile::softwareProgram() const
   {
     return m_softwareProgram;
@@ -252,7 +252,7 @@ namespace openstudio{
     m_datetime = datetimeElement.firstChild().nodeValue().toStdString();
     m_comment = commentElement.firstChild().nodeValue().toStdString();
   }
-  
+
   std::string BCLProvenance::author() const
   {
     return m_author;
@@ -320,12 +320,12 @@ namespace openstudio{
     }
   }
 
-  std::string BCLCost::instanceName() const  
+  std::string BCLCost::instanceName() const
   {
     return m_instanceName;
   }
 
-  std::string BCLCost::costType() const  
+  std::string BCLCost::costType() const
   {
     return m_costType;
   }
@@ -405,7 +405,7 @@ namespace openstudio{
     OS_ASSERT(!nameElement.isNull());
     OS_ASSERT(!uidElement.isNull());
     OS_ASSERT(!versionIdElement.isNull());
-    
+
     QString name = nameElement.firstChild().nodeValue().replace('_', ' ');
     while (name.indexOf("  ") != -1) {
       name = name.replace("  ", " ");
@@ -486,7 +486,7 @@ namespace openstudio{
 
         bool intOk;
         int intValue = toQString(value).toInt(&intOk);
-        
+
         if (datatype == "float" && doubleOk)
         {
           if (units.empty())
@@ -607,7 +607,7 @@ namespace openstudio{
   {
     return m_provenanceRequired;
   }
-  
+
   std::vector<BCLProvenance> BCLSearchResult::provenances() const
   {
     return m_provenances;

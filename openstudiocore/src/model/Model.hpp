@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -58,6 +58,7 @@ class ComponentData;
 class Schedule;
 class Node;
 class SpaceType;
+class FoundationKivaSettings;
 
 namespace detail {
   class Model_Impl;
@@ -111,6 +112,10 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Get the Building object if there is one, this implementation uses a cached reference to the Building
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<Building>(). */
   boost::optional<Building> building() const;
+  
+  /** Get the FoundationKivaSettings object if there is one, this implementation uses a cached reference to the FoundationKivaSettings
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<FoundationKivaSettings>(). */
+  boost::optional<FoundationKivaSettings> foundationKivaSettings() const;  
 
   /** Get the LifeCycleCostParameters object if there is one, this implementation uses a cached reference to the LifeCycleCostParameters
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<LifeCycleCostParameters>(). */
@@ -131,7 +136,7 @@ class MODEL_API Model : public openstudio::Workspace {
   bool isDayofWeekforStartDayDefaulted() const;
   bool isLeapYear() const;
   bool isIsLeapYearDefaulted() const;
-  void setCalendarYear(int calendarYear);
+  bool setCalendarYear(int calendarYear);
   void resetCalendarYear();
   bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
   void resetDayofWeekforStartDay();
@@ -150,7 +155,7 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Get an always on schedule with discrete type limits if there is one.
    *  create a new schedule if necessary and add it to the model */
   Schedule alwaysOnDiscreteSchedule() const;
-    
+
   /** Get the always on schedule with discrete type limits name. */
   std::string alwaysOnDiscreteScheduleName() const;
 

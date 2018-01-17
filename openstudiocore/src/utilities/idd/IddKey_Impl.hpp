@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -62,7 +62,7 @@ namespace detail {
     /// load by parsing text
     static std::shared_ptr<IddKey_Impl> load(const std::string& name, const std::string& text);
 
-    /// print idd 
+    /// print idd
     std::ostream& print(std::ostream& os) const;
 
    private:
@@ -70,7 +70,7 @@ namespace detail {
     /// partial constructor used by load
     IddKey_Impl(const std::string& name);
 
-    // parse 
+    // parse
     void parse(const std::string& text);
 
     // name

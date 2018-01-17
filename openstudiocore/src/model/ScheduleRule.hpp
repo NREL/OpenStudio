@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -72,7 +72,7 @@ class MODEL_API ScheduleRule : public ParentObject {
 
   /** @name Getters */
   //@{
-  
+
   ScheduleRuleset scheduleRuleset() const;
 
   int ruleIndex() const;
@@ -84,11 +84,11 @@ class MODEL_API ScheduleRule : public ParentObject {
   bool applyMonday() const;
 
   bool applyTuesday() const;
-
+ 
   bool applyWednesday() const;
 
   bool applyThursday() const;
-
+ 
   bool applyFriday() const;
 
   bool applySaturday() const;
@@ -112,21 +112,37 @@ class MODEL_API ScheduleRule : public ParentObject {
   /** @name Setters */
   //@{
 
-  void setApplySunday(bool applySunday);
+  bool setApplySunday(bool applySunday);
 
-  void setApplyMonday(bool applyMonday);
+  void setApplySundayNoFail(bool applySunday);
 
-  void setApplyTuesday(bool applyTuesday);
+  bool setApplyMonday(bool applyMonday);
 
-  void setApplyWednesday(bool applyWednesday);
+  void setApplyMondayNoFail(bool applyMonday);
 
-  void setApplyThursday(bool applyThursday);
+  bool setApplyTuesday(bool applyTuesday);
 
-  void setApplyFriday(bool applyFriday);
+  void setApplyTuesdayNoFail(bool applyTuesday);
 
-  void setApplySaturday(bool applySaturday);
+  bool setApplyWednesday(bool applyWednesday);
 
-  //void setApplyHoliday(bool applyHoliday);
+  void setApplyWednesdayNoFail(bool applyWednesday);
+
+  bool setApplyThursday(bool applyThursday);
+
+  void setApplyThursdayNoFail(bool applyThursday);
+
+  bool setApplyFriday(bool applyFriday);
+
+  void setApplyFridayNoFail(bool applyFriday);
+
+  bool setApplySaturday(bool applySaturday);
+
+  void setApplySaturdayNoFail(bool applySaturday);
+
+  //bool setApplyHoliday(bool applyHoliday);
+
+  //void setApplyHolidayNoFail(bool applyHoliday);
 
   /// Sets the start date of the date range, will delete any specific dates specified.
   /// A start date > end date indicates that the range wraps around the year.
@@ -151,7 +167,7 @@ class MODEL_API ScheduleRule : public ParentObject {
 
   /// Returns whether or not this rule covers each given date.
   std::vector<bool> containsDates(const std::vector<openstudio::Date>& dates);
-  
+
   //@}
  protected:
 
@@ -184,4 +200,3 @@ typedef std::vector<ScheduleRule> ScheduleRuleVector;
 } // openstudio
 
 #endif // MODEL_SCHEDULERULE_HPP
-

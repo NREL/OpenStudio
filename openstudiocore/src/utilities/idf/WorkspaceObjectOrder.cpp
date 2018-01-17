@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,25 +39,25 @@ namespace openstudio {
 namespace detail {
   // CONSTRUCTORS
 
-  WorkspaceObjectOrder_Impl::WorkspaceObjectOrder_Impl(const ObjectGetter& objectGetter) 
+  WorkspaceObjectOrder_Impl::WorkspaceObjectOrder_Impl(const ObjectGetter& objectGetter)
     : ObjectOrderBase(), m_objectGetter(objectGetter) {}
 
-  WorkspaceObjectOrder_Impl::WorkspaceObjectOrder_Impl(const std::vector<Handle>& directOrder, 
-                                                       const ObjectGetter& objectGetter) 
+  WorkspaceObjectOrder_Impl::WorkspaceObjectOrder_Impl(const std::vector<Handle>& directOrder,
+                                                       const ObjectGetter& objectGetter)
     : ObjectOrderBase(true), m_objectGetter(objectGetter), m_directOrder(directOrder) {}
 
   WorkspaceObjectOrder_Impl::WorkspaceObjectOrder_Impl(
-      const std::vector<IddObjectType>& iddOrder,const ObjectGetter& objectGetter) 
+      const std::vector<IddObjectType>& iddOrder,const ObjectGetter& objectGetter)
     : ObjectOrderBase(iddOrder), m_objectGetter(objectGetter) {}
 
   // GETTERS AND SETTERS
 
   bool WorkspaceObjectOrder_Impl::isDirectOrder() const { return m_directOrder; }
 
-  boost::optional< std::vector<Handle> > WorkspaceObjectOrder_Impl::directOrder() const { 
-    return m_directOrder; 
+  boost::optional< std::vector<Handle> > WorkspaceObjectOrder_Impl::directOrder() const {
+    return m_directOrder;
   }
-    
+
   void WorkspaceObjectOrder_Impl::setDirectOrder(const std::vector<Handle>& order) {
     /// \todo Elements in order should be unique? Algorithms will still work if not true, but
     /// may get unexpected results.
@@ -77,7 +77,7 @@ namespace detail {
     m_directOrder->insert(it,handle);
     return true;
   }
-   
+
   bool WorkspaceObjectOrder_Impl::insert(const Handle& handle,unsigned index) {
     if (!m_directOrder) { return false; }
     if (index < m_directOrder->size()) {
@@ -86,12 +86,12 @@ namespace detail {
       m_directOrder->insert(it,handle);
       return true;
     }
-    else { 
-      m_directOrder->push_back(handle); 
+    else {
+      m_directOrder->push_back(handle);
       return true;
     }
   }
-    
+
   bool WorkspaceObjectOrder_Impl::move(const Handle& handle, const Handle& insertBeforeHandle) {
     if (!m_directOrder) { return false; }
     // find type in order
@@ -160,8 +160,8 @@ namespace detail {
   }
 
   /** Predicate for external sorters (for instance, std::set). */
-  bool WorkspaceObjectOrder_Impl::less(const WorkspaceObject& left, 
-                                       const WorkspaceObject& right) const 
+  bool WorkspaceObjectOrder_Impl::less(const WorkspaceObject& left,
+                                       const WorkspaceObject& right) const
   {
     if (!m_directOrder) {
       return ObjectOrderBase::less(left.iddObject().type(),right.iddObject().type());
@@ -187,7 +187,7 @@ namespace detail {
   }
 
   std::vector<WorkspaceObject> WorkspaceObjectOrder_Impl::sort(
-      const std::vector<WorkspaceObject>& objects) const 
+      const std::vector<WorkspaceObject>& objects) const
   {
     WorkspaceObjectVector result(objects);
     std::sort(result.begin(), result.end(), std::bind(&WorkspaceObjectOrder_Impl::less_WorkspaceObject, this, std::placeholders::_1, std::placeholders::_2));
@@ -209,7 +209,7 @@ namespace detail {
   }
   /// returns empty vector if not all objects can be converted to handles
   std::vector<Handle> WorkspaceObjectOrder_Impl::sortedHandles(
-      const std::vector<WorkspaceObject>& objects) const 
+      const std::vector<WorkspaceObject>& objects) const
   {
     if (isDirectOrder()) {
       // easier to sort handles, get first and sort
@@ -238,8 +238,8 @@ namespace detail {
   boost::optional<unsigned> WorkspaceObjectOrder_Impl::indexInOrder(const Handle& handle) const {
     if (m_directOrder) {
       auto loc = getIterator(handle);
-      if (loc != m_directOrder->end()) { 
-        return (loc - m_directOrder->begin()); 
+      if (loc != m_directOrder->end()) {
+        return (loc - m_directOrder->begin());
       }
     }
     return boost::none;
@@ -261,8 +261,8 @@ namespace detail {
 
   std::vector<Handle>::iterator WorkspaceObjectOrder_Impl::getIterator(IddObjectType type) {
     OS_ASSERT(m_directOrder);
-    for (auto it = m_directOrder->begin(), 
-         itEnd = m_directOrder->end(); it != itEnd; ++ it) 
+    for (auto it = m_directOrder->begin(),
+         itEnd = m_directOrder->end(); it != itEnd; ++ it)
     {
       if (getIddObjectType(*it) == type) { return it; }
     }
@@ -270,14 +270,14 @@ namespace detail {
   }
 
   std::vector<Handle>::iterator WorkspaceObjectOrder_Impl::getIterator(
-      const WorkspaceObject& object) 
+      const WorkspaceObject& object)
   {
     OS_ASSERT(m_directOrder);
     return std::find(m_directOrder->begin(),m_directOrder->end(),object.handle());
   }
 
   std::vector<Handle>::const_iterator WorkspaceObjectOrder_Impl::getIterator(
-      const Handle& handle) const 
+      const Handle& handle) const
   {
     OS_ASSERT(m_directOrder);
     return std::find(m_directOrder->begin(),m_directOrder->end(),handle);
@@ -285,7 +285,7 @@ namespace detail {
 
   std::vector<Handle>::const_iterator WorkspaceObjectOrder_Impl::getIterator(IddObjectType type) const {
     OS_ASSERT(m_directOrder);
-    for (auto it = m_directOrder->begin(), 
+    for (auto it = m_directOrder->begin(),
          itEnd = m_directOrder->end(); it != itEnd; ++ it) {
       if (getIddObjectType(*it) == type) { return it; }
     }
@@ -293,23 +293,23 @@ namespace detail {
   }
 
   std::vector<Handle>::const_iterator WorkspaceObjectOrder_Impl::getIterator(
-      const WorkspaceObject& object) const 
+      const WorkspaceObject& object) const
   {
     OS_ASSERT(m_directOrder);
     return std::find(m_directOrder->begin(),m_directOrder->end(),object.handle());
   }
 
   boost::optional<IddObjectType> WorkspaceObjectOrder_Impl::getIddObjectType(
-      const Handle& handle) const 
+      const Handle& handle) const
   {
     OS_ASSERT(m_objectGetter);
     OptionalWorkspaceObject object = m_objectGetter(handle);
     if (object) { return object->iddObject().type(); }
     else { return boost::none; }
-  } 
+  }
 
   std::vector<WorkspaceObject> WorkspaceObjectOrder_Impl::getObjects(
-      const std::vector<Handle>& handles) const 
+      const std::vector<Handle>& handles) const
   {
     WorkspaceObjectVector objects;
     // loop through handles and try to find objects
@@ -327,12 +327,12 @@ namespace detail {
     return less(left,right);
   }
 
-  bool WorkspaceObjectOrder_Impl::less_WorkspaceObject(const WorkspaceObject& left, 
-                                                       const WorkspaceObject& right) const 
+  bool WorkspaceObjectOrder_Impl::less_WorkspaceObject(const WorkspaceObject& left,
+                                                       const WorkspaceObject& right) const
   { return less(left,right); }
 
-  bool WorkspaceObjectOrder_Impl::less_IddObjectType(IddObjectType left, 
-                                                     IddObjectType right) const 
+  bool WorkspaceObjectOrder_Impl::less_IddObjectType(IddObjectType left,
+                                                     IddObjectType right) const
   { return less(left,right); }
 
 } // detail
@@ -451,7 +451,7 @@ boost::optional<unsigned> WorkspaceObjectOrder::indexInOrder(const Handle& handl
 // CONSTRUCTORS
 
 WorkspaceObjectOrder::WorkspaceObjectOrder(
-    const std::shared_ptr<detail::WorkspaceObjectOrder_Impl>& impl) 
+    const std::shared_ptr<detail::WorkspaceObjectOrder_Impl>& impl)
   : m_impl(impl) {}
 
 } // openstudio

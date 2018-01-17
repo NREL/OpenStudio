@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -270,7 +270,8 @@ TEST_F(ModelFixture, ComponentWatcher_ComponentData_Interactions) {
 }
 
 TEST_F(ModelFixture, ComponentWatcher_BadComponentDataFromWorkspace) {
-  Workspace ws;
+  Workspace ws(StrictnessLevel::Draft,
+               IddFileType::OpenStudio);
   OptionalWorkspaceObject owo = ws.addObject(IdfObject(IddObjectType::OS_ComponentData));
   ASSERT_TRUE(owo);
   // make component data ok except points to non-existent object
@@ -345,7 +346,8 @@ TEST_F(ModelFixture, Component_CreateScheduleLibrary) {
 }
 
 TEST_F(ModelFixture,Component_BadSwaps) {
-  Workspace workspace;
+  Workspace workspace(StrictnessLevel::Draft,
+                      IddFileType::OpenStudio);
   Model model;
   Model tempModel;
   LightsDefinition light(tempModel);

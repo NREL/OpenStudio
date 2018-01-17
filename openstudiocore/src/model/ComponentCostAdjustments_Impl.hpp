@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -55,25 +55,25 @@ class MODEL_API ComponentCostAdjustments_Impl : public ParentObject_Impl{
   virtual ~ComponentCostAdjustments_Impl(){}
 
   boost::optional<double> miscellaneousCostPerConditionedArea() const;
-  void setMiscellaneousCostPerConditionedArea(double num);
+  bool setMiscellaneousCostPerConditionedArea(double num);
 
   boost::optional<double> designAndEngineeringFees() const;
-  void setDesignAndEngineeringFees(double num);
+  bool setDesignAndEngineeringFees(double num);
 
   boost::optional<double> contractorFee() const;
-  void setContractorFee(double num);
+  bool setContractorFee(double num);
 
   boost::optional<double> contingency() const;
-  void setContingency(double num);
+  bool setContingency(double num);
 
   boost::optional<double> permitsBondingAndInsurance() const;
-  void setPermitsBondingAndInsurance(double num);
+  bool setPermitsBondingAndInsurance(double num);
 
   boost::optional<double> commissioningFee() const;
-  void setCommissioningFee(double num);
+  bool setCommissioningFee(double num);
 
   boost::optional<double> regionalAdjustmentFactor() const;
-  void setRegionalAdjustmentFactor(double num);
+  bool setRegionalAdjustmentFactor(double num);
 
   // return the parent object in the hierarchy
   virtual boost::optional<ParentObject> parent() const override;
@@ -101,4 +101,4 @@ private:
 } // model
 } // openstudio
 
-#endif // MODEL_COMPONENTCOSTADJUSTMENTS_IMPL_HPP
+#endif // MODEL_COMPONENTCOSTADJUSTMENTS_IMPL_HPP
