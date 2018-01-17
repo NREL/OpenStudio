@@ -350,7 +350,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
 
   }
   catch (std::exception& e) {
-    LOG(Error,"Unable to translate " << modelObject.briefDescription() 
+    LOG(Error,"Unable to translate " << modelObject.briefDescription()
         << " to EnergyPlus IDF, because " << e.what() << ".");
     return boost::none;
   }

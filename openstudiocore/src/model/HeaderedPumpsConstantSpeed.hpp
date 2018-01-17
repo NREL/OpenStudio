@@ -103,13 +103,13 @@ class MODEL_API HeaderedPumpsConstantSpeed : public StraightComponent {
 
   void autosizeTotalRatedFlowRate();
 
-  void setNumberofPumpsinBank(int numberofPumpsinBank);
+  bool setNumberofPumpsinBank(int numberofPumpsinBank);
 
   bool setFlowSequencingControlScheme(std::string flowSequencingControlScheme);
 
-  void setRatedPumpHead(double ratedPumpHead);
+  bool setRatedPumpHead(double ratedPumpHead);
 
-  void setRatedPowerConsumption(double ratedPowerConsumption);
+  bool setRatedPowerConsumption(double ratedPowerConsumption);
 
   void autosizeRatedPowerConsumption();
 
@@ -164,5 +164,4 @@ typedef std::vector<HeaderedPumpsConstantSpeed> HeaderedPumpsConstantSpeedVector
 } // model
 } // openstudio
 
-#endif // MODEL_HEADEREDPUMPSCONSTANTSPEED_HPP
-
+#endif // MODEL_HEADEREDPUMPSCONSTANTSPEED_HPP

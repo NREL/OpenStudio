@@ -195,37 +195,37 @@ namespace detail {
 
     bool setRatedCoolingCoefficientofPerformance(double ratedCoolingCoefficientofPerformance);
 
-    void setTotalCoolingCapacityCoefficient1(double totalCoolingCapacityCoefficient1);
+    bool setTotalCoolingCapacityCoefficient1(double totalCoolingCapacityCoefficient1);
 
-    void setTotalCoolingCapacityCoefficient2(double totalCoolingCapacityCoefficient2);
+    bool setTotalCoolingCapacityCoefficient2(double totalCoolingCapacityCoefficient2);
 
-    void setTotalCoolingCapacityCoefficient3(double totalCoolingCapacityCoefficient3);
+    bool setTotalCoolingCapacityCoefficient3(double totalCoolingCapacityCoefficient3);
 
-    void setTotalCoolingCapacityCoefficient4(double totalCoolingCapacityCoefficient4);
+    bool setTotalCoolingCapacityCoefficient4(double totalCoolingCapacityCoefficient4);
 
-    void setTotalCoolingCapacityCoefficient5(double totalCoolingCapacityCoefficient5);
+    bool setTotalCoolingCapacityCoefficient5(double totalCoolingCapacityCoefficient5);
 
-    void setSensibleCoolingCapacityCoefficient1(double sensibleCoolingCapacityCoefficient1);
+    bool setSensibleCoolingCapacityCoefficient1(double sensibleCoolingCapacityCoefficient1);
 
-    void setSensibleCoolingCapacityCoefficient2(double sensibleCoolingCapacityCoefficient2);
+    bool setSensibleCoolingCapacityCoefficient2(double sensibleCoolingCapacityCoefficient2);
 
-    void setSensibleCoolingCapacityCoefficient3(double sensibleCoolingCapacityCoefficient3);
+    bool setSensibleCoolingCapacityCoefficient3(double sensibleCoolingCapacityCoefficient3);
 
-    void setSensibleCoolingCapacityCoefficient4(double sensibleCoolingCapacityCoefficient4);
+    bool setSensibleCoolingCapacityCoefficient4(double sensibleCoolingCapacityCoefficient4);
 
-    void setSensibleCoolingCapacityCoefficient5(double sensibleCoolingCapacityCoefficient5);
+    bool setSensibleCoolingCapacityCoefficient5(double sensibleCoolingCapacityCoefficient5);
 
-    void setSensibleCoolingCapacityCoefficient6(double sensibleCoolingCapacityCoefficient6);
+    bool setSensibleCoolingCapacityCoefficient6(double sensibleCoolingCapacityCoefficient6);
 
-    void setCoolingPowerConsumptionCoefficient1(double coolingPowerConsumptionCoefficient1);
+    bool setCoolingPowerConsumptionCoefficient1(double coolingPowerConsumptionCoefficient1);
 
-    void setCoolingPowerConsumptionCoefficient2(double coolingPowerConsumptionCoefficient2);
+    bool setCoolingPowerConsumptionCoefficient2(double coolingPowerConsumptionCoefficient2);
 
-    void setCoolingPowerConsumptionCoefficient3(double coolingPowerConsumptionCoefficient3);
+    bool setCoolingPowerConsumptionCoefficient3(double coolingPowerConsumptionCoefficient3);
 
-    void setCoolingPowerConsumptionCoefficient4(double coolingPowerConsumptionCoefficient4);
+    bool setCoolingPowerConsumptionCoefficient4(double coolingPowerConsumptionCoefficient4);
 
-    void setCoolingPowerConsumptionCoefficient5(double coolingPowerConsumptionCoefficient5);
+    bool setCoolingPowerConsumptionCoefficient5(double coolingPowerConsumptionCoefficient5);
 
     bool setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin);
 
@@ -245,7 +245,7 @@ namespace detail {
     REGISTER_LOGGER("openstudio.model.CoilCoolingWaterToAirHeatPumpEquationFit");
 
     virtual boost::optional<HVACComponent> containingHVACComponent() const override;
-    
+
   };
 
 } // detail
@@ -254,4 +254,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILCOOLINGWATERTOAIRHEATPUMPEQUATIONFIT_IMPL_HPP
-

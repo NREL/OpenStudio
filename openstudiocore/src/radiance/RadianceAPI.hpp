@@ -10,5 +10,5 @@
   #else
     #define RADIANCE_API
   #endif
-  
+
 #endif

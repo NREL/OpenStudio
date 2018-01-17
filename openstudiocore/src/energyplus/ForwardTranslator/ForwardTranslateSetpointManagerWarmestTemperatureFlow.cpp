@@ -87,7 +87,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerWarmestTem
   // MinimumTurndownRatio
   n = modelObject.minimumTurndownRatio();
   idfObject.setDouble(SetpointManager_WarmestTemperatureFlowFields::MinimumTurndownRatio,n);
-  
+
   return idfObject;
 }
 

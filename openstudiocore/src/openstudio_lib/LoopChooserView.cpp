@@ -55,7 +55,7 @@ LoopChooserView::LoopChooserView(QWidget* parent)
   this->setLayout(mainLayout);
 
   auto scrollArea = new QScrollArea();
-  
+
   scrollArea->setWidgetResizable(true);
 
   scrollArea->setFrameStyle(QFrame::NoFrame);
@@ -93,7 +93,7 @@ void LoopChooserView::layoutView()
   this->setUpdatesEnabled(false);
 
   QLayoutItem * child;
-  while((child = m_vLayout->takeAt(0)) != nullptr) 
+  while((child = m_vLayout->takeAt(0)) != nullptr)
   {
       delete child->widget();
       delete child;
@@ -131,7 +131,7 @@ void LoopChooserView::layoutView()
     }
   }
 
-  for(int i = 0; i < m_vLayout->count(); i++) 
+  for(int i = 0; i < m_vLayout->count(); i++)
   {
     if( QWidget * widget = m_vLayout->itemAt(i)->widget() )
     {
@@ -182,7 +182,7 @@ LoopChooserItem::LoopChooserItem(model::Loop & loop, LoopChooserView * parent)
   auto hLayout = new QHBoxLayout();
 
   m_checkBox = new QCheckBox();
-  
+
   m_checkBox->setText(toQString(loop.name().get()));
 
   connect(m_checkBox, &QCheckBox::clicked, this, &LoopChooserItem::sendClickedSignal);

@@ -201,9 +201,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void HeaderedPumpsConstantSpeed_Impl::setNumberofPumpsinBank(int numberofPumpsinBank) {
+  bool HeaderedPumpsConstantSpeed_Impl::setNumberofPumpsinBank(int numberofPumpsinBank) {
     bool result = setInt(OS_HeaderedPumps_ConstantSpeedFields::NumberofPumpsinBank, numberofPumpsinBank);
     OS_ASSERT(result);
+    return result;
   }
 
   bool HeaderedPumpsConstantSpeed_Impl::setFlowSequencingControlScheme(std::string flowSequencingControlScheme) {
@@ -211,17 +212,19 @@ namespace detail {
     return result;
   }
 
-  void HeaderedPumpsConstantSpeed_Impl::setRatedPumpHead(double ratedPumpHead) {
+  bool HeaderedPumpsConstantSpeed_Impl::setRatedPumpHead(double ratedPumpHead) {
     bool result = setDouble(OS_HeaderedPumps_ConstantSpeedFields::RatedPumpHead, ratedPumpHead);
     OS_ASSERT(result);
+    return result;
   }
 
-  void HeaderedPumpsConstantSpeed_Impl::setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption) {
+  bool HeaderedPumpsConstantSpeed_Impl::setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption) {
     bool result(false);
     if (ratedPowerConsumption) {
       result = setDouble(OS_HeaderedPumps_ConstantSpeedFields::RatedPowerConsumption, ratedPowerConsumption.get());
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void HeaderedPumpsConstantSpeed_Impl::autosizeRatedPowerConsumption() {
@@ -415,20 +418,20 @@ void HeaderedPumpsConstantSpeed::autosizeTotalRatedFlowRate() {
   getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->autosizeTotalRatedFlowRate();
 }
 
-void HeaderedPumpsConstantSpeed::setNumberofPumpsinBank(int numberofPumpsinBank) {
-  getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setNumberofPumpsinBank(numberofPumpsinBank);
+bool HeaderedPumpsConstantSpeed::setNumberofPumpsinBank(int numberofPumpsinBank) {
+  return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setNumberofPumpsinBank(numberofPumpsinBank);
 }
 
 bool HeaderedPumpsConstantSpeed::setFlowSequencingControlScheme(std::string flowSequencingControlScheme) {
   return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setFlowSequencingControlScheme(flowSequencingControlScheme);
 }
 
-void HeaderedPumpsConstantSpeed::setRatedPumpHead(double ratedPumpHead) {
-  getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setRatedPumpHead(ratedPumpHead);
+bool HeaderedPumpsConstantSpeed::setRatedPumpHead(double ratedPumpHead) {
+  return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setRatedPumpHead(ratedPumpHead);
 }
 
-void HeaderedPumpsConstantSpeed::setRatedPowerConsumption(double ratedPowerConsumption) {
-  getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setRatedPowerConsumption(ratedPowerConsumption);
+bool HeaderedPumpsConstantSpeed::setRatedPowerConsumption(double ratedPowerConsumption) {
+  return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setRatedPowerConsumption(ratedPowerConsumption);
 }
 
 void HeaderedPumpsConstantSpeed::autosizeRatedPowerConsumption() {
@@ -482,5 +485,4 @@ HeaderedPumpsConstantSpeed::HeaderedPumpsConstantSpeed(std::shared_ptr<detail::H
   }
 
 } // model
-} // openstudio
-
+} // openstudio

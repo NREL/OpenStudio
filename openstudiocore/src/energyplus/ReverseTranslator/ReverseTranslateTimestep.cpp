@@ -54,7 +54,7 @@ OptionalModelObject ReverseTranslator::translateTimestep( const WorkspaceObject 
   if( i )
   {
     mo.setInt(OS_TimestepFields::NumberofTimestepsperHour,i.get());
-  } 
+  }
 
   return mo;
 }

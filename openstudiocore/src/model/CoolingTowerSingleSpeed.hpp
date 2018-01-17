@@ -279,13 +279,13 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
 
   void resetEvaporationLossMode();
 
-  void setEvaporationLossFactor(double evaporationLossFactor);
+  bool setEvaporationLossFactor(double evaporationLossFactor);
 
   bool setEvaporationLossFactor(const Quantity& evaporationLossFactor);
 
   void resetEvaporationLossFactor();
 
-  void setDriftLossPercent(double driftLossPercent);
+  bool setDriftLossPercent(double driftLossPercent);
 
   bool setDriftLossPercent(const Quantity& driftLossPercent);
 
@@ -418,4 +418,3 @@ typedef std::vector<CoolingTowerSingleSpeed> CoolingTowerSingleSpeedVector;
 } // openstudio
 
 #endif // MODEL_COOLINGTOWERSINGLESPEED_HPP
-

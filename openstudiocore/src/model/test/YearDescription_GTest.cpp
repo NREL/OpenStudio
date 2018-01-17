@@ -60,7 +60,7 @@ TEST_F(ModelFixture, YearDescription)
   EXPECT_FALSE(yd.setDayofWeekforStartDay("Monday"));
   EXPECT_EQ("Tuesday", yd.dayofWeekforStartDay());
   EXPECT_TRUE(yd.isDayofWeekforStartDayDefaulted());
-  
+
   EXPECT_FALSE(yd.setIsLeapYear(false));
   EXPECT_TRUE(yd.isLeapYear());
   EXPECT_TRUE(yd.isIsLeapYearDefaulted());
@@ -74,7 +74,7 @@ TEST_F(ModelFixture, YearDescription)
   EXPECT_TRUE(yd.setDayofWeekforStartDay("Monday"));
   EXPECT_EQ("Monday", yd.dayofWeekforStartDay());
   EXPECT_FALSE(yd.isDayofWeekforStartDayDefaulted());
-  
+
   EXPECT_TRUE(yd.setIsLeapYear(true));
   EXPECT_TRUE(yd.isLeapYear());
   EXPECT_FALSE(yd.isIsLeapYearDefaulted());

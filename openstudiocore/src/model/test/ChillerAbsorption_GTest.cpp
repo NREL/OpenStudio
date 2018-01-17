@@ -40,12 +40,12 @@ TEST_F(ModelFixture,ChillerAbsorption)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
-     ChillerAbsorption chiller(m); 
+  ASSERT_EXIT (
+  {
+     Model m;
+     ChillerAbsorption chiller(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }

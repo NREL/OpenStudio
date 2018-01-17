@@ -130,19 +130,22 @@ namespace detail {
     return result;
   }
 
-  void SetpointManagerFollowGroundTemperature_Impl::setOffsetTemperatureDifference(double offsetTemperatureDifference) {
+  bool SetpointManagerFollowGroundTemperature_Impl::setOffsetTemperatureDifference(double offsetTemperatureDifference) {
     bool result = setDouble(OS_SetpointManager_FollowGroundTemperatureFields::OffsetTemperatureDifference, offsetTemperatureDifference);
     OS_ASSERT(result);
+    return result;
   }
 
-  void SetpointManagerFollowGroundTemperature_Impl::setMaximumSetpointTemperature(double maximumSetpointTemperature) {
+  bool SetpointManagerFollowGroundTemperature_Impl::setMaximumSetpointTemperature(double maximumSetpointTemperature) {
     bool result = setDouble(OS_SetpointManager_FollowGroundTemperatureFields::MaximumSetpointTemperature, maximumSetpointTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
-  void SetpointManagerFollowGroundTemperature_Impl::setMinimumSetpointTemperature(double minimumSetpointTemperature) {
+  bool SetpointManagerFollowGroundTemperature_Impl::setMinimumSetpointTemperature(double minimumSetpointTemperature) {
     bool result = setDouble(OS_SetpointManager_FollowGroundTemperatureFields::MinimumSetpointTemperature, minimumSetpointTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   bool SetpointManagerFollowGroundTemperature_Impl::setSetpointNode(const Node& node) {
@@ -215,16 +218,16 @@ bool SetpointManagerFollowGroundTemperature::setReferenceGroundTemperatureObject
   return getImpl<detail::SetpointManagerFollowGroundTemperature_Impl>()->setReferenceGroundTemperatureObjectType(groundTemperatureObjType);
 }
 
-void SetpointManagerFollowGroundTemperature::setOffsetTemperatureDifference(double offsetTemperatureDifference) {
-  getImpl<detail::SetpointManagerFollowGroundTemperature_Impl>()->setOffsetTemperatureDifference(offsetTemperatureDifference);
+bool SetpointManagerFollowGroundTemperature::setOffsetTemperatureDifference(double offsetTemperatureDifference) {
+  return getImpl<detail::SetpointManagerFollowGroundTemperature_Impl>()->setOffsetTemperatureDifference(offsetTemperatureDifference);
 }
 
-void SetpointManagerFollowGroundTemperature::setMaximumSetpointTemperature(double maximumSetpointTemperature) {
-  getImpl<detail::SetpointManagerFollowGroundTemperature_Impl>()->setMaximumSetpointTemperature(maximumSetpointTemperature);
+bool SetpointManagerFollowGroundTemperature::setMaximumSetpointTemperature(double maximumSetpointTemperature) {
+  return getImpl<detail::SetpointManagerFollowGroundTemperature_Impl>()->setMaximumSetpointTemperature(maximumSetpointTemperature);
 }
 
-void SetpointManagerFollowGroundTemperature::setMinimumSetpointTemperature(double minimumSetpointTemperature) {
-  getImpl<detail::SetpointManagerFollowGroundTemperature_Impl>()->setMinimumSetpointTemperature(minimumSetpointTemperature);
+bool SetpointManagerFollowGroundTemperature::setMinimumSetpointTemperature(double minimumSetpointTemperature) {
+  return getImpl<detail::SetpointManagerFollowGroundTemperature_Impl>()->setMinimumSetpointTemperature(minimumSetpointTemperature);
 }
 
 /// @cond
@@ -235,4 +238,3 @@ SetpointManagerFollowGroundTemperature::SetpointManagerFollowGroundTemperature(s
 
 } // model
 } // openstudio
-

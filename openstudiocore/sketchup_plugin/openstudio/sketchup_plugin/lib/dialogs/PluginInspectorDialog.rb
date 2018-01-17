@@ -29,12 +29,12 @@
 module OpenStudio
 
   class PluginInspectorDialog < Modeleditor::InspectorDialog
-    
+
     def initialize
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-     
+
       super("SketchUpPlugin".to_InspectorDialogClient, OpenStudio::SketchUpWidget)
-      
+
       @ignore = false
     end
 
@@ -82,7 +82,7 @@ module OpenStudio
       msg += "It is advised that you save a backup of your current OpenStudio model and restart SketchUp."
       UI.messagebox(msg)
     end
-    
+
     def onPushButtonNew(checked)
       model_interface =  Plugin.model_manager.model_interface
       if model_interface.model_watcher.enabled
@@ -91,7 +91,7 @@ module OpenStudio
         show_error
       end
     end
-    
+
     def onPushButtonCopy(checked)
       model_interface =  Plugin.model_manager.model_interface
       if model_interface.model_watcher.enabled
@@ -100,7 +100,7 @@ module OpenStudio
         show_error
       end
     end
-    
+
     def onPushButtonDelete(checked)
       model_interface =  Plugin.model_manager.model_interface
       if model_interface.model_watcher.enabled
@@ -109,7 +109,7 @@ module OpenStudio
         show_error
       end
     end
-    
+
     def onPushButtonPurge(checked)
       model_interface =  Plugin.model_manager.model_interface
       if model_interface.model_watcher.enabled
@@ -118,7 +118,7 @@ module OpenStudio
         show_error
       end
     end
-    
+
     def show
       Plugin.log(OpenStudio::Trace, "#{current_method_name}, enabled? = #{enabled?}")
       update
@@ -130,7 +130,7 @@ module OpenStudio
 
     def update
       Plugin.log(OpenStudio::Trace, "#{current_method_name}, enabled? = #{enabled?}")
-      
+
       model_interface = Plugin.model_manager.model_interface
       if model_interface
         setModel(model_interface.openstudio_model)

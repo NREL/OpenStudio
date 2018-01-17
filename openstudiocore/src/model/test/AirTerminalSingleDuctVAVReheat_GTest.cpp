@@ -53,20 +53,20 @@ TEST_F(ModelFixture,AirTerminalSingleDuctVAVReheat_AirTerminalSingleDuctVAVRehea
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-    Model m; 
+  ASSERT_EXIT (
+  {
+    Model m;
     Schedule s = m.alwaysOnDiscreteSchedule();
     CoilHeatingElectric coil = CoilHeatingElectric(m,s);
     AirTerminalSingleDuctVAVReheat testObject(m,s,coil);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
 TEST_F(ModelFixture,AirTerminalSingleDuctVAVReheat_addToNode) {
-  Model m; 
+  Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   CoilHeatingElectric coil = CoilHeatingElectric(m,s);
   AirTerminalSingleDuctVAVReheat testObject(m,s,coil);
@@ -127,7 +127,7 @@ TEST_F(ModelFixture,AirTerminalSingleDuctVAVReheat_remove) {
   auto terminals = airLoopHVAC.demandComponents(AirTerminalSingleDuctVAVReheat::iddObjectType());
   EXPECT_EQ(3u,terminals.size());
 
-  auto boiler = m.getModelObjects<BoilerHotWater>().front();  
+  auto boiler = m.getModelObjects<BoilerHotWater>().front();
   auto plant = boiler.plantLoop().get();
   auto coils = plant.demandComponents(CoilHeatingWater::iddObjectType());
   EXPECT_EQ(4u,coils.size());

@@ -92,7 +92,7 @@ TEST_F(ModelFixture, FuelCell)
   // check default inverter
   GeneratorFuelCellInverter fI = fuelcell.inverter();
 
-  // check default optional stackcooler 
+  // check default optional stackcooler
   boost::optional<GeneratorFuelCellStackCooler> fSC = fuelcell.stackCooler();
 
 }

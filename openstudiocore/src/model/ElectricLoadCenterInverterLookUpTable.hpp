@@ -104,15 +104,15 @@ class MODEL_API ElectricLoadCenterInverterLookUpTable : public Inverter {
 
   void resetRadiativeFraction();
 
-  void setRatedMaximumContinuousOutputPower(double ratedMaximumContinuousOutputPower);
+  bool setRatedMaximumContinuousOutputPower(double ratedMaximumContinuousOutputPower);
 
   void resetRatedMaximumContinuousOutputPower();
 
-  void setNightTareLossPower(double nightTareLossPower);
+  bool setNightTareLossPower(double nightTareLossPower);
 
   void resetNightTareLossPower();
 
-  void setNominalVoltageInput(double nominalVoltageInput);
+  bool setNominalVoltageInput(double nominalVoltageInput);
 
   void resetNominalVoltageInput();
 
@@ -182,4 +182,3 @@ typedef std::vector<ElectricLoadCenterInverterLookUpTable> ElectricLoadCenterInv
 } // openstudio
 
 #endif // MODEL_ELECTRICLOADCENTERINVERTERLOOKUPTABLE_HPP
-

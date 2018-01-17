@@ -57,7 +57,7 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateMeterCustom( MeterCustom & modelObject )
 {
-  
+
   boost::optional<std::string> s;
   boost::optional<double> value;
 
@@ -70,13 +70,13 @@ boost::optional<IdfObject> ForwardTranslator::translateMeterCustom( MeterCustom 
   {
     idfObject.setName(*s);
   }
-  
+
   // FuelType
   if( (s = modelObject.fuelType()) )
   {
     idfObject.setString(Meter_CustomFields::FuelType,s.get());
   }
-  
+
   // Handle the (Key Name, Output Variable or Meter Name) pairs
   std::vector< std::pair<std::string, std::string> > keyVarGroups = modelObject.keyVarGroups();
 
@@ -86,8 +86,8 @@ boost::optional<IdfObject> ForwardTranslator::translateMeterCustom( MeterCustom 
     {
       IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
 
-      eg.setString(Meter_CustomExtensibleFields::KeyName,keyVarGroup.first); 
-      eg.setString(Meter_CustomExtensibleFields::OutputVariableorMeterName,keyVarGroup.second); 
+      eg.setString(Meter_CustomExtensibleFields::KeyName,keyVarGroup.first);
+      eg.setString(Meter_CustomExtensibleFields::OutputVariableorMeterName,keyVarGroup.second);
     }
   }
   else {

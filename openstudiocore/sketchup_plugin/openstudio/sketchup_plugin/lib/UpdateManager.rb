@@ -29,7 +29,7 @@
 module OpenStudio
 
   class PluginUpdateManager < UpdateManager
-  
+
     def initialize(appName, verbose)
       super(appName)
       @verbose = verbose
@@ -37,7 +37,7 @@ module OpenStudio
     end
 
     def replyProcessed()
-    
+
       if not self.error
         if (self.newMajorRelease or self.newMinorRelease)
           mostRecentVersion = self.mostRecentVersion
@@ -62,11 +62,11 @@ module OpenStudio
       else
         puts "Error occurred while checking for update."
       end
-      
+
       Plugin.update_manager = nil
-      
+
     end
-    
+
   end
 
 end

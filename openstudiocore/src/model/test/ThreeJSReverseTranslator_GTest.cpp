@@ -151,7 +151,7 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
 
   ThreeJSReverseTranslator rt;
 
-  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/window_floorplan.json"); 
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/window_floorplan.json");
   ASSERT_TRUE(exists(p));
 
   boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));

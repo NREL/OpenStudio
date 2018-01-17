@@ -50,7 +50,7 @@ add_custom_command(
 )
 
 add_custom_target("GenerateIddFactoryRun"
-  DEPENDS 
+  DEPENDS
   "${CMAKE_CURRENT_BINARY_DIR}/../utilities/idd/IddFactoryFileIndex.hxx"
   "${CMAKE_CURRENT_BINARY_DIR}/../utilities/idd/IddEnums.hxx"
   "${CMAKE_CURRENT_BINARY_DIR}/../utilities/idd/IddFieldEnums.hxx"

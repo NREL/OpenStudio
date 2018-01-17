@@ -81,7 +81,7 @@ void LostCloudConnectionDialog::createWidgets(bool internetAvailable,
   this->backButton()->hide();
 
   QLabel * label = nullptr;
-  
+
   QVBoxLayout * mainLayout = this->upperLayout();
   mainLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
@@ -141,7 +141,7 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
   QPushButton * button = nullptr;
 
   QLabel * label = nullptr;
-        
+
   label = new QLabel;
   label->setText("<b>" + tr("Options to correct the problem:") + "</b>");
   vLayout->addWidget(label);
@@ -152,7 +152,7 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
   vLayout->addLayout(hLayout);
 
   horizontalSpacer = new QSpacerItem(INDENT, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
-  hLayout->addSpacerItem(horizontalSpacer); 
+  hLayout->addSpacerItem(horizontalSpacer);
 
   label = new QLabel;
   label->setWordWrap(true);
@@ -169,7 +169,7 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
   vLayout->addLayout(hLayout);
 
   horizontalSpacer = new QSpacerItem(INDENT, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
-  hLayout->addSpacerItem(horizontalSpacer); 
+  hLayout->addSpacerItem(horizontalSpacer);
 
   label = new QLabel;
   label->setWordWrap(true);
@@ -186,7 +186,7 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
   vLayout->addLayout(hLayout);
 
   horizontalSpacer = new QSpacerItem(INDENT, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
-  hLayout->addSpacerItem(horizontalSpacer); 
+  hLayout->addSpacerItem(horizontalSpacer);
 
   label = new QLabel;
   label->setWordWrap(true);
@@ -201,7 +201,7 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
   vLayout->addLayout(hLayout);
 
   //horizontalSpacer = new QSpacerItem(INDENT, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
-  //hLayout->addSpacerItem(horizontalSpacer); 
+  //hLayout->addSpacerItem(horizontalSpacer);
 
   button = new OrangeButton(this);
   button->setText("Launch AWS Console");

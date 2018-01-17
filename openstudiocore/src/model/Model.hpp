@@ -136,7 +136,7 @@ class MODEL_API Model : public openstudio::Workspace {
   bool isDayofWeekforStartDayDefaulted() const;
   bool isLeapYear() const;
   bool isIsLeapYearDefaulted() const;
-  void setCalendarYear(int calendarYear);
+  bool setCalendarYear(int calendarYear);
   void resetCalendarYear();
   bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
   void resetDayofWeekforStartDay();
@@ -155,7 +155,7 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Get an always on schedule with discrete type limits if there is one.
    *  create a new schedule if necessary and add it to the model */
   Schedule alwaysOnDiscreteSchedule() const;
-    
+
   /** Get the always on schedule with discrete type limits name. */
   std::string alwaysOnDiscreteScheduleName() const;
 

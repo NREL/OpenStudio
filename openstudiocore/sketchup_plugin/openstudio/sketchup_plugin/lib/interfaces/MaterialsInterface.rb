@@ -40,14 +40,14 @@ module OpenStudio
   RenderBySpaceType = 6
   RenderByThermalZone = 7
   RenderByBuildingStory = 8
-  
+
   class MaterialsInterface
 
     #for surface type render mode
     attr_reader :floor_ext, :floor_int, :wall_ext, :wall_int, :roof_ext, :roof_int, :window_ext, :window_int, :door_ext, :door_int
     attr_reader :space_shading, :building_shading, :site_shading, :interior_partition_surface
     attr_reader :space_shading_back, :building_shading_back, :site_shading_back, :interior_partition_surface_back
-    
+
     #for boundary render mode
     attr_reader :surface_ext, :adiabatic_ext, :space_ext, :ground_ext, :groundfcfactormethod_ext, :groundslabpreprocessoraverage_ext
     attr_reader :groundslabpreprocessorcore_ext, :groundslabpreprocessorperimeter_ext, :groundbasementpreprocessoraveragewall_ext
@@ -61,23 +61,23 @@ module OpenStudio
     attr_reader :outdoors_int, :outdoorssun_int, :outdoorswind_int, :outdoorssunwind_int
     attr_reader :subext_ext, :subext_int, :subint_ext, :subint_int
     attr_reader :air_wall, :solar_collector, :photovoltaic
-    
+
     # for testing
     attr_accessor :observer
-    
+
     def initialize(model_interface)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       @model_interface = model_interface
       @materials = @model_interface.skp_model.materials
-      
+
       @observer = MaterialsObserver.new(self)
       @observer_added = false # true if observer has been added to the entity
-  
+
       # rendering settings
       @render_defaults = false
-      @rendering_mode = 0     
-    
+      @rendering_mode = 0
+
       # Materials must be 'in model' to be used on a face
       # 'in model" materials change when a new SU file is created, or an old SU file is opened
 
@@ -97,10 +97,10 @@ module OpenStudio
       @door_int = get_material("OpenStudio_Door_Int", Sketchup::Color.new(202, 188, 149, 1.0))
 
       # The detached colors may be breaking from the new DXF color scheme
-      
+
       @site_shading = get_material("OpenStudio_Site_Shading", Sketchup::Color.new(75, 124, 149, 1.0))
       @site_shading_back = get_material("OpenStudio_Site_Shading_back", Sketchup::Color.new(187, 209, 220, 1.0))  # old DXF: "Blue"
-            
+
       @building_shading = get_material("OpenStudio_Building_Shading", Sketchup::Color.new(113, 76, 153, 1.0))  # old DXF: "Light Gray"
       @building_shading_back = get_material("OpenStudio_Building_Shading_back", Sketchup::Color.new(216, 203, 229, 1.0))
 
@@ -109,7 +109,7 @@ module OpenStudio
 
       @interior_partition_surface = get_material("OpenStudio_Interior_Partition_Surface", Sketchup::Color.new(158, 188, 143, 1.0))   # "Yellow"
       @interior_partition_surface_back = get_material("OpenStudio_Interior_Partition_Surface_back", Sketchup::Color.new(213, 226, 207, 1.0))
-      
+
       # start textures for boundary conditions
       @surface_ext = get_material("OpenStudio_Surface_Ext", Sketchup::Color.new(0, 153, 0, 1.0))
       @surface_int = get_material("OpenStudio_Surface_Int", Sketchup::Color.new(0, 153, 0, 1.0))
@@ -179,45 +179,45 @@ module OpenStudio
 
       # todo: get smarter about this for different rendering modes
       @air_wall = @model_interface.skp_model.materials["OpenStudio_AirWall"]
-      if (@air_wall.nil?)      
+      if (@air_wall.nil?)
         @air_wall = @model_interface.skp_model.materials.add("OpenStudio_AirWall")
         @air_wall.texture = Plugin.dir + "/lib/resources/AirWall.png"
         @air_wall.texture.size = 180
         @air_wall.alpha = 0.25
       end
-      
+
       @solar_collector = @model_interface.skp_model.materials["OpenStudio_SolarCollector"]
-      if (@solar_collector.nil?)      
+      if (@solar_collector.nil?)
         @solar_collector = @model_interface.skp_model.materials.add("OpenStudio_SolarCollector")
         @solar_collector.texture = Plugin.dir + "/lib/resources/SolarCollector.png"
         @solar_collector.texture.size = 40
         @solar_collector.alpha = 1.0
       end
-      
+
       @photovoltaic = @model_interface.skp_model.materials["OpenStudio_Photovoltaic"]
-      if (@photovoltaic.nil?)      
+      if (@photovoltaic.nil?)
         @photovoltaic = @model_interface.skp_model.materials.add("OpenStudio_Photovoltaic")
         @photovoltaic.texture = Plugin.dir + "/lib/resources/Photovoltaic.png"
         @photovoltaic.texture.size = 40
         @photovoltaic.alpha = 1.0
       end
-      
+
     end
-    
+
     def destroy
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       @model_interface = nil
       @materials = nil
       @observer = nil
     end
-     
+
     def valid_entity?
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
 
       return((not @materials.nil?) and (not @materials.deleted?) and @materials.valid? and (@materials.entityID > 0))
     end
-    
+
     def add_observers(recursive = false)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
 
@@ -232,16 +232,16 @@ module OpenStudio
         @observer_added = true
         @observer.enable
       end
-      
+
       if recursive
         @model_interface.rendering_colors.each { |interface| interface.add_observers(recursive) }
       end
-      
+
     end
 
     def remove_observers(recursive = false)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       had_observers = false
       if (valid_entity?)
         if $OPENSTUDIO_SKETCHUPPLUGIN_DISABLE_OBSERVERS
@@ -254,18 +254,18 @@ module OpenStudio
           @observer_added = false
         end
       end
-      
+
       if recursive
         @model_interface.rendering_colors.each { |interface| interface.remove_observers(recursive) }
-      end  
-      
+      end
+
       return had_observers
-      
+
     end
-    
+
     def destroy_observers(recursive = false)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       result = false
       if @observer
         if (valid_entity?)
@@ -283,19 +283,19 @@ module OpenStudio
         @observer.destroy
         @observer = nil
         result = true
-        
+
         if recursive
           @model_interface.rendering_colors.each { |interface| interface.destroy_observers(recursive) }
-        end  
+        end
       end
-      
+
       return result
-      
+
     end
-    
+
     def get_material(name, color)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       material = @model_interface.skp_model.materials[name]
       if (material.nil?)
         material = @model_interface.skp_model.materials.add(name)
@@ -304,31 +304,31 @@ module OpenStudio
       end
       return(material)
     end
-    
+
     def render_defaults
       #Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       return @render_defaults
     end
-    
+
     # DLM: can we remove this?
     #def render_defaults=(render_defaults)
     #  #Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-    #  
+    #
     #  @render_defaults = render_defaults
-    #  
+    #
     #  @model_interface.request_paint
     #end
-    
+
     def rendering_mode
       #Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       return @rendering_mode
     end
 
     def rendering_mode=(rendering_mode)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-    
+
       if rendering_mode == RenderByConstruction or rendering_mode == RenderBySpaceType
         if @rendering_mode == rendering_mode
           # toggle render defaults
@@ -338,11 +338,11 @@ module OpenStudio
           @render_defaults = true
         end
       end
-      
+
       @rendering_mode = rendering_mode
 
       rendering_options = @model_interface.skp_model.rendering_options
-      
+
       if @rendering_mode == RenderWaiting
         rendering_options["FaceFrontColor"] = "white"
         rendering_options["FaceBackColor"] = "white"
@@ -364,14 +364,14 @@ module OpenStudio
         rendering_options["RenderMode"] = 2 # render by material
         rendering_options["DisplayColorByLayer"] = false
       end
-      
+
       dialog_manager = Plugin.dialog_manager
       if dialog_manager
         dialog_manager.selection_changed
       end
-      
+
       @model_interface.request_paint
-     
+
     end
 
   end

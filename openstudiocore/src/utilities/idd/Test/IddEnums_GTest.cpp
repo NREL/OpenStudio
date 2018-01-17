@@ -42,7 +42,7 @@ TEST_F(IddFixture,IddEnums_IddFileType)
 
   epIdd = openstudio::IddFileType("EnergyPlus");
   EXPECT_TRUE( epIdd != osIdd );
-  
+
   EXPECT_EQ("OpenStudio",osIdd.valueName());
   EXPECT_EQ("OpenStudio",osIdd.valueDescription());
 }
@@ -52,7 +52,7 @@ TEST_F(IddFixture,IddEnums_IddObjectType)
   openstudio::IddObjectType iddType(openstudio::IddObjectType::Catchall);
   iddType = openstudio::IddObjectType::UserCustom;
   iddType = openstudio::IddObjectType::CommentOnly;
-  
+
   iddType = openstudio::IddObjectType("BuildingSurface:Detailed");
   EXPECT_EQ("BuildingSurface_Detailed",iddType.valueName());
   EXPECT_EQ("BuildingSurface:Detailed",iddType.valueDescription());

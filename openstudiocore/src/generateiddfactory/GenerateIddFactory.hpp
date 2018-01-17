@@ -38,11 +38,11 @@ namespace openstudio {
 
 typedef openstudio::filesystem::path path;
 
-/** Initialize one IddFileFactoryData object per Idd file, based on user input arguments. Throws 
+/** Initialize one IddFileFactoryData object per Idd file, based on user input arguments. Throws
  *  on input error. */
 IddFileFactoryDataVector constructIddFileObjects(const std::vector<std::string>& iddArgs);
 
-/** Open the output file streams and start writing the output files. All generated files are 
+/** Open the output file streams and start writing the output files. All generated files are
  *  prefixed with outFileHeader. Call this function before parsing the IDD files. */
 void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
                         const std::vector<IddFileFactoryData>& iddFiles);
@@ -51,7 +51,7 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
 void completeOutFiles(const openstudio::IddFileFactoryDataVector& iddFiles,
                       GenerateIddFactoryOutFiles& outFiles);
 
-/** Get the IddFileFactoryData object in iddFiles associated with IDD file fileName. Throws if 
+/** Get the IddFileFactoryData object in iddFiles associated with IDD file fileName. Throws if
  *  the search is unsuccessful. */
 openstudio::IddFileFactoryData getFile(const std::string& fileName,
                                        const openstudio::IddFileFactoryDataVector& iddFiles);

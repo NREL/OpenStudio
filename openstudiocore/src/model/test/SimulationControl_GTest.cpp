@@ -42,7 +42,7 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture,SimulationControl_LoadsConvergenceToleranceValue_Quantity) {
   Model model;
- 
+
   SimulationControl simulationControl = model.getUniqueModelObject<SimulationControl>();
 
   Unit units = simulationControl.getLoadsConvergenceToleranceValue(true).units(); // Get IP units.

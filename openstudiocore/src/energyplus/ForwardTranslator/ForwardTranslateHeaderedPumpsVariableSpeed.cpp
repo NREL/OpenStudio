@@ -47,7 +47,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateHeaderedPumpsVariableSpeed( 
+boost::optional<IdfObject> ForwardTranslator::translateHeaderedPumpsVariableSpeed(
     HeaderedPumpsVariableSpeed & modelObject)
 {
   IdfObject idfObject(IddObjectType::HeaderedPumps_VariableSpeed);

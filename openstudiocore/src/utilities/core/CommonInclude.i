@@ -11,7 +11,7 @@
 %}
 
 %header %{
-// Must undo more of the damage caused by ruby/win32.h 2.0.0 
+// Must undo more of the damage caused by ruby/win32.h 2.0.0
 #ifdef access
 #undef access
 #endif
@@ -25,16 +25,16 @@
 
 %include <utilities/core/Macro.hpp>
 
-#define BOOST_SERIALIZATION_ASSUME_ABSTRACT(T) 
+#define BOOST_SERIALIZATION_ASSUME_ABSTRACT(T)
 
-#define BOOST_CLASS_EXPORT_GUID(T,K) 
+#define BOOST_CLASS_EXPORT_GUID(T,K)
 
-#define BOOST_CLASS_EXPORT(T) 
+#define BOOST_CLASS_EXPORT(T)
 
 // Disable some standard warnings here, that we do not care about
 // Namely: nothing known about base class, operator ignored, "wrong" class and "wrong" constant names
 // and nested classes and "nothing known about <type>"
-// also ignoring #509, shadowed method. Its a red herring for all of our cases 
+// also ignoring #509, shadowed method. Its a red herring for all of our cases
 //#pragma SWIG nowarn=401,362,365,366,368,378,503,801,312
 #pragma SWIG nowarn=362,365,366,368,378,503,801,312,509,401
 

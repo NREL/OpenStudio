@@ -90,13 +90,13 @@ signals:
     void selectItem(OSItem* item);
 
   private slots:
-  
+
     void replaceItem(OSItem* item, const OSItemId& replacementItemId);
 
     void clearSelection();
 
     void handleDrop(const OSItemId&);
-  
+
     void doAdd();
 
     void doCopy();

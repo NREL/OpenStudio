@@ -54,7 +54,7 @@ TEST_F(UnitsFixture,ScaleFactory_RegisteredScales) {
 
   LOG(Debug,"ScaleFactory_RegisteredScales");
 
-  // ETH@20100909 Using ScaleFactory instead of ScaleFactory in an attempt 
+  // ETH@20100909 Using ScaleFactory instead of ScaleFactory in an attempt
   // to get ScaleFactory.hpp to show up in coverage analysis.
   std::vector<Scale> scales = ScaleFactory::instance().registeredScales();
 

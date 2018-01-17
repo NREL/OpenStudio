@@ -37,9 +37,9 @@
 
 namespace openstudio {
 
-/** Quantity class defines value, unit pairs. Units are set at construction and are modified by 
- *  arithmetic operations. The constructors and assignment operator ensure that this class 
- *  behaves as "plain old data" (POD) by cloning any units information (to avoid multiple objects 
+/** Quantity class defines value, unit pairs. Units are set at construction and are modified by
+ *  arithmetic operations. The constructors and assignment operator ensure that this class
+ *  behaves as "plain old data" (POD) by cloning any units information (to avoid multiple objects
  *  pointing to the exact same unit data). */
 class UTILITIES_API Quantity {
  public:
@@ -90,7 +90,7 @@ class UTILITIES_API Quantity {
    *  unit to be set. */
   void setBaseUnitExponent(const std::string& baseUnit, int exponent);
 
-  /** Units in string form. LaTeX mathematical formatting--_ for subscripting, ^ for 
+  /** Units in string form. LaTeX mathematical formatting--_ for subscripting, ^ for
    *  superscripting. Curly braces {} are used for grouping. \sa Unit::standardUnitsString */
   std::string standardUnitsString(bool withScale=true) const;
 
@@ -167,16 +167,16 @@ class UTILITIES_API Quantity {
   /** Divide by double. No impact to units or scale. Does not throw. */
   Quantity& operator/=(double d);
 
-  /** Raise Quantity to a rational power. Throws openstudio::Exception if expDenom is not a common divisor 
-   *  for all baseUnit and scale exponents. Returned scale exponent may differ from expectation 
-   *  based on initialization of openstudio::ScaleFactory, see Scale operators declared in 
+  /** Raise Quantity to a rational power. Throws openstudio::Exception if expDenom is not a common divisor
+   *  for all baseUnit and scale exponents. Returned scale exponent may differ from expectation
+   *  based on initialization of openstudio::ScaleFactory, see Scale operators declared in
    *  ScaleFactory.hpp.  */
   Quantity& pow(int expNum,int expDenom=1);
 
   //@}
 
   friend UTILITIES_API std::ostream& operator<<(std::ostream& os,const Quantity& q);
-  
+
  protected:
   double m_value;
   Unit m_units;
@@ -205,7 +205,7 @@ UTILITIES_API Quantity operator*(const Quantity& lQuantity,const Quantity& rQuan
 /** Divide Quantities. Used with base class Quantities and mixed Quantity types. */
 UTILITIES_API Quantity operator/(const Quantity& lQuantity,const Quantity& rQuantity);
 
-/** Raise rQuantity to a rational power. Throws openstudio::Exception if the scale exponent or 
+/** Raise rQuantity to a rational power. Throws openstudio::Exception if the scale exponent or
  *  any base unit exponent is not cleanly divisible by expDenom. */
 UTILITIES_API Quantity pow(const Quantity& rQuantity,int expNum,int expDenom=1);
 

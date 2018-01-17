@@ -37,7 +37,7 @@
 namespace openstudio {
 
 
-  class UTILITIES_API UnzipFile 
+  class UTILITIES_API UnzipFile
   {
     public:
       /// Constructs a UnzipFile object, opening the given file name. Throws if file could not be opened

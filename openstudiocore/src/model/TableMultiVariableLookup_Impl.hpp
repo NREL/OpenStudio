@@ -168,7 +168,7 @@ namespace detail {
 
     void resetTableDataFormat();
 
-    void setExternalFileName(boost::optional<std::string> externalFileName);
+    bool setExternalFileName(boost::optional<std::string> externalFileName);
 
     void resetExternalFileName();
 
@@ -180,55 +180,55 @@ namespace detail {
 
     void resetX2SortOrder();
 
-    void setNormalizationReference(boost::optional<double> normalizationReference);
+    bool setNormalizationReference(boost::optional<double> normalizationReference);
 
     void resetNormalizationReference();
 
-    void setMinimumValueofX1(boost::optional<double> minimumValueofX1);
+    bool setMinimumValueofX1(boost::optional<double> minimumValueofX1);
 
     void resetMinimumValueofX1();
 
-    void setMaximumValueofX1(boost::optional<double> maximumValueofX1);
+    bool setMaximumValueofX1(boost::optional<double> maximumValueofX1);
 
     void resetMaximumValueofX1();
 
-    void setMinimumValueofX2(boost::optional<double> minimumValueofX2);
+    bool setMinimumValueofX2(boost::optional<double> minimumValueofX2);
 
     void resetMinimumValueofX2();
 
-    void setMaximumValueofX2(boost::optional<double> maximumValueofX2);
+    bool setMaximumValueofX2(boost::optional<double> maximumValueofX2);
 
     void resetMaximumValueofX2();
 
-    void setMinimumValueofX3(boost::optional<double> minimumValueofX3);
+    bool setMinimumValueofX3(boost::optional<double> minimumValueofX3);
 
     void resetMinimumValueofX3();
 
-    void setMaximumValueofX3(boost::optional<double> maximumValueofX3);
+    bool setMaximumValueofX3(boost::optional<double> maximumValueofX3);
 
     void resetMaximumValueofX3();
 
-    void setMinimumValueofX4(boost::optional<double> minimumValueofX4);
+    bool setMinimumValueofX4(boost::optional<double> minimumValueofX4);
 
     void resetMinimumValueofX4();
 
-    void setMaximumValueofX4(boost::optional<double> maximumValueofX4);
+    bool setMaximumValueofX4(boost::optional<double> maximumValueofX4);
 
     void resetMaximumValueofX4();
 
-    void setMinimumValueofX5(boost::optional<double> minimumValueofX5);
+    bool setMinimumValueofX5(boost::optional<double> minimumValueofX5);
 
     void resetMinimumValueofX5();
 
-    void setMaximumValueofX5(boost::optional<double> maximumValueofX5);
+    bool setMaximumValueofX5(boost::optional<double> maximumValueofX5);
 
     void resetMaximumValueofX5();
 
-    void setMinimumTableOutput(boost::optional<double> minimumTableOutput);
+    bool setMinimumTableOutput(boost::optional<double> minimumTableOutput);
 
     void resetMinimumTableOutput();
 
-    void setMaximumTableOutput(boost::optional<double> maximumTableOutput);
+    bool setMaximumTableOutput(boost::optional<double> maximumTableOutput);
 
     void resetMaximumTableOutput();
 
@@ -305,5 +305,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_TABLEMULTIVARIABLELOOKUP_IMPL_HPP
-
+#endif // MODEL_TABLEMULTIVARIABLELOOKUP_IMPL_HPP

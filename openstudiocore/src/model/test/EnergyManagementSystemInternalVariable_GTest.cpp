@@ -46,7 +46,7 @@ using std::string;
 TEST_F(ModelFixture, EMSInternalVariable_EMSInternalVariable)
 {
   Model model;
-    
+
   // add internal variable
   EnergyManagementSystemInternalVariable var(model, "TestName");
   var.setInternalDataIndexKeyName("TestName");

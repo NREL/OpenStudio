@@ -73,7 +73,7 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   bool isDesignSupplyAirFlowRateAutosized() const;
 
-  void setDesignSupplyAirFlowRate(boost::optional<double> designSupplyAirFlowRate);
+  bool setDesignSupplyAirFlowRate(boost::optional<double> designSupplyAirFlowRate);
 
   bool setDesignSupplyAirFlowRate(const OSOptionalQuantity& designSupplyAirFlowRate);
 
@@ -186,7 +186,7 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   Schedule availabilitySchedule() const;
 
-  void setAvailabilitySchedule(Schedule & schedule);
+  bool setAvailabilitySchedule(Schedule & schedule);
 
   bool setNightCycleControlType(std::string const & nightCycle);
 
@@ -210,7 +210,7 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   static boost::optional<PlantLoop> plantForAirTerminal( HVACComponent & airTerminal );
 
-  static void setPlantForAirTerminal( HVACComponent & airTerminal, PlantLoop & plantLoop );
+  static bool setPlantForAirTerminal( HVACComponent & airTerminal, PlantLoop & plantLoop );
 
   unsigned supplyOutletPortA() const;
 
@@ -275,4 +275,3 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 } // openstudio
 
 #endif
-

@@ -46,20 +46,20 @@ module OpenStudio
 
       end
     end
-    
+
     # this method starts a new OpenStudio Model from the empty template and then requests user input from a wizard
     def new_openstudio_from_wizard
       if (prompt_to_continue_open)
-      
-        # load empty model 
+
+        # load empty model
         Plugin.model_manager.open_openstudio(Plugin.empty_template_path, Sketchup.active_model, false, false)
 
         # DLM: this is causing a crash on Mac
         if (Plugin.platform == Platform_Windows)
           # run user script in future process so SketchUp entities are made for each color
-          proc = Proc.new { 
+          proc = Proc.new {
             # run on demand user script on new file
-            if Plugin.user_script_runner.run_user_script("Space Type and Construction Set Wizard") 
+            if Plugin.user_script_runner.run_user_script("Space Type and Construction Set Wizard")
               UI.messagebox("Run the \"Space Type and Construction Set Wizard\" user script under \"On Demand Template Generators\" to add additional space types or construction sets.", MB_OK)
             else
               # user cancelled or measure fails open the minimal template instead
@@ -71,10 +71,10 @@ module OpenStudio
         else
           UI.messagebox("Model is currently empty. Run the \"Space Type and Construction Set Wizard\" user script under \"On Demand Template Generators\" to add additional space types or construction sets.", MB_OK)
         end
-        
+
       end
     end
-    
+
     def open_openstudio
       result = false
       if (prompt_to_continue_open)
@@ -85,36 +85,36 @@ module OpenStudio
         end
 
         if (path = UI.open_panel("Open OpenStudio Model File", openstudio_dir, "*.osm"))  # bug in SU7 prevents file filters from working
-          
+
           success = Plugin.model_manager.open_openstudio(path, Sketchup.active_model)
-          
+
           if success
             # Save the dir so we can start here next time
-            Plugin.write_pref("Last OpenStudio Dir", File.dirname(path))  
+            Plugin.write_pref("Last OpenStudio Dir", File.dirname(path))
           else
             UI.messagebox("Failed to open #{path}")
           end
-          
+
         end
       end
       return(result)
     end
-    
+
 
     def save_openstudio
       result = nil
-      
+
       path = Plugin.model_manager.model_interface.openstudio_path
       if (path.nil?)
         result = save_openstudio_as
       else
         # check if writable?
         result = Plugin.model_manager.model_interface.export_openstudio(path)
-        if not result 
+        if not result
           UI.messagebox("Failed to save OpenStudio Model to '#{path}'")
         end
       end
-      
+
       return result
     end
 
@@ -128,9 +128,9 @@ module OpenStudio
         stem = OpenStudio::toString(OpenStudio::Path.new(path).stem)
 
         if extension.empty?
-        
+
           path = path + '.osm'
-          
+
           # see if file exists and prompt user if they want to overwrite it
           # only needed because not caught by sketchup save dialog
           if File.exist?(path)
@@ -140,20 +140,20 @@ module OpenStudio
             else
               return save_openstudio_as
             end
-          end      
-        
+          end
+
         elsif extension != '.osm'
-        
+
           path = OpenStudio::Path.new(path).replace_extension("osm").to_s
           new_name = OpenStudio::toString(OpenStudio::Path.new(path).filename)
-        
+
           result = UI.messagebox("File name must have .osm extension. Do you want to rename your file to #{new_name}?",MB_YESNO)
           if result == 6 # YES
             # save file
           else
             return save_openstudio_as
-          end        
-          
+          end
+
           # see if file exists and prompt user if they want to overwrite it
           # only needed because not caught by sketchup save dialog
           if File.exist?(path)
@@ -163,10 +163,10 @@ module OpenStudio
             else
               return save_openstudio_as
             end
-          end      
-          
-        end   
-          
+          end
+
+        end
+
         # store copy for restore
         old_path = Plugin.model_manager.model_interface.openstudio_path
 
@@ -175,22 +175,22 @@ module OpenStudio
 
         if result
           # Save the dir so we can start here next time
-          Plugin.write_pref("Last OpenStudio Dir", File.dirname(path))  
-            
+          Plugin.write_pref("Last OpenStudio Dir", File.dirname(path))
+
           # set path again to establish path watcher as file now exists
           Plugin.model_manager.model_interface.openstudio_path = path
         else
           UI.messagebox("Failed to save OpenStudio Model to '#{path}'")
-          
+
           # will create a new path watcher for old path
           Plugin.model_manager.model_interface.openstudio_path = old_path
         end
-       
+
       end
-      
+
       return result
     end
-    
+
     def import_openstudio
       if (prompt_to_continue_import("OpenStudio Model"))
         openstudio_dir = Plugin.read_pref("Last OpenStudio Import Dir")
@@ -199,9 +199,9 @@ module OpenStudio
         end
 
         if (path = UI.open_panel("Import OpenStudio Model", openstudio_dir, "*.osm"))  # bug in SU7 prevents file filters from working
-          
+
           success = Plugin.model_manager.open_openstudio(path, Sketchup.active_model, false, true)
-          
+
           if success
             # Save the dir so we can start here next time
             Plugin.write_pref("Last OpenStudio Import Dir", File.dirname(path))
@@ -212,7 +212,7 @@ module OpenStudio
         end
       end
     end
-    
+
     def import_constructions
       dir = Plugin.read_pref("Last Constructions Import Dir")
       if not dir
@@ -221,8 +221,8 @@ module OpenStudio
 
       if (path = UI.open_panel("Import Constructions", dir, "*.osm"))  # bug in SU7 prevents file filters from working
         # Save the dir so we can start here next time
-        Plugin.write_pref("Last Constructions Import Dir", File.dirname(path))  
-          
+        Plugin.write_pref("Last Constructions Import Dir", File.dirname(path))
+
         success = false
         openstudio_model = Plugin.model_manager.model_from_openstudio_path(path)
         if openstudio_model
@@ -230,12 +230,12 @@ module OpenStudio
           success = true
         end
 
-        if not success 
+        if not success
           UI.messagebox("Failed to import #{path}")
         end
       end
     end
-    
+
     def import_schedules
       dir = Plugin.read_pref("Last Schedules Import Dir")
       if not dir
@@ -244,21 +244,21 @@ module OpenStudio
 
       if (path = UI.open_panel("Import Schedules", dir, "*.osm"))  # bug in SU7 prevents file filters from working
         # Save the dir so we can start here next time
-        Plugin.write_pref("Last Schedules Import Dir", File.dirname(path))  
-        
+        Plugin.write_pref("Last Schedules Import Dir", File.dirname(path))
+
         success = false
         openstudio_model = Plugin.model_manager.model_from_openstudio_path(path)
         if openstudio_model
           Plugin.model_manager.model_interface.import_schedules(openstudio_model)
           success = true
         end
-        
-        if not success 
+
+        if not success
           UI.messagebox("Failed to import #{path}")
         end
       end
     end
-    
+
     def import_space_types
       dir = Plugin.read_pref("Last Space Loads Import Dir")
       if not dir
@@ -267,8 +267,8 @@ module OpenStudio
 
       if (path = UI.open_panel("Import Space Loads", dir, "*.osm"))  # bug in SU7 prevents file filters from working
         # Save the dir so we can start here next time
-        Plugin.write_pref("Last Space Loads Import Dir", File.dirname(path))  
-        
+        Plugin.write_pref("Last Space Loads Import Dir", File.dirname(path))
+
         success = false
         openstudio_model = Plugin.model_manager.model_from_openstudio_path(path)
         if openstudio_model
@@ -276,12 +276,12 @@ module OpenStudio
           success = true
         end
 
-        if not success 
+        if not success
           UI.messagebox("Failed to import #{path}")
         end
       end
     end
-    
+
     def import_idf
       if (prompt_to_continue_import("EnergyPlus Idf"))
         idf_dir = Plugin.read_pref("Last Idf Import Dir")
@@ -292,21 +292,21 @@ module OpenStudio
         if (path = UI.open_panel("Import EnergyPlus Idf", idf_dir, "*.idf"))  # bug in SU7 prevents file filters from working
 
           success = false
-          
+
           workspace = Plugin.model_manager.workspace_from_idf_path(path)
           if workspace
             openstudio_model, errors, warnings, untranslated_idf_objects = Plugin.model_manager.model_from_workspace(workspace)
             Plugin.model_manager.attach_openstudio_model(openstudio_model, Sketchup.active_model, nil, false, true, errors, warnings, untranslated_idf_objects)
             success = true
           end
-          
+
           if success
             # Save the dir so we can start here next time
             Plugin.write_pref("Last Idf Import Dir", File.dirname(path))
           else
             UI.messagebox("Failed to import #{path}.  If this is an older EnergyPlus Idf please upgrade to version 8.4 using the EnergyPlus transition program.")
           end
-          
+
         end
       end
     end
@@ -319,21 +319,21 @@ module OpenStudio
 
       if (path = UI.open_panel("Import EnergyPlus Idf Constructions", dir, "*.idf; *.imf"))  # bug in SU7 prevents file filters from working
         # Save the dir so we can start here next time
-        Plugin.write_pref("Last Idf Constructions Import Dir", File.dirname(path))  
-          
-        success = false  
+        Plugin.write_pref("Last Idf Constructions Import Dir", File.dirname(path))
+
+        success = false
         workspace = Plugin.model_manager.workspace_from_idf_path(path)
         if workspace
           Plugin.model_manager.model_interface.import_idf_constructions(workspace)
           success = true
         end
 
-        if not success 
+        if not success
           UI.messagebox("Failed to import #{path}")
         end
       end
     end
-    
+
     def import_idf_schedules
       dir = Plugin.read_pref("Last Idf Schedules Import Dir")
       if not dir
@@ -342,21 +342,21 @@ module OpenStudio
 
       if (path = UI.open_panel("Import EnergyPlus Idf Schedules", dir, "*.idf; *.imf"))  # bug in SU7 prevents file filters from working
         # Save the dir so we can start here next time
-        Plugin.write_pref("Last Idf Schedules Import Dir", File.dirname(path))  
-        
-        success = false  
+        Plugin.write_pref("Last Idf Schedules Import Dir", File.dirname(path))
+
+        success = false
         workspace = Plugin.model_manager.workspace_from_idf_path(path)
         if workspace
           Plugin.model_manager.model_interface.import_idf_schedules(workspace)
           success = true
         end
-        
-        if not success 
+
+        if not success
           UI.messagebox("Failed to import #{path}")
         end
       end
     end
-    
+
     def import_gbxml
       if (prompt_to_continue_import("gbXML Model"))
         gbxml_dir = Plugin.read_pref("Last gbXML Import Dir")
@@ -367,20 +367,20 @@ module OpenStudio
         if (path = UI.open_panel("Import gbXML Model", gbxml_dir, "*.xml"))  # bug in SU7 prevents file filters from working
 
           success = false
-          
+
           openstudio_model, errors, warnings = Plugin.model_manager.model_from_gbXML_path(path)
           if openstudio_model
             Plugin.model_manager.attach_openstudio_model(openstudio_model, Sketchup.active_model, nil, false, true, errors, warnings)
             success = true
           end
-          
+
           if success
             # Save the dir so we can start here next time
             Plugin.write_pref("Last gbXML Import Dir", File.dirname(path))
           else
             UI.messagebox("Failed to import gbXML file at #{path}.")
           end
-          
+
         end
       end
     end
@@ -395,35 +395,35 @@ module OpenStudio
         if (path = UI.open_panel("Import SDD Model", sdd_dir, "*.xml"))  # bug in SU7 prevents file filters from working
 
           success = false
-          
+
           openstudio_model, errors, warnings = Plugin.model_manager.model_from_sdd_path(path)
           if openstudio_model
             Plugin.model_manager.attach_openstudio_model(openstudio_model, Sketchup.active_model, nil, false, true, errors, warnings)
             success = true
           end
-          
+
           if success
             # Save the dir so we can start here next time
             Plugin.write_pref("Last SDD Import Dir", File.dirname(path))
           else
             UI.messagebox("Failed to import SDD file at #{path}.")
           end
-          
+
         end
       end
     end
-    
+
     def export_openstudio
-      
+
       if (path = UI.save_panel("Export OpenStudio Model", Plugin.model_manager.model_interface.openstudio_dir, Plugin.model_manager.model_interface.openstudio_name))
 
         extension = OpenStudio::toString(OpenStudio::Path.new(path).extension)
         stem = OpenStudio::toString(OpenStudio::Path.new(path).stem)
 
         if extension.empty?
-        
+
           path = path + '.osm'
-          
+
           # see if file exists and prompt user if they want to overwrite it
           # only needed because not caught by sketchup save dialog
           if File.exist?(path)
@@ -433,20 +433,20 @@ module OpenStudio
             else
               return export_openstudio
             end
-          end      
-        
+          end
+
         elsif extension != '.osm'
-        
+
           path = OpenStudio::Path.new(path).replace_extension("osm").to_s
           new_name = OpenStudio::toString(OpenStudio::Path.new(path).filename)
-        
+
           result = UI.messagebox("File name must have .osm extension. Do you want to rename your file to #{new_name}?",MB_YESNO)
           if result == 6 # YES
             # save file
           else
             return export_openstudio
-          end        
-          
+          end
+
           # see if file exists and prompt user if they want to overwrite it
           # only needed because not caught by sketchup save dialog
           if File.exist?(path)
@@ -456,16 +456,16 @@ module OpenStudio
             else
               return export_openstudio
             end
-          end      
-          
-        end   
+          end
+
+        end
 
         result = Plugin.model_manager.model_interface.export_openstudio(path)
-        
-        if not result 
+
+        if not result
           UI.messagebox("Failed to export OpenStudio Model to #{path}")
         end
-        
+
       end
     end
 
@@ -489,7 +489,7 @@ module OpenStudio
             else
               return export_untranslated_idf
             end
-          end      
+          end
 
         elsif extension != '.idf'
 
@@ -501,7 +501,7 @@ module OpenStudio
             # save file
           else
             return export_untranslated_idf
-          end        
+          end
 
           # see if file exists and prompt user if they want to overwrite it
           # only needed because not caught by sketchup save dialog
@@ -512,9 +512,9 @@ module OpenStudio
             else
               return export_untranslated_idf
             end
-          end      
-        end   
-        
+          end
+        end
+
         result = Plugin.model_manager.model_interface.export_untranslated_idf(path)
 
         if not result
@@ -523,7 +523,7 @@ module OpenStudio
       end
 
     end
-    
+
     def export_idf
       if Plugin.read_pref('Warn on Idf Export')
         # YESNO messagebox, user can cancel at save_panel
@@ -551,7 +551,7 @@ module OpenStudio
             else
               return export_idf
             end
-          end      
+          end
 
         elsif extension != '.idf'
 
@@ -563,7 +563,7 @@ module OpenStudio
             # save file
           else
             return export_idf
-          end        
+          end
 
           # see if file exists and prompt user if they want to overwrite it
           # only needed because not caught by sketchup save dialog
@@ -574,9 +574,9 @@ module OpenStudio
             else
               return export_idf
             end
-          end      
-        end   
-        
+          end
+        end
+
         result = Plugin.model_manager.model_interface.export_idf(path)
 
         if not result
@@ -613,7 +613,7 @@ module OpenStudio
             else
               return export_gbxml
             end
-          end      
+          end
 
         elsif extension != '.xml'
 
@@ -625,7 +625,7 @@ module OpenStudio
             # save file
           else
             return export_gbxml
-          end        
+          end
 
           # see if file exists and prompt user if they want to overwrite it
           # only needed because not caught by sketchup save dialog
@@ -636,9 +636,9 @@ module OpenStudio
             else
               return export_gbxml
             end
-          end      
-        end   
-        
+          end
+        end
+
         result = Plugin.model_manager.model_interface.export_gbxml(path)
 
         if not result
@@ -675,7 +675,7 @@ module OpenStudio
             else
               return export_sdd
             end
-          end      
+          end
 
         elsif extension != '.xml'
 
@@ -687,7 +687,7 @@ module OpenStudio
             # save file
           else
             return export_sdd
-          end        
+          end
 
           # see if file exists and prompt user if they want to overwrite it
           # only needed because not caught by sketchup save dialog
@@ -698,9 +698,9 @@ module OpenStudio
             else
               return export_sdd
             end
-          end      
-        end   
-        
+          end
+        end
+
         result = Plugin.model_manager.model_interface.export_sdd(path)
 
         if not result
@@ -709,7 +709,7 @@ module OpenStudio
       end
 
     end
-    
+
     def check_site(source_name, new_name, new_lat, new_lon, new_time, new_elev)
 
       # if we already have site set check distance between site and weather file
@@ -770,7 +770,7 @@ module OpenStudio
           site.update_model_object
           site.add_watcher
           site.add_observers
-          
+
           # set the model object fields
           site.model_object.setName(new_name.gsub(',', '-'))
           site.model_object.setLatitude(new_lat)
@@ -781,8 +781,8 @@ module OpenStudio
 
       end
     end
-    
-    
+
+
     def prompt_to_continue_open
       result = false
 
@@ -796,11 +796,11 @@ module OpenStudio
       else
         result = true
       end
-      
+
       return result
     end
-    
-    
+
+
     def prompt_to_continue_import(name)
       result = false
 
@@ -817,7 +817,7 @@ module OpenStudio
 
       return result
     end
-    
+
 
   end
 

@@ -432,9 +432,10 @@ namespace detail {
     return isEmpty(OS_SpaceFields::PartofTotalFloorArea);
   }
 
-  void Space_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
+  bool Space_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
     bool result = setDouble(OS_SpaceFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
     OS_ASSERT(result);
+    return result;
   }
 
   void Space_Impl::resetDirectionofRelativeNorth() {
@@ -442,9 +443,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void Space_Impl::setXOrigin(double xOrigin, bool driverMethod) {
+  bool Space_Impl::setXOrigin(double xOrigin, bool driverMethod) {
     bool result = setDouble(OS_SpaceFields::XOrigin, xOrigin, driverMethod);
     OS_ASSERT(result);
+    return result;
   }
 
   void Space_Impl::resetXOrigin() {
@@ -452,9 +454,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void Space_Impl::setYOrigin(double yOrigin, bool driverMethod) {
+  bool Space_Impl::setYOrigin(double yOrigin, bool driverMethod) {
     bool result = setDouble(OS_SpaceFields::YOrigin, yOrigin, driverMethod);
     OS_ASSERT(result);
+    return result;
   }
 
   void Space_Impl::resetYOrigin() {
@@ -462,9 +465,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void Space_Impl::setZOrigin(double zOrigin, bool driverMethod) {
+  bool Space_Impl::setZOrigin(double zOrigin, bool driverMethod) {
     bool result = setDouble(OS_SpaceFields::ZOrigin, zOrigin, driverMethod);
     OS_ASSERT(result);
+    return result;
   }
 
   void Space_Impl::resetZOrigin() {
@@ -472,7 +476,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void Space_Impl::setPartofTotalFloorArea(bool partofTotalFloorArea) {
+  bool Space_Impl::setPartofTotalFloorArea(bool partofTotalFloorArea) {
     bool result = false;
     if (partofTotalFloorArea) {
       result = setString(OS_SpaceFields::PartofTotalFloorArea, "Yes");
@@ -480,6 +484,7 @@ namespace detail {
       result = setString(OS_SpaceFields::PartofTotalFloorArea, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void Space_Impl::resetPartofTotalFloorArea() {
@@ -2979,8 +2984,8 @@ bool Space::isPartofTotalFloorAreaDefaulted() const {
   return getImpl<detail::Space_Impl>()->isPartofTotalFloorAreaDefaulted();
 }
 
-void Space::setPartofTotalFloorArea(bool partofTotalFloorArea) {
-  getImpl<detail::Space_Impl>()->setPartofTotalFloorArea(partofTotalFloorArea);
+bool Space::setPartofTotalFloorArea(bool partofTotalFloorArea) {
+  return getImpl<detail::Space_Impl>()->setPartofTotalFloorArea(partofTotalFloorArea);
 }
 
 void Space::resetPartofTotalFloorArea() {
@@ -3567,4 +3572,3 @@ std::vector<std::vector<Point3d> > generateSkylightPattern(const std::vector<Spa
 
 } // model
 } // openstudio
-

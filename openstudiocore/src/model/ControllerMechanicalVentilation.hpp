@@ -64,7 +64,7 @@ class MODEL_API ControllerMechanicalVentilation : public ModelObject {
 
   bool isDemandControlledVentilationDefaulted() const;
 
-  void setDemandControlledVentilation(bool demandControlledVentilation);
+  bool setDemandControlledVentilation(bool demandControlledVentilation);
 
   void resetDemandControlledVentilation();
 

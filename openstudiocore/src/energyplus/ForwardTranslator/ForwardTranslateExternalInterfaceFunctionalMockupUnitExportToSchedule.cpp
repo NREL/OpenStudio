@@ -58,7 +58,7 @@ boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceFunction
   if (s) {
     idfObject.setName(*s);
   }
-  
+
   const boost::optional<ScheduleTypeLimits> m = modelObject.scheduleTypeLimits();
   if (m.is_initialized()) {
     idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::ScheduleTypeLimitsNames, m.get().nameString());

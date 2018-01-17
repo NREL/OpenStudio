@@ -828,7 +828,7 @@ set(${target_name}_src
   MaterialPropertyGlazingSpectralData.cpp
   MaterialPropertyMoisturePenetrationDepthSettings.hpp
   MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp
-  MaterialPropertyMoisturePenetrationDepthSettings.cpp  
+  MaterialPropertyMoisturePenetrationDepthSettings.cpp
   MeterCustom.hpp
   MeterCustom_Impl.hpp
   MeterCustom.cpp

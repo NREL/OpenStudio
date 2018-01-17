@@ -75,9 +75,9 @@ namespace detail {
     return getString(OS_VersionFields::VersionIdentifier).get();
   }
 
-  void Version_Impl::setVersionIdentifier(const std::string& s)
+  bool Version_Impl::setVersionIdentifier(const std::string& s)
   {
-    setString(OS_VersionFields::VersionIdentifier,s);
+    return setString(OS_VersionFields::VersionIdentifier,s);;
   }
 
   // return the parent object in the hierarchy
@@ -119,9 +119,9 @@ std::string Version::versionIdentifier() const {
   return getImpl<detail::Version_Impl>()->versionIdentifier();
 }
 
-void Version::setVersionIdentifier(const std::string& s)
+bool Version::setVersionIdentifier(const std::string& s)
 {
-  getImpl<detail::Version_Impl>()->setVersionIdentifier(s);
+  return getImpl<detail::Version_Impl>()->setVersionIdentifier(s);
 }
 
 IddObjectType Version::iddObjectType() {
@@ -130,4 +130,4 @@ IddObjectType Version::iddObjectType() {
 }
 
 } // model
-} // openstudio
+} // openstudio

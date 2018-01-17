@@ -202,15 +202,15 @@ namespace detail {
 
     void resetEvaporatorFlowRateforSecondaryFluid();
 
-    void setEvaporatorEvaporatingTemperature(double evaporatorEvaporatingTemperature);
+    bool setEvaporatorEvaporatingTemperature(double evaporatorEvaporatingTemperature);
 
-    void setEvaporatorApproachTemperatureDifference(double evaporatorApproachTemperatureDifference);
+    bool setEvaporatorApproachTemperatureDifference(double evaporatorApproachTemperatureDifference);
 
-    void setEvaporatorRangeTemperatureDifference(boost::optional<double> evaporatorRangeTemperatureDifference);
+    bool setEvaporatorRangeTemperatureDifference(boost::optional<double> evaporatorRangeTemperatureDifference);
 
     void resetEvaporatorRangeTemperatureDifference();
 
-    void setNumberofPumpsinLoop(int numberofPumpsinLoop);
+    bool setNumberofPumpsinLoop(int numberofPumpsinLoop);
 
     void resetNumberofPumpsinLoop();
 
@@ -242,7 +242,7 @@ namespace detail {
 
     void resetPumpMotorHeattoFluid();
 
-    void setSumUADistributionPiping(double sumUADistributionPiping);
+    bool setSumUADistributionPiping(double sumUADistributionPiping);
 
     void resetSumUADistributionPiping();
 
@@ -250,7 +250,7 @@ namespace detail {
 
     void resetDistributionPipingZone();
 
-    void setSumUAReceiverSeparatorShell(double sumUAReceiverSeparatorShell);
+    bool setSumUAReceiverSeparatorShell(double sumUAReceiverSeparatorShell);
 
     void resetSumUAReceiverSeparatorShell();
 
@@ -258,11 +258,11 @@ namespace detail {
 
     void resetReceiverSeparatorZone();
 
-    void setEvaporatorRefrigerantInventory(double evaporatorRefrigerantInventory);
+    bool setEvaporatorRefrigerantInventory(double evaporatorRefrigerantInventory);
 
     void resetEvaporatorRefrigerantInventory();
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -281,5 +281,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONSECONDARYSYSTEM_IMPL_HPP
-
+#endif // MODEL_REFRIGERATIONSECONDARYSYSTEM_IMPL_HPP

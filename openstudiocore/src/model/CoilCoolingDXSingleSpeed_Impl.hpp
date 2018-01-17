@@ -42,6 +42,7 @@ namespace detail {
 
   // derive CoilCoolingDXSingleSpeed_Impl from ModelObject_Impl to override virtual methods
   class MODEL_API CoilCoolingDXSingleSpeed_Impl : public StraightComponent_Impl {
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -155,71 +156,71 @@ namespace detail {
 
     bool setAvailabilitySchedule(Schedule& schedule );
 
-    void setRatedCOP( boost::optional<double> value );
+    bool setRatedCOP( boost::optional<double> value );
 
-    void setRatedCOP( double value );
+    bool setRatedCOP( double value );
 
-    void setRatedEvaporatorFanPowerPerVolumeFlowRate( boost::optional<double> value );
+    bool setRatedEvaporatorFanPowerPerVolumeFlowRate( boost::optional<double> value );
 
-    void setRatedEvaporatorFanPowerPerVolumeFlowRate( double value );
+    bool setRatedEvaporatorFanPowerPerVolumeFlowRate( double value );
 
-    void setTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve );
+    bool setTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve );
 
-    void setTotalCoolingCapacityFunctionOfFlowFractionCurve(const Curve& curve );
+    bool setTotalCoolingCapacityFunctionOfFlowFractionCurve(const Curve& curve );
 
-    void setEnergyInputRatioFunctionOfTemperatureCurve(const Curve& curve );
+    bool setEnergyInputRatioFunctionOfTemperatureCurve(const Curve& curve );
 
-    void setEnergyInputRatioFunctionOfFlowFractionCurve(const Curve& curve );
+    bool setEnergyInputRatioFunctionOfFlowFractionCurve(const Curve& curve );
 
-    void setPartLoadFractionCorrelationCurve(const Curve& curve );
+    bool setPartLoadFractionCorrelationCurve(const Curve& curve );
 
-    void setNominalTimeForCondensateRemovalToBegin( boost::optional<double> value );
+    bool setNominalTimeForCondensateRemovalToBegin( boost::optional<double> value );
 
-    void setNominalTimeForCondensateRemovalToBegin( double value );
+    bool setNominalTimeForCondensateRemovalToBegin( double value );
 
-    void setRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity( boost::optional<double> value );
+    bool setRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity( boost::optional<double> value );
 
-    void setRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity( double value );
+    bool setRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity( double value );
 
-    void setMaximumCyclingRate( boost::optional<double> value );
+    bool setMaximumCyclingRate( boost::optional<double> value );
 
-    void setMaximumCyclingRate( double value );
+    bool setMaximumCyclingRate( double value );
 
-    void setLatentCapacityTimeConstant( boost::optional<double> value );
+    bool setLatentCapacityTimeConstant( boost::optional<double> value );
 
-    void setLatentCapacityTimeConstant( double value );
+    bool setLatentCapacityTimeConstant( double value );
 
-    void setCondenserAirInletNodeName( const boost::optional<std::string>& value );
+    bool setCondenserAirInletNodeName( const boost::optional<std::string>& value );
 
-    void setCondenserType( const std::string& value );
+    bool setCondenserType( const std::string& value );
 
-    void setEvaporativeCondenserEffectiveness( boost::optional<double> value );
+    bool setEvaporativeCondenserEffectiveness( boost::optional<double> value );
 
-    void setEvaporativeCondenserEffectiveness( double value );
+    bool setEvaporativeCondenserEffectiveness( double value );
 
-    void setEvaporativeCondenserAirFlowRate( boost::optional<double> value );
+    bool setEvaporativeCondenserAirFlowRate( boost::optional<double> value );
 
-    void setEvaporativeCondenserAirFlowRate( double value );
+    bool setEvaporativeCondenserAirFlowRate( double value );
 
-    void setEvaporativeCondenserPumpRatedPowerConsumption( boost::optional<double> value );
+    bool setEvaporativeCondenserPumpRatedPowerConsumption( boost::optional<double> value );
 
-    void setEvaporativeCondenserPumpRatedPowerConsumption( double value );
+    bool setEvaporativeCondenserPumpRatedPowerConsumption( double value );
 
-    void setCrankcaseHeaterCapacity( boost::optional<double> value );
+    bool setCrankcaseHeaterCapacity( boost::optional<double> value );
 
-    void setCrankcaseHeaterCapacity( double value );
+    bool setCrankcaseHeaterCapacity( double value );
 
-    void setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation( boost::optional<double> value );
+    bool setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation( boost::optional<double> value );
 
-    void setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation( double value );
+    bool setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation( double value );
 
-    void setBasinHeaterCapacity( boost::optional<double> value );
+    bool setBasinHeaterCapacity( boost::optional<double> value );
 
-    void setBasinHeaterCapacity( double value );
+    bool setBasinHeaterCapacity( double value );
 
-    void setBasinHeaterSetpointTemperature( boost::optional<double> value );
+    bool setBasinHeaterSetpointTemperature( boost::optional<double> value );
 
-    void setBasinHeaterSetpointTemperature( double value );
+    bool setBasinHeaterSetpointTemperature( double value );
 
     bool setBasinHeaterOperatingSchedule(Schedule& schedule );
 

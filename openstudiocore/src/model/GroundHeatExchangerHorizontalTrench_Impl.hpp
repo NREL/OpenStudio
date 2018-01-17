@@ -149,11 +149,11 @@ namespace detail {
 
     void resetGroundTemperatureModel();
 
-    void setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature);
+    bool setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature);
 
-    void setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(double kusudaAchenbachAverageAmplitudeofSurfaceTemperature);
+    bool setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(double kusudaAchenbachAverageAmplitudeofSurfaceTemperature);
 
-    void setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
+    bool setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
 
     bool setEvapotranspirationGroundCoverParameter(double evapotranspirationGroundCoverParameter);
 
@@ -179,4 +179,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_GROUNDHEATEXCHANGERHORIZONTALTRENCH_IMPL_HPP
-

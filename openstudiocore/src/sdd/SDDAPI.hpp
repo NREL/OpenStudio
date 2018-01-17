@@ -10,5 +10,5 @@
   #else
     #define SDD_API
   #endif
-  
+
 #endif

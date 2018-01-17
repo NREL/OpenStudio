@@ -39,50 +39,50 @@ namespace detail {
 
   /** CurveTriquadratic_Impl is a Curve_Impl that is the implementation class for CurveTriquadratic.*/
   class MODEL_API CurveTriquadratic_Impl : public Curve_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
 
     /** @name Constructors and Destructors */
@@ -206,143 +206,143 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setCoefficient1Constant(boost::optional<double> coefficient1Constant);
+    bool setCoefficient1Constant(boost::optional<double> coefficient1Constant);
 
     void resetCoefficient1Constant();
 
-    void setCoefficient2xPOW2(boost::optional<double> coefficient2xPOW2);
+    bool setCoefficient2xPOW2(boost::optional<double> coefficient2xPOW2);
 
     void resetCoefficient2xPOW2();
 
-    void setCoefficient3x(boost::optional<double> coefficient3x);
+    bool setCoefficient3x(boost::optional<double> coefficient3x);
 
     void resetCoefficient3x();
 
-    void setCoefficient4yPOW2(boost::optional<double> coefficient4yPOW2);
+    bool setCoefficient4yPOW2(boost::optional<double> coefficient4yPOW2);
 
     void resetCoefficient4yPOW2();
 
-    void setCoefficient5y(boost::optional<double> coefficient5y);
+    bool setCoefficient5y(boost::optional<double> coefficient5y);
 
     void resetCoefficient5y();
 
-    void setCoefficient6zPOW2(boost::optional<double> coefficient6zPOW2);
+    bool setCoefficient6zPOW2(boost::optional<double> coefficient6zPOW2);
 
     void resetCoefficient6zPOW2();
 
-    void setCoefficient7z(boost::optional<double> coefficient7z);
+    bool setCoefficient7z(boost::optional<double> coefficient7z);
 
     void resetCoefficient7z();
 
-    void setCoefficient8xPOW2TIMESYPOW2(boost::optional<double> coefficient8xPOW2TIMESYPOW2);
+    bool setCoefficient8xPOW2TIMESYPOW2(boost::optional<double> coefficient8xPOW2TIMESYPOW2);
 
     void resetCoefficient8xPOW2TIMESYPOW2();
 
-    void setCoefficient9xTIMESY(boost::optional<double> coefficient9xTIMESY);
+    bool setCoefficient9xTIMESY(boost::optional<double> coefficient9xTIMESY);
 
     void resetCoefficient9xTIMESY();
 
-    void setCoefficient10xTIMESYPOW2(boost::optional<double> coefficient10xTIMESYPOW2);
+    bool setCoefficient10xTIMESYPOW2(boost::optional<double> coefficient10xTIMESYPOW2);
 
     void resetCoefficient10xTIMESYPOW2();
 
-    void setCoefficient11xPOW2TIMESY(boost::optional<double> coefficient11xPOW2TIMESY);
+    bool setCoefficient11xPOW2TIMESY(boost::optional<double> coefficient11xPOW2TIMESY);
 
     void resetCoefficient11xPOW2TIMESY();
 
-    void setCoefficient12xPOW2TIMESZPOW2(boost::optional<double> coefficient12xPOW2TIMESZPOW2);
+    bool setCoefficient12xPOW2TIMESZPOW2(boost::optional<double> coefficient12xPOW2TIMESZPOW2);
 
     void resetCoefficient12xPOW2TIMESZPOW2();
 
-    void setCoefficient13xTIMESZ(boost::optional<double> coefficient13xTIMESZ);
+    bool setCoefficient13xTIMESZ(boost::optional<double> coefficient13xTIMESZ);
 
     void resetCoefficient13xTIMESZ();
 
-    void setCoefficient14xTIMESZPOW2(boost::optional<double> coefficient14xTIMESZPOW2);
+    bool setCoefficient14xTIMESZPOW2(boost::optional<double> coefficient14xTIMESZPOW2);
 
     void resetCoefficient14xTIMESZPOW2();
 
-    void setCoefficient15xPOW2TIMESZ(boost::optional<double> coefficient15xPOW2TIMESZ);
+    bool setCoefficient15xPOW2TIMESZ(boost::optional<double> coefficient15xPOW2TIMESZ);
 
     void resetCoefficient15xPOW2TIMESZ();
 
-    void setCoefficient16yPOW2TIMESZPOW2(boost::optional<double> coefficient16yPOW2TIMESZPOW2);
+    bool setCoefficient16yPOW2TIMESZPOW2(boost::optional<double> coefficient16yPOW2TIMESZPOW2);
 
     void resetCoefficient16yPOW2TIMESZPOW2();
 
-    void setCoefficient17yTIMESZ(boost::optional<double> coefficient17yTIMESZ);
+    bool setCoefficient17yTIMESZ(boost::optional<double> coefficient17yTIMESZ);
 
     void resetCoefficient17yTIMESZ();
 
-    void setCoefficient18yTIMESZPOW2(boost::optional<double> coefficient18yTIMESZPOW2);
+    bool setCoefficient18yTIMESZPOW2(boost::optional<double> coefficient18yTIMESZPOW2);
 
     void resetCoefficient18yTIMESZPOW2();
 
-    void setCoefficient19yPOW2TIMESZ(boost::optional<double> coefficient19yPOW2TIMESZ);
+    bool setCoefficient19yPOW2TIMESZ(boost::optional<double> coefficient19yPOW2TIMESZ);
 
     void resetCoefficient19yPOW2TIMESZ();
 
-    void setCoefficient20xPOW2TIMESYPOW2TIMESZPOW2(boost::optional<double> coefficient20xPOW2TIMESYPOW2TIMESZPOW2);
+    bool setCoefficient20xPOW2TIMESYPOW2TIMESZPOW2(boost::optional<double> coefficient20xPOW2TIMESYPOW2TIMESZPOW2);
 
     void resetCoefficient20xPOW2TIMESYPOW2TIMESZPOW2();
 
-    void setCoefficient21xPOW2TIMESYPOW2TIMESZ(boost::optional<double> coefficient21xPOW2TIMESYPOW2TIMESZ);
+    bool setCoefficient21xPOW2TIMESYPOW2TIMESZ(boost::optional<double> coefficient21xPOW2TIMESYPOW2TIMESZ);
 
     void resetCoefficient21xPOW2TIMESYPOW2TIMESZ();
 
-    void setCoefficient22xPOW2TIMESYTIMESZPOW2(boost::optional<double> coefficient22xPOW2TIMESYTIMESZPOW2);
+    bool setCoefficient22xPOW2TIMESYTIMESZPOW2(boost::optional<double> coefficient22xPOW2TIMESYTIMESZPOW2);
 
     void resetCoefficient22xPOW2TIMESYTIMESZPOW2();
 
-    void setCoefficient23xTIMESYPOW2TIMESZPOW2(boost::optional<double> coefficient23xTIMESYPOW2TIMESZPOW2);
+    bool setCoefficient23xTIMESYPOW2TIMESZPOW2(boost::optional<double> coefficient23xTIMESYPOW2TIMESZPOW2);
 
     void resetCoefficient23xTIMESYPOW2TIMESZPOW2();
 
-    void setCoefficient24xPOW2TIMESYTIMESZ(boost::optional<double> coefficient24xPOW2TIMESYTIMESZ);
+    bool setCoefficient24xPOW2TIMESYTIMESZ(boost::optional<double> coefficient24xPOW2TIMESYTIMESZ);
 
     void resetCoefficient24xPOW2TIMESYTIMESZ();
 
-    void setCoefficient25xTIMESYPOW2TIMESZ(boost::optional<double> coefficient25xTIMESYPOW2TIMESZ);
+    bool setCoefficient25xTIMESYPOW2TIMESZ(boost::optional<double> coefficient25xTIMESYPOW2TIMESZ);
 
     void resetCoefficient25xTIMESYPOW2TIMESZ();
 
-    void setCoefficient26xTIMESYTIMESZPOW2(boost::optional<double> coefficient26xTIMESYTIMESZPOW2);
+    bool setCoefficient26xTIMESYTIMESZPOW2(boost::optional<double> coefficient26xTIMESYTIMESZPOW2);
 
     void resetCoefficient26xTIMESYTIMESZPOW2();
 
-    void setCoefficient27xTIMESYTIMESZ(boost::optional<double> coefficient27xTIMESYTIMESZ);
+    bool setCoefficient27xTIMESYTIMESZ(boost::optional<double> coefficient27xTIMESYTIMESZ);
 
     void resetCoefficient27xTIMESYTIMESZ();
 
-    void setMinimumValueofx(boost::optional<double> minimumValueofx);
+    bool setMinimumValueofx(boost::optional<double> minimumValueofx);
 
     void resetMinimumValueofx();
 
-    void setMaximumValueofx(boost::optional<double> maximumValueofx);
+    bool setMaximumValueofx(boost::optional<double> maximumValueofx);
 
     void resetMaximumValueofx();
 
-    void setMinimumValueofy(boost::optional<double> minimumValueofy);
+    bool setMinimumValueofy(boost::optional<double> minimumValueofy);
 
     void resetMinimumValueofy();
 
-    void setMaximumValueofy(boost::optional<double> maximumValueofy);
+    bool setMaximumValueofy(boost::optional<double> maximumValueofy);
 
     void resetMaximumValueofy();
 
-    void setMinimumValueofz(boost::optional<double> minimumValueofz);
+    bool setMinimumValueofz(boost::optional<double> minimumValueofz);
 
     void resetMinimumValueofz();
 
-    void setMaximumValueofz(boost::optional<double> maximumValueofz);
+    bool setMaximumValueofz(boost::optional<double> maximumValueofz);
 
     void resetMaximumValueofz();
 
-    void setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
+    bool setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
 
     void resetMinimumCurveOutput();
 
-    void setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
+    bool setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
 
     void resetMaximumCurveOutput();
 
@@ -378,4 +378,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_CURVETRIQUADRATIC_IMPL_HPP
-

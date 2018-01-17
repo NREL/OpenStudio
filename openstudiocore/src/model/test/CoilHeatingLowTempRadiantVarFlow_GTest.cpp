@@ -41,54 +41,54 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,CoilHeatingLowTempRadiantVarFlow_Check_Constructor) 
-{  
+TEST_F(ModelFixture,CoilHeatingLowTempRadiantVarFlow_Check_Constructor)
+{
   Model model;
   ScheduleConstant heatingControlTemperatureSchedule(model);
   heatingControlTemperatureSchedule.setValue(15.0);
 
   CoilHeatingLowTempRadiantVarFlow testCoil(model,
                                             heatingControlTemperatureSchedule);
- 
+
   // Test set and get temperature schedule
   EXPECT_TRUE(testCoil.setHeatingControlTemperatureSchedule(heatingControlTemperatureSchedule));
   boost::optional<Schedule> sch1 = testCoil.heatingControlTemperatureSchedule();
   EXPECT_EQ(*sch1,heatingControlTemperatureSchedule);
-} 
+}
 
-TEST_F(ModelFixture,CoilHeatingLowTempRadiantVarFlow_Getters_Setters) 
-{  
+TEST_F(ModelFixture,CoilHeatingLowTempRadiantVarFlow_Getters_Setters)
+{
   Model model;
   ScheduleConstant heatingControlTemperatureSchedule(model);
   heatingControlTemperatureSchedule.setValue(15.0);
-  
+
   CoilHeatingLowTempRadiantVarFlow testCoil(model,
                                             heatingControlTemperatureSchedule);
 
   // Field N1 Maximum Hot Water Flow
-  
+
   EXPECT_TRUE(testCoil.setMaximumHotWaterFlow(100));
   EXPECT_EQ(*testCoil.maximumHotWaterFlow(),100);
   EXPECT_FALSE(testCoil.isMaximumHotWaterFlowDefaulted());
   EXPECT_FALSE(testCoil.isMaximumHotWaterFlowAutosized());
-  
+
   testCoil.resetMaximumHotWaterFlow();
   EXPECT_TRUE(testCoil.isMaximumHotWaterFlowDefaulted());
-  
+
   testCoil.autosizeMaximumHotWaterFlow();
   EXPECT_TRUE(testCoil.isMaximumHotWaterFlowAutosized());
-  
+
   // Field N2 Heating Control Throttling Range
-  
+
   EXPECT_TRUE(testCoil.setHeatingControlThrottlingRange(1.0));
   boost::optional<double> value = testCoil.heatingControlThrottlingRange();
   EXPECT_EQ(*value,1.0);
   EXPECT_FALSE(testCoil.isHeatingControlThrottlingRangeDefaulted());
-  
+
   testCoil.resetHeatingControlThrottlingRange();
   value = testCoil.heatingControlThrottlingRange();
   EXPECT_TRUE(testCoil.isHeatingControlThrottlingRangeDefaulted());
-  EXPECT_EQ(*value,0.5); 
+  EXPECT_EQ(*value,0.5);
 }
 
 TEST_F(ModelFixture,CoilHeatingLowTempRadiantVarFlow_addToNode) {

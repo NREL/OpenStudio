@@ -338,7 +338,7 @@ void QwtDial::paintEvent( QPaintEvent *event )
         QPainter p( &d_data->pixmapCache );
         p.setRenderHint( QPainter::Antialiasing, true );
         p.translate( -r.topLeft() );
-            
+
         if ( d_data->mode != QwtDial::RotateScale )
             drawContents( &p );
 
@@ -475,7 +475,7 @@ void QwtDial::drawNeedle( QPainter *painter ) const
   \param center Center of the dial
   \param radius Radius of the scale
 */
-void QwtDial::drawScale( QPainter *painter, 
+void QwtDial::drawScale( QPainter *painter,
     const QPointF &center, double radius ) const
 {
     QwtRoundScaleDraw *sd = const_cast<QwtRoundScaleDraw *>( scaleDraw() );
@@ -568,9 +568,9 @@ const QwtRoundScaleDraw *QwtDial::scaleDraw() const
   Set an individual scale draw
 
   The motivation for setting a scale draw is often
-  to overload QwtRoundScaleDraw::label() to return 
+  to overload QwtRoundScaleDraw::label() to return
   individual tick labels.
-  
+
   \param scaleDraw Scale draw
   \warning The previous scale draw is deleted
 */
@@ -601,7 +601,7 @@ void QwtDial::setScaleArc( double minArc, double maxArc )
     if ( maxScaleArc - minScaleArc > 360.0 )
         maxScaleArc = minScaleArc + 360.0;
 
-    if ( ( minScaleArc != d_data->minScaleArc ) || 
+    if ( ( minScaleArc != d_data->minScaleArc ) ||
         ( maxScaleArc != d_data->maxScaleArc ) )
     {
         d_data->minScaleArc = minScaleArc;
@@ -612,7 +612,7 @@ void QwtDial::setScaleArc( double minArc, double maxArc )
     }
 }
 
-/*! 
+/*!
   Set the lower limit for the scale arc
 
   \param min Lower limit of the scale arc
@@ -623,7 +623,7 @@ void QwtDial::setMinScaleArc( double min )
     setScaleArc( min, d_data->maxScaleArc );
 }
 
-/*! 
+/*!
   \return Lower limit of the scale arc
   \sa setScaleArc()
 */
@@ -632,7 +632,7 @@ double QwtDial::minScaleArc() const
     return d_data->minScaleArc;
 }
 
-/*! 
+/*!
   Set the upper limit for the scale arc
 
   \param max Upper limit of the scale arc
@@ -643,7 +643,7 @@ void QwtDial::setMaxScaleArc( double max )
     setScaleArc( d_data->minScaleArc, max );
 }
 
-/*! 
+/*!
   \return Upper limit of the scale arc
   \sa setScaleArc()
 */
@@ -691,7 +691,7 @@ QSize QwtDial::sizeHint() const
 
     const int d = 6 * sh + 2 * lineWidth();
 
-    QSize hint( d, d ); 
+    QSize hint( d, d );
     if ( !isReadOnly() )
         hint = hint.expandedTo( QApplication::globalStrut() );
 
@@ -718,7 +718,7 @@ QSize QwtDial::minimumSizeHint() const
 
   \param pos Mouse position
 
-  \retval True, when the inner circle contains pos 
+  \retval True, when the inner circle contains pos
   \sa scrolledTo()
 */
 bool QwtDial::isScrollPosition( const QPoint &pos ) const
@@ -730,7 +730,7 @@ bool QwtDial::isScrollPosition( const QPoint &pos ) const
         if ( d_data->mode == QwtDial::RotateScale )
             angle = 360.0 - angle;
 
-        double valueAngle = 
+        double valueAngle =
             qwtNormalizeDegrees( 90.0 - scaleMap().transform( value() ) );
 
         d_data->mouseOffset = qwtNormalizeDegrees( angle - valueAngle );
@@ -775,7 +775,7 @@ double QwtDial::scrolledTo( const QPoint &pos ) const
             const double arc = angle - scaleMap().transform( value() );
             if ( qAbs( arc ) > 180.0 )
             {
-                boundedAngle = ( arc > 0 ) 
+                boundedAngle = ( arc > 0 )
                     ? scaleMap().p1() : scaleMap().p2();
             }
 
@@ -821,7 +821,7 @@ void QwtDial::changeEvent( QEvent *event )
         default:
             break;
     }
-    
+
     QwtAbstractSlider::changeEvent( event );
 }
 
@@ -847,7 +847,7 @@ void QwtDial::setAngleRange( double angle, double span )
 }
 
 /*!
-  Invalidate the internal caches and call 
+  Invalidate the internal caches and call
   QwtAbstractSlider::scaleChange()
  */
 void QwtDial::scaleChange()

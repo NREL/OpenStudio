@@ -71,7 +71,7 @@ namespace openstudio{
     //@}
     /** @name Destructor */
     //@{
-  
+
     /// Virtual destructor
     virtual ~RemoteBCL();
 
@@ -84,7 +84,7 @@ namespace openstudio{
 
     /// Get the measure by uid
     virtual boost::optional<BCLMeasure> getMeasure(const std::string& uid, const std::string& versionId = "") const override;
-    
+
     /// Perform a meta search on the library to identify number and types of results available.
     /// The total number of search results available can be used in the search method which requires a page number.
     boost::optional<BCLMetaSearchResult> metaSearchComponentLibrary(const std::string& searchTerm,
@@ -92,17 +92,17 @@ namespace openstudio{
     boost::optional<BCLMetaSearchResult> metaSearchComponentLibrary(const std::string& searchTerm,
       const unsigned componentTypeTID, const std::string& filterType = "nrel_component") const;
 
-    /// Perform a component search of the library, results are returned in 'pages', 
+    /// Perform a component search of the library, results are returned in 'pages',
     /// the number of results per page is configurable and a metasearch should be performed
-    /// to determine the total number of results pages available 
+    /// to determine the total number of results pages available
     std::vector<BCLSearchResult> searchComponentLibrary(const std::string& searchTerm,
       const std::string& componentType, const unsigned page = 0) const;
     std::vector<BCLSearchResult> searchComponentLibrary(const std::string& searchTerm,
       const unsigned componentTypeTID, const unsigned page = 0) const;
 
-    /// Perform a measure search of the library, results are returned in 'pages', 
+    /// Perform a measure search of the library, results are returned in 'pages',
     /// the number of results per page is configurable and a metasearch should be performed
-    /// to determine the total number of results pages available 
+    /// to determine the total number of results pages available
     std::vector<BCLSearchResult> searchMeasureLibrary(const std::string& searchTerm,
       const std::string& componentType, const unsigned page = 0) const;
     std::vector<BCLSearchResult> searchMeasureLibrary(const std::string& searchTerm,
@@ -112,7 +112,7 @@ namespace openstudio{
     /// and return the number that have updates
     int checkForComponentUpdates();
     int checkForMeasureUpdates();
-    
+
     /// Return the uids for components and measures respectively that have updates available
     std::vector<BCLSearchResult> componentsWithUpdates() const;
     std::vector<BCLSearchResult> measuresWithUpdates() const;
@@ -197,7 +197,7 @@ namespace openstudio{
     std::vector<BCLSearchResult> waitForSearch(int msec = 50000) const;
 
     static bool initializeSSL(const openstudio::path &t_pathToSSLLibraries = openstudio::path());
-    
+
     //@}
     /** @name Non-blocking class members */
     //@{

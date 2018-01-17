@@ -43,80 +43,80 @@ class Curve;
 
 namespace detail {
 
-  /** PumpVariableSpeed_Impl is a StraightComponent_Impl that is the implementation class for 
+  /** PumpVariableSpeed_Impl is a StraightComponent_Impl that is the implementation class for
    *  PumpVariableSpeed.*/
   class MODEL_API PumpVariableSpeed_Impl : public StraightComponent_Impl {
-    
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
 
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
 
     /** @name Constructors and Destructors */
@@ -256,7 +256,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setRatedFlowRate(boost::optional<double> ratedFlowRate);
+    bool setRatedFlowRate(boost::optional<double> ratedFlowRate);
 
     bool setRatedFlowRate(const OSOptionalQuantity& ratedFlowRate);
 
@@ -264,13 +264,13 @@ namespace detail {
 
     void autosizeRatedFlowRate();
 
-    void setRatedPumpHead(double ratedPumpHead);
+    bool setRatedPumpHead(double ratedPumpHead);
 
     bool setRatedPumpHead(const Quantity& ratedPumpHead);
 
     void resetRatedPumpHead();
 
-    void setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
+    bool setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
 
     bool setRatedPowerConsumption(const OSOptionalQuantity& ratedPowerConsumption);
 
@@ -290,31 +290,31 @@ namespace detail {
 
     void resetFractionofMotorInefficienciestoFluidStream();
 
-    void setCoefficient1ofthePartLoadPerformanceCurve(double coefficient1ofthePartLoadPerformanceCurve);
+    bool setCoefficient1ofthePartLoadPerformanceCurve(double coefficient1ofthePartLoadPerformanceCurve);
 
     bool setCoefficient1ofthePartLoadPerformanceCurve(const Quantity& coefficient1ofthePartLoadPerformanceCurve);
 
     void resetCoefficient1ofthePartLoadPerformanceCurve();
 
-    void setCoefficient2ofthePartLoadPerformanceCurve(double coefficient2ofthePartLoadPerformanceCurve);
+    bool setCoefficient2ofthePartLoadPerformanceCurve(double coefficient2ofthePartLoadPerformanceCurve);
 
     bool setCoefficient2ofthePartLoadPerformanceCurve(const Quantity& coefficient2ofthePartLoadPerformanceCurve);
 
     void resetCoefficient2ofthePartLoadPerformanceCurve();
 
-    void setCoefficient3ofthePartLoadPerformanceCurve(double coefficient3ofthePartLoadPerformanceCurve);
+    bool setCoefficient3ofthePartLoadPerformanceCurve(double coefficient3ofthePartLoadPerformanceCurve);
 
     bool setCoefficient3ofthePartLoadPerformanceCurve(const Quantity& coefficient3ofthePartLoadPerformanceCurve);
 
     void resetCoefficient3ofthePartLoadPerformanceCurve();
 
-    void setCoefficient4ofthePartLoadPerformanceCurve(double coefficient4ofthePartLoadPerformanceCurve);
+    bool setCoefficient4ofthePartLoadPerformanceCurve(double coefficient4ofthePartLoadPerformanceCurve);
 
     bool setCoefficient4ofthePartLoadPerformanceCurve(const Quantity& coefficient4ofthePartLoadPerformanceCurve);
 
     void resetCoefficient4ofthePartLoadPerformanceCurve();
 
-    void setMinimumFlowRate(double minimumFlowRate);
+    bool setMinimumFlowRate(double minimumFlowRate);
 
     bool setMinimumFlowRate(const Quantity& minimumFlowRate);
 
@@ -332,7 +332,7 @@ namespace detail {
 
     void resetPumpCurve();
 
-    void setImpellerDiameter(boost::optional<double> impellerDiameter);
+    bool setImpellerDiameter(boost::optional<double> impellerDiameter);
 
     bool setImpellerDiameter(const OSOptionalQuantity& impellerDiameter);
 
@@ -385,7 +385,7 @@ namespace detail {
     bool setSkinLossRadiativeFraction(double skinLossRadiativeFraction);
 
     double designMinimumFlowRateFraction() const;
-    
+
     bool setDesignMinimumFlowRateFraction(double designMinimumFlowRateFraction);
 
     //@}
@@ -439,5 +439,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_PUMPVARIABLESPEED_IMPL_HPP
-
+#endif // MODEL_PUMPVARIABLESPEED_IMPL_HPP

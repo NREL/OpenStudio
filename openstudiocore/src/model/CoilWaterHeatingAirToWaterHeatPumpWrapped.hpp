@@ -117,7 +117,7 @@ class MODEL_API CoilWaterHeatingAirToWaterHeatPumpWrapped : public ModelObject {
 
   void autocalculateRatedEvaporatorAirFlowRate();
 
-  void setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP);
+  bool setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP);
 
   bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
 
@@ -165,4 +165,3 @@ typedef std::vector<CoilWaterHeatingAirToWaterHeatPumpWrapped> CoilWaterHeatingA
 } // openstudio
 
 #endif // MODEL_COILWATERHEATINGAIRTOWATERHEATPUMPWRAPPED_HPP
-

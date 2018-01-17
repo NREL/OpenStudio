@@ -41,9 +41,9 @@ namespace openstudio{
 namespace radiance{
 
   /** AnnualIlluminanceMap represents illuminance map for an entire year.
-  *   We assume that the output files is from SPOT, with length in meters and illuminance 
+  *   We assume that the output files is from SPOT, with length in meters and illuminance
   *   values in footcandles.  All illuminance values are converted to lux.
-  */ 
+  */
   class RADIANCE_API AnnualIlluminanceMap
   {
     private:

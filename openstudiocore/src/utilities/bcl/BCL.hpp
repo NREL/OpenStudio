@@ -36,7 +36,7 @@
 #include "../core/Logger.hpp"
 #include "../data/Attribute.hpp"
 
-#include <QObject> 
+#include <QObject>
 
 class QDomElement;
 class QNetworkReply;
@@ -57,7 +57,7 @@ namespace openstudio{
     /// e.g. 'Construction Type'
     std::string label() const;
 
-    /// Possible values for the facet as well as the number of search results after applying each value, 
+    /// Possible values for the facet as well as the number of search results after applying each value,
     /// e.g. [['steel framed', 30], ['metal building', 21], ...]
     std::vector<std::pair<std::string, uint> > items() const;
 

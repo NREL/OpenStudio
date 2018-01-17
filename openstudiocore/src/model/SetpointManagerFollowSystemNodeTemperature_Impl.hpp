@@ -101,11 +101,11 @@ namespace detail {
 
     bool setReferenceTemperatureType(const std::string& referenceTemperatureType);
 
-    void setOffsetTemperatureDifference(double offsetTemperatureDifference);
+    bool setOffsetTemperatureDifference(double offsetTemperatureDifference);
 
-    void setMaximumLimitSetpointTemperature(double maximumLimitSetpointTemperature);
+    bool setMaximumLimitSetpointTemperature(double maximumLimitSetpointTemperature);
 
-    void setMinimumLimitSetpointTemperature(double minimumLimitSetpointTemperature);
+    bool setMinimumLimitSetpointTemperature(double minimumLimitSetpointTemperature);
 
     //@}
     /** @name Other */
@@ -127,4 +127,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SETPOINTMANAGERFOLLOWSYSTEMNODETEMPERATURE_IMPL_HPP
-

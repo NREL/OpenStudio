@@ -141,11 +141,11 @@ class MODEL_API GroundHeatExchangerHorizontalTrench : public StraightComponent {
 
   void resetGroundTemperatureModel();
 
-  void setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature);
+  bool setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature);
 
-  void setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(double kusudaAchenbachAverageAmplitudeofSurfaceTemperature);
+  bool setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(double kusudaAchenbachAverageAmplitudeofSurfaceTemperature);
 
-  void setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
+  bool setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
 
   bool setEvapotranspirationGroundCoverParameter(double evapotranspirationGroundCoverParameter);
 
@@ -179,4 +179,3 @@ typedef std::vector<GroundHeatExchangerHorizontalTrench> GroundHeatExchangerHori
 } // openstudio
 
 #endif // MODEL_GROUNDHEATEXCHANGERHORIZONTALTRENCH_HPP
-

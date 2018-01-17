@@ -128,7 +128,7 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-    
+
     ModelObject clone(Model model) const override;
 
     std::vector<ModelObject> children() const override;

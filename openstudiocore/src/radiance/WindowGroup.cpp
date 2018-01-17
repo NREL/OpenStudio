@@ -49,7 +49,7 @@
 namespace openstudio{
 namespace radiance{
 
-  WindowGroup::WindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space, 
+  WindowGroup::WindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space,
                            const model::ConstructionBase& construction,
                            const boost::optional<model::ShadingControl>& shadingControl)
     : m_outwardNormal(outwardNormal), m_space(space), m_construction(construction), m_shadingControl(shadingControl)
@@ -62,7 +62,7 @@ namespace radiance{
  bool WindowGroup::operator==(const WindowGroup& other) const
 {
   if (!m_shadingControl && !other.shadingControl()){
-  
+
     if (m_space.handle() == other.space().handle()){
       if (m_construction.handle() == other.construction().handle()){
         double angle = std::abs(radToDeg(getAngle(m_outwardNormal, other.outwardNormal())));
@@ -73,13 +73,13 @@ namespace radiance{
       }
     }
     return false;
-  
+
   }else if (m_shadingControl && !other.shadingControl()){
     return false;
   }else if (!m_shadingControl && other.shadingControl()){
     return false;
   }
-  
+
   if (m_space.handle() == other.space().handle()){
     if (m_construction.handle() == other.construction().handle()){
       if (m_shadingControl->handle() == other.shadingControl()->handle()){
@@ -103,12 +103,12 @@ namespace radiance{
   {
     m_name = name;
   }
-  
+
   openstudio::Vector3d WindowGroup::outwardNormal() const
   {
     return m_outwardNormal;
   }
-  
+
   model::Space WindowGroup::space() const
   {
     return m_space;
@@ -176,7 +176,7 @@ namespace radiance{
     std::string result = "n/a";
     if (m_shadingControl){
       std::string shadingControlType = this->shadingControlType();
-      
+
       if (istringEqual("AlwaysOff", shadingControlType)){
         result = "n/a";
       } else if (istringEqual("AlwaysOn", shadingControlType)){

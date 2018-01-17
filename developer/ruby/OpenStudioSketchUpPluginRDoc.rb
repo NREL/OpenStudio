@@ -1,6 +1,6 @@
 # Stages and then runs rdoc on OpenStudio.
 
-# Inputs: 
+# Inputs:
 #   ARGV[0] - path to binary directory containing config file
 
 require ARGV[0] + 'config'
@@ -25,8 +25,8 @@ mkdir_p(output_dir) if not File.exists?(output_dir)
 
 # empty output dir
 Dir.glob("#{output_dir}*").each {|d| rm_rf(d)}
-Dir.mkdir("#{output_dir}lib") 
-Dir.mkdir("#{output_dir}sketchup") 
+Dir.mkdir("#{output_dir}lib")
+Dir.mkdir("#{output_dir}sketchup")
 
 # copy only files we want
 cp_r("#{source_dir}lib/.", "#{output_dir}lib/.")
