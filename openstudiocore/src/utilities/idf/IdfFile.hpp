@@ -186,7 +186,7 @@ class UTILITIES_API IdfFile {
   /** Load an IdfFile from path using the IddFactory, and choosing iddFileType based on file
    *  extension, if possible. (IddFileType::OpenStudio if extension is modelFileExtension() or
    *  componentFileExtension(), IddFileType::EnergyPlus otherwise.) */
-  static boost::optional<IdfFile> load(const path& p, 
+  static boost::optional<IdfFile> load(const path& p,
                                        ProgressBar* progressBar=nullptr);
 
   /** Load an IdfFile from path using the IddFactory and iddFileType, if possible. Will attempt to

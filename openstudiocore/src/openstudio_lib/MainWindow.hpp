@@ -108,7 +108,7 @@ class MainWindow : public QMainWindow
 
   void changeDefaultLibrariesClicked();
 
-  void saveAsFileClicked(); 
+  void saveAsFileClicked();
 
   void saveFileClicked();
 

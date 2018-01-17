@@ -43,10 +43,10 @@ namespace detail {
   class StandardsInformationConstruction_Impl;
 }
 
-/** StandardsInformationConstruction is the ModelObject that wraps OpenStudio IDD object 
- *  'OS:StandardsInformation:ConstructionFields'. StandardsInformationConstruction provides a 
- *  place to register information about a construction that building energy standards often need 
- *  to know, but is irrelevant to simulation. It contains user-specified values that are not 
+/** StandardsInformationConstruction is the ModelObject that wraps OpenStudio IDD object
+ *  'OS:StandardsInformation:ConstructionFields'. StandardsInformationConstruction provides a
+ *  place to register information about a construction that building energy standards often need
+ *  to know, but is irrelevant to simulation. It contains user-specified values that are not
  *  generally checked against input or output data. */
 class MODEL_API StandardsInformationConstruction : public ModelObject {
  public:
@@ -97,8 +97,8 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
   /** Returns a list of suggestions for standards construction type based on intendedSurfaceType. */
   std::vector<std::string> suggestedStandardsConstructionTypes() const;
 
-  /** Return the layer of construction() whose thickness can be perturbed (usually to reach a 
-   *  certain property value for the overall construction), if the construction() exists and is a 
+  /** Return the layer of construction() whose thickness can be perturbed (usually to reach a
+   *  certain property value for the overall construction), if the construction() exists and is a
    *  LayeredConstruction. */
   boost::optional<Material> perturbableLayer() const;
 
@@ -153,24 +153,24 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
   bool setIntendedSurfaceType(const std::string& type);
   void resetIntendedSurfaceType();
 
-  /** Set the constructionType to type. To be used with standardsinterface, this string should 
-   *  match an appropriate enumeration value in the standardsinterface::DataDictionary. The 
+  /** Set the constructionType to type. To be used with standardsinterface, this string should
+   *  match an appropriate enumeration value in the standardsinterface::DataDictionary. The
    *  enumeration for which this should be a value generally varies by intendedSurfaceType(). */
-  void setStandardsConstructionType(const std::string& type);
+  bool setStandardsConstructionType(const std::string& type);
   void resetStandardsConstructionType();
 
-  /** Set the perturbableLayer to the one at layerIndex. Returns false if construction() is not a 
-   *  LayeredConstruction or 
+  /** Set the perturbableLayer to the one at layerIndex. Returns false if construction() is not a
+   *  LayeredConstruction or
    *
-   *  \code 
-   *  layerIndex >= construction().get().cast<LayeredConstruction>().numLayers(). 
+   *  \code
+   *  layerIndex >= construction().get().cast<LayeredConstruction>().numLayers().
    *  \endcode */
   bool setPerturbableLayer(unsigned layerIndex);
 
-  /** Set the perturbableLayer to material. Returns false if construction() is not a 
-   *  LayeredConstruction or 
+  /** Set the perturbableLayer to material. Returns false if construction() is not a
+   *  LayeredConstruction or
    *
-   *  \code 
+   *  \code
    *  MaterialVector layers = construction().get().cast<LayeredConstruction>().layers();
    *  std::find(layers.begin(),layers.end(),material) == layers.end();
    *  \endcode */
@@ -179,19 +179,19 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
   /** Clears all PerturbableLayer information, including type. */
   void resetPerturbableLayer();
 
-  /** Set the perturbableLayerType to type. Can be one of the provided types, or a free-form 
+  /** Set the perturbableLayerType to type. Can be one of the provided types, or a free-form
    *  string. \sa standardPerturbableLayerTypeValues */
-  void setPerturbableLayerType(const std::string& type);
+  bool setPerturbableLayerType(const std::string& type);
   void resetPerturbableLayerType();
 
-  void setOtherPerturbableLayerType(const std::string& otherPerturbableLayerType);
+  bool setOtherPerturbableLayerType(const std::string& otherPerturbableLayerType);
   void resetOtherPerturbableLayerType();
 
-  void setConstructionStandard(const std::string& constructionStandard);
+  bool setConstructionStandard(const std::string& constructionStandard);
 
   void resetConstructionStandard();
 
-  void setConstructionStandardSource(const std::string& constructionStandardSource);
+  bool setConstructionStandardSource(const std::string& constructionStandardSource);
 
   void resetConstructionStandardSource();
 
@@ -223,7 +223,9 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
 
   void resetFenestrationGasFill();
 
-  void setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating);
+  bool setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating);
+
+  void setFenestrationLowEmissivityCoatingNoFail(bool fenestrationLowEmissivityCoating);
 
   void resetFenestrationLowEmissivityCoating();
 
@@ -242,7 +244,7 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
   explicit StandardsInformationConstruction(const ConstructionBase& construction);
 
   explicit StandardsInformationConstruction(
-      std::shared_ptr<detail::StandardsInformationConstruction_Impl> impl);  
+      std::shared_ptr<detail::StandardsInformationConstruction_Impl> impl);
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.StandardsInformationConstruction");
@@ -255,7 +257,6 @@ typedef boost::optional<StandardsInformationConstruction> OptionalStandardsInfor
 typedef std::vector<StandardsInformationConstruction> StandardsInformationConstructionVector;
 
 } // model
-} // openstudio 
+} // openstudio
 
 #endif // MODEL_STANDARDSINFORMATIONCONSTRUCTION_HPP
-

@@ -307,7 +307,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_20hours)
   bool until24Found = false;
   bool nextValueShouldBeLast = false;
   unsigned numUntils = 0;
-  
+
   for ( unsigned i = 0; i < N; ++i){
     boost::optional<std::string> field = objects[0].getString(i, true, false);
     ASSERT_TRUE(field);
@@ -431,7 +431,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_TwoPoint)
   bool until24Found = false;
   bool nextValueShouldBeLast = false;
   unsigned numUntils = 0;
-  
+
   for ( unsigned i = 0; i < N; ++i){
     boost::optional<std::string> field = objects[0].getString(i, true, false);
     ASSERT_TRUE(field);
@@ -797,7 +797,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_500)
   bool until24Found = false;
   bool nextValueShouldBeLast = false;
   unsigned numUntils = 0;
-  
+
   for (unsigned i = 0; i < N; ++i){
     boost::optional<std::string> field = objects[0].getString(i, true, false);
     ASSERT_TRUE(field);

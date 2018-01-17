@@ -189,11 +189,11 @@ class MODEL_API EvaporativeFluidCoolerSingleSpeed : public StraightComponent {
 
   void resetEvaporationLossMode();
 
-  void setEvaporationLossFactor(double evaporationLossFactor);
+  bool setEvaporationLossFactor(double evaporationLossFactor);
 
   void resetEvaporationLossFactor();
 
-  void setDriftLossPercent(double driftLossPercent);
+  bool setDriftLossPercent(double driftLossPercent);
 
   void resetDriftLossPercent();
 
@@ -248,5 +248,4 @@ typedef std::vector<EvaporativeFluidCoolerSingleSpeed> EvaporativeFluidCoolerSin
 } // model
 } // openstudio
 
-#endif // MODEL_EVAPORATIVEFLUIDCOOLERSINGLESPEED_HPP
-
+#endif // MODEL_EVAPORATIVEFLUIDCOOLERSINGLESPEED_HPP

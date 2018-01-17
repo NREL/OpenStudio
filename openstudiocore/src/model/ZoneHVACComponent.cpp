@@ -364,7 +364,7 @@ namespace detail {
         }
       }
     }
-  
+
     return false;
   }
 
@@ -374,7 +374,7 @@ namespace detail {
     if( node ) return node->cast<ModelObject>();
     return boost::none;
   }
-  
+
   boost::optional<ModelObject> ZoneHVACComponent_Impl::airOutletModelObject() const
   {
     auto node = outletNode();

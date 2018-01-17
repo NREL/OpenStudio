@@ -2732,13 +2732,13 @@ namespace detail {
 
 Workspace::Workspace() :
     m_impl(new detail::Workspace_Impl(StrictnessLevel(StrictnessLevel::Draft),
-                                      IddFileType(IddFileType::OpenStudio)))
+                                      IddFileType(IddFileType::EnergyPlus)))
 {
   addVersionObject();
 }
 
 Workspace::Workspace(StrictnessLevel level) :
-    m_impl(new detail::Workspace_Impl(level,IddFileType(IddFileType::OpenStudio)))
+    m_impl(new detail::Workspace_Impl(level,IddFileType(IddFileType::EnergyPlus)))
 {
   addVersionObject();
 }

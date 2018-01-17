@@ -121,9 +121,9 @@ namespace detail {
 
     bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
-    void setMinimumDryBulbTemperatureforDehumidifierOperation(double minimumDryBulbTemperatureforDehumidifierOperation);
+    bool setMinimumDryBulbTemperatureforDehumidifierOperation(double minimumDryBulbTemperatureforDehumidifierOperation);
 
-    void setMaximumDryBulbTemperatureforDehumidifierOperation(double maximumDryBulbTemperatureforDehumidifierOperation);
+    bool setMaximumDryBulbTemperatureforDehumidifierOperation(double maximumDryBulbTemperatureforDehumidifierOperation);
 
     bool setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad);
 
@@ -157,4 +157,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_ZONEHVACDEHUMIDIFIERDX_IMPL_HPP
-

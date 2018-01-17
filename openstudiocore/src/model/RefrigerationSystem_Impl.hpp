@@ -210,7 +210,7 @@ namespace detail {
 
     bool setCompressorList(const ModelObjectList& modelObjectList);
 
-    void setMinimumCondensingTemperature(double minimumCondensingTemperature);
+    bool setMinimumCondensingTemperature(double minimumCondensingTemperature);
 
     bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
 
@@ -226,7 +226,7 @@ namespace detail {
 
     void resetLiquidSuctionHeatExchangerSubcooler();
 
-    void setSumUASuctionPiping(double sumUASuctionPiping);
+    bool setSumUASuctionPiping(double sumUASuctionPiping);
 
     void resetSumUASuctionPiping();
 
@@ -234,7 +234,7 @@ namespace detail {
 
     void resetSuctionPipingZone();
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -242,7 +242,7 @@ namespace detail {
 
     void resetIntercoolerType();
 
-    void setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness);
+    bool setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness);
 
     void resetShellandCoilIntercoolerEffectiveness();
 
@@ -271,5 +271,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONSYSTEM_IMPL_HPP
-
+#endif // MODEL_REFRIGERATIONSYSTEM_IMPL_HPP

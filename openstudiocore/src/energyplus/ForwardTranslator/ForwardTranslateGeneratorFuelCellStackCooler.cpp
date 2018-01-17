@@ -48,7 +48,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellStackCoo
   boost::optional<std::string> s;
   boost::optional<double> d;
   boost::optional<Connection> connection;
-  
+
   IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_StackCooler, modelObject);
   //Name
   s = modelObject.name();
@@ -193,7 +193,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellStackCoo
   }
 
   return pcm;
-  
+
 }
 
 } // energyplus

@@ -36,17 +36,17 @@
 
 namespace openstudio {
 namespace model {
-  
+
   class SpaceLoadDefinition;
 
 namespace detail {
 
 class MODEL_API LifeCycleCost_Impl : public ModelObject_Impl
 {
-  
-  
-  
-  
+
+
+
+
 public:
   // constructor
   LifeCycleCost_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
@@ -96,7 +96,7 @@ public:
   //@{
 
   bool setCategory(const std::string& category);
-  
+
   bool setCost(double cost);
 
   bool setCostUnits(const std::string& costUnits);
@@ -122,7 +122,7 @@ public:
   boost::optional<double> costedArea() const;
 
   boost::optional<int> costedThermalZones() const;
-  
+
 private:
   REGISTER_LOGGER("openstudio.model.LifeCycleCost");
 

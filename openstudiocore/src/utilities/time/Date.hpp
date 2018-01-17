@@ -114,17 +114,17 @@ namespace openstudio{
       ((NotAMonth)(Not a month)(boost::date_time::NotAMonth))
       ((NumMonths)(Number of months)(boost::date_time::NumMonths))
   );
-   
+
   /// Converts string to MonthOfYear. Accepts full string or first three letters.
   UTILITIES_API MonthOfYear monthOfYear(const std::string& month);
 
   /// convert unsigned to MonthOfYear
   UTILITIES_API MonthOfYear monthOfYear(unsigned month);
 
-  /// convert MonthOfYear to unsigned 
+  /// convert MonthOfYear to unsigned
   UTILITIES_API unsigned month(MonthOfYear monthOfYear);
 
-  /** \class NthDayOfWeekInMonth 
+  /** \class NthDayOfWeekInMonth
    *  \brief NthDayOfWeekInMonth is an enum for the nth DayOfWeek in MonthOfYear
    *  (e.g. first Saturday in January).
    *  \details The fifth NthDayOfWeekInMonth is equivalent to the last DayOfWeek in

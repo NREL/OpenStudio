@@ -5,13 +5,13 @@
   %module openstudiomodel
 
   %pythoncode %{
-    from openstudiomodelcore import *
-    from openstudiomodelsimulation import *
-    from openstudiomodelresources import *
-    from openstudiomodelgeometry import *
-    from openstudiomodelhvac import *
-    from openstudiomodelrefrigeration import *
-    from openstudiomodelgenerators import *
+    from .openstudiomodelcore import *
+    from .openstudiomodelsimulation import *
+    from .openstudiomodelresources import *
+    from .openstudiomodelgeometry import *
+    from .openstudiomodelhvac import *
+    from .openstudiomodelrefrigeration import *
+    from .openstudiomodelgenerators import *
   %}
 
 #endif
@@ -27,4 +27,4 @@
 %import <model/ModelRefrigeration.i>
 %import <model/ModelGenerators.i>
 
-#endif //MODEL_I 
+#endif //MODEL_I

@@ -1,7 +1,7 @@
 Continuous Integration is facilitated through the use of the [decent_ci](https://github.com/lefticus/decent_ci) system.
 
 The files `.decent_ci.yaml`, `.decent_ci-Linux.yaml`, `.decent_ci-Windows.yaml` and `.decent_ci-MacOS.yaml` in the root
-folder configure the build system. 
+folder configure the build system.
 
 For building OpenStudio, you need to set up the requirements for decent_ci, and follow its instructions here:
 
@@ -22,7 +22,7 @@ Additionally, OpenStudio requires that the following packages be installed
  * nsis
  * Official release of EnergyPlus 8.1, installed in the standard location
 
-## Linux 
+## Linux
 
  * Official builds of Qt, openssl and Boost: `sudo apt-get install libboost-all-dev qtbase5-dev libssl-dev libqt5webkit5-dev ruby-dev irb`
  * Official release of EnergyPlus 8.1, installed in the standard location

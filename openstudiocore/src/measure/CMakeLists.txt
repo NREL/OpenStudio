@@ -17,7 +17,7 @@ set(${target_name}_src
   OSMeasureInfoGetter.cpp
   OSMeasureInfoGetter.hpp
   OSOutput.cpp
-  OSOutput.hpp  
+  OSOutput.hpp
   OSRunner.cpp
   OSRunner.hpp
   ReportingMeasure.cpp
@@ -43,7 +43,7 @@ set(${target_name}_depends
 )
 
 
-add_library(${target_name} 
+add_library(${target_name}
   ${${target_name}_src}
   ${${target_name}_moc_src}
 )
@@ -114,10 +114,10 @@ MAKE_SWIG_TARGET(OpenStudioMeasure measure "${CMAKE_CURRENT_SOURCE_DIR}/Measure.
 #    "ruby_OpenStudioEnergyPlus"
 #    "ruby_OpenStudioMeasure"
 #  )
-#  
+#
 #  if(APPLE)
 #    # the following script will change the bindings to prefer the version of libruby included with SketchUp to the system library, preventing loading two different copies of libruby
 #    add_custom_command(TARGET ${target_name}_tests POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "$<TARGET_FILE:${target_name}_tests>")
-#  endif() 
+#  endif()
 #endif()
 

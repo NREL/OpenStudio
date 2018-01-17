@@ -74,9 +74,9 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   OSDocument( openstudio::model::Model library,
               const openstudio::path &resourcesPath,
               openstudio::model::OptionalModel model = boost::none,
-              QString filePath = QString(), 
-              bool isPlugin = false, 
-              int startTabIndex = 0, 
+              QString filePath = QString(),
+              bool isPlugin = false,
+              int startTabIndex = 0,
               int startSubTabIndex = 0);
 
   virtual ~OSDocument();
@@ -131,7 +131,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   // does not return model object from BCL
   boost::optional<model::ModelObject> getModelObject(const OSItemId& itemId) const;
 
-  // Retrieves the Component identified by itemId from the local bcl library, 
+  // Retrieves the Component identified by itemId from the local bcl library,
   // updates it to the current version and returns it.
   boost::optional<model::Component> getComponent(const OSItemId& itemId) const;
 
@@ -159,14 +159,14 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
     SIMULATION_SETTINGS,
     RUBY_SCRIPTS,
     RUN_SIMULATION,
-    RESULTS_SUMMARY 
+    RESULTS_SUMMARY
   };
 
   enum HorizontalTabID
   {
     MY_MODEL,
     LIBRARY,
-    EDIT 
+    EDIT
   };
 
   std::shared_ptr<MainRightColumnController> mainRightColumnController() const;
@@ -251,7 +251,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
  private slots:
 
-  void onVerticalTabSelected(int id); 
+  void onVerticalTabSelected(int id);
 
   void inspectModelObject(model::OptionalModelObject &, bool readOnly);
 
@@ -262,7 +262,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   void toggleUnits(bool displayIP);
 
   void openLibDlg();
- 
+
   void on_closeBclDlg();
 
   void on_closeMeasuresBclDlg();
@@ -307,7 +307,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   void setSavePath(const QString & savePath);
 
   // When opening an OSM, check the model for a weather file, if a weather file is listed
-  // copy it into the temp directory.  If the listed weather file cannot be found, remove the 
+  // copy it into the temp directory.  If the listed weather file cannot be found, remove the
   // weather file object.  Returns false if the user's weather file is reset, returns true otherwise.
   bool fixWeatherFileInTemp(bool opening);
 

@@ -24,7 +24,7 @@
 %ignore openstudio::Attribute::Attribute(const std::string& name, const std::string& value, const boost::optional<std::string>& units);
 %ignore openstudio::Attribute::Attribute(const std::string& name, const std::vector<openstudio::Attribute>& value, const boost::optional<std::string>& units);
 
-#if defined(SWIGRUBY) 
+#if defined(SWIGRUBY)
   // cannot distinguish between int and unsigned
   %ignore openstudio::Attribute::Attribute(const std::string& name, unsigned value);
   %ignore openstudio::Attribute::Attribute(const std::string& name, unsigned value, const std::string& units);
@@ -41,7 +41,7 @@
     os << *self;
     return os.str();
   }
-  
+
 };
 
-#endif //UTILITIES_DATA_ATTRIBUTE_I 
+#endif //UTILITIES_DATA_ATTRIBUTE_I

@@ -62,7 +62,7 @@ boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceVariable
   if (d.is_initialized()) {
     idfObject.setDouble(ExternalInterface_VariableFields::InitialValue, d.get());
   }
-  
+
   return idfObject;
 }
 

@@ -80,6 +80,6 @@ class  MODELEDITOR_API IGLineEdit : public QLineEdit
   double m_max;
 
 };
-  
+
 
 #endif // MODELEDITOR_IGLINEEDIT_HPP

@@ -25,20 +25,20 @@
   #include <model_editor/InspectorGadget.hpp>
   #include <model_editor/InspectorDialog.hpp>
   #include <model_editor/ModalDialogs.hpp>
-  
+
   #include <model/Model.hpp>
   #include <model/ModelObject.hpp>
-  
+
   using namespace openstudio;
   using namespace openstudio::model;
-  
+
   // to be ignored
   class QAction;
   class QDomNode;
   class QDomElement;
   class QDomDocument;
   class QNetworkAccessManager;
-  class QThread;  
+  class QThread;
   namespace openstudio{
     class ProgressBar;
     class UpdateManager;
@@ -76,4 +76,4 @@
 %feature("director") ModelObjectSelectorDialogWatcher;
 %include <model_editor/ModalDialogs.hpp>
 
-#endif //MODELEDITOR_LIB_I 
+#endif //MODELEDITOR_LIB_I

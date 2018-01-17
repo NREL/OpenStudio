@@ -68,7 +68,7 @@ TEST_F(ModelFixture, UtilityBill_Electricity) {
   EXPECT_EQ(Date(1,1,1999), bp1.startDate());
   EXPECT_EQ(30, bp1.numberOfDays());
   EXPECT_EQ(Date(1,30,1999), bp1.endDate());
-  
+
   BillingPeriod bp2 = utilityBill.addBillingPeriod();
   EXPECT_EQ(Date(1,31,1999), bp2.startDate());
   EXPECT_EQ(30, bp2.numberOfDays());
@@ -124,7 +124,7 @@ TEST_F(ModelFixture, UtilityBill_Electricity) {
   ASSERT_TRUE(meter.installLocationType());
   EXPECT_EQ(InstallLocationType::Facility, meter.installLocationType()->value());
   EXPECT_FALSE(meter.specificInstallLocation());
-  
+
   OutputMeter meter2 = utilityBill.consumptionMeter();
   EXPECT_EQ(1u, model.getModelObjects<OutputMeter>().size());
 

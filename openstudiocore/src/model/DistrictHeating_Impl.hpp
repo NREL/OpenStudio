@@ -92,7 +92,7 @@ namespace detail {
     bool setNominalCapacity(boost::optional<double> nominalCapacity);
 
     void autosizeNominalCapacity();
-    
+
     bool addToNode(Node & node) override;
 
     //@}

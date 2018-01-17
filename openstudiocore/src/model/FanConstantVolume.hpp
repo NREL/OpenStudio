@@ -89,19 +89,19 @@ class MODEL_API FanConstantVolume : public StraightComponent {
   bool setAvailabilitySchedule(Schedule& s);
 
   /** Sets the value of the FanEfficiency field. **/
-  void setFanEfficiency(double value);
+  bool setFanEfficiency(double value);
 
   /** Sets the value of the PressureRise field. **/
-  void setPressureRise(double value);
+  bool setPressureRise(double value);
 
   /** Sets the value of the MotorEfficiency field. **/
-  void setMotorEfficiency(double value);
+  bool setMotorEfficiency(double value);
 
   /** Sets the value of the MotorInAirStreamFraction field. **/
-  void setMotorInAirstreamFraction(double value);
+  bool setMotorInAirstreamFraction(double value);
 
   /** Sets the value of the EndUseSubcategory field. **/
-  void setEndUseSubcategory(std::string value);
+  bool setEndUseSubcategory(std::string value);
 
   //@}
 

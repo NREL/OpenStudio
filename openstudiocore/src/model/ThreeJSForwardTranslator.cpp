@@ -77,7 +77,7 @@ namespace openstudio
     {
       return 1024;
     }
-    
+
     ThreeMaterial makeMaterial(const std::string& name, unsigned color, double opacity, unsigned side, unsigned shininess = 50, const std::string type = "MeshPhongMaterial")
     {
       bool transparent = false;
@@ -114,7 +114,7 @@ namespace openstudio
 
     void buildMaterials(Model model, std::vector<ThreeMaterial>& materials, std::map<std::string, std::string>& materialMap)
     {
-      // materials from 'openstudio\openstudiocore\ruby\openstudio\sketchup_plugin\lib\interfaces\MaterialsInterface.rb' 
+      // materials from 'openstudio\openstudiocore\ruby\openstudio\sketchup_plugin\lib\interfaces\MaterialsInterface.rb'
 
       //addMaterial(materials, materialMap, makeMaterial("Undefined", toThreeColor(255, 255, 255), 1, ThreeSide::DoubleSide, 50, "MeshBasicMaterial"));
       addMaterial(materials, materialMap, makeMaterial("Undefined", toThreeColor(255, 255, 255), 1, ThreeSide::DoubleSide));
@@ -155,7 +155,7 @@ namespace openstudio
       addMaterial(materials, materialMap, makeMaterial("SpaceShading", toThreeColor(76, 110, 178), 1, ThreeSide::DoubleSide));
       addMaterial(materials, materialMap, makeMaterial("SpaceShading_Ext", toThreeColor(76, 110, 178), 1, ThreeSide::FrontSide));
       addMaterial(materials, materialMap, makeMaterial("SpaceShading_Int", toThreeColor(183, 197, 224), 1, ThreeSide::BackSide));
-      
+
       addMaterial(materials, materialMap, makeMaterial("InteriorPartitionSurface", toThreeColor(158, 188, 143), 1, ThreeSide::DoubleSide));
       addMaterial(materials, materialMap, makeMaterial("InteriorPartitionSurface_Ext", toThreeColor(158, 188, 143), 1, ThreeSide::FrontSide));
       addMaterial(materials, materialMap, makeMaterial("InteriorPartitionSurface_Int", toThreeColor(213, 226, 207), 1, ThreeSide::BackSide));
@@ -179,7 +179,7 @@ namespace openstudio
       addMaterial(materials, materialMap, makeMaterial("Boundary_Groundbasementpreprocessorlowerwall", toThreeColor(204, 173, 163), 1, ThreeSide::DoubleSide));
       addMaterial(materials, materialMap, makeMaterial("Boundary_Othersidecoefficients", toThreeColor(63, 63, 63), 1, ThreeSide::DoubleSide));
       addMaterial(materials, materialMap, makeMaterial("Boundary_Othersideconditionsmodel", toThreeColor(153, 0, 76), 1, ThreeSide::DoubleSide));
-      
+
       // make construction materials
       for (auto& construction : model.getModelObjects<ConstructionBase>()){
         boost::optional<RenderingColor> color = construction.renderingColor();
@@ -190,7 +190,7 @@ namespace openstudio
         std::string name = "Construction_" + construction.nameString();
         addMaterial(materials, materialMap, makeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
       }
-      
+
       // make thermal zone materials
       for (auto& thermalZone : model.getConcreteModelObjects<ThermalZone>()){
         boost::optional<RenderingColor> color = thermalZone.renderingColor();
@@ -212,7 +212,7 @@ namespace openstudio
         std::string name = "SpaceType_" + spaceType.nameString();
         addMaterial(materials, materialMap, makeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
       }
-      
+
       // make building story materials
       for (auto& buildingStory : model.getConcreteModelObjects<BuildingStory>()){
         boost::optional<RenderingColor> color = buildingStory.renderingColor();
@@ -234,7 +234,7 @@ namespace openstudio
         std::string name = "BuildingUnit_" + buildingUnit.nameString();
         addMaterial(materials, materialMap, makeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
       }
-    
+
     }
 
     size_t getVertexIndex(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol = 0.001)
@@ -327,13 +327,13 @@ namespace openstudio
         std::string subSurfaceTypeMaterialName;
         if (istringEqual(subSurfaceType, "FixedWindow") ||
             istringEqual(subSurfaceType, "OperableWindow") ||
-            istringEqual(subSurfaceType, "GlassDoor") || 
+            istringEqual(subSurfaceType, "GlassDoor") ||
             istringEqual(subSurfaceType, "Skylight") ||
             istringEqual(subSurfaceType, "TubularDaylightDome") ||
             istringEqual(subSurfaceType, "TubularDaylightDiffuser"))
         {
           subSurfaceTypeMaterialName = "Window";
-        } else if (istringEqual(subSurfaceType, "Door") || 
+        } else if (istringEqual(subSurfaceType, "Door") ||
                   istringEqual(subSurfaceType, "OverheadDoor"))
         {
           subSurfaceTypeMaterialName = "Door";
@@ -370,7 +370,7 @@ namespace openstudio
         userData.setConstructionName(construction->nameString());
         userData.setConstructionMaterialName("Construction_" + construction->nameString());
       }
-    
+
       if (space)
       {
         userData.setSpaceName(space->nameString());
@@ -471,7 +471,7 @@ namespace openstudio
       }
 
       ThreeGeometryData geometryData(toThreeVector(allVertices), faceIndices);
-    
+
       ThreeGeometry geometry(toThreeUUID(toString(planarSurface.handle())), "Geometry", geometryData);
       geometries.push_back(geometry);
 
@@ -493,9 +493,9 @@ namespace openstudio
 
         Point3dVector otherVertices = otherSiteTransformation*adjacentPlanarSurface->vertices();
         if (circularEqual(siteTransformation*vertices, reverse(otherVertices))){
-          userData.setCoincidentWithOutsideObject(true); 
+          userData.setCoincidentWithOutsideObject(true);
         } else{
-          userData.setCoincidentWithOutsideObject(false); 
+          userData.setCoincidentWithOutsideObject(false);
         }
       }
 
@@ -507,7 +507,7 @@ namespace openstudio
     {
       m_logSink.setLogLevel(Warn);
       //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSForwardTranslator"));
-      m_logSink.setThreadId(QThread::currentThread());  
+      m_logSink.setThreadId(QThread::currentThread());
     }
 
     std::vector<LogMessage> ThreeJSForwardTranslator::warnings() const
@@ -619,7 +619,7 @@ namespace openstudio
       ThreeBoundingBox threeBoundingBox(boundingBox.minX().get(), boundingBox.minY().get(), boundingBox.minZ().get(),
                                         boundingBox.maxX().get(), boundingBox.maxY().get(), boundingBox.maxZ().get(),
                                         lookAtX, lookAtY, lookAtZ, lookAtR);
-     
+
       std::vector<std::string> buildingStoryNames;
       for (const auto& buildingStory : buildingStories){
         buildingStoryNames.push_back(buildingStory.nameString());
@@ -637,40 +637,40 @@ namespace openstudio
 
       for (const auto& buildingUnit : buildingUnits){
         modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:BuildingUnit", toString(buildingUnit.handle()), buildingUnit.nameString()));
-        
+
         n += 1;
         updatePercentage(100.0*n / N);
       }
 
       for (const auto& thermalZone : thermalZones){
         modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:ThermalZone", toString(thermalZone.handle()), thermalZone.nameString()));
-        
+
         n += 1;
         updatePercentage(100.0*n / N);
       }
 
       for (const auto& spaceType : spaceTypes){
         modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:SpaceType", toString(spaceType.handle()), spaceType.nameString()));
-        
+
         n += 1;
         updatePercentage(100.0*n / N);
       }
 
       for (const auto& defaultConstructionSet : defaultConstructionSets){
         modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:DefaultConstructionSet", toString(defaultConstructionSet.handle()), defaultConstructionSet.nameString()));
-        
+
         n += 1;
         updatePercentage(100.0*n / N);
       }
-  
+
       ThreeSceneMetadata metadata(buildingStoryNames, threeBoundingBox, modelObjectMetadata);
-  
+
       ThreeScene scene(metadata, allGeometries, materials, sceneObject);
 
       updatePercentage(100.0);
 
       return scene;
     }
-    
+
   }//model
 }//openstudio

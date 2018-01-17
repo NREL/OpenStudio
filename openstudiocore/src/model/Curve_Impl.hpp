@@ -39,8 +39,8 @@ namespace detail {
 
   /** Curve_Impl is a ModelObject_Impl that is the implementation class for Curve. */
   class MODEL_API Curve_Impl : public ResourceObject_Impl {
-    
-    
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -48,10 +48,10 @@ namespace detail {
     // Construct completely new object.
     Curve_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // Construct from existing workspace object (typically when Model is being constructed 
+    // Construct from existing workspace object (typically when Model is being constructed
     // from Workspace).
-    Curve_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-               Model_Impl* model, 
+    Curve_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+               Model_Impl* model,
                bool keepHandle);
 
     // Clone copy constructor.

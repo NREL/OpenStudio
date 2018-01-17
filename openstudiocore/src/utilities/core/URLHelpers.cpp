@@ -33,7 +33,7 @@
 #include <QRegularExpression>
 
 namespace openstudio {
-  
+
 QUrl completeURL(const QUrl &t_source, const std::vector<QUrl> &t_searchPaths, bool throwOnFailure)
 {
   if (t_source.scheme() == "file" || t_source.scheme().isEmpty())
@@ -48,7 +48,7 @@ QUrl completeURL(const QUrl &t_source, const std::vector<QUrl> &t_searchPaths, b
 
     for (const auto & searchitr : t_searchPaths)
     {
-      //search for files here... 
+      //search for files here...
       /// \todo support remote urls
       if (searchitr.scheme() == "file" || searchitr.scheme().isEmpty())
       {
@@ -60,7 +60,7 @@ QUrl completeURL(const QUrl &t_source, const std::vector<QUrl> &t_searchPaths, b
         {
           return QUrl::fromLocalFile(toQString(completepath));
         }
-      }    
+      }
     }
   } else {
     return t_source;
@@ -83,7 +83,7 @@ QUrl toURL(const std::string& s) {
 }
 
 std::string toString(const QUrl& url) {
-  // reimplementation of toString(QString) b/c direct use of that method led to 
+  // reimplementation of toString(QString) b/c direct use of that method led to
   // MSVS warning C4717: recursive on all control paths
   const QByteArray& qb = url.toString().toUtf8();
   return std::string(qb.data());
@@ -104,7 +104,7 @@ boost::optional<openstudio::path> getOptionalOriginalPath(const Url& url)
   if (url.scheme() == "file" || url.scheme().isEmpty()){
     QString localFile = url.toLocalFile();
 
-    // test for root slash added to windows paths, "/E:/test/CloudTest/scripts/StandardReports/measure.rb" 
+    // test for root slash added to windows paths, "/E:/test/CloudTest/scripts/StandardReports/measure.rb"
     const QRegularExpression regexp("^\\/([a-zA-Z]:\\/.*)");
     QRegularExpressionMatch match = regexp.match(localFile);
     if (match.hasMatch()){

@@ -40,7 +40,7 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, ElectricLoadCenterInverterSimple_Instantiate) {
   auto result = false;
   auto value = 0.1;
-  
+
   Model model;
   ThermalZone thermalZone(model);
 
@@ -73,6 +73,6 @@ TEST_F(ModelFixture, ElectricLoadCenterInverterSimple_Instantiate) {
   EXPECT_EQ(electricLoadCenterInverterSimple.inverterEfficiency().get(), value);
   electricLoadCenterInverterSimple.resetInverterEfficiency();
   EXPECT_FALSE(electricLoadCenterInverterSimple.inverterEfficiency());
- 
+
 }
 

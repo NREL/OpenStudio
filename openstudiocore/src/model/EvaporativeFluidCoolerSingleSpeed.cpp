@@ -506,7 +506,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void EvaporativeFluidCoolerSingleSpeed_Impl::setEvaporationLossFactor(boost::optional<double> evaporationLossFactor) {
+  bool EvaporativeFluidCoolerSingleSpeed_Impl::setEvaporationLossFactor(boost::optional<double> evaporationLossFactor) {
     bool result(false);
     if (evaporationLossFactor) {
       result = setDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::EvaporationLossFactor, evaporationLossFactor.get());
@@ -516,6 +516,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetEvaporationLossFactor() {
@@ -523,9 +524,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void EvaporativeFluidCoolerSingleSpeed_Impl::setDriftLossPercent(double driftLossPercent) {
+  bool EvaporativeFluidCoolerSingleSpeed_Impl::setDriftLossPercent(double driftLossPercent) {
     bool result = setDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DriftLossPercent, driftLossPercent);
     OS_ASSERT(result);
+    return result;
   }
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetDriftLossPercent() {
@@ -939,16 +941,16 @@ void EvaporativeFluidCoolerSingleSpeed::resetEvaporationLossMode() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetEvaporationLossMode();
 }
 
-void EvaporativeFluidCoolerSingleSpeed::setEvaporationLossFactor(double evaporationLossFactor) {
-  getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
+bool EvaporativeFluidCoolerSingleSpeed::setEvaporationLossFactor(double evaporationLossFactor) {
+  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
 }
 
 void EvaporativeFluidCoolerSingleSpeed::resetEvaporationLossFactor() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetEvaporationLossFactor();
 }
 
-void EvaporativeFluidCoolerSingleSpeed::setDriftLossPercent(double driftLossPercent) {
-  getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDriftLossPercent(driftLossPercent);
+bool EvaporativeFluidCoolerSingleSpeed::setDriftLossPercent(double driftLossPercent) {
+  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDriftLossPercent(driftLossPercent);
 }
 
 void EvaporativeFluidCoolerSingleSpeed::resetDriftLossPercent() {
@@ -1002,5 +1004,4 @@ EvaporativeFluidCoolerSingleSpeed::EvaporativeFluidCoolerSingleSpeed(std::shared
   }
 
 } // model
-} // openstudio
-
+} // openstudio

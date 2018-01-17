@@ -52,7 +52,7 @@ namespace openstudio{
     StringStreamLogSink_Impl::~StringStreamLogSink_Impl()
     {
       this->disable();
-    
+
       // already called
       //LogSink_Impl::~LogSink_Impl();
     }

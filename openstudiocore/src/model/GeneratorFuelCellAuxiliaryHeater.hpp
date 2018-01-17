@@ -95,19 +95,19 @@ class MODEL_API GeneratorFuelCellAuxiliaryHeater : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setExcessAirRatio(double excessAirRatio);
+  bool setExcessAirRatio(double excessAirRatio);
 
   void resetExcessAirRatio();
 
-  void setAncillaryPowerConstantTerm(double ancillaryPowerConstantTerm);
+  bool setAncillaryPowerConstantTerm(double ancillaryPowerConstantTerm);
 
   void resetAncillaryPowerConstantTerm();
 
-  void setAncillaryPowerLinearTerm(double ancillaryPowerLinearTerm);
+  bool setAncillaryPowerLinearTerm(double ancillaryPowerLinearTerm);
 
   void resetAncillaryPowerLinearTerm();
 
-  void setSkinLossUFactorTimesAreaValue(double skinLossUFactorTimesAreaValue);
+  bool setSkinLossUFactorTimesAreaValue(double skinLossUFactorTimesAreaValue);
 
   void resetSkinLossUFactorTimesAreaValue();
 
@@ -123,19 +123,19 @@ class MODEL_API GeneratorFuelCellAuxiliaryHeater : public ModelObject {
 
   void resetHeatingCapacityUnits();
 
-  void setMaximumHeatingCapacityinWatts(double maximumHeatingCapacityinWatts);
+  bool setMaximumHeatingCapacityinWatts(double maximumHeatingCapacityinWatts);
 
   void resetMaximumHeatingCapacityinWatts();
 
-  void setMinimumHeatingCapacityinWatts(double minimumHeatingCapacityinWatts);
+  bool setMinimumHeatingCapacityinWatts(double minimumHeatingCapacityinWatts);
 
   void resetMinimumHeatingCapacityinWatts();
 
-  void setMaximumHeatingCapacityinKmolperSecond(double maximumHeatingCapacityinKmolperSecond);
+  bool setMaximumHeatingCapacityinKmolperSecond(double maximumHeatingCapacityinKmolperSecond);
 
   void resetMaximumHeatingCapacityinKmolperSecond();
 
-  void setMinimumHeatingCapacityinKmolperSecond(double minimumHeatingCapacityinKmolperSecond);
+  bool setMinimumHeatingCapacityinKmolperSecond(double minimumHeatingCapacityinKmolperSecond);
 
   void resetMinimumHeatingCapacityinKmolperSecond();
 
@@ -169,4 +169,3 @@ typedef std::vector<GeneratorFuelCellAuxiliaryHeater> GeneratorFuelCellAuxiliary
 } // openstudio
 
 #endif // MODEL_GENERATORFUELCELLAUXILIARYHEATER_HPP
-

@@ -77,7 +77,7 @@
   endif()
 
   # Hand run commands we are replicating here
-  
+
   #  jason@ubuntu12:~/OpenStudio-main/openstudiocore/java$ /usr/lib/jvm/java-1.7.0-openjdk-amd64/bin/javac TestOpenStudio.java -classpath ~/openstudio-main-build/OSCore-prefix/src/OSCore-build/Products/java/OpenStudio.jar
   #  jason@ubuntu12:~/OpenStudio-main/openstudiocore/java$ LD_LIBRARY_PATH=~/openstudio-main-build/OSCore-prefix/src/OSCore-build/Products/java /usr/lib/jvm/java-1.7.0-openjdk-amd64/bin/java -classpath ~/openstudio-main-build/OSCore-prefix/src/OSCore-build/Products/java/OpenStudio.jar:.  TestOpenStudio
 
@@ -92,12 +92,12 @@
    )
 
   if (MSVC)
-    add_test(NAME "JavaSanityCheck" 
+    add_test(NAME "JavaSanityCheck"
       COMMAND "${Java_JAVA_EXECUTABLE}"  -classpath "${CMAKE_BINARY_DIR}/Products/java/$<CONFIGURATION>/OpenStudio.jar;${CMAKE_BINARY_DIR}" TestOpenStudio
-	  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/Products/java/$<CONFIGURATION>" 
+	  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/Products/java/$<CONFIGURATION>"
       )
   else()
-    add_test(NAME "JavaSanityCheck" 
+    add_test(NAME "JavaSanityCheck"
       COMMAND "${Java_JAVA_EXECUTABLE}"  "-Djava.library.path=${OPENSTUDIO_JAVA_BIN_DIR}" -classpath "${OPENSTUDIO_JAVA_JAR}:${CMAKE_BINARY_DIR}" TestOpenStudio
       )
   endif()

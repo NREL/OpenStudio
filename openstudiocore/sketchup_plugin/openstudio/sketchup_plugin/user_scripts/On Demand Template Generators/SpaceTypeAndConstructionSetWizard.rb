@@ -13,17 +13,17 @@ require "#{File.dirname(__FILE__)}/resources/OsLib_Constructions"
 
 #start the measure
 class SpaceTypeAndConstructionSetWizard < OpenStudio::Ruleset::ModelUserScript
-  
+
   #define the name that a user will see, this method may be deprecated as
   #the display name in PAT comes from the name field in measure.xml
   def name
     return "Space Type and Construction Set Wizard"
   end
-  
+
   #define the arguments that the user will input
   def arguments(model)
     args = OpenStudio::Ruleset::OSArgumentVector.new
-    
+
     # load the JSON standards file
     temp = File.read("#{File.dirname(__FILE__)}/resources/OpenStudio_Standards.json")
     standards = JSON.parse(temp)
@@ -31,7 +31,7 @@ class SpaceTypeAndConstructionSetWizard < OpenStudio::Ruleset::ModelUserScript
     building_types = []
     templates = []
     climate_zones = []
-    
+
     standards["space_types"].each_key do |template|
       templates << template
       standards["space_types"][template].each_key do |climate_zone_set|
@@ -40,7 +40,7 @@ class SpaceTypeAndConstructionSetWizard < OpenStudio::Ruleset::ModelUserScript
         end
       end
     end
-    
+
     standards["construction_sets"].each_key do |template|
       templates << template
       standards["space_types"][template].each_key do |climate_zone|
@@ -49,12 +49,12 @@ class SpaceTypeAndConstructionSetWizard < OpenStudio::Ruleset::ModelUserScript
         end
       end
     end
-    
+
     standards["climate_zones"].each_key do |climate_zone|
       next if climate_zone.include? "CEC"
       climate_zones << climate_zone
     end
-    
+
     building_types.uniq!
     templates.uniq!
     climate_zones.uniq!
@@ -235,9 +235,9 @@ class SpaceTypeAndConstructionSetWizard < OpenStudio::Ruleset::ModelUserScript
 
     # updated for the benefit of SketchUp UserScript workflow
     runner.registerFinalCondition("The model has #{finishing_spaceTypes.size} space types and #{finishing_constructionSets.size} construction sets.")
-    
+
     return true
- 
+
   end #end the run method
 
 end #end the measure

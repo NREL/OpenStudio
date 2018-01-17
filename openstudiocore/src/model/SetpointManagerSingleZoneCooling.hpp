@@ -76,9 +76,9 @@ class MODEL_API SetpointManagerSingleZoneCooling : public SetpointManager {
 
   bool setControlVariable(const std::string& controlVariable);
 
-  void setMinimumSupplyAirTemperature(double minimumSupplyAirTemperature);
+  bool setMinimumSupplyAirTemperature(double minimumSupplyAirTemperature);
 
-  void setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
+  bool setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
 
   bool setControlZone(const ThermalZone& thermalZone);
 
@@ -114,4 +114,3 @@ typedef std::vector<SetpointManagerSingleZoneCooling> SetpointManagerSingleZoneC
 } // openstudio
 
 #endif // MODEL_SETPOINTMANAGERSINGLEZONECOOLING_HPP
-

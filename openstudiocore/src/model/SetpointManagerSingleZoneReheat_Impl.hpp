@@ -40,20 +40,16 @@ class ZoneHVACEquipmentConnections;
 namespace detail {
 
   class MODEL_API SetpointManagerSingleZoneReheat_Impl : public SetpointManager_Impl {
-    
-    
-    
 
-    
    public:
 
     SetpointManagerSingleZoneReheat_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerSingleZoneReheat_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                                         Model_Impl* model, 
+    SetpointManagerSingleZoneReheat_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                         Model_Impl* model,
                                          bool keepHandle);
 
-    SetpointManagerSingleZoneReheat_Impl(const SetpointManagerSingleZoneReheat_Impl& other, 
+    SetpointManagerSingleZoneReheat_Impl(const SetpointManagerSingleZoneReheat_Impl& other,
                                          Model_Impl* model,
                                          bool keepHandles);
 
@@ -66,15 +62,15 @@ namespace detail {
     virtual ModelObject clone(Model model) const override;
 
     virtual bool addToNode(Node & node) override;
-    
+
     double minimumSupplyAirTemperature();
-    
-    void setMinimumSupplyAirTemperature( double value );
-    
+
+    bool setMinimumSupplyAirTemperature( double value );
+
     double maximumSupplyAirTemperature();
-    
-    void setMaximumSupplyAirTemperature( double value );
-    
+
+    bool setMaximumSupplyAirTemperature( double value );
+
     virtual boost::optional<Node> setpointNode() const override;
 
     virtual std::string controlVariable() const override;
@@ -83,7 +79,7 @@ namespace detail {
 
     boost::optional<ThermalZone> controlZone();
 
-    void setControlZone(ThermalZone& thermalZone);
+    bool setControlZone(ThermalZone& thermalZone);
 
     void resetControlZone();
 
@@ -104,4 +100,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SETPOINTMANAGERSINGLEZONEREHEAT_IMPL_HPP
-

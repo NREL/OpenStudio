@@ -433,7 +433,7 @@ namespace detail {
     return result;
   }
 
-  void RefrigerationAirChiller_Impl::setRatedUnitLoadFactor(boost::optional<double> ratedUnitLoadFactor) {
+  bool RefrigerationAirChiller_Impl::setRatedUnitLoadFactor(boost::optional<double> ratedUnitLoadFactor) {
     bool result(false);
     if (ratedUnitLoadFactor) {
       result = setDouble(OS_Refrigeration_AirChillerFields::RatedUnitLoadFactor, ratedUnitLoadFactor.get());
@@ -443,6 +443,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationAirChiller_Impl::resetRatedUnitLoadFactor() {
@@ -450,7 +451,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationAirChiller_Impl::setRatedCapacity(boost::optional<double> ratedCapacity) {
+  bool RefrigerationAirChiller_Impl::setRatedCapacity(boost::optional<double> ratedCapacity) {
     bool result(false);
     if (ratedCapacity) {
       result = setDouble(OS_Refrigeration_AirChillerFields::RatedCapacity, ratedCapacity.get());
@@ -460,6 +461,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationAirChiller_Impl::resetRatedCapacity() {
@@ -504,9 +506,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationAirChiller_Impl::setCoilMaterialCorrectionFactor(double coilMaterialCorrectionFactor) {
+  bool RefrigerationAirChiller_Impl::setCoilMaterialCorrectionFactor(double coilMaterialCorrectionFactor) {
     bool result = setDouble(OS_Refrigeration_AirChillerFields::CoilMaterialCorrectionFactor, coilMaterialCorrectionFactor);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationAirChiller_Impl::resetCoilMaterialCorrectionFactor() {
@@ -514,9 +517,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationAirChiller_Impl::setRefrigerantCorrectionFactor(double refrigerantCorrectionFactor) {
+  bool RefrigerationAirChiller_Impl::setRefrigerantCorrectionFactor(double refrigerantCorrectionFactor) {
     bool result = setDouble(OS_Refrigeration_AirChillerFields::RefrigerantCorrectionFactor, refrigerantCorrectionFactor);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationAirChiller_Impl::resetRefrigerantCorrectionFactor() {
@@ -561,9 +565,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationAirChiller_Impl::setRatedTotalHeatingPower(double ratedTotalHeatingPower) {
+  bool RefrigerationAirChiller_Impl::setRatedTotalHeatingPower(double ratedTotalHeatingPower) {
     bool result = setDouble(OS_Refrigeration_AirChillerFields::RatedTotalHeatingPower, ratedTotalHeatingPower);
     OS_ASSERT(result);
+    return result;
   }
 
   bool RefrigerationAirChiller_Impl::setHeatingPowerSchedule(Schedule& schedule) {
@@ -599,9 +604,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationAirChiller_Impl::setRatedAirFlow(double ratedAirFlow) {
+  bool RefrigerationAirChiller_Impl::setRatedAirFlow(double ratedAirFlow) {
     bool result = setDouble(OS_Refrigeration_AirChillerFields::RatedAirFlow, ratedAirFlow);
     OS_ASSERT(result);
+    return result;
   }
 
   bool RefrigerationAirChiller_Impl::setMinimumFanAirFlowRatio(double minimumFanAirFlowRatio) {
@@ -699,9 +705,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationAirChiller_Impl::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
+  bool RefrigerationAirChiller_Impl::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
     bool result = setDouble(OS_Refrigeration_AirChillerFields::AverageRefrigerantChargeInventory, averageRefrigerantChargeInventory);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationAirChiller_Impl::resetAverageRefrigerantChargeInventory() {
@@ -957,16 +964,16 @@ bool RefrigerationAirChiller::setCapacityRatingType(std::string capacityRatingTy
   return getImpl<detail::RefrigerationAirChiller_Impl>()->setCapacityRatingType(capacityRatingType);
 }
 
-void RefrigerationAirChiller::setRatedUnitLoadFactor(double ratedUnitLoadFactor) {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedUnitLoadFactor(ratedUnitLoadFactor);
+bool RefrigerationAirChiller::setRatedUnitLoadFactor(double ratedUnitLoadFactor) {
+  return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedUnitLoadFactor(ratedUnitLoadFactor);
 }
 
 void RefrigerationAirChiller::resetRatedUnitLoadFactor() {
   getImpl<detail::RefrigerationAirChiller_Impl>()->resetRatedUnitLoadFactor();
 }
 
-void RefrigerationAirChiller::setRatedCapacity(double ratedCapacity) {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedCapacity(ratedCapacity);
+bool RefrigerationAirChiller::setRatedCapacity(double ratedCapacity) {
+  return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedCapacity(ratedCapacity);
 }
 
 void RefrigerationAirChiller::resetRatedCapacity() {
@@ -997,16 +1004,16 @@ void RefrigerationAirChiller::resetMaximumTemperatureDifferenceBetweenInletAiran
   getImpl<detail::RefrigerationAirChiller_Impl>()->resetMaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature();
 }
 
-void RefrigerationAirChiller::setCoilMaterialCorrectionFactor(double coilMaterialCorrectionFactor) {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->setCoilMaterialCorrectionFactor(coilMaterialCorrectionFactor);
+bool RefrigerationAirChiller::setCoilMaterialCorrectionFactor(double coilMaterialCorrectionFactor) {
+  return getImpl<detail::RefrigerationAirChiller_Impl>()->setCoilMaterialCorrectionFactor(coilMaterialCorrectionFactor);
 }
 
 void RefrigerationAirChiller::resetCoilMaterialCorrectionFactor() {
   getImpl<detail::RefrigerationAirChiller_Impl>()->resetCoilMaterialCorrectionFactor();
 }
 
-void RefrigerationAirChiller::setRefrigerantCorrectionFactor(double refrigerantCorrectionFactor) {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->setRefrigerantCorrectionFactor(refrigerantCorrectionFactor);
+bool RefrigerationAirChiller::setRefrigerantCorrectionFactor(double refrigerantCorrectionFactor) {
+  return getImpl<detail::RefrigerationAirChiller_Impl>()->setRefrigerantCorrectionFactor(refrigerantCorrectionFactor);
 }
 
 void RefrigerationAirChiller::resetRefrigerantCorrectionFactor() {
@@ -1037,8 +1044,8 @@ void RefrigerationAirChiller::resetSHR60CorrectionFactor() {
   getImpl<detail::RefrigerationAirChiller_Impl>()->resetSHR60CorrectionFactor();
 }
 
-void RefrigerationAirChiller::setRatedTotalHeatingPower(double ratedTotalHeatingPower) {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedTotalHeatingPower(ratedTotalHeatingPower);
+bool RefrigerationAirChiller::setRatedTotalHeatingPower(double ratedTotalHeatingPower) {
+  return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedTotalHeatingPower(ratedTotalHeatingPower);
 }
 
 bool RefrigerationAirChiller::setHeatingPowerSchedule(Schedule& schedule) {
@@ -1065,8 +1072,8 @@ void RefrigerationAirChiller::resetRatedFanPower() {
   getImpl<detail::RefrigerationAirChiller_Impl>()->resetRatedFanPower();
 }
 
-void RefrigerationAirChiller::setRatedAirFlow(double ratedAirFlow) {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedAirFlow(ratedAirFlow);
+bool RefrigerationAirChiller::setRatedAirFlow(double ratedAirFlow) {
+  return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedAirFlow(ratedAirFlow);
 }
 
 bool RefrigerationAirChiller::setMinimumFanAirFlowRatio(double minimumFanAirFlowRatio) {
@@ -1129,8 +1136,8 @@ void RefrigerationAirChiller::resetTemperatureTerminationDefrostFractiontoIce() 
 //   getImpl<detail::RefrigerationAirChiller_Impl>()->resetVerticalLocation();
 // }
 
-void RefrigerationAirChiller::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->setAverageRefrigerantChargeInventory(averageRefrigerantChargeInventory);
+bool RefrigerationAirChiller::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
+  return getImpl<detail::RefrigerationAirChiller_Impl>()->setAverageRefrigerantChargeInventory(averageRefrigerantChargeInventory);
 }
 
 void RefrigerationAirChiller::resetAverageRefrigerantChargeInventory() {
@@ -1144,5 +1151,4 @@ RefrigerationAirChiller::RefrigerationAirChiller(std::shared_ptr<detail::Refrige
 /// @endcond
 
 } // model
-} // openstudio
-
+} // openstudio

@@ -45,7 +45,7 @@ TEST_F(IddFixture,IddKey_Getters) {
   EXPECT_TRUE(f->properties().type == IddFieldType::ChoiceType);
   IddKeyVector keys = f->keys();
   EXPECT_EQ(static_cast<unsigned>(8),keys.size());
-  LOG(Info,"Keys for field " << Controller_OutdoorAirFields::EconomizerControlType 
+  LOG(Info,"Keys for field " << Controller_OutdoorAirFields::EconomizerControlType
       << ", " << f->name() << ", of IddObject " << obj.name() << ":");
   unsigned i = 0;
   for (IddKey& key : keys) {

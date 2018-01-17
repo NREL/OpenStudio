@@ -53,7 +53,7 @@ namespace std {
 // like it is for some other languages using "magic names"
 // http://www.swig.org/Doc1.3/Ruby.html#Ruby_nn54
 // For each individual implementation that you want to support the operator overload
-// for C# you will need to implement the operator overload using the 
+// for C# you will need to implement the operator overload using the
 // %typemap(cscode) directive. See:
 // http://swig.svn.sourceforge.net/viewvc/swig/trunk/Examples/test-suite/operator_overload.i?revision=10885&view=markup
 %rename(Equal) operator =;
@@ -91,4 +91,4 @@ namespace std {
 %include <std_shared_ptr.i>
 %include <boost_shared_ptr.i>
 
-#endif 
+#endif

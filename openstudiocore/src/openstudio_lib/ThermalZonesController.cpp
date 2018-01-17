@@ -59,7 +59,7 @@ namespace openstudio {
 ThermalZonesController::ThermalZonesController(bool isIP, const model::Model & model)
   : ModelSubTabController(new ThermalZonesView(isIP,model),model)
 {
-  //subTabView()->itemSelectorButtons()->disableCopyButton(); 
+  //subTabView()->itemSelectorButtons()->disableCopyButton();
 
   ThermalZoneView * thermalZoneView = static_cast<ThermalZoneView *>(subTabView()->inspectorView());
 
@@ -197,7 +197,7 @@ void ThermalZonesController::addComponentToZone(model::ThermalZone & zone, Handl
     if( exisitngHVACComps.size() > 0 )
     {
       QMessageBox message(subTabView());
-      
+
       message.setText("Sorry, only one piece of zone equipment is allowed at this time.");
 
       message.exec();
@@ -211,7 +211,7 @@ void ThermalZonesController::addComponentToZone(model::ThermalZone & zone, Handl
   if( libraryComp )
   {
     model::ZoneHVACComponent compClone = libraryComp->clone(model()).cast<model::ZoneHVACComponent>();
-  
+
     bool added = compClone.addToThermalZone(zone);
 
     if( added )
@@ -227,7 +227,7 @@ void ThermalZonesController::addComponentToZone(model::ThermalZone & zone, Handl
   if( ! wasSuccessful )
   {
     QMessageBox message(subTabView());
-    
+
     message.setText("The selected component is not allowed at this location.");
 
     message.exec();
@@ -297,7 +297,7 @@ void ThermalZonesController::onPurgeObjects(const openstudio::IddObjectType& idd
       thermalZone.remove();
     }
   }
-  
+
   // DLM: this method doesn't actually call ThermalZone::remove which is important to preserve model validity
   //this->model().removeObjects(toRemove);
 }

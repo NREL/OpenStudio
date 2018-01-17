@@ -168,8 +168,8 @@ void OSListItem::setSelected(bool isSelected)
     if( isSelected )
     {
       if( wasSelected )
-      { 
-        return; 
+      {
+        return;
       }
       else
       {
@@ -289,7 +289,7 @@ void OSItemSelectionController::removeSelectedItem(OSListItem * item)
 {
   OS_ASSERT(item);
 
-  auto it = 
+  auto it =
     std::find(m_selectedItems.begin(),m_selectedItems.end(),item);
 
   if( it != m_selectedItems.end() )
@@ -300,13 +300,13 @@ void OSItemSelectionController::removeSelectedItem(OSListItem * item)
   }
 }
 
-QWidget * OSItemDelegate::view(QSharedPointer<OSListItem> dataSource) 
-{ 
+QWidget * OSItemDelegate::view(QSharedPointer<OSListItem> dataSource)
+{
   return new QWidget();
 }
 
-QGraphicsObject * OSGraphicsItemDelegate::view(QSharedPointer<OSListItem> dataSource) 
-{ 
+QGraphicsObject * OSGraphicsItemDelegate::view(QSharedPointer<OSListItem> dataSource)
+{
   return nullptr;
 }
 

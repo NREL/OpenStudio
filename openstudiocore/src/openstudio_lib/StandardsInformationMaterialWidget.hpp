@@ -76,7 +76,7 @@ class StandardsInformationMaterialWidget : public QWidget
     void disableComposite();
 
   private:
-    
+
     QComboBox * m_standard = nullptr;
 
     QComboBox * m_standardSource = nullptr;

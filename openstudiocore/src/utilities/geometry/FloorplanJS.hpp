@@ -108,7 +108,7 @@ namespace openstudio{
   class UTILITIES_API FloorplanJS{
   public:
 
-    /// default constructor 
+    /// default constructor
     FloorplanJS();
 
     /// constructor from JSON formatted string, will throw if error
@@ -145,11 +145,11 @@ namespace openstudio{
 
     ThreeModelObjectMetadata makeModelObjectMetadata(const std::string& iddObjectType, const Json::Value& object) const;
 
-    void makeGeometries(const Json::Value& story, const Json::Value& space, bool belowFloorPlenum, bool aboveCeilingPlenum, 
+    void makeGeometries(const Json::Value& story, const Json::Value& space, bool belowFloorPlenum, bool aboveCeilingPlenum,
       double lengthToMeters, double minZ, double maxZ, const Json::Value& vertices, const Json::Value& edges, const Json::Value& faces, const std::string& faceId,
       bool openstudioFormat, std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren) const;
-    
-    std::string makeSurface(const Json::Value& story, const Json::Value& space, const std::string& parentSurfaceName, const std::string& parentSubSurfaceName, 
+
+    std::string makeSurface(const Json::Value& story, const Json::Value& space, const std::string& parentSurfaceName, const std::string& parentSubSurfaceName,
       bool belowFloorPlenum, bool aboveCeilingPlenum, const std::string& surfaceType, const Point3dVector& vertices, size_t faceFormat,
       std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren, double illuminanceSetpoint) const;
 

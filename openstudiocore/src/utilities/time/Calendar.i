@@ -14,5 +14,5 @@
 // include the header into the swig interface directly
 %include <utilities/time/Calendar.hpp>
 
-#endif //UTILITIES_TIME_CALENDAR_I 
+#endif //UTILITIES_TIME_CALENDAR_I
 

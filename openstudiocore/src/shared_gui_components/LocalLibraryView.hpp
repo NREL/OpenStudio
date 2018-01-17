@@ -43,7 +43,7 @@ namespace openstudio{
 
 class MeasureBadge;
 class OSViewSwitcher;
-  
+
 class LocalLibraryView : public QWidget
 {
   Q_OBJECT

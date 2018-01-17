@@ -10,5 +10,5 @@
   #else
     #define OSVERSION_API
   #endif
-  
+
 #endif

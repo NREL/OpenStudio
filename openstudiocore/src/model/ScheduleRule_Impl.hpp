@@ -45,17 +45,7 @@ namespace detail {
 
   /** ScheduleRule_Impl is a ParentObject_Impl that is the implementation class for ScheduleRule.*/
   class MODEL_API ScheduleRule_Impl : public ParentObject_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    //
-    
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -81,8 +71,8 @@ namespace detail {
     virtual bool setParent(ParentObject& newParent) override;
 
     virtual std::vector<ResourceObject> resources() const override;
- 
-    virtual std::vector<ModelObject> children() const override;    
+
+    virtual std::vector<ModelObject> children() const override;
 
     virtual std::vector<IdfObject> remove() override;
 
@@ -135,21 +125,21 @@ namespace detail {
 
     bool setRuleIndex(int index);
 
-    void setApplySunday(bool applySunday);
+    bool setApplySunday(bool applySunday);
 
-    void setApplyMonday(bool applyMonday);
+    bool setApplyMonday(bool applyMonday);
 
-    void setApplyTuesday(bool applyTuesday);
+    bool setApplyTuesday(bool applyTuesday);
 
-    void setApplyWednesday(bool applyWednesday);
+    bool setApplyWednesday(bool applyWednesday);
 
-    void setApplyThursday(bool applyThursday);
+    bool setApplyThursday(bool applyThursday);
 
-    void setApplyFriday(bool applyFriday);
+    bool setApplyFriday(bool applyFriday);
 
-    void setApplySaturday(bool applySaturday);
+    bool setApplySaturday(bool applySaturday);
 
-    //void setApplyHoliday(bool applyHoliday);
+    //bool setApplyHoliday(bool applyHoliday);
 
     /// Sets the start date of the date range, will delete any specific dates specified.
     /// A start date > end date indicates that the range wraps around the year.
@@ -186,4 +176,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SCHEDULERULE_IMPL_HPP
-

@@ -189,7 +189,7 @@ RetType OneConstParamOptionalProxy(FromDataType *t_from, const Param1 & t_param1
 //  std::string foo()
 // };
 //
-// class A 
+// class A
 // {
 //  B b();
 // };
@@ -1147,7 +1147,7 @@ class NameLineEditConcept : public BaseConcept
 {
   public:
 
-    NameLineEditConcept(const Heading &t_heading, 
+    NameLineEditConcept(const Heading &t_heading,
       bool t_isInspectable,
       bool t_deleteObject,
       bool t_hasClickFocus = true)
@@ -1703,7 +1703,7 @@ class DropZoneConcept : public BaseConcept
 };
 
 template<typename ValueType, typename DataSourceType>
-class DropZoneConceptImpl : public DropZoneConcept 
+class DropZoneConceptImpl : public DropZoneConcept
 {
   public:
 

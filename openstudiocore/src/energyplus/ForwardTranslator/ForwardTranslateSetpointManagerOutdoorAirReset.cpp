@@ -71,7 +71,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerOutdoorAir
   if( d )
   {
     idfObject.setDouble(SetpointManager_OutdoorAirResetFields::OutdoorLowTemperature,d.get());
-  } 
+  }
 
   // SetpointatOutdoorHighTemperature
   d = modelObject.setpointatOutdoorHighTemperature();
@@ -85,7 +85,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerOutdoorAir
   if( d )
   {
     idfObject.setDouble(SetpointManager_OutdoorAirResetFields::OutdoorHighTemperature,d.get());
-  } 
+  }
 
   // SetpointNodeorNodeListName
   node = modelObject.setpointNode();

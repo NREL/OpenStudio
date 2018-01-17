@@ -47,8 +47,8 @@ class ModelObjectTypeListView : public OSCollapsibleItemList
   Q_OBJECT
 
   public:
-    ModelObjectTypeListView(const model::Model& model, 
-                            bool addScrollArea, 
+    ModelObjectTypeListView(const model::Model& model,
+                            bool addScrollArea,
                             OSItemType headerType,
                             bool showLocalBCL = false,
                             QWidget * parent = nullptr);

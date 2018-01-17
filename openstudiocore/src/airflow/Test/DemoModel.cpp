@@ -155,7 +155,7 @@ boost::optional<openstudio::model::Model> buildDemoModel2012(openstudio::model::
   if(!thermostat) {
     return boost::none;
   }
-  
+
   // create  thermal zones
   openstudio::model::ThermalZone libraryZone(model);
   openstudio::model::SizingZone librarySizing(model, libraryZone);
@@ -193,7 +193,7 @@ boost::optional<openstudio::model::Model> buildDemoModel2012(openstudio::model::
   airLoop.addBranchForZone(office2Zone);
 
   boost::optional<openstudio::model::SetpointManagerSingleZoneReheat> setpointManager;
-  for (openstudio::model::SetpointManagerSingleZoneReheat t : 
+  for (openstudio::model::SetpointManagerSingleZoneReheat t :
     model.getModelObjects<openstudio::model::SetpointManagerSingleZoneReheat>()) {
     setpointManager = t;
     break;
@@ -226,7 +226,7 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
   vertices.push_back(openstudio::Point3d(9.022, 0, 2.413));
 
   openstudio::model::SubSurface exteriorDoor(vertices, model);
-  
+
   std::vector<openstudio::model::Surface> searchResults = hallway->findSurfaces(180.0, 180.0, 90.0, 90.0);
   if(searchResults.size() != 1) {
     return boost::none;
@@ -393,7 +393,7 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
 
   northWall = searchResults[0];
   exteriorDoor.setSurface(northWall);
- 
+
   // Windows
   // Office 1, South Wall
   vertices.clear();

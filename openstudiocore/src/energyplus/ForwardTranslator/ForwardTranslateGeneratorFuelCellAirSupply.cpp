@@ -69,7 +69,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellAirSuppl
   boost::optional<CurveCubic> curve;
   boost::optional<CurveQuadratic> curvequad;
   std::vector< std::pair<std::string, double> > constituents;
-  
+
   IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_AirSupply, modelObject);
   //Name
   s = modelObject.name();
@@ -161,7 +161,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellAirSuppl
   }
 
   return pcm;
-  
+
 }
 
 } // energyplus

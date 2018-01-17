@@ -49,7 +49,7 @@ class LibraryTabWidget : public QWidget
   virtual ~LibraryTabWidget() {}
 
   void showRemoveButton();
- 
+
   void hideRemoveButton();
 
   void addTab( QWidget * widget,
@@ -82,7 +82,7 @@ class LibraryTabWidget : public QWidget
 
   std::vector<QString> m_unSelectedPixmaps;
 
-  std::vector<QPushButton *> m_tabButtons; 
+  std::vector<QPushButton *> m_tabButtons;
 
   QPushButton * m_removeButton = nullptr;
 };

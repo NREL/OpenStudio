@@ -34,7 +34,7 @@
 
 TEST(FloatCompare, Equal)
 {
-  std::cout << "Machine epsilon for double is: " 
+  std::cout << "Machine epsilon for double is: "
             << std::numeric_limits<double>::epsilon() << std::endl;
 
   EXPECT_TRUE(openstudio::equal(1.0+1.0,2.0));

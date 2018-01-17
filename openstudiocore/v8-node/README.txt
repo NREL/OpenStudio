@@ -3,9 +3,9 @@
 New CMAKE Build Options added
   BUILD_V8_BINDINGS - Builds SWIG Bindings for V8
   BUILD_NODE_MODULES
-    Builds the V8 bindings specifically as Node loadable add-ons and enabled v8 unit tests. 
+    Builds the V8 bindings specifically as Node loadable add-ons and enabled v8 unit tests.
     If disabled libraries are generated and built but are untested since V8 does
-      not provide any kind of module loader or cli. 
+      not provide any kind of module loader or cli.
     Enables internal features of SWIG-V8 module to ensure backward compatibility
       with older version of V8 that is shipped with Node.js
   BUILD_NODE - Downloads and builds Node.js into Node-prefix folder. After
@@ -14,8 +14,8 @@ New CMAKE Build Options added
 
 Generated libraries are in OSCore-prefix/src/OSCore-build/Products/v8
 
-Tests exist in two locations. 
-  Simple assertions using the Node.js assert library are in openstudiocore/v8-node/test 
+Tests exist in two locations.
+  Simple assertions using the Node.js assert library are in openstudiocore/v8-node/test
   node-jasmine based tests are in openstudiocore/v8-node/jasmine
   The number of "gotchas" that needed to be address with unit tests where few
     exceptions - this is just to ensure that exception handling is working. All
@@ -50,7 +50,7 @@ enable:
 
 BUILD_V8_BINDINGS - Enables the V8 bindings
 BUILD_NODE_MODULES - Enables V8 bindings as Node addons
-BUILD_NODE - Downloads and compiles node to be used locally 
+BUILD_NODE - Downloads and compiles node to be used locally
 BUILD_SWIG - Clones the latest Git SWIG from https://github.com/lefticus/swig-v8 with V8 Support
 BUILD_TESTING - Enables testing
 
@@ -94,7 +94,7 @@ openstudiocore/v8-node  - This directory with associated tests and the OpenStudi
 openstudiocore/ProjectMacros.cmake   - updated to create SWIG V8 bindings in addition to the existing .NET, Ruby and Python bindings macros
 openstudiocore/model/Model*.i : updated to reorganize some class definitions to make sure they are available at the correct time
 openstudiocore/utilities/core/Exception.i  - Exception handling for V8 SWIG was enabled
-openstudiocore/utilities/core/Path.i - Path construction helper code was added 
+openstudiocore/utilities/core/Path.i - Path construction helper code was added
 openstudiocore/utilities/core/UUID.i : destructor was made public
 openstudiocore/utilities/core/v8/LanguageSpecific.i  - added which fixes up some v8 specific things including adding operator overload
                                                      aliases. The aliases are not pretty, but at least the are available since
@@ -107,17 +107,17 @@ The majority of the work required was in the SWIG V8 code wrapper generator.
 
 Specifically:
 
-  - Fix handling of overloaded method names in different classes 
-  - Make sure install grabs v8 swig files as well   
-  - Fix incorrect include of stdexcept in std_pair.i for javascript v8 
-  - Fix compiling of returning of const std::string & 
-  - Add support for %begin section in javascript/v8 module 
+  - Fix handling of overloaded method names in different classes
+  - Make sure install grabs v8 swig files as well
+  - Fix incorrect include of stdexcept in std_pair.i for javascript v8
+  - Fix compiling of returning of const std::string &
+  - Add support for %begin section in javascript/v8 module
   - More tightly integrate Node.i (For support of generating Node add-ons)
-  - Clean up init call name in Node implementation 
-  - Better integrate Node.js and fix emitting of inheritance when base class 
+  - Clean up init call name in Node implementation
+  - Better integrate Node.js and fix emitting of inheritance when base class
       is not defined in current module
-  - Support intermodule dependencies for V8 
-  - Support the latest revision of v8 while still working with Node 
-  - Fix type checking. Inspiration was taken from the Ruby SWIG Module 
+  - Support intermodule dependencies for V8
+  - Support the latest revision of v8 while still working with Node
+  - Fix type checking. Inspiration was taken from the Ruby SWIG Module
 
 These changes are tracked and available at https://github.com/lefticus/swig-v8

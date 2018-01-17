@@ -27,4 +27,4 @@
 %include <utilities/data/TimeSeries.hpp>
 
 
-#endif //UTILITIES_DATA_TIMESERIES_I 
+#endif //UTILITIES_DATA_TIMESERIES_I

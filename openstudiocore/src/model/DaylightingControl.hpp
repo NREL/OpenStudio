@@ -119,21 +119,21 @@ class MODEL_API DaylightingControl : public SpaceItem {
   /** @name Setters */
   //@{
 
-  void setPositionXCoordinate(double positionXCoordinate);
+  bool setPositionXCoordinate(double positionXCoordinate);
 
-  void setPositionYCoordinate(double positionYCoordinate);
+  bool setPositionYCoordinate(double positionYCoordinate);
 
-  void setPositionZCoordinate(double positionZCoordinate);
+  bool setPositionZCoordinate(double positionZCoordinate);
 
-  void setPsiRotationAroundXAxis(double psiRotationAroundXAxis);
+  bool setPsiRotationAroundXAxis(double psiRotationAroundXAxis);
 
   void resetPsiRotationAroundXAxis();
 
-  void setThetaRotationAroundYAxis(double thetaRotationAroundYAxis);
+  bool setThetaRotationAroundYAxis(double thetaRotationAroundYAxis);
 
   void resetThetaRotationAroundYAxis();
 
-  void setPhiRotationAroundZAxis(double phiRotationAroundZAxis);
+  bool setPhiRotationAroundZAxis(double phiRotationAroundZAxis);
 
   void resetPhiRotationAroundZAxis();
 
@@ -153,7 +153,7 @@ class MODEL_API DaylightingControl : public SpaceItem {
 
   void resetMinimumLightOutputFractionforContinuousDimmingControl();
 
-  void setNumberofSteppedControlSteps(int numberofSteppedControlSteps);
+  bool setNumberofSteppedControlSteps(int numberofSteppedControlSteps);
 
   void resetNumberofSteppedControlSteps();
 
@@ -180,7 +180,7 @@ class MODEL_API DaylightingControl : public SpaceItem {
 
   /// Returns a Transformation representing position and orientation in meters relative to the Space.
   openstudio::Transformation transformation() const;
-  
+
   /** Sets a Transformation representing position and orientation in meters relative to the Space. */
   bool setTransformation(const openstudio::Transformation& transformation);
 
@@ -217,5 +217,4 @@ typedef std::vector<DaylightingControl> DaylightingControlVector;
 } // model
 } // openstudio
 
-#endif // MODEL_DAYLIGHTINGCONTROL_HPP
-
+#endif // MODEL_DAYLIGHTINGCONTROL_HPP

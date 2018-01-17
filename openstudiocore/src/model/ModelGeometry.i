@@ -23,21 +23,21 @@
 
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelGeometry
-  
+
   // ignore thermal zone for now
   %ignore openstudio::model::Building::thermalZones;
   %ignore openstudio::model::Space::thermalZone;
   %ignore openstudio::model::Space::setThermalZone;
-  
+
   // ignore GeneratorPhotovoltaic
   %ignore openstudio::model::PlanarSurface::generatorPhotovoltaics;
-  
+
   // DLM: this is a proof of concept section to see how attributes work in C#
   %include <attribute.i>
 
   // partofTotalFloorArea is a read/write boolean attribute
   %attribute(openstudio::model::Space, bool, partofTotalFloorArea, partofTotalFloorArea, setPartofTotalFloorArea);
-  
+
   // floorArea is a read only double attribute
   %attribute(openstudio::model::Space, double, floorArea, floorArea);
 
@@ -88,6 +88,13 @@ class DesignSpecificationOutdoorAir;
 class SpaceLoadInstance;
 class SpaceLoadDefinition;
 class GeneratorPhotovoltaic;
+
+class ExteriorLights;
+class ExteriorFuelEquipment;
+class ExteriorWaterEquipment;
+class ExteriorLoadDefinition;
+class ExteriorLoadInstance;
+
 }
 }
 
@@ -97,18 +104,18 @@ UNIQUEMODELOBJECT_TEMPLATES(Building);
 MODELOBJECT_TEMPLATES(BuildingStory);
 MODELOBJECT_TEMPLATES(BuildingUnit);
 MODELOBJECT_TEMPLATES(PlanarSurfaceGroup);
-MODELOBJECT_TEMPLATES(Space); 
-MODELOBJECT_TEMPLATES(SpaceItem); 
+MODELOBJECT_TEMPLATES(Space);
+MODELOBJECT_TEMPLATES(SpaceItem);
 MODELOBJECT_TEMPLATES(SpaceLoad);
-MODELOBJECT_TEMPLATES(SpaceLoadInstance);   
-MODELOBJECT_TEMPLATES(Lights); 
+MODELOBJECT_TEMPLATES(SpaceLoadInstance);
+MODELOBJECT_TEMPLATES(Lights);
 MODELOBJECT_TEMPLATES(PlanarSurface);
 MODELOBJECT_TEMPLATES(DefaultConstructionSet);
-MODELOBJECT_TEMPLATES(Surface); 
+MODELOBJECT_TEMPLATES(Surface);
 MODELOBJECT_TEMPLATES(SubSurface);
-MODELOBJECT_TEMPLATES(ShadingSurfaceGroup); 
-MODELOBJECT_TEMPLATES(ShadingSurface); 
-MODELOBJECT_TEMPLATES(InteriorPartitionSurfaceGroup); 
+MODELOBJECT_TEMPLATES(ShadingSurfaceGroup);
+MODELOBJECT_TEMPLATES(ShadingSurface);
+MODELOBJECT_TEMPLATES(InteriorPartitionSurfaceGroup);
 MODELOBJECT_TEMPLATES(InteriorPartitionSurface);
 MODELOBJECT_TEMPLATES(SurfacePropertyOtherSideCoefficients);
 MODELOBJECT_TEMPLATES(SurfacePropertyOtherSideConditionsModel);
@@ -124,12 +131,19 @@ MODELOBJECT_TEMPLATES(InternalMass);
 MODELOBJECT_TEMPLATES(SpaceInfiltrationDesignFlowRate);
 MODELOBJECT_TEMPLATES(SpaceInfiltrationEffectiveLeakageArea);
 MODELOBJECT_TEMPLATES(DaylightingControl);
-MODELOBJECT_TEMPLATES(GlareSensor); 
+MODELOBJECT_TEMPLATES(GlareSensor);
 MODELOBJECT_TEMPLATES(IlluminanceMap);
 MODELOBJECT_TEMPLATES(DaylightingDeviceShelf);
 MODELOBJECT_TEMPLATES(SpaceType);
-MODELOBJECT_TEMPLATES(ExteriorLights);
 MODELOBJECT_TEMPLATES(LightingSimulationZone);
+MODELOBJECT_TEMPLATES(FoundationKiva);
+MODELOBJECT_TEMPLATES(SurfacePropertyExposedFoundationPerimeter);
+
+MODELOBJECT_TEMPLATES(ExteriorLoadInstance);   
+MODELOBJECT_TEMPLATES(ExteriorLights);
+MODELOBJECT_TEMPLATES(ExteriorFuelEquipment);
+MODELOBJECT_TEMPLATES(ExteriorWaterEquipment);
+
 
 SWIG_UNIQUEMODELOBJECT(Site);
 SWIG_UNIQUEMODELOBJECT(Facility);
@@ -137,18 +151,18 @@ SWIG_UNIQUEMODELOBJECT(Building);
 SWIG_MODELOBJECT(BuildingStory, 1);
 SWIG_MODELOBJECT(BuildingUnit, 1);
 SWIG_MODELOBJECT(PlanarSurfaceGroup, 0);
-SWIG_MODELOBJECT(Space, 1); 
-SWIG_MODELOBJECT(SpaceItem, 0); 
+SWIG_MODELOBJECT(Space, 1);
+SWIG_MODELOBJECT(SpaceItem, 0);
 SWIG_MODELOBJECT(SpaceLoad, 0);
-SWIG_MODELOBJECT(SpaceLoadInstance, 0); 
-SWIG_MODELOBJECT(Lights, 1); 
+SWIG_MODELOBJECT(SpaceLoadInstance, 0);
+SWIG_MODELOBJECT(Lights, 1);
 SWIG_MODELOBJECT(PlanarSurface, 0);
 SWIG_MODELOBJECT(DefaultConstructionSet, 1);
-SWIG_MODELOBJECT(Surface, 1); 
+SWIG_MODELOBJECT(Surface, 1);
 SWIG_MODELOBJECT(SubSurface, 1);
-SWIG_MODELOBJECT(ShadingSurfaceGroup, 1); 
-SWIG_MODELOBJECT(ShadingSurface, 1); 
-SWIG_MODELOBJECT(InteriorPartitionSurfaceGroup, 1); 
+SWIG_MODELOBJECT(ShadingSurfaceGroup, 1);
+SWIG_MODELOBJECT(ShadingSurface, 1);
+SWIG_MODELOBJECT(InteriorPartitionSurfaceGroup, 1);
 SWIG_MODELOBJECT(InteriorPartitionSurface, 1);
 SWIG_MODELOBJECT(SurfacePropertyOtherSideCoefficients, 1);
 SWIG_MODELOBJECT(SurfacePropertyOtherSideConditionsModel, 1);
@@ -165,11 +179,18 @@ SWIG_MODELOBJECT(SpaceInfiltrationDesignFlowRate, 1);
 SWIG_MODELOBJECT(SpaceInfiltrationEffectiveLeakageArea, 1);
 SWIG_MODELOBJECT(DaylightingControl, 1);
 SWIG_MODELOBJECT(GlareSensor, 1);
-SWIG_MODELOBJECT(IlluminanceMap, 1); 
+SWIG_MODELOBJECT(IlluminanceMap, 1);
 SWIG_MODELOBJECT(DaylightingDeviceShelf, 1);
 SWIG_MODELOBJECT(SpaceType, 1);
-SWIG_MODELOBJECT(ExteriorLights, 1);
 SWIG_MODELOBJECT(LightingSimulationZone, 1);
+SWIG_MODELOBJECT(FoundationKiva, 1);
+SWIG_MODELOBJECT(SurfacePropertyExposedFoundationPerimeter, 1);
+
+SWIG_MODELOBJECT(ExteriorLoadInstance, 0); 
+SWIG_MODELOBJECT(ExteriorLights, 1);
+SWIG_MODELOBJECT(ExteriorFuelEquipment, 1);
+SWIG_MODELOBJECT(ExteriorWaterEquipment, 1);
+
 
 #if defined SWIGCSHARP || defined(SWIGJAVA)
 
@@ -191,26 +212,26 @@ SWIG_MODELOBJECT(LightingSimulationZone, 1);
 #if defined(SWIGCSHARP)
   //%pragma(csharp) imclassimports=%{
   %pragma(csharp) moduleimports=%{
-  
+
     using System;
     using System.Runtime.InteropServices;
-    
+
     public partial class Model : Workspace {
       public SpaceType plenumSpaceType()
       {
         return OpenStudio.OpenStudioModelGeometry.getPlenumSpaceType(this);
       }
-    }  
+    }
 
     public partial class SpaceType : ResourceObject {
       public SpaceVector spaces()
       {
         return OpenStudio.OpenStudioModelGeometry.getSpaces(this);
       }
-    }  
+    }
   %}
 #endif
 
-#endif 
+#endif
 
 

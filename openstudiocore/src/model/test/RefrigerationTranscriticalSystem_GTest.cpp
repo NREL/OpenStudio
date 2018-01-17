@@ -54,12 +54,12 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_DefaultConstructor)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model model;
     RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -500,7 +500,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllMediumTemperature
 {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
-  
+
   ScheduleCompact s1(model);
   RefrigerationCase case1 = RefrigerationCase(model, s1);
   RefrigerationCase case2 = RefrigerationCase(model, s1);
@@ -578,7 +578,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllLowTemperatureCas
 {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
-  
+
   ScheduleCompact s1(model);
   RefrigerationCase case1 = RefrigerationCase(model, s1);
   RefrigerationCase case2 = RefrigerationCase(model, s1);

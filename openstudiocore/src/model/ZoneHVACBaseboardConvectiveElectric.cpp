@@ -147,12 +147,13 @@ namespace detail {
     return result;
   }
 
-  void ZoneHVACBaseboardConvectiveElectric_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
+  bool ZoneHVACBaseboardConvectiveElectric_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
     bool result(false);
     if (nominalCapacity) {
       result = setDouble(OS_ZoneHVAC_Baseboard_Convective_ElectricFields::NominalCapacity, nominalCapacity.get());
     }
     OS_ASSERT(result);
+    return result;
   }
 
   bool ZoneHVACBaseboardConvectiveElectric_Impl::setNominalCapacity(const OSOptionalQuantity& nominalCapacity) {
@@ -356,8 +357,8 @@ bool ZoneHVACBaseboardConvectiveElectric::setAvailabilitySchedule(Schedule& sche
   return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->setAvailabilitySchedule(schedule);
 }
 
-void ZoneHVACBaseboardConvectiveElectric::setNominalCapacity(double nominalCapacity) {
-  getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->setNominalCapacity(nominalCapacity);
+bool ZoneHVACBaseboardConvectiveElectric::setNominalCapacity(double nominalCapacity) {
+  return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->setNominalCapacity(nominalCapacity);
 }
 
 bool ZoneHVACBaseboardConvectiveElectric::setNominalCapacity(const Quantity& nominalCapacity) {
@@ -407,4 +408,3 @@ ZoneHVACBaseboardConvectiveElectric::ZoneHVACBaseboardConvectiveElectric(std::sh
 
 } // model
 } // openstudio
-

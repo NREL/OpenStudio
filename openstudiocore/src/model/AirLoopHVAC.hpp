@@ -93,7 +93,7 @@ class MODEL_API AirLoopHVAC : public Loop
 
   bool isDesignSupplyAirFlowRateAutosized() const;
 
-  void setDesignSupplyAirFlowRate(double designSupplyAirFlowRate);
+  bool setDesignSupplyAirFlowRate(double designSupplyAirFlowRate);
 
   bool setDesignSupplyAirFlowRate(const Quantity& designSupplyAirFlowRate);
 
@@ -273,7 +273,7 @@ class MODEL_API AirLoopHVAC : public Loop
   Schedule availabilitySchedule() const;
 
   /** Set the availability schedule for when this system is allowed to run. **/
-  void setAvailabilitySchedule(Schedule & schedule);
+  bool setAvailabilitySchedule(Schedule & schedule);
 
   /** Configure the system to night cycle
     * This is a convenience for creating and attaching a new AvailabilityManagerNightCycle.

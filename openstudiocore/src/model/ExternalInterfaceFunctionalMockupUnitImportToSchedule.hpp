@@ -51,7 +51,7 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImportToSchedule : public S
   /** @name Constructors and Destructors */
   //@{
 
-  explicit ExternalInterfaceFunctionalMockupUnitImportToSchedule(const Model& model, 
+  explicit ExternalInterfaceFunctionalMockupUnitImportToSchedule(const Model& model,
                                                                  const ExternalInterfaceFunctionalMockupUnitImport& fMUFile,
                                                                  const std::string& fMUInstanceName,
                                                                  const std::string& fMUVariableName,
@@ -80,11 +80,11 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImportToSchedule : public S
 
   bool setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile);
 
-  void setFMUInstanceName(const std::string& fMUInstanceName);
+  bool setFMUInstanceName(const std::string& fMUInstanceName);
 
-  void setFMUVariableName(const std::string& fMUVariableName);
+  bool setFMUVariableName(const std::string& fMUVariableName);
 
-  void setInitialValue(double initialValue);
+  bool setInitialValue(double initialValue);
 
   //@}
   /** @name Other */
@@ -115,5 +115,4 @@ typedef std::vector<ExternalInterfaceFunctionalMockupUnitImportToSchedule> Exter
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOSCHEDULE_HPP
-
+#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOSCHEDULE_HPP

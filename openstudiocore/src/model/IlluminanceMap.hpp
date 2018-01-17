@@ -47,9 +47,9 @@ namespace detail {
 
 /** IlluminanceMap is a SpaceItem and is an interface to the OpenStudio IDD object named "OS:IlluminanceMap".
  *
- *  IlluminanceMap is a child of the Space object and is used to report daylighting illuminance values 
+ *  IlluminanceMap is a child of the Space object and is used to report daylighting illuminance values
  *  over a grid.  The grid of points to calculate daylight
- *  illuminance over is defined by the minimum and maximum corners of a rectangle aligned with the parent \link Space Space's \endlink 
+ *  illuminance over is defined by the minimum and maximum corners of a rectangle aligned with the parent \link Space Space's \endlink
  *  coordinate system.
  */
 class MODEL_API IlluminanceMap : public SpaceItem {
@@ -109,11 +109,11 @@ class MODEL_API IlluminanceMap : public SpaceItem {
   /** @name Setters */
   //@{
 
-  void setOriginXCoordinate(double originXCoordinate);
+  bool setOriginXCoordinate(double originXCoordinate);
 
-  void setOriginYCoordinate(double originYCoordinate);
+  bool setOriginYCoordinate(double originYCoordinate);
 
-  void setOriginZCoordinate(double originZCoordinate);
+  bool setOriginZCoordinate(double originZCoordinate);
 
   bool setPsiRotationAroundXAxis(double psiRotationAroundXAxis);
 
@@ -127,7 +127,7 @@ class MODEL_API IlluminanceMap : public SpaceItem {
 
   void resetPhiRotationAroundZAxis();
 
-  void setXLength(double xLength);
+  bool setXLength(double xLength);
 
   void resetXLength();
 
@@ -135,7 +135,7 @@ class MODEL_API IlluminanceMap : public SpaceItem {
 
   void resetNumberofXGridPoints();
 
-  void setYLength(double yLength);
+  bool setYLength(double yLength);
 
   void resetYLength();
 
@@ -186,4 +186,3 @@ typedef std::vector<IlluminanceMap> IlluminanceMapVector;
 } // openstudio
 
 #endif // MODEL_ILLUMINANCEMAP_HPP
-

@@ -595,9 +595,10 @@ namespace detail {
     return result;
   }
 
-  void RefrigerationSystem_Impl::setMinimumCondensingTemperature(double minimumCondensingTemperature) {
+  bool RefrigerationSystem_Impl::setMinimumCondensingTemperature(double minimumCondensingTemperature) {
     bool result = setDouble(OS_Refrigeration_SystemFields::MinimumCondensingTemperature, minimumCondensingTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   bool RefrigerationSystem_Impl::setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType) {
@@ -649,9 +650,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationSystem_Impl::setSumUASuctionPiping(double sumUASuctionPiping) {
+  bool RefrigerationSystem_Impl::setSumUASuctionPiping(double sumUASuctionPiping) {
     bool result = setDouble(OS_Refrigeration_SystemFields::SumUASuctionPiping, sumUASuctionPiping);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSystem_Impl::resetSumUASuctionPiping() {
@@ -676,9 +678,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationSystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationSystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_SystemFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSystem_Impl::resetEndUseSubcategory() {
@@ -696,9 +699,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationSystem_Impl::setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness) {
+  bool RefrigerationSystem_Impl::setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness) {
     bool result = setDouble(OS_Refrigeration_SystemFields::ShellandCoilIntercoolerEffectiveness, shellandCoilIntercoolerEffectiveness);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSystem_Impl::resetShellandCoilIntercoolerEffectiveness() {
@@ -972,8 +976,8 @@ bool RefrigerationSystem::setRefrigerationCondenser(const ModelObject& refrigera
   return getImpl<detail::RefrigerationSystem_Impl>()->setRefrigerationCondenser(refrigerationCondenser);
 }
 
-void RefrigerationSystem::setMinimumCondensingTemperature(double minimumCondensingTemperature) {
-  getImpl<detail::RefrigerationSystem_Impl>()->setMinimumCondensingTemperature(minimumCondensingTemperature);
+bool RefrigerationSystem::setMinimumCondensingTemperature(double minimumCondensingTemperature) {
+  return getImpl<detail::RefrigerationSystem_Impl>()->setMinimumCondensingTemperature(minimumCondensingTemperature);
 }
 
 bool RefrigerationSystem::setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType) {
@@ -1004,8 +1008,8 @@ void RefrigerationSystem::resetLiquidSuctionHeatExchangerSubcooler() {
   getImpl<detail::RefrigerationSystem_Impl>()->resetLiquidSuctionHeatExchangerSubcooler();
 }
 
-void RefrigerationSystem::setSumUASuctionPiping(double sumUASuctionPiping) {
-  getImpl<detail::RefrigerationSystem_Impl>()->setSumUASuctionPiping(sumUASuctionPiping);
+bool RefrigerationSystem::setSumUASuctionPiping(double sumUASuctionPiping) {
+  return getImpl<detail::RefrigerationSystem_Impl>()->setSumUASuctionPiping(sumUASuctionPiping);
 }
 
 void RefrigerationSystem::resetSumUASuctionPiping() {
@@ -1020,8 +1024,8 @@ void RefrigerationSystem::resetSuctionPipingZone() {
   getImpl<detail::RefrigerationSystem_Impl>()->resetSuctionPipingZone();
 }
 
-void RefrigerationSystem::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::RefrigerationSystem_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool RefrigerationSystem::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::RefrigerationSystem_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void RefrigerationSystem::resetEndUseSubcategory() {
@@ -1036,8 +1040,8 @@ void RefrigerationSystem::resetIntercoolerType() {
   getImpl<detail::RefrigerationSystem_Impl>()->resetIntercoolerType();
 }
 
-void RefrigerationSystem::setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness) {
-  getImpl<detail::RefrigerationSystem_Impl>()->setShellandCoilIntercoolerEffectiveness(shellandCoilIntercoolerEffectiveness);
+bool RefrigerationSystem::setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness) {
+  return getImpl<detail::RefrigerationSystem_Impl>()->setShellandCoilIntercoolerEffectiveness(shellandCoilIntercoolerEffectiveness);
 }
 
 void RefrigerationSystem::resetShellandCoilIntercoolerEffectiveness() {
@@ -1051,5 +1055,4 @@ RefrigerationSystem::RefrigerationSystem(std::shared_ptr<detail::RefrigerationSy
 /// @endcond
 
 } // model
-} // openstudio
-
+} // openstudio

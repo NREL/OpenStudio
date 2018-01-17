@@ -62,7 +62,7 @@ namespace openstudio
 
       StringStreamLogSink m_logSink;
     };
-  
+
   }
 }
 #endif //MODEL_FLOORPLANJSFORWARDTRANSLATOR_HPP

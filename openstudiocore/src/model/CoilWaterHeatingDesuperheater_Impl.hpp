@@ -154,11 +154,11 @@ namespace detail {
 
     void resetRatedHeatReclaimRecoveryEfficiency();
 
-    void setRatedInletWaterTemperature(double ratedInletWaterTemperature);
+    bool setRatedInletWaterTemperature(double ratedInletWaterTemperature);
 
-    void setRatedOutdoorAirTemperature(double ratedOutdoorAirTemperature);
+    bool setRatedOutdoorAirTemperature(double ratedOutdoorAirTemperature);
 
-    void setMaximumInletWaterTemperatureforHeatReclaim(double maximumInletWaterTemperatureforHeatReclaim);
+    bool setMaximumInletWaterTemperatureforHeatReclaim(double maximumInletWaterTemperatureforHeatReclaim);
 
     bool setHeatReclaimEfficiencyFunctionofTemperatureCurve(const boost::optional<CurveBiquadratic>& curveBiquadratic);
 
@@ -211,4 +211,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILWATERHEATINGDESUPERHEATER_IMPL_HPP
-

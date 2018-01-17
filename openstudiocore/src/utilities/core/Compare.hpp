@@ -33,8 +33,8 @@
 
 #include <utility> // for std::pair
 #include <iostream>
-#include <vector> 
-#include <string> 
+#include <vector>
+#include <string>
 
 #include <boost/optional.hpp>
 #include <boost/algorithm/string.hpp>

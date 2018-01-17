@@ -36,7 +36,7 @@
 namespace openstudio{
 
   /** Base class for exceptions. */
-  class UTILITIES_API Exception: public std::exception { 
+  class UTILITIES_API Exception: public std::exception {
   public:
 
     /// Constructor takes a message
@@ -58,7 +58,7 @@ namespace openstudio{
 
     /// return the message
     virtual const char* what() const throw() {return m_msg.c_str();}
-  
+
   private:
 
     std::string m_msg;

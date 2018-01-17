@@ -73,7 +73,7 @@ namespace detail {
     //@{
 
     std::string daylightRedirectionDeviceType() const;
-  
+
     bool isDaylightRedirectionDeviceTypeDefaulted() const;
 
     //@}
@@ -89,7 +89,7 @@ namespace detail {
     //@{
 
     //@}
-    
+
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.DaylightRedirectionDevice");

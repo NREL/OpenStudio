@@ -69,9 +69,9 @@ class MODEL_API ExternalInterfaceVariable : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setInitialValue(double initialValue);
+  bool setInitialValue(double initialValue);
 
-  void setExportToBCVTB(bool exportToBCVTB);
+  bool setExportToBCVTB(bool exportToBCVTB);
 
   void resetExportToBCVTB();
 
@@ -104,5 +104,4 @@ typedef std::vector<ExternalInterfaceVariable> ExternalInterfaceVariableVector;
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACEVARIABLE_HPP
-
+#endif // MODEL_EXTERNALINTERFACEVARIABLE_HPP

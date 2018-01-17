@@ -103,7 +103,7 @@ class MODEL_API GeneratorFuelCellWaterSupply : public ModelObject {
 
   bool setReformerWaterPumpPowerFunctionofFuelRateCurve(const CurveCubic& cubicCurves);
 
-  void setPumpHeatLossFactor(double pumpHeatLossFactor);
+  bool setPumpHeatLossFactor(double pumpHeatLossFactor);
 
   void resetPumpHeatLossFactor();
 
@@ -149,4 +149,3 @@ typedef std::vector<GeneratorFuelCellWaterSupply> GeneratorFuelCellWaterSupplyVe
 } // openstudio
 
 #endif // MODEL_GENERATORFUELCELLWATERSUPPLY_HPP
-

@@ -53,10 +53,10 @@ class MODEL_API AvailabilityManagerHybridVentilation : public AvailabilityManage
   //@{
 
   // Constructor for AvailabilityManagerHybridVentilation.
-  // The required "ventilationControlModeSchedule" will be initialized with 
+  // The required "ventilationControlModeSchedule" will be initialized with
   // a new schedule having a constant value of one, meaning the availability manager
   // will operate with temperature control.
-  // The required "minimumOutdoorVentilationAirSchedule" will be initialized with a 
+  // The required "minimumOutdoorVentilationAirSchedule" will be initialized with a
   // schedule of constant value 0. This schedule is only applicable if control mode is 0,
   // but EnergyPlus requires it to operate.
   explicit AvailabilityManagerHybridVentilation(const Model& model);
@@ -109,7 +109,7 @@ class MODEL_API AvailabilityManagerHybridVentilation : public AvailabilityManage
 
   bool setVentilationControlModeSchedule(Schedule& schedule);
 
-  void setUseWeatherFileRainIndicators(bool useWeatherFileRainIndicators);
+  bool setUseWeatherFileRainIndicators(bool useWeatherFileRainIndicators);
 
   bool setMaximumWindSpeed(double maximumWindSpeed);
 

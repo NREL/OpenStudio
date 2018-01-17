@@ -37,7 +37,7 @@ module OpenStudio
       super
       @container = WindowContainer.new("Surface Search", 550, 375, 150, 150)
       @container.set_file(Plugin.dir + "/lib/dialogs/html/SurfaceSearch.html")
-      
+
       @hash['CLASS'] = ""
       @hash['NAME'] = ""
       @hash['TYPE'] = ""
@@ -56,9 +56,9 @@ module OpenStudio
       @hash['HIGH_POLY_SURFACES'] = false
       @hash['VERTEX_LIMIT'] = "4"
       @hash['SCENE_NAME'] = ""
-      
+
       @last_report = ""
-      
+
       add_callbacks
     end
 
@@ -74,14 +74,14 @@ module OpenStudio
       @container.web_dialog.add_action_callback("on_change_azimuth") { on_change_azimuth }
       @container.web_dialog.add_action_callback("on_high_poly_surfaces") { on_high_poly_surfaces }
     end
-    
+
     def on_load
       super
       set_select_options("CLASS", ["", "OS:Surface", "OS:SubSurface", "OS:ShadingSurface",  "OS:InteriorPartitionSurface"])
       on_change_class
       disable_element("VERTEX_LIMIT")
-    end 
-    
+    end
+
     def on_change_azimuth
       if @hash['AZIMUTH_FROM'].to_f == 0 and @hash['AZIMUTH_TO'].to_f == 360
         @hash['EXCLUDE_HORIZONTAL_SURFACES'] = false
@@ -104,7 +104,7 @@ module OpenStudio
       case (@hash['CLASS'])
 
       when ""
-      
+
         enable_element("CLASS")
         enable_element("NAME")
         enable_element("CONSTRUCTION")
@@ -124,13 +124,13 @@ module OpenStudio
         #disable_element("SHADING_CONTROL_NAME")
         #@hash['FRAME_AND_DIVIDER_NAME'] = ""
         #disable_element("FRAME_AND_DIVIDER_NAME")
-        
+
         object_names = Plugin.model_manager.model_interface.openstudio_model.getConstructionBases.collect { |object| object.name.get }
         object_names = [""].concat(object_names.sort)
         set_select_options("CONSTRUCTION", object_names)
 
         update
-      
+
       when "OS:Surface"
 
         enable_element("CLASS")
@@ -143,14 +143,14 @@ module OpenStudio
         enable_element("EXCLUDE_HORIZONTAL_SURFACES")
         enable_element("NON_CONVEX_SURFACES")
         enable_element("HIGH_POLY_SURFACES")
-       
+
         #@hash['SHADING_CONTROL_NAME'] = ""
         #disable_element("SHADING_CONTROL_NAME")
         #@hash['FRAME_AND_DIVIDER_NAME'] = ""
         #disable_element("FRAME_AND_DIVIDER_NAME")
-                
+
         set_select_options("TYPE", [""].concat(OpenStudio::Model::Surface.validSurfaceTypeValues))
-        
+
         object_names = Plugin.model_manager.model_interface.openstudio_model.getConstructionBases.collect { |object| object.name.get }
         object_names = [""].concat(object_names.sort)
         set_select_options("CONSTRUCTION", object_names)
@@ -173,20 +173,20 @@ module OpenStudio
         enable_element("EXCLUDE_HORIZONTAL_SURFACES")
         enable_element("NON_CONVEX_SURFACES")
         enable_element("HIGH_POLY_SURFACES")
-       
+
         @hash['OUTSIDE_BOUNDARY_CONDITION'] = ""
         disable_element("OUTSIDE_BOUNDARY_CONDITION")
         @hash['SUN'] = ""
         disable_element("SUN")
         @hash['WIND'] = ""
         disable_element("WIND")
-        
+
         set_select_options("TYPE", [""].concat(OpenStudio::Model::SubSurface.validSubSurfaceTypeValues))
-        
+
         object_names = Plugin.model_manager.model_interface.openstudio_model.getConstructionBases.collect { |object| object.name.get }
         object_names = [""].concat(object_names.sort)
         set_select_options("CONSTRUCTION", object_names)
-        
+
         set_select_options("OUTSIDE_BOUNDARY_CONDITION", [""])
         set_select_options("SUN", [""])
         set_select_options("WIND", [""])
@@ -198,11 +198,11 @@ module OpenStudio
         #object_names = Plugin.model_manager.model_interface.openstudio_model.getObjectsByType("WindowProperty:FrameAndDivider".to_IddObjectType).collect { |object| object.name.get }
         #object_names = [""].concat(object_names.sort)
         #set_select_options("FRAME_AND_DIVIDER_NAME", object_names)
-        
+
         update
-        
+
       when "OS:ShadingSurface"
-      
+
         enable_element("CLASS")
         enable_element("NAME")
         enable_element("EXCLUDE_HORIZONTAL_SURFACES")
@@ -222,7 +222,7 @@ module OpenStudio
         #disable_element("SHADING_CONTROL_NAME")
         #@hash['FRAME_AND_DIVIDER_NAME'] = ""
         #disable_element("FRAME_AND_DIVIDER_NAME")
-        
+
         set_select_options("TYPE", [""])
         set_select_options("CONSTRUCTION", [""])
         set_select_options("OUTSIDE_BOUNDARY_CONDITION", [""])
@@ -232,9 +232,9 @@ module OpenStudio
         #set_select_options("FRAME_AND_DIVIDER_NAME", [""])
 
         update
-        
+
       when "OS:InteriorPartitionSurface"
-      
+
         enable_element("CLASS")
         enable_element("NAME")
         enable_element("EXCLUDE_HORIZONTAL_SURFACES")
@@ -254,7 +254,7 @@ module OpenStudio
         #disable_element("SHADING_CONTROL_NAME")
         #@hash['FRAME_AND_DIVIDER_NAME'] = ""
         #disable_element("FRAME_AND_DIVIDER_NAME")
-        
+
         set_select_options("TYPE", [""])
 
         object_names = Plugin.model_manager.model_interface.openstudio_model.getConstructionBases.collect { |object| object.name.get }
@@ -268,9 +268,9 @@ module OpenStudio
         #set_select_options("FRAME_AND_DIVIDER_NAME", [""])
 
         update
-        
+
       end
-      
+
     end
 
     def apply_surface_orientation_filter(planar_surfaces)
@@ -278,7 +278,7 @@ module OpenStudio
       if not ((@hash['AZIMUTH_FROM'] == "0" and @hash['AZIMUTH_TO'] == "360") or (@hash['AZIMUTH_FROM'] == "" and @hash['AZIMUTH_TO'] == ""))
         azimuth_from = OpenStudio::OptionalDouble.new
         azimuth_to = OpenStudio::OptionalDouble.new
-        
+
         # if statement to support negative input numbers in "from" field
         if @hash['AZIMUTH_FROM'].to_f < 0
           azimuth_from = OpenStudio::OptionalDouble.new( @hash['AZIMUTH_FROM'].to_f + 360 )
@@ -330,7 +330,7 @@ module OpenStudio
         elsif @hash['AZIMUTH_TO'].upcase == "NW" or @hash['AZIMUTH_TO'].upcase == "NORTHWEST" or @hash['AZIMUTH_TO'].upcase == "NORTH WEST"
           azimuth_to = OpenStudio::OptionalDouble.new(315)
         end
-        
+
         # get model objects to search
         model_objects = nil
         if (@hash['CLASS'] == "")
@@ -344,9 +344,9 @@ module OpenStudio
         elsif (@hash['CLASS'] == "OS:InteriorPartitionSurface")
           model_objects = Plugin.model_manager.model_interface.openstudio_model.getInteriorPartitionSurfaces
         end
-        
+
         model_objects = OpenStudio::Model::PlanarSurface::findPlanarSurfaces(model_objects, azimuth_from, azimuth_to, OpenStudio::OptionalDouble.new, OpenStudio::OptionalDouble.new, 0.5)
-        
+
         # reject surfaces not in results
         planar_surfaces.reject! { |planar_surface| not model_objects.include?(planar_surface.model_object) }
 
@@ -364,13 +364,13 @@ module OpenStudio
       end
       return true
     end
-    
+
     def non_convex_test(drawing_interface)
       if @hash['NON_CONVEX_SURFACES']
         face = drawing_interface.entity
         loop = face.outer_loop
         status = loop.convex?
-        
+
         # if face is convex skip over it
         if status
           return false
@@ -417,75 +417,75 @@ module OpenStudio
     def on_search_model
       model_interface = Plugin.model_manager.model_interface
       skp_model = model_interface.skp_model
-      
+
       model_interface.remove_observers(true)
       skp_model.selection.clear
       skp_model.entities.each {|e| skp_model.selection.add(e)}
-      selected_entities = search(skp_model.selection)   
+      selected_entities = search(skp_model.selection)
       skp_model.selection.clear
       model_interface.add_observers(true)
 
       skp_model.selection.add(selected_entities)
     end
-    
+
     def on_search_selection
       model_interface = Plugin.model_manager.model_interface
       skp_model = model_interface.skp_model
-    
+
       model_interface.remove_observers(true)
       selected_entities = search(skp_model.selection)
       skp_model.selection.clear
       model_interface.add_observers(true)
-      
+
       skp_model.selection.add(selected_entities)
     end
-    
+
     def search(selection)
-      
+
       if selection.empty?
         UI.messagebox("Selection is empty, please select objects for searching or choose 'Search in Entire Model'.")
         return []
       end
-      
+
       @last_report = "Search results:\n"
-      
+
       selected_entities = []
-      
+
       model_interface = Plugin.model_manager.model_interface
-      
+
       # must remove observers outside of operation, if they are removed and then added inside operation they will fire
       model_interface.remove_observers(true)
-      
+
       skp_model = model_interface.skp_model
 
       begin
-      
+
         model_interface.start_operation("Surface Search", true)
-        
+
         progress_dialog = ProgressDialog.new("Searching Surfaces")
 
         # hide all groups, faces, and edges
         model_interface.spaces.each { |group| group.entity.hidden = true }
         model_interface.shading_surface_groups.each { |group| group.entity.hidden = true }
         model_interface.interior_partition_surface_groups.each { |group| group.entity.hidden = true }
-        model_interface.illuminance_maps.each { |group| group.entity.hidden = true }      
-        model_interface.daylighting_controls.each { |group| group.entity.hidden = true }      
+        model_interface.illuminance_maps.each { |group| group.entity.hidden = true }
+        model_interface.daylighting_controls.each { |group| group.entity.hidden = true }
         model_interface.luminaires.each { |group| group.entity.hidden = true }
 
-        model_interface.surfaces.each do |face| 
-          face.entity.hidden = true 
+        model_interface.surfaces.each do |face|
+          face.entity.hidden = true
           face.entity.edges.each { |edge| edge.hidden = true }
         end
-        model_interface.sub_surfaces.each do |face| 
-          face.entity.hidden = true 
+        model_interface.sub_surfaces.each do |face|
+          face.entity.hidden = true
           face.entity.edges.each { |edge| edge.hidden = true }
         end
-        model_interface.shading_surfaces.each do |face| 
-          face.entity.hidden = true 
+        model_interface.shading_surfaces.each do |face|
+          face.entity.hidden = true
           face.entity.edges.each { |edge| edge.hidden = true }
         end
-        model_interface.interior_partition_surfaces.each do |face| 
-          face.entity.hidden = true 
+        model_interface.interior_partition_surfaces.each do |face|
+          face.entity.hidden = true
           face.entity.edges.each { |edge| edge.hidden = true }
         end
 
@@ -497,7 +497,7 @@ module OpenStudio
         wind = @hash["WIND"].upcase
         #shading_control = @hash['SHADING_CONTROL_NAME'].upcase
         #frame_and_divider = @hash['FRAME_AND_DIVIDER_NAME'].upcase
-        
+
         # populate list of planar surfaces to search
         planar_surfaces = nil
         if (@hash['CLASS'] == "")
@@ -511,29 +511,29 @@ module OpenStudio
         elsif (@hash['CLASS'] == "OS:InteriorPartitionSurface")
           planar_surfaces = model_interface.interior_partition_surfaces.to_a
         end
-        
+
         # start the progress bar
         num_surfaces = planar_surfaces.length
-        
+
         # reject surfaces not in selection
         planar_surfaces.reject! { |planar_surface| not planar_surface.in_selection?(selection) }
-        
+
         # do angular search
         apply_surface_orientation_filter(planar_surfaces)
-        
+
         # loop over surfaces
         planar_surfaces.each_index do |index|
-        
+
           progress_dialog.setValue((100*index)/num_surfaces)
-          
+
           planar_surface = planar_surfaces[index]
           model_object = planar_surface.model_object
-        
+
           # common tests
           if not horizontal_test(model_object)
             next
           end
-          
+
           if not non_convex_test(planar_surface)
             next
           end
@@ -545,25 +545,25 @@ module OpenStudio
           if not surface_name_test(model_object)
             next
           end
-          
+
           if ((planar_surface.class == Surface) and (@hash['CLASS'] == "" or @hash['CLASS'] == "OS:Surface"))
             if model_object.getString(2,true).to_s.upcase.include?(type) and
                model_object.getString(3,true).to_s.upcase.include?(construction) and
                model_object.getString(5,true).to_s.upcase.include?(outside_boundary_condition) and
                model_object.getString(7,true).to_s.upcase.include?(sun) and
                model_object.getString(8,true).to_s.upcase.include?(wind) #and
-               #shading_control.empty? and frame_and_divider.empty? 
+               #shading_control.empty? and frame_and_divider.empty?
 
                # unhide face
-               planar_surface.entity.visible = true    
+               planar_surface.entity.visible = true
                selected_entities << planar_surface.entity
 
                # unhide edges
                planar_surface.entity.edges.each {|edge| edge.visible = true }
 
                # unhide space
-               planar_surface.parent.entity.visible = true      
-               
+               planar_surface.parent.entity.visible = true
+
                # add to report
                @last_report << "#{model_object.iddObject.name.to_s}, #{model_object.name.to_s}\n"
 
@@ -576,21 +576,21 @@ module OpenStudio
                #model_object.getString(8,true).to_s.upcase.include?(frame_and_divider)
 
                # unhide face
-               planar_surface.entity.visible = true  
+               planar_surface.entity.visible = true
                selected_entities << planar_surface.entity
 
                # unhide edges
                planar_surface.entity.edges.each {|edge| edge.visible = true }
 
                # unhide base surface
-               #planar_surface.parent.entity.visible = true   
+               #planar_surface.parent.entity.visible = true
 
                # unhide base surface edges
                planar_surface.parent.entity.edges.each {|edge| edge.visible = true }
 
                # unhide space
-               planar_surface.parent.parent.entity.visible = true   
-               
+               planar_surface.parent.parent.entity.visible = true
+
                # add to report
                @last_report << "#{model_object.iddObject.name.to_s}, #{model_object.name.to_s}\n"
             end
@@ -600,18 +600,18 @@ module OpenStudio
                #shading_control.empty? and frame_and_divider.empty?
 
                 # unhide face
-               planar_surface.entity.visible = true 
+               planar_surface.entity.visible = true
                selected_entities << planar_surface.entity
 
                # unhide edges
                planar_surface.entity.edges.each {|edge| edge.visible = true }
-               
+
                # unhide shading surface group
                planar_surface.parent.entity.visible = true
 
                # unhide space
-               planar_surface.parent.parent.entity.visible = true if planar_surface.parent.parent.entity   
-               
+               planar_surface.parent.parent.entity.visible = true if planar_surface.parent.parent.entity
+
                # add to report
                @last_report << "#{model_object.iddObject.name.to_s}, #{model_object.name.to_s}\n"
             end
@@ -622,14 +622,14 @@ module OpenStudio
                #shading_control.empty? and frame_and_divider.empty?
 
                 # unhide face
-               planar_surface.entity.visible = true  
+               planar_surface.entity.visible = true
                selected_entities << planar_surface.entity
 
                # unhide edges
                planar_surface.entity.edges.each {|edge| edge.visible = true }
 
                # unhide interior partition surface group
-               planar_surface.parent.entity.visible = true    
+               planar_surface.parent.entity.visible = true
 
                # unhide space
                planar_surface.parent.parent.entity.visible = true
@@ -639,54 +639,54 @@ module OpenStudio
             end
           end
         end
-        
+
       ensure
-      
-        model_interface.commit_operation 
+
+        model_interface.commit_operation
         progress_dialog.destroy
-      
+
       end
-      
+
       model_interface.add_observers(true)
-      
+
       return selected_entities
     end
-    
+
     def on_unhide_all
-    
+
       # unhide all
       model_interface = Plugin.model_manager.model_interface
-      
+
       # must remove observers outside of operation, if they are removed and then added inside operation they will fire
-      model_interface.remove_observers(true) 
-      
+      model_interface.remove_observers(true)
+
       skp_model = model_interface.skp_model
-      
+
       begin
-      
+
         model_interface.start_operation("Unhide All", true)
 
         model_interface.spaces.each { |group| group.entity.visible = true }
         model_interface.shading_surface_groups.each { |group| group.entity.visible = true }
-        model_interface.interior_partition_surface_groups.each { |group| group.entity.visible = true }      
-        model_interface.illuminance_maps.each { |group| group.entity.visible = true }      
-        model_interface.daylighting_controls.each { |group| group.entity.visible = true }      
+        model_interface.interior_partition_surface_groups.each { |group| group.entity.visible = true }
+        model_interface.illuminance_maps.each { |group| group.entity.visible = true }
+        model_interface.daylighting_controls.each { |group| group.entity.visible = true }
         model_interface.luminaires.each { |group| group.entity.visible = true }
-        model_interface.all_surfaces.each do |face| 
-          face.entity.visible = true 
+        model_interface.all_surfaces.each do |face|
+          face.entity.visible = true
           face.entity.edges.each { |edge| edge.visible = true }
         end
-        
+
       ensure
-      
+
         model_interface.commit_operation
-        
+
       end
-      
-      model_interface.add_observers(true) 
-      
-    end    
-    
+
+      model_interface.add_observers(true)
+
+    end
+
     def on_last_report
       if (Plugin.platform == Platform_Windows)
         Plugin.dialog_manager.show(LastReportInterface)
@@ -696,11 +696,11 @@ module OpenStudio
         UI.messagebox @last_report,MB_MULTILINE
       end
     end
-    
+
     def on_cancel
       close
     end
-    
+
   end
 
 end

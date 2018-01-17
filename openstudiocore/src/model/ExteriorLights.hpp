@@ -30,7 +30,7 @@
 #define MODEL_EXTERIORLIGHTS_HPP
 
 #include "ModelAPI.hpp"
-#include "ModelObject.hpp"
+#include "ExteriorLoadInstance.hpp"
 
 namespace openstudio {
 namespace model {
@@ -45,10 +45,10 @@ namespace detail {
 
 } // detail
 
-/** ExteriorLights is a ModelObject that wraps the OpenStudio IDD object
+/** ExteriorLights is a ExteriorLoadInstance that wraps the OpenStudio IDD object
  *  'OS:Exterior:Lights'. ExteriorLights is a child of Facility and instances
  *  ExteriorLightsDefinition. */
-class MODEL_API ExteriorLights : public ModelObject {
+class MODEL_API ExteriorLights : public ExteriorLoadInstance {
  public:
   /** @name Constructors and Destructors */
   //@{

@@ -41,12 +41,12 @@ TEST_F(ModelFixture,TemperingValve)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
-     TemperingValve valve(m); 
+  ASSERT_EXIT (
+  {
+     Model m;
+     TemperingValve valve(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }

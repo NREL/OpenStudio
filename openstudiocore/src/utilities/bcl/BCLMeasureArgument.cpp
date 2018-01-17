@@ -55,7 +55,7 @@ namespace openstudio{
     QString test = element.firstChildElement("required").firstChild().nodeValue();
     if (test == "true"){
       m_required = true;
-    } else { 
+    } else {
       m_required = false;
     }
 
