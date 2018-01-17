@@ -903,4 +903,4 @@ std::vector<std::string> SimulationControl::repeatedIntervalEnvironmentPeriods()
 }
 
 }
-}
+}
