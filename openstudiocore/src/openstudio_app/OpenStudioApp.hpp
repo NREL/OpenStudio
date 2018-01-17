@@ -142,7 +142,13 @@ class OpenStudioApp : public OSAppBase
 
   void revertToSaved();
 
+  void changeDefaultLibraries();
+
  private slots:
+
+  std::vector<openstudio::path> defaultLibraryPaths() const;
+
+  std::vector<openstudio::path> libraryPaths() const;
 
   void buildCompLibraries();
 
@@ -169,6 +175,8 @@ class OpenStudioApp : public OSAppBase
   // Uses QApplication arguments to load osm files passed by cli into new OSDocument,
   // or creates a new empty OSDocument
   void onMeasureManagerAndLibraryReady();
+
+  void onChangeDefaultLibrariesDone();
 
  private:
 
@@ -200,6 +208,8 @@ class OpenStudioApp : public OSAppBase
 
   openstudio::model::Model m_hvacCompLibrary;
 
+  openstudio::model::Model m_library;
+
   std::shared_ptr<OSDocument> m_osDocument;
 
   QString m_lastPath;
@@ -208,6 +218,7 @@ class OpenStudioApp : public OSAppBase
 
   QFutureWatcher<void> m_buildCompLibWatcher;
   QFutureWatcher<void> m_waitForMeasureManagerWatcher;
+  QFutureWatcher<void> m_changeLibrariesWatcher;
 };
 
 } // openstudio
