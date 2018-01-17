@@ -41,8 +41,8 @@ namespace detail {
 
 } // detail
 
-/** PeopleDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object 
- *  'OS_People_Definition'. Its fields are derived from the EnergyPlus IDD object 'People'. 
+/** PeopleDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object
+ *  'OS_People_Definition'. Its fields are derived from the EnergyPlus IDD object 'People'.
  *  \sa People
  */
 class MODEL_API PeopleDefinition : public SpaceLoadDefinition {
@@ -127,7 +127,7 @@ class MODEL_API PeopleDefinition : public SpaceLoadDefinition {
 
   void resetCarbonDioxideGenerationRate();
 
-  void setEnableASHRAE55ComfortWarnings(bool enableASHRAE55ComfortWarnings);
+  bool setEnableASHRAE55ComfortWarnings(bool enableASHRAE55ComfortWarnings);
 
   void resetEnableASHRAE55ComfortWarnings();
 
@@ -154,8 +154,8 @@ class MODEL_API PeopleDefinition : public SpaceLoadDefinition {
   /** Returns the m^2/person represented by this definition, assuming floorArea (m^2). */
   double getFloorAreaPerPerson(double floorArea) const;
 
-  /** If method is a \link numberofPeopleCalculationMethodValues valid number of people 
-   *  calculation method \endlink, changes this definition to an equivalent number of people, 
+  /** If method is a \link numberofPeopleCalculationMethodValues valid number of people
+   *  calculation method \endlink, changes this definition to an equivalent number of people,
    *  under the assumption of floorArea (m^2). */
   bool setNumberOfPeopleCalculationMethod(const std::string& method,double floorArea);
 
@@ -185,4 +185,3 @@ typedef std::vector<PeopleDefinition> PeopleDefinitionVector;
 } // openstudio
 
 #endif // MODEL_PEOPLEDEFINITION_HPP
-

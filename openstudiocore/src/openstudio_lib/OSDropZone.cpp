@@ -126,12 +126,12 @@ OSDropZone::OSDropZone(OSVectorController* vectorController,
   QString mainBoxStyle;
   mainBoxStyle.append("QWidget#OSDropZone {");
   mainBoxStyle.append(" background: #CECECE;");
-  if(m_size.height() && m_size.width()){ 
+  if(m_size.height() && m_size.width()){
     mainLayout->setContentsMargins(0,0,0,0);
-    mainBoxStyle.append(" border: none;"); 
+    mainBoxStyle.append(" border: none;");
   } else {
     mainBoxStyle.append(" border: 2px dashed #808080;");
-    mainBoxStyle.append(" border-radius: 10px;"); 
+    mainBoxStyle.append(" border-radius: 10px;");
   }
   mainBoxStyle.append("}");
   setStyleSheet(mainBoxStyle);
@@ -182,7 +182,7 @@ bool OSDropZone::setMaxItems(int max)
     if( max == 1 )
     {
       if(m_size.height() && m_size.width())
-      { 
+      {
         m_scrollArea->setFixedHeight(m_size.height());
         m_scrollArea->setMaximumWidth(m_size.width());
         setMaximumHeight(m_size.height());
@@ -431,7 +431,7 @@ void OSItemDropZone::setExtensible(bool extensible)
     style.append("}");
 
     setFixedWidth(m_size.width());
-    setFixedHeight(m_size.height()); 
+    setFixedHeight(m_size.height());
   }
   else if( extensible )
   {
@@ -488,7 +488,7 @@ void OSItemDropZone::dropEvent(QDropEvent *event)
 }
 
 OSDropZoneItem::OSDropZoneItem()
-  : QGraphicsObject(), 
+  : QGraphicsObject(),
     m_mouseDown(false)
 {
   setAcceptHoverEvents(true);
@@ -527,8 +527,8 @@ void OSDropZoneItem::setText(const QString & text)
   update();
 }
 
-void OSDropZoneItem::paint( QPainter *painter, 
-                                                 const QStyleOptionGraphicsItem *option, 
+void OSDropZoneItem::paint( QPainter *painter,
+                                                 const QStyleOptionGraphicsItem *option,
                                                  QWidget *widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -778,7 +778,7 @@ void OSDropZone2::onItemRemoveClicked()
     boost::optional<model::ModelObject> modelObject = (*m_get)();
     boost::optional<model::ParentObject> parent = boost::none;
     if (modelObject) {
-     parent = modelObject->parent();  
+     parent = modelObject->parent();
     }
     (*m_reset)();
     if (m_deleteObject) {

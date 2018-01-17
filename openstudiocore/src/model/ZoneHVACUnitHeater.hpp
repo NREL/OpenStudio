@@ -50,7 +50,7 @@ namespace detail {
 
 /** ZoneHVACUnitHeater is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:UnitHeater'. */
 
-class MODEL_API ZoneHVACUnitHeater : public ZoneHVACComponent 
+class MODEL_API ZoneHVACUnitHeater : public ZoneHVACComponent
 {
   public:
 
@@ -60,7 +60,7 @@ class MODEL_API ZoneHVACUnitHeater : public ZoneHVACComponent
           Schedule & availabilitySchedule,
           HVACComponent & supplyAirFan,
           HVACComponent & heatingCoil);
-  
+
   virtual ~ZoneHVACUnitHeater() {}
 
 

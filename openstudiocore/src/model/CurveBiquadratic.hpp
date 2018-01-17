@@ -107,31 +107,31 @@ class MODEL_API CurveBiquadratic : public Curve {
   /** @name Setters */
   //@{
 
-  void setCoefficient1Constant(double coefficient1Constant);
+  bool setCoefficient1Constant(double coefficient1Constant);
 
-  void setCoefficient2x(double coefficient2x);
+  bool setCoefficient2x(double coefficient2x);
 
-  void setCoefficient3xPOW2(double coefficient3xPOW2);
+  bool setCoefficient3xPOW2(double coefficient3xPOW2);
 
-  void setCoefficient4y(double coefficient4y);
+  bool setCoefficient4y(double coefficient4y);
 
-  void setCoefficient5yPOW2(double coefficient5yPOW2);
+  bool setCoefficient5yPOW2(double coefficient5yPOW2);
 
-  void setCoefficient6xTIMESY(double coefficient6xTIMESY);
+  bool setCoefficient6xTIMESY(double coefficient6xTIMESY);
 
-  void setMinimumValueofx(double minimumValueofx);
+  bool setMinimumValueofx(double minimumValueofx);
 
-  void setMaximumValueofx(double maximumValueofx);
+  bool setMaximumValueofx(double maximumValueofx);
 
-  void setMinimumValueofy(double minimumValueofy);
+  bool setMinimumValueofy(double minimumValueofy);
 
-  void setMaximumValueofy(double maximumValueofy);
+  bool setMaximumValueofy(double maximumValueofy);
 
-  void setMinimumCurveOutput(double minimumCurveOutput);
+  bool setMinimumCurveOutput(double minimumCurveOutput);
 
   void resetMinimumCurveOutput();
 
-  void setMaximumCurveOutput(double maximumCurveOutput);
+  bool setMaximumCurveOutput(double maximumCurveOutput);
 
   void resetMaximumCurveOutput();
 
@@ -178,4 +178,4 @@ typedef std::vector<CurveBiquadratic> CurveBiquadraticVector;
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEBIQUADRATIC_HPP
+#endif // MODEL_CURVEBIQUADRATIC_HPP

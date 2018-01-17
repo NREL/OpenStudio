@@ -103,7 +103,7 @@ TEST_F(ModelFixture, ScheduleRule)
   // check weekends
   rule.setApplySunday(true);
   rule.setApplySaturday(true);
-  
+
   EXPECT_TRUE(rule.applySunday());
   EXPECT_FALSE(rule.applyMonday());
   EXPECT_FALSE(rule.applyTuesday());
@@ -153,112 +153,112 @@ TEST_F(ModelFixture, ScheduleRule)
 /*
 January
 
-Su Mo Tu We Th Fr Sa 
-             1  2  3 
- 4  5  6  7  8  9 10 
-11 12 13 14 15 16 17 
-18 19 20 21 22 23 24 
-25 26 27 28 29 30 31 
+Su Mo Tu We Th Fr Sa
+             1  2  3
+ 4  5  6  7  8  9 10
+11 12 13 14 15 16 17
+18 19 20 21 22 23 24
+25 26 27 28 29 30 31
 
 February
 
-Su Mo Tu We Th Fr Sa 
- 1  2  3  4  5  6  7 
- 8  9 10 11 12 13 14 
-15 16 17 18 19 20 21 
-22 23 24 25 26 27 28 
+Su Mo Tu We Th Fr Sa
+ 1  2  3  4  5  6  7
+ 8  9 10 11 12 13 14
+15 16 17 18 19 20 21
+22 23 24 25 26 27 28
 
 March
 
-Su Mo Tu We Th Fr Sa 
- 1  2  3  4  5  6  7 
- 8  9 10 11 12 13 14 
-15 16 17 18 19 20 21 
-22 23 24 25 26 27 28 
-29 30 31 
+Su Mo Tu We Th Fr Sa
+ 1  2  3  4  5  6  7
+ 8  9 10 11 12 13 14
+15 16 17 18 19 20 21
+22 23 24 25 26 27 28
+29 30 31
 
 April
 
-Su Mo Tu We Th Fr Sa 
-          1  2  3  4 
- 5  6  7  8  9 10 11 
-12 13 14 15 16 17 18 
-19 20 21 22 23 24 25 
-26 27 28 29 30 
+Su Mo Tu We Th Fr Sa
+          1  2  3  4
+ 5  6  7  8  9 10 11
+12 13 14 15 16 17 18
+19 20 21 22 23 24 25
+26 27 28 29 30
 
 May
 
-Su Mo Tu We Th Fr Sa 
-                1  2 
- 3  4  5  6  7  8  9 
-10 11 12 13 14 15 16 
-17 18 19 20 21 22 23 
-24 25 26 27 28 29 30 
-31 
+Su Mo Tu We Th Fr Sa
+                1  2
+ 3  4  5  6  7  8  9
+10 11 12 13 14 15 16
+17 18 19 20 21 22 23
+24 25 26 27 28 29 30
+31
 
 June
 
-Su Mo Tu We Th Fr Sa 
-    1  2  3  4  5  6 
- 7  8  9 10 11 12 13 
-14 15 16 17 18 19 20 
-21 22 23 24 25 26 27 
-28 29 30 
+Su Mo Tu We Th Fr Sa
+    1  2  3  4  5  6
+ 7  8  9 10 11 12 13
+14 15 16 17 18 19 20
+21 22 23 24 25 26 27
+28 29 30
 
 July
 
-Su Mo Tu We Th Fr Sa 
-          1  2  3  4 
- 5  6  7  8  9 10 11 
-12 13 14 15 16 17 18 
-19 20 21 22 23 24 25 
-26 27 28 29 30 31 
+Su Mo Tu We Th Fr Sa
+          1  2  3  4
+ 5  6  7  8  9 10 11
+12 13 14 15 16 17 18
+19 20 21 22 23 24 25
+26 27 28 29 30 31
 
 August
 
-Su Mo Tu We Th Fr Sa 
-                   1 
- 2  3  4  5  6  7  8 
- 9 10 11 12 13 14 15 
-16 17 18 19 20 21 22 
-23 24 25 26 27 28 29 
-30 31 
+Su Mo Tu We Th Fr Sa
+                   1
+ 2  3  4  5  6  7  8
+ 9 10 11 12 13 14 15
+16 17 18 19 20 21 22
+23 24 25 26 27 28 29
+30 31
 
 September
 
-Su Mo Tu We Th Fr Sa 
-       1  2  3  4  5 
- 6  7  8  9 10 11 12 
-13 14 15 16 17 18 19 
-20 21 22 23 24 25 26 
-27 28 29 30 
+Su Mo Tu We Th Fr Sa
+       1  2  3  4  5
+ 6  7  8  9 10 11 12
+13 14 15 16 17 18 19
+20 21 22 23 24 25 26
+27 28 29 30
 
 October
 
-Su Mo Tu We Th Fr Sa 
-             1  2  3 
- 4  5  6  7  8  9 10 
-11 12 13 14 15 16 17 
-18 19 20 21 22 23 24 
-25 26 27 28 29 30 31 
+Su Mo Tu We Th Fr Sa
+             1  2  3
+ 4  5  6  7  8  9 10
+11 12 13 14 15 16 17
+18 19 20 21 22 23 24
+25 26 27 28 29 30 31
 
 November
 
-Su Mo Tu We Th Fr Sa 
- 1  2  3  4  5  6  7 
- 8  9 10 11 12 13 14 
-15 16 17 18 19 20 21 
-22 23 24 25 26 27 28 
-29 30 
+Su Mo Tu We Th Fr Sa
+ 1  2  3  4  5  6  7
+ 8  9 10 11 12 13 14
+15 16 17 18 19 20 21
+22 23 24 25 26 27 28
+29 30
 
 December
 
-Su Mo Tu We Th Fr Sa 
-       1  2  3  4  5 
- 6  7  8  9 10 11 12 
-13 14 15 16 17 18 19 
-20 21 22 23 24 25 26 
-27 28 29 30 31 
+Su Mo Tu We Th Fr Sa
+       1  2  3  4  5
+ 6  7  8  9 10 11 12
+13 14 15 16 17 18 19
+20 21 22 23 24 25 26
+27 28 29 30 31
 
 Holidays and Observances:
 Jan 1   New Year's Day

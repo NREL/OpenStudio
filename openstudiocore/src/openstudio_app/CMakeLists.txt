@@ -99,7 +99,7 @@ if( APPLE )
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QCocoaIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/platforms/ )
 elseif( UNIX )
-  
+
   #add_custom_command(TARGET ${target_name}
   #  POST_BUILD
   #  COMMAND chrpath -r "$ORIGIN/." $<TARGET_FILE:${target_name}>
@@ -115,7 +115,7 @@ elseif( UNIX )
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QXcbIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/platforms/
     COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QXcbGlxIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/xcbglintegrations/
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${Qt5XcbQpaLib} $<TARGET_FILE_DIR:${target_name}>/ 
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${Qt5XcbQpaLib} $<TARGET_FILE_DIR:${target_name}>/
     COMMAND chrpath -r "$ORIGIN/.." $<TARGET_FILE_DIR:${target_name}>/platforms/$<TARGET_FILE_NAME:Qt5::QXcbIntegrationPlugin>
     COMMAND chrpath -r "$ORIGIN/.." $<TARGET_FILE_DIR:${target_name}>/xcbglintegrations/$<TARGET_FILE_NAME:Qt5::QXcbGlxIntegrationPlugin>
     COMMAND chrpath -r "$ORIGIN/.." $<TARGET_FILE_DIR:${target_name}>/sqldrivers/$<TARGET_FILE_NAME:Qt5::QSQLiteDriverPlugin>
@@ -123,13 +123,13 @@ elseif( UNIX )
     #COMMAND chrpath -r "$ORIGIN/.." $<TARGET_FILE_DIR:${target_name}>/sceneparsers/$<TARGET_FILE_NAME:Qt5::AssimpParserPlugin>
     VERBATIM
     )
-  
+
   foreach(LIB ${QT_LIBS})
     add_custom_command(TARGET ${target_name}
       POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_SONAME_FILE:${LIB}> $<TARGET_FILE_DIR:${target_name}>/ )
   endforeach()
-  
+
   foreach(LIB ${QT_WEB_LIBS})
     add_custom_command(TARGET ${target_name}
       POST_BUILD
@@ -142,46 +142,46 @@ elseif( UNIX )
 
   add_custom_command(TARGET ${target_name}
     POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QtWebEngineProcess} $<TARGET_FILE_DIR:${target_name}>/ 
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QtWebEngineProcess} $<TARGET_FILE_DIR:${target_name}>/
     COMMAND chrpath -r "$ORIGIN/." $<TARGET_FILE_DIR:${target_name}>/QtWebEngineProcess
     VERBATIM)
-    
+
 elseif( WIN32 )
   add_custom_command(TARGET ${target_name}
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QWindowsIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/platforms/ )
-  
+
   foreach(LIB ${QT_LIBS})
     # release dlls are needed in debug dir for QtWebEngineProcess, second copy_if_different will be a no-op
     get_property(LIB_RELEASE_PATH TARGET ${LIB} PROPERTY IMPORTED_LOCATION_RELEASE)
     add_custom_command(TARGET ${target_name}
       POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:${LIB}> $<TARGET_FILE_DIR:${target_name}>/ 
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${LIB_RELEASE_PATH} $<TARGET_FILE_DIR:${target_name}>/ 
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:${LIB}> $<TARGET_FILE_DIR:${target_name}>/
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${LIB_RELEASE_PATH} $<TARGET_FILE_DIR:${target_name}>/
     )
   endforeach()
-  
+
   foreach(LIB ${QT_WEB_LIBS})
     # release dlls are needed in debug dir for QtWebEngineProcess, second copy_if_different will be a no-op
     get_property(LIB_RELEASE_PATH TARGET ${LIB} PROPERTY IMPORTED_LOCATION_RELEASE)
     add_custom_command(TARGET ${target_name}
       POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:${LIB}> $<TARGET_FILE_DIR:${target_name}>/ 
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${LIB_RELEASE_PATH} $<TARGET_FILE_DIR:${target_name}>/ 
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:${LIB}> $<TARGET_FILE_DIR:${target_name}>/
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${LIB_RELEASE_PATH} $<TARGET_FILE_DIR:${target_name}>/
     )
   endforeach()
-  
+
   target_link_libraries(${target_name} optimized ${QT_MAIN_LIB} debug ${QT_MAIN_LIB_D})
 
   add_custom_command(TARGET ${target_name}
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QtWebEngineProcess} $<TARGET_FILE_DIR:${target_name}>/ )
-  
+
   add_custom_command(TARGET ${target_name}
     POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${icudtl} $<TARGET_FILE_DIR:${target_name}>/ 
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${qweb_resources} $<TARGET_FILE_DIR:${target_name}>/ 
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${qweb_resources_100} $<TARGET_FILE_DIR:${target_name}>/ 
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${icudtl} $<TARGET_FILE_DIR:${target_name}>/
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${qweb_resources} $<TARGET_FILE_DIR:${target_name}>/
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${qweb_resources_100} $<TARGET_FILE_DIR:${target_name}>/
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${qweb_resources_200} $<TARGET_FILE_DIR:${target_name}>/ )
 
 endif()
@@ -276,11 +276,11 @@ if( NOT APPLE )
     #install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/sceneparsers/$<TARGET_FILE_NAME:Qt5::GLTFSceneParserPlugin> DESTINATION bin/sceneparsers/ COMPONENT OpenStudioApp)
     #install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/sceneparsers/$<TARGET_FILE_NAME:Qt5::AssimpParserPlugin> DESTINATION bin/sceneparsers/ COMPONENT OpenStudioApp)
     install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/libQt5XcbQpa.so.5 DESTINATION bin/ COMPONENT OpenStudioApp)
-    
+
     foreach(LIB ${QT_LIBS})
       install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/$<TARGET_SONAME_FILE_NAME:${LIB}> DESTINATION bin/ COMPONENT OpenStudioApp)
     endforeach()
-    
+
     foreach(LIB ${QT_WEB_LIBS})
       install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/$<TARGET_SONAME_FILE_NAME:${LIB}> DESTINATION bin/ COMPONENT OpenStudioApp)
     endforeach()

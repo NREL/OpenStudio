@@ -65,7 +65,7 @@ boost::optional<IdfObject> ForwardTranslator::translateBuilding( Building & mode
   for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
     translateAndMapModelObject(lifeCycleCost);
   }
-  
+
   OptionalString optS = modelObject.name();
   if( optS )
   {

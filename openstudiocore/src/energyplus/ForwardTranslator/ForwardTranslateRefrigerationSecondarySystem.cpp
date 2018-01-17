@@ -89,7 +89,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSecondarySys
       {
         IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
 
-        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_case->name().get()); 
+        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_case->name().get());
       }
     }
 
@@ -101,7 +101,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSecondarySys
       {
         IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
 
-        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_walkin->name().get()); 
+        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_walkin->name().get());
       }
     }
 
@@ -113,7 +113,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSecondarySys
       {
         IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
 
-        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_airChiller->name().get()); 
+        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_airChiller->name().get());
       }
     }
   }

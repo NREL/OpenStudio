@@ -62,21 +62,21 @@ namespace detail {
     //@}
     /** @name Virtual Methods */
     //@{
-    
+
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
-    
+
     virtual boost::optional<ThermalZone> thermalZone() override;
-    
+
     virtual bool addToThermalZone(ThermalZone & thermalZone) override;
 
     virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;  
-    
+    virtual unsigned outletPort() const override;
+
     //@}
     /** @name Getters */
     //@{
@@ -115,13 +115,13 @@ namespace detail {
 
     bool setFanEfficiency(double fanEfficiency);
 
-    void setPressureRise(double pressureRise);
+    bool setPressureRise(double pressureRise);
 
     bool setMaximumFlowRate(boost::optional<double> maximumFlowRate);
 
     void resetMaximumFlowRate();
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     bool setFlowFractionSchedule(Schedule& schedule);
 
@@ -152,5 +152,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_FANZONEEXHAUST_IMPL_HPP
-
+#endif // MODEL_FANZONEEXHAUST_IMPL_HPP

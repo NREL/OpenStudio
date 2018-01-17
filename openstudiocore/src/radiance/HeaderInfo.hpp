@@ -40,7 +40,7 @@ namespace radiance{
 
   /** HeaderInfo represents the header of a radiance output file from SPOT.
    *   It's primary function is to define the x and y axis of the illuminance map.
-   */ 
+   */
   class RADIANCE_API HeaderInfo
   {
     public:

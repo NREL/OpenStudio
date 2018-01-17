@@ -68,7 +68,9 @@ class MODEL_API ZoneAirContaminantBalance : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setCarbonDioxideConcentration(bool carbonDioxideConcentration);
+  bool setCarbonDioxideConcentration(bool carbonDioxideConcentration);
+
+  void setCarbonDioxideConcentrationNoFail(bool carbonDioxideConcentration);
 
   void resetCarbonDioxideConcentration();
 
@@ -108,4 +110,3 @@ typedef std::vector<ZoneAirContaminantBalance> ZoneAirContaminantBalanceVector;
 } // openstudio
 
 #endif // MODEL_ZONEAIRCONTAMINANTBALANCE_HPP
-

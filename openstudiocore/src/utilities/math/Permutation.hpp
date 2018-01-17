@@ -34,11 +34,11 @@
 
 namespace openstudio {
 
-/** Returns the permutation that transforms sequence container original into newOrder. 
- *  T is required to have .size() and [i] defined. The type of element held by T must 
- *  have == defined. original and newOrder should contain the same elements, jut in a 
+/** Returns the permutation that transforms sequence container original into newOrder.
+ *  T is required to have .size() and [i] defined. The type of element held by T must
+ *  have == defined. original and newOrder should contain the same elements, jut in a
  *  different order. */
-template<class T> 
+template<class T>
 std::vector<unsigned> permutation(const T& original,const T& newOrder) {
 
   OS_ASSERT(original.size() == newOrder.size());
@@ -61,7 +61,7 @@ std::vector<unsigned> permutation(const T& original,const T& newOrder) {
   return result;
 }
 
-/** Returns the contents of original reorders as per order. That is, result[order[i]] = 
+/** Returns the contents of original reorders as per order. That is, result[order[i]] =
  *  original[i]. T is required to have .size() and [i] defined. T must also be constructable
  *  from .size(). */
 template<class T>

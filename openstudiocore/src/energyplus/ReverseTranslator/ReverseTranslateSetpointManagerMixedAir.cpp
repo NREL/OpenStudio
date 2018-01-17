@@ -110,7 +110,7 @@ OptionalModelObject ReverseTranslator::translateSetpointManagerMixedAir( const W
   if( s )
   {
     boost::optional<Node> node = m_model.getModelObjectByName<Node>(s.get());
-  
+
     if( node )
     {
       mo.addToNode(node.get());

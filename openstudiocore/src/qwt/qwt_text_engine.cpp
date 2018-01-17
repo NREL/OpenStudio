@@ -115,7 +115,7 @@ private:
         int row = 0;
         for ( row = 0; row < img.height(); row++ )
         {
-            const QRgb *line = reinterpret_cast<const QRgb *>( 
+            const QRgb *line = reinterpret_cast<const QRgb *>(
                 img.scanLine( row ) );
 
             const int w = pm.width();

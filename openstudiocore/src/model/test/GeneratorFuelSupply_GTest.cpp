@@ -67,7 +67,7 @@ TEST_F(ModelFixture, FuelCellFuelSupply) {
   EXPECT_EQ(0, curveCubic.coefficient4xPOW3());
   EXPECT_EQ(-1.0e10, curveCubic.minimumValueofx());
   EXPECT_EQ(1.0e10, curveCubic.maximumValueofx());
-  
+
   EXPECT_EQ(1, fuelsupply.compressorHeatLossFactor());
   EXPECT_EQ("LiquidGeneric", fuelsupply.fuelType());
   fuelsupply.resetFuelType();

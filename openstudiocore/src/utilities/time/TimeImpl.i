@@ -20,13 +20,13 @@
     os << *self;
     return os.str();
   }
-  
+
   std::string __hash__() const{
     std::ostringstream os;
     os << *self;
     return os.str();
   }
-  
+
   int __cmp__(const Time& other) const{
     if (*self < other){
         return -1;
@@ -35,7 +35,7 @@
     }
     return 0;
   }
-  
+
 };
 
-#endif //UTILITIES_TIME_TIMEIMPL_I 
+#endif //UTILITIES_TIME_TIMEIMPL_I

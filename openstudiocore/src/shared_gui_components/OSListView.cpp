@@ -113,7 +113,7 @@ void OSListView::paintEvent(QPaintEvent *)
 void OSListView::setDelegate(QSharedPointer<OSItemDelegate> delegate)
 {
   if( delegate )
-  { 
+  {
     m_delegate = delegate;
 
     refreshAllViews();

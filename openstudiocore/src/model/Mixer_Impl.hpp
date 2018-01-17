@@ -86,7 +86,7 @@ class MODEL_API Mixer_Impl : public HVACComponent_Impl
 
 } // detail
 
-} // model 
+} // model
 
 } // openstudio
 

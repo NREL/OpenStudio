@@ -62,8 +62,8 @@ namespace detail {
  *  SimulationControl defines what types of sizing simulations are performed for an EnergyPlus simulation,
  *  it also controls whether or not to report results from sizing and weather file simulations.
  *  SimulationControl parents several other ModelObject types that configure simulation parameters for EnergyPlus.
- *  SimulationControl does not have a public constructor because it is a unique ModelObject.  
- *  To get the SimulationControl object for a Model or create one if it does not yet exist use model.getUniqueObject<SimulationControl>().  
+ *  SimulationControl does not have a public constructor because it is a unique ModelObject.
+ *  To get the SimulationControl object for a Model or create one if it does not yet exist use model.getUniqueObject<SimulationControl>().
  *  To get the SimulationControl object for a Model but not create one if it does not yet exist use model.getOptionalUniqueObject<SimulationControl>().
  */
 class MODEL_API SimulationControl : public ParentObject {
@@ -130,23 +130,33 @@ class MODEL_API SimulationControl : public ParentObject {
   /** @name Setters */
   //@{
 
-  void setDoZoneSizingCalculation(bool doZoneSizingCalculation);
+  bool setDoZoneSizingCalculation(bool doZoneSizingCalculation);
+
+  void setDoZoneSizingCalculationNoFail(bool doZoneSizingCalculation);
 
   void resetDoZoneSizingCalculation();
 
-  void setDoSystemSizingCalculation(bool doSystemSizingCalculation);
+  bool setDoSystemSizingCalculation(bool doSystemSizingCalculation);
+
+  void setDoSystemSizingCalculationNoFail(bool doSystemSizingCalculation);
 
   void resetDoSystemSizingCalculation();
 
-  void setDoPlantSizingCalculation(bool doPlantSizingCalculation);
+  bool setDoPlantSizingCalculation(bool doPlantSizingCalculation);
+
+  void setDoPlantSizingCalculationNoFail(bool doPlantSizingCalculation);
 
   void resetDoPlantSizingCalculation();
 
-  void setRunSimulationforSizingPeriods(bool runSimulationforSizingPeriods);
+  bool setRunSimulationforSizingPeriods(bool runSimulationforSizingPeriods);
+
+  void setRunSimulationforSizingPeriodsNoFail(bool runSimulationforSizingPeriods);
 
   void resetRunSimulationforSizingPeriods();
 
-  void setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods);
+  bool setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods);
+
+  void setRunSimulationforWeatherFileRunPeriodsNoFail(bool runSimulationforWeatherFileRunPeriods);
 
   void resetRunSimulationforWeatherFileRunPeriods();
 
@@ -215,7 +225,7 @@ class MODEL_API SimulationControl : public ParentObject {
   /** Returns the SqlFile environment period strings that correspond to sizing periods. */
   std::vector<std::string> sizingEnvironmentPeriods() const;
 
-  /** Returns the SqlFile environment period strings that correspond to single-year annual 
+  /** Returns the SqlFile environment period strings that correspond to single-year annual
    *  simulations. */
   std::vector<std::string> annualSimulationEnvironmentPeriods() const;
 
@@ -261,4 +271,4 @@ typedef boost::optional<SimulationControl> OptionalSimulationControl;
 }
 }
 
-#endif
+#endif

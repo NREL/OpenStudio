@@ -73,6 +73,7 @@ MODELOBJECT_TEMPLATES(SiteGroundTemperatureShallow);
 MODELOBJECT_TEMPLATES(SiteGroundTemperatureFCfactorMethod);
 MODELOBJECT_TEMPLATES(SiteWaterMainsTemperature);
 UNIQUEMODELOBJECT_TEMPLATES(YearDescription);
+MODELOBJECT_TEMPLATES(FoundationKivaSettings);
 
 SWIG_UNIQUEMODELOBJECT(SimulationControl);
 SWIG_UNIQUEMODELOBJECT(LightingSimulationControl);
@@ -108,5 +109,6 @@ SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureShallow);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureFCfactorMethod);
 SWIG_UNIQUEMODELOBJECT(SiteWaterMainsTemperature);
 SWIG_UNIQUEMODELOBJECT(YearDescription);
+SWIG_UNIQUEMODELOBJECT(FoundationKivaSettings);
 
 #endif

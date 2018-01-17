@@ -101,7 +101,7 @@ namespace detail {
 
     void resetEfficiencySchedule();
 
-    void setDefaultFixedEfficiency();
+    bool setDefaultFixedEfficiency();
 
     //@}
     /** @name Other */
@@ -119,4 +119,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_PHOTOVOLTAICPERFORMANCESIMPLE_IMPL_HPP
-

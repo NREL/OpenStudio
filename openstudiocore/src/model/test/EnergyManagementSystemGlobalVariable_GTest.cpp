@@ -46,7 +46,7 @@ using std::string;
 TEST_F(ModelFixture, EMSGlobalVariable_EMSGlobalVariable)
 {
   Model model;
-    
+
   // add global variable
   unsigned n1 = model.objects().size();
   EnergyManagementSystemGlobalVariable var(model, "glob_var");

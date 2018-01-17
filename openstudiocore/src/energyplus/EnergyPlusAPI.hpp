@@ -10,5 +10,5 @@
   #else
     #define ENERGYPLUS_API
   #endif
-  
+
 #endif

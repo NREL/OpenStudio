@@ -56,7 +56,7 @@ boost::optional<IdfObject> ForwardTranslator::translateExternalInterface(Externa
   if (s) {
     idfObject.setName(*s);
   }
-  
+
   s = modelObject.nameofExternalInterface();
   if (s.is_initialized()) {
     idfObject.setString(ExternalInterfaceFields::NameofExternalInterface, s.get());

@@ -7,7 +7,7 @@
 
 
 ######################################################################
-# == Synopsis 
+# == Synopsis
 #
 #   This measure will load the current OpenStudio Model, convert to an ISM model, save the model to disk
 # then load the model into an ISOmodel structure, run the ISOmodel code and save output to a CSV file
@@ -16,17 +16,17 @@ Default_Weather_File_Path = "c:\\epw\\ord.epw"	# define the default weather file
 
 #start the measure
 class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
-  
+
   #define the name that a user will see, this method may be deprecated as
   #the display name in PAT comes from the name field in measure.xml
   def name
     return "OSM2ISMV01"
   end
-  
+
   #define the arguments that the user will input
   def arguments(model)
     args = OpenStudio::Ruleset::OSArgumentVector.new
-    
+
 	weather_file_path = OpenStudio::Ruleset::OSArgument::makeStringArgument("weather_file_path",true)
 	weather_file_path.setDisplayName("Path to weather file")
 	weather_file_path.setDefaultValue(Default_Weather_File_Path)
@@ -73,7 +73,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	hvac_type_string = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('hvac_type_string', hvac_options, true)
 	hvac_type_string.setDisplayName("Select HVAC Type")
 	hvac_type_string.setDefaultValue("24 - VAV, Water or Water+Air heat, Air cool, No Individual Ctrl")
-	args << hvac_type_string  
+	args << hvac_type_string
 	
 	cooling_IPLVToCop_ratio = OpenStudio::Ruleset::OSArgument::makeDoubleArgument("cooling_IPLVToCop_ratio", true)
 	cooling_IPLVToCop_ratio.setDefaultValue(1.0)
@@ -111,7 +111,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	bem_type_string = OpenStudio::Ruleset::OSArgument::makeChoiceArgument("bem_type_string", bem_options, true)
 	bem_type_string.setDisplayName("Select BEM Type")
 	bem_type_string.setDefaultValue("1 - No BEM/BAS")
-	args << bem_type_string 
+	args << bem_type_string
 	
 	# have the user input the dhw distribution system type
 	dhw_dist_options= OpenStudio::StringVector.new
@@ -121,7 +121,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	dhw_dist_type_string = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('dhw_dist_type_string', dhw_dist_options, true)
 	dhw_dist_type_string.setDisplayName("Select DHW Distribution Type")
 	dhw_dist_type_string.setDefaultValue("3 - Circulation System or Unknown")
-	args << dhw_dist_type_string 
+	args << dhw_dist_type_string
 
 
 	fan_control_options = OpenStudio::StringVector.new
@@ -153,7 +153,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 
 	
 	# #these are items that aren't modeled in OS so set default values
-	# occupancy_sensors = 1 	# occupancy sensors set to off in ISO since they can't be modeled directly in OS 
+	# occupancy_sensors = 1 	# occupancy sensors set to off in ISO since they can't be modeled directly in OS
 	occupancy_sensors_options = OpenStudio::StringVector.new
 	occupancy_sensors_options << "1 - No or Few Occupancy Sensors"
 	occupancy_sensors_options << "2 - Occ. Sensors > 60% of Spaces"
@@ -253,7 +253,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	occupancy_day_start_string = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('occupancy_day_start_string', occupancy_day_options, true)
 	occupancy_day_start_string.setDisplayName("Starting Day of Primary Occupancy")
 	occupancy_day_start_string.setDefaultValue("1 - Monday")
-	args << occupancy_day_start_string 
+	args << occupancy_day_start_string
 	
 	occupancy_day_end_string = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('occupancy_day_end_string', occupancy_day_options, true)
 	occupancy_day_end_string.setDisplayName("Ending Day of Primary Occupancy")
@@ -268,7 +268,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	occupancy_hour_start_string = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('occupancy_hour_start_string', occupancy_hour_options, true)
 	occupancy_hour_start_string.setDisplayName("Starting Hour of Primary Occupancy")
 	occupancy_hour_start_string.setDefaultValue("7 : 00")
-	args << occupancy_hour_start_string 
+	args << occupancy_hour_start_string
 	
 	occupancy_hour_end_string = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('occupancy_hour_end_string', occupancy_hour_options, true)
 	occupancy_hour_end_string.setDisplayName("Ending Hour of Primary Occupancy")
@@ -312,7 +312,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	
 	# get the number of people from the model to set default DHW use and ventilation rates
 	nPeople = model.getBuilding.numberOfPeople
-	 
+	
 	dhw_demand_choice = OpenStudio::Ruleset::OSArgument::makeDoubleArgument("dhw_demand_choice", true)
 	dhw_demand_choice.setDisplayName("DHW: DHW Demand (L/person/day)")
 	dhw_demand_choice.setDefaultValue(3.8) # default to 3.8L/person/day per ASHRAE HVAC apps chapter 50 for offices
@@ -366,8 +366,8 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
   #define what happens when the measure is run
   def run(model, runner, user_arguments)
     super(model, runner, user_arguments)
-    
-    #use the built-in error checking 
+
+    #use the built-in error checking
     if not runner.validateUserArguments(arguments(model), user_arguments)
       return false
     end
@@ -400,7 +400,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	wall_roof_extract_choice = runner.getBoolArgumentValue("wall_roof_extract_choice",user_arguments)
 	dhw_extract_choice = runner.getBoolArgumentValue("dhw_extract_choice",user_arguments)
 	infiltration_extract_choice = runner.getBoolArgumentValue("infiltration_extract_choice",user_arguments)
-	ventilation_extract_choice = runner.getBoolArgumentValue("ventilation_extract_choice",user_arguments) 
+	ventilation_extract_choice = runner.getBoolArgumentValue("ventilation_extract_choice",user_arguments)
 	cooling_cop_choice = runner.getDoubleArgumentValue("cooling_cop_choice",user_arguments)
 	heating_eff_choice = runner.getDoubleArgumentValue("heating_eff_choice",user_arguments)
 	heating_fuel_choice_string = runner.getStringArgumentValue("heating_fuel_choice_string",user_arguments)
@@ -425,7 +425,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	########### start the real programming
 
 	
-	# set filenames and open log file 
+	# set filenames and open log file
 	#set the base name of the file
 	input_file="osm2iso"
 	
@@ -439,7 +439,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	puts "Writing processing log to #{osm2iso_log_file}"
 
 	time=Time.new
-	# create output file and start writing out 
+	# create output file and start writing out
 	logfile = File.new(osm2iso_log_file, 'w+')
 	
 	logfile.puts "Starting Log File #{osm2iso_log_file} on #{time.ctime}"
@@ -460,10 +460,10 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 		return false   # use this to stop further processing for now
 	end
 	
-	# process occupancy info from user inputs 
+	# process occupancy info from user inputs
 	occupancy_day_start = occupancy_day_start_string.to_i  # convert the string to an integer.  The way the strings are written this will pull off the leading number	
 	occupancy_day_end = occupancy_day_end_string.to_i  # convert the string to an integer.  The way the strings are written this will pull off the leading number
-	if (occupancy_day_end < occupancy_day_start ) 
+	if (occupancy_day_end < occupancy_day_start )
 		puts "!!!ERROR!!!  You need Occupancy Starting Day < Occupancy Ending Day.  Conversion terminated"
 		logfile.puts "!!!ERROR!!!  You need Occupancy Starting Day < Occupancy Ending Day.  Conversion terminated"
 		runner.registerError("You need Occupancy Starting Day < Occupancy Ending Day.  Conversion terminated")
@@ -472,7 +472,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 
 	occupancy_hour_start = occupancy_hour_start_string.to_i  # convert the string to an integer.  The way the strings are written this will pull off the leading number		
 	occupancy_hour_end = occupancy_hour_end_string.to_i  # convert the string to an integer.  The way the strings are written this will pull off the leading number
-	if (occupancy_hour_end < occupancy_hour_start ) 
+	if (occupancy_hour_end < occupancy_hour_start )
 		puts "!!!ERROR!!!  You need Occupancy Starting Hour < Occupancy Ending Hour.  Conversion terminated"
 		logfile.puts "!!!ERROR!!!  You need Occupancy Starting Hour < Occupancy Ending Hour.  Conversion terminated"
 		runner.registerError("You need Occupancy Starting Hour < Occupancy Ending Hour.  Conversion terminated")
@@ -687,9 +687,9 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 		
 			const_R = outside_air_film_R + inside_air_film_R  #set the starting R as outside+inside film coefficients
 
-			# first check if the construction is a  single layer 
+			# first check if the construction is a  single layer
 			#simple glazing, if so pull off U factor and SHGC directly, set heat capacity to 0
-			if layers.size == 1 
+			if layers.size == 1
 				
 				layer=layers[0]
 				if not layer.to_SimpleGlazing.empty?	# check to see if the layer is simple glazing
@@ -754,7 +754,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 					# compute SHGC of a 3 layer window as ST1 * ST3 / (1 - R1 *R3)
 					const_SHGC[name] = norm_ST1 * norm_ST3 /(1.0 - norm_back_SR1*norm_front_SR3)
 					# for U value = 1/ (sum R values for each layer + film coefficients)
-					const_U[name] = 1.0/(1.0/uValue1 + 1.0/uValue2 + 1.0/uValue3 + const_R)  
+					const_U[name] = 1.0/(1.0/uValue1 + 1.0/uValue2 + 1.0/uValue3 + const_R)
 				
 				elsif not layers[0].to_ThermochromicGlazing.empty?
 					logfile.puts "thermochromic Glazing Not Converted - only estimating U value, SHGC set to 0.3"
@@ -785,7 +785,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	puts "...Parsing Schedules"
 	
 	# get the year description from the model and set the calendar year to 2007
-	# we use 2006 because Jan 1 is a sinday and then day 1 of the week is sunday 
+	# we use 2006 because Jan 1 is a sinday and then day 1 of the week is sunday
 	yd = model.getYearDescription
 	yd.setCalendarYear(2006)
 
@@ -821,7 +821,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 		occupancy_schedules_ave = Array.new(7){Array.new(24,0.0)}
 		nscheds= 0
 		space_area_total = 0.0
-		# get an area weighted average over all the space types. 
+		# get an area weighted average over all the space types.
 		space_types.each do |space_type|
 			space_area = space_type.floorArea
 			space_area_total += space_area
@@ -858,7 +858,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 		(0..6).each do |day|
 			(0..23).each do |hour|
 				occupancy_schedules_ave[day][hour] = occupancy_schedules_ave[day][hour]/space_area_total
-				occ_frac_sum[day] +=occupancy_schedules_ave[day][hour] 
+				occ_frac_sum[day] +=occupancy_schedules_ave[day][hour]
 			end
 			if occ_frac_sum[day] > threshold
 				day_occ[day] = 1
@@ -896,7 +896,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 		(0 .. (23-num_occ_hours)).each do |start_hour|
 			temp_sum = 0.0
 			(start_hour .. start_hour + num_occ_hours).each do |i|
-				temp_sum += avg_occupied_schedule[i] 
+				temp_sum += avg_occupied_schedule[i]
 			end
 			if temp_sum > max_sum
 				max_sum = temp_sum
@@ -951,7 +951,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 						unoccupied_sum+= value
 						unoccupied_hours += 1
 					end
-				else	# if day is not occupied, add the hour value to unoccupied 
+				else	# if day is not occupied, add the hour value to unoccupied
 					unoccupied_sum+= value
 					unoccupied_hours += 1
 				end
@@ -969,7 +969,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	number_days_occupied_per_year = 52 * (occupancy_day_end - occupancy_day_start +1)
 	
 	# at this point we have an array with the schedule names and two arrays with the averages
-	# that are indexed by the schedule names.   
+	# that are indexed by the schedule names.
 
 	# define what fraction of the year are occupied and unoccupied
 	frac_year_occ = occupied_hours/8760.0
@@ -987,7 +987,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	nominal_epd = building.electricEquipmentPowerPerFloorArea # overall nominal electric equipment power density W/m2
 	nominal_gpd = building.gasEquipmentPowerPerFloorArea # overall nominal gas equipment power density W/m2
 
-	# loop over the lighting, equipment, and occupancy schedules to get the occupied and unoccupied values 
+	# loop over the lighting, equipment, and occupancy schedules to get the occupied and unoccupied values
 	# and compute the area weighted averages
 	light_total_area = 0   # set this to a tiny number to avoid divide by zero but to also avoid skewing the area
 	light_occ_total = 0
@@ -1109,7 +1109,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	# compute the nominal area per person info
 	nominal_app = 1.0/building.peoplePerFloorArea  # nominal area per person m^2/person
 
-	# set the heat gain per person to be the average occupied value  
+	# set the heat gain per person to be the average occupied value
 	heat_gain_per_person_occ = activity_level_occ
 	heat_gain_per_person_unocc = activity_level_unocc
 
@@ -1156,8 +1156,8 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	cool_setpoint_unocc_total = 0
 
 	# loop through the zones and find the thermostats rather than use the thermostat vector we can get from the model
-	# we want to do a zone area weighted average in case the different zones have different 
-	thermal_zones.each do |zone|		#loop through the zones 
+	# we want to do a zone area weighted average in case the different zones have different
+	thermal_zones.each do |zone|		#loop through the zones
 		zone_area=zone.floorArea * zone.multiplier
 		total_zone_area += zone_area
 
@@ -1165,7 +1165,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 			thermostat=zone.thermostatSetpointDualSetpoint.get
 			if not thermostat.coolingSetpointTemperatureSchedule.empty?
 				cool_sched = thermostat.coolingSetpointTemperatureSchedule.get
-				cool_setpoint_occ_total += occ_aves[cool_sched.name.to_s] * zone_area 
+				cool_setpoint_occ_total += occ_aves[cool_sched.name.to_s] * zone_area
 				cool_setpoint_unocc_total += unocc_aves[cool_sched.name.to_s] * zone_area
 			else  # if we have no schedule, use the default values for thiz zone
 				cool_setpoint_occ_total += cool_setpoint_occ_default * zone_area
@@ -1173,7 +1173,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 			end
 			if not thermostat.heatingSetpointTemperatureSchedule.empty?
 				heat_sched = thermostat.heatingSetpointTemperatureSchedule.get
-				heat_setpoint_occ_total += occ_aves[heat_sched.name.to_s] * zone_area 
+				heat_setpoint_occ_total += occ_aves[heat_sched.name.to_s] * zone_area
 				heat_setpoint_unocc_total += unocc_aves[heat_sched.name.to_s] * zone_area
 			else
 				heat_setpoint_occ_total += heat_setpoint_occ_default * zone_area
@@ -1212,7 +1212,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	
 	logfile.printf("Calculated %1.2f of total area has daylighting controls \n",frac_daylight)
 	if frac_daylight > 0.6
-		daylight_sensors=2  # turn on daylighting controls in ISO model 
+		daylight_sensors=2  # turn on daylighting controls in ISO model
 	else
 		daylight_sensors=1  # turn off daylighting controls in ISO model
 	end
@@ -1228,7 +1228,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	if not building.conditionedFloorArea.empty?
 		floor_area = building.conditionedFloorarea
 	else
-		floor_area = building.floorArea 
+		floor_area = building.floorArea
 	end
 	logfile.puts "Floor Area = #{floor_area} m2"
 
@@ -1238,7 +1238,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	spaces.each do |sp|
 	  # loop through space surfaces to find max z value
 		z_points=Array.new
-		sp.surfaces.each do |s|  
+		sp.surfaces.each do |s|
 			s.vertices.each do |vertex|
 				z_points << vertex.z  # get out all the z points for the surface and put in the array
 			end
@@ -1285,12 +1285,12 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 		absorption = const_solarAbsorptance[s.construction.get.name.to_s]
 		emissivity = const_thermalAbsorptance[s.construction.get.name.to_s]
 		heatcapacity = const_heatCapacity[s.construction.get.name.to_s]
-	 
+	
 		azimuth = s.azimuth*180/3.141592654  # get the surface azimuth and convert from radians to degrees
 		az = azimuth + 22.5  # rotate the coordinate system 22.5 degrees so N is 0 to 45 instead of -22.5 to 22.5
-		if az > 360 then 
+		if az > 360 then
 			az = az - 360	# remap anything between 360 and 382.5 back to 0 to 22.5
-		end 
+		end
 		for i in 0 .. 7
 			if (az > dirLimit[i]) && (az<= dirLimit[i+1])
 
@@ -1319,16 +1319,16 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 				# add in lines to  compute SCF, and SDF in each direction here
 			end		
 		end		
-	end 
+	end
 
 	total_wall_area =0.0
-	wall_areas.each do |a| 
+	wall_areas.each do |a|
 		total_wall_area += a
 	end
 	logfile.printf("Total Wall Area = %1.2f m2\n",total_wall_area)
 	
 	total_window_area=0.0
-	window_areas.each do |a| 
+	window_areas.each do |a|
 		total_window_area += a
 	end
 	logfile.printf("Total Window Area = %1.2f  m2\n",total_window_area)
@@ -1397,7 +1397,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	skylight_SHGC_sum = 0.0
 	roof_count=0
 
-	# the building.roofs variable does not seem to return the roof surfaces in a vector as it supposed to 
+	# the building.roofs variable does not seem to return the roof surfaces in a vector as it supposed to
 	# so we search through all surfaces and find the outside roof surfaces ourselves
 	# calculate area and average solar absorption and thermal emissivity
 	surfaces.each do |s|
@@ -1423,7 +1423,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 			skylight_SHGC_sum+= const_SHGC[ss.construction.get.name.to_s] * ss.surface.get.netArea
 		end	
 	end
-	logfile.puts "Found #{roof_count} roof surfaces" 
+	logfile.puts "Found #{roof_count} roof surfaces"
 
 	#  Get the area weighted average of wall absorption, emissivity, U and window U and SHGC
 	if wall_roof_extract_choice
@@ -1512,7 +1512,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 					logfile.puts "Space defined for Infiltration object ##{count}"
 					case rate_type
 					when "Flow/Space"
-						# add in the design flow rate per space * number of spaces 
+						# add in the design flow rate per space * number of spaces
 						infil_rate_temp = infil.designFlowRate.to_s.to_f
 						logfile.puts "Infiltration Object # #{count} is Flow/Space, #{infil_rate_temp} m3/s added"
 					when "Flow/ExteriorArea", "Flow/ExteriorWallArea"
@@ -1544,7 +1544,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 					
 					case rate_type
 					when "Flow/Space"
-						# add in the design flow rate per space * number of spaces 
+						# add in the design flow rate per space * number of spaces
 						infil_rate_temp= infil.designFlowRate.to_s.to_f * st.spaces.size
 						logfile.puts "Infiltration Object # #{count} is Flow/Space, #{infil_rate_temp} m3/s added"
 					when "Flow/ExteriorArea", "Flow/ExteriorWallArea"
@@ -1582,7 +1582,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 			logfile.printf("Total Infiltration = %1.3f m3/s at 4 Pa (natural pressure difference)\n",infil_rate_sum);
 
 			# get avg infiltration rate and convert to from m3/m2/min @ 4 Pa to m3/m2/h @ 75 Pa with a .67 pressure exponent
-			# assume constant infilration rate is based on a nominal 4 Pa pressure difference 
+			# assume constant infilration rate is based on a nominal 4 Pa pressure difference
 			infiltration_rate = infil_rate_sum/(total_wall_area + roof_area)*3600*(75/4)**0.67
 		else
 			infiltration_rate = infiltration_rate_choice
@@ -1597,7 +1597,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	logfile.puts "*****************************"
 
 	# set the HVAC info using user intp or parse and gather info for COP, Heating Eff, and Heating fuel type
-	if not hvac_extract_choice 
+	if not hvac_extract_choice
 		puts "Using User Input HVAC Info"
 		cooling_COP = cooling_cop_choice
 		heating_system_efficiency = heating_eff_choice
@@ -1626,7 +1626,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 			end
 
 			# loop through the components and store them all in a single array
-			# if 
+			# if
 			supply_components.each do |component|
 				next if not component.to_Node.empty?   				# skip if the component is a node
 				next if not component.to_ConnectorMixer.empty?  	# skip of component is a mixer connector
@@ -1821,7 +1821,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 			elsif not coil.to_CoilHeatingDXSingleSpeed.empty?   # check for single speed DX heating coil
 				elec_sum += coil.to_CoilHeatingDXSingleSpeed.get.ratedCOP.to_f*area
 				elec_area_sum += area
-			elsif not coil.to_AirLoopHVACUnitaryHeatPumpAirToAir.empty? # check for unitary heat pump, extract coil and get 
+			elsif not coil.to_AirLoopHVACUnitaryHeatPumpAirToAir.empty? # check for unitary heat pump, extract coil and get
 				elec_sum += coil.to_AirLoopHVACUnitaryHeatPumpAirToAir.get.heatingCoil.to_CoilHeatingDXSingleSpeed.get.ratedCOP.to_f*area	
 				elec_area_sum += area	
 			elsif not coil.to_BoilerHotWater.empty?
@@ -1855,7 +1855,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 					end
 				end
 			end
-		end 
+		end
 
 		if gas_sum > elec_sum
 			heating_fuel_type = 2  # set heating fuel type to gas if heating_gas_area is larger than electric area
@@ -1892,7 +1892,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 
 	hvac_cold_table =[	0.00, 	0.00, 	0.00, 	0.00, 	0.00, 	0.01,	0.00, 	0.00, 	0.00, 	0.00, 	
 						0.01, 	0.00,	0.00, 	0.01, 	0.01, 	0.00, 	0.00, 	0.01, 	0.00, 	0.00,
-						0.00,  	0.00, 	0.01, 	0.00, 	0.00,	0.01, 	0.00, 	0.00, 	0.01, 	0.01, 
+						0.00,  	0.00, 	0.01, 	0.00, 	0.00,	0.01, 	0.00, 	0.00, 	0.01, 	0.01,
 						0.00,	0.00,	0.01,	0.00,	0.01,	0.00,	0.00]
 						
 	#extract losses from loss tables based on hvac type
@@ -1935,7 +1935,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 					sched_mult=1.0	# if no schedule is defined set multiplier to 1.0
 				end
 
-				if outdoor_air.outdoorAirMethod == "Maximum" 
+				if outdoor_air.outdoorAirMethod == "Maximum"
 					space_air_rate = [air_per_person, air_per_area, air_rate, air_ach].max * s.multiplier * sched_mult
 				else 	# if maximum is not selected, assume sum is selected
 					space_air_rate = (air_per_person + air_per_area + air_rate + air_ach) * s.multiplier * sched_mult
@@ -1951,7 +1951,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	supply_exhaust_rate = freshair_flow_rate	# set exhaust = supply rate as default (i.e. no pressurization)
 
 	logfile.printf("Total ventilation fresh air flow rate = %1.2f L/s\n", freshair_flow_rate)
-	logfile.puts "No exhaust rate extraction - set air exhaust rate to ventilation rate" 
+	logfile.puts "No exhaust rate extraction - set air exhaust rate to ventilation rate"
 
 	# use DHW distribution type to set DHW distribution efficiency
 	dhw_dist_eff_table=[1.0,0.8,0.6]  # create lookup table
@@ -2015,7 +2015,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 				if not equip.flowRateFractionSchedule.empty?
 					frac_sched = equip.flowRateFractionSchedule.get.name.to_s
 					# get multiplier by doing a weighted average of occupied and unoccupied times
-					mult = occ_aves[frac_sched]*frac_year_occ + unocc_aves[frac_sched]*frac_year_unocc 
+					mult = occ_aves[frac_sched]*frac_year_occ + unocc_aves[frac_sched]*frac_year_unocc
 				else
 					mult = 1.0
 				end
@@ -2032,13 +2032,13 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	end
 		
 	# print out the DHW fuel type, system efficiency, distribution efficiency
-	logfile.printf("DHW: Fuel Type = %i, System Efficiency = %0.2f Distribution Efficiency = %0.2f, Demand = %1.2f m3/yr \n", 
+	logfile.printf("DHW: Fuel Type = %i, System Efficiency = %0.2f Distribution Efficiency = %0.2f, Demand = %1.2f m3/yr \n",
 		dhw_fuel_type,  dhw_system_efficiency, dhw_distribution_efficiency,dhw_demand)
 
 	time=Time.new # get the current system clock
 		
 	puts "Writing Output to #{osm2iso_output_file}"
-	# create output file and start writing out 
+	# create output file and start writing out
 	
 	
 	
@@ -2193,8 +2193,8 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 
 	
 	time=Time.new  # get the current clock time for adding time to logfile
-	# create log file and start writing out 
-	logfile = File.new(runiso_log_file, 'w+') 
+	# create log file and start writing out
+	logfile = File.new(runiso_log_file, 'w+')
 	logfile.puts "Starting Log File #{runiso_log_file} at #{time.ctime}"
 
 
@@ -2263,7 +2263,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	logfile.puts "  Saving ISOmodel Simulation Results"
 	logfile.puts "*****************************"
 
-	puts 
+	puts
 
 	 elec_enduse=Array.new(14) {Array.new(12,0.0)}
 	 gas_enduse=Array.new(14) {Array.new(12,0.0)}
@@ -2273,22 +2273,22 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 			gas_enduse[cat][month] = simResults.monthlyResults[month].getEndUse(OpenStudio::EndUses.fuelTypes[1], OpenStudio::EndUses.categories[cat])
 		end	
 	end
-	  
-	  
+	
+	
 	floorArea=userModel.floorArea
-	months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] 
+	months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
 	# openstudio::OPENSTUDIO_ENUM(EndUseFuelType ,((Electricity)(Electricity))((Gas)(Natural Gas))((OtherFuel)(Other Fuel))((DistrictCooling)(District Cooling))((DistrictHeating)(District Heating))((Water)(Water)) 	 )	
 	#openstudio::OPENSTUDIO_ENUM(EndUseCategoryType ,((Heating)(Heating))((Cooling)(Cooling))((InteriorLights)(Interior Lighting))((ExteriorLights)(Exterior Lighting))((InteriorEquipment)(Interior Equipment))((ExteriorEquipment)(Exterior Equipment))((Fans)(Fans))((Pumps)(Pumps))((HeatRejection)(Heat Rejection))((Humidifier)(Humidification))((HeatRecovery)(Heat Recovery))((WaterSystems)(Water Systems))((Refrigeration)(Refrigeration))((Generators)(Generators)) 	 )	
 	 puts "Monthly Energy Use By Category in kWh/m2"
-	 puts "Month \tEHeat \tECool \tEIntLt \tEExtLt \tEInEqp \tEFan \tEPump \tEDHW \tGHeat \tGInEqp \tGDHW" 
-	 
+	 puts "Month \tEHeat \tECool \tEIntLt \tEExtLt \tEInEqp \tEFan \tEPump \tEDHW \tGHeat \tGInEqp \tGDHW"
+	
 	 logfile.puts "Monthly Energy Use By Category in kWh/m2"
-	 logfile.puts "Month \tEHeat \tECool \tEIntLt \tEExtLt \tEInEqp \tEFan \tEPump \tEDHW \tGHeat  \tGInEqp \tGDHW" 
-	 
+	 logfile.puts "Month \tEHeat \tECool \tEIntLt \tEExtLt \tEInEqp \tEFan \tEPump \tEDHW \tGHeat  \tGInEqp \tGDHW"
+	
 	 totaluse=Array.new(13,0.0)
 	
-	 
+	
 	 (0..11).each do |month|
 		print months[month]
 		logfile.print months[month], "\t"
@@ -2530,7 +2530,7 @@ class OSM2ISMV01 < OpenStudio::Ruleset::ModelUserScript
 	euifile.printf("%4.3g \n", gas_total)
 	
 	
-	euifile.puts 
+	euifile.puts
 	euifile.puts "Total EUIs (kWh/m2)"
 	euifile.puts "Month , Jan, Feb, Mar, Apr , May, Jun, Jul, Aug, Sep, Oct, Nov, Dec, Total"
 	euifile.print "Total,"

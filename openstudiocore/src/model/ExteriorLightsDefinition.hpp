@@ -30,7 +30,7 @@
 #define MODEL_EXTERIORLIGHTSDEFINITION_HPP
 
 #include "ModelAPI.hpp"
-#include "ResourceObject.hpp"
+#include "ExteriorLoadDefinition.hpp"
 
 namespace openstudio {
 namespace model {
@@ -41,9 +41,9 @@ namespace detail {
 
 } // detail
 
-/** ExteriorLightsDefinition is a ResourceObject that wraps the OpenStudio IDD object
+/** ExteriorLightsDefinition is a ExteriorLoadDefinition that wraps the OpenStudio IDD object
  *  'OS:Exterior:Lights:Definition'. */
-class MODEL_API ExteriorLightsDefinition : public ResourceObject {
+class MODEL_API ExteriorLightsDefinition : public ExteriorLoadDefinition {
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -98,4 +98,5 @@ typedef std::vector<ExteriorLightsDefinition> ExteriorLightsDefinitionVector;
 } // openstudio
 
 #endif // MODEL_EXTERIORLIGHTSDEFINITION_HPP
+
 

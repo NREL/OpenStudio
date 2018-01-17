@@ -48,7 +48,7 @@ TEST_F(ModelFixture, MaterialPropertyGlazingSpectralData)
   MaterialPropertyGlazingSpectralData mpgsd(model);
 
   EXPECT_EQ(0u, mpgsd.spectralDataFields().size());
-  
+
   EXPECT_TRUE(mpgsd.addSpectralDataField(0.3, 0.0, 0.045, 0.045));
   EXPECT_EQ(1u, mpgsd.spectralDataFields().size());
 

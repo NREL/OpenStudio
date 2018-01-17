@@ -13,7 +13,7 @@
   #include <utilities/idd/ExtensibleIndex.hpp>
   #include <utilities/idd/IddObjectProperties.hpp>
   #include <utilities/idd/Comments.hpp>
-  
+
   #include <utilities/units/Quantity.hpp>
   #include <utilities/units/Unit.hpp>
   #include <utilities/units/BTUUnit.hpp>
@@ -26,7 +26,7 @@
   #include <utilities/units/MPHUnit.hpp>
   #include <utilities/units/SIUnit.hpp>
   #include <utilities/units/ThermUnit.hpp>
-  #include <utilities/units/WhUnit.hpp>  
+  #include <utilities/units/WhUnit.hpp>
 %}
 
 %include <utilities/idd/Comments.hpp>
@@ -101,4 +101,4 @@
   }
 };
 
-#endif // UTILITIES_IDD_I 
+#endif // UTILITIES_IDD_I

@@ -254,7 +254,7 @@ QSplitter::handle::vertical {
   image: url(:images/v_divider_dots.png);
 }
 
-QToolButton { 
+QToolButton {
   border: none;
 }
 
@@ -307,15 +307,15 @@ QWidget#VBlueGradientWidget {
 }
 
 QWidget#GrayWidget {
-  background: #E6E6E6; 
+  background: #E6E6E6;
 }
 
 QWidget#DarkGrayWidget {
-  background: #808080; 
+  background: #808080;
 }
 
 QWidget#GrayWidgetWithLeftTopBorders {
-  background: #E6E6E6; 
+  background: #E6E6E6;
   border-left: 1px solid black;
   border-top: 1px solid black;
 }
@@ -330,10 +330,10 @@ QSplitter#GrayWidgetWithLeftTopBorders {
 }
 
 QPushButton#StandardGrayButton {
-  border-radius: 4px; 
-  border: 1px solid #949393; 
+  border-radius: 4px;
+  border: 1px solid #949393;
   background: qlineargradient(x1:0,y1:0,x2:0,y2:1,
-                               stop: 0 #F2F2F2, 
+                               stop: 0 #F2F2F2,
                                stop: 1 #D9D9D9 );
   min-height: 22px;
   max-height: 22px;
@@ -343,29 +343,29 @@ QPushButton#StandardGrayButton {
   padding-left: 10px;
   padding-right: 10px;
 }
-  
+
 QPushButton#StandardGrayButton:hover {
   background: qlineargradient(x1:0,y1:0,x2:0,y2:1,
                                stop: 0 #D9D9D9,
                                stop: 1 #F2F2F2 );
 }
-  
+
 QPushButton#StandardGrayButton:pressed {
-  border: 2px solid #949393; 
+  border: 2px solid #949393;
   background: #D9D9D9;
 }
-  
+
 QPushButton#StandardGrayButton:checked {
-  border: 1px solid #949393; 
+  border: 1px solid #949393;
   background: qlineargradient(x1:0,y1:0,x2:0,y2:1,
                                     stop: 0 #95B3DE, stop: 1 #4B7DB0);
 }
 
 QPushButton#StandardVerticalGrayButton {
-  border-radius: 4px; 
-  border: 1px solid #949393; 
+  border-radius: 4px;
+  border: 1px solid #949393;
   background: qlineargradient(x1:0,y1:0,x2:0,y2:1,
-                               stop: 0 #F2F2F2, 
+                               stop: 0 #F2F2F2,
                                stop: 1 #D9D9D9 );
   min-width: 22px;
   max-width: 22px;
@@ -375,18 +375,18 @@ QPushButton#StandardVerticalGrayButton {
   padding-left: 10px;
   padding-right: 10px;
 }
-  
+
 QPushButton#StandardVerticalGrayButton:hover {
   background: qlineargradient(x1:0,y1:0,x2:0,y2:1,
                                stop: 0 #D9D9D9,
                                stop: 1 #F2F2F2 );
 }
-  
+
 QPushButton#StandardVerticalGrayButton:pressed {
   border: 2px solid #949393;
   background: #D9D9D9;
 }
-  
+
 QPushButton#StandardVerticalGrayButton:checked {
   border: 1px solid #949393;
   background: qlineargradient(x1:0,y1:0,x2:0,y2:1,
@@ -394,10 +394,10 @@ QPushButton#StandardVerticalGrayButton:checked {
 }
 
 QPushButton#StandardBlueButton {
-  border-radius: 4px; 
-  border: 1px solid #949393; 
+  border-radius: 4px;
+  border: 1px solid #949393;
   background: qlineargradient(x1:0,y1:0,x2:0,y2:1,
-                               stop: 0 #239DD7, 
+                               stop: 0 #239DD7,
                                stop: 1 #1C7BBF );
   min-height: 22px;
   max-height: 22px;
@@ -408,15 +408,15 @@ QPushButton#StandardBlueButton {
   padding-right: 10px;
   color: white;
 }
-  
+
 QPushButton#StandardBlueButton:hover {
   background: qlineargradient(x1:0,y1:0,x2:0,y2:1,
                                stop: 0 #1C7BBF,
                                stop: 1 #239DD7 );
 }
-  
+
 QPushButton#StandardBlueButton:pressed {
-  border: 2px solid #949393; 
+  border: 2px solid #949393;
   background: #D9D9D9;
 }
 
@@ -472,7 +472,7 @@ QPushButton#DeleteButton:disabled {
 QPushButton#DeleteButton:hover {
   background-image: url(":/images/delete_over.png");
 }
-  
+
 QPushButton#DeleteButton:pressed {
   background-image: url(":/images/delete_press.png");
   background-image: url(":/images/delete_press.png");
@@ -490,16 +490,16 @@ QPushButton#PurgeButton:disabled {
 QPushButton#PurgeButton:hover {
   background-image: url(":/images/remove_unused_over.png");
 }
-  
+
 QPushButton#PurgeButton:pressed {
   background-image: url(":/images/remove_unused_pressed.png");
 }
 
 QPushButton#NavigatorButton {
-  border-radius: 3px; 
-  border: 1px solid #2C3233; 
+  border-radius: 3px;
+  border: 1px solid #2C3233;
   background: qlineargradient(x1:0,y1:0,x2:0,y2:1,
-                               stop: 0 #F2F2F2, 
+                               stop: 0 #F2F2F2,
                                stop: 1 #D9D9D9 );
   height: 19px;
   font-size: 12px;
@@ -508,15 +508,15 @@ QPushButton#NavigatorButton {
   padding-left: 10px;
   padding-right: 10px;
 }
-  
+
 QPushButton#NavigatorButton:hover {
   background: qlineargradient(x1:0,y1:0,x2:0,y2:1,
                                stop: 0 #D9D9D9,
                                stop: 1 #F2F2F2 );
 }
-  
+
 QPushButton#NavigatorButton:pressed {
-  border: 2px solid #949393; 
+  border: 2px solid #949393;
   background: #D9D9D9;
 }
 
@@ -529,7 +529,7 @@ QToolButton#OnOffSliderButton:pressed {
   border: none;
   background: none;
 }
-  
+
 QToolButton#OnOffSliderButton:checked {
   background-image: url(":/images/toggle_on.png");
 }
@@ -538,7 +538,7 @@ QToolButton#OnOffSliderButton:hover {
   border: none;
   background-image: url(":/images/toggle_off_over.png");
 }
-  
+
 QToolButton#OnOffSliderButton:checked:hover {
   background-image: url(":/images/toggle_on_over.png");
 }
@@ -552,7 +552,7 @@ QPushButton#OnOffSliderButton:pressed {
   border: none;
   background: none;
 }
-  
+
 QPushButton#OnOffSliderButton:checked {
   background-image: url(":/images/toggle_on.png");
 }
@@ -561,7 +561,7 @@ QPushButton#OnOffSliderButton:hover {
   border: none;
   background-image: url(":/images/toggle_off_over.png");
 }
-  
+
 QPushButton#OnOffSliderButton:checked:hover {
   background-image: url(":/images/toggle_on_over.png");
 }
@@ -575,7 +575,7 @@ QToolButton#TrueFalseSliderButton:pressed {
   border: none;
   background: none;
 }
-  
+
 QToolButton#TrueFalseSliderButton:checked {
   background-image: url(":/images/toggle_true.png");
 }
@@ -584,7 +584,7 @@ QToolButton#TrueFalseSliderButton:hover {
   border: none;
   background-image: url(":/images/toggle_false_over.png");
 }
-  
+
 QToolButton#TrueFalseSliderButton:checked:hover {
   background-image: url(":/images/toggle_true_over.png");
 }
@@ -598,7 +598,7 @@ QPushButton#TrueFalseSliderButton:pressed {
   border: none;
   background: none;
 }
-  
+
 QPushButton#TrueFalseSliderButton:checked {
   background-image: url(":/images/toggle_true.png");
 }
@@ -607,7 +607,7 @@ QPushButton#TrueFalseSliderButton:hover {
   border: none;
   background-image: url(":/images/toggle_false_over.png");
 }
-  
+
 QPushButton#TrueFalseSliderButton:checked:hover {
   background-image: url(":/images/toggle_true_over.png");
 }
@@ -640,7 +640,7 @@ QTreeView:has-children {
     alternate-background-color: #E6E6E6;
     background: #F2F2F2;
 }
-   
+
 QTreeView::item:selected {
     border: 1px solid #6a6ea9;
 }

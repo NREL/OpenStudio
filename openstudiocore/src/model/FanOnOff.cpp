@@ -248,10 +248,11 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanOnOff_Impl::setPressureRise(double pressureRise)
+  bool FanOnOff_Impl::setPressureRise(double pressureRise)
   {
     bool result = setDouble(OS_Fan_OnOffFields::PressureRise, pressureRise);
     OS_ASSERT(result);
+    return result;
   }
 
   bool FanOnOff_Impl::setMaximumFlowRate(boost::optional<double> maximumFlowRate)
@@ -314,10 +315,11 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanOnOff_Impl::setEndUseSubcategory(std::string endUseSubcategory)
+  bool FanOnOff_Impl::setEndUseSubcategory(std::string endUseSubcategory)
   {
     bool result = setString(OS_Fan_OnOffFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void FanOnOff_Impl::resetEndUseSubcategory()
@@ -674,9 +676,9 @@ double FanOnOff::pressureRise() const
   return getImpl<detail::FanOnOff_Impl>()->pressureRise();
 }
 
-void FanOnOff::setPressureRise(double pressureRise)
+bool FanOnOff::setPressureRise(double pressureRise)
 {
-  getImpl<detail::FanOnOff_Impl>()->setPressureRise(pressureRise);
+  return getImpl<detail::FanOnOff_Impl>()->setPressureRise(pressureRise);
 }
 
 // Field Maximum Flow Rate
@@ -781,9 +783,9 @@ bool FanOnOff::isEndUseSubcategoryDefaulted() const
 
 // Field End-Use Subcategory
 
-void FanOnOff::setEndUseSubcategory(std::string endUseSubcategory)
+bool FanOnOff::setEndUseSubcategory(std::string endUseSubcategory)
 {
-  getImpl<detail::FanOnOff_Impl>()->setEndUseSubcategory(endUseSubcategory);
+  return getImpl<detail::FanOnOff_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void FanOnOff::resetEndUseSubcategory()
@@ -803,4 +805,3 @@ FanOnOff::FanOnOff(std::shared_ptr<detail::FanOnOff_Impl> impl)
 
 } // model
 } // openstudio
-

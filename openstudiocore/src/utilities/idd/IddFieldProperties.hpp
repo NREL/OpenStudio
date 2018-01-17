@@ -38,9 +38,9 @@
 
 namespace openstudio {
 
-/** \class IddFieldType 
- *  \brief Enumeration of IDF field types as defined by the possible values for the IDD \\type 
- *  flag. See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro 
+/** \class IddFieldType
+ *  \brief Enumeration of IDF field types as defined by the possible values for the IDD \\type
+ *  flag. See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
  *  call is:
  *  \code
 OPENSTUDIO_ENUM(IddFieldType,
@@ -69,7 +69,7 @@ OPENSTUDIO_ENUM(IddFieldType,
   ((HandleType)(handle))
 );
 
-/** IddFieldProperties describes the properties of an IddField object, as specified by 
+/** IddFieldProperties describes the properties of an IddField object, as specified by
  *  IDD markup. */
 struct UTILITIES_API IddFieldProperties{
  public:
@@ -86,7 +86,7 @@ struct UTILITIES_API IddFieldProperties{
   /** Negation of operator== */
   bool operator!=(const IddFieldProperties& other) const;
 
-  /** Field type (alpha, numeric, various flavors of alpha providing links to other objects 
+  /** Field type (alpha, numeric, various flavors of alpha providing links to other objects
    *  and files). */
   IddFieldType type;
 
@@ -111,7 +111,7 @@ struct UTILITIES_API IddFieldProperties{
   /** True if this field is the first in an extensible group. */
   bool beginExtensible;
 
-  /** The EnergyPlus-format unit string for this field. All data are assumed to be associated 
+  /** The EnergyPlus-format unit string for this field. All data are assumed to be associated
    *  with these (typically SI) units. */
   boost::optional<std::string> units;
 
@@ -138,17 +138,17 @@ struct UTILITIES_API IddFieldProperties{
   /// The default value as double.
   boost::optional<double> numericDefault;
 
-  /** This field points to an IdfObject that is registered with one of the reference lists named 
-   *  in this vector. The list names are defined by \\reference markup of name fields. There is 
+  /** This field points to an IdfObject that is registered with one of the reference lists named
+   *  in this vector. The list names are defined by \\reference markup of name fields. There is
    *  also an OpenStudio-specific universal reference list called 'AllObjects'. */
   std::vector<std::string> objectLists;
 
-  /** This field specifies that the containing IdfObject belongs to the following reference lists. 
-   *  This information can be used by other objects to point to (reference) this object using 
+  /** This field specifies that the containing IdfObject belongs to the following reference lists.
+   *  This information can be used by other objects to point to (reference) this object using
    *  \\object-list markup. */
   std::vector<std::string> references;
 
-  /** This field specifies that the containing IdfObject belongs to the following reference-class-name lists. 
+  /** This field specifies that the containing IdfObject belongs to the following reference-class-name lists.
   **/
   std::vector<std::string> referenceClassNames;
 

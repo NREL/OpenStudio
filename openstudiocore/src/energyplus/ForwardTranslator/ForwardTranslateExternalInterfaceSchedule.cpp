@@ -68,7 +68,7 @@ boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceSchedule
   if (d.is_initialized()) {
     idfObject.setDouble(ExternalInterface_ScheduleFields::InitialValue, d.get());
   }
-  
+
   return idfObject;
 }
 

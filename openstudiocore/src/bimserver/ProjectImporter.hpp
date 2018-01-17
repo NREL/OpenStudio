@@ -79,7 +79,7 @@ namespace bimserver {
       void processIFCList(QStringList ifcList);
       /// process success cases for createProject, checkInIFC, and login
       void processSucessCases(QString sucessCase);
-      /// process all failure cases if BIMserver outputs an exception. Print it 
+      /// process all failure cases if BIMserver outputs an exception. Print it
       void processFailureCases(QString failureCase);
       /// OSM string is retrieved
       void processOSMRetrieved(QString osmString);

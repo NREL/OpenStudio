@@ -64,7 +64,7 @@ OptionalModelObject ReverseTranslator::translateSizingSystem( const WorkspaceObj
     return boost::none;
   }
 
-  openstudio::model::SizingSystem sizingSystem = airLoopHVAC->sizingSystem(); 
+  openstudio::model::SizingSystem sizingSystem = airLoopHVAC->sizingSystem();
 
   boost::optional<std::string> s;
   boost::optional<double> value;

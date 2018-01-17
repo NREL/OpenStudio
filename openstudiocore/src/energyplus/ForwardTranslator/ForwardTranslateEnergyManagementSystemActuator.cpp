@@ -99,7 +99,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemAct
       auto space = load->space();
       auto spaceType = load->spaceType();
       if (spaceType) {
-        
+
         // should not also have a space assigned
         OS_ASSERT(!space);
 

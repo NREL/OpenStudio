@@ -68,7 +68,7 @@ namespace detail {
     virtual IddObjectType iddObjectType() const override;
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
-    
+
     virtual unsigned inletPort() override;
 
     virtual unsigned outletPort() override;
@@ -123,7 +123,7 @@ namespace detail {
 
     void resetCondensationControlType();
 
-    void setCondensationControlDewpointOffset(double condensationControlDewpointOffset);
+    bool setCondensationControlDewpointOffset(double condensationControlDewpointOffset);
 
     void resetCondensationControlDewpointOffset();
 
@@ -139,7 +139,7 @@ namespace detail {
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
- 
+
     std::vector<std::string> condensationControlTypeValues() const;
 
     boost::optional<ModelObject> coolingHighWaterTemperatureScheduleAsModelObject() const;
@@ -159,4 +159,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILCOOLINGLOWTEMPRADIANTCONSTFLOW_IMPL_HPP
-

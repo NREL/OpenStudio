@@ -211,9 +211,10 @@ namespace detail {
     return result;
   }
 
-  void GeneratorFuelCellWaterSupply_Impl::setPumpHeatLossFactor(double pumpHeatLossFactor) {
+  bool GeneratorFuelCellWaterSupply_Impl::setPumpHeatLossFactor(double pumpHeatLossFactor) {
     bool result = setDouble(OS_Generator_FuelCell_WaterSupplyFields::PumpHeatLossFactor, pumpHeatLossFactor);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellWaterSupply_Impl::resetPumpHeatLossFactor() {
@@ -448,8 +449,8 @@ bool GeneratorFuelCellWaterSupply::setReformerWaterPumpPowerFunctionofFuelRateCu
   return getImpl<detail::GeneratorFuelCellWaterSupply_Impl>()->setReformerWaterPumpPowerFunctionofFuelRateCurve(cubicCurves);
 }
 
-void GeneratorFuelCellWaterSupply::setPumpHeatLossFactor(double pumpHeatLossFactor) {
-  getImpl<detail::GeneratorFuelCellWaterSupply_Impl>()->setPumpHeatLossFactor(pumpHeatLossFactor);
+bool GeneratorFuelCellWaterSupply::setPumpHeatLossFactor(double pumpHeatLossFactor) {
+  return getImpl<detail::GeneratorFuelCellWaterSupply_Impl>()->setPumpHeatLossFactor(pumpHeatLossFactor);
 }
 
 void GeneratorFuelCellWaterSupply::resetPumpHeatLossFactor() {
@@ -492,4 +493,3 @@ GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(std::shared_ptr<detai
 
 } // model
 } // openstudio
-

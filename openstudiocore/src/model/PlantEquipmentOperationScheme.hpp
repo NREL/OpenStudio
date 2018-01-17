@@ -53,7 +53,7 @@ class MODEL_API PlantEquipmentOperationScheme : public ModelObject {
 
   boost::optional<PlantLoop> plantLoop() const;
 
-  /// @cond 
+  /// @cond
 
   typedef detail::PlantEquipmentOperationScheme_Impl ImplType;
 
@@ -63,7 +63,7 @@ class MODEL_API PlantEquipmentOperationScheme : public ModelObject {
 
   REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationScheme");
 
-  /// @endcond 
+  /// @endcond
 
 };
 

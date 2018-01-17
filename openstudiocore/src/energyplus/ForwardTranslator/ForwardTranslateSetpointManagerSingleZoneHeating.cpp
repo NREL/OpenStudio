@@ -79,7 +79,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerSingleZone
   {
     node = thermalZone->zoneAirNode();
     idfObject.setString(SetpointManager_SingleZone_HeatingFields::ZoneNodeName,node->name().get());
-  } 
+  }
 
   // ZoneInletNodeName
   if( thermalZone )
@@ -99,7 +99,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerSingleZone
   {
     idfObject.setString(SetpointManager_SingleZone_HeatingFields::SetpointNodeorNodeListName,node->name().get());
   }
-  
+
   return idfObject;
 }
 

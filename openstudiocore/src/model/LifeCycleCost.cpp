@@ -544,6 +544,8 @@ LifeCycleCost::LifeCycleCost(const ModelObject& modelObject)
     throw openstudio::Exception("Cannot add cost to unknown model object type '" + modelObject.iddObject().name() + "'");
   }
 
+  // TODO: add ExteriorLoadDefinition?
+
   test = this->setCost(0.0);
   OS_ASSERT(test);
 

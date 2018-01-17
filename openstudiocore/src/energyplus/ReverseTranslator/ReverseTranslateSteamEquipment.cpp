@@ -64,7 +64,7 @@ OptionalModelObject ReverseTranslator::translateSteamEquipment(
 
   // create the definition
   openstudio::model::SteamEquipmentDefinition definition(m_model);
-  
+
   OptionalString s = workspaceObject.name();
   if(s){
     definition.setName(*s + " Definition");
@@ -149,7 +149,7 @@ OptionalModelObject ReverseTranslator::translateSteamEquipment(
   if(s){
     steamEquipment.setEndUseSubcategory(*s);
   }
-       
+
   return steamEquipment;
 }
 

@@ -195,7 +195,7 @@ namespace detail {
   //  OS_ASSERT(result);
   //}
 
-  void LuminaireDefinition_Impl::setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature) {
+  bool LuminaireDefinition_Impl::setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature) {
     bool result = false;
     if (returnAirFractionCalculatedfromPlenumTemperature) {
       result = setString(OS_Luminaire_DefinitionFields::ReturnAirFractionCalculatedfromPlenumTemperature, "Yes");
@@ -203,6 +203,7 @@ namespace detail {
       result = setString(OS_Luminaire_DefinitionFields::ReturnAirFractionCalculatedfromPlenumTemperature, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void LuminaireDefinition_Impl::resetReturnAirFractionCalculatedfromPlenumTemperature() {
@@ -331,8 +332,8 @@ void LuminaireDefinition::resetReturnAirFraction() {
   getImpl<detail::LuminaireDefinition_Impl>()->resetReturnAirFraction();
 }
 
-void LuminaireDefinition::setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature) {
-  getImpl<detail::LuminaireDefinition_Impl>()->setReturnAirFractionCalculatedfromPlenumTemperature(returnAirFractionCalculatedfromPlenumTemperature);
+bool LuminaireDefinition::setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature) {
+  return getImpl<detail::LuminaireDefinition_Impl>()->setReturnAirFractionCalculatedfromPlenumTemperature(returnAirFractionCalculatedfromPlenumTemperature);
 }
 
 void LuminaireDefinition::resetReturnAirFractionCalculatedfromPlenumTemperature() {
@@ -364,4 +365,3 @@ LuminaireDefinition::LuminaireDefinition(std::shared_ptr<detail::LuminaireDefini
 
 } // model
 } // openstudio
-

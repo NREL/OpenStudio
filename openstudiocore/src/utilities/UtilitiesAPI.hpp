@@ -7,7 +7,7 @@
 
       #if defined(openstudio_utilities_EXPORTS)
         #define UTILITIES_API __declspec(dllexport)
-        #define UTILITIES_TEMPLATE_EXT 
+        #define UTILITIES_TEMPLATE_EXT
       #else
         #define UTILITIES_API __declspec(dllimport)
         #define UTILITIES_TEMPLATE_EXT extern
@@ -16,7 +16,7 @@
     #else
 
       #define UTILITIES_API
-      #if defined(openstudio_utilities_EXPORTS) 
+      #if defined(openstudio_utilities_EXPORTS)
         #define UTILITIES_TEMPLATE_EXT
       #else
         #define UTILITIES_TEMPLATE_EXT extern
@@ -27,7 +27,7 @@
   #else
 
     #define UTILITIES_API
-    #define UTILITIES_TEMPLATE_EXT 
+    #define UTILITIES_TEMPLATE_EXT
 
   #endif
 

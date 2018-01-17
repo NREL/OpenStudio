@@ -42,22 +42,22 @@ TEST_F(ModelFixture,CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
-     CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit coil(m); 
+  ASSERT_EXIT (
+  {
+     Model m;
+     CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit coil(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
 TEST_F(ModelFixture,CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Remove)
 {
-  Model m; 
+  Model m;
   auto count = m.modelObjects().size();
 
-  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit coil(m); 
+  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit coil(m);
   CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData speed(m);
   coil.addSpeed(speed);
   coil.remove();

@@ -38,7 +38,7 @@ module OpenStudio
     attr_reader :container
 
     def initialize(container, interface, hash)
-      @container = container  # In subclasses @container must be created before calling add_callbacks    
+      @container = container  # In subclasses @container must be created before calling add_callbacks
       @interface = interface  # The dialog reports back to this object using:  @interface.report
       @hash = hash
     end
@@ -75,7 +75,7 @@ module OpenStudio
     def on_key(d, p)
       if (p == "27")  # Escape key
         on_cancel
-      end        
+      end
     end
 
 
@@ -96,7 +96,7 @@ module OpenStudio
         end
         @hash[key] = value
       end
-      
+
     end
 
 
@@ -106,7 +106,7 @@ module OpenStudio
 
 
     def show
-      @container.show    
+      @container.show
     end
 
 
@@ -146,7 +146,7 @@ module OpenStudio
           value.gsub!(/\n/, "\\n")  # Replace \n with \\n for JavaScript
         else
           value.gsub!(/\r\n/, "\\n")  # Replace \n with \\n for JavaScript
-          
+
           value.gsub!(/\n/, "\\n")  # Replace \n with \\n for JavaScript
 
           # "Unfix" a workaround for a bug in SU6 that added an extra space character at the beginning of the string.
@@ -211,7 +211,7 @@ module OpenStudio
           path = ""
         end
         @container.execute_function("setElementSource('" + name + "', '" + path + "')")
-      end    
+      end
     end
 
 
@@ -220,17 +220,17 @@ module OpenStudio
       if (id.nil?)
         puts "Dialog: nil id passed to get_element_value_by_id"
         value = nil
-      else 
+      else
         value = @container.web_dialog.get_element_value(id)
       end
       return(value)
     end
 
-    
+
     def disable_element(name)
       if (name.nil?)
         puts "Dialog:  nil name passed to disable_element"
-      else      
+      else
         @container.execute_function("disableElement('" + name + "')")
       end
     end
@@ -239,7 +239,7 @@ module OpenStudio
     def enable_element(name)
       if (name.nil?)
         puts "Dialog:  nil name passed to enable_element"
-      else      
+      else
         @container.execute_function("enableElement('" + name + "')")
       end
     end
@@ -248,7 +248,7 @@ module OpenStudio
     def hide_element(name)
       if (name.nil?)
         puts "Dialog:  nil name passed to hide_element"
-      else      
+      else
         @container.execute_function("hideElement('" + name + "')")
       end
     end
@@ -257,7 +257,7 @@ module OpenStudio
     def show_element(name)
       if (name.nil?)
         puts "Dialog:  nil name passed to show_element"
-      else      
+      else
         @container.execute_function("showElement('" + name + "')")
       end
     end
@@ -266,7 +266,7 @@ module OpenStudio
     def mark_element(name)
       if (name.nil?)
         puts "Dialog:  nil name passed to mark_element"
-      else      
+      else
         @container.execute_function("markElement('" + name + "')")
       end
     end
@@ -275,7 +275,7 @@ module OpenStudio
     def unmark_element(name)
       if (name.nil?)
         puts "Dialog:  nil name passed to unmark_element"
-      else      
+      else
         @container.execute_function("unmarkElement('" + name + "')")
       end
     end
@@ -287,9 +287,9 @@ module OpenStudio
 
     def add_callbacks
       super
-      @container.web_dialog.add_action_callback("on_ok") { on_ok }  
+      @container.web_dialog.add_action_callback("on_ok") { on_ok }
     end
-    
+
 
     def on_key(d, p)
       super
@@ -297,19 +297,19 @@ module OpenStudio
         on_ok
       end
     end
-    
+
 
     def on_ok
       if (report)
         close
       end
     end
-    
+
   end
 
 
-  class PropertiesDialog < MessageDialog  # Abstract class for all properties dialogs    
-    
+  class PropertiesDialog < MessageDialog  # Abstract class for all properties dialogs
+
     def add_callbacks
       super
       @container.web_dialog.add_action_callback("on_apply") { on_apply }
@@ -356,9 +356,9 @@ module OpenStudio
     def add_callbacks
       super
       @container.web_dialog.add_action_callback("on_next") { on_next }
-      @container.web_dialog.add_action_callback("on_back") { on_back }    
+      @container.web_dialog.add_action_callback("on_back") { on_back }
     end
-    
+
 
     def on_key(d, p)
       super
@@ -429,8 +429,8 @@ module OpenStudio
       @container = container
       add_callbacks
     end
-    
-    
+
+
     def add_callbacks
       # Be careful with callbacks from FrameContainers...could accidentally overwrite the callback for the WindowContainer!
       @container.web_dialog.add_action_callback("on_load_page") { on_load_page }
@@ -447,15 +447,15 @@ module OpenStudio
 
 # might be able to replace all WizardPage with just Page...
   class WizardPage < Page
-  
+
     attr_accessor :prev_page, :next_page
-    
+
     def initialize(container, interface, hash)
       super
       @prev_page = nil
       @next_page = nil
     end
-  
+
   end
-  
+
 end

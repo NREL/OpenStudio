@@ -60,10 +60,10 @@ namespace isomodel {
     std::stringstream ss;
 
     ss << vecName << "("<< vec.size() <<") = [";
-    if(vec.size()>0) {    
-      ss << vec[0]; 
+    if(vec.size()>0) {
+      ss << vec[0];
       for(unsigned int i = 1;i<vec.size() ;i++){
-        ss << ", " << vec[i];  
+        ss << ", " << vec[i];
       }
     }
     ss << "]";
@@ -83,7 +83,7 @@ namespace isomodel {
       ss << "\t" << i;
       for(unsigned int j = 0;j< mat.size2(); j++){
         ss << "," << mat(i,j);
-      }    
+      }
       ss << std::endl;
     }
 
@@ -94,7 +94,7 @@ namespace isomodel {
   /**
    * Initializes a vector to the specified value
    */
-  void vectorInit(Vector& vec, double val){  
+  void vectorInit(Vector& vec, double val){
     for(unsigned int i = 0;i<vec.size() ;i++){
       vec[i] = val;
     }
@@ -294,16 +294,16 @@ namespace isomodel {
   const double kWh2MJ = 3.6f;
 
   //Solver functions
-  void SimModel::scheduleAndOccupancy(Vector& weekdayOccupiedMegaseconds, 
+  void SimModel::scheduleAndOccupancy(Vector& weekdayOccupiedMegaseconds,
     Vector& weekdayUnoccupiedMegaseconds,
     Vector& weekendOccupiedMegaseconds,
     Vector& weekendUnoccupiedMegaseconds,
     Vector& clockHourOccupied,
     Vector& clockHourUnoccupied,
     double& frac_hrs_wk_day,
-    double& hoursUnoccupiedPerDay, 
+    double& hoursUnoccupiedPerDay,
     double& hoursOccupiedPerDay,
-    double& frac_hrs_wk_nt, 
+    double& frac_hrs_wk_nt,
     double& frac_hrs_wke_tot)  const
   {
     hoursOccupiedPerDay = pop->hoursEnd() - pop->hoursStart();
@@ -352,7 +352,7 @@ namespace isomodel {
       }
     }
   }
-  void SimModel::solarRadiationBreakdown(const Vector& weekdayOccupiedMegaseconds, 
+  void SimModel::solarRadiationBreakdown(const Vector& weekdayOccupiedMegaseconds,
     const Vector& weekdayUnoccupiedMegaseconds,
     const Vector& weekendOccupiedMegaseconds,
     const Vector& weekendUnoccupiedMegaseconds,
@@ -379,12 +379,12 @@ namespace isomodel {
 
     Vector v_Egh_nt = prod(m_mhEgh,clockHourUnoccupied);
     v_Egh_nt /= sum(clockHourUnoccupied);
-    /**    
+    /**
 v_mdbt=W.mdbt;  % copy to a new variable so vector nature is clear
 M_mhdbt=W.mhdbt;  % copy to a new variable so matrix nature is clear
 M_mhEgh=W.mhEgh; % copy to a new variable so matrix nature is clear
 
-% Note, these are matrix multiplies (matrix*vector) resulting in a vector  
+% Note, these are matrix multiplies (matrix*vector) resulting in a vector
 v_Tdbt_day=(M_mhdbt*v_day_hrs_yesno)./sum(v_day_hrs_yesno); %monthly average dry bulb temp (dbt) during the occupied hours of days
 v_Tdbt_nt=(M_mhdbt*v_nt_hrs_yesno)./sum(v_nt_hrs_yesno); %monthly avg dbt during the unoccupied hours of days
 
@@ -397,9 +397,9 @@ v_Egh_nt=(M_mhEgh*v_nt_hrs_yesno)./sum(v_nt_hrs_yesno);  %monthly avg Egh during
     Vector v_Wgh_wke_day = mult(v_Egh_day,weekendOccupiedMegaseconds);
     Vector v_Wgh_wke_nt = mult(v_Egh_nt,weekendUnoccupiedMegaseconds);
     Vector v_Wgh_tot = sum(sum(v_Wgh_wk_day,v_Wgh_wk_nt),sum(v_Wgh_wke_day,v_Wgh_wke_nt));
-    /**    
+    /**
 v_Wgh_wk_day=v_Egh_day.*v_Msec_wk_day; % monthly avg Egh energy (Wgh) during the week days
-v_Wgh_wk_nt=v_Egh_nt.*v_Msec_wk_nt;  %monthly avg Wgh during week nights 
+v_Wgh_wk_nt=v_Egh_nt.*v_Msec_wk_nt;  %monthly avg Wgh during week nights
 v_Wgh_wke_day=v_Egh_day.*v_Msec_wke_day; %monthly avg Wgh during weekend days
 v_Wgh_wke_nt=v_Egh_nt.*v_Msec_wke_nt; %monthly avg Wgh during weekend nights
 v_Wgh_tot=v_Wgh_wk_day+v_Wgh_wk_nt+v_Wgh_wke_day+v_Wgh_wke_nt; %Egh_avg_total MJ/m2
@@ -440,7 +440,7 @@ frac_Pgh_wke_nt=v_Wgh_wke_nt./v_Wgh_tot; %frac_Egh_unocc_weekend_night
 %%  find what time the sun comes up and goes down and the fraction of hours sun is up and down
 
 %%% CHANGE
-% the following two lines were in the original spreadsheet and the fraction of hours up was fixed.  
+% the following two lines were in the original spreadsheet and the fraction of hours up was fixed.
 % Let's do this properly by looking for the hours the sun is up and down each month
 % RTM 10-NOV-2012
 %
@@ -459,7 +459,7 @@ for  I=1:12
     v_frac_hrs_sun_up(I)=length(J)/24;  % fraction of hours in the day the sun is up
     v_frac_hrs_sun_down(I)=1-v_frac_hrs_sun_up(I); % fraction of hours in the day the sun is down
 end
-v_hrs_sun_down_mo=v_frac_hrs_sun_down.*v_hrs_ina_mo;  
+v_hrs_sun_down_mo=v_frac_hrs_sun_down.*v_hrs_ina_mo;
     */
     //Vector v_hrs_sun_down_mo = Vector(v_frac_hrs_sun_down.size());
     for(size_t i = 0;i<v_frac_hrs_sun_down.size();i++) {
@@ -467,8 +467,8 @@ v_hrs_sun_down_mo=v_frac_hrs_sun_down.*v_hrs_ina_mo;
     }
   }
 
-  void SimModel::lightingEnergyUse(const Vector& v_hrs_sun_down_mo, 
-    double& Q_illum_occ, 
+  void SimModel::lightingEnergyUse(const Vector& v_hrs_sun_down_mo,
+    double& Q_illum_occ,
     double& Q_illum_unocc,
     double& Q_illum_tot_yr,
     Vector& v_Q_illum_tot,
@@ -498,13 +498,13 @@ F_C=In.lighting_constant_illumination; %F_c = constant illuminance control fract
     double n_day_start = 7;
     double n_day_end = 19;
     double n_weeks = 50;
-    double t_lt_D = (std::min(n_day_end,pop->hoursEnd())-std::max(pop->hoursStart(),n_day_start)) * 
+    double t_lt_D = (std::min(n_day_end,pop->hoursEnd())-std::max(pop->hoursStart(),n_day_start)) *
                     (pop->daysEnd()+1-pop->daysStart()+1)*n_weeks;
     double t_lt_N = (std::max(n_day_start-pop->hoursStart(),0.0) + std::max(pop->hoursEnd()-n_day_end,0.0)) *
                     (pop->daysEnd()+1-pop->daysStart()+1)*n_weeks;
     Q_illum_occ = structure->floorArea() * lpd_occ * F_C * F_O * (t_lt_D * F_D + t_lt_N) / 1000.0;
 /*
-%%% NOTE 
+%%% NOTE
 % the following assumes day starts at hour 7 and ends at hour 19
 % and 2 weeks per year are considered completely unoccupied for lighting
 % This should be converted to a monthly quanitity using the monthly
@@ -516,7 +516,7 @@ n_weeks=50;
 t_lt_D=(min(In.occ_hour_end,n_day_end)-max(In.occ_hour_start,n_day_start))*(In.occ_day_end+1-In.occ_day_start+1)*n_weeks; %lighting_operating_hours during the daytime
 t_lt_N=(max(n_day_start-In.occ_hour_start,0)+max(In.occ_hour_end-n_day_end,0))*(In.occ_day_end+1-In.occ_day_start+1)*n_weeks; %lighting_operating_hours during the nighttime
 
-% total lighting energy 
+% total lighting energy
 Q_illum_occ=In.cond_flr_area*lpd_occ*F_C*F_O*(t_lt_D*F_D + t_lt_N)/1000;  % find the total lighting energy for occupied times in kWh
 
 %%% CHANGE
@@ -531,8 +531,8 @@ Q_illum_occ=In.cond_flr_area*lpd_occ*F_C*F_O*(t_lt_D*F_D + t_lt_N)/1000;  % find
 % Q_illum_tot_yr=Q_illum_occ+Q_illum_par;
 */
 
-    double t_unocc = hoursInYear - t_lt_D - t_lt_N; 
-    Q_illum_unocc = structure->floorArea() * lpd_unocc * t_unocc / 1000.0; 
+    double t_unocc = hoursInYear - t_lt_D - t_lt_N;
+    Q_illum_unocc = structure->floorArea() * lpd_unocc * t_unocc / 1000.0;
     Q_illum_tot_yr = Q_illum_occ + Q_illum_unocc;
     v_Q_illum_tot = mult(monthFractionOfYear, Q_illum_tot_yr, 12);
     v_Q_illum_ext_tot = mult(v_hrs_sun_down_mo, lights->exteriorEnergy() / 1000.0);
@@ -578,9 +578,9 @@ v_env_UA=v_wall_A.*v_wall_U + v_win_A.*v_win_U; %compute total envelope U*A
 
 % compute direct transmission heat transfer coefficient to exterior in W/K as per 8.3.1
 % ignore linear and point thermal bridges for now
-H_D = sum(v_env_UA);  
+H_D = sum(v_env_UA);
 */
-    double H_g = 0;  
+    double H_g = 0;
     double H_U = 0;
     double H_A = 0;
     H_tr = H_D + H_g + H_U + H_A;
@@ -601,8 +601,8 @@ v_wall_emiss=In.wall_thermal_emiss; % wall thermal emissivity
 v_wall_alpha_sc =In.wall_solar_alpha; %wall solar absorption coefficient
 */
   }
-  void SimModel::windowSolarGain(const Vector& v_win_A, 
-    const Vector& v_wall_emiss, 
+  void SimModel::windowSolarGain(const Vector& v_win_A,
+    const Vector& v_wall_emiss,
     const Vector& v_wall_alpha_sc,
     const Vector& v_wall_U,
     const Vector& v_wall_A,
@@ -639,7 +639,7 @@ v_wall_alpha_sc =In.wall_solar_alpha; %wall solar absorption coefficient
     int vsize = 9;
     double n_win_ff = 0.25;
     Vector v_win_ff = Vector(vsize);
-    
+
     double n_win_SDF_table[] = {0.5,0.35,1.0};
     Vector v_win_SDF = Vector(vsize);
     Vector v_win_SDF_frac = Vector(vsize);
@@ -692,7 +692,7 @@ v_g_gln = In.win_SHGC ; % normal incidence solar energy transmittance which is S
 n_win_F_W = 0.9;%  correction factor for non-scattering window as per ISO 13790 11.4.2
 v_g_gl = v_g_gln*n_win_F_W; % solar energy transmittance of glazing as per 11.4.2
 
-v_win_A_sol=v_win_F_shgl.*v_g_gl.*(1-v_win_ff).*v_win_A; 
+v_win_A_sol=v_win_F_shgl.*v_g_gl.*(1-v_win_ff).*v_win_A;
 
 % form factors given in ISO 13790, 11.4.6 as 0.5 for wall, 1.0 for unshaded roof
 
@@ -709,7 +709,7 @@ v_win_A_sol=v_win_F_shgl.*v_g_gl.*(1-v_win_ff).*v_win_A;
 /*
 n_v_env_form_factors=[0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 1]; %formfactor_to_sky.  Walls are all 0.5, roof is 1.0
 n_R_sc_ext=0.04;  % vertical wall external convection surface heat resistance as per ISO 6946
-v_wall_R_sc=ones(size(1,9))*n_R_sc_ext; %vertical wall external convective surface heat resistances 
+v_wall_R_sc=ones(size(1,9))*n_R_sc_ext; %vertical wall external convective surface heat resistances
 
 % 11.4.6 says use hr=5 as a first approx.
 v_win_hr=5*v_wall_emiss; %window external radiative heat xfer coeff.
@@ -722,7 +722,7 @@ v_win_hr=5*v_wall_emiss; %window external radiative heat xfer coeff.
 % U_c = thermal transmittance of opaque part determined via ISO 6946 W/m2K
 % A_c = projected area of opaque part in m2
 
-v_wall_A_sol=v_wall_alpha_sc.*v_wall_R_sc.*v_wall_U.*v_wall_A; 
+v_wall_A_sol=v_wall_alpha_sc.*v_wall_R_sc.*v_wall_U.*v_wall_A;
 
   */
   }
@@ -737,7 +737,7 @@ v_wall_A_sol=v_wall_alpha_sc.*v_wall_R_sc.*v_wall_U.*v_wall_A;
   /*
   %% Solar Heat Gain
 % From EN ISo 13790 11.3.2  eqn 43
-% 
+%
 % ?sol,k = F_sh,ob,k * A_sol,k *  I_sol,k ? F*r,k ?_r,k
 %
 % ?_sol,k = solar heat flow gains through building element k
@@ -805,7 +805,7 @@ end
       theta_er[i]=11.0;
     }
     double n_v_env_form_factors[]={0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1};
-    
+
     Vector v_wall_phi_r = mult(mult(mult(mult(v_wall_R_sc,v_wall_U),v_wall_A),v_win_hr),theta_er);
     Vector v_wall_phi_sol(12);
     for(size_t i = 0;i<v_win_phi_sol.size();i++){
@@ -814,7 +814,7 @@ end
       }
       v_wall_phi_sol[i] = sum(temp);
     }
-    
+
     printVector("v_wall_phi_r",v_wall_phi_r);
     printVector("v_win_phi_sol",v_win_phi_sol);
     printVector("v_wall_phi_sol",v_wall_phi_sol);
@@ -837,12 +837,12 @@ v_phi_sol=v_win_phi_sol+v_wall_phi_sol;  % total envelope solar heat gain in W
 v_E_sol= v_phi_sol.* v_Msec_ina_mo(I); % total envelope heat gain in MJ
   */
   }
-  void SimModel::heatGainsAndLosses(double frac_hrs_wk_day, 
-      double Q_illum_occ, 
+  void SimModel::heatGainsAndLosses(double frac_hrs_wk_day,
+      double Q_illum_occ,
       double Q_illum_unocc,
       double Q_illum_tot_yr,
       double& phi_int_avg,
-      double& phi_plug_avg, 
+      double& phi_plug_avg,
       double& phi_illum_avg,
       double& phi_int_wke_nt,
       double& phi_int_wke_day,
@@ -852,7 +852,7 @@ v_E_sol= v_phi_sol.* v_Msec_ina_mo(I); % total envelope heat gain in MJ
     double phi_int_occ = pop->heatGainPerPerson() / pop->densityOccupied();
     double phi_int_unocc = pop->heatGainPerPerson() / pop->densityUnoccupied();
     phi_int_avg = frac_hrs_wk_day*phi_int_occ +(1-frac_hrs_wk_day)*phi_int_unocc;
-    
+
     double phi_plug_occ = building->electricApplianceHeatGainOccupied() + building->gasApplianceHeatGainOccupied(); //%get the heat again in W/m2 from appliances during occupied times
     double phi_plug_unocc = building->electricApplianceHeatGainUnoccupied() + building->gasApplianceHeatGainUnoccupied(); //%get the heat again in W/m2 from appliances during unoccupied times
     phi_plug_avg=phi_plug_occ*frac_hrs_wk_day + phi_plug_unocc*(1-frac_hrs_wk_day); //% get the average heat gain from appliances in W/m2
@@ -860,14 +860,14 @@ v_E_sol= v_phi_sol.* v_Msec_ina_mo(I); % total envelope heat gain in MJ
     // double phi_illum_occ = Q_illum_occ/structure->floorArea()/hoursInYear/frac_hrs_wk_day*1000; //% convert occ illum energy from kWh to W/m2
     double phi_illum_unocc = Q_illum_unocc/structure->floorArea()/hoursInYear/(1-frac_hrs_wk_day)*1000; //% convert unocc illum engergy from kWh to W/m2
     phi_illum_avg = Q_illum_tot_yr/structure->floorArea()/hoursInYear*1000; //% % convert avg E_illum from kWh per year to average W/m2
-    
+
   /*
   %% Compute heat gains and losses
 
 % heat gain from occupants
 %%% from Table G-9 of ISO 13790
 
-% 
+%
 phi_int_occ=In.htgain_per_person/In.people_density_occ;  % get the heat gain in W/m2 from people during occupied times
 phi_int_unocc=In.htgain_per_person/In.people_density_unocc;  % get the heat gain in W/m2 from people during unoccupied times
 phi_int_avg=frac_hrs_wk_day*phi_int_occ +(1-frac_hrs_wk_day)*phi_int_unocc;  %get the average heat gain from people in W/m2
@@ -886,7 +886,7 @@ phi_illum_avg = Q_illum_tot_yr/In.cond_flr_area/hrs_ina_yr*1000; % % convert avg
 %
 
 % original spreadsheet computed the approximate internal heat gain for week nights, weekend days, and weekend nights
-% assuming they scale as the occ. fractions.  These are used for finding temp and not for directly calculating energy 
+% assuming they scale as the occ. fractions.  These are used for finding temp and not for directly calculating energy
 % use total so approximations are more acceptable
 % phi_int_wk_nt=(phi_int_occ+phi_plug_occ+phi_illum_occ)*occ_frac_wk_nt;
 % phi_int_wke_day=(phi_int_occ+phi_plug_occ+phi_illum_occ)*occ_frac_wke_day;
@@ -906,7 +906,7 @@ phi_int_wk_nt=(phi_int_unocc+phi_plug_unocc+phi_illum_unocc);
 phi_int_wke_day=(phi_int_unocc+phi_plug_unocc+phi_illum_unocc);
 phi_int_wke_nt=(phi_int_unocc+phi_plug_unocc+phi_illum_unocc);
   */
-    
+
   }
   void SimModel::internalHeatGain(double phi_int_avg, double phi_plug_avg, double phi_illum_avg, double& phi_I_tot) const
   {
@@ -925,8 +925,8 @@ phi_I_lt = phi_illum_avg*In.cond_flr_area; %phi_I_lg - total lighting internal h
 phi_I_tot = phi_I_occ + phi_I_app + phi_I_lt;
   */
   }
-  void SimModel::unoccupiedHeatGain(double phi_int_wk_nt, 
-    double phi_int_wke_day, 
+  void SimModel::unoccupiedHeatGain(double phi_int_wk_nt,
+    double phi_int_wke_day,
     double phi_int_wke_nt,
     const Vector& weekdayUnoccupiedMegaseconds,
     const Vector& weekendOccupiedMegaseconds,
@@ -974,7 +974,7 @@ v_P_tot_wke_nt = (v_W_int_wke_nt+v_W_sol_wke_nt)./v_Msec_wke_nt; % total heat ga
   */
   }
   void SimModel::interiorTemp(
-    const Vector& v_wall_A, 
+    const Vector& v_wall_A,
     const Vector& v_P_tot_wke_day,
     const Vector& v_P_tot_wk_nt,
     const Vector& v_P_tot_wke_nt,
@@ -1005,7 +1005,7 @@ v_P_tot_wke_nt = (v_W_int_wke_nt+v_W_sol_wke_nt)./v_Msec_wke_nt; % total heat ga
     }
     double ht_tset_ctrl = heating->temperatureSetPointOccupied() - T_adj;
     double cl_tset_ctrl = cooling->temperatureSetPointOccupied() + T_adj;
-    
+
     double ht_tset_unocc = heating->temperatureSetPointUnoccupied();
     double cl_tset_unocc = cooling->temperatureSetPointUnoccupied();
 
@@ -1037,8 +1037,8 @@ v_P_tot_wke_nt = (v_W_int_wke_nt+v_W_sol_wke_nt)./v_Msec_wke_nt; % total heat ga
 % based on the BEM type.
 % an advanced BEM has the effect of reducing the effective heating temp and
 % raising the effective cooling temp during times of control (i.e. during
-% occupancy).  
-% 
+% occupancy).
+%
 switch In.BEM_type
     case 1
         T_adj=0;
@@ -1048,7 +1048,7 @@ switch In.BEM_type
         T_adj=1;
 end
 
-ht_tset_ctrl = In.ht_tset_occ - T_adj;  % 
+ht_tset_ctrl = In.ht_tset_occ - T_adj;  %
 cl_tset_ctrl = In.cl_tset_occ + T_adj;
 
 % during unoccupied times, we use a setback temp and even if we have a BEM
@@ -1060,7 +1060,7 @@ v_ht_tset_ctrl = ones(12,1).*ht_tset_ctrl;  % create a column vector of the inte
 v_cl_tset_ctrl = ones(12,1).*cl_tset_ctrl;
 */
 
-    double T_ht_ctrl_flag=1,  
+    double T_ht_ctrl_flag=1,
            T_cl_ctrl_flag=1;
     double Cm_int = structure->interiorHeatCapacity()*structure->floorArea();//% set the interior heat capacity
 
@@ -1071,7 +1071,7 @@ v_cl_tset_ctrl = ones(12,1).*cl_tset_ctrl;
 % flags to signify if we have heating and controls turned on or off
 % and cooling and controls turned off.  We might turn off if we are
 % unoccupied for an extended period of time, say a school in summer
-T_ht_ctrl_flag=1;  
+T_ht_ctrl_flag=1;
 T_cl_ctrl_flag=1;
 
 %%% NOTE heat capacity description had an error on input sheet before.  It asked for
@@ -1099,7 +1099,7 @@ Cm=Cm_int+Cm_env;
     double H_tot = H_tr + H_ve;
     tau = Cm / H_tot / 3600.0;
 /*
-% H_ve is overall heat transfer coefficient by ventilation as per ISO 13790 9.3  
+% H_ve is overall heat transfer coefficient by ventilation as per ISO 13790 9.3
 H_ve=0;  % not implemented, set to 0 for now (its small so a good approx anyhow)
 H_tot=H_tr+H_ve;  %total overall heat transfer coefficient as per 12.2.1.3
 
@@ -1117,13 +1117,13 @@ tau=Cm./H_tot/3600;  % time constant of building in *hours* as per eqn 62 in 12.
 % when occupant, lighting, and plugload gains are small
 */
 
-    Vector v_ti(5); 
+    Vector v_ti(5);
     v_ti[0] = v_ti[2] = v_ti[4] = hoursUnoccupiedPerDay;
     v_ti[1] = v_ti[3] = hoursOccupiedPerDay;
     Matrix M_dT(v_P_tot_wk_nt.size(),5,0);
     Matrix M_Te(v_Tdbt_nt.size(),5,0);
     /*
-%%% NOTE 
+%%% NOTE
 % The following code is not a direct translation of the excel spreadsheet
 % but makes use of both loops and matricies for clarity but computes the same results
 
@@ -1142,7 +1142,7 @@ M_Te=[v_Tdbt_nt, v_Tdbt_day, v_Tdbt_nt, v_Tdbt_day, v_Tdbt_nt]; % create a matri
 
 
     /*re-arrange the Else by just using the copy constructors
-        
+
 else % if the HVAC heating controls are turned off there is no setback so temp is constant
     v_Th_wk_day=v_ht_tset_ctrl;
     v_Th_wk_nt=v_ht_tset_ctrl;
@@ -1156,7 +1156,7 @@ end
 
 
     /*
-% compute the change in temp from setback to another heating temp in unoccupied times 
+% compute the change in temp from setback to another heating temp in unoccupied times
 if T_ht_ctrl_flag ==1  % if the HVAC heating controls are turned on.*/
 
     if(T_ht_ctrl_flag==1){//if the HVAC heating controls are turned on.
@@ -1171,8 +1171,8 @@ if T_ht_ctrl_flag ==1  % if the HVAC heating controls are turned on.*/
 
       /*
        % find the exponential Temp decay after any changes in heating temp setpoint and put
-  % in the matrix M_Ta with columns being the different time segments 
-  
+  % in the matrix M_Ta with columns being the different time segments
+
     M_Ta=zeros(12,4);
     v_Tstart=v_ht_tset_ctrl;
     for I=1:4
@@ -1214,7 +1214,7 @@ if T_ht_ctrl_flag ==1  % if the HVAC heating controls are turned on.*/
 
       for(size_t i = 0;i<M_Tb.size2();i++){
         for(size_t j = 0;j<M_Tb.size1();j++){
-          double v_T_avg= tau / v_ti(i) * (M_Taa(j,i) - M_Te(j,i) -M_dT(j,i)) * (1-exp(-1 * v_ti(i) / tau)) + M_Te(j,i) +M_dT(j,i); 
+          double v_T_avg= tau / v_ti(i) * (M_Taa(j,i) - M_Te(j,i) -M_dT(j,i)) * (1-exp(-1 * v_ti(i) / tau)) + M_Te(j,i) +M_dT(j,i);
           M_Tb(j,i) = std::max(v_T_avg, ht_tset_unocc);
         }
       }
@@ -1235,10 +1235,10 @@ if T_ht_ctrl_flag ==1  % if the HVAC heating controls are turned on.*/
     % ending temp and assuming exponential decay of temps
     %v_t_start=M_Taa(:,1);
     for I=1:5 % loop through wk nt to wke day to wke nt to wke day to wke nt
-        v_T_avg=tau./v_ti(I).*(M_Taa(:,I) - M_Te(:,I) -M_dT(:,I)).*(1-exp(-v_ti(I)/tau)) + M_Te(:,I) +M_dT(:,I);       
+        v_T_avg=tau./v_ti(I).*(M_Taa(:,I) - M_Te(:,I) -M_dT(:,I)).*(1-exp(-v_ti(I)/tau)) + M_Te(:,I) +M_dT(:,I);
         M_Tb(:,I) = max(v_T_avg,ht_tset_unocc);
     end
-    
+
     v_Th_wke_avg=zeros(12,1);
     for I=1:12 % for each month
         v_Th_wke_avg(I)=mean(M_Tb(I,:));  % get the average for each month
@@ -1248,12 +1248,12 @@ if T_ht_ctrl_flag ==1  % if the HVAC heating controls are turned on.*/
     */
 
 
-    Vector v_Tc_wk_day(v_cl_tset_ctrl); 
+    Vector v_Tc_wk_day(v_cl_tset_ctrl);
     Vector v_Tc_wk_nt(v_cl_tset_ctrl);
     Vector v_Tc_wke_avg(v_cl_tset_ctrl);
 
     /*else  % if cooling controls are turned off, temp will be constant at the control set temp with no setback
-   v_Tc_wk_day=v_cl_tset_ctrl; 
+   v_Tc_wk_day=v_cl_tset_ctrl;
    v_Tc_wk_nt=v_cl_tset_ctrl;
    v_Tc_wke_avg=v_cl_tset_ctrl;
 end*/
@@ -1266,12 +1266,12 @@ end*/
           v_Tstart(j) = M_Tc(j,i) = (v_Tstart(j) - M_Te(j,i) - M_dT(j,i)) * exp(-1 * v_ti(i) / tau) + M_Te(j,i) + M_dT(j,i);
         }
       }
-          /*    
+          /*
 if T_cl_ctrl_flag ==1  % if the HVAC cooling controls are on
     % find the Temp decay after any changes in cooling temp setpoint
     M_Tc=zeros(12,4);
     v_Tstart=v_cl_tset_ctrl;
-    for I=1:4    
+    for I=1:4
         M_Tc(:,I)=(v_Tstart - M_Te(:,I) - M_dT(:,I)).*exp(-v_ti(I)/tau)+M_Te(:,I)+M_dT(:,I);
         v_Tstart=M_Tc(:,I);
     end
@@ -1287,8 +1287,8 @@ if T_cl_ctrl_flag ==1  % if the HVAC cooling controls are on
       }
     /*
     % Check to see if the decay temp is lower than the temp setpoint.  If so, the space will cool
-    % to that level.  If the cooling setpoint is lower the cooling system will kick in and lower the 
-    % temp to the cold temp setpoint 
+    % to that level.  If the cooling setpoint is lower the cooling system will kick in and lower the
+    % temp to the cold temp setpoint
     M_Tcc=zeros(12,5);
     M_Tcc(:,1)=min(v_cl_tset_ctrl,cl_tset_unocc);
     for I=2:5
@@ -1296,17 +1296,17 @@ if T_cl_ctrl_flag ==1  % if the HVAC cooling controls are on
     end
       */
 
-      
+
       Matrix M_Td(12,5,0);
-      
+
       for(size_t i = 0;i<M_Td.size2();i++){
         for(size_t j = 0;j<M_Td.size1();j++){
-          double v_T_avg= tau / v_ti(i) * (M_Tcc(j,i) - M_Te(j,i) -M_dT(j,i)) * (1-exp(-1 * v_ti(i) / tau)) + M_Te(j,i) +M_dT(j,i); 
+          double v_T_avg= tau / v_ti(i) * (M_Tcc(j,i) - M_Te(j,i) -M_dT(j,i)) * (1-exp(-1 * v_ti(i) / tau)) + M_Te(j,i) +M_dT(j,i);
           M_Td(j,i) = std::max(v_T_avg, cl_tset_unocc);
         }
       }
 
-      
+
       for(size_t i = 0;i<v_Th_wke_avg.size();i++){
         double sum = 0;
         for(size_t j = 0;j<M_Td.size2();j++){
@@ -1323,29 +1323,29 @@ if T_cl_ctrl_flag ==1  % if the HVAC cooling controls are on
     %v_t_start=M_Tcc(:,1);
     M_Td=zeros(12,5);
     for I=1:5
-        v_T_avg=tau./v_ti(I).*(M_Tcc(:,I) - M_Te(:,I) -M_dT(:,I)).*(1-exp(-v_ti(I)/tau)) + M_Te(:,I) +M_dT(:,I);       
+        v_T_avg=tau./v_ti(I).*(M_Tcc(:,I) - M_Te(:,I) -M_dT(:,I)).*(1-exp(-v_ti(I)/tau)) + M_Te(:,I) +M_dT(:,I);
         M_Td(:,I) = min(v_T_avg,cl_tset_unocc);
     end
-    
+
     v_Tc_wke_avg=zeros(12,1);
     for I=1:12
         v_Tc_wke_avg(I)=mean(M_Td(I,:));  % get the average for each month
     end
     v_Tc_wk_day = v_cl_tset_ctrl;
-    v_Tc_wk_nt=M_Td(:,1); % T_i_unocc_weekday_night  
+    v_Tc_wk_nt=M_Td(:,1); % T_i_unocc_weekday_night
     */
-    
+
     }
 
-    
-    
-    
-      
-      
-    
+
+
+
+
+
+
     Vector v_Th_wk_avg = sum(sum(mult(v_Th_wk_day,frac_hrs_wk_day),mult(v_Th_wk_nt,frac_hrs_wk_nt)),mult(v_Th_wke_avg,frac_hrs_wke_tot));
     Vector v_Tc_wk_avg = sum(sum(mult(v_Tc_wk_day,frac_hrs_wk_day),mult(v_Tc_wk_nt,frac_hrs_wk_nt)),mult(v_Tc_wke_avg,frac_hrs_wke_tot));
-   
+
 
     //v_Th_avg(v_Th_wk_avg);
     //v_Tc_avg(v_Tc_wk_avg);
@@ -1367,7 +1367,7 @@ if T_cl_ctrl_flag ==1  % if the HVAC cooling controls are on
     }
     /*
 
-    
+
 %find the average temp for the whole week from the fractions of each period
 v_Th_wk_avg = v_Th_wk_day*frac_hrs_wk_day+v_Th_wk_nt*frac_hrs_wk_nt+v_Th_wke_avg*frac_hrs_wke_tot; % T_i_average
 v_Tc_wk_avg = v_Tc_wk_day*frac_hrs_wk_day+v_Tc_wk_nt*frac_hrs_wk_nt+v_Tc_wke_avg*frac_hrs_wke_tot; % T_i_average
@@ -1380,7 +1380,7 @@ v_Tc_avg = max(v_Tc_wk_avg,cl_tset_ctrl); % T_i_cool_average_cal
   */
 
 
-    
+
 
   }
   void SimModel::ventilationCalc(const Vector& v_Th_avg,
@@ -1411,7 +1411,7 @@ qv_ext=-(qv_supp-In.vent_supply_diff./In.cond_flr_area./3.6);   %vent exhaust ra
 qv_comb = 0 ; % combustion appliance ventilation rate  - not implemented yet but will be impt for restaurants
 qv_diff=qv_supp + qv_ext + qv_comb;  % difference between air intake and air exhaust including combustion exhaust
 
-vent_ht_recov=In.vent_heat_recovery; %vent_heat_recovery_eff 
+vent_ht_recov=In.vent_heat_recovery; %vent_heat_recovery_eff
 vent_outdoor_frac=1-In.vent_recirc_fraction; % fctrl_vent_recirculation
 
 % infilatration source EN 15242:2007 Sec 6.7 direct method
@@ -1419,7 +1419,7 @@ tot_env_A=sum(In.wall_area)+sum(In.win_area);
 */
     double n_p_exp=0.65;
     /// \todo Note: v_Q75pa, aka infiltrationRate(), is never being calculated or set, so it is, at least in some cases, a
-    ///             random value (now that the matrices are properly initialized to 0). So when it goes to 0, the rest 
+    ///             random value (now that the matrices are properly initialized to 0). So when it goes to 0, the rest
     ///             of the model goes to infinity for the HVAC calculations.
     ///             I'm setting it to non-zero here
     double v_Q75pa=structure->infiltrationRate();
@@ -1430,7 +1430,7 @@ tot_env_A=sum(In.wall_area)+sum(In.win_area);
 
 #ifdef DEBUG_ISO_MODEL_SIMULATION
     LOG(Trace, "v_Q4pa " << v_Q4pa << " v_Q75pa " << v_Q75pa << " tot_env_A " << tot_env_A << " floorArea: " << floorArea << " n_p_exp " << n_p_exp);
-#endif 
+#endif
 
     double n_zone_frac = 0.7;
     double h_stack = n_zone_frac * vent_zone_height;
@@ -1488,7 +1488,7 @@ v_qv_stack_cl=max(n_stack_coeff.*v_Q4pa*(h_stack.*abs(W.mdbt-v_Tc_avg)).^n_stack
 
     Vector v_qv_wind_ht = mult(mult(pow(mult(mult(location->weather()->mwind(),location->weather()->mwind()), n_dCp * location->terrain()), n_wind_exp),v_Q4pa),n_wind_coeff);// % qv_wind_heating
     Vector v_qv_wind_cl = mult(mult(pow(mult(mult(location->weather()->mwind(),location->weather()->mwind()), n_dCp * location->terrain()), n_wind_exp),v_Q4pa),n_wind_coeff);// % qv_wind_cooling
-    
+
     printVector("v_qv_wind_ht",v_qv_wind_ht);
     printVector("v_qv_wind_cl",v_qv_wind_cl);
 
@@ -1500,7 +1500,7 @@ v_qv_stack_cl=max(n_stack_coeff.*v_Q4pa*(h_stack.*abs(W.mdbt-v_Tc_avg)).^n_stack
 
     Vector v_qv_sw_ht = sum(v_qv_ht_max, div(mult(mult(v_qv_stack_ht, v_qv_wind_ht), n_sw_coeff), v_Q4pa));// %qv_sw_heat m3/h/m2
     Vector v_qv_sw_cl = sum(v_qv_cl_max, div(mult(mult(v_qv_stack_cl, v_qv_wind_cl), n_sw_coeff), v_Q4pa));// %qv_sw_cool m3/h/m2
-    
+
     printVector("v_qv_sw_ht",v_qv_sw_ht);
     printVector("v_qv_sw_cl",v_qv_sw_cl);
 
@@ -1527,14 +1527,14 @@ v_qv_inf_ht = max(0,-qv_diff)+v_qv_sw_ht; %q_inf_heat m3/h/m2
 v_qv_inf_cl = max(0,-qv_diff)+v_qv_sw_cl; %q_inf_cool m3/h/m2
 
 
-% source EN ISO 13789 C.5  There they use Vdot instead of Q 
+% source EN ISO 13789 C.5  There they use Vdot instead of Q
 % Vdot = Vdot_f (1??_v) +Vdot_x
 % Vdot_f is the design airflow rate due to mechanical ventilation;
 % Vdot_x is the additional airflow rate with fans on, due to wind effects;
 % ?_v is the global heat recovery efficiency, taking account of the differences between supply and extract
 % airflow rates. Heat in air leaving the building through leakage cannot be recovered.
 
- % set vent_rate_flag=0 if ventilation rate is constant, 1 if we assume vent off in unoccopied times or 
+ % set vent_rate_flag=0 if ventilation rate is constant, 1 if we assume vent off in unoccopied times or
  % 2 if we assume ventilation rate is dropped proportionally to population
  %
  % set to 1 to mimic the behavior of the original spreadsheet
@@ -1548,12 +1548,12 @@ v_qv_inf_cl = max(0,-qv_diff)+v_qv_sw_cl; %q_inf_cool m3/h/m2
       case 1:
         vent_op_frac = frac_hrs_wk_day;
         break;
-      default: 
+      default:
         vent_op_frac = frac_hrs_wk_day + (1-frac_hrs_wk_day) * pop->densityOccupied() / pop->densityUnoccupied();
         break;
     }
  /*
-vent_rate_flag=1; 
+vent_rate_flag=1;
 
 % set the operation fraction for the ventilation rate
 if vent_rate_flag==0
@@ -1575,7 +1575,7 @@ end
     printVector("v_qve_ht",v_qve_ht);
     printVector("v_qve_cl",v_qve_cl);
 
-  double n_rhoc_air = 1200; 
+  double n_rhoc_air = 1200;
 
   v_Hve_ht = div(mult(v_qve_ht,n_rhoc_air),3600.0);
   v_Hve_cl = div(mult(v_qve_cl,n_rhoc_air),3600.0);
@@ -1585,7 +1585,7 @@ if In.vent_type==3
 else
     v_qv_mve_ht=ones(12,1)*vent_op_frac*qv_supp*vent_outdoor_frac*(1-vent_ht_recov);
 end
-    
+
 %qv_f_cl=ones(12,1)*qv_supp*vent_outdoor_frac; %qv_me_cooling
 if In.vent_type==3
     v_qv_mve_cl=zeros(12,1); %qv_me_cooling for calc
@@ -1637,7 +1637,7 @@ v_tot_mo_ht_gain = phi_I_tot*v_Msec_ina_mo + v_E_sol;  % total_heat_gain = total
 
 % compute the heating need including thermal mass effects
 % NOTE: the building heat thermal time constant, tau, was calculated in the section
-% on interior temperature 
+% on interior temperature
 a_H0=1; % a_H_0 = reference dimensionless parameter
 tau_H0=15; % tau_H_0 = reference time constant
 a_H = a_H0+tau/tau_H0;  %a_H_building heating dimensionless constant
@@ -1649,8 +1649,8 @@ v_Qtot_ht = v_QT_ht+v_QV_ht ; %QL_total total heat loss in MJ
     Vector v_gamma_H_ht = div(v_tot_mo_ht_gain , sum(v_Qtot_ht, std::numeric_limits<double>::min()));
     Vector v_eta_g_H(12);
     for(size_t i = 0;i<v_eta_g_H.size();i++){
-      v_eta_g_H[i] = v_gamma_H_ht(i) > 0 ? 
-                        (1-std::pow(v_gamma_H_ht[i],a_H)) / (1-std::pow(v_gamma_H_ht[i],(a_H+1))) : 
+      v_eta_g_H[i] = v_gamma_H_ht(i) > 0 ?
+                        (1-std::pow(v_gamma_H_ht[i],a_H)) / (1-std::pow(v_gamma_H_ht[i],(a_H+1))) :
                         1 / (v_gamma_H_ht(i)+std::numeric_limits<double>::min());
     }
     v_Qneed_ht = dif(v_Qtot_ht,mult(v_eta_g_H,v_tot_mo_ht_gain));
@@ -1674,12 +1674,12 @@ v_Qneed_ht = v_Qtot_ht - v_eta_g_H.*v_tot_mo_ht_gain; %QNH = QL,H - eta_G_H.*Q_G
 
 Qneed_ht_yr = sum(v_Qneed_ht);
    */
-    
+
     Vector v_QT_cl = mult(mult(dif(v_Tc_avg, location->weather()->mdbt()),H_tr),megasecondsInMonth);// % QT for cooling in MJ
     Vector v_QV_cl = mult(mult(mult(v_Hve_cl, structure->floorArea()), dif(v_Tc_avg, location->weather()->mdbt())), megasecondsInMonth);// % QT for coolin in MJ
     Vector v_Qtot_cl = sum(v_QT_cl, v_QV_cl);// % QL = QT + QV for cooling = total cooling heat loss in MJ
 
-    Vector v_gamma_H_cl = div(v_Qtot_cl,sum(v_tot_mo_ht_gain,std::numeric_limits<double>::min()));//  %gamma_C = heat loss ratio Qloss/Qgain 
+    Vector v_gamma_H_cl = div(v_Qtot_cl,sum(v_tot_mo_ht_gain,std::numeric_limits<double>::min()));//  %gamma_C = heat loss ratio Qloss/Qgain
 
     //% compute the cooling gain utilization factor eta_g_cl
     Vector v_eta_g_CL(12);
@@ -1691,8 +1691,8 @@ Qneed_ht_yr = sum(v_Qneed_ht);
       LOG(Trace, numer << " = 1.0 - " << v_gamma_H_cl[i] << "^" << (a_H+1.0));
 #endif
 
-      v_eta_g_CL[i] = v_gamma_H_cl(i) > 0.0 ? 
-                        (1.0-std::pow(v_gamma_H_cl[i],a_H)) / (1.0-std::pow(v_gamma_H_cl[i],(a_H+1.0))) : 
+      v_eta_g_CL[i] = v_gamma_H_cl(i) > 0.0 ?
+                        (1.0-std::pow(v_gamma_H_cl[i],a_H)) / (1.0-std::pow(v_gamma_H_cl[i],(a_H+1.0))) :
                         1.0;
     }
 
@@ -1707,7 +1707,7 @@ v_QT_cl = H_tr*(v_Tc_avg - v_mdbt).*v_Msec_ina_mo; % QT for cooling in MJ
 v_QV_cl = v_Hve_cl*In.cond_flr_area.*(v_Tc_avg - v_mdbt).*v_Msec_ina_mo; % QT for coolin in MJ
 v_Qtot_cl = v_QT_cl+v_QV_cl; % QL = QT + QV for cooling = total cooling heat loss in MJ
 
-v_gamma_H_cl = v_Qtot_cl./(v_tot_mo_ht_gain+eps);  %gamma_C = heat loss ratio Qloss/Qgain 
+v_gamma_H_cl = v_Qtot_cl./(v_tot_mo_ht_gain+eps);  %gamma_C = heat loss ratio Qloss/Qgain
 
 % compute the cooling gain utilization factor eta_g_cl
 v_eta_g_CL=zeros(12,1);
@@ -1770,7 +1770,7 @@ v_Qfan_tot = v_Vair_tot.*In.fan_specific_power.*In.fan_flow_ctrl_factor./In.cond
   }
   void SimModel::hvac(const Vector& v_Qneed_ht,
     const Vector& v_Qneed_cl,
-    double Qneed_ht_yr, 
+    double Qneed_ht_yr,
     double Qneed_cl_yr,
     Vector& v_Qelec_ht,
     Vector& v_Qgas_ht,
@@ -1778,7 +1778,7 @@ v_Qfan_tot = v_Vair_tot.*In.fan_specific_power.*In.fan_flow_ctrl_factor./In.cond
     Vector& v_Qcl_gas_tot) const
   {
     double DH_YesNo =0;
-    double n_eta_DH_network = 0.9; 
+    double n_eta_DH_network = 0.9;
     double n_eta_DH_sys = 0.87;
     double n_frac_DH_free = 0.000;
 
@@ -1797,7 +1797,7 @@ n_eta_DH_sys = 0.87; % efficiency of DH heating system
 n_frac_DH_free = 0.000; % fraction of free heat source to DH (0 to 1)
 
 DC_YesNo = 0;  % building connected to DC (0=no, 1=yes)
-n_eta_DC_network = 0.9;  % efficiency of DC network. 
+n_eta_DC_network = 0.9;  % efficiency of DC network.
 n_eta_DC_COP = 5.5;  % COP of DC elec Chillers
 n_eta_DC_frac_abs = 0;  % fraction of DC chillers that are absorption
 n_eta_DC_COP_abs = 1;  % COP of DC absorption chillers
@@ -1810,7 +1810,7 @@ n_frac_DC_free = 0;  % fraction of free heat source to absorption DC chillers (0
 
 
 
-/*  %% HVAC System  
+/*  %% HVAC System
 %
 % From EN 15243-2007 Annex E.
 % HVAC system info table from EN 15243:2007 Table E1.  columns are
@@ -1829,7 +1829,7 @@ a_cl_loss=In.cool_loss_factor;
   double f_dem_cl = std::max((1.0 - f_dem_ht), 0.1);
   double eta_dist_ht  =1.0/(1.0+a_ht_loss+f_waste/f_dem_ht); //% overall distribution efficiency for heating
   double eta_dist_cl = 1.0/(1.0+a_cl_loss+f_waste/f_dem_cl); //%overall distrubtion efficiency for cooling
-  
+
   Vector v_Qloss_ht_dist = div(mult(v_Qneed_ht,(1-eta_dist_ht)),eta_dist_ht);
   Vector v_Qloss_cl_dist = div(mult(v_Qneed_cl,(1-eta_dist_cl)),eta_dist_cl);
   printVector("v_Qloss_ht_dist",v_Qloss_ht_dist);
@@ -1879,7 +1879,7 @@ if DC_YesNo==1
     v_Qcl_sys = zeros(12,1);  % if we have district cooling our cooling energy needs from our system are zero
     v_Qcool_DC = v_Qloss_cl_dist+v_Qneed_cl;  % if we have DC the cooling needs are the dist losses + the cooling needs themselves
 else
-    v_Qcl_sys =(v_Qloss_cl_dist+v_Qneed_cl)/(IEER+eps);  % if no DC compute our total system cooling energy needs including losses 
+    v_Qcl_sys =(v_Qloss_cl_dist+v_Qneed_cl)/(IEER+eps);  % if no DC compute our total system cooling energy needs including losses
     v_Qcool_DC=zeros(12,1); % if no DC, DC cooling needs are zero
 end
 
@@ -1896,7 +1896,7 @@ end
     printVector("v_Qht_DH_total",v_Qht_DH_total);
     printVector("v_Qcl_elec_tot",v_Qcl_elec_tot);
     printVector("v_Qcl_gas_tot",v_Qcl_gas_tot);
-    
+
     //Vector v_Qelec_ht,v_Qgas_ht;
 
     if(heating->energyType() == 1)
@@ -1916,7 +1916,7 @@ end
 /*
 v_Qcl_DC_elec = v_Qcool_DC * (1-n_eta_DC_frac_abs) / (n_eta_DC_COP*n_eta_DC_network);  % Energy used for cooling by district electric chillers
 v_Qcl_DC_abs =  v_Qcool_DC * (1-n_frac_DC_free) / n_eta_DC_COP_abs; %Energy used for cooling by district absorption chillers
-   
+
 v_Qht_DH_total = v_Qht_DH * (1 - n_frac_DH_free) / (n_eta_DH_sys * n_eta_DH_network);
 v_Qcl_elec_tot = v_Qcl_sys + v_Qcl_DC_elec; %total electric cooling energy (MJ)
 v_Qcl_gas_tot = v_Qcl_DC_abs; % total gas cooliing energy
@@ -1928,14 +1928,14 @@ v_Qcl_gas_tot = v_Qcl_DC_abs; % total gas cooliing energy
      v_Qelec_ht = zeros(12,1);  % if we get here, fuel was gas to total electric heating energy is 0
      v_Qgas_ht=v_Qht_sys+v_Qht_DH_total;  % total gas heating energy is building + any DH
  end
- 
+
   */
 
 
   }
   void SimModel::pump(const Vector& v_Qneed_ht,
     const Vector& v_Qneed_cl,
-    double Qneed_ht_yr, 
+    double Qneed_ht_yr,
     double Qneed_cl_yr,
     Vector& v_Q_pump_tot
   ) const
@@ -1946,7 +1946,7 @@ v_Qcl_gas_tot = v_Qcl_DC_abs; % total gas cooliing energy
 
        %%% NOTE original GIT spreadsheet had this hardwired
        %Q_pumps_yr = 8;  %  set pump energy density 8 MJ/m2/yr
-       %  
+       %
        %
        %  new GIT model following EPA NR 2007 6.9.7.1 and 6.9.7.2
        % European Performance Assessment - Non Residential
@@ -1958,7 +1958,7 @@ v_Qcl_gas_tot = v_Qcl_DC_abs; % total gas cooliing energy
 
     Vector v_frac_ht_mode = div(v_Qneed_ht,sum(v_Qneed_ht, v_Qneed_cl));
     double frac_ht_total=sum(v_frac_ht_mode);
-    double Q_pumps_ht = Q_pumps_yr * heating->pumpControlReduction() * structure->floorArea(); 
+    double Q_pumps_ht = Q_pumps_yr * heating->pumpControlReduction() * structure->floorArea();
     Vector v_Q_pumps_ht = div(mult(v_frac_ht_mode, Q_pumps_ht), frac_ht_total);
     /*
        n_E_pumps = 0.25;  % specific power of systems pumps + control systems in W/m2
@@ -2040,8 +2040,8 @@ v_Qcl_gas_tot = v_Qcl_DC_abs; % total gas cooliing energy
   /*%% DHW and Solar Water Heating
  %
  % Qdhw= ((Qdem;DWH/?sys;DHW) - Qses;DHW)/?gen;DHW
- % Source: NEN 2916 12.2  
- 
+ % Source: NEN 2916 12.2
+
 n_dhw_tset = 60; % water temperature set point (C)
 n_dhw_tsupply = 20; % water initial temp (C)
 n_CP_h20=4.18;  % specific heat of water in MJ/m3/K
@@ -2052,10 +2052,10 @@ v_Q_dhw_solar =zeros(12,1);  % Q from solar energy hot water collectors - not in
 
 
 Q_dhw_yr = In.DHW_demand*(n_dhw_tset-n_dhw_tsupply).*n_CP_h20; % total annual energy required for heating DHW MJ/yr
- 
+
 % n_dhw_dist_eff_table=[1 0.8 0.6]; % all taps < 3m from gen = 1, taps> 3m = 0.8, circulation or unknown =0.6
 % %eta_dhw_dist = n_dhw_dist_eff_table(In.DHW_dist_sys_type); % set the distribution efficiency from table
-% 
+%
 % eta_dhw_dist = In.DHW_dist_eff; % DHW distribtuion efficiency
 % eta_dhw_sys = In.DHW_sys_eff; % DHW system efficiency
 
@@ -2103,7 +2103,7 @@ end
   */
   }
 
-  
+
   ISOResults SimModel::simulate() const
   {
     Vector weekdayOccupiedMegaseconds(12);
@@ -2144,13 +2144,13 @@ end
     double Qneed_ht_yr, Qneed_cl_yr;
     Vector v_Qneed_ht, v_Qneed_cl;
 
-    Vector v_Qelec_ht, v_Qcl_elec_tot, v_Q_illum_tot, v_Q_illum_ext_tot, 
+    Vector v_Qelec_ht, v_Qcl_elec_tot, v_Q_illum_tot, v_Q_illum_ext_tot,
             v_Qfan_tot, v_Q_pump_tot, v_Q_dhw_elec, v_Qgas_ht, v_Qcl_gas_tot, v_Q_dhw_gas;
 
     frac_hrs_wk_day = hoursUnoccupiedPerDay = hoursOccupiedPerDay = frac_hrs_wk_nt = frac_hrs_wke_tot = 1;
-  
+
     //openstudio::isomodel::loadDefaults(simModel);
-  
+
 #ifdef DEBUG_ISO_MODEL_SIMULATION
     LOG(Trace, "scheduleAndOccupancy: ");
 #endif
@@ -2164,8 +2164,8 @@ end
           clockHourUnoccupied,
           frac_hrs_wk_day,
           hoursUnoccupiedPerDay,
-          hoursOccupiedPerDay, 
-          frac_hrs_wk_nt, 
+          hoursOccupiedPerDay,
+          frac_hrs_wk_nt,
           frac_hrs_wke_tot);
 
 
@@ -2210,10 +2210,10 @@ end
     LOG(Trace, "lightingEnergyUse: ");
 #endif
 
-    lightingEnergyUse(v_hrs_sun_down_mo, 
-          Q_illum_occ, Q_illum_unocc, 
-          Q_illum_tot_yr, 
-          v_Q_illum_tot, 
+    lightingEnergyUse(v_hrs_sun_down_mo,
+          Q_illum_occ, Q_illum_unocc,
+          Q_illum_tot_yr,
+          v_Q_illum_tot,
           v_Q_illum_ext_tot);
 
 #ifdef DEBUG_ISO_MODEL_SIMULATION
@@ -2253,8 +2253,8 @@ end
     LOG(Trace, "windowSolarGain: ");
 #endif
 
-    windowSolarGain(v_win_A, 
-          v_wall_emiss, 
+    windowSolarGain(v_win_A,
+          v_wall_emiss,
           v_wall_alpha_sc,
           v_wall_U,
           v_wall_A,
@@ -2262,7 +2262,7 @@ end
           v_win_hr,
           v_wall_R_sc,
           v_win_A_sol);
-          
+
 #ifdef DEBUG_ISO_MODEL_SIMULATION
     printVector("v_wall_A_sol",v_wall_A_sol);
     printVector("v_win_hr",v_win_hr);
@@ -2279,21 +2279,21 @@ end
           v_win_hr,
           v_wall_A_sol,
           v_E_sol);
-          
+
 #ifdef DEBUG_ISO_MODEL_SIMULATION
     printVector("v_E_sol",v_E_sol);
 
     LOG(Trace, "heatGainsAndLosses: ");
 #endif
 
-    heatGainsAndLosses(frac_hrs_wk_day, 
-          Q_illum_occ, 
-          Q_illum_unocc, 
-          Q_illum_tot_yr, 
-          phi_int_avg, 
+    heatGainsAndLosses(frac_hrs_wk_day,
+          Q_illum_occ,
+          Q_illum_unocc,
+          Q_illum_tot_yr,
+          phi_int_avg,
           phi_plug_avg,
           phi_illum_avg,
-          phi_int_wke_nt, 
+          phi_int_wke_nt,
           phi_int_wke_day,
           phi_int_wk_nt);
 
@@ -2317,8 +2317,8 @@ end
 #endif
 
 
-    unoccupiedHeatGain(phi_int_wk_nt, 
-          phi_int_wke_day, 
+    unoccupiedHeatGain(phi_int_wk_nt,
+          phi_int_wke_day,
           phi_int_wke_nt,
           weekdayUnoccupiedMegaseconds,
           weekendOccupiedMegaseconds,
@@ -2327,8 +2327,8 @@ end
           frac_Pgh_wke_day,
           frac_Pgh_wke_nt,
           v_E_sol,
-          v_P_tot_wke_day, 
-          v_P_tot_wk_nt, 
+          v_P_tot_wke_day,
+          v_P_tot_wk_nt,
           v_P_tot_wke_nt);
 #ifdef DEBUG_ISO_MODEL_SIMULATION
     printVector("v_P_tot_wke_day",v_P_tot_wke_day);
@@ -2338,7 +2338,7 @@ end
     LOG(Trace, "interiorTemp: ");
 #endif
 
-    interiorTemp(v_wall_A, 
+    interiorTemp(v_wall_A,
           v_P_tot_wke_day,
           v_P_tot_wk_nt,
           v_P_tot_wke_nt,
@@ -2387,20 +2387,20 @@ end
           v_Qfan_tot,
           v_Qneed_ht,
           v_Qneed_cl,
-          Qneed_ht_yr, 
+          Qneed_ht_yr,
           Qneed_cl_yr);
 
 #ifdef DEBUG_ISO_MODEL_SIMULATION
       LOG(Trace, "Qneed_ht_yr: " << Qneed_ht_yr);
       LOG(Trace, "Qneed_cl_yr: " << Qneed_cl_yr);
       printVector("v_Qfan_tot",v_Qfan_tot);
-        
+
       LOG(Trace, "hvac: ");
 #endif
 
     hvac(v_Qneed_ht,
           v_Qneed_cl,
-          Qneed_ht_yr, 
+          Qneed_ht_yr,
           Qneed_cl_yr,
           v_Qelec_ht,
           v_Qgas_ht,
@@ -2418,7 +2418,7 @@ end
 
     pump(v_Qneed_ht,
           v_Qneed_cl,
-          Qneed_ht_yr, 
+          Qneed_ht_yr,
           Qneed_cl_yr,
           v_Q_pump_tot);
 
@@ -2469,18 +2469,18 @@ end
     EndUses results[12];
     ISOResults allResults;
 
-    double E_plug_elec = building->electricApplianceHeatGainOccupied() * frac_hrs_wk_day + 
+    double E_plug_elec = building->electricApplianceHeatGainOccupied() * frac_hrs_wk_day +
                          building->electricApplianceHeatGainUnoccupied() * (1.0 - frac_hrs_wk_day);
-    double E_plug_gas = building->gasApplianceHeatGainOccupied() * frac_hrs_wk_day + 
-                         building->gasApplianceHeatGainUnoccupied() * (1.0 - frac_hrs_wk_day);  
+    double E_plug_gas = building->gasApplianceHeatGainOccupied() * frac_hrs_wk_day +
+                         building->gasApplianceHeatGainUnoccupied() * (1.0 - frac_hrs_wk_day);
 
     Vector v_Q_plug_elec = div(mult(hoursInMonth, E_plug_elec, 12), 1000.0);
     Vector v_Q_plug_gas  = div(mult(hoursInMonth, E_plug_gas,  12), 1000.0);
     printVector("v_Q_plug_elec",v_Q_plug_elec);
     printVector("v_Q_plug_gas",v_Q_plug_gas);
-                         
+
 /*
-  %% Plugload 
+  %% Plugload
 
 E_plug_elec =( In.elec_plug_dens_occ*frac_hrs_wk_day + In.elec_plug_dens_unocc*(1-frac_hrs_wk_day)); % average electric plugloads in W/m2
 E_plug_gas = (In.gas_plug_dens_occ*frac_hrs_wk_day + In.gas_plug_dens_unocc*(1-frac_hrs_wk_day)); % averaged gas plugloads in W/m2

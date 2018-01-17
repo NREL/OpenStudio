@@ -69,15 +69,15 @@ class MODEL_API RefrigerationSubcoolerLiquidSuction : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setLiquidSuctionDesignSubcoolingTemperatureDifference(double liquidSuctionDesignSubcoolingTemperatureDifference);
+  bool setLiquidSuctionDesignSubcoolingTemperatureDifference(double liquidSuctionDesignSubcoolingTemperatureDifference);
 
   void resetLiquidSuctionDesignSubcoolingTemperatureDifference();
 
-  void setDesignLiquidInletTemperature(double designLiquidInletTemperature);
+  bool setDesignLiquidInletTemperature(double designLiquidInletTemperature);
 
   void resetDesignLiquidInletTemperature();
 
-  void setDesignVaporInletTemperature(double designVaporInletTemperature);
+  bool setDesignVaporInletTemperature(double designVaporInletTemperature);
 
   void resetDesignVaporInletTemperature();
 
@@ -111,4 +111,3 @@ typedef std::vector<RefrigerationSubcoolerLiquidSuction> RefrigerationSubcoolerL
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONSUBCOOLERLIQUIDSUCTION_HPP
-

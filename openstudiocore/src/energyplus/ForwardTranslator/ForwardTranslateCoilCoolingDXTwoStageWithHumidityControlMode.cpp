@@ -167,7 +167,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoStageWith
 boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoStageWithHumidityControlMode( model::CoilCoolingDXTwoStageWithHumidityControlMode & modelObject )
 {
   IdfObject coilSystemCoolingDXIdf(IddObjectType::CoilSystem_Cooling_DX);
-    
+
   m_idfObjects.push_back(coilSystemCoolingDXIdf);
 
   boost::optional<IdfObject> oIdfObject = translateCoilCoolingDXTwoStageWithHumidityControlModeWithoutUnitary(modelObject);

@@ -178,7 +178,7 @@ namespace detail {
 
     bool setReferenceElectricalEfficiencyUsingLowerHeatingValue(double referenceElectricalEfficiencyUsingLowerHeatingValue);
 
-    void setReferenceCombustionAirInletTemperature(double referenceCombustionAirInletTemperature);
+    bool setReferenceCombustionAirInletTemperature(double referenceCombustionAirInletTemperature);
     void resetReferenceCombustionAirInletTemperature();
 
     bool setReferenceCombustionAirInletHumidityRatio(double referenceCombustionAirInletHumidityRatio);
@@ -238,7 +238,7 @@ namespace detail {
     bool setExhaustAirFlowRateFunctionofPartLoadRatioCurve(const Curve& exhaustAirFlowRateFunctionofPartLoadRatioCurve);
     void resetExhaustAirFlowRateFunctionofPartLoadRatioCurve();
 
-    void setNominalExhaustAirOutletTemperature(double nominalExhaustAirOutletTemperature);
+    bool setNominalExhaustAirOutletTemperature(double nominalExhaustAirOutletTemperature);
     void resetNominalExhaustAirOutletTemperature();
 
     // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
@@ -272,4 +272,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_GENERATORMICROTURBINE_IMPL_HPP
-

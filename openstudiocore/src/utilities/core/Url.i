@@ -18,13 +18,13 @@ namespace openstudio{
 
   class Url {
   public:
-    
+
     ~Url();
 
   protected:
      Url();
   };
-  
+
 
   %extend Url{
     Url(const std::string& s){
@@ -32,10 +32,10 @@ namespace openstudio{
       p = new Url(toQString(s));
       return p;
     }
-    
+
     std::string __str__() const{
       return toString(*self);
-    }    
+    }
   };
 
 } // openstudio

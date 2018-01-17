@@ -45,7 +45,7 @@
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio{
-  
+
 EditRubyMeasureView::EditRubyMeasureView(bool applyMeasureNow)
   : QWidget()
 {
@@ -155,14 +155,14 @@ void EditRubyMeasureView::clear()
  }
 }
 
-EditNullView::EditNullView(const QString & text) 
+EditNullView::EditNullView(const QString & text)
   : QWidget()
 {
   auto mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(5,5,5,5);
   mainVLayout->setSpacing(5);
   setLayout(mainVLayout);
-  
+
   auto label = new QLabel();
   label->setText(text);
   label->setWordWrap(true);

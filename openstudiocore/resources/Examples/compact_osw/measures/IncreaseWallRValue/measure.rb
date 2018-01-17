@@ -133,7 +133,7 @@ class IncreaseInsulationRValueForExteriorWallsByPercentage < OpenStudio::Ruleset
 
         #push to hashes
         constructions_hash_old_new[exterior_surface_construction.name.to_s] = final_construction
-        constructions_hash_new_old[final_construction] = exterior_surface_construction #push the object to hash key vs. name        
+        constructions_hash_new_old[final_construction] = exterior_surface_construction #push the object to hash key vs. name
 
         #find already cloned insulation material and link to construction
         target_material = max_thermal_resistance_material

@@ -31,9 +31,9 @@ require("fileutils")
 module OpenStudio
 
   class SimulationManager
-  
+
     attr_reader :run_manager, :status_widget
-  
+
     def initialize
       @run_manager = OpenStudio::Runmanager::RunManager.new
       @status_widget = OpenStudio::Runmanager::JobStatusWidget.new(@run_manager)
@@ -45,10 +45,10 @@ module OpenStudio
     end
 
     def run_simulation
-    
+
       model_interface = Plugin.model_manager.model_interface
       model_interface.clear_errors
-    
+
       # call translate model to idf first, later these warnings should be shown in run status widget instead?
       workspace, errors, warnings = Plugin.model_manager.model_to_workspace(model_interface.openstudio_model)
 
@@ -65,19 +65,19 @@ module OpenStudio
         model_interface.add_error("Warnings occurred on translation to EnergyPlus\n\n", false)
         warnings.each {|warning| model_interface.add_warning("Warning: #{warning.logMessage}\n\n", false)}
       end
-      
+
       if Plugin.read_pref('Show Errors on Idf Translation') and errors
         model_interface.show_errors
         result = UI.messagebox("Errors occurred on translation to EnergyPlus, continue simulation?", MB_YESNO)
         if result == 7 # NO
           return
-        end 
+        end
       elsif Plugin.read_pref('Show Warnings on Idf Translation') and (errors or warnings)
         model_interface.show_errors
         result = UI.messagebox("Warnings occurred on translation to EnergyPlus, continue simulation?", MB_YESNO)
         if result == 7 # NO
           return
-        end 
+        end
       end
 
       # check that new file has been saved
@@ -97,8 +97,8 @@ module OpenStudio
         UI.messagebox("Cannot locate the input data dictionary (IDD) in the EnergyPlus directory.  Correct the EXE path and try again.")
         Plugin.dialog_manager.show(PreferencesInterface)
         return(false)
-      end   
-      
+      end
+
       expandobjects_path = ''
       if (Plugin.platform == Platform_Windows)
         expandobjects_path = Plugin.energyplus_dir + '/ExpandObjects.exe'
@@ -109,14 +109,14 @@ module OpenStudio
         UI.messagebox("Cannot locate ExpandObjects in the EnergyPlus directory.  Correct the EXE path and try again.")
         Plugin.dialog_manager.show(PreferencesInterface)
         return(false)
-      end  
-      
+      end
+
       readvars_path = ""
       if (Plugin.platform == Platform_Windows)
         readvars_path = Plugin.energyplus_dir + '/PostProcess/ReadVarsESO.exe'
         if (not File.exists?(readvars_path))
           readvars_path = Plugin.energyplus_dir + '/readvars.exe'
-        end  
+        end
       else
         readvars_path = Plugin.energyplus_dir + '/readvars'
       end
@@ -124,49 +124,49 @@ module OpenStudio
         UI.messagebox("Cannot locate ReadVarsESO in the EnergyPlus directory.  Correct the EXE path and try again.")
         Plugin.dialog_manager.show(PreferencesInterface)
         return(false)
-      end  
-      
+      end
+
       # directory to run simulation in
       openstudio_path = model_interface.openstudio_path
       openstudio_dir = model_interface.openstudio_dir
       run_dir = OpenStudio::Path.new("run")
       rmdb_path = model_interface.model_temp_dir / OpenStudio::Path.new("resources/run.db")
-      
+
       # run in the model path
       #base_dir = OpenStudio::Path.new(openstudio_dir) / OpenStudio::Path.new(OpenStudio::Path.new(model_interface.openstudio_path).stem)
       #search_dir = OpenStudio::Path.new("..") / OpenStudio::Path.new(OpenStudio::Path.new(model_interface.openstudio_path).stem)
-      
+
       # run in the temp dir
       base_dir = model_interface.model_temp_dir / OpenStudio::Path.new("resources")
       search_dir = OpenStudio::Path.new("../in.osm")
 
       # pause run manager
       @run_manager.setPaused(true)
-      
+
       # delete current jobs
       jobs = @run_manager.getJobs()
       jobs.each do |job|
         @run_manager.remove(job)
       end
-      
+
       # load jobs from the temp dir
       @run_manager.loadJobs(rmdb_path)
-      
+
       jobs = @run_manager.getJobs()
 
       # ModelToIdf
       # ExpandObjects
       # EnergyPlus
       # ReadVars (if rvi file is given)
-      
+
       @modeltoidf = nil
       @expandobjects = nil
       @energyplus = nil
       @readvars = nil
-      
+
       jobs.each do |job|
         jobType = job.jobType
-        
+
         if jobType == "ModelToIdf".to_JobType
           @modeltoidf = job
           @modeltoidf.setBasePath(base_dir)
@@ -174,7 +174,7 @@ module OpenStudio
           @expandobjects = job
         elsif jobType == "EnergyPlus".to_JobType
           @energyplus = job
-          
+
           if model_interface.get_attribute("RUN_READVARS")
             rvi_files = OpenStudio::Runmanager::Files.new()
             if rvi_file = model_interface.get_attribute("RVI_FILE")
@@ -183,11 +183,11 @@ module OpenStudio
             @readvars = OpenStudio::Runmanager::JobFactory::createReadVarsJob(tools, OpenStudio::Runmanager::JobParams.new(), OpenStudio::Runmanager::Files.new())
             @energyplus.addChild(@readvars)
           end
-      
+
         else
         end
       end
-      
+
       # close sql file if open
       sql_file = model_interface.openstudio_model.sqlFile
       if not sql_file.empty?
@@ -198,7 +198,7 @@ module OpenStudio
         Plugin.dialog_manager.update(ColorScaleInterface)
         model_interface.request_paint
       end
-      
+
       # create the "set of tools" needed
       #tools = OpenStudio::Runmanager::Tools.new()
       #tools.append(OpenStudio::Runmanager::ToolInfo.new("energyplus", OpenStudio::Runmanager::ToolVersion.new(7,2), OpenStudio::Path.new(Plugin.energyplus_path)))
@@ -207,12 +207,12 @@ module OpenStudio
 
       # unpause run manager
       @run_manager.setPaused(false)
-      
+
       # show status dialog
       @status_widget.setWorkflow(@modeltoidf)
       @status_widget.show
       @status_widget.activateWindow
- 
+
       # add a proc to check for completion
       proc = Proc.new { self.check_complete }
       Plugin.add_event( proc )
@@ -221,32 +221,32 @@ module OpenStudio
 
     def on_completion
       #@run_manager.hideStatusDialog
-      
+
       @run_manager.setPaused(true)
-      
+
       model_interface = Plugin.model_manager.model_interface
-      
+
       errors = ""
-      @modeltoidf.outputFiles().each do |f| 
+      @modeltoidf.outputFiles().each do |f|
         puts "modeltoidf created #{f.fullPath.to_s}"
       end
       if @expandobjects
-        @expandobjects.outputFiles().each do |f| 
+        @expandobjects.outputFiles().each do |f|
           puts "expandobjects created #{f.fullPath.to_s}"
         end
       end
-      @energyplus.outputFiles().each do |f| 
+      @energyplus.outputFiles().each do |f|
         puts "energyplus created #{f.fullPath.to_s}"
         if f.filename == "eplusout.sql"
           model_interface.results_interface.output_file_path = f.fullPath.to_s
         end
       end
       if @readvars
-        @readvars.outputFiles().each do |f| 
+        @readvars.outputFiles().each do |f|
           puts "readvars created #{f.fullPath.to_s}"
         end
       end
-      
+
       # copy files over after simulation
       model_interface.save_model_temp_dir
 
@@ -256,7 +256,7 @@ module OpenStudio
       else
         UI.messagebox("Simulation failed, please check error file for details")
       end
-      
+
       @modeltoidf = nil
       @expandobjects = nil
       @energyplus = nil
@@ -274,7 +274,7 @@ module OpenStudio
         # check again next time
         proc = Proc.new { self.check_complete }
         Plugin.add_event( proc )
-      end   
+      end
     end
 
   end

@@ -42,8 +42,8 @@ TEST_F(ModelFixture, WaterHeaterStratified_WaterHeaterStratified)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
      Model m;
      WaterHeaterStratified waterHeaterStratified(m);
      exit(0);

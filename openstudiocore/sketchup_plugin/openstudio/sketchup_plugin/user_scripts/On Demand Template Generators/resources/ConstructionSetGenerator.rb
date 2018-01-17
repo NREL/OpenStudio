@@ -7,7 +7,7 @@ require 'openstudio'
 class ConstructionSetGenerator
 
 def initialize(path_to_standards_json)
-  
+
   #load the data from the JSON file into a ruby hash
   @standards = {}
   temp = File.read(path_to_standards_json.to_s)
@@ -31,7 +31,7 @@ def make_name(template, clim, building_type, spc_type)
   if clim == "CZ1-8"
     clim = ""
   end
-  
+
   if building_type == "FullServiceRestaurant"
     building_type = "FullSrvRest"
   elsif building_type == "Hospital"
@@ -67,23 +67,23 @@ def make_name(template, clim, building_type, spc_type)
   elsif building_type == "Warehouse"
     building_type = "Warehouse"
   end
-  
+
   parts = [template]
-  
+
   if not clim.empty?
     parts << clim
   end
-  
+
   if not building_type.empty?
     parts << building_type
   end
-    
+
   if not spc_type.empty?
     parts << spc_type
   end
-  
+
   result = parts.join(' - ')
-  
+
   @created_names << result
 
   return result
@@ -94,15 +94,15 @@ def longest_name
   return sorted_names[-1]
 end
 
-def make_material(material_name, data, model)  
+def make_material(material_name, data, model)
 
   material = nil
   material_type = data["material_type"]
-  
+
   if material_type == "StandardOpaqueMaterial"
     material = OpenStudio::Model::StandardOpaqueMaterial.new(model)
     material.setName(material_name)
-    
+
     material.setRoughness(data["roughness"].to_s)
     material.setThickness(OpenStudio::convert(data["thickness"].to_f, "in", "m").get)
     material.setConductivity(OpenStudio::convert(data["conductivity"].to_f, "Btu*in/hr*ft^2*R", "W/m*K").get)
@@ -111,22 +111,22 @@ def make_material(material_name, data, model)
     material.setThermalAbsorptance(data["thermal_absorptance"].to_f)
     material.setSolarAbsorptance(data["solar_absorptance"].to_f)
     material.setVisibleAbsorptance(data["visible_absorptance"].to_f)
-    
-  elsif material_type == "MasslessOpaqueMaterial" 
+
+  elsif material_type == "MasslessOpaqueMaterial"
     material = OpenStudio::Model::MasslessOpaqueMaterial.new(model)
     material.setName(material_name)
-    
+
     material.setConductivity(OpenStudio::convert(data["conductivity"].to_f, "Btu*in/hr*ft^2*R", "W/m*K").get)
     material.setDensity(OpenStudio::convert(data["density"].to_f, "lb/ft^3", "kg/m^3").get)
     material.setSpecificHeat(OpenStudio::convert(data["specific_heat"].to_f, "Btu/lb*R", "J/kg*K").get)
     material.setThermalAbsorptance(data["thermal_absorptance"].to_f)
     material.setSolarAbsorptance(data["solar_absorptance"].to_f)
     material.setVisibleAbsorptance(data["visible_absorptance"].to_f)
-    
+
   elsif material_type == "AirGap"
     material = OpenStudio::Model::AirGap.new(model)
     material.setName(material_name)
-    
+
     material.setThermalResistance(OpenStudio::convert(data["resistance"].to_f, "hr*ft^2*R/Btu*in", "m*K/W").get)
 
   elsif material_type == "Gas"
@@ -135,19 +135,19 @@ def make_material(material_name, data, model)
 
     material.setThickness(OpenStudio::convert(data["thickness"].to_f, "in", "m").get)
     material.setGasType(data["gas_type"].to_s)
-    
-  elsif material_type == "SimpleGlazing" 
+
+  elsif material_type == "SimpleGlazing"
     material = OpenStudio::Model::SimpleGlazing.new(model)
     material.setName(material_name)
-    
+
     material.setUFactor(OpenStudio::convert(data["u_factor"].to_f, "Btu/hr*ft^2*R", "W/m^2*K").get)
     material.setSolarHeatGainCoefficient(data["solar_heat_gain_coefficient"].to_f)
     material.setVisibleTransmittance(data["visible_transmittance"].to_f)
 
-  elsif material_type == "StandardGlazing" 
+  elsif material_type == "StandardGlazing"
     material = OpenStudio::Model::StandardGlazing.new(model)
     material.setName(material_name)
-    
+
     material.setOpticalDataType(data["optical_data_type"].to_s)
     material.setThickness(OpenStudio::convert(data["thickness"].to_f, "in", "m").get)
     material.setSolarTransmittanceatNormalIncidence(data["solar_transmittance_at_normal_incidence"].to_f)
@@ -158,83 +158,83 @@ def make_material(material_name, data, model)
     material.setBackSideVisibleReflectanceatNormalIncidence(data["back_side_visible_reflectance_at_normal_incidence"].to_f)
     material.setInfraredTransmittanceatNormalIncidence(data["infrared_transmittance_at_normal_incidence"].to_f)
     material.setFrontSideInfraredHemisphericalEmissivity(data["front_side_infrared_hemispherical_emissivity"].to_f)
-    material.setBackSideInfraredHemisphericalEmissivity(data["back_side_infrared_hemispherical_emissivity"].to_f) 
+    material.setBackSideInfraredHemisphericalEmissivity(data["back_side_infrared_hemispherical_emissivity"].to_f)
     material.setConductivity(OpenStudio::convert(data["conductivity"].to_f, "Btu*in/hr*ft^2*R", "W/m*K").get)
-    material.setDirtCorrectionFactorforSolarandVisibleTransmittance(data["dirt_correction_factor_for_solar_and_visible_transmittance"].to_f) 
+    material.setDirtCorrectionFactorforSolarandVisibleTransmittance(data["dirt_correction_factor_for_solar_and_visible_transmittance"].to_f)
     if /true/i.match(data["solar_diffusing"].to_s)
-      material.setSolarDiffusing(true) 
+      material.setSolarDiffusing(true)
     else
       material.setSolarDiffusing(false)
     end
-    
+
   else
     puts "Unknown material type #{material_type}"
     exit
   end
-  
+
   return material
 end
 
-def get_material(material_name, model)  
+def get_material(material_name, model)
   # first check model
   model.getMaterials.each do |material|
     if material.name.to_s == material_name
       return material
     end
   end
-  
+
   data = @materials[material_name]
   if data
-    material = make_material(material_name, data, model) 
-    return material 
+    material = make_material(material_name, data, model)
+    return material
   end
-  
+
   puts "Cannot find material named '#{material_name}'"
 end
 
-def make_construction(construction_name, data, model)  
+def make_construction(construction_name, data, model)
   construction = OpenStudio::Model::Construction.new(model)
   construction.setName(construction_name)
-  
+
   standards_info = construction.standardsInformation
-  
+
   intended_surface_type = data["intended_surface_type"]
   if not intended_surface_type
     intended_surface_type = ""
   end
   standards_info.setIntendedSurfaceType(intended_surface_type)
-  
+
   standards_construction_type = data["standards_construction_type"]
   if not standards_construction_type
     standards_construction_type = ""
   end
   standards_info.setStandardsConstructionType(standards_construction_type)
-  
+
   #TODO: could put color in the spreadsheet
-  
+
   layers = OpenStudio::Model::MaterialVector.new
   data["materials"].each do |material_name|
     layers << get_material(material_name, model)
   end
   construction.setLayers(layers)
-  
+
   return construction
 end
 
-def get_construction(construction_name, model)  
+def get_construction(construction_name, model)
   # first check model
   model.getConstructions.each do |construction|
     if construction.name.to_s == construction_name
       return construction
     end
   end
-  
+
   data = @constructions[construction_name]
   if data
-    construction = make_construction(construction_name, data, model) 
-    return construction 
+    construction = make_construction(construction_name, data, model)
+    return construction
   end
-  
+
   puts "Cannot find construction named '#{construction_name}'"
 end
 
@@ -242,16 +242,16 @@ def generate_all_constructions(model = nil)
   if model.nil?
     model = OpenStudio::Model::Model.new
   end
-  
+
   for construction_name in @constructions.keys.sort
-    get_construction(construction_name, model)  
+    get_construction(construction_name, model)
   end
 end
 
 # pass in a specific climate zone here and get the climate zone set to use for generate_construction_set
 def find_climate_zone_set(template, clim, building_type, spc_type)
   possible_climate_zone_sets = []
-  
+
   if tmp1 = @construction_sets[template]
     tmp1.each_pair do |climate_zone_set, tmp2|
       if tmp3 = tmp2[building_type]
@@ -261,7 +261,7 @@ def find_climate_zone_set(template, clim, building_type, spc_type)
       end
     end
   end
-  
+
   result = nil
   possible_climate_zone_sets.each do |possible_climate_zone_set|
     if climate_zone_set = @climate_zone_sets[possible_climate_zone_set]
@@ -296,57 +296,57 @@ def generate_construction_set(template, clim, building_type, spc_type, model = n
       end
     end
   end
-  
+
   if not data
     puts "Cannot find construction set for #{template} #{clim} #{building_type} #{spc_type}"
     exit
   end
-  
+
   name = make_name(template, clim, building_type, spc_type)
 
   #create a new space type and name it
   construction_set = OpenStudio::Model::DefaultConstructionSet.new(model)
   construction_set.setName(name)
-  
+
   # exterior surfaces constructions
   exterior_surfaces = OpenStudio::Model::DefaultSurfaceConstructions.new(model)
   construction_set.setDefaultExteriorSurfaceConstructions(exterior_surfaces)
   if construction_name = data["exterior_floor"]
     exterior_surfaces.setFloorConstruction(get_construction(construction_name, model))
-  end      
+  end
   if construction_name = data["exterior_wall"]
     exterior_surfaces.setWallConstruction(get_construction(construction_name, model))
   end
   if construction_name = data["exterior_roof"]
     exterior_surfaces.setRoofCeilingConstruction(get_construction(construction_name, model))
-  end    
-  
+  end
+
   # interior surfaces constructions
   interior_surfaces = OpenStudio::Model::DefaultSurfaceConstructions.new(model)
   construction_set.setDefaultInteriorSurfaceConstructions(interior_surfaces)
   if construction_name = data["interior_floor"]
     interior_surfaces.setFloorConstruction(get_construction(construction_name, model))
-  end      
+  end
   if construction_name = data["interior_wall"]
     interior_surfaces.setWallConstruction(get_construction(construction_name, model))
   end
   if construction_name = data["interior_ceiling"]
     interior_surfaces.setRoofCeilingConstruction(get_construction(construction_name, model))
-  end  
-  
+  end
+
   # ground contact surfaces constructions
   ground_surfaces = OpenStudio::Model::DefaultSurfaceConstructions.new(model)
   construction_set.setDefaultGroundContactSurfaceConstructions(ground_surfaces)
   if construction_name = data["ground_contact_floor"]
     ground_surfaces.setFloorConstruction(get_construction(construction_name, model))
-  end      
+  end
   if construction_name = data["ground_contact_wall"]
     ground_surfaces.setWallConstruction(get_construction(construction_name, model))
   end
   if construction_name = data["ground_contact_ceiling"]
     ground_surfaces.setRoofCeilingConstruction(get_construction(construction_name, model))
   end
-  
+
   # exterior sub surfaces constructions
   exterior_subsurfaces = OpenStudio::Model::DefaultSubSurfaceConstructions.new(model)
   construction_set.setDefaultExteriorSubSurfaceConstructions(exterior_subsurfaces)
@@ -358,23 +358,23 @@ def generate_construction_set(template, clim, building_type, spc_type, model = n
   end
   if construction_name = data["exterior_door"]
     exterior_subsurfaces.setDoorConstruction(get_construction(construction_name, model))
-  end  
+  end
   if construction_name = data["exterior_glass_door"]
     exterior_subsurfaces.setGlassDoorConstruction(get_construction(construction_name, model))
-  end  
+  end
   if construction_name = data["exterior_overhead_door"]
     exterior_subsurfaces.setOverheadDoorConstruction(get_construction(construction_name, model))
-  end  
+  end
   if construction_name = data["exterior_skylight"]
     exterior_subsurfaces.setOverheadDoorConstruction(get_construction(construction_name, model))
-  end  
+  end
   if construction_name = data["tubular_daylight_dome"]
     exterior_subsurfaces.setTubularDaylightDomeConstruction(get_construction(construction_name, model))
-  end  
+  end
   if construction_name = data["tubular_daylight_diffuser"]
     exterior_subsurfaces.setTubularDaylightDiffuserConstruction(get_construction(construction_name, model))
-  end  
-  
+  end
+
   # interior sub surfaces constructions
   interior_subsurfaces = OpenStudio::Model::DefaultSubSurfaceConstructions.new(model)
   construction_set.setDefaultInteriorSubSurfaceConstructions(interior_subsurfaces)
@@ -386,8 +386,8 @@ def generate_construction_set(template, clim, building_type, spc_type, model = n
   end
   if construction_name = data["interior_door"]
     interior_subsurfaces.setDoorConstruction(get_construction(construction_name, model))
-  end  
-  
+  end
+
   # other constructions
   if construction_name = data["interior_partition"]
     construction_set.setInteriorPartitionConstruction(get_construction(construction_name, model))
@@ -401,13 +401,13 @@ def generate_construction_set(template, clim, building_type, spc_type, model = n
   if construction_name = data["site_shading"]
     construction_set.setSiteShadingConstruction(get_construction(construction_name, model))
   end
- 
+
   #componentize the construction set
   construction_set_component = construction_set.createComponent
 
   #return the construction set and the componentized construction set
   return [construction_set, construction_set_component]
-  
+
 end #end generate_construction_set
 
 end #end class ConstructionSetGenerator

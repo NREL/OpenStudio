@@ -80,9 +80,9 @@ class MODEL_API SetpointManagerSingleZoneOneStageCooling : public SetpointManage
 
   bool setControlVariable(const std::string& controlVariable);
 
-  void setCoolingStageOnSupplyAirSetpointTemperature(double coolingStageOnSupplyAirSetpointTemperature);
+  bool setCoolingStageOnSupplyAirSetpointTemperature(double coolingStageOnSupplyAirSetpointTemperature);
 
-  void setCoolingStageOffSupplyAirSetpointTemperature(double coolingStageOffSupplyAirSetpointTemperature);
+  bool setCoolingStageOffSupplyAirSetpointTemperature(double coolingStageOffSupplyAirSetpointTemperature);
 
   bool setControlZone(const ThermalZone& thermalZone);
 
@@ -118,4 +118,3 @@ typedef std::vector<SetpointManagerSingleZoneOneStageCooling> SetpointManagerSin
 } // openstudio
 
 #endif // MODEL_SETPOINTMANAGERSINGLEZONEONESTAGECOOLING_HPP
-

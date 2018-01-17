@@ -74,7 +74,7 @@ TEST_F(BCLFixture, BCLMeasure)
   EXPECT_FALSE(measure->directory() == measure2->directory());
   EXPECT_TRUE(dir2 == measure2->directory());
   EXPECT_EQ(6u, measure2->files().size());
-  
+
   measure2->setName("New Measure"); // this would normally be initiated by a change from the measure
   EXPECT_FALSE(measure2->checkForUpdatesFiles());
   EXPECT_FALSE(measure2->checkForUpdatesXML()); // name change does not trigger xml update
@@ -107,7 +107,7 @@ TEST_F(BCLFixture, BCLMeasure)
   std::string className = BCLMeasure::makeClassName("Another Measure");
   EXPECT_EQ("AnotherMeasure", className);
 
-  EXPECT_NO_THROW( measure2 = BCLMeasure("Another Measure", className, dir2, "Envelope.Fenestration", 
+  EXPECT_NO_THROW( measure2 = BCLMeasure("Another Measure", className, dir2, "Envelope.Fenestration",
     MeasureType::ReportingMeasure, "Description", "Modeler Description") );
   ASSERT_TRUE(measure2);
   ASSERT_TRUE(exists(dir2));
@@ -135,7 +135,7 @@ TEST_F(BCLFixture, BCLMeasure_CTor)
   EXPECT_EQ("ATestMeasure", className);
 
   try{
-    BCLMeasure measure("Test Measure", className, dir, "Envelope.Fenestration", 
+    BCLMeasure measure("Test Measure", className, dir, "Envelope.Fenestration",
                        MeasureType::ModelMeasure, "Description", "Modeler Description");
   }catch(std::exception&){
     ASSERT_TRUE(false);

@@ -30,15 +30,15 @@
 #define MODEL_EXTERIORLIGHTSDEFINITION_IMPL_HPP
 
 #include "ModelAPI.hpp"
-#include "ResourceObject_Impl.hpp"
+#include "ExteriorLoadDefinition_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
 namespace detail {
 
-  /** ExteriorLightsDefinition_Impl is a ResourceObject_Impl that is the implementation class for ExteriorLightsDefinition.*/
-  class MODEL_API ExteriorLightsDefinition_Impl : public ResourceObject_Impl {
+  /** ExteriorLightsDefinition_Impl is a ExteriorLoadDefinition_Impl that is the implementation class for ExteriorLightsDefinition.*/
+  class MODEL_API ExteriorLightsDefinition_Impl : public ExteriorLoadDefinition_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{

@@ -39,13 +39,13 @@ namespace detail {
 
   /** ScheduleVariableInterval_Impl is a ScheduleInterval_Impl that is the implementation class for ScheduleVariableInterval.*/
   class MODEL_API ScheduleVariableInterval_Impl : public ScheduleInterval_Impl {
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
    public:
 
     /** @name Constructors and Destructors */
@@ -101,7 +101,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod = true);
+    bool setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod = true);
 
     void resetInterpolatetoTimestep(bool driverMethod = true);
 
@@ -109,7 +109,7 @@ namespace detail {
 
     bool setStartDay(int startDay, bool driverMethod = true);
 
-    void setOutOfRangeValue(double outOfRangeValue, bool driverMethod = true);
+    bool setOutOfRangeValue(double outOfRangeValue, bool driverMethod = true);
 
     void resetOutOfRangeValue(bool driverMethod = true);
 
@@ -127,5 +127,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_SCHEDULEVARIABLEINTERVAL_IMPL_HPP
-
+#endif // MODEL_SCHEDULEVARIABLEINTERVAL_IMPL_HPP

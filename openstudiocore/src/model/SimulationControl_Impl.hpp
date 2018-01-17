@@ -54,42 +54,42 @@ class ZoneCapacitanceMultiplierResearchSpecial;
 namespace detail {
 
   class MODEL_API SimulationControl_Impl : public ParentObject_Impl {
-    
 
-    
-    
 
-    
-    
 
-    
-    
 
-    
-    
 
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
 
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
    public:
 
@@ -183,23 +183,23 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setDoZoneSizingCalculation(bool doZoneSizingCalculation);
+    bool setDoZoneSizingCalculation(bool doZoneSizingCalculation);
 
     void resetDoZoneSizingCalculation();
 
-    void setDoSystemSizingCalculation(bool doSystemSizingCalculation);
+    bool setDoSystemSizingCalculation(bool doSystemSizingCalculation);
 
     void resetDoSystemSizingCalculation();
 
-    void setDoPlantSizingCalculation(bool doPlantSizingCalculation);
+    bool setDoPlantSizingCalculation(bool doPlantSizingCalculation);
 
     void resetDoPlantSizingCalculation();
 
-    void setRunSimulationforSizingPeriods(bool runSimulationforSizingPeriods);
+    bool setRunSimulationforSizingPeriods(bool runSimulationforSizingPeriods);
 
     void resetRunSimulationforSizingPeriods();
 
-    void setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods);
+    bool setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods);
 
     void resetRunSimulationforWeatherFileRunPeriods();
 
@@ -240,7 +240,7 @@ namespace detail {
     std::vector<RunPeriod> runPeriods() const;
 
     boost::optional<ShadowCalculation> shadowCalculation() const;
-  
+
     boost::optional<SizingParameters> sizingParameters() const;
 
     boost::optional<Timestep> timestep() const;
@@ -256,7 +256,7 @@ namespace detail {
     /** Returns the SqlFile environment period strings that correspond to sizing periods. */
     std::vector<std::string> sizingEnvironmentPeriods() const;
 
-    /** Returns the SqlFile environment period strings that correspond to single-year annual 
+    /** Returns the SqlFile environment period strings that correspond to single-year annual
      *  simulations. */
     std::vector<std::string> annualSimulationEnvironmentPeriods() const;
 
@@ -285,4 +285,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SIMULATIONCONTROL_IMPL_HPP
-

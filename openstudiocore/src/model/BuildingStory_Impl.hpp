@@ -45,11 +45,11 @@ namespace detail {
 
   /** BuildingStory_Impl is a ModelObject_Impl that is the implementation class for BuildingStory.*/
   class MODEL_API BuildingStory_Impl : public ModelObject_Impl {
-    
-    
-    
-    
-    
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -85,7 +85,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setNominalZCoordinate(double nominalZCoordinate);
+    bool setNominalZCoordinate(double nominalZCoordinate);
     void resetNominalZCoordinate();
 
     bool setNominalFloortoFloorHeight(double nominalFloortoFloorHeight);
@@ -145,4 +145,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_BUILDINGSTORY_IMPL_HPP
-

@@ -29,31 +29,31 @@
 module OpenStudio
 
   class ModelEntitiesObserver < Sketchup::EntitiesObserver
-  
+
     def initialize(model_interface)
       @model_interface = model_interface
       @enabled = false
     end
-    
+
     def disable
       was_enabled = @enabled
       @enabled = false
       return was_enabled
     end
-    
+
     def enable
       @enabled = true
     end
-    
+
     def destroy
       @model_interface = nil
       @enabled = false
-    end    
-    
+    end
+
     def onElementAdded(entities, entity)
-    
+
       Plugin.log(OpenStudio::Trace, "#{current_method_name}, @enabled = #{@enabled}")
-      
+
       return if not @enabled
 
       if (!entity.deleted? and entity.class == Sketchup::Group)
@@ -69,12 +69,12 @@ module OpenStudio
             # ends up getting added twice.
             proc = Proc.new {
               #puts "cut-paste/delete-undo surface group"
-              
+
               # DLM: what if entity is deleted now?
 
               entity.drawing_interface.on_undelete_entity(entity)
             }
-            
+
             Plugin.add_event( proc )
 
           else
@@ -82,7 +82,7 @@ module OpenStudio
 
             proc = Proc.new {
               #puts "copy-paste surface group"
-              
+
               # DLM: what if entity is deleted now?
 
               # At this point SketchUp has created a new Group object for 'entity'.
@@ -93,7 +93,7 @@ module OpenStudio
 
               # Solution is to "touch" the new Group to force SketchUp to create a new
               # ComponentDefinition and a new Entities object.
-              cpoint = entity.entities.add_cpoint(Geom::Point3d.new(0,0,0)) 
+              cpoint = entity.entities.add_cpoint(Geom::Point3d.new(0,0,0))
               cpoint.erase!
 
               if drawing_interface = entity.drawing_interface
@@ -104,12 +104,12 @@ module OpenStudio
                 error_message = ""
 
                 if(drawing_interface.class == Space)
-                  Plugin.log(OpenStudio::Info, "New Space") 
+                  Plugin.log(OpenStudio::Info, "New Space")
 
                   has_children = true
 
                   # see if we already have this object
-                  Plugin.model_manager.model_interface.spaces.each do |space| 
+                  Plugin.model_manager.model_interface.spaces.each do |space|
                     if space.entity == entity
                       already_exists = true
                       break
@@ -117,12 +117,12 @@ module OpenStudio
                   end
 
                 elsif(drawing_interface.class == ShadingSurfaceGroup)
-                  Plugin.log(OpenStudio::Info, "New ShadingSurfaceGroup") 
+                  Plugin.log(OpenStudio::Info, "New ShadingSurfaceGroup")
 
                   has_children = true
 
                   # see if we already have this object
-                  Plugin.model_manager.model_interface.shading_surface_groups.each do |shading_surface_group| 
+                  Plugin.model_manager.model_interface.shading_surface_groups.each do |shading_surface_group|
                     if shading_surface_group.entity == entity
                       already_exists = true
                       break
@@ -130,36 +130,36 @@ module OpenStudio
                   end
 
                 elsif(drawing_interface.class == InteriorPartitionSurfaceGroup)
-                  Plugin.log(OpenStudio::Info, "New InteriorPartitionSurfaceGroup") 
+                  Plugin.log(OpenStudio::Info, "New InteriorPartitionSurfaceGroup")
 
                   has_children = true
 
                   need_to_remove = true
                   error_message = "Can only add InteriorPartitionSurfaceGroup at Space level"
                 else
-                  Plugin.log(OpenStudio::Info, "Unknown object added") 
+                  Plugin.log(OpenStudio::Info, "Unknown object added")
 
                   need_to_remove = true
                   error_message = "Unknown object of type #{drawing_interface.class} added"
                 end
 
                 if need_to_remove
-                  Plugin.log(OpenStudio::Info, "Removing object of type #{drawing_interface.class}") 
+                  Plugin.log(OpenStudio::Info, "Removing object of type #{drawing_interface.class}")
                   DrawingUtils.clean_entity(entity)
                   Sketchup.active_model.entities.erase_entities(entity)
                   Sketchup.send_action("selectSelectionTool:")
                   UI.messagebox(error_message)
                 elsif not already_exists
-                  Plugin.log(OpenStudio::Info, "New object of type #{drawing_interface.class} from entity copy") 
+                  Plugin.log(OpenStudio::Info, "New object of type #{drawing_interface.class} from entity copy")
                   new_interface = drawing_interface.class.new_from_entity_copy(entity)
                   new_interface.update_entity if has_children
-                end 
+                end
 
               end
             }
-            
+
             Plugin.add_event( proc )
-            
+
           end
 
         else
@@ -181,9 +181,9 @@ module OpenStudio
             # will clean the original drawing interface, not this copy.
             DrawingUtils.clean_entity(entity)
           }
-          
+
           Plugin.add_event( proc )
-          
+
         end
 
       end

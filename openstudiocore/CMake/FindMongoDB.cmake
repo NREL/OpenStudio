@@ -20,31 +20,31 @@ else(MongoDB_INCLUDE_DIR AND MongoDB_LIBRARIES)
     $ENV{ProgramFiles}/Mongo/*/include
     $ENV{SystemDrive}/Mongo/*/include
   )
-  
+
   if(WIN32)
-    
+
     find_library(MongoDB_LIBRARIES_RELEASE NAMES mongoclient
       PATHS
-      ${CMAKE_LIBRARY_PATH}/mongo 
+      ${CMAKE_LIBRARY_PATH}/mongo
       $ENV{ProgramFiles}/Mongo/*/lib
       $ENV{SystemDrive}/Mongo/*/lib
     )
-    
+
     if(MongoDB_LIBRARIES_RELEASE)
       set(MongoDB_LIBRARIES "${MongoDB_LIBRARIES}optimized;${MongoDB_LIBRARIES_RELEASE};")
     endif()
-  
+
     find_library(MongoDB_LIBRARIES_DEBUG NAMES mongoclientd
       PATHS
-      ${CMAKE_LIBRARY_PATH}/mongo 
+      ${CMAKE_LIBRARY_PATH}/mongo
       $ENV{ProgramFiles}/Mongo/*/lib
       $ENV{SystemDrive}/Mongo/*/lib
     )
-    
+
     if(MongoDB_LIBRARIES_DEBUG)
       set(MongoDB_LIBRARIES "${MongoDB_LIBRARIES}debug;${MongoDB_LIBRARIES_DEBUG};")
-    endif()     
-    
+    endif()
+
     set(MongoDB_LIBRARIES "${MongoDB_LIBRARIES}" CACHE STRING "Mongo libraries")
 
   else()

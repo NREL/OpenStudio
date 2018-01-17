@@ -143,13 +143,13 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setNominalSpeedLevel(int nominalSpeedLevel);
+    bool setNominalSpeedLevel(int nominalSpeedLevel);
 
-    void setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel);
+    bool setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel);
 
     void autosizeGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
 
-    void setRatedAirFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel);
+    bool setRatedAirFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel);
 
     void autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
 
@@ -159,7 +159,7 @@ namespace detail {
 
     bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
-    // void setCondenserAirInletNodeName(boost::optional<std::string> condenserAirInletNodeName);
+    // bool setCondenserAirInletNodeName(boost::optional<std::string> condenserAirInletNodeName);
 
     // void resetCondenserAirInletNodeName();
 
@@ -226,4 +226,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILCOOLINGDXVARIABLESPEED_IMPL_HPP
-

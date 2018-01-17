@@ -47,8 +47,8 @@ namespace detail {
     ClimateZones_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    ClimateZones_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                      Model_Impl* model, 
+    ClimateZones_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                      Model_Impl* model,
                       bool keepHandle);
 
     // clone copy constructor
@@ -78,7 +78,7 @@ namespace detail {
 
     // return the parent object in the hierarchy
     virtual boost::optional<ParentObject> parent() const override;
-    
+
     // Get all output variable names that could be associated with this object.
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
@@ -98,7 +98,7 @@ namespace detail {
                                const std::string& value);
 
     ClimateZone setClimateZone(const std::string& institution,
-                               unsigned year, 
+                               unsigned year,
                                const std::string& value);
 
     ClimateZone appendClimateZone(const std::string& institution);
@@ -107,12 +107,12 @@ namespace detail {
                                   const std::string& value);
 
     ClimateZone appendClimateZone(const std::string& institution,
-                                  unsigned year, 
+                                  unsigned year,
                                   const std::string& value);
 
-    ClimateZone appendClimateZone(const std::string& institution, 
-                                  const std::string documentName, 
-                                  unsigned year, 
+    ClimateZone appendClimateZone(const std::string& institution,
+                                  const std::string documentName,
+                                  unsigned year,
                                   const std::string& value);
 
     // set the parent, child may have to call methods on the parent

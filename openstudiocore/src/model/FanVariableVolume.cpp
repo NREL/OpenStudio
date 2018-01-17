@@ -313,9 +313,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanVariableVolume_Impl::setPressureRise(double pressureRise) {
+  bool FanVariableVolume_Impl::setPressureRise(double pressureRise) {
     bool result = setDouble(OS_Fan_VariableVolumeFields::PressureRise, pressureRise);
     OS_ASSERT(result);
+    return result;
   }
 
   bool FanVariableVolume_Impl::setPressureRise(const Quantity& pressureRise) {
@@ -458,7 +459,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanVariableVolume_Impl::setFanPowerCoefficient1(boost::optional<double> fanPowerCoefficient1) {
+  bool FanVariableVolume_Impl::setFanPowerCoefficient1(boost::optional<double> fanPowerCoefficient1) {
     bool result(false);
     if (fanPowerCoefficient1) {
       result = setDouble(OS_Fan_VariableVolumeFields::FanPowerCoefficient1, fanPowerCoefficient1.get());
@@ -468,6 +469,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   bool FanVariableVolume_Impl::setFanPowerCoefficient1(const OSOptionalQuantity& fanPowerCoefficient1) {
@@ -492,7 +494,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanVariableVolume_Impl::setFanPowerCoefficient2(boost::optional<double> fanPowerCoefficient2) {
+  bool FanVariableVolume_Impl::setFanPowerCoefficient2(boost::optional<double> fanPowerCoefficient2) {
     bool result(false);
     if (fanPowerCoefficient2) {
       result = setDouble(OS_Fan_VariableVolumeFields::FanPowerCoefficient2, fanPowerCoefficient2.get());
@@ -502,6 +504,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   bool FanVariableVolume_Impl::setFanPowerCoefficient2(const OSOptionalQuantity& fanPowerCoefficient2) {
@@ -526,7 +529,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanVariableVolume_Impl::setFanPowerCoefficient3(boost::optional<double> fanPowerCoefficient3) {
+  bool FanVariableVolume_Impl::setFanPowerCoefficient3(boost::optional<double> fanPowerCoefficient3) {
     bool result(false);
     if (fanPowerCoefficient3) {
       result = setDouble(OS_Fan_VariableVolumeFields::FanPowerCoefficient3, fanPowerCoefficient3.get());
@@ -536,6 +539,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   bool FanVariableVolume_Impl::setFanPowerCoefficient3(const OSOptionalQuantity& fanPowerCoefficient3) {
@@ -560,7 +564,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanVariableVolume_Impl::setFanPowerCoefficient4(boost::optional<double> fanPowerCoefficient4) {
+  bool FanVariableVolume_Impl::setFanPowerCoefficient4(boost::optional<double> fanPowerCoefficient4) {
     bool result(false);
     if (fanPowerCoefficient4) {
       result = setDouble(OS_Fan_VariableVolumeFields::FanPowerCoefficient4, fanPowerCoefficient4.get());
@@ -570,6 +574,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   bool FanVariableVolume_Impl::setFanPowerCoefficient4(const OSOptionalQuantity& fanPowerCoefficient4) {
@@ -594,7 +599,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanVariableVolume_Impl::setFanPowerCoefficient5(boost::optional<double> fanPowerCoefficient5) {
+  bool FanVariableVolume_Impl::setFanPowerCoefficient5(boost::optional<double> fanPowerCoefficient5) {
     bool result(false);
     if (fanPowerCoefficient5) {
       result = setDouble(OS_Fan_VariableVolumeFields::FanPowerCoefficient5, fanPowerCoefficient5.get());
@@ -604,6 +609,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   bool FanVariableVolume_Impl::setFanPowerCoefficient5(const OSOptionalQuantity& fanPowerCoefficient5) {
@@ -628,9 +634,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanVariableVolume_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool FanVariableVolume_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Fan_VariableVolumeFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void FanVariableVolume_Impl::resetEndUseSubcategory() {
@@ -1098,8 +1105,8 @@ void FanVariableVolume::resetFanEfficiency() {
   getImpl<detail::FanVariableVolume_Impl>()->resetFanEfficiency();
 }
 
-void FanVariableVolume::setPressureRise(double pressureRise) {
-  getImpl<detail::FanVariableVolume_Impl>()->setPressureRise(pressureRise);
+bool FanVariableVolume::setPressureRise(double pressureRise) {
+  return getImpl<detail::FanVariableVolume_Impl>()->setPressureRise(pressureRise);
 }
 
 bool FanVariableVolume::setPressureRise(const Quantity& pressureRise) {
@@ -1178,8 +1185,8 @@ void FanVariableVolume::resetMotorInAirstreamFraction() {
   getImpl<detail::FanVariableVolume_Impl>()->resetMotorInAirstreamFraction();
 }
 
-void FanVariableVolume::setFanPowerCoefficient1(double fanPowerCoefficient1) {
-  getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient1(fanPowerCoefficient1);
+bool FanVariableVolume::setFanPowerCoefficient1(double fanPowerCoefficient1) {
+  return getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient1(fanPowerCoefficient1);
 }
 
 bool FanVariableVolume::setFanPowerCoefficient1(const Quantity& fanPowerCoefficient1) {
@@ -1190,8 +1197,8 @@ void FanVariableVolume::resetFanPowerCoefficient1() {
   getImpl<detail::FanVariableVolume_Impl>()->resetFanPowerCoefficient1();
 }
 
-void FanVariableVolume::setFanPowerCoefficient2(double fanPowerCoefficient2) {
-  getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient2(fanPowerCoefficient2);
+bool FanVariableVolume::setFanPowerCoefficient2(double fanPowerCoefficient2) {
+  return getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient2(fanPowerCoefficient2);
 }
 
 bool FanVariableVolume::setFanPowerCoefficient2(const Quantity& fanPowerCoefficient2) {
@@ -1202,8 +1209,8 @@ void FanVariableVolume::resetFanPowerCoefficient2() {
   getImpl<detail::FanVariableVolume_Impl>()->resetFanPowerCoefficient2();
 }
 
-void FanVariableVolume::setFanPowerCoefficient3(double fanPowerCoefficient3) {
-  getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient3(fanPowerCoefficient3);
+bool FanVariableVolume::setFanPowerCoefficient3(double fanPowerCoefficient3) {
+  return getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient3(fanPowerCoefficient3);
 }
 
 bool FanVariableVolume::setFanPowerCoefficient3(const Quantity& fanPowerCoefficient3) {
@@ -1214,8 +1221,8 @@ void FanVariableVolume::resetFanPowerCoefficient3() {
   getImpl<detail::FanVariableVolume_Impl>()->resetFanPowerCoefficient3();
 }
 
-void FanVariableVolume::setFanPowerCoefficient4(double fanPowerCoefficient4) {
-  getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient4(fanPowerCoefficient4);
+bool FanVariableVolume::setFanPowerCoefficient4(double fanPowerCoefficient4) {
+  return getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient4(fanPowerCoefficient4);
 }
 
 bool FanVariableVolume::setFanPowerCoefficient4(const Quantity& fanPowerCoefficient4) {
@@ -1226,8 +1233,8 @@ void FanVariableVolume::resetFanPowerCoefficient4() {
   getImpl<detail::FanVariableVolume_Impl>()->resetFanPowerCoefficient4();
 }
 
-void FanVariableVolume::setFanPowerCoefficient5(double fanPowerCoefficient5) {
-  getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient5(fanPowerCoefficient5);
+bool FanVariableVolume::setFanPowerCoefficient5(double fanPowerCoefficient5) {
+  return getImpl<detail::FanVariableVolume_Impl>()->setFanPowerCoefficient5(fanPowerCoefficient5);
 }
 
 bool FanVariableVolume::setFanPowerCoefficient5(const Quantity& fanPowerCoefficient5) {
@@ -1238,8 +1245,8 @@ void FanVariableVolume::resetFanPowerCoefficient5() {
   getImpl<detail::FanVariableVolume_Impl>()->resetFanPowerCoefficient5();
 }
 
-void FanVariableVolume::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::FanVariableVolume_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool FanVariableVolume::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::FanVariableVolume_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void FanVariableVolume::resetEndUseSubcategory() {
@@ -1257,4 +1264,4 @@ FanVariableVolume::FanVariableVolume(std::shared_ptr<detail::FanVariableVolume_I
   }
 
 } // model
-} // openstudio
+} // openstudio

@@ -127,7 +127,7 @@ namespace detail {
 
     void resetCarbonDioxideGenerationRate();
 
-    void setEnableASHRAE55ComfortWarnings(bool enableASHRAE55ComfortWarnings);
+    bool setEnableASHRAE55ComfortWarnings(bool enableASHRAE55ComfortWarnings);
 
     void resetEnableASHRAE55ComfortWarnings();
 
@@ -174,4 +174,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_PEOPLEDEFINITION_IMPL_HPP
-

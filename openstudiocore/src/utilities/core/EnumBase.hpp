@@ -55,117 +55,117 @@ template<typename Enum>
       {
       }
 
-      /** Construct from t_value. Throws std::runtime_error if t_value does not match a name or 
+      /** Construct from t_value. Throws std::runtime_error if t_value does not match a name or
        *  a description (case insensitive). */
       EnumBase(const std::string &t_value)
         : m_value(lookupValue(t_value))
       {
       }
 
-      /** Returns the name associated with t_value, if it exists. Otherwise, throws 
+      /** Returns the name associated with t_value, if it exists. Otherwise, throws
        *  std::runtime_error. */
-      static std::string valueName(int t_value) 
-      { 
+      static std::string valueName(int t_value)
+      {
         const auto &m = getNames();
         auto itr = m.find(t_value);
-        if (itr == m.end()) 
-        { 
-          throw std::runtime_error("Invalid domain"); 
-        } 
+        if (itr == m.end())
+        {
+          throw std::runtime_error("Invalid domain");
+        }
         return itr->second;
-      } 
+      }
 
-      /** Returns the description associated with t_value, if it exists. Otherwise, throws 
+      /** Returns the description associated with t_value, if it exists. Otherwise, throws
        *  std::runtime_error. */
-      static std::string valueDescription(int t_value) 
+      static std::string valueDescription(int t_value)
       {
         const std::map<int, std::string> &m = getDescriptions();
         auto itr = m.find(t_value);
-        if (itr == m.end()) 
-        { 
-          return valueName(t_value); 
-        } 
+        if (itr == m.end())
+        {
+          return valueName(t_value);
+        }
         return itr->second;
-      } 
+      }
 
       /** Returns the set of all values in this enum's domain. */
-      static const std::set<int> &getValues() 
-      { 
-        static std::set<int> values(buildValues()); 
-        return values; 
-      } 
+      static const std::set<int> &getValues()
+      {
+        static std::set<int> values(buildValues());
+        return values;
+      }
 
       /** Returns this instance's current value (as an integer). */
-      int value() const 
-      {  
+      int value() const
+      {
         return m_value;
-      } 
+      }
 
       /** Returns the name associated with this instance's current value. */
-      std::string valueName() const 
-      { 
-        return valueName(m_value); 
+      std::string valueName() const
+      {
+        return valueName(m_value);
       }
 
       /** Returns the description associated with this instance's current value. */
-      std::string valueDescription() const 
-      { 
-        return valueDescription(m_value); 
-      } 
+      std::string valueDescription() const
+      {
+        return valueDescription(m_value);
+      }
 
-      /** Set this instance's value to t_value. Throws std::runtime_error if 
+      /** Set this instance's value to t_value. Throws std::runtime_error if
        *  t_value is not in the domain. */
       void setValue(int t_value)
       {
         m_value = lookupValue(t_value);
       }
 
-      bool operator==(const Enum& other) const { return (m_value==other.m_value);} 
-      bool operator!=(const Enum& other) const { return (m_value!=other.m_value);} 
-      bool operator>(const Enum& other) const { return (m_value>other.m_value);} 
-      bool operator>=(const Enum& other) const { return (m_value>=other.m_value);} 
-      bool operator<(const Enum& other) const { return (m_value<other.m_value);} 
-      bool operator<=(const Enum& other) const { return (m_value<=other.m_value);} 
+      bool operator==(const Enum& other) const { return (m_value==other.m_value);}
+      bool operator!=(const Enum& other) const { return (m_value!=other.m_value);}
+      bool operator>(const Enum& other) const { return (m_value>other.m_value);}
+      bool operator>=(const Enum& other) const { return (m_value>=other.m_value);}
+      bool operator<(const Enum& other) const { return (m_value<other.m_value);}
+      bool operator<=(const Enum& other) const { return (m_value<=other.m_value);}
 
-      static void initialize() 
-      { 
-        getValues(); 
-        getLookupMap(); 
+      static void initialize()
+      {
+        getValues();
+        getLookupMap();
         getNames();
         getDescriptions();
-      } 
+      }
 
       /** Returns the (integer) value associated with t_name, as determined by case-insensitive
        *  comparison to the enumerated names and descriptions. */
-      int lookupValue(std::string t_name) 
-      { 
-        boost::algorithm::to_upper(t_name); 
-        const auto &names = getLookupMap(); 
-        auto itr = names.find(t_name); 
-        if (itr != names.end()) 
-        { 
-          return itr->second; 
-        } 
-        throw std::runtime_error("Unknown Value"); 
-      } 
+      int lookupValue(std::string t_name)
+      {
+        boost::algorithm::to_upper(t_name);
+        const auto &names = getLookupMap();
+        auto itr = names.find(t_name);
+        if (itr != names.end())
+        {
+          return itr->second;
+        }
+        throw std::runtime_error("Unknown Value");
+      }
 
       /** Returns t_value if it is in the domain. Otherwise throws std::runtime_error. */
-      int lookupValue(int t_value) 
-      { 
-        const std::set<int> &values = getValues(); 
-        if (values.count(t_value) != 0) 
-        { 
-          return t_value; 
-        } else { 
-          throw std::runtime_error("Unknown value"); 
-        } 
-      } 
+      int lookupValue(int t_value)
+      {
+        const std::set<int> &values = getValues();
+        if (values.count(t_value) != 0)
+        {
+          return t_value;
+        } else {
+          throw std::runtime_error("Unknown value");
+        }
+      }
 
-      static const std::map<std::string, int> &getLookupMap() 
-      { 
-        static const std::map<std::string, int> m = buildLookupMap(); 
-        return m; 
-      } 
+      static const std::map<std::string, int> &getLookupMap()
+      {
+        static const std::map<std::string, int> m = buildLookupMap();
+        return m;
+      }
 
       static const std::map<int, std::string> &getNames()
       {
@@ -196,8 +196,8 @@ template<typename Enum>
         return m;
       }
 
-      static std::map<std::string, int> buildLookupMap() 
-      { 
+      static std::map<std::string, int> buildLookupMap()
+      {
 
         const auto &m = getNames();
         const auto &d = getDescriptions();
@@ -214,7 +214,7 @@ template<typename Enum>
         }
 
         return retval;
-      } 
+      }
 
       static std::set<int> buildValues()
       {

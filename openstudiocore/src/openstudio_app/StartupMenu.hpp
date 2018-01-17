@@ -59,7 +59,7 @@ class StartupMenu : public QMenuBar
 
   void loadFileClicked();
 
-  void saveAsFileClicked(); 
+  void saveAsFileClicked();
 
   void saveFileClicked();
 

@@ -98,13 +98,13 @@ QRectF QwtPlotSeriesItem::boundingRect() const
 
 void QwtPlotSeriesItem::updateScaleDiv(
     const QwtScaleDiv &xScaleDiv, const QwtScaleDiv &yScaleDiv )
-{   
+{
     const QRectF rect = QRectF(
         xScaleDiv.lowerBound(), yScaleDiv.lowerBound(),
         xScaleDiv.range(), yScaleDiv.range() );
-        
+
     setRectOfInterest( rect );
-}   
+}
 
 void QwtPlotSeriesItem::dataChanged()
 {

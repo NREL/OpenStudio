@@ -162,9 +162,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellElectricalStorage_Impl::setSimpleMaximumCapacity(double simpleMaximumCapacity) {
+  bool GeneratorFuelCellElectricalStorage_Impl::setSimpleMaximumCapacity(double simpleMaximumCapacity) {
     bool result = setDouble(OS_Generator_FuelCell_ElectricalStorageFields::SimpleMaximumCapacity, simpleMaximumCapacity);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellElectricalStorage_Impl::resetSimpleMaximumCapacity() {
@@ -172,9 +173,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellElectricalStorage_Impl::setSimpleMaximumPowerDraw(double simpleMaximumPowerDraw) {
+  bool GeneratorFuelCellElectricalStorage_Impl::setSimpleMaximumPowerDraw(double simpleMaximumPowerDraw) {
     bool result = setDouble(OS_Generator_FuelCell_ElectricalStorageFields::SimpleMaximumPowerDraw, simpleMaximumPowerDraw);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellElectricalStorage_Impl::resetSimpleMaximumPowerDraw() {
@@ -182,9 +184,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellElectricalStorage_Impl::setSimpleMaximumPowerStore(double simpleMaximumPowerStore) {
+  bool GeneratorFuelCellElectricalStorage_Impl::setSimpleMaximumPowerStore(double simpleMaximumPowerStore) {
     bool result = setDouble(OS_Generator_FuelCell_ElectricalStorageFields::SimpleMaximumPowerStore, simpleMaximumPowerStore);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellElectricalStorage_Impl::resetSimpleMaximumPowerStore() {
@@ -192,9 +195,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellElectricalStorage_Impl::setInitialChargeState(double initialChargeState) {
+  bool GeneratorFuelCellElectricalStorage_Impl::setInitialChargeState(double initialChargeState) {
     bool result = setDouble(OS_Generator_FuelCell_ElectricalStorageFields::InitialChargeState, initialChargeState);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellElectricalStorage_Impl::resetInitialChargeState() {
@@ -279,32 +283,32 @@ void GeneratorFuelCellElectricalStorage::resetNominalDischargingEnergeticEfficie
   getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->resetNominalDischargingEnergeticEfficiency();
 }
 
-void GeneratorFuelCellElectricalStorage::setSimpleMaximumCapacity(double simpleMaximumCapacity) {
-  getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->setSimpleMaximumCapacity(simpleMaximumCapacity);
+bool GeneratorFuelCellElectricalStorage::setSimpleMaximumCapacity(double simpleMaximumCapacity) {
+  return getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->setSimpleMaximumCapacity(simpleMaximumCapacity);
 }
 
 void GeneratorFuelCellElectricalStorage::resetSimpleMaximumCapacity() {
   getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->resetSimpleMaximumCapacity();
 }
 
-void GeneratorFuelCellElectricalStorage::setSimpleMaximumPowerDraw(double simpleMaximumPowerDraw) {
-  getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->setSimpleMaximumPowerDraw(simpleMaximumPowerDraw);
+bool GeneratorFuelCellElectricalStorage::setSimpleMaximumPowerDraw(double simpleMaximumPowerDraw) {
+  return getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->setSimpleMaximumPowerDraw(simpleMaximumPowerDraw);
 }
 
 void GeneratorFuelCellElectricalStorage::resetSimpleMaximumPowerDraw() {
   getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->resetSimpleMaximumPowerDraw();
 }
 
-void GeneratorFuelCellElectricalStorage::setSimpleMaximumPowerStore(double simpleMaximumPowerStore) {
-  getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->setSimpleMaximumPowerStore(simpleMaximumPowerStore);
+bool GeneratorFuelCellElectricalStorage::setSimpleMaximumPowerStore(double simpleMaximumPowerStore) {
+  return getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->setSimpleMaximumPowerStore(simpleMaximumPowerStore);
 }
 
 void GeneratorFuelCellElectricalStorage::resetSimpleMaximumPowerStore() {
   getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->resetSimpleMaximumPowerStore();
 }
 
-void GeneratorFuelCellElectricalStorage::setInitialChargeState(double initialChargeState) {
-  getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->setInitialChargeState(initialChargeState);
+bool GeneratorFuelCellElectricalStorage::setInitialChargeState(double initialChargeState) {
+  return getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->setInitialChargeState(initialChargeState);
 }
 
 void GeneratorFuelCellElectricalStorage::resetInitialChargeState() {
@@ -319,4 +323,3 @@ GeneratorFuelCellElectricalStorage::GeneratorFuelCellElectricalStorage(std::shar
 
 } // model
 } // openstudio
-

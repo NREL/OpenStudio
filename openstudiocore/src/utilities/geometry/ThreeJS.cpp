@@ -38,7 +38,7 @@
 #include <string>
 
 namespace openstudio{
-  
+
   unsigned toThreeColor(unsigned r, unsigned g, unsigned b)
   {
     return 65536 * r + 256 * g + b;
@@ -101,7 +101,7 @@ namespace openstudio{
     : m_metadata(metadata), m_geometries(geometries), m_materials(materials), m_sceneObject(sceneObject)
   {
   }
-    
+
   ThreeScene::ThreeScene(const std::string& s)
     : m_metadata(std::vector<std::string>(), ThreeBoundingBox(0,0,0,0,0,0,0,0,0,0), std::vector<ThreeModelObjectMetadata>()), m_sceneObject(ThreeSceneObject("", std::vector<ThreeSceneChild>()))
   {
@@ -145,9 +145,9 @@ namespace openstudio{
 
     m_sceneObject = ThreeSceneObject(root.get("object", Json::objectValue));
   }
-    
+
   boost::optional<ThreeScene> ThreeScene::load(const std::string& json)
-  {  
+  {
     try {
       ThreeScene scene(json);
       return scene;
@@ -203,7 +203,7 @@ namespace openstudio{
   {
     return m_geometries;
   }
-  
+
   boost::optional<ThreeGeometry> ThreeScene::getGeometry(const std::string& geometryId) const
   {
     for (const auto& geometry : m_geometries){
@@ -228,7 +228,7 @@ namespace openstudio{
     }
     return boost::none;
   }
-  
+
   ThreeSceneObject ThreeScene::object() const
   {
     return m_sceneObject;
@@ -364,7 +364,7 @@ namespace openstudio{
   {
     return m_doubleSided;
   }
-  
+
   ThreeGeometry::ThreeGeometry(const std::string& uuid, const::std::string& type, const ThreeGeometryData& data)
     : m_uuid(uuid), m_type(type), m_data(data)
    {}
@@ -393,7 +393,7 @@ namespace openstudio{
    {
      return m_uuid;
    }
-    
+
    std::string ThreeGeometry::type() const
    {
      return m_type;
@@ -407,7 +407,7 @@ namespace openstudio{
   ThreeMaterial::ThreeMaterial(const std::string& uuid, const std::string& name, const::std::string& type,
       unsigned color, unsigned ambient, unsigned emissive, unsigned specular, unsigned shininess,
       double opacity, bool transparent, bool wireframe, unsigned side)
-      : m_uuid(uuid), m_name(name), m_type(type), m_color(color), m_ambient(ambient), m_emissive(emissive), 
+      : m_uuid(uuid), m_name(name), m_type(type), m_color(color), m_ambient(ambient), m_emissive(emissive),
       m_specular(specular), m_shininess(shininess), m_opacity(opacity), m_transparent(transparent),
       m_wireframe(wireframe), m_side(side)
   {}
@@ -935,7 +935,7 @@ namespace openstudio{
   {
     m_spaceTypeName = s;
   }
-    
+
   void ThreeUserData::setSpaceTypeHandle(const std::string& s)
   {
     m_spaceTypeHandle = s;
@@ -950,7 +950,7 @@ namespace openstudio{
   {
     m_buildingStoryName = s;
   }
-    
+
   void ThreeUserData::setBuildingStoryHandle(const std::string& s)
   {
     m_buildingStoryHandle = s;
@@ -965,7 +965,7 @@ namespace openstudio{
   {
     m_buildingUnitName = s;
   }
-    
+
   void ThreeUserData::setBuildingUnitHandle(const std::string& s)
   {
     m_buildingUnitHandle = s;
@@ -980,7 +980,7 @@ namespace openstudio{
   {
     m_constructionSetName = s;
   }
-    
+
   void ThreeUserData::setConstructionSetHandle(const std::string& s)
   {
     m_constructionSetHandle = s;
@@ -1106,7 +1106,7 @@ namespace openstudio{
   {
     return m_name;
   }
-    
+
   std::string ThreeSceneChild::type() const
   {
     return m_type;
@@ -1185,7 +1185,7 @@ namespace openstudio{
   {
     return m_uuid;
   }
-    
+
   std::string ThreeSceneObject::type() const
   {
     return m_type;
@@ -1285,7 +1285,7 @@ namespace openstudio{
 
   ThreeModelObjectMetadata::ThreeModelObjectMetadata()
   {}
-  
+
   ThreeModelObjectMetadata::ThreeModelObjectMetadata(const Json::Value& value)
   {
     assertKeyAndType(value, "iddObjectType", Json::stringValue);
@@ -1404,7 +1404,7 @@ namespace openstudio{
   {
     return m_buildingStoryNames;
   }
-  
+
   ThreeBoundingBox ThreeSceneMetadata::boundingBox() const
   {
     return m_boundingBox;

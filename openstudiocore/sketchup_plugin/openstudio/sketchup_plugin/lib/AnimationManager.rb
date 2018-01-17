@@ -48,7 +48,7 @@ module OpenStudio
       @match_time_step = false
       @repeat = false
       @day_only = false
-      
+
       @time_step = 600.0
       @multiplier = 6
       @delay = 0.1
@@ -62,7 +62,7 @@ module OpenStudio
         @play = true
 
         time = Sketchup.active_model.shadow_info.time
-        
+
         if (@end_marker > @start_marker)
           if (time < @start_marker or time > @end_marker)
             Sketchup.active_model.shadow_info.time = @start_marker
@@ -72,7 +72,7 @@ module OpenStudio
             Sketchup.active_model.shadow_info.time = @start_marker
           end
         end
-        
+
         Plugin.menu_manager.rwd_anim_cmd.tooltip = "Fast Reverse"
         Plugin.menu_manager.play_anim_cmd.tooltip = "Stop"
         Plugin.menu_manager.fwd_anim_cmd.tooltip = "Fast Forward"
@@ -87,17 +87,17 @@ module OpenStudio
       this_time = ::Time.now
       if ((this_time -  @previous_time) > @delay)
         @previous_time = this_time
-        
+
         if (@fast_reverse)
           reverse_time
         else
           forward_time
         end
       end
-      
+
       view.show_frame
     end
-    
+
 
     def forward_time
       if (@fast_forward)
@@ -105,7 +105,7 @@ module OpenStudio
       else
         time = Sketchup.active_model.shadow_info.time + @time_step
       end
-      
+
       if (@day_only)
         sunrise = Sketchup.active_model.shadow_info.sunrise
         sunset = Sketchup.active_model.shadow_info.sunset
@@ -117,7 +117,7 @@ module OpenStudio
           time = sunrise
         end
       end
-      
+
       if (@end_marker > @start_marker)
         if (time > @end_marker)
           if (@repeat)
@@ -149,7 +149,7 @@ module OpenStudio
       else
         time = Sketchup.active_model.shadow_info.time - @time_step
       end
-      
+
       if (@day_only)
         sunrise = Sketchup.active_model.shadow_info.sunrise
         sunset = Sketchup.active_model.shadow_info.sunset
@@ -161,7 +161,7 @@ module OpenStudio
           time = sunset
         end
       end
-      
+
       if (@end_marker > @start_marker)
         if (time < @start_marker)
           if (@repeat)
@@ -219,7 +219,7 @@ module OpenStudio
 
     def reverse_to_marker
       time = Sketchup.active_model.shadow_info.time
-   
+
       if (@end_marker > @start_marker)
         if (time > @end_marker)
           Sketchup.active_model.shadow_info.time = @end_marker
@@ -235,14 +235,14 @@ module OpenStudio
           Sketchup.active_model.shadow_info.time = @start_marker
         end
       end
-      
+
       update
     end
 
 
     def forward_to_marker
       time = Sketchup.active_model.shadow_info.time
-   
+
       if (@end_marker > @start_marker)
         if (time > @end_marker)
           Sketchup.active_model.shadow_info.time = @start_marker
@@ -258,19 +258,19 @@ module OpenStudio
           Sketchup.active_model.shadow_info.time = @end_marker
         end
       end
-      
+
       update
     end
 
 
     def update  # update_interface   update_dialogs
       Sketchup.set_status_text(Sketchup.active_model.shadow_info.time.strftime("%I:%M %p, %B %d"))
-      
+
       # Also sets stuff in the control panel dialog, if open.
     end
 
 
-    def stop_animation    
+    def stop_animation
 
       # Can be called by SketchUp
       Sketchup.active_model.active_view.animation = nil
@@ -280,7 +280,7 @@ module OpenStudio
       @fast_reverse = false
 
       Sketchup.set_status_text(Sketchup.active_model.shadow_info.time.strftime("%I:%M %p, %B %d"))
-      
+
       Plugin.menu_manager.rwd_anim_cmd.tooltip = "Reverse Frame"
       Plugin.menu_manager.play_anim_cmd.tooltip = "Play"
       Plugin.menu_manager.fwd_anim_cmd.tooltip = "Forward Frame"

@@ -28,7 +28,7 @@
 
 #ifndef SHAREDGUICOMPONENTS_OSVIEWSWITCHER_HPP
 #define SHAREDGUICOMPONENTS_OSVIEWSWITCHER_HPP
- 
+
 #include <QSharedPointer>
 #include <QWidget>
 

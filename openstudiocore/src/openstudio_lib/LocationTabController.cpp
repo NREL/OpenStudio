@@ -55,7 +55,7 @@ LocationTabController::LocationTabController(bool isIP,
   m_model(model),
   m_isIP(isIP)
 {
-  mainContentWidget()->addSubTab("Weather File && Design Days", WEATHER_FILE); 
+  mainContentWidget()->addSubTab("Weather File && Design Days", WEATHER_FILE);
   mainContentWidget()->addSubTab("Life Cycle Costs", LIFE_CYCLE_COSTS);
   mainContentWidget()->addSubTab("Utility Bills", UTILITY_BILLS);
 

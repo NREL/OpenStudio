@@ -483,7 +483,7 @@ void Component::createAbridgedLayout()
   }
   m_msg->setHidden(true);
   leftLayout->addWidget(m_msg);
-  
+
 
   auto mainLayout = new QHBoxLayout();
   mainLayout->addLayout(leftLayout);

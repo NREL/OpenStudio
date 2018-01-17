@@ -170,7 +170,7 @@ void MainTabView::select()
     } else {
       index++;
     }
-  } 
+  }
 
   setCurrentIndex(index);
 }
@@ -196,7 +196,7 @@ void MainTabView::setCurrentIndex(int index)
     style.append("              color: black;");
     style.append("}");
 
-    button->setStyleSheet(style); 
+    button->setStyleSheet(style);
     button->adjustSize();
     button->move(xPos,5);
 
@@ -221,7 +221,7 @@ void MainTabView::setCurrentIndex(int index)
   style.append("              color: black;");
   style.append("}");
 
-  button->setStyleSheet(style); 
+  button->setStyleSheet(style);
   button->raise();
 
   emit tabSelected(m_ids[index]);
@@ -242,7 +242,7 @@ void MainTabView::paintEvent ( QPaintEvent * event )
 
 void MainTabView::resizeEvent( QResizeEvent * event )
 {
-  QSize size = event->size();  
+  QSize size = event->size();
 
   QSize newSize(size.width() - 7,size.height() - 25);
 

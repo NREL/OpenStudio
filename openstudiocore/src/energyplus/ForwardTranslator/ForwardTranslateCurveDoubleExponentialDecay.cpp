@@ -42,7 +42,7 @@ using namespace std;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCurveDoubleExponentialDecay( 
+boost::optional<IdfObject> ForwardTranslator::translateCurveDoubleExponentialDecay(
     CurveDoubleExponentialDecay& modelObject)
 {
   IdfObject idfObject(IddObjectType::Curve_DoubleExponentialDecay);

@@ -55,7 +55,7 @@ class MODEL_API CurrencyType_Impl : public ParentObject_Impl{
   virtual ~CurrencyType_Impl(){}
 
   OptionalString  monetaryUnit() const;
-  void setMonetaryUnit(const std::string& str);
+  bool setMonetaryUnit(const std::string& str);
 
   // return the parent object in the hierarchy
   virtual boost::optional<ParentObject> parent() const override;
@@ -83,4 +83,4 @@ private:
 } // model
 } // openstudio
 
-#endif // MODEL_CURRENCYTYPE_IMPL_HPP
+#endif // MODEL_CURRENCYTYPE_IMPL_HPP

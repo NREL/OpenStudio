@@ -190,9 +190,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ThermalStorageIceDetailed_Impl::setCapacity(double capacity) {
+  bool ThermalStorageIceDetailed_Impl::setCapacity(double capacity) {
     bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::Capacity, capacity);
     OS_ASSERT(result);
+    return result;
   }
 
   bool ThermalStorageIceDetailed_Impl::setDischargingCurve(const Curve& dischargingCurve) {
@@ -205,29 +206,34 @@ namespace detail {
     return result;
   }
 
-  void ThermalStorageIceDetailed_Impl::setTimestepoftheCurveData(double timestepoftheCurveData) {
+  bool ThermalStorageIceDetailed_Impl::setTimestepoftheCurveData(double timestepoftheCurveData) {
     bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::TimestepoftheCurveData, timestepoftheCurveData);
     OS_ASSERT(result);
+    return result;
   }
 
-  void ThermalStorageIceDetailed_Impl::setParasiticElectricLoadDuringDischarging(double parasiticElectricLoadDuringDischarging) {
+  bool ThermalStorageIceDetailed_Impl::setParasiticElectricLoadDuringDischarging(double parasiticElectricLoadDuringDischarging) {
     bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::ParasiticElectricLoadDuringDischarging, parasiticElectricLoadDuringDischarging);
     OS_ASSERT(result);
+    return result;
   }
 
-  void ThermalStorageIceDetailed_Impl::setParasiticElectricLoadDuringCharging(double parasiticElectricLoadDuringCharging) {
+  bool ThermalStorageIceDetailed_Impl::setParasiticElectricLoadDuringCharging(double parasiticElectricLoadDuringCharging) {
     bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::ParasiticElectricLoadDuringCharging, parasiticElectricLoadDuringCharging);
     OS_ASSERT(result);
+    return result;
   }
 
-  void ThermalStorageIceDetailed_Impl::setTankLossCoefficient(double tankLossCoefficient) {
+  bool ThermalStorageIceDetailed_Impl::setTankLossCoefficient(double tankLossCoefficient) {
     bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::TankLossCoefficient, tankLossCoefficient);
     OS_ASSERT(result);
+    return result;
   }
 
-  void ThermalStorageIceDetailed_Impl::setFreezingTemperatureofStorageMedium(double freezingTemperatureofStorageMedium) {
+  bool ThermalStorageIceDetailed_Impl::setFreezingTemperatureofStorageMedium(double freezingTemperatureofStorageMedium) {
     bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::FreezingTemperatureofStorageMedium, freezingTemperatureofStorageMedium);
     OS_ASSERT(result);
+    return result;
   }
 
   bool ThermalStorageIceDetailed_Impl::setThawProcessIndicator(std::string thawProcessIndicator) {
@@ -384,8 +390,8 @@ void ThermalStorageIceDetailed::resetAvailabilitySchedule() {
   getImpl<detail::ThermalStorageIceDetailed_Impl>()->resetAvailabilitySchedule();
 }
 
-void ThermalStorageIceDetailed::setCapacity(double capacity) {
-  getImpl<detail::ThermalStorageIceDetailed_Impl>()->setCapacity(capacity);
+bool ThermalStorageIceDetailed::setCapacity(double capacity) {
+  return getImpl<detail::ThermalStorageIceDetailed_Impl>()->setCapacity(capacity);
 }
 
 bool ThermalStorageIceDetailed::setDischargingCurve(const Curve& dischargingCurve) {
@@ -396,24 +402,24 @@ bool ThermalStorageIceDetailed::setChargingCurve(const Curve& chargingCurve) {
   return getImpl<detail::ThermalStorageIceDetailed_Impl>()->setChargingCurve(chargingCurve);
 }
 
-void ThermalStorageIceDetailed::setTimestepoftheCurveData(double timestepoftheCurveData) {
-  getImpl<detail::ThermalStorageIceDetailed_Impl>()->setTimestepoftheCurveData(timestepoftheCurveData);
+bool ThermalStorageIceDetailed::setTimestepoftheCurveData(double timestepoftheCurveData) {
+  return getImpl<detail::ThermalStorageIceDetailed_Impl>()->setTimestepoftheCurveData(timestepoftheCurveData);
 }
 
-void ThermalStorageIceDetailed::setParasiticElectricLoadDuringDischarging(double parasiticElectricLoadDuringDischarging) {
-  getImpl<detail::ThermalStorageIceDetailed_Impl>()->setParasiticElectricLoadDuringDischarging(parasiticElectricLoadDuringDischarging);
+bool ThermalStorageIceDetailed::setParasiticElectricLoadDuringDischarging(double parasiticElectricLoadDuringDischarging) {
+  return getImpl<detail::ThermalStorageIceDetailed_Impl>()->setParasiticElectricLoadDuringDischarging(parasiticElectricLoadDuringDischarging);
 }
 
-void ThermalStorageIceDetailed::setParasiticElectricLoadDuringCharging(double parasiticElectricLoadDuringCharging) {
-  getImpl<detail::ThermalStorageIceDetailed_Impl>()->setParasiticElectricLoadDuringCharging(parasiticElectricLoadDuringCharging);
+bool ThermalStorageIceDetailed::setParasiticElectricLoadDuringCharging(double parasiticElectricLoadDuringCharging) {
+  return getImpl<detail::ThermalStorageIceDetailed_Impl>()->setParasiticElectricLoadDuringCharging(parasiticElectricLoadDuringCharging);
 }
 
-void ThermalStorageIceDetailed::setTankLossCoefficient(double tankLossCoefficient) {
-  getImpl<detail::ThermalStorageIceDetailed_Impl>()->setTankLossCoefficient(tankLossCoefficient);
+bool ThermalStorageIceDetailed::setTankLossCoefficient(double tankLossCoefficient) {
+  return getImpl<detail::ThermalStorageIceDetailed_Impl>()->setTankLossCoefficient(tankLossCoefficient);
 }
 
-void ThermalStorageIceDetailed::setFreezingTemperatureofStorageMedium(double freezingTemperatureofStorageMedium) {
-  getImpl<detail::ThermalStorageIceDetailed_Impl>()->setFreezingTemperatureofStorageMedium(freezingTemperatureofStorageMedium);
+bool ThermalStorageIceDetailed::setFreezingTemperatureofStorageMedium(double freezingTemperatureofStorageMedium) {
+  return getImpl<detail::ThermalStorageIceDetailed_Impl>()->setFreezingTemperatureofStorageMedium(freezingTemperatureofStorageMedium);
 }
 
 bool ThermalStorageIceDetailed::setThawProcessIndicator(std::string thawProcessIndicator) {
@@ -428,4 +434,3 @@ ThermalStorageIceDetailed::ThermalStorageIceDetailed(std::shared_ptr<detail::The
 
 } // model
 } // openstudio
-

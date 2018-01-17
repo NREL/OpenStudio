@@ -190,7 +190,7 @@ class MODEL_API RadianceParameters : public ModelObject {
 
   void resetLimitWeightVMX();
 
-  void setLimitWeightDMX(double limitWeightDMX);
+  bool setLimitWeightDMX(double limitWeightDMX);
 
   bool setLimitWeightDMX(const Quantity& limitWeightDMX);
 
@@ -240,4 +240,3 @@ typedef std::vector<RadianceParameters> RadianceParametersVector;
 } // openstudio
 
 #endif // MODEL_RADIANCEPARAMETERS_HPP
-

@@ -244,7 +244,7 @@ namespace detail {
     return isEmpty(OS_Output_VariableFields::ExportToBCVTB);
   }
 
-  void OutputVariable_Impl::setExportToBCVTB(bool exportToBCVTB) {
+  bool OutputVariable_Impl::setExportToBCVTB(bool exportToBCVTB) {
     bool result = false;
     if (exportToBCVTB) {
       result = setString(OS_Output_VariableFields::ExportToBCVTB, "True");
@@ -252,6 +252,7 @@ namespace detail {
       result = setString(OS_Output_VariableFields::ExportToBCVTB, "False");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void OutputVariable_Impl::resetExportToBCVTB() {
@@ -373,8 +374,8 @@ bool OutputVariable::isExportToBCVTBDefaulted() const {
   return getImpl<detail::OutputVariable_Impl>()->isExportToBCVTBDefaulted();
 }
 
-void OutputVariable::setExportToBCVTB(bool exportToBCVTB) {
-  getImpl<detail::OutputVariable_Impl>()->setExportToBCVTB(exportToBCVTB);
+bool OutputVariable::setExportToBCVTB(bool exportToBCVTB) {
+  return getImpl<detail::OutputVariable_Impl>()->setExportToBCVTB(exportToBCVTB);
 }
 
 void OutputVariable::resetExportToBCVTB() {
@@ -382,4 +383,4 @@ void OutputVariable::resetExportToBCVTB() {
 }
 
 } // model
-} // openstudio
+} // openstudio

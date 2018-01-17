@@ -33,7 +33,7 @@ require 'minitest/autorun'
 class Component_Test < MiniTest::Unit::TestCase
 
   def test_lightingSchedule_fromScratch
-  
+
     justASchedule = OpenStudio::Model::Model.new
 
     schedule = OpenStudio::Model::ScheduleCompact.new(justASchedule)
@@ -43,7 +43,7 @@ class Component_Test < MiniTest::Unit::TestCase
     assert(scheduleComponent.componentData.numComponentObjects == 2)
     assert(scheduleComponent.numObjects == 3)
     assert_equal(false,scheduleComponent.primaryObject.to_ScheduleCompact.empty?)
-    
+
     justLights = OpenStudio::Model::Model.new
     ocd = justLights.insertComponent(scheduleComponent)
     assert(justLights.numObjects == 3)
@@ -55,17 +55,17 @@ class Component_Test < MiniTest::Unit::TestCase
     light1 = OpenStudio::Model::Lights.new(lightDefinition)
     light1.setSchedule(schedule)
     assert(justLights.numObjects == 5)
-    
+
     ocd = justLights.insertComponent(scheduleComponent)
     assert(justLights.numObjects == 5)
     assert_equal(false,ocd.empty?)
     assert_equal(false,ocd.get.primaryComponentObject.to_ScheduleCompact.empty?)
     assert_equal(false,light1.schedule.empty?)
     assert(ocd.get.primaryComponentObject.to_ScheduleCompact.get == light1.schedule.get)
-    
+
     light2 = OpenStudio::Model::Lights.new(lightDefinition)
     light2.setSchedule(schedule)
-    
+
     lightsComponent = light1.createComponent
     assert(lightsComponent.componentData.numComponentObjects == 4)
     assert(lightsComponent.numObjects == 5)
@@ -75,11 +75,11 @@ class Component_Test < MiniTest::Unit::TestCase
     assert(resrcs.size == 2)
     resrcs = OpenStudio::Model::getRecursiveResources(lightsComponent.getLightss[0])
     assert(resrcs.size == 3)
-    
+
   end
-  
+
   def test_componentWatcher_inComponent
-  
+
     # create component
     model = OpenStudio::Model::Model.new
     designDay = OpenStudio::Model::DesignDay.new(model)
@@ -89,14 +89,14 @@ class Component_Test < MiniTest::Unit::TestCase
     cd = designDayComponent.componentData
     versionUUID = cd.versionUUID
     designDay = designDayComponent.primaryObject.to_DesignDay.get
-    
+
     # version changes on data change
     ok = designDay.setName("My Design Day")
     assert_equal(false,ok.empty?)
     assert_equal(false,versionUUID == cd.versionUUID)
     versionUUID = cd.versionUUID
-    
+
   end
-  
+
 end
 

@@ -90,7 +90,7 @@ class MODEL_API ZoneHVACComponent : public HVACComponent
    *  This is used to feed an AirLoopHVAC structure (such as a DOAS, or any built up system) into a ZoneHVACComponent.
    *  If the ZoneHVACComponent object is already attached to a thermalZone() then it will first be detached using removeFromThermalZone().
    *
-   *  Certain OpenStudio objects derived from the ZoneHVACComponent type, 
+   *  Certain OpenStudio objects derived from the ZoneHVACComponent type,
    *  can be used as AirLoopHVAC supply components.
    *  One example is the AirLoopHVACUnitarySystem, which can be used as both
    *  a ZoneHVACComponent and a AirLoopHVAC component. In these cases
@@ -103,12 +103,12 @@ class MODEL_API ZoneHVACComponent : public HVACComponent
    *  The AirLoopHVAC object would have been attached via addToNode */
   boost::optional<AirLoopHVAC> airLoopHVAC() const;
 
-  /** If this ZoneHVACComponent is used as a supply component 
+  /** If this ZoneHVACComponent is used as a supply component
    *  on an AirLoopHVAC system, then this method will detach
    *  this ZoneHVACComponent from the AirLoopHVAC system, otherwise
    *  this method does nothing.
    *
-   *  Certain OpenStudio objects derived from the ZoneHVACComponent type, 
+   *  Certain OpenStudio objects derived from the ZoneHVACComponent type,
    *  can be used as AirLoopHVAC supply components.
    *  One example is the AirLoopHVACUnitarySystem, which can be used as both
    *  a ZoneHVACComponent and a AirLoopHVAC component.

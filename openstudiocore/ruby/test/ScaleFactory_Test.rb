@@ -36,7 +36,7 @@ class ScaleFactory_Test < MiniTest::Unit::TestCase
 
   # def teardown
   # end
-  
+
   def test_printScales
     str = OpenStudio::printScales
     assert(str != "")

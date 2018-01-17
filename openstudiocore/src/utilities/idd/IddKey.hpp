@@ -75,7 +75,7 @@ class UTILITIES_API IddKey {
 
   /** Returns true if all data is exactly equal. */
   bool operator==(const IddKey& other) const;
-  
+
   /** Negation of operator==. */
   bool operator!=(const IddKey& other) const;
 

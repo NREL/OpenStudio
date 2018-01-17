@@ -513,7 +513,7 @@ namespace detail{
   bool Attribute_Impl::valueAsBoolean() const
   {
     if(!m_value.isValid() || m_value.isNull() || m_valueType != AttributeValueType::Boolean){
-      LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type " 
+      LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to Boolean.");
     }
     return m_value.value<bool>();
@@ -521,7 +521,7 @@ namespace detail{
 
   void Attribute_Impl::setValue(bool value) {
     if (m_valueType != AttributeValueType::Boolean) {
-      LOG_AND_THROW("Attribute is '" << name() << "' is of type " 
+      LOG_AND_THROW("Attribute is '" << name() << "' is of type "
                     << valueType().valueDescription() << ", not Boolean.");
     }
     m_value = value;
@@ -531,7 +531,7 @@ namespace detail{
   int Attribute_Impl::valueAsInteger() const
   {
     if(!m_value.isValid() || m_value.isNull() || m_valueType != AttributeValueType::Integer){
-      LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type " 
+      LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to Integer.");
     }
     return m_value.value<int>();
@@ -539,7 +539,7 @@ namespace detail{
 
   void Attribute_Impl::setValue(int value) {
     if (m_valueType != AttributeValueType::Integer) {
-      LOG_AND_THROW("Attribute is '" << name() << "' is of type " 
+      LOG_AND_THROW("Attribute is '" << name() << "' is of type "
                     << valueType().valueDescription() << ", not Integer.");
     }
     m_value = value;
@@ -549,7 +549,7 @@ namespace detail{
   unsigned Attribute_Impl::valueAsUnsigned() const
   {
     if(!m_value.isValid() || m_value.isNull() || m_valueType != AttributeValueType::Unsigned){
-      LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type " 
+      LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to Unsigned.");
     }
     return m_value.value<unsigned>();
@@ -557,7 +557,7 @@ namespace detail{
 
   void Attribute_Impl::setValue(unsigned value) {
     if (m_valueType != AttributeValueType::Unsigned) {
-      LOG_AND_THROW("Attribute is '" << name() << "' is of type " 
+      LOG_AND_THROW("Attribute is '" << name() << "' is of type "
                     << valueType().valueDescription() << ", not Unsigned.");
     }
     m_value = value;
@@ -567,7 +567,7 @@ namespace detail{
   double Attribute_Impl::valueAsDouble() const
   {
     if(!m_value.isValid() || m_value.isNull() || m_valueType != AttributeValueType::Double){
-      LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type " 
+      LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to Double.");
     }
     return m_value.value<double>();
@@ -575,7 +575,7 @@ namespace detail{
 
   void Attribute_Impl::setValue(double value) {
     if (m_valueType != AttributeValueType::Double) {
-      LOG_AND_THROW("Attribute is '" << name() << "' is of type " 
+      LOG_AND_THROW("Attribute is '" << name() << "' is of type "
                     << valueType().valueDescription() << ", not Double.");
     }
     m_value = value;
@@ -585,7 +585,7 @@ namespace detail{
   Quantity Attribute_Impl::valueAsQuantity() const
   {
     if(!m_value.isValid() || m_value.isNull() || m_valueType != AttributeValueType::Quantity){
-      LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type " 
+      LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to Quantity.");
     }
     return m_value.value<openstudio::Quantity>();
@@ -593,7 +593,7 @@ namespace detail{
 
   void Attribute_Impl::setValue(const Quantity& value) {
     if (m_valueType != AttributeValueType::Quantity) {
-      LOG_AND_THROW("Attribute is '" << name() << "' is of type " 
+      LOG_AND_THROW("Attribute is '" << name() << "' is of type "
                     << valueType().valueDescription() << ", not Quantity.");
     }
     m_value.setValue(value);
@@ -603,7 +603,7 @@ namespace detail{
   Unit Attribute_Impl::valueAsUnit() const
   {
     if(!m_value.isValid() || m_value.isNull() || m_valueType != AttributeValueType::Unit){
-      LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type " 
+      LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to Unit.");
     }
     return m_value.value<openstudio::OSOptionalQuantity>().units();
@@ -611,7 +611,7 @@ namespace detail{
 
   void Attribute_Impl::setValue(const Unit& value) {
     if (m_valueType != AttributeValueType::Unit) {
-      LOG_AND_THROW("Attribute is '" << name() << "' is of type " 
+      LOG_AND_THROW("Attribute is '" << name() << "' is of type "
                     << valueType().valueDescription() << ", not Unit.");
     }
     m_value.setValue(OSOptionalQuantity(value));
@@ -621,7 +621,7 @@ namespace detail{
   std::string Attribute_Impl::valueAsString() const
   {
     if(!m_value.isValid() || m_value.isNull() || m_valueType != AttributeValueType::String){
-      LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type " 
+      LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to String.");
     }
     return m_value.value<std::string>();
@@ -629,7 +629,7 @@ namespace detail{
 
   void Attribute_Impl::setValue(const char* value) {
     if (m_valueType != AttributeValueType::String) {
-      LOG_AND_THROW("Attribute is '" << name() << "' is of type " 
+      LOG_AND_THROW("Attribute is '" << name() << "' is of type "
                     << valueType().valueDescription() << ", not String.");
     }
     m_value.setValue(std::string(value));
@@ -638,7 +638,7 @@ namespace detail{
 
   void Attribute_Impl::setValue(const std::string& value) {
     if (m_valueType != AttributeValueType::String) {
-      LOG_AND_THROW("Attribute is '" << name() << "' is of type " 
+      LOG_AND_THROW("Attribute is '" << name() << "' is of type "
                     << valueType().valueDescription() << ", not String.");
     }
     m_value.setValue(value);
@@ -648,7 +648,7 @@ namespace detail{
   std::vector<Attribute> Attribute_Impl::valueAsAttributeVector() const
   {
     if(!m_value.isValid() || m_value.isNull() || m_valueType != AttributeValueType::AttributeVector){
-      LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type " 
+      LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to AttributeVector.");
     }
     return m_value.value<std::vector<Attribute> >();
@@ -656,7 +656,7 @@ namespace detail{
 
   void Attribute_Impl::setValue(const std::vector<Attribute>& value) {
     if (m_valueType != AttributeValueType::AttributeVector) {
-      LOG_AND_THROW("Attribute is '" << name() << "' is of type " 
+      LOG_AND_THROW("Attribute is '" << name() << "' is of type "
                     << valueType().valueDescription() << ", not AttributeVector.");
     }
     m_value.setValue(value);
@@ -750,7 +750,7 @@ namespace detail{
         OS_ASSERT(false);
         break;
     }
-    return result;  
+    return result;
   }
 
   QDomDocument Attribute_Impl::toXml() const
@@ -935,13 +935,13 @@ namespace detail{
     if (check) {
       if (OptionalAttribute validator = Attribute::fromQVariant(name(),value)) {
         if (validator->valueType() != valueType()) {
-          LOG_AND_THROW("QVariant value of type " << value.typeName() 
-              << " does not convert to AttributeValueType " << valueType().valueDescription() 
+          LOG_AND_THROW("QVariant value of type " << value.typeName()
+              << " does not convert to AttributeValueType " << valueType().valueDescription()
               << ".");
         }
       }
       else {
-        LOG_AND_THROW("Unable to construct Attribute using QVariant value of type " 
+        LOG_AND_THROW("Unable to construct Attribute using QVariant value of type "
             << value.typeName() << ".");
       }
     }
@@ -955,7 +955,7 @@ AttributeDescription::AttributeDescription(const std::string& t_name,
                                            const std::string& t_description,
                                            const AttributeValueType& t_validValueType,
                                            bool t_required)
-  : name(t_name), 
+  : name(t_name),
     displayName(t_displayName),
     description(t_description),
     validValueTypes(1u,t_validValueType),
@@ -968,7 +968,7 @@ AttributeDescription::AttributeDescription(const std::string& t_name,
                                            const AttributeValueType& t_validValueType,
                                            bool t_required,
                                            QVariant t_defaultValue)
-  : name(t_name), 
+  : name(t_name),
     displayName(t_displayName),
     description(t_description),
     validValueTypes(1u,t_validValueType),
@@ -981,7 +981,7 @@ AttributeDescription::AttributeDescription(const std::string& t_name,
                                            const std::string& t_description,
                                            const std::vector<AttributeValueType>& t_validValueTypes,
                                            bool t_required)
-  : name(t_name), 
+  : name(t_name),
     displayName(t_displayName),
     description(t_description),
     validValueTypes(t_validValueTypes),
@@ -994,7 +994,7 @@ AttributeDescription::AttributeDescription(const std::string& t_name,
                                            const std::vector<AttributeValueType>& t_validValueTypes,
                                            bool t_required,
                                            QVariant t_defaultValue)
-  : name(t_name), 
+  : name(t_name),
     displayName(t_displayName),
     description(t_description),
     validValueTypes(t_validValueTypes),
@@ -1028,12 +1028,12 @@ Attribute::Attribute(const openstudio::UUID& uuid,
                      const boost::optional<std::string>& units,
                      const std::string& source)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid, 
-                                        versionUUID, 
-                                        name, 
-                                        displayName, 
-                                        value, 
-                                        units, 
+             new detail::Attribute_Impl(uuid,
+                                        versionUUID,
+                                        name,
+                                        displayName,
+                                        value,
+                                        units,
                                         source)))
 {
   OS_ASSERT(m_impl);
@@ -1065,11 +1065,11 @@ Attribute::Attribute(const openstudio::UUID& uuid,
                      const boost::optional<std::string>& units,
                      const std::string& source)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid, 
-                                        versionUUID, 
-                                        name, 
-                                        displayName, 
-                                        value, 
+             new detail::Attribute_Impl(uuid,
+                                        versionUUID,
+                                        name,
+                                        displayName,
+                                        value,
                                         units,
                                         source)))
 {
@@ -1096,10 +1096,10 @@ Attribute::Attribute(const openstudio::UUID& uuid,
                      const Quantity& value,
                      const std::string& source)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid, 
-                                        versionUUID, 
-                                        name, 
-                                        displayName, 
+             new detail::Attribute_Impl(uuid,
+                                        versionUUID,
+                                        name,
+                                        displayName,
                                         value,
                                         source)))
 {
@@ -1119,10 +1119,10 @@ Attribute::Attribute(const openstudio::UUID& uuid,
                      const Unit& value,
                      const std::string& source)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid, 
-                                        versionUUID, 
-                                        name, 
-                                        displayName, 
+             new detail::Attribute_Impl(uuid,
+                                        versionUUID,
+                                        name,
+                                        displayName,
                                         value,
                                         source)))
 {
@@ -1155,11 +1155,11 @@ Attribute::Attribute(const openstudio::UUID& uuid,
                      const boost::optional<std::string>& units,
                      const std::string& source)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid, 
-                                        versionUUID, 
-                                        name, 
-                                        displayName, 
-                                        value, 
+             new detail::Attribute_Impl(uuid,
+                                        versionUUID,
+                                        name,
+                                        displayName,
+                                        value,
                                         units,
                                         source)))
 {
@@ -1192,11 +1192,11 @@ Attribute::Attribute(const openstudio::UUID& uuid,
                      const boost::optional<std::string>& units,
                      const std::string& source)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid, 
-                                        versionUUID, 
-                                        name, 
-                                        displayName, 
-                                        value, 
+             new detail::Attribute_Impl(uuid,
+                                        versionUUID,
+                                        name,
+                                        displayName,
+                                        value,
                                         units,
                                         source)))
 {
@@ -1229,11 +1229,11 @@ Attribute::Attribute(const openstudio::UUID& uuid,
                      const boost::optional<std::string>& units,
                      const std::string& source)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid, 
-                                        versionUUID, 
-                                        name, 
-                                        displayName, 
-                                        value, 
+             new detail::Attribute_Impl(uuid,
+                                        versionUUID,
+                                        name,
+                                        displayName,
+                                        value,
                                         units,
                                         source)))
 {
@@ -1266,11 +1266,11 @@ Attribute::Attribute(const openstudio::UUID& uuid,
                      const boost::optional<std::string>& units,
                      const std::string& source)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid, 
-                                        versionUUID, 
-                                        name, 
-                                        displayName, 
-                                        value, 
+             new detail::Attribute_Impl(uuid,
+                                        versionUUID,
+                                        name,
+                                        displayName,
+                                        value,
                                         units,
                                         source)))
 {
@@ -1302,11 +1302,11 @@ Attribute::Attribute(const openstudio::UUID& uuid,
                      const boost::optional<std::string>& units,
                      const std::string& source)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid, 
-                                        versionUUID, 
-                                        name, 
-                                        displayName, 
-                                        value, 
+             new detail::Attribute_Impl(uuid,
+                                        versionUUID,
+                                        name,
+                                        displayName,
+                                        value,
                                         units,
                                         source)))
 {
@@ -1392,7 +1392,7 @@ boost::optional<Attribute> Attribute::fromQVariant(const std::string& name, cons
         result = *test;
       }
     }else if (typeName == "std::vector<openstudio::Attribute>") {
-      result = Attribute(name,value.value<std::vector<openstudio::Attribute> >(),units);      
+      result = Attribute(name,value.value<std::vector<openstudio::Attribute> >(),units);
     }
     break;
     default:
@@ -1594,7 +1594,7 @@ bool Attribute::saveToXml(const openstudio::path& path) const
   }
   catch( const std::exception &e) {
     LOG_FREE(Error, "openstudio.Attribute", "Error saving to XML: " << e.what());
-  } 
+  }
 
   return result;
 }
@@ -1661,7 +1661,7 @@ std::vector<double> getDoubleVectorFromAttribute(const Attribute& attribute) {
 }
 
 bool isConsistent(const Attribute& candidate,const AttributeDescription& description) {
-  return ((candidate.name() == description.name) && 
+  return ((candidate.name() == description.name) &&
           (std::find(description.validValueTypes.begin(),
                      description.validValueTypes.end(),
                      candidate.valueType()) != description.validValueTypes.end()));
@@ -1863,13 +1863,13 @@ namespace detail {
                          source);
       default :
         LOG_FREE_AND_THROW("openstudio.Attribute","Unknown AttributeValueType " << valueType.valueName() << ".");
-    }    
+    }
   }
 
   QVariant toVariant(const std::vector<Attribute>& attributes) {
     QVariantMap map;
     std::set<std::string> attributeNames;
-    // keep up with sources separately--if there is a single, non-empty source 
+    // keep up with sources separately--if there is a single, non-empty source
     // for the whole vector, just record it once
     QVariantMap sourceMap;
     std::string lastSource;

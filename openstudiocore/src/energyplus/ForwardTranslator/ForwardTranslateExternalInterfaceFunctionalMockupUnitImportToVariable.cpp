@@ -58,7 +58,7 @@ boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceFunction
   if (s) {
     idfObject.setName(*s);
   }
-  
+
   boost::optional<ExternalInterfaceFunctionalMockupUnitImport> file = modelObject.fMUFile();
   if (file.is_initialized()) {
     idfObject.setString(ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::FMUFileName, file.get().fMUFileName());

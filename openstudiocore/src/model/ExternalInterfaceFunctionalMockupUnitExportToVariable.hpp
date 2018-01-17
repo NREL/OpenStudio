@@ -67,9 +67,9 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitExportToVariable : public M
   /** @name Setters */
   //@{
 
-  void setFMUVariableName(const std::string& fMUVariableName);
+  bool setFMUVariableName(const std::string& fMUVariableName);
 
-  void setInitialValue(double initialValue);
+  bool setInitialValue(double initialValue);
 
   //@}
   /** @name Other */
@@ -100,5 +100,4 @@ typedef std::vector<ExternalInterfaceFunctionalMockupUnitExportToVariable> Exter
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITEXPORTTOVARIABLE_HPP
-
+#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITEXPORTTOVARIABLE_HPP

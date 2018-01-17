@@ -42,50 +42,50 @@ namespace detail {
 
   /** LuminaireDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for LuminaireDefinition.*/
   class MODEL_API LuminaireDefinition_Impl : public SpaceLoadDefinition_Impl {
-    
 
-    
-    
-    Q_PROPERTY(openstudio::Quantity lightingPower_SI 
-               READ lightingPower_SI 
+
+
+
+    Q_PROPERTY(openstudio::Quantity lightingPower_SI
+               READ lightingPower_SI
                WRITE setLightingPower);
-    Q_PROPERTY(openstudio::Quantity lightingPower_IP 
-               READ lightingPower_IP 
+    Q_PROPERTY(openstudio::Quantity lightingPower_IP
+               READ lightingPower_IP
                WRITE setLightingPower);
 
-    
-    
-    Q_PROPERTY(openstudio::Quantity fractionRadiant_SI 
-               READ fractionRadiant_SI 
+
+
+    Q_PROPERTY(openstudio::Quantity fractionRadiant_SI
+               READ fractionRadiant_SI
                WRITE setFractionRadiant);
-    Q_PROPERTY(openstudio::Quantity fractionRadiant_IP 
-               READ fractionRadiant_IP 
+    Q_PROPERTY(openstudio::Quantity fractionRadiant_IP
+               READ fractionRadiant_IP
                WRITE setFractionRadiant);
 
-    
-    
-    Q_PROPERTY(openstudio::Quantity fractionVisible_SI 
-               READ fractionVisible_SI 
+
+
+    Q_PROPERTY(openstudio::Quantity fractionVisible_SI
+               READ fractionVisible_SI
                WRITE setFractionVisible);
-    Q_PROPERTY(openstudio::Quantity fractionVisible_IP 
-               READ fractionVisible_IP 
+    Q_PROPERTY(openstudio::Quantity fractionVisible_IP
+               READ fractionVisible_IP
                WRITE setFractionVisible);
 
-    
-    
-    Q_PROPERTY(openstudio::Quantity returnAirFraction_SI 
-               READ returnAirFraction_SI 
+
+
+    Q_PROPERTY(openstudio::Quantity returnAirFraction_SI
+               READ returnAirFraction_SI
                WRITE setReturnAirFraction);
-    Q_PROPERTY(openstudio::Quantity returnAirFraction_IP 
-               READ returnAirFraction_IP 
+    Q_PROPERTY(openstudio::Quantity returnAirFraction_IP
+               READ returnAirFraction_IP
                WRITE setReturnAirFraction);
 
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -105,7 +105,7 @@ namespace detail {
     //@}
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
-    
+
     virtual IddObjectType iddObjectType() const override;
 
     // Attributes
@@ -170,7 +170,7 @@ namespace detail {
 
     //void resetReturnAirFraction();
 
-    void setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature);
+    bool setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature);
 
     void resetReturnAirFractionCalculatedfromPlenumTemperature();
 
@@ -194,4 +194,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_LUMINAIREDEFINITION_IMPL_HPP
-
