@@ -884,7 +884,6 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateMaterialPropertyMoisturePenetrationDepthSettings( model::MaterialPropertyMoisturePenetrationDepthSettings & modelObject );
 
-  boost::optional<IdfObject> translateMaterialPropertyMoisturePenetrationDepthSettings( model::MaterialPropertyMoisturePenetrationDepthSettings & modelObject );
   boost::optional<IdfObject> translateMasslessOpaqueMaterial( model::MasslessOpaqueMaterial & modelObject );
 
   boost::optional<IdfObject> translateMeterCustom( model::MeterCustom & modelObject );
