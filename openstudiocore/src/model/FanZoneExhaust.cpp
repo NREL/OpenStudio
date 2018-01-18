@@ -325,7 +325,7 @@ namespace detail {
   }
 
   std::string FanZoneExhaust_Impl::emsActuatorComponentType() const {
-    return std::string("FAN");
+    return std::string("Fan");
   }
 
   std::vector<std::string> FanZoneExhaust_Impl::emsInternalVariables() const {

@@ -878,7 +878,7 @@ namespace detail {
   }
 
   std::string FanVariableVolume_Impl::emsActuatorComponentType() const {
-    return std::string("FAN");
+    return std::string("Fan");
   }
 
   std::vector<std::string> FanVariableVolume_Impl::emsInternalVariables() const {
