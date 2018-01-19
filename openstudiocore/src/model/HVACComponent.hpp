@@ -208,8 +208,8 @@ class MODEL_API EMSActuatorNames
 
   private:
 
-  std::string controlTypeName;
-  std::string componentTypeName;
+  std::string m_controlTypeName;
+  std::string m_componentTypeName;
 };
 
 typedef boost::optional<HVACComponent> OptionalHVACComponent;

@@ -637,12 +637,12 @@ namespace detail {
     return false;
   }
 
-  std::vector<std::pair<std::string, std::string>> AirLoopHVACOutdoorAirSystem_Impl::emsActuator() const {
-    std::vector<std::pair<std::string, std::string>> types{{"Outdoor Air System Node", "Drybulb Temperature"},
-                                                           {"Outdoor Air System Node","Wetbulb Temperature"},
-                                                           {"Outdoor Air System Node", "Wind Speed"},
-                                                           {"Outdoor Air System Node", "Wind Direction"}};
-    return types;
+  std::vector<EMSActuatorNames> AirLoopHVACOutdoorAirSystem_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Outdoor Air System Node", "Drybulb Temperature"},
+                                            {"Outdoor Air System Node","Wetbulb Temperature"},
+                                            {"Outdoor Air System Node", "Wind Speed"},
+                                            {"Outdoor Air System Node", "Wind Direction"}};
+    return actuators;
   }
 
   std::vector<std::string> AirLoopHVACOutdoorAirSystem_Impl::emsInternalVariables() const {

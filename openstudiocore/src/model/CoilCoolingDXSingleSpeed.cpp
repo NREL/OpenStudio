@@ -1020,15 +1020,15 @@ namespace detail{
     return getAutosizedValue("Design Size Evaporative Condenser Air Flow Rate", "W");
   }
 
-  std::vector<std::pair<std::string, std::string>> CoilCoolingDXSingleSpeed_Impl::emsActuator() const {
-    std::vector<std::pair<std::string, std::string>> types{{"Coil:Cooling:DX:SingleSpeed","Autosized Rated Air Flow Rate"},
-                                                           {"Coil:Cooling:DX:SingleSpeed","Autosized Rated Sensible Heat Ratio"},
-                                                           {"Coil:Cooling:DX:SingleSpeed","Autosized Rated Total Cooling Capacity"},
-                                                           {"Outdoor Air System Node","Drybulb Temperature"},
-                                                           {"Outdoor Air System Node","Wetbulb Temperature"},
-                                                           {"Outdoor Air System Node","Wind Speed"},
-                                                           {"Outdoor Air System Node","Wind Direction"}};
-    return types;
+  std::vector<EMSActuatorNames> CoilCoolingDXSingleSpeed_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Coil:Cooling:DX:SingleSpeed", "Autosized Rated Air Flow Rate"},
+                                            {"Coil:Cooling:DX:SingleSpeed","Autosized Rated Sensible Heat Ratio"},
+                                            {"Coil:Cooling:DX:SingleSpeed","Autosized Rated Total Cooling Capacity"},
+                                            {"Outdoor Air System Node","Drybulb Temperature"},
+                                            {"Outdoor Air System Node","Wetbulb Temperature"},
+                                            {"Outdoor Air System Node","Wind Speed"},
+                                            {"Outdoor Air System Node","Wind Direction"}};
+    return actuators;
   }
 
   std::vector<std::string> CoilCoolingDXSingleSpeed_Impl::emsInternalVariables() const {

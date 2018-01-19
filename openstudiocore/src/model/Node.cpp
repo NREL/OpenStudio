@@ -415,17 +415,17 @@ namespace detail{
     return false;
   }
 
-  std::vector<std::pair<std::string, std::string>> Node_Impl::emsActuator() const {
-    std::vector<std::pair<std::string, std::string>> types{{"System Node Setpoint", "Temperature Setpoint"},
-                                                           {"System Node Setpoint", "Temperature Minimum Setpoint"},
-                                                           {"System Node Setpoint", "Temperature Maximum Setpoint"},
-                                                           {"System Node Setpoint", "Humidity Ratio Setpoint"},
-                                                           {"System Node Setpoint", "Humidity Ratio Maximum Setpoint"},
-                                                           {"System Node Setpoint", "Humidity Ratio Minimum Setpoint"},
-                                                           {"System Node Setpoint", "Mass Flow Rate Setpoint"},
-                                                           {"System Node Setpoint", "Mass Flow Rate Maximum Available Setpoint"},
-                                                           {"System Node Setpoint", "Mass Flow Rate Minimum Available Setpoint"}};
-    return types;
+  std::vector<EMSActuatorNames> Node_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"System Node Setpoint", "Temperature Setpoint"},
+                                            {"System Node Setpoint", "Temperature Minimum Setpoint"},
+                                            {"System Node Setpoint", "Temperature Maximum Setpoint"},
+                                            {"System Node Setpoint", "Humidity Ratio Setpoint"},
+                                            {"System Node Setpoint", "Humidity Ratio Maximum Setpoint"},
+                                            {"System Node Setpoint", "Humidity Ratio Minimum Setpoint"},
+                                            {"System Node Setpoint", "Mass Flow Rate Setpoint"},
+                                            {"System Node Setpoint", "Mass Flow Rate Maximum Available Setpoint"},
+                                            {"System Node Setpoint", "Mass Flow Rate Minimum Available Setpoint"}};
+    return actuators;
   }
 
   std::vector<std::string> Node_Impl::emsInternalVariables() const {

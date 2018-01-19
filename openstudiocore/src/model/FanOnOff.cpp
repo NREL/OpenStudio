@@ -517,12 +517,12 @@ namespace detail {
 
   }
 
-  std::vector<std::pair<std::string, std::string>> FanOnOff_Impl::emsActuator() const {
-    std::vector<std::pair<std::string, std::string>> types{{"Fan", "Fan Air Mass Flow Rate"},
-    {"Fan", "Fan Pressure Rise"},
-    {"Fan", "Fan Total Efficiency"},
-    {"Fan", "Fan Autosized Air Flow Rate"}};
-    return types;
+  std::vector<EMSActuatorNames> FanOnOff_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Fan", "Fan Air Mass Flow Rate"},
+                                            {"Fan", "Fan Pressure Rise"},
+                                            {"Fan", "Fan Total Efficiency"},
+                                            {"Fan", "Fan Autosized Air Flow Rate"}};
+    return actuators;
   }
 
   std::vector<std::string> FanOnOff_Impl::emsInternalVariables() const {

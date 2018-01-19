@@ -775,10 +775,10 @@ namespace detail {
     return setDouble(OS_Pump_ConstantSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead,designShaftPowerPerUnitFlowRatePerUnitHead);
   }
 
-  std::vector<std::pair<std::string, std::string>> PumpConstantSpeed_Impl::emsActuator() const {
-    std::vector<std::pair<std::string, std::string>> types{{"Pump", "Pump Mass Flow Rate"},
-                                                           {"Pump", "Pump Pressure Rise"}};
-    return types;
+  std::vector<EMSActuatorNames> PumpConstantSpeed_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Pump", "Pump Mass Flow Rate"},
+                                            {"Pump", "Pump Pressure Rise"}};
+    return actuators;
   }
 
   std::vector<std::string> PumpConstantSpeed_Impl::emsInternalVariables() const {

@@ -522,7 +522,7 @@ namespace detail {
     return;
   }
 
-  std::vector<EMSActuatorNames> emsActuatorNames() const {
+  std::vector<EMSActuatorNames> HVACComponent_Impl::emsActuatorNames() const {
     return std::vector<EMSActuatorNames>();
   }
 

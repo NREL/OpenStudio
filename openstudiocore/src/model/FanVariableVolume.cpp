@@ -872,12 +872,12 @@ namespace detail {
 
   }
 
-  std::vector<std::pair<std::string, std::string>> FanVariableVolume_Impl::emsActuator() const {
-    std::vector<std::pair<std::string, std::string>> types{{"Fan", "Fan Air Mass Flow Rate"},
-                                                           {"Fan", "Fan Pressure Rise"},
-                                                           {"Fan", "Fan Total Efficiency"},
-                                                           {"Fan", "Fan Autosized Air Flow Rate"}};
-    return types;
+  std::vector<EMSActuatorNames> FanVariableVolume_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Fan", "Fan Air Mass Flow Rate"},
+                                            {"Fan", "Fan Pressure Rise"},
+                                            {"Fan", "Fan Total Efficiency"},
+                                            {"Fan", "Fan Autosized Air Flow Rate"}};
+    return actuators;
   }
 
   std::vector<std::string> FanVariableVolume_Impl::emsInternalVariables() const {

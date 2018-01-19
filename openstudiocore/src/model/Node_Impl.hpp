@@ -126,7 +126,7 @@ namespace detail {
 
     bool isConnected(const ModelObject & modelObject);
 
-    virtual std::vector<std::pair<std::string, std::string>> emsActuator() const override;
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
     virtual std::vector<std::string> emsInternalVariables() const override;
 

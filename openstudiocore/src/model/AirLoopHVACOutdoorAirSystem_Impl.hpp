@@ -107,7 +107,7 @@ namespace detail {
     boost::optional<ModelObject> oaComponent(openstudio::Handle handle);
     boost::optional<ModelObject> reliefComponent(openstudio::Handle handle);
 
-    virtual std::vector<std::pair<std::string, std::string>> emsActuator() const override;
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
     virtual std::vector<std::string> emsInternalVariables() const override;
 
