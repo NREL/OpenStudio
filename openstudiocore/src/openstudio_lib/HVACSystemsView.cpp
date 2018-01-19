@@ -283,7 +283,8 @@ void HVACGraphicsView::resetZoom()
   this->scale(0.65,0.65);
 }
 
-HVACControlsView::HVACControlsView()
+/* Controls tab for an AirLoopHVAC */
+HVACAirLoopControlsView::HVACAirLoopControlsView()
   : QScrollArea()
 {
   auto widget = new QWidget();
@@ -403,6 +404,134 @@ HVACControlsView::HVACControlsView()
   availabilityManagerViewSwitcher->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed); // QSizePolicy::MinimumExpanding, QSizePolicy::Expanding
   mainVLayout->addWidget(availabilityManagerViewSwitcher);
 }
+
+
+/* Controls tab for an AirLoopHVAC */
+HVACPlantLoopControlsView::HVACPlantLoopControlsView()
+  : QScrollArea()
+{
+  auto widget = new QWidget();
+
+  auto mainVLayout = new QVBoxLayout();
+  mainVLayout->setContentsMargins(5,5,5,5);
+  mainVLayout->setSpacing(10);
+  mainVLayout->setAlignment(Qt::AlignTop);
+  widget->setLayout(mainVLayout);
+
+  setWidget(widget);
+  setWidgetResizable(true);
+  setFrameShape(QFrame::NoFrame);
+
+  systemNameLabel = new QLabel("HVAC System");
+  systemNameLabel->setObjectName("H1");
+  mainVLayout->addWidget(systemNameLabel);
+
+
+  // Plant Loop Type
+  auto hClassificationLayout = new QHBoxLayout();
+  hClassificationLayout->setContentsMargins(0,0,0,0);
+  hClassificationLayout->setSpacing(5);
+  mainVLayout->addLayout(hClassificationLayout);
+
+  QLabel * plantLoopTypeTitle = new QLabel("Plant Loop Type: ");
+  plantLoopTypeTitle->setObjectName("H2");
+  hClassificationLayout->addWidget(plantLoopTypeTitle);
+
+  plantLoopTypeLabel = new QLabel();
+  hClassificationLayout->addWidget(plantLoopTypeLabel);
+  hClassificationLayout->addStretch();
+
+
+  // Add a separation line
+  auto line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainVLayout->addWidget(line);
+
+
+  /***********************************************************************************************************************
+   *                  P L A N T    E Q U I P M E N T    O P E R A T I O N    S C H E M E S
+   ***********************************************************************************************************************/
+
+  QLabel * spmTitle = new QLabel("Plant Equipment Operation Schemes");
+  spmTitle->setObjectName("H1");
+  mainVLayout->addWidget(spmTitle);
+
+  // We are going to place 4 QVBoxLayout inside a QHBoxLayout
+  hClassificationLayout = new QHBoxLayout();
+  hClassificationLayout->setContentsMargins(0,0,0,0);
+  hClassificationLayout->setSpacing(5);
+  mainVLayout->addLayout(hClassificationLayout);
+
+  // Heating Components
+  QVBoxLayout * vClassificationLayout = new QVBoxLayout();
+  hClassificationLayout->addLayout(vClassificationLayout);
+
+  QLabel * heatingComponentsTitle = new QLabel("Heating Components:");
+  heatingComponentsTitle->setObjectName("H2");
+  vClassificationLayout->addWidget(heatingComponentsTitle);
+
+  heatingComponentsLabel = new QLabel();
+  vClassificationLayout->addWidget(heatingComponentsLabel);
+  hClassificationLayout->addStretch();
+
+  // Cooling Components
+  vClassificationLayout = new QVBoxLayout();
+  hClassificationLayout->addLayout(vClassificationLayout);
+
+  QLabel * coolingComponentsTitle = new QLabel("Cooling Components:");
+  coolingComponentsTitle->setObjectName("H2");
+  vClassificationLayout->addWidget(coolingComponentsTitle);
+
+  coolingComponentsLabel = new QLabel();
+  vClassificationLayout->addWidget(coolingComponentsLabel);
+  hClassificationLayout->addStretch();
+
+  // Setpoint Components
+  vClassificationLayout = new QVBoxLayout();
+  hClassificationLayout->addLayout(vClassificationLayout);
+
+  QLabel * setpointComponentsTitle = new QLabel("Setpoint Components:");
+  setpointComponentsTitle->setObjectName("H2");
+  vClassificationLayout->addWidget(setpointComponentsTitle);
+
+  setpointComponentsLabel = new QLabel();
+  vClassificationLayout->addWidget(setpointComponentsLabel);
+  hClassificationLayout->addStretch();
+
+  // Uncontrolled Components
+  vClassificationLayout = new QVBoxLayout();
+  hClassificationLayout->addLayout(vClassificationLayout);
+
+  QLabel * uncontrolledComponentsTitle = new QLabel("Uncontrolled Components:");
+  uncontrolledComponentsTitle->setObjectName("H2");
+  vClassificationLayout->addWidget(uncontrolledComponentsTitle);
+
+  uncontrolledComponentsLabel = new QLabel();
+  vClassificationLayout->addWidget(uncontrolledComponentsLabel);
+  hClassificationLayout->addStretch();
+
+
+  // Add a separation line
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainVLayout->addWidget(line);
+
+  // AvailabilityManagers
+  QLabel * avmTitle = new QLabel("Availability Managers");
+  avmTitle->setObjectName("H1");
+  mainVLayout->addWidget(avmTitle);
+
+  QLabel * avmListTitle = new QLabel("Availability Managers from highest precedence to lowest");
+  avmListTitle->setObjectName("H2");
+  mainVLayout->addWidget(avmListTitle);
+
+  availabilityManagerViewSwitcher = new OSViewSwitcher();
+  availabilityManagerViewSwitcher->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed); // QSizePolicy::MinimumExpanding, QSizePolicy::Expanding
+  mainVLayout->addWidget(availabilityManagerViewSwitcher);
+}
+
 
 MechanicalVentilationView::MechanicalVentilationView()
   : QWidget()
