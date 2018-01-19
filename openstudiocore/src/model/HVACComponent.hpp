@@ -169,8 +169,6 @@ class MODEL_API HVACComponent : public ParentObject
 
   /** Return the names of the available ems actuators.
   */
-  virtual std::vector<std::pair<std::string, std::string>> emsActuator() const;
-
   virtual std::vector<EMSActuatorNames> emsActuatorNames() const;
 
   /** Return the names of the available ems internal variables.

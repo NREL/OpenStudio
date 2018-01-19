@@ -115,7 +115,7 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
 
   virtual void applySizingValues();
 
-  virtual std::vector<std::pair<std::string,std::string>> emsActuator() const;
+  virtual std::vector<EMSActuatorNames> emsActuatorNames() const;
 
   virtual std::vector<std::string> emsInternalVariables() const;
 

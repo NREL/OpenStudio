@@ -522,8 +522,8 @@ namespace detail {
     return;
   }
 
-  std::vector<std::pair<std::string, std::string>> HVACComponent_Impl::emsActuator() const {
-    return std::vector<std::pair<std::string, std::string>>();
+  std::vector<EMSActuatorNames> emsActuatorNames() const {
+    return std::vector<EMSActuatorNames>();
   }
 
   std::vector<std::string> HVACComponent_Impl::emsInternalVariables() const {
@@ -615,9 +615,9 @@ void HVACComponent::applySizingValues() {
   return getImpl<detail::HVACComponent_Impl>()->applySizingValues();
 }
 
-std::vector<std::pair<std::string, std::string>> HVACComponent::emsActuator() const
+std::vector<EMSActuatorNames> HVACComponent::emsActuatorNames() const
 {
-  return getImpl<detail::HVACComponent_Impl>()->emsActuator();
+  return getImpl<detail::HVACComponent_Impl>()->emsActuatorNames();
 }
 
 std::vector<std::string> HVACComponent::emsInternalVariables() const
