@@ -2173,7 +2173,7 @@ void AvailabilityManagerObjectVectorController::onReplaceItem(OSItem * currentIt
               t_avmList->addAvailabilityManager(new_avm, priority);
             } else {
               // We are dragging an existing AVM onto another existing one
-              // We shift them instead, by setting the priority of the one being dragged to the oen being dragger onto
+              // We shift them instead, by setting the priority of the one being dragged to the one being dragger onto
               t_avmList->setAvailabilityManagerPriority(new_avm, priority);
             }
           }
