@@ -40,9 +40,9 @@
 namespace openstudio{
 namespace wind{
 
-// These classes are a mixture of definitions from the CONTAM docs and old 
+// These classes are a mixture of definitions from the CONTAM docs and old
 // Fundamentals handbooks - references are needed
-enum ShelterClass { Default, Urban, Suburban, Airport, LargeObstruction15ft, 
+enum ShelterClass { Default, Urban, Suburban, Airport, LargeObstruction15ft,
 LargeObstruction40ft, LargeObstruction100ft, FlatTerrain };
 
 double WIND_API pressureModifier(ShelterClass shelter, double H, double Href=10.0);

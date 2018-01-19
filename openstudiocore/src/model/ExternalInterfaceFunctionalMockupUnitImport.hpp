@@ -73,11 +73,11 @@ class MODEL_API ExternalInterfaceFunctionalMockupUnitImport : public ModelObject
   /** @name Setters */
   //@{
 
-  void setFMUTimeout(double fMUTimeout);
+  bool setFMUTimeout(double fMUTimeout);
 
   void resetFMUTimeout();
 
-  void setFMULoggingOn(int fMULoggingOn);
+  bool setFMULoggingOn(int fMULoggingOn);
 
   void resetFMULoggingOn();
 
@@ -112,5 +112,4 @@ typedef std::vector<ExternalInterfaceFunctionalMockupUnitImport> ExternalInterfa
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORT_HPP
-
+#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORT_HPP

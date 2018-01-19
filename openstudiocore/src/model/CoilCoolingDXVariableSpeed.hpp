@@ -110,13 +110,13 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
   /** @name Setters */
   //@{
 
-  void setNominalSpeedLevel(int nominalSpeedLevel);
+  bool setNominalSpeedLevel(int nominalSpeedLevel);
 
-  void setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(double grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel);
+  bool setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(double grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel);
 
   void autosizeGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
 
-  void setRatedAirFlowRateAtSelectedNominalSpeedLevel(double ratedAirFlowRateAtSelectedNominalSpeedLevel);
+  bool setRatedAirFlowRateAtSelectedNominalSpeedLevel(double ratedAirFlowRateAtSelectedNominalSpeedLevel);
 
   void autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
 
@@ -126,7 +126,7 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
 
   bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
-  // void setCondenserAirInletNodeName(std::string condenserAirInletNodeName);
+  // bool setCondenserAirInletNodeName(std::string condenserAirInletNodeName);
 
   // void resetCondenserAirInletNodeName();
 
@@ -202,4 +202,3 @@ typedef std::vector<CoilCoolingDXVariableSpeed> CoilCoolingDXVariableSpeedVector
 } // openstudio
 
 #endif // MODEL_COILCOOLINGDXVARIABLESPEED_HPP
-

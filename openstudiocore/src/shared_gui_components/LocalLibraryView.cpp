@@ -91,7 +91,7 @@ LocalLibraryView::LocalLibraryView(QWidget * parent)
   addMeasureButton = new AddScriptButton();
   addMeasureButton->setToolTip("Create a Measure from Template and add to My Measures");
   footerHLayout->addWidget(addMeasureButton);
-  
+
   footerHLayout->addStretch();
 
   myMeasuresFolderButton = new MyMeasuresFolderButton();
@@ -163,7 +163,7 @@ LibraryItemView::LibraryItemView(QWidget * parent)
   m_measureBadge = new MeasureBadge();
   m_measureBadge->setFixedWidth(25);
   m_measureBadge->setMeasureBadgeType(MeasureBadgeType::MyMeasure);
-  
+
   mainHBoxLayout->addWidget(m_measureBadge,Qt::AlignLeft);
 
   label = new QLabel("Measure");

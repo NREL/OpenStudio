@@ -33,24 +33,24 @@ class MakeScenesFromStories < OpenStudio::Ruleset::ModelUserScript
   def name
     return "Make SketchUp Scene For Each Building Story Floorplan"
   end
-  
+
   # returns a vector of arguments, the runner will present these arguments to the user
   # then pass in the results on run
   def arguments(model)
     result = OpenStudio::Ruleset::OSArgumentVector.new
     return result
   end
-  
+
   def makeSceneFromStorySpaces(skp_model, story, all_spaces)
-    
+
     pages = skp_model.pages
     story_name = story.name.get
-    
+
     # hide all spaces
     all_spaces.each do |space|
       if drawing_interface = space.drawing_interface
         if entity = drawing_interface.entity
-          entity.visible = false 
+          entity.visible = false
         end
       end
     end
@@ -59,7 +59,7 @@ class MakeScenesFromStories < OpenStudio::Ruleset::ModelUserScript
     story.spaces.each do |space|
       if drawing_interface = space.drawing_interface
         if entity = drawing_interface.entity
-          entity.visible = true 
+          entity.visible = true
         end
       end
     end
@@ -71,7 +71,7 @@ class MakeScenesFromStories < OpenStudio::Ruleset::ModelUserScript
         break
       end
     end
-    
+
     # create scene saving current visibility state
     story_page = pages.add("OS - #{story_name}")
     story_page.use_camera = false
@@ -81,16 +81,16 @@ class MakeScenesFromStories < OpenStudio::Ruleset::ModelUserScript
     story_page.use_shadow_info=false
     #pages.selected_page = story_page # not updated correctly if extra stories after this
   end
-  
+
   def makeSceneFromSpacesWithNoStory(skp_model, all_spaces)
     pages = skp_model.pages
     story_name = "<no story>"
-    
+
     # hide all spaces
     all_spaces.each do |space|
       if drawing_interface = space.drawing_interface
         if entity = drawing_interface.entity
-          entity.visible = false 
+          entity.visible = false
         end
       end
     end
@@ -100,7 +100,7 @@ class MakeScenesFromStories < OpenStudio::Ruleset::ModelUserScript
       if space.buildingStory.empty?
         if drawing_interface = space.drawing_interface
           if entity = drawing_interface.entity
-            entity.visible = true 
+            entity.visible = true
           end
         end
       end
@@ -113,7 +113,7 @@ class MakeScenesFromStories < OpenStudio::Ruleset::ModelUserScript
         break
       end
     end
-    
+
     # create scene saving current visibility state
     story_page = pages.add("OS - #{story_name}")
     story_page.use_camera = false
@@ -123,12 +123,12 @@ class MakeScenesFromStories < OpenStudio::Ruleset::ModelUserScript
     story_page.use_shadow_info=false
     #pages.selected_page = story_page # not updated correctly if extra stories after this
   end
-    
+
   # override run to implement the functionality of your script
   # model is an OpenStudio::Model::Model, runner is a OpenStudio::Ruleset::UserScriptRunner
-  def run(model, runner, user_arguments)   
+  def run(model, runner, user_arguments)
     super(model, runner, user_arguments)
-    
+
     # this is not a portable script as it uses the SketchUp API
 
     # unhide all spaces
@@ -136,28 +136,28 @@ class MakeScenesFromStories < OpenStudio::Ruleset::ModelUserScript
     spaces.each do |space|
       if drawing_interface = space.drawing_interface
         if entity = drawing_interface.entity
-          entity.visible = true 
+          entity.visible = true
         end
       end
     end
-    
+
     # get the active SketchUp model
     skp_model = Sketchup.active_model
     pages = skp_model.pages
-    
+
     # page with all stories
     all_stories_page = nil
-    pages.each do |page| 
-      if page.name.to_s == "OS - All Stories" 
-        
+    pages.each do |page|
+      if page.name.to_s == "OS - All Stories"
+
         # update hidden geometry
         page.update(16)
-        
+
         all_stories_page = page
         break
       end
     end
-  
+
     if not all_stories_page
       # create scene saving current visibility state
       all_stories_page = pages.add("OS - All Stories")
@@ -170,8 +170,8 @@ class MakeScenesFromStories < OpenStudio::Ruleset::ModelUserScript
 
     # create scene saving current camera state
     working_camera_page = nil
-    pages.each do |page| 
-      if page.name.to_s == "OS - Working Camera"  
+    pages.each do |page|
+      if page.name.to_s == "OS - Working Camera"
         working_camera_page = page
         break
       end
@@ -198,17 +198,17 @@ class MakeScenesFromStories < OpenStudio::Ruleset::ModelUserScript
 
     # set camera to plan and zoom extents before make next scene
     plan_camera_page = nil
-    pages.each do |page| 
-      if page.name.to_s == "OS - Plan Camera" 
-        
+    pages.each do |page|
+      if page.name.to_s == "OS - Plan Camera"
+
         # update Camera Location
         page.update(1)
-        
-        plan_camera_page = page 
+
+        plan_camera_page = page
         break
       end
     end
-    
+
     if not plan_camera_page
       # create scene saving plan zoom extents
       plan_camera_page = pages.add("OS - Plan Camera")
@@ -218,7 +218,7 @@ class MakeScenesFromStories < OpenStudio::Ruleset::ModelUserScript
       plan_camera_page.delay_time = 0
       plan_camera_page.use_shadow_info=false
     end
-    
+
     # get all the stories sorted by z height
     stories = model.getBuildingStorys.sort do |x, y|
       xz = x.nominalZCoordinate
@@ -241,7 +241,7 @@ class MakeScenesFromStories < OpenStudio::Ruleset::ModelUserScript
     stories.each do |story|
       makeSceneFromStorySpaces(skp_model, story, spaces)
     end
-    
+
     return true
   end
 

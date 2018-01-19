@@ -161,7 +161,7 @@ TEST_F(ModelFixture, ScheduleTypeRegistry_GetOrCreateScheduleTypeLimits) {
     Model model;
 
     ScheduleType scheduleType = ScheduleTypeRegistry::instance().getScheduleType("ThermostatSetpointDualSetpoint", "Heating Setpoint Temperature");
-    
+
     EXPECT_FALSE(scheduleType.lowerLimitValue);
     EXPECT_FALSE(scheduleType.upperLimitValue);
 

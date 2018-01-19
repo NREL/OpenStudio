@@ -8,7 +8,7 @@ set(${target_name}_src
   SimModel.hpp
   SimModel.cpp
   UserModel.hpp
-  UserModel.cpp  
+  UserModel.cpp
   Building.cpp
   Cooling.cpp
   Heating.cpp
@@ -68,8 +68,8 @@ target_link_libraries(${target_name}_static ${${target_name}_static_depends})
 
 #No need to install static library
 #if(NOT APPLE)
-#install(TARGETS ${target_name} 
-#  RUNTIME DESTINATION bin 
+#install(TARGETS ${target_name}
+#  RUNTIME DESTINATION bin
 #  LIBRARY DESTINATION lib
 #)
 #endif()

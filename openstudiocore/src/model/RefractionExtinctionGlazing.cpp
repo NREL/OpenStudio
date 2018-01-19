@@ -421,11 +421,11 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefractionExtinctionGlazing_Impl::setSolarDiffusing(bool solarDiffusing) {
+  bool RefractionExtinctionGlazing_Impl::setSolarDiffusing(bool solarDiffusing) {
     if (solarDiffusing) {
-      setBooleanFieldValue(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarDiffusing, true);
+      return setBooleanFieldValue(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarDiffusing, true);
     } else {
-      setBooleanFieldValue(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarDiffusing, false);
+      return setBooleanFieldValue(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarDiffusing, false);;
     }
   }
 
@@ -763,8 +763,13 @@ void RefractionExtinctionGlazing::resetDirtCorrectionFactorforSolarandVisibleTra
   getImpl<detail::RefractionExtinctionGlazing_Impl>()->resetDirtCorrectionFactorforSolarandVisibleTransmittance();
 }
 
-void RefractionExtinctionGlazing::setSolarDiffusing(bool solarDiffusing) {
-  getImpl<detail::RefractionExtinctionGlazing_Impl>()->setSolarDiffusing(solarDiffusing);
+bool RefractionExtinctionGlazing::setSolarDiffusing(bool solarDiffusing) {
+  return getImpl<detail::RefractionExtinctionGlazing_Impl>()->setSolarDiffusing(solarDiffusing);
+}
+
+void RefractionExtinctionGlazing::setSolarDiffusingNoFail(bool solarDiffusing) {
+  bool result = getImpl<detail::RefractionExtinctionGlazing_Impl>()->setSolarDiffusing(solarDiffusing);
+  OS_ASSERT(result);
 }
 
 void RefractionExtinctionGlazing::resetSolarDiffusing() {
@@ -779,4 +784,3 @@ RefractionExtinctionGlazing::RefractionExtinctionGlazing(std::shared_ptr<detail:
 
 } // model
 } // openstudio
-

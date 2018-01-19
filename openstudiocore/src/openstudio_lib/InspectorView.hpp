@@ -136,7 +136,7 @@ class BaseInspectorView : public QWidget, public Nano::Observer
 
   signals:
 
-  void toggleUnitsClicked(bool displayIP); 
+  void toggleUnitsClicked(bool displayIP);
 
   void removeButtonClicked(bool);
 
@@ -156,7 +156,7 @@ class GenericInspectorView : public BaseInspectorView
   Q_OBJECT;
 
   public:
-  
+
   GenericInspectorView(QWidget * parent = nullptr);
 
   virtual ~GenericInspectorView() {}
@@ -209,8 +209,8 @@ class NewPlenumDialog : public QDialog
 
   private slots:
 
-  void onCancelClicked(); 
-  void onApplyClicked(); 
+  void onCancelClicked();
+  void onApplyClicked();
 };
 
 class PlenumChooserView : public QWidget
@@ -218,7 +218,7 @@ class PlenumChooserView : public QWidget
   Q_OBJECT;
 
   public:
-  
+
   PlenumChooserView(QWidget * parent = nullptr);
 
   virtual ~PlenumChooserView() {}

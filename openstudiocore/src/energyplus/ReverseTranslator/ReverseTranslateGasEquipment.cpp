@@ -60,7 +60,7 @@ OptionalModelObject ReverseTranslator::translateGasEquipment( const WorkspaceObj
 
   // create the definition
   openstudio::model::GasEquipmentDefinition definition(m_model);
-  
+
   OptionalString s = workspaceObject.name();
   if(s){
     definition.setName(*s + " Definition");
@@ -68,7 +68,7 @@ OptionalModelObject ReverseTranslator::translateGasEquipment( const WorkspaceObj
 
   s = workspaceObject.getString(openstudio::GasEquipmentFields::DesignLevelCalculationMethod, true);
   OS_ASSERT(s);
- 
+
   OptionalDouble d;
   if (istringEqual("EquipmentLevel", *s)){
     d = workspaceObject.getDouble(openstudio::GasEquipmentFields::DesignLevel);
@@ -150,7 +150,7 @@ OptionalModelObject ReverseTranslator::translateGasEquipment( const WorkspaceObj
   if(s){
     gasEquipment.setEndUseSubcategory(*s);
   }
-       
+
   return gasEquipment;
 }
 

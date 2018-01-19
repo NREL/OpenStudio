@@ -409,9 +409,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void EvaporativeFluidCoolerTwoSpeed_Impl::setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor) {
+  bool EvaporativeFluidCoolerTwoSpeed_Impl::setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor) {
     bool result = setDouble(OS_EvaporativeFluidCooler_TwoSpeedFields::LowFanSpeedAirFlowRateSizingFactor, lowFanSpeedAirFlowRateSizingFactor);
     OS_ASSERT(result);
+    return result;
   }
 
   bool EvaporativeFluidCoolerTwoSpeed_Impl::setLowFanSpeedFanPower(boost::optional<double> lowFanSpeedFanPower) {
@@ -427,9 +428,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void EvaporativeFluidCoolerTwoSpeed_Impl::setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor) {
+  bool EvaporativeFluidCoolerTwoSpeed_Impl::setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor) {
     bool result = setDouble(OS_EvaporativeFluidCooler_TwoSpeedFields::LowFanSpeedFanPowerSizingFactor, lowFanSpeedFanPowerSizingFactor);
     OS_ASSERT(result);
+    return result;
   }
 
   bool EvaporativeFluidCoolerTwoSpeed_Impl::setDesignSprayWaterFlowRate(double designSprayWaterFlowRate) {
@@ -442,7 +444,7 @@ namespace detail {
     return result;
   }
 
-  void EvaporativeFluidCoolerTwoSpeed_Impl::setOutdoorAirInletNodeName(boost::optional<std::string> outdoorAirInletNodeName) {
+  bool EvaporativeFluidCoolerTwoSpeed_Impl::setOutdoorAirInletNodeName(boost::optional<std::string> outdoorAirInletNodeName) {
     bool result(false);
     if (outdoorAirInletNodeName) {
       result = setString(OS_EvaporativeFluidCooler_TwoSpeedFields::OutdoorAirInletNodeName, outdoorAirInletNodeName.get());
@@ -452,6 +454,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void EvaporativeFluidCoolerTwoSpeed_Impl::resetOutdoorAirInletNodeName() {
@@ -459,9 +462,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void EvaporativeFluidCoolerTwoSpeed_Impl::setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio) {
+  bool EvaporativeFluidCoolerTwoSpeed_Impl::setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio) {
     bool result = setDouble(OS_EvaporativeFluidCooler_TwoSpeedFields::HeatRejectionCapacityandNominalCapacitySizingRatio, heatRejectionCapacityandNominalCapacitySizingRatio);
     OS_ASSERT(result);
+    return result;
   }
 
   bool EvaporativeFluidCoolerTwoSpeed_Impl::setHighSpeedStandardDesignCapacity(boost::optional<double> highSpeedStandardDesignCapacity) {
@@ -503,9 +507,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void EvaporativeFluidCoolerTwoSpeed_Impl::setLowSpeedStandardCapacitySizingFactor(double lowSpeedStandardCapacitySizingFactor) {
+  bool EvaporativeFluidCoolerTwoSpeed_Impl::setLowSpeedStandardCapacitySizingFactor(double lowSpeedStandardCapacitySizingFactor) {
     bool result = setDouble(OS_EvaporativeFluidCooler_TwoSpeedFields::LowSpeedStandardCapacitySizingFactor, lowSpeedStandardCapacitySizingFactor);
     OS_ASSERT(result);
+    return result;
   }
 
   bool EvaporativeFluidCoolerTwoSpeed_Impl::setHighFanSpeedUfactorTimesAreaValue(boost::optional<double> highFanSpeedUfactorTimesAreaValue) {
@@ -552,9 +557,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void EvaporativeFluidCoolerTwoSpeed_Impl::setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor) {
+  bool EvaporativeFluidCoolerTwoSpeed_Impl::setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor) {
     bool result = setDouble(OS_EvaporativeFluidCooler_TwoSpeedFields::LowFanSpeedUFactorTimesAreaSizingFactor, lowFanSpeedUFactorTimesAreaSizingFactor);
     OS_ASSERT(result);
+    return result;
   }
 
   bool EvaporativeFluidCoolerTwoSpeed_Impl::setDesignWaterFlowRate(boost::optional<double> designWaterFlowRate) {
@@ -618,9 +624,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void EvaporativeFluidCoolerTwoSpeed_Impl::setLowSpeedUserSpecifiedDesignCapacitySizingFactor(double lowSpeedUserSpecifiedDesignCapacitySizingFactor) {
+  bool EvaporativeFluidCoolerTwoSpeed_Impl::setLowSpeedUserSpecifiedDesignCapacitySizingFactor(double lowSpeedUserSpecifiedDesignCapacitySizingFactor) {
     bool result = setDouble(OS_EvaporativeFluidCooler_TwoSpeedFields::LowSpeedUserSpecifiedDesignCapacitySizingFactor, lowSpeedUserSpecifiedDesignCapacitySizingFactor);
     OS_ASSERT(result);
+    return result;
   }
 
   bool EvaporativeFluidCoolerTwoSpeed_Impl::setDesignEnteringWaterTemperature(boost::optional<double> designEnteringWaterTemperature) {
@@ -684,7 +691,7 @@ namespace detail {
     return result;
   }
 
-  void EvaporativeFluidCoolerTwoSpeed_Impl::setEvaporationLossFactor(boost::optional<double> evaporationLossFactor) {
+  bool EvaporativeFluidCoolerTwoSpeed_Impl::setEvaporationLossFactor(boost::optional<double> evaporationLossFactor) {
     bool result(false);
     if (evaporationLossFactor) {
       result = setDouble(OS_EvaporativeFluidCooler_TwoSpeedFields::EvaporationLossFactor, evaporationLossFactor.get());
@@ -694,6 +701,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void EvaporativeFluidCoolerTwoSpeed_Impl::resetEvaporationLossFactor() {
@@ -701,9 +709,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void EvaporativeFluidCoolerTwoSpeed_Impl::setDriftLossPercent(double driftLossPercent) {
+  bool EvaporativeFluidCoolerTwoSpeed_Impl::setDriftLossPercent(double driftLossPercent) {
     bool result = setDouble(OS_EvaporativeFluidCooler_TwoSpeedFields::DriftLossPercent, driftLossPercent);
     OS_ASSERT(result);
+    return result;
   }
 
   bool EvaporativeFluidCoolerTwoSpeed_Impl::setBlowdownCalculationMode(std::string blowdownCalculationMode) {
@@ -1084,8 +1093,8 @@ void EvaporativeFluidCoolerTwoSpeed::autosizeLowFanSpeedAirFlowRate() {
   getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->autosizeLowFanSpeedAirFlowRate();
 }
 
-void EvaporativeFluidCoolerTwoSpeed::setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor) {
-  getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setLowFanSpeedAirFlowRateSizingFactor(lowFanSpeedAirFlowRateSizingFactor);
+bool EvaporativeFluidCoolerTwoSpeed::setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor) {
+  return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setLowFanSpeedAirFlowRateSizingFactor(lowFanSpeedAirFlowRateSizingFactor);
 }
 
 bool EvaporativeFluidCoolerTwoSpeed::setLowFanSpeedFanPower(double lowFanSpeedFanPower) {
@@ -1096,8 +1105,8 @@ void EvaporativeFluidCoolerTwoSpeed::autosizeLowFanSpeedFanPower() {
   getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->autosizeLowFanSpeedFanPower();
 }
 
-void EvaporativeFluidCoolerTwoSpeed::setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor) {
-  getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setLowFanSpeedFanPowerSizingFactor(lowFanSpeedFanPowerSizingFactor);
+bool EvaporativeFluidCoolerTwoSpeed::setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor) {
+  return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setLowFanSpeedFanPowerSizingFactor(lowFanSpeedFanPowerSizingFactor);
 }
 
 bool EvaporativeFluidCoolerTwoSpeed::setDesignSprayWaterFlowRate(double designSprayWaterFlowRate) {
@@ -1108,16 +1117,16 @@ bool EvaporativeFluidCoolerTwoSpeed::setPerformanceInputMethod(std::string perfo
   return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setPerformanceInputMethod(performanceInputMethod);
 }
 
-void EvaporativeFluidCoolerTwoSpeed::setOutdoorAirInletNodeName(std::string outdoorAirInletNodeName) {
-  getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setOutdoorAirInletNodeName(outdoorAirInletNodeName);
+bool EvaporativeFluidCoolerTwoSpeed::setOutdoorAirInletNodeName(std::string outdoorAirInletNodeName) {
+  return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setOutdoorAirInletNodeName(outdoorAirInletNodeName);
 }
 
 void EvaporativeFluidCoolerTwoSpeed::resetOutdoorAirInletNodeName() {
   getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->resetOutdoorAirInletNodeName();
 }
 
-void EvaporativeFluidCoolerTwoSpeed::setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio) {
-  getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setHeatRejectionCapacityandNominalCapacitySizingRatio(heatRejectionCapacityandNominalCapacitySizingRatio);
+bool EvaporativeFluidCoolerTwoSpeed::setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio) {
+  return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setHeatRejectionCapacityandNominalCapacitySizingRatio(heatRejectionCapacityandNominalCapacitySizingRatio);
 }
 
 bool EvaporativeFluidCoolerTwoSpeed::setHighSpeedStandardDesignCapacity(double highSpeedStandardDesignCapacity) {
@@ -1140,8 +1149,8 @@ void EvaporativeFluidCoolerTwoSpeed::autosizeLowSpeedStandardDesignCapacity() {
   getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->autosizeLowSpeedStandardDesignCapacity();
 }
 
-void EvaporativeFluidCoolerTwoSpeed::setLowSpeedStandardCapacitySizingFactor(double lowSpeedStandardCapacitySizingFactor) {
-  getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setLowSpeedStandardCapacitySizingFactor(lowSpeedStandardCapacitySizingFactor);
+bool EvaporativeFluidCoolerTwoSpeed::setLowSpeedStandardCapacitySizingFactor(double lowSpeedStandardCapacitySizingFactor) {
+  return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setLowSpeedStandardCapacitySizingFactor(lowSpeedStandardCapacitySizingFactor);
 }
 
 bool EvaporativeFluidCoolerTwoSpeed::setHighFanSpeedUfactorTimesAreaValue(double highFanSpeedUfactorTimesAreaValue) {
@@ -1168,8 +1177,8 @@ void EvaporativeFluidCoolerTwoSpeed::autosizeLowFanSpeedUfactorTimesAreaValue() 
   getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->autosizeLowFanSpeedUfactorTimesAreaValue();
 }
 
-void EvaporativeFluidCoolerTwoSpeed::setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor) {
-  getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setLowFanSpeedUFactorTimesAreaSizingFactor(lowFanSpeedUFactorTimesAreaSizingFactor);
+bool EvaporativeFluidCoolerTwoSpeed::setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor) {
+  return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setLowFanSpeedUFactorTimesAreaSizingFactor(lowFanSpeedUFactorTimesAreaSizingFactor);
 }
 
 bool EvaporativeFluidCoolerTwoSpeed::setDesignWaterFlowRate(double designWaterFlowRate) {
@@ -1204,8 +1213,8 @@ void EvaporativeFluidCoolerTwoSpeed::autosizeLowSpeedUserSpecifiedDesignCapacity
   getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->autosizeLowSpeedUserSpecifiedDesignCapacity();
 }
 
-void EvaporativeFluidCoolerTwoSpeed::setLowSpeedUserSpecifiedDesignCapacitySizingFactor(double lowSpeedUserSpecifiedDesignCapacitySizingFactor) {
-  getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setLowSpeedUserSpecifiedDesignCapacitySizingFactor(lowSpeedUserSpecifiedDesignCapacitySizingFactor);
+bool EvaporativeFluidCoolerTwoSpeed::setLowSpeedUserSpecifiedDesignCapacitySizingFactor(double lowSpeedUserSpecifiedDesignCapacitySizingFactor) {
+  return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setLowSpeedUserSpecifiedDesignCapacitySizingFactor(lowSpeedUserSpecifiedDesignCapacitySizingFactor);
 }
 
 bool EvaporativeFluidCoolerTwoSpeed::setDesignEnteringWaterTemperature(double designEnteringWaterTemperature) {
@@ -1240,16 +1249,16 @@ bool EvaporativeFluidCoolerTwoSpeed::setEvaporationLossMode(std::string evaporat
   return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setEvaporationLossMode(evaporationLossMode);
 }
 
-void EvaporativeFluidCoolerTwoSpeed::setEvaporationLossFactor(double evaporationLossFactor) {
-  getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
+bool EvaporativeFluidCoolerTwoSpeed::setEvaporationLossFactor(double evaporationLossFactor) {
+  return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
 }
 
 void EvaporativeFluidCoolerTwoSpeed::resetEvaporationLossFactor() {
   getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->resetEvaporationLossFactor();
 }
 
-void EvaporativeFluidCoolerTwoSpeed::setDriftLossPercent(double driftLossPercent) {
-  getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setDriftLossPercent(driftLossPercent);
+bool EvaporativeFluidCoolerTwoSpeed::setDriftLossPercent(double driftLossPercent) {
+  return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setDriftLossPercent(driftLossPercent);
 }
 
 bool EvaporativeFluidCoolerTwoSpeed::setBlowdownCalculationMode(std::string blowdownCalculationMode) {
@@ -1319,5 +1328,4 @@ EvaporativeFluidCoolerTwoSpeed::EvaporativeFluidCoolerTwoSpeed(std::shared_ptr<d
   }
 
 } // model
-} // openstudio
-
+} // openstudio

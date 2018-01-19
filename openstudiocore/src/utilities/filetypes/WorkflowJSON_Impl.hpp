@@ -39,12 +39,12 @@
 #include "../data/Variant.hpp"
 #include "../data/Attribute.hpp"
 
-#include <nano/nano_signal_slot.hpp> 
+#include <nano/nano_signal_slot.hpp>
 
 #include <jsoncpp/json.h>
 
 namespace openstudio{
-  
+
 class DateTime;
 
 namespace detail {
@@ -143,7 +143,7 @@ namespace detail {
       boost::optional<openstudio::path> weatherFile() const;
 
       bool setWeatherFile(const openstudio::path& weatherFile);
-    
+
       void resetWeatherFile();
 
       std::vector<WorkflowStep> workflowSteps() const;

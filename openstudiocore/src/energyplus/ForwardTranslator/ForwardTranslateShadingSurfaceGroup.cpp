@@ -46,7 +46,7 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateShadingSurfaceGroup( model::ShadingSurfaceGroup & modelObject )
 {
-  
+
   ShadingSurfaceVector shadingSurfaces = modelObject.shadingSurfaces();
   std::sort(shadingSurfaces.begin(), shadingSurfaces.end(), WorkspaceObjectNameLess());
   for (ShadingSurface& shadingSurface : shadingSurfaces){

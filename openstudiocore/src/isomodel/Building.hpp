@@ -59,7 +59,7 @@ class Building
     double _gasApplianceHeatGainUnoccupied;
     double _buildingEnergyManagement;
   };
-  
+
 
 } // isomodel
 } // openstudio

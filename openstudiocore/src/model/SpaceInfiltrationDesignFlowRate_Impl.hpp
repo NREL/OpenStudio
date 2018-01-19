@@ -42,23 +42,23 @@ namespace detail {
 
   /** SpaceInfiltrationDesignFlowRate_Impl is a SpaceLoad_Impl that is the implementation class for SpaceInfiltrationDesignFlowRate.*/
   class MODEL_API SpaceInfiltrationDesignFlowRate_Impl : public SpaceLoad_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -80,7 +80,7 @@ namespace detail {
     //@{
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
-    
+
     virtual IddObjectType iddObjectType() const override;
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;

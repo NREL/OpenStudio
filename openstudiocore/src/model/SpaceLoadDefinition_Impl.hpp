@@ -66,13 +66,13 @@ namespace detail {
     /// Returns all instances of this definition.
     std::vector<SpaceLoadInstance> instances() const;
 
-    /** Returns the floor area associated with instances of this space load definition.  
+    /** Returns the floor area associated with instances of this space load definition.
     If two instances are in the same space then that floor area will be double counted.
     If two instances used in the same space type then that floor area will be double counted.
     Space and SpaceLoadInstance multipliers are included in the result. **/
     double floorArea() const;
 
-    /** Returns the number of instances of this space load.  
+    /** Returns the number of instances of this space load.
     Space and SpaceLoadInstance multipliers are included in the result **/
     int quantity() const;
 

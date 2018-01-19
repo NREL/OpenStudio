@@ -7,7 +7,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 #add_custom_command(
 #  OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.h"
 #  COMMAND "${SWIG_EXECUTABLE}"
-#          "-ruby" 
+#          "-ruby"
 #          -external-runtime "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.h"
 #)
 
@@ -227,7 +227,7 @@ set(${target_name}_SRC
   RunTabView.cpp
   RunTabView.hpp
   ScheduleDayView.cpp
-  ScheduleDayView.hpp  
+  ScheduleDayView.hpp
   ScheduleDialog.cpp
   ScheduleDialog.hpp
   ScheduleSetInspectorView.cpp
@@ -271,7 +271,7 @@ set(${target_name}_SRC
   SpacesSpacesGridView.cpp
   SpacesSpacesGridView.hpp
   SpacesSubsurfacesGridView.cpp
-  SpacesSubsurfacesGridView.hpp  
+  SpacesSubsurfacesGridView.hpp
   SpacesSubtabGridView.cpp
   SpacesSubtabGridView.hpp
   SpacesSurfacesGridView.cpp
@@ -408,7 +408,7 @@ set(${target_name}_SRC
   ../shared_gui_components/MeasureManager.cpp
   ../shared_gui_components/MeasureManager.hpp
   ../shared_gui_components/NetworkProxyDialog.cpp
-  ../shared_gui_components/NetworkProxyDialog.hpp  
+  ../shared_gui_components/NetworkProxyDialog.hpp
   ../shared_gui_components/OSCheckBox.cpp
   ../shared_gui_components/OSCheckBox.hpp
   ../shared_gui_components/OSCollapsibleView.cpp
@@ -435,7 +435,7 @@ set(${target_name}_SRC
   ../shared_gui_components/OSListView.cpp
   ../shared_gui_components/OSListView.hpp
   ../shared_gui_components/OSLoadNamePixmapLineEdit.cpp
-  ../shared_gui_components/OSLoadNamePixmapLineEdit.hpp  
+  ../shared_gui_components/OSLoadNamePixmapLineEdit.hpp
   ../shared_gui_components/OSQObjectController.cpp
   ../shared_gui_components/OSQObjectController.hpp
   ../shared_gui_components/OSQuantityEdit.cpp
@@ -445,7 +445,7 @@ set(${target_name}_SRC
   ../shared_gui_components/OSUnsignedEdit.cpp
   ../shared_gui_components/OSUnsignedEdit.hpp
   ../shared_gui_components/OSViewSwitcher.cpp
-  ../shared_gui_components/OSViewSwitcher.hpp  
+  ../shared_gui_components/OSViewSwitcher.hpp
   ../shared_gui_components/PageNavigator.cpp
   ../shared_gui_components/PageNavigator.hpp
   ../shared_gui_components/ProcessEventsProgressBar.cpp
@@ -455,7 +455,7 @@ set(${target_name}_SRC
   ../shared_gui_components/SyncMeasuresDialogCentralWidget.cpp
   ../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp
   ../shared_gui_components/TextEditDialog.cpp
-  ../shared_gui_components/TextEditDialog.hpp 
+  ../shared_gui_components/TextEditDialog.hpp
   ../shared_gui_components/TIDItemModel.cpp
   ../shared_gui_components/TIDItemModel.hpp
   ../shared_gui_components/WorkflowController.cpp
@@ -465,7 +465,7 @@ set(${target_name}_SRC
   ../shared_gui_components/WaitDialog.cpp
   ../shared_gui_components/WaitDialog.hpp
   ../shared_gui_components/WorkflowTools.cpp
-  ../shared_gui_components/WorkflowTools.hpp 
+  ../shared_gui_components/WorkflowTools.hpp
 
   #"${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.h"
 )
@@ -502,7 +502,7 @@ set(${target_name}_moc
   GeometryPreviewController.hpp
   GeometryPreviewView.hpp
   GeometryTabController.hpp
-  GeometryTabView.hpp  
+  GeometryTabView.hpp
   GridItem.hpp
   GridScene.hpp
   GridViewSubTab.hpp
@@ -679,7 +679,7 @@ set(${target_name}_moc
   ../shared_gui_components/OSLineEdit.hpp
   ../shared_gui_components/OSListController.hpp
   ../shared_gui_components/OSListView.hpp
-  ../shared_gui_components/OSLoadNamePixmapLineEdit.hpp  
+  ../shared_gui_components/OSLoadNamePixmapLineEdit.hpp
   ../shared_gui_components/OSQObjectController.hpp
   ../shared_gui_components/OSQuantityEdit.hpp
   ../shared_gui_components/OSSwitch.hpp
@@ -688,7 +688,7 @@ set(${target_name}_moc
   ../shared_gui_components/PageNavigator.hpp
   ../shared_gui_components/SyncMeasuresDialog.hpp
   ../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp
-  ../shared_gui_components/TextEditDialog.hpp 
+  ../shared_gui_components/TextEditDialog.hpp
   ../shared_gui_components/TIDItemModel.hpp
   ../shared_gui_components/WorkflowController.hpp
   ../shared_gui_components/WorkflowView.hpp
@@ -743,11 +743,11 @@ set(${target_name}_test_src
 )
 
 set(${target_name}_test_depends
-  ${${target_name}_depends} 
+  ${${target_name}_depends}
 )
 
 CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
 CREATE_SRC_GROUPS("${${target_name}_test_src}")
 if(BUILD_TESTING)
-  
+
 endif()

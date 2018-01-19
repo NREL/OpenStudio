@@ -60,7 +60,7 @@ OSCollapsibleView::OSCollapsibleView(bool alwaysExpanded, QWidget * parent)
   mainVLayout->setContentsMargins(0,0,0,0);
   mainVLayout->setSpacing(0);
   setLayout(mainVLayout);
-  
+
   m_headerContainer = new OSViewSwitcher();
   mainVLayout->addWidget(m_headerContainer);
 

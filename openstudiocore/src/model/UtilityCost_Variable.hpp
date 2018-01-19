@@ -45,7 +45,7 @@ namespace detail{
  *  UtilityCost_Variable allows for the direct entry of monthly values into a variable.
  */
 class MODEL_API UtilityCost_Variable : public ParentObject{
- 
+
 public:
 
   /** @name Constructors and Destructors */
@@ -85,8 +85,6 @@ public:
 
   boost::optional<double> decemberValue() const;
 
-  boost::optional<std::string> name() const;
-
   boost::optional<std::string> tariffName() const;
 
   boost::optional<std::string> variableType() const;
@@ -94,36 +92,34 @@ public:
   //@}
   /** @name Setters */
   //@{
-  
-  void setJanuaryValue(double januaryValue);
 
-  void setFebruaryValue(double februaryValue);
-  
-  void setMarchValue(double marchValue);
-  
-  void setAprilValue(double aprilValue);
-  
-  void setMayValue(double mayValue);
+  bool setJanuaryValue(double januaryValue);
 
-  void setJuneValue(double juneValue);
+  bool setFebruaryValue(double februaryValue);
 
-  void setJulyValue(double julyValue);
-  
-  void setAugustValue(double augustValue);
+  bool setMarchValue(double marchValue);
 
-  void setSeptemberValue(double septemberValue);
-  
-  void setOctoberValue(double octoberValue);
+  bool setAprilValue(double aprilValue);
 
-  void setNovemberValue(double novemberValue);
+  bool setMayValue(double mayValue);
 
-  void setDecemberValue(double decemberValue);
+  bool setJuneValue(double juneValue);
 
-  void setName(const std::string& name);
+  bool setJulyValue(double julyValue);
 
-  void setTariffName(const std::string& tariffName);
- 
-  void setVariableType(const std::string& variableType);
+  bool setAugustValue(double augustValue);
+
+  bool setSeptemberValue(double septemberValue);
+
+  bool setOctoberValue(double octoberValue);
+
+  bool setNovemberValue(double novemberValue);
+
+  bool setDecemberValue(double decemberValue);
+
+  bool setTariffName(const std::string& tariffName);
+
+  bool setVariableType(const std::string& variableType);
 
   //@}
 

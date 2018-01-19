@@ -75,51 +75,51 @@ class MODEL_API Gas : public GasLayer {
   /** Gets the gas type. */
   std::string gasType() const;
 
-  /** The conductivity (W/m*K) at temperature (K). Will throw if gasType == "Custom" and 
+  /** The conductivity (W/m*K) at temperature (K). Will throw if gasType == "Custom" and
    *  necessary values are not available. */
   double getThermalConductivity(double temperature) const;
 
-  /** The conductance (W/m^2*K) at temperature (K). Will throw if gasType == "Custom" and 
+  /** The conductance (W/m^2*K) at temperature (K). Will throw if gasType == "Custom" and
    *  necessary values are not available. */
   double getThermalConductance(double temperature) const;
 
-  /** The resistivity (m*K/W) at temperature (K). Will throw if gasType == "Custom" and 
+  /** The resistivity (m*K/W) at temperature (K). Will throw if gasType == "Custom" and
    *  necessary values are not available. */
   double getThermalResistivity(double temperature) const;
 
-  /** The resistance (m^2*K/W) at temperature (K). Will throw if gasType == "Custom" and 
+  /** The resistance (m^2*K/W) at temperature (K). Will throw if gasType == "Custom" and
    *  necessary values are not available. */
   double getThermalResistance(double temperature) const;
 
-  /** The viscosity (kg/m*s) at temperature (K). Will throw if gasType == "Custom" and 
+  /** The viscosity (kg/m*s) at temperature (K). Will throw if gasType == "Custom" and
    *  necessary values are not available. */
   double getViscosity(double temperature) const;
 
-  /** The specific heat (J/kg*K) at temperature (K). Will throw if gasType == "Custom" and 
+  /** The specific heat (J/kg*K) at temperature (K). Will throw if gasType == "Custom" and
    *  necessary values are not available. */
   double getSpecificHeat(double temperature) const;
 
-  /** The first conductivity coefficient of gasType "Custom" (W/m*K). The conductivity (W/m*K) = 
+  /** The first conductivity coefficient of gasType "Custom" (W/m*K). The conductivity (W/m*K) =
    *  A (W/m*K) + B (W/m*K^2) * temperature (K) + C (W/m*K^3) * temperature (K^2). */
   boost::optional<double> customConductivityCoefficientA() const;
 
-  /** The second conductivity coefficient of gasType "Custom" (W/m*K^2). The conductivity (W/m*K) = 
+  /** The second conductivity coefficient of gasType "Custom" (W/m*K^2). The conductivity (W/m*K) =
    *  A (W/m*K) + B (W/m*K^2) * temperature (K) + C (W/m*K^3) * temperature (K^2). */
   boost::optional<double> customConductivityCoefficientB() const;
 
-  /** The third conductivity coefficient of gasType "Custom" (W/m*K^3). The conductivity (W/m*K) = 
+  /** The third conductivity coefficient of gasType "Custom" (W/m*K^3). The conductivity (W/m*K) =
    *  A (W/m*K) + B (W/m*K^2) * temperature (K) + C (W/m*K^3) * temperature (K^2). */
   boost::optional<double> customConductivityCoefficientC() const;
 
-  /** The first viscosity coefficient of gasType "Custom" (kg/m*s). The viscosity (kg/m*s) = 
+  /** The first viscosity coefficient of gasType "Custom" (kg/m*s). The viscosity (kg/m*s) =
    *  A (kg/m*s) + B (kg/m*s*K) * temperature (K) + C (kg/m*s*K^2) * temperature (K^2). */
   boost::optional<double> customViscosityCoefficientA() const;
 
-  /** The second viscosity coefficient of gasType "Custom" (kg/m*s). The viscosity (kg/m*s) = 
+  /** The second viscosity coefficient of gasType "Custom" (kg/m*s). The viscosity (kg/m*s) =
    *  A (kg/m*s) + B (kg/m*s*K) * temperature (K) + C (kg/m*s*K^2) * temperature (K^2). */
   boost::optional<double> customViscosityCoefficientB() const;
 
-  /** The third viscosity coefficient of gasType "Custom" (kg/m*s). The viscosity (kg/m*s) = 
+  /** The third viscosity coefficient of gasType "Custom" (kg/m*s). The viscosity (kg/m*s) =
    *  A (kg/m*s) + B (kg/m*s*K) * temperature (K) + C (kg/m*s*K^2) * temperature (K^2). */
   boost::optional<double> customViscosityCoefficientC() const;
 
@@ -208,19 +208,19 @@ class MODEL_API Gas : public GasLayer {
 
   bool setThickness(const Quantity& thickness);
 
-  void setConductivityCoefficientA(double conductivityCoefficientA);
+  bool setConductivityCoefficientA(double conductivityCoefficientA);
 
   bool setConductivityCoefficientA(const Quantity& conductivityCoefficientA);
 
   void resetConductivityCoefficientA();
 
-  void setConductivityCoefficientB(double conductivityCoefficientB);
+  bool setConductivityCoefficientB(double conductivityCoefficientB);
 
   bool setConductivityCoefficientB(const Quantity& conductivityCoefficientB);
 
   void resetConductivityCoefficientB();
 
-  void setConductivityCoefficientC(double conductivityCoefficientC);
+  bool setConductivityCoefficientC(double conductivityCoefficientC);
 
   bool setConductivityCoefficientC(const Quantity& conductivityCoefficientC);
 
@@ -232,13 +232,13 @@ class MODEL_API Gas : public GasLayer {
 
   void resetViscosityCoefficientA();
 
-  void setViscosityCoefficientB(double viscosityCoefficientB);
+  bool setViscosityCoefficientB(double viscosityCoefficientB);
 
   bool setViscosityCoefficientB(const Quantity& viscosityCoefficientB);
 
   void resetViscosityCoefficientB();
 
-  void setViscosityCoefficientC(double viscosityCoefficientC);
+  bool setViscosityCoefficientC(double viscosityCoefficientC);
 
   bool setViscosityCoefficientC(const Quantity& viscosityCoefficientC);
 
@@ -250,13 +250,13 @@ class MODEL_API Gas : public GasLayer {
 
   void resetSpecificHeatCoefficientA();
 
-  void setSpecificHeatCoefficientB(double specificHeatCoefficientB);
+  bool setSpecificHeatCoefficientB(double specificHeatCoefficientB);
 
   bool setSpecificHeatCoefficientB(const Quantity& specificHeatCoefficientB);
 
   void resetSpecificHeatCoefficientB();
 
-  void setSpecificHeatCoefficientC(double specificHeatCoefficientC);
+  bool setSpecificHeatCoefficientC(double specificHeatCoefficientC);
 
   bool setSpecificHeatCoefficientC(const Quantity& specificHeatCoefficientC);
 
@@ -304,4 +304,3 @@ typedef std::vector<Gas> GasVector;
 } // openstudio
 
 #endif // MODEL_GAS_HPP
-

@@ -41,7 +41,7 @@ namespace detail {
 
 } // detail
 
-/** CurveExponentialDecay is a Curve that wraps the OpenStudio IDD object 
+/** CurveExponentialDecay is a Curve that wraps the OpenStudio IDD object
  *  'OS:Curve:ExponentialDecay'. The functional form is \f$f(x) = c_1 + c_2 \cdot e^{c_3 \cdot x}\f$ */
 class MODEL_API CurveExponentialDecay : public Curve {
  public:
@@ -91,21 +91,21 @@ class MODEL_API CurveExponentialDecay : public Curve {
   /** @name Setters */
   //@{
 
-  void setCoefficient1C1(double coefficient1C1);
+  bool setCoefficient1C1(double coefficient1C1);
 
-  void setCoefficient2C2(double coefficient2C2);
+  bool setCoefficient2C2(double coefficient2C2);
 
-  void setCoefficient3C3(double coefficient3C3);
+  bool setCoefficient3C3(double coefficient3C3);
 
-  void setMinimumValueofx(double minimumValueofx);
+  bool setMinimumValueofx(double minimumValueofx);
 
-  void setMaximumValueofx(double maximumValueofx);
+  bool setMaximumValueofx(double maximumValueofx);
 
-  void setMinimumCurveOutput(double minimumCurveOutput);
+  bool setMinimumCurveOutput(double minimumCurveOutput);
 
   void resetMinimumCurveOutput();
 
-  void setMaximumCurveOutput(double maximumCurveOutput);
+  bool setMaximumCurveOutput(double maximumCurveOutput);
 
   void resetMaximumCurveOutput();
 
@@ -148,5 +148,4 @@ typedef std::vector<CurveExponentialDecay> CurveExponentialDecayVector;
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEEXPONENTIALDECAY_HPP
-
+#endif // MODEL_CURVEEXPONENTIALDECAY_HPP

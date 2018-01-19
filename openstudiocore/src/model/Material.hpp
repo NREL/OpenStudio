@@ -46,8 +46,8 @@ namespace detail{
 }
 
 /** A Material is a ResourceObject that serves as a base class for all objects that can be used
- *  in \link LayeredConstruction LayeredConstructions \endlink. It also provides Attributes for 
- *  'thickness', 'getVisibleTransmiattance', 'interiorVisibleAbsorptance', and 
+ *  in \link LayeredConstruction LayeredConstructions \endlink. It also provides Attributes for
+ *  'thickness', 'getVisibleTransmiattance', 'interiorVisibleAbsorptance', and
  *  'exteriorVisibleAbsorptance'. */
 class MODEL_API Material : public ResourceObject {
  public:
@@ -60,8 +60,8 @@ class MODEL_API Material : public ResourceObject {
   /** @name Getters */
   //@{
 
-  /** Get the thickness of the material. Virtual implementation. For some materials, 0.0 is always 
-   *  returned. 
+  /** Get the thickness of the material. Virtual implementation. For some materials, 0.0 is always
+   *  returned.
    *
    *  Attribute Name: 'thickness' */
   double thickness() const;
@@ -71,12 +71,12 @@ class MODEL_API Material : public ResourceObject {
    *  Attribute Name: 'getVisibleTransmittance' */
   boost::optional<double> getVisibleTransmittance() const;
 
-  /** Get the interiorVisibleAbsorptance of the material. Virtual implementation. 
+  /** Get the interiorVisibleAbsorptance of the material. Virtual implementation.
    *
    *  Attribute Name: 'interiorVisibleAbsorptance' */
   boost::optional<double> interiorVisibleAbsorptance() const;
 
-  /** Get the exteriorVisibleAbsorptance of the material. Virtual implementation. 
+  /** Get the exteriorVisibleAbsorptance of the material. Virtual implementation.
    *
    *  Attribute Name: 'exteriorVisibleAbsorptance' */
   boost::optional<double> exteriorVisibleAbsorptance() const;
@@ -88,7 +88,7 @@ class MODEL_API Material : public ResourceObject {
   /** @name Setters */
   //@{
 
-  /** Set thickness to value (m). For some materials, false is always returned. 
+  /** Set thickness to value (m). For some materials, false is always returned.
    *
    *  Attribute Name: 'thickness' */
   bool setThickness(double value);
@@ -107,7 +107,7 @@ class MODEL_API Material : public ResourceObject {
 
   // resets the material property moisture penetration depth settings
   void resetMaterialPropertyMoisturePenetrationDepthSettings();
-  
+
   //@}
  protected:
   /// @cond
@@ -120,7 +120,7 @@ class MODEL_API Material : public ResourceObject {
 
   Material(IddObjectType type,const Model& model);
 
-  explicit Material(std::shared_ptr<detail::Material_Impl> impl);  
+  explicit Material(std::shared_ptr<detail::Material_Impl> impl);
 
   /// @endcond
  private:

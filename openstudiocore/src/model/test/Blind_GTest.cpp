@@ -374,7 +374,7 @@ TEST_F(ModelFixture,Blind_BackSideSlatDiffuseVisibleReflectance_Quantity) {
 TEST_F(ModelFixture,Blind_SlatInfraredHemisphericalTransmittance_Quantity) {
   Model model;
   // TODO: Check constructor.
-  Blind blind(model);  
+  Blind blind(model);
 
   Unit units = blind.getSlatInfraredHemisphericalTransmittance(true).units(); // Get IP units.
 

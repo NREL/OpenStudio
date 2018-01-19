@@ -181,6 +181,8 @@ class EvaporativeCoolerIndirectResearchSpecial;
 class EvaporativeFluidCoolerSingleSpeed;
 class EvaporativeFluidCoolerTwoSpeed;
 class ExteriorLights;
+class ExteriorFuelEquipment;
+class ExteriorWaterEquipment;
 class ExternalInterface;
 class ExternalInterfaceActuator;
 class ExternalInterfaceFunctionalMockupUnitExportFromVariable;
@@ -201,6 +203,8 @@ class FanZoneExhaust;
 class FFactorGroundFloorConstruction;
 class FluidCoolerSingleSpeed;
 class FluidCoolerTwoSpeed;
+class FoundationKiva;
+class FoundationKivaSettings;
 class Gas;
 class GasEquipment;
 class GasMixture;
@@ -360,6 +364,7 @@ class SubSurface;
 class Surface;
 class SurfacePropertyConvectionCoefficients;
 class SurfacePropertyConvectionCoefficientsMultipleSurface;
+class SurfacePropertyExposedFoundationPerimeter;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
 class TableMultiVariableLookup;
@@ -757,19 +762,23 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateEvaporativeFluidCoolerTwoSpeed( model::EvaporativeFluidCoolerTwoSpeed & modelObject  );
 
   boost::optional<IdfObject> translateExteriorLights(model::ExteriorLights& modelObject );
-  
+
+  boost::optional<IdfObject> translateExteriorFuelEquipment(model::ExteriorFuelEquipment& modelObject );
+
+  boost::optional<IdfObject> translateExteriorWaterEquipment(model::ExteriorWaterEquipment& modelObject );
+
   boost::optional<IdfObject> translateExternalInterface(model::ExternalInterface& modelObject );
-    
+
   boost::optional<IdfObject> translateExternalInterfaceActuator(model::ExternalInterfaceActuator& modelObject );
-  
+
   boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitExportFromVariable(model::ExternalInterfaceFunctionalMockupUnitExportFromVariable& modelObject );
-    
+
   boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitExportToActuator(model::ExternalInterfaceFunctionalMockupUnitExportToActuator& modelObject );
-      
+
   boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitExportToSchedule(model::ExternalInterfaceFunctionalMockupUnitExportToSchedule& modelObject );
 
   boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitExportToVariable(model::ExternalInterfaceFunctionalMockupUnitExportToVariable& modelObject );
-    
+
   boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitImport(model::ExternalInterfaceFunctionalMockupUnitImport& modelObject );
 
   boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitImportFromVariable(model::ExternalInterfaceFunctionalMockupUnitImportFromVariable& modelObject );
@@ -779,7 +788,7 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitImportToSchedule(model::ExternalInterfaceFunctionalMockupUnitImportToSchedule& modelObject );
 
   boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitImportToVariable(model::ExternalInterfaceFunctionalMockupUnitImportToVariable& modelObject );
-  
+
   boost::optional<IdfObject> translateExternalInterfaceSchedule(model::ExternalInterfaceSchedule& modelObject);
 
   boost::optional<IdfObject> translateExternalInterfaceVariable(model::ExternalInterfaceVariable& modelObject);
@@ -801,6 +810,10 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateFluidCoolerSingleSpeed(model::FluidCoolerSingleSpeed & modelObject);
 
   boost::optional<IdfObject> translateFluidCoolerTwoSpeed(model::FluidCoolerTwoSpeed & modelObject);
+  
+  boost::optional<IdfObject> translateFoundationKiva(model::FoundationKiva & modelObject);
+
+  boost::optional<IdfObject> translateFoundationKivaSettings(model::FoundationKivaSettings & modelObject);
 
   boost::optional<IdfObject> translateGas( model::Gas & modelObject );
 
@@ -868,7 +881,7 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateLuminaire( model::Luminaire & modelObject );
 
   boost::optional<IdfObject> translateMaterialPropertyGlazingSpectralData( model::MaterialPropertyGlazingSpectralData & modelObject );
-  
+
   boost::optional<IdfObject> translateMaterialPropertyMoisturePenetrationDepthSettings( model::MaterialPropertyMoisturePenetrationDepthSettings & modelObject );
 
   boost::optional<IdfObject> translateMasslessOpaqueMaterial( model::MasslessOpaqueMaterial & modelObject );
@@ -1110,6 +1123,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateSurfacePropertyConvectionCoefficients(model::SurfacePropertyConvectionCoefficients & modelObject);
 
   boost::optional<IdfObject> translateSurfacePropertyConvectionCoefficientsMultipleSurface(model::SurfacePropertyConvectionCoefficientsMultipleSurface & modelObject);
+  
+  boost::optional<IdfObject> translateSurfacePropertyExposedFoundationPerimeter(model::SurfacePropertyExposedFoundationPerimeter & modelObject);
 
   boost::optional<IdfObject> translateSurfacePropertyOtherSideCoefficients(model::SurfacePropertyOtherSideCoefficients & modelObject);
 

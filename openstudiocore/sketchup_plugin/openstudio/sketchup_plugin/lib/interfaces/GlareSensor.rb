@@ -34,31 +34,31 @@ module OpenStudio
 
   # entity for this class is a component instance
   class GlareSensor < DrawingInterface
-  
+
     def initialize
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       super
       @observer = ComponentObserver.new(self)
     end
-    
+
 ##### Begin override methods for the input object #####
 
     def self.model_object_from_handle(handle)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       model_object = Plugin.model_manager.model_interface.openstudio_model.getGlareSensor(handle)
       if not model_object.empty?
         model_object = model_object.get
       else
-        puts "GlareSensor: model_object is empty for #{handle.class}, #{handle.to_s}, #{Plugin.model_manager.model_interface.openstudio_model}"                    
+        puts "GlareSensor: model_object is empty for #{handle.class}, #{handle.to_s}, #{Plugin.model_manager.model_interface.openstudio_model}"
         model_object = nil
       end
       return model_object
     end
-    
+
     def self.new_from_handle(handle)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       drawing_interface = GlareSensor.new
       model_object = model_object_from_handle(handle)
       drawing_interface.model_object = model_object
@@ -66,7 +66,7 @@ module OpenStudio
       drawing_interface.add_watcher
       return(drawing_interface)
     end
-    
+
     def create_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
 
@@ -75,17 +75,17 @@ module OpenStudio
       @model_interface.model_watcher.enable if model_watcher_enabled
       super
     end
-    
+
     def check_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       # Look up the Space drawing interface (might fail if the reference is bad)
       if (not parent_from_model_object)
         @model_interface.add_error("Error:  " + @model_object.name.to_s + "\n")
         @model_interface.add_error("The space referenced by this glare sensor does not exist, it cannot be drawn.\n\n")
         return(false)
       end
-        
+
       return(super)
     end
 
@@ -111,57 +111,57 @@ module OpenStudio
         end
       end
     end
-    
+
     # Returns the parent drawing interface according to the input object.
-    def parent_from_model_object     
+    def parent_from_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       parent = nil
       if (@model_object)
         space = @model_object.space
         if (not space.empty?)
           parent = space.get.drawing_interface
-        end  
+        end
       end
-      return(parent)  
+      return(parent)
     end
 
 ##### Begin override methods for the entity #####
 
     def create_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
-      if (@parent.nil?)        
+
+      if (@parent.nil?)
       #  # Create a new space just for this GlareSensor.
       #  Plugin.log(OpenStudio::Warn, "Creating containing Space for GlareSensor #{@model_object.name}")
-      #  
+      #
       #  @parent = Space.new
       #  @parent.create_model_object
       #  @model_object.setParent(@parent.model_object)
       #  @parent.draw_entity
       #  @parent.add_child(self)  # Would be nice to not have to call this
-      
+
         # how did this happen?
         Plugin.log(OpenStudio::Error, "Parent #{@parent} is nil, cannot create entity for glare sensor #{@model_object.name}")
         return nil
-      end    
+      end
 
       # add component definition
       path = "#{$OPENSTUDIO_SKETCHUPPLUGIN_DIR}/resources/components/OpenStudio_GlareSensor.skp"
       definition = Sketchup.active_model.definitions.load(path)
-      
+
       # parent entity is first a Sketchup::Group corresponding to a space
       @entity = @parent.entity.entities.add_instance(definition, Geom::Transformation.new)
-      
+
       # make it unique as we will be messing with the definition
       @entity.make_unique
-      
+
       # create or confirm layer for class"
       model = Sketchup.active_model
       layers = model.layers
       new_layer = layers.add "#{@model_object.class}"
       # put entity onto new layer
-      @entity.layer = new_layer 
+      @entity.layer = new_layer
     end
 
 
@@ -177,31 +177,31 @@ module OpenStudio
 
       # do not want to call super if just want to redraw
       super
-      
+
       if(valid_entity?)
-        
+
         # do not want to trigger update_model_object in here
         had_observers = remove_observers
-        
+
         # set definition
         path = "#{$OPENSTUDIO_SKETCHUPPLUGIN_DIR}/resources/components/OpenStudio_GlareSensor.skp"
         @entity.definition = Sketchup.active_model.definitions.load(path)
-        
+
         # need to make unique
         @entity.make_unique
-        
+
         set_entity_name
-        
+
         #puts "update_entity: self.coordinate_transformation = #{self.coordinate_transformation.to_a}"
         #puts "update_entity: self.model_object_transformation = #{self.model_object_transformation.to_a}"
-        
+
         # move entity
         self.coordinate_transformation = self.model_object_transformation
 
         add_observers if had_observers
-        
+
       end
-      
+
     end
 
     # Final cleanup of the entity.
@@ -214,7 +214,7 @@ module OpenStudio
     # Returns the parent drawing interface according to the entity.
     def parent_from_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       parent = nil
       if (valid_entity?)
         # entity class will be a ComponentInstance
@@ -227,14 +227,14 @@ module OpenStudio
       end
       return(parent)
     end
-    
+
 ##### Begin override methods for the interface #####
 
 ##### Begin new methods for the interface #####
 
     def set_entity_name
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
+
       if (@model_object.name.empty?)
         @entity.name = "Glare Sensor:  " + "(Untitled)"
       else
@@ -255,7 +255,7 @@ module OpenStudio
 
       @model_object.setTransformation(transform.to_openstudio_transformation)
     end
-    
+
   end
 
 end

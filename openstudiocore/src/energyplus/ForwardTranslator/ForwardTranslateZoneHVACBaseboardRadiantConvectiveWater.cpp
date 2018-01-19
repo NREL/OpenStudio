@@ -145,8 +145,8 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACBaseboardRadiantC
   }
 
   //get rid of any existing surface (just to be safe)
-  idfObject.clearExtensibleGroups();  
- 
+  idfObject.clearExtensibleGroups();
+
   //aggregator for total area; will be used to create weighted area
   double totalAreaOfWallSurfaces = 0;
   double totalAreaOfCeilingSurfaces = 0;
@@ -174,13 +174,13 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACBaseboardRadiantC
   //loop through all the surfaces, adding them and their flow fractions (weighted per-area)
   for ( auto const& surface : surfaces ) {
     IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
-    group.setString(ZoneHVAC_Baseboard_RadiantConvective_WaterExtensibleFields::SurfaceName, surface.name().get());        
+    group.setString(ZoneHVAC_Baseboard_RadiantConvective_WaterExtensibleFields::SurfaceName, surface.name().get());
     if( istringEqual(surface.surfaceType(),"Floor") ) {
-      group.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterExtensibleFields::FractionofRadiantEnergytoSurface, (surface.grossArea()/totalAreaOfFloorSurfaces * fractionOnFloor) );     
+      group.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterExtensibleFields::FractionofRadiantEnergytoSurface, (surface.grossArea()/totalAreaOfFloorSurfaces * fractionOnFloor) );
     } else if( istringEqual(surface.surfaceType(),"RoofCeiling") ) {
-      group.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterExtensibleFields::FractionofRadiantEnergytoSurface, (surface.grossArea()/totalAreaOfCeilingSurfaces * fractionOnCeiling) );     
+      group.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterExtensibleFields::FractionofRadiantEnergytoSurface, (surface.grossArea()/totalAreaOfCeilingSurfaces * fractionOnCeiling) );
     } else {
-      group.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterExtensibleFields::FractionofRadiantEnergytoSurface, (surface.grossArea()/totalAreaOfWallSurfaces * fractionOnWall) );     
+      group.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterExtensibleFields::FractionofRadiantEnergytoSurface, (surface.grossArea()/totalAreaOfWallSurfaces * fractionOnWall) );
     }
   }
 

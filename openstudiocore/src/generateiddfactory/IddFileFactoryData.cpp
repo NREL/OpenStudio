@@ -42,7 +42,7 @@
 namespace openstudio {
 
 IddFileFactoryData::IddFileFactoryData(const std::string& fileNameAndPathPair) {
-  std::cout << "Creating new IddFileFactoryData object from input argument '" 
+  std::cout << "Creating new IddFileFactoryData object from input argument '"
             << fileNameAndPathPair << "'." << std::endl;
   std::stringstream ss;
 
@@ -51,7 +51,7 @@ IddFileFactoryData::IddFileFactoryData(const std::string& fileNameAndPathPair) {
   boost::smatch match;
   bool ok = boost::regex_match(fileNameAndPathPair,match,re);
   if (!ok) {
-    ss << "Unable to decompose " << fileNameAndPathPair 
+    ss << "Unable to decompose " << fileNameAndPathPair
        << " into name and path. Type 'GenerateIddFactory --help' if usage is unclear.";
     throw std::runtime_error(ss.str().c_str());
   }
@@ -95,7 +95,7 @@ IddFileFactoryData::IddFileFactoryData(const std::string& fileNameAndPathPair) {
 void IddFileFactoryData::parseFile(const path& outPath,
                                    const std::string& outFileHeader,
                                    GenerateIddFactoryOutFiles& outFiles,
-                                   int iddFileIndex) 
+                                   int iddFileIndex)
 {
   std::stringstream ss;
 
@@ -182,13 +182,13 @@ void IddFileFactoryData::parseFile(const path& outPath,
     if (!ok) {
       ss << "Unable to extract object name from line " << lineNum << "," << std::endl
          << line << std::endl
-         << ", of Idd file '" << m_fileName << "'."; 
+         << ", of Idd file '" << m_fileName << "'.";
       throw std::runtime_error(ss.str().c_str());
     }
     objectName.second = std::string(matches[1].first,matches[1].second);
     boost::trim(objectName.second);
     objectName.first = m_convertName(objectName.second);
-    m_objectNames.push_back(objectName);    
+    m_objectNames.push_back(objectName);
 
     // start writing create function
     cxxFile->tempFile
@@ -209,7 +209,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
     // get rest of object
     while (std::getline(iddFile,line)) {
       ++lineNum; trimLine = line; boost::trim(trimLine);
-      if (trimLine.empty()) { 
+      if (trimLine.empty()) {
         // finish writing create function
         cxxFile->tempFile
           << std::endl
@@ -238,7 +238,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
           boost::algorithm::to_upper(upperObjectName);
 
           std::stringstream tempSS;
- 
+
           fieldEnumHxx.tempFile
             << "#ifndef UTILITIES_IDD_" << upperObjectName << "_FIELDENUMS_HXX" << std::endl
             << "#define UTILITIES_IDD_" << upperObjectName << "_FIELDENUMS_HXX" << std::endl
@@ -293,7 +293,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
               << " *" << std::endl
               << " *  \\code" << std::endl
 //              << tempSS.str() << std::endl
-              << " *  \\endcode */" << std::endl 
+              << " *  \\endcode */" << std::endl
               << tempSS.str() << std::endl;
 
             tempSS.str("");
@@ -313,7 +313,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
             << "%include <utilities/idd/" << filename << ">" << std::endl;
         }
 
-        break; 
+        break;
       }
 
       // continue writing create function
@@ -328,7 +328,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
         fieldName = boost::regex_replace(fieldName,boost::regex(","),"");
         boost::trim(fieldName);
         if (extensibleFieldNames.empty()) {
-          fieldNames.push_back(fieldName); 
+          fieldNames.push_back(fieldName);
         }
         else {
           // strip out numbers
@@ -336,11 +336,11 @@ void IddFileFactoryData::parseFile(const path& outPath,
           boost::trim(fieldName);
           extensibleFieldNames.push_back(fieldName);
         }
-      }  
+      }
 
       // look for extensible identifier
       if (boost::regex_search(trimLine,iddRegex::beginExtensible())) {
-        if (fieldNames.empty()) { 
+        if (fieldNames.empty()) {
           std::cerr << "Extensible processing unable to proceed because " << objectName.second
                     << " is extensible but is missing \\begin-extensible flag." << std::endl << std::endl;
         }
@@ -362,7 +362,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
             << "which contains " << m_objectNames.size() << " objects." << std::endl << std::endl;
   if (!m_includedFiles.empty()) {
     for (const FileNameRemovedObjectsPair& p : m_includedFiles) {
-      std::cout << "Idd file '" << m_fileName << "' includes all but " << p.second.size() 
+      std::cout << "Idd file '" << m_fileName << "' includes all but " << p.second.size()
                 << " objects of Idd file '" << p.first << "'." << std::endl << std::endl;
     }
   }
@@ -372,7 +372,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
     << "void IddFactorySingleton::register" << fileName() << "ObjectsInCallbackMap() {" << std::endl;
   for (const StringPair& objectName : objectNames()) {
     cxxFile->tempFile
-      << "  m_callbackMap.insert(IddObjectCallbackMap::value_type(IddObjectType::" 
+      << "  m_callbackMap.insert(IddObjectCallbackMap::value_type(IddObjectType::"
       << objectName.first << ",create" << objectName.first << "IddObject));" << std::endl;
   }
   cxxFile->tempFile
@@ -427,4 +427,4 @@ std::string IddFileFactoryData::m_readyLineForOutput(const std::string& line) co
   return result;
 }
 
-} // openstudio 
+} // openstudio

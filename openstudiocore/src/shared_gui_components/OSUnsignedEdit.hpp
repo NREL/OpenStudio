@@ -100,7 +100,7 @@ class OSUnsignedEdit2: public QLineEdit {
             boost::optional<BasicQuery> isAutocalculated=boost::none);
 
   void unbind();
-  
+
 protected:
 
   virtual void focusInEvent(QFocusEvent * e) override;

@@ -153,7 +153,7 @@ VersionString extractOpenStudioVersion(const QVariant& variant) {
   if (topLevel.contains("metadata")) {
     topLevel = topLevel["metadata"].toObject();
   }
-  
+
   OptionalVersionString version;
   if (topLevel.contains("openstudio_version")) {
     version = VersionString(topLevel["openstudio_version"].toString().toStdString());

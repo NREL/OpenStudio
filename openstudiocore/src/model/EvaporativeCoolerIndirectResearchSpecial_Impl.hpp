@@ -143,7 +143,7 @@ namespace detail {
 
     bool setCoolerMaximumEffectiveness(double coolerMaximumEffectiveness);
 
-    void setRecirculatingWaterPumpPowerConsumption(double recirculatingWaterPumpPowerConsumption);
+    bool setRecirculatingWaterPumpPowerConsumption(double recirculatingWaterPumpPowerConsumption);
 
     void autosizeRecirculatingWaterPumpPowerConsumption();
 
@@ -157,7 +157,7 @@ namespace detail {
 
     bool setSecondaryFanDeltaPressure(double secondaryFanDeltaPressure);
 
-    void setDewpointEffectivenessFactor(double dewpointEffectivenessFactor);
+    bool setDewpointEffectivenessFactor(double dewpointEffectivenessFactor);
 
     bool setDriftLossFraction(boost::optional<double> driftLossFraction);
 
@@ -179,15 +179,15 @@ namespace detail {
 
     void resetDrybulbEffectivenessFlowRatioModifierCurve();
 
-    void setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
+    bool setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
 
     bool setWaterPumpPowerModifierCurve(const boost::optional<Curve>& curve);
 
     void resetWaterPumpPowerModifierCurve();
 
-    void setSecondaryAirFlowScalingFactor(double secondaryAirFlowScalingFactor);
+    bool setSecondaryAirFlowScalingFactor(double secondaryAirFlowScalingFactor);
 
-    void setSecondaryAirFanDesignPower(boost::optional<double> secondaryAirFanDesignPower);
+    bool setSecondaryAirFanDesignPower(boost::optional<double> secondaryAirFanDesignPower);
 
     void autosizeSecondaryAirFanDesignPower();
 
@@ -226,5 +226,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_EVAPORATIVECOOLERINDIRECTRESEARCHSPECIAL_IMPL_HPP
-
+#endif // MODEL_EVAPORATIVECOOLERINDIRECTRESEARCHSPECIAL_IMPL_HPP

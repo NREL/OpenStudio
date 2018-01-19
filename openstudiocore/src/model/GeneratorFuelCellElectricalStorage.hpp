@@ -91,19 +91,19 @@ class MODEL_API GeneratorFuelCellElectricalStorage : public ModelObject {
 
   void resetNominalDischargingEnergeticEfficiency();
 
-  void setSimpleMaximumCapacity(double simpleMaximumCapacity);
+  bool setSimpleMaximumCapacity(double simpleMaximumCapacity);
 
   void resetSimpleMaximumCapacity();
 
-  void setSimpleMaximumPowerDraw(double simpleMaximumPowerDraw);
+  bool setSimpleMaximumPowerDraw(double simpleMaximumPowerDraw);
 
   void resetSimpleMaximumPowerDraw();
 
-  void setSimpleMaximumPowerStore(double simpleMaximumPowerStore);
+  bool setSimpleMaximumPowerStore(double simpleMaximumPowerStore);
 
   void resetSimpleMaximumPowerStore();
 
-  void setInitialChargeState(double initialChargeState);
+  bool setInitialChargeState(double initialChargeState);
 
   void resetInitialChargeState();
 
@@ -137,4 +137,3 @@ typedef std::vector<GeneratorFuelCellElectricalStorage> GeneratorFuelCellElectri
 } // openstudio
 
 #endif // MODEL_GENERATORFUELCELLELECTRICALSTORAGE_HPP
-

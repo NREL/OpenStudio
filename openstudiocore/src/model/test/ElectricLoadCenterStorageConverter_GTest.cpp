@@ -78,8 +78,8 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageConverter_Instantiate) {
   EXPECT_EQ(elcConv.powerConversionEfficiencyMethod(), "SimpleFixed");
   EXPECT_FALSE(elcConv.designMaximumContinuousInputPower());
   EXPECT_FALSE(elcConv.efficiencyFunctionofPowerCurve());
-  
-  
+
+
   // efficiencyFunctionofPowerCurveName
   CurveQuadratic effFPower = CurveQuadratic(model);
   EXPECT_FALSE(elcConv.efficiencyFunctionofPowerCurve());
@@ -113,7 +113,7 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageConverter_Instantiate) {
   EXPECT_FALSE(elcConv.thermalZone());
   EXPECT_TRUE(elcConv.setThermalZone(thermalZone));
   ASSERT_TRUE(elcConv.thermalZone());
-  
+
   // radiativeFraction
   EXPECT_TRUE(elcConv.isRadiativeFractionDefaulted());
   result = elcConv.setRadiativeFraction(0.25);

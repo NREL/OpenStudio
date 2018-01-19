@@ -119,14 +119,14 @@ RunView::RunView()
   m_playButton->setIcon(playbuttonicon);
   m_playButton->setLayoutDirection(Qt::RightToLeft);
   m_playButton->setStyleSheet("QAbstractButton:!hover { border: none; }");
-  
+
   mainLayout->addWidget(m_playButton, 0, 0);
   connect(m_playButton, &QToolButton::clicked, this, &RunView::playButtonClicked);
-  
+
   // Progress bar area
   m_progressBar = new QProgressBar();
   m_progressBar->setMaximum(State::complete);
-  
+
   auto progressbarlayout = new QVBoxLayout();
   progressbarlayout->addWidget(m_progressBar);
   mainLayout->addLayout(progressbarlayout, 0, 1);
@@ -202,7 +202,7 @@ openstudio::path RunView::resourcePath(const openstudio::path & osmPath) const
   auto baseName = osmPath.stem();
   auto parentPath = osmPath.parent_path();
   auto resourcePath = parentPath / baseName;
-  return resourcePath; 
+  return resourcePath;
 }
 
 void RunView::playButtonClicked(bool t_checked)
@@ -230,10 +230,10 @@ void RunView::playButtonClicked(bool t_checked)
 
     // run in save dir
     //auto basePath = resourcePath(toPath(osdocument->savePath()));
-    
+
     // run in temp dir
     auto basePath = toPath(osdocument->modelTempDir()) / toPath("resources");
-    
+
     auto workflowPath = basePath / "workflow.osw";
     auto stdoutPath = basePath / "stdout";
     auto stderrPath = basePath / "stderr";
@@ -273,7 +273,7 @@ void RunView::playButtonClicked(bool t_checked)
 void RunView::onNewConnection()
 {
   m_runSocket = m_runTcpServer->nextPendingConnection();
-  connect(m_runSocket,&QTcpSocket::readyRead,this,&RunView::onRunDataReady); 
+  connect(m_runSocket,&QTcpSocket::readyRead,this,&RunView::onRunDataReady);
 }
 
 void RunView::onRunDataReady()

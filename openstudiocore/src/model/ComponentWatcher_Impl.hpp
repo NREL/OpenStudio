@@ -66,8 +66,8 @@ namespace detail {
 
     //@}
     /** @name Nano Signals */
-    //@{ 
-    
+    //@{
+
     Nano::Signal<void(const ComponentWatcher &)> obsolete;
 
 
@@ -78,7 +78,7 @@ namespace detail {
     void componentDataChange();
 
     void relationshipChange(int index,Handle newHandle,Handle oldHandle);
-    
+
     void objectRemove(const Handle& handleOfRemovedObject);
 
     void objectAdd(const WorkspaceObject& addedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);

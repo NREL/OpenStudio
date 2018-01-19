@@ -45,7 +45,7 @@ module OpenStudio
 
 
     def show
-      @container.show_modal    
+      @container.show_modal
     end
 
   end

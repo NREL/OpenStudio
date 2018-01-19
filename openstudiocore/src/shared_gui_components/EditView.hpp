@@ -41,7 +41,7 @@ class QTextEdit;
 class QVBoxLayout;
 
 namespace openstudio{
-  
+
 
 class InputCheckBox;
 
@@ -109,9 +109,9 @@ class DoubleInputView : public InputView
 
   DoubleInputView();
   virtual ~DoubleInputView() {}
-  
+
   QLineEdit * lineEdit;
-  
+
   void setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description);
 
   void setIncomplete(bool incomplete) override;

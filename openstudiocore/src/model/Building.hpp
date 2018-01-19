@@ -58,10 +58,10 @@ namespace detail {
 /** Building derives from ParentObject and is an interface to the OpenStudio IDD object named "Building".
  *
  *  Building is a unique object which parents all \link Space Spaces\endlink in the model.  Conceptually,
- *  the Building object represents the envelope shell and everything inside (lighting, equipment, etc).  
+ *  the Building object represents the envelope shell and everything inside (lighting, equipment, etc).
  *  The Building is a child of the Facility object which includes the Building as well as exterior equipment,
  *  parking lot lighting, water systems for grounds, etc.
- *   
+ *
  */
 class MODEL_API Building : public ParentObject {
  public:
@@ -106,7 +106,7 @@ class MODEL_API Building : public ParentObject {
   /** @name Setters */
   //@{
 
-  void setNorthAxis(double northAxis);
+  bool setNorthAxis(double northAxis);
   void resetNorthAxis();
 
   bool setNominalFloortoFloorHeight(double nominalFloortoFloorHeight);
@@ -122,7 +122,7 @@ class MODEL_API Building : public ParentObject {
   void resetStandardsNumberOfLivingUnits();
 
   bool setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight);
-  void resetNominalFloortoCeilingHeight(); 
+  void resetNominalFloortoCeilingHeight();
 
   /// Sets the standards building type. This is a freeform field used to identify the building type for standards.
   /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
@@ -130,7 +130,8 @@ class MODEL_API Building : public ParentObject {
   bool setStandardsBuildingType(const std::string& standardsBuildingType);
   void resetStandardsBuildingType();
 
-  void setRelocatable(bool isRelocatable);
+  bool setRelocatable(bool isRelocatable);
+  void setRelocatableNoFail(bool isRelocatable);
   void resetRelocatable();
 
 
@@ -165,7 +166,7 @@ class MODEL_API Building : public ParentObject {
   /// Resets the default schedule set for this space.
   void resetDefaultScheduleSet();
 
-  /// Returns all OutputMeter objects at the Building level. 
+  /// Returns all OutputMeter objects at the Building level.
   std::vector<OutputMeter> meters() const;
 
   /// Returns the parent Facility object if it exists.
@@ -190,7 +191,7 @@ class MODEL_API Building : public ParentObject {
 
   // ETH@20140115 - Should take a bool as to whether to include spaces marked as
   // "not in floor area".
-  /// Returns the total floor area in square meters.  
+  /// Returns the total floor area in square meters.
   /// Includes only spaces marked as included in floor area.
   /// Includes space multipliers in calculation.
   /// Attribute name: floorArea
@@ -232,7 +233,7 @@ class MODEL_API Building : public ParentObject {
 
   /** Returns the lighting power (W) in this building. */
   double lightingPower() const;
-  
+
   /** Returns the lighting power density (W/m^2) of this building. */
   double lightingPowerPerFloorArea() const;
 
@@ -313,4 +314,3 @@ typedef std::vector<Building> BuildingVector;
 } // openstudio
 
 #endif // MODEL_BUILDING_HPP
-

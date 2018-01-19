@@ -56,7 +56,7 @@ namespace bimserver {
   class BIMSERVER_API BIMserverConnection : public QObject
   {
     Q_OBJECT
-  
+
   public:
     /// Default constructor
     BIMserverConnection(QObject * parent, QString bimserverAddr, QString bimserverPort);
@@ -113,10 +113,10 @@ namespace bimserver {
     ///send the list of all ifc revisions
     void listAllIFCRevisions(QStringList ifcRevisionList);
 
-    ///emit error occurs signal 
+    ///emit error occurs signal
     void errorOccured(QString errorMessage);
 
-    ///operationSucceeded() will send one of the following QString: 
+    ///operationSucceeded() will send one of the following QString:
     void operationSucceeded(QString successMessage);
 
     ///emit error if BIMserver is not setup correctly.

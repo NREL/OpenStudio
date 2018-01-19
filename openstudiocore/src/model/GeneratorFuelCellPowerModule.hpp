@@ -168,75 +168,75 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
 
   bool setEfficiencyCurve(const CurveQuadratic& quadraticCurve);
 
-  void setNominalEfficiency(double nominalEfficiency);
+  bool setNominalEfficiency(double nominalEfficiency);
 
   void resetNominalEfficiency();
 
-  void setNominalElectricalPower(double nominalElectricalPower);
+  bool setNominalElectricalPower(double nominalElectricalPower);
 
   void resetNominalElectricalPower();
 
-  void setNumberofStopsatStartofSimulation(double numberofStopsatStartofSimulation);
+  bool setNumberofStopsatStartofSimulation(double numberofStopsatStartofSimulation);
 
   void resetNumberofStopsatStartofSimulation();
 
-  void setCyclingPerformanceDegradationCoefficient(double cyclingPerformanceDegradationCoefficient);
+  bool setCyclingPerformanceDegradationCoefficient(double cyclingPerformanceDegradationCoefficient);
 
   void resetCyclingPerformanceDegradationCoefficient();
 
-  void setNumberofRunHoursatBeginningofSimulation(double numberofRunHoursatBeginningofSimulation);
+  bool setNumberofRunHoursatBeginningofSimulation(double numberofRunHoursatBeginningofSimulation);
 
   void resetNumberofRunHoursatBeginningofSimulation();
 
-  void setAccumulatedRunTimeDegradationCoefficient(double accumulatedRunTimeDegradationCoefficient);
+  bool setAccumulatedRunTimeDegradationCoefficient(double accumulatedRunTimeDegradationCoefficient);
 
   void resetAccumulatedRunTimeDegradationCoefficient();
 
-  void setRunTimeDegradationInitiationTimeThreshold(double runTimeDegradationInitiationTimeThreshold);
+  bool setRunTimeDegradationInitiationTimeThreshold(double runTimeDegradationInitiationTimeThreshold);
 
   void resetRunTimeDegradationInitiationTimeThreshold();
 
-  void setPowerUpTransientLimit(double powerUpTransientLimit);
+  bool setPowerUpTransientLimit(double powerUpTransientLimit);
 
   void resetPowerUpTransientLimit();
 
-  void setPowerDownTransientLimit(double powerDownTransientLimit);
+  bool setPowerDownTransientLimit(double powerDownTransientLimit);
 
   void resetPowerDownTransientLimit();
 
-  void setStartUpTime(double startUpTime);
+  bool setStartUpTime(double startUpTime);
 
   void resetStartUpTime();
 
-  void setStartUpFuel(double startUpFuel);
+  bool setStartUpFuel(double startUpFuel);
 
   void resetStartUpFuel();
 
-  void setStartUpElectricityConsumption(double startUpElectricityConsumption);
+  bool setStartUpElectricityConsumption(double startUpElectricityConsumption);
 
   void resetStartUpElectricityConsumption();
 
-  void setStartUpElectricityProduced(double startUpElectricityProduced);
+  bool setStartUpElectricityProduced(double startUpElectricityProduced);
 
   void resetStartUpElectricityProduced();
 
-  void setShutDownTime(double shutDownTime);
+  bool setShutDownTime(double shutDownTime);
 
   void resetShutDownTime();
 
-  void setShutDownFuel(double shutDownFuel);
+  bool setShutDownFuel(double shutDownFuel);
 
   void resetShutDownFuel();
 
-  void setShutDownElectricityConsumption(double shutDownElectricityConsumption);
+  bool setShutDownElectricityConsumption(double shutDownElectricityConsumption);
 
   void resetShutDownElectricityConsumption();
 
-  void setAncillaryElectricityConstantTerm(double ancillaryElectricityConstantTerm);
+  bool setAncillaryElectricityConstantTerm(double ancillaryElectricityConstantTerm);
 
   void resetAncillaryElectricityConstantTerm();
 
-  void setAncillaryElectricityLinearTerm(double ancillaryElectricityLinearTerm);
+  bool setAncillaryElectricityLinearTerm(double ancillaryElectricityLinearTerm);
 
   void resetAncillaryElectricityLinearTerm();
 
@@ -252,11 +252,11 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
 
   void resetSkinLossRadiativeFraction();
 
-  void setConstantSkinLossRate(double constantSkinLossRate);
+  bool setConstantSkinLossRate(double constantSkinLossRate);
 
   void resetConstantSkinLossRate();
 
-  void setSkinLossUFactorTimesAreaTerm(double skinLossUFactorTimesAreaTerm);
+  bool setSkinLossUFactorTimesAreaTerm(double skinLossUFactorTimesAreaTerm);
 
   void resetSkinLossUFactorTimesAreaTerm();
 
@@ -264,11 +264,11 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
 
   void resetSkinLossQuadraticCurve();
 
-  void setDilutionAirFlowRate(double dilutionAirFlowRate);
+  bool setDilutionAirFlowRate(double dilutionAirFlowRate);
 
   void resetDilutionAirFlowRate();
 
-  void setStackHeatlosstoDilutionAir(double stackHeatlosstoDilutionAir);
+  bool setStackHeatlosstoDilutionAir(double stackHeatlosstoDilutionAir);
 
   void resetStackHeatlosstoDilutionAir();
 
@@ -280,11 +280,11 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
 
   void resetDilutionOutletAirNode();
 
-  void setMinimumOperatingPoint(double minimumOperatingPoint);
+  bool setMinimumOperatingPoint(double minimumOperatingPoint);
 
   void resetMinimumOperatingPoint();
 
-  void setMaximumOperatingPoint(double maximumOperatingPoint);
+  bool setMaximumOperatingPoint(double maximumOperatingPoint);
 
   void resetMaximumOperatingPoint();
 
@@ -318,4 +318,3 @@ typedef std::vector<GeneratorFuelCellPowerModule> GeneratorFuelCellPowerModuleVe
 } // openstudio
 
 #endif // MODEL_GENERATORFUELCELLPOWERMODULE_HPP
-

@@ -58,7 +58,7 @@ module OpenStudio
 
 
     def onMouseMove(flags, x, y, view)
-      @ip.pick(view, x, y)      
+      @ip.pick(view, x, y)
       view.invalidate #if (@ip.display?)
     end
 
@@ -82,7 +82,7 @@ module OpenStudio
     # See Tool documentation...can override context menu completely
     #def getMenu
     #end
-    
+
     # onUserText is called when the user enters something into the VCB
     # In this implementation, we create a line of the entered length if
     # the user types a length while selecting the second point

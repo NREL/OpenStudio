@@ -47,7 +47,7 @@ namespace detail {
 
 } // detail
 
-/** OutputMeter is a ModelObject that wraps the OpenStudio IDD object 'OS_Output_Meter'. 
+/** OutputMeter is a ModelObject that wraps the OpenStudio IDD object 'OS_Output_Meter'.
  *
  *  A OutputMeter is a virtual instrument measuring energy use of some fuel type at a particular location.
  *  OutputMeter objects may be associated with various classes in the building model hierarchy (e.g. Facility, Building, Zone, Plant, etc).
@@ -144,11 +144,11 @@ class MODEL_API OutputMeter : public ModelObject {
 
   void resetReportingFrequency();
 
-  void setMeterFileOnly(bool meterFileOnly);
+  bool setMeterFileOnly(bool meterFileOnly);
 
   void resetMeterFileOnly();
 
-  void setCumulative(bool cumulative);
+  bool setCumulative(bool cumulative);
 
   void resetCumulative();
 
@@ -220,4 +220,3 @@ MODEL_API bool MeterFuelTypeEquals(const OutputMeter& meter, const FuelType& ft)
 } // openstudio
 
 #endif // MODEL_OUTPUTMETER_HPP
-

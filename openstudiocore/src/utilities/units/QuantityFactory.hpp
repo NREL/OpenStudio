@@ -60,7 +60,7 @@ class UTILITIES_API QuantityFactorySingleton {
    *  guarantee that the returned result will be in that system. */
   boost::optional<Quantity> createQuantity(const std::string& quantityString,UnitSystem system) const;
 
-  /** Creates a quantity from value and unitString, which is passed to UnitFactory. Uses 
+  /** Creates a quantity from value and unitString, which is passed to UnitFactory. Uses
    *  openstudio::getSystem to intuit the appropriate system, if possible. */
   boost::optional<Quantity> createQuantity(double value, const std::string& unitString) const;
 

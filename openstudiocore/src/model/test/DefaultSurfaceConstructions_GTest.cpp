@@ -75,7 +75,7 @@ TEST_F(ModelFixture, DefaultSurfaceConstructions)
 TEST_F(ModelFixture, DefaultSurfaceConstructions_Clone) {
   Model model;
   Model exampleModel = model::exampleModel();
-  
+
   unsigned numConstructions(0);
   unsigned numMaterials(0);
   for (const DefaultSurfaceConstructions& object : exampleModel.getModelObjects<DefaultSurfaceConstructions>()) {

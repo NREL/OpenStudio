@@ -56,7 +56,7 @@ SWIG_UNIT_TEMPLATES(Misc1Unit);
 
 %define SWIG_UNIT(_name)
   %include <utilities/units/##_name##.hpp>
-  
+
   %extend openstudio::Unit {
     %template(to_##_name) optionalCast<openstudio::##_name>;
   }

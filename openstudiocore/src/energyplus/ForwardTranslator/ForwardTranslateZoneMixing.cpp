@@ -50,18 +50,18 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateZoneMixing( ZoneMixing & modelObject )
 {
-  // Makes sure the modelObject gets put in the map, and that the new idfObject gets put in 
+  // Makes sure the modelObject gets put in the map, and that the new idfObject gets put in
   // the final file. Also set's the idfObject's name.
   IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneMixing, modelObject);
 
   boost::optional<double> value;
 
-  // ZoneName 
+  // ZoneName
   ThermalZone zone = modelObject.zone();
   translateAndMapModelObject(zone);
   idfObject.setString(ZoneMixingFields::ZoneName, zone.name().get());
 
-  // ScheduleName 
+  // ScheduleName
   Schedule schedule = modelObject.schedule();
   translateAndMapModelObject(schedule);
   idfObject.setString(ZoneMixingFields::ScheduleName, schedule.name().get());
@@ -112,7 +112,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneMixing( ZoneMixing & 
     translateAndMapModelObject(*optSchedule);
     idfObject.setString(ZoneMixingFields::DeltaTemperatureScheduleName, optSchedule->name().get());
   }
-  
+
   // MinimumZoneTemperatureScheduleName
   optSchedule = modelObject.minimumZoneTemperatureSchedule();
   if (optSchedule){

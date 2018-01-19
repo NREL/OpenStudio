@@ -134,7 +134,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEnergyRecoveryVen
       // Supply Air Fan Inlet and Outlet Nodes
       if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_OnOff )
       {
-        
+
         _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName,supplyFanInletNodeName );
         _supplyAirFan->setString(Fan_OnOffFields::AirOutletNodeName,zoneInletNode->name().get() );
       }
@@ -151,7 +151,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEnergyRecoveryVen
       // Exhaust Air Fan Inlet and Outlet Nodes
       if( _exhaustAirFan->iddObject().type() == IddObjectType::Fan_OnOff )
       {
-        
+
         _exhaustAirFan->setString(Fan_OnOffFields::AirInletNodeName,exhaustFanInletNodeName );
         _exhaustAirFan->setString(Fan_OnOffFields::AirOutletNodeName,exhaustFanOutletNodeName );
       }

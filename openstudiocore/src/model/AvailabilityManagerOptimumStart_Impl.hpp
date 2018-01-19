@@ -108,19 +108,19 @@ namespace detail {
 
     void resetControlZone();
 
-    void setMaximumValueforOptimumStartTime(double maximumValueforOptimumStartTime);
+    bool setMaximumValueforOptimumStartTime(double maximumValueforOptimumStartTime);
 
     bool setControlAlgorithm(std::string controlAlgorithm);
 
-    void setConstantTemperatureGradientduringCooling(double constantTemperatureGradientduringCooling);
+    bool setConstantTemperatureGradientduringCooling(double constantTemperatureGradientduringCooling);
 
-    void setConstantTemperatureGradientduringHeating(double constantTemperatureGradientduringHeating);
+    bool setConstantTemperatureGradientduringHeating(double constantTemperatureGradientduringHeating);
 
-    void setInitialTemperatureGradientduringCooling(double initialTemperatureGradientduringCooling);
+    bool setInitialTemperatureGradientduringCooling(double initialTemperatureGradientduringCooling);
 
-    void setInitialTemperatureGradientduringHeating(double initialTemperatureGradientduringHeating);
+    bool setInitialTemperatureGradientduringHeating(double initialTemperatureGradientduringHeating);
 
-    void setConstantStartTime(double constantStartTime);
+    bool setConstantStartTime(double constantStartTime);
 
     bool setNumberofPreviousDays(int numberofPreviousDays);
 
@@ -146,4 +146,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_AVAILABILITYMANAGEROPTIMUMSTART_IMPL_HPP
-

@@ -55,7 +55,7 @@ class OSInspectorView : public QWidget
     virtual ~OSInspectorView() {}
 
   signals:
-    
+
     void dropZoneItemClicked(OSItem* item);
 
   public slots:

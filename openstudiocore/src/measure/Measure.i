@@ -26,7 +26,7 @@
   #include <measure/OSRunner.hpp>
   #include <measure/OSMeasure.hpp>
   #include <measure/OSMeasureInfoGetter.hpp>
-  
+
   #include <measure/EnergyPlusMeasure.hpp>
   #include <measure/ModelMeasure.hpp>
   #include <measure/ReportingMeasure.hpp>

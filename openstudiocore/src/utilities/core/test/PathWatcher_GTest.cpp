@@ -54,11 +54,11 @@ struct TestPathWatcher : public openstudio::PathWatcher{
   TestPathWatcher(const openstudio::path& path)
     : PathWatcher(path, 1), added(false), changed(false), removed(false)
   {}
-  
+
   virtual void onPathAdded() override { added = true; }
   virtual void onPathChanged() override { changed = true; }
   virtual void onPathRemoved() override { removed = true; }
-  
+
   bool added;
   bool changed;
   bool removed;
@@ -101,8 +101,8 @@ TEST_F(CoreFixture, PathWatcher_File)
   Application::instance().application(false);
 
   openstudio::path path = toPath("./PathWatcher_File");
-  TestFileWriter w1(path, "test 1"); w1.start(); 
-  while (!w1.isFinished()){  
+  TestFileWriter w1(path, "test 1"); w1.start();
+  while (!w1.isFinished()){
     // do not call process events
     QThread::yieldCurrentThread();
   }
@@ -115,8 +115,8 @@ TEST_F(CoreFixture, PathWatcher_File)
 
   EXPECT_EQ(path.string(), watcher.path().string());
 
-  TestFileWriter w2(path, "test 2"); w2.start(); 
-  while (!w2.isFinished()){  
+  TestFileWriter w2(path, "test 2"); w2.start();
+  while (!w2.isFinished()){
     // do not call process events
     QThread::yieldCurrentThread();
   }
@@ -132,7 +132,7 @@ TEST_F(CoreFixture, PathWatcher_File)
   EXPECT_FALSE(watcher.changed);
 
   TestFileRemover r1(path); r1.start();
-  while (!r1.isFinished()){  
+  while (!r1.isFinished()){
     // do not call process events
     QThread::yieldCurrentThread();
   }
@@ -165,8 +165,8 @@ TEST_F(CoreFixture, PathWatcher_Dir)
   EXPECT_EQ(path.string(), watcher.path().string());
 
   // catches the file addition
-  TestFileWriter w1(filePath, "test 1"); w1.start(); 
-  while (!w1.isFinished()){  
+  TestFileWriter w1(filePath, "test 1"); w1.start();
+  while (!w1.isFinished()){
     // do not call process events
     QThread::yieldCurrentThread();
   }
@@ -180,8 +180,8 @@ TEST_F(CoreFixture, PathWatcher_Dir)
   EXPECT_FALSE(watcher.changed);
 
   // does not catch changes to the file
-  TestFileWriter w2(filePath, "test 2"); w2.start(); 
-  while (!w2.isFinished()){  
+  TestFileWriter w2(filePath, "test 2"); w2.start();
+  while (!w2.isFinished()){
     // do not call process events
     QThread::yieldCurrentThread();
   }
@@ -191,10 +191,10 @@ TEST_F(CoreFixture, PathWatcher_Dir)
   System::msleep(10);
 
   EXPECT_FALSE(watcher.changed);
-  
+
   // catches file removal
   TestFileRemover r1(filePath); r1.start();
-  while (!r1.isFinished()){  
+  while (!r1.isFinished()){
     // do not call process events
     QThread::yieldCurrentThread();
   }

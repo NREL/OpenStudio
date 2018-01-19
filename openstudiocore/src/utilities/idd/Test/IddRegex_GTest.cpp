@@ -120,7 +120,7 @@ TEST_F(IddFixture, IddRegex_FieldExtraction) {
         \\key Continuous\
         \\key Intermittent\
         \\default Continuous");
- 
+
   smatch matches;
   std::string firstMatch;
   std::string secondMatch;

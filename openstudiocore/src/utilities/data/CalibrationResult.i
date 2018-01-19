@@ -14,4 +14,4 @@
 
 %include <utilities/data/CalibrationResult.hpp>
 
-#endif //UTILITIES_DATA_CALIBRATIONRESULT_I 
+#endif //UTILITIES_DATA_CALIBRATIONRESULT_I

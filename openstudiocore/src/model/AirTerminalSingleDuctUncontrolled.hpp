@@ -50,7 +50,7 @@ namespace detail {
  *  named "AirTerminal:SingleDuct:Uncontrolled"
  *
  *  The purpose of this class is to simplify the construction and manipulation
- *  AirTerminal:SingleDuct:Uncontrolled objects in energyplus.  
+ *  AirTerminal:SingleDuct:Uncontrolled objects in energyplus.
  */
 class MODEL_API AirTerminalSingleDuctUncontrolled : public StraightComponent {
 
@@ -58,7 +58,7 @@ class MODEL_API AirTerminalSingleDuctUncontrolled : public StraightComponent {
   /** @name Constructors and Destructors */
   //@{
 
-  /** Constructs a new AirTerminalSingleDuctUncontrolled object and places it inside the 
+  /** Constructs a new AirTerminalSingleDuctUncontrolled object and places it inside the
    *  model.  The object is fully initialized with all companion objects. */
   AirTerminalSingleDuctUncontrolled(const Model& model, Schedule & availabilitySchedule);
 
@@ -97,14 +97,14 @@ class MODEL_API AirTerminalSingleDuctUncontrolled : public StraightComponent {
   friend class openstudio::IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
 
-  /// @cond 
+  /// @cond
   typedef detail::AirTerminalSingleDuctUncontrolled_Impl ImplType;
 
   explicit AirTerminalSingleDuctUncontrolled(std::shared_ptr<detail::AirTerminalSingleDuctUncontrolled_Impl> impl);
 
  private:
   REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctUncontrolled");
-  /// @endcond 
+  /// @endcond
 };
 
 typedef boost::optional<AirTerminalSingleDuctUncontrolled> OptionalAirTerminalSingleDuctUncontrolled;

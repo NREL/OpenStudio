@@ -77,9 +77,9 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setFMUVariableName(const std::string& fMUVariableName);
+    bool setFMUVariableName(const std::string& fMUVariableName);
 
-    void setInitialValue(double initialValue);
+    bool setInitialValue(double initialValue);
 
     //@}
     /** @name Other */
@@ -96,5 +96,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITEXPORTTOVARIABLE_IMPL_HPP
-
+#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITEXPORTTOVARIABLE_IMPL_HPP

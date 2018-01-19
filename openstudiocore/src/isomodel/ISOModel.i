@@ -17,10 +17,10 @@
   #include <isomodel/ForwardTranslator.hpp>
   #include <isomodel/UserModel.hpp>
   #include <isomodel/SimModel.hpp>
-  
+
   using namespace openstudio::isomodel;
   using namespace openstudio;
-  
+
   #include <model/Model.hpp>
   #include <utilities/data/EndUses.hpp>
 %}
@@ -168,4 +168,4 @@
 %include <isomodel/SimModel.hpp>
 %include <isomodel/UserModel.hpp>
 %include <isomodel/ForwardTranslator.hpp>
-#endif //ISOMODEL_I 
+#endif //ISOMODEL_I

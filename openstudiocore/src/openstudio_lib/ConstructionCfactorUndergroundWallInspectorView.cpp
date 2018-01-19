@@ -178,7 +178,7 @@ void ConstructionCfactorUndergroundWallInspectorView::attach(openstudio::model::
     DoubleGetter(std::bind(&model::CFactorUndergroundWallConstruction::height, m_cFactorUndergroundWallConstruction.get_ptr())),
     boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::CFactorUndergroundWallConstruction::*)(double)>(&model::CFactorUndergroundWallConstruction::setHeight), m_cFactorUndergroundWallConstruction.get_ptr(), std::placeholders::_1))
   );
-  
+
   m_standardsInformationWidget->attach(m_cFactorUndergroundWallConstruction.get());
 }
 

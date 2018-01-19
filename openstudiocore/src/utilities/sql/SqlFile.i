@@ -8,7 +8,7 @@
   #include <utilities/sql/SqlFile.hpp>
   #include <utilities/sql/SqlFileEnums.hpp>
   #include <utilities/sql/SqlFileTimeSeriesQuery.hpp>
-  
+
   #include <utilities/units/Unit.hpp>
   #include <utilities/units/BTUUnit.hpp>
   #include <utilities/units/CelsiusUnit.hpp>
@@ -48,4 +48,4 @@
 %include <utilities/sql/SqlFileTimeSeriesQuery.hpp>
 %include <utilities/sql/SqlFileEnums.hpp>
 
-#endif //UTILITIES_OUTPUT_SQLFILE_I 
+#endif //UTILITIES_OUTPUT_SQLFILE_I

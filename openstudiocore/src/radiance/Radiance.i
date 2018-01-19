@@ -31,4 +31,4 @@
 %include <radiance/ForwardTranslator.hpp>
 %include <radiance/Utils.hpp>
 
-#endif //RADIANCE_RADIANCE_I 
+#endif //RADIANCE_RADIANCE_I

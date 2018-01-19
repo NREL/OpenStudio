@@ -47,7 +47,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSolarCollectorPerformance
   m_idfObjects.push_back(idfObject);
 
   boost::optional<double> d;
-  
+
   std::string name = modelObject.name().get();
   idfObject.setName(name);
 

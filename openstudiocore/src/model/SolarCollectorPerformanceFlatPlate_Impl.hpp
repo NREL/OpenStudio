@@ -104,19 +104,19 @@ namespace detail {
 
     bool setTestCorrelationType(std::string testCorrelationType);
 
-    void setCoefficient1ofEfficiencyEquation(double coefficient1ofEfficiencyEquation);
+    bool setCoefficient1ofEfficiencyEquation(double coefficient1ofEfficiencyEquation);
 
-    void setCoefficient2ofEfficiencyEquation(double coefficient2ofEfficiencyEquation);
+    bool setCoefficient2ofEfficiencyEquation(double coefficient2ofEfficiencyEquation);
 
-    void setCoefficient3ofEfficiencyEquation(boost::optional<double> coefficient3ofEfficiencyEquation);
+    bool setCoefficient3ofEfficiencyEquation(boost::optional<double> coefficient3ofEfficiencyEquation);
 
     void resetCoefficient3ofEfficiencyEquation();
 
-    void setCoefficient2ofIncidentAngleModifier(boost::optional<double> coefficient2ofIncidentAngleModifier);
+    bool setCoefficient2ofIncidentAngleModifier(boost::optional<double> coefficient2ofIncidentAngleModifier);
 
     void resetCoefficient2ofIncidentAngleModifier();
 
-    void setCoefficient3ofIncidentAngleModifier(boost::optional<double> coefficient3ofIncidentAngleModifier);
+    bool setCoefficient3ofIncidentAngleModifier(boost::optional<double> coefficient3ofIncidentAngleModifier);
 
     void resetCoefficient3ofIncidentAngleModifier();
 
@@ -135,5 +135,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_SOLARCOLLECTORPERFORMANCEFLATPLATE_IMPL_HPP
-
+#endif // MODEL_SOLARCOLLECTORPERFORMANCEFLATPLATE_IMPL_HPP

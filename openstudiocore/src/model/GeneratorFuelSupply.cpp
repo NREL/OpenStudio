@@ -293,9 +293,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelSupply_Impl::setLiquidGenericFuelLowerHeatingValue(double liquidGenericFuelLowerHeatingValue) {
+  bool GeneratorFuelSupply_Impl::setLiquidGenericFuelLowerHeatingValue(double liquidGenericFuelLowerHeatingValue) {
     bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelLowerHeatingValue, liquidGenericFuelLowerHeatingValue);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelSupply_Impl::resetLiquidGenericFuelLowerHeatingValue() {
@@ -303,9 +304,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelSupply_Impl::setLiquidGenericFuelHigherHeatingValue(double liquidGenericFuelHigherHeatingValue) {
+  bool GeneratorFuelSupply_Impl::setLiquidGenericFuelHigherHeatingValue(double liquidGenericFuelHigherHeatingValue) {
     bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelHigherHeatingValue, liquidGenericFuelHigherHeatingValue);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelSupply_Impl::resetLiquidGenericFuelHigherHeatingValue() {
@@ -313,9 +315,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelSupply_Impl::setLiquidGenericFuelMolecularWeight(double liquidGenericFuelMolecularWeight) {
+  bool GeneratorFuelSupply_Impl::setLiquidGenericFuelMolecularWeight(double liquidGenericFuelMolecularWeight) {
     bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelMolecularWeight, liquidGenericFuelMolecularWeight);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelSupply_Impl::resetLiquidGenericFuelMolecularWeight() {
@@ -323,9 +326,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelSupply_Impl::setLiquidGenericFuelCO2EmissionFactor(double liquidGenericFuelCO2EmissionFactor) {
+  bool GeneratorFuelSupply_Impl::setLiquidGenericFuelCO2EmissionFactor(double liquidGenericFuelCO2EmissionFactor) {
     bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelCO2EmissionFactor, liquidGenericFuelCO2EmissionFactor);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelSupply_Impl::resetLiquidGenericFuelCO2EmissionFactor() {
@@ -581,32 +585,32 @@ void GeneratorFuelSupply::resetFuelType() {
   getImpl<detail::GeneratorFuelSupply_Impl>()->resetFuelType();
 }
 
-void GeneratorFuelSupply::setLiquidGenericFuelLowerHeatingValue(double liquidGenericFuelLowerHeatingValue) {
-  getImpl<detail::GeneratorFuelSupply_Impl>()->setLiquidGenericFuelLowerHeatingValue(liquidGenericFuelLowerHeatingValue);
+bool GeneratorFuelSupply::setLiquidGenericFuelLowerHeatingValue(double liquidGenericFuelLowerHeatingValue) {
+  return getImpl<detail::GeneratorFuelSupply_Impl>()->setLiquidGenericFuelLowerHeatingValue(liquidGenericFuelLowerHeatingValue);
 }
 
 void GeneratorFuelSupply::resetLiquidGenericFuelLowerHeatingValue() {
   getImpl<detail::GeneratorFuelSupply_Impl>()->resetLiquidGenericFuelLowerHeatingValue();
 }
 
-void GeneratorFuelSupply::setLiquidGenericFuelHigherHeatingValue(double liquidGenericFuelHigherHeatingValue) {
-  getImpl<detail::GeneratorFuelSupply_Impl>()->setLiquidGenericFuelHigherHeatingValue(liquidGenericFuelHigherHeatingValue);
+bool GeneratorFuelSupply::setLiquidGenericFuelHigherHeatingValue(double liquidGenericFuelHigherHeatingValue) {
+  return getImpl<detail::GeneratorFuelSupply_Impl>()->setLiquidGenericFuelHigherHeatingValue(liquidGenericFuelHigherHeatingValue);
 }
 
 void GeneratorFuelSupply::resetLiquidGenericFuelHigherHeatingValue() {
   getImpl<detail::GeneratorFuelSupply_Impl>()->resetLiquidGenericFuelHigherHeatingValue();
 }
 
-void GeneratorFuelSupply::setLiquidGenericFuelMolecularWeight(double liquidGenericFuelMolecularWeight) {
-  getImpl<detail::GeneratorFuelSupply_Impl>()->setLiquidGenericFuelMolecularWeight(liquidGenericFuelMolecularWeight);
+bool GeneratorFuelSupply::setLiquidGenericFuelMolecularWeight(double liquidGenericFuelMolecularWeight) {
+  return getImpl<detail::GeneratorFuelSupply_Impl>()->setLiquidGenericFuelMolecularWeight(liquidGenericFuelMolecularWeight);
 }
 
 void GeneratorFuelSupply::resetLiquidGenericFuelMolecularWeight() {
   getImpl<detail::GeneratorFuelSupply_Impl>()->resetLiquidGenericFuelMolecularWeight();
 }
 
-void GeneratorFuelSupply::setLiquidGenericFuelCO2EmissionFactor(double liquidGenericFuelCO2EmissionFactor) {
-  getImpl<detail::GeneratorFuelSupply_Impl>()->setLiquidGenericFuelCO2EmissionFactor(liquidGenericFuelCO2EmissionFactor);
+bool GeneratorFuelSupply::setLiquidGenericFuelCO2EmissionFactor(double liquidGenericFuelCO2EmissionFactor) {
+  return getImpl<detail::GeneratorFuelSupply_Impl>()->setLiquidGenericFuelCO2EmissionFactor(liquidGenericFuelCO2EmissionFactor);
 }
 
 void GeneratorFuelSupply::resetLiquidGenericFuelCO2EmissionFactor() {
@@ -633,4 +637,3 @@ GeneratorFuelSupply::GeneratorFuelSupply(std::shared_ptr<detail::GeneratorFuelSu
 
 } // model
 } // openstudio
-

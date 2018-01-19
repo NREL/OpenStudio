@@ -97,7 +97,7 @@ OptionalModelObject ReverseTranslator::translateScheduleWeekDaily(const Workspac
       }
     }
   }
-  
+
   target = workspaceObject.getTarget(Schedule_Week_DailyFields::ThursdaySchedule_DayName);
   if (target){
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);

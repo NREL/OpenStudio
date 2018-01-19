@@ -203,9 +203,9 @@ namespace detail{
     return getDouble( openstudio::OS_Coil_Heating_WaterFields::UFactorTimesAreaValue );
   }
 
-  void CoilHeatingWater_Impl::setUFactorTimesAreaValue( double value )
+  bool CoilHeatingWater_Impl::setUFactorTimesAreaValue( double value )
   {
-    setDouble( openstudio::OS_Coil_Heating_WaterFields::UFactorTimesAreaValue, value );
+    return setDouble( openstudio::OS_Coil_Heating_WaterFields::UFactorTimesAreaValue, value );;
   }
 
   bool CoilHeatingWater_Impl::isUFactorTimesAreaValueAutosized()
@@ -228,9 +228,9 @@ namespace detail{
     return getDouble( openstudio::OS_Coil_Heating_WaterFields::MaximumWaterFlowRate );
   }
 
-  void CoilHeatingWater_Impl::setMaximumWaterFlowRate( double value )
+  bool CoilHeatingWater_Impl::setMaximumWaterFlowRate( double value )
   {
-    setDouble( openstudio::OS_Coil_Heating_WaterFields::MaximumWaterFlowRate, value );
+    return setDouble( openstudio::OS_Coil_Heating_WaterFields::MaximumWaterFlowRate, value );;
   }
 
   bool CoilHeatingWater_Impl::isMaximumWaterFlowRateAutosized()
@@ -253,9 +253,9 @@ namespace detail{
     return getString( openstudio::OS_Coil_Heating_WaterFields::PerformanceInputMethod,true ).get();
   }
 
-  void CoilHeatingWater_Impl::setPerformanceInputMethod( std::string value )
+  bool CoilHeatingWater_Impl::setPerformanceInputMethod( std::string value )
   {
-    setString( openstudio::OS_Coil_Heating_WaterFields::PerformanceInputMethod, value );
+    return setString( openstudio::OS_Coil_Heating_WaterFields::PerformanceInputMethod, value );;
   }
 
   boost::optional<double> CoilHeatingWater_Impl::ratedCapacity()
@@ -263,9 +263,9 @@ namespace detail{
     return getDouble( openstudio::OS_Coil_Heating_WaterFields::RatedCapacity );
   }
 
-  void CoilHeatingWater_Impl::setRatedCapacity( double value )
+  bool CoilHeatingWater_Impl::setRatedCapacity( double value )
   {
-    setDouble( openstudio::OS_Coil_Heating_WaterFields::RatedCapacity, value );
+    return setDouble( openstudio::OS_Coil_Heating_WaterFields::RatedCapacity, value );;
   }
 
   bool CoilHeatingWater_Impl::isRatedCapacityAutosized()
@@ -288,9 +288,9 @@ namespace detail{
     return getDouble( openstudio::OS_Coil_Heating_WaterFields::RatedInletWaterTemperature,true ).get();
   }
 
-  void CoilHeatingWater_Impl::setRatedInletWaterTemperature( double value )
+  bool CoilHeatingWater_Impl::setRatedInletWaterTemperature( double value )
   {
-    setDouble( openstudio::OS_Coil_Heating_WaterFields::RatedInletWaterTemperature, value );
+    return setDouble( openstudio::OS_Coil_Heating_WaterFields::RatedInletWaterTemperature, value );;
   }
 
   double CoilHeatingWater_Impl::ratedInletAirTemperature()
@@ -298,9 +298,9 @@ namespace detail{
     return getDouble( openstudio::OS_Coil_Heating_WaterFields::RatedInletAirTemperature,true ).get();
   }
 
-  void CoilHeatingWater_Impl::setRatedInletAirTemperature( double value )
+  bool CoilHeatingWater_Impl::setRatedInletAirTemperature( double value )
   {
-    setDouble( openstudio::OS_Coil_Heating_WaterFields::RatedInletAirTemperature, value );
+    return setDouble( openstudio::OS_Coil_Heating_WaterFields::RatedInletAirTemperature, value );;
   }
 
   double CoilHeatingWater_Impl::ratedOutletWaterTemperature()
@@ -308,9 +308,9 @@ namespace detail{
     return getDouble( openstudio::OS_Coil_Heating_WaterFields::RatedOutletWaterTemperature,true ).get();
   }
 
-  void CoilHeatingWater_Impl::setRatedOutletWaterTemperature( double value )
+  bool CoilHeatingWater_Impl::setRatedOutletWaterTemperature( double value )
   {
-    setDouble( openstudio::OS_Coil_Heating_WaterFields::RatedOutletWaterTemperature, value );
+    return setDouble( openstudio::OS_Coil_Heating_WaterFields::RatedOutletWaterTemperature, value );;
   }
 
   double CoilHeatingWater_Impl::ratedOutletAirTemperature()
@@ -318,9 +318,9 @@ namespace detail{
     return getDouble( openstudio::OS_Coil_Heating_WaterFields::RatedOutletAirTemperature,true ).get();
   }
 
-  void CoilHeatingWater_Impl::setRatedOutletAirTemperature( double value )
+  bool CoilHeatingWater_Impl::setRatedOutletAirTemperature( double value )
   {
-    setDouble( openstudio::OS_Coil_Heating_WaterFields::RatedOutletAirTemperature, value );
+    return setDouble( openstudio::OS_Coil_Heating_WaterFields::RatedOutletAirTemperature, value );;
   }
 
   double CoilHeatingWater_Impl::ratedRatioForAirAndWaterConvection()
@@ -328,9 +328,9 @@ namespace detail{
     return getDouble( openstudio::OS_Coil_Heating_WaterFields::RatedRatioforAirandWaterConvection,true ).get();
   }
 
-  void CoilHeatingWater_Impl::setRatedRatioForAirAndWaterConvection( double value )
+  bool CoilHeatingWater_Impl::setRatedRatioForAirAndWaterConvection( double value )
   {
-    setDouble( openstudio::OS_Coil_Heating_WaterFields::RatedRatioforAirandWaterConvection, value );
+    return setDouble( openstudio::OS_Coil_Heating_WaterFields::RatedRatioforAirandWaterConvection, value );;
   }
 
   unsigned CoilHeatingWater_Impl::airInletPort()
@@ -709,7 +709,7 @@ boost::optional<double> CoilHeatingWater::uFactorTimesAreaValue()
   return getImpl<detail::CoilHeatingWater_Impl>()->uFactorTimesAreaValue();
 }
 
-void CoilHeatingWater::setUFactorTimesAreaValue( double value )
+bool CoilHeatingWater::setUFactorTimesAreaValue( double value )
 {
   return getImpl<detail::CoilHeatingWater_Impl>()->setUFactorTimesAreaValue( value );
 }
@@ -729,7 +729,7 @@ boost::optional<double> CoilHeatingWater::maximumWaterFlowRate()
   return getImpl<detail::CoilHeatingWater_Impl>()->maximumWaterFlowRate();
 }
 
-void CoilHeatingWater::setMaximumWaterFlowRate( double value )
+bool CoilHeatingWater::setMaximumWaterFlowRate( double value )
 {
   return getImpl<detail::CoilHeatingWater_Impl>()->setMaximumWaterFlowRate( value );
 }
@@ -749,7 +749,7 @@ std::string CoilHeatingWater::performanceInputMethod()
   return getImpl<detail::CoilHeatingWater_Impl>()->performanceInputMethod();
 }
 
-void CoilHeatingWater::setPerformanceInputMethod( std::string value )
+bool CoilHeatingWater::setPerformanceInputMethod( std::string value )
 {
   return getImpl<detail::CoilHeatingWater_Impl>()->setPerformanceInputMethod( value );
 }
@@ -759,7 +759,7 @@ boost::optional<double> CoilHeatingWater::ratedCapacity()
   return getImpl<detail::CoilHeatingWater_Impl>()->ratedCapacity();
 }
 
-void CoilHeatingWater::setRatedCapacity( double value )
+bool CoilHeatingWater::setRatedCapacity( double value )
 {
   return getImpl<detail::CoilHeatingWater_Impl>()->setRatedCapacity( value );
 }
@@ -779,7 +779,7 @@ double CoilHeatingWater::ratedInletWaterTemperature()
   return getImpl<detail::CoilHeatingWater_Impl>()->ratedInletWaterTemperature();
 }
 
-void CoilHeatingWater::setRatedInletWaterTemperature( double value )
+bool CoilHeatingWater::setRatedInletWaterTemperature( double value )
 {
   return getImpl<detail::CoilHeatingWater_Impl>()->setRatedInletWaterTemperature( value );
 }
@@ -789,7 +789,7 @@ double CoilHeatingWater::ratedInletAirTemperature()
   return getImpl<detail::CoilHeatingWater_Impl>()->ratedInletAirTemperature();
 }
 
-void CoilHeatingWater::setRatedInletAirTemperature( double value )
+bool CoilHeatingWater::setRatedInletAirTemperature( double value )
 {
   return getImpl<detail::CoilHeatingWater_Impl>()->setRatedInletAirTemperature( value );
 }
@@ -799,7 +799,7 @@ double CoilHeatingWater::ratedOutletWaterTemperature()
   return getImpl<detail::CoilHeatingWater_Impl>()->ratedOutletWaterTemperature();
 }
 
-void CoilHeatingWater::setRatedOutletWaterTemperature( double value )
+bool CoilHeatingWater::setRatedOutletWaterTemperature( double value )
 {
   return getImpl<detail::CoilHeatingWater_Impl>()->setRatedOutletWaterTemperature( value );
 }
@@ -809,7 +809,7 @@ double CoilHeatingWater::ratedOutletAirTemperature()
   return getImpl<detail::CoilHeatingWater_Impl>()->ratedOutletAirTemperature();
 }
 
-void CoilHeatingWater::setRatedOutletAirTemperature( double value )
+bool CoilHeatingWater::setRatedOutletAirTemperature( double value )
 {
   return getImpl<detail::CoilHeatingWater_Impl>()->setRatedOutletAirTemperature( value );
 }
@@ -819,7 +819,7 @@ double CoilHeatingWater::ratedRatioForAirAndWaterConvection()
   return getImpl<detail::CoilHeatingWater_Impl>()->ratedRatioForAirAndWaterConvection();
 }
 
-void CoilHeatingWater::setRatedRatioForAirAndWaterConvection( double value )
+bool CoilHeatingWater::setRatedRatioForAirAndWaterConvection( double value )
 {
   return getImpl<detail::CoilHeatingWater_Impl>()->setRatedRatioForAirAndWaterConvection( value );
 }
@@ -847,5 +847,4 @@ boost::optional<ControllerWaterCoil> CoilHeatingWater::controllerWaterCoil()
   }
 
 } // model
-} // openstudio
-
+} // openstudio

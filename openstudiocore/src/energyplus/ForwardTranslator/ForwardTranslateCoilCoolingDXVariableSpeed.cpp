@@ -57,7 +57,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableSpee
   // IndoorAirInletNodeName
   if( auto node = modelObject.inletModelObject() ) {
     idfObject.setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName,node->name().get());
-  }  
+  }
 
   // IndoorAirOutletNodeName
   if( auto node = modelObject.outletModelObject() ) {
@@ -94,7 +94,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableSpee
   }
 
   // EnergyPartLoadFractionCurveName
-  { 
+  {
     auto curve = modelObject.energyPartLoadFractionCurve();
     if( auto _curve = translateAndMapModelObject(curve) ) {
       idfObject.setString(Coil_Cooling_DX_VariableSpeedFields::EnergyPartLoadFractionCurveName,_curve->name().get());
@@ -133,19 +133,19 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableSpee
   if( (value = modelObject.basinHeaterCapacity()) ) {
     idfObject.setDouble(Coil_Cooling_DX_VariableSpeedFields::BasinHeaterCapacity,value.get());
   }
-  
+
   // BasinHeaterSetpointTemperature
   if( (value = modelObject.basinHeaterSetpointTemperature()) ) {
     idfObject.setDouble(Coil_Cooling_DX_VariableSpeedFields::BasinHeaterSetpointTemperature,value.get());
   }
-  
+
   // BasinHeaterOperatingScheduleName
   if( auto schedule = modelObject.basinHeaterOperatingSchedule() ) {
     if( auto _schedule = translateAndMapModelObject(schedule.get()) ) {
       idfObject.setString(Coil_Cooling_DX_VariableSpeedFields::BasinHeaterOperatingScheduleName,_schedule->name().get());
     }
   }
-  
+
   auto const speeds = modelObject.speeds();
 
   // NumberofSpeeds
@@ -187,7 +187,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableSpee
     }
 
     // SpeedTotalCoolingCapacityFunctionofTemperatureCurveName
-    { 
+    {
       auto curve = speed.totalCoolingCapacityFunctionofTemperatureCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Cooling_DX_VariableSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofTemperatureCurveName,_curve->name().get());
@@ -195,7 +195,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableSpee
     }
 
     // SpeedTotalCoolingCapacityFunctionofAirFlowFractionCurveName
-    { 
+    {
       auto curve = speed.totalCoolingCapacityFunctionofAirFlowFractionCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Cooling_DX_VariableSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofAirFlowFractionCurveName,_curve->name().get());
@@ -203,7 +203,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableSpee
     }
 
     // SpeedEnergyInputRatioFunctionofTemperatureCurveName
-    { 
+    {
       auto curve = speed.energyInputRatioFunctionofTemperatureCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Cooling_DX_VariableSpeedExtensibleFields::SpeedEnergyInputRatioFunctionofTemperatureCurveName,_curve->name().get());
@@ -211,13 +211,13 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableSpee
     }
 
     // SpeedEnergyInputRatioFunctionofAirFlowFractionCurveName
-    { 
+    {
       auto curve = speed.energyInputRatioFunctionofAirFlowFractionCurve();
       if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Cooling_DX_VariableSpeedExtensibleFields::SpeedEnergyInputRatioFunctionofAirFlowFractionCurveName,_curve->name().get());
       }
     }
-  
+
   }
 
   return idfObject;
@@ -226,7 +226,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableSpee
 boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableSpeed( CoilCoolingDXVariableSpeed& modelObject )
 {
   IdfObject coilSystemCoolingDXIdf(IddObjectType::CoilSystem_Cooling_DX);
-    
+
   m_idfObjects.push_back(coilSystemCoolingDXIdf);
 
   boost::optional<IdfObject> idfObject = translateCoilCoolingDXVariableSpeedWithoutUnitary(modelObject);

@@ -31,8 +31,8 @@
 # == OpenStudio
 #
 # OpenStudio is a free plugin for the SketchUp 3D drawing program built
-# around the OpenStudio building model. OpenStudio allows users to create and edit 
-# building geometry for the energy simulation engines EnergyPlus and, eventually, 
+# around the OpenStudio building model. OpenStudio allows users to create and edit
+# building geometry for the energy simulation engines EnergyPlus and, eventually,
 # Radiance. Over time the OpenStudio plugin will become more and more integrated
 # with other applications in the OpenStudio toolkit.
 #
@@ -43,8 +43,8 @@
 # == Design Intent
 #
 # OpenStudio does not provide access to all objects in the OpenStudio building model, access
-# to more objects is planned for future releases. Each OpenStudio::ModelObject exposed in OpenStudio 
-# is mapped to a particular type of SketchUp::Entity. For example, the OpenStudio::Building object is 
+# to more objects is planned for future releases. Each OpenStudio::ModelObject exposed in OpenStudio
+# is mapped to a particular type of SketchUp::Entity. For example, the OpenStudio::Building object is
 # mapped to the SketchUp::ShadowInfo object, the OpenStudio::Space object is mapped to the SketchUp::Group
 # object, and the OpenStudio::Surface object is mapped to the SketchUp::Face object.  For each of these
 # mappings, an OpenStudio::DrawingInterface object is used to keep the OpenStudio::ModelObject in sync
@@ -53,9 +53,9 @@
 # handles most updates to either the SketchUp::Entity or OpenStudio::ModelObject.  Updates to SketchUp::Entities
 # are handled in OpenStudio::Observer classes.
 
-# The SketchUp::Entity stores string ids for 
+# The SketchUp::Entity stores string ids for
 # both the OpenStudio::DrawingInterface and OpenStudio::ModelObject associated with it in its 'OpenStudio'
-# attribute dictionary.  The associations stored in SketchUp::Entity are primarily used to restore the 
+# attribute dictionary.  The associations stored in SketchUp::Entity are primarily used to restore the
 # model on reload.  The OpenStudio::Model is persisted on disk and a file path is stored within the SketchUp
 # model so the two can be reassociated on reload.
 #

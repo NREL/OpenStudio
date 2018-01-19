@@ -34,7 +34,7 @@ require("openstudio/sketchup_plugin/sketchup/Geom")
 class Array
 
   def is_subset_of?(other)
-  
+
     for element in self
 
       element_matched = false
@@ -51,11 +51,11 @@ class Array
         return(false)
       end
     end
-  
+
     return(true)
   end
-  
-  
+
+
   def is_same_set?(other)
     if (self.length == other.length and self.is_subset_of?(other))
       return(true)
@@ -70,7 +70,7 @@ end
 class Float
 
   def round_to(decimal_places = 0)
-    if (decimal_places > 0)    
+    if (decimal_places > 0)
       precision = (10**(decimal_places)).to_f
       return((self * precision).round / precision)
     else
@@ -91,10 +91,10 @@ class Sketchup::Model
 
   def openstudio_path=(path)
     OpenStudio::Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-    
+
     set_attribute('OpenStudio', 'OpenStudioPath', path)
-  end  
-  
+  end
+
   # returns the OpenStudio::ModelInterface associated with this Model
   def model_interface
     object = nil
@@ -116,16 +116,16 @@ class Sketchup::Model
 
   def model_interface=(object)
     OpenStudio::Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-    
+
     set_attribute('OpenStudio', 'ModelInterface', object.object_id.to_s)
   end
-  
+
   def openstudio_entities
     result = []
     entities.each {|e| result << e if e.model_object_handle }
     return result
   end
-  
+
   def delete_openstudio_entities
     # DLM: for some reason there is no delete_attribute for SketchUp::Model
     # delete_attribute('OpenStudio') # deletes entire attribute dictionary
@@ -133,7 +133,7 @@ class Sketchup::Model
     set_attribute('OpenStudio', 'ModelInterface', nil)
     entities.erase_entities(openstudio_entities)
   end
-  
+
 end
 
 class Sketchup::Entity
@@ -146,7 +146,7 @@ class Sketchup::Entity
   # takes a OpenStudio::Handle or a string
   def model_object_handle=(handle)
     OpenStudio::Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-    
+
     set_attribute('OpenStudio', 'Handle', handle.to_s)
   end
 
@@ -173,7 +173,7 @@ class Sketchup::Entity
 
   def drawing_interface=(object)
     OpenStudio::Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-    
+
     set_attribute('OpenStudio', 'DrawingInterface', object.object_id.to_s)
   end
 
@@ -322,10 +322,10 @@ class Sketchup::Loop
 
   def polygon_loop
     points = []
-    self.vertices.each do |vertex| 
+    self.vertices.each do |vertex|
       # DLM@20100920: weird bug in SU 8 that vertices can also return attribute dictionary for a loop's vertices
       if vertex.class == Sketchup::Vertex
-        points << vertex.position 
+        points << vertex.position
       end
     end
     return(Geom::PolygonLoop.new(points))
@@ -370,7 +370,7 @@ end
 class Sketchup::ShadowInfo
 
   # Still need to reconcile daylight saving time between EnergyPlus and SketchUp
-  
+
 
   def time
     # API bug:  ShadowTime is returning the hour incorrectly in UTC/GMT time, but the time zone is (correctly) the local one.
@@ -419,7 +419,7 @@ class Sketchup::ShadowInfo
   def north_angle
     return(self['NorthAngle'])
   end
-  
+
 private
   def convert_to_utc(time)
     # API bug:  ShadowTime is returning the hour incorrectly in UTC/GMT time, but the time zone is (correctly) the local one.

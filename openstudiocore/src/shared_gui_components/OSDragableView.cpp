@@ -49,7 +49,7 @@ void OSDragableView::mouseReleaseEvent(QMouseEvent* event)
   if(event->button() == Qt::LeftButton)
   {
     if( m_mouseDown )
-    { 
+    {
       emit clicked();
       m_mouseDown = false;
     }
@@ -83,7 +83,7 @@ void OSDragableView::mouseMoveEvent(QMouseEvent * event)
   }
 
   m_mouseDown = false;
-  
+
   QPixmap pixmap(size());
   pixmap.fill(Qt::transparent);
 

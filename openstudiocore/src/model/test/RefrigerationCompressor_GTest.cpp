@@ -42,12 +42,12 @@ TEST_F(ModelFixture, RefrigerationCompressor_DefaultConstructor)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model model;
     RefrigerationCompressor testObject = RefrigerationCompressor(model);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -134,7 +134,7 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithCustomData)
   capacityCurve.setInputUnitTypeforX("Temperature");
   capacityCurve.setInputUnitTypeforY("Temperature");
   capacityCurve.setOutputUnitType("Capacity");
-  
+
   testObject.setRefrigerationCompressorCapacityCurve(capacityCurve);
 
   CurveBicubic transPowerCurve = CurveBicubic(model);
@@ -178,7 +178,7 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithCustomData)
   transCapacityCurve.setInputUnitTypeforX("Temperature");
   transCapacityCurve.setInputUnitTypeforY("Temperature");
   transCapacityCurve.setOutputUnitType("Capacity");
-  
+
   testObject.setTranscriticalCompressorCapacityCurve(transCapacityCurve);
   EXPECT_EQ("Transcritical", testObject.modeofOperation());
 

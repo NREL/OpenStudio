@@ -25,7 +25,7 @@
  *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
- 
+
 #ifndef MODEL_UNITARYSYSTEMPERFORMANCEMULTISPEED_HPP
 #define MODEL_UNITARYSYSTEMPERFORMANCEMULTISPEED_HPP
 
@@ -37,7 +37,7 @@ namespace openstudio {
 namespace energyplus {
   class ForwardTranslator;
 }
-  
+
 namespace model {
 
 namespace detail {
@@ -86,21 +86,21 @@ class MODEL_API UnitarySystemPerformanceMultispeed : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
   explicit UnitarySystemPerformanceMultispeed(const Model& model);
-  
+
   virtual ~UnitarySystemPerformanceMultispeed() {}
   //@}
-  
+
   static IddObjectType iddObjectType();
-  
+
   /** @name Getters */
   //@{
 
   bool singleModeOperation() const;
 
   std::vector<SupplyAirflowRatioField> supplyAirflowRatioFields();
-  
+
   //@}
-  
+
   //** @name Setters */
 
   bool setSingleModeOperation(bool singleMode);
@@ -114,17 +114,17 @@ class MODEL_API UnitarySystemPerformanceMultispeed : public ModelObject {
   bool addSupplyAirflowRatioField(double heatingRatio, double coolingRatio);
 
   void resetSupplyAirflowRatioFields();
-  
+
   //@{
-  
+
   //@}
 
  protected:
   /// @cond
   typedef detail::UnitarySystemPerformanceMultispeed_Impl ImplType;
-  
+
   explicit UnitarySystemPerformanceMultispeed(std::shared_ptr<detail::UnitarySystemPerformanceMultispeed_Impl> impl);
-  
+
   friend class detail::UnitarySystemPerformanceMultispeed_Impl;
   friend class Model;
   friend class IdfObject;

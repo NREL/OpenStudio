@@ -298,9 +298,9 @@ namespace detail{
     return this->getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumAirFlowRate);
   }
 
-  void AirTerminalSingleDuctVAVReheat_Impl::setMaximumAirFlowRate( double value )
+  bool AirTerminalSingleDuctVAVReheat_Impl::setMaximumAirFlowRate( double value )
   {
-    this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumAirFlowRate,value);
+    return this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumAirFlowRate,value);
   }
 
   void AirTerminalSingleDuctVAVReheat_Impl::autosizeMaximumAirFlowRate()
@@ -331,19 +331,21 @@ namespace detail{
     return this->getString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ZoneMinimumAirFlowInputMethod).get();
   }
 
-  void AirTerminalSingleDuctVAVReheat_Impl::setZoneMinimumAirFlowMethod( std::string value )
+  bool AirTerminalSingleDuctVAVReheat_Impl::setZoneMinimumAirFlowMethod( std::string value )
   {
     if( istringEqual(value,"Constant") )
     {
-      this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ZoneMinimumAirFlowInputMethod,"Constant");
+      return this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ZoneMinimumAirFlowInputMethod,"Constant");
     }
     else if( istringEqual(value,"FixedFlowRate") )
     {
-      this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ZoneMinimumAirFlowInputMethod,"FixedFlowRate");
+      return this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ZoneMinimumAirFlowInputMethod,"FixedFlowRate");
     }
     else if( istringEqual(value,"Scheduled") )
     {
-      this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ZoneMinimumAirFlowInputMethod,"Scheduled");
+      return this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ZoneMinimumAirFlowInputMethod,"Scheduled");
+    } else {
+      return false;
     }
   }
 
@@ -352,9 +354,9 @@ namespace detail{
     return this->getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ConstantMinimumAirFlowFraction).get();
   }
 
-  void AirTerminalSingleDuctVAVReheat_Impl::setConstantMinimumAirFlowFraction( double value )
+  bool AirTerminalSingleDuctVAVReheat_Impl::setConstantMinimumAirFlowFraction( double value )
   {
-    this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ConstantMinimumAirFlowFraction,value);
+    return this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ConstantMinimumAirFlowFraction,value);
   }
 
   double AirTerminalSingleDuctVAVReheat_Impl::fixedMinimumAirFlowRate()
@@ -362,9 +364,9 @@ namespace detail{
     return this->getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::FixedMinimumAirFlowRate).get();
   }
 
-  void AirTerminalSingleDuctVAVReheat_Impl::setFixedMinimumAirFlowRate( double value )
+  bool AirTerminalSingleDuctVAVReheat_Impl::setFixedMinimumAirFlowRate( double value )
   {
-    this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::FixedMinimumAirFlowRate,value);
+    return this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::FixedMinimumAirFlowRate,value);
   }
 
   boost::optional<Schedule> AirTerminalSingleDuctVAVReheat_Impl::minimumAirFlowFractionSchedule() const
@@ -391,9 +393,9 @@ namespace detail{
     return this->getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumHotWaterorSteamFlowRate);
   }
 
-  void AirTerminalSingleDuctVAVReheat_Impl::setMaximumHotWaterOrSteamFlowRate( double value )
+  bool AirTerminalSingleDuctVAVReheat_Impl::setMaximumHotWaterOrSteamFlowRate( double value )
   {
-    this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumHotWaterorSteamFlowRate,value);
+    return this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumHotWaterorSteamFlowRate,value);
   }
 
   void AirTerminalSingleDuctVAVReheat_Impl::autosizeMaximumHotWaterOrSteamFlowRate()
@@ -424,9 +426,9 @@ namespace detail{
     return this->getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MinimumHotWaterorSteamFlowRate).get();
   }
 
-  void AirTerminalSingleDuctVAVReheat_Impl::setMinimumHotWaterOrStreamFlowRate( double value )
+  bool AirTerminalSingleDuctVAVReheat_Impl::setMinimumHotWaterOrStreamFlowRate( double value )
   {
-    this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MinimumHotWaterorSteamFlowRate,value);
+    return this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MinimumHotWaterorSteamFlowRate,value);
   }
 
   double AirTerminalSingleDuctVAVReheat_Impl::convergenceTolerance()
@@ -434,9 +436,9 @@ namespace detail{
     return this->getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ConvergenceTolerance).get();
   }
 
-  void AirTerminalSingleDuctVAVReheat_Impl::setConvergenceTolerance( double value )
+  bool AirTerminalSingleDuctVAVReheat_Impl::setConvergenceTolerance( double value )
   {
-    this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ConvergenceTolerance,value);
+    return this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ConvergenceTolerance,value);
   }
 
   std::string AirTerminalSingleDuctVAVReheat_Impl::damperHeatingAction()
@@ -444,9 +446,9 @@ namespace detail{
     return this->getString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::DamperHeatingAction).get();
   }
 
-  void AirTerminalSingleDuctVAVReheat_Impl::setDamperHeatingAction( std::string value )
+  bool AirTerminalSingleDuctVAVReheat_Impl::setDamperHeatingAction( std::string value )
   {
-    setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::DamperHeatingAction,value);
+    return setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::DamperHeatingAction,value);;
   }
 
   boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::maximumFlowPerZoneFloorAreaDuringReheat()
@@ -460,9 +462,9 @@ namespace detail{
     OS_ASSERT(result);
   }
 
-  void AirTerminalSingleDuctVAVReheat_Impl::setMaximumFlowPerZoneFloorAreaDuringReheat( double value )
+  bool AirTerminalSingleDuctVAVReheat_Impl::setMaximumFlowPerZoneFloorAreaDuringReheat( double value )
   {
-    this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowperZoneFloorAreaDuringReheat,value);
+    return this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowperZoneFloorAreaDuringReheat,value);
   }
 
   void AirTerminalSingleDuctVAVReheat_Impl::autosizeMaximumFlowPerZoneFloorAreaDuringReheat()
@@ -493,9 +495,9 @@ namespace detail{
     return this->getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowFractionDuringReheat);
   }
 
-  void AirTerminalSingleDuctVAVReheat_Impl::setMaximumFlowFractionDuringReheat( double value )
+  bool AirTerminalSingleDuctVAVReheat_Impl::setMaximumFlowFractionDuringReheat( double value )
   {
-    this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowFractionDuringReheat,value);
+    return this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowFractionDuringReheat,value);
   }
 
   void AirTerminalSingleDuctVAVReheat_Impl::autosizeMaximumFlowFractionDuringReheat()
@@ -531,9 +533,9 @@ namespace detail{
     return this->getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumReheatAirTemperature).get();
   }
 
-  void AirTerminalSingleDuctVAVReheat_Impl::setMaximumReheatAirTemperature( double value )
+  bool AirTerminalSingleDuctVAVReheat_Impl::setMaximumReheatAirTemperature( double value )
   {
-    this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumReheatAirTemperature,value);
+    return this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumReheatAirTemperature,value);
   }
 
   HVACComponent AirTerminalSingleDuctVAVReheat_Impl::reheatCoil() const
@@ -638,9 +640,9 @@ namespace detail{
     return getBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ControlForOutdoorAir);
   }
 
-  void AirTerminalSingleDuctVAVReheat_Impl::setControlForOutdoorAir(bool controlForOutdoorAir)
+  bool AirTerminalSingleDuctVAVReheat_Impl::setControlForOutdoorAir(bool controlForOutdoorAir)
   {
-    setBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ControlForOutdoorAir,controlForOutdoorAir);
+    return setBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ControlForOutdoorAir,controlForOutdoorAir);;
   }
 
   boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedMaximumAirFlowRate() const {
@@ -758,9 +760,9 @@ boost::optional<double> AirTerminalSingleDuctVAVReheat::maximumAirFlowRate() con
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->maximumAirFlowRate();
 }
 
-void AirTerminalSingleDuctVAVReheat::setMaximumAirFlowRate( double value )
+bool AirTerminalSingleDuctVAVReheat::setMaximumAirFlowRate( double value )
 {
-  getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setMaximumAirFlowRate(value);
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setMaximumAirFlowRate(value);
 }
 
 void AirTerminalSingleDuctVAVReheat::autosizeMaximumAirFlowRate()
@@ -778,9 +780,9 @@ std::string AirTerminalSingleDuctVAVReheat::zoneMinimumAirFlowMethod()
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->zoneMinimumAirFlowMethod();
 }
 
-void AirTerminalSingleDuctVAVReheat::setZoneMinimumAirFlowMethod( std::string value )
+bool AirTerminalSingleDuctVAVReheat::setZoneMinimumAirFlowMethod( std::string value )
 {
-  getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setZoneMinimumAirFlowMethod(value);
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setZoneMinimumAirFlowMethod(value);
 }
 
 double AirTerminalSingleDuctVAVReheat::constantMinimumAirFlowFraction()
@@ -788,9 +790,9 @@ double AirTerminalSingleDuctVAVReheat::constantMinimumAirFlowFraction()
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->constantMinimumAirFlowFraction();
 }
 
-void AirTerminalSingleDuctVAVReheat::setConstantMinimumAirFlowFraction( double value )
+bool AirTerminalSingleDuctVAVReheat::setConstantMinimumAirFlowFraction( double value )
 {
-  getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setConstantMinimumAirFlowFraction(value);
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setConstantMinimumAirFlowFraction(value);
 }
 
 double AirTerminalSingleDuctVAVReheat::fixedMinimumAirFlowRate()
@@ -798,9 +800,9 @@ double AirTerminalSingleDuctVAVReheat::fixedMinimumAirFlowRate()
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->fixedMinimumAirFlowRate();
 }
 
-void AirTerminalSingleDuctVAVReheat::setFixedMinimumAirFlowRate( double value )
+bool AirTerminalSingleDuctVAVReheat::setFixedMinimumAirFlowRate( double value )
 {
-  getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setFixedMinimumAirFlowRate(value);
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setFixedMinimumAirFlowRate(value);
 }
 
 boost::optional<Schedule> AirTerminalSingleDuctVAVReheat::minimumAirFlowFractionSchedule() const
@@ -822,9 +824,9 @@ boost::optional<double> AirTerminalSingleDuctVAVReheat::maximumHotWaterOrSteamFl
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->maximumHotWaterOrSteamFlowRate();
 }
 
-void AirTerminalSingleDuctVAVReheat::setMaximumHotWaterOrSteamFlowRate( double value )
+bool AirTerminalSingleDuctVAVReheat::setMaximumHotWaterOrSteamFlowRate( double value )
 {
-  getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setMaximumHotWaterOrSteamFlowRate(value);
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setMaximumHotWaterOrSteamFlowRate(value);
 }
 
 void AirTerminalSingleDuctVAVReheat::autosizeMaximumHotWaterOrSteamFlowRate()
@@ -842,9 +844,9 @@ double AirTerminalSingleDuctVAVReheat::minimumHotWaterOrSteamFlowRate()
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->minimumHotWaterOrSteamFlowRate();
 }
 
-void AirTerminalSingleDuctVAVReheat::setMinimumHotWaterOrStreamFlowRate( double value )
+bool AirTerminalSingleDuctVAVReheat::setMinimumHotWaterOrStreamFlowRate( double value )
 {
-  getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setMinimumHotWaterOrStreamFlowRate(value);
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setMinimumHotWaterOrStreamFlowRate(value);
 }
 
 double AirTerminalSingleDuctVAVReheat::convergenceTolerance()
@@ -852,9 +854,9 @@ double AirTerminalSingleDuctVAVReheat::convergenceTolerance()
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->convergenceTolerance();
 }
 
-void AirTerminalSingleDuctVAVReheat::setConvergenceTolerance( double value )
+bool AirTerminalSingleDuctVAVReheat::setConvergenceTolerance( double value )
 {
-  getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setConvergenceTolerance(value);
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setConvergenceTolerance(value);
 }
 
 std::string AirTerminalSingleDuctVAVReheat::damperHeatingAction()
@@ -862,7 +864,7 @@ std::string AirTerminalSingleDuctVAVReheat::damperHeatingAction()
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->damperHeatingAction();
 }
 
-void AirTerminalSingleDuctVAVReheat::setDamperHeatingAction( std::string value )
+bool AirTerminalSingleDuctVAVReheat::setDamperHeatingAction( std::string value )
 {
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setDamperHeatingAction(value);
 }
@@ -877,9 +879,9 @@ void AirTerminalSingleDuctVAVReheat::resetMaximumFlowPerZoneFloorAreaDuringRehea
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->resetMaximumFlowPerZoneFloorAreaDuringReheat();
 }
 
-void AirTerminalSingleDuctVAVReheat::setMaximumFlowPerZoneFloorAreaDuringReheat( double value )
+bool AirTerminalSingleDuctVAVReheat::setMaximumFlowPerZoneFloorAreaDuringReheat( double value )
 {
-  getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setMaximumFlowPerZoneFloorAreaDuringReheat(value);
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setMaximumFlowPerZoneFloorAreaDuringReheat(value);
 }
 
 void AirTerminalSingleDuctVAVReheat::autosizeMaximumFlowPerZoneFloorAreaDuringReheat()
@@ -897,9 +899,9 @@ boost::optional<double> AirTerminalSingleDuctVAVReheat::maximumFlowFractionDurin
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->maximumFlowFractionDuringReheat();
 }
 
-void AirTerminalSingleDuctVAVReheat::setMaximumFlowFractionDuringReheat( double value )
+bool AirTerminalSingleDuctVAVReheat::setMaximumFlowFractionDuringReheat( double value )
 {
-  getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setMaximumFlowFractionDuringReheat(value);
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setMaximumFlowFractionDuringReheat(value);
 }
 
 void AirTerminalSingleDuctVAVReheat::autosizeMaximumFlowFractionDuringReheat()
@@ -922,9 +924,9 @@ double AirTerminalSingleDuctVAVReheat::maximumReheatAirTemperature()
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->maximumReheatAirTemperature();
 }
 
-void AirTerminalSingleDuctVAVReheat::setMaximumReheatAirTemperature( double value )
+bool AirTerminalSingleDuctVAVReheat::setMaximumReheatAirTemperature( double value )
 {
-  getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setMaximumReheatAirTemperature(value);
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setMaximumReheatAirTemperature(value);
 }
 
 HVACComponent AirTerminalSingleDuctVAVReheat::reheatCoil() const
@@ -942,9 +944,9 @@ bool AirTerminalSingleDuctVAVReheat::controlForOutdoorAir() const
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->controlForOutdoorAir();
 }
 
-void AirTerminalSingleDuctVAVReheat::setControlForOutdoorAir(bool controlForOutdoorAir)
+bool AirTerminalSingleDuctVAVReheat::setControlForOutdoorAir(bool controlForOutdoorAir)
 {
-  getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setControlForOutdoorAir(controlForOutdoorAir);
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setControlForOutdoorAir(controlForOutdoorAir);
 }
 
   boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumAirFlowRate() const {
@@ -966,4 +968,3 @@ void AirTerminalSingleDuctVAVReheat::setControlForOutdoorAir(bool controlForOutd
 } // model
 
 } // openstudio
-

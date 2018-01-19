@@ -67,7 +67,7 @@ private:
   QScrollArea * m_rightScrollArea;
   Component * m_expandedComponent;
   std::vector<BCLMeasure> m_measuresNeedingUpdates;
-  WorkflowJSON m_workflow; 
+  WorkflowJSON m_workflow;
   MeasureManager * m_measureManager; // DLM: why is this a raw pointer?
 
 private slots:

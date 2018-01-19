@@ -1723,7 +1723,7 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   m_sundayButton->bind(
       m_scheduleRule,
       std::bind(&model::ScheduleRule::applySunday,&m_scheduleRule),
-      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplySunday,&m_scheduleRule,std::placeholders::_1)));
+      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplySundayNoFail,&m_scheduleRule,std::placeholders::_1)));
   weekHLayout->addWidget(m_sundayButton);
 
   weekHLayout->addSpacing(10);
@@ -1733,7 +1733,7 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   m_mondayButton->bind(
       m_scheduleRule,
       std::bind(&model::ScheduleRule::applyMonday,&m_scheduleRule),
-      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplyMonday,&m_scheduleRule,std::placeholders::_1)));
+      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplyMondayNoFail,&m_scheduleRule,std::placeholders::_1)));
   weekHLayout->addWidget(m_mondayButton);
 
   weekHLayout->addSpacing(10);
@@ -1743,7 +1743,7 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   m_tuesdayButton->bind(
       m_scheduleRule,
       std::bind(&model::ScheduleRule::applyTuesday,&m_scheduleRule),
-      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplyTuesday,&m_scheduleRule,std::placeholders::_1)));
+      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplyTuesdayNoFail,&m_scheduleRule,std::placeholders::_1)));
   weekHLayout->addWidget(m_tuesdayButton);
 
   weekHLayout->addSpacing(10);
@@ -1753,7 +1753,7 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   m_wednesdayButton->bind(
       m_scheduleRule,
       std::bind(&model::ScheduleRule::applyWednesday,&m_scheduleRule),
-      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplyWednesday,&m_scheduleRule,std::placeholders::_1)));
+      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplyWednesdayNoFail,&m_scheduleRule,std::placeholders::_1)));
   weekHLayout->addWidget(m_wednesdayButton);
 
   weekHLayout->addSpacing(10);
@@ -1763,7 +1763,7 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   m_thursdayButton->bind(
       m_scheduleRule,
       std::bind(&model::ScheduleRule::applyThursday,&m_scheduleRule),
-      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplyThursday,&m_scheduleRule,std::placeholders::_1)));
+      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplyThursdayNoFail,&m_scheduleRule,std::placeholders::_1)));
   weekHLayout->addWidget(m_thursdayButton);
 
   weekHLayout->addSpacing(10);
@@ -1773,7 +1773,7 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   m_fridayButton->bind(
       m_scheduleRule,
       std::bind(&model::ScheduleRule::applyFriday,&m_scheduleRule),
-      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplyFriday,&m_scheduleRule,std::placeholders::_1)));
+      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplyFridayNoFail,&m_scheduleRule,std::placeholders::_1)));
   weekHLayout->addWidget(m_fridayButton);
 
   weekHLayout->addSpacing(10);
@@ -1783,7 +1783,7 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   m_saturdayButton->bind(
       m_scheduleRule,
       std::bind(&model::ScheduleRule::applySaturday,&m_scheduleRule),
-      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplySaturday,&m_scheduleRule,std::placeholders::_1)));
+      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplySaturdayNoFail,&m_scheduleRule,std::placeholders::_1)));
   weekHLayout->addWidget(m_saturdayButton);
 
   ruleVLayout->addLayout(weekHLayout);

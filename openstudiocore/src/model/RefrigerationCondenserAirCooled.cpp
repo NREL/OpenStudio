@@ -293,9 +293,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserAirCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationCondenserAirCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_Condenser_AirCooledFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserAirCooled_Impl::resetEndUseSubcategory() {
@@ -303,9 +304,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserAirCooled_Impl::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
+  bool RefrigerationCondenserAirCooled_Impl::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
     bool result = setDouble(OS_Refrigeration_Condenser_AirCooledFields::CondenserRefrigerantOperatingChargeInventory, condenserRefrigerantOperatingChargeInventory);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserAirCooled_Impl::resetCondenserRefrigerantOperatingChargeInventory() {
@@ -313,9 +315,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserAirCooled_Impl::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
+  bool RefrigerationCondenserAirCooled_Impl::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
     bool result = setDouble(OS_Refrigeration_Condenser_AirCooledFields::CondensateReceiverRefrigerantInventory, condensateReceiverRefrigerantInventory);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserAirCooled_Impl::resetCondensateReceiverRefrigerantInventory() {
@@ -323,9 +326,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserAirCooled_Impl::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
+  bool RefrigerationCondenserAirCooled_Impl::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
     bool result = setDouble(OS_Refrigeration_Condenser_AirCooledFields::CondensatePipingRefrigerantInventory, condensatePipingRefrigerantInventory);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserAirCooled_Impl::resetCondensatePipingRefrigerantInventory() {
@@ -487,32 +491,32 @@ void RefrigerationCondenserAirCooled::resetAirInletZone() {
   getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->resetAirInletZone();
 }
 
-void RefrigerationCondenserAirCooled::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool RefrigerationCondenserAirCooled::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void RefrigerationCondenserAirCooled::resetEndUseSubcategory() {
   getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->resetEndUseSubcategory();
 }
 
-void RefrigerationCondenserAirCooled::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
-  getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setCondenserRefrigerantOperatingChargeInventory(condenserRefrigerantOperatingChargeInventory);
+bool RefrigerationCondenserAirCooled::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
+  return getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setCondenserRefrigerantOperatingChargeInventory(condenserRefrigerantOperatingChargeInventory);
 }
 
 void RefrigerationCondenserAirCooled::resetCondenserRefrigerantOperatingChargeInventory() {
   getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->resetCondenserRefrigerantOperatingChargeInventory();
 }
 
-void RefrigerationCondenserAirCooled::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
-  getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setCondensateReceiverRefrigerantInventory(condensateReceiverRefrigerantInventory);
+bool RefrigerationCondenserAirCooled::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
+  return getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setCondensateReceiverRefrigerantInventory(condensateReceiverRefrigerantInventory);
 }
 
 void RefrigerationCondenserAirCooled::resetCondensateReceiverRefrigerantInventory() {
   getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->resetCondensateReceiverRefrigerantInventory();
 }
 
-void RefrigerationCondenserAirCooled::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
-  getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setCondensatePipingRefrigerantInventory(condensatePipingRefrigerantInventory);
+bool RefrigerationCondenserAirCooled::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
+  return getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setCondensatePipingRefrigerantInventory(condensatePipingRefrigerantInventory);
 }
 
 void RefrigerationCondenserAirCooled::resetCondensatePipingRefrigerantInventory() {
@@ -526,5 +530,4 @@ RefrigerationCondenserAirCooled::RefrigerationCondenserAirCooled(std::shared_ptr
 /// @endcond
 
 } // model
-} // openstudio
-
+} // openstudio

@@ -71,7 +71,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerSingleZone
   {
     idfObject.setString(SetpointManager_SingleZone_OneStageHeatingFields::SetpointNodeorNodeListName,node->name().get());
   }
-  
+
   return idfObject;
 }
 

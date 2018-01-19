@@ -109,7 +109,7 @@ namespace detail {
 
     bool setVentilationControlModeSchedule(Schedule& schedule);
 
-    void setUseWeatherFileRainIndicators(bool useWeatherFileRainIndicators);
+    bool setUseWeatherFileRainIndicators(bool useWeatherFileRainIndicators);
 
     bool setMaximumWindSpeed(double maximumWindSpeed);
 

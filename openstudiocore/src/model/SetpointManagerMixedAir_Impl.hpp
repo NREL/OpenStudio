@@ -38,14 +38,14 @@ namespace model {
 namespace detail {
 
   class MODEL_API SetpointManagerMixedAir_Impl : public SetpointManager_Impl {
-    
-    
+
+
    public:
 
     SetpointManagerMixedAir_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerMixedAir_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                                 Model_Impl* model, 
+    SetpointManagerMixedAir_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                 Model_Impl* model,
                                  bool keepHandle);
 
     SetpointManagerMixedAir_Impl(const SetpointManagerMixedAir_Impl& other, Model_Impl* model,bool keepHandles);
@@ -66,19 +66,19 @@ namespace detail {
 
     boost::optional<Node> referenceSetpointNode();
 
-    void setReferenceSetpointNode(Node& node );
+    bool setReferenceSetpointNode(Node& node );
 
     void resetReferenceSetpointNode();
 
     boost::optional<Node> fanInletNode();
 
-    void setFanInletNode(Node& node );
+    bool setFanInletNode(Node& node );
 
     void resetFanInletNode();
 
     boost::optional<Node> fanOutletNode();
 
-    void setFanOutletNode(Node& node );
+    bool setFanOutletNode(Node& node );
 
     void resetFanOutletNode();
 

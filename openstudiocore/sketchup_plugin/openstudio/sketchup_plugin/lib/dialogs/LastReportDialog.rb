@@ -39,14 +39,14 @@ module OpenStudio
       @container = WindowContainer.new(Plugin.name + " Last Report Window", 400, 400, 150, 150)
       @container.center_on_parent
       @container.set_file(Plugin.dir + "/lib/dialogs/html/LastReport.html")
-      
+
       add_callbacks
     end
-    
+
     def on_load
       super
     end
-    
+
     def update
       super
     end

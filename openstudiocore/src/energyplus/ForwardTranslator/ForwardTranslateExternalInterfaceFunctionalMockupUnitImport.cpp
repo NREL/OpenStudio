@@ -56,7 +56,7 @@ boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceFunction
   s = modelObject.name();
   if (s) {
     idfObject.setName(*s);
-  } 
+  }
 
   s = modelObject.fMUFileName();
   if (s.is_initialized()) {

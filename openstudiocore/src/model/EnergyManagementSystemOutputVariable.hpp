@@ -145,7 +145,7 @@ class MODEL_API EnergyManagementSystemOutputVariable : public ModelObject {
   bool setEMSVariableName(const EnergyManagementSystemCurveOrTableIndexVariable& object);
   bool setEMSVariableName(const EnergyManagementSystemConstructionIndexVariable& object);
 
-  void setExportToBCVTB(bool exportToBCVTB);
+  bool setExportToBCVTB(bool exportToBCVTB);
 
   void resetExportToBCVTB();
 
@@ -181,4 +181,3 @@ typedef std::vector<EnergyManagementSystemOutputVariable> EnergyManagementSystem
 } // openstudio
 
 #endif // MODEL_ENERGYMANAGEMENTSYSTEMOUTPUTVARIABLE_HPP
-

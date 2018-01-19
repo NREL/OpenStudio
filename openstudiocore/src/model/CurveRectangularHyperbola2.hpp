@@ -41,8 +41,8 @@ namespace detail {
 
 } // detail
 
-/** CurveRectangularHyperbola2 is a Curve that wraps the OpenStudio IDD object 
- *  'OS:Curve:RectangularHyperbola2'. The functional form is 
+/** CurveRectangularHyperbola2 is a Curve that wraps the OpenStudio IDD object
+ *  'OS:Curve:RectangularHyperbola2'. The functional form is
  *  \f$\displaystyle f(x) = \frac{c_1 \cdot x}{c_2 + x} + c_3 \cdot x\f$ */
 class MODEL_API CurveRectangularHyperbola2 : public Curve {
  public:
@@ -92,21 +92,21 @@ class MODEL_API CurveRectangularHyperbola2 : public Curve {
   /** @name Setters */
   //@{
 
-  void setCoefficient1C1(double coefficient1C1);
+  bool setCoefficient1C1(double coefficient1C1);
 
-  void setCoefficient2C2(double coefficient2C2);
+  bool setCoefficient2C2(double coefficient2C2);
 
-  void setCoefficient3C3(double coefficient3C3);
+  bool setCoefficient3C3(double coefficient3C3);
 
-  void setMinimumValueofx(double minimumValueofx);
+  bool setMinimumValueofx(double minimumValueofx);
 
-  void setMaximumValueofx(double maximumValueofx);
+  bool setMaximumValueofx(double maximumValueofx);
 
-  void setMinimumCurveOutput(double minimumCurveOutput);
+  bool setMinimumCurveOutput(double minimumCurveOutput);
 
   void resetMinimumCurveOutput();
 
-  void setMaximumCurveOutput(double maximumCurveOutput);
+  bool setMaximumCurveOutput(double maximumCurveOutput);
 
   void resetMaximumCurveOutput();
 
@@ -149,5 +149,4 @@ typedef std::vector<CurveRectangularHyperbola2> CurveRectangularHyperbola2Vector
 } // model
 } // openstudio
 
-#endif // MODEL_CURVERECTANGULARHYPERBOLA2_HPP
-
+#endif // MODEL_CURVERECTANGULARHYPERBOLA2_HPP

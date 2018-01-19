@@ -519,7 +519,7 @@ double TimeSeries_Impl::valueAtSecondsFromFirstReport(long secondsFromFirstRepor
 
   if (m_intervalLength) {
 
-    // before the start of the first interval 
+    // before the start of the first interval
     if (secondsFromFirstReport <= -m_intervalLength->totalSeconds()) {
       LOG(Debug, "Cannot compute value " << secondsFromFirstReport << " seconds before first reporting time when interval length is " << *m_intervalLength);
     } else if (secondsFromFirstReport > duration) {

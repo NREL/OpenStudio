@@ -28,7 +28,7 @@ QListView::item:hover, QTableView::item:hover {
 QHeaderView::section {
   background-color: qlineargradient(x1:0,y1:0,
                                     x2:0,y2:1,
-                                    stop: 0 #6B747B, 
+                                    stop: 0 #6B747B,
                                     stop: 0.33 #D0D4D7,
                                     stop: 0.66 #D0D4D7,
                                     stop: 1 #6B747B);
@@ -37,7 +37,7 @@ QHeaderView::section {
 QWidget#listLabel {
   background-color: qlineargradient(x1:0,y1:0,
                                     x2:0,y2:1,
-                                    stop: 0 #6B747B, 
+                                    stop: 0 #6B747B,
                                     stop: 0.33 #D0D4D7,
                                     stop: 0.66 #D0D4D7,
                                     stop: 1 #6B747B);
@@ -46,7 +46,7 @@ QWidget#listLabel {
 QWidget#tableLabel {
   background-color: qlineargradient(x1:0,y1:0,
                                     x2:0,y2:1,
-                                    stop: 0 #6B747B, 
+                                    stop: 0 #6B747B,
                                     stop: 0.33 #D0D4D7,
                                     stop: 0.66 #D0D4D7,
                                     stop: 1 #6B747B);
@@ -55,7 +55,7 @@ QWidget#tableLabel {
 QWidget#selectionLabel {
   background-color: qlineargradient(x1:0,y1:0,
                                     x2:0,y2:1,
-                                    stop: 0 #6B747B, 
+                                    stop: 0 #6B747B,
                                     stop: 0.33 #D0D4D7,
                                     stop: 0.66 #D0D4D7,
                                     stop: 1 #6B747B);
@@ -64,7 +64,7 @@ QWidget#selectionLabel {
 QWidget#igLabel{
   background-color: qlineargradient(x1:0,y1:0,
                                     x2:0,y2:1,
-                                    stop: 0 #6B747B, 
+                                    stop: 0 #6B747B,
                                     stop: 0.33 #D0D4D7,
                                     stop: 0.66 #D0D4D7,
                                     stop: 1 #6B747B);

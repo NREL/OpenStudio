@@ -29,10 +29,10 @@
 module OpenStudio
 
   class PluginPathWatcher < PathWatcher
-  
+
     def initialize(model_interface, path)
       super(path)
-      
+
       @model_interface = model_interface
     end
 
@@ -51,7 +51,7 @@ module OpenStudio
         # skp_model is no longer valid (e.g. closed on Mac)
         proc = Proc.new { Plugin.model_manager.purge_invalid_model_interfaces }
         Plugin.add_event( proc )
-        
+
         # continue ignoring
 
       elsif skp_model != Sketchup.active_model
@@ -80,6 +80,6 @@ module OpenStudio
       end
 
     end
-    
+
   end
 end

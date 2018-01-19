@@ -92,7 +92,7 @@ class LoopItemView : public QWidget
   private slots:
 
   void emitAddToModelClicked();
-  
+
   private:
 
   AddToModelEnum m_addToModelEnum;

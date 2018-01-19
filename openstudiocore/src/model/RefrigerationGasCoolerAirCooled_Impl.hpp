@@ -42,7 +42,7 @@ namespace detail {
 
   /** RefrigerationGasCoolerAirCooled_Impl is a ParentObject_Impl that is the implementation class for RefrigerationGasCoolerAirCooled.*/
   class MODEL_API RefrigerationGasCoolerAirCooled_Impl : public ParentObject_Impl {
-//    
+//
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -147,19 +147,19 @@ namespace detail {
 
     void resetMinimumFanAirFlowRatio();
 
-    void setTransitionTemperature(double transitionTemperature);
+    bool setTransitionTemperature(double transitionTemperature);
 
     void resetTransitionTemperature();
 
-    void setTranscriticalApproachTemperature(double transcriticalApproachTemperature);
+    bool setTranscriticalApproachTemperature(double transcriticalApproachTemperature);
 
     void resetTranscriticalApproachTemperature();
 
-    void setSubcriticalTemperatureDifference(double subcriticalTemperatureDifference);
+    bool setSubcriticalTemperatureDifference(double subcriticalTemperatureDifference);
 
     void resetSubcriticalTemperatureDifference();
 
-    void setMinimumCondensingTemperature(double minimumCondensingTemperature);
+    bool setMinimumCondensingTemperature(double minimumCondensingTemperature);
 
     void resetMinimumCondensingTemperature();
 
@@ -167,19 +167,19 @@ namespace detail {
 
     // void resetAirInletNode();
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
 
-    void setGasCoolerRefrigerantOperatingChargeInventory(double gasCoolerRefrigerantOperatingChargeInventory);
+    bool setGasCoolerRefrigerantOperatingChargeInventory(double gasCoolerRefrigerantOperatingChargeInventory);
 
     void resetGasCoolerRefrigerantOperatingChargeInventory();
 
-    void setGasCoolerReceiverRefrigerantInventory(double gasCoolerReceiverRefrigerantInventory);
+    bool setGasCoolerReceiverRefrigerantInventory(double gasCoolerReceiverRefrigerantInventory);
 
     void resetGasCoolerReceiverRefrigerantInventory();
 
-    void setGasCoolerOutletPipingRefrigerantInventory(double gasCoolerOutletPipingRefrigerantInventory);
+    bool setGasCoolerOutletPipingRefrigerantInventory(double gasCoolerOutletPipingRefrigerantInventory);
 
     void resetGasCoolerOutletPipingRefrigerantInventory();
 
@@ -198,5 +198,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONGASCOOLERAIRCOOLED_IMPL_HPP
-
+#endif // MODEL_REFRIGERATIONGASCOOLERAIRCOOLED_IMPL_HPP

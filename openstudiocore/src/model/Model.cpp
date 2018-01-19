@@ -372,6 +372,10 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(EvaporativeFluidCoolerTwoSpeed);
     REGISTER_CONSTRUCTOR(ExteriorLights);
     REGISTER_CONSTRUCTOR(ExteriorLightsDefinition);
+    REGISTER_CONSTRUCTOR(ExteriorFuelEquipment);
+    REGISTER_CONSTRUCTOR(ExteriorFuelEquipmentDefinition);
+    REGISTER_CONSTRUCTOR(ExteriorWaterEquipment);
+    REGISTER_CONSTRUCTOR(ExteriorWaterEquipmentDefinition);
     REGISTER_CONSTRUCTOR(ExternalInterface);
     REGISTER_CONSTRUCTOR(ExternalInterfaceActuator);
     REGISTER_CONSTRUCTOR(ExternalInterfaceFunctionalMockupUnitExportFromVariable);
@@ -393,6 +397,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(FFactorGroundFloorConstruction);
     REGISTER_CONSTRUCTOR(FluidCoolerSingleSpeed);
     REGISTER_CONSTRUCTOR(FluidCoolerTwoSpeed);
+    REGISTER_CONSTRUCTOR(FoundationKiva);
+    REGISTER_CONSTRUCTOR(FoundationKivaSettings);
     REGISTER_CONSTRUCTOR(Gas);
     REGISTER_CONSTRUCTOR(GasEquipment);
     REGISTER_CONSTRUCTOR(GasEquipmentDefinition);
@@ -574,6 +580,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(Surface);
     REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficients)
     REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficientsMultipleSurface);
+    REGISTER_CONSTRUCTOR(SurfacePropertyExposedFoundationPerimeter);
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideCoefficients);
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideConditionsModel);
     REGISTER_CONSTRUCTOR(TableMultiVariableLookup);
@@ -837,6 +844,10 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(EvaporativeFluidCoolerTwoSpeed);
     REGISTER_COPYCONSTRUCTORS(ExteriorLights);
     REGISTER_COPYCONSTRUCTORS(ExteriorLightsDefinition);
+    REGISTER_COPYCONSTRUCTORS(ExteriorFuelEquipment);
+    REGISTER_COPYCONSTRUCTORS(ExteriorFuelEquipmentDefinition);
+    REGISTER_COPYCONSTRUCTORS(ExteriorWaterEquipment);
+    REGISTER_COPYCONSTRUCTORS(ExteriorWaterEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(ExternalInterface);
     REGISTER_COPYCONSTRUCTORS(ExternalInterfaceActuator);
     REGISTER_COPYCONSTRUCTORS(ExternalInterfaceFunctionalMockupUnitExportFromVariable);
@@ -858,6 +869,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(FFactorGroundFloorConstruction);
     REGISTER_COPYCONSTRUCTORS(FluidCoolerSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(FluidCoolerTwoSpeed);
+    REGISTER_COPYCONSTRUCTORS(FoundationKiva);
+    REGISTER_COPYCONSTRUCTORS(FoundationKivaSettings);
     REGISTER_COPYCONSTRUCTORS(Gas);
     REGISTER_COPYCONSTRUCTORS(GasEquipment);
     REGISTER_COPYCONSTRUCTORS(GasEquipmentDefinition);
@@ -1039,6 +1052,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(Surface);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyConvectionCoefficients);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyConvectionCoefficientsMultipleSurface);
+    REGISTER_COPYCONSTRUCTORS(SurfacePropertyExposedFoundationPerimeter);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideCoefficients);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideConditionsModel);
     REGISTER_COPYCONSTRUCTORS(TableMultiVariableLookup);
@@ -1151,6 +1165,21 @@ if (_className::iddObjectType() == typeToCreate) { \
 
     return m_cachedBuilding;
   }
+  
+  boost::optional<FoundationKivaSettings> Model_Impl::foundationKivaSettings() const
+  {
+    if (m_cachedFoundationKivaSettings){
+      return m_cachedFoundationKivaSettings;
+    }
+
+    boost::optional<FoundationKivaSettings> result = this->model().getOptionalUniqueModelObject<FoundationKivaSettings>();
+    if (result){
+      m_cachedFoundationKivaSettings = result;
+      result->getImpl<FoundationKivaSettings_Impl>().get()->FoundationKivaSettings_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedFoundationKivaSettings>(const_cast<openstudio::model::detail::Model_Impl *>(this));
+    }
+
+    return m_cachedFoundationKivaSettings;
+  }  
 
   boost::optional<LifeCycleCostParameters> Model_Impl::lifeCycleCostParameters() const
   {
@@ -1242,13 +1271,13 @@ if (_className::iddObjectType() == typeToCreate) { \
     return m_cachedYearDescription->isIsLeapYearDefaulted();
   }
 
-  void Model_Impl::setCalendarYear(int calendarYear)
+  bool Model_Impl::setCalendarYear(int calendarYear)
   {
     if (!m_cachedYearDescription){
       m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
     }
     OS_ASSERT(m_cachedYearDescription);
-    m_cachedYearDescription->setCalendarYear(calendarYear);
+    return m_cachedYearDescription->setCalendarYear(calendarYear);
   }
 
   void Model_Impl::resetCalendarYear()
@@ -1851,6 +1880,7 @@ if (_className::iddObjectType() == typeToCreate) { \
   {
     Handle dummy;
     clearCachedBuilding(dummy);
+    clearCachedFoundationKivaSettings(dummy);
     clearCachedLifeCycleCostParameters(dummy);
     clearCachedRunPeriod(dummy);
     clearCachedYearDescription(dummy);
@@ -1861,6 +1891,11 @@ if (_className::iddObjectType() == typeToCreate) { \
   {
     m_cachedBuilding.reset();
   }
+  
+  void Model_Impl::clearCachedFoundationKivaSettings(const Handle &)
+  {
+    m_cachedFoundationKivaSettings.reset();
+  }  
 
   void Model_Impl::clearCachedLifeCycleCostParameters(const Handle &handle)
   {
@@ -1888,21 +1923,21 @@ if (_className::iddObjectType() == typeToCreate) { \
         modelObj->autosize();
       } else if (auto modelObj = optModelObj.optionalCast<Loop>()) { // Loop
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<SizingZone>()) { // SizingZone 
+      } else if (auto modelObj = optModelObj.optionalCast<SizingZone>()) { // SizingZone
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<SizingSystem>()) { // SizingSystem 
+      } else if (auto modelObj = optModelObj.optionalCast<SizingSystem>()) { // SizingSystem
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<ControllerOutdoorAir>()) { // ControllerOutdoorAir 
+      } else if (auto modelObj = optModelObj.optionalCast<ControllerOutdoorAir>()) { // ControllerOutdoorAir
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR 
+      } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXMultiSpeedStageData>()) { // CoilCoolingDXMultiSpeedStageData 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXMultiSpeedStageData>()) { // CoilCoolingDXMultiSpeedStageData
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilPerformanceDXCooling>()) { // CoilPerformanceDXCooling 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilPerformanceDXCooling>()) { // CoilPerformanceDXCooling
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) { // CoilHeatingDXMultiSpeedStageData 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) { // CoilHeatingDXMultiSpeedStageData
         modelObj->autosize();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) { // CoilHeatingGasMultiStageStageData 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) { // CoilHeatingGasMultiStageStageData
         modelObj->autosize();
       }
     }
@@ -1915,21 +1950,21 @@ if (_className::iddObjectType() == typeToCreate) { \
         modelObj->applySizingValues();
       } else if (auto modelObj = optModelObj.optionalCast<Loop>()) { // Loop
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<SizingZone>()) { // SizingZone 
+      } else if (auto modelObj = optModelObj.optionalCast<SizingZone>()) { // SizingZone
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<SizingSystem>()) { // SizingSystem 
+      } else if (auto modelObj = optModelObj.optionalCast<SizingSystem>()) { // SizingSystem
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<ControllerOutdoorAir>()) { // ControllerOutdoorAir 
+      } else if (auto modelObj = optModelObj.optionalCast<ControllerOutdoorAir>()) { // ControllerOutdoorAir
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR 
+      } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXMultiSpeedStageData>()) { // CoilCoolingDXMultiSpeedStageData 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXMultiSpeedStageData>()) { // CoilCoolingDXMultiSpeedStageData
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilPerformanceDXCooling>()) { // CoilPerformanceDXCooling 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilPerformanceDXCooling>()) { // CoilPerformanceDXCooling
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) { // CoilHeatingDXMultiSpeedStageData 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) { // CoilHeatingDXMultiSpeedStageData
         modelObj->applySizingValues();
-      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) { // CoilHeatingGasMultiStageStageData 
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) { // CoilHeatingGasMultiStageStageData
         modelObj->applySizingValues();
       }
     }
@@ -2033,6 +2068,11 @@ boost::optional<Building> Model::building() const
   return getImpl<detail::Model_Impl>()->building();
 }
 
+boost::optional<FoundationKivaSettings> Model::foundationKivaSettings() const
+{
+  return getImpl<detail::Model_Impl>()->foundationKivaSettings();
+}
+
 boost::optional<LifeCycleCostParameters> Model::lifeCycleCostParameters() const
 {
   return getImpl<detail::Model_Impl>()->lifeCycleCostParameters();
@@ -2073,9 +2113,9 @@ bool Model::isIsLeapYearDefaulted() const
   return getImpl<detail::Model_Impl>()->isIsLeapYearDefaulted();
 }
 
-void Model::setCalendarYear(int calendarYear)
+bool Model::setCalendarYear(int calendarYear)
 {
-  getImpl<detail::Model_Impl>()->setCalendarYear(calendarYear);
+  return getImpl<detail::Model_Impl>()->setCalendarYear(calendarYear);
 }
 
 void Model::resetCalendarYear()

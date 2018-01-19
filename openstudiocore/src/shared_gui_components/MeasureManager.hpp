@@ -65,22 +65,22 @@ namespace measure {
 class LocalLibraryController;
 
 /***
-* MeasureManager provides a single interface for finding measures on the user's computer in a variety of places.  
+* MeasureManager provides a single interface for finding measures on the user's computer in a variety of places.
 *
 * It also manages checking if a newer version of a given measure is available on the user's computer and updating
-* the current project to use the updated measure.  Measures directories are searched in the following order 
+* the current project to use the updated measure.  Measures directories are searched in the following order
 * 1) my measures, 3) bcl measures.  This supports the following use cases:
 *
 * A user has started a measure in their my measures directory, then uploaded to BCL, then downloaded that measure. In this case
 * a measure with the same uid will exist in both my measures and the bcl measures.  The my measures version is preferred.
-* 
-* A user has downloaded a measure from the bcl to their local bcl and manually copied the directory to my measures.  
+*
+* A user has downloaded a measure from the bcl to their local bcl and manually copied the directory to my measures.
 * This use case is not supported but in this case the my measures version is preferred.
 *
-* A user has manually downloaded a measure from the bcl to their my measures directory as well as downloaded it to their local bcl.  
+* A user has manually downloaded a measure from the bcl to their my measures directory as well as downloaded it to their local bcl.
 * In this case the my measures version is preferred.
 *
-* A user has manually copied a measure in their my measures directory to their my measures directory.  
+* A user has manually copied a measure in their my measures directory to their my measures directory.
 * In this case only one of the measures is displayed.
 *
 **/
@@ -123,13 +123,13 @@ class MeasureManager : public QObject
 
     //// Retrieve a measure from combinedMeasures by id.
     boost::optional<BCLMeasure> getMeasure(const UUID & id);
-    
+
     //// Retrieve a measure from combinedMeasures by id then calls updateMeasure, returns measure in the project.
     //// Throws if measure cannot be found by id or if updateMeasure fails.
-    //// If the measure already exists in the project the user is prompted if they want to replace it or not. 
+    //// If the measure already exists in the project the user is prompted if they want to replace it or not.
     BCLMeasure insertReplaceMeasure(const UUID &t_id);
 
-    //// Updates an individual measure in the project with a measure outside the project, computes arguments on the external measure before copying to project. 
+    //// Updates an individual measure in the project with a measure outside the project, computes arguments on the external measure before copying to project.
     //// result.first is true if the update succeeded and arguments were computed for current model, result.second is the new measure dir name.
     //// result.first is false if the update failed or arguments were not computed for current model, result.second is error message.
     std::pair<bool,std::string> updateMeasure(const BCLMeasure &t_measure);
@@ -157,7 +157,7 @@ class MeasureManager : public QObject
     ///// Updates the UI for all measures.
     ///// For all measures in the "myMeasures" list which have changed relative to the version
     ///// in the project, update the project to the new version
-    ///// 
+    /////
     ///// Does not ask for user approval
     //void updateMyMeasures(analysisdriver::SimpleProject &t_project);
 
@@ -165,9 +165,9 @@ class MeasureManager : public QObject
     ///// For all measures in the "bclMeasures" list which have changed relative to the version
     ///// in the project, update the project to the new version.
     /////
-    ///// Also checks installed measures and updates the project's version of them if 
-    ///// appropriate. 
-    ///// 
+    ///// Also checks installed measures and updates the project's version of them if
+    ///// appropriate.
+    /////
     ///// Does not ask for user approval
     //void updateBCLMeasures(analysisdriver::SimpleProject &t_project);
 

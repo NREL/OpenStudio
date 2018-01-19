@@ -168,11 +168,11 @@ class MODEL_API HeatExchangerFluidToFluid : public WaterToWaterComponent {
 
   void resetSizingFactor();
 
-  void setOperationMinimumTemperatureLimit(double operationMinimumTemperatureLimit);
+  bool setOperationMinimumTemperatureLimit(double operationMinimumTemperatureLimit);
 
   void resetOperationMinimumTemperatureLimit();
 
-  void setOperationMaximumTemperatureLimit(double operationMaximumTemperatureLimit);
+  bool setOperationMaximumTemperatureLimit(double operationMaximumTemperatureLimit);
 
   void resetOperationMaximumTemperatureLimit();
 
@@ -214,4 +214,3 @@ typedef std::vector<HeatExchangerFluidToFluid> HeatExchangerFluidToFluidVector;
 } // openstudio
 
 #endif // MODEL_HEATEXCHANGERFLUIDTOFLUID_HPP
-

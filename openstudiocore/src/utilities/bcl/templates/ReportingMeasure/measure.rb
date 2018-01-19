@@ -28,30 +28,30 @@ class ReportingMeasureName < OpenStudio::Measure::ReportingMeasure
     # this measure does not require any user arguments, return an empty list
 
     return args
-  end 
-  
+  end
+
   # return a vector of IdfObject's to request EnergyPlus objects needed by the run method
   def energyPlusOutputRequests(runner, user_arguments)
     super(runner, user_arguments)
-    
+
     result = OpenStudio::IdfObjectVector.new
-    
-    # use the built-in error checking 
+
+    # use the built-in error checking
     if !runner.validateUserArguments(arguments(), user_arguments)
       return result
     end
-    
+
     request = OpenStudio::IdfObject.load("Output:Variable,,Site Outdoor Air Drybulb Temperature,Hourly;").get
     result << request
-    
+
     return result
   end
-  
+
   # define what happens when the measure is run
   def run(runner, user_arguments)
     super(runner, user_arguments)
 
-    # use the built-in error checking 
+    # use the built-in error checking
     if !runner.validateUserArguments(arguments(), user_arguments)
       return false
     end
@@ -112,7 +112,7 @@ class ReportingMeasureName < OpenStudio::Measure::ReportingMeasure
       time_step = "Hourly" # "Zone Timestep", "Hourly", "HVAC System Timestep"
       variable_name = "Site Outdoor Air Drybulb Temperature"
       output_timeseries = sqlFile.timeSeries(ann_env_pd, time_step, variable_name, key_value) # key value would go at the end if we used it.
-      
+
       if output_timeseries.empty?
         runner.registerWarning("Timeseries not found.")
       else
@@ -121,11 +121,11 @@ class ReportingMeasureName < OpenStudio::Measure::ReportingMeasure
     else
       runner.registerWarning("No annual environment period found.")
     end
-    
+
     # configure template with variable values
     renderer = ERB.new(html_in)
     html_out = renderer.result(binding)
-    
+
     # write html file
     html_out_path = "./report.html"
     File.open(html_out_path, 'w') do |file|
@@ -142,7 +142,7 @@ class ReportingMeasureName < OpenStudio::Measure::ReportingMeasure
     sqlFile.close()
 
     return true
- 
+
   end
 
 end

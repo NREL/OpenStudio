@@ -45,20 +45,20 @@ namespace detail {
 
   /** SpaceInfiltrationEffectiveLeakageArea_Impl is a SpaceLoad_Impl that is the implementation class for SpaceInfiltrationEffectiveLeakageArea.*/
   class MODEL_API SpaceInfiltrationEffectiveLeakageArea_Impl : public SpaceLoad_Impl {
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
+
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -140,7 +140,7 @@ namespace detail {
 
     //@}
    protected:
-    
+
     // index of the space name
     virtual int spaceIndex() const override;
 

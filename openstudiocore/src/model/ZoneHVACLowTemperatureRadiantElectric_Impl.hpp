@@ -43,7 +43,7 @@ class HVACComponent;
 namespace detail {
 
   /** ZoneHVACLowTemperatureRadiantElectric_Impl is a ZoneHVAC_Impl that is the implementation class for ZoneHVACLowTemperatureRadiantElectric.*/
-  class MODEL_API ZoneHVACLowTemperatureRadiantElectric_Impl : public ZoneHVACComponent_Impl {   
+  class MODEL_API ZoneHVACLowTemperatureRadiantElectric_Impl : public ZoneHVACComponent_Impl {
    public:
     /** @name Constructors and Destructors */
 
@@ -60,7 +60,7 @@ namespace detail {
                                                bool keepHandle);
 
     virtual ~ZoneHVACLowTemperatureRadiantElectric_Impl() {}
-    
+
     virtual unsigned inletPort() const override;
 
     virtual unsigned outletPort() const override;
@@ -68,7 +68,7 @@ namespace detail {
     /** @name Virtual Methods */
 
     virtual ModelObject clone(Model model) const override;
-    
+
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
@@ -78,7 +78,7 @@ namespace detail {
     /** @name Getters */
 
     Schedule availabilitySchedule() const;
-    
+
     Schedule heatingSetpointTemperatureSchedule() const;
 
     boost::optional<std::string> radiantSurfaceType() const;
@@ -108,7 +108,7 @@ namespace detail {
     /** @name Setters */
 
     bool setAvailabilitySchedule(Schedule& schedule);
-    
+
     bool setHeatingSetpointTemperatureSchedule(Schedule& schedule);
 
     bool setRadiantSurfaceType(boost::optional<std::string> radiantSurfaceType);
@@ -128,7 +128,7 @@ namespace detail {
     bool setHeatingThrottlingRange(double heatingThrottlingRange);
 
     void resetHeatingThrottlingRange();
-    
+
     boost::optional<ThermalZone> thermalZone() const;
 
     bool addToThermalZone(ThermalZone & thermalZone) override;
@@ -149,7 +149,7 @@ namespace detail {
     // objects should be returned as boost::optionals
     boost::optional<Schedule> optionalAvailabilitySchedule() const;
     boost::optional<Schedule> optionalHeatingSetpointTemperatureSchedule() const;
-    
+
     std::vector<std::string> radiantSurfaceTypeValues() const;
     std::vector<std::string> temperatureControlTypeValues() const;
 

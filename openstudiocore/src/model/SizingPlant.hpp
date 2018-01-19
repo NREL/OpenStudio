@@ -78,7 +78,7 @@ class MODEL_API SizingPlant : public ModelObject {
 
   Quantity getDesignLoopExitTemperature(bool returnIP=false) const;
 
-  void setDesignLoopExitTemperature(double designLoopExitTemperature);
+  bool setDesignLoopExitTemperature(double designLoopExitTemperature);
 
   bool setDesignLoopExitTemperature(const Quantity& designLoopExitTemperature);
 
@@ -134,4 +134,3 @@ typedef std::vector<SizingPlant> SizingPlantVector;
 } // openstudio
 
 #endif // MODEL_SIZINGPLANT_HPP
-

@@ -132,19 +132,19 @@ class MODEL_API RefrigerationGasCoolerAirCooled : public ParentObject {
 
   void resetMinimumFanAirFlowRatio();
 
-  void setTransitionTemperature(double transitionTemperature);
+  bool setTransitionTemperature(double transitionTemperature);
 
   void resetTransitionTemperature();
 
-  void setTranscriticalApproachTemperature(double transcriticalApproachTemperature);
+  bool setTranscriticalApproachTemperature(double transcriticalApproachTemperature);
 
   void resetTranscriticalApproachTemperature();
 
-  void setSubcriticalTemperatureDifference(double subcriticalTemperatureDifference);
+  bool setSubcriticalTemperatureDifference(double subcriticalTemperatureDifference);
 
   void resetSubcriticalTemperatureDifference();
 
-  void setMinimumCondensingTemperature(double minimumCondensingTemperature);
+  bool setMinimumCondensingTemperature(double minimumCondensingTemperature);
 
   void resetMinimumCondensingTemperature();
 
@@ -152,19 +152,19 @@ class MODEL_API RefrigerationGasCoolerAirCooled : public ParentObject {
 
   // void resetAirInletNode();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 
-  void setGasCoolerRefrigerantOperatingChargeInventory(double gasCoolerRefrigerantOperatingChargeInventory);
+  bool setGasCoolerRefrigerantOperatingChargeInventory(double gasCoolerRefrigerantOperatingChargeInventory);
 
   void resetGasCoolerRefrigerantOperatingChargeInventory();
 
-  void setGasCoolerReceiverRefrigerantInventory(double gasCoolerReceiverRefrigerantInventory);
+  bool setGasCoolerReceiverRefrigerantInventory(double gasCoolerReceiverRefrigerantInventory);
 
   void resetGasCoolerReceiverRefrigerantInventory();
 
-  void setGasCoolerOutletPipingRefrigerantInventory(double gasCoolerOutletPipingRefrigerantInventory);
+  bool setGasCoolerOutletPipingRefrigerantInventory(double gasCoolerOutletPipingRefrigerantInventory);
 
   void resetGasCoolerOutletPipingRefrigerantInventory();
 
@@ -197,5 +197,4 @@ typedef std::vector<RefrigerationGasCoolerAirCooled> RefrigerationGasCoolerAirCo
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONGASCOOLERAIRCOOLED_HPP
-
+#endif // MODEL_REFRIGERATIONGASCOOLERAIRCOOLED_HPP

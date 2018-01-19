@@ -85,13 +85,13 @@ TEST_F(ModelFixture, ElectricEquipment_Cost) {
   EXPECT_DOUBLE_EQ(0, cost->totalCost());
 
   electricEquipment1.setSpace(*space1);
-  
+
   EXPECT_DOUBLE_EQ(50, cost->totalCost());
 
   electricEquipment2.setSpace(*space2);
 
   EXPECT_DOUBLE_EQ(100, cost->totalCost());
-  
+
   ThermalZone thermalZone(model);
   space1->setThermalZone(thermalZone);
   thermalZone.setMultiplier(4);
