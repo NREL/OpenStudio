@@ -470,12 +470,25 @@ namespace detail {
 
   }
 
+  // std::vector<EMSActuatorNames> FanConstantVolume_Impl::emsActuatorNames() const {
   std::vector<std::pair<std::string, std::string>> FanConstantVolume_Impl::emsActuator() const {
     std::vector<std::pair<std::string, std::string>> types{{"Fan","Fan Air Mass Flow Rate"},
                                                            {"Fan","Fan Pressure Rise"},
                                                            {"Fan","Fan Total Efficiency"},
                                                            {"Fan","Fan Autosized Air Flow Rate"}};
     return types;
+
+    /**
+    std::vector<EMSActuatorNames> actuators;
+
+    // I don't think the initializer list syntax will work with complex types, but it might be worth trying
+    actuators.push_back(EMSActuatorNames("Fan","Fan Air Mass Flow Rate"));
+    actuators.push_back(EMSActuatorNames("Fan","Fan Pressure Rise"));
+    actuators.push_back(EMSActuatorNames("Fan","Fan Total Efficiency"));
+    actuators.push_back(EMSActuatorNames("Fan","Fan Autosized Air Flow Rate"));
+
+    return actuators;
+    **/
   }
 
   std::vector<std::string> FanConstantVolume_Impl::emsInternalVariables() const {

@@ -72,6 +72,9 @@ namespace detail {
  *  actuaters could be thought of as source and target ports, where a connection can be made between the two.
  *
  */
+
+class EMSActuatorNames;
+
 class MODEL_API HVACComponent : public ParentObject
 {
   public:
@@ -168,6 +171,8 @@ class MODEL_API HVACComponent : public ParentObject
   */
   virtual std::vector<std::pair<std::string, std::string>> emsActuator() const;
 
+  virtual std::vector<EMSActuatorNames> emsActuatorNames() const;
+
   /** Return the names of the available ems internal variables.
   */
   virtual std::vector<std::string> emsInternalVariables() const;
@@ -192,6 +197,21 @@ class MODEL_API HVACComponent : public ParentObject
 
   REGISTER_LOGGER("openstudio.model.HVACComponent");
 
+};
+
+class MODEL_API EMSActuatorNames
+{
+  public:
+
+  EMSActuatorNames(const std::string & controlTypeName,const std::string & componentTypeName);
+
+  std::string controlTypeName() const;
+  std::string componentTypeName() const;
+
+  private:
+
+  std::string controlTypeName;
+  std::string componentTypeName;
 };
 
 typedef boost::optional<HVACComponent> OptionalHVACComponent;
