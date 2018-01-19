@@ -119,7 +119,7 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
 
   virtual std::vector<EMSActuatorNames> emsActuatorNames() const;
 
-  virtual std::vector<std::string> emsInternalVariables() const;
+  virtual std::vector<std::string> emsInternalVariableNames() const;
 
  protected:
 

@@ -1031,7 +1031,7 @@ namespace detail{
     return actuators;
   }
 
-  std::vector<std::string> CoilCoolingDXSingleSpeed_Impl::emsInternalVariables() const {
+  std::vector<std::string> CoilCoolingDXSingleSpeed_Impl::emsInternalVariableNames() const {
     std::vector<std::string> types;
     return types;
   }

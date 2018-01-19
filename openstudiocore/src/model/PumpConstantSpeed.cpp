@@ -781,7 +781,7 @@ namespace detail {
     return actuators;
   }
 
-  std::vector<std::string> PumpConstantSpeed_Impl::emsInternalVariables() const {
+  std::vector<std::string> PumpConstantSpeed_Impl::emsInternalVariableNames() const {
     std::vector<std::string> types{"Pump Maximum Mass Flow Rate"};
     return types;
   }

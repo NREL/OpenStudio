@@ -173,7 +173,7 @@ class MODEL_API HVACComponent : public ParentObject
 
   /** Return the names of the available ems internal variables.
   */
-  virtual std::vector<std::string> emsInternalVariables() const;
+  virtual std::vector<std::string> emsInternalVariableNames() const;
 
   protected:
 

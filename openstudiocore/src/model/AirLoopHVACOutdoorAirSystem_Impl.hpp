@@ -109,7 +109,7 @@ namespace detail {
 
     virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    virtual std::vector<std::string> emsInternalVariables() const override;
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
    private:
     REGISTER_LOGGER("openstudio.model.AirLoopHVACOutdoorAirSystem");

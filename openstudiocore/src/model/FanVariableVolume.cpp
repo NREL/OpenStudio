@@ -880,7 +880,7 @@ namespace detail {
     return actuators;
   }
 
-  std::vector<std::string> FanVariableVolume_Impl::emsInternalVariables() const {
+  std::vector<std::string> FanVariableVolume_Impl::emsInternalVariableNames() const {
     std::vector<std::string> types{"Fan Maximum Mass Flow Rate",
                                    "Fan Nominal Pressure Rise",
                                    "Fan Nominal Total Efficiency"};

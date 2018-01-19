@@ -428,7 +428,7 @@ namespace detail{
     return actuators;
   }
 
-  std::vector<std::string> Node_Impl::emsInternalVariables() const {
+  std::vector<std::string> Node_Impl::emsInternalVariableNames() const {
     std::vector<std::string> types;
     return types;
   }

@@ -190,7 +190,7 @@ namespace detail {
     return actuators;
   }
 
-  std::vector<std::string> LoadProfilePlant_Impl::emsInternalVariables() const {
+  std::vector<std::string> LoadProfilePlant_Impl::emsInternalVariableNames() const {
     std::vector<std::string> types;
     return types;
   }

@@ -645,7 +645,7 @@ namespace detail {
     return actuators;
   }
 
-  std::vector<std::string> AirLoopHVACOutdoorAirSystem_Impl::emsInternalVariables() const {
+  std::vector<std::string> AirLoopHVACOutdoorAirSystem_Impl::emsInternalVariableNames() const {
     std::vector<std::string> types;
     return types;
   }
