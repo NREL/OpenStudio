@@ -267,6 +267,10 @@ namespace detail {
 
     bool addToNode(Node & node) override;
 
+    virtual std::vector<std::pair<std::string, std::string>> emsActuator() const override;
+
+    virtual std::vector<std::string> emsInternalVariables() const override;
+
     //@}
    private:
 

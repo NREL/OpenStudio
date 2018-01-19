@@ -1164,13 +1164,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  std::vector<std::string> PumpVariableSpeed_Impl::emsActuatorControlTypes() const {
-    std::vector<std::string> types{"Pump Mass Flow Rate", "Pump Pressure Rise"};
+  std::vector<std::pair<std::string, std::string>> PumpVariableSpeed_Impl::emsActuator() const {
+    std::vector<std::pair<std::string, std::string>> types{{"Pump", "Pump Mass Flow Rate"},
+    {"Pump", "Pump Pressure Rise"}};
     return types;
-  }
-
-  std::string PumpVariableSpeed_Impl::emsActuatorComponentType() const {
-    return std::string("Pump");
   }
 
   std::vector<std::string> PumpVariableSpeed_Impl::emsInternalVariables() const {

@@ -184,13 +184,10 @@ namespace detail {
     return false;
   }
 
-  std::vector<std::string> LoadProfilePlant_Impl::emsActuatorControlTypes() const {
-    std::vector<std::string> types{"Mass Flow Rate", "Power"};
+  std::vector<std::pair<std::string, std::string>> LoadProfilePlant_Impl::emsActuator() const {
+    std::vector<std::pair<std::string, std::string>> types{{"Plant Load Profile", "Mass Flow Rate"},
+                                                           {"Plant Load Profile", "Power"}};
     return types;
-  }
-
-  std::string LoadProfilePlant_Impl::emsActuatorComponentType() const {
-    return std::string("Plant Load Profile");
   }
 
   std::vector<std::string> LoadProfilePlant_Impl::emsInternalVariables() const {

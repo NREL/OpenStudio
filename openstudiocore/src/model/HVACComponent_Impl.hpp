@@ -48,13 +48,6 @@ class ZoneHVACComponent;
 namespace detail {
 
 class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
-
-
-
-
-
-
-
  public:
 
   HVACComponent_Impl( IddObjectType type, Model_Impl* model);
@@ -122,10 +115,8 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
 
   virtual void applySizingValues();
 
-  virtual std::vector<std::string> emsActuatorControlTypes() const;
+  virtual std::vector<std::pair<std::string,std::string>> emsActuator() const;
 
-  virtual std::string emsActuatorComponentType() const;
-  
   virtual std::vector<std::string> emsInternalVariables() const;
 
  protected:

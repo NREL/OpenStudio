@@ -522,12 +522,8 @@ namespace detail {
     return;
   }
 
-  std::vector<std::string> HVACComponent_Impl::emsActuatorControlTypes() const {
-    return std::vector<std::string>();
-  }
-
-  std::string HVACComponent_Impl::emsActuatorComponentType() const {
-    return std::string();
+  std::vector<std::pair<std::string, std::string>> HVACComponent_Impl::emsActuator() const {
+    return std::vector<std::pair<std::string, std::string>>();
   }
 
   std::vector<std::string> HVACComponent_Impl::emsInternalVariables() const {
@@ -619,17 +615,12 @@ void HVACComponent::applySizingValues() {
   return getImpl<detail::HVACComponent_Impl>()->applySizingValues();
 }
 
-std::vector<std::string> HVACComponent::emsActuatorControlTypes() const
+std::vector<std::pair<std::string, std::string>> HVACComponent::emsActuator() const
 {
-  return getImpl<detail::HVACComponent_Impl>()->emsActuatorControlTypes();
+  return getImpl<detail::HVACComponent_Impl>()->emsActuator();
 }
 
-std::string HVACComponent::emsActuatorComponentType() const
-{
-  return getImpl<detail::HVACComponent_Impl>()->emsActuatorComponentType();
-}
-
-std::vector<std::string> HVACComponent::emsInternalVariables() const 
+std::vector<std::string> HVACComponent::emsInternalVariables() const
 {
   return getImpl<detail::HVACComponent_Impl>()->emsInternalVariables();
 }

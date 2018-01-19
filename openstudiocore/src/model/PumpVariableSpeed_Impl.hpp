@@ -181,9 +181,7 @@ namespace detail {
 
   virtual void applySizingValues() override;
 
-  virtual std::vector<std::string> emsActuatorControlTypes() const override;
-
-  virtual std::string emsActuatorComponentType() const override;
+  virtual std::vector<std::pair<std::string, std::string>> emsActuator() const override;
 
   virtual std::vector<std::string> emsInternalVariables() const override;
 

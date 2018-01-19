@@ -319,17 +319,18 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  std::vector<std::string> FanZoneExhaust_Impl::emsActuatorControlTypes() const {
-    std::vector<std::string> types{"Fan Air Mass Flow Rate", "Fan Pressure Rise", "Fan Total Efficiency", "Fan Autosized Air Flow Rate"};
+  std::vector<std::pair<std::string, std::string>> FanZoneExhaust_Impl::emsActuator() const {
+    std::vector<std::pair<std::string, std::string>> types{{"Fan", "Fan Air Mass Flow Rate"},
+                                                           {"Fan", "Fan Pressure Rise"},
+                                                           {"Fan", "Fan Total Efficiency"},
+                                                           {"Fan", "Fan Autosized Air Flow Rate"}};
     return types;
   }
 
-  std::string FanZoneExhaust_Impl::emsActuatorComponentType() const {
-    return std::string("Fan");
-  }
-
   std::vector<std::string> FanZoneExhaust_Impl::emsInternalVariables() const {
-    std::vector<std::string> types{"Fan Maximum Mass Flow Rate", "Fan Nominal Pressure Rise", "Fan Nominal Total Efficiency"};
+    std::vector<std::string> types{"Fan Maximum Mass Flow Rate",
+                                   "Fan Nominal Pressure Rise",
+                                   "Fan Nominal Total Efficiency"};
     return types;
   }
 

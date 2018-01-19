@@ -108,6 +108,10 @@ namespace detail {
 
   virtual void applySizingValues() override;
 
+  virtual std::vector<std::pair<std::string, std::string>> emsActuator() const override;
+
+  virtual std::vector<std::string> emsInternalVariables() const override;
+
     //@}
     /** @name Setters */
     //@{

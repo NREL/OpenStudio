@@ -47,6 +47,7 @@
 #include <utilities/idd/OS_AirLoopHVAC_ControllerList_FieldEnums.hxx>
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <utility>
 
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
@@ -634,6 +635,19 @@ namespace detail {
       }
     }
     return false;
+  }
+
+  std::vector<std::pair<std::string, std::string>> AirLoopHVACOutdoorAirSystem_Impl::emsActuator() const {
+    std::vector<std::pair<std::string, std::string>> types{{"Outdoor Air System Node", "Drybulb Temperature"},
+                                                           {"Outdoor Air System Node","Wetbulb Temperature"},
+                                                           {"Outdoor Air System Node", "Wind Speed"},
+                                                           {"Outdoor Air System Node", "Wind Direction"}};
+    return types;
+  }
+
+  std::vector<std::string> AirLoopHVACOutdoorAirSystem_Impl::emsInternalVariables() const {
+    std::vector<std::string> types;
+    return types;
   }
 
 } // detail
