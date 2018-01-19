@@ -45,6 +45,8 @@ class Splitter;
 
 class ZoneHVACComponent;
 
+class EMSActuatorNames;
+
 namespace detail {
 
 class MODEL_API HVACComponent_Impl : public ParentObject_Impl {

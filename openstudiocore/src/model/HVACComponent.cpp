@@ -625,6 +625,22 @@ std::vector<std::string> HVACComponent::emsInternalVariables() const
   return getImpl<detail::HVACComponent_Impl>()->emsInternalVariables();
 }
 
+EMSActuatorNames::EMSActuatorNames(const std::string & controlTypeName,const std::string & componentTypeName)
+  : m_controlTypeName(controlTypeName),
+    m_componentTypeName(componentTypeName)
+{
+}
+
+std::string EMSActuatorNames::controlTypeName() const
+{
+  return m_controlTypeName;
+}
+
+std::string EMSActuatorNames::componentTypeName() const
+{
+  return m_componentTypeName;
+}
+
 } // model
 
 } // openstudio
