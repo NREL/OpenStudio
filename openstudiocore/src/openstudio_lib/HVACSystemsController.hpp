@@ -60,7 +60,8 @@ class AvailabilityManagerAssignmentList;
 
 class LoopView;
 class HVACSystemsView;
-class HVACControlsView;
+class HVACAirLoopControlsView;
+class HVACPlantLoopControlsView;
 class LoopListModel;
 class HVACGraphicsView;
 class HVACLayoutController;
@@ -116,6 +117,8 @@ class HVACSystemsController : public QObject, public Nano::Observer
   public slots:
 
   void updateLater();
+
+  // void dropZoneItemSelected(OSItem* item);
 
   private slots:
 
@@ -185,7 +188,9 @@ class HVACControlsController : public QObject, public Nano::Observer
 
   virtual ~HVACControlsController();
 
-  HVACControlsView * hvacControlsView() const;
+  HVACAirLoopControlsView * hvacAirLoopControlsView() const;
+
+  HVACPlantLoopControlsView * hvacPlantLoopControlsView() const;
 
   NoControlsView * noControlsView() const;
 
@@ -211,9 +216,13 @@ class HVACControlsController : public QObject, public Nano::Observer
 
   void onUnitaryHeatPumpControlZoneChanged(int index);
 
+  // void onDropZoneItemClicked(OSItem* item);
+
   private:
 
-  QPointer<HVACControlsView> m_hvacControlsView;
+  QPointer<HVACAirLoopControlsView> m_hvacAirLoopControlsView;
+
+  QPointer<HVACPlantLoopControlsView> m_hvacPlantLoopControlsView;
 
   QPointer<NoControlsView> m_noControlsView;
 
@@ -313,6 +322,8 @@ class SystemAvailabilityVectorController : public ModelObjectVectorController
 
   void reportItems();
 
+  void onDropZoneItemClicked(OSItem* item);
+
   protected:
 
   std::vector<OSItemId> makeVector() override;
@@ -349,6 +360,8 @@ class SupplyAirTempScheduleVectorController : public ModelObjectVectorController
   void reportItemsLater();
 
   void reportItems();
+
+  void onDropZoneItemClicked(OSItem* item);
 
   protected:
 
@@ -390,6 +403,9 @@ class AvailabilityManagerObjectVectorController : public ModelObjectVectorContro
 
   void reportItems();
 
+  void onDropZoneItemClicked(OSItem* item);
+
+
  protected:
 
   virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle) override;
@@ -403,6 +419,7 @@ class AvailabilityManagerObjectVectorController : public ModelObjectVectorContro
   virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId) override;
 
   virtual void onDrop(const OSItemId& itemId) override;
+
 
  private:
 
