@@ -1082,10 +1082,7 @@ void RunView::processBec()
 		if (file.open(QIODevice::ReadOnly | QIODevice::Text))
 		{
             beginInfiniteProgress("Reading sun lite");
-            QFuture<void> future = QtConcurrent::run(this, &RunView::readSunlite, &file);
-            while (future.isRunning()){
-                QApplication::processEvents();
-            }
+            readSunlite(&file);
             endInfiniteProgress();
 		}
 		else{
@@ -1105,6 +1102,7 @@ void RunView::processBec()
         bvName = trans.getBVName(newBVName);
 		qDebug() << "bvName:" << bvName << ", newBVName:" << newBVName;
         if(bvName.isEmpty()){
+			doFinish();
             return;
         }
 
@@ -1171,16 +1169,24 @@ void RunView::readSunlite(QFile *file)
     logH2Text("Sunlit Fraction");
     for (int irow = 1; irow < rowls.size(); ++irow) {
         QStringList cols = rowls.at(irow).split("</td>");
-
+		QApplication::processEvents();
         if (cols.size()<1)
             break;
 
         QString sfname = cols.at(0);
         QString msg = sfname + ":";
-        for (int icol = 1; icol < cols.size(); ++icol) {
-            double num = cols.at(icol).trimmed().toDouble();
-            sunlits[sfname.toUpper().trimmed()].append(num);
-            msg += QString::number(num) + ",";
+		for (int icol = 1; icol < cols.size(); ++icol) {
+			bool canDouble = false;
+			QString strNum = cols.at(icol).trimmed();
+			double num = strNum.toDouble(&canDouble);
+			if (canDouble){
+				sunlits[sfname.toUpper().trimmed()].append(num);
+				msg += QString::number(num) + ",";
+			}
+			else{
+				//logErrorText(QString(">>>'") + strNum + "' Can't convert to real number this use 0 <<<");
+			}
+			QApplication::processEvents();
         }
         logNormalText(QString("%1\n").arg(msg));
     }
@@ -1435,6 +1441,7 @@ void RunView::playButtonClicked00(bool t_checked, RunView::RUNMODE runmode, bool
 		  m_becProcess->deleteLater();
 		  m_becProcess = NULL;
 	  }
+	  doFinish();
     }
 }
 
