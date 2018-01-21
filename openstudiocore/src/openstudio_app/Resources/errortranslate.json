@@ -63,5 +63,9 @@
 		"regex": "Error detected(.*)",
 		"translate": "Error detected$1",
 		"name": "16"
+	}, {
+		"regex": "Errors (.*)",
+		"translate": "Errors $1",
+		"name": "17"
 	}]
 }
