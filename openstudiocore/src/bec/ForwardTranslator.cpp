@@ -470,7 +470,7 @@ QString ForwardTranslator::getBVName(QString& newTextName)
     }
 
     inputBuildingType.setComboBoxItems(types);
-    inputBuildingType.resize(pixelsWide, inputBuildingType.size().height());
+    inputBuildingType.resize(pixelsWide, inputBuildingType.size().height()/2);
 
     int ret = inputBuildingType.exec();
 
