@@ -101,11 +101,15 @@ namespace detail {
 
     void autosizeMaximumAirFlowRate();
 
-  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+    boost::optional<double> autosizedMaximumAirFlowRate() const ;
 
-  virtual void autosize() override;
+    virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+    virtual void applySizingValues() override;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
    private:
 
