@@ -615,32 +615,6 @@ void HVACComponent::applySizingValues() {
   return getImpl<detail::HVACComponent_Impl>()->applySizingValues();
 }
 
-std::vector<EMSActuatorNames> HVACComponent::emsActuatorNames() const
-{
-  return getImpl<detail::HVACComponent_Impl>()->emsActuatorNames();
-}
-
-std::vector<std::string> HVACComponent::emsInternalVariableNames() const
-{
-  return getImpl<detail::HVACComponent_Impl>()->emsInternalVariableNames();
-}
-
-EMSActuatorNames::EMSActuatorNames(const std::string & controlTypeName,const std::string & componentTypeName)
-  : m_controlTypeName(controlTypeName),
-    m_componentTypeName(componentTypeName)
-{
-}
-
-std::string EMSActuatorNames::controlTypeName() const
-{
-  return m_controlTypeName;
-}
-
-std::string EMSActuatorNames::componentTypeName() const
-{
-  return m_componentTypeName;
-}
-
 } // model
 
 } // openstudio

@@ -45,8 +45,6 @@ class Splitter;
 
 class ZoneHVACComponent;
 
-class EMSActuatorNames;
-
 namespace detail {
 
 class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
@@ -117,9 +115,9 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
 
   virtual void applySizingValues();
 
-  virtual std::vector<EMSActuatorNames> emsActuatorNames() const;
+  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-  virtual std::vector<std::string> emsInternalVariableNames() const;
+  virtual std::vector<std::string> emsInternalVariableNames() const override;
 
  protected:
 

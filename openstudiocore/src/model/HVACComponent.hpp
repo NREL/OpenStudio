@@ -73,8 +73,6 @@ namespace detail {
  *
  */
 
-class EMSActuatorNames;
-
 class MODEL_API HVACComponent : public ParentObject
 {
   public:
@@ -167,14 +165,6 @@ class MODEL_API HVACComponent : public ParentObject
 
   void applySizingValues();
 
-  /** Return the names of the available ems actuators.
-  */
-  virtual std::vector<EMSActuatorNames> emsActuatorNames() const;
-
-  /** Return the names of the available ems internal variables.
-  */
-  virtual std::vector<std::string> emsInternalVariableNames() const;
-
   protected:
 
   HVACComponent(IddObjectType type,const Model& model);
@@ -195,21 +185,6 @@ class MODEL_API HVACComponent : public ParentObject
 
   REGISTER_LOGGER("openstudio.model.HVACComponent");
 
-};
-
-class MODEL_API EMSActuatorNames
-{
-  public:
-
-  EMSActuatorNames(const std::string & controlTypeName,const std::string & componentTypeName);
-
-  std::string controlTypeName() const;
-  std::string componentTypeName() const;
-
-  private:
-
-  std::string m_controlTypeName;
-  std::string m_componentTypeName;
 };
 
 typedef boost::optional<HVACComponent> OptionalHVACComponent;
