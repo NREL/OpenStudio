@@ -1899,6 +1899,10 @@ namespace detail {
   std::vector<EMSActuatorNames> Surface_Impl::emsActuatorNames() const {
     std::vector<EMSActuatorNames> actuators{{"Surface", "Interior Surface Convection Heat Transfer Coefficient"},
                                             {"Surface", "Exterior Surface Convection Heat Transfer Coefficient"},
+                                            {"Surface", "Outdoor Air Drybulb Temperature"},
+                                            {"Surface", "Outdoor Air Wetbulb Temperature"},
+                                            {"Surface", "Outdoor Air Wind Speed"},
+                                            {"Surface", "Outdoor Air Wind Direction"},
                                             {"Surface", "Construction State"},
                                             {"Window Shading Control", "Control Status"},
                                             {"Window Shading Control", "Slat Angle"}};
