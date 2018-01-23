@@ -1757,7 +1757,7 @@ namespace detail {
   }
 
   std::vector<EMSActuatorNames> AirLoopHVAC_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{{"AirLoopHVAC", "Availability Status"}};
+    std::vector<EMSActuatorNames> actuators{{"AirLoopHVAC", "Availability Status"}}; //takes value 0,1,2,3
     return actuators;
   }
 

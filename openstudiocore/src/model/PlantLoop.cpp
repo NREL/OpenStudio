@@ -992,7 +992,7 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
     //DYNAMIC
     //{"Supply Side Branch", "On/Off Supervisory"}
     //{"Demand Side Branch", "On/Off Supervisory"}
-    //{"Plant Component ", "On/Off Supervisory"}
+    //{"Plant Component *", "On/Off Supervisory"}
     return actuators;
   }
 
