@@ -424,7 +424,11 @@ namespace detail{
                                             {"System Node Setpoint", "Humidity Ratio Minimum Setpoint"},
                                             {"System Node Setpoint", "Mass Flow Rate Setpoint"},
                                             {"System Node Setpoint", "Mass Flow Rate Maximum Available Setpoint"},
-                                            {"System Node Setpoint", "Mass Flow Rate Minimum Available Setpoint"}};
+                                            {"System Node Setpoint", "Mass Flow Rate Minimum Available Setpoint"},
+                                            {"Outdoor Air System Node", "Drybulb Temperature"},
+                                            {"Outdoor Air System Node", "Wetbulb Temperature"},
+                                            {"Outdoor Air System Node", "Wind Speed"},
+                                            {"Outdoor Air System Node", "Wind Direction"}};
     return actuators;
   }
 

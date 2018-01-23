@@ -395,7 +395,7 @@ namespace detail {
         result.push_back("Daylighting Reference Point 1 Glare Index Setpoint Exceeded Time");
         result.push_back("Daylighting Reference Point 1 Daylight Illuminance Setpoint Exceeded Time");
       //}
-      
+
       //if (secondaryDaylightingControl()){
         result.push_back("Daylighting Reference Point 2 Illuminance");
         result.push_back("Daylighting Reference Point 2 Glare Index");
@@ -2741,6 +2741,22 @@ namespace detail {
     if( auto controller = zoneControlContaminantController() ) {
       controller->remove();
     }
+  }
+
+  std::vector<EMSActuatorNames> ThermalZone_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Zone", "Outdoor Air Drybulb Temperature"},
+                                            {"Zone", "Outdoor Air Wetbulb Temperature"},
+                                            {"Zone", "Outdoor Air Wind Speed"},
+                                            {"Zone", "Outdoor Air Wind Direction"}};
+    return actuators;
+  }
+
+  std::vector<std::string> ThermalZone_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{"Zone Floor Area",
+                                   "Zone Air Volume",
+                                   "Zone Multiplier",
+                                   "Zone List Multiplier"};
+    return types;
   }
 
 } // detail
