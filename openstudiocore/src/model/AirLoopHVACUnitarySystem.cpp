@@ -1307,6 +1307,23 @@ namespace detail {
 
   }
 
+  std::vector<EMSActuatorNames> AirLoopHVACUnitarySystem_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"AirLoopHVAC:UnitarySystem", "Autosized Supply Air Flow Rate"},
+                                            {"AirLoopHVAC:UnitarySystem", "Autosized Supply Air Flow Rate During Cooling Operation"},
+                                            {"AirLoopHVAC:UnitarySystem", "Autosized Supply Air Flow Rate During Heating Operation"},
+                                            {"AirLoopHVAC:UnitarySystem", "Autosized Supply Air Flow Rate During No Heating or Cooling Operation"},
+                                            {"Unitary HVAC", "Sensible Load Request"},
+                                            {"Unitary HVAC", "Moisture Load Request"}};
+    return actuators;
+  }
+
+  std::vector<std::string> AirLoopHVACUnitarySystem_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{"Unitary System Control Zone Mass Flow Fraction",
+                                   "Unitary HVAC Design Heating Capacity",
+                                   "Unitary HVAC Design Cooling Capacity"};
+    return types;
+  }
+
 } // detail
 
 AirLoopHVACUnitarySystem::AirLoopHVACUnitarySystem(const Model& model)
