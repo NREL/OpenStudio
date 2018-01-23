@@ -85,7 +85,7 @@ namespace detail {
 
   bool ConstructionWithInternalSource_Impl::eraseLayer(unsigned layerIndex)
   {
-    if (this->numLayers() < 3){
+    if (this->numLayers() < 1){
       return false;
     }
     bool result = LayeredConstruction_Impl::eraseLayer(layerIndex);
