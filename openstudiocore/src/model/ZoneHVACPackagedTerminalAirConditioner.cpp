@@ -716,6 +716,17 @@ namespace detail {
 
   }
 
+  std::vector<EMSActuatorNames> ZoneHVACPackagedTerminalAirConditioner_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"System Node Setpoint", "Temperature Setpoint"},
+                                            {"System Node Setpoint", "Temperature Minimum Setpoint"}};
+    return actuators;
+  }
+
+  std::vector<std::string> ZoneHVACPackagedTerminalAirConditioner_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
+
 } // detail
 
 ZoneHVACPackagedTerminalAirConditioner::ZoneHVACPackagedTerminalAirConditioner( const Model& model,
