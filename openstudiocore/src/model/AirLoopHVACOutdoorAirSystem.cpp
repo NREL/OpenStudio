@@ -637,16 +637,6 @@ namespace detail {
     return false;
   }
 
-  std::vector<EMSActuatorNames> AirLoopHVACOutdoorAirSystem_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators;
-    return actuators;
-  }
-
-  std::vector<std::string> AirLoopHVACOutdoorAirSystem_Impl::emsInternalVariableNames() const {
-    std::vector<std::string> types;
-    return types;
-  }
-
 } // detail
 
 // create a new AirLoopHVACOutdoorAirSystem object in the model's workspace
