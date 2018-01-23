@@ -2744,7 +2744,13 @@ namespace detail {
   }
 
   std::vector<EMSActuatorNames> ThermalZone_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{{"Zone", "Outdoor Air Drybulb Temperature"},
+    std::vector<EMSActuatorNames> actuators{{"Zone Temperature Control", "Heating Setpoint"},
+                                            {"Zone Temperature Control", "Cooling Setpoint"},
+                                            {"Zone Humidity Control", "Relative Humidity Humidifying Setpoint"},
+                                            {"Zone Humidity Control", "Relative Humidity Dehumidifying Setpoint"},
+                                            {"Zone Comfort Control", "Heating Setpoint"},
+                                            {"Zone Comfort Control", "Cooling Setpoint"},
+                                            {"Zone", "Outdoor Air Drybulb Temperature"},
                                             {"Zone", "Outdoor Air Wetbulb Temperature"},
                                             {"Zone", "Outdoor Air Wind Speed"},
                                             {"Zone", "Outdoor Air Wind Direction"}};
