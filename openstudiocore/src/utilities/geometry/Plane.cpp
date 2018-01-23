@@ -76,7 +76,7 @@ namespace openstudio{
   Plane::Plane(const std::vector<Point3d>& points)
     : m_a(0.0), m_b(0.0), m_c(0.0), m_d(0.0)
   {
-    unsigned N = points.size();
+    size_t N = points.size();
     if (N < 3){
       LOG_AND_THROW("Cannot compute plane with fewer than three points");
     }else if (N == 3){

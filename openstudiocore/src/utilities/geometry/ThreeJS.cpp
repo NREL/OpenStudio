@@ -271,19 +271,19 @@ namespace openstudio{
     Json::Value normals = value.get("normals", Json::arrayValue);
     n = normals.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
-      m_normals.push_back(normals[i].asDouble());
+      m_normals.push_back(normals[i].asInt()); // DLM: known type conversion?
     }
 
     Json::Value uvs = value.get("uvs", Json::arrayValue);
     n = uvs.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
-      m_uvs.push_back(uvs[i].asDouble());
+      m_uvs.push_back(uvs[i].asInt()); // DLM: known type conversion?
     }
 
     Json::Value faces = value.get("faces", Json::arrayValue);
     n = faces.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
-      m_faces.push_back(faces[i].asDouble());
+      m_faces.push_back(faces[i].asInt()); // DLM: known type conversion?
     }
 
   }

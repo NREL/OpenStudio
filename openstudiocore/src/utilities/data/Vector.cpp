@@ -38,7 +38,7 @@
 namespace openstudio{
 
   Vector createVector(const std::vector<double>& values) {
-    unsigned n = values.size();
+    size_t n = values.size();
     Vector result(n);
     for (unsigned i = 0; i < n; ++i) {
       result[i] = values[i];
@@ -47,7 +47,7 @@ namespace openstudio{
   }
 
   Vector createVector(const std::vector<long>& values) {
-    unsigned n = values.size();
+    size_t n = values.size();
     Vector result(n);
     for (unsigned i = 0; i < n; ++i) {
       result[i] = (double)(values[i]);
@@ -56,9 +56,9 @@ namespace openstudio{
   }
 
   std::vector<double> toStandardVector(const Vector& values) {
-    unsigned n = values.size();
+    size_t n = values.size();
     std::vector<double> result(n);
-    for (unsigned i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
       result[i] = values[i];
     }
     return result;
@@ -82,7 +82,7 @@ namespace openstudio{
   /// assumes that x is strictly increasing
   InterpInfo interpInfo(const Vector& x, double xi)
   {
-    unsigned N = x.size();
+    size_t N = x.size();
 
     InterpInfo result;
 
@@ -114,7 +114,7 @@ namespace openstudio{
   /// assumes that x is strictly increasing
   double interp(const Vector& x, const Vector& y, double xi, InterpMethod interpMethod, ExtrapMethod extrapMethod){
 
-    unsigned N = x.size();
+    size_t N = x.size();
 
     double result = 0.0;
 
@@ -163,7 +163,7 @@ namespace openstudio{
   /// assumes that x is strictly increasing
   Vector interp(const Vector& x, const Vector& y, const Vector& xi, InterpMethod interpMethod, ExtrapMethod extrapMethod){
 
-    unsigned N = x.size();
+    size_t N = x.size();
 
     Vector result(N);
 
@@ -240,7 +240,7 @@ namespace openstudio{
   /// take the natural logarithm of elements of a Vector
   Vector log(const Vector& x)
   {
-    unsigned N = x.size();
+    size_t N = x.size();
     Vector result(N);
     for (unsigned i = 0; i < N; ++i){
       result(i) = std::log(x(i));
@@ -252,7 +252,7 @@ namespace openstudio{
   Vector log(const Vector& x, double base)
   {
     double logBase = std::log(base);
-    unsigned N = x.size();
+    size_t N = x.size();
     Vector result(N);
     for (unsigned i = 0; i < N; ++i){
       result(i) = std::log(x(i)) / logBase;
@@ -308,7 +308,7 @@ namespace openstudio{
   double mean(const Vector& vector)
   {
     double avg = 0;
-    unsigned N = vector.size();
+    size_t N = vector.size();
     if (N > 0){
       avg = sum(vector) / N;
     }
@@ -319,7 +319,7 @@ namespace openstudio{
   double variance(const Vector& vector)
   {
     double result = 0;
-    unsigned N = vector.size();
+    size_t N = vector.size();
     if (N > 0)
     {
       double sumSquares = pow(boost::numeric::ublas::norm_2(vector), 2.0);
