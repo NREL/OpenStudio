@@ -717,8 +717,7 @@ namespace detail {
   }
 
   std::vector<EMSActuatorNames> ZoneHVACPackagedTerminalAirConditioner_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{{"System Node Setpoint", "Temperature Setpoint"},
-                                            {"System Node Setpoint", "Temperature Minimum Setpoint"}};
+    std::vector<EMSActuatorNames> actuators;
     return actuators;
   }
 
