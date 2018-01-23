@@ -151,7 +151,7 @@ void WindowMaterialGlazingInspectorView::createLayout()
 
   m_backSideSolarReflectanceAtNormalIncidence = new OSQuantityEdit2("","","", m_isIP);
   connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_backSideSolarReflectanceAtNormalIncidence, &OSQuantityEdit2::onUnitSystemChange);
-  mainGridLayout->addWidget(m_backSideSolarReflectanceAtNormalIncidence,row++,0,1,3);
+  mainGridLayout->addWidget(m_backSideSolarReflectanceAtNormalIncidence,row++,0,1,3); 
 
   // Visible Transmittance At Normal Incidence
 
@@ -336,7 +336,7 @@ void WindowMaterialGlazingInspectorView::attach(openstudio::model::StandardGlazi
   );
 
   // m_backSideSolarReflectanceAtNormalIncidence->bind(glazing,"backSideSolarReflectanceatNormalIncidence",m_isIP);
-  m_frontSideSolarReflectanceAtNormalIncidence->bind(
+  m_backSideSolarReflectanceAtNormalIncidence->bind(
     m_isIP,
     *m_glazing,
     OptionalDoubleGetter(std::bind(&model::StandardGlazing::backSideSolarReflectanceatNormalIncidence, m_glazing.get_ptr())),
