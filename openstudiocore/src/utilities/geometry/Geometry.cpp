@@ -72,7 +72,7 @@ namespace openstudio{
   OptionalVector3d getNewallVector(const Point3dVector& points)
   {
     OptionalVector3d result;
-    unsigned N = points.size();
+    size_t N = points.size();
     if (N >= 3){
       Vector3d vec;
       for (unsigned i = 1; i < N-1; ++i){
@@ -107,11 +107,11 @@ namespace openstudio{
       Transformation alignFace = Transformation::alignFace(points);
       Point3dVector surfacePoints = alignFace.inverse()*points;
 
-      unsigned N = surfacePoints.size();
+      size_t N = surfacePoints.size();
       double A = 0;
       double cx = 0;
       double cy = 0;
-      for (unsigned i = 0; i < N; ++i){
+      for (size_t i = 0; i < N; ++i){
         double x1, x2, y1, y2;
         if (i == N-1){
           x1 = surfacePoints[i].x();
@@ -145,7 +145,7 @@ namespace openstudio{
   /// reorder points to upper-left-corner convention
   Point3dVector reorderULC(const Point3dVector& points)
   {
-    unsigned N = points.size();
+    size_t N = points.size();
     if (N < 3){
       return Point3dVector();
     }
@@ -182,7 +182,7 @@ namespace openstudio{
 
   std::vector<Point3d> removeCollinear(const Point3dVector& points, double tol)
   {
-    unsigned N = points.size();
+    size_t N = points.size();
     if (N < 3){
       return points;
     }
@@ -368,7 +368,7 @@ namespace openstudio{
 
   bool circularEqual(const Point3dVector& points1, const Point3dVector& points2, double tol)
   {
-    unsigned N = points1.size();
+    size_t N = points1.size();
     if (N != points2.size()){
       return false;
     }
@@ -380,7 +380,7 @@ namespace openstudio{
     bool result = false;
 
     // look for a common starting point
-    for (unsigned i = 0; i < N; ++i){
+    for (size_t i = 0; i < N; ++i){
       if (getDistance(points1[0], points2[i]) <= tol){
 
         result = true;
@@ -464,8 +464,8 @@ namespace openstudio{
     TPPLPoly outerPoly; // must be counter-clockwise, input vertices are clockwise
     outerPoly.Init(vertices.size());
     outerPoly.SetHole(false);
-    unsigned n = vertices.size();
-    for(unsigned i = 0; i < n; ++i){
+    size_t n = vertices.size();
+    for(size_t i = 0; i < n; ++i){
 
       // should all have zero z coordinate now
       double z = vertices[n-i-1].z();
