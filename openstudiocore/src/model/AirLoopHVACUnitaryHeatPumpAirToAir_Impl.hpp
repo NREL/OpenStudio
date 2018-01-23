@@ -131,17 +131,21 @@ namespace detail {
 
     bool isDehumidificationControlTypeDefaulted() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
 
-  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
 
-  boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const ;
+    boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const ;
 
-  virtual void autosize() override;
+    virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+    virtual void applySizingValues() override;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
     /** @name Setters */
