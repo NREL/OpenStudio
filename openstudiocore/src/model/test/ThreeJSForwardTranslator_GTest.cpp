@@ -47,6 +47,7 @@ TEST_F(ModelFixture,ThreeJSForwardTranslator_ExampleModel) {
 
   ThreeJSForwardTranslator ft;
   ThreeJSReverseTranslator rt;
+  openstudio::path out;
 
   Model model = exampleModel();
   model.save(resourcesPath() / toPath("model/exampleModel.osm"), true);
@@ -56,15 +57,27 @@ TEST_F(ModelFixture,ThreeJSForwardTranslator_ExampleModel) {
   std::string json = scene.toJSON();
   EXPECT_TRUE(ThreeScene::load(json));
 
+  out = resourcesPath() / toPath("model/ModelToThreeJSTriangulated.json");
+  openstudio::filesystem::ofstream file1(out);
+  ASSERT_TRUE(file1.is_open());
+  file1 << json;
+  file1.close();
+
   // not triangulated, for model transport/translation
   scene = ft.modelToThreeJS(model, false);
   json = scene.toJSON();
   EXPECT_TRUE(ThreeScene::load(json));
 
+  out = resourcesPath() / toPath("model/ModelToThreeJSNonTriangulated.json");
+  openstudio::filesystem::ofstream file2(out);
+  ASSERT_TRUE(file2.is_open());
+  file2 << json;
+  file2.close();
+
   boost::optional<Model> model2 = rt.modelFromThreeJS(scene);
   ASSERT_TRUE(model2);
 
-  model2->save(resourcesPath() / toPath("model/ThreeJS_ExampleModel.osm"), true);
+  model2->save(resourcesPath() / toPath("model/ModelToThreeJSToModel.osm"), true);
 
   EXPECT_EQ(model.getConcreteModelObjects<Space>().size(), model2->getConcreteModelObjects<Space>().size());
   EXPECT_EQ(model.getConcreteModelObjects<Surface>().size(), model2->getConcreteModelObjects<Surface>().size());

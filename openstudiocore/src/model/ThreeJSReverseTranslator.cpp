@@ -41,6 +41,8 @@
 #include "BuildingStory_Impl.hpp"
 #include "BuildingUnit.hpp"
 #include "BuildingUnit_Impl.hpp"
+#include "Construction.hpp"
+#include "Construction_Impl.hpp"
 #include "Surface.hpp"
 #include "Surface_Impl.hpp"
 #include "SubSurface.hpp"
@@ -62,7 +64,7 @@
 #include "ShadingSurfaceGroup.hpp"
 #include "InteriorPartitionSurfaceGroup.hpp"
 #include "DaylightingControl.hpp"
-
+#include "AirWallMaterial.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
@@ -94,7 +96,7 @@ namespace openstudio
       }
 
 
-      if (faces[0] == ThreeJSForwardTranslator::openstudioFaceFormatId()){
+      if (faces[0] == openstudioFaceFormatId()){
         // openstudio, all vertices belong to one face
         Point3dVector face;
 
@@ -120,6 +122,18 @@ namespace openstudio
       }
 
       return result;
+    }
+
+    Construction ThreeJSReverseTranslator::getAirWallConstruction(Model& model)
+    {
+      boost::optional<Construction> result = model.getConcreteModelObjectByName<Construction>("AirWall");
+      if (!result){
+        AirWallMaterial airWall(model);
+        airWall.setName("AirWall");
+        result = Construction(airWall);
+      }
+      OS_ASSERT(result);
+      return result.get();
     }
 
     ThreeJSReverseTranslator::ThreeJSReverseTranslator()
@@ -245,6 +259,8 @@ namespace openstudio
       std::map<std::string, DefaultConstructionSet> originalNameToDefaultConstructionSetMap;
       std::map<std::string, Surface> originalNameToSurfaceMap;
       std::map<std::string, SubSurface> originalNameToSubSurfaceMap;
+      std::map<std::string, unsigned> originalNameToSpaceMultiplierMap;
+      std::map<std::string, unsigned> originalNameToThermalZoneMultiplierMap;
 
       // create all the objects we will need
       ThreeSceneMetadata metadata = scene.metadata();
@@ -263,6 +279,22 @@ namespace openstudio
         if (istringEqual(iddObjectType, "OS:Space")){
           Space space(model);
           modelObject = space;
+
+          unsigned multiplier = 1;
+          if (m.multiplier()){
+            multiplier = m.multiplier().get();
+          }
+
+          // DLM: temp code
+          if (multiplier==0){
+            LOG(Warn, "Muliplier for Space '" << name << "' is 0, setting to 1");
+            multiplier = 1;
+          }else if (multiplier > 1){
+            LOG(Warn, "Multiplier translation not yet implemented for Space '" << name << "', setting to 1");
+            multiplier = 1;
+          }
+
+          originalNameToSpaceMultiplierMap.insert(std::make_pair(name, multiplier));
           originalNameToSpaceMap.insert(std::make_pair(name, space));
         }else if (istringEqual(iddObjectType, "OS:ThermalZone")){
           ThermalZone thermalZone(model);
@@ -274,6 +306,23 @@ namespace openstudio
           originalNameToSpaceTypeMap.insert(std::make_pair(name, spaceType));
         }else if (istringEqual(iddObjectType, "OS:BuildingStory")){
           BuildingStory buildingStory(model);
+
+          boost::optional<unsigned> multiplier = m.multiplier(); // DLM: should we apply multipliers only to Spaces in ThreeJS?
+          boost::optional<double> nominalZCoordinate = m.nominalZCoordinate();
+          boost::optional<double> belowFloorPlenumHeight = m.belowFloorPlenumHeight();
+          boost::optional<double> floorToCeilingHeight = m.floorToCeilingHeight();
+          boost::optional<double> aboveCeilingPlenumHeight = m.aboveCeilingPlenumHeight();
+
+          OS_ASSERT(multiplier);
+          OS_ASSERT(nominalZCoordinate);
+          OS_ASSERT(belowFloorPlenumHeight);
+          OS_ASSERT(floorToCeilingHeight);
+          OS_ASSERT(aboveCeilingPlenumHeight);
+
+          buildingStory.setNominalZCoordinate(*nominalZCoordinate);
+          buildingStory.setNominalFloortoCeilingHeight(*floorToCeilingHeight);
+          buildingStory.setNominalFloortoFloorHeight(*floorToCeilingHeight + *belowFloorPlenumHeight + *aboveCeilingPlenumHeight);
+
           modelObject = buildingStory;
           originalNameToBuildingStoryMap.insert(std::make_pair(name, buildingStory));
         }else if (istringEqual(iddObjectType, "OS:BuildingUnit")){
@@ -342,6 +391,7 @@ namespace openstudio
         std::string outsideBoundaryConditionObjectName = userData.outsideBoundaryConditionObjectName();
         std::string outsideBoundaryConditionObjectHandle = userData.outsideBoundaryConditionObjectHandle();
         double illuminanceSetpoint = userData.illuminanceSetpoint();
+        bool airWall = userData.airWall();
         //bool plenum = userData.plenum();
         //bool belowFloorPlenum = userData.belowFloorPlenum();
         //bool aboveFloorPlenum = userData.aboveCeilingPlenum();
@@ -421,10 +471,32 @@ namespace openstudio
           }
           OS_ASSERT(space);
 
+          unsigned multiplier = 1;
+          const auto it = originalNameToSpaceMultiplierMap.find(spaceName);
+          if (it != originalNameToSpaceMultiplierMap.end()){
+            multiplier = it->second;
+          }else{
+            LOG(Warn, "Could not find muliplier for Space '" << spaceName << "'");
+          }
+
           if (thermalZone){
             if (!space->thermalZone()){
+
+              const auto it = originalNameToThermalZoneMultiplierMap.find(thermalZoneName);
+              if (it != originalNameToThermalZoneMultiplierMap.end()){
+                if (it->second != multiplier){
+                  LOG(Warn, "Varying mulipliers detected for ThermalZone '" << thermalZoneName << "', setting multiplier to 1");
+                  thermalZone->setMultiplier(1);
+                }
+              } else{
+                originalNameToThermalZoneMultiplierMap[thermalZoneName] = multiplier;
+                thermalZone->setMultiplier(multiplier);
+              }
+
               space->setThermalZone(*thermalZone);
             }
+          } else if (multiplier > 1){
+            LOG(Warn, "Space '" << spaceName << "' has muliplier of " << multiplier << " but no ThermalZone, multiplier ignored");
           }
 
           if (spaceType){
@@ -460,6 +532,10 @@ namespace openstudio
               surface.setName(name);
               surface.setSpace(*space);
               surface.setSurfaceType(surfaceType);
+
+              if (airWall){
+                surface.setConstruction(getAirWallConstruction(model));
+              }
 
               originalNameToSurfaceMap.insert(std::make_pair(name, surface));
 
@@ -501,6 +577,10 @@ namespace openstudio
               subSurface.setName(name);
               subSurface.setSurface(*surface);
               subSurface.setSubSurfaceType(surfaceType);
+
+              if (airWall){
+                subSurface.setConstruction(getAirWallConstruction(model));
+              }
 
               originalNameToSubSurfaceMap.insert(std::make_pair(name, subSurface));
 

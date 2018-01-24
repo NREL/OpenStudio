@@ -34,7 +34,8 @@
 #include "Intersection.hpp"
 
 #include "../core/Assert.hpp"
-#include "../core/Path.hpp"
+#include "../core/Compare.hpp"
+//#include "../core/Path.hpp"
 #include "../core/Json.hpp"
 
 #include <jsoncpp/json.h>
@@ -281,7 +282,7 @@ namespace openstudio{
 
   std::string FloorplanJS::makeSurface(const Json::Value& story, const Json::Value& space, const std::string& parentSurfaceName, const std::string& parentSubSurfaceName,
     bool belowFloorPlenum, bool aboveCeilingPlenum, const std::string& surfaceType, const Point3dVector& vertices, size_t faceFormat,
-    std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren, double illuminanceSetpoint) const
+    std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren, double illuminanceSetpoint, bool airWall) const
   {
     bool plenum = false;
     std::string spaceNamePostFix;
@@ -429,9 +430,11 @@ namespace openstudio{
       }
 
       userData.setSurfaceType(surfaceType);
+      userData.setSurfaceTypeMaterialName(surfaceType);
       //userData.setAboveCeilingPlenum(aboveCeilingPlenum);
       //userData.setBelowFloorPlenum(belowFloorPlenum);
       userData.setIlluminanceSetpoint(illuminanceSetpoint);
+      userData.setAirWall(airWall);
 
       ThreeSceneChild sceneChild(uuid, name, type, geometryId, materialId, userData);
       sceneChildren.push_back(sceneChild);
@@ -443,7 +446,7 @@ namespace openstudio{
   void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& space,
     bool belowFloorPlenum, bool aboveCeilingPlenum, double lengthToMeters, double minZ, double maxZ,
     const Json::Value& vertices, const Json::Value& edges, const Json::Value& faces, const std::string& faceId,
-    bool openstudioFormat, std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren) const
+    bool openstudioFormat, std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren, bool openToBelow) const
   {
     std::vector<Point3d> faceVertices;
     std::vector<Point3d> windowCenterVertices;
@@ -561,8 +564,8 @@ namespace openstudio{
     }
 
     Point3dVectorVector allFinalFaceVertices;
-    unsigned roofCeilingFaceFormat = 1024;
-    unsigned wallFaceFormat = 1024;
+    unsigned roofCeilingFaceFormat = openstudioFaceFormatId();
+    unsigned wallFaceFormat = openstudioFaceFormatId();
     if (openstudioFormat){
       allFinalFaceVertices.push_back(faceVertices);
     }else{
@@ -581,8 +584,8 @@ namespace openstudio{
         finalRoofCeilingVertices.push_back(Point3d(v.x(), v.y(), maxZ));
       }
 
-      makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "Floor", finalfloorVertices, roofCeilingFaceFormat, geometries, sceneChildren, 0);
-      makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "RoofCeiling", reverse(finalRoofCeilingVertices), roofCeilingFaceFormat, geometries, sceneChildren, 0);
+      makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "Floor", finalfloorVertices, roofCeilingFaceFormat, geometries, sceneChildren, 0, openToBelow);
+      makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "RoofCeiling", reverse(finalRoofCeilingVertices), roofCeilingFaceFormat, geometries, sceneChildren, 0, false);
     }
 
     // create each wall
@@ -763,12 +766,12 @@ namespace openstudio{
 
       std::string parentSurfaceName;
       for (const auto& finalWallVertices : allFinalWallVertices){
-        parentSurfaceName = makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "Wall", finalWallVertices, finalWallFaceFormat, geometries, sceneChildren, 0);
+        parentSurfaceName = makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "Wall", finalWallVertices, finalWallFaceFormat, geometries, sceneChildren, 0, false);
       }
 
       std::vector<std::string> parentSubSurfaceNames;
       for (const auto& finalWindowVertices : allFinalWindowVertices){
-        std::string parentSubSurfaceName = makeSurface(story, space, parentSurfaceName, "", belowFloorPlenum, aboveCeilingPlenum, "FixedWindow", finalWindowVertices, wallFaceFormat, geometries, sceneChildren, 0);
+        std::string parentSubSurfaceName = makeSurface(story, space, parentSurfaceName, "", belowFloorPlenum, aboveCeilingPlenum, "FixedWindow", finalWindowVertices, wallFaceFormat, geometries, sceneChildren, 0, false);
         parentSubSurfaceNames.push_back(parentSubSurfaceName);
       }
 
@@ -776,7 +779,7 @@ namespace openstudio{
       OS_ASSERT(shadeN == allFinalShadeParentSubSurfaceIndices.size());
       for (size_t shadeIdx = 0; shadeIdx < shadeN; ++shadeIdx){
         std::string parentSubSurfaceName = parentSubSurfaceNames[allFinalShadeParentSubSurfaceIndices[shadeIdx]];
-        makeSurface(story, space, "", parentSubSurfaceName, belowFloorPlenum, aboveCeilingPlenum, "SpaceShading", allFinalShadeVertices[shadeIdx], wallFaceFormat, geometries, sceneChildren, 0);
+        makeSurface(story, space, "", parentSubSurfaceName, belowFloorPlenum, aboveCeilingPlenum, "SpaceShading", allFinalShadeVertices[shadeIdx], wallFaceFormat, geometries, sceneChildren, 0, false);
       }
     }
 
@@ -808,7 +811,7 @@ namespace openstudio{
           dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() + 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() - 0.1, height));
           dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() - 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() - 0.1, height));
 
-          makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "DaylightingControl", dcVertices, wallFaceFormat, geometries, sceneChildren, illuminanceSetpoint);
+          makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "DaylightingControl", dcVertices, wallFaceFormat, geometries, sceneChildren, illuminanceSetpoint, false);
         }
       }
     }
@@ -833,14 +836,21 @@ namespace openstudio{
   ThreeScene FloorplanJS::toThreeScene(bool openstudioFormat) const
   {
     m_plenumThermalZoneNames.clear();
+    m_boundingBox = BoundingBox();
 
     std::vector<ThreeGeometry> geometries;
-    std::vector<ThreeMaterial> materials;
     std::vector<ThreeSceneChild> children;
     std::vector<std::string> buildingStoryNames;
     std::vector<ThreeModelObjectMetadata> modelObjectMetadata;
 
-    double currentZ = 0;
+    std::vector<ThreeMaterial> materials;
+    if (!openstudioFormat){
+      materials = makeStandardThreeMaterials();
+    }
+
+    // TODO: add model specific materials
+
+    double currentStoryZ = 0;
 
     // read project config
     std::string units = "ft";
@@ -850,15 +860,24 @@ namespace openstudio{
       if (!config.isNull()){
         units = config.get("units", units).asString();
       }
+
+      Json::Value ground = project.get("ground", Json::objectValue);
+      if (!ground.isNull()){
+        if (checkKeyAndType(ground, "floor_offset", Json::realValue)){
+          currentStoryZ = ground.get("floor_offset", units).asDouble();
+        }
+      }
     }
 
-    // DLM: geometry in ThreeJS output is always in meters without north angle applied, north angle is applied directly to osm
+    // DLM: geometry in ThreeJS output is always in meters without north angle applied
+    // north angle is applied directly to osm, does not impact this translation
 
     double lengthToMeters = 1;
     if (istringEqual(units, "ft")){
       lengthToMeters = 0.3048; // don't use openstudio convert to keep dependencies low
     }
 
+    // are there any plenums in the entire model
     bool anyPlenums = false;
 
     // loop over stories
@@ -866,35 +885,56 @@ namespace openstudio{
     Json::ArrayIndex storyN = stories.size();
     for (Json::ArrayIndex storyIdx = 0; storyIdx < storyN; ++storyIdx){
 
-      // get story properties
-      modelObjectMetadata.push_back(makeModelObjectMetadata("OS:BuildingStory", stories[storyIdx]));
-
       std::string storyName;
       if (checkKeyAndType(stories[storyIdx], "name", Json::stringValue)){
         buildingStoryNames.push_back(storyName);
       }
 
-      double belowFloorPlenumHeight = 0;
+      unsigned storyMultiplier = 1;
+      if (checkKeyAndType(stories[storyIdx], "multiplier", Json::uintValue)){
+        storyMultiplier = stories[storyIdx].get("multiplier", storyMultiplier).asUInt();
+      }
+
+      double storyBelowFloorPlenumHeight = 0;
       if (checkKeyAndType(stories[storyIdx], "below_floor_plenum_height", Json::realValue)){
-        belowFloorPlenumHeight = lengthToMeters * stories[storyIdx].get("below_floor_plenum_height", belowFloorPlenumHeight).asDouble();
+        storyBelowFloorPlenumHeight = lengthToMeters * stories[storyIdx].get("below_floor_plenum_height", storyBelowFloorPlenumHeight).asDouble();
       }
 
-      double floorToCeilingHeight = 3;
+      double storyFloorToCeilingHeight = 3; // default is 3 m
       if (checkKeyAndType(stories[storyIdx], "floor_to_ceiling_height", Json::realValue)){
-        floorToCeilingHeight = lengthToMeters * stories[storyIdx].get("floor_to_ceiling_height", floorToCeilingHeight).asDouble();
+        storyFloorToCeilingHeight = lengthToMeters * stories[storyIdx].get("floor_to_ceiling_height", storyFloorToCeilingHeight).asDouble();
       }
 
-      double aboveCeilingPlenumHeight = 0;
+      double storyAboveCeilingPlenumHeight = 0;
       if (checkKeyAndType(stories[storyIdx], "above_ceiling_plenum_height", Json::realValue)){
-        aboveCeilingPlenumHeight = lengthToMeters * stories[storyIdx].get("above_ceiling_plenum_height", aboveCeilingPlenumHeight).asDouble();
+        storyAboveCeilingPlenumHeight = lengthToMeters * stories[storyIdx].get("above_ceiling_plenum_height", storyAboveCeilingPlenumHeight).asDouble();
       }
 
       // DLM: temp code
-      if (floorToCeilingHeight < 0.1){
+      if (storyFloorToCeilingHeight < 0.1){
         //belowFloorPlenumHeight = 1;
-        floorToCeilingHeight = 3;
+        storyFloorToCeilingHeight = 3;
         //aboveCeilingPlenumHeight = 1;
       }
+      if (storyMultiplier == 0){
+        storyMultiplier = 1;
+      } else if (storyMultiplier > 1){
+        //LOG(Warn, "Multiplier translation not yet implemented");
+        //storyMultiplier = 1;
+      }
+
+      // get story properties
+      ThreeModelObjectMetadata storyMetadata = makeModelObjectMetadata("OS:BuildingStory", stories[storyIdx]);
+      storyMetadata.setMultiplier(storyMultiplier);
+      storyMetadata.setNominalZCoordinate(currentStoryZ);
+      storyMetadata.setBelowFloorPlenumHeight(storyBelowFloorPlenumHeight);
+      storyMetadata.setFloorToCeilingHeight(storyFloorToCeilingHeight);
+      storyMetadata.setAboveCeilingPlenumHeight(storyAboveCeilingPlenumHeight);
+      modelObjectMetadata.push_back(storyMetadata);
+
+      // increment currentStoryZ, will be zero for multiplier == 1
+      // DLM: TODO need to get the intersection and matching code in utilities, move stories after intersecting and matching
+      //currentStoryZ += 0.5*(storyMultiplier - 1)*(storyBelowFloorPlenumHeight + storyFloorToCeilingHeight + storyAboveCeilingPlenumHeight);
 
       // get the geometry
       assertKeyAndType(stories[storyIdx], "geometry", Json::objectValue);
@@ -915,34 +955,86 @@ namespace openstudio{
           assertKeyAndType(spaces[spaceIdx], "name", Json::stringValue);
           std::string spaceName = spaces[spaceIdx].get("name", "").asString();
 
-          double minZ = currentZ;
-          double maxZ = currentZ + belowFloorPlenumHeight;
-          if (belowFloorPlenumHeight > 0){
+          // translate space properties, default to story values
+          unsigned spaceMultiplier = storyMultiplier;
+          if (checkKeyAndType(spaces[spaceIdx], "multiplier", Json::uintValue)){
+            spaceMultiplier = spaces[spaceIdx].get("multiplier", spaceMultiplier).asUInt();
+          }
+          if (spaceMultiplier == 0){
+            spaceMultiplier = 1;
+          } else if (spaceMultiplier > 1){
+            //LOG(Warn, "Multiplier translation not yet implemented");
+            //spaceMultiplier = 1;
+          }
+
+          double spaceBelowFloorPlenumHeight = storyBelowFloorPlenumHeight;
+          if (checkKeyAndType(spaces[spaceIdx], "below_floor_plenum_height", Json::realValue)){
+            spaceBelowFloorPlenumHeight = lengthToMeters * spaces[spaceIdx].get("below_floor_plenum_height", spaceBelowFloorPlenumHeight).asDouble();
+          }
+
+          double spaceFloorToCeilingHeight = storyFloorToCeilingHeight;
+          if (checkKeyAndType(spaces[spaceIdx], "floor_to_ceiling_height", Json::realValue)){
+            spaceFloorToCeilingHeight = lengthToMeters * spaces[spaceIdx].get("floor_to_ceiling_height", spaceFloorToCeilingHeight).asDouble();
+          }
+
+          double spaceAboveCeilingPlenumHeight = storyAboveCeilingPlenumHeight;
+          if (checkKeyAndType(spaces[spaceIdx], "above_ceiling_plenum_height", Json::realValue)){
+            spaceAboveCeilingPlenumHeight = lengthToMeters * spaces[spaceIdx].get("above_ceiling_plenum_height", spaceAboveCeilingPlenumHeight).asDouble();
+          }
+
+          double spaceFloorOffset = 0;
+          if (checkKeyAndType(spaces[spaceIdx], "floor_offset", Json::realValue)){
+            spaceFloorOffset = lengthToMeters * spaces[spaceIdx].get("floor_offset", spaceFloorOffset).asDouble();
+          }
+
+          bool openToBelow = false;
+          if (checkKeyAndType(spaces[spaceIdx], "open_to_below", Json::booleanValue)){
+            openToBelow = spaces[spaceIdx].get("open_to_below", openToBelow).asBool();
+          }
+
+          // create geometry
+          double minZ = currentStoryZ + spaceFloorOffset;
+          double maxZ = currentStoryZ + spaceFloorOffset + spaceBelowFloorPlenumHeight;
+          if (spaceBelowFloorPlenumHeight > 0){
             anyPlenums = true;
-            modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:Space", "", spaceName + BELOWFLOORPLENUMPOSTFIX));
-            makeGeometries(stories[storyIdx], spaces[spaceIdx], true, false, lengthToMeters, minZ, maxZ, vertices, edges, faces, faceId, openstudioFormat, geometries, children);
+            ThreeModelObjectMetadata spaceMetadata("OS:Space", "", spaceName + BELOWFLOORPLENUMPOSTFIX);
+            spaceMetadata.setMultiplier(spaceMultiplier);
+            spaceMetadata.setOpenToBelow(openToBelow);
+            modelObjectMetadata.push_back(spaceMetadata);
+            makeGeometries(stories[storyIdx], spaces[spaceIdx], true, false, lengthToMeters, minZ, maxZ, vertices, edges, faces, faceId, openstudioFormat, geometries, children, openToBelow);
+            openToBelow = false; // no longer open
           }
 
           minZ = maxZ;
-          maxZ += floorToCeilingHeight;
-          if (floorToCeilingHeight > 0){
-            modelObjectMetadata.push_back(makeModelObjectMetadata("OS:Space", spaces[spaceIdx]));
-            makeGeometries(stories[storyIdx], spaces[spaceIdx], false, false, lengthToMeters, minZ, maxZ, vertices, edges, faces, faceId, openstudioFormat, geometries, children);
+          maxZ += spaceFloorToCeilingHeight;
+          if (spaceFloorToCeilingHeight > 0){
+            ThreeModelObjectMetadata spaceMetadata = makeModelObjectMetadata("OS:Space", spaces[spaceIdx]);
+            spaceMetadata.setMultiplier(spaceMultiplier);
+            spaceMetadata.setOpenToBelow(openToBelow);
+            modelObjectMetadata.push_back(spaceMetadata);
+            makeGeometries(stories[storyIdx], spaces[spaceIdx], false, false, lengthToMeters, minZ, maxZ, vertices, edges, faces, faceId, openstudioFormat, geometries, children, openToBelow);
+            openToBelow = false; // no longer open
           }
 
           minZ = maxZ;
-          maxZ += aboveCeilingPlenumHeight;
-          if (aboveCeilingPlenumHeight > 0){
+          maxZ += spaceAboveCeilingPlenumHeight;
+          if (spaceAboveCeilingPlenumHeight > 0){
             anyPlenums = true;
-            modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:Space", "", spaceName + ABOVECEILINGPLENUMPOSTFIX));
-            makeGeometries(stories[storyIdx], spaces[spaceIdx], false, true, lengthToMeters, minZ, maxZ, vertices, edges, faces, faceId, openstudioFormat, geometries, children);
+            ThreeModelObjectMetadata spaceMetadata("OS:Space", "", spaceName + ABOVECEILINGPLENUMPOSTFIX);
+            spaceMetadata.setMultiplier(spaceMultiplier);
+            spaceMetadata.setOpenToBelow(openToBelow);
+            modelObjectMetadata.push_back(spaceMetadata);
+            makeGeometries(stories[storyIdx], spaces[spaceIdx], false, true, lengthToMeters, minZ, maxZ, vertices, edges, faces, faceId, openstudioFormat, geometries, children, openToBelow);
+            openToBelow = false; // no longer open
           }
         }
 
       } // spaces
 
-      // increment height for next story
-      currentZ += belowFloorPlenumHeight + floorToCeilingHeight + aboveCeilingPlenumHeight;
+      // increment height for next story, will be (storyBelowFloorPlenumHeight + storyFloorToCeilingHeight + storyAboveCeilingPlenumHeight) for multiplier == 1
+      // DLM: TODO need to get the intersection and matching code in utilities, move stories after intersecting and matching
+      //currentStoryZ += 0.5*(storyMultiplier + 1)*(storyBelowFloorPlenumHeight + storyFloorToCeilingHeight + storyAboveCeilingPlenumHeight);
+      currentStoryZ += storyBelowFloorPlenumHeight + storyFloorToCeilingHeight + storyAboveCeilingPlenumHeight;
 
     } // stories
 
@@ -959,6 +1051,7 @@ namespace openstudio{
     for (Json::ArrayIndex i = 0; i < n; ++i){
       modelObjectMetadata.push_back(makeModelObjectMetadata("OS:ThermalZone", thermalZones[i]));
     }
+    // DLM: how will we merge this plenum zone with existing plenum zones?
     for (const auto& thermalZoneName : m_plenumThermalZoneNames){
       modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:ThermalZone", "", thermalZoneName));
     }
@@ -1451,6 +1544,17 @@ namespace openstudio{
       Json::Value removed;
       vertices.removeIndex(i, &removed);
     }
+  }
+
+  std::string floorplanToThreeJS(const std::string& json, bool openstudioFormat)
+  {
+    boost::optional<FloorplanJS> floorplan = FloorplanJS::load(json);
+    if (floorplan){
+      ThreeScene scene = floorplan->toThreeScene(openstudioFormat);
+      return scene.toJSON(false);
+    }
+
+    return "{}";
   }
 
 } // openstudio

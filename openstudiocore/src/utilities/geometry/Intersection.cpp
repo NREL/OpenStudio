@@ -349,7 +349,7 @@ namespace openstudio{
     outerPoly.Init(outer.size() - 1);
     outerPoly.SetHole(false);
     //std::cout << "outer :";
-    for(unsigned i = 0; i < outer.size() - 1; ++i){
+    for(size_t i = 0; i < outer.size() - 1; ++i){
       outerPoly[i].x = outer[i].x();
       outerPoly[i].y = outer[i].y();
       //std::cout << "(" << outer[i].x() << ", " << outer[i].y() << ") ";
@@ -771,7 +771,7 @@ namespace openstudio{
   {
     std::vector<std::vector<Point3d> > result;
 
-    unsigned N = polygons.size();
+    size_t N = polygons.size();
     if (N <= 1){
       return polygons;
     }

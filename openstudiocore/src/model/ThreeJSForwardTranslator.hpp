@@ -47,9 +47,6 @@ namespace openstudio
     public:
       ThreeJSForwardTranslator();
 
-      /// identifies ThreeJS faces in OpenStudio format (e.g. unlimited number of vertices)
-      static unsigned openstudioFaceFormatId();
-
       /// Convert an OpenStudio Model to ThreeJS format
       /// Triangulate surfaces if the ThreeJS representation will be used for display
       /// Do not triangulate surfaces if the ThreeJs representation will be translated back to a model

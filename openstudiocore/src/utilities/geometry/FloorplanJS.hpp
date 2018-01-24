@@ -33,6 +33,7 @@
 
 #include "Point3d.hpp"
 #include "Transformation.hpp"
+#include "BoundingBox.hpp"
 
 #include "../core/Logger.hpp"
 #include "../core/UUID.hpp"
@@ -53,18 +54,30 @@ namespace openstudio{
   class Point3d;
   class FloorplanJS;
 
+  /** FloorplanObject is used to update data in a FloorplanJS object
+  *
+  *  The class is not impl-ized in hopes that it can be ported to JavaScript via emscripten
+  */
   class UTILITIES_API FloorplanObject{
   public:
 
-    // pass empty string for any null values
+    /// pass empty string for any null values
     FloorplanObject(const std::string& id, const std::string& name, const std::string& handleString);
     FloorplanObject(const std::string& id, const std::string& name, const UUID& handle);
 
+    /// id in FloorplanJS
     std::string id() const;
+
+    /// object name
     std::string name() const;
+
+    /// handle of corresponding OpenStudio Model object, will be null if none
     UUID handle() const;
+
+    /// handle of corresponding OpenStudio Model object, will be empty string if none
     std::string handleString() const;
 
+    /// handle of corresponding OpenStudio Model parent object, will be null if none
     boost::optional<std::string> parentHandleString() const;
     void setParentHandleString(const std::string& parentHandleString);
     void resetParentHandleString();
@@ -101,7 +114,10 @@ namespace openstudio{
     std::map<std::string, FloorplanObject> m_objectReferenceMap;
   };
 
-  /** FloorplanJS is an adapter for the Geometry Editor JSON format
+  /** FloorplanJS is an adapter for the FloorspaceJS JSON format.  This class includes code which transforms a FloorspaceJS JSON into a 3D model in ThreeJS format.
+  *   There are two variations of the ThreeJS format, one which is suitable for rendering with ThreeJS and one that preserves all vertices in a surface for
+  *   conversion to OpenStudio Model format.  Converting from FloorspaceJS to ThreeJS to OpenStudio ensures that the ThreeJS preview of a FloorspaceJS model is as
+  *   accurate as possible.  These conversions can also be used to convert a FloorspaceJS file to a 3D model for translation to other 3D formats.
   *
   *  The class is not impl-ized in hopes that it can be ported to JavaScript via emscripten
   */
@@ -121,7 +137,9 @@ namespace openstudio{
     std::string toJSON(bool prettyPrint = false) const;
 
     /// convert to ThreeJS, will throw if error
-    /// ThreeJS file produced will always be in metric units, NorthAxis will not be applied
+    /// if openstudioFormat is true, surfaces will be created with arbitrary number of vertices, not suitable for rendering using ThreeJS
+    /// if openstudioFormat is false, surfaces will be created with with either 3 or 4 vertices, suitable for rendering using ThreeJS
+    /// ThreeJS file produced will always be in metric units, NorthAxis will not be applied during this conversion
     ThreeScene toThreeScene(bool openstudioFormat) const;
 
     /// degrees from North measured clockwise
@@ -131,6 +149,7 @@ namespace openstudio{
     /// if object with same handle exists, name will be updated
     /// else if object with same name exists, handle will be assigned
     /// else new object will be added
+    /// if removeMissingObjects is true, then existing objects not in input will be deleted
     void updateStories(const std::vector<FloorplanObject>& objects, bool removeMissingObjects);
     void updateSpaces(const std::vector<FloorplanObject>& objects, bool removeMissingObjects);
     void updateBuildingUnits(const std::vector<FloorplanObject>& objects, bool removeMissingObjects);
@@ -147,11 +166,11 @@ namespace openstudio{
 
     void makeGeometries(const Json::Value& story, const Json::Value& space, bool belowFloorPlenum, bool aboveCeilingPlenum,
       double lengthToMeters, double minZ, double maxZ, const Json::Value& vertices, const Json::Value& edges, const Json::Value& faces, const std::string& faceId,
-      bool openstudioFormat, std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren) const;
+      bool openstudioFormat, std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren, bool openToBelow) const;
 
     std::string makeSurface(const Json::Value& story, const Json::Value& space, const std::string& parentSurfaceName, const std::string& parentSubSurfaceName,
       bool belowFloorPlenum, bool aboveCeilingPlenum, const std::string& surfaceType, const Point3dVector& vertices, size_t faceFormat,
-      std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren, double illuminanceSetpoint) const;
+      std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren, double illuminanceSetpoint, bool airWall) const;
 
     std::string getHandleString(const Json::Value& value) const;
     std::string getName(const Json::Value& value) const;
@@ -178,7 +197,11 @@ namespace openstudio{
 
     unsigned m_lastId;
     mutable std::set<std::string> m_plenumThermalZoneNames;
+    mutable BoundingBox m_boundingBox;
   };
+
+  /// convienence method, converts a FloorplanJS JSON string to a ThreeJS JSON string
+  UTILITIES_API std::string floorplanToThreeJS(const std::string& json, bool openstudioFormat);
 
 } // openstudio
 
