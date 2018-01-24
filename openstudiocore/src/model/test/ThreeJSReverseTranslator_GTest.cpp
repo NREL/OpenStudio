@@ -309,6 +309,40 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SimAUD_Paper) {
 }
 
 
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Shading) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan_shading.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  openstudio::path outpath = resourcesPath() / toPath("model/floorplan_shading.osm");
+  model->save(outpath, true);
+
+  ASSERT_EQ(1u, model->getConcreteModelObjects<Space>().size());
+  ASSERT_EQ(2u, model->getConcreteModelObjects<ShadingSurfaceGroup>().size());
+
+  boost::optional<Space> space1 = model->getConcreteModelObjectByName<Space>("Space 1 - 1");
+  ASSERT_TRUE(space1);
+
+  boost::optional<ShadingSurfaceGroup> shading1 = model->getConcreteModelObjectByName<ShadingSurfaceGroup>("Shading 1 - 1");
+  boost::optional<ShadingSurfaceGroup> shading2 = model->getConcreteModelObjectByName<ShadingSurfaceGroup>("Shading 1 - 2");
+  ASSERT_TRUE(shading1);
+  ASSERT_TRUE(shading2);
+}
+
+
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SplitLevel) {
 
   ThreeJSReverseTranslator rt;
@@ -609,6 +643,41 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_StoryMultipliers) {
 
   EXPECT_EQ(0, rt.errors().size());
   EXPECT_EQ(2u, rt.warnings().size()); // DLM: temporarily expect 2 warnings about non-translated multipliers
+
+  for (const auto& error : rt.errors()){
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+
+  //for (const auto& warning : rt.warnings()){
+  //  EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
+  //}
+
+}
+
+
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_StoryMultipliers2) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/story_multipliers2.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  openstudio::path outpath = resourcesPath() / toPath("model/story_multipliers2.osm");
+  model->save(outpath, true);
+
+  EXPECT_EQ(0, rt.errors().size());
+  EXPECT_EQ(1u, rt.warnings().size()); // DLM: temporarily expect 1 warnings about non-translated multipliers
 
   for (const auto& error : rt.errors()){
     EXPECT_TRUE(false) << "Error: " << error.logMessage();

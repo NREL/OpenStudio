@@ -643,6 +643,8 @@ namespace openstudio{
     assertType(value, "subSurfaceHandle", Json::stringValue);
     assertType(value, "spaceName", Json::stringValue);
     assertType(value, "spaceHandle", Json::stringValue);
+    assertType(value, "shadingName", Json::stringValue);
+    assertType(value, "shadingHandle", Json::stringValue);
     assertType(value, "thermalZoneName", Json::stringValue);
     assertType(value, "thermalZoneHandle", Json::stringValue);
     assertType(value, "thermalZoneMaterialName", Json::stringValue);
@@ -683,6 +685,8 @@ namespace openstudio{
     m_subSurfaceHandle = value.get("subSurfaceHandle", "").asString();
     m_spaceName = value.get("spaceName", "").asString();
     m_spaceHandle = value.get("spaceHandle", "").asString();
+    m_shadingName = value.get("shadingName", "").asString();
+    m_shadingHandle = value.get("shadingHandle", "").asString();
     m_thermalZoneName = value.get("thermalZoneName", "").asString();
     m_thermalZoneHandle = value.get("thermalZoneHandle", "").asString();
     m_thermalZoneMaterialName = value.get("thermalZoneMaterialName", "").asString();
@@ -728,6 +732,8 @@ namespace openstudio{
     result["subSurfaceHandle"] = m_subSurfaceHandle;
     result["spaceName"] = m_spaceName;
     result["spaceHandle"] = m_spaceHandle;
+    result["shadingName"] = m_shadingName;
+    result["shadingHandle"] = m_shadingHandle;
     result["thermalZoneName"] = m_thermalZoneName;
     result["thermalZoneHandle"] = m_thermalZoneHandle;
     result["thermalZoneMaterialName"] = m_thermalZoneMaterialName;
@@ -821,6 +827,16 @@ namespace openstudio{
   std::string ThreeUserData::spaceHandle() const
   {
     return m_spaceHandle;
+  }
+
+  std::string ThreeUserData::shadingName() const
+  {
+    return m_shadingName;
+  }
+
+  std::string ThreeUserData::shadingHandle() const
+  {
+    return m_shadingHandle;
   }
 
   std::string ThreeUserData::thermalZoneName() const
@@ -1021,6 +1037,16 @@ namespace openstudio{
   void ThreeUserData::setSpaceHandle(const std::string& s)
   {
     m_spaceHandle = s;
+  }
+
+  void ThreeUserData::setShadingName(const std::string& s)
+  {
+    m_shadingName = s;
+  }
+
+  void ThreeUserData::setShadingHandle(const std::string& s)
+  {
+    m_shadingHandle = s;
   }
 
   void ThreeUserData::setThermalZoneName(const std::string& s)

@@ -280,18 +280,34 @@ namespace openstudio{
     return result;
   }
 
-  std::string FloorplanJS::makeSurface(const Json::Value& story, const Json::Value& space, const std::string& parentSurfaceName, const std::string& parentSubSurfaceName,
+  std::string FloorplanJS::makeSurface(const Json::Value& story, const Json::Value& spaceOrShading, const std::string& parentSurfaceName, const std::string& parentSubSurfaceName,
     bool belowFloorPlenum, bool aboveCeilingPlenum, const std::string& surfaceType, const Point3dVector& vertices, size_t faceFormat,
     std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren, double illuminanceSetpoint, bool airWall) const
   {
+    std::string finalSurfaceType = surfaceType;
+
+    bool isShading = false;
+    bool isSpace = false;
+    assertKeyAndType(spaceOrShading, "type", Json::stringValue);
+    std::string type = spaceOrShading.get("type", "").asString();
+    if (istringEqual(type, "space")){
+      isSpace = true;
+    } else if (istringEqual(type, "shading")){
+      isShading = true;
+      // DLM: TODO add key to distinguish site and building shading
+      finalSurfaceType = "SiteShading";
+    }else{
+      LOG(Error, "Unknown type '" << type << "'");
+    }
+
     bool plenum = false;
-    std::string spaceNamePostFix;
+    std::string spaceOrShadingNamePostFix;
     if (belowFloorPlenum){
       plenum = true;
-      spaceNamePostFix = BELOWFLOORPLENUMPOSTFIX;
+      spaceOrShadingNamePostFix = BELOWFLOORPLENUMPOSTFIX;
     } else if (aboveCeilingPlenum){
       plenum = true;
-      spaceNamePostFix = ABOVECEILINGPLENUMPOSTFIX;
+      spaceOrShadingNamePostFix = ABOVECEILINGPLENUMPOSTFIX;
     }
 
     std::string geometryId = std::string("Geometry ") + std::to_string(geometries.size());
@@ -335,14 +351,22 @@ namespace openstudio{
         userData.setBuildingStoryHandle(s);
       }
 
-      // space
-      assertKeyAndType(space, "name", Json::stringValue);
-      s = space.get("name", "").asString();
-      userData.setSpaceName(s + spaceNamePostFix);
+      // space or shading
+      assertKeyAndType(spaceOrShading, "name", Json::stringValue);
+      s = spaceOrShading.get("name", "").asString();
+      if (isSpace){
+        userData.setSpaceName(s + spaceOrShadingNamePostFix);
+      } else if (isShading){
+        userData.setShadingName(s + spaceOrShadingNamePostFix);
+      }
 
-      if (checkKeyAndType(space, "handle", Json::stringValue)){
-        s = space.get("handle", "").asString();
-        userData.setSpaceHandle(s);
+      if (checkKeyAndType(spaceOrShading, "handle", Json::stringValue)){
+        s = spaceOrShading.get("handle", "").asString();
+        if (isSpace){
+          userData.setSpaceHandle(s);
+        } else if (isShading){
+          userData.setShadingHandle(s);
+        }
       }
 
       // parent surface
@@ -352,8 +376,8 @@ namespace openstudio{
       userData.setSubSurfaceName(parentSubSurfaceName);
 
       // building unit
-      if (checkKeyAndType(space, "building_unit_id", Json::stringValue)){
-        id = space.get("building_unit_id", "").asString();
+      if (checkKeyAndType(spaceOrShading, "building_unit_id", Json::stringValue)){
+        id = spaceOrShading.get("building_unit_id", "").asString();
         if (const Json::Value* buildingUnit = findById(m_value["building_units"], id)){
           assertKeyAndType(*buildingUnit, "name", Json::stringValue);
           s = buildingUnit->get("name", "").asString();
@@ -369,12 +393,12 @@ namespace openstudio{
       }
 
       // thermal zone
-      if (checkKeyAndType(space, "thermal_zone_id", Json::stringValue)){
-        id = space.get("thermal_zone_id", "").asString();
+      if (checkKeyAndType(spaceOrShading, "thermal_zone_id", Json::stringValue)){
+        id = spaceOrShading.get("thermal_zone_id", "").asString();
         if (const Json::Value* thermalZone = findById(m_value["thermal_zones"], id)){
           assertKeyAndType(*thermalZone, "name", Json::stringValue);
           s = thermalZone->get("name", "").asString();
-          std::string thermalZoneName = s + spaceNamePostFix;
+          std::string thermalZoneName = s + spaceOrShadingNamePostFix;
           userData.setThermalZoneName(thermalZoneName);
 
           if (plenum){
@@ -395,8 +419,8 @@ namespace openstudio{
       if (plenum){
         userData.setSpaceTypeName(PLENUMSPACETYPENAME);
       } else {
-        if (checkKeyAndType(space, "space_type_id", Json::stringValue)){
-          id = space.get("space_type_id", "").asString();
+        if (checkKeyAndType(spaceOrShading, "space_type_id", Json::stringValue)){
+          id = spaceOrShading.get("space_type_id", "").asString();
           if (const Json::Value* spaceType = findById(m_value["space_types"], id)){
             assertKeyAndType(*spaceType, "name", Json::stringValue);
             s = spaceType->get("name", "").asString();
@@ -413,8 +437,8 @@ namespace openstudio{
       }
 
       // construction set
-      if (checkKeyAndType(space, "construction_set_id", Json::stringValue)){
-        id = space.get("construction_set_id", "").asString();
+      if (checkKeyAndType(spaceOrShading, "construction_set_id", Json::stringValue)){
+        id = spaceOrShading.get("construction_set_id", "").asString();
         if (const Json::Value* constructionSet = findById(m_value["construction_sets"], id)){
           assertKeyAndType(*constructionSet, "name", Json::stringValue);
           s = constructionSet->get("name", "").asString();
@@ -429,8 +453,8 @@ namespace openstudio{
         }
       }
 
-      userData.setSurfaceType(surfaceType);
-      userData.setSurfaceTypeMaterialName(surfaceType);
+      userData.setSurfaceType(finalSurfaceType);
+      userData.setSurfaceTypeMaterialName(finalSurfaceType);
       //userData.setAboveCeilingPlenum(aboveCeilingPlenum);
       //userData.setBelowFloorPlenum(belowFloorPlenum);
       userData.setIlluminanceSetpoint(illuminanceSetpoint);
@@ -443,7 +467,7 @@ namespace openstudio{
     return faceId;
   }
 
-  void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& space,
+  void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& spaceOrShading,
     bool belowFloorPlenum, bool aboveCeilingPlenum, double lengthToMeters, double minZ, double maxZ,
     const Json::Value& vertices, const Json::Value& edges, const Json::Value& faces, const std::string& faceId,
     bool openstudioFormat, std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren, bool openToBelow) const
@@ -584,8 +608,8 @@ namespace openstudio{
         finalRoofCeilingVertices.push_back(Point3d(v.x(), v.y(), maxZ));
       }
 
-      makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "Floor", finalfloorVertices, roofCeilingFaceFormat, geometries, sceneChildren, 0, openToBelow);
-      makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "RoofCeiling", reverse(finalRoofCeilingVertices), roofCeilingFaceFormat, geometries, sceneChildren, 0, false);
+      makeSurface(story, spaceOrShading, "", "", belowFloorPlenum, aboveCeilingPlenum, "Floor", finalfloorVertices, roofCeilingFaceFormat, geometries, sceneChildren, 0, openToBelow);
+      makeSurface(story, spaceOrShading, "", "", belowFloorPlenum, aboveCeilingPlenum, "RoofCeiling", reverse(finalRoofCeilingVertices), roofCeilingFaceFormat, geometries, sceneChildren, 0, false);
     }
 
     // create each wall
@@ -766,12 +790,12 @@ namespace openstudio{
 
       std::string parentSurfaceName;
       for (const auto& finalWallVertices : allFinalWallVertices){
-        parentSurfaceName = makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "Wall", finalWallVertices, finalWallFaceFormat, geometries, sceneChildren, 0, false);
+        parentSurfaceName = makeSurface(story, spaceOrShading, "", "", belowFloorPlenum, aboveCeilingPlenum, "Wall", finalWallVertices, finalWallFaceFormat, geometries, sceneChildren, 0, false);
       }
 
       std::vector<std::string> parentSubSurfaceNames;
       for (const auto& finalWindowVertices : allFinalWindowVertices){
-        std::string parentSubSurfaceName = makeSurface(story, space, parentSurfaceName, "", belowFloorPlenum, aboveCeilingPlenum, "FixedWindow", finalWindowVertices, wallFaceFormat, geometries, sceneChildren, 0, false);
+        std::string parentSubSurfaceName = makeSurface(story, spaceOrShading, parentSurfaceName, "", belowFloorPlenum, aboveCeilingPlenum, "FixedWindow", finalWindowVertices, wallFaceFormat, geometries, sceneChildren, 0, false);
         parentSubSurfaceNames.push_back(parentSubSurfaceName);
       }
 
@@ -779,12 +803,12 @@ namespace openstudio{
       OS_ASSERT(shadeN == allFinalShadeParentSubSurfaceIndices.size());
       for (size_t shadeIdx = 0; shadeIdx < shadeN; ++shadeIdx){
         std::string parentSubSurfaceName = parentSubSurfaceNames[allFinalShadeParentSubSurfaceIndices[shadeIdx]];
-        makeSurface(story, space, "", parentSubSurfaceName, belowFloorPlenum, aboveCeilingPlenum, "SpaceShading", allFinalShadeVertices[shadeIdx], wallFaceFormat, geometries, sceneChildren, 0, false);
+        makeSurface(story, spaceOrShading, "", parentSubSurfaceName, belowFloorPlenum, aboveCeilingPlenum, "SpaceShading", allFinalShadeVertices[shadeIdx], wallFaceFormat, geometries, sceneChildren, 0, false);
       }
     }
 
     // get daylighting controls
-    for (const auto& daylightingControl : space.get("daylighting_controls", Json::arrayValue)){
+    for (const auto& daylightingControl : spaceOrShading.get("daylighting_controls", Json::arrayValue)){
       assertKeyAndType(daylightingControl, "vertex_id", Json::stringValue);
       std::string vertexId = daylightingControl.get("vertex_id", "").asString();
 
@@ -811,7 +835,7 @@ namespace openstudio{
           dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() + 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() - 0.1, height));
           dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() - 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() - 0.1, height));
 
-          makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "DaylightingControl", dcVertices, wallFaceFormat, geometries, sceneChildren, illuminanceSetpoint, false);
+          makeSurface(story, spaceOrShading, "", "", belowFloorPlenum, aboveCeilingPlenum, "DaylightingControl", dcVertices, wallFaceFormat, geometries, sceneChildren, illuminanceSetpoint, false);
         }
       }
     }
@@ -1030,6 +1054,94 @@ namespace openstudio{
         }
 
       } // spaces
+
+      // loop over shading
+      Json::Value shading = stories[storyIdx].get("shading", Json::arrayValue);
+      Json::ArrayIndex shadingN = shading.size();
+      for (Json::ArrayIndex shadingdx = 0; shadingdx < shadingN; ++shadingdx){
+
+        // each shading should have one face
+        if (checkKeyAndType(shading[shadingdx], "face_id", Json::stringValue)){
+          std::string faceId = shading[shadingdx].get("face_id", "").asString();
+
+          assertKeyAndType(shading[shadingdx], "name", Json::stringValue);
+          std::string shadingName = shading[shadingdx].get("name", "").asString();
+
+          // translate shading properties, default to story values
+          unsigned shadingMultiplier = storyMultiplier;
+          if (checkKeyAndType(shading[shadingdx], "multiplier", Json::uintValue)){
+            shadingMultiplier = shading[shadingdx].get("multiplier", shadingMultiplier).asUInt();
+          }
+          if (shadingMultiplier == 0){
+            shadingMultiplier = 1;
+          } else if (shadingMultiplier > 1){
+            //LOG(Warn, "Multiplier translation not yet implemented");
+            //shadingMultiplier = 1;
+          }
+
+          double shadingBelowFloorPlenumHeight = storyBelowFloorPlenumHeight;
+          if (checkKeyAndType(shading[shadingdx], "below_floor_plenum_height", Json::realValue)){
+            shadingBelowFloorPlenumHeight = lengthToMeters * shading[shadingdx].get("below_floor_plenum_height", shadingBelowFloorPlenumHeight).asDouble();
+          }
+
+          double shadingFloorToCeilingHeight = storyFloorToCeilingHeight;
+          if (checkKeyAndType(shading[shadingdx], "floor_to_ceiling_height", Json::realValue)){
+            shadingFloorToCeilingHeight = lengthToMeters * shading[shadingdx].get("floor_to_ceiling_height", shadingFloorToCeilingHeight).asDouble();
+          }
+
+          double shadingAboveCeilingPlenumHeight = storyAboveCeilingPlenumHeight;
+          if (checkKeyAndType(shading[shadingdx], "above_ceiling_plenum_height", Json::realValue)){
+            shadingAboveCeilingPlenumHeight = lengthToMeters * shading[shadingdx].get("above_ceiling_plenum_height", shadingAboveCeilingPlenumHeight).asDouble();
+          }
+
+          double shadingFloorOffset = 0;
+          if (checkKeyAndType(shading[shadingdx], "floor_offset", Json::realValue)){
+            shadingFloorOffset = lengthToMeters * shading[shadingdx].get("floor_offset", shadingFloorOffset).asDouble();
+          }
+
+          bool openToBelow = false;
+          if (checkKeyAndType(shading[shadingdx], "open_to_below", Json::booleanValue)){
+            openToBelow = shading[shadingdx].get("open_to_below", openToBelow).asBool();
+          }
+
+          // create geometry
+          double minZ = currentStoryZ + shadingFloorOffset;
+          double maxZ = currentStoryZ + shadingFloorOffset + shadingBelowFloorPlenumHeight;
+          if (shadingBelowFloorPlenumHeight > 0){
+            anyPlenums = true;
+            ThreeModelObjectMetadata shadingMetadata("OS:ShadingSurfaceGroup", "", shadingName + BELOWFLOORPLENUMPOSTFIX);
+            shadingMetadata.setMultiplier(shadingMultiplier);
+            shadingMetadata.setOpenToBelow(openToBelow);
+            modelObjectMetadata.push_back(shadingMetadata);
+            makeGeometries(stories[storyIdx], shading[shadingdx], true, false, lengthToMeters, minZ, maxZ, vertices, edges, faces, faceId, openstudioFormat, geometries, children, openToBelow);
+            openToBelow = false; // no longer open
+          }
+
+          minZ = maxZ;
+          maxZ += shadingFloorToCeilingHeight;
+          if (shadingFloorToCeilingHeight > 0){
+            ThreeModelObjectMetadata shadingMetadata = makeModelObjectMetadata("OS:ShadingSurfaceGroup", shading[shadingdx]);
+            shadingMetadata.setMultiplier(shadingMultiplier);
+            shadingMetadata.setOpenToBelow(openToBelow);
+            modelObjectMetadata.push_back(shadingMetadata);
+            makeGeometries(stories[storyIdx], shading[shadingdx], false, false, lengthToMeters, minZ, maxZ, vertices, edges, faces, faceId, openstudioFormat, geometries, children, openToBelow);
+            openToBelow = false; // no longer open
+          }
+
+          minZ = maxZ;
+          maxZ += shadingAboveCeilingPlenumHeight;
+          if (shadingAboveCeilingPlenumHeight > 0){
+            anyPlenums = true;
+            ThreeModelObjectMetadata shadingMetadata("OS:ShadingSurfaceGroup", "", shadingName + ABOVECEILINGPLENUMPOSTFIX);
+            shadingMetadata.setMultiplier(shadingMultiplier);
+            shadingMetadata.setOpenToBelow(openToBelow);
+            modelObjectMetadata.push_back(shadingMetadata);
+            makeGeometries(stories[storyIdx], shading[shadingdx], false, true, lengthToMeters, minZ, maxZ, vertices, edges, faces, faceId, openstudioFormat, geometries, children, openToBelow);
+            openToBelow = false; // no longer open
+          }
+        }
+
+      } // shading
 
       // increment height for next story, will be (storyBelowFloorPlenumHeight + storyFloorToCeilingHeight + storyAboveCeilingPlenumHeight) for multiplier == 1
       // DLM: TODO need to get the intersection and matching code in utilities, move stories after intersecting and matching
