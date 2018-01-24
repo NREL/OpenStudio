@@ -82,7 +82,7 @@ module OpenStudio
       # Look up the parent drawing interface (might fail if the reference is bad)
       if (not parent_from_model_object)
         @model_interface.add_error("Error:  " + @model_object.name.to_s + "\n")
-        @model_interface.add_error("The space referenced by this shading surface group does not exist, it cannot be drawn.\n\n")
+        @model_interface.add_error("The space, building, or site object referenced by this shading surface group does not exist, it cannot be drawn.\n\n")
         return(false)
       end
 
