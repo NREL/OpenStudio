@@ -44,6 +44,8 @@
 #include "../ShadingSurfaceGroup_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
+#include "../SpaceType.hpp"
+#include "../SpaceType_Impl.hpp"
 #include "../Surface.hpp"
 #include "../Surface_Impl.hpp"
 #include "../SubSurface.hpp"
@@ -63,6 +65,7 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS) {
 
   ThreeJSReverseTranslator rt;
+  openstudio::path out;
 
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan.json");
   ASSERT_TRUE(exists(p));
@@ -75,22 +78,27 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS) {
   std::string json = scene.toJSON();
   EXPECT_TRUE(ThreeScene::load(json));
 
+  out = resourcesPath() / toPath("model/FloorplanToThreeJSTriangulated.json");
+  openstudio::filesystem::ofstream file1(out);
+  ASSERT_TRUE(file1.is_open());
+  file1 << json;
+  file1.close();
+
   // not triangulated, for model transport/translation
   scene = floorPlan->toThreeScene(true);
   json = scene.toJSON();
   EXPECT_TRUE(ThreeScene::load(json));
 
+  out = resourcesPath() / toPath("model/FloorplanToThreeJSNonTriangulated.json");
+  openstudio::filesystem::ofstream file2(out);
+  ASSERT_TRUE(file2.is_open());
+  file2 << json;
+  file2.close();
+
   boost::optional<Model> model = rt.modelFromThreeJS(scene);
   ASSERT_TRUE(model);
 
-  model->save(resourcesPath() / toPath("model/ThreeJS_FloorplanJS.osm"), true);
-
-  openstudio::path out = resourcesPath() / toPath("model/ThreeJS_FloorplanJS.json");
-  json = scene.toJSON(true);
-  openstudio::filesystem::ofstream file(out);
-  ASSERT_TRUE(file.is_open());
-  file << json;
-  file.close();
+  model->save(resourcesPath() / toPath("model/FloorplanToThreeJSNonTriangulatedToModel.osm"), true);
 }
 
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SurfaceMatch) {
@@ -263,8 +271,6 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
   EXPECT_NEAR(convert(800.0, "ft^2", "m^2").get(), infos[2].southSurface->grossArea(), 0.001);
   EXPECT_NEAR(convert(0.6*800.0, "ft^2", "m^2").get(), infos[2].southSurface->netArea(), 0.001);
   EXPECT_EQ(1, infos[2].dcs.size());
-
-
 }
 
 
@@ -286,6 +292,9 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SimAUD_Paper) {
   boost::optional<Model> model = rt.modelFromThreeJS(scene);
   ASSERT_TRUE(model);
 
+  openstudio::path outpath = resourcesPath() / toPath("model/floorplan-paper.osm");
+  model->save(outpath, true);
+
   EXPECT_EQ(0, rt.errors().size());
   EXPECT_EQ(0, rt.warnings().size());
 
@@ -297,4 +306,433 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SimAUD_Paper) {
     EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
   }
 
+}
+
+
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SplitLevel) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/split_level.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  openstudio::path outpath = resourcesPath() / toPath("model/split_level.osm");
+  model->save(outpath, true);
+
+  EXPECT_EQ(0, rt.errors().size());
+  EXPECT_EQ(0, rt.warnings().size());
+
+  for (const auto& error : rt.errors()){
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+
+  for (const auto& warning : rt.warnings()){
+    EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
+  }
+
+  EXPECT_EQ(2u, model->getConcreteModelObjects<BuildingStory>().size());
+  EXPECT_EQ(3u, model->getConcreteModelObjects<Space>().size());
+
+  boost::optional<Space> space1 = model->getConcreteModelObjectByName<Space>("Main Space");
+  boost::optional<Space> space2 = model->getConcreteModelObjectByName<Space>("Split Level");
+  boost::optional<Space> space3 = model->getConcreteModelObjectByName<Space>("Upper floor");
+  ASSERT_TRUE(space1);
+  ASSERT_TRUE(space2);
+  ASSERT_TRUE(space3);
+
+  ASSERT_TRUE(space1->buildingStory());
+  EXPECT_EQ("Story 1", space1->buildingStory()->nameString());
+  ASSERT_TRUE(space2->buildingStory());
+  EXPECT_EQ("Story 1", space2->buildingStory()->nameString());
+  ASSERT_TRUE(space3->buildingStory());
+  EXPECT_EQ("Story 2", space3->buildingStory()->nameString());
+
+  std::vector<Space> spaces;
+  spaces.push_back(*space1);
+  spaces.push_back(*space2);
+  spaces.push_back(*space3);
+
+  struct SpaceInfo{
+    std::string name;
+    unsigned numExteriorWalls;
+    unsigned numInteriorWalls;
+    double exteriorWallArea;
+    double interiorWallArea;
+  };
+
+  std::vector<SpaceInfo> infos;
+  for (const auto& space : spaces){
+    SpaceInfo info;
+    info.name = space.nameString();
+    info.numExteriorWalls = 0;
+    info.numInteriorWalls = 0;
+    info.exteriorWallArea = 0;
+    info.interiorWallArea = 0;
+    for (const auto& surface : space.surfaces()){
+      if (surface.surfaceType() == "Wall"){
+        if (surface.outsideBoundaryCondition() == "Outdoors"){
+          info.numExteriorWalls += 1;
+          info.exteriorWallArea += surface.grossArea();
+        } else if (surface.outsideBoundaryCondition() == "Surface"){
+          info.numInteriorWalls += 1;
+          info.interiorWallArea += surface.grossArea();
+        }
+      }
+    }
+    infos.push_back(info);
+  }
+
+  ASSERT_EQ(3u, infos.size());
+
+  EXPECT_EQ("Main Space", infos[0].name);
+  EXPECT_EQ(4, infos[0].numExteriorWalls);
+  EXPECT_EQ(1, infos[0].numInteriorWalls);
+  EXPECT_NEAR(convert(3*800.0 + 400.0, "ft^2", "m^2").get(), infos[0].exteriorWallArea, 0.001);
+  EXPECT_NEAR(convert(400.0, "ft^2", "m^2").get(), infos[0].interiorWallArea, 0.001);
+
+  EXPECT_EQ("Split Level", infos[1].name);
+  EXPECT_EQ(3, infos[1].numExteriorWalls);
+  EXPECT_EQ(2, infos[1].numInteriorWalls);
+  EXPECT_NEAR(convert(3*800.0, "ft^2", "m^2").get(), infos[1].exteriorWallArea, 0.001);
+  EXPECT_NEAR(convert(2*400.0, "ft^2", "m^2").get(), infos[1].interiorWallArea, 0.001);
+
+  EXPECT_EQ("Upper floor", infos[2].name);
+  EXPECT_EQ(4, infos[2].numExteriorWalls);
+  EXPECT_EQ(1, infos[2].numInteriorWalls);
+  EXPECT_NEAR(convert(3*800.0 + 400.0, "ft^2", "m^2").get(), infos[2].exteriorWallArea, 0.001);
+  EXPECT_NEAR(convert(400.0, "ft^2", "m^2").get(), infos[2].interiorWallArea, 0.001);
+}
+
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_StorySpaceHeights) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/story_space_heights.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  openstudio::path outpath = resourcesPath() / toPath("model/story_space_heights.osm");
+  model->save(outpath, true);
+
+  EXPECT_EQ(0, rt.errors().size());
+  EXPECT_EQ(0, rt.warnings().size());
+
+  for (const auto& error : rt.errors()){
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+
+  for (const auto& warning : rt.warnings()){
+    EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
+  }
+
+  EXPECT_EQ(1u, model->getConcreteModelObjects<BuildingStory>().size());
+  EXPECT_EQ(4u, model->getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(4u, model->getConcreteModelObjects<ThermalZone>().size());
+
+  boost::optional<Space> space1 = model->getConcreteModelObjectByName<Space>("Story Default");
+  boost::optional<Space> space2 = model->getConcreteModelObjectByName<Space>("Story Default Plenum");
+  boost::optional<Space> space3 = model->getConcreteModelObjectByName<Space>("Story Default Floor Plenum");
+  boost::optional<Space> space4 = model->getConcreteModelObjectByName<Space>("Tall No Plenums");
+  ASSERT_TRUE(space1);
+  ASSERT_TRUE(space2);
+  ASSERT_TRUE(space3);
+  ASSERT_TRUE(space4);
+
+  ASSERT_TRUE(space1->buildingStory());
+  EXPECT_EQ("Story 1", space1->buildingStory()->nameString());
+  ASSERT_TRUE(space2->buildingStory());
+  EXPECT_EQ("Story 1", space2->buildingStory()->nameString());
+  ASSERT_TRUE(space3->buildingStory());
+  EXPECT_EQ("Story 1", space3->buildingStory()->nameString());
+  ASSERT_TRUE(space4->buildingStory());
+  EXPECT_EQ("Story 1", space4->buildingStory()->nameString());
+
+  ASSERT_TRUE(space1->spaceType());
+  EXPECT_EQ("Space Type 1", space1->spaceType()->nameString());
+  ASSERT_TRUE(space2->spaceType());
+  EXPECT_EQ("Plenum Space Type", space2->spaceType()->nameString());
+  EXPECT_EQ(model->plenumSpaceType().handle(), space2->spaceType()->handle());
+  ASSERT_TRUE(space3->spaceType());
+  EXPECT_EQ("Plenum Space Type", space3->spaceType()->nameString());
+  EXPECT_EQ(model->plenumSpaceType().handle(), space3->spaceType()->handle());
+  ASSERT_TRUE(space4->spaceType());
+  EXPECT_EQ("Space Type 1", space4->spaceType()->nameString());
+
+  // plenums are assigned to unique zones, but the zones are not yet plenums as they are not connected to an air loop
+  ASSERT_TRUE(space1->thermalZone());
+  EXPECT_EQ("Thermal Zone 1", space1->thermalZone()->nameString());
+  EXPECT_FALSE(space1->thermalZone()->isPlenum());
+  ASSERT_TRUE(space2->thermalZone());
+  EXPECT_EQ("Thermal Zone 1 Plenum", space2->thermalZone()->nameString());
+  EXPECT_FALSE(space2->thermalZone()->isPlenum());
+  ASSERT_TRUE(space3->buildingStory());
+  EXPECT_EQ("Thermal Zone 1 Floor Plenum", space3->thermalZone()->nameString());
+  EXPECT_FALSE(space3->thermalZone()->isPlenum());
+  ASSERT_TRUE(space4->buildingStory());
+  EXPECT_EQ("Thermal Zone 2", space4->thermalZone()->nameString());
+  EXPECT_FALSE(space4->thermalZone()->isPlenum());
+
+  std::vector<Space> spaces;
+  spaces.push_back(*space1);
+  spaces.push_back(*space2);
+  spaces.push_back(*space3);
+  spaces.push_back(*space4);
+
+  double volume1 = 0;
+  volume1 += space1->volume();
+  volume1 += space2->volume();
+  volume1 += space3->volume();
+
+  EXPECT_NEAR(volume1, space4->volume() , 0.001);
+
+  struct SpaceInfo{
+    std::string name;
+    unsigned numExterior;
+    unsigned numInterior;
+    double exteriorArea;
+    double interiorArea;
+    std::set<std::string> adjacentSpaces;
+  };
+
+  std::vector<SpaceInfo> infos;
+  for (const auto& space : spaces){
+    SpaceInfo info;
+    info.name = space.nameString();
+    info.numExterior = 0;
+    info.numInterior = 0;
+    info.exteriorArea = 0;
+    info.interiorArea = 0;
+    for (const auto& surface : space.surfaces()){
+
+      if ((surface.outsideBoundaryCondition() == "Outdoors") || (surface.outsideBoundaryCondition() == "Ground")){
+        info.numExterior += 1;
+        info.exteriorArea += surface.grossArea();
+      } else if (surface.outsideBoundaryCondition() == "Surface"){
+        info.numInterior += 1;
+        info.interiorArea += surface.grossArea();
+        ASSERT_TRUE(surface.adjacentSurface());
+        ASSERT_TRUE(surface.adjacentSurface()->space());
+        info.adjacentSpaces.insert(surface.adjacentSurface()->space()->nameString());
+      }
+    }
+    infos.push_back(info);
+  }
+
+  ASSERT_EQ(4u, infos.size());
+
+  EXPECT_EQ("Story Default", infos[0].name);
+  EXPECT_EQ(3, infos[0].numExterior);
+  EXPECT_EQ(3, infos[0].numInterior);
+  EXPECT_NEAR(convert(3*800.0, "ft^2", "m^2").get(), infos[0].exteriorArea, 0.001);
+  EXPECT_NEAR(convert(2*100.0*100.0 + 800.0, "ft^2", "m^2").get(), infos[0].interiorArea, 0.001);
+  EXPECT_EQ(3u, infos[0].adjacentSpaces.size());
+  EXPECT_EQ(0u, infos[0].adjacentSpaces.count("Story Default"));
+  EXPECT_EQ(1u, infos[0].adjacentSpaces.count("Story Default Plenum"));
+  EXPECT_EQ(1u, infos[0].adjacentSpaces.count("Story Default Floor Plenum"));
+  EXPECT_EQ(1u, infos[0].adjacentSpaces.count("Tall No Plenums"));
+
+  EXPECT_EQ("Story Default Plenum", infos[1].name);
+  EXPECT_EQ(4, infos[1].numExterior);
+  EXPECT_EQ(2, infos[1].numInterior);
+  EXPECT_NEAR(convert(3*200.0 + 100.0*100.0, "ft^2", "m^2").get(), infos[1].exteriorArea, 0.001);
+  EXPECT_NEAR(convert(200.0 + 100.0*100.0, "ft^2", "m^2").get(), infos[1].interiorArea, 0.001);
+  EXPECT_EQ(2u, infos[1].adjacentSpaces.size());
+  EXPECT_EQ(1u, infos[1].adjacentSpaces.count("Story Default"));
+  EXPECT_EQ(0u, infos[1].adjacentSpaces.count("Story Default Plenum"));
+  EXPECT_EQ(0u, infos[1].adjacentSpaces.count("Story Default Floor Plenum"));
+  EXPECT_EQ(1u, infos[1].adjacentSpaces.count("Tall No Plenums"));
+
+  EXPECT_EQ("Story Default Floor Plenum", infos[2].name);
+  EXPECT_EQ(4, infos[2].numExterior);
+  EXPECT_EQ(2, infos[2].numInterior);
+  EXPECT_NEAR(convert(3*200.0 + 100.0*100.0, "ft^2", "m^2").get(), infos[2].exteriorArea, 0.001);
+  EXPECT_NEAR(convert(200.0 + 100.0*100.0, "ft^2", "m^2").get(), infos[2].interiorArea, 0.001);
+  EXPECT_EQ(2u, infos[2].adjacentSpaces.size());
+  EXPECT_EQ(1u, infos[2].adjacentSpaces.count("Story Default"));
+  EXPECT_EQ(0u, infos[2].adjacentSpaces.count("Story Default Plenum"));
+  EXPECT_EQ(0u, infos[2].adjacentSpaces.count("Story Default Floor Plenum"));
+  EXPECT_EQ(1u, infos[2].adjacentSpaces.count("Tall No Plenums"));
+
+  EXPECT_EQ("Tall No Plenums", infos[3].name);
+  EXPECT_EQ(5, infos[3].numExterior);
+  EXPECT_EQ(3, infos[3].numInterior);
+  EXPECT_NEAR(convert(3*1200.0 + 2*100.0*100.0, "ft^2", "m^2").get(), infos[3].exteriorArea, 0.001);
+  EXPECT_NEAR(convert(1200.0, "ft^2", "m^2").get(), infos[3].interiorArea, 0.001);
+  EXPECT_EQ(3u, infos[3].adjacentSpaces.size());
+  EXPECT_EQ(1u, infos[3].adjacentSpaces.count("Story Default"));
+  EXPECT_EQ(1u, infos[3].adjacentSpaces.count("Story Default Plenum"));
+  EXPECT_EQ(1u, infos[3].adjacentSpaces.count("Story Default Floor Plenum"));
+  EXPECT_EQ(0u, infos[3].adjacentSpaces.count("Tall No Plenums"));
+}
+
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_StoryMultipliers) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/story_multipliers.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  openstudio::path outpath = resourcesPath() / toPath("model/story_multipliers.osm");
+  model->save(outpath, true);
+
+  EXPECT_EQ(0, rt.errors().size());
+  EXPECT_EQ(2u, rt.warnings().size()); // DLM: temporarily expect 2 warnings about non-translated multipliers
+
+  for (const auto& error : rt.errors()){
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+
+  //for (const auto& warning : rt.warnings()){
+  //  EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
+  //}
+
+}
+
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_OpenToBelow) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/open_to_below.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  openstudio::path outpath = resourcesPath() / toPath("model/open_to_below.osm");
+  model->save(outpath, true);
+
+  EXPECT_EQ(0, rt.errors().size());
+  EXPECT_EQ(0, rt.warnings().size());
+
+  for (const auto& error : rt.errors()){
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+
+  for (const auto& warning : rt.warnings()){
+    EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
+  }
+
+  boost::optional<Space> space1 = model->getConcreteModelObjectByName<Space>("Open 1");
+  boost::optional<Space> space2 = model->getConcreteModelObjectByName<Space>("Closed 1");
+  boost::optional<Space> space3 = model->getConcreteModelObjectByName<Space>("Open 2");
+  boost::optional<Space> space4 = model->getConcreteModelObjectByName<Space>("Closed 2");
+  ASSERT_TRUE(space1);
+  ASSERT_TRUE(space2);
+  ASSERT_TRUE(space3);
+  ASSERT_TRUE(space4);
+
+  std::vector<Space> spaces;
+  spaces.push_back(*space1);
+  spaces.push_back(*space2);
+  spaces.push_back(*space3);
+  spaces.push_back(*space4);
+
+  EXPECT_NEAR(convert(100.0*100.0, "ft^2", "m^2").get(), space1->floorArea(), 0.001);
+  EXPECT_NEAR(convert(100.0*100.0, "ft^2", "m^2").get(), space2->floorArea(), 0.001);
+  EXPECT_NEAR(convert(0.0, "ft^2", "m^2").get(), space3->floorArea(), 0.001); // air wall floor
+  EXPECT_NEAR(convert(100.0*100.0, "ft^2", "m^2").get(), space4->floorArea(), 0.001);
+
+  struct SpaceInfo{
+    std::string name;
+    boost::optional<Surface> floor;
+    boost::optional<Surface> ceiling;
+  };
+
+  std::vector<SpaceInfo> infos;
+  for (const auto& space : spaces){
+    SpaceInfo info;
+    info.name = space.nameString();
+    for (const auto& surface : space.surfaces()){
+      if (surface.surfaceType() == "Floor"){
+        EXPECT_FALSE(info.floor);
+        info.floor = surface;
+      }else if (surface.surfaceType() == "RoofCeiling"){
+        EXPECT_FALSE(info.ceiling);
+        info.ceiling = surface;
+      }
+    }
+    infos.push_back(info);
+  }
+
+  ASSERT_EQ(4u, infos.size());
+
+  EXPECT_EQ("Open 1", infos[0].name);
+  ASSERT_TRUE(infos[0].floor);
+  EXPECT_FALSE(infos[0].floor->isAirWall());
+  EXPECT_FALSE(infos[0].floor->adjacentSurface());
+  ASSERT_TRUE(infos[0].ceiling);
+  EXPECT_TRUE(infos[0].ceiling->isAirWall());
+  ASSERT_TRUE(infos[0].ceiling->adjacentSurface());
+  ASSERT_TRUE(infos[0].ceiling->adjacentSurface()->space());
+  EXPECT_EQ("Open 2", infos[0].ceiling->adjacentSurface()->space()->nameString());
+
+  EXPECT_EQ("Closed 1", infos[1].name);
+  ASSERT_TRUE(infos[1].floor);
+  EXPECT_FALSE(infos[1].floor->isAirWall());
+  EXPECT_FALSE(infos[1].floor->adjacentSurface());
+  ASSERT_TRUE(infos[1].ceiling);
+  EXPECT_FALSE(infos[1].ceiling->isAirWall());
+  ASSERT_TRUE(infos[1].ceiling->adjacentSurface());
+  ASSERT_TRUE(infos[1].ceiling->adjacentSurface()->space());
+  EXPECT_EQ("Closed 2", infos[1].ceiling->adjacentSurface()->space()->nameString());
+
+  EXPECT_EQ("Open 2", infos[2].name);
+  ASSERT_TRUE(infos[2].floor);
+  EXPECT_TRUE(infos[2].floor->isAirWall());
+  ASSERT_TRUE(infos[2].floor->adjacentSurface());
+  ASSERT_TRUE(infos[2].floor->adjacentSurface()->space());
+  EXPECT_EQ("Open 1", infos[2].floor->adjacentSurface()->space()->nameString());
+  ASSERT_TRUE(infos[2].ceiling);
+  EXPECT_FALSE(infos[2].ceiling->isAirWall());
+  EXPECT_FALSE(infos[2].ceiling->adjacentSurface());
+
+  EXPECT_EQ("Closed 2", infos[3].name);
+  ASSERT_TRUE(infos[3].floor);
+  EXPECT_FALSE(infos[3].floor->isAirWall());
+  ASSERT_TRUE(infos[3].floor->adjacentSurface());
+  ASSERT_TRUE(infos[3].floor->adjacentSurface()->space());
+  EXPECT_EQ("Closed 1", infos[3].floor->adjacentSurface()->space()->nameString());
+  ASSERT_TRUE(infos[3].ceiling);
+  EXPECT_FALSE(infos[3].ceiling->isAirWall());
+  EXPECT_FALSE(infos[3].ceiling->adjacentSurface());
 }

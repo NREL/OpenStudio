@@ -45,6 +45,10 @@ set(utilities_resources_src
   utilities/Filetypes/full.osw
   utilities/Geometry/floorplan.json
   utilities/Geometry/floorplan-paper.json
+  utilities/Geometry/open_to_below.json
+  utilities/Geometry/split_level.json
+  utilities/Geometry/story_multipliers.json
+  utilities/Geometry/story_space_heights.json
   utilities/Geometry/surface_match_floorplan.json
   utilities/Geometry/threejs.json
   utilities/Geometry/window_floorplan.json
