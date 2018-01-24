@@ -29,13 +29,14 @@
 #include "FileOperations.hpp"
 
 #include "Model.hpp"
+#include "Component.hpp"
 
 #include "Building.hpp"
 #include "Building_Impl.hpp"
-#include "FileOperations.hpp"
-#include "Component.hpp"
 #include "Facility.hpp"
 #include "Facility_Impl.hpp"
+#include "Site.hpp"
+#include "Site_Impl.hpp"
 #include "LifeCycleCostParameters.hpp"
 #include "LifeCycleCostParameters_Impl.hpp"
 #include "Model_Impl.hpp"
@@ -411,6 +412,7 @@ namespace model {
     // always have the following objects after opening in the app.
     openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
     openstudio::model::Facility facility = model.getUniqueModelObject<openstudio::model::Facility>();
+    openstudio::model::Site site = model.getUniqueModelObject<openstudio::model::Site>();
 
     // from simulation tab
     //model.getUniqueModelObject<openstudio::model::RadianceParameters>();

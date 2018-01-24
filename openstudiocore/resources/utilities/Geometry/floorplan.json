@@ -104,7 +104,8 @@
 			"handle": null,
 			"name": "Story 1",
 			"below_floor_plenum_height": 0,
-			"floor_to_ceiling_height": 0,
+			"floor_to_ceiling_height": 3,
+			"above_ceiling_plenum_height": 0,
 			"multiplier": 0,
 			"imageVisible": false,
 			"spaces": [
@@ -306,7 +307,8 @@
 			"handle": null,
 			"name": "Story 2",
 			"below_floor_plenum_height": 0,
-			"floor_to_ceiling_height": 0,
+			"floor_to_ceiling_height": 3,
+			"above_ceiling_plenum_height": 0,
 			"multiplier": 0,
 			"imageVisible": false,
 			"spaces": [

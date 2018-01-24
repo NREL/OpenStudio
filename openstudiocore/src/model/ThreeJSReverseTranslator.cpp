@@ -30,6 +30,7 @@
 #include "ThreeJSReverseTranslator.hpp"
 #include "ThreeJSForwardTranslator.hpp"
 
+#include "FileOperations.hpp"
 #include "RenderingColor.hpp"
 #include "ConstructionBase.hpp"
 #include "ConstructionBase_Impl.hpp"
@@ -250,6 +251,7 @@ namespace openstudio
       m_handleMapping.clear();
 
       Model model;
+      initializeModelObjects(model);
 
       std::map<std::string, Space> originalNameToSpaceMap;
       std::map<std::string, ThermalZone> originalNameToThermalZoneMap;
@@ -378,6 +380,8 @@ namespace openstudio
         UUID subSurfaceHandle = toUUID(userData.subSurfaceHandle());
         std::string spaceName = userData.spaceName();
         UUID spaceHandle = toUUID(userData.spaceHandle());
+        std::string shadingName = userData.shadingName();
+        UUID shadingHandle = toUUID(userData.shadingHandle());
         std::string thermalZoneName = userData.thermalZoneName();
         UUID thermalZoneHandle = toUUID(userData.thermalZoneHandle());
         std::string spaceTypeName = userData.spaceTypeName();
@@ -592,6 +596,10 @@ namespace openstudio
 
         } else if (istringEqual(surfaceType, "SiteShading") || istringEqual(surfaceType, "BuildingShading") || istringEqual(surfaceType, "SpaceShading")){
 
+          if (shadingName.empty()){
+            shadingName = "Default " + surfaceType ;
+          }
+
           boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup;
           if (istringEqual(surfaceType, "SpaceShading")){
 
@@ -628,10 +636,15 @@ namespace openstudio
               shadingSurfaceGroup = groups[0];
             }
           } else{
-            shadingSurfaceGroup = model.getConcreteModelObjectByName<ShadingSurfaceGroup>(surfaceType);
+            shadingSurfaceGroup = model.getConcreteModelObjectByName<ShadingSurfaceGroup>(shadingName);
             if (!shadingSurfaceGroup){
               shadingSurfaceGroup = ShadingSurfaceGroup(model);
-              shadingSurfaceGroup->setName(surfaceType);
+              if (istringEqual(surfaceType, "SiteShading")){
+                shadingSurfaceGroup->setShadingSurfaceType("Site");
+              }else if (istringEqual(surfaceType, "BuildingShading")){
+                shadingSurfaceGroup->setShadingSurfaceType("Building");
+              }
+              shadingSurfaceGroup->setName(shadingName);
             }
           }
 

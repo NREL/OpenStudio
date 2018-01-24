@@ -1,3 +1,4 @@
+
 /***********************************************************************************************************************
  *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
@@ -197,6 +198,10 @@ namespace openstudio{
     std::string spaceName() const;
     std::string spaceHandle() const;
 
+    /// Parent shading name if any
+    std::string shadingName() const;
+    std::string shadingHandle() const;
+
     /// ThermalZone name if any
     std::string thermalZoneName() const;
     std::string thermalZoneHandle() const;
@@ -248,6 +253,8 @@ namespace openstudio{
     void setSubSurfaceHandle(const std::string& s);
     void setSpaceName(const std::string& s);
     void setSpaceHandle(const std::string& s);
+    void setShadingName(const std::string& s);
+    void setShadingHandle(const std::string& s);
     void setThermalZoneName(const std::string& s);
     void setThermalZoneHandle(const std::string& s);
     void setThermalZoneMaterialName(const std::string& s);
@@ -294,6 +301,8 @@ namespace openstudio{
     std::string m_subSurfaceHandle;
     std::string m_spaceName;
     std::string m_spaceHandle;
+    std::string m_shadingName;
+    std::string m_shadingHandle;
     std::string m_thermalZoneName;
     std::string m_thermalZoneHandle;
     std::string m_thermalZoneMaterialName;
