@@ -133,7 +133,8 @@ namespace openstudio{
     result.push_back(makeThreeMaterial("Boundary_Othersidecoefficients", toThreeColor(63, 63, 63), 1, ThreeSide::DoubleSide));
     result.push_back(makeThreeMaterial("Boundary_Othersideconditionsmodel", toThreeColor(153, 0, 76), 1, ThreeSide::DoubleSide));
 
-    // special rendering materials, these are textures in SketchUp
+    // special rendering materials, these are components or textures in SketchUp
+    result.push_back(makeThreeMaterial("DaylightingControl", toThreeColor(102, 178, 204), 0.1, ThreeSide::DoubleSide));
     result.push_back(makeThreeMaterial("AirWall", toThreeColor(102, 178, 204), 0.1, ThreeSide::DoubleSide));
     result.push_back(makeThreeMaterial("SolarCollector", toThreeColor(255, 255, 255), 1, ThreeSide::DoubleSide));
     result.push_back(makeThreeMaterial("Photovoltaic", toThreeColor(255, 255, 255), 0.1, ThreeSide::DoubleSide));
