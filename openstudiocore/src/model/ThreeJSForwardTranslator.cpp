@@ -467,12 +467,12 @@ namespace openstudio
       std::vector<ThreeMaterial> materials;
       std::map<std::string, std::string> materialMap;
 
-      if (triangulateSurfaces){
+      //if (triangulateSurfaces){
         // add the standard materials for rendering
         for (const auto& material : makeStandardThreeMaterials()){
           addMaterial(materials, materialMap, material);
         }
-      }
+      //}
 
       // add model specific materials
       buildMaterials(model, materials, materialMap);
@@ -549,10 +549,23 @@ namespace openstudio
       for (const auto& buildingStory : buildingStories){
         buildingStoryNames.push_back(buildingStory.nameString());
 
-        modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:BuildingStory", toString(buildingStory.handle()), buildingStory.nameString()));
+        ThreeModelObjectMetadata storyMetaData("OS:BuildingStory", toString(buildingStory.handle()), buildingStory.nameString());
+        if (buildingStory.nominalZCoordinate()){
+          storyMetaData.setNominalZCoordinate(buildingStory.nominalZCoordinate().get());
+        }
+        if (buildingStory.nominalFloortoCeilingHeight()){
+          storyMetaData.setFloorToCeilingHeight(buildingStory.nominalFloortoCeilingHeight().get());
+        }
+        if (buildingStory.nominalFloortoFloorHeight()){
+          // DLM: how to translate this?
+        }
+        modelObjectMetadata.push_back(storyMetaData);
 
         for (const auto& space : buildingStory.spaces()){
-          modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:Space", toString(space.handle()), space.nameString()));
+          ThreeModelObjectMetadata spaceMetaData("OS:Space", toString(space.handle()), space.nameString());
+          // multiplier?
+          // open to below?
+          modelObjectMetadata.push_back(spaceMetaData);
         }
 
         n += 1;

@@ -313,15 +313,16 @@ namespace openstudio
           boost::optional<double> floorToCeilingHeight = m.floorToCeilingHeight();
           boost::optional<double> aboveCeilingPlenumHeight = m.aboveCeilingPlenumHeight();
 
-          OS_ASSERT(multiplier);
-          OS_ASSERT(nominalZCoordinate);
-          OS_ASSERT(belowFloorPlenumHeight);
-          OS_ASSERT(floorToCeilingHeight);
-          OS_ASSERT(aboveCeilingPlenumHeight);
+          if (nominalZCoordinate){
+            buildingStory.setNominalZCoordinate(*nominalZCoordinate);
+          }
 
-          buildingStory.setNominalZCoordinate(*nominalZCoordinate);
-          buildingStory.setNominalFloortoCeilingHeight(*floorToCeilingHeight);
-          buildingStory.setNominalFloortoFloorHeight(*floorToCeilingHeight + *belowFloorPlenumHeight + *aboveCeilingPlenumHeight);
+          if (floorToCeilingHeight){
+            buildingStory.setNominalFloortoCeilingHeight(*floorToCeilingHeight);
+            if (belowFloorPlenumHeight && aboveCeilingPlenumHeight){
+              buildingStory.setNominalFloortoFloorHeight(*floorToCeilingHeight + *belowFloorPlenumHeight + *aboveCeilingPlenumHeight);
+            }
+          }
 
           modelObject = buildingStory;
           originalNameToBuildingStoryMap.insert(std::make_pair(name, buildingStory));
