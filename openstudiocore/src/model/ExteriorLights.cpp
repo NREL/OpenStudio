@@ -251,6 +251,15 @@ namespace detail {
     return false;
   }
 
+  std::vector<EMSActuatorNames> ExteriorLights_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"ExteriorLights", "Electric Power"}};
+    return actuators;
+  }
+
+  std::vector<std::string> ExteriorLights_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
 } // detail
 
 ExteriorLights::ExteriorLights(const ExteriorLightsDefinition& definition,
