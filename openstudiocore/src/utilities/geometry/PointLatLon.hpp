@@ -127,6 +127,10 @@ namespace openstudio{
   // vector of PointLatLon
   typedef std::vector<PointLatLon> PointLatLonVector;
 
+  /// compute distance in meters between two points on the Earth's surface
+  /// lat and lon are specified in degrees
+  UTILITIES_API double getDistanceLatLon(double lat1, double lon1, double lat2, double lon2);
+
 } // openstudio
 
 #endif //UTILITIES_GEOMETRY_POINTLATLON_HPP
