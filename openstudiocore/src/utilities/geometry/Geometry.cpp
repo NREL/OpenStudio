@@ -41,8 +41,6 @@
 
 #include <list>
 
-#include <QPolygon>
-
 namespace openstudio{
   /// convert degrees to radians
   double degToRad(double degrees)
@@ -729,15 +727,14 @@ namespace openstudio{
       return false;
     }
 
-    QPolygonF surfacePolygon;
+    Point3dVector surfacePolygon;
     for (const Point3d& point : faceVertices){
       if (std::abs(point.z()) > 0.001){
         LOG_FREE(Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface point z not on plane, z =" << point.z());
       }
-      surfacePolygon << QPointF(point.x(),point.y());
+      surfacePolygon.push_back(Point3d(point.x(),point.y(), 0.0));
     }
-    // close the polygon
-    surfacePolygon << QPointF(faceVertices[0].x(), faceVertices[0].y());
+    std::reverse(surfacePolygon.begin(), surfacePolygon.end());
 
     if (doViewGlass){
       viewVertices.push_back(Point3d(viewMinX, viewMinY + viewHeight, 0));
@@ -745,19 +742,19 @@ namespace openstudio{
       viewVertices.push_back(Point3d(viewMinX + viewWidth, viewMinY, 0));
       viewVertices.push_back(Point3d(viewMinX + viewWidth, viewMinY + viewHeight, 0));
 
-      QPolygonF windowPolygon;
+      Point3dVector windowPolygon;
       for (const Point3d& point : viewVertices){
         if (std::abs(point.z()) > 0.001){
           LOG_FREE(Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface point z not on plane, z =" << point.z());
         }
-        windowPolygon << QPointF(point.x(),point.y());
+        windowPolygon.push_back(Point3d(point.x(),point.y(), 0.0));
       }
-      // close the polygon
-      windowPolygon << QPointF(viewVertices[0].x(), viewVertices[0].y());
 
       // sub surface must be fully contained by base surface
-      for (const QPointF& point : windowPolygon){
-        if (!surfacePolygon.containsPoint(point, Qt::OddEvenFill)){
+      for (const Point3d& point : windowPolygon){
+        if (!within(point, surfacePolygon, 0.001)){
+          std::cout << "point: " << point << std::endl;
+          std::cout << "surfacePolygon: " << surfacePolygon << std::endl;
           LOG_FREE(Debug, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface does not fully contain SubSurface");
           return false;
         }
@@ -770,19 +767,17 @@ namespace openstudio{
       daylightingVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY, 0));
       daylightingVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY + daylightingHeight, 0));
 
-      QPolygonF windowPolygon;
+      Point3dVector windowPolygon;
       for (const Point3d& point : daylightingVertices){
         if (std::abs(point.z()) > 0.001){
           LOG_FREE(Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface point z not on plane, z =" << point.z());
         }
-        windowPolygon << QPointF(point.x(),point.y());
+        windowPolygon.push_back(Point3d(point.x(),point.y(), 0.0));
       }
-      // close the polygon
-      windowPolygon << QPointF(daylightingVertices[0].x(), daylightingVertices[0].y());
 
       // sub surface must be fully contained by base surface
-      for (const QPointF& point : windowPolygon){
-        if (!surfacePolygon.containsPoint(point, Qt::OddEvenFill)){
+      for (const Point3d& point : windowPolygon){
+        if (!within(point, surfacePolygon, 0.001)){
           LOG_FREE(Debug, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface does not fully contain SubSurface");
           return false;
         }
