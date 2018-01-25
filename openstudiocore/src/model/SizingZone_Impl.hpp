@@ -194,17 +194,17 @@ namespace detail {
 
     bool isDedicatedOutdoorAirHighSetpointTemperatureforDesignAutosized() const;
 
-  boost::optional<double> autosizedDedicatedOutdoorAirLowSetpointTemperatureforDesign() const ;
+    boost::optional<double> autosizedDedicatedOutdoorAirLowSetpointTemperatureforDesign() const ;
 
-  boost::optional<double> autosizedDedicatedOutdoorAirHighSetpointTemperatureforDesign() const ;
+    boost::optional<double> autosizedDedicatedOutdoorAirHighSetpointTemperatureforDesign() const ;
 
-  void autosize();
+    void autosize();
 
-  void applySizingValues();
+    void applySizingValues();
 
-  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-  virtual std::vector<std::string> emsInternalVariableNames() const override;
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
     /** @name Setters */
