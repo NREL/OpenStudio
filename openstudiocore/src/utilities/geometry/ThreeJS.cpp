@@ -29,6 +29,7 @@
 #include "ThreeJS.hpp"
 
 #include "../core/Assert.hpp"
+#include "../core/Compare.hpp"
 #include "../core/Path.hpp"
 #include "../core/Json.hpp"
 #include "../core/UUID.hpp"
@@ -50,6 +51,64 @@ namespace openstudio{
     return 65536 * r + 256 * g + b;
   }
 
+  unsigned toThreeColor(const std::string& s)
+  {
+    int r = 0;
+    int g = 0;
+    int b = 0;
+    std::string c(s);
+    if (c.size() == 4){
+      c = s.substr(0, 1) + s.substr(1, 1) + s.substr(1, 1) + s.substr(2, 1) + s.substr(2, 1) + s.substr(3, 1) + s.substr(3, 1);
+      OS_ASSERT(c.size() == 7);
+    }
+
+    if (c.size() == 7){
+      r = std::stoi(c.substr(1, 2), 0, 16);
+      g = std::stoi(c.substr(3, 2), 0, 16);
+      b = std::stoi(c.substr(5, 2), 0, 16);
+    }
+
+    return toThreeColor(r, g, b);
+  }
+
+  std::string getObjectThreeMaterialName(const std::string& iddObjectType, const std::string& name)
+  {
+    std::string result;
+    if (istringEqual(iddObjectType, "OS:Construction")){
+      result = "Construction_" + name;
+    }else if (istringEqual(iddObjectType, "OS:ThermalZone")){
+      result = "ThermalZone_" + name;
+    }else if (istringEqual(iddObjectType, "OS:SpaceType")){
+      result = "SpaceType_" + name;
+    }else if (istringEqual(iddObjectType, "OS:BuildingStory")){
+      result = "BuildingStory_" + name;
+    }else if (istringEqual(iddObjectType, "OS:BuildingUnit")){
+      result = "BuildingUnit_" + name;
+    } else{
+      LOG_FREE(Error, "getObjectMaterialName", "Unknown iddObjectType '" << iddObjectType << "'");
+    }
+    return result;
+  }
+
+  std::string getSurfaceTypeThreeMaterialName(const std::string& surfaceType)
+  {
+    if (istringEqual(surfaceType, "FixedWindow") ||
+        istringEqual(surfaceType, "OperableWindow") ||
+        istringEqual(surfaceType, "GlassDoor") ||
+        istringEqual(surfaceType, "Skylight") ||
+        istringEqual(surfaceType, "TubularDaylightDome") ||
+        istringEqual(surfaceType, "TubularDaylightDiffuser"))
+    {
+      return "Window";
+    } else if (istringEqual(surfaceType, "Door") ||
+              istringEqual(surfaceType, "OverheadDoor"))
+    {
+      return "Door";
+    }
+
+    return surfaceType;
+  }
+
   ThreeMaterial makeThreeMaterial(const std::string& name, unsigned color, double opacity, unsigned side, unsigned shininess, const std::string type)
   {
     bool transparent = false;
@@ -61,6 +120,27 @@ namespace openstudio{
       color, color, toThreeColor(0, 0, 0), color, shininess, opacity, transparent, false, side);
 
     return result;
+  }
+
+  void addThreeMaterial(std::vector<ThreeMaterial>& materials, std::map<std::string, std::string>& materialMap, const ThreeMaterial& material)
+  {
+    materialMap[material.name()] = material.uuid();
+    materials.push_back(material);
+  }
+
+  std::string getThreeMaterialId(const std::string& materialName, std::map<std::string, std::string>& materialMap)
+  {
+    std::map<std::string, std::string>::const_iterator it = materialMap.find(materialName);
+    if (it != materialMap.end()){
+      return it->second;
+    }
+
+    it = materialMap.find("Undefined");
+    if (it != materialMap.end()){
+      return it->second;
+    }
+    OS_ASSERT(false);
+    return "";
   }
 
   std::vector<ThreeMaterial> makeStandardThreeMaterials()
@@ -133,11 +213,16 @@ namespace openstudio{
     result.push_back(makeThreeMaterial("Boundary_Othersidecoefficients", toThreeColor(63, 63, 63), 1, ThreeSide::DoubleSide));
     result.push_back(makeThreeMaterial("Boundary_Othersideconditionsmodel", toThreeColor(153, 0, 76), 1, ThreeSide::DoubleSide));
 
+    // special rendering materials
+    result.push_back(makeThreeMaterial("SpaceType_Plenum", toThreeColor(192, 192, 192), 0.1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("ThermalZone_Plenum", toThreeColor(192, 192, 192), 0.1, ThreeSide::DoubleSide));
+
     // special rendering materials, these are components or textures in SketchUp
     result.push_back(makeThreeMaterial("DaylightingControl", toThreeColor(102, 178, 204), 0.1, ThreeSide::DoubleSide));
     result.push_back(makeThreeMaterial("AirWall", toThreeColor(102, 178, 204), 0.1, ThreeSide::DoubleSide));
     result.push_back(makeThreeMaterial("SolarCollector", toThreeColor(255, 255, 255), 1, ThreeSide::DoubleSide));
     result.push_back(makeThreeMaterial("Photovoltaic", toThreeColor(255, 255, 255), 0.1, ThreeSide::DoubleSide));
+
 
     return result;
   }
@@ -1436,6 +1521,9 @@ namespace openstudio{
     m_handle = value.get("handle", "").asString();
     m_name = value.get("name", "").asString();
 
+    if (checkKeyAndType(value, "color", Json::stringValue)){
+      m_color = value.get("color", 1).asString();
+    }
     if (checkKeyAndType(value, "open_to_below", Json::booleanValue)){
       m_openToBelow = value.get("open_to_below", 1).asBool();
     }
@@ -1478,6 +1566,7 @@ namespace openstudio{
     result["iddObjectType"] = m_iddObjectType;
     result["handle"] = m_handle;
     result["name"] = m_name;
+    result["color"] = m_color;
     result["open_to_below"] = m_openToBelow;
     if (m_multiplier){
       result["multiplier"] = m_multiplier.get();
@@ -1496,6 +1585,22 @@ namespace openstudio{
     }
 
     return result;
+  }
+
+  std::string ThreeModelObjectMetadata::color() const
+  {
+    return m_color;
+  }
+
+  bool ThreeModelObjectMetadata::setColor(const std::string& c)
+  {
+    m_color = c;
+    return true;
+  }
+
+  void ThreeModelObjectMetadata::resetColor()
+  {
+    m_color.clear();
   }
 
   bool ThreeModelObjectMetadata::openToBelow() const

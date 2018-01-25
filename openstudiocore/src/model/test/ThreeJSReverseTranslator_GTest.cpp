@@ -681,16 +681,16 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Colors) {
   //EXPECT_EQ(255, space->renderingColor()->renderingAlphaValue());
 
   ASSERT_TRUE(thermalZone->renderingColor());
-  EXPECT_EQ(255, story->renderingColor()->renderingRedValue());
-  EXPECT_EQ(0, story->renderingColor()->renderingGreenValue());
-  EXPECT_EQ(0, story->renderingColor()->renderingBlueValue());
-  EXPECT_EQ(255, story->renderingColor()->renderingAlphaValue());
+  EXPECT_EQ(255, thermalZone->renderingColor()->renderingRedValue());
+  EXPECT_EQ(0, thermalZone->renderingColor()->renderingGreenValue());
+  EXPECT_EQ(0, thermalZone->renderingColor()->renderingBlueValue());
+  EXPECT_EQ(255, thermalZone->renderingColor()->renderingAlphaValue());
 
   ASSERT_TRUE(spaceType->renderingColor());
-  EXPECT_EQ(0, story->renderingColor()->renderingRedValue());
-  EXPECT_EQ(255, story->renderingColor()->renderingGreenValue());
-  EXPECT_EQ(0, story->renderingColor()->renderingBlueValue());
-  EXPECT_EQ(255, story->renderingColor()->renderingAlphaValue());
+  EXPECT_EQ(0, spaceType->renderingColor()->renderingRedValue());
+  EXPECT_EQ(255, spaceType->renderingColor()->renderingGreenValue());
+  EXPECT_EQ(0, spaceType->renderingColor()->renderingBlueValue());
+  EXPECT_EQ(255, spaceType->renderingColor()->renderingAlphaValue());
 
   //ASSERT_TRUE(constructionSet->renderingColor());
   //EXPECT_EQ(0, story->renderingColor()->renderingRedValue());

@@ -240,7 +240,22 @@ namespace openstudio
       return leftTypeOrder < rightTypeOrder;
     }
 
+    boost::optional<RenderingColor> makeRenderingColor(const std::string& color, Model& model)
+    {
+      if (color.size() != 7){
+        return boost::none;
+      }
 
+      int r = std::stoi(color.substr(1, 2), 0, 16);
+      int g = std::stoi(color.substr(3, 2), 0, 16);
+      int b = std::stoi(color.substr(5, 2), 0, 16);
+
+      RenderingColor result(model);
+      result.setRenderingRedValue(r);
+      result.setRenderingGreenValue(g);
+      result.setRenderingBlueValue(b);
+      return result;
+    }
 
     boost::optional<Model> ThreeJSReverseTranslator::modelFromThreeJS(const ThreeScene& scene)
     {
@@ -275,6 +290,7 @@ namespace openstudio
         std::string iddObjectType = m.iddObjectType();
         UUID handle = toUUID(m.handle());
         std::string name = m.name();
+        std::string color = m.color();
 
         boost::optional<ModelObject> modelObject;
 
@@ -300,10 +316,18 @@ namespace openstudio
           originalNameToSpaceMap.insert(std::make_pair(name, space));
         }else if (istringEqual(iddObjectType, "OS:ThermalZone")){
           ThermalZone thermalZone(model);
+          boost::optional<RenderingColor> renderingColor = makeRenderingColor(color, model);
+          if (renderingColor){
+            thermalZone.setRenderingColor(*renderingColor);
+          }
           modelObject = thermalZone;
           originalNameToThermalZoneMap.insert(std::make_pair(name, thermalZone));
         }else if (istringEqual(iddObjectType, "OS:SpaceType")){
           SpaceType spaceType(model);
+          boost::optional<RenderingColor> renderingColor = makeRenderingColor(color, model);
+          if (renderingColor){
+            spaceType.setRenderingColor(*renderingColor);
+          }
           modelObject = spaceType;
           originalNameToSpaceTypeMap.insert(std::make_pair(name, spaceType));
         }else if (istringEqual(iddObjectType, "OS:BuildingStory")){
@@ -326,10 +350,19 @@ namespace openstudio
             }
           }
 
+          boost::optional<RenderingColor> renderingColor = makeRenderingColor(color, model);
+          if (renderingColor){
+            buildingStory.setRenderingColor(*renderingColor);
+          }
+
           modelObject = buildingStory;
           originalNameToBuildingStoryMap.insert(std::make_pair(name, buildingStory));
         }else if (istringEqual(iddObjectType, "OS:BuildingUnit")){
           BuildingUnit buildingUnit(model);
+          boost::optional<RenderingColor> renderingColor = makeRenderingColor(color, model);
+          if (renderingColor){
+            buildingUnit.setRenderingColor(*renderingColor);
+          }
           modelObject = buildingUnit;
           originalNameToBuildingUnitMap.insert(std::make_pair(name, buildingUnit));
         } else if (istringEqual(iddObjectType, "OS:DefaultConstructionSet")){
