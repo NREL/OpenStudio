@@ -42,6 +42,12 @@ namespace openstudio
   namespace model
   {
 
+    /** ThreeJSForwardTranslator converts an OpenStudio Model to ThreeJS format. There are two variations of the ThreeJS format,
+    *   a triangulated one which is suitable for rendering with ThreeJS and non-triangulated one that preserves all vertices in a
+    *   surface for conversion to OpenStudio Model format.
+    *
+    *   The FloorplanJS in the Utilities/Geometry project converts a FloorspaceJS JSON file to ThreeJS format, code should be shared between these two classes as much as possible.
+    */
     MODEL_API class ThreeJSForwardTranslator
     {
     public:

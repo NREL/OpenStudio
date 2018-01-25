@@ -119,6 +119,10 @@ namespace openstudio{
   *   conversion to OpenStudio Model format.  Converting from FloorspaceJS to ThreeJS to OpenStudio ensures that the ThreeJS preview of a FloorspaceJS model is as
   *   accurate as possible.  These conversions can also be used to convert a FloorspaceJS file to a 3D model for translation to other 3D formats.
   *
+  *  FloorplanJS does not support version translation of old FloorspaceJS files, that functionality is in the FloorspaceJS project.
+  *
+  *  The ThreeJSForwardTranslator in the Model project converts an OpenStudio Model to ThreeJS format, code should be shared between these two classes as much as possible.
+  *
   *  The class is not impl-ized in hopes that it can be ported to JavaScript via emscripten
   */
   class UTILITIES_API FloorplanJS{

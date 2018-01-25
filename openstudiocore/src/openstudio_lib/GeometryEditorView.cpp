@@ -629,6 +629,10 @@ void EditorWebView::mergeExport()
     QMessageBox::information(this, "Merging Models", "Models Merged");
   }
 
+  if (!m_floorplan){
+    QMessageBox::information(this, "Uh oh", "Uh oh");
+  }
+
   // make sure handles get updated in floorplan and the exported string
   model::FloorplanJSForwardTranslator ft;
   m_floorplan = ft.updateFloorplanJS(*m_floorplan, m_model, false);
