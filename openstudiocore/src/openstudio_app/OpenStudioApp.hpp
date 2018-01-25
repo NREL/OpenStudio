@@ -150,7 +150,8 @@ class OpenStudioApp : public OSAppBase
 
   std::vector<openstudio::path> libraryPaths() const;
 
-  void buildCompLibraries();
+  // Build the component libraries and return a vector of paths that failed to load
+  std::vector<std::string> buildCompLibraries();
 
   void newFromEmptyTemplateSlot( );
 
@@ -202,6 +203,8 @@ class OpenStudioApp : public OSAppBase
 
   void connectOSDocumentSignals();
 
+  void removeLibraryFromsSettings( const openstudio::path & path );
+
   QProcess* m_measureManagerProcess;
 
   openstudio::model::Model m_compLibrary;
@@ -218,7 +221,7 @@ class OpenStudioApp : public OSAppBase
 
   QFutureWatcher<void> m_buildCompLibWatcher;
   QFutureWatcher<void> m_waitForMeasureManagerWatcher;
-  QFutureWatcher<void> m_changeLibrariesWatcher;
+  QFutureWatcher<std::vector<std::string> > m_changeLibrariesWatcher;
 };
 
 } // openstudio
