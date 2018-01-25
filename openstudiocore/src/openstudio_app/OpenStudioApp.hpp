@@ -142,9 +142,16 @@ class OpenStudioApp : public OSAppBase
 
   void revertToSaved();
 
+  void changeDefaultLibraries();
+
  private slots:
 
-  void buildCompLibraries();
+  std::vector<openstudio::path> defaultLibraryPaths() const;
+
+  std::vector<openstudio::path> libraryPaths() const;
+
+  // Build the component libraries and return a vector of paths that failed to load
+  std::vector<std::string> buildCompLibraries();
 
   void newFromEmptyTemplateSlot( );
 
@@ -170,6 +177,8 @@ class OpenStudioApp : public OSAppBase
   // or creates a new empty OSDocument
   void onMeasureManagerAndLibraryReady();
 
+  void onChangeDefaultLibrariesDone();
+
  private:
 
   enum fileType{
@@ -194,11 +203,15 @@ class OpenStudioApp : public OSAppBase
 
   void connectOSDocumentSignals();
 
+  void removeLibraryFromsSettings( const openstudio::path & path );
+
   QProcess* m_measureManagerProcess;
 
   openstudio::model::Model m_compLibrary;
 
   openstudio::model::Model m_hvacCompLibrary;
+
+  openstudio::model::Model m_library;
 
   std::shared_ptr<OSDocument> m_osDocument;
 
@@ -208,6 +221,7 @@ class OpenStudioApp : public OSAppBase
 
   QFutureWatcher<void> m_buildCompLibWatcher;
   QFutureWatcher<void> m_waitForMeasureManagerWatcher;
+  QFutureWatcher<std::vector<std::string> > m_changeLibrariesWatcher;
 };
 
 } // openstudio

@@ -64,6 +64,8 @@ namespace openstudio{
 
     QComboBox *  m_spaceTypeFilter = nullptr;
 
+    QComboBox *  m_subSurfaceTypeFilter = nullptr;
+
     QComboBox *  m_loadTypeFilter = nullptr;
 
     QComboBox *  m_windExposureFilter = nullptr;
@@ -90,6 +92,8 @@ namespace openstudio{
 
     void showSpaceTypeFilter();
 
+    void showSubSurfaceTypeFilter();
+
     void showSpaceNameFilter();
 
     void showWindExposureFilter();
@@ -109,6 +113,8 @@ namespace openstudio{
     void initializeThermalZoneFilter();
 
     void initializeSpaceTypeFilter();
+
+    void initializeSubSurfaceTypeFilter();
 
     void initializeLoadTypeFilter();
 
@@ -130,6 +136,8 @@ namespace openstudio{
 
     std::set<openstudio::model::ModelObject> m_objectsFilterdBySpaceType;
 
+    std::set<openstudio::model::ModelObject> m_objectsFilterdBySubSurfaceType;
+
     std::set<openstudio::model::ModelObject> m_objectsFilteredBySpaceName;
 
     std::set<openstudio::model::ModelObject> m_objectsFilteredByWindExposure;
@@ -149,6 +157,8 @@ namespace openstudio{
   protected slots:
 
     virtual void spaceNameFilterChanged();
+
+    virtual void subSurfaceTypeFilterChanged(const QString & text);
 
     virtual void storyFilterChanged(const QString & text);
 

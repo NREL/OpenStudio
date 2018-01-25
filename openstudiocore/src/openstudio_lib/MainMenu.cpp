@@ -114,10 +114,6 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   exportMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::exportSDDClicked);
 
-  action = new QAction(tr("&Load Library"), this);
-  m_fileMenu->addAction(action);
-  connect(action, &QAction::triggered, this, &MainMenu::loadLibraryClicked);
-
   if (!m_isPlugin){
 
     m_fileMenu->addSeparator();
@@ -153,6 +149,10 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   action = new QAction(tr("&Change My Measures Directory"),this);
   m_preferencesMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::changeMyMeasuresDir);
+
+  action = new QAction(tr("&Change Default Libraries"), this);
+  m_preferencesMenu->addAction(action);
+  connect(action, &QAction::triggered, this, &MainMenu::changeDefaultLibrariesClicked);
 
   //action = new QAction(tr("&Scan for Tools"),this);
   //m_preferencesMenu->addAction(action);
