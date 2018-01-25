@@ -66,6 +66,10 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
+      result.push_back("Average, Surface Other Side Conditions Modeled Convection Air Temperature");
+      result.push_back("Average, Surface Other Side Conditions Modeled Convection Heat Transfer Coefficient");
+      result.push_back("Average, Surface Other Side Conditions Modeled Radiation Temperature");
+      result.push_back("Average, Surface Other Side Conditions Modeled Radiation Heat Transfer Coefficient");
     }
     return result;
   }
@@ -94,6 +98,18 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  std::vector<EMSActuatorNames> SurfacePropertyOtherSideConditionsModel_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Other Side Boundary Conditions", "Convection Bulk Air Temperature"},
+                                            {"Other Side Boundary Conditions", "Convection Heat Transfer Coefficient"},
+                                            {"Other Side Boundary Conditions", "Radiation Effective Temperature"},
+                                            {"Other Side Boundary Conditions", "Radiation Linear Heat Transfer Coefficient"}};
+    return actuators;
+  }
+
+  std::vector<std::string> SurfacePropertyOtherSideConditionsModel_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
 } // detail
 
 SurfacePropertyOtherSideConditionsModel::SurfacePropertyOtherSideConditionsModel(const Model& model)
