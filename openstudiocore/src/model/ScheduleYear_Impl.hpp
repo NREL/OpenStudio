@@ -91,6 +91,10 @@ namespace detail {
     /// Returns a vector of week schedules in the same order and with the same number of elements as dates.
     std::vector<ScheduleWeek> scheduleWeeks() const;
 
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
     /** @name Setters */
     //@{
