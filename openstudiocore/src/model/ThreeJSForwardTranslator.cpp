@@ -75,7 +75,7 @@ namespace openstudio
   {
 
     std::string getObjectThreeMaterialName(const ModelObject& object){
-      return openstudio::getObjectThreeMaterialName(object.iddObjectType().valueName(), object.nameString());
+      return openstudio::getObjectThreeMaterialName(object.iddObjectType().valueDescription(), object.nameString());
     }
 
     void buildMaterials(Model model, std::vector<ThreeMaterial>& materials, std::map<std::string, std::string>& materialMap)
@@ -141,7 +141,7 @@ namespace openstudio
     {
       std::stringstream stream;
       stream << "#"
-             << std::setfill ('0') << std::setw(sizeof(int)*2)
+             << std::setfill ('0') << std::setw(2)
              << std::hex << renderingColor.renderingRedValue() << renderingColor.renderingGreenValue() << renderingColor.renderingBlueValue();
 
       std::string result = stream.str();
@@ -533,7 +533,7 @@ namespace openstudio
       for (const auto& buildingStory : buildingStories){
         buildingStoryNames.push_back(buildingStory.nameString());
 
-        ThreeModelObjectMetadata storyMetaData(buildingStory.iddObjectType().valueName(), toString(buildingStory.handle()), buildingStory.nameString());
+        ThreeModelObjectMetadata storyMetaData(buildingStory.iddObjectType().valueDescription(), toString(buildingStory.handle()), buildingStory.nameString());
         if (buildingStory.nominalZCoordinate()){
           storyMetaData.setNominalZCoordinate(buildingStory.nominalZCoordinate().get());
         }
@@ -549,7 +549,7 @@ namespace openstudio
         modelObjectMetadata.push_back(storyMetaData);
 
         for (const auto& space : buildingStory.spaces()){
-          ThreeModelObjectMetadata spaceMetaData(space.iddObjectType().valueName(), toString(space.handle()), space.nameString());
+          ThreeModelObjectMetadata spaceMetaData(space.iddObjectType().valueDescription(), toString(space.handle()), space.nameString());
           // multiplier?
           // open to below?
           modelObjectMetadata.push_back(spaceMetaData);
@@ -562,7 +562,7 @@ namespace openstudio
 
       for (const auto& buildingUnit : buildingUnits){
 
-        ThreeModelObjectMetadata unitMetaData(buildingUnit.iddObjectType().valueName(), toString(buildingUnit.handle()), buildingUnit.nameString());
+        ThreeModelObjectMetadata unitMetaData(buildingUnit.iddObjectType().valueDescription(), toString(buildingUnit.handle()), buildingUnit.nameString());
         if (buildingUnit.renderingColor()){
           unitMetaData.setColor(getColorString(buildingUnit.renderingColor().get()));
         }
@@ -573,7 +573,7 @@ namespace openstudio
       }
 
       for (const auto& thermalZone : thermalZones){
-        ThreeModelObjectMetadata zoneMetaData(thermalZone.iddObjectType().valueName(), toString(thermalZone.handle()), thermalZone.nameString());
+        ThreeModelObjectMetadata zoneMetaData(thermalZone.iddObjectType().valueDescription(), toString(thermalZone.handle()), thermalZone.nameString());
         if (thermalZone.renderingColor()){
           zoneMetaData.setColor(getColorString(thermalZone.renderingColor().get()));
         }
@@ -584,7 +584,7 @@ namespace openstudio
       }
 
       for (const auto& spaceType : spaceTypes){
-        ThreeModelObjectMetadata spaceTypeMetaData(spaceType.iddObjectType().valueName(), toString(spaceType.handle()), spaceType.nameString());
+        ThreeModelObjectMetadata spaceTypeMetaData(spaceType.iddObjectType().valueDescription(), toString(spaceType.handle()), spaceType.nameString());
         if (spaceType.renderingColor()){
           spaceTypeMetaData.setColor(getColorString(spaceType.renderingColor().get()));
         }
@@ -595,7 +595,7 @@ namespace openstudio
       }
 
       for (const auto& defaultConstructionSet : defaultConstructionSets){
-        ThreeModelObjectMetadata setMetaData(defaultConstructionSet.iddObjectType().valueName(), toString(defaultConstructionSet.handle()), defaultConstructionSet.nameString());
+        ThreeModelObjectMetadata setMetaData(defaultConstructionSet.iddObjectType().valueDescription(), toString(defaultConstructionSet.handle()), defaultConstructionSet.nameString());
         modelObjectMetadata.push_back(setMetaData);
 
         n += 1;
