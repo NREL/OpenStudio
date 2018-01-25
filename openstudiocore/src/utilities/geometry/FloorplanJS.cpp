@@ -48,6 +48,7 @@ namespace openstudio{
   const std::string BELOWFLOORPLENUMPOSTFIX(" Floor Plenum");
   const std::string ABOVECEILINGPLENUMPOSTFIX(" Plenum");
   const std::string PLENUMSPACETYPENAME("Plenum Space Type"); // DLM: needs to be coordinated with name in Model_Impl::plenumSpaceType()
+  const std::string PLENUMCOLOR("#C0C0C0"); // DLM: needs to be coordinated with plenum colors in makeStandardThreeMaterials
 
   FloorplanObject::FloorplanObject(const std::string& id, const std::string& name, const std::string& handleString)
     : m_id(id), m_name(name), m_handle(toUUID(handleString)), m_handleString(handleString)
@@ -358,6 +359,7 @@ namespace openstudio{
       assertKeyAndType(story, "name", Json::stringValue);
       s = story.get("name", "").asString();
       userData.setBuildingStoryName(s);
+      userData.setBuildingStoryMaterialName(getObjectThreeMaterialName("OS:BuildingStory", s));
 
       if (checkKeyAndType(story, "handle", Json::stringValue)){
         s = story.get("handle", "").asString();
@@ -395,6 +397,7 @@ namespace openstudio{
           assertKeyAndType(*buildingUnit, "name", Json::stringValue);
           s = buildingUnit->get("name", "").asString();
           userData.setBuildingUnitName(s);
+          userData.setBuildingUnitMaterialName(getObjectThreeMaterialName("OS:BuildingUnit", s));
 
           if (checkKeyAndType(*buildingUnit, "handle", Json::stringValue)){
             s = buildingUnit->get("handle", "").asString();
@@ -413,10 +416,14 @@ namespace openstudio{
           s = thermalZone->get("name", "").asString();
           std::string thermalZoneName = s + spaceOrShadingNamePostFix;
           userData.setThermalZoneName(thermalZoneName);
+          userData.setThermalZoneMaterialName(getObjectThreeMaterialName("OS:ThermalZone", s));
 
           if (plenum){
-            // DLM: we do not have this plenum thermal zone in the floorplan
+            // DLM: we do not have this plenum thermal zone in the floorplan so user can't edit its properties
             m_plenumThermalZoneNames.insert(thermalZoneName);
+
+            // reset to ThermalZone_Plenum in makeStandardThreeMaterials
+            userData.setThermalZoneMaterialName(getObjectThreeMaterialName("OS:ThermalZone", "Plenum"));
           }else{
             if (checkKeyAndType(*thermalZone, "handle", Json::stringValue)){
               s = thermalZone->get("handle", "").asString();
@@ -431,6 +438,7 @@ namespace openstudio{
       // space type
       if (plenum){
         userData.setSpaceTypeName(PLENUMSPACETYPENAME);
+        userData.setSpaceTypeMaterialName(getObjectThreeMaterialName("OS:SpaceType", "Plenum"));
       } else {
         if (checkKeyAndType(spaceOrShading, "space_type_id", Json::stringValue)){
           id = spaceOrShading.get("space_type_id", "").asString();
@@ -438,6 +446,7 @@ namespace openstudio{
             assertKeyAndType(*spaceType, "name", Json::stringValue);
             s = spaceType->get("name", "").asString();
             userData.setSpaceTypeName(s);
+            userData.setSpaceTypeMaterialName(getObjectThreeMaterialName("OS:SpaceType", s));
 
             if (checkKeyAndType(*spaceType, "handle", Json::stringValue)){
               s = spaceType->get("handle", "").asString();
@@ -456,6 +465,7 @@ namespace openstudio{
           assertKeyAndType(*constructionSet, "name", Json::stringValue);
           s = constructionSet->get("name", "").asString();
           userData.setConstructionSetName(s);
+          //userData.setConstructionSetNameMaterialName(getObjectThreeMaterialName("OS:DefaultConstructionSet", s));
 
           if (checkKeyAndType(*constructionSet, "handle", Json::stringValue)){
             s = constructionSet->get("handle", "").asString();
@@ -467,7 +477,7 @@ namespace openstudio{
       }
 
       userData.setSurfaceType(finalSurfaceType);
-      userData.setSurfaceTypeMaterialName(finalSurfaceType);
+      userData.setSurfaceTypeMaterialName(getSurfaceTypeThreeMaterialName(finalSurfaceType));
       //userData.setAboveCeilingPlenum(aboveCeilingPlenum);
       //userData.setBelowFloorPlenum(belowFloorPlenum);
       userData.setIlluminanceSetpoint(illuminanceSetpoint);
@@ -882,6 +892,20 @@ namespace openstudio{
 
   }
 
+  void FloorplanJS::makeMaterial(const Json::Value& object, const std::string& iddObjectType, std::vector<ThreeMaterial>& materials, std::map<std::string, std::string>& materialMap) const
+  {
+    assertKeyAndType(object, "name", Json::stringValue);
+    std::string name = object.get("name", "").asString();
+
+    if (checkKeyAndType(object, "color", Json::stringValue)){
+      std::string color = object.get("color", "").asString();
+
+      std::string materialName = getObjectThreeMaterialName(iddObjectType, name);
+      ThreeMaterial material = makeThreeMaterial(materialName, toThreeColor(color), 1, ThreeSide::DoubleSide);
+      addThreeMaterial(materials, materialMap, material);
+    }
+  }
+
   ThreeModelObjectMetadata FloorplanJS::makeModelObjectMetadata(const std::string& iddObjectType, const Json::Value& object) const
   {
     std::string handle;
@@ -894,7 +918,14 @@ namespace openstudio{
       name = object.get("name", "").asString();
     }
 
-    return ThreeModelObjectMetadata(iddObjectType, handle, name);
+    ThreeModelObjectMetadata result(iddObjectType, handle, name);
+
+    if (checkKeyAndType(object, "color", Json::stringValue)){
+      std::string color = object.get("color", "").asString();
+      result.setColor(color);
+    }
+
+    return result;
   }
 
   ThreeScene FloorplanJS::toThreeScene(bool openstudioFormat) const
@@ -908,11 +939,15 @@ namespace openstudio{
     std::vector<ThreeModelObjectMetadata> modelObjectMetadata;
 
     std::vector<ThreeMaterial> materials;
-    if (!openstudioFormat){
-      materials = makeStandardThreeMaterials();
-    }
+    std::map<std::string, std::string> materialMap;
 
-    // TODO: add model specific materials
+    // add standard materials if we will be rendering
+    if (!openstudioFormat){
+      for (const auto& material : makeStandardThreeMaterials()){
+        addThreeMaterial(materials, materialMap, material);
+      }
+    }
+    // add model specific materials in loop with makeMaterial
 
     double currentStoryZ = 0;
 
@@ -951,7 +986,13 @@ namespace openstudio{
 
       std::string storyName;
       if (checkKeyAndType(stories[storyIdx], "name", Json::stringValue)){
+        storyName = stories[storyIdx].get("name", storyName).asString();
         buildingStoryNames.push_back(storyName);
+      }
+
+      std::string storyColor;
+      if (checkKeyAndType(stories[storyIdx], "color", Json::stringValue)){
+        storyColor = stories[storyIdx].get("color", storyColor).asString();
       }
 
       unsigned storyMultiplier = 1;
@@ -989,12 +1030,16 @@ namespace openstudio{
 
       // get story properties
       ThreeModelObjectMetadata storyMetadata = makeModelObjectMetadata("OS:BuildingStory", stories[storyIdx]);
+      storyMetadata.setColor(storyColor);
       storyMetadata.setMultiplier(storyMultiplier);
       storyMetadata.setNominalZCoordinate(currentStoryZ);
       storyMetadata.setBelowFloorPlenumHeight(storyBelowFloorPlenumHeight);
       storyMetadata.setFloorToCeilingHeight(storyFloorToCeilingHeight);
       storyMetadata.setAboveCeilingPlenumHeight(storyAboveCeilingPlenumHeight);
       modelObjectMetadata.push_back(storyMetadata);
+
+      // make story material
+      makeMaterial(stories[storyIdx], "OS:BuildingStory", materials, materialMap);
 
       // increment currentStoryZ, will be zero for multiplier == 1
       // DLM: TODO need to get the intersection and matching code in utilities, move stories after intersecting and matching
@@ -1195,6 +1240,7 @@ namespace openstudio{
     Json::ArrayIndex n = buildingUnits.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
       modelObjectMetadata.push_back(makeModelObjectMetadata("OS:BuildingUnit", buildingUnits[i]));
+      makeMaterial(buildingUnits[i], "OS:BuildingUnit", materials, materialMap);
     }
 
     // loop over thermal_zones
@@ -1202,10 +1248,14 @@ namespace openstudio{
     n = thermalZones.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
       modelObjectMetadata.push_back(makeModelObjectMetadata("OS:ThermalZone", thermalZones[i]));
+      makeMaterial(thermalZones[i], "OS:ThermalZone", materials, materialMap);
     }
+
     // DLM: how will we merge this plenum zone with existing plenum zones?
     for (const auto& thermalZoneName : m_plenumThermalZoneNames){
-      modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:ThermalZone", "", thermalZoneName));
+      ThreeModelObjectMetadata thermalZoneMetadata("OS:ThermalZone", "", thermalZoneName);
+      modelObjectMetadata.push_back(thermalZoneMetadata);
+      thermalZoneMetadata.setColor(PLENUMCOLOR); // already made in makeStandardThreeMaterials
     }
 
     // loop over space_types
@@ -1213,9 +1263,12 @@ namespace openstudio{
     n = spaceTypes.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
       modelObjectMetadata.push_back(makeModelObjectMetadata("OS:SpaceType", spaceTypes[i]));
+      makeMaterial(spaceTypes[i], "OS:SpaceType", materials, materialMap);
     }
     if (anyPlenums){
-      modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:SpaceType", "", PLENUMSPACETYPENAME));
+      ThreeModelObjectMetadata spaceTypeMetadata("OS:SpaceType", "", PLENUMSPACETYPENAME);
+      modelObjectMetadata.push_back(spaceTypeMetadata);
+      spaceTypeMetadata.setColor(PLENUMCOLOR); // already made in makeStandardThreeMaterials
     }
 
     // loop over construction_sets
@@ -1223,6 +1276,7 @@ namespace openstudio{
     n = constructionSets.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
       modelObjectMetadata.push_back(makeModelObjectMetadata("OS:DefaultConstructionSet", constructionSets[i]));
+      //makeMaterial(constructionSets[i], "OS:DefaultConstructionSet", materials, materialMap);
     }
 
     m_boundingBox.addPoint(Point3d(0, 0, 0));

@@ -38,6 +38,7 @@
 #include "../core/Logger.hpp"
 
 #include <vector>
+#include <map>
 #include <boost/optional.hpp>
 
 namespace Json{
@@ -58,8 +59,23 @@ namespace openstudio{
   /// convert RGB to unsigned
   UTILITIES_API unsigned toThreeColor(unsigned r, unsigned g, unsigned b);
 
+  /// convert string to unsigned
+  UTILITIES_API unsigned toThreeColor(const std::string& s);
+
+  /// convert object name to material name
+  UTILITIES_API std::string getObjectThreeMaterialName(const std::string& iddObjectType, const std::string& name);
+
+  /// convert surface type to material name
+  UTILITIES_API std::string getSurfaceTypeThreeMaterialName(const std::string& surfaceType);
+
   /// Create a ThreeMaterial
   UTILITIES_API ThreeMaterial makeThreeMaterial(const std::string& name, unsigned color, double opacity, unsigned side, unsigned shininess = 50, const std::string type = "MeshPhongMaterial");
+
+  /// Add a ThreeMaterial to a list of materials and map of material name to material
+  UTILITIES_API void addThreeMaterial(std::vector<ThreeMaterial>& materials, std::map<std::string, std::string>& materialMap, const ThreeMaterial& material);
+
+  /// Get a material id out of material map
+  UTILITIES_API std::string getThreeMaterialId(const std::string& materialName, std::map<std::string, std::string>& materialMap);
 
   /// Create the standard ThreeMaterials
   UTILITIES_API std::vector<ThreeMaterial> makeStandardThreeMaterials();
@@ -425,6 +441,11 @@ namespace openstudio{
     std::string handle() const;
     std::string name() const;
 
+    // applies to general objects
+    std::string color() const;
+    bool setColor(const std::string& c);
+    void resetColor();
+
     /// applies to Space
     bool openToBelow() const;
     bool setOpenToBelow(bool t);
@@ -464,6 +485,7 @@ namespace openstudio{
     std::string m_iddObjectType;
     std::string m_handle;
     std::string m_name;
+    std::string m_color;
 
     bool m_openToBelow;
     boost::optional<unsigned> m_multiplier;
