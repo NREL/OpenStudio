@@ -96,6 +96,16 @@ boost::optional<ElectricLoadCenterDistribution> Generator_Impl::electricLoadCent
   return boost::none;
 }
 
+std::vector<EMSActuatorNames> Generator_Impl::emsActuatorNames() const {
+  std::vector<EMSActuatorNames> actuators{{"On-Site Generator Control", "Requested Power"}};
+  return actuators;
+}
+
+std::vector<std::string> Generator_Impl::emsInternalVariableNames() const {
+  std::vector<std::string> types{"Generator Nominal Maximum Power",
+                                 "Generator Nominal Thermal To Electric Ratio"};
+  return types;
+}
 } // detail
 
 Generator::Generator(IddObjectType type,const Model& model)
