@@ -169,7 +169,7 @@ namespace openstudio{
       bool openstudioFormat, std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren, bool openToBelow) const;
 
     std::string makeSurface(const Json::Value& story, const Json::Value& spaceOrShading, const std::string& parentSurfaceName, const std::string& parentSubSurfaceName,
-      bool belowFloorPlenum, bool aboveCeilingPlenum, const std::string& surfaceType, const Point3dVector& vertices, size_t faceFormat,
+      bool belowFloorPlenum, bool aboveCeilingPlenum, const std::string& surfaceType, const Point3dVectorVector& finalFaceVertices, size_t faceFormat,
       std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren, double illuminanceSetpoint, bool airWall) const;
 
     std::string getHandleString(const Json::Value& value) const;

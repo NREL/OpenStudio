@@ -280,8 +280,20 @@ namespace openstudio{
     return result;
   }
 
+  size_t getVertexIndex(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol = 0.001)
+  {
+    size_t n = allPoints.size();
+    for (size_t i = 0; i < n; ++i){
+      if (std::sqrt(std::pow(point3d.x()-allPoints[i].x(), 2) + std::pow(point3d.y()-allPoints[i].y(), 2) + std::pow(point3d.z()-allPoints[i].z(), 2)) < tol){
+        return i;
+      }
+    }
+    allPoints.push_back(point3d);
+    return (allPoints.size() - 1);
+  }
+
   std::string FloorplanJS::makeSurface(const Json::Value& story, const Json::Value& spaceOrShading, const std::string& parentSurfaceName, const std::string& parentSubSurfaceName,
-    bool belowFloorPlenum, bool aboveCeilingPlenum, const std::string& surfaceType, const Point3dVector& vertices, size_t faceFormat,
+    bool belowFloorPlenum, bool aboveCeilingPlenum, const std::string& surfaceType, const Point3dVectorVector& finalFaceVertices, size_t faceFormat,
     std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren, double illuminanceSetpoint, bool airWall) const
   {
     std::string finalSurfaceType = surfaceType;
@@ -313,18 +325,19 @@ namespace openstudio{
     std::string geometryId = std::string("Geometry ") + std::to_string(geometries.size());
     std::string faceId = std::string("Face ") + std::to_string(geometries.size());
 
-    size_t n = vertices.size();
-
-    std::vector<size_t> faces;
-    faces.push_back(faceFormat);
-    for (size_t i = 0; i < n; ++i){
-      faces.push_back(i);
+    Point3dVector allVertices;
+    std::vector<size_t> faceIndices;
+    for (const auto& finalFaceVerts : finalFaceVertices) {
+      faceIndices.push_back(faceFormat);
+      for (const auto& vert: finalFaceVerts){
+        faceIndices.push_back(getVertexIndex(vert, allVertices));
+      }
     }
 
     {
       std::string uuid = geometryId;
       std::string type = "Geometry";
-      ThreeGeometryData data(toThreeVector(vertices), faces);
+      ThreeGeometryData data(toThreeVector(allVertices), faceIndices);
       ThreeGeometry geometry(uuid, type, data);
       geometries.push_back(geometry);
     }
@@ -599,18 +612,25 @@ namespace openstudio{
     }
 
     // create floor and ceiling
+    Point3dVectorVector allFinalfloorVertices;
+    Point3dVectorVector allFinalRoofCeilingVertices;
     for (const auto& finalFaceVertices : allFinalFaceVertices){
       Point3dVector finalfloorVertices;
       Point3dVector finalRoofCeilingVertices;
-
       for (auto& v : finalFaceVertices){
-        finalfloorVertices.push_back(Point3d(v.x(), v.y(), minZ));
-        finalRoofCeilingVertices.push_back(Point3d(v.x(), v.y(), maxZ));
+        Point3d floorVert(v.x(), v.y(), minZ);
+        Point3d ceilVert(v.x(), v.y(), maxZ);
+        finalfloorVertices.push_back(floorVert);
+        finalRoofCeilingVertices.push_back(ceilVert);
+        m_boundingBox.addPoint(floorVert);
+        m_boundingBox.addPoint(ceilVert);
       }
-
-      makeSurface(story, spaceOrShading, "", "", belowFloorPlenum, aboveCeilingPlenum, "Floor", finalfloorVertices, roofCeilingFaceFormat, geometries, sceneChildren, 0, openToBelow);
-      makeSurface(story, spaceOrShading, "", "", belowFloorPlenum, aboveCeilingPlenum, "RoofCeiling", reverse(finalRoofCeilingVertices), roofCeilingFaceFormat, geometries, sceneChildren, 0, false);
+      std::reverse(finalRoofCeilingVertices.begin(), finalRoofCeilingVertices.end());
+      allFinalfloorVertices.push_back(finalfloorVertices);
+      allFinalRoofCeilingVertices.push_back(finalRoofCeilingVertices);
     }
+    makeSurface(story, spaceOrShading, "", "", belowFloorPlenum, aboveCeilingPlenum, "Floor", allFinalfloorVertices, roofCeilingFaceFormat, geometries, sceneChildren, 0, openToBelow);
+    makeSurface(story, spaceOrShading, "", "", belowFloorPlenum, aboveCeilingPlenum, "RoofCeiling", allFinalRoofCeilingVertices, roofCeilingFaceFormat, geometries, sceneChildren, 0, false);
 
     // create each wall
     std::set<unsigned> mappedWindows;
@@ -645,8 +665,13 @@ namespace openstudio{
 
             const Json::Value* windowDefinition = findById(windowDefinitions, windowDefinitionIds[windowIdx]);
             if (windowDefinition){
-              assertKeyAndType(*windowDefinition, "window_definition_type", Json::stringValue);
-              std::string windowDefinitionType = windowDefinition->get("window_definition_type", "").asString();
+              std::string windowDefinitionMode;
+              if (checkKeyAndType(*windowDefinition, "window_definition_type", Json::stringValue)){
+                windowDefinitionMode = windowDefinition->get("window_definition_type", "").asString();
+              } else {
+                assertKeyAndType(*windowDefinition, "window_definition_mode", Json::stringValue);
+                windowDefinitionMode = windowDefinition->get("window_definition_mode", "").asString();
+              }
 
 			        //"name": "Single Window",
 			        //"window_definition_type": "Single Window",
@@ -661,7 +686,7 @@ namespace openstudio{
 
               // DLM: TODO fins and overhangs
 
-              if (istringEqual("Single Window", windowDefinitionType) || istringEqual("Repeating Windows", windowDefinitionType)){
+              if (istringEqual("Single Window", windowDefinitionMode) || istringEqual("Repeating Windows", windowDefinitionMode)){
                 assertKeyAndType(*windowDefinition, "sill_height", Json::realValue);
                 assertKeyAndType(*windowDefinition, "height", Json::realValue);
                 assertKeyAndType(*windowDefinition, "width", Json::realValue);
@@ -736,7 +761,7 @@ namespace openstudio{
                   }
                 }
 
-              } else if (istringEqual("Window to Wall Ratio", windowDefinitionType)){
+              } else if (istringEqual("Window to Wall Ratio", windowDefinitionMode)){
                 assertKeyAndType(*windowDefinition, "sill_height", Json::realValue);
                 assertKeyAndType(*windowDefinition, "wwr", Json::realValue);
 
@@ -785,17 +810,32 @@ namespace openstudio{
         allFinalWallVertices.push_back(wallVertices);
       } else{
         finalWallFaceFormat =  0; // triangle
-        allFinalWallVertices = computeTriangulation(wallVertices, allFinalWindowVertices, tol);
+
+        Transformation t = Transformation::alignFace(wallVertices);
+        //Transformation r = t.rotationMatrix();
+        Transformation tInv = t.inverse();
+        Point3dVector faceVertices = reverse(tInv*wallVertices);
+
+        // get vertices of all sub surfaces
+        Point3dVectorVector faceSubVertices;
+        for (const auto& finalWindowVertices : allFinalWindowVertices){
+          faceSubVertices.push_back(reverse(tInv*finalWindowVertices));
+        }
+
+        Point3dVectorVector finalFaceVertices = computeTriangulation(faceVertices, faceSubVertices, tol);
+        for (const auto& finalFaceVerts : finalFaceVertices) {
+          Point3dVector finalVerts = t*finalFaceVerts;
+          allFinalWallVertices.push_back(reverse(finalVerts));
+        }
+
       }
 
       std::string parentSurfaceName;
-      for (const auto& finalWallVertices : allFinalWallVertices){
-        parentSurfaceName = makeSurface(story, spaceOrShading, "", "", belowFloorPlenum, aboveCeilingPlenum, "Wall", finalWallVertices, finalWallFaceFormat, geometries, sceneChildren, 0, false);
-      }
+      parentSurfaceName = makeSurface(story, spaceOrShading, "", "", belowFloorPlenum, aboveCeilingPlenum, "Wall", allFinalWallVertices, finalWallFaceFormat, geometries, sceneChildren, 0, false);
 
       std::vector<std::string> parentSubSurfaceNames;
       for (const auto& finalWindowVertices : allFinalWindowVertices){
-        std::string parentSubSurfaceName = makeSurface(story, spaceOrShading, parentSurfaceName, "", belowFloorPlenum, aboveCeilingPlenum, "FixedWindow", finalWindowVertices, wallFaceFormat, geometries, sceneChildren, 0, false);
+        std::string parentSubSurfaceName = makeSurface(story, spaceOrShading, parentSurfaceName, "", belowFloorPlenum, aboveCeilingPlenum, "FixedWindow", Point3dVectorVector(1,finalWindowVertices), wallFaceFormat, geometries, sceneChildren, 0, false);
         parentSubSurfaceNames.push_back(parentSubSurfaceName);
       }
 
@@ -803,7 +843,7 @@ namespace openstudio{
       OS_ASSERT(shadeN == allFinalShadeParentSubSurfaceIndices.size());
       for (size_t shadeIdx = 0; shadeIdx < shadeN; ++shadeIdx){
         std::string parentSubSurfaceName = parentSubSurfaceNames[allFinalShadeParentSubSurfaceIndices[shadeIdx]];
-        makeSurface(story, spaceOrShading, "", parentSubSurfaceName, belowFloorPlenum, aboveCeilingPlenum, "SpaceShading", allFinalShadeVertices[shadeIdx], wallFaceFormat, geometries, sceneChildren, 0, false);
+        makeSurface(story, spaceOrShading, "", parentSubSurfaceName, belowFloorPlenum, aboveCeilingPlenum, "SpaceShading", Point3dVectorVector(1,allFinalShadeVertices[shadeIdx]), wallFaceFormat, geometries, sceneChildren, 0, false);
       }
     }
 
@@ -835,7 +875,7 @@ namespace openstudio{
           dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() + 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() - 0.1, height));
           dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() - 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() - 0.1, height));
 
-          makeSurface(story, spaceOrShading, "", "", belowFloorPlenum, aboveCeilingPlenum, "DaylightingControl", dcVertices, wallFaceFormat, geometries, sceneChildren, illuminanceSetpoint, false);
+          makeSurface(story, spaceOrShading, "", "", belowFloorPlenum, aboveCeilingPlenum, "DaylightingControl", Point3dVectorVector(1,dcVertices), wallFaceFormat, geometries, sceneChildren, illuminanceSetpoint, false);
         }
       }
     }
@@ -1185,8 +1225,24 @@ namespace openstudio{
       modelObjectMetadata.push_back(makeModelObjectMetadata("OS:DefaultConstructionSet", constructionSets[i]));
     }
 
-    // DLM: TODO set correct bounding box
-    ThreeBoundingBox boundingBox(0,0,0,0,0,0,0,0,0,0);
+    m_boundingBox.addPoint(Point3d(0, 0, 0));
+
+    double lookAtX = 0; // (boundingBox.minX().get() + boundingBox.maxX().get()) / 2.0
+    double lookAtY = 0; // (boundingBox.minY().get() + boundingBox.maxY().get()) / 2.0
+    double lookAtZ = 0; // (boundingBox.minZ().get() + boundingBox.maxZ().get()) / 2.0
+    double lookAtR =            sqrt(std::pow(m_boundingBox.maxX().get() / 2.0, 2) + std::pow(m_boundingBox.maxY().get() / 2.0, 2) + std::pow(m_boundingBox.maxZ().get() / 2.0, 2));
+    lookAtR = std::max(lookAtR, sqrt(std::pow(m_boundingBox.minX().get() / 2.0, 2) + std::pow(m_boundingBox.maxY().get() / 2.0, 2) + std::pow(m_boundingBox.maxZ().get() / 2.0, 2)));
+    lookAtR = std::max(lookAtR, sqrt(std::pow(m_boundingBox.maxX().get() / 2.0, 2) + std::pow(m_boundingBox.minY().get() / 2.0, 2) + std::pow(m_boundingBox.maxZ().get() / 2.0, 2)));
+    lookAtR = std::max(lookAtR, sqrt(std::pow(m_boundingBox.maxX().get() / 2.0, 2) + std::pow(m_boundingBox.maxY().get() / 2.0, 2) + std::pow(m_boundingBox.minZ().get() / 2.0, 2)));
+    lookAtR = std::max(lookAtR, sqrt(std::pow(m_boundingBox.minX().get() / 2.0, 2) + std::pow(m_boundingBox.minY().get() / 2.0, 2) + std::pow(m_boundingBox.maxZ().get() / 2.0, 2)));
+    lookAtR = std::max(lookAtR, sqrt(std::pow(m_boundingBox.minX().get() / 2.0, 2) + std::pow(m_boundingBox.maxY().get() / 2.0, 2) + std::pow(m_boundingBox.minZ().get() / 2.0, 2)));
+    lookAtR = std::max(lookAtR, sqrt(std::pow(m_boundingBox.maxX().get() / 2.0, 2) + std::pow(m_boundingBox.minY().get() / 2.0, 2) + std::pow(m_boundingBox.minZ().get() / 2.0, 2)));
+    lookAtR = std::max(lookAtR, sqrt(std::pow(m_boundingBox.minX().get() / 2.0, 2) + std::pow(m_boundingBox.minY().get() / 2.0, 2) + std::pow(m_boundingBox.minZ().get() / 2.0, 2)));
+
+    ThreeBoundingBox boundingBox(m_boundingBox.minX().get(),m_boundingBox.minY().get(),m_boundingBox.minZ().get(),
+                                 m_boundingBox.maxX().get(),m_boundingBox.maxY().get(),m_boundingBox.maxZ().get(),
+                                 lookAtX, lookAtY, lookAtZ, lookAtR);
+
     ThreeSceneMetadata metadata(buildingStoryNames, boundingBox, modelObjectMetadata);
 
     ThreeSceneObject sceneObject("", children);
