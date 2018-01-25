@@ -164,7 +164,7 @@ namespace detail {
     // shading surface groups
     std::vector<ShadingSurfaceGroup> shadingSurfaceGroups = this->shadingSurfaceGroups();
     result.insert(result.end(),shadingSurfaceGroups.begin(),shadingSurfaceGroups.end());
-    
+
     return result;
   }
 
@@ -390,6 +390,22 @@ namespace detail {
   }
 */
 
+  std::vector<EMSActuatorNames> Site_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Weather Data", "Outdoor Dry Bulb"},
+                                            {"Weather Data", "Outdoor Dew Point"},
+                                            {"Weather Data", "Outdoor Relative Humidity"},
+                                            {"Weather Data", "Diffuse Solar"},
+                                            {"Weather Data", "Direct Solar"},
+                                            {"Weather Data", "Wind Speed"},
+                                            {"Weather Data", "Wind Direction"},
+    };
+    return actuators;
+  }
+
+  std::vector<std::string> Site_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
 } // detail
 
 IddObjectType Site::iddObjectType() {
