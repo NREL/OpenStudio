@@ -323,10 +323,9 @@ bool OpenStudioApp::openFile(const QString& fileName, bool restoreTabs)
   return false;
 }
 
-void OpenStudioApp::buildCompLibraries()
+std::vector<std::string> OpenStudioApp::buildCompLibraries()
 {
-  osversion::VersionTranslator versionTranslator;
-  versionTranslator.setAllowNewerVersions(false);
+  std::vector<std::string> failed;
 
   QWidget * parent = nullptr;
   if( this->currentDocument() ){
@@ -348,20 +347,30 @@ void OpenStudioApp::buildCompLibraries()
   OS_ASSERT(temp);
   m_compLibrary = temp.get();
 
-  p = resourcesPath() / toPath("hvaclibrary/hvac_library.osm");
-  OS_ASSERT(exists(p));
-  temp = versionTranslator.loadModel(p);
-  if (!temp){
-    LOG_FREE(Error, "OpenStudioApp", "Failed to load hvaclibrary");
-    for (const auto& error : versionTranslator.errors()){
-      LOG_FREE(Error, "OpenStudioApp", error.logMessage());
+  for( auto path : libraryPaths() ) {
+    try {
+      if ( exists(path) ) {
+        osversion::VersionTranslator versionTranslator;
+        versionTranslator.setAllowNewerVersions(false);
+        boost::optional<Model> temp = versionTranslator.loadModel(path);
+        if (temp) {
+          m_compLibrary.insertObjects(temp->objects());
+        } else {
+          LOG_FREE(Error, "OpenStudioApp", "Failed to load library");
+          removeLibraryFromsSettings(path);
+          failed.push_back(path.string());
+        }
+      } else {
+        removeLibraryFromsSettings(path);
+        failed.push_back(path.string());
+      }
+    } catch(...) {
+      removeLibraryFromsSettings(path);
+      failed.push_back(path.string());
     }
   }
-  if (!temp){
-    QMessageBox::critical(parent, QString("Failed to load hvaclibrary"), QString("Failed to load hvaclibrary, likely due to problem with VersionTranslator."));
-  }
-  OS_ASSERT(temp);
-  m_hvacCompLibrary = temp.get();
+
+  return failed;
 }
 
 OpenStudioApp * OpenStudioApp::instance()
@@ -1195,11 +1204,40 @@ void OpenStudioApp::changeDefaultLibraries() {
 
     auto future = QtConcurrent::run(this,&OpenStudioApp::buildCompLibraries);
     m_changeLibrariesWatcher.setFuture(future);
-    connect(&m_changeLibrariesWatcher, &QFutureWatcher<void>::finished, this, &OpenStudioApp::onChangeDefaultLibrariesDone);
+    connect(&m_changeLibrariesWatcher, &QFutureWatcher<std::vector<std::string> >::finished, this, &OpenStudioApp::onChangeDefaultLibrariesDone);
+  }
+}
+
+void OpenStudioApp::removeLibraryFromsSettings( const openstudio::path & path ) {
+  auto paths = libraryPaths();
+  paths.erase(std::remove(paths.begin(), paths.end(), path), paths.end());
+
+  QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+  settings.remove("library");
+
+  if ( paths != defaultLibraryPaths() ) {
+    settings.beginWriteArray("library");
+    int i = 0;
+    for( const auto newpath : paths ) {
+      settings.setArrayIndex(i);
+      settings.setValue("path",QString::fromStdString(newpath.string()));
+      ++i;
+    }
+    settings.endArray();
   }
 }
 
 void OpenStudioApp::onChangeDefaultLibrariesDone() {
+  auto failed = m_changeLibrariesWatcher.result();
+  if( ! failed.empty() ) {
+    QString text("Failed to load the following libraries...\n\n");
+    for( const auto & path : failed ) {
+      text.append(QString::fromStdString(path));
+      text.append("\n");
+    }
+    QMessageBox::critical(nullptr, QString("Failed to load library"), text);
+  }
+
   auto doc = currentDocument();
   if( doc ) {
     doc->setComponentLibrary(m_compLibrary);
