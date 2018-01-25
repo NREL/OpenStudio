@@ -141,6 +141,7 @@ namespace openstudio {
     showStoryFilter();
     showThermalZoneFilter();
     showSpaceTypeFilter();
+    showSubSurfaceTypeFilter();
     showOutsideBoundaryConditionFilter();
     showSpaceNameFilter();
 

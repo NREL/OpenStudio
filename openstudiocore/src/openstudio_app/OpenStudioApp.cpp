@@ -226,9 +226,9 @@ void OpenStudioApp::onMeasureManagerAndLibraryReady() {
       if( model ){
 
         m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
-                                                                     resourcesPath(), 
-                                                                     model,
-                                                                     fileName) );
+                                                                   resourcesPath(), 
+                                                                   model,
+                                                                   fileName) );
 
         connectOSDocumentSignals();
 
@@ -297,12 +297,12 @@ bool OpenStudioApp::openFile(const QString& fileName, bool restoreTabs)
       processEvents();
 
       m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(),
-                                                                   resourcesPath(),
-                                                                   model,
-                                                                   fileName,
-                                                                   false,
-                                                                   startTabIndex,
-                                                                   startSubTabIndex) );
+                                                                 resourcesPath(),
+                                                                 model,
+                                                                 fileName,
+                                                                 false,
+                                                                 startTabIndex,
+                                                                 startSubTabIndex) );
 
       connectOSDocumentSignals();
 
@@ -464,8 +464,8 @@ void OpenStudioApp::importIdf()
         }
 
         m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(),
-                                                                     resourcesPath(),
-                                                                     model) );
+                                                                   resourcesPath(),
+                                                                   model) );
         m_osDocument->markAsModified();
         // ETH: parent should change now ...
         //parent = m_osDocument->mainWindow();
@@ -627,8 +627,8 @@ void OpenStudioApp::import(OpenStudioApp::fileType type)
       }
 
       m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(),
-                                                                   resourcesPath(),
-                                                                   *model) );
+                                                                 resourcesPath(),
+                                                                 *model) );
       m_osDocument->markAsModified();
       // ETH: parent should change now ...
       //parent = m_osDocument->mainWindow();
