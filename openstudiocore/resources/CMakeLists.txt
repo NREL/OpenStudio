@@ -44,6 +44,7 @@ set(utilities_resources_src
   utilities/Filetypes/min.osw
   utilities/Filetypes/full.osw
   utilities/Geometry/floorplan.json
+  utilities/Geometry/floorplan_colors.json
   utilities/Geometry/floorplan-paper.json
   utilities/Geometry/floorplan_shading.json
   utilities/Geometry/open_to_below.json

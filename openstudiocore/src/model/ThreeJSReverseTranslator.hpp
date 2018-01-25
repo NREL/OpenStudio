@@ -45,6 +45,12 @@ namespace openstudio
 
     class Construction;
 
+    /** ThreeJSReverseTranslator converts a ThreeJS JSON to OpenStudio Model. There are two variations of the ThreeJS format,
+    *   this translator requires that the ThreeJS JSON be in OpenStudio Model format rather than optimized for display.
+    *
+    *   After conversion a map of handles from the ThreeJS JSON to new handles in the returned OpenStudio Model can be retreived.
+    *   This map is useful if merging the translated OpenStudio Model with an existing OpenStudio Model.
+    */
     MODEL_API class ThreeJSReverseTranslator
     {
     public:

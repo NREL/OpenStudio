@@ -52,6 +52,10 @@
 #include "../SubSurface_Impl.hpp"
 #include "../ShadingSurface.hpp"
 #include "../ShadingSurface_Impl.hpp"
+#include "../DefaultConstructionSet.hpp"
+#include "../DefaultConstructionSet_Impl.hpp"
+#include "../RenderingColor.hpp"
+#include "../RenderingColor_Impl.hpp"
 
 #include "../../utilities/geometry/ThreeJS.hpp"
 #include "../../utilities/geometry/FloorplanJS.hpp"
@@ -618,6 +622,82 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_StorySpaceHeights) {
   EXPECT_EQ(1u, infos[3].adjacentSpaces.count("Story Default Plenum"));
   EXPECT_EQ(1u, infos[3].adjacentSpaces.count("Story Default Floor Plenum"));
   EXPECT_EQ(0u, infos[3].adjacentSpaces.count("Tall No Plenums"));
+}
+
+
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Colors) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan_colors.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  openstudio::path outpath = resourcesPath() / toPath("model/floorplan_colors.osm");
+  model->save(outpath, true);
+
+  EXPECT_EQ(0, rt.errors().size());
+  EXPECT_EQ(0u, rt.warnings().size());
+
+  for (const auto& error : rt.errors()){
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+
+  for (const auto& warning : rt.warnings()){
+    EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
+  }
+
+  boost::optional<BuildingStory> story = model->getConcreteModelObjectByName<BuildingStory>("Black Story");
+  boost::optional<Space> space = model->getConcreteModelObjectByName<Space>("White Space");
+  boost::optional<ThermalZone> thermalZone = model->getConcreteModelObjectByName<ThermalZone>("Red Zone");
+  boost::optional<SpaceType> spaceType = model->getConcreteModelObjectByName<SpaceType>("Green Type");
+  boost::optional<DefaultConstructionSet> constructionSet = model->getConcreteModelObjectByName<DefaultConstructionSet>("Blue Set");
+  ASSERT_TRUE(story);
+  ASSERT_TRUE(space);
+  ASSERT_TRUE(thermalZone);
+  ASSERT_TRUE(spaceType);
+  ASSERT_TRUE(constructionSet);
+
+  ASSERT_TRUE(story->renderingColor());
+  EXPECT_EQ(0, story->renderingColor()->renderingRedValue());
+  EXPECT_EQ(0, story->renderingColor()->renderingGreenValue());
+  EXPECT_EQ(0, story->renderingColor()->renderingBlueValue());
+  EXPECT_EQ(255, story->renderingColor()->renderingAlphaValue());
+
+  //ASSERT_TRUE(space->renderingColor());
+  //EXPECT_EQ(255, space->renderingColor()->renderingRedValue());
+  //EXPECT_EQ(255, space->renderingColor()->renderingGreenValue());
+  //EXPECT_EQ(255, space->renderingColor()->renderingBlueValue());
+  //EXPECT_EQ(255, space->renderingColor()->renderingAlphaValue());
+
+  ASSERT_TRUE(thermalZone->renderingColor());
+  EXPECT_EQ(255, story->renderingColor()->renderingRedValue());
+  EXPECT_EQ(0, story->renderingColor()->renderingGreenValue());
+  EXPECT_EQ(0, story->renderingColor()->renderingBlueValue());
+  EXPECT_EQ(255, story->renderingColor()->renderingAlphaValue());
+
+  ASSERT_TRUE(spaceType->renderingColor());
+  EXPECT_EQ(0, story->renderingColor()->renderingRedValue());
+  EXPECT_EQ(255, story->renderingColor()->renderingGreenValue());
+  EXPECT_EQ(0, story->renderingColor()->renderingBlueValue());
+  EXPECT_EQ(255, story->renderingColor()->renderingAlphaValue());
+
+  //ASSERT_TRUE(constructionSet->renderingColor());
+  //EXPECT_EQ(0, story->renderingColor()->renderingRedValue());
+  //EXPECT_EQ(0, story->renderingColor()->renderingGreenValue());
+  //EXPECT_EQ(255, story->renderingColor()->renderingBlueValue());
+  //EXPECT_EQ(255, story->renderingColor()->renderingAlphaValue());
+
 }
 
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_StoryMultipliers) {

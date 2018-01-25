@@ -562,6 +562,9 @@ namespace openstudio
       m_currentToNewHandleMapping = handleMapping;
       m_newToCurrentHandleMapping.clear();
       for (const auto& it : handleMapping){
+        if (m_newToCurrentHandleMapping.find(it.second) != m_newToCurrentHandleMapping.end()){
+          LOG(Error, "Multiple entries in current model refer to handle '" << toString(it.second) << "' in new model");
+        }
         m_newToCurrentHandleMapping[it.second] = it.first;
       }
 
@@ -588,6 +591,17 @@ namespace openstudio
           getCurrentModelObject(newObject);
         }
       }
+    }
+
+    std::vector<IddObjectType> ModelMerger::iddObjectTypesToMerge() const
+    {
+      return m_iddObjectTypesToMerge;
+    }
+
+    bool ModelMerger::setIddObjectTypesToMerge(const std::vector<IddObjectType>& iddObjectTypesToMerge)
+    {
+      LOG(Error, "setIddObjectTypesToMerge is not yet implemented");
+      return false;
     }
 
   }//model
