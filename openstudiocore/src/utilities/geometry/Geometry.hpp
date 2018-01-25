@@ -79,10 +79,6 @@ namespace openstudio{
   /// return angle (in radians) between two vectors
   UTILITIES_API double getAngle(const Vector3d& vector1, const Vector3d& vector2);
 
-  /// compute distance in meters between two points on the Earth's surface
-  /// lat and lon are specified in degrees
-  UTILITIES_API double getDistanceLatLon(double lat1, double lon1, double lat2, double lon2);
-
   /// check if two vectors of points are equal (within tolerance) irregardless of initial ordering.
   UTILITIES_API bool circularEqual(const std::vector<Point3d>& points1, const std::vector<Point3d>& points2, double tol = 0.001);
 
