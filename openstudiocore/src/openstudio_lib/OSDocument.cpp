@@ -1158,6 +1158,10 @@ namespace openstudio {
 
     m_mainWindow->view()->selectSubTabByIndex(m_subTabId);
 
+    bool enableFileImportActions = true;
+    bool enablePreferencesActions = true;
+    bool enableComponentsMeasuresActions = true;
+
     switch (m_mainTabId)
     {
     case SITE:
@@ -1177,6 +1181,9 @@ namespace openstudio {
       break;
     case GEOMETRY:
       m_mainRightColumnController->configureForGeometrySubTab(m_subTabId);
+      enableFileImportActions = false;
+      enablePreferencesActions = false;
+      enableComponentsMeasuresActions = false;
       break;
     case FACILITY:
       m_mainRightColumnController->configureForFacilitySubTab(m_subTabId);
@@ -1216,6 +1223,10 @@ namespace openstudio {
     default:
       break;
     }
+
+    m_mainWindow->enableFileImportActions(enableFileImportActions);
+    m_mainWindow->enablePreferencesActions(enablePreferencesActions);
+    m_mainWindow->enablePreferencesActions(enableComponentsMeasuresActions);
 
     //m_mainWindow->selectHorizontalTab(LIBRARY);
 
