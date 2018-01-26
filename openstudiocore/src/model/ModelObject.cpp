@@ -1352,9 +1352,9 @@ std::vector<std::string> ModelObject::emsInternalVariableNames() const {
   return getImpl<detail::ModelObject_Impl>()->emsInternalVariableNames();
 }
 
-EMSActuatorNames::EMSActuatorNames(const std::string & controlTypeName, const std::string & componentTypeName)
-  : m_controlTypeName(controlTypeName),
-  m_componentTypeName(componentTypeName) {}
+EMSActuatorNames::EMSActuatorNames(const std::string & componentTypeName, const std::string & controlTypeName)
+  : m_componentTypeName(componentTypeName),
+  m_controlTypeName(controlTypeName) {}
 
 std::string EMSActuatorNames::controlTypeName() const {
   return m_controlTypeName;

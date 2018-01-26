@@ -349,7 +349,7 @@ class MODEL_API EMSActuatorNames
 {
 public:
 
-  EMSActuatorNames(const std::string & controlTypeName, const std::string & componentTypeName);
+  EMSActuatorNames(const std::string & componentTypeName, const std::string & controlTypeName);
 
   std::string controlTypeName() const;
   std::string componentTypeName() const;
