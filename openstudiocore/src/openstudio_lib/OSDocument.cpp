@@ -1226,7 +1226,7 @@ namespace openstudio {
 
     m_mainWindow->enableFileImportActions(enableFileImportActions);
     m_mainWindow->enablePreferencesActions(enablePreferencesActions);
-    m_mainWindow->enablePreferencesActions(enableComponentsMeasuresActions);
+    m_mainWindow->enableComponentsMeasuresActions(enableComponentsMeasuresActions);
 
     //m_mainWindow->selectHorizontalTab(LIBRARY);
 
