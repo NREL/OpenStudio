@@ -130,14 +130,12 @@
 namespace openstudio {
 
   OSDocument::OSDocument(openstudio::model::Model library,
-    openstudio::model::Model hvacLibrary,
     const openstudio::path &resourcesPath,
     openstudio::model::OptionalModel model,
     QString filePath, bool isPlugin,
     int startTabIndex, int startSubTabIndex)
     : OSQObjectController(),
     m_compLibrary(library),
-    m_hvacCompLibrary(hvacLibrary),
     m_resourcesPath(resourcesPath),
     m_onlineMeasuresBclDialog(nullptr),
     m_onlineBclDialog(nullptr),
@@ -147,9 +145,6 @@ namespace openstudio {
     m_startTabIndex(startTabIndex),
     m_startSubTabIndex(startSubTabIndex)
   {
-    m_combinedCompLibrary = model::Model(m_compLibrary.clone());
-    m_combinedCompLibrary.insertObjects(m_hvacCompLibrary.objects());
-
     QFile data(":openstudiolib.qss");
 
     static QString style;
@@ -200,7 +195,7 @@ namespace openstudio {
     connect(m_mainWindow, &MainWindow::importSDDClicked, this, &OSDocument::importSDDClicked);
     connect(m_mainWindow, &MainWindow::importIFCClicked, this, &OSDocument::importIFCClicked);
     connect(m_mainWindow, &MainWindow::loadFileClicked, this, &OSDocument::loadFileClicked);
-    connect(m_mainWindow, &MainWindow::loadLibraryClicked, this, &OSDocument::loadLibraryClicked);
+    connect(m_mainWindow, &MainWindow::changeDefaultLibrariesClicked, this, &OSDocument::changeDefaultLibrariesClicked);
     connect(m_mainWindow, &MainWindow::newClicked, this, &OSDocument::newClicked);
     connect(m_mainWindow, &MainWindow::exitClicked, this, &OSDocument::exitClicked);
     connect(m_mainWindow, &MainWindow::helpClicked, this, &OSDocument::helpClicked);
@@ -1527,30 +1522,7 @@ namespace openstudio {
   {
     m_compLibrary = model;
 
-    m_combinedCompLibrary = model::Model(m_compLibrary.clone());
-    m_combinedCompLibrary.insertObjects(m_hvacCompLibrary.objects());
-
     onVerticalTabSelected(m_mainTabId);
-  }
-
-  openstudio::model::Model OSDocument::hvacComponentLibrary() const
-  {
-    return m_hvacCompLibrary;
-  }
-
-  void OSDocument::setHVACComponentLibrary(const openstudio::model::Model& model)
-  {
-    m_hvacCompLibrary = model;
-
-    m_combinedCompLibrary = model::Model(m_compLibrary.clone());
-    m_combinedCompLibrary.insertObjects(m_hvacCompLibrary.objects());
-
-    onVerticalTabSelected(m_mainTabId);
-  }
-
-  openstudio::model::Model OSDocument::combinedComponentLibrary() const
-  {
-    return m_combinedCompLibrary;
   }
 
   bool OSDocument::fromModel(const OSItemId& itemId) const
@@ -1560,11 +1532,7 @@ namespace openstudio {
 
   bool OSDocument::fromComponentLibrary(const OSItemId& itemId) const
   {
-    bool fromCompLibrary = (itemId.sourceId() == modelToSourceId(m_compLibrary));
-    bool fromHVACCompLibrary = (itemId.sourceId() == modelToSourceId(m_hvacCompLibrary));
-    bool fromCombinedCompLibrary = (itemId.sourceId() == modelToSourceId(m_combinedCompLibrary));
-    bool result = (fromCompLibrary || fromHVACCompLibrary || fromCombinedCompLibrary);
-    return result;
+    return (itemId.sourceId() == modelToSourceId(m_compLibrary));
   }
 
   bool OSDocument::fromBCL(const OSItemId& itemId) const
@@ -1604,18 +1572,11 @@ namespace openstudio {
       Handle handle(toUUID(itemId.itemId()));
       return m_model.getModelObject<model::ModelObject>(handle);
     }
+
     else if (fromComponentLibrary(itemId)){
       if (itemId.sourceId() == modelToSourceId(m_compLibrary)){
         Handle handle(toUUID(itemId.itemId()));
         return m_compLibrary.getModelObject<model::ModelObject>(handle);
-      }
-      else if (itemId.sourceId() == modelToSourceId(m_hvacCompLibrary)){
-        Handle handle(toUUID(itemId.itemId()));
-        return m_hvacCompLibrary.getModelObject<model::ModelObject>(handle);
-      }
-      else if (itemId.sourceId() == modelToSourceId(m_combinedCompLibrary)){
-        Handle handle(toUUID(itemId.itemId()));
-        return m_combinedCompLibrary.getModelObject<model::ModelObject>(handle);
       }
     }
 
