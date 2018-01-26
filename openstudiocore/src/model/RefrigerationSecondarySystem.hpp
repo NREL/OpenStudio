@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -171,15 +171,15 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
 
   void resetEvaporatorFlowRateforSecondaryFluid();
 
-  void setEvaporatorEvaporatingTemperature(double evaporatorEvaporatingTemperature);
+  bool setEvaporatorEvaporatingTemperature(double evaporatorEvaporatingTemperature);
 
-  void setEvaporatorApproachTemperatureDifference(double evaporatorApproachTemperatureDifference);
+  bool setEvaporatorApproachTemperatureDifference(double evaporatorApproachTemperatureDifference);
 
-  void setEvaporatorRangeTemperatureDifference(double evaporatorRangeTemperatureDifference);
+  bool setEvaporatorRangeTemperatureDifference(double evaporatorRangeTemperatureDifference);
 
   void resetEvaporatorRangeTemperatureDifference();
 
-  void setNumberofPumpsinLoop(int numberofPumpsinLoop);
+  bool setNumberofPumpsinLoop(int numberofPumpsinLoop);
 
   void resetNumberofPumpsinLoop();
 
@@ -211,7 +211,7 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
 
   void resetPumpMotorHeattoFluid();
 
-  void setSumUADistributionPiping(double sumUADistributionPiping);
+  bool setSumUADistributionPiping(double sumUADistributionPiping);
 
   void resetSumUADistributionPiping();
 
@@ -219,7 +219,7 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
 
   void resetDistributionPipingZone();
 
-  void setSumUAReceiverSeparatorShell(double sumUAReceiverSeparatorShell);
+  bool setSumUAReceiverSeparatorShell(double sumUAReceiverSeparatorShell);
 
   void resetSumUAReceiverSeparatorShell();
 
@@ -227,11 +227,11 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
 
   void resetReceiverSeparatorZone();
 
-  void setEvaporatorRefrigerantInventory(double evaporatorRefrigerantInventory);
+  bool setEvaporatorRefrigerantInventory(double evaporatorRefrigerantInventory);
 
   void resetEvaporatorRefrigerantInventory();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 
@@ -264,5 +264,4 @@ typedef std::vector<RefrigerationSecondarySystem> RefrigerationSecondarySystemVe
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONSECONDARYSYSTEM_HPP
-
+#endif // MODEL_REFRIGERATIONSECONDARYSYSTEM_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -54,11 +54,11 @@ namespace openstudio {
     /// and returns as std::string
     UTILITIES_API std::string read_as_string(const openstudio::path &t_path);
 
-    /// Returns all file paths (non recursively) in the directory t_path. 
+    /// Returns all file paths (non recursively) in the directory t_path.
     /// Result values are relative to t_path
     UTILITIES_API std::vector<openstudio::path> directory_files(const openstudio::path &t_path);
 
-    /// Returns all file paths (recursively) in the directory t_path. 
+    /// Returns all file paths (recursively) in the directory t_path.
     /// Result values are relative to t_path
     UTILITIES_API std::vector<openstudio::path> recursive_directory_files(const openstudio::path &t_path);
 

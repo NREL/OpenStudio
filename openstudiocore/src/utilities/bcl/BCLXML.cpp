@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -68,7 +68,7 @@ namespace openstudio{
       file.close();
       LOG_AND_THROW("'" << toString(xmlPath) << "' could not be opened");
     }
-    
+
     QDomElement element = bclXML.firstChildElement("component");
     if (!element.isNull()){
       m_bclXMLType = BCLXMLType::ComponentXML;
@@ -177,7 +177,7 @@ namespace openstudio{
         if (!versionElement.isNull()){
           softwareProgram = versionElement.firstChildElement("software_program").firstChild().nodeValue().toStdString();
           softwareProgramVersion = versionElement.firstChildElement("identifier").firstChild().nodeValue().toStdString();
-        
+
           // added in schema version 3
           QDomElement minCompatibleVersionElement = versionElement.firstChildElement("min_compatible");
           if (minCompatibleVersionElement.isNull()){
@@ -218,7 +218,7 @@ namespace openstudio{
         }else{
           path = m_path.parent_path() / toPath(fileName);
         }
-        
+
         BCLFileReference file(path);
         file.setSoftwareProgram(softwareProgram);
         file.setSoftwareProgramVersion(softwareProgramVersion);
@@ -419,7 +419,7 @@ namespace openstudio{
       if (file.fileType() == filetype){
         matches.push_back(file);
       }
-    } 
+    }
     return matches;
   }
 
@@ -538,7 +538,7 @@ namespace openstudio{
         result = true;
         break;
       }
-    } 
+    }
 
     return result;
   }
@@ -556,7 +556,7 @@ namespace openstudio{
       }else{
         newFiles.push_back(file);
       }
-    } 
+    }
 
     if (result == true){
       incrementVersionId();
@@ -887,7 +887,7 @@ namespace openstudio{
 
   std::string BCLXML::computeXMLChecksum() const
   {
-    // DLM: CHANGING THE IMPLEMENTATION OF THIS FUNCTION WILL CAUSE 
+    // DLM: CHANGING THE IMPLEMENTATION OF THIS FUNCTION WILL CAUSE
     // CHECKSUMS TO BE COMPUTED DIFFERENTLY
     // WE WANT TO AVOID FIGHTING WHERE DIFFERENT VERSIONS OF OPENSTUDIO
     // COMPUTE THE CHECKSUM IN DIFFERENT WAYS
@@ -895,7 +895,7 @@ namespace openstudio{
 
     // will be picked up when Ruby file changes
     //ss << "Name: " << m_name << std::endl;
-    
+
     // will be picked up when Ruby file changes
     //ss << "Display Name: " << m_displayName << std::endl;
 

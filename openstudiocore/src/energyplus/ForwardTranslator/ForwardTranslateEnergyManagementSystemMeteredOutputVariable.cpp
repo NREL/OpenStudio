@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -61,11 +61,11 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemMet
   if (s) {
     idfObject.setName(*s);
   }
- 
+
   idfObject.setString(EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName, modelObject.emsVariableName());
 
   idfObject.setString(EnergyManagementSystem_MeteredOutputVariableFields::UpdateFrequency, modelObject.updateFrequency());
-  
+
   s = modelObject.emsProgramOrSubroutineName();
   if (s.is_initialized()) {
     idfObject.setString(EnergyManagementSystem_MeteredOutputVariableFields::EMSProgramorSubroutineName, s.get());
@@ -75,7 +75,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemMet
   idfObject.setString(EnergyManagementSystem_MeteredOutputVariableFields::GroupType, modelObject.groupType());
 
   idfObject.setString(EnergyManagementSystem_MeteredOutputVariableFields::EndUseCategory, modelObject.endUseCategory());
-  
+
   s = modelObject.endUseSubcategory();
   if (s.is_initialized()) {
     idfObject.setString(EnergyManagementSystem_MeteredOutputVariableFields::EndUseSubcategory, s.get());

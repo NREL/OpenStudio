@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -102,7 +102,7 @@ class OpenStudioApp : public OSAppBase
 
   openstudio::model::Model hvacComponentLibrary() const;
 
-  openstudio::path resourcesPath() const; 
+  openstudio::path resourcesPath() const;
 
   openstudio::path openstudioCLIPath() const;
 
@@ -117,15 +117,15 @@ class OpenStudioApp : public OSAppBase
  signals:
 
  public slots:
-  
+
   void quit();
 
-  void importIdf(); 
+  void importIdf();
 
-  void importgbXML(); 
+  void importgbXML();
 
-  void importSDD(); 
-  
+  void importSDD();
+
   void importIFC();
 
   void open();
@@ -181,7 +181,7 @@ class OpenStudioApp : public OSAppBase
 
   bool openFile(const QString& fileName, bool restoreTabs = false);
 
-  void versionUpdateMessageBox(const osversion::VersionTranslator& translator, bool successful, const QString& fileName, 
+  void versionUpdateMessageBox(const osversion::VersionTranslator& translator, bool successful, const QString& fileName,
       const openstudio::path &tempModelDir);
 
   void readSettings();

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -65,12 +65,12 @@ namespace model {
   /// directory structure, copy files to relative locations, etc
   /// Returns true if any changes were made
   //MODEL_API bool updateModelTempDir(openstudio::model::Model& model, const openstudio::path& modelTempDir);
-    
+
   /// Connect the model to WorkflowJSON found in the temp directory.
   /// Returns true if existing WorkflowJSON was found.  If no existing WorkflowJSON is found, a new one is created in the temp dir.
   //MODEL_API bool attachWorkflow(openstudio::model::Model& model, const openstudio::path& modelTempDir);
 
-  /// Initialize a temporary directory for a given model, if savedPath is passed in then existing companion directories are copied to 
+  /// Initialize a temporary directory for a given model, if savedPath is passed in then existing companion directories are copied to
   /// the temporary directory.  Returns path to the temporary directory.
   /// This method combines calls to createModelTempDir, initializeModelTempDir, updateModelTempDir, and attachWorkflow.
   MODEL_API openstudio::path initializeModel(openstudio::model::Model model);

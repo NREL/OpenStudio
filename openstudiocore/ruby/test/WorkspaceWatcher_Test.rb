@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -33,22 +33,22 @@ require 'minitest/autorun'
 module OpenStudio
 
   class TestWorkspaceWatcher < WorkspaceWatcher
-  
+
     attr_accessor :addedObjectHandle, :removedObjectHandle
-  
+
     def initialize(workspace)
-      @addedObjectHandle = nil 
-      @removedObjectHandle = nil    
+      @addedObjectHandle = nil
+      @removedObjectHandle = nil
       super
     end
 
     def clearState
       super
-      @addedObjectHandle = nil 
+      @addedObjectHandle = nil
       @removedObjectHandle = nil
       puts "clearState"
     end
-    
+
     def onChangeWorkspace
       super
       puts "onChangeWorkspace"
@@ -82,27 +82,27 @@ end
 
 
 class WorkspaceWatcher_Test < MiniTest::Unit::TestCase
-  
+
   # def setup
   # end
 
   # def teardown
   # end
-  
+
   def test_WorkspaceWatcher
-  
+
     workspace = OpenStudio::Workspace.new
     watcher = OpenStudio::TestWorkspaceWatcher.new(workspace)
-    
+
     assert((not watcher.dirty))
     assert((not watcher.addedObjectHandle))
     assert((not watcher.removedObjectHandle))
-    
+
     idfObject = OpenStudio::IdfObject.new("OS_Space".to_IddObjectType)
     addedObject = workspace.addObject(idfObject)
     assert((not addedObject.empty?))
     addedObjectHandle = addedObject.get.handle
-    
+
     assert_equal(1, workspace.numObjects)
     assert(watcher.dirty)
     assert(watcher.objectAdded)
@@ -111,21 +111,21 @@ class WorkspaceWatcher_Test < MiniTest::Unit::TestCase
     assert(watcher.addedObjectHandle)
     assert((not watcher.removedObjectHandle))
     assert_equal(addedObjectHandle.to_s, watcher.addedObjectHandle.to_s)
-    
+
     watcher.clearState
-      
+
     assert((not watcher.dirty))
     assert((not watcher.addedObjectHandle))
     assert((not watcher.removedObjectHandle))
-    
+
     addedObject.get.remove
-    
+
     assert_equal(0, workspace.numObjects)
     assert(watcher.dirty)
     assert((not watcher.addedObjectHandle))
     assert(watcher.removedObjectHandle)
     assert_equal(addedObjectHandle.to_s, watcher.removedObjectHandle.to_s)
-    
+
   end
 
 end

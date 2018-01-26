@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -43,8 +43,8 @@ namespace detail {
 
 } // detail
 
-/** InternalMassDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object 
- *  'OS_InternalMass_Definition'. Its fields are derived from the EnergyPlus IDD object 
+/** InternalMassDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object
+ *  'OS_InternalMass_Definition'. Its fields are derived from the EnergyPlus IDD object
  *  'InternalMass'. \sa InternalMass
  */
 class MODEL_API InternalMassDefinition : public SpaceLoadDefinition {
@@ -109,15 +109,15 @@ class MODEL_API InternalMassDefinition : public SpaceLoadDefinition {
    *  and numPeople. */
   double getSurfaceArea(double floorArea, double numPeople) const;
 
-  /** Returns the m^2/m^2 of construction surface area per floor area represented by this 
+  /** Returns the m^2/m^2 of construction surface area per floor area represented by this
    *  definition, assuming floorArea (m^2) and numPeople. */
   double getSurfaceAreaPerFloorArea(double floorArea, double numPeople) const;
 
-  /** Returns the m^2/person of construction surface area represented by this definition, assuming 
+  /** Returns the m^2/person of construction surface area represented by this definition, assuming
    *  floorArea (m^2) and numPeople. */
   double getSurfaceAreaPerPerson(double floorArea, double numPeople) const;
 
-  /** If method is a \link validDesignLevelCalculationMethodValues valid design level calculation 
+  /** If method is a \link validDesignLevelCalculationMethodValues valid design level calculation
    *  method \endlink, changes this definition to an equivalent construction surface area, under the
    *  assumptions of floorArea (m^2) and numPeople. */
   bool setDesignLevelCalculationMethod(const std::string& method,

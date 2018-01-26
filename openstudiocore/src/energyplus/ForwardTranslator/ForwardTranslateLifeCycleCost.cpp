@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -76,7 +76,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCost( LifeCycleC
 
   // check for field types of LifeCycleCost:NonrecurringCost {Construction, Salvage, OtherCapital}
   if (istringEqual("Construction", category) ||
-      istringEqual("Salvage", category) || 
+      istringEqual("Salvage", category) ||
       istringEqual("OtherCapital", category)){
 
     if (lengthOfStudyPeriodInMonths >= 12*yearsFromStart + monthsFromStart){
@@ -110,7 +110,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCost( LifeCycleC
       category = "Replacement";
       yearsFromStart += repeatPeriodYears;
       monthsFromStart += repeatPeriodMonths;
-    
+
     }else{
       //LOG(Warn, "LifeCycleCost '" << name << "' occurs outside the study period, will not be translated");
     }

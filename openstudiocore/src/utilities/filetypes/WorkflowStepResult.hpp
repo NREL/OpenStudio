@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -223,22 +223,22 @@ class UTILITIES_API WorkflowStepResult {
   // method for backwards compatibility with OpenStudio 1.X
   // returns StepResult if initialized, if not initialized returns Success for backwards compatibility
   StepResult value() const;
-  
+
   // method for backwards compatibility with OpenStudio 1.X
   std::vector<LogMessage> errors() const;
-  
+
   // method for backwards compatibility with OpenStudio 1.X
   std::vector<LogMessage> warnings() const;
-  
+
   // method for backwards compatibility with OpenStudio 1.X
   std::vector<LogMessage> info() const;
-  
+
   // method for backwards compatibility with OpenStudio 1.X
   boost::optional<LogMessage> initialCondition() const;
 
   // method for backwards compatibility with OpenStudio 1.X
   boost::optional<LogMessage> finalCondition() const;
-  
+
   // method for backwards compatibility with OpenStudio 1.X
   std::vector<Attribute> attributes() const;
 
@@ -275,10 +275,10 @@ class UTILITIES_API WorkflowStepResult {
 
   bool setMeasureXmlChecksum(const std::string& checksum);
   void resetMeasureXmlChecksum();
-  
+
   bool setMeasureClassName(const std::string& className);
   void resetMeasureClassName();
-    
+
   bool setMeasureDisplayName(const std::string& displayName);
   void resetMeasureDisplayName();
 

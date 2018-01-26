@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -428,7 +428,7 @@ namespace detail {
     boost::optional<CoilCoolingDXMultiSpeed> parentCoil;
     auto coilCoolingDXMultiSpeeds = this->model().getConcreteModelObjects<CoilCoolingDXMultiSpeed>();
     for (const auto & coilInModel : coilCoolingDXMultiSpeeds) {
-      // Check the coil performance objects in this coil to see if one of them is this object       
+      // Check the coil performance objects in this coil to see if one of them is this object
       std::vector<CoilCoolingDXMultiSpeedStageData> perfStages = coilInModel.stages();
       int i = 1;
       for (auto perfStage : perfStages) {
@@ -461,7 +461,7 @@ namespace detail {
     int index = std::get<0>(indexAndName);
     CoilCoolingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
     std::string sqlField = "Speed " + std::to_string(index) + " Design Size Rated Total Cooling Capacity";
-  
+
     return parentCoil.getAutosizedValue(sqlField, "W");
   }
 
@@ -517,7 +517,7 @@ namespace detail {
     int index = std::get<0>(indexAndName);
     CoilCoolingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
     std::string sqlField = "Speed " + std::to_string(index) + " Design Size Rated Evaporative Condenser Pump Power Consumption";
-    
+
     return parentCoil.getAutosizedValue(sqlField, "W");
   }
 

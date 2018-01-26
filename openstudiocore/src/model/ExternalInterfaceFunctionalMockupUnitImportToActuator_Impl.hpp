@@ -92,17 +92,17 @@ namespace detail {
 
     bool setActuatedComponentUnique(const ModelObject& modelObject);
 
-    void setActuatedComponentType(const std::string& actuatedComponentType);
+    bool setActuatedComponentType(const std::string& actuatedComponentType);
 
-    void setActuatedComponentControlType(const std::string& actuatedComponentControlType);
+    bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
 
     bool setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile);
 
-    void setFMUInstanceName(const std::string& fMUInstanceName);
+    bool setFMUInstanceName(const std::string& fMUInstanceName);
 
-    void setFMUVariableName(const std::string& fMUVariableName);
+    bool setFMUVariableName(const std::string& fMUVariableName);
 
-    void setInitialValue(double initialValue);
+    bool setInitialValue(double initialValue);
 
     //@}
     /** @name Other */
@@ -120,5 +120,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOACTUATOR_IMPL_HPP
-
+#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOACTUATOR_IMPL_HPP

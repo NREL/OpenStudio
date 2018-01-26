@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -315,19 +315,19 @@ int main(int argc, char *argv[])
   Init_digest();
   rb_provide("digest");
   rb_provide("digest.so");
-  
+
   Init_rmd160();
   rb_provide("digest/rmd160");
   rb_provide("digest/rmd160.so");
-  
+
   Init_sha1();
   rb_provide("digest/sha1");
   rb_provide("digest/sha1.so");
-  
+
   Init_sha2();
   rb_provide("digest/sha2");
   rb_provide("digest/sha2.so");
-  
+
   Init_md5();
   rb_provide("digest/md5");
   rb_provide("digest/md5.so");
@@ -335,67 +335,67 @@ int main(int argc, char *argv[])
   Init_bigdecimal();
   rb_provide("bigdecimal");
   rb_provide("bigdecimal.so");
-  
+
   Init_bubblebabble();
   rb_provide("bubblebabble");
   rb_provide("bubblebabble.so");
-  
+
   Init_complex();
   rb_provide("complex");
   rb_provide("complex.so");
-  
+
 #ifndef _MSC_VER
   Init_console();
   rb_provide("console");
   rb_provide("console.so");
 #endif
-  
+
   Init_continuation();
   rb_provide("continuation");
   rb_provide("continuation.so");
-  
+
   Init_coverage();
   rb_provide("coverage");
   rb_provide("coverage.so");
-  
+
   Init_cparse();
   rb_provide("cparse");
   rb_provide("cparse.so");
-  
+
   Init_date_core();
   rb_provide("date_core");
   rb_provide("date_core.so");
-  
+
 //#ifndef _MSC_VER
 //  Init_dbm();
 //  rb_provide("dbm");
 //  rb_provide("dbm.so");
 //#endif
-  
+
   Init_etc();
   rb_provide("etc");
   rb_provide("etc.so");
-  
+
   Init_fcntl();
   rb_provide("fcntl");
   rb_provide("fcntl.so");
-  
+
   Init_fiber();
   rb_provide("fiber");
   rb_provide("fiber.so");
-  
+
   //Init_fiddle();
   //rb_provide("fiddle");
   //rb_provide("fiddle");
-  
+
   Init_generator();
   rb_provide("generator");
   rb_provide("generator.so");
-  
+
   Init_nkf();
   rb_provide("nkf");
   rb_provide("nkf.so");
-  
+
   Init_nonblock();
   rb_provide("nonblock");
   rb_provide("nonblock.so");
@@ -409,37 +409,37 @@ int main(int argc, char *argv[])
   rb_provide("openssl");
   rb_provide("openssl.so");
 #endif // Q_OS_LINUX
-  
+
   Init_objspace();
   rb_provide("objspace");
   rb_provide("objspace.so");
-  
+
   Init_parser();
   rb_provide("parser");
   rb_provide("parser.so");
-  
+
   Init_pathname();
   rb_provide("pathname");
   rb_provide("pathname.so");
-  
+
   Init_psych();
   rb_provide("psych");
   rb_provide("psych.so");
-  
+
 #ifndef _MSC_VER
   Init_pty();
   rb_provide("pty");
   rb_provide("pty.so");
-  
+
   Init_rational();
   rb_provide("rational");
   rb_provide("rational.so");
 #endif
-  
+
   //Init_readline();
   //rb_provide("readline");
   //rb_provide("readline");
-  
+
   Init_ripper();
   rb_provide("ripper");
   rb_provide("ripper.so");
@@ -447,33 +447,33 @@ int main(int argc, char *argv[])
   Init_sdbm();
   rb_provide("sdbm");
   rb_provide("sdbm.so");
-  
+
   Init_sizeof();
   rb_provide("sizeof");
   rb_provide("sizeof.so");
-  
+
   Init_socket();
   rb_provide("socket");
   rb_provide("socket.so");
-  
+
   Init_stringio();
   rb_provide("stringio");
   rb_provide("stringio.so");
-  
+
   Init_strscan();
   rb_provide("strscan");
   rb_provide("strscan.so");
-  
+
 #ifndef _MSC_VER
   Init_syslog();
   rb_provide("syslog");
   rb_provide("syslog.so");
 #endif
-  
+
   Init_thread();
   rb_provide("thread");
   rb_provide("thread.so");
-  
+
 #ifndef _MSC_VER
   Init_wait();
   rb_provide("wait");
@@ -493,7 +493,7 @@ int main(int argc, char *argv[])
    // openstudio
    init_openstudio_internal();
   }
-  
+
   // chop off the first argument which is the exe path/name
   ruby_set_argv(argc - 1,argv + 1);
 

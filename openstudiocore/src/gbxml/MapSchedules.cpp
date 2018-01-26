@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -59,7 +59,7 @@ namespace gbxml {
   openstudio::model::ScheduleTypeLimits getScheduleTypeLimits(const std::string& type, openstudio::model::Model& model)
   {
     boost::optional<openstudio::model::ScheduleTypeLimits> result = model.getModelObjectByName<openstudio::model::ScheduleTypeLimits>(type);
-    
+
     if (result){
       return *result;
     }
@@ -115,7 +115,7 @@ namespace gbxml {
     result.setName(escapeName(id, name));
 
     // don't need to translate type
-    
+
     QDomNodeList dayElements = element.elementsByTagName("Day");
     for (int i = 0; i < dayElements.count(); i++){
 
@@ -129,12 +129,12 @@ namespace gbxml {
         QString thisId = dayScheduleElement.attribute("id");
         if (thisId == dayScheduleIdRef){
 
-          boost::optional<openstudio::model::ModelObject> modelObject = translateScheduleDay(dayScheduleElement, doc, model);          
+          boost::optional<openstudio::model::ModelObject> modelObject = translateScheduleDay(dayScheduleElement, doc, model);
           if (modelObject){
-            
+
             boost::optional<openstudio::model::ScheduleDay> scheduleDay = modelObject->cast<openstudio::model::ScheduleDay>();
             if (scheduleDay){
-              
+
               if (dayType == "Weekday"){
                 result.setWeekdaySchedule(*scheduleDay);
               }else if (dayType == "Weekend"){
@@ -214,7 +214,7 @@ namespace gbxml {
       OS_ASSERT(yd.calendarYear());
       OS_ASSERT(yd.calendarYear().get() == endDateParts.at(0).toInt());
       openstudio::Date endDate = yd.makeDate(endDateParts.at(1).toInt(), endDateParts.at(2).toInt());
-      
+
       QString weekScheduleId = element.elementsByTagName("WeekScheduleId").at(0).toElement().attribute("weekScheduleIdRef");
 
       // this can be made more efficient using QXPath in QXmlPatterns later
@@ -224,9 +224,9 @@ namespace gbxml {
         QString thisId = scheduleWeekElement.attribute("id");
         if (thisId == weekScheduleId){
 
-          boost::optional<openstudio::model::ModelObject> modelObject = translateScheduleWeek(scheduleWeekElement, doc, model);          
+          boost::optional<openstudio::model::ModelObject> modelObject = translateScheduleWeek(scheduleWeekElement, doc, model);
           if (modelObject){
-            
+
             boost::optional<openstudio::model::ScheduleWeek> scheduleWeek = modelObject->cast<openstudio::model::ScheduleWeek>();
             if (scheduleWeek){
               result.addScheduleWeek(endDate, *scheduleWeek);

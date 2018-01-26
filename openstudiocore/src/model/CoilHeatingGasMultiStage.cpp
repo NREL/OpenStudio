@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -149,7 +149,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilHeatingGasMultiStage_Impl::setParasiticGasLoad(boost::optional<double> parasiticGasLoad) {
+  bool CoilHeatingGasMultiStage_Impl::setParasiticGasLoad(boost::optional<double> parasiticGasLoad) {
     bool result(false);
     if (parasiticGasLoad) {
       result = setDouble(OS_Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad, parasiticGasLoad.get());
@@ -159,6 +159,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CoilHeatingGasMultiStage_Impl::resetParasiticGasLoad() {
@@ -270,8 +271,8 @@ void CoilHeatingGasMultiStage::resetPartLoadFractionCorrelationCurve() {
   getImpl<detail::CoilHeatingGasMultiStage_Impl>()->resetPartLoadFractionCorrelationCurve();
 }
 
-void CoilHeatingGasMultiStage::setParasiticGasLoad(double parasiticGasLoad) {
-  getImpl<detail::CoilHeatingGasMultiStage_Impl>()->setParasiticGasLoad(parasiticGasLoad);
+bool CoilHeatingGasMultiStage::setParasiticGasLoad(double parasiticGasLoad) {
+  return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->setParasiticGasLoad(parasiticGasLoad);
 }
 
 void CoilHeatingGasMultiStage::resetParasiticGasLoad() {
@@ -294,4 +295,3 @@ CoilHeatingGasMultiStage::CoilHeatingGasMultiStage(std::shared_ptr<detail::CoilH
 
 } // model
 } // openstudio
-

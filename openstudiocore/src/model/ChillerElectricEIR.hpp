@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -184,11 +184,11 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
 
   bool setReferenceCOP(double referenceCOP);
 
-  void setReferenceLeavingChilledWaterTemperature(double referenceLeavingChilledWaterTemperature);
+  bool setReferenceLeavingChilledWaterTemperature(double referenceLeavingChilledWaterTemperature);
 
   void resetReferenceLeavingChilledWaterTemperature();
 
-  void setReferenceEnteringCondenserFluidTemperature(double referenceEnteringCondenserFluidTemperature);
+  bool setReferenceEnteringCondenserFluidTemperature(double referenceEnteringCondenserFluidTemperature);
 
   void resetReferenceEnteringCondenserFluidTemperature();
 
@@ -230,19 +230,19 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
 
   void resetMinimumUnloadingRatio();
 
-  void setChilledWaterInletNodeName(std::string chilledWaterInletNodeName);
+  bool setChilledWaterInletNodeName(std::string chilledWaterInletNodeName);
 
-  void setChilledWaterOutletNodeName(std::string chilledWaterOutletNodeName);
+  bool setChilledWaterOutletNodeName(std::string chilledWaterOutletNodeName);
 
-  void setCondenserInletNodeName(boost::optional<std::string> condenserInletNodeName);
+  bool setCondenserInletNodeName(boost::optional<std::string> condenserInletNodeName);
 
-  void setCondenserInletNodeName(std::string condenserInletNodeName);
+  bool setCondenserInletNodeName(std::string condenserInletNodeName);
 
   void resetCondenserInletNodeName();
 
-  void setCondenserOutletNodeName(boost::optional<std::string> condenserOutletNodeName);
+  bool setCondenserOutletNodeName(boost::optional<std::string> condenserOutletNodeName);
 
-  void setCondenserOutletNodeName(std::string condenserOutletNodeName);
+  bool setCondenserOutletNodeName(std::string condenserOutletNodeName);
 
   void resetCondenserOutletNodeName();
 
@@ -258,7 +258,7 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
 
   void resetCompressorMotorEfficiency();
 
-  void setLeavingChilledWaterLowerTemperatureLimit(double leavingChilledWaterLowerTemperatureLimit);
+  bool setLeavingChilledWaterLowerTemperatureLimit(double leavingChilledWaterLowerTemperatureLimit);
 
   void resetLeavingChilledWaterLowerTemperatureLimit();
 
@@ -270,15 +270,15 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
 
   void resetDesignHeatRecoveryWaterFlowRate();
 
-  void setHeatRecoveryInletNodeName(boost::optional<std::string> heatRecoveryInletNodeName);
+  bool setHeatRecoveryInletNodeName(boost::optional<std::string> heatRecoveryInletNodeName);
 
-  void setHeatRecoveryInletNodeName(std::string heatRecoveryInletNodeName);
+  bool setHeatRecoveryInletNodeName(std::string heatRecoveryInletNodeName);
 
   void resetHeatRecoveryInletNodeName();
 
-  void setHeatRecoveryOutletNodeName(boost::optional<std::string> heatRecoveryOutletNodeName);
+  bool setHeatRecoveryOutletNodeName(boost::optional<std::string> heatRecoveryOutletNodeName);
 
-  void setHeatRecoveryOutletNodeName(std::string heatRecoveryOutletNodeName);
+  bool setHeatRecoveryOutletNodeName(std::string heatRecoveryOutletNodeName);
 
   void resetHeatRecoveryOutletNodeName();
 
@@ -333,5 +333,4 @@ typedef std::vector<ChillerElectricEIR> ChillerElectricEIRVector;
 
 } // openstudio
 
-#endif // MODEL_CHILLERELECTRICEIR_HPP
-
+#endif // MODEL_CHILLERELECTRICEIR_HPP

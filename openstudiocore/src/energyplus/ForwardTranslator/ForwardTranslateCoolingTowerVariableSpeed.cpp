@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -113,13 +113,13 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerVariableSpeed
   }
 
   // DesignRangeTemperature
-  
+
   if( (d = modelObject.designRangeTemperature()) )
   {
     idfObject.setDouble(CoolingTower_VariableSpeedFields::DesignRangeTemperature,d.get());
   }
 
-  // DesignWaterFlowRate 
+  // DesignWaterFlowRate
 
   if( (d = modelObject.designWaterFlowRate()) )
   {
@@ -130,7 +130,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerVariableSpeed
     idfObject.setString(openstudio::CoolingTower_VariableSpeedFields::DesignWaterFlowRate,"Autosize");
   }
 
-  // DesignAirFlowRate 
+  // DesignAirFlowRate
 
   if( (d = modelObject.designAirFlowRate()) )
   {
@@ -158,7 +158,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerVariableSpeed
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
     {
-      idfObject.setString(CoolingTower_VariableSpeedFields::FanPowerRatioFunctionofAirFlowRateRatioCurveName,_curve->name().get()); 
+      idfObject.setString(CoolingTower_VariableSpeedFields::FanPowerRatioFunctionofAirFlowRateRatioCurveName,_curve->name().get());
     }
   }
 
@@ -227,9 +227,9 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerVariableSpeed
   {
     idfObject.setString(openstudio::CoolingTower_VariableSpeedFields::BlowdownCalculationMode,s.get());
   }
-  
+
   // BlowdownConcentrationRatio
-  
+
   if( (d = modelObject.blowdownConcentrationRatio()) )
   {
     idfObject.setDouble(openstudio::CoolingTower_VariableSpeedFields::BlowdownConcentrationRatio,d.get());
@@ -272,13 +272,13 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerVariableSpeed
   {
     idfObject.setDouble(openstudio::CoolingTower_VariableSpeedFields::CellMaximumWaterFlowRateFraction,d.get());
   }
-  
+
   // SizingFactor
 
   if( (d = modelObject.sizingFactor()) )
   {
     idfObject.setDouble(openstudio::CoolingTower_VariableSpeedFields::SizingFactor,d.get());
-  } 
+  }
 
   if( (s = modelObject.endUseSubcategory()) ) {
     idfObject.setString(openstudio::CoolingTower_VariableSpeedFields::EndUseSubcategory,s.get());

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -244,7 +244,7 @@ void WindowMaterialGasInspectorView::attach(openstudio::model::Gas & gas)
     m_isIP,
     *m_gas,
     OptionalDoubleGetter(std::bind(&model::Gas::conductivityCoefficientA, m_gas.get_ptr())),
-    DoubleSetterVoidReturn(std::bind(static_cast<void(model::Gas::*)(double)>(&model::Gas::setConductivityCoefficientA), m_gas.get_ptr(), std::placeholders::_1)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Gas::*)(double)>(&model::Gas::setConductivityCoefficientA), m_gas.get_ptr(), std::placeholders::_1)),
     boost::optional<NoFailAction>(std::bind(&model::Gas::resetConductivityCoefficientA, m_gas.get_ptr()))
   );
 
@@ -253,7 +253,7 @@ void WindowMaterialGasInspectorView::attach(openstudio::model::Gas & gas)
     m_isIP,
     *m_gas,
     OptionalDoubleGetter(std::bind(&model::Gas::conductivityCoefficientB, m_gas.get_ptr())),
-    DoubleSetterVoidReturn(std::bind(static_cast<void(model::Gas::*)(double)>(&model::Gas::setConductivityCoefficientB), m_gas.get_ptr(), std::placeholders::_1)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Gas::*)(double)>(&model::Gas::setConductivityCoefficientB), m_gas.get_ptr(), std::placeholders::_1)),
     boost::optional<NoFailAction>(std::bind(&model::Gas::resetConductivityCoefficientB, m_gas.get_ptr()))
   );
 
@@ -271,7 +271,7 @@ void WindowMaterialGasInspectorView::attach(openstudio::model::Gas & gas)
     m_isIP,
     *m_gas,
     OptionalDoubleGetter(std::bind(&model::Gas::viscosityCoefficientB, m_gas.get_ptr())),
-    DoubleSetterVoidReturn(std::bind(static_cast<void(model::Gas::*)(double)>(&model::Gas::setViscosityCoefficientB), m_gas.get_ptr(), std::placeholders::_1)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Gas::*)(double)>(&model::Gas::setViscosityCoefficientB), m_gas.get_ptr(), std::placeholders::_1)),
     boost::optional<NoFailAction>(std::bind(&model::Gas::resetViscosityCoefficientB, m_gas.get_ptr()))
   );
 
@@ -289,7 +289,7 @@ void WindowMaterialGasInspectorView::attach(openstudio::model::Gas & gas)
     m_isIP,
     *m_gas,
     OptionalDoubleGetter(std::bind(&model::Gas::specificHeatCoefficientB, m_gas.get_ptr())),
-    DoubleSetterVoidReturn(std::bind(static_cast<void(model::Gas::*)(double)>(&model::Gas::setSpecificHeatCoefficientB), m_gas.get_ptr(), std::placeholders::_1)),
+    boost::optional<DoubleSetter>(std::bind(static_cast<bool(model::Gas::*)(double)>(&model::Gas::setSpecificHeatCoefficientB), m_gas.get_ptr(), std::placeholders::_1)),
     boost::optional<NoFailAction>(std::bind(&model::Gas::resetSpecificHeatCoefficientB, m_gas.get_ptr()))
   );
 

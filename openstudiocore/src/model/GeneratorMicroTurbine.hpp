@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -166,7 +166,7 @@ class MODEL_API GeneratorMicroTurbine : public Generator {
 
   bool setReferenceElectricalEfficiencyUsingLowerHeatingValue(double referenceElectricalEfficiencyUsingLowerHeatingValue);
 
-  void setReferenceCombustionAirInletTemperature(double referenceCombustionAirInletTemperature);
+  bool setReferenceCombustionAirInletTemperature(double referenceCombustionAirInletTemperature);
   void resetReferenceCombustionAirInletTemperature();
 
   bool setReferenceCombustionAirInletHumidityRatio(double referenceCombustionAirInletHumidityRatio);
@@ -226,7 +226,7 @@ class MODEL_API GeneratorMicroTurbine : public Generator {
   bool setExhaustAirFlowRateFunctionofPartLoadRatioCurve(const Curve& exhaustAirFlowRateFunctionofPartLoadRatioCurve);
   void resetExhaustAirFlowRateFunctionofPartLoadRatioCurve();
 
-  void setNominalExhaustAirOutletTemperature(double nominalExhaustAirOutletTemperature);
+  bool setNominalExhaustAirOutletTemperature(double nominalExhaustAirOutletTemperature);
   void resetNominalExhaustAirOutletTemperature();
 
   // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
@@ -267,4 +267,3 @@ typedef std::vector<GeneratorMicroTurbine> GeneratorMicroTurbineVector;
 } // openstudio
 
 #endif // MODEL_GENERATORMICROTURBINE_HPP
-

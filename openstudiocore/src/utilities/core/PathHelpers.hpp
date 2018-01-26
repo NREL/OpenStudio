@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -35,15 +35,15 @@
 
 namespace openstudio {
 
-/** Single location for storing the default extension for Model serialization files. (That is, 
- *  the file extension to be used for Idf files following the IddFileType::OpenStudio Idd, or a 
+/** Single location for storing the default extension for Model serialization files. (That is,
+ *  the file extension to be used for Idf files following the IddFileType::OpenStudio Idd, or a
  *  subset thereof.) */
-UTILITIES_API std::string modelFileExtension(); 
+UTILITIES_API std::string modelFileExtension();
 
-/** Single location for storing the default extension for Component serialization files. (That is, 
- *  the file extension to be used for Idf files following the IddFileType::OpenStudio Idd, and 
+/** Single location for storing the default extension for Component serialization files. (That is,
+ *  the file extension to be used for Idf files following the IddFileType::OpenStudio Idd, and
  *  containing a single Component.) */
-UTILITIES_API std::string componentFileExtension(); 
+UTILITIES_API std::string componentFileExtension();
 
 UTILITIES_API std::string tableFileExtension();
 
@@ -53,8 +53,8 @@ UTILITIES_API std::string documentFileExtension();
 UTILITIES_API std::string rulesetFileExtension();
 
 /** Returns completed path if p is a path to a file on this system. Otherwise, returns an empty
- *  path. If base is not empty, completion is done relative to base. If ext is not empty, and p 
- *  has no extension, then p's extension is set to ext. If ext is not empty and p has an 
+ *  path. If base is not empty, completion is done relative to base. If ext is not empty, and p
+ *  has no extension, then p's extension is set to ext. If ext is not empty and p has an
  *  extension, then a warning may be logged if they do not match. */
 UTILITIES_API path completePathToFile(const path& p,
                                       const path& base=path(),
@@ -64,16 +64,16 @@ UTILITIES_API path completePathToFile(const path& p,
 /** Get p's extension as a string with the dot removed. */
 UTILITIES_API std::string getFileExtension(const path& p);
 
-/** Set p's extension to ext. If p has an extension not equal to ext, p's extension can be 
- *  replaced and/or a warning can be issued. Returns an empty path if there is a mismatch and 
+/** Set p's extension to ext. If p has an extension not equal to ext, p's extension can be
+ *  replaced and/or a warning can be issued. Returns an empty path if there is a mismatch and
  *  replaceOnMismatch == false. */
 UTILITIES_API path setFileExtension(const path& p,
                                     const std::string& ext,
                                     bool replaceOnMismatch=false,
                                     bool warnOnMismatch=true);
 
-/** As necessary, makes the parent folder for path p. If recursive == false, only one folder may 
- *  be constructed. If recursive == true, any number of folders may be constructed. Returns false 
+/** As necessary, makes the parent folder for path p. If recursive == false, only one folder may
+ *  be constructed. If recursive == true, any number of folders may be constructed. Returns false
  *  if parent folder does not exist after calling this function. */
 UTILITIES_API bool makeParentFolder(const path& p,const path& base=path(),bool recursive=false);
 
@@ -102,12 +102,12 @@ UTILITIES_API bool isEmptyDirectory(const path& dirName);
 /** Returns the drive letter, e.g. if path is "C:\temp" returns "C".*/
 UTILITIES_API boost::optional<std::string> windowsDriveLetter(const path& p);
 
-/** Determines if a path is on a network drive.  
+/** Determines if a path is on a network drive.
   * Returns false if path is not absolute.
   * Currently only implemented for Windows, returns false on other platforms. */
 UTILITIES_API bool isNetworkPath(const path& p);
 
-/** Determines if a path is on a network drive and if that network resources is available.  
+/** Determines if a path is on a network drive and if that network resources is available.
   * Returns false if path is not absolute or if path is not a network path.
   * Currently only implemented for Windows, returns false on other platforms. */
 UTILITIES_API bool isNetworkPathAvailable(const path& p);

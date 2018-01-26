@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -76,7 +76,7 @@ LibraryTabWidget::LibraryTabWidget(QWidget * parent)
 
   auto isConnected = connect(m_removeButton, SIGNAL(clicked(bool)), this, SIGNAL(removeButtonClicked(bool)));
   OS_ASSERT(isConnected);
- 
+
   auto hLayout = new QHBoxLayout();
   hLayout->setContentsMargins(0, 0, 0, 0);
   hLayout->addStretch();
@@ -119,7 +119,7 @@ void LibraryTabWidget::addTab( QWidget * widget,
 
   m_pageStack->addWidget(widget);
 
-  m_selectedPixmaps.push_back(selectedImagePath); 
+  m_selectedPixmaps.push_back(selectedImagePath);
 
   m_unSelectedPixmaps.push_back(unSelectedImagePath);
 
@@ -144,7 +144,7 @@ void LibraryTabWidget::select()
     {
       index++;
     }
-  } 
+  }
 
   setCurrentIndex(index);
 }
@@ -154,14 +154,14 @@ void LibraryTabWidget::setCurrentIndex(int index)
   int xPos = 0;
 
   for(unsigned i = 0; i < m_tabButtons.size(); i++)
-  {  
+  {
     QPushButton * button = m_tabButtons[i];
 
     button->move(xPos,0);
 
     xPos = xPos + button->width();
 
-    QString imagePath = m_unSelectedPixmaps[i]; 
+    QString imagePath = m_unSelectedPixmaps[i];
 
     QString style;
 
@@ -169,12 +169,12 @@ void LibraryTabWidget::setCurrentIndex(int index)
     style.append(imagePath);
     style.append("\"); border: none; }");
 
-    button->setStyleSheet(style); 
+    button->setStyleSheet(style);
   }
 
   QPushButton * button = m_tabButtons[index];
 
-  QString imagePath = m_selectedPixmaps[index]; 
+  QString imagePath = m_selectedPixmaps[index];
 
   QString style;
 
@@ -182,7 +182,7 @@ void LibraryTabWidget::setCurrentIndex(int index)
   style.append(imagePath);
   style.append("\"); border: none; background-repeat: 0; }");
 
-  button->setStyleSheet(style); 
+  button->setStyleSheet(style);
 
   m_pageStack->setCurrentIndex(index);
 }

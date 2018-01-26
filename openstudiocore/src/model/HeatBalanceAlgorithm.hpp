@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -48,8 +48,8 @@ namespace detail {
 /** HeatBalanceAlgorithm derives from ModelObject and is an interface to the OpenStudio IDD object named "HeatBalanceAlgorithm".
  *
  *  HeatBalanceAlgorithm is a unique object that specifies the global heat and moisture algorithms
- *  used across building construction calculations. HeatBalanceAlgorithm does not have a public constructor because it is a unique ModelObject.  
- *  To get the HeatBalanceAlgorithm object for a Model or create one if it does not yet exist use model.getUniqueObject<HeatBalanceAlgorithm>().  
+ *  used across building construction calculations. HeatBalanceAlgorithm does not have a public constructor because it is a unique ModelObject.
+ *  To get the HeatBalanceAlgorithm object for a Model or create one if it does not yet exist use model.getUniqueObject<HeatBalanceAlgorithm>().
  *  To get the HeatBalanceAlgorithm object for a Model but not create one if it does not yet exist use model.getOptionalUniqueObject<HeatBalanceAlgorithm>().
  */
 class MODEL_API HeatBalanceAlgorithm : public ModelObject {

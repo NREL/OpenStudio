@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -93,7 +93,7 @@ std::vector<std::pair<IddObjectType, std::string> > MaterialsView::modelObjectTy
   result.push_back(std::make_pair<IddObjectType, std::string>(IddObjectType::OS_Material_RoofVegetation, "Roof Vegetation Materials"));
   result.push_back(std::make_pair<IddObjectType, std::string>(IddObjectType::OS_WindowMaterial_Glazing_RefractionExtinctionMethod, "Refraction Extinction Method Glazing Window Materials"));
   result.push_back(std::make_pair<IddObjectType, std::string>(IddObjectType::OS_WindowMaterial_GlazingGroup_Thermochromic, "Glazing Group Thermochromic Window Materials"));
-  
+
   return result;
 }
 
@@ -191,9 +191,9 @@ void MaterialsInspectorView::onSelectModelObject(const openstudio::model::ModelO
       break;
     case IddObjectType::OS_WindowMaterial_SimpleGlazingSystem:
       this->showWindowMaterialSimpleGlazingSystemInspectorView(modelObject);
-      break;      
+      break;
     default:
-      showDefaultView();      
+      showDefaultView();
   }
 }
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -41,10 +41,10 @@ namespace detail {
 
 /** OutsideSurfaceConvectionAlgorithm derives from ModelObject and is an interface to the OpenStudio IDD object named "SurfaceConvectionAlgorithm:Outside".
  *
- *  OutsideSurfaceConvectionAlgorithm is a unique object that specifies the global model used for surface convection at the outside face of all the 
- *  heat transfer surfaces in the model.  This global algorithm may be overridden for specific Surface, SurfaceList, or Zone objects. 
- *  OutsideSurfaceConvectionAlgorithm does not have a public constructor because it is a unique ModelObject.  
- *  To get the OutsideSurfaceConvectionAlgorithm object for a Model or create one if it does not yet exist use model.getUniqueObject<OutsideSurfaceConvectionAlgorithm>().  
+ *  OutsideSurfaceConvectionAlgorithm is a unique object that specifies the global model used for surface convection at the outside face of all the
+ *  heat transfer surfaces in the model.  This global algorithm may be overridden for specific Surface, SurfaceList, or Zone objects.
+ *  OutsideSurfaceConvectionAlgorithm does not have a public constructor because it is a unique ModelObject.
+ *  To get the OutsideSurfaceConvectionAlgorithm object for a Model or create one if it does not yet exist use model.getUniqueObject<OutsideSurfaceConvectionAlgorithm>().
  *  To get the OutsideSurfaceConvectionAlgorithm object for a Model but not create one if it does not yet exist use model.getOptionalUniqueObject<OutsideSurfaceConvectionAlgorithm>().
  */
 class MODEL_API OutsideSurfaceConvectionAlgorithm : public ModelObject {

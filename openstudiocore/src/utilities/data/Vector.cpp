@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -100,20 +100,20 @@ namespace openstudio{
       result.extrapolated = false;
       Vector::const_iterator begin = x.begin();
       Vector::const_iterator it = std::lower_bound(begin, x.end(), xi);
-      
+
       result.ia = (unsigned)(it-begin-1);
       result.ib = (unsigned)(it-begin);
       result.wa = (x(result.ib)-xi)/(x(result.ib)-x(result.ia));
       result.wb = (xi-x(result.ia))/(x(result.ib)-x(result.ia));
     }
-      
+
     return result;
   }
 
   /// linear interpolation of the function y = f(x) at point xi
   /// assumes that x is strictly increasing
   double interp(const Vector& x, const Vector& y, double xi, InterpMethod interpMethod, ExtrapMethod extrapMethod){
-    
+
     unsigned N = x.size();
 
     double result = 0.0;
@@ -162,7 +162,7 @@ namespace openstudio{
   /// linear interpolation of the function y = f(x) at points xi
   /// assumes that x is strictly increasing
   Vector interp(const Vector& x, const Vector& y, const Vector& xi, InterpMethod interpMethod, ExtrapMethod extrapMethod){
- 
+
     unsigned N = x.size();
 
     Vector result(N);
@@ -183,7 +183,7 @@ namespace openstudio{
   {
     // seed random number generator
     static std::minstd_rand generator(42u);
-    
+
     // define distribution
     boost::uniform_real<> dist(a,b);
 
@@ -202,7 +202,7 @@ namespace openstudio{
   Vector linspace(double a, double b, unsigned N)
   {
     double delta = (b-a)/(N-1);
-    
+
     Vector result(N);
     for (unsigned n = 0; n < N; ++n){
       result(n) = a + n*delta;
@@ -334,8 +334,8 @@ namespace openstudio{
     return sqrt(variance(vector));
   }
 
-  std::function<double (const Vector&)> sumVectorFunctor() { 
-    return std::function<double (const Vector&)> (&sum); 
+  std::function<double (const Vector&)> sumVectorFunctor() {
+    return std::function<double (const Vector&)> (&sum);
   }
 
   std::function<double (const Vector&)> maximumVectorFunctor() {

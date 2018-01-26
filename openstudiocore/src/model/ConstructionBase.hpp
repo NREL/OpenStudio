@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -60,16 +60,16 @@ class MODEL_API ConstructionBase : public ResourceObject {
 
   //@}
 
-  /** Returns the sum of the surface area of all planar surfaces that use this construction (m^2). 
-   *  If this construction is used by a Surface that contains one or more \link SubSurface 
-   *  SubSurfaces \endlink, than the SubSurface areas are subtracted out of the total. 
-   *  If two adjacent surfaces both reference the same construction then only the area of the largest 
+  /** Returns the sum of the surface area of all planar surfaces that use this construction (m^2).
+   *  If this construction is used by a Surface that contains one or more \link SubSurface
+   *  SubSurfaces \endlink, than the SubSurface areas are subtracted out of the total.
+   *  If two adjacent surfaces both reference the same construction then only the area of the largest
    *  adjacent surface will be counted.  If two adjacent surfaces reference different constructions then
    *  the net area of each adjacent surface will be included in the net area for their respective constructions.*/
   double getNetArea() const;
 
   /** Set the u-factor of this surface in W/m^2*K, if possible. Value should already include
-   *  appropriate standard film coefficients, assuming still air indoors and 15 mph outdoor air speed. 
+   *  appropriate standard film coefficients, assuming still air indoors and 15 mph outdoor air speed.
    *  Does not consider any custom SurfacePropertyConvectionCoefficients. */
   bool setUFactor(double value);
 
@@ -103,43 +103,43 @@ class MODEL_API ConstructionBase : public ResourceObject {
   /** Get the u-factor of this construction (W/m^2*K). Includes filmResistance. */
   boost::optional<double> uFactor(double filmResistance) const;
 
-  /** Get the thermal conductance of this construction (W/m^2*K). Does not include film 
+  /** Get the thermal conductance of this construction (W/m^2*K). Does not include film
    *  coefficients. */
   boost::optional<double> thermalConductance() const;
 
-  /** Get the thermal conductance of this construction (W/m^2*K). filmResistance is subtracted out 
+  /** Get the thermal conductance of this construction (W/m^2*K). filmResistance is subtracted out
    *  of the thermalResistance if necessary. */
   boost::optional<double> thermalConductance(double filmResistance) const;
 
   /** Get the heat capacity of this construction (J/m^2*K). Only works for
    *  \link LayeredConstruction LayeredConstructions \endlink of \link StandardOpaqueMaterial
-   *  StandardOpaqueMaterials \endlink. 
+   *  StandardOpaqueMaterials \endlink.
    *
    *  Attribute Name: 'heatCapacity' */
   boost::optional<double> heatCapacity() const;
 
-  /** Get the visible absorptance of the interior side of this construction (dimensionless). May 
-   *  require simulation ('EnvelopeSummary' table). 
+  /** Get the visible absorptance of the interior side of this construction (dimensionless). May
+   *  require simulation ('EnvelopeSummary' table).
    *
    *  Attribute Name: 'interiorVisibleAbsorptance' */
   boost::optional<double> interiorVisibleAbsorptance() const;
 
-  /** \deprecated 
+  /** \deprecated
    *   This will be removed after 1.4.0 */
   boost::optional<double> interiorVisibleAbsorbtance() const;
 
-  /** Get the visible absorptance of the exterior side of this construction (dimensionless). May 
-   *  require simulation ('EnvelopeSummary' table). 
+  /** Get the visible absorptance of the exterior side of this construction (dimensionless). May
+   *  require simulation ('EnvelopeSummary' table).
    *
    *  Attribute Name: 'exteriorVisibleAbsorptance' */
   boost::optional<double> exteriorVisibleAbsorptance() const;
 
-  /** \deprecated 
+  /** \deprecated
    *   This will be removed after 1.4.0 */
   boost::optional<double> exteriorVisibleAbsorbtance() const;
 
-  /** Get the visible transmittance of this construction (dimensionless). May require simulation 
-   *  ('EnvelopeSummary' table). 
+  /** Get the visible transmittance of this construction (dimensionless). May require simulation
+   *  ('EnvelopeSummary' table).
    *
    *  Attribute Name: 'visibleTransmittance' */
   boost::optional<double> visibleTransmittance() const;

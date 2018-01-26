@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -68,22 +68,22 @@ class UTILITIES_API DataError {
   /** Returns the scope of the error. */
   Scope scope() const;
 
-  /** Returns the enum that describes the error. The .valueDescription() contains a brief 
+  /** Returns the enum that describes the error. The .valueDescription() contains a brief
    *  description. */
   DataErrorType type() const;
 
   /** Returns the index of the erroneous field, if scope() == Scope::Field, otherwise throws. */
   unsigned fieldIdentifier() const;
 
-  /** Returns the handle of the erroneous object, if applicable. Otherwise, returned 
+  /** Returns the handle of the erroneous object, if applicable. Otherwise, returned
    *  Handle.isNull(). */
   Handle objectIdentifier() const;
 
   /** Returns the name of the object identified by objectIdentifier(), or an empty string. */
   std::string objectName() const;
 
-  /** Returns the type of the object identified by objectIdentifier() if the error is field- or 
-   *  object-level; if the error is collection level, the return value will either evaluate to 
+  /** Returns the type of the object identified by objectIdentifier() if the error is field- or
+   *  object-level; if the error is collection level, the return value will either evaluate to
    *  false or be related to a cardinality constraint. */
   boost::optional<IddObjectType> objectType() const;
 

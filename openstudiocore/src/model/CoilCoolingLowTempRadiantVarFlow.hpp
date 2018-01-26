@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -49,7 +49,7 @@ namespace detail {
 /** CoilCoolingLowTempRadiantVarFlow is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow'. */
 class MODEL_API CoilCoolingLowTempRadiantVarFlow : public StraightComponent {
  public:
- 
+
   /** @name Constructors and Destructors */
   //@{
 
@@ -61,7 +61,7 @@ class MODEL_API CoilCoolingLowTempRadiantVarFlow : public StraightComponent {
   //@}
 
   static IddObjectType iddObjectType();
-  
+
   //unsigned inletPort();
 
   //unsigned outletPort();
@@ -113,7 +113,7 @@ class MODEL_API CoilCoolingLowTempRadiantVarFlow : public StraightComponent {
 
   void resetCondensationControlType();
 
-  void setCondensationControlDewpointOffset(double condensationControlDewpointOffset);
+  bool setCondensationControlDewpointOffset(double condensationControlDewpointOffset);
 
   void resetCondensationControlDewpointOffset();
 
@@ -155,4 +155,3 @@ typedef std::vector<CoilCoolingLowTempRadiantVarFlow> CoilCoolingLowTempRadiantV
 } // openstudio
 
 #endif // MODEL_COILCOOLINGLOWTEMPRADIANTVARFLOW_HPP
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,7 +30,7 @@
 
 namespace openstudio {
 
-GridScene::GridScene( QObject * parent ) 
+GridScene::GridScene( QObject * parent )
   : QGraphicsScene(parent)
 {
 }
@@ -38,7 +38,7 @@ GridScene::GridScene( QObject * parent )
 QRectF GridScene::getCell(int xindex, int yindex)
 {
   int xcord;
-  int ycord; 
+  int ycord;
   int width;
   int height;
 
@@ -53,7 +53,7 @@ QRectF GridScene::getCell(int xindex, int yindex)
 QRectF GridScene::getCell(QPointF point)
 {
   float xcord;
-  float ycord; 
+  float ycord;
   int width;
   int height;
 

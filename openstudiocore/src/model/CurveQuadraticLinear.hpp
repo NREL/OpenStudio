@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -41,8 +41,8 @@ namespace detail {
 
 } // detail
 
-/** CurveQuadraticLinear is a Curve that wraps the OpenStudio IDD object 
- *  'OS:Curve:QuadraticLinear'. The functional form is 
+/** CurveQuadraticLinear is a Curve that wraps the OpenStudio IDD object
+ *  'OS:Curve:QuadraticLinear'. The functional form is
  *  \f$f(x) = c_1 + c_2 \cdot x + c_3 \cdot x^2 + (c_4 + c_5 \cdot x + c_6 \cdot x^2) \cdot y\f$ */
 class MODEL_API CurveQuadraticLinear : public Curve {
  public:
@@ -108,31 +108,31 @@ class MODEL_API CurveQuadraticLinear : public Curve {
   /** @name Setters */
   //@{
 
-  void setCoefficient1Constant(double coefficient1Constant);
+  bool setCoefficient1Constant(double coefficient1Constant);
 
-  void setCoefficient2x(double coefficient2x);
+  bool setCoefficient2x(double coefficient2x);
 
-  void setCoefficient3xPOW2(double coefficient3xPOW2);
+  bool setCoefficient3xPOW2(double coefficient3xPOW2);
 
-  void setCoefficient4y(double coefficient4y);
+  bool setCoefficient4y(double coefficient4y);
 
-  void setCoefficient5xTIMESY(double coefficient5xTIMESY);
+  bool setCoefficient5xTIMESY(double coefficient5xTIMESY);
 
-  void setCoefficient6xPOW2TIMESY(double coefficient6xPOW2TIMESY);
+  bool setCoefficient6xPOW2TIMESY(double coefficient6xPOW2TIMESY);
 
-  void setMinimumValueofx(double minimumValueofx);
+  bool setMinimumValueofx(double minimumValueofx);
 
-  void setMaximumValueofx(double maximumValueofx);
+  bool setMaximumValueofx(double maximumValueofx);
 
-  void setMinimumValueofy(double minimumValueofy);
+  bool setMinimumValueofy(double minimumValueofy);
 
-  void setMaximumValueofy(double maximumValueofy);
+  bool setMaximumValueofy(double maximumValueofy);
 
-  void setMinimumCurveOutput(double minimumCurveOutput);
+  bool setMinimumCurveOutput(double minimumCurveOutput);
 
   void resetMinimumCurveOutput();
 
-  void setMaximumCurveOutput(double maximumCurveOutput);
+  bool setMaximumCurveOutput(double maximumCurveOutput);
 
   void resetMaximumCurveOutput();
 
@@ -179,5 +179,4 @@ typedef std::vector<CurveQuadraticLinear> CurveQuadraticLinearVector;
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEQUADRATICLINEAR_HPP
-
+#endif // MODEL_CURVEQUADRATICLINEAR_HPP

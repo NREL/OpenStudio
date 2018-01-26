@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,20 +39,20 @@ namespace detail {
 
   /** CurveQuartic_Impl is a Curve_Impl that is the implementation class for CurveQuartic.*/
   class MODEL_API CurveQuartic_Impl : public Curve_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
 
     /** @name Constructors and Destructors */
@@ -116,25 +116,25 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setCoefficient1Constant(double coefficient1Constant);
+    bool setCoefficient1Constant(double coefficient1Constant);
 
-    void setCoefficient2x(double coefficient2x);
+    bool setCoefficient2x(double coefficient2x);
 
-    void setCoefficient3xPOW2(double coefficient3xPOW2);
+    bool setCoefficient3xPOW2(double coefficient3xPOW2);
 
-    void setCoefficient4xPOW3(double coefficient4xPOW3);
+    bool setCoefficient4xPOW3(double coefficient4xPOW3);
 
-    void setCoefficient5xPOW4(double coefficient5xPOW4);
+    bool setCoefficient5xPOW4(double coefficient5xPOW4);
 
-    void setMinimumValueofx(double minimumValueofx);
+    bool setMinimumValueofx(double minimumValueofx);
 
-    void setMaximumValueofx(double maximumValueofx);
+    bool setMaximumValueofx(double maximumValueofx);
 
-    void setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
+    bool setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
 
     void resetMinimumCurveOutput();
 
-    void setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
+    bool setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
 
     void resetMaximumCurveOutput();
 
@@ -161,5 +161,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEQUARTIC_IMPL_HPP
-
+#endif // MODEL_CURVEQUARTIC_IMPL_HPP

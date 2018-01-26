@@ -13,8 +13,8 @@
 - ![Fixed:][fixed] [#1429]( https://github.com/NREL/OpenStudio/issues/1429 ), Document Timeseries Results
 - ![Fixed:][fixed] [#1430]( https://github.com/NREL/OpenStudio/issues/1430 ), Document General Modeling QAQC
 - ![Fixed:][fixed] [#2305]( https://github.com/NREL/OpenStudio/issues/2305 ), ATU CV Four Pipe problems with InducedAirInletNode
-- ![Fixed:][fixed] [#2750]( https://github.com/NREL/OpenStudio/issues/2750 ), EMS:Sensor constructor with OutputVariable should get the KeyValue 
-- ![Fixed:][fixed] [#2879]( https://github.com/NREL/OpenStudio/issues/2879 ), The default chilled beam type is missing 
+- ![Fixed:][fixed] [#2750]( https://github.com/NREL/OpenStudio/issues/2750 ), EMS:Sensor constructor with OutputVariable should get the KeyValue
+- ![Fixed:][fixed] [#2879]( https://github.com/NREL/OpenStudio/issues/2879 ), The default chilled beam type is missing
 - ![Fixed:][fixed] [#2888]( https://github.com/NREL/OpenStudio/issues/2888 ), Cannot edit any of the Fractions for the loads in current develop in OS App
 - ![Fixed:][fixed] [#2891]( https://github.com/NREL/OpenStudio/issues/2891 ), 2.3.1 AirLoopHVAC doesn't have an AvailabilityManagerAssignmentList assigned
 - ![Improved:][improved] [#907]( https://github.com/NREL/OpenStudio/issues/907 ), Water end-use column missing from PAT results tab

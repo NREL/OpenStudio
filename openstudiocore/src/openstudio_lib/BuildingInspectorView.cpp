@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -303,7 +303,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   mainGridLayout->addLayout(vLayout, row, 0);
   mainGridLayout->setRowMinimumHeight(row, 30);
 
-  // Relocatable 
+  // Relocatable
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
@@ -505,7 +505,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   ++row;
 
-  // widths and heights 
+  // widths and heights
 
   mainGridLayout->setColumnMinimumWidth(0, 80);
   mainGridLayout->setColumnMinimumWidth(1, 80);
@@ -586,7 +586,8 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
     m_isIP,
     *m_building,
     OptionalDoubleGetter(std::bind(&model::Building::northAxis, m_building.get_ptr())),
-    DoubleSetterVoidReturn(std::bind(static_cast<void(model::Building::*)(double)>(&model::Building::setNorthAxis), m_building.get_ptr(), std::placeholders::_1)),
+    boost::optional<DoubleSetter>([this](double d) { return m_building->setNorthAxis(d); }),
+    // boost::optional<DoubleSetter>(std::bind(static_cast<bool (model::Building::*)(double)>(&model::Building::setNorthAxis), m_building.get_ptr(), std::placeholders::_1)),
     boost::optional<NoFailAction>(std::bind(&model::Building::resetNorthAxis, m_building.get_ptr())),
     boost::none,
     boost::none,
@@ -614,7 +615,7 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
   m_relocatable->bind(
     building,
     std::bind(&model::Building::relocatable, building),
-    boost::optional<BoolSetter>(std::bind(&model::Building::setRelocatable, building, std::placeholders::_1)),
+    boost::optional<BoolSetter>(std::bind(&model::Building::setRelocatableNoFail, building, std::placeholders::_1)),
     boost::optional<NoFailAction>(),
     boost::optional<BasicQuery>(std::bind(&model::Building::isRelocatableDefaulted, building))
   );

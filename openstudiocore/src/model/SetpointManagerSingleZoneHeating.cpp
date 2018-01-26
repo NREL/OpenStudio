@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -95,14 +95,16 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_SetpointManager_SingleZone_HeatingFields::ControlZoneName);
   }
 
-  void SetpointManagerSingleZoneHeating_Impl::setMinimumSupplyAirTemperature(double minimumSupplyAirTemperature) {
+  bool SetpointManagerSingleZoneHeating_Impl::setMinimumSupplyAirTemperature(double minimumSupplyAirTemperature) {
     bool result = setDouble(OS_SetpointManager_SingleZone_HeatingFields::MinimumSupplyAirTemperature, minimumSupplyAirTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
-  void SetpointManagerSingleZoneHeating_Impl::setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature) {
+  bool SetpointManagerSingleZoneHeating_Impl::setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature) {
     bool result = setDouble(OS_SetpointManager_SingleZone_HeatingFields::MaximumSupplyAirTemperature, maximumSupplyAirTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   bool SetpointManagerSingleZoneHeating_Impl::setControlZone(const ThermalZone& thermalZone) {
@@ -184,12 +186,12 @@ boost::optional<ThermalZone> SetpointManagerSingleZoneHeating::controlZone() con
   return getImpl<detail::SetpointManagerSingleZoneHeating_Impl>()->controlZone();
 }
 
-void SetpointManagerSingleZoneHeating::setMinimumSupplyAirTemperature(double minimumSupplyAirTemperature) {
-  getImpl<detail::SetpointManagerSingleZoneHeating_Impl>()->setMinimumSupplyAirTemperature(minimumSupplyAirTemperature);
+bool SetpointManagerSingleZoneHeating::setMinimumSupplyAirTemperature(double minimumSupplyAirTemperature) {
+  return getImpl<detail::SetpointManagerSingleZoneHeating_Impl>()->setMinimumSupplyAirTemperature(minimumSupplyAirTemperature);
 }
 
-void SetpointManagerSingleZoneHeating::setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature) {
-  getImpl<detail::SetpointManagerSingleZoneHeating_Impl>()->setMaximumSupplyAirTemperature(maximumSupplyAirTemperature);
+bool SetpointManagerSingleZoneHeating::setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature) {
+  return getImpl<detail::SetpointManagerSingleZoneHeating_Impl>()->setMaximumSupplyAirTemperature(maximumSupplyAirTemperature);
 }
 
 bool SetpointManagerSingleZoneHeating::setControlZone(const ThermalZone& thermalZone) {
@@ -216,4 +218,3 @@ SetpointManagerSingleZoneHeating::SetpointManagerSingleZoneHeating(std::shared_p
 
 } // model
 } // openstudio
-

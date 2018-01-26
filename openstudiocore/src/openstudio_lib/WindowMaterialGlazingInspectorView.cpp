@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -151,7 +151,7 @@ void WindowMaterialGlazingInspectorView::createLayout()
 
   m_backSideSolarReflectanceAtNormalIncidence = new OSQuantityEdit2("","","", m_isIP);
   connect(this, &WindowMaterialGlazingInspectorView::toggleUnitsClicked, m_backSideSolarReflectanceAtNormalIncidence, &OSQuantityEdit2::onUnitSystemChange);
-  mainGridLayout->addWidget(m_backSideSolarReflectanceAtNormalIncidence,row++,0,1,3);
+  mainGridLayout->addWidget(m_backSideSolarReflectanceAtNormalIncidence,row++,0,1,3); 
 
   // Visible Transmittance At Normal Incidence
 
@@ -289,7 +289,7 @@ void WindowMaterialGlazingInspectorView::attach(openstudio::model::StandardGlazi
   m_solarDiffusing->bind(
     *m_glazing,
     std::bind(&model::StandardGlazing::solarDiffusing, m_glazing.get_ptr()),
-    boost::optional<BoolSetter>(std::bind(&model::StandardGlazing::setSolarDiffusing, m_glazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<BoolSetter>(std::bind(&model::StandardGlazing::setSolarDiffusingNoFail, m_glazing.get_ptr(), std::placeholders::_1)),
     boost::optional<NoFailAction>(std::bind(&model::StandardGlazing::resetSolarDiffusing, m_glazing.get_ptr())),
     boost::optional<BasicQuery>(std::bind(&model::StandardGlazing::isSolarDiffusingDefaulted, m_glazing.get_ptr()))
   );
@@ -336,7 +336,7 @@ void WindowMaterialGlazingInspectorView::attach(openstudio::model::StandardGlazi
   );
 
   // m_backSideSolarReflectanceAtNormalIncidence->bind(glazing,"backSideSolarReflectanceatNormalIncidence",m_isIP);
-  m_frontSideSolarReflectanceAtNormalIncidence->bind(
+  m_backSideSolarReflectanceAtNormalIncidence->bind(
     m_isIP,
     *m_glazing,
     OptionalDoubleGetter(std::bind(&model::StandardGlazing::backSideSolarReflectanceatNormalIncidence, m_glazing.get_ptr())),

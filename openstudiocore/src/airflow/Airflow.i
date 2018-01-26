@@ -18,7 +18,7 @@
   #include <airflow/contam/ForwardTranslator.hpp>
   using namespace openstudio::contam;
   using namespace openstudio;
-  
+
   #include <model/Model.hpp>
   #include <model/ModelObject.hpp>
 %}
@@ -58,4 +58,4 @@
 //%include <airflow/ReverseTranslator.hpp>
 %include <airflow/contam/ForwardTranslator.hpp>
 
-#endif //AIRFLOW_I 
+#endif //AIRFLOW_I

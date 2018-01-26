@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -80,13 +80,13 @@ path tempDir()
 }
 
 /** path to UTF-8 encoding. */
-std::string toString(const path& p) 
+std::string toString(const path& p)
 {
   return p.generic_string();
 }
 
 /** path to QString. */
-QString toQString(const path& p) 
+QString toQString(const path& p)
 {
   return toQString(toString(p));
 }
@@ -98,7 +98,7 @@ path toPath(const char* s)
 }
 
 /** UTF-8 encoded std::string to path*/
-path toPath(const std::string& s) 
+path toPath(const std::string& s)
 {
   return toPath(toQString(s));
 }

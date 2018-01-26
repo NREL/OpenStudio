@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -49,12 +49,17 @@
 #include "InteriorPartitionSurface_Impl.hpp"
 #include "PlanarSurfaceGroup.hpp"
 #include "PlanarSurfaceGroup_Impl.hpp"
+#include "ShadingSurfaceGroup.hpp"
+#include "ShadingSurfaceGroup_Impl.hpp"
 #include "Space.hpp"
 #include "Space_Impl.hpp"
 #include "DefaultConstructionSet.hpp"
 #include "DefaultConstructionSet_Impl.hpp"
 #include "ShadingSurfaceGroup.hpp"
 #include "InteriorPartitionSurfaceGroup.hpp"
+#include "DaylightingControl.hpp"
+#include "DaylightingControl_Impl.hpp"
+
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
@@ -79,7 +84,7 @@ namespace openstudio
     {
       m_logSink.setLogLevel(Warn);
       //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSReverseTranslator"));
-      m_logSink.setThreadId(QThread::currentThread());    
+      m_logSink.setThreadId(QThread::currentThread());
     }
 
     std::vector<LogMessage> ModelMerger::warnings() const
@@ -116,7 +121,7 @@ namespace openstudio
       }
       return boost::none;
     }
-    
+
     boost::optional<UUID> ModelMerger::getCurrentModelHandle(const UUID& newHandle)
     {
       auto it = m_newToCurrentHandleMapping.find(newHandle);
@@ -141,6 +146,11 @@ namespace openstudio
         currentSurface.remove();
       }
 
+      // remove current shadingSurfaceGroups
+      for (auto& shadingSurfaceGroup : currentSpace.shadingSurfaceGroups()){
+        shadingSurfaceGroup.remove();
+      }
+
       // add new surfaces
       for (const auto& newSurface : newSpace.surfaces()){
         // DLM: this should probably be moved to a mergeSurface method
@@ -163,7 +173,44 @@ namespace openstudio
         }
       }
 
-      // DLM: TODO shadingSurfaceGroups
+      // add new shadingSurfaceGroups
+      for (const auto& newShadingSurfaceGroup : newSpace.shadingSurfaceGroups()){
+
+        // check if this already merged via a window clone
+        if (m_newMergedHandles.find(newShadingSurfaceGroup.handle()) != m_newMergedHandles.end()){
+          continue;
+        }
+
+        ShadingSurfaceGroup clone = newShadingSurfaceGroup.clone(m_currentModel).cast<ShadingSurfaceGroup>();
+        clone.setSpace(currentSpace);
+
+        m_newMergedHandles.insert(newShadingSurfaceGroup.handle());
+        m_currentToNewHandleMapping[clone.handle()] = newShadingSurfaceGroup.handle();
+        m_newToCurrentHandleMapping[newShadingSurfaceGroup.handle()] = clone.handle();
+
+        boost::optional<SubSurface> newShadedSubSurface = newShadingSurfaceGroup.shadedSubSurface();
+        if (newShadedSubSurface){
+          boost::optional<UUID> currentSubSurfaceHandle = getCurrentModelHandle(newShadedSubSurface->handle());
+          if (currentSubSurfaceHandle){
+            boost::optional<SubSurface> currentSubSurface = m_currentModel.getModelObject<SubSurface>(*currentSubSurfaceHandle);
+            if (currentSubSurface){
+              clone.setShadedSubSurface(*currentSubSurface);
+            }
+          }
+        }
+
+        boost::optional<Surface> newShadedSurface = newShadingSurfaceGroup.shadedSurface();
+        if (newShadedSurface){
+          boost::optional<UUID> currentSurfaceHandle = getCurrentModelHandle(newShadedSurface->handle());
+          if (currentSurfaceHandle){
+            boost::optional<Surface> currentSurface = m_currentModel.getModelObject<Surface>(*currentSurfaceHandle);
+            if (currentSurface){
+              clone.setShadedSurface(*currentSurface);
+            }
+          }
+        }
+      }
+
       // DLM: TODO interiorPartitionSurfaceGroups
 
       // thermal zone
@@ -231,6 +278,46 @@ namespace openstudio
         currentSpace.resetDefaultConstructionSet();
       }
 
+      // remove current daylightingControls
+      for (auto& daylightingControl : currentSpace.daylightingControls()){
+        daylightingControl.remove();
+      }
+
+      // add new daylightingControls
+      for (const auto& newDaylightingControl : newSpace.daylightingControls()){
+
+        DaylightingControl clone = newDaylightingControl.clone(m_currentModel).cast<DaylightingControl>();
+        clone.setSpace(currentSpace);
+
+        m_newMergedHandles.insert(newDaylightingControl.handle());
+        m_currentToNewHandleMapping[clone.handle()] = newDaylightingControl.handle();
+        m_newToCurrentHandleMapping[newDaylightingControl.handle()] = clone.handle();
+
+        // hook up daylighting control to thermal zone
+        for (const auto& newThermalZone : newDaylightingControl.getModelObjectSources<ThermalZone>()){
+          boost::optional<DaylightingControl> primaryDaylightingControl = newThermalZone.primaryDaylightingControl();
+          boost::optional<DaylightingControl> secondaryDaylightingControl = newThermalZone.secondaryDaylightingControl();
+
+          if (primaryDaylightingControl && (primaryDaylightingControl->handle() == newDaylightingControl.handle())){
+            boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(newThermalZone);
+            if (currentObject){
+              ThermalZone currentThermalZone = currentObject->cast<ThermalZone>();
+              currentThermalZone.setPrimaryDaylightingControl(clone);
+              currentThermalZone.setFractionofZoneControlledbyPrimaryDaylightingControl(newThermalZone.fractionofZoneControlledbyPrimaryDaylightingControl());
+            }
+
+          } else if (secondaryDaylightingControl && (secondaryDaylightingControl->handle() == newDaylightingControl.handle())){
+            boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(newThermalZone);
+            if (currentObject){
+              ThermalZone currentThermalZone = currentObject->cast<ThermalZone>();
+              currentThermalZone.setSecondaryDaylightingControl(clone);
+              currentThermalZone.setFractionofZoneControlledbySecondaryDaylightingControl(newThermalZone.fractionofZoneControlledbySecondaryDaylightingControl());
+            }
+          }
+
+        }
+
+      }
     }
 
     void ModelMerger::mergeThermalZone(ThermalZone& currentThermalZone, const ThermalZone& newThermalZone)
@@ -254,7 +341,7 @@ namespace openstudio
       // DLM: TODO zoneControlContaminantController
       // DLM: TODO sizingZone
     }
-  
+
     void ModelMerger::mergeSpaceType(SpaceType& currentSpaceType, const SpaceType& newSpaceType)
     {
       if (m_newMergedHandles.find(newSpaceType.handle()) != m_newMergedHandles.end()){
@@ -277,7 +364,7 @@ namespace openstudio
       } else{
         currentSpaceType.resetDefaultConstructionSet();
       }
-        
+
       // DLM: TODO default schedule set
 
       // DLM: TODO rendering color
@@ -404,12 +491,12 @@ namespace openstudio
         default:
           LOG(Error, "No constructor registered for IddObjectType " << iddObjectType.valueName());
         }
-            
+
         OS_ASSERT(currentObject);
         m_currentToNewHandleMapping[currentObject->handle()] = newObject.handle();
         m_newToCurrentHandleMapping[newObject.handle()] = currentObject->handle();
       }
-          
+
       // merge objects
       switch (iddObjectType.value()){
       case IddObjectType::OS_Space:
@@ -502,6 +589,6 @@ namespace openstudio
         }
       }
     }
-    
+
   }//model
 }//openstudio

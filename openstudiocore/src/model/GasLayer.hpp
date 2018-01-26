@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,9 +39,9 @@ namespace detail{
   class GasLayer_Impl;
 }
 
-/** GasLayer is a FenestrationMaterial that serves as a base class for gaseous layers in 
- *  fenestration \link LayeredConstruction LayeredConstructions \endlink. The base class is used 
- *  to determine if EnergyPlus's rules for relative placement of fenestration layers are 
+/** GasLayer is a FenestrationMaterial that serves as a base class for gaseous layers in
+ *  fenestration \link LayeredConstruction LayeredConstructions \endlink. The base class is used
+ *  to determine if EnergyPlus's rules for relative placement of fenestration layers are
  *  satisfied. */
 class MODEL_API GasLayer : public FenestrationMaterial {
  public:
@@ -61,7 +61,7 @@ class MODEL_API GasLayer : public FenestrationMaterial {
 
   GasLayer(IddObjectType type,const Model& model);
 
-  explicit GasLayer(std::shared_ptr<detail::GasLayer_Impl> impl);  
+  explicit GasLayer(std::shared_ptr<detail::GasLayer_Impl> impl);
 
   /// @endcond
  private:

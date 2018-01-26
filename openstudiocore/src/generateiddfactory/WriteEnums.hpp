@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,14 +42,14 @@ void writeDomain(std::ostream &t_os, const std::string &t_name, const Container 
 {
   if (in_class)
   {
-    t_os << 
+    t_os <<
       "  enum domain " << std::endl;
   } else {
-    t_os << 
+    t_os <<
       "  enum " << t_name << "::domain : int" << std::endl;
   }
 
-  t_os << 
+  t_os <<
   "  {" << std::endl;
 
   for (const auto &val : t_values)
@@ -70,7 +70,7 @@ void writeBuildStringVec(std::ostream &t_os, const std::string &t_name, const Co
     t_os << "    " << t_name << "::VecType " << t_name << "::buildStringVec(bool isd)" << std::endl;
   }
 
-  t_os << 
+  t_os <<
   "    {" << std::endl <<
   "      struct evalue" << std::endl <<
   "      {" << std::endl <<
@@ -84,10 +84,10 @@ void writeBuildStringVec(std::ostream &t_os, const std::string &t_name, const Co
     t_os << "{ " << t_name << "::" << val.first << ", \"" << val.first << "\", \"" << val.second << "\"}," << std::endl;
   }
 
-  t_os << 
+  t_os <<
   "        { 0,0,0 }" << std::endl <<
   "      };" << std::endl <<
- 
+
   "      VecType v;" << std::endl <<
   "      int i = 0;" << std::endl <<
   "      while (!(a[i].value == 0 && a[i].name == 0 && a[i].description == 0))" << std::endl <<
@@ -131,7 +131,7 @@ void writeEnumFast(std::ostream &t_os, const std::string &t_name, const Containe
   "  static std::string enumName() " << std::endl <<
   "  { return \"" << t_name << "\"; }" << std::endl <<
   "  domain value() const { return static_cast<domain>(EnumBase<" << t_name << ">::value()); }" << std::endl <<
- 
+
   "   private:" << std::endl <<
   "    friend class EnumBase<" << t_name << ">;" << std::endl <<
   "    typedef std::pair<std::string, int> PT;" << std::endl <<
@@ -142,18 +142,18 @@ void writeEnumFast(std::ostream &t_os, const std::string &t_name, const Containe
   t_os <<
   "  " << std::endl <<
 //  "    friend class boost::serialization::access;" << std::endl <<
- 
+
 //  "    template<class Archive> void serialize(Archive & ar, const unsigned int version)" << std::endl <<
 //  "    {" << std::endl <<
 //  "      ar & boost::serialization::make_nvp(\"value\", m_value);" << std::endl <<
 //  "    }" << std::endl <<
   "  };" << std::endl <<
- 
+
   "  inline std::ostream &operator<<(std::ostream &os, const " << t_name << " &e)" << std::endl <<
   "  {" << std::endl <<
   "    return os << e.valueName() << \"(\" << e.value() << \")\";" << std::endl <<
   "  }" << std::endl <<
- 
+
   "  typedef boost::optional<" << t_name << "> Optional" << t_name << " ;" << std::endl <<
   "#endif";
 }

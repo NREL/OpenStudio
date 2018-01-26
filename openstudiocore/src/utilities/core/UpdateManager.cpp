@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -47,8 +47,8 @@
 namespace openstudio{
 
   UpdateManager::UpdateManager(const std::string& appName)
-    : m_appName(appName), m_finished(false), m_error(false), 
-      m_newMajorRelease(false), m_newMinorRelease(false), m_newPatchRelease(false), 
+    : m_appName(appName), m_finished(false), m_error(false),
+      m_newMajorRelease(false), m_newMinorRelease(false), m_newPatchRelease(false),
       m_mostRecentVersion(openStudioVersion()), m_manager(new QNetworkAccessManager(this))
   {
     Application::instance().processEvents(); // a kludge to make sure that updatemanager works correctly in a non-application environment on unix
@@ -58,7 +58,7 @@ namespace openstudio{
     connect(this, &UpdateManager::processed, this, &UpdateManager::replyProcessed);
 
     QUrl url(QString::fromStdString(updateUrl()));
-    
+
     m_request = new QNetworkRequest(url);
     OS_ASSERT(m_request);
 
@@ -67,8 +67,8 @@ namespace openstudio{
   }
 
   UpdateManager::UpdateManager(const std::string& appName, const std::string& url)
-    : m_appName(appName), m_finished(false), m_error(false), 
-      m_newMajorRelease(false), m_newMinorRelease(false), m_newPatchRelease(false), 
+    : m_appName(appName), m_finished(false), m_error(false),
+      m_newMajorRelease(false), m_newMinorRelease(false), m_newPatchRelease(false),
       m_mostRecentVersion(openStudioVersion()), m_manager(new QNetworkAccessManager(this))
   {
     Application::instance().processEvents(); // a kludge to make sure that updatemanager works correctly in a non-application environment on unix
@@ -76,11 +76,11 @@ namespace openstudio{
 
 
     connect(m_manager, &QNetworkAccessManager::finished, this, &UpdateManager::replyFinished);
-    
+
     connect(this, &UpdateManager::processed, this, &UpdateManager::replyProcessed);
-  
+
     m_request = new QNetworkRequest(QUrl(QString::fromStdString(url)));
-    
+
     m_reply = m_manager->get(*m_request);
   }
 
@@ -128,7 +128,7 @@ namespace openstudio{
   {
     return m_updateMessages;
   }
-  
+
 
   std::string UpdateManager::updateUrl() const
   {
@@ -162,7 +162,7 @@ namespace openstudio{
             QDomElement release = nodes.at(i).toElement();
             if (!release.isNull()){
               if (!checkRelease(release)){
-                // break if not newer than current 
+                // break if not newer than current
                 break;
               }
             }

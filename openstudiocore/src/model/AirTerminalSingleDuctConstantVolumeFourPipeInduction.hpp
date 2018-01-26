@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -122,7 +122,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction : public St
 
   bool setHeatingCoil(const HVACComponent& heatingCoil);
 
-  void setMaximumHotWaterFlowRate(double maximumHotWaterFlowRate);
+  bool setMaximumHotWaterFlowRate(double maximumHotWaterFlowRate);
 
   void resetMaximumHotWaterFlowRate();
 
@@ -140,7 +140,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction : public St
 
   void resetCoolingCoil();
 
-  void setMaximumColdWaterFlowRate(double maximumColdWaterFlowRate);
+  bool setMaximumColdWaterFlowRate(double maximumColdWaterFlowRate);
 
   void resetMaximumColdWaterFlowRate();
 
@@ -192,4 +192,3 @@ typedef std::vector<AirTerminalSingleDuctConstantVolumeFourPipeInduction> AirTer
 } // openstudio
 
 #endif // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMEFOURPIPEINDUCTION_HPP
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -41,7 +41,7 @@
 #include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
-  
+
 class Workspace;
 class WorkspaceObject;
 
@@ -188,11 +188,11 @@ class MEASURE_API OSRunner {
                              const std::string& displayName,
                              const std::string& value);
 
-  /** Halts the simulation with the provided completed status, does not set the current measure's step result. 
+  /** Halts the simulation with the provided completed status, does not set the current measure's step result.
    *  Measure writers can call this with "Success" if all required results have been generated.
-   *  Measure writers should not call this with "Fail", runner.registerError should be used instead.  
+   *  Measure writers should not call this with "Fail", runner.registerError should be used instead.
    *  Measure writers can call this with "Invalid" if the workflow requests parameter combinations that are not valid.
-   *  Measure writers should not call this with "Cancel", this is reserved for external cancel operations.   
+   *  Measure writers should not call this with "Cancel", this is reserved for external cancel operations.
    */
   virtual void haltWorkflow(const std::string& completedStatus = "Invalid");
 
@@ -269,11 +269,11 @@ class MEASURE_API OSRunner {
       const std::string& argument_name,
       const std::map<std::string,OSArgument>& user_arguments);
 
-  /** Call this method to retrieve the value of an OSArgument that was created by 
+  /** Call this method to retrieve the value of an OSArgument that was created by
    *  makeChoiceArgumentOfWorkspaceObjects. */
   boost::optional<openstudio::WorkspaceObject> getOptionalWorkspaceObjectChoiceValue(
       const std::string& argument_name,
-      const std::map<std::string,OSArgument>& user_arguments, 
+      const std::map<std::string,OSArgument>& user_arguments,
       const openstudio::Workspace& workspace);
 
   //@}
@@ -337,7 +337,7 @@ class MEASURE_API OSRunner {
 
   // current data
   WorkflowStepResult m_result;
-  
+
   mutable boost::optional<openstudio::model::Model> m_lastOpenStudioModel;
   boost::optional<openstudio::path> m_lastOpenStudioModelPath;
   mutable boost::optional<openstudio::Workspace> m_lastEnergyPlusWorkspace;

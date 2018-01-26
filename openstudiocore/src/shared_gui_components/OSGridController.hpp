@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -69,7 +69,7 @@ class Holder;
 ///
 /// Generally, Concepts take a ModelObject and display some field of it.
 ///
-/// This has been extended with the ProxyAdapter, which inserts itself between the `getter`, `setter` 
+/// This has been extended with the ProxyAdapter, which inserts itself between the `getter`, `setter`
 /// and the Concept. This ProxyAdapter allows you to not just display data with the ModelObject
 /// but to actually display data on something the ModelObject contains, for example, showing the name
 /// of a SizingZone which is associated with a ThermalZone
@@ -98,9 +98,9 @@ class DataSource
     /// add.*Column functions.
     ///
     ///
-    /// \param[in] t_sourceFunc Takes an Input object (practically speaking, a ModelObject derivation) and returns a vector 
+    /// \param[in] t_sourceFunc Takes an Input object (practically speaking, a ModelObject derivation) and returns a vector
     ///                         of items (probably some derived class from ModelObject)
-    /// \param[in] t_wantsPlaceholder Informs the system to add a placeholder gap at the bottom of the list when it is 
+    /// \param[in] t_wantsPlaceholder Informs the system to add a placeholder gap at the bottom of the list when it is
     ///                         rendering the list of widgets. This is to help non-dropzone enabled stacks of widgets
     ///                         line up with those stacks that do contain dropzones
     /// \param[in] t_dropZoneConcept The `BaseConcept` you want displayed at the bottom of the list of widgets.
@@ -205,7 +205,7 @@ class ObjectSelector : public QObject, public Nano::Observer
   public:
     ObjectSelector(OSGridController *t_grid);
 
-    void addWidget(const boost::optional<model::ModelObject> &t_obj, Holder *t_holder, int row, int column, 
+    void addWidget(const boost::optional<model::ModelObject> &t_obj, Holder *t_holder, int row, int column,
         const boost::optional<int> &subrow, bool t_selector);
     void setObjectSelection(const model::ModelObject &t_obj, bool t_selected);
     bool getObjectSelection(const model::ModelObject &t_obj) const;
@@ -741,7 +741,7 @@ private slots:
 
 };
 
-// Possible solution for user facing column resize 
+// Possible solution for user facing column resize
 // Hardst part is addressing persitance when grid redraws
 //class ColumnSizer : public QWidget
 //{

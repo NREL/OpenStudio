@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -90,7 +90,7 @@ class MODEL_API CoilHeatingWater : public WaterToAirComponent {
   boost::optional<double> uFactorTimesAreaValue();
 
   /** Sets the value of the UFactorTimesAreaValue field. **/
-  void setUFactorTimesAreaValue( double value );
+  bool setUFactorTimesAreaValue( double value );
 
   /** Returns true if the UFactorTimesAreaValue field is set to autosize **/
   bool isUFactorTimesAreaValueAutosized();
@@ -102,7 +102,7 @@ class MODEL_API CoilHeatingWater : public WaterToAirComponent {
   boost::optional<double> maximumWaterFlowRate();
 
   /** Sets the value of the MaximumWaterFlowRate field. **/
-  void setMaximumWaterFlowRate( double value );
+  bool setMaximumWaterFlowRate( double value );
 
   /** Returns true if the MaximumWaterFlowRate field is set to autosize **/
   bool isMaximumWaterFlowRateAutosized();
@@ -116,13 +116,13 @@ class MODEL_API CoilHeatingWater : public WaterToAirComponent {
   /** Sets the value of the PerformanceInputMethod field.
    *  Options are UFactorTimesAreaAndDesignWaterFlowRate and NominalCapacity.
    */
-  void setPerformanceInputMethod( std::string value );
+  bool setPerformanceInputMethod( std::string value );
 
   /** Returns the value of the RatedCapacity field. **/
   boost::optional<double> ratedCapacity();
 
   /** Sets the value of the RatedCapacity field. **/
-  void setRatedCapacity( double value );
+  bool setRatedCapacity( double value );
 
   /** Returns true if the RatedCapacity field is set to autosize **/
   bool isRatedCapacityAutosized();
@@ -134,31 +134,31 @@ class MODEL_API CoilHeatingWater : public WaterToAirComponent {
   double ratedInletWaterTemperature();
 
   /** Sets the value of RatedInletWaterTemperature field. **/
-  void setRatedInletWaterTemperature( double value );
+  bool setRatedInletWaterTemperature( double value );
 
   /** Returns the value of RatedInletWaterTemperature field. **/
   double ratedInletAirTemperature();
 
   /** Sets the value of RatedInletWaterTemperature field. **/
-  void setRatedInletAirTemperature( double value );
+  bool setRatedInletAirTemperature( double value );
 
   /** Returns the value of RatedOutletWaterTemperature field. **/
   double ratedOutletWaterTemperature();
 
   /** Sets the value of RatedOutletWaterTemperature field. **/
-  void setRatedOutletWaterTemperature( double value );
+  bool setRatedOutletWaterTemperature( double value );
 
   /** Returns the value of RatedOutletAirTemperature field. **/
   double ratedOutletAirTemperature();
 
   /** Sets the value of RatedOutletAirTemperature field. **/
-  void setRatedOutletAirTemperature( double value );
+  bool setRatedOutletAirTemperature( double value );
 
   /** Returns the value of RatedRatioForAirAndWaterConvection field. **/
   double ratedRatioForAirAndWaterConvection();
 
   /** Sets the value of RatedRatioForAirAndWaterConvection field. **/
-  void setRatedRatioForAirAndWaterConvection( double value );
+  bool setRatedRatioForAirAndWaterConvection( double value );
 
   /** Returns the optional ControllerWaterCoil associated with this coil.
    */
@@ -198,4 +198,4 @@ typedef boost::optional<CoilHeatingWater> OptionalCoilHeatingWater;
 } // model
 } // openstudio
 
-#endif // MODEL_COILHEATINGWATER_HPP
+#endif // MODEL_COILHEATINGWATER_HPP

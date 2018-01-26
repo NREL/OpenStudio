@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -38,12 +38,12 @@ TEST_F(ModelFixture, MeterCustomDecrement_DefaultConstructor)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model model;
     MeterCustomDecrement testObject(model, "Electricity:Facility");
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -51,7 +51,7 @@ TEST_F(ModelFixture, MeterCustomDecrement_DefaultConstructor)
 
 TEST_F(ModelFixture, MeterCustomDecrement_Remove)
 {
-  Model model; 
+  Model model;
   MeterCustomDecrement testObject(model, "Electricity:Facility");
 
   EXPECT_EQ((unsigned)1, model.getModelObjects<MeterCustomDecrement>().size());
@@ -64,7 +64,7 @@ TEST_F(ModelFixture, MeterCustomDecrement_KeyVarGroups)
 {
   Model model;
   MeterCustomDecrement testObject(model, "Electricity:Facility");
-  
+
   EXPECT_EQ("Electricity:Facility", testObject.sourceMeterName());
   testObject.setSourceMeterName("Electricity:Building");
   EXPECT_EQ("Electricity:Building", testObject.sourceMeterName());
@@ -93,17 +93,17 @@ TEST_F(ModelFixture, MeterCustomDecrement_KeyVarGroups)
 
   EXPECT_EQ("SPACE1-1 Equipment 1", keyVarGroups[0].first);
   EXPECT_EQ("Equipment Electric Energy", keyVarGroups[0].second);
-  
+
   // Try changing the keyName at index 0
   testObject.setKeyName(0, "A new key name");
   keyVarGroups = testObject.keyVarGroups();
   EXPECT_EQ("A new key name", keyVarGroups[0].first);
-  
+
   // Try changing the setOutputVariableorMeterName at index 0
   testObject.setOutputVariableorMeterName(0, "A new output var name");
   keyVarGroups = testObject.keyVarGroups();
   EXPECT_EQ("A new output var name", keyVarGroups[0].second);
-  
+
 
   testObject.removeAllKeyVarGroups();
   for (int i=0; i<100; i++) {
@@ -112,5 +112,5 @@ TEST_F(ModelFixture, MeterCustomDecrement_KeyVarGroups)
   keyVarGroups = testObject.keyVarGroups();
   EXPECT_EQ(100, keyVarGroups.size());
   EXPECT_EQ(100, testObject.numKeyVarGroups());
-  
+
 }

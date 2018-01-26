@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -59,14 +59,14 @@ OptionalModelObject ReverseTranslator::translateControllerOutdoorAir( const Work
   if( value )
   {
     mo.setMinimumOutdoorAirFlowRate(value.get());
-  }  
+  }
 
   value = workspaceObject.getDouble(Controller_OutdoorAirFields::MaximumOutdoorAirFlowRate);
   if( value )
   {
     mo.setMaximumOutdoorAirFlowRate(value.get());
   }
-  
+
   s = workspaceObject.getString(Controller_OutdoorAirFields::EconomizerControlType);
   if( s )
   {
@@ -130,28 +130,28 @@ OptionalModelObject ReverseTranslator::translateControllerOutdoorAir( const Work
   s = workspaceObject.getString(Controller_OutdoorAirFields::MinimumFractionofOutdoorAirScheduleName);
   if( s )
   {
-    LOG(Warn, "ControllerOutdoorAir " << workspaceObject.briefDescription() 
+    LOG(Warn, "ControllerOutdoorAir " << workspaceObject.briefDescription()
          << " references a minimum fraction of outdoor air schedule, which is not supported");
   }
 
   s = workspaceObject.getString(Controller_OutdoorAirFields::MaximumFractionofOutdoorAirScheduleName);
   if( s )
   {
-    LOG(Warn, "ControllerOutdoorAir " << workspaceObject.briefDescription() 
+    LOG(Warn, "ControllerOutdoorAir " << workspaceObject.briefDescription()
          << " references a maximum fraction of outdoor air schedule, which is not supported");
   }
 
   s = workspaceObject.getString(Controller_OutdoorAirFields::MechanicalVentilationControllerName);
   if( s )
   {
-    LOG(Warn, "ControllerOutdoorAir " << workspaceObject.briefDescription() 
+    LOG(Warn, "ControllerOutdoorAir " << workspaceObject.briefDescription()
          << " references a mechanical ventilation controller, which is not supported");
   }
 
   s = workspaceObject.getString(Controller_OutdoorAirFields::TimeofDayEconomizerControlScheduleName);
   if( s )
   {
-    LOG(Warn, "ControllerOutdoorAir " << workspaceObject.briefDescription() 
+    LOG(Warn, "ControllerOutdoorAir " << workspaceObject.briefDescription()
          << " references a time of day economizer control schedule, which is not supported");
   }
 
@@ -166,12 +166,12 @@ OptionalModelObject ReverseTranslator::translateControllerOutdoorAir( const Work
     {
       mo.setHighHumidityControl(false);
     }
-  } 
+  }
 
   s = workspaceObject.getString(Controller_OutdoorAirFields::HumidistatControlZoneName);
   if( s )
   {
-    LOG(Warn, "ControllerOutdoorAir " << workspaceObject.briefDescription() 
+    LOG(Warn, "ControllerOutdoorAir " << workspaceObject.briefDescription()
          << " references a high humidity control zone, which is not supported");
   }
 

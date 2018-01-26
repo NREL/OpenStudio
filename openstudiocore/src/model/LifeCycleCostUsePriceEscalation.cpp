@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -67,9 +67,9 @@ OptionalInt LifeCycleCostUsePriceEscalation_Impl::escalationStartYear() const
   return getInt(OS_LifeCycleCost_UsePriceEscalationFields::EscalationStartYear);
 }
 
-void LifeCycleCostUsePriceEscalation_Impl::setEscalationStartYear(int num)
+bool LifeCycleCostUsePriceEscalation_Impl::setEscalationStartYear(int num)
 {
-  setInt(OS_LifeCycleCost_UsePriceEscalationFields::EscalationStartYear,num);
+  return setInt(OS_LifeCycleCost_UsePriceEscalationFields::EscalationStartYear,num);;
 }
 
 boost::optional<double> LifeCycleCostUsePriceEscalation_Impl::yearEscalation(unsigned index) const
@@ -105,9 +105,9 @@ OptionalString LifeCycleCostUsePriceEscalation_Impl::resource() const
   return getString(OS_LifeCycleCost_UsePriceEscalationFields::Resource);
 }
 
-void LifeCycleCostUsePriceEscalation_Impl::setResource(const std::string& str)
+bool LifeCycleCostUsePriceEscalation_Impl::setResource(const std::string& str)
 {
-  setString(OS_LifeCycleCost_UsePriceEscalationFields::Resource,str);
+  return setString(OS_LifeCycleCost_UsePriceEscalationFields::Resource,str);;
 }
 
 OptionalString LifeCycleCostUsePriceEscalation_Impl::escalationStartMonth() const
@@ -115,9 +115,9 @@ OptionalString LifeCycleCostUsePriceEscalation_Impl::escalationStartMonth() cons
   return getString(OS_LifeCycleCost_UsePriceEscalationFields::EscalationStartMonth);
 }
 
-void LifeCycleCostUsePriceEscalation_Impl::setEscalationStartMonth(const std::string& str)
+bool LifeCycleCostUsePriceEscalation_Impl::setEscalationStartMonth(const std::string& str)
 {
-  setString(OS_LifeCycleCost_UsePriceEscalationFields::EscalationStartMonth,str);
+  return setString(OS_LifeCycleCost_UsePriceEscalationFields::EscalationStartMonth,str);;
 }
 
 // return the parent object in the hierarchy
@@ -177,9 +177,9 @@ OptionalInt LifeCycleCostUsePriceEscalation::escalationStartYear() const
   return getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>()->escalationStartYear();
 }
 
-void LifeCycleCostUsePriceEscalation::setEscalationStartYear(int num)
+bool LifeCycleCostUsePriceEscalation::setEscalationStartYear(int num)
 {
-  getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>()->setEscalationStartYear(num);
+  return getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>()->setEscalationStartYear(num);
 }
 
 boost::optional<double> LifeCycleCostUsePriceEscalation::yearEscalation(unsigned index) const {
@@ -199,9 +199,9 @@ OptionalString LifeCycleCostUsePriceEscalation::resource() const
   return getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>()->resource();
 }
 
-void LifeCycleCostUsePriceEscalation::setResource(const std::string& str)
+bool LifeCycleCostUsePriceEscalation::setResource(const std::string& str)
 {
-  getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>()->setResource(str);
+  return getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>()->setResource(str);
 }
 
 OptionalString LifeCycleCostUsePriceEscalation::escalationStartMonth() const
@@ -209,9 +209,9 @@ OptionalString LifeCycleCostUsePriceEscalation::escalationStartMonth() const
   return getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>()->escalationStartMonth();
 }
 
-void LifeCycleCostUsePriceEscalation::setEscalationStartMonth(const std::string& str)
+bool LifeCycleCostUsePriceEscalation::setEscalationStartMonth(const std::string& str)
 {
-  getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>()->setEscalationStartMonth(str);
+  return getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>()->setEscalationStartMonth(str);
 }
 
 IddObjectType LifeCycleCostUsePriceEscalation::iddObjectType()
@@ -221,4 +221,4 @@ IddObjectType LifeCycleCostUsePriceEscalation::iddObjectType()
 }
 
 } // model
-} // openstudio
+} // openstudio

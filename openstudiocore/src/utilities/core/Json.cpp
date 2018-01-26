@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -153,7 +153,7 @@ VersionString extractOpenStudioVersion(const QVariant& variant) {
   if (topLevel.contains("metadata")) {
     topLevel = topLevel["metadata"].toObject();
   }
-  
+
   OptionalVersionString version;
   if (topLevel.contains("openstudio_version")) {
     version = VersionString(topLevel["openstudio_version"].toString().toStdString());

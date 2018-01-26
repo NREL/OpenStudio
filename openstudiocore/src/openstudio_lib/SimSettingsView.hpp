@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -126,9 +126,9 @@ private:
                 int row,
                 int column,
                 QString text,
-                const std::string& modelUnits, 
-                const std::string& siUnits, 
-                const std::string& ipUnits, 
+                const std::string& modelUnits,
+                const std::string& siUnits,
+                const std::string& ipUnits,
                 OSQuantityEdit2 * & quantityEdit);
 
   void addField(QGridLayout * gridLayout,
@@ -136,9 +136,9 @@ private:
                 int column,
                 QLabel * & label,
                 QString text,
-                const std::string& modelUnits, 
-                const std::string& siUnits, 
-                const std::string& ipUnits, 
+                const std::string& modelUnits,
+                const std::string& siUnits,
+                const std::string& ipUnits,
                 OSQuantityEdit2 * & quantityEdit);
 
   void addField(QGridLayout * gridLayout,
@@ -200,7 +200,7 @@ private:
 
   QButtonGroup * m_runPeriodGroup;
   QButtonGroup * m_radianceGroup;
-  
+
   QLineEdit * m_runPeriodName;
 
   bool m_isIP;

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,12 +44,12 @@ class MODEL_API MeterCustomDecrement_Impl : public ModelObject_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
-    
+
     // constructor
     MeterCustomDecrement_Impl(const IdfObject& idfObject,
                      Model_Impl* model,
                      bool keepHandle);
-    
+
     // construct from workspace
     MeterCustomDecrement_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                      Model_Impl* model,
@@ -76,7 +76,7 @@ class MODEL_API MeterCustomDecrement_Impl : public ModelObject_Impl {
     //@{
 
     boost::optional<std::string> fuelType() const;
-    
+
     std::string sourceMeterName() const;
 
     // Return a vector of (Key, Var) pairs
@@ -100,7 +100,7 @@ class MODEL_API MeterCustomDecrement_Impl : public ModelObject_Impl {
     bool setFuelType(const std::string& fuelType);
 
     void resetFuelType();
-    
+
     bool setSourceMeterName(const std::string& sourceMeterName);
 
     // Add a new (Key, Var) group

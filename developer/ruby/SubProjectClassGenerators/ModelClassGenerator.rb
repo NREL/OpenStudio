@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -828,9 +828,9 @@ class ModelClassGenerator < SubProjectClassGenerator
         if field.canAutocalculate?
           result << "    bool " << field.isAutocalculateName << "() const;\n\n"
         end
-        
+
       }
-      
+
       # Extensible field getters
       if (@iddObject.properties.extensible)
         result << "    // TODO: Handle this object's extensible fields." << "\n"
@@ -1220,7 +1220,7 @@ class ModelClassGenerator < SubProjectClassGenerator
           result << "    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->#{field.autosizedName}();\n"
           result << "  }\n\n"
         end
-        
+
         if field.canAutocalculate?
           result << "bool " << @className << "::" << field.isAutocalculateName << "() const {\n"
           result << "  return getImpl<detail::" << @className << "_Impl>()->" << field.isAutocalculateName << "();\n"
@@ -1228,7 +1228,7 @@ class ModelClassGenerator < SubProjectClassGenerator
         end
 
       }
-      
+
       # Non-extensible field setters
       @nonextensibleFields.each { |field|
 

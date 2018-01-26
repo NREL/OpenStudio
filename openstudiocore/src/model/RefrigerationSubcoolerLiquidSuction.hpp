@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -69,15 +69,15 @@ class MODEL_API RefrigerationSubcoolerLiquidSuction : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setLiquidSuctionDesignSubcoolingTemperatureDifference(double liquidSuctionDesignSubcoolingTemperatureDifference);
+  bool setLiquidSuctionDesignSubcoolingTemperatureDifference(double liquidSuctionDesignSubcoolingTemperatureDifference);
 
   void resetLiquidSuctionDesignSubcoolingTemperatureDifference();
 
-  void setDesignLiquidInletTemperature(double designLiquidInletTemperature);
+  bool setDesignLiquidInletTemperature(double designLiquidInletTemperature);
 
   void resetDesignLiquidInletTemperature();
 
-  void setDesignVaporInletTemperature(double designVaporInletTemperature);
+  bool setDesignVaporInletTemperature(double designVaporInletTemperature);
 
   void resetDesignVaporInletTemperature();
 
@@ -111,4 +111,3 @@ typedef std::vector<RefrigerationSubcoolerLiquidSuction> RefrigerationSubcoolerL
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONSUBCOOLERLIQUIDSUCTION_HPP
-

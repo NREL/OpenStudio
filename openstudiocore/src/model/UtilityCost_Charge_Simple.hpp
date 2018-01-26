@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -45,7 +45,7 @@ namespace detail{
  *  UtilityCost_Charge_Simple is used to compute flat charges such as taxes and fees related to a utility bill.
  */
 class MODEL_API UtilityCost_Charge_Simple : public ParentObject{
- 
+
 public:
 
   /** @name Constructors and Destructors */
@@ -74,15 +74,15 @@ public:
   /** @name Setters */
   //@{
 
-  void setTariffName(const std::string& tariffName);
+  bool setTariffName(const std::string& tariffName);
 
-  void setSourceVariable(const std::string& sourceVariable);
+  bool setSourceVariable(const std::string& sourceVariable);
 
-  void setSeason(const std::string& season);
+  bool setSeason(const std::string& season);
 
-  void setCategoryVariableName(const std::string& categoryVariableName);
+  bool setCategoryVariableName(const std::string& categoryVariableName);
 
-  void setCostPerUnitValueOrVariableName(const std::string& costPerUnitValueOrVariableName);
+  bool setCostPerUnitValueOrVariableName(const std::string& costPerUnitValueOrVariableName);
 
   //@}
 
@@ -117,4 +117,4 @@ typedef std::vector<UtilityCost_Charge_Simple> UtilityCost_Charge_SimpleVector;
 } // model
 } // openstudio
 
-#endif // MODEL_UTILITYCOST_CHARGE_SIMPLE_HPP
+#endif // MODEL_UTILITYCOST_CHARGE_SIMPLE_HPP

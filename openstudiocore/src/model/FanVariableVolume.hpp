@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -151,7 +151,7 @@ class MODEL_API FanVariableVolume : public StraightComponent {
 
   void resetFanEfficiency();
 
-  void setPressureRise(double pressureRise);
+  bool setPressureRise(double pressureRise);
 
   bool setPressureRise(const Quantity& pressureRise);
 
@@ -191,37 +191,37 @@ class MODEL_API FanVariableVolume : public StraightComponent {
 
   void resetMotorInAirstreamFraction();
 
-  void setFanPowerCoefficient1(double fanPowerCoefficient1);
+  bool setFanPowerCoefficient1(double fanPowerCoefficient1);
 
   bool setFanPowerCoefficient1(const Quantity& fanPowerCoefficient1);
 
   void resetFanPowerCoefficient1();
 
-  void setFanPowerCoefficient2(double fanPowerCoefficient2);
+  bool setFanPowerCoefficient2(double fanPowerCoefficient2);
 
   bool setFanPowerCoefficient2(const Quantity& fanPowerCoefficient2);
 
   void resetFanPowerCoefficient2();
 
-  void setFanPowerCoefficient3(double fanPowerCoefficient3);
+  bool setFanPowerCoefficient3(double fanPowerCoefficient3);
 
   bool setFanPowerCoefficient3(const Quantity& fanPowerCoefficient3);
 
   void resetFanPowerCoefficient3();
 
-  void setFanPowerCoefficient4(double fanPowerCoefficient4);
+  bool setFanPowerCoefficient4(double fanPowerCoefficient4);
 
   bool setFanPowerCoefficient4(const Quantity& fanPowerCoefficient4);
 
   void resetFanPowerCoefficient4();
 
-  void setFanPowerCoefficient5(double fanPowerCoefficient5);
+  bool setFanPowerCoefficient5(double fanPowerCoefficient5);
 
   bool setFanPowerCoefficient5(const Quantity& fanPowerCoefficient5);
 
   void resetFanPowerCoefficient5();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 
@@ -258,5 +258,4 @@ typedef std::vector<FanVariableVolume> FanVariableVolumeVector;
 
 } // openstudio
 
-#endif // MODEL_FANVARIABLEVOLUME_HPP
-
+#endif // MODEL_FANVARIABLEVOLUME_HPP

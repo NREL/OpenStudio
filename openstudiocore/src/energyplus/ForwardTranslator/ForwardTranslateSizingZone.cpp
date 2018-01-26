@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -126,7 +126,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
   }
 
   // ZoneCoolingDesignSupplyAirHumidityRatio
-  
+
   value = modelObject.zoneCoolingDesignSupplyAirHumidityRatio();
   if( value )
   {
@@ -134,7 +134,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
   }
 
   // ZoneHeatingDesignSupplyAirHumidityRatio
-  
+
   value = modelObject.zoneHeatingDesignSupplyAirHumidityRatio();
   if( value )
   {
@@ -142,17 +142,17 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
   }
 
   //  ((DesignSpecificationOutdoorAirObjectName)(Design Specification Outdoor Air Object Name))
-  
-  // ZoneHeatingSizingFactor 
-  
+
+  // ZoneHeatingSizingFactor
+
   value = modelObject.zoneHeatingSizingFactor();
   if( value )
   {
     idfObject.setDouble(Sizing_ZoneFields::ZoneHeatingSizingFactor,value.get());
   }
-  
-  // ZoneCoolingSizingFactor 
-  
+
+  // ZoneCoolingSizingFactor
+
   value = modelObject.zoneCoolingSizingFactor();
   if( value )
   {
@@ -160,7 +160,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
   }
 
   // CoolingDesignAirFlowMethod
-  
+
   s = modelObject.coolingDesignAirFlowMethod();
   if( s )
   {
@@ -168,7 +168,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
   }
 
   // CoolingDesignAirFlowRate
-  
+
   value = modelObject.coolingDesignAirFlowRate();
   if( value )
   {
@@ -200,7 +200,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
   }
 
   // HeatingDesignAirFlowMethod
-  
+
   s = modelObject.heatingDesignAirFlowMethod();
   if( s )
   {
@@ -208,7 +208,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
   }
 
   // HeatingDesignAirFlowRate
-  
+
   value = modelObject.heatingDesignAirFlowRate();
   if( value )
   {
@@ -242,9 +242,9 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
   // DesignZoneAirDistributionEffectivenessinCoolingMode
   // DesignZoneAirDistributionEffectivenessinHeatingMode
 
-  boost::optional<double> designZoneAirDistributionEffectivenessinCoolingMode = 
+  boost::optional<double> designZoneAirDistributionEffectivenessinCoolingMode =
                             modelObject.designZoneAirDistributionEffectivenessinCoolingMode();
-  boost::optional<double> designZoneAirDistributionEffectivenessinHeatingMode = 
+  boost::optional<double> designZoneAirDistributionEffectivenessinHeatingMode =
                             modelObject.designZoneAirDistributionEffectivenessinHeatingMode();
 
   std::string designSpecificationZoneAirDistributionName;
@@ -285,7 +285,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
 
   // Add ThermalZone and associated design objects to ControllerMechanicalVentilation.
   // This would be done in forwardTranslateControllerMechanicalVentilation except doing it here maintains proper order of the idf file.
-  
+
   boost::optional<model::ControllerMechanicalVentilation> controllerMechanicalVentilation;
   boost::optional<IdfObject> _controllerMechanicalVentilation;
 
@@ -293,12 +293,12 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
   {
     if( boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVAC->airLoopHVACOutdoorAirSystem() )
     {
-      model::ControllerOutdoorAir controllerOutdoorAir = oaSystem->getControllerOutdoorAir(); 
+      model::ControllerOutdoorAir controllerOutdoorAir = oaSystem->getControllerOutdoorAir();
 
       controllerMechanicalVentilation = controllerOutdoorAir.controllerMechanicalVentilation();
     }
   }
-  
+
   if( controllerMechanicalVentilation )
   {
     _controllerMechanicalVentilation = translateAndMapModelObject(controllerMechanicalVentilation.get());

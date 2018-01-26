@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,14 +39,14 @@ namespace openstudio {
 /// Fixed precision values: 23, 0.126, .1
 UTILITIES_API const boost::regex& regexFixedPrecisionValue();
 
-/** Fixed precision value embedded in larger string. Must be set off with spaces or newline 
+/** Fixed precision value embedded in larger string. Must be set off with spaces or newline
  *  characters. May be terminated with a '. ', ', ', or ';'. */
 UTILITIES_API const boost::regex& regexEmbeddedFixedPrecisionValue();
 
 /** Returns true if s is a FixedPrecisionValue. No other text is tolerated, including whitespace. */
 UTILITIES_API bool isFixedPrecisionValue(const std::string& s);
 
-/** Returns true if s contains a FixedPrecisionValue. Other text separated by whitespace is tolerated, 
+/** Returns true if s contains a FixedPrecisionValue. Other text separated by whitespace is tolerated,
  *  but ScientificNotationValues and the like are not. */
 UTILITIES_API bool containsFixedPrecisionValue(const std::string& s);
 
@@ -61,7 +61,7 @@ UTILITIES_API const boost::regex& regexEmbeddedScientificNotationValue();
 /** Returns true if s is a ScientificNotationValue. No other text is tolerated, including whitespace. */
 UTILITIES_API bool isScientificNotationValue(const std::string& s);
 
-/** Returns true if s contains a ScientificNotationValue. Other text is tolerated as long as it is 
+/** Returns true if s contains a ScientificNotationValue. Other text is tolerated as long as it is
  *  separated from the value by whitespace. */
 UTILITIES_API bool containsScientificNotationValue(const std::string& s);
 
@@ -69,13 +69,13 @@ UTILITIES_API bool containsScientificNotationValue(const std::string& s);
 /// Base unit: kg, kN, etc. Limits unit strings to 10 characters.
 UTILITIES_API const boost::regex& regexBaseUnit();
 
-/// Exponent: 0, 1, -2, etc. 
+/// Exponent: 0, 1, -2, etc.
 UTILITIES_API const boost::regex& regexExponent();
 
 /// Atomic unit: kN^2, s, ms. Limits unit strings to 10 characters.
 UTILITIES_API const boost::regex& regexAtomicUnit();
 
-/** Atomic unit embedded in larger string. Must be set off with spaces, newline characters, 
+/** Atomic unit embedded in larger string. Must be set off with spaces, newline characters,
  *  *, /, (, or ) */
 UTILITIES_API const boost::regex& regexEmbeddedAtomicUnit();
 
@@ -91,7 +91,7 @@ UTILITIES_API bool containsAtomicUnit(const std::string& s);
  *  surrounded by Scale.abbr( ). */
 UTILITIES_API const boost::regex& regexCompoundUnit();
 
-/** Compound unit embedded in larger string. Must be set off with spaces, newline characters, or 
+/** Compound unit embedded in larger string. Must be set off with spaces, newline characters, or
  *  ( ). May be terminated with a '. ', ', ', or ';'. */
 UTILITIES_API const boost::regex& regexEmbeddedCompoundUnit();
 
@@ -106,7 +106,7 @@ UTILITIES_API bool containsCompoundUnit(const std::string& s);
 /** Scaled unit: k(kg^2/m^2). A compound unit surrounded by Scale.abbr\(\). */
 UTILITIES_API const boost::regex& regexScaledUnit();
 
-/** Scaled unit embedded in larger string. Must be set off with spaces or newline characters. 
+/** Scaled unit embedded in larger string. Must be set off with spaces or newline characters.
  *  May be terminated with a '. ', ', ', or ';'. */
 UTILITIES_API const boost::regex& regexEmbeddedScaledUnit();
 
@@ -118,10 +118,10 @@ UTILITIES_API bool isScaledUnit(const std::string& s);
 UTILITIES_API bool containsScaledUnit(const std::string& s);
 
 
-/** Textual scaled unit: people/1000 ft^2. A compound unit with 10+ embedded in the denominator. 
+/** Textual scaled unit: people/1000 ft^2. A compound unit with 10+ embedded in the denominator.
  *
- *  match[1] = "numerator units/" 
- *  match[2] = "10+" 
+ *  match[1] = "numerator units/"
+ *  match[2] = "10+"
  *  match[3] = "denominator units" */
 UTILITIES_API const boost::regex& regexDirectScaledUnit();
 
@@ -129,18 +129,18 @@ UTILITIES_API const boost::regex& regexDirectScaledUnit();
  *  or matching parentheses or brackets. Match will be in [1], [5], [9], or [13]. */
 UTILITIES_API const boost::regex& regexEmbeddedDirectScaledUnit();
 
-/** Returns true if s is a direct scaled unit. No other text is tolerated, including whitespaces. 
+/** Returns true if s is a direct scaled unit. No other text is tolerated, including whitespaces.
  */
 UTILITIES_API bool isDirectScaledUnit(const std::string& s);
 
 /** Returns true if s contains a direct scaled unit. Other text is tolerated as long as the direct
- *  scaled unit is set off by spaces, newline characters, or matching parentheses or brackes. May 
+ *  scaled unit is set off by spaces, newline characters, or matching parentheses or brackes. May
  *  be terminated with a '. ', ', ', or ';'. */
 UTILITIES_API bool containsDirectScaledUnit(const std::string& s);
 
-/** Decomposes a direct scaled unit string into numerator, exponent of scale in denominator 
+/** Decomposes a direct scaled unit string into numerator, exponent of scale in denominator
  *  (3 for /1000), and denominator. */
-UTILITIES_API std::pair<std::string,std::pair<unsigned,std::string> > 
+UTILITIES_API std::pair<std::string,std::pair<unsigned,std::string> >
   decomposeDirectScaledUnit(const std::string& s);
 
 
@@ -160,8 +160,8 @@ UTILITIES_API bool isUnit(const std::string& s);
 UTILITIES_API bool containsUnit(const std::string& s);
 
 
-/** Quantity: 3 kN, -1.021D-2 k(m^2), 2 Hz, 3.0 1/ms, 3.0/ms. A value (fixed precision, or 
- *  scientific noation) and a unit separated by a space or a '/'. 
+/** Quantity: 3 kN, -1.021D-2 k(m^2), 2 Hz, 3.0 1/ms, 3.0/ms. A value (fixed precision, or
+ *  scientific noation) and a unit separated by a space or a '/'.
  *
  *  \li matches[1] - value
  *  \li matches[2] - one character--space or '/'
@@ -180,20 +180,20 @@ UTILITIES_API bool isQuantity(const std::string& s);
 UTILITIES_API bool containsQuantity(const std::string& s);
 
 
-/** Returns value string as .first and unit string as .second. Precondition: isQuantity(s) == true. 
+/** Returns value string as .first and unit string as .second. Precondition: isQuantity(s) == true.
  *  Throws otherwise. */
 UTILITIES_API std::pair<std::string,std::string> decomposeQuantityString(const std::string& s);
 
-/** Returns scale abbreviation as .first and compoundUnitString as .second. Precondition: 
+/** Returns scale abbreviation as .first and compoundUnitString as .second. Precondition:
  *  isScaledUnit(s) == true. Throws otherwise. */
 UTILITIES_API std::pair<std::string,std::string> decomposeScaledUnitString(const std::string& s);
 
-/** Returns vectors of strings, where each string contains atomic unit. First vector is numerator, 
+/** Returns vectors of strings, where each string contains atomic unit. First vector is numerator,
  *  second is denominator. Precondition: isCompoundUnit(s) == true. Throws otherwise. */
 UTILITIES_API std::pair< std::vector<std::string>,std::vector<std::string> > decomposeCompoundUnitString(
     const std::string& s);
 
-/** Returns baseUnit string and integer exponent. Precondition: isAtomicUnit(s) == true. Throws 
+/** Returns baseUnit string and integer exponent. Precondition: isAtomicUnit(s) == true. Throws
  *  otherwise. */
 UTILITIES_API std::pair<std::string,int> decomposeAtomicUnitString(const std::string& s);
 

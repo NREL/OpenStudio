@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -163,7 +163,7 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
   bool isMinimumSupplyAirTemperatureInCoolingModeAutosized() const;
 
   boost::optional<double> minimumSupplyAirTemperatureInCoolingMode() const;
-  
+
   bool isMaximumSupplyAirTemperatureInHeatingModeAutosized() const;
 
   boost::optional<double> maximumSupplyAirTemperatureInHeatingMode() const;
@@ -176,7 +176,7 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   bool setCapacityControlMethod(std::string capacityControlMethod);
 
-  void setMaximumSupplyAirFlowRate(double maximumSupplyAirFlowRate);
+  bool setMaximumSupplyAirFlowRate(double maximumSupplyAirFlowRate);
 
   bool setMaximumSupplyAirFlowRate(const Quantity& maximumSupplyAirFlowRate);
 
@@ -194,7 +194,7 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   void resetMediumSpeedSupplyAirFlowRatio();
 
-  void setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate);
+  bool setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate);
 
   bool setMaximumOutdoorAirFlowRate(const Quantity& maximumOutdoorAirFlowRate);
 
@@ -206,19 +206,19 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   bool setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType);
 
-  void setOutdoorAirMixerName(std::string outdoorAirMixerName);
+  bool setOutdoorAirMixerName(std::string outdoorAirMixerName);
 
   bool setSupplyAirFan( HVACComponent & fan );
 
   bool setCoolingCoil( HVACComponent & coolingCoil );
 
-  void setMaximumColdWaterFlowRate(double maximumColdWaterFlowRate);
+  bool setMaximumColdWaterFlowRate(double maximumColdWaterFlowRate);
 
   bool setMaximumColdWaterFlowRate(const Quantity& maximumColdWaterFlowRate);
 
   void autosizeMaximumColdWaterFlowRate();
 
-  void setMinimumColdWaterFlowRate(double minimumColdWaterFlowRate);
+  bool setMinimumColdWaterFlowRate(double minimumColdWaterFlowRate);
 
   bool setMinimumColdWaterFlowRate(const Quantity& minimumColdWaterFlowRate);
 
@@ -232,13 +232,13 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   bool setHeatingCoil( HVACComponent & heatingCoil );
 
-  void setMaximumHotWaterFlowRate(double maximumHotWaterFlowRate);
+  bool setMaximumHotWaterFlowRate(double maximumHotWaterFlowRate);
 
   bool setMaximumHotWaterFlowRate(const Quantity& maximumHotWaterFlowRate);
 
   void autosizeMaximumHotWaterFlowRate();
 
-  void setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate);
+  bool setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate);
 
   bool setMinimumHotWaterFlowRate(const Quantity& minimumHotWaterFlowRate);
 
@@ -250,8 +250,8 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   void resetHeatingConvergenceTolerance();
 
-  /** Sets the supply air fan operating mode schedule. Values of zero indicate that the fan 
-   *  cycles on and off with the active (heating or cooling) coil. Other values operate the 
+  /** Sets the supply air fan operating mode schedule. Values of zero indicate that the fan
+   *  cycles on and off with the active (heating or cooling) coil. Other values operate the
    *  fan continuously. */
   bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
@@ -310,5 +310,4 @@ typedef std::vector<ZoneHVACFourPipeFanCoil> ZoneHVACFourPipeFanCoilVector;
 } // model
 } // openstudio
 
-#endif // MODEL_ZONEHVACFOURPIPEFANCOIL_HPP
-
+#endif // MODEL_ZONEHVACFOURPIPEFANCOIL_HPP

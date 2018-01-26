@@ -19,10 +19,10 @@
   #include <gbxml/ForwardTranslator.hpp>
   using namespace openstudio::gbxml;
   using namespace openstudio;
-  
+
   #include <model/Model.hpp>
   #include <model/ModelObject.hpp>
-  
+
   #include <QDomDocument>
   #include <QDomElement>
 %}
@@ -35,4 +35,4 @@
 %include <gbxml/ReverseTranslator.hpp>
 %include <gbxml/ForwardTranslator.hpp>
 
-#endif //GBXML_I 
+#endif //GBXML_I

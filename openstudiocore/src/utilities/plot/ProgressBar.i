@@ -5,7 +5,7 @@
   #include <utilities/plot/ProgressBar.hpp>
 %}
 
-%feature("director") ProgressBar;  
+%feature("director") ProgressBar;
 
 %ignore ProgressBar(const std::shared_ptr<QProgressBar>& impl);
 

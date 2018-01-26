@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,17 +44,17 @@ TEST_F(ModelFixture, HeatExchangerFluidToFluid)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model m;
     HeatExchangerFluidToFluid hx(m);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 
   {
-    Model m; 
+    Model m;
     PlantLoop plant1(m);
     PlantLoop plant2(m);
 
@@ -65,7 +65,7 @@ TEST_F(ModelFixture, HeatExchangerFluidToFluid)
   }
 
   {
-    Model m; 
+    Model m;
     PlantLoop plant1(m);
     PlantLoop plant2(m);
 
@@ -83,7 +83,7 @@ TEST_F(ModelFixture, HeatExchangerFluidToFluid)
   }
 
   {
-    Model m; 
+    Model m;
     AirLoopHVAC airLoopHVAC(m);
 
     HeatExchangerFluidToFluid hx(m);

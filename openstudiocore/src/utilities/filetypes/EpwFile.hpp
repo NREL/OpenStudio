@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -92,7 +92,7 @@ private:
   double m_pressure; // Atmospheric pressure in Pa
   double m_wetbulb; // Thermodynamic wet bulb temperature in C
 
-  // These are always computed 
+  // These are always computed
   double m_psat;
   double m_W;
   double m_h;
@@ -186,14 +186,14 @@ public:
   // Conversion
   /** Create an EpwDataPoint from an EPW-formatted string */
   static boost::optional<EpwDataPoint> fromEpwString(const std::string &line);
-  /** Creata an EpwDataPoint from a list of EPW data as strings. The pedantic argument controls how strict the conversion is. 
+  /** Creata an EpwDataPoint from a list of EPW data as strings. The pedantic argument controls how strict the conversion is.
       If pedantic is true, the list should have 35 elements. If pedantic is false, lists with more or fewer elements may
       still result in an EpwDataPoint */
   static boost::optional<EpwDataPoint> fromEpwStrings(const std::vector<std::string> &list, bool pedantic=true);
-  /** Creata an EpwDataPoint from a list of EPW data as strings, overriding the date and time with the specified arguments. 
-      The pedantic argument controls how strict the conversion is. If pedantic is true, the list should have 35 elements. 
+  /** Creata an EpwDataPoint from a list of EPW data as strings, overriding the date and time with the specified arguments.
+      The pedantic argument controls how strict the conversion is. If pedantic is true, the list should have 35 elements.
       If pedantic is false, lists with more or fewer elements may still result in an EpwDataPoint */
-  static boost::optional<EpwDataPoint> fromEpwStrings(int year, int month, int day, int hour, int minute, 
+  static boost::optional<EpwDataPoint> fromEpwStrings(int year, int month, int day, int hour, int minute,
     const std::vector<std::string> &list, bool pedantic = true);
   /** Returns a list of strings containing the EPW data in the EpwDataPoint */
   std::vector<std::string> toEpwStrings() const;
@@ -415,7 +415,7 @@ public:
 
   /// static load method
   static boost::optional<EpwFile> load(const openstudio::path& p, bool storeData=false);
-  
+
   /// static load method
   static boost::optional<EpwFile> loadFromString(const std::string& str, bool storeData=false);
 
@@ -434,7 +434,7 @@ public:
   /// get the country
   std::string country() const;
 
-  /// get the data source 
+  /// get the data source
   std::string dataSource() const;
 
   /// get the WMO number

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -176,7 +176,7 @@ namespace measure {
       }
 
       BCLMeasureArgument bclArgument(argument.name(), argument.displayName(),
-                                     argument.description(), bclMeasureType, 
+                                     argument.description(), bclMeasureType,
                                      argument.units(), argument.required(),
                                      argument.modelDependent(), defaultValue,
                                      argument.choiceValues(), argument.choiceValueDisplayNames(),
@@ -262,7 +262,7 @@ std::string infoExtractorRubyFunction() {
   ss << "  end" << std::endl << std::endl;
   // Check list of objects in memory before loading the script
   ss << "  currentObjects = Hash.new" << std::endl;
-  ss << "  ObjectSpace.each_object(OpenStudio::Measure::OSMeasure) { |obj| currentObjects[obj] = true }" << std::endl << std::endl; 
+  ss << "  ObjectSpace.each_object(OpenStudio::Measure::OSMeasure) { |obj| currentObjects[obj] = true }" << std::endl << std::endl;
   ss << "  ObjectSpace.garbage_collect" << std::endl;
   // This line is REQUIRED or the ObjectSpace order will change when garbage collection runs automatically
   // If ~12 measures are added and garbage collection runs, the following loop to grab the first measure

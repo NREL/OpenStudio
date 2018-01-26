@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -68,7 +68,9 @@ class MODEL_API ZoneAirContaminantBalance : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setCarbonDioxideConcentration(bool carbonDioxideConcentration);
+  bool setCarbonDioxideConcentration(bool carbonDioxideConcentration);
+
+  void setCarbonDioxideConcentrationNoFail(bool carbonDioxideConcentration);
 
   void resetCarbonDioxideConcentration();
 
@@ -108,4 +110,3 @@ typedef std::vector<ZoneAirContaminantBalance> ZoneAirContaminantBalanceVector;
 } // openstudio
 
 #endif // MODEL_ZONEAIRCONTAMINANTBALANCE_HPP
-

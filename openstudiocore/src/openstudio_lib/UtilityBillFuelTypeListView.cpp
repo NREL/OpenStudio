@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -50,10 +50,10 @@ UtilityBillFuelTypeListController::UtilityBillFuelTypeListController(const model
   //model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<UtilityBillFuelTypeListController, &UtilityBillFuelTypeListController::objectAdded>(this);
   connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &UtilityBillFuelTypeListController::objectAdded, Qt::QueuedConnection);
 
-  
+
   //model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<UtilityBillFuelTypeListController, &UtilityBillFuelTypeListController::objectRemoved>(this);
   connect(OSAppBase::instance(), &OSAppBase::workspaceObjectRemovedPtr, this, &UtilityBillFuelTypeListController::objectRemoved, Qt::QueuedConnection);
-  
+
 }
 
 IddObjectType UtilityBillFuelTypeListController::iddObjectType() const
@@ -128,14 +128,14 @@ std::vector<OSItemId> UtilityBillFuelTypeListController::makeVector()
   return result;
 }
 
-UtilityBillFuelTypeListView::UtilityBillFuelTypeListView(const model::Model& model, 
+UtilityBillFuelTypeListView::UtilityBillFuelTypeListView(const model::Model& model,
   openstudio::FuelType fuelType,
   bool addScrollArea,
   QWidget * parent)
   : OSItemList(new UtilityBillFuelTypeListController(model,fuelType),addScrollArea),
   m_fuelType(fuelType)
-{ 
-}  
+{
+}
 
 boost::optional<openstudio::model::ModelObject> UtilityBillFuelTypeListView::selectedModelObject() const
 {

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -66,7 +66,7 @@ public:
          i < children.length();
          i++ )
     {
-      QDomNode childNode = children.at(i); 
+      QDomNode childNode = children.at(i);
 
       if( childNode.isElement() )
       {
@@ -74,7 +74,7 @@ public:
 
         if( istringEqual(childElement.tagName().toStdString(),"term") )
         {
-          auto childItem = new TIDItem(childElement,this); 
+          auto childItem = new TIDItem(childElement,this);
 
           m_childItems.append(childItem);
         }
@@ -113,7 +113,7 @@ public:
     {
       return m_parentItem->m_childItems.indexOf(const_cast<TIDItem *>(this));
     }
-  
+
     return 0;
   }
 
@@ -272,7 +272,7 @@ const std::map<int,std::vector<IddObjectType> > TIDItemModel::createTidToOSTypeM
 
   // 127 Construction Assembly
   std::vector<IddObjectType> tid127_types;
-  tid127_types.push_back(IddObjectType::OS_Construction); 
+  tid127_types.push_back(IddObjectType::OS_Construction);
   map[127] = tid127_types;
 
   // KSB: Should we have lower tids in the map like these?
@@ -280,17 +280,17 @@ const std::map<int,std::vector<IddObjectType> > TIDItemModel::createTidToOSTypeM
 
   // 152 Floor
   std::vector<IddObjectType> tid152_types;
-  tid152_types.push_back(IddObjectType::OS_Construction); 
+  tid152_types.push_back(IddObjectType::OS_Construction);
   map[152] = tid152_types;
 
   // 134 Roof
   std::vector<IddObjectType> tid134_types;
-  tid134_types.push_back(IddObjectType::OS_Construction); 
+  tid134_types.push_back(IddObjectType::OS_Construction);
   map[134] = tid134_types;
 
   // 129 Wall
   std::vector<IddObjectType> tid129_types;
-  tid129_types.push_back(IddObjectType::OS_Construction); 
+  tid129_types.push_back(IddObjectType::OS_Construction);
   map[129] = tid129_types;
 
   return map;

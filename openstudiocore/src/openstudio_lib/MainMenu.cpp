@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -40,7 +40,7 @@
 
 namespace openstudio {
 
-MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) : 
+MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   QMenuBar(parent), m_isPlugin(isPlugin)
 {
   m_isIP = isIP;
@@ -71,7 +71,7 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   connect(m_revertToSavedAction, &QAction::triggered, this, &MainMenu::revertFileClicked, Qt::QueuedConnection);
 
   action = new QAction(tr("&Save"), this);
-  action->setShortcut(QKeySequence(QKeySequence::Save)); 
+  action->setShortcut(QKeySequence(QKeySequence::Save));
   m_fileMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::saveFileClicked);
 
@@ -88,15 +88,15 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   importMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::importClicked, Qt::QueuedConnection);
 
-  action = new QAction(tr("&gbXML"), this); 
+  action = new QAction(tr("&gbXML"), this);
   importMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::importgbXMLClicked, Qt::QueuedConnection);
 
-  action = new QAction(tr("&SDD"), this); 
+  action = new QAction(tr("&SDD"), this);
   importMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::importSDDClicked, Qt::QueuedConnection);
 
-  action = new QAction(tr("I&FC"), this); 
+  action = new QAction(tr("I&FC"), this);
   importMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::importIFCClicked, Qt::QueuedConnection);
 
@@ -191,7 +191,7 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   connect(action, &QAction::triggered, this, &MainMenu::downloadMeasuresClicked);
 
   action = new QAction(tr("Find &Components"),this);
-  m_measureMenu->addAction(action); 
+  m_measureMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::downloadComponentsClicked);
 
   // Help menu

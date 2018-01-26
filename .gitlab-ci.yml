@@ -1,0 +1,48 @@
+stages:
+- build
+
+build:windows:
+  variables:
+    CI_DEBUG_TRACE: "true"
+  stage: build
+  only:
+  - develop
+  tags:
+  - windows
+  script:
+  - cd CPP
+  - if not exist "build" mkdir build
+  - cd build
+  - cmake -G "Visual Studio 12 2013 Win64" -DCMAKE_BUILD_TYPE=Release ../
+  - cmake --build . --config Release --target PACKAGE
+  
+build:mac:
+  variables:
+    CI_DEBUG_TRACE: "true"
+  stage: build
+  only:
+  - develop
+  tags:
+  - mac
+  script:
+  - cd CPP
+  - if not exist "build" mkdir build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=Release ../
+  - make
+  
+build:ubuntu:
+  variables:
+    CI_DEBUG_TRACE: "true"
+  stage: build
+  only:
+  - develop
+  tags:
+  - ubuntu
+  script:
+  - cd CPP
+  - if not exist "build" mkdir build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=Release ../
+  - make
+  

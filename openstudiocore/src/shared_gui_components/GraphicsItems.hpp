@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -53,7 +53,7 @@ class AbstractButtonItem : public QGraphicsObject
   virtual ~AbstractButtonItem() {}
 
   void setChecked(bool checked);
-  
+
   signals:
 
   void mouseClicked(bool checked = false);
@@ -79,7 +79,7 @@ class ButtonItem : public QGraphicsObject, public Nano::Observer
 
   public:
 
-  ButtonItem(const QPixmap & image, const QPixmap & downImage, 
+  ButtonItem(const QPixmap & image, const QPixmap & downImage,
              const QPixmap & hoverImage, QGraphicsItem * parent = nullptr);
 
   virtual ~ButtonItem() {}
@@ -100,8 +100,8 @@ class ButtonItem : public QGraphicsObject, public Nano::Observer
 
   void hoverLeaveEvent(QGraphicsSceneHoverEvent * event) override;
 
-  void paint(QPainter *painter, 
-             const QStyleOptionGraphicsItem *option, 
+  void paint(QPainter *painter,
+             const QStyleOptionGraphicsItem *option,
              QWidget *widget = nullptr) override;
 
   private:
@@ -170,8 +170,8 @@ class GridLayoutItem : public QGraphicsObject
 
   protected:
 
-  void paint( QPainter *painter, 
-              const QStyleOptionGraphicsItem *option, 
+  void paint( QPainter *painter,
+              const QStyleOptionGraphicsItem *option,
               QWidget *widget = nullptr ) override {}
 
   private slots:
@@ -192,7 +192,7 @@ class GridLayoutItem : public QGraphicsObject
 
   int columns() const;
 
-  std::pair<int,int> gridPos(int i); 
+  std::pair<int,int> gridPos(int i);
 
   QGraphicsObject * createNewItemView(int i);
 

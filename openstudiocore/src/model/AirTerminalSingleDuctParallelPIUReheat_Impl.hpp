@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -146,19 +146,19 @@ namespace detail {
     // and https://github.com/NREL/OpenStudio/pull/2589
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    void setMaximumPrimaryAirFlowRate(boost::optional<double> maximumPrimaryAirFlowRate);
+    bool setMaximumPrimaryAirFlowRate(boost::optional<double> maximumPrimaryAirFlowRate);
 
     void autosizeMaximumPrimaryAirFlowRate();
 
-    void setMaximumSecondaryAirFlowRate(boost::optional<double> maximumSecondaryAirFlowRate);
+    bool setMaximumSecondaryAirFlowRate(boost::optional<double> maximumSecondaryAirFlowRate);
 
     void autosizeMaximumSecondaryAirFlowRate();
 
-    void setMinimumPrimaryAirFlowFraction(boost::optional<double> minimumPrimaryAirFlowFraction);
+    bool setMinimumPrimaryAirFlowFraction(boost::optional<double> minimumPrimaryAirFlowFraction);
 
     void autosizeMinimumPrimaryAirFlowFraction();
 
-    void setFanOnFlowFraction(boost::optional<double> fanOnFlowFraction);
+    bool setFanOnFlowFraction(boost::optional<double> fanOnFlowFraction);
 
     void autosizeFanOnFlowFraction();
 
@@ -166,7 +166,7 @@ namespace detail {
 
     bool setReheatCoil( HVACComponent & hvacComponent );
 
-    void setMaximumHotWaterorSteamFlowRate(boost::optional<double> maximumHotWaterorSteamFlowRate);
+    bool setMaximumHotWaterorSteamFlowRate(boost::optional<double> maximumHotWaterorSteamFlowRate);
 
     void resetMaximumHotWaterorSteamFlowRate();
 
@@ -184,7 +184,7 @@ namespace detail {
     // Use carefully.  Removing (or moving) plenum will leave model in invalid state
     bool setInducedAirPlenumZone(ThermalZone & thermalZone);
 
-    void setFanAvailabilitySchedule(Schedule & schedule);
+    bool setFanAvailabilitySchedule(Schedule & schedule);
 
     //@}
    protected:
@@ -207,4 +207,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_AIRTERMINALSINGLEDUCTPARALLELPIUREHEAT_IMPL_HPP
-

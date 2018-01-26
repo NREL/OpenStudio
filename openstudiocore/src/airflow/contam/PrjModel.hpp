@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -49,10 +49,10 @@ namespace detail {
 
 /** IndexModel is primarily a container for CONTAM airflow model data.
 *
-*  IndexModel contains CONTAM airflow model elements and has several methods 
+*  IndexModel contains CONTAM airflow model elements and has several methods
 *  to produce the PRJ file. The PRJ file is a positional text file and is
-*  the primary way in which data is provided to the ContamX solver. The 
-*  format is documented here: 
+*  the primary way in which data is provided to the ContamX solver. The
+*  format is documented here:
 *
 *  www.bfrl.nist.gov/IAQanalysis/CONTAM/manual/Content/html/PRJ/PRJ_PRJ_Sections.htm
 *

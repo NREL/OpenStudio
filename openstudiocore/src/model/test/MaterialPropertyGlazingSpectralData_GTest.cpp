@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -48,7 +48,7 @@ TEST_F(ModelFixture, MaterialPropertyGlazingSpectralData)
   MaterialPropertyGlazingSpectralData mpgsd(model);
 
   EXPECT_EQ(0u, mpgsd.spectralDataFields().size());
-  
+
   EXPECT_TRUE(mpgsd.addSpectralDataField(0.3, 0.0, 0.045, 0.045));
   EXPECT_EQ(1u, mpgsd.spectralDataFields().size());
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -1461,7 +1461,7 @@ namespace openstudio {
 
         if (dataSource->source().wantsPlaceholder())
         {
-          // use this space to put in a blank placeholder of some kind to make sure the 
+          // use this space to put in a blank placeholder of some kind to make sure the
           // widget is evenly laid out relative to its friends in the adjacent columns
           addWidget(new QWidget(this->gridView()), boost::none, false);
         }
@@ -1500,7 +1500,7 @@ namespace openstudio {
 
   void OSGridController::checkSelectedFields()
   {
-    // If there is a header row, investigate which columns were previously checked 
+    // If there is a header row, investigate which columns were previously checked
     // (and loaded into m_customFields by QSettings) and check the respective
     // header widgets
     if (!this->m_hasHorizontalHeader) return;
@@ -1943,7 +1943,7 @@ void HorizontalHeaderPushButton::focusInEvent(QFocusEvent * e)
   {
     emit inFocus(true, true); // TODO should hasData = true???
   }
-  
+
   QPushButton::focusInEvent(e);
 }
 
@@ -1953,14 +1953,14 @@ void HorizontalHeaderPushButton::focusOutEvent(QFocusEvent * e)
   {
     emit inFocus(false, false);
   }
-  
+
   QPushButton::focusOutEvent(e);
 }
 
 //ColumnSizer::mouseMoveEvent ( QMouseEvent * event )
 //{
 //  if( event->buttons == Qt::LeftButton ) {
-//    
+//
 //  }
 //}
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -54,7 +54,7 @@
 
 namespace openstudio {
   /*
-void getRadiancePreRunWarningsAndErrors(std::vector<std::string> &t_warnings, 
+void getRadiancePreRunWarningsAndErrors(std::vector<std::string> &t_warnings,
     std::vector<std::string> &t_errors,
     openstudio::runmanager::RunManager &t_runManager,
     boost::optional<openstudio::model::Model> &t_model)
@@ -67,7 +67,7 @@ void getRadiancePreRunWarningsAndErrors(std::vector<std::string> &t_warnings,
   t_runManager.setConfigOptions(co);
   bool ruby_not_installed = co.getTools().getAllByName("ruby").tools().size() == 0;
   bool radiance_not_installed = co.getTools().getAllByName("rtrace").tools().size() == 0;
-  
+
   if(radiance_not_installed){
     t_errors.push_back("Radiance is required but not found, install Radiance and scan for tools.");
   }
@@ -75,7 +75,7 @@ void getRadiancePreRunWarningsAndErrors(std::vector<std::string> &t_warnings,
   if(ruby_not_installed){
     t_errors.push_back("Ruby is required but not found, locate Ruby in scan for tools.");
   }
-  
+
   // TODO remove when fixed
   #if defined(Q_OS_WIN)
   if(QSysInfo::windowsVersion() == QSysInfo::WV_XP){
@@ -241,7 +241,7 @@ void addRadianceToProject(openstudio::analysisdriver::SimpleProject &t_project)
       problem.insert(*index, wi);
     }
   }
- 
+
 }
 */
 }

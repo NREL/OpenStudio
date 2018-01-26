@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -101,7 +101,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 
   // Field A3 Cooled Beam Type
   idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::CooledBeamType, modelObject.cooledBeamType());
-  
+
   // Field A4 Supply Air Inlet Node Name
   temp = modelObject.inletModelObject();
   if(temp)

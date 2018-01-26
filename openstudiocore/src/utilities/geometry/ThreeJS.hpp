@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -70,7 +70,7 @@ namespace openstudio{
 
   /// ThreeGeometryData holds the geometry data for an object
   class UTILITIES_API ThreeGeometryData{
-  public: 
+  public:
     ThreeGeometryData(const std::vector<double>& vertices, const std::vector<size_t>& faces);
     std::vector<double> vertices() const;
     std::vector<size_t> normals() const;
@@ -100,7 +100,7 @@ namespace openstudio{
 
   /// ThreeGeometry holds the geometry for an object
   class UTILITIES_API ThreeGeometry{
-  public: 
+  public:
     ThreeGeometry(const std::string& uuid, const::std::string& type, const ThreeGeometryData& data);
     std::string uuid() const;
     std::string type() const;
@@ -115,7 +115,7 @@ namespace openstudio{
     std::string m_type;
     ThreeGeometryData m_data;
   };
- 
+
   /// ThreeMaterial defines a rendering material
   class UTILITIES_API ThreeMaterial{
   public:
@@ -133,7 +133,7 @@ namespace openstudio{
     double opacity() const;
     bool transparent() const;
     bool wireframe() const;
-    unsigned side() const;   
+    unsigned side() const;
 
   private:
     friend class ThreeScene;
@@ -151,37 +151,67 @@ namespace openstudio{
     double m_opacity;
     bool m_transparent;
     bool m_wireframe;
-    unsigned m_side; 
+    unsigned m_side;
   };
 
   /// ThreeUserData decorates a ThreeSceneChild with additional information
   class UTILITIES_API ThreeUserData{
-  public: 
+  public:
     ThreeUserData();
     std::string handle() const;
     std::string name() const;
+
+    /// surfaceType is overloaded as a more general type:
+    /// Surfaces {"Wall", "Floor", "RoofCeiling"}
+    /// SubSurfaces {"FixedWindow", "OperableWindow", "GlassDoor", "Skylight", "TubularDaylightDome", "TubularDaylightDiffuser", "Door", "OverheadDoor"}
+    /// ShadingSurfaces {"SiteShading", "BuildingShading", "SpaceShading"}
+    /// InteriorPartitionSurfaces {"InteriorPartitionSurface"}
+    /// DaylightingControl {"DaylightingControl"}
     std::string surfaceType() const;
     std::string surfaceTypeMaterialName() const;
+
+    /// Construction name if any
     std::string constructionName() const;
     std::string constructionHandle() const;
     std::string constructionMaterialName() const;
+
+    /// Parent surface name if any
+    std::string surfaceName() const;
+    std::string surfaceHandle() const;
+
+    /// Parent sub surface name if any
+    std::string subSurfaceName() const;
+    std::string subSurfaceHandle() const;
+
+    /// Parent spaces name if any
     std::string spaceName() const;
     std::string spaceHandle() const;
+
+    /// ThermalZone name if any
     std::string thermalZoneName() const;
     std::string thermalZoneHandle() const;
     std::string thermalZoneMaterialName() const;
+
+    /// SpaceType name if any
     std::string spaceTypeName() const;
     std::string spaceTypeHandle() const;
     std::string spaceTypeMaterialName() const;
+
+    /// BuildingStory name if any
     std::string buildingStoryName() const;
     std::string buildingStoryHandle() const;
     std::string buildingStoryMaterialName() const;
+
+    /// BuildingUnit name if any
     std::string buildingUnitName() const;
     std::string buildingUnitHandle() const;
     std::string buildingUnitMaterialName() const;
+
+    /// ConstructionSet name if any
     std::string constructionSetName() const;
     std::string constructionSetHandle() const;
     std::string constructionSetMaterialName() const;
+
     std::string outsideBoundaryCondition() const;
     std::string outsideBoundaryConditionObjectName() const;
     std::string outsideBoundaryConditionObjectHandle() const;
@@ -189,6 +219,7 @@ namespace openstudio{
     bool coincidentWithOutsideObject() const;
     std::string sunExposure() const;
     std::string windExposure() const;
+    double illuminanceSetpoint() const;
     //bool plenum() const;
     //bool belowFloorPlenum() const;
     //bool aboveCeilingPlenum() const;
@@ -200,6 +231,10 @@ namespace openstudio{
     void setConstructionName(const std::string& s);
     void setConstructionHandle(const std::string& s);
     void setConstructionMaterialName(const std::string& s);
+    void setSurfaceName(const std::string& s);
+    void setSurfaceHandle(const std::string& s);
+    void setSubSurfaceName(const std::string& s);
+    void setSubSurfaceHandle(const std::string& s);
     void setSpaceName(const std::string& s);
     void setSpaceHandle(const std::string& s);
     void setThermalZoneName(const std::string& s);
@@ -224,6 +259,7 @@ namespace openstudio{
     void setCoincidentWithOutsideObject(bool b);
     void setSunExposure(const std::string& s);
     void setWindExposure(const std::string& s);
+    void setIlluminanceSetpoint(double d);
     //void setBelowFloorPlenum(bool v);
     //void setAboveCeilingPlenum(bool v);
 
@@ -234,11 +270,16 @@ namespace openstudio{
 
     std::string m_handle;
     std::string m_name;
+    std::string m_type;
     std::string m_surfaceType;
     std::string m_surfaceTypeMaterialName;
     std::string m_constructionName;
     std::string m_constructionHandle;
     std::string m_constructionMaterialName;
+    std::string m_surfaceName;
+    std::string m_surfaceHandle;
+    std::string m_subSurfaceName;
+    std::string m_subSurfaceHandle;
     std::string m_spaceName;
     std::string m_spaceHandle;
     std::string m_thermalZoneName;
@@ -263,14 +304,15 @@ namespace openstudio{
     bool m_coincidentWithOutsideObject;
     std::string m_sunExposure;
     std::string m_windExposure;
+    double m_illuminanceSetpoint;
     //bool m_belowFloorPlenum;
     //bool m_aboveCeilingPlenum;
   };
 
-  
+
   /// ThreeSceneChild is a child object of a ThreeSceneObject
   class UTILITIES_API ThreeSceneChild{
-  public: 
+  public:
     ThreeSceneChild(const std::string& uuid, const std::string& name, const std::string& type,
                     const std::string& geometryId, const std::string& materialId, const ThreeUserData& userData);
     std::string uuid() const;
@@ -297,7 +339,7 @@ namespace openstudio{
 
   /// ThreeSceneObject is the root object in a ThreeScene
   class UTILITIES_API ThreeSceneObject{
-  public: 
+  public:
     ThreeSceneObject(const std::string& uuid, const std::vector<ThreeSceneChild>& children);
     std::string uuid() const;
     std::string type() const;
@@ -315,10 +357,10 @@ namespace openstudio{
     std::vector<ThreeSceneChild> m_children;
   };
 
-  /// ThreeBoundingBox includes information about a bounding box 
+  /// ThreeBoundingBox includes information about a bounding box
   class UTILITIES_API ThreeBoundingBox{
-  public: 
-    ThreeBoundingBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, 
+  public:
+    ThreeBoundingBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ,
                      double lookAtX, double lookAtY, double lookAtZ, double lookAtR);
     double minX() const;
     double minY() const;
@@ -350,9 +392,9 @@ namespace openstudio{
 
   /// ThreeModelObjectMetadata includes metadata about an OpenStudio ModelObject
   class UTILITIES_API ThreeModelObjectMetadata{
-  public: 
+  public:
 
-    // DLM: public default ctor seems to be only to make SWIG happy, normal tricks of ignoring vector resize did not work 
+    // DLM: public default ctor seems to be only to make SWIG happy, normal tricks of ignoring vector resize did not work
     // additionally private default ctor with template<class _Ty> friend class std::allocator; also did not work
     ThreeModelObjectMetadata();
 
@@ -374,7 +416,7 @@ namespace openstudio{
 
   /// ThreeSceneMetadata includes metadata about an OpenStudio Model Object
   class UTILITIES_API ThreeSceneMetadata{
-  public: 
+  public:
     ThreeSceneMetadata(const std::vector<std::string>& buildingStoryNames, const ThreeBoundingBox& boundingBox, const std::vector<ThreeModelObjectMetadata>& modelObjectMetadata);
     std::string version() const;
     std::string type() const;
@@ -404,7 +446,7 @@ namespace openstudio{
   class UTILITIES_API ThreeScene{
   public:
 
-    /// constructor 
+    /// constructor
     ThreeScene(const ThreeSceneMetadata& metadata, const std::vector<ThreeGeometry>& geometries, const std::vector<ThreeMaterial>& materials, const ThreeSceneObject& sceneObject);
 
     /// constructor from JSON formatted string, will throw if error
@@ -415,7 +457,7 @@ namespace openstudio{
 
     /// print to JSON
     std::string toJSON(bool prettyPrint = false) const;
-  
+
     ThreeSceneMetadata metadata() const;
     std::vector<ThreeGeometry> geometries() const;
     boost::optional<ThreeGeometry> getGeometry(const std::string& geometryId) const;

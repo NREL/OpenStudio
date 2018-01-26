@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,7 +44,7 @@ namespace detail {
 
 } // detail
 
-/** CoilWaterHeatingAirToWaterHeatPump is a ModelObject that wraps the OpenStudio IDD object 'OS:Coil:WaterHeating:AirToWaterHeatPump'. 
+/** CoilWaterHeatingAirToWaterHeatPump is a ModelObject that wraps the OpenStudio IDD object 'OS:Coil:WaterHeating:AirToWaterHeatPump'.
  *  As of EnergyPlus version 8.4.0 this object maps to Coil:WaterHeating:AirToWaterHeatPump:Pumped in idf format.
  */
 class MODEL_API CoilWaterHeatingAirToWaterHeatPump : public HVACComponent {
@@ -148,11 +148,11 @@ class MODEL_API CoilWaterHeatingAirToWaterHeatPump : public HVACComponent {
 
   void autosizeRatedCondenserWaterFlowRate();
 
-  void setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP);
+  bool setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP);
 
-  void setCondenserPumpPowerIncludedinRatedCOP(bool condenserPumpPowerIncludedinRatedCOP);
+  bool setCondenserPumpPowerIncludedinRatedCOP(bool condenserPumpPowerIncludedinRatedCOP);
 
-  void setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(bool condenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP);
+  bool setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(bool condenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP);
 
   bool setCondenserWaterPumpPower(double condenserWaterPumpPower);
 
@@ -214,4 +214,3 @@ typedef std::vector<CoilWaterHeatingAirToWaterHeatPump> CoilWaterHeatingAirToWat
 } // openstudio
 
 #endif // MODEL_COILWATERHEATINGAIRTOWATERHEATPUMP_HPP
-

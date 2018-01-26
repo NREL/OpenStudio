@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -129,31 +129,31 @@ class MODEL_API Luminaire : public SpaceLoadInstance {
   /** Resets the (fractional) Schedule. */
   void resetSchedule();
 
-  void setPositionXcoordinate(double positionXcoordinate);
+  bool setPositionXcoordinate(double positionXcoordinate);
 
   bool setPositionXcoordinate(const Quantity& positionXcoordinate);
 
-  void setPositionYcoordinate(double positionYcoordinate);
+  bool setPositionYcoordinate(double positionYcoordinate);
 
   bool setPositionYcoordinate(const Quantity& positionYcoordinate);
 
-  void setPositionZcoordinate(double positionZcoordinate);
+  bool setPositionZcoordinate(double positionZcoordinate);
 
   bool setPositionZcoordinate(const Quantity& positionZcoordinate);
 
-  void setPsiRotationAroundXaxis(double psiRotationAroundXaxis);
+  bool setPsiRotationAroundXaxis(double psiRotationAroundXaxis);
 
   bool setPsiRotationAroundXaxis(const Quantity& psiRotationAroundXaxis);
 
   void resetPsiRotationAroundXaxis();
 
-  void setThetaRotationAroundYaxis(double thetaRotationAroundYaxis);
+  bool setThetaRotationAroundYaxis(double thetaRotationAroundYaxis);
 
   bool setThetaRotationAroundYaxis(const Quantity& thetaRotationAroundYaxis);
 
   void resetThetaRotationAroundYaxis();
 
-  void setPhiRotationAroundZaxis(double phiRotationAroundZaxis);
+  bool setPhiRotationAroundZaxis(double phiRotationAroundZaxis);
 
   bool setPhiRotationAroundZaxis(const Quantity& phiRotationAroundZaxis);
 
@@ -225,4 +225,3 @@ typedef std::vector<Luminaire> LuminaireVector;
 } // openstudio
 
 #endif // MODEL_LUMINAIRE_HPP
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -65,7 +65,7 @@ class ENERGYPLUS_API ReverseTranslator {
 
   /** Translates the given Workspace to a Model.
    *
-   *  This method carries out its work by explicitly translating the highest level objects in 
+   *  This method carries out its work by explicitly translating the highest level objects in
    *  the Workspace by calling translateAndMapWorkspaceObject().  The translateAndMapWorkspaceObject method in turn calls a type
    *  specific function to translate the given object.  Each type specific function is responsible for translating
    *  not only the direct workspace object passed into it, but also related objects under its purview.  Related objects
@@ -73,7 +73,7 @@ class ENERGYPLUS_API ReverseTranslator {
    *  AirLoopHVAC is connected to other components via node connections and the translate function for AirLoopHVAC
    *  is responsbile for translating the components associated with the loop.  The method translateAndMapWorkspaceObject()
    *  uses an internal map to determine if an object has already been translated, therefore there is no
-   *  concern of translating an object twice, provided that workspace objects are always translated using the 
+   *  concern of translating an object twice, provided that workspace objects are always translated using the
    *  translateAndMapWorkspaceObject() interface as opposed to the type specific translators.
    */
   boost::optional<model::ModelObject> translateAndMapWorkspaceObject(const WorkspaceObject & workspaceObject);
@@ -93,7 +93,7 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateBuilding(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateBuildingSurfaceDetailed(const WorkspaceObject & workspaceObject);
-  
+
   boost::optional<model::ModelObject> translateControllerOutdoorAir(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateCoilHeatingGas(const WorkspaceObject & workspaceObject);
@@ -145,9 +145,9 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateDesignSpecificationOutdoorAir( const WorkspaceObject& workspaceObject);
 
   boost::optional<model::ModelObject> translateElectricEquipment(const WorkspaceObject & workspaceObject);
-  
+
   boost::optional<model::ModelObject> translateElectricLoadCenterStorageSimple(const WorkspaceObject & workspaceObject);
-  
+
   boost::optional<model::ModelObject> translateElectricLoadCenterStorageConverter(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateEnergyManagementSystemActuator(const WorkspaceObject & workspaceObject);
@@ -167,7 +167,7 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateEnergyManagementSystemProgram(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateEnergyManagementSystemProgramCallingManager(const WorkspaceObject & workspaceObject);
-  
+
   boost::optional<model::ModelObject> translateEnergyManagementSystemSensor(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateEnergyManagementSystemSubroutine(const WorkspaceObject & workspaceObject);
@@ -180,12 +180,16 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateExteriorLights(const WorkspaceObject& workspaceObject);
 
+  boost::optional<model::ModelObject> translateExteriorFuelEquipment(const WorkspaceObject& workspaceObject);
+
+  boost::optional<model::ModelObject> translateExteriorWaterEquipment(const WorkspaceObject& workspaceObject);
+
   boost::optional<model::ModelObject> translateFanConstantVolume(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateFenestrationSurfaceDetailed(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateGasEquipment(const WorkspaceObject & workspaceObject);
-  
+
   boost::optional<model::ModelObject> translateGeneratorMicroTurbine(const WorkspaceObject& workspaceObject);
 
   boost::optional<model::ModelObject> translateGroundHeatExchangerVertical(const WorkspaceObject & workspaceObject);
@@ -203,9 +207,9 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateMaterialAirGap(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateMaterialNoMass(const WorkspaceObject & workspaceObject);
-  
+
   boost::optional<model::ModelObject> translateMeterCustom(const WorkspaceObject & workspaceObject);
-  
+
   boost::optional<model::ModelObject> translateMeterCustomDecrement(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateOtherEquipment(const WorkspaceObject& workspaceObject);
@@ -307,7 +311,7 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateZoneAirHeatBalanceAlgorithm(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateZoneAirMassFlowConservation(const WorkspaceObject & workspaceObject);
-  
+
   boost::optional<model::ModelObject> translateZoneCrossMixing(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateZoneHVACEquipmentList(const WorkspaceObject & workspaceObject);

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -61,7 +61,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPumpWrappedCondenser( 
+boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPumpWrappedCondenser(
     WaterHeaterHeatPumpWrappedCondenser & modelObject)
 {
   IdfObject idfObject(IddObjectType::WaterHeater_HeatPump_WrappedCondenser);
@@ -161,7 +161,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPumpWrappe
         auto outletNode = modelObject.outletNode();
         OS_ASSERT(outletNode);
         airOutletNodeName = outletNode->name().get();
-        
+
         inletAirZoneName = thermalZone->name().get();
         fanInletNodeName = modelObject.name().get() + " Evap Outlet - Fan Inlet";
         fanOutletNodeName = airOutletNodeName;
@@ -216,7 +216,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPumpWrappe
         auto outletNode = modelObject.outletNode();
         OS_ASSERT(outletNode);
         airOutletNodeName = outletNode->name().get();
-        
+
         inletAirZoneName = thermalZone->name().get();
         fanInletNodeName = airInletNodeName;
         fanOutletNodeName = modelObject.name().get() + " Fan Outlet - Evap Inlet";

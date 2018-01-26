@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -128,7 +128,7 @@ namespace detail {
     bool setIntendedSurfaceType(const std::string& type);
     void resetIntendedSurfaceType();
 
-    void setStandardsConstructionType(const std::string& type);
+    bool setStandardsConstructionType(const std::string& type);
     void resetStandardsConstructionType();
 
     bool setPerturbableLayer(unsigned layerIndex);
@@ -138,19 +138,19 @@ namespace detail {
     /** Clears all PerturbableLayer information, including type. */
     void resetPerturbableLayer();
 
-    void setPerturbableLayerType(const std::string& type);
+    bool setPerturbableLayerType(const std::string& type);
 
     void resetPerturbableLayerType();
 
-    void setOtherPerturbableLayerType(const std::string& otherPerturbableLayerType);
+    bool setOtherPerturbableLayerType(const std::string& otherPerturbableLayerType);
 
     void resetOtherPerturbableLayerType();
 
-    void setConstructionStandard(const std::string& constructionStandard);
+    bool setConstructionStandard(const std::string& constructionStandard);
 
     void resetConstructionStandard();
 
-    void setConstructionStandardSource(const std::string& constructionStandardSource);
+    bool setConstructionStandardSource(const std::string& constructionStandardSource);
 
     void resetConstructionStandardSource();
 
@@ -182,7 +182,7 @@ namespace detail {
 
     void resetFenestrationGasFill();
 
-    void setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating);
+    bool setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating);
 
     void resetFenestrationLowEmissivityCoating();
 
@@ -191,10 +191,10 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.StandardsInformationConstruction");
   };
-  
+
 } // detail
 
 } // model
-} // openstudio 
+} // openstudio
 
 #endif // MODEL_STANDARDSINFORMATIONCONSTRUCTION_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -376,7 +376,7 @@ namespace openstudio{
     }
     return allComponents;
   }
-  
+
   std::vector<BCLMeasure> LocalBCL::measures() const
   {
     std::vector<BCLMeasure> allMeasures;
@@ -408,7 +408,7 @@ namespace openstudio{
   }
 
   std::vector<BCLComponent> LocalBCL::searchComponents(const std::string& searchTerm,
-    const std::string& componentType) const 
+    const std::string& componentType) const
   {
     std::vector<BCLComponent> results;
     QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
@@ -427,13 +427,13 @@ namespace openstudio{
   }
 
   std::vector<BCLComponent> LocalBCL::searchComponents(const std::string& searchTerm,
-    const unsigned componentTypeTID) const 
+    const unsigned componentTypeTID) const
   {
     return searchComponents(searchTerm, "");
   }
 
   std::vector<BCLMeasure> LocalBCL::searchMeasures(const std::string& searchTerm,
-    const std::string& componentType) const 
+    const std::string& componentType) const
   {
     std::vector<BCLMeasure> results;
     QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
@@ -452,7 +452,7 @@ namespace openstudio{
   }
 
   std::vector<BCLMeasure> LocalBCL::searchMeasures(const std::string& searchTerm,
-    const unsigned componentTypeTID) const 
+    const unsigned componentTypeTID) const
   {
     return searchMeasures(searchTerm, "");
   }
@@ -717,7 +717,7 @@ namespace openstudio{
     while (query.next()) {
       uids.insert(make_pair(toString(query.value(0).toString()), toString(query.value(1).toString())));
     }
-    
+
     for (const auto & searchTerm : searchTerms){
 
       UidsType theseUids;
@@ -729,7 +729,7 @@ namespace openstudio{
 
       UidsVecType newUids(std::max(uids.size(), theseUids.size()));
       auto insertEnd = std::set_intersection(uids.begin(), uids.end(), theseUids.begin(), theseUids.end(), newUids.begin());
-      
+
       uids.clear();
       uids.insert(newUids.begin(), insertEnd);
 

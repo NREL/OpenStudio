@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -157,37 +157,43 @@ namespace detail {
     return isEmpty(OS_Curve_CubicFields::OutputUnitType);
   }
 
-  void CurveCubic_Impl::setCoefficient1Constant(double coefficient1Constant) {
+  bool CurveCubic_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = setDouble(OS_Curve_CubicFields::Coefficient1Constant, coefficient1Constant);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveCubic_Impl::setCoefficient2x(double coefficient2x) {
+  bool CurveCubic_Impl::setCoefficient2x(double coefficient2x) {
     bool result = setDouble(OS_Curve_CubicFields::Coefficient2x, coefficient2x);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveCubic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
+  bool CurveCubic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
     bool result = setDouble(OS_Curve_CubicFields::Coefficient3x_POW_2, coefficient3xPOW2);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveCubic_Impl::setCoefficient4xPOW3(double coefficient4xPOW3) {
+  bool CurveCubic_Impl::setCoefficient4xPOW3(double coefficient4xPOW3) {
     bool result = setDouble(OS_Curve_CubicFields::Coefficient4x_POW_3, coefficient4xPOW3);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveCubic_Impl::setMinimumValueofx(double minimumValueofx) {
+  bool CurveCubic_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_CubicFields::MinimumValueofx, minimumValueofx);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveCubic_Impl::setMaximumValueofx(double maximumValueofx) {
+  bool CurveCubic_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_CubicFields::MaximumValueofx, maximumValueofx);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveCubic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
+  bool CurveCubic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
     bool result = false;
     if (minimumCurveOutput) {
       result = setDouble(OS_Curve_CubicFields::MinimumCurveOutput, minimumCurveOutput.get());
@@ -195,6 +201,7 @@ namespace detail {
       result = setString(OS_Curve_CubicFields::MinimumCurveOutput, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveCubic_Impl::resetMinimumCurveOutput() {
@@ -202,7 +209,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveCubic_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
+  bool CurveCubic_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
     bool result = false;
     if (maximumCurveOutput) {
       result = setDouble(OS_Curve_CubicFields::MaximumCurveOutput, maximumCurveOutput.get());
@@ -210,6 +217,7 @@ namespace detail {
       result = setString(OS_Curve_CubicFields::MaximumCurveOutput, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveCubic_Impl::resetMaximumCurveOutput() {
@@ -314,40 +322,40 @@ bool CurveCubic::isOutputUnitTypeDefaulted() const {
   return getImpl<detail::CurveCubic_Impl>()->isOutputUnitTypeDefaulted();
 }
 
-void CurveCubic::setCoefficient1Constant(double coefficient1Constant) {
-  getImpl<detail::CurveCubic_Impl>()->setCoefficient1Constant(coefficient1Constant);
+bool CurveCubic::setCoefficient1Constant(double coefficient1Constant) {
+  return getImpl<detail::CurveCubic_Impl>()->setCoefficient1Constant(coefficient1Constant);
 }
 
-void CurveCubic::setCoefficient2x(double coefficient2x) {
-  getImpl<detail::CurveCubic_Impl>()->setCoefficient2x(coefficient2x);
+bool CurveCubic::setCoefficient2x(double coefficient2x) {
+  return getImpl<detail::CurveCubic_Impl>()->setCoefficient2x(coefficient2x);
 }
 
-void CurveCubic::setCoefficient3xPOW2(double coefficient3xPOW2) {
-  getImpl<detail::CurveCubic_Impl>()->setCoefficient3xPOW2(coefficient3xPOW2);
+bool CurveCubic::setCoefficient3xPOW2(double coefficient3xPOW2) {
+  return getImpl<detail::CurveCubic_Impl>()->setCoefficient3xPOW2(coefficient3xPOW2);
 }
 
-void CurveCubic::setCoefficient4xPOW3(double coefficient4xPOW3) {
-  getImpl<detail::CurveCubic_Impl>()->setCoefficient4xPOW3(coefficient4xPOW3);
+bool CurveCubic::setCoefficient4xPOW3(double coefficient4xPOW3) {
+  return getImpl<detail::CurveCubic_Impl>()->setCoefficient4xPOW3(coefficient4xPOW3);
 }
 
-void CurveCubic::setMinimumValueofx(double minimumValueofx) {
-  getImpl<detail::CurveCubic_Impl>()->setMinimumValueofx(minimumValueofx);
+bool CurveCubic::setMinimumValueofx(double minimumValueofx) {
+  return getImpl<detail::CurveCubic_Impl>()->setMinimumValueofx(minimumValueofx);
 }
 
-void CurveCubic::setMaximumValueofx(double maximumValueofx) {
-  getImpl<detail::CurveCubic_Impl>()->setMaximumValueofx(maximumValueofx);
+bool CurveCubic::setMaximumValueofx(double maximumValueofx) {
+  return getImpl<detail::CurveCubic_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
-void CurveCubic::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveCubic_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+bool CurveCubic::setMinimumCurveOutput(double minimumCurveOutput) {
+  return getImpl<detail::CurveCubic_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveCubic::resetMinimumCurveOutput() {
   getImpl<detail::CurveCubic_Impl>()->resetMinimumCurveOutput();
 }
 
-void CurveCubic::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveCubic_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+bool CurveCubic::setMaximumCurveOutput(double maximumCurveOutput) {
+  return getImpl<detail::CurveCubic_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveCubic::resetMaximumCurveOutput() {
@@ -377,5 +385,4 @@ CurveCubic::CurveCubic(std::shared_ptr<detail::CurveCubic_Impl> impl)
 /// @endcond
 
 } // model
-} // openstudio
-
+} // openstudio

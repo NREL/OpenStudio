@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -69,11 +69,11 @@ class MODEL_API CoilCoolingLowTempRadiantVarFlow_Impl : public StraightComponent
     virtual IddObjectType iddObjectType() const override;
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
-    
+
     virtual unsigned inletPort() override;
 
-    virtual unsigned outletPort() override;    
-    
+    virtual unsigned outletPort() override;
+
     virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
     //@}
@@ -87,7 +87,7 @@ class MODEL_API CoilCoolingLowTempRadiantVarFlow_Impl : public StraightComponent
     bool isMaximumColdWaterFlowAutosized() const;
 
     double coolingControlThrottlingRange() const;
-    
+
     bool isCoolingControlThrottlingRangeDefaulted() const;
 
     boost::optional<Schedule> coolingControlTemperatureSchedule() const;
@@ -128,14 +128,14 @@ class MODEL_API CoilCoolingLowTempRadiantVarFlow_Impl : public StraightComponent
 
     void resetCondensationControlType();
 
-    void setCondensationControlDewpointOffset(double condensationControlDewpointOffset);
+    bool setCondensationControlDewpointOffset(double condensationControlDewpointOffset);
 
     void resetCondensationControlDewpointOffset();
 
     //@}
     /** @name Other */
     //@{
-    
+
     bool addToNode(Node & node) override;
 
     // Used to find the ZoneHVAC that contains this coil
@@ -163,4 +163,3 @@ class MODEL_API CoilCoolingLowTempRadiantVarFlow_Impl : public StraightComponent
 } // openstudio
 
 #endif // MODEL_COILCOOLINGLOWTEMPRADIANTVARFLOW_IMPL_HPP
-

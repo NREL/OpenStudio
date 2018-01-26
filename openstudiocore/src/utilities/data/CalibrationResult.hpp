@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -48,12 +48,12 @@ class UTILITIES_API CalibrationBillingPeriod {
   /// Creates a CalibrationBillingPeriod wrapper around attribute if it is correctly formatted.
   static boost::optional<CalibrationBillingPeriod> fromAttribute(const Attribute& attribute);
 
-  /// Create attribute wrapper with all required information. 
+  /// Create attribute wrapper with all required information.
   CalibrationBillingPeriod(const Date& startDate, unsigned numberOfDays,
      const std::string& consumptionUnit, boost::optional<std::string> peakDemandUnit,
      boost::optional<double> consumption, boost::optional<double> peakDemand, boost::optional<double> totalCost,
      boost::optional<double> modelConsumption, boost::optional<double> modelPeakDemand, boost::optional<double> modelTotalCost);
-  
+
   /// Returns the attribute
   Attribute attribute() const;
 
@@ -67,7 +67,7 @@ class UTILITIES_API CalibrationBillingPeriod {
   unsigned numberOfDays() const;
 
   std::string consumptionUnit() const;
-  
+
   boost::optional<std::string> peakDemandUnit() const;
 
   /** Returns the consumption in billing units. */
@@ -108,9 +108,9 @@ class UTILITIES_API CalibrationUtilityBill {
   /// Creates a CalibrationUtilityBill wrapper around attribute if it is correctly formatted.
   static boost::optional<CalibrationUtilityBill> fromAttribute(const Attribute& attribute);
 
-  /// Create attribute wrapper with all required information. 
+  /// Create attribute wrapper with all required information.
   CalibrationUtilityBill(const std::string& name, const FuelType& fuelType, const InstallLocationType& meterInstallLocation,
-    boost::optional<std::string> meterSpecificInstallLocation, boost::optional<EndUseCategoryType> meterEndUseCategory, 
+    boost::optional<std::string> meterSpecificInstallLocation, boost::optional<EndUseCategoryType> meterEndUseCategory,
     boost::optional<std::string> meterSpecificEndUse, std::string consumptionUnit, double consumptionUnitConversionFactor,
     boost::optional<std::string> peakDemandUnit, boost::optional<double> peakDemandUnitConversionFactor,
     boost::optional<unsigned> timestepsInPeakDemandWindow, boost::optional<double> minutesInPeakDemandWindow,
@@ -126,7 +126,7 @@ class UTILITIES_API CalibrationUtilityBill {
   InstallLocationType meterInstallLocation() const;
 
   boost::optional<std::string> meterSpecificInstallLocation() const;
-  
+
   boost::optional<EndUseCategoryType> meterEndUseCategory() const;
 
   boost::optional<std::string> meterSpecificEndUse() const;
@@ -134,19 +134,19 @@ class UTILITIES_API CalibrationUtilityBill {
   std::string consumptionUnit() const;
 
   double consumptionUnitConversionFactor () const;
-  
+
   boost::optional<std::string> peakDemandUnit() const;
 
   boost::optional<double> peakDemandUnitConversionFactor() const;
 
   boost::optional<unsigned> timestepsInPeakDemandWindow() const;
-  
+
   boost::optional<double> minutesInPeakDemandWindow() const;
 
   boost::optional<unsigned> numberBillingPeriodsInCalculations() const;
-  
+
   boost::optional<double> CVRMSE() const;
-  
+
   boost::optional<double> NMBE() const;
 
   /// Returns all CalibrationBillingPeriod associated with this CalibrationUtilityBill.

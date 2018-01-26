@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -46,7 +46,7 @@ namespace detail {
 
 /** WorkspaceObject holds and manipulates data objects in Energyplus IDF format in the context of
  *  a Workspace. Over and above IdfObject, WorkspaceObject maintains ObjectListType fields as
- *  pointers (possibly null) to other WorkspaceObjects in the same Workspace, and only commits 
+ *  pointers (possibly null) to other WorkspaceObjects in the same Workspace, and only commits
  *  changes that maintain the validity of its Workspace at the current StrictnessLevel (typically
  *  Draft, moving to Final right before simulation). */
 class UTILITIES_API WorkspaceObject : public IdfObject {
@@ -123,13 +123,13 @@ class UTILITIES_API WorkspaceObject : public IdfObject {
   /** Returns the reference lists of which this object is a member, if this object has a name. */
   std::vector<std::string> canBeTarget() const;
 
-  /** Checks for equality of objectListFields(). Prerequisite: iddObject()s must be 
-   *  equal. Looks for object equality of targets if same workspace(), otherwise, looks for data 
+  /** Checks for equality of objectListFields(). Prerequisite: iddObject()s must be
+   *  equal. Looks for object equality of targets if same workspace(), otherwise, looks for data
    *  field equality of targets. */
   bool objectListFieldsEqual(const WorkspaceObject& other) const;
 
-  /** Returns true if for all objectListFields() that for both objects are non-empty, 
-   *  the values are equal (using the same criteria as objectListFieldsEqual). 
+  /** Returns true if for all objectListFields() that for both objects are non-empty,
+   *  the values are equal (using the same criteria as objectListFieldsEqual).
    *  Prerequisite: iddObject()s must be equal. */
   bool objectListFieldsNonConflicting(const WorkspaceObject& other) const;
 
@@ -137,14 +137,14 @@ class UTILITIES_API WorkspaceObject : public IdfObject {
   /** @name Serialization */
   //@{
 
-  /** Returns an equivalent IdfObject, naming target objects if necessary. All data is cloned. 
-   *  If the objects have handle fields (as in the OpenStudio IDD), pointers to other objects 
+  /** Returns an equivalent IdfObject, naming target objects if necessary. All data is cloned.
+   *  If the objects have handle fields (as in the OpenStudio IDD), pointers to other objects
    *  are printed as handles; otherwise pointers are printed as names. */
   //DLM@20101010: don't like const overload, just make sure everything is named all the time
   IdfObject idfObject();
 
   /** Returns an equivalent IdfObject, leaving unnamed target objects unnamed. All data is cloned.
-   *  If the objects have handle fields (as in the OpenStudio IDD), pointers to other objects 
+   *  If the objects have handle fields (as in the OpenStudio IDD), pointers to other objects
    *  are printed as handles; otherwise pointers are printed as names. */
   //DLM@20101010: don't like const overload, just make sure everything is named all the time
   IdfObject idfObject() const;
@@ -165,7 +165,7 @@ class UTILITIES_API WorkspaceObject : public IdfObject {
   WorkspaceObject(std::shared_ptr<detail::WorkspaceObject_Impl> impl);
 
  private:
- 
+
   std::vector<WorkspaceObject> objects(const std::vector<Handle>& handles,bool sorted) const;
 
   REGISTER_LOGGER("utilities.idf.WorkspaceObject");

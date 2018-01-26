@@ -159,7 +159,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorFuelCell) {
   // check default inverter
   GeneratorFuelCellInverter fI = fuelcell.inverter();
 
-  // check default optional stackcooler 
+  // check default optional stackcooler
   boost::optional<GeneratorFuelCellStackCooler> fSC = fuelcell.stackCooler();
   EXPECT_FALSE(fSC);
 

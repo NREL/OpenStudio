@@ -1,6 +1,6 @@
 
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -64,6 +64,8 @@ namespace openstudio{
 
     QComboBox *  m_spaceTypeFilter = nullptr;
 
+    QComboBox *  m_subSurfaceTypeFilter = nullptr;
+
     QComboBox *  m_loadTypeFilter = nullptr;
 
     QComboBox *  m_windExposureFilter = nullptr;
@@ -75,7 +77,7 @@ namespace openstudio{
     QComboBox *  m_surfaceTypeFilter = nullptr;
 
     QComboBox *  m_interiorPartitionGroupFilter = nullptr;
-    
+
   protected:
 
     REGISTER_LOGGER("openstudio.SpacesSubtabGridView");
@@ -89,6 +91,8 @@ namespace openstudio{
     void showThermalZoneFilter();
 
     void showSpaceTypeFilter();
+
+    void showSubSurfaceTypeFilter();
 
     void showSpaceNameFilter();
 
@@ -110,6 +114,8 @@ namespace openstudio{
 
     void initializeSpaceTypeFilter();
 
+    void initializeSubSurfaceTypeFilter();
+
     void initializeLoadTypeFilter();
 
     void initializeWindExposureFilter();
@@ -130,6 +136,8 @@ namespace openstudio{
 
     std::set<openstudio::model::ModelObject> m_objectsFilterdBySpaceType;
 
+    std::set<openstudio::model::ModelObject> m_objectsFilterdBySubSurfaceType;
+
     std::set<openstudio::model::ModelObject> m_objectsFilteredBySpaceName;
 
     std::set<openstudio::model::ModelObject> m_objectsFilteredByWindExposure;
@@ -149,6 +157,8 @@ namespace openstudio{
   protected slots:
 
     virtual void spaceNameFilterChanged();
+
+    virtual void subSurfaceTypeFilterChanged(const QString & text);
 
     virtual void storyFilterChanged(const QString & text);
 

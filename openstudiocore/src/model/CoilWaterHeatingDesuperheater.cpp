@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -410,19 +410,22 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilWaterHeatingDesuperheater_Impl::setRatedInletWaterTemperature(double ratedInletWaterTemperature) {
+  bool CoilWaterHeatingDesuperheater_Impl::setRatedInletWaterTemperature(double ratedInletWaterTemperature) {
     bool result = setDouble(OS_Coil_WaterHeating_DesuperheaterFields::RatedInletWaterTemperature, ratedInletWaterTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CoilWaterHeatingDesuperheater_Impl::setRatedOutdoorAirTemperature(double ratedOutdoorAirTemperature) {
+  bool CoilWaterHeatingDesuperheater_Impl::setRatedOutdoorAirTemperature(double ratedOutdoorAirTemperature) {
     bool result = setDouble(OS_Coil_WaterHeating_DesuperheaterFields::RatedOutdoorAirTemperature, ratedOutdoorAirTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CoilWaterHeatingDesuperheater_Impl::setMaximumInletWaterTemperatureforHeatReclaim(double maximumInletWaterTemperatureforHeatReclaim) {
+  bool CoilWaterHeatingDesuperheater_Impl::setMaximumInletWaterTemperatureforHeatReclaim(double maximumInletWaterTemperatureforHeatReclaim) {
     bool result = setDouble(OS_Coil_WaterHeating_DesuperheaterFields::MaximumInletWaterTemperatureforHeatReclaim, maximumInletWaterTemperatureforHeatReclaim);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CoilWaterHeatingDesuperheater_Impl::setHeatReclaimEfficiencyFunctionofTemperatureCurve(const boost::optional<CurveBiquadratic>& curveBiquadratic) {
@@ -677,16 +680,16 @@ void CoilWaterHeatingDesuperheater::resetRatedHeatReclaimRecoveryEfficiency() {
   getImpl<detail::CoilWaterHeatingDesuperheater_Impl>()->resetRatedHeatReclaimRecoveryEfficiency();
 }
 
-void CoilWaterHeatingDesuperheater::setRatedInletWaterTemperature(double ratedInletWaterTemperature) {
-  getImpl<detail::CoilWaterHeatingDesuperheater_Impl>()->setRatedInletWaterTemperature(ratedInletWaterTemperature);
+bool CoilWaterHeatingDesuperheater::setRatedInletWaterTemperature(double ratedInletWaterTemperature) {
+  return getImpl<detail::CoilWaterHeatingDesuperheater_Impl>()->setRatedInletWaterTemperature(ratedInletWaterTemperature);
 }
 
-void CoilWaterHeatingDesuperheater::setRatedOutdoorAirTemperature(double ratedOutdoorAirTemperature) {
-  getImpl<detail::CoilWaterHeatingDesuperheater_Impl>()->setRatedOutdoorAirTemperature(ratedOutdoorAirTemperature);
+bool CoilWaterHeatingDesuperheater::setRatedOutdoorAirTemperature(double ratedOutdoorAirTemperature) {
+  return getImpl<detail::CoilWaterHeatingDesuperheater_Impl>()->setRatedOutdoorAirTemperature(ratedOutdoorAirTemperature);
 }
 
-void CoilWaterHeatingDesuperheater::setMaximumInletWaterTemperatureforHeatReclaim(double maximumInletWaterTemperatureforHeatReclaim) {
-  getImpl<detail::CoilWaterHeatingDesuperheater_Impl>()->setMaximumInletWaterTemperatureforHeatReclaim(maximumInletWaterTemperatureforHeatReclaim);
+bool CoilWaterHeatingDesuperheater::setMaximumInletWaterTemperatureforHeatReclaim(double maximumInletWaterTemperatureforHeatReclaim) {
+  return getImpl<detail::CoilWaterHeatingDesuperheater_Impl>()->setMaximumInletWaterTemperatureforHeatReclaim(maximumInletWaterTemperatureforHeatReclaim);
 }
 
 bool CoilWaterHeatingDesuperheater::setHeatReclaimEfficiencyFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic) {
@@ -753,4 +756,3 @@ CoilWaterHeatingDesuperheater::CoilWaterHeatingDesuperheater(std::shared_ptr<det
 
 } // model
 } // openstudio
-

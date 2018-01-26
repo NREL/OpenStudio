@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -73,7 +73,7 @@ boost::optional<IdfObject> ForwardTranslator::translateControllerMechanicalVenti
   }
 
   // Availability Schedule
-  // If there is a ControllerOutdoorAir::minimumOutdoorAirSchedule 
+  // If there is a ControllerOutdoorAir::minimumOutdoorAirSchedule
   // then use that for the ControllerMechanicalVentilation::availabilitySchedule
   // Note that this scheme will not support fractions (schedule values above 0) because anything greater than 0 will
   // make the mechanical ventilation controller avaiable and thus taking precedence.
@@ -114,11 +114,11 @@ boost::optional<IdfObject> ForwardTranslator::translateControllerMechanicalVenti
   // Demand Controlled Ventilation
   if( modelObject.demandControlledVentilation() )
   {
-    idfObject.setString(openstudio::Controller_MechanicalVentilationFields::DemandControlledVentilation,"Yes"); 
+    idfObject.setString(openstudio::Controller_MechanicalVentilationFields::DemandControlledVentilation,"Yes");
   }
   else
   {
-    idfObject.setString(openstudio::Controller_MechanicalVentilationFields::DemandControlledVentilation,"No"); 
+    idfObject.setString(openstudio::Controller_MechanicalVentilationFields::DemandControlledVentilation,"No");
   }
 
   // System Outdoor Air Method

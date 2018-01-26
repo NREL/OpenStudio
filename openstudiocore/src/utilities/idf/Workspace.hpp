@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -92,21 +92,21 @@ class UTILITIES_API Workspace {
   /** @name Constructors and Destructors */
   //@{
 
-  /** Default constructor assumes StrictnessLevel::Draft and IddFileType::OpenStudio. Adds a
+  /** Default constructor assumes StrictnessLevel::Draft and IddFileType::EnergyPlus. Adds a
    *  versionObject with the version identifier set according to the version registered for
    *  iddFileType in the IddFactory. */
   Workspace();
 
-  /** Construct IddFileType::OpenStudio Workspace at StrictnessLevel level. Adds a versionObject
+  /** Construct IddFileType::EnergyPlus Workspace at StrictnessLevel level. Adds a versionObject
    *  with the version identifier set according to the version registered for iddFileType in the
    *  IddFactory. If level == StrictnessLevel::Final, Workspace can be invalid
    *  post-construction. */
   Workspace(StrictnessLevel level);
 
-  /** Default constructor. User can specify IddFileType and StrictnessLevel. Adds a versionObject
-   *  with the version identifier set according to the version registered for iddFileType in the
-   *  IddFactory. If level == StrictnessLevel::Final, Workspace can be invalid
-   *  post-construction. */
+  /** Default constructor. User can specify IddFileType (IddFileType::EnergyPlus or IddFileType::OpenStudio)
+   *  and StrictnessLevel. Adds a versionObject with the version identifier set according to the version
+   *  registered for iddFileType in the IddFactory.
+   *  If level == StrictnessLevel::Final, Workspace can be invalid post-construction. */
   Workspace(StrictnessLevel level, IddFileType iddFileType);
 
   /** Construct from idfFile. The new Workspace inherits idfFile's IddFile. Each IdfObject in

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -36,7 +36,7 @@
 #include "../utilities/bcl/BCLMeasure.hpp"
 
 namespace openstudio{
-  
+
 LightHeaderToggleButton::LightHeaderToggleButton(QWidget * parent)
   : QPushButton(parent)
 {
@@ -51,7 +51,7 @@ LightHeaderToggleButton::LightHeaderToggleButton(QWidget * parent)
   style.append("QPushButton:checked { border: none; ");
   style.append("background-image: url(\":/shared_gui_components/images/toggle_arrow.png\"); ");
   style.append(" } ");
-  
+
   setStyleSheet(style);
 }
 
@@ -69,7 +69,7 @@ HeaderToggleButton::HeaderToggleButton(QWidget * parent)
   style.append("QPushButton:checked { border: none; ");
   style.append("background-image: url(\":/shared_gui_components/images/toggle_arrow.png\"); ");
   style.append(" } ");
-  
+
   setStyleSheet(style);
 }
 

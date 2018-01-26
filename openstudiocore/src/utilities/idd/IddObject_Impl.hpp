@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -110,8 +110,8 @@ namespace detail {
     /** Get number of non-extensible fields. */
     unsigned numFields() const;
 
-    /** The original number of fields included in an object constructed by IddObjectType. Accounts 
-     *  for properties().minFields, properties().numExtensibleGroupsRequired, and 
+    /** The original number of fields included in an object constructed by IddObjectType. Accounts
+     *  for properties().minFields, properties().numExtensibleGroupsRequired, and
      *  IddField::properties().required. */
     unsigned numFieldsInDefaultObject() const;
 
@@ -144,11 +144,11 @@ namespace detail {
      *  !isExtensibleField(index). */
     ExtensibleIndex extensibleIndex(unsigned index) const;
 
-    /** Returns the overall IddObject index equivalent to extensibleIndex. Throws if IddObject 
+    /** Returns the overall IddObject index equivalent to extensibleIndex. Throws if IddObject
      *  is not extensible or if extensibleIndex.field >= properties().numExtensible. */
     unsigned index(ExtensibleIndex extensibleIndex) const;
 
-    /** Get the reference lists to which this object belongs. This method only returns supported 
+    /** Get the reference lists to which this object belongs. This method only returns supported
      *  reference lists attached to an index 0 name field. */
     std::vector<std::string> references() const;
 
@@ -161,7 +161,7 @@ namespace detail {
     /// get the indices of the fields of \object-list type. includes indices in the first
     /// extensible group
     std::vector<unsigned> objectListFields() const;
-    
+
     /// get the indices of the fields of \type url
     std::vector<unsigned> urlFields() const;
 
@@ -173,9 +173,9 @@ namespace detail {
     //@{
 
     /** Load from name, group, type, and text. */
-    static std::shared_ptr<IddObject_Impl> load(const std::string& name, 
+    static std::shared_ptr<IddObject_Impl> load(const std::string& name,
                                                   const std::string& group,
-                                                  const std::string& text, 
+                                                  const std::string& text,
                                                   IddObjectType type);
 
     // print
@@ -185,7 +185,7 @@ namespace detail {
 
    private:
 
-    std::string m_name;   
+    std::string m_name;
     std::string m_group;               // group name
     IddObjectType m_type;
     IddObjectProperties m_properties;
@@ -210,7 +210,7 @@ namespace detail {
     // configure logging
     REGISTER_LOGGER("utilities.idd.IddObject");
   };
-  
+
 } // detail
 } // openstudio
 

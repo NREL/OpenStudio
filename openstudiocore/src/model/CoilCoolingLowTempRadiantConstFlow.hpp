@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -53,14 +53,14 @@ class MODEL_API CoilCoolingLowTempRadiantConstFlow : public StraightComponent {
   /** @name Constructors and Destructors */
   //@{
 
-  CoilCoolingLowTempRadiantConstFlow(const Model& model, 
+  CoilCoolingLowTempRadiantConstFlow(const Model& model,
                                      Schedule& coolingHighWaterTemperatureSchedule,
                                      Schedule& coolingLowWaterTemperatureSchedule,
                                      Schedule& coolingHighControlTemperatureSchedule,
                                      Schedule& coolingLowControlTemperatureSchedule);
 
   virtual ~CoilCoolingLowTempRadiantConstFlow() {}
- 
+
   //virtual unsigned inletPort();
 
   //virtual unsigned outletPort();
@@ -76,11 +76,11 @@ class MODEL_API CoilCoolingLowTempRadiantConstFlow : public StraightComponent {
   //@{
 
    /** The following four schedules: cooling high and low water temperature schedules, cooling high and low control temperature schedules
-   define the high and low limits of a zone radiant system's desired inlet/supply cooling water temperatures and the high and low limits of a zone's cooling control temperature setpoints. 
-   If the space radiant cooling control temperature exceeds the cooling control temperature setpoint high limit, the inlet cooling water temperature is reduced to its low limit. If the space 
+   define the high and low limits of a zone radiant system's desired inlet/supply cooling water temperatures and the high and low limits of a zone's cooling control temperature setpoints.
+   If the space radiant cooling control temperature exceeds the cooling control temperature setpoint high limit, the inlet cooling water temperature is reduced to its low limit. If the space
    radiant cooling control temperature drops below its cooling control temperature low limit, the radiant cooling loop is shut off. If the space radiant cooling control temperature varies between
    the cooling control temperature high and low limits, the desired inlet cooling water temperature is linearly interpolated between the high and low cooling water temperature limits. The desired water
-   temperature is achieved by the zone 3-way valve for mixing/bypassing controls.  
+   temperature is achieved by the zone 3-way valve for mixing/bypassing controls.
   */
 
   boost::optional<Schedule> coolingHighWaterTemperatureSchedule() const;
@@ -124,7 +124,7 @@ class MODEL_API CoilCoolingLowTempRadiantConstFlow : public StraightComponent {
 
   void resetCondensationControlType();
 
-  void setCondensationControlDewpointOffset(double condensationControlDewpointOffset);
+  bool setCondensationControlDewpointOffset(double condensationControlDewpointOffset);
 
   void resetCondensationControlDewpointOffset();
 
@@ -158,4 +158,3 @@ typedef std::vector<CoilCoolingLowTempRadiantConstFlow> CoilCoolingLowTempRadian
 } // openstudio
 
 #endif // MODEL_COILCOOLINGLOWTEMPRADIANTCONSTFLOW_HPP
-

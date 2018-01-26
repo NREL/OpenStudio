@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,13 +39,13 @@ TEST_F(IddFixture,IddFileAndFactoryWrapper_ExplicitIddFile)
 
   EXPECT_EQ(IddFactory::instance().getIddFile(IddFileType::OpenStudio).objects().size(),wrapper.iddFile().objects().size());
 
-  // Even though OpenStudio IddFile, it has been disembodied from IddFactory, so IddFileType 
+  // Even though OpenStudio IddFile, it has been disembodied from IddFactory, so IddFileType
   // has been lost.
   EXPECT_TRUE(wrapper.iddFileType() == IddFileType(IddFileType::UserCustom));
 
-  EXPECT_TRUE(wrapper.requiredObjects().size() == 
+  EXPECT_TRUE(wrapper.requiredObjects().size() ==
               IddFactory::instance().getRequiredObjects(IddFileType::OpenStudio).size());
-  EXPECT_TRUE(wrapper.uniqueObjects().size() == 
+  EXPECT_TRUE(wrapper.uniqueObjects().size() ==
               IddFactory::instance().getUniqueObjects(IddFileType::OpenStudio).size());
 
   EXPECT_TRUE(wrapper.isInFile(IddObjectType::OS_AirLoopHVAC));
@@ -56,30 +56,30 @@ TEST_F(IddFixture,IddFileAndFactoryWrapper_ExplicitIddFile)
 TEST_F(IddFixture,IddFileAndFactoryWrapper_DefaultConstructor)
 {
   IddFileAndFactoryWrapper wrapper;
-  EXPECT_TRUE(wrapper.requiredObjects() == 
+  EXPECT_TRUE(wrapper.requiredObjects() ==
               IddFactory::instance().getRequiredObjects(IddFileType::OpenStudio));
-  EXPECT_TRUE(wrapper.uniqueObjects() == 
+  EXPECT_TRUE(wrapper.uniqueObjects() ==
               IddFactory::instance().getUniqueObjects(IddFileType::OpenStudio));
   EXPECT_FALSE(wrapper.getObject(IddObjectType::UserCustom));
-  
+
   wrapper.setIddFile(IddFileType::UserCustom);
   EXPECT_TRUE(wrapper.requiredObjects().empty());
   EXPECT_TRUE(wrapper.uniqueObjects().empty());
 
   wrapper.setIddFile(IddFactory::instance().getIddFile(IddFileType::OpenStudio));
-  // Even though OpenStudio IddFile, it has been disembodied from IddFactory, so IddFileType 
+  // Even though OpenStudio IddFile, it has been disembodied from IddFactory, so IddFileType
   // has been lost.
   EXPECT_TRUE(wrapper.iddFileType() == IddFileType(IddFileType::UserCustom));
-  EXPECT_TRUE(wrapper.requiredObjects().size() == 
+  EXPECT_TRUE(wrapper.requiredObjects().size() ==
               IddFactory::instance().getRequiredObjects(IddFileType::OpenStudio).size());
-  EXPECT_TRUE(wrapper.uniqueObjects().size() == 
+  EXPECT_TRUE(wrapper.uniqueObjects().size() ==
               IddFactory::instance().getUniqueObjects(IddFileType::OpenStudio).size());
 
   // no change to underlying IddFile
   wrapper.setIddFile(IddFileType::UserCustom);
-  EXPECT_TRUE(wrapper.requiredObjects().size() == 
+  EXPECT_TRUE(wrapper.requiredObjects().size() ==
               IddFactory::instance().getRequiredObjects(IddFileType::OpenStudio).size());
-  EXPECT_TRUE(wrapper.uniqueObjects().size() == 
+  EXPECT_TRUE(wrapper.uniqueObjects().size() ==
               IddFactory::instance().getUniqueObjects(IddFileType::OpenStudio).size());
 }
 

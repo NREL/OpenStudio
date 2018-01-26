@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -38,7 +38,7 @@
 #include <string>
 
 namespace openstudio{
-  
+
   unsigned toThreeColor(unsigned r, unsigned g, unsigned b)
   {
     return 65536 * r + 256 * g + b;
@@ -101,7 +101,7 @@ namespace openstudio{
     : m_metadata(metadata), m_geometries(geometries), m_materials(materials), m_sceneObject(sceneObject)
   {
   }
-    
+
   ThreeScene::ThreeScene(const std::string& s)
     : m_metadata(std::vector<std::string>(), ThreeBoundingBox(0,0,0,0,0,0,0,0,0,0), std::vector<ThreeModelObjectMetadata>()), m_sceneObject(ThreeSceneObject("", std::vector<ThreeSceneChild>()))
   {
@@ -145,9 +145,9 @@ namespace openstudio{
 
     m_sceneObject = ThreeSceneObject(root.get("object", Json::objectValue));
   }
-    
+
   boost::optional<ThreeScene> ThreeScene::load(const std::string& json)
-  {  
+  {
     try {
       ThreeScene scene(json);
       return scene;
@@ -203,7 +203,7 @@ namespace openstudio{
   {
     return m_geometries;
   }
-  
+
   boost::optional<ThreeGeometry> ThreeScene::getGeometry(const std::string& geometryId) const
   {
     for (const auto& geometry : m_geometries){
@@ -228,7 +228,7 @@ namespace openstudio{
     }
     return boost::none;
   }
-  
+
   ThreeSceneObject ThreeScene::object() const
   {
     return m_sceneObject;
@@ -364,7 +364,7 @@ namespace openstudio{
   {
     return m_doubleSided;
   }
-  
+
   ThreeGeometry::ThreeGeometry(const std::string& uuid, const::std::string& type, const ThreeGeometryData& data)
     : m_uuid(uuid), m_type(type), m_data(data)
    {}
@@ -393,7 +393,7 @@ namespace openstudio{
    {
      return m_uuid;
    }
-    
+
    std::string ThreeGeometry::type() const
    {
      return m_type;
@@ -407,7 +407,7 @@ namespace openstudio{
   ThreeMaterial::ThreeMaterial(const std::string& uuid, const std::string& name, const::std::string& type,
       unsigned color, unsigned ambient, unsigned emissive, unsigned specular, unsigned shininess,
       double opacity, bool transparent, bool wireframe, unsigned side)
-      : m_uuid(uuid), m_name(name), m_type(type), m_color(color), m_ambient(ambient), m_emissive(emissive), 
+      : m_uuid(uuid), m_name(name), m_type(type), m_color(color), m_ambient(ambient), m_emissive(emissive),
       m_specular(specular), m_shininess(shininess), m_opacity(opacity), m_transparent(transparent),
       m_wireframe(wireframe), m_side(side)
   {}
@@ -523,7 +523,8 @@ namespace openstudio{
   }
 
   ThreeUserData::ThreeUserData()
-    : m_coincidentWithOutsideObject(false)
+    : m_coincidentWithOutsideObject(false),
+      m_illuminanceSetpoint(0.0)
       //m_belowFloorPlenum(false),
       //m_aboveCeilingPlenum(false)
   {}
@@ -537,6 +538,10 @@ namespace openstudio{
     assertType(value, "constructionName", Json::stringValue);
     assertType(value, "constructionHandle", Json::stringValue);
     assertType(value, "constructionMaterialName", Json::stringValue);
+    assertType(value, "surfaceName", Json::stringValue);
+    assertType(value, "surfaceHandle", Json::stringValue);
+    assertType(value, "subSurfaceName", Json::stringValue);
+    assertType(value, "subSurfaceHandle", Json::stringValue);
     assertType(value, "spaceName", Json::stringValue);
     assertType(value, "spaceHandle", Json::stringValue);
     assertType(value, "thermalZoneName", Json::stringValue);
@@ -561,6 +566,7 @@ namespace openstudio{
     assertType(value, "coincidentWithOutsideObject", Json::stringValue);
     assertType(value, "sunExposure", Json::stringValue);
     assertType(value, "windExposure", Json::stringValue);
+    assertType(value, "illuminanceSetpoint", Json::realValue);
     assertType(value, "belowFloorPlenum", Json::booleanValue);
     assertType(value, "aboveCeilingPlenum", Json::booleanValue);
 
@@ -571,6 +577,10 @@ namespace openstudio{
     m_constructionName = value.get("constructionName", "").asString();
     m_constructionHandle = value.get("constructionHandle", "").asString();
     m_constructionMaterialName = value.get("constructionMaterialName", "").asString();
+    m_surfaceName = value.get("surfaceName", "").asString();
+    m_surfaceHandle = value.get("surfaceHandle", "").asString();
+    m_subSurfaceName = value.get("subSurfaceName", "").asString();
+    m_subSurfaceHandle = value.get("subSurfaceHandle", "").asString();
     m_spaceName = value.get("spaceName", "").asString();
     m_spaceHandle = value.get("spaceHandle", "").asString();
     m_thermalZoneName = value.get("thermalZoneName", "").asString();
@@ -595,6 +605,7 @@ namespace openstudio{
     m_coincidentWithOutsideObject = value.get("coincidentWithOutsideObject", false).asBool();
     m_sunExposure = value.get("sunExposure", "").asString();
     m_windExposure = value.get("windExposure", "").asString();
+    m_illuminanceSetpoint = value.get("illuminanceSetpoint", "").asDouble();
     //m_belowFloorPlenum = value.get("belowFloorPlenum", "").asBool();
     //m_aboveCeilingPlenum = value.get("aboveCeilingPlenum", "").asBool();
   }
@@ -610,6 +621,10 @@ namespace openstudio{
     result["constructionName"] = m_constructionName;
     result["constructionName"] = m_constructionName;
     result["constructionMaterialName"] = m_constructionMaterialName;
+    result["surfaceName"] = m_surfaceName;
+    result["surfaceHandle"] = m_surfaceHandle;
+    result["subSurfaceName"] = m_subSurfaceName;
+    result["subSurfaceHandle"] = m_subSurfaceHandle;
     result["spaceName"] = m_spaceName;
     result["spaceHandle"] = m_spaceHandle;
     result["thermalZoneName"] = m_thermalZoneName;
@@ -634,6 +649,7 @@ namespace openstudio{
     result["coincidentWithOutsideObject"] = m_coincidentWithOutsideObject;
     result["sunExposure"] = m_sunExposure;
     result["windExposure"] = m_windExposure;
+    result["illuminanceSetpoint"] = m_illuminanceSetpoint;
     //result["belowFloorPlenum"] = m_belowFloorPlenum;
     //result["aboveCeilingPlenum"] = m_aboveCeilingPlenum;
 
@@ -673,6 +689,26 @@ namespace openstudio{
   std::string ThreeUserData::constructionMaterialName() const
   {
     return m_constructionMaterialName;
+  }
+
+  std::string ThreeUserData::surfaceName() const
+  {
+    return m_surfaceName;
+  }
+
+  std::string ThreeUserData::surfaceHandle() const
+  {
+    return m_surfaceHandle;
+  }
+
+  std::string ThreeUserData::subSurfaceName() const
+  {
+    return m_subSurfaceName;
+  }
+
+  std::string ThreeUserData::subSurfaceHandle() const
+  {
+    return m_subSurfaceHandle;
   }
 
   std::string ThreeUserData::spaceName() const
@@ -795,6 +831,11 @@ namespace openstudio{
     return m_windExposure;
   }
 
+  double ThreeUserData::illuminanceSetpoint() const
+  {
+    return m_illuminanceSetpoint;
+  }
+
   //bool ThreeUserData::plenum() const
   //{
   //  return (m_belowFloorPlenum || m_aboveCeilingPlenum);
@@ -845,6 +886,26 @@ namespace openstudio{
     m_constructionMaterialName = s;
   }
 
+  void ThreeUserData::setSurfaceName(const std::string& s)
+  {
+    m_surfaceName = s;
+  }
+
+  void ThreeUserData::setSurfaceHandle(const std::string& s)
+  {
+    m_surfaceHandle = s;
+  }
+
+  void ThreeUserData::setSubSurfaceName(const std::string& s)
+  {
+    m_subSurfaceName = s;
+  }
+
+  void ThreeUserData::setSubSurfaceHandle(const std::string& s)
+  {
+    m_subSurfaceHandle = s;
+  }
+
   void ThreeUserData::setSpaceName(const std::string& s)
   {
     m_spaceName = s;
@@ -874,7 +935,7 @@ namespace openstudio{
   {
     m_spaceTypeName = s;
   }
-    
+
   void ThreeUserData::setSpaceTypeHandle(const std::string& s)
   {
     m_spaceTypeHandle = s;
@@ -889,7 +950,7 @@ namespace openstudio{
   {
     m_buildingStoryName = s;
   }
-    
+
   void ThreeUserData::setBuildingStoryHandle(const std::string& s)
   {
     m_buildingStoryHandle = s;
@@ -904,7 +965,7 @@ namespace openstudio{
   {
     m_buildingUnitName = s;
   }
-    
+
   void ThreeUserData::setBuildingUnitHandle(const std::string& s)
   {
     m_buildingUnitHandle = s;
@@ -919,7 +980,7 @@ namespace openstudio{
   {
     m_constructionSetName = s;
   }
-    
+
   void ThreeUserData::setConstructionSetHandle(const std::string& s)
   {
     m_constructionSetHandle = s;
@@ -963,6 +1024,11 @@ namespace openstudio{
   void ThreeUserData::setWindExposure(const std::string& s)
   {
     m_windExposure = s;
+  }
+
+  void ThreeUserData::setIlluminanceSetpoint(double d)
+  {
+    m_illuminanceSetpoint = d;
   }
 
   //void ThreeUserData::setBelowFloorPlenum(bool v)
@@ -1040,7 +1106,7 @@ namespace openstudio{
   {
     return m_name;
   }
-    
+
   std::string ThreeSceneChild::type() const
   {
     return m_type;
@@ -1119,7 +1185,7 @@ namespace openstudio{
   {
     return m_uuid;
   }
-    
+
   std::string ThreeSceneObject::type() const
   {
     return m_type;
@@ -1219,7 +1285,7 @@ namespace openstudio{
 
   ThreeModelObjectMetadata::ThreeModelObjectMetadata()
   {}
-  
+
   ThreeModelObjectMetadata::ThreeModelObjectMetadata(const Json::Value& value)
   {
     assertKeyAndType(value, "iddObjectType", Json::stringValue);
@@ -1338,7 +1404,7 @@ namespace openstudio{
   {
     return m_buildingStoryNames;
   }
-  
+
   ThreeBoundingBox ThreeSceneMetadata::boundingBox() const
   {
     return m_boundingBox;

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -47,7 +47,7 @@ namespace detail{
  *  objects.
  *
  *  \todo The IDD object "OS:ComponentCost:Adjustments" should be marked as unique
- *   
+ *
  */
 class MODEL_API ComponentCostAdjustments : public ParentObject {
 public:
@@ -60,38 +60,38 @@ public:
   //@}
   /** @name Getters */
   //@{
- 
+
   boost::optional<double> miscellaneousCostPerConditionedArea() const;
-  
+
   boost::optional<double> designAndEngineeringFees() const;
 
   boost::optional<double> contractorFee() const;
 
   boost::optional<double> contingency() const;
-  
+
   boost::optional<double> permitsBondingAndInsurance() const;
 
   boost::optional<double> commissioningFee() const;
-  
+
   boost::optional<double> regionalAdjustmentFactor() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  void setMiscellaneousCostPerConditionedArea(double miscellaneousCostPerConditionedArea);
+  bool setMiscellaneousCostPerConditionedArea(double miscellaneousCostPerConditionedArea);
 
-  void setDesignAndEngineeringFees(double designAndEngineeringFees);
+  bool setDesignAndEngineeringFees(double designAndEngineeringFees);
 
-  void setContractorFee(double contractorFee);
+  bool setContractorFee(double contractorFee);
 
-  void setContingency(double contingency);
+  bool setContingency(double contingency);
 
-  void setPermitsBondingAndInsurance(double permitsBondingAndInsurance);
+  bool setPermitsBondingAndInsurance(double permitsBondingAndInsurance);
 
-  void setCommissioningFee(double commissioningFee);
+  bool setCommissioningFee(double commissioningFee);
 
-  void setRegionalAdjustmentFactor(double regionalAdjustmentFactor);
+  bool setRegionalAdjustmentFactor(double regionalAdjustmentFactor);
 
   //@}
 
@@ -106,10 +106,10 @@ protected:
 
   friend class Model;
   friend class IdfObject;
-  
+
   /// Constructs a new ComponentCostAdjustments object in the model.
   explicit ComponentCostAdjustments(const Model& model);
-  
+
   // constructor
   explicit ComponentCostAdjustments(std::shared_ptr<detail::ComponentCostAdjustments_Impl> impl);
 
@@ -129,4 +129,4 @@ typedef std::vector<ComponentCostAdjustments> ComponentCostAdjustmentsVector;
 } // model
 } // openstudio
 
-#endif // MODEL_COMPONENTCOSTADJUSTMENTS_HPP
+#endif // MODEL_COMPONENTCOSTADJUSTMENTS_HPP

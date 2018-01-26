@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -52,7 +52,7 @@ class UTILITIES_API ValidityReport {
   /** Copy constructor. Resets .nextError() in the cloned report. */
   ValidityReport(const ValidityReport& other);
 
-  /** Insert error into the report. Should only be called by a class that is constructing the 
+  /** Insert error into the report. Should only be called by a class that is constructing the
    *  report. */
   void insertError(const DataError& error);
 
@@ -60,7 +60,7 @@ class UTILITIES_API ValidityReport {
   /** @name Inspection */
   //@{
 
-  /** The strictness level of the report. StrictnessLevel::None is for opening files, 
+  /** The strictness level of the report. StrictnessLevel::None is for opening files,
    *  StricnessLevel::Draft is for active modeling, and StrictnessLevel::Final is for models
    *  ready to simulate. */
   StrictnessLevel level() const;
@@ -71,16 +71,16 @@ class UTILITIES_API ValidityReport {
   /** Returns the name of the object being reported on, or an empty string. */
   std::string objectName() const;
 
-  /** Returns the type of the object being reported on if this is a report on an individual 
+  /** Returns the type of the object being reported on if this is a report on an individual
    *  object; if the report is for an entire collection, the return value will evaluate to
    *  false. */
   boost::optional<IddObjectType> objectType() const;
 
   /** Returns the number of errors listed in the report. */
   unsigned numErrors() const;
-  
+
   /** Get the next DataError in the report. To be used in data clean-up/debugging. Return value
-   *  of false indicates that the last error has already been reported. (If the report is 
+   *  of false indicates that the last error has already been reported. (If the report is
    *  non-empty, then the next call to nextError() will start cycling back through the errors.) */
   boost::optional<DataError> nextError();
 

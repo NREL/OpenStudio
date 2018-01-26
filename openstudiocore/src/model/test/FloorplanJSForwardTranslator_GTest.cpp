@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -80,7 +80,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
   ASSERT_TRUE(value.isMember("space_types"));
   ASSERT_TRUE(value["space_types"].isArray());
   EXPECT_EQ(0u, value["space_types"].size());
-  
+
   ASSERT_TRUE(value.isMember("thermal_zones"));
   ASSERT_TRUE(value["thermal_zones"].isArray());
   EXPECT_EQ(0u, value["thermal_zones"].size());
@@ -88,7 +88,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
   ASSERT_TRUE(value.isMember("building_units"));
   ASSERT_TRUE(value["building_units"].isArray());
   EXPECT_EQ(0u, value["building_units"].size());
-  
+
   ASSERT_TRUE(value.isMember("construction_sets"));
   ASSERT_TRUE(value["construction_sets"].isArray());
   EXPECT_EQ(0u, value["construction_sets"].size());
@@ -184,7 +184,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
   ASSERT_TRUE(value["building_units"].isArray());
   ASSERT_EQ(1u, value["building_units"].size());
   EXPECT_EQ("BuildingUnit 1", value["building_units"][0].get("name", "").asString());
-  
+
   ASSERT_TRUE(value.isMember("construction_sets"));
   ASSERT_TRUE(value["construction_sets"].isArray());
   ASSERT_EQ(1u, value["construction_sets"].size());
@@ -250,7 +250,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
   ASSERT_TRUE(value["building_units"].isArray());
   ASSERT_EQ(1u, value["building_units"].size());
   EXPECT_EQ("BuildingUnit 1", value["building_units"][0].get("name", "").asString());
-  
+
   ASSERT_TRUE(value.isMember("construction_sets"));
   ASSERT_TRUE(value["construction_sets"].isArray());
   ASSERT_EQ(1u, value["construction_sets"].size());
@@ -305,7 +305,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
   ASSERT_TRUE(value.isMember("space_types"));
   ASSERT_TRUE(value["space_types"].isArray());
   EXPECT_EQ(0u, value["space_types"].size());
-  
+
   ASSERT_TRUE(value.isMember("thermal_zones"));
   ASSERT_TRUE(value["thermal_zones"].isArray());
   EXPECT_EQ(0u, value["thermal_zones"].size());
@@ -313,7 +313,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
   ASSERT_TRUE(value.isMember("building_units"));
   ASSERT_TRUE(value["building_units"].isArray());
   EXPECT_EQ(0u, value["building_units"].size());
-  
+
   ASSERT_TRUE(value.isMember("construction_sets"));
   ASSERT_TRUE(value["construction_sets"].isArray());
   EXPECT_EQ(0u, value["construction_sets"].size());

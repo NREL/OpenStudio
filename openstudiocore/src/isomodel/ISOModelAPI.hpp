@@ -10,5 +10,5 @@
   #else
     #define ISOMODEL_API
   #endif
-  
+
 #endif

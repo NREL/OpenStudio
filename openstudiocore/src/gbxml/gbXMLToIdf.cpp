@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -50,9 +50,9 @@ int main(int argc, char *argv[])
       ("inputPath", boost::program_options::value<std::string>(&inputPathString), "path to gbXML file")
   ;
 
-  boost::program_options::variables_map vm;        
+  boost::program_options::variables_map vm;
   boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
-  boost::program_options::notify(vm);    
+  boost::program_options::notify(vm);
 
   if (vm.count("help")) {
     std::cout << "Usage: gbXMLToIdf --inputPath=./path/to/gbXML.xml" << std::endl;
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
   }
 
   if (vm.count("inputPath")) {
-    
+
     openstudio::path inputPath = openstudio::toPath(inputPathString);
 
     openstudio::gbxml::ReverseTranslator reverseTranslator;

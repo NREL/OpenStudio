@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -64,7 +64,7 @@ namespace detail {
   {}
 
   IddField_Impl::IddField_Impl(const std::string& name, const std::string& objectName)
-    : m_name(name), m_objectName(objectName) 
+    : m_name(name), m_objectName(objectName)
   {}
 
   // GETTERS
@@ -116,8 +116,8 @@ namespace detail {
             return IPUnit();
           }
           UnitSystem sys(UnitSystem::IP);
-          // if pretty string contains W or J, use BTU system     
-          std::string tempString = siUnit->prettyString(false);         
+          // if pretty string contains W or J, use BTU system
+          std::string tempString = siUnit->prettyString(false);
           if (!tempString.empty()) {
             Unit tempUnit = parseUnitString(tempString);
             if ((tempUnit.baseUnitExponent("W") != 0) || (tempUnit.baseUnitExponent("J") != 0)) {
@@ -125,10 +125,10 @@ namespace detail {
             }
           }
           // otherwise, if standard string contains m and s, use CFM system
-          if ((sys == UnitSystem::IP) && 
-              (siUnit->baseUnitExponent("s") != 0) && 
-              (siUnit->baseUnitExponent("m") != 0)) 
-          {            
+          if ((sys == UnitSystem::IP) &&
+              (siUnit->baseUnitExponent("s") != 0) &&
+              (siUnit->baseUnitExponent("m") != 0))
+          {
             sys = UnitSystem::CFM;
           }
           return convert(Quantity(1.0,*siUnit),sys).get().units();
@@ -208,8 +208,8 @@ namespace detail {
   }
 
   bool IddField_Impl::isObjectListField() const {
-    if ((properties().type == IddFieldType::ObjectListType) && 
-        (!properties().objectLists.empty())) 
+    if ((properties().type == IddFieldType::ObjectListType) &&
+        (!properties().objectLists.empty()))
     {
       return true;
     }
@@ -724,8 +724,8 @@ bool IddField::operator!=(const IddField& other) const
 
 // SERIALIZATION
 
-OptionalIddField IddField::load(const std::string& name, 
-                                const std::string& text, 
+OptionalIddField IddField::load(const std::string& name,
+                                const std::string& text,
                                 const std::string& objectName) {
   std::shared_ptr<detail::IddField_Impl> p = detail::IddField_Impl::load(name,text,objectName);
   if (p) { return IddField(p); }
@@ -751,7 +751,7 @@ bool referencesEqual(const IddField& field1, const IddField& field2) {
   // to be equal, must be same size
   if (refs1.size() == refs2.size()) {
     unsigned start = 0;        // start index for refs2
-    
+
     // look for refs1 in turn
     for (const std::string& ref1 : refs1) {
       for (unsigned i = start; i < n; ++i) {
@@ -759,22 +759,22 @@ bool referencesEqual(const IddField& field1, const IddField& field2) {
           // refs2[i] not found yet--see if there is a match
           if (istringEqual(ref1,refs2[i])) {
             found[i] = true;
-            if (i == start) { 
+            if (i == start) {
               // a match and at where we started, so move start marker up
-              ++start; 
+              ++start;
             }
             break;
           }
         }
-        else if (i == start) { 
+        else if (i == start) {
           // refs[start] already matched, so move start marker up
-          ++start; 
+          ++start;
         }
       }
     }
     // tried to match each ref1 with a refs2. see if we were successful.
-    if (found == BoolVector(n,true)) { 
-      result = true; 
+    if (found == BoolVector(n,true)) {
+      result = true;
     }
   }
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -68,7 +68,7 @@ void ModelObjectInspectorView::update()
   /** Nano Signal onChange originally modified a slot directly inside
    *  QWidget called update(). This is fine, except for when we need
    *  to automatically disconnect. Now this nano signal calls this slot,
-   *  And this slot automatically emits the QSignal that will call 
+   *  And this slot automatically emits the QSignal that will call
    *  call QWidget::update().
    */
   // this->onChange.nano_emit();
@@ -152,7 +152,7 @@ DefaultInspectorView::DefaultInspectorView(const model::Model& model,
   m_mainLabel->setText("Initial");
   m_mainLabel->setAlignment(Qt::AlignHCenter);
   m_mainLabel->setAlignment(Qt::AlignVCenter);
-  
+
   mainVLayout->addWidget(underConstructionLabel);
   mainVLayout->addWidget(m_mainLabel);
 }

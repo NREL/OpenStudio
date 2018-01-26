@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,6 +30,7 @@
 #include "ThreeJS.hpp"
 #include "Vector3d.hpp"
 #include "Geometry.hpp"
+#include "Plane.hpp"
 #include "Intersection.hpp"
 
 #include "../core/Assert.hpp"
@@ -45,12 +46,12 @@ namespace openstudio{
 
   const std::string BELOWFLOORPLENUMPOSTFIX(" Floor Plenum");
   const std::string ABOVECEILINGPLENUMPOSTFIX(" Plenum");
-  const std::string PLENUMSPACETYPENAME("Plenum Space Type"); // DLM: needs to be coordinated with name in Model_Impl::plenumSpaceType() 
+  const std::string PLENUMSPACETYPENAME("Plenum Space Type"); // DLM: needs to be coordinated with name in Model_Impl::plenumSpaceType()
 
   FloorplanObject::FloorplanObject(const std::string& id, const std::string& name, const std::string& handleString)
     : m_id(id), m_name(name), m_handle(toUUID(handleString)), m_handleString(handleString)
   {}
-  
+
   FloorplanObject::FloorplanObject(const std::string& id, const std::string& name, const UUID& handle)
     : m_id(id), m_name(name), m_handle(handle), m_handleString(toString(handle))
   {}
@@ -94,7 +95,7 @@ namespace openstudio{
     m_data.removeMember("construction_set_id");
 
     //window_id
-   
+
     //daylighting_control_id
 
   }
@@ -160,7 +161,7 @@ namespace openstudio{
     }
     return boost::none;
   }
- 
+
   boost::optional<std::string> FloorplanObject::getDataString(const std::string& key) const
   {
     Json::Value value = m_data.get(key, Json::nullValue);
@@ -183,7 +184,7 @@ namespace openstudio{
   {
     m_data[key] = value;
   }
-  
+
   void FloorplanObject::setDataInt(const std::string& key, int value)
   {
     m_data[key] = value;
@@ -251,9 +252,9 @@ namespace openstudio{
   {
     setLastId(m_value);
   }
-    
+
   boost::optional<FloorplanJS> FloorplanJS::load(const std::string& json)
-  {  
+  {
     try {
       FloorplanJS result(json);
       return result;
@@ -278,9 +279,9 @@ namespace openstudio{
     return result;
   }
 
-  void FloorplanJS::makeSurface(const Json::Value& story, const Json::Value& space, bool belowFloorPlenum, bool aboveCeilingPlenum,
-    const std::string& surfaceType, const Point3dVector& vertices, size_t faceFormat, 
-    std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren) const
+  std::string FloorplanJS::makeSurface(const Json::Value& story, const Json::Value& space, const std::string& parentSurfaceName, const std::string& parentSubSurfaceName,
+    bool belowFloorPlenum, bool aboveCeilingPlenum, const std::string& surfaceType, const Point3dVector& vertices, size_t faceFormat,
+    std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren, double illuminanceSetpoint) const
   {
     bool plenum = false;
     std::string spaceNamePostFix;
@@ -318,6 +319,7 @@ namespace openstudio{
       std::string materialId;
 
       ThreeUserData userData;
+      userData.setName(faceId);
 
       std::string s;
       std::string id;
@@ -341,6 +343,12 @@ namespace openstudio{
         s = space.get("handle", "").asString();
         userData.setSpaceHandle(s);
       }
+
+      // parent surface
+      userData.setSurfaceName(parentSurfaceName);
+
+      // parent sub surface
+      userData.setSubSurfaceName(parentSubSurfaceName);
 
       // building unit
       if (checkKeyAndType(space, "building_unit_id", Json::stringValue)){
@@ -381,7 +389,7 @@ namespace openstudio{
           LOG(Error, "Cannot find ThermalZone '" << id << "'");
         }
       }
-      
+
       // space type
       if (plenum){
         userData.setSpaceTypeName(PLENUMSPACETYPENAME);
@@ -392,7 +400,7 @@ namespace openstudio{
             assertKeyAndType(*spaceType, "name", Json::stringValue);
             s = spaceType->get("name", "").asString();
             userData.setSpaceTypeName(s);
-            
+
             if (checkKeyAndType(*spaceType, "handle", Json::stringValue)){
               s = spaceType->get("handle", "").asString();
               userData.setSpaceTypeHandle(s);
@@ -423,17 +431,39 @@ namespace openstudio{
       userData.setSurfaceType(surfaceType);
       //userData.setAboveCeilingPlenum(aboveCeilingPlenum);
       //userData.setBelowFloorPlenum(belowFloorPlenum);
+      userData.setIlluminanceSetpoint(illuminanceSetpoint);
 
       ThreeSceneChild sceneChild(uuid, name, type, geometryId, materialId, userData);
       sceneChildren.push_back(sceneChild);
     }
+
+    return faceId;
   }
 
-  void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& space, bool belowFloorPlenum, bool aboveCeilingPlenum, double lengthToMeters, double minZ, double maxZ,
+  void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& space,
+    bool belowFloorPlenum, bool aboveCeilingPlenum, double lengthToMeters, double minZ, double maxZ,
     const Json::Value& vertices, const Json::Value& edges, const Json::Value& faces, const std::string& faceId,
     bool openstudioFormat, std::vector<ThreeGeometry>& geometries, std::vector<ThreeSceneChild>& sceneChildren) const
   {
     std::vector<Point3d> faceVertices;
+    std::vector<Point3d> windowCenterVertices;
+    std::vector<std::string> windowDefinitionIds;
+    std::vector<Point3d> daylightingControlVertices;
+
+    const Json::Value windowDefinitions = m_value.get("window_definitions", Json::arrayValue);
+    const Json::Value daylightingControlDefinitions = m_value.get("daylighting_control_definitions", Json::arrayValue);
+
+    // get all the windows on this story
+    std::map<std::string, std::vector<Json::Value> > edgeIdToWindowsMap;
+    for (const auto& window : story.get("windows", Json::arrayValue)){
+      assertKeyAndType(window, "edge_id", Json::stringValue);
+
+      std::string edgeId = window.get("edge_id", "").asString();
+      if (edgeIdToWindowsMap.find(edgeId) == edgeIdToWindowsMap.end()){
+        edgeIdToWindowsMap[edgeId] = std::vector<Json::Value>();
+      }
+      edgeIdToWindowsMap[edgeId].push_back(window);
+    }
 
     // get the face
     const Json::Value* face = findById(faces, faceId);
@@ -457,22 +487,53 @@ namespace openstudio{
           OS_ASSERT(2u == vertexIds.size());
 
           // get the vertices
+          const Json::Value* nextVertex;
           const Json::Value* vertex1 = findById(vertices, vertexIds[0].asString());
           const Json::Value* vertex2 = findById(vertices, vertexIds[1].asString());
 
+          vertex1 = findById(vertices, vertexIds[0].asString());
+          vertex2 = findById(vertices, vertexIds[1].asString());
+
           if (edgeOrder == 1){
-            vertex1 = findById(vertices, vertexIds[0].asString());
-            vertex2 = findById(vertices, vertexIds[1].asString());
+            nextVertex = vertex1;
           }else{
-            vertex1 = findById(vertices, vertexIds[1].asString());
-            vertex2 = findById(vertices, vertexIds[0].asString());
+            nextVertex = vertex2;
           }
+          OS_ASSERT(nextVertex);
           OS_ASSERT(vertex1);
           OS_ASSERT(vertex2);
 
-          assertKeyAndType(*vertex1, "x", Json::realValue);
-          assertKeyAndType(*vertex1, "y", Json::realValue);
-          faceVertices.push_back(Point3d(lengthToMeters * vertex1->get("x", 0.0).asDouble(), lengthToMeters * vertex1->get("y", 0.0).asDouble(), 0.0));
+          assertKeyAndType(*nextVertex, "x", Json::realValue);
+          assertKeyAndType(*nextVertex, "y", Json::realValue);
+          faceVertices.push_back(Point3d(lengthToMeters * nextVertex->get("x", 0.0).asDouble(), lengthToMeters * nextVertex->get("y", 0.0).asDouble(), 0.0));
+
+          // check if there are windows on this edge
+          if (edgeIdToWindowsMap.find(edgeId) != edgeIdToWindowsMap.end()){
+            std::vector<Json::Value> windows = edgeIdToWindowsMap[edgeId];
+            for (const auto& window : windows){
+              assertKeyAndType(window, "window_definition_id", Json::stringValue);
+              std::string windowDefinitionId = window.get("window_definition_id", "").asString();
+
+              std::vector<double> alphas;
+              if (checkKeyAndType(window, "alpha", Json::realValue)){
+                alphas.push_back(window.get("alpha", 0.0).asDouble());
+              } else if (checkKeyAndType(window, "alpha", Json::arrayValue)){
+                Json::Value temp = window.get("alpha", Json::arrayValue);
+                Json::ArrayIndex tempN = temp.size();
+                for (Json::ArrayIndex tempIdx = 0; tempIdx < tempN; ++tempIdx){
+                  alphas.push_back(temp[tempIdx].asDouble());
+                }
+              }
+
+              for (const auto& alpha : alphas){
+                double x = (1.0 - alpha) * vertex1->get("x", 0.0).asDouble() + alpha * vertex2->get("x", 0.0).asDouble();
+                double y = (1.0 - alpha) * vertex1->get("y", 0.0).asDouble() + alpha * vertex2->get("y", 0.0).asDouble();
+
+                windowDefinitionIds.push_back(windowDefinitionId);
+                windowCenterVertices.push_back(Point3d(lengthToMeters*x, lengthToMeters*y, 0.0));
+              }
+            }
+          }
         }
       }
     }
@@ -480,7 +541,8 @@ namespace openstudio{
     // correct the floor vertices
 
     // simplify the vertices to remove potential duplicate, colinear points
-    faceVertices = simplify(faceVertices, false, 0.001);
+    double tol = 0.001;
+    faceVertices = simplify(faceVertices, false, tol);
 
     unsigned numPoints = faceVertices.size();
     if (numPoints < 3){
@@ -499,7 +561,7 @@ namespace openstudio{
     }
 
     Point3dVectorVector allFinalFaceVertices;
-    unsigned roofCeilingFaceFormat = 1024; 
+    unsigned roofCeilingFaceFormat = 1024;
     unsigned wallFaceFormat = 1024;
     if (openstudioFormat){
       allFinalFaceVertices.push_back(faceVertices);
@@ -519,22 +581,238 @@ namespace openstudio{
         finalRoofCeilingVertices.push_back(Point3d(v.x(), v.y(), maxZ));
       }
 
-      makeSurface(story, space, belowFloorPlenum, aboveCeilingPlenum, "Floor", finalfloorVertices, roofCeilingFaceFormat, geometries, sceneChildren);
-      makeSurface(story, space, belowFloorPlenum, aboveCeilingPlenum, "RoofCeiling", reverse(finalRoofCeilingVertices), roofCeilingFaceFormat, geometries, sceneChildren);
+      makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "Floor", finalfloorVertices, roofCeilingFaceFormat, geometries, sceneChildren, 0);
+      makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "RoofCeiling", reverse(finalRoofCeilingVertices), roofCeilingFaceFormat, geometries, sceneChildren, 0);
     }
-
 
     // create each wall
+    std::set<unsigned> mappedWindows;
     for (unsigned i = 1; i <= numPoints; ++i){
-      Point3dVector finalWallVertices;
-      finalWallVertices.push_back(Point3d(faceVertices[i % numPoints].x(), faceVertices[i % numPoints].y(), maxZ));
-      finalWallVertices.push_back(Point3d(faceVertices[i % numPoints].x(), faceVertices[i % numPoints].y(), minZ));
-      finalWallVertices.push_back(Point3d(faceVertices[i - 1].x(), faceVertices[i - 1].y(), minZ));
-      finalWallVertices.push_back(Point3d(faceVertices[i - 1].x(), faceVertices[i - 1].y(), maxZ));
+      Point3dVector wallVertices;
+      wallVertices.push_back(Point3d(faceVertices[i - 1].x(), faceVertices[i - 1].y(), maxZ));
+      wallVertices.push_back(Point3d(faceVertices[i % numPoints].x(), faceVertices[i % numPoints].y(), maxZ));
+      wallVertices.push_back(Point3d(faceVertices[i % numPoints].x(), faceVertices[i % numPoints].y(), minZ));
+      wallVertices.push_back(Point3d(faceVertices[i - 1].x(), faceVertices[i - 1].y(), minZ));
 
-      makeSurface(story, space, belowFloorPlenum, aboveCeilingPlenum, "Wall", finalWallVertices, wallFaceFormat, geometries, sceneChildren);
+      // find windows that appear on this edge, can't use edge ids after simplify algorithm
+      std::vector<Point3d> testSegment;
+      testSegment.push_back(Point3d(faceVertices[i - 1].x(), faceVertices[i - 1].y(), 0.0));
+      testSegment.push_back(Point3d(faceVertices[i % numPoints].x(), faceVertices[i % numPoints].y(), 0.0));
+
+      Vector3d edgeVector = testSegment[1] - testSegment[0];
+      edgeVector.setLength(1.0);
+      Vector3d upVector(0, 0, 1);
+      Vector3d crossVector = upVector.cross(edgeVector);
+
+      Point3dVectorVector allFinalWindowVertices;
+      Point3dVectorVector allFinalShadeVertices;
+      std::vector<unsigned> allFinalShadeParentSubSurfaceIndices;
+
+      unsigned windowN = windowCenterVertices.size();
+      OS_ASSERT(windowN == windowDefinitionIds.size());
+      for (unsigned windowIdx = 0; windowIdx < windowN; ++windowIdx){
+        if (mappedWindows.find(windowIdx) == mappedWindows.end()){
+          if (getDistancePointToLineSegment(windowCenterVertices[windowIdx], testSegment) < tol){
+
+            // get window definition
+
+            const Json::Value* windowDefinition = findById(windowDefinitions, windowDefinitionIds[windowIdx]);
+            if (windowDefinition){
+              assertKeyAndType(*windowDefinition, "window_definition_type", Json::stringValue);
+              std::string windowDefinitionType = windowDefinition->get("window_definition_type", "").asString();
+
+			        //"name": "Single Window",
+			        //"window_definition_type": "Single Window",
+			        //"wwr": null,
+			        //"sill_height": 3,
+			        //"window_spacing": null,
+			        //"height": 4,
+			        //"width": 2,
+			        //"overhang_projection_factor": 0.5,
+			        //"fin_projection_factor": 0.5,
+			        //"type": "window_definitions"
+
+              // DLM: TODO fins and overhangs
+
+              if (istringEqual("Single Window", windowDefinitionType) || istringEqual("Repeating Windows", windowDefinitionType)){
+                assertKeyAndType(*windowDefinition, "sill_height", Json::realValue);
+                assertKeyAndType(*windowDefinition, "height", Json::realValue);
+                assertKeyAndType(*windowDefinition, "width", Json::realValue);
+
+                double sillHeight = lengthToMeters * windowDefinition->get("sill_height", 0.0).asDouble();
+                double height = lengthToMeters * windowDefinition->get("height", 0.0).asDouble();
+                double width = lengthToMeters * windowDefinition->get("width", 0.0).asDouble();
+
+                Vector3d widthVector = edgeVector;
+                widthVector.setLength(0.5*width);
+                Point3d window1 = windowCenterVertices[windowIdx] + widthVector;
+                widthVector.setLength(-0.5*width);
+                Point3d window2 = windowCenterVertices[windowIdx] + widthVector;
+
+                Point3dVector windowVertices;
+                windowVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight + height));
+                windowVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight));
+                windowVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight));
+                windowVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight + height));
+
+                unsigned parentSubSurfaceIndex = allFinalWindowVertices.size();
+                allFinalWindowVertices.push_back(windowVertices);
+
+                if (checkKeyAndType(*windowDefinition, "overhang_projection_factor", Json::realValue) || checkKeyAndType(*windowDefinition, "overhang_projection_factor", Json::intValue)){
+                  double projectionFactor = windowDefinition->get("overhang_projection_factor", 0.0).asDouble();
+
+                  if (projectionFactor > 0){
+                    Vector3d outVector = crossVector;
+                    outVector.setLength(projectionFactor*height);
+
+                    Point3d window3 = window1 + outVector;
+                    Point3d window4 = window2 + outVector;
+
+                    Point3dVector shadeVertices;
+                    shadeVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight + height));
+                    shadeVertices.push_back(Point3d(window3.x(), window3.y(), sillHeight + height));
+                    shadeVertices.push_back(Point3d(window4.x(), window4.y(), sillHeight + height));
+                    shadeVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight + height));
+
+                    allFinalShadeVertices.push_back(shadeVertices);
+                    allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
+                  }
+                }
+
+                if (checkKeyAndType(*windowDefinition, "fin_projection_factor", Json::realValue) || checkKeyAndType(*windowDefinition, "fin_projection_factor", Json::intValue)){
+                  double projectionFactor  = windowDefinition->get("fin_projection_factor", 0.0).asDouble();
+
+                  if (projectionFactor > 0){
+                    Vector3d outVector = crossVector;
+                    outVector.setLength(projectionFactor*height);
+
+                    Point3d window3 = window1 + outVector;
+                    Point3d window4 = window2 + outVector;
+
+                    Point3dVector shadeVertices;
+                    shadeVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight + height));
+                    shadeVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight));
+                    shadeVertices.push_back(Point3d(window3.x(), window3.y(), sillHeight));
+                    shadeVertices.push_back(Point3d(window3.x(), window3.y(), sillHeight + height));
+
+                    allFinalShadeVertices.push_back(shadeVertices);
+                    allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
+
+                    shadeVertices.clear();
+                    shadeVertices.push_back(Point3d(window4.x(), window4.y(), sillHeight + height));
+                    shadeVertices.push_back(Point3d(window4.x(), window4.y(), sillHeight));
+                    shadeVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight));
+                    shadeVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight + height));
+
+                    allFinalShadeVertices.push_back(shadeVertices);
+                    allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
+                  }
+                }
+
+              } else if (istringEqual("Window to Wall Ratio", windowDefinitionType)){
+                assertKeyAndType(*windowDefinition, "sill_height", Json::realValue);
+                assertKeyAndType(*windowDefinition, "wwr", Json::realValue);
+
+                double sillHeight = lengthToMeters * windowDefinition->get("sill_height", 0.0).asDouble();
+                double wwr = windowDefinition->get("wwr", 0.0).asDouble();
+
+                double projectionFactor = 0.0;
+                if (checkKeyAndType(*windowDefinition, "overhang_projection_factor", Json::realValue) || checkKeyAndType(*windowDefinition, "overhang_projection_factor", Json::intValue)){
+                  projectionFactor = windowDefinition->get("overhang_projection_factor", 0.0).asDouble();
+                }
+
+                // applyViewAndDaylightingGlassRatios does not currently take argument for fins
+
+                Point3dVector viewVertices;
+                Point3dVector daylightingVertices; // not populated
+                Point3dVector exteriorShadingVertices;
+                Point3dVector interiorShelfVertices; // not populated
+
+                bool test = applyViewAndDaylightingGlassRatios(wwr, 0.0, sillHeight, 0.0, projectionFactor, 0.0, wallVertices, viewVertices, daylightingVertices, exteriorShadingVertices, interiorShelfVertices);
+                if (test)
+                {
+                  if (!viewVertices.empty()){
+                    unsigned parentSubSurfaceIndex = allFinalWindowVertices.size();
+                    allFinalWindowVertices.push_back(viewVertices);
+
+                    if (!exteriorShadingVertices.empty()){
+                      allFinalShadeVertices.push_back(exteriorShadingVertices);
+                      allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
+                    }
+                  }
+                }
+              }
+
+            }
+
+            mappedWindows.insert(windowIdx);
+          }
+        }
+      }
+
+      Point3dVectorVector allFinalWallVertices;
+      unsigned finalWallFaceFormat = wallFaceFormat;
+      if (openstudioFormat){
+        allFinalWallVertices.push_back(wallVertices);
+      } else if (allFinalWindowVertices.empty()){
+        allFinalWallVertices.push_back(wallVertices);
+      } else{
+        finalWallFaceFormat =  0; // triangle
+        allFinalWallVertices = computeTriangulation(wallVertices, allFinalWindowVertices, tol);
+      }
+
+      std::string parentSurfaceName;
+      for (const auto& finalWallVertices : allFinalWallVertices){
+        parentSurfaceName = makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "Wall", finalWallVertices, finalWallFaceFormat, geometries, sceneChildren, 0);
+      }
+
+      std::vector<std::string> parentSubSurfaceNames;
+      for (const auto& finalWindowVertices : allFinalWindowVertices){
+        std::string parentSubSurfaceName = makeSurface(story, space, parentSurfaceName, "", belowFloorPlenum, aboveCeilingPlenum, "FixedWindow", finalWindowVertices, wallFaceFormat, geometries, sceneChildren, 0);
+        parentSubSurfaceNames.push_back(parentSubSurfaceName);
+      }
+
+      size_t shadeN = allFinalShadeVertices.size();
+      OS_ASSERT(shadeN == allFinalShadeParentSubSurfaceIndices.size());
+      for (size_t shadeIdx = 0; shadeIdx < shadeN; ++shadeIdx){
+        std::string parentSubSurfaceName = parentSubSurfaceNames[allFinalShadeParentSubSurfaceIndices[shadeIdx]];
+        makeSurface(story, space, "", parentSubSurfaceName, belowFloorPlenum, aboveCeilingPlenum, "SpaceShading", allFinalShadeVertices[shadeIdx], wallFaceFormat, geometries, sceneChildren, 0);
+      }
     }
-    
+
+    // get daylighting controls
+    for (const auto& daylightingControl : space.get("daylighting_controls", Json::arrayValue)){
+      assertKeyAndType(daylightingControl, "vertex_id", Json::stringValue);
+      std::string vertexId = daylightingControl.get("vertex_id", "").asString();
+
+      const Json::Value* vertex = findById(vertices, vertexId);
+      if (vertex){
+        assertKeyAndType(daylightingControl, "daylighting_control_definition_id", Json::stringValue);
+        std::string daylightingControlDefinitionId = daylightingControl.get("daylighting_control_definition_id", "").asString();
+
+        assertKeyAndType(*vertex, "x", Json::realValue);
+        assertKeyAndType(*vertex, "y", Json::realValue);
+
+
+        const Json::Value* daylightingControlDefinition = findById(daylightingControlDefinitions, daylightingControlDefinitionId);
+        if (daylightingControlDefinition){
+          assertKey(*daylightingControlDefinition, "height");
+          assertKey(*daylightingControlDefinition, "illuminance_setpoint");
+
+          double height = lengthToMeters * daylightingControlDefinition->get("height", 0.0).asDouble();
+          double illuminanceSetpoint = daylightingControlDefinition->get("illuminance_setpoint", 0.0).asDouble(); // DLM: TODO put in unit conversion
+
+          Point3dVector dcVertices;
+          dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() - 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() + 0.1, height));
+          dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() + 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() + 0.1, height));
+          dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() + 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() - 0.1, height));
+          dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() - 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() - 0.1, height));
+
+          makeSurface(story, space, "", "", belowFloorPlenum, aboveCeilingPlenum, "DaylightingControl", dcVertices, wallFaceFormat, geometries, sceneChildren, illuminanceSetpoint);
+        }
+      }
+    }
+
   }
 
   ThreeModelObjectMetadata FloorplanJS::makeModelObjectMetadata(const std::string& iddObjectType, const Json::Value& object) const
@@ -574,7 +852,7 @@ namespace openstudio{
       }
     }
 
-    // DLM: geometry in ThreeJS output is always in meters without north angle applied, north angle is applied directly to osm 
+    // DLM: geometry in ThreeJS output is always in meters without north angle applied, north angle is applied directly to osm
 
     double lengthToMeters = 1;
     if (istringEqual(units, "ft")){
@@ -600,7 +878,7 @@ namespace openstudio{
       if (checkKeyAndType(stories[storyIdx], "below_floor_plenum_height", Json::realValue)){
         belowFloorPlenumHeight = lengthToMeters * stories[storyIdx].get("below_floor_plenum_height", belowFloorPlenumHeight).asDouble();
       }
-       
+
       double floorToCeilingHeight = 3;
       if (checkKeyAndType(stories[storyIdx], "floor_to_ceiling_height", Json::realValue)){
         floorToCeilingHeight = lengthToMeters * stories[storyIdx].get("floor_to_ceiling_height", floorToCeilingHeight).asDouble();
@@ -632,7 +910,7 @@ namespace openstudio{
 
         // each space should have one face
         if (checkKeyAndType(spaces[spaceIdx], "face_id", Json::stringValue)){
-          std::string faceId = spaces[spaceIdx].get("face_id", "").asString(); 
+          std::string faceId = spaces[spaceIdx].get("face_id", "").asString();
 
           assertKeyAndType(spaces[spaceIdx], "name", Json::stringValue);
           std::string spaceName = spaces[spaceIdx].get("name", "").asString();
@@ -659,7 +937,7 @@ namespace openstudio{
             modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:Space", "", spaceName + ABOVECEILINGPLENUMPOSTFIX));
             makeGeometries(stories[storyIdx], spaces[spaceIdx], false, true, lengthToMeters, minZ, maxZ, vertices, edges, faces, faceId, openstudioFormat, geometries, children);
           }
-        } 
+        }
 
       } // spaces
 
@@ -667,7 +945,7 @@ namespace openstudio{
       currentZ += belowFloorPlenumHeight + floorToCeilingHeight + aboveCeilingPlenumHeight;
 
     } // stories
-    
+
     // loop over building_units
     Json::Value buildingUnits = m_value.get("building_units", Json::arrayValue);
     Json::ArrayIndex n = buildingUnits.size();
@@ -718,9 +996,15 @@ namespace openstudio{
     double result = 0;
     Json::Value project = m_value.get("project", Json::objectValue);
     if (!project.isNull()){
-      Json::Value config = project.get("config", Json::objectValue);
-      if (!config.isNull()){
-        result = config.get("north_axis", result).asDouble();
+      if (project.isMember("north_axis")){
+        // current location
+        result = project.get("north_axis", result).asDouble();
+      } else{
+        // previous location
+        Json::Value config = project.get("config", Json::objectValue);
+        if (!config.isNull()){
+          result = config.get("north_axis", result).asDouble();
+        }
       }
     }
     return result;
@@ -797,7 +1081,7 @@ namespace openstudio{
     return value.get("face_id", "").asString();
   }
 
-  
+
   std::string FloorplanJS::getNextId()
   {
     ++m_lastId;
@@ -910,7 +1194,7 @@ namespace openstudio{
   }
 
   void FloorplanJS::updateObjects(Json::Value& value, const std::string& key, const std::vector<FloorplanObject>& objects, bool removeMissingObjects)
-  { 
+  {
     // ensure key exists
     if (!value.isMember(key)){
       value[key] = Json::Value(Json::arrayValue);
@@ -984,7 +1268,7 @@ namespace openstudio{
           v = &(value[key].append(newObject));
         }
       }
-     
+
       if (v){
         // update properties
         Json::Value data = object.data();
@@ -1022,19 +1306,19 @@ namespace openstudio{
     if (v){
       value[key] = v->get("id", "").asString();
       return;
-    } 
+    }
 
     v = findById(m_value, searchKey, objectReference.id());
     if (v){
       value[key] = v->get("id", "").asString();
       return;
-    } 
+    }
 
     v = findByName(m_value, searchKey, objectReference.name(), true);
     if (v){
       value[key] = v->get("id", "").asString();
       return;
-    } 
+    }
 
     value[key] = "";
   }
@@ -1063,7 +1347,7 @@ namespace openstudio{
         Json::ArrayIndex n2 = edgeIds.size();
         for (Json::ArrayIndex i2 = 0; i2 < n2; ++i2){
           std::string edgeId = edgeIds[i2].asString();
-        
+
           if (removeFace){
             edgeIdsToRemove.insert(edgeId);
           }
@@ -1116,7 +1400,7 @@ namespace openstudio{
         Json::ArrayIndex n2 = vertexIds.size();
         for (Json::ArrayIndex i2 = 0; i2 < n2; ++i2){
           std::string vertexId = vertexIds[i2].asString();
-        
+
           if (removeEdge){
             vertexIdsToRemove.insert(vertexId);
           }

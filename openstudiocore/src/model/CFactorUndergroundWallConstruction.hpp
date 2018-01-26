@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,7 +39,7 @@ namespace detail{
   class CFactorUndergroundWallConstruction_Impl;
 }
 
-/** CFactorUndergroundWallConstruction is a ConstructionBase object that wraps EnergyPlus IDD 
+/** CFactorUndergroundWallConstruction is a ConstructionBase object that wraps EnergyPlus IDD
  *  object 'Construction:CfactorUndergroundWall'. */
 class MODEL_API CFactorUndergroundWallConstruction : public ConstructionBase {
  public:
@@ -81,7 +81,7 @@ class MODEL_API CFactorUndergroundWallConstruction : public ConstructionBase {
   friend class detail::CFactorUndergroundWallConstruction_Impl;
 
   explicit CFactorUndergroundWallConstruction(
-      std::shared_ptr<detail::CFactorUndergroundWallConstruction_Impl> impl);  
+      std::shared_ptr<detail::CFactorUndergroundWallConstruction_Impl> impl);
 
   /// @endcond
  private:

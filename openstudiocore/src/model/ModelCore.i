@@ -15,14 +15,14 @@
     rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_Model) { OpenStudio::Model::toModel(self); } }");
     rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_OptionalModel) { OpenStudio::Model::toOptionalModel(self); } }");
     rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_Component) { OpenStudio::Component::toComponent(self); } }");
-    rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_OptionalComponent) { OpenStudio::Component::toOptionalComponent(self); } }");  
+    rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_OptionalComponent) { OpenStudio::Component::toOptionalComponent(self); } }");
   %}
 
 #elif defined SWIGCSHARP
 
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelCore
-  
+
   // ignore building for now
   %ignore openstudio::model::Model::building;
 
@@ -31,23 +31,23 @@
 
   // Ignore outdoor air node for now
   %ignore openstudio::model::Model::outdoorAirNode;
-  
+
   // should be able to do something here as C# supports partial classes
   // http://www.swig.org/Doc1.3/CSharp.html#csharp_extending_proxy_class
   %typemap(csclassmodifiers) openstudio::model::Model "public partial class"
   %typemap(csclassmodifiers) openstudio::model::ModelObject "public partial class"
-  
+
   %pragma(csharp) moduleimports=%{
-  
+
     using System;
     using System.Runtime.InteropServices;
-        
+
     //public partial class IdfObject {
     //  public OptionalModelObject to_ModelObject()
     //  {
     //   return OpenStudio.OpenStudioModelCore.toModelObject(this);
     //  }
-    //}    
+    //}
   %}
 
 #elif defined SWIGJAVA
@@ -110,7 +110,7 @@ class Node;
 %feature("valuewrapper") SpaceType;
 %feature("valuewrapper") Node;
 
-// templates 
+// templates
 %ignore std::vector<openstudio::model::ModelObject>::vector(size_type);
 %ignore std::vector<openstudio::model::ModelObject>::resize(size_type);
 %template(ModelObjectVector)std::vector<openstudio::model::ModelObject>;
@@ -155,7 +155,7 @@ namespace model {
     }
     boost::optional<Component> toOptionalComponent(const openstudio::Workspace& workspace) {
       return workspace.optionalCast<Component>();
-    }    
+    }
   }
   }
 }
@@ -174,7 +174,7 @@ namespace model {
   }
 };
 
-//MODELOBJECT_TEMPLATES(ModelObject); // swig preprocessor did not seem to see these for other objects so these are defined above 
+//MODELOBJECT_TEMPLATES(ModelObject); // swig preprocessor did not seem to see these for other objects so these are defined above
 MODELEXTENSIBLEGROUP_TEMPLATES(ModelExtensibleGroup);
 MODELOBJECT_TEMPLATES(ParentObject);
 MODELOBJECT_TEMPLATES(ResourceObject);
@@ -184,8 +184,8 @@ UNIQUEMODELOBJECT_TEMPLATES(RadianceParameters);
 MODELOBJECT_TEMPLATES(OutputMeter);
 MODELOBJECT_TEMPLATES(MeterCustom);
 MODELOBJECT_TEMPLATES(MeterCustomDecrement);
-MODELOBJECT_TEMPLATES(LifeCycleCost); 
-MODELOBJECT_TEMPLATES(UtilityBill); 
+MODELOBJECT_TEMPLATES(LifeCycleCost);
+MODELOBJECT_TEMPLATES(UtilityBill);
 MODELEXTENSIBLEGROUP_TEMPLATES(BillingPeriod)
 MODELOBJECT_TEMPLATES(ComponentData);
 MODELOBJECT_TEMPLATES(ScheduleTypeLimits); // Needed for OutputVariable
@@ -237,7 +237,7 @@ SWIG_MODELOBJECT(OutputMeter, 1);
 SWIG_MODELOBJECT(MeterCustom, 1);
 SWIG_MODELOBJECT(MeterCustomDecrement, 1);
 SWIG_MODELOBJECT(LifeCycleCost, 1);
-SWIG_MODELOBJECT(UtilityBill, 1); 
+SWIG_MODELOBJECT(UtilityBill, 1);
 SWIG_MODELEXTENSIBLEGROUP(BillingPeriod);
 SWIG_MODELOBJECT(ComponentData, 1);
 SWIG_MODELOBJECT(ScheduleTypeLimits, 1); // Needed for OutputVariable
@@ -249,7 +249,7 @@ SWIG_MODELOBJECT(ScheduleYear, 1);
 SWIG_MODELOBJECT(ScheduleRule, 1);
 SWIG_MODELOBJECT(ScheduleRuleset, 1);
 SWIG_MODELOBJECT(OutputVariable, 1);
-SWIG_MODELOBJECT(GenericModelObject, 0); 
+SWIG_MODELOBJECT(GenericModelObject, 0);
 SWIG_MODELOBJECT(ModelObjectList, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemSensor, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemActuator, 1);
@@ -278,4 +278,4 @@ SWIG_MODELOBJECT(ExternalInterfaceFunctionalMockupUnitImportToVariable, 1);
 SWIG_MODELOBJECT(ExternalInterfaceSchedule, 1);
 SWIG_MODELOBJECT(ExternalInterfaceVariable, 1);
 
-#endif //MODEL_CORE_I 
+#endif //MODEL_CORE_I

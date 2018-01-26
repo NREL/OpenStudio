@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -152,7 +152,7 @@ class MODEL_API HeatExchangerAirToAirSensibleAndLatent : public AirToAirComponen
 
   bool supplyAirOutletTemperatureControl() const;
 
-  void setSupplyAirOutletTemperatureControl(bool supplyAirOutletTemperatureControl);
+  bool setSupplyAirOutletTemperatureControl(bool supplyAirOutletTemperatureControl);
 
   std::string heatExchangerType() const;
 
@@ -168,7 +168,7 @@ class MODEL_API HeatExchangerAirToAirSensibleAndLatent : public AirToAirComponen
 
   bool isThresholdTemperatureDefaulted() const;
 
-  void setThresholdTemperature(double thresholdTemperature);
+  bool setThresholdTemperature(double thresholdTemperature);
 
   bool setThresholdTemperature(const Quantity& thresholdTemperature);
 
@@ -196,7 +196,7 @@ class MODEL_API HeatExchangerAirToAirSensibleAndLatent : public AirToAirComponen
 
   bool economizerLockout() const;
 
-  void setEconomizerLockout(bool economizerLockout);
+  bool setEconomizerLockout(bool economizerLockout);
 
   boost::optional<double> autosizedNominalSupplyAirFlowRate() const ;
 
@@ -230,5 +230,4 @@ typedef std::vector<HeatExchangerAirToAirSensibleAndLatent> HeatExchangerAirToAi
 } // model
 } // openstudio
 
-#endif // MODEL_HEATEXCHANGERAIRTOAIRSENSIBLEANDLATENT_HPP
-
+#endif // MODEL_HEATEXCHANGERAIRTOAIRSENSIBLEANDLATENT_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -48,11 +48,11 @@ namespace detail {
  *     \li OS:Schedule:FixedInterval
  *     \li OS:Schedule:VariableInterval
  *
- *  For detailed information on ScheduleTypeLimits, please see ScheduleBase and 
- *  \link ScheduleTypeRegistrySingleton ScheduleTypeRegistry \endlink. In general, ModelObject 
- *  setters that take a Schedule will fail if the ScheduleTypeLimits are set and are incompatible 
- *  with the proposed use. This ensures that the Schedule is written using units and bounds 
- *  expected by the user object (e.g. fractional for lighting schedules, W for people activity 
+ *  For detailed information on ScheduleTypeLimits, please see ScheduleBase and
+ *  \link ScheduleTypeRegistrySingleton ScheduleTypeRegistry \endlink. In general, ModelObject
+ *  setters that take a Schedule will fail if the ScheduleTypeLimits are set and are incompatible
+ *  with the proposed use. This ensures that the Schedule is written using units and bounds
+ *  expected by the user object (e.g. fractional for lighting schedules, W for people activity
  *  level schedules, C or F for thermostat schedules). */
 class MODEL_API Schedule : public ScheduleBase {
  public:

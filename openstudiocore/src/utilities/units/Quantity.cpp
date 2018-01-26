@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -71,7 +71,7 @@ Quantity& Quantity::operator=(const Quantity& q) {
   return *this;
 }
 
-double Quantity::value() const { 
+double Quantity::value() const {
   return m_value;
 }
 
@@ -174,7 +174,7 @@ void Quantity::setAsRelative() {
   tu->setAsRelative();
 }
 
-void Quantity::lbmToLbf() 
+void Quantity::lbmToLbf()
 {
   OptionalIPUnit iu = m_units.optionalCast<IPUnit>();
   if(!iu) {
@@ -192,7 +192,7 @@ void Quantity::lbmToLbf()
   OS_ASSERT(baseUnitExponent("lb_m") == 0);
 }
 
-void Quantity::lbfToLbm() 
+void Quantity::lbfToLbm()
 {
   OptionalIPUnit iu = m_units.optionalCast<IPUnit>();
   if(!iu) {

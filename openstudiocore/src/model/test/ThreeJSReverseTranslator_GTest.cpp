@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -31,15 +31,30 @@
 #include "ModelFixture.hpp"
 
 #include "../ThreeJSReverseTranslator.hpp"
+#include "../ThreeJSForwardTranslator.hpp"
 #include "../ModelMerger.hpp"
 #include "../Model.hpp"
+#include "../BuildingStory.hpp"
+#include "../BuildingStory_Impl.hpp"
+#include "../DaylightingControl.hpp"
+#include "../DaylightingControl_Impl.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
+#include "../ShadingSurfaceGroup.hpp"
+#include "../ShadingSurfaceGroup_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
 #include "../Surface.hpp"
 #include "../Surface_Impl.hpp"
+#include "../SubSurface.hpp"
+#include "../SubSurface_Impl.hpp"
+#include "../ShadingSurface.hpp"
+#include "../ShadingSurface_Impl.hpp"
 
 #include "../../utilities/geometry/ThreeJS.hpp"
 #include "../../utilities/geometry/FloorplanJS.hpp"
+#include "../../utilities/geometry/Geometry.hpp"
+#include "../../utilities/units/QuantityConverter.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -128,5 +143,158 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SurfaceMatch) {
     }
   }
   EXPECT_EQ(8u, numMatched);
+
+}
+
+
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/window_floorplan.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  std::stringstream ss;
+  ss << *model;
+  std::string s = ss.str();
+
+  ThreeJSForwardTranslator ft;
+  ft.modelToThreeJS(*model, true);
+
+  ASSERT_EQ(3u, model->getConcreteModelObjects<Space>().size());
+
+  boost::optional<Space> space1 = model->getConcreteModelObjectByName<Space>("Space 1");
+  boost::optional<Space> space2 = model->getConcreteModelObjectByName<Space>("Space 2");
+  boost::optional<Space> space3 = model->getConcreteModelObjectByName<Space>("Space 3");
+  ASSERT_TRUE(space1);
+  ASSERT_TRUE(space2);
+  ASSERT_TRUE(space3);
+
+  std::vector<Space> spaces;
+  spaces.push_back(*space1);
+  spaces.push_back(*space2);
+  spaces.push_back(*space3);
+
+  struct SpaceInfo{
+    std::string name;
+    unsigned numExteriorWalls;
+    boost::optional<Surface> southSurface;
+    std::vector<SubSurface> windows;
+    std::vector<DaylightingControl> dcs;
+  };
+
+  std::vector<SpaceInfo> infos;
+  for (const auto& space : spaces){
+    SpaceInfo info;
+    info.name = space.nameString();
+    info.numExteriorWalls = 0;
+    for (const auto& surface : space.surfaces()){
+      if (surface.surfaceType() == "Wall"){
+        if (surface.outsideBoundaryCondition() == "Outdoors"){
+          info.numExteriorWalls += 1;
+          if ((surface.azimuth() > degToRad(179)) && (surface.azimuth() < degToRad(181))){
+            // only one
+            EXPECT_FALSE(info.southSurface) << info.name;
+            info.southSurface = surface;
+            for (const auto& subSurface : surface.subSurfaces()){
+              info.windows.push_back(subSurface);
+            }
+          }
+        }
+      }
+    }
+
+    for (const auto& dc : space.daylightingControls()){
+      info.dcs.push_back(dc);
+    }
+
+    infos.push_back(info);
+  }
+
+  std::sort(std::begin(infos), std::end(infos), [](SpaceInfo a, SpaceInfo b) {return a.name < b.name; });
+
+  ASSERT_EQ(3u, infos.size());
+
+  EXPECT_EQ("Space 1", infos[0].name);
+  EXPECT_EQ(3, infos[0].numExteriorWalls);
+  ASSERT_TRUE(infos[0].southSurface);
+  EXPECT_EQ(9, infos[0].windows.size());
+  for (const auto& window : infos[0].windows){
+    EXPECT_NEAR(convert(8.0, "ft^2", "m^2").get(), window.grossArea(), 0.001);
+    ASSERT_EQ(1u, window.shadingSurfaceGroups().size());
+    EXPECT_EQ(3u, window.shadingSurfaceGroups()[0].shadingSurfaces().size()); // overhang + fins
+  }
+  EXPECT_NEAR(convert(800.0, "ft^2", "m^2").get(), infos[0].southSurface->grossArea(), 0.001);
+  EXPECT_NEAR(convert(800.0 - 9*8.0, "ft^2", "m^2").get(), infos[0].southSurface->netArea(), 0.001);
+  EXPECT_EQ(1, infos[0].dcs.size());
+
+  EXPECT_EQ("Space 2", infos[1].name);
+  EXPECT_EQ(2, infos[1].numExteriorWalls);
+  ASSERT_TRUE(infos[1].southSurface);
+  EXPECT_EQ(17, infos[1].windows.size());
+  for (const auto& window : infos[1].windows){
+    EXPECT_NEAR(convert(8.0, "ft^2", "m^2").get(), window.grossArea(), 0.001);
+    EXPECT_EQ(0, window.shadingSurfaceGroups().size()); // no shades
+  }
+  EXPECT_NEAR(convert(800.0, "ft^2", "m^2").get(), infos[1].southSurface->grossArea(), 0.001);
+  EXPECT_NEAR(convert(800.0 - 17*8.0, "ft^2", "m^2").get(), infos[1].southSurface->netArea(), 0.001);
+  EXPECT_EQ(1, infos[1].dcs.size());
+
+  EXPECT_EQ("Space 3", infos[2].name);
+  EXPECT_EQ(3, infos[2].numExteriorWalls);
+  ASSERT_TRUE(infos[2].southSurface);
+  EXPECT_EQ(1, infos[2].windows.size());
+  for (const auto& window : infos[2].windows){
+    EXPECT_NEAR(convert(0.4*800.0, "ft^2", "m^2").get(), window.grossArea(), 0.001);
+    ASSERT_EQ(1u, window.shadingSurfaceGroups().size());
+    EXPECT_EQ(1u, window.shadingSurfaceGroups()[0].shadingSurfaces().size()); // just overhang
+  }
+  EXPECT_NEAR(convert(800.0, "ft^2", "m^2").get(), infos[2].southSurface->grossArea(), 0.001);
+  EXPECT_NEAR(convert(0.6*800.0, "ft^2", "m^2").get(), infos[2].southSurface->netArea(), 0.001);
+  EXPECT_EQ(1, infos[2].dcs.size());
+
+
+}
+
+
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SimAUD_Paper) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan-paper.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  EXPECT_EQ(0, rt.errors().size());
+  EXPECT_EQ(0, rt.warnings().size());
+
+  for (const auto& error : rt.errors()){
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+
+  for (const auto& warning : rt.warnings()){
+    EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
+  }
 
 }

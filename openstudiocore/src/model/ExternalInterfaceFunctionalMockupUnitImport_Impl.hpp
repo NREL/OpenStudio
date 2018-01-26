@@ -83,11 +83,11 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setFMUTimeout(double fMUTimeout);
+    bool setFMUTimeout(double fMUTimeout);
 
     void resetFMUTimeout();
 
-    void setFMULoggingOn(int fMULoggingOn);
+    bool setFMULoggingOn(int fMULoggingOn);
 
     void resetFMULoggingOn();
 
@@ -108,5 +108,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORT_IMPL_HPP
-
+#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORT_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -75,7 +75,7 @@ TEST_F(ModelFixture, DefaultSurfaceConstructions)
 TEST_F(ModelFixture, DefaultSurfaceConstructions_Clone) {
   Model model;
   Model exampleModel = model::exampleModel();
-  
+
   unsigned numConstructions(0);
   unsigned numMaterials(0);
   for (const DefaultSurfaceConstructions& object : exampleModel.getModelObjects<DefaultSurfaceConstructions>()) {

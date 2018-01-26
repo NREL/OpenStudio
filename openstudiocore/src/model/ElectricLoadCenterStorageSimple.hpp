@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -65,10 +65,10 @@ class MODEL_API ElectricLoadCenterStorageSimple : public ElectricalStorage {
     // Convenience method to return the electricalLoadCenter on which it's assigned (optional)
     // In parent
     // boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
-    
+
     Schedule availabilitySchedule() const;
     bool isAvailabilityScheduleDefaulted() const;
-    
+
     // TODO: Included in parent class, shouldn't need to define it here...
     //virtual boost::optional<ThermalZone> thermalZone() const override;
 
@@ -96,28 +96,28 @@ class MODEL_API ElectricLoadCenterStorageSimple : public ElectricalStorage {
 
     bool setAvailabilitySchedule(Schedule& schedule);
     void resetAvailabilitySchedule();
-        
+
     // TODO: Included in parent class, shouldn't need to define it...
     //virtual bool setThermalZone(ThermalZone& zone) override;
     //virtual void resetThermalZone() override;
 
     bool setRadiativeFractionforZoneHeatGains(double radiativeFractionforZoneHeatGains);
     void resetRadiativeFractionforZoneHeatGains();
-    
+
     bool setNominalEnergeticEfficiencyforCharging(double nominalEnergeticEfficiencyforCharging);
     void resetNominalEnergeticEfficiencyforCharging();
-    
+
     // TODO: I've requested an .IDD change in EnergyPlus, to make this "Nominal Energetic Efficiency for Discharging"
     // TODO: https://github.com/NREL/EnergyPlus/issues/5730
     bool setNominalDischargingEnergeticEfficiency(double nominalDischargingEnergeticEfficiency);
     void resetNominalDischargingEnergeticEfficiency();
-    
+
     bool setMaximumStorageCapacity(double maximumStorageCapacity);
-    
+
     bool setMaximumPowerforDischarging(double maximumPowerforDischarging);
-    
+
     bool setMaximumPowerforCharging(double maximumPowerforCharging);
-    
+
     bool setInitialStateofCharge(double initialStateofCharge);
     void resetInitialStateofCharge();
 

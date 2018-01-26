@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -150,7 +150,7 @@ namespace detail {
   {
     Json::Value value(Json::objectValue);
     bool complete = false;
- 
+
     if (startedAt()){
       value["started_at"] = startedAt()->toISO8601();
     }
@@ -239,7 +239,7 @@ namespace detail {
     if (complete || (stepValues().size() > 0)){
       Json::Value values(Json::arrayValue);
       for (const auto& stepValue : stepValues()){
-        
+
         Json::Value v;
         Json::Reader reader;
         bool parsingSuccessful = reader.parse(stepValue.string(), v);
@@ -335,7 +335,7 @@ namespace detail {
   {
     return m_measureClassName;
   }
-    
+
   boost::optional<std::string> WorkflowStepResult_Impl::measureDisplayName() const
   {
     return m_measureDisplayName;
@@ -415,7 +415,7 @@ namespace detail {
     }
     return result;
   }
-  
+
   std::vector<LogMessage> WorkflowStepResult_Impl::warnings() const
   {
     LOG(Debug, "WorkflowStepResult::warnings is deprecated, use stepWarnings instead");
@@ -425,7 +425,7 @@ namespace detail {
     }
     return result;
   }
-  
+
   std::vector<LogMessage> WorkflowStepResult_Impl::info() const
   {
     LOG(Debug, "WorkflowStepResult::info is deprecated, use stepInfo instead");
@@ -435,7 +435,7 @@ namespace detail {
     }
     return result;
   }
-  
+
   boost::optional<LogMessage> WorkflowStepResult_Impl::initialCondition() const
   {
     LOG(Debug, "WorkflowStepResult::initialCondition is deprecated, use stepInitialCondition instead");
@@ -455,7 +455,7 @@ namespace detail {
     }
     return result;
   }
-  
+
   std::vector<Attribute> WorkflowStepResult_Impl::attributes() const
   {
     LOG(Debug, "WorkflowStepResult::attributes is deprecated, use stepValues instead");
@@ -511,7 +511,7 @@ namespace detail {
   {
     m_completedAt.reset();
   }
-    
+
   bool WorkflowStepResult_Impl::setMeasureType(const MeasureType& measureType)
   {
     m_measureType = measureType;
@@ -544,7 +544,7 @@ namespace detail {
   {
     m_measureId.reset();
   }
-  
+
   bool WorkflowStepResult_Impl::setMeasureUUID(const UUID& uuid)
   {
     m_measureId = removeBraces(uuid);
@@ -566,7 +566,7 @@ namespace detail {
   {
     m_measureVersionId.reset();
   }
-  
+
   bool WorkflowStepResult_Impl::setMeasureVersionUUID(const UUID& uuid)
   {
     m_measureVersionId = removeBraces(uuid);
@@ -770,7 +770,7 @@ boost::optional<WorkflowStepValue> WorkflowStepValue::fromString(const std::stri
 
   boost::optional<WorkflowStepValue> result;
 
-  try{  
+  try{
     std::string name = value["name"].asString();
     Json::Value v = value["value"];
     if (v.isString()){
@@ -784,7 +784,7 @@ boost::optional<WorkflowStepValue> WorkflowStepValue::fromString(const std::stri
     } else{
       //error
     }
- 
+
   } catch (const std::exception&){
     return boost::none;
   }
@@ -893,7 +893,7 @@ boost::optional<WorkflowStepResult> WorkflowStepResult::fromString(const std::st
 
   WorkflowStepResult result;
 
-  try{  
+  try{
 
     if (value.isMember("started_at")){
       boost::optional<DateTime> dateTime = DateTime::fromISO8601(value["started_at"].asString());
@@ -908,7 +908,7 @@ boost::optional<WorkflowStepResult> WorkflowStepResult::fromString(const std::st
         result.setCompletedAt(*dateTime);
       }
     }
- 
+
     if (value.isMember("measure_type")){
       Json::Value measureType = value["measure_type"];
       try{
@@ -983,7 +983,7 @@ boost::optional<WorkflowStepResult> WorkflowStepResult::fromString(const std::st
     for (Json::ArrayIndex i = 0; i < n; ++i){
       result.addStepError(errors[i].asString());
     }
-  
+
     Json::Value warnings = value.get("step_warnings", defaultArrayValue);
     n = warnings.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
@@ -1157,17 +1157,17 @@ std::vector<LogMessage> WorkflowStepResult::errors() const
 {
   return getImpl<detail::WorkflowStepResult_Impl>()->errors();
 }
-  
+
 std::vector<LogMessage> WorkflowStepResult::warnings() const
 {
   return getImpl<detail::WorkflowStepResult_Impl>()->warnings();
 }
-  
+
 std::vector<LogMessage> WorkflowStepResult::info() const
 {
   return getImpl<detail::WorkflowStepResult_Impl>()->info();
 }
-  
+
 boost::optional<LogMessage> WorkflowStepResult::initialCondition() const
 {
   return getImpl<detail::WorkflowStepResult_Impl>()->initialCondition();
@@ -1177,7 +1177,7 @@ boost::optional<LogMessage> WorkflowStepResult::finalCondition() const
 {
   return getImpl<detail::WorkflowStepResult_Impl>()->finalCondition();
 }
-  
+
 std::vector<Attribute> WorkflowStepResult::attributes() const
 {
   return getImpl<detail::WorkflowStepResult_Impl>()->attributes();

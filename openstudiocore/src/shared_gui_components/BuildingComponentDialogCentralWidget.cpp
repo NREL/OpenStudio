@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -139,7 +139,7 @@ void BuildingComponentDialogCentralWidget::createLayout()
 
   m_collapsibleComponentList->addCollapsibleComponent(collapsibleComponent);
   //*******************************************************************
-  
+
   m_progressBar = new QProgressBar(this);
   m_progressBar->setVisible(false);
 
@@ -214,7 +214,7 @@ void BuildingComponentDialogCentralWidget::setTid(const std::string& filterType,
   for( const auto & response : responses)
   {
     auto component = new Component(response);
-    
+
     // TODO replace with a componentList owned by m_collapsibleComponentList
     m_componentList->addComponent(component);
   }
@@ -262,7 +262,7 @@ void BuildingComponentDialogCentralWidget::lowerPushButtonClicked()
 {
   for (Component* component : m_collapsibleComponentList->components()) {
     if (component->checkBox()->isChecked() && component->checkBox()->isEnabled()){
-      
+
       auto remoteBCL = new RemoteBCL();
 
       if (m_filterType == "components")

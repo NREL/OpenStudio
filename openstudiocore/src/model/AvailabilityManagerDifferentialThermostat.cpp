@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -130,14 +130,16 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void AvailabilityManagerDifferentialThermostat_Impl::setTemperatureDifferenceOnLimit(double temperatureDifferenceOnLimit) {
+  bool AvailabilityManagerDifferentialThermostat_Impl::setTemperatureDifferenceOnLimit(double temperatureDifferenceOnLimit) {
     bool result = setDouble(OS_AvailabilityManager_DifferentialThermostatFields::TemperatureDifferenceOnLimit, temperatureDifferenceOnLimit);
     OS_ASSERT(result);
+    return result;
   }
 
-  void AvailabilityManagerDifferentialThermostat_Impl::setTemperatureDifferenceOffLimit(double temperatureDifferenceOffLimit) {
+  bool AvailabilityManagerDifferentialThermostat_Impl::setTemperatureDifferenceOffLimit(double temperatureDifferenceOffLimit) {
     bool result = setDouble(OS_AvailabilityManager_DifferentialThermostatFields::TemperatureDifferenceOffLimit, temperatureDifferenceOffLimit);
     OS_ASSERT(result);
+    return result;
   }
 
 } // detail
@@ -187,12 +189,12 @@ void AvailabilityManagerDifferentialThermostat::resetColdNode() {
   getImpl<detail::AvailabilityManagerDifferentialThermostat_Impl>()->resetColdNode();
 }
 
-void AvailabilityManagerDifferentialThermostat::setTemperatureDifferenceOnLimit(double temperatureDifferenceOnLimit) {
-  getImpl<detail::AvailabilityManagerDifferentialThermostat_Impl>()->setTemperatureDifferenceOnLimit(temperatureDifferenceOnLimit);
+bool AvailabilityManagerDifferentialThermostat::setTemperatureDifferenceOnLimit(double temperatureDifferenceOnLimit) {
+  return getImpl<detail::AvailabilityManagerDifferentialThermostat_Impl>()->setTemperatureDifferenceOnLimit(temperatureDifferenceOnLimit);
 }
 
-void AvailabilityManagerDifferentialThermostat::setTemperatureDifferenceOffLimit(double temperatureDifferenceOffLimit) {
-  getImpl<detail::AvailabilityManagerDifferentialThermostat_Impl>()->setTemperatureDifferenceOffLimit(temperatureDifferenceOffLimit);
+bool AvailabilityManagerDifferentialThermostat::setTemperatureDifferenceOffLimit(double temperatureDifferenceOffLimit) {
+  return getImpl<detail::AvailabilityManagerDifferentialThermostat_Impl>()->setTemperatureDifferenceOffLimit(temperatureDifferenceOffLimit);
 }
 
 /// @cond
@@ -203,4 +205,3 @@ AvailabilityManagerDifferentialThermostat::AvailabilityManagerDifferentialThermo
 
 } // model
 } // openstudio
-

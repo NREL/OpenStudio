@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -197,17 +197,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVN
           if( ! spaces.empty() ) {
             if( auto designSpecificationOutdoorAir = spaces.front().designSpecificationOutdoorAir() ) {
               idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::DesignSpecificationOutdoorAirObjectName,
-                designSpecificationOutdoorAir->name().get()); 
+                designSpecificationOutdoorAir->name().get());
             }
           }
         }
-      }  
+      }
     }
   }
 
   // MaximumHotWaterOrSteamFlowRate
    // value = modelObject.maximumHotWaterOrSteamFlowRate();
-   // 
+   //
    // if( value )
    // {
   //    idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumHotWaterorSteamFlowRate,value.get());
@@ -231,7 +231,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVN
 
   // MaximumFlowPerZoneFloorAreaDuringReheat
     //value = modelObject.maximumFlowPerZoneFloorAreaDuringReheat();
-  
+
    // if( value )
    // {
    //   idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumFlowperZoneFloorAreaDuringReheat,value.get());

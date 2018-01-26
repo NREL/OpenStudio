@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -47,7 +47,7 @@ namespace openstudio {
 namespace measure {
 
 OSRunner::OSRunner(const WorkflowJSON& workflow)
-  : m_workflow(workflow), m_startedStep(false), m_streamsCaptured(false), 
+  : m_workflow(workflow), m_startedStep(false), m_streamsCaptured(false),
     m_unitsPreference("IP"), m_languagePreference("en"), m_halted(false),
     m_originalStdOut(nullptr), m_originalStdErr(nullptr)
 {
@@ -147,7 +147,7 @@ boost::optional<openstudio::path> OSRunner::lastEpwFilePath() const
 
 bool OSRunner::inSelection(const openstudio::model::ModelObject& modelObject) const {
   return true;
-}  
+}
 
 std::map<std::string, OSArgument> OSRunner::getUserInput(std::vector<OSArgument>& arguments) const
 {
@@ -209,7 +209,7 @@ bool OSRunner::incrementStep()
   restoreStreams();
 
   // check for created files
-  
+
   // get list of new files
   if (m_currentDir){
     openstudio::path absoluteRootDir = m_workflow.absoluteRootDir();
@@ -240,9 +240,9 @@ bool OSRunner::incrementStep()
   m_currentDirFiles.clear();
 
   m_result.setCompletedAt(DateTime::nowUTC());
-    
+
   currentStep->setResult(m_result);
-  
+
   m_result = WorkflowStepResult();
   m_startedStep = false;
 
@@ -452,7 +452,7 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
       // script_argument is in user_arguments
       OSArgument user_argument = it->second;
 
-      // check that names still match 
+      // check that names still match
       if (user_argument.name() != script_argument.name()) {
         ss << "User argument name '" << user_argument.name() << "' does not match map key ";
         ss << script_argument.name() << ".";
@@ -813,7 +813,7 @@ boost::optional<openstudio::path> OSRunner::getOptionalPathArgumentValue(
 
 boost::optional<openstudio::WorkspaceObject> OSRunner::getOptionalWorkspaceObjectChoiceValue(
   const std::string& argument_name,
-  const std::map<std::string,OSArgument>& user_arguments, 
+  const std::map<std::string,OSArgument>& user_arguments,
   const openstudio::Workspace& workspace)
 
 {

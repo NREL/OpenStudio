@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -121,11 +121,11 @@ OSGridView::OSGridView(OSGridController * gridController,
 
   if (useHeader) {
     auto header = new DarkGradientHeader();
-    header->label->setText(headerText); 
+    header->label->setText(headerText);
     auto collabsibleView = new OSCollapsibleView(true);
     collabsibleView->setHeader(header);
     collabsibleView->setContent(widget);
-    collabsibleView->setExpanded(true); 
+    collabsibleView->setExpanded(true);
     layout->addWidget(collabsibleView);
   } else {
     layout->addWidget(widget);
@@ -221,7 +221,7 @@ QLayoutItem * OSGridView::itemAtPosition(int row, int column)
 //  auto index = m_gridController->columnCount() * relativerow; // this assumes that you are always deleting from the zero index column
 //
 //  auto count = m_gridLayouts.at(layoutnum)->count();
-// 
+//
 //  QLayoutItem * item = m_gridLayouts.at(layoutnum)->itemAtPosition(relativerow, column);
 //
 //  if (!item) return;

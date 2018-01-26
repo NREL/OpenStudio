@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -38,7 +38,7 @@ namespace model {
 namespace detail {
 
 class MODEL_API UtilityCost_Tariff_Impl : public ParentObject_Impl{
-  
+
  public:
   // constructor
   UtilityCost_Tariff_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
@@ -55,46 +55,46 @@ class MODEL_API UtilityCost_Tariff_Impl : public ParentObject_Impl{
   virtual ~UtilityCost_Tariff_Impl(){}
 
   boost::optional<double> energyConversionFactor() const;
-  void setEnergyConversionFactor(double num);
+  bool setEnergyConversionFactor(double num);
 
   boost::optional<double> demandConversionFactor() const;
-  void setDemandConversionFactor(double num);
+  bool setDemandConversionFactor(double num);
 
   OptionalString outputMeterName() const;
-  void setOutputMeterName(const std::string& str);
+  bool setOutputMeterName(const std::string& str);
 
   OptionalString conversionFactorChoice() const;
-  void setConversionFactorChoice(const std::string& str);
+  bool setConversionFactorChoice(const std::string& str);
 
   OptionalString timeOfUsePeriodScheduleName() const;
-  void setTimeOfUsePeriodScheduleName(const std::string& str);
+  bool setTimeOfUsePeriodScheduleName(const std::string& str);
 
   OptionalString seasonScheduleName() const;
-  void setSeasonScheduleName(const std::string& str);
+  bool setSeasonScheduleName(const std::string& str);
 
   OptionalString monthScheduleName() const;
-  void setMonthScheduleName(const std::string& str);
+  bool setMonthScheduleName(const std::string& str);
 
   OptionalString demandWindowLength() const;
-  void setDemandWindowLength(const std::string& str);
+  bool setDemandWindowLength(const std::string& str);
 
   OptionalString monthlyChargeOrVariableName() const;
-  void setMonthlyChargeOrVariableName(const std::string& str);
+  bool setMonthlyChargeOrVariableName(const std::string& str);
 
   OptionalString minimumMonthlyChargeOrVariableName() const;
-  void setMinimumMonthlyChargeOrVariableName(const std::string& str);
+  bool setMinimumMonthlyChargeOrVariableName(const std::string& str);
 
   OptionalString realTimePricingChargeScheduleName() const;
-  void setRealTimePricingChargeScheduleName(const std::string& str);
+  bool setRealTimePricingChargeScheduleName(const std::string& str);
 
   OptionalString customerBaselineLoadScheduleName() const;
-  void setCustomerBaselineLoadScheduleName(const std::string& str);
+  bool setCustomerBaselineLoadScheduleName(const std::string& str);
 
   OptionalString groupName() const;
-  void setGroupName(const std::string& str);
+  bool setGroupName(const std::string& str);
 
   OptionalString buyOrSell() const;
-  void setBuyOrSell(const std::string& str);
+  bool setBuyOrSell(const std::string& str);
 
   // return the parent object in the hierarchy
   virtual boost::optional<ParentObject> parent() const override;
@@ -122,4 +122,4 @@ private:
 } // model
 } // openstudio
 
-#endif // MODEL_UTILITYCOST_TARIFF_IMPL_HPP
+#endif // MODEL_UTILITYCOST_TARIFF_IMPL_HPP

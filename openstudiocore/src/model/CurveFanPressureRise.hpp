@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -41,7 +41,7 @@ namespace detail {
 
 } // detail
 
-/** CurveFanPressureRise is a Curve that wraps the OpenStudio IDD object 
+/** CurveFanPressureRise is a Curve that wraps the OpenStudio IDD object
  *  'OS:Curve:FanPressureRise'. The functional form is \f$\Delta P_{fan,tot} = c_1 \cdot {Q_{fan}}^2 + c_2 \cdot Q_{fan} + c_3 \cdot Q_{fan} \cdot \sqrt{P_{sm} - P_o} + c_4 \cdot (P_{sm} - P_o),\ \text{where}\ P_o = 0.0\f$ */
 class MODEL_API CurveFanPressureRise : public Curve {
  public:
@@ -85,27 +85,27 @@ class MODEL_API CurveFanPressureRise : public Curve {
   /** @name Setters */
   //@{
 
-  void setCoefficient1C1(double coefficient1C1);
+  bool setCoefficient1C1(double coefficient1C1);
 
-  void setCoefficient2C2(double coefficient2C2);
+  bool setCoefficient2C2(double coefficient2C2);
 
-  void setCoefficient3C3(double coefficient3C3);
+  bool setCoefficient3C3(double coefficient3C3);
 
-  void setCoefficient4C4(double coefficient4C4);
+  bool setCoefficient4C4(double coefficient4C4);
 
-  void setMinimumValueofQfan(double minimumValueofQfan);
+  bool setMinimumValueofQfan(double minimumValueofQfan);
 
-  void setMaximumValueofQfan(double maximumValueofQfan);
+  bool setMaximumValueofQfan(double maximumValueofQfan);
 
-  void setMinimumValueofPsm(double minimumValueofPsm);
+  bool setMinimumValueofPsm(double minimumValueofPsm);
 
-  void setMaximumValueofPsm(double maximumValueofPsm);
+  bool setMaximumValueofPsm(double maximumValueofPsm);
 
-  void setMinimumCurveOutput(double minimumCurveOutput);
+  bool setMinimumCurveOutput(double minimumCurveOutput);
 
   void resetMinimumCurveOutput();
 
-  void setMaximumCurveOutput(double maximumCurveOutput);
+  bool setMaximumCurveOutput(double maximumCurveOutput);
 
   void resetMaximumCurveOutput();
 
@@ -140,5 +140,4 @@ typedef std::vector<CurveFanPressureRise> CurveFanPressureRiseVector;
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEFANPRESSURERISE_HPP
-
+#endif // MODEL_CURVEFANPRESSURERISE_HPP

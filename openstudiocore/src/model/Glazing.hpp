@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,7 +39,7 @@ namespace detail{
   class Glazing_Impl;
 }
 
-/** Glazing is a FenestrationMaterial that serves as a base class for several types of glass 
+/** Glazing is a FenestrationMaterial that serves as a base class for several types of glass
  *  layers in fenestration \link LayeredConstruction LayeredConstructions \endlink. */
 class MODEL_API Glazing : public FenestrationMaterial {
  public:
@@ -59,7 +59,7 @@ class MODEL_API Glazing : public FenestrationMaterial {
 
   Glazing(IddObjectType type,const Model& model);
 
-  explicit Glazing(std::shared_ptr<detail::Glazing_Impl> impl);  
+  explicit Glazing(std::shared_ptr<detail::Glazing_Impl> impl);
 
   /// @endcond
  private:

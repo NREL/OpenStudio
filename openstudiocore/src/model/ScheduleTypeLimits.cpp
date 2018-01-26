@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -124,7 +124,7 @@ namespace detail {
     return ScheduleTypeLimits::units(unitType(), returnIP);
   }
 
-  void ScheduleTypeLimits_Impl::setLowerLimitValue(boost::optional<double> lowerLimitValue) {
+  bool ScheduleTypeLimits_Impl::setLowerLimitValue(boost::optional<double> lowerLimitValue) {
     bool result = false;
     if (lowerLimitValue) {
       result = setDouble(OS_ScheduleTypeLimitsFields::LowerLimitValue, lowerLimitValue.get());
@@ -132,6 +132,7 @@ namespace detail {
       result = setString(OS_ScheduleTypeLimitsFields::LowerLimitValue, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   bool ScheduleTypeLimits_Impl::setLowerLimitValue(const OSOptionalQuantity& lowerLimitValue) {
@@ -156,7 +157,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ScheduleTypeLimits_Impl::setUpperLimitValue(boost::optional<double> upperLimitValue) {
+  bool ScheduleTypeLimits_Impl::setUpperLimitValue(boost::optional<double> upperLimitValue) {
     bool result = false;
     if (upperLimitValue) {
       result = setDouble(OS_ScheduleTypeLimitsFields::UpperLimitValue, upperLimitValue.get());
@@ -164,6 +165,7 @@ namespace detail {
       result = setString(OS_ScheduleTypeLimitsFields::UpperLimitValue, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   bool ScheduleTypeLimits_Impl::setUpperLimitValue(const OSOptionalQuantity& upperLimitValue) {
@@ -507,8 +509,8 @@ boost::optional<Unit> ScheduleTypeLimits::units(bool returnIP) const {
   return getImpl<detail::ScheduleTypeLimits_Impl>()->units(returnIP);
 }
 
-void ScheduleTypeLimits::setLowerLimitValue(double lowerLimitValue) {
-  getImpl<detail::ScheduleTypeLimits_Impl>()->setLowerLimitValue(lowerLimitValue);
+bool ScheduleTypeLimits::setLowerLimitValue(double lowerLimitValue) {
+  return getImpl<detail::ScheduleTypeLimits_Impl>()->setLowerLimitValue(lowerLimitValue);
 }
 
 bool ScheduleTypeLimits::setLowerLimitValue(const Quantity& lowerLimitValue) {
@@ -519,8 +521,8 @@ void ScheduleTypeLimits::resetLowerLimitValue() {
   getImpl<detail::ScheduleTypeLimits_Impl>()->resetLowerLimitValue();
 }
 
-void ScheduleTypeLimits::setUpperLimitValue(double upperLimitValue) {
-  getImpl<detail::ScheduleTypeLimits_Impl>()->setUpperLimitValue(upperLimitValue);
+bool ScheduleTypeLimits::setUpperLimitValue(double upperLimitValue) {
+  return getImpl<detail::ScheduleTypeLimits_Impl>()->setUpperLimitValue(upperLimitValue);
 }
 
 bool ScheduleTypeLimits::setUpperLimitValue(const Quantity& upperLimitValue) {
@@ -604,4 +606,3 @@ bool isCompatible(const ScheduleTypeLimits &parentLimits,
 
 } // model
 } // openstudio
-

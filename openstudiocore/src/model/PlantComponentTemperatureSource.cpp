@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -156,7 +156,7 @@ namespace detail {
     return result;
   }
 
-  void PlantComponentTemperatureSource_Impl::setSourceTemperature(boost::optional<double> sourceTemperature) {
+  bool PlantComponentTemperatureSource_Impl::setSourceTemperature(boost::optional<double> sourceTemperature) {
     bool result(false);
     if (sourceTemperature) {
       result = setDouble(OS_PlantComponent_TemperatureSourceFields::SourceTemperature, sourceTemperature.get());
@@ -166,6 +166,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void PlantComponentTemperatureSource_Impl::resetSourceTemperature() {
@@ -258,8 +259,8 @@ bool PlantComponentTemperatureSource::setTemperatureSpecificationType(std::strin
   return getImpl<detail::PlantComponentTemperatureSource_Impl>()->setTemperatureSpecificationType(temperatureSpecificationType);
 }
 
-void PlantComponentTemperatureSource::setSourceTemperature(double sourceTemperature) {
-  getImpl<detail::PlantComponentTemperatureSource_Impl>()->setSourceTemperature(sourceTemperature);
+bool PlantComponentTemperatureSource::setSourceTemperature(double sourceTemperature) {
+  return getImpl<detail::PlantComponentTemperatureSource_Impl>()->setSourceTemperature(sourceTemperature);
 }
 
 void PlantComponentTemperatureSource::resetSourceTemperature() {
@@ -286,4 +287,3 @@ PlantComponentTemperatureSource::PlantComponentTemperatureSource(std::shared_ptr
 
 } // model
 } // openstudio
-

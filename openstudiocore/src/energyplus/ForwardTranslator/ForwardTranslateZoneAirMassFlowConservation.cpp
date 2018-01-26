@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -45,7 +45,7 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateZoneAirMassFlowConservation(
     ZoneAirMassFlowConservation & modelObject)
 {
-  // Makes sure the modelObject gets put in the map, and that the new idfObject gets put in 
+  // Makes sure the modelObject gets put in the map, and that the new idfObject gets put in
   // the final file. Also set's the idfObject's name.
   IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneAirMassFlowConservation, modelObject);
 
@@ -56,7 +56,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneAirMassFlowConservati
   }
 
   idfObject.setString(ZoneAirMassFlowConservationFields::InfiltrationBalancingMethod, modelObject.infiltrationBalancingMethod());
-  
+
   idfObject.setString(ZoneAirMassFlowConservationFields::InfiltrationBalancingZones, modelObject.infiltrationBalancingZones());
 
   return idfObject;

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -119,9 +119,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilHeatingGasMultiStageStageData_Impl::setParasiticElectricLoad(double ParasiticElectricLoad) {
+  bool CoilHeatingGasMultiStageStageData_Impl::setParasiticElectricLoad(double ParasiticElectricLoad) {
     bool result = setDouble(OS_Coil_Heating_Gas_MultiStage_StageDataFields::ParasiticElectricLoad, ParasiticElectricLoad);
     OS_ASSERT(result);
+    return result;
   }
 
   boost::optional<std::tuple<int, CoilHeatingGasMultiStage>> CoilHeatingGasMultiStageStageData_Impl::stageIndexAndParentCoil() const {
@@ -134,7 +135,7 @@ namespace detail {
     boost::optional<CoilHeatingGasMultiStage> parentCoil;
     auto coilHeatingGasMultiStages = this->model().getConcreteModelObjects<CoilHeatingGasMultiStage>();
     for (const auto & coilInModel : coilHeatingGasMultiStages) {
-      // Check the coil performance objects in this coil to see if one of them is this object       
+      // Check the coil performance objects in this coil to see if one of them is this object
       std::vector< CoilHeatingGasMultiStageStageData> perfStages = coilInModel.stages();
       int i = 1;
       for (auto perfStage : perfStages) {
@@ -227,8 +228,8 @@ void CoilHeatingGasMultiStageStageData::autosizeNominalCapacity() {
   getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->autosizeNominalCapacity();
 }
 
-void CoilHeatingGasMultiStageStageData::setParasiticElectricLoad(double ParasiticElectricLoad) {
-  getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->setParasiticElectricLoad(ParasiticElectricLoad);
+bool CoilHeatingGasMultiStageStageData::setParasiticElectricLoad(double ParasiticElectricLoad) {
+  return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->setParasiticElectricLoad(ParasiticElectricLoad);
 }
 
 /// @cond
@@ -255,4 +256,3 @@ CoilHeatingGasMultiStageStageData::CoilHeatingGasMultiStageStageData(std::shared
 
 } // model
 } // openstudio
-

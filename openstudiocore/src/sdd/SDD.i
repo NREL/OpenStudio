@@ -19,10 +19,10 @@
   #include <sdd/ForwardTranslator.hpp>
   using namespace openstudio::sdd;
   using namespace openstudio;
-  
+
   #include <model/Model.hpp>
   #include <model/ModelObject.hpp>
-  
+
   #include <QDomDocument>
   #include <QDomElement>
 %}
@@ -35,4 +35,4 @@
 %include <sdd/ReverseTranslator.hpp>
 %include <sdd/ForwardTranslator.hpp>
 
-#endif //SDD_I 
+#endif //SDD_I

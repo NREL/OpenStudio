@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,7 +39,7 @@ namespace isomodel {
 
 
   SolarRadiation::SolarRadiation(const TimeFrame &frame, const EpwData &wdata, double tilt)
-    : m_frame(frame), 
+    : m_frame(frame),
       m_weatherData(wdata),
 
       m_surfaceTilt(tilt/2.0), //surface tilt in radians (pi/2 is vertical, 0 is horizontal)
@@ -65,7 +65,7 @@ namespace isomodel {
   SolarRadiation::~SolarRadiation() {}
 
   /**
-   * compute the monthly average solar radiation incident on the vertical surfaces for the 
+   * compute the monthly average solar radiation incident on the vertical surfaces for the
    * eight primary directions (N, S, E, W, NW, SW, NE, SE)
    * these computations come from ASHRAE2007  Fundamentals , chapter 14
    * or Duffie and Beckman "Solar engineering of thermal processes, 3rd ed",
@@ -106,10 +106,10 @@ namespace isomodel {
         double SurfaceSolarAzimuth = ::fabs(SolarAzimuth - (SurfaceAzimuths[s]*(PI/180.0)));//surface - solar azimuth in degrees, >pi/2 means surface is in shade
 
         double AngleOfIncidence = acos(cos(SolarAltitudeAngles) * cos(SurfaceSolarAzimuth) * sin(m_surfaceTilt) + sin(SolarAltitudeAngles) * cos(m_surfaceTilt)); //ancle of incidence of sun's rays on surface in rad
-        
+
         double DirectBeam = vecEB[i] * std::max(cos(AngleOfIncidence), 0.0);//Beam component of radiation
 
-        double DiffuseRadiation = std::max(0.45, 0.55 + 0.437 * cos(AngleOfIncidence) + 0.313 * pow(cos(AngleOfIncidence), 2.0)); //Diffuse component of radiation 
+        double DiffuseRadiation = std::max(0.45, 0.55 + 0.437 * cos(AngleOfIncidence) + 0.313 * pow(cos(AngleOfIncidence), 2.0)); //Diffuse component of radiation
         //diffuse component for sigma> pi/2 meaning it is a wall tilted outward, for sigma<= pi/2 meaning wall vertical or tilted inward
         double DiffuseComponent= (m_surfaceTilt>PI/2) ? vecED[i] * DiffuseRadiation * sin(m_surfaceTilt) : vecED[i] * (DiffuseRadiation * sin(m_surfaceTilt)+cos(m_surfaceTilt));
 
@@ -198,7 +198,7 @@ namespace isomodel {
       m_monthlyRelativeHumidity[midx]  += vecRH[i];
       m_monthlyGlobalHorizontalRadiation[midx] += vecEGH[i];
       m_monthlyWindspeed[midx]+= vecWSPD[i];
-      
+
       //std::stringstream ss;
       for(int s = 0;s<NUM_SURFACES;s++) {
         m_monthlySolarRadiation[midx][s] += m_eglobe[i][s];

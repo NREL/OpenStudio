@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -46,20 +46,20 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_DefaultConstructor)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model model;
     Schedule schedule = model.alwaysOnDiscreteSchedule();
-    
+
     AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(model,schedule);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
 TEST_F(ModelFixture,AirTerminalSingleDuctVAVNoReheat_addToNode) {
-  Model m; 
+  Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   AirTerminalSingleDuctVAVNoReheat testObject(m,s);
 
@@ -96,7 +96,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_AddToNodeWithThermalZone)
 {
   Model model;
   Schedule schedule = model.alwaysOnDiscreteSchedule();
-  
+
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(model,schedule);
 
   AirLoopHVAC airLoop(model);
@@ -107,9 +107,9 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_AddToNodeWithThermalZone)
 
   EXPECT_TRUE(testObject.addToNode(inletNode));
   EXPECT_EQ((unsigned)9, airLoop.demandComponents().size());
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_AddAirTerminalToPlantLoopAddDemandBranchForComponent)
@@ -133,16 +133,16 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_AddAirTerminalToPlantLoopA
   EXPECT_NE((unsigned)7, airLoop.demandComponents().size());
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
   EXPECT_NE((unsigned)7, plantLoop.demandComponents().size());
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_AddObjectByAirLoopAddBranchForZoneWithThermalZone)
 {
   Model model;
   Schedule schedule = model.alwaysOnDiscreteSchedule();
-  
+
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(model,schedule);
 
   AirLoopHVAC airLoop(model);
@@ -151,16 +151,16 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_AddObjectByAirLoopAddBranc
   EXPECT_TRUE(airLoop.addBranchForZone(thermalZone, testObject));
   EXPECT_EQ((unsigned)9, airLoop.demandComponents().size());
   EXPECT_NE((unsigned)7, airLoop.demandComponents().size());
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_AddObjectByAirLoopAddBranchForHVACComponent)
 {
   Model model;
   Schedule schedule = model.alwaysOnDiscreteSchedule();
-  
+
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(model,schedule);
 
   AirLoopHVAC airLoop(model);
@@ -168,16 +168,16 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_AddObjectByAirLoopAddBranc
   EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObject));
   EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());
   EXPECT_NE((unsigned)9, airLoop.demandComponents().size());
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_AddObjectByAirLoopAddBranchForHVACComponentWithThermalZone)
 {
   Model model;
   Schedule schedule = model.alwaysOnDiscreteSchedule();
-  
+
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(model,schedule);
 
   AirLoopHVAC airLoop(model);
@@ -187,16 +187,16 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_AddObjectByAirLoopAddBranc
 
   EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObject));
   EXPECT_EQ((unsigned)10, airLoop.demandComponents().size());
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_AddToNodeTwoSameObjects)
 {
   Model model;
   Schedule schedule = model.alwaysOnDiscreteSchedule();
-  
+
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(model,schedule);
 
   AirLoopHVAC airLoop(model);
@@ -205,16 +205,16 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_AddToNodeTwoSameObjects)
   testObject.addToNode(inletNode);
   inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
   EXPECT_FALSE(testObject.addToNode(inletNode));
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_IsRemovable)
 {
   Model model;
   Schedule schedule = model.alwaysOnDiscreteSchedule();
-  
+
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(model,schedule);
 
   EXPECT_TRUE(testObject.isRemovable());
@@ -224,7 +224,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_Remove)
 {
   Model model;
   Schedule schedule = model.alwaysOnDiscreteSchedule();
-  
+
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(model,schedule);
 
   AirLoopHVAC airLoop(model);
@@ -242,7 +242,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_RemoveObjectWithThermalZon
 {
   Model model;
   Schedule schedule = model.alwaysOnDiscreteSchedule();
-  
+
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(model,schedule);
 
   AirLoopHVAC airLoop(model);
@@ -263,7 +263,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_CloneOneModelWithDefaultDa
 {
   Model model;
   Schedule schedule = model.alwaysOnDiscreteSchedule();
-  
+
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(model,schedule);
 
   AirTerminalSingleDuctVAVNoReheat testObjectClone = testObject.clone(model).cast<AirTerminalSingleDuctVAVNoReheat>();
@@ -277,7 +277,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_CloneOneModelWithCustomDat
   Model model;
   Schedule schedule = model.alwaysOnDiscreteSchedule();
   Schedule minAirFlowSchedule = model.alwaysOnDiscreteSchedule();
-  
+
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(model,schedule);
   testObject.setMaximumAirFlowRate(999.0);
   testObject.setZoneMinimumAirFlowInputMethod("Scheduled");
@@ -296,7 +296,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_CloneTwoModelsWithDefaultD
 {
   Model model;
   Schedule schedule = model.alwaysOnDiscreteSchedule();
-  
+
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(model,schedule);
 
   AirTerminalSingleDuctVAVNoReheat testObjectClone = testObject.clone(model).cast<AirTerminalSingleDuctVAVNoReheat>();
@@ -310,11 +310,11 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_CloneTwoModelsWithDefaultD
   EXPECT_NE(testObjectClone2, testObjectClone);
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_MaximumAirFlowRate) 
+TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_MaximumAirFlowRate)
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  
+
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(m,s);
 
   EXPECT_TRUE(testObject.isMaximumAirFlowRateAutosized());
@@ -334,11 +334,11 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_MaximumAirFlowRate)
   EXPECT_TRUE(testObject.isMaximumAirFlowRateAutosized());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_ZoneMinimumAirFlowInputMethod) 
+TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_ZoneMinimumAirFlowInputMethod)
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  
+
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(m,s);
 
   EXPECT_EQ("Constant", testObject.zoneMinimumAirFlowInputMethod().get());
@@ -356,11 +356,11 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_ZoneMinimumAirFlowInputMet
   EXPECT_EQ("", testObject.zoneMinimumAirFlowInputMethod().get());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_ConstantMinimumAirFlowFraction) 
+TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_ConstantMinimumAirFlowFraction)
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  
+
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(m,s);
 
   EXPECT_DOUBLE_EQ(0.3, testObject.constantMinimumAirFlowFraction().get());
@@ -378,11 +378,11 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_ConstantMinimumAirFlowFrac
   EXPECT_DOUBLE_EQ(0.3, testObject.constantMinimumAirFlowFraction().get());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_FixedMinimumAirFlowRate) 
+TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_FixedMinimumAirFlowRate)
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  
+
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(m,s);
 
   EXPECT_TRUE(testObject.isFixedMinimumAirFlowRateDefaulted());
@@ -400,11 +400,11 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_FixedMinimumAirFlowRate)
   EXPECT_DOUBLE_EQ(0.0, testObject.fixedMinimumAirFlowRate().get());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_MinimumAirFlowFractionSchedule) 
+TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_MinimumAirFlowFractionSchedule)
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  
+
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(m,s);
 
   ScheduleCompact alwaysOnSchedule(m);
@@ -420,12 +420,12 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_MinimumAirFlowFractionSche
   EXPECT_EQ(alwaysOnSchedule, testObject.minimumAirFlowFractionSchedule().get());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_DesignSpecificationOutdoorAirObject) 
+TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_DesignSpecificationOutdoorAirObject)
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   DesignSpecificationOutdoorAir oa = DesignSpecificationOutdoorAir(m);
-  
+
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(m,s);
 }
 

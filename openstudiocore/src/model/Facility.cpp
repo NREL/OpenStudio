@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,6 +39,10 @@
 #include "ConstructionBase_Impl.hpp"
 #include "ExteriorLights.hpp"
 #include "ExteriorLights_Impl.hpp"
+#include "ExteriorFuelEquipment.hpp"
+#include "ExteriorFuelEquipment_Impl.hpp"
+#include "ExteriorWaterEquipment.hpp"
+#include "ExteriorWaterEquipment_Impl.hpp"
 #include "LifeCycleCostParameters.hpp"
 #include "LifeCycleCostParameters_Impl.hpp"
 #include "OutputMeter.hpp"
@@ -114,6 +118,12 @@ namespace detail {
     ExteriorLightsVector exteriorLights = this->exteriorLights();
     result.insert(result.end(),exteriorLights.begin(),exteriorLights.end());
 
+    ExteriorFuelEquipmentVector exteriorFuelEquipments = this->exteriorFuelEquipments();
+    result.insert(result.end(),exteriorFuelEquipments.begin(),exteriorFuelEquipments.end());
+
+    ExteriorWaterEquipmentVector exteriorWaterEquipments = this->exteriorWaterEquipments();
+    result.insert(result.end(),exteriorWaterEquipments.begin(),exteriorWaterEquipments.end());
+
     return result;
   }
 
@@ -188,6 +198,14 @@ namespace detail {
 
   std::vector<ExteriorLights> Facility_Impl::exteriorLights() const {
     return model().getConcreteModelObjects<ExteriorLights>();
+  }
+
+  std::vector<ExteriorFuelEquipment> Facility_Impl::exteriorFuelEquipments() const {
+    return model().getConcreteModelObjects<ExteriorFuelEquipment>();
+  }
+
+  std::vector<ExteriorWaterEquipment> Facility_Impl::exteriorWaterEquipments() const {
+    return model().getConcreteModelObjects<ExteriorWaterEquipment>();
   }
 
   OptionalDouble Facility_Impl::totalSiteEnergy() const
@@ -1400,6 +1418,16 @@ namespace detail {
     return result;
   }
 
+  std::vector<ModelObject> Facility_Impl::exteriorFuelEquipmentAsModelObjects() const {
+    ModelObjectVector result = castVector<ModelObject>(exteriorFuelEquipments());
+    return result;
+  }
+
+  std::vector<ModelObject> Facility_Impl::exteriorWaterEquipmentAsModelObjects() const {
+    ModelObjectVector result = castVector<ModelObject>(exteriorWaterEquipments());
+    return result;
+  }
+
 }// detail
 
 Facility::Facility(std::shared_ptr<detail::Facility_Impl> impl)
@@ -2020,6 +2048,14 @@ boost::optional<OutputMeter> Facility::getMeterByFuelType(
 
 std::vector<ExteriorLights> Facility::exteriorLights() const {
   return getImpl<detail::Facility_Impl>()->exteriorLights();
+}
+
+std::vector<ExteriorFuelEquipment> Facility::exteriorFuelEquipments() const {
+  return getImpl<detail::Facility_Impl>()->exteriorFuelEquipments();
+}
+
+std::vector<ExteriorWaterEquipment> Facility::exteriorWaterEquipments() const {
+  return getImpl<detail::Facility_Impl>()->exteriorWaterEquipments();
 }
 
 std::vector<FuelType> Facility::fossilFuels() {

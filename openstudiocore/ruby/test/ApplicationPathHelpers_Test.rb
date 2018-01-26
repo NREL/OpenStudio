@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -31,24 +31,24 @@ require 'openstudio'
 require 'minitest/autorun'
 
 class ApplicationPathHelpers_Test < MiniTest::Unit::TestCase
-  
+
   # def setup
   # end
 
   # def teardown
   # end
-  
+
   def test_energyplus
     ep_dir = OpenStudio::getEnergyPlusDirectory
     assert(File.exists?(ep_dir.to_s))
     assert(File.directory?(ep_dir.to_s))
-    
+
     ep = OpenStudio::getEnergyPlusExecutable
     assert(File.exists?(ep.to_s))
     assert(!File.directory?(ep.to_s))
     assert(File.executable?(ep.to_s))
   end
-  
+
 
 end
 

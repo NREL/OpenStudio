@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -153,75 +153,74 @@ namespace detail {
     return getInt(OS_RunPeriodFields::NumberofTimesRunperiodtobeRepeated, true).get();
   }
 
-  void RunPeriod_Impl::setBeginMonth(int month)
+  bool RunPeriod_Impl::setBeginMonth(int month)
   {
-    setInt(OS_RunPeriodFields::BeginMonth,month);
+    return setInt(OS_RunPeriodFields::BeginMonth,month);;
   }
 
-  void RunPeriod_Impl::setBeginDayOfMonth(int day)
+  bool RunPeriod_Impl::setBeginDayOfMonth(int day)
   {
-    setInt(OS_RunPeriodFields::BeginDayofMonth,day);
+    return setInt(OS_RunPeriodFields::BeginDayofMonth,day);;
   }
 
-  void RunPeriod_Impl::setEndMonth(int month)
+  bool RunPeriod_Impl::setEndMonth(int month)
   {
-    setInt(OS_RunPeriodFields::EndMonth,month);
+    return setInt(OS_RunPeriodFields::EndMonth,month);;
   }
 
-  void RunPeriod_Impl::setEndDayOfMonth(int day)
+  bool RunPeriod_Impl::setEndDayOfMonth(int day)
   {
-    setInt(OS_RunPeriodFields::EndDayofMonth,day);
+    return setInt(OS_RunPeriodFields::EndDayofMonth,day);;
   }
 
-  void RunPeriod_Impl::setUseWeatherFileHolidays(bool use)
+  bool RunPeriod_Impl::setUseWeatherFileHolidays(bool use)
   {
     if(use)
     {
-      setString(OS_RunPeriodFields::UseWeatherFileHolidaysandSpecialDays,"Yes");
-      return;
+      return setString(OS_RunPeriodFields::UseWeatherFileHolidaysandSpecialDays,"Yes");
     }
-    setString(OS_RunPeriodFields::UseWeatherFileHolidaysandSpecialDays,"No");
+    return setString(OS_RunPeriodFields::UseWeatherFileHolidaysandSpecialDays,"No");
   }
-  void RunPeriod_Impl::setUseWeatherFileDaylightSavings(bool use)
+
+  bool RunPeriod_Impl::setUseWeatherFileDaylightSavings(bool use)
   {
     if(use)
     {
-      setString(OS_RunPeriodFields::UseWeatherFileDaylightSavingPeriod,"Yes");
-      return;
+      return setString(OS_RunPeriodFields::UseWeatherFileDaylightSavingPeriod,"Yes");
     }
-    setString(OS_RunPeriodFields::UseWeatherFileDaylightSavingPeriod,"No");
+    return setString(OS_RunPeriodFields::UseWeatherFileDaylightSavingPeriod,"No");
   }
-  void RunPeriod_Impl::setApplyWeekendHolidayRule(bool apply)
+
+  bool RunPeriod_Impl::setApplyWeekendHolidayRule(bool apply)
   {
     if(apply)
     {
-      setString(OS_RunPeriodFields::ApplyWeekendHolidayRule,"Yes");
-      return;
+      return setString(OS_RunPeriodFields::ApplyWeekendHolidayRule,"Yes");
     }
-    setString(OS_RunPeriodFields::ApplyWeekendHolidayRule,"No");
+    return setString(OS_RunPeriodFields::ApplyWeekendHolidayRule,"No");
   }
-  void RunPeriod_Impl::setUseWeatherFileRainInd(bool rainInd)
+
+  bool RunPeriod_Impl::setUseWeatherFileRainInd(bool rainInd)
   {
     if(rainInd)
     {
-      setString(OS_RunPeriodFields::UseWeatherFileRainIndicators,"Yes");
-      return;
+      return setString(OS_RunPeriodFields::UseWeatherFileRainIndicators,"Yes");
     }
-    setString(OS_RunPeriodFields::UseWeatherFileRainIndicators,"No");
+    return setString(OS_RunPeriodFields::UseWeatherFileRainIndicators,"No");
   }
-  void RunPeriod_Impl::setUseWeatherFileSnowInd(bool snowInd)
+
+  bool RunPeriod_Impl::setUseWeatherFileSnowInd(bool snowInd)
   {
     if(snowInd)
     {
-      setString(OS_RunPeriodFields::UseWeatherFileSnowIndicators,"Yes");
-      return;
+      return setString(OS_RunPeriodFields::UseWeatherFileSnowIndicators,"Yes");
     }
-    setString(OS_RunPeriodFields::UseWeatherFileSnowIndicators,"No");
+    return setString(OS_RunPeriodFields::UseWeatherFileSnowIndicators,"No");
   }
 
-  void RunPeriod_Impl::setNumTimePeriodRepeats(int numRepeats)
+  bool RunPeriod_Impl::setNumTimePeriodRepeats(int numRepeats)
   {
-    setInt(OS_RunPeriodFields::NumberofTimesRunperiodtobeRepeated,numRepeats);
+    return setInt(OS_RunPeriodFields::NumberofTimesRunperiodtobeRepeated,numRepeats);;
   }
 
   void RunPeriod_Impl::ensureNoLeapDays()
@@ -370,54 +369,54 @@ int RunPeriod::getNumTimePeriodRepeats() const
   return getImpl<detail::RunPeriod_Impl>()->getNumTimePeriodRepeats();
 }
 
-void RunPeriod::setBeginMonth(int month)
+bool RunPeriod::setBeginMonth(int month)
 {
-  getImpl<detail::RunPeriod_Impl>()->setBeginMonth(month);
+  return getImpl<detail::RunPeriod_Impl>()->setBeginMonth(month);
 }
 
-void RunPeriod::setBeginDayOfMonth(int day)
+bool RunPeriod::setBeginDayOfMonth(int day)
 {
-  getImpl<detail::RunPeriod_Impl>()->setBeginDayOfMonth(day);
+  return getImpl<detail::RunPeriod_Impl>()->setBeginDayOfMonth(day);
 }
 
-void RunPeriod::setEndMonth(int month)
+bool RunPeriod::setEndMonth(int month)
 {
-  getImpl<detail::RunPeriod_Impl>()->setEndMonth(month);
+  return getImpl<detail::RunPeriod_Impl>()->setEndMonth(month);
 }
 
-void RunPeriod::setEndDayOfMonth(int day)
+bool RunPeriod::setEndDayOfMonth(int day)
 {
-  getImpl<detail::RunPeriod_Impl>()->setEndDayOfMonth(day);
+  return getImpl<detail::RunPeriod_Impl>()->setEndDayOfMonth(day);
 }
 
-void RunPeriod::setUseWeatherFileHolidays(bool use)
+bool RunPeriod::setUseWeatherFileHolidays(bool use)
 {
-  getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileHolidays(use);
+  return getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileHolidays(use);
 }
 
-void RunPeriod::setUseWeatherFileDaylightSavings(bool use)
+bool RunPeriod::setUseWeatherFileDaylightSavings(bool use)
 {
-  getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileDaylightSavings(use);
+  return getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileDaylightSavings(use);
 }
 
-void RunPeriod::setApplyWeekendHolidayRule(bool apply)
+bool RunPeriod::setApplyWeekendHolidayRule(bool apply)
 {
-  getImpl<detail::RunPeriod_Impl>()->setApplyWeekendHolidayRule(apply);
+  return getImpl<detail::RunPeriod_Impl>()->setApplyWeekendHolidayRule(apply);
 }
 
-void RunPeriod::setUseWeatherFileRainInd(bool rainInd)
+bool RunPeriod::setUseWeatherFileRainInd(bool rainInd)
 {
-  getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileRainInd(rainInd);
+  return getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileRainInd(rainInd);
 }
 
-void RunPeriod::setUseWeatherFileSnowInd(bool snowInd)
+bool RunPeriod::setUseWeatherFileSnowInd(bool snowInd)
 {
-  getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileSnowInd(snowInd);
+  return getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileSnowInd(snowInd);
 }
 
-void RunPeriod::setNumTimePeriodRepeats(int numRepeats)
+bool RunPeriod::setNumTimePeriodRepeats(int numRepeats)
 {
-  getImpl<detail::RunPeriod_Impl>()->setNumTimePeriodRepeats(numRepeats);
+  return getImpl<detail::RunPeriod_Impl>()->setNumTimePeriodRepeats(numRepeats);
 }
 
 void RunPeriod::ensureNoLeapDays()

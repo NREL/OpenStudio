@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -45,45 +45,45 @@ namespace detail {
 
   /** SetpointManagerOutdoorAirReset_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerOutdoorAirReset.*/
   class MODEL_API SetpointManagerOutdoorAirReset_Impl : public SetpointManager_Impl {
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -166,19 +166,19 @@ namespace detail {
 
     void resetControlVariable();
 
-    void setSetpointatOutdoorLowTemperature(double setpointatOutdoorLowTemperature);
+    bool setSetpointatOutdoorLowTemperature(double setpointatOutdoorLowTemperature);
 
     bool setSetpointatOutdoorLowTemperature(const Quantity& setpointatOutdoorLowTemperature);
 
-    void setOutdoorLowTemperature(double outdoorLowTemperature);
+    bool setOutdoorLowTemperature(double outdoorLowTemperature);
 
     bool setOutdoorLowTemperature(const Quantity& outdoorLowTemperature);
 
-    void setSetpointatOutdoorHighTemperature(double setpointatOutdoorHighTemperature);
+    bool setSetpointatOutdoorHighTemperature(double setpointatOutdoorHighTemperature);
 
     bool setSetpointatOutdoorHighTemperature(const Quantity& setpointatOutdoorHighTemperature);
 
-    void setOutdoorHighTemperature(double outdoorHighTemperature);
+    bool setOutdoorHighTemperature(double outdoorHighTemperature);
 
     bool setOutdoorHighTemperature(const Quantity& outdoorHighTemperature);
 
@@ -186,25 +186,25 @@ namespace detail {
 
     void resetSchedule();
 
-    void setSetpointatOutdoorLowTemperature2(boost::optional<double> setpointatOutdoorLowTemperature2);
+    bool setSetpointatOutdoorLowTemperature2(boost::optional<double> setpointatOutdoorLowTemperature2);
 
     bool setSetpointatOutdoorLowTemperature2(const OSOptionalQuantity& setpointatOutdoorLowTemperature2);
 
     void resetSetpointatOutdoorLowTemperature2();
 
-    void setOutdoorLowTemperature2(boost::optional<double> outdoorLowTemperature2);
+    bool setOutdoorLowTemperature2(boost::optional<double> outdoorLowTemperature2);
 
     bool setOutdoorLowTemperature2(const OSOptionalQuantity& outdoorLowTemperature2);
 
     void resetOutdoorLowTemperature2();
 
-    void setSetpointatOutdoorHighTemperature2(boost::optional<double> setpointatOutdoorHighTemperature2);
+    bool setSetpointatOutdoorHighTemperature2(boost::optional<double> setpointatOutdoorHighTemperature2);
 
     bool setSetpointatOutdoorHighTemperature2(const OSOptionalQuantity& setpointatOutdoorHighTemperature2);
 
     void resetSetpointatOutdoorHighTemperature2();
 
-    void setOutdoorHighTemperature2(boost::optional<double> outdoorHighTemperature2);
+    bool setOutdoorHighTemperature2(boost::optional<double> outdoorHighTemperature2);
 
     bool setOutdoorHighTemperature2(const OSOptionalQuantity& outdoorHighTemperature2);
 
@@ -255,5 +255,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_SETPOINTMANAGEROUTDOORAIRRESET_IMPL_HPP
-
+#endif // MODEL_SETPOINTMANAGEROUTDOORAIRRESET_IMPL_HPP

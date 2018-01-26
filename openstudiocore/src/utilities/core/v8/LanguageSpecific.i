@@ -43,7 +43,7 @@ namespace std {
     class shared_ptr {
     };
 }
- 
+
 // Provide some basic operator renaming for V8 to make sure that the
 // functions are at least available.
 %rename(Equal) operator =;

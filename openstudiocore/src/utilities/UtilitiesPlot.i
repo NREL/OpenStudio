@@ -40,7 +40,7 @@
   #include <QMainWindow>
   #include <QNetworkAccessManager>
   #include <utilities/core/PathWatcher.hpp>
-  #include <utilities/core/UpdateManager.hpp> 
+  #include <utilities/core/UpdateManager.hpp>
 %}
 
 

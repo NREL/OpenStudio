@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -54,15 +54,15 @@ boost::optional<IdfObject> ForwardTranslator::translateMaterialPropertyMoistureP
   idfObject.setString(MaterialProperty_MoisturePenetrationDepth_SettingsFields::Name, modelObject.materialName());
 
   idfObject.setDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::WaterVaporDiffusionResistanceFactor, modelObject.waterVaporDiffusionResistanceFactor());
-  
+
   idfObject.setDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficienta, modelObject.moistureEquationCoefficientA());
-  
+
   idfObject.setDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientb, modelObject.moistureEquationCoefficientB());
-  
+
   idfObject.setDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientc, modelObject.moistureEquationCoefficientC());
-  
+
   idfObject.setDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientd, modelObject.moistureEquationCoefficientD());
-  
+
   boost::optional<double> value;
 
   if( modelObject.isSurfaceLayerPenetrationDepthAutocalculated() )
@@ -73,7 +73,7 @@ boost::optional<IdfObject> ForwardTranslator::translateMaterialPropertyMoistureP
   {
     idfObject.setDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::SurfaceLayerPenetrationDepth,value.get());
   }
-  
+
   if( modelObject.isDeepLayerPenetrationDepthAutocalculated() )
   {
     idfObject.setString(MaterialProperty_MoisturePenetrationDepth_SettingsFields::DeepLayerPenetrationDepth,"Autocalculate");
@@ -82,10 +82,10 @@ boost::optional<IdfObject> ForwardTranslator::translateMaterialPropertyMoistureP
   {
     idfObject.setDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::DeepLayerPenetrationDepth,value.get());
   }
-  
+
   idfObject.setDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::CoatingLayerThickness, modelObject.coatingLayerThickness());
-  
-  idfObject.setDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::CoatingLayerWaterVaporDiffusionResistanceFactor, modelObject.coatingLayerWaterVaporDiffusionResistanceFactor());  
+
+  idfObject.setDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::CoatingLayerWaterVaporDiffusionResistanceFactor, modelObject.coatingLayerWaterVaporDiffusionResistanceFactor());
 
   return boost::optional<IdfObject>(idfObject);
 }

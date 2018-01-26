@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -532,13 +532,13 @@ TEST_F(ModelFixture, Facility_EconomicsTest_EmptyModel) {
   meter.setFuelType(FuelType::Electricity);
   meter.setInstallLocationType(InstallLocationType::Facility);
   meter.setReportingFrequency("Hourly");
-  
+
   electricMeter = facility.getMeterByFuelType(FuelType::Electricity, "Hourly");
   ASSERT_TRUE(electricMeter);
 
   RunPeriod runPeriod = model.getUniqueModelObject<RunPeriod>();
 
-  boost::optional<openstudio::TimeSeries> timeSeries = electricMeter->getData(runPeriod.name().get()); 
+  boost::optional<openstudio::TimeSeries> timeSeries = electricMeter->getData(runPeriod.name().get());
   if (timeSeries){
     openstudio::Vector values = timeSeries->values();
     unsigned numValues = values.size();

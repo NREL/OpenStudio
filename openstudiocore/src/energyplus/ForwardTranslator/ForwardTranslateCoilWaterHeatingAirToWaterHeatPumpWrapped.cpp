@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -45,7 +45,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCoilWaterHeatingAirToWaterHeatPumpWrapped( 
+boost::optional<IdfObject> ForwardTranslator::translateCoilWaterHeatingAirToWaterHeatPumpWrapped(
     CoilWaterHeatingAirToWaterHeatPumpWrapped & modelObject)
 {
   IdfObject idfObject(IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_Wrapped);
@@ -107,7 +107,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilWaterHeatingAirToWate
   }
 
   if( modelObject.isRatedEvaporatorAirFlowRateAutocalculated() ) {
-    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_WrappedFields::RatedEvaporatorAirFlowRate,"Autocalculate"); 
+    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_WrappedFields::RatedEvaporatorAirFlowRate,"Autocalculate");
   } else if( auto value = modelObject.ratedEvaporatorAirFlowRate() ) {
     idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPump_WrappedFields::RatedEvaporatorAirFlowRate,value.get());
   }
