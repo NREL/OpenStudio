@@ -193,7 +193,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
 
   auto buildCompLibrariesFuture = QtConcurrent::run(this,&OpenStudioApp::buildCompLibraries);
   m_buildCompLibWatcher.setFuture(buildCompLibrariesFuture);
-  connect(&m_buildCompLibWatcher, &QFutureWatcher<void>::finished, this, &OpenStudioApp::onMeasureManagerAndLibraryReady);
+  connect(&m_buildCompLibWatcher, &QFutureWatcher<std::vector<std::string> >::finished, this, &OpenStudioApp::onMeasureManagerAndLibraryReady);
 }
 
 OpenStudioApp::~OpenStudioApp()
@@ -207,6 +207,9 @@ OpenStudioApp::~OpenStudioApp()
 
 void OpenStudioApp::onMeasureManagerAndLibraryReady() {
   if( m_buildCompLibWatcher.isFinished() && m_waitForMeasureManagerWatcher.isFinished() ) {
+    auto failed = m_buildCompLibWatcher.result();
+    showFailedLibraryDialog(failed);
+
     bool openedCommandLine = false;
 
     QStringList args = QApplication::arguments();
@@ -357,15 +360,12 @@ std::vector<std::string> OpenStudioApp::buildCompLibraries()
           m_compLibrary.insertObjects(temp->objects());
         } else {
           LOG_FREE(Error, "OpenStudioApp", "Failed to load library");
-          removeLibraryFromsSettings(path);
           failed.push_back(path.string());
         }
       } else {
-        removeLibraryFromsSettings(path);
         failed.push_back(path.string());
       }
     } catch(...) {
-      removeLibraryFromsSettings(path);
       failed.push_back(path.string());
     }
   }
@@ -1227,8 +1227,7 @@ void OpenStudioApp::removeLibraryFromsSettings( const openstudio::path & path ) 
   }
 }
 
-void OpenStudioApp::onChangeDefaultLibrariesDone() {
-  auto failed = m_changeLibrariesWatcher.result();
+void OpenStudioApp::showFailedLibraryDialog(const std::vector<std::string> & failed) {
   if( ! failed.empty() ) {
     QString text("Failed to load the following libraries...\n\n");
     for( const auto & path : failed ) {
@@ -1237,6 +1236,12 @@ void OpenStudioApp::onChangeDefaultLibrariesDone() {
     }
     QMessageBox::critical(nullptr, QString("Failed to load library"), text);
   }
+}
+
+void OpenStudioApp::onChangeDefaultLibrariesDone() {
+  auto failed = m_changeLibrariesWatcher.result();
+
+  showFailedLibraryDialog(failed);
 
   auto doc = currentDocument();
   if( doc ) {
