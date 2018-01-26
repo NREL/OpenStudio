@@ -102,39 +102,42 @@ MainWindow::MainWindow(bool isPlugin, QWidget *parent) :
 
   setCentralWidget(m_mainSplitter);
 
-  auto mainMenu = new MainMenu(m_displayIP, m_isPlugin);
-  connect(mainMenu, &MainMenu::toggleUnitsClicked, this, &MainWindow::toggleUnits);
-  connect(mainMenu, &MainMenu::downloadComponentsClicked, this, &MainWindow::downloadComponentsClicked);
-  connect(mainMenu, &MainMenu::openLibDlgClicked, this, &MainWindow::openLibDlgClicked);
+  m_mainMenu = new MainMenu(m_displayIP, m_isPlugin);
+  connect(m_mainMenu, &MainMenu::toggleUnitsClicked, this, &MainWindow::toggleUnits);
+  connect(m_mainMenu, &MainMenu::downloadComponentsClicked, this, &MainWindow::downloadComponentsClicked);
+  connect(m_mainMenu, &MainMenu::openLibDlgClicked, this, &MainWindow::openLibDlgClicked);
 
-  this->setMenuBar(mainMenu);
+  this->setMenuBar(m_mainMenu);
 
-  connect(mainMenu, &MainMenu::exportClicked, this, &MainWindow::exportClicked);
-  connect(mainMenu, &MainMenu::exportgbXMLClicked, this, &MainWindow::exportgbXMLClicked);
-  connect(mainMenu, &MainMenu::exportSDDClicked, this, &MainWindow::exportSDDClicked);
-  connect(mainMenu, &MainMenu::importClicked, this, &MainWindow::importClicked);
-  connect(mainMenu, &MainMenu::importgbXMLClicked, this, &MainWindow::importgbXMLClicked);
-  connect(mainMenu, &MainMenu::importSDDClicked, this, &MainWindow::importSDDClicked);
-  connect(mainMenu, &MainMenu::importIFCClicked, this, &MainWindow::importIFCClicked);
-  connect(mainMenu, &MainMenu::loadFileClicked, this, &MainWindow::loadFileClicked);
-  connect(mainMenu, &MainMenu::changeDefaultLibrariesClicked, this, &MainWindow::changeDefaultLibrariesClicked);
-  connect(mainMenu, &MainMenu::saveAsFileClicked, this, &MainWindow::saveAsFileClicked);
-  connect(mainMenu, &MainMenu::saveFileClicked, this, &MainWindow::saveFileClicked);
-  connect(mainMenu, &MainMenu::revertFileClicked, this, &MainWindow::revertFileClicked);
-  connect(mainMenu, &MainMenu::newClicked, this, &MainWindow::newClicked);
-  connect(mainMenu, &MainMenu::exitClicked, this, &MainWindow::exitClicked);
-  connect(mainMenu, &MainMenu::helpClicked, this, &MainWindow::helpClicked);
-  connect(mainMenu, &MainMenu::aboutClicked, this, &MainWindow::aboutClicked);
-  connect(mainMenu, &MainMenu::scanForToolsClicked, this, &MainWindow::scanForToolsClicked);
-  connect(mainMenu, &MainMenu::showRunManagerPreferencesClicked, this, &MainWindow::showRunManagerPreferencesClicked);
-  connect(mainMenu, &MainMenu::showRubyConsoleClicked, this, &MainWindow::showRubyConsoleClicked);
-  connect(mainMenu, &MainMenu::toggleUnitsClicked, this, &MainWindow::toggleUnitsClicked);
-  connect(mainMenu, &MainMenu::changeMyMeasuresDir, this, &MainWindow::changeMyMeasuresDir);
-  connect(mainMenu, &MainMenu::applyMeasureClicked, this, &MainWindow::applyMeasureClicked);
-  connect(mainMenu, &MainMenu::downloadMeasuresClicked, this, &MainWindow::downloadMeasuresClicked);
-  connect(mainMenu, &MainMenu::changeBclLogin, this, &MainWindow::changeBclLogin);
-  connect(mainMenu, &MainMenu::configureProxyClicked, this, &MainWindow::configureProxyClicked);
-  connect(this, &MainWindow::enableRevertToSaved, mainMenu, &MainMenu::enableRevertToSavedAction);
+  connect(m_mainMenu, &MainMenu::exportClicked, this, &MainWindow::exportClicked);
+  connect(m_mainMenu, &MainMenu::exportgbXMLClicked, this, &MainWindow::exportgbXMLClicked);
+  connect(m_mainMenu, &MainMenu::exportSDDClicked, this, &MainWindow::exportSDDClicked);
+  connect(m_mainMenu, &MainMenu::importClicked, this, &MainWindow::importClicked);
+  connect(m_mainMenu, &MainMenu::importgbXMLClicked, this, &MainWindow::importgbXMLClicked);
+  connect(m_mainMenu, &MainMenu::importSDDClicked, this, &MainWindow::importSDDClicked);
+  connect(m_mainMenu, &MainMenu::importIFCClicked, this, &MainWindow::importIFCClicked);
+  connect(m_mainMenu, &MainMenu::loadFileClicked, this, &MainWindow::loadFileClicked);
+  connect(m_mainMenu, &MainMenu::changeDefaultLibrariesClicked, this, &MainWindow::changeDefaultLibrariesClicked);
+  connect(m_mainMenu, &MainMenu::saveAsFileClicked, this, &MainWindow::saveAsFileClicked);
+  connect(m_mainMenu, &MainMenu::saveFileClicked, this, &MainWindow::saveFileClicked);
+  connect(m_mainMenu, &MainMenu::revertFileClicked, this, &MainWindow::revertFileClicked);
+  connect(m_mainMenu, &MainMenu::newClicked, this, &MainWindow::newClicked);
+  connect(m_mainMenu, &MainMenu::exitClicked, this, &MainWindow::exitClicked);
+  connect(m_mainMenu, &MainMenu::helpClicked, this, &MainWindow::helpClicked);
+  connect(m_mainMenu, &MainMenu::aboutClicked, this, &MainWindow::aboutClicked);
+  connect(m_mainMenu, &MainMenu::scanForToolsClicked, this, &MainWindow::scanForToolsClicked);
+  connect(m_mainMenu, &MainMenu::showRunManagerPreferencesClicked, this, &MainWindow::showRunManagerPreferencesClicked);
+  connect(m_mainMenu, &MainMenu::showRubyConsoleClicked, this, &MainWindow::showRubyConsoleClicked);
+  connect(m_mainMenu, &MainMenu::toggleUnitsClicked, this, &MainWindow::toggleUnitsClicked);
+  connect(m_mainMenu, &MainMenu::changeMyMeasuresDir, this, &MainWindow::changeMyMeasuresDir);
+  connect(m_mainMenu, &MainMenu::applyMeasureClicked, this, &MainWindow::applyMeasureClicked);
+  connect(m_mainMenu, &MainMenu::downloadMeasuresClicked, this, &MainWindow::downloadMeasuresClicked);
+  connect(m_mainMenu, &MainMenu::changeBclLogin, this, &MainWindow::changeBclLogin);
+  connect(m_mainMenu, &MainMenu::configureProxyClicked, this, &MainWindow::configureProxyClicked);
+  connect(this, &MainWindow::enableRevertToSaved, m_mainMenu, &MainMenu::enableRevertToSavedAction);
+  connect(this, &MainWindow::enableFileImports, m_mainMenu, &MainMenu::enableFileImportActions);
+  connect(this, &MainWindow::enablePreferences, m_mainMenu, &MainMenu::enablePreferencesActions);
+  connect(this, &MainWindow::enableComponentsMeasures, m_mainMenu, &MainMenu::enableComponentsMeasuresActions);
 }
 
 QSize MainWindow::sizeHint() const
@@ -252,6 +255,21 @@ bool MainWindow::displayIP()
 void MainWindow::enableRevertToSavedAction(bool enable)
 {
   emit enableRevertToSaved(enable);
+}
+
+void MainWindow::enableFileImportActions(bool enable)
+{
+  emit enableFileImports(enable);
+}
+
+void MainWindow::enablePreferencesActions(bool enable)
+{
+  emit enablePreferences(enable);
+}
+
+void MainWindow::enableComponentsMeasuresActions(bool enable)
+{
+  emit enableComponentsMeasures(enable);
 }
 
 void MainWindow::readSettings()
