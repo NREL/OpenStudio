@@ -186,6 +186,8 @@ class OpenStudioApp : public OSAppBase
     GBXML
   };
 
+  void showFailedLibraryDialog(const std::vector<std::string> & failedPaths);
+
   void import(fileType type);
 
   bool openFile(const QString& fileName, bool restoreTabs = false);
@@ -219,7 +221,7 @@ class OpenStudioApp : public OSAppBase
 
   std::shared_ptr<StartupMenu> m_startupMenu;
 
-  QFutureWatcher<void> m_buildCompLibWatcher;
+  QFutureWatcher<std::vector<std::string> > m_buildCompLibWatcher;
   QFutureWatcher<void> m_waitForMeasureManagerWatcher;
   QFutureWatcher<std::vector<std::string> > m_changeLibrariesWatcher;
 };
