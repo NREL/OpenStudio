@@ -102,6 +102,7 @@ MainWindow::MainWindow(bool isPlugin, QWidget *parent) :
 
   setCentralWidget(m_mainSplitter);
 
+<<<<<<< HEAD
   m_mainMenu = new MainMenu(m_displayIP, m_isPlugin);
   connect(m_mainMenu, &MainMenu::toggleUnitsClicked, this, &MainWindow::toggleUnits);
   connect(m_mainMenu, &MainMenu::downloadComponentsClicked, this, &MainWindow::downloadComponentsClicked);
@@ -138,6 +139,42 @@ MainWindow::MainWindow(bool isPlugin, QWidget *parent) :
   connect(this, &MainWindow::enableFileImports, m_mainMenu, &MainMenu::enableFileImportActions);
   connect(this, &MainWindow::enablePreferences, m_mainMenu, &MainMenu::enablePreferencesActions);
   connect(this, &MainWindow::enableComponentsMeasures, m_mainMenu, &MainMenu::enableComponentsMeasuresActions);
+=======
+  auto mainMenu = new MainMenu(m_displayIP, m_isPlugin);
+  connect(mainMenu, &MainMenu::toggleUnitsClicked, this, &MainWindow::toggleUnits);
+  connect(mainMenu, &MainMenu::downloadComponentsClicked, this, &MainWindow::downloadComponentsClicked);
+  connect(mainMenu, &MainMenu::openLibDlgClicked, this, &MainWindow::openLibDlgClicked);
+
+  this->setMenuBar(mainMenu);
+
+  connect(mainMenu, &MainMenu::exportClicked, this, &MainWindow::exportClicked);
+  connect(mainMenu, &MainMenu::exportgbXMLClicked, this, &MainWindow::exportgbXMLClicked);
+  connect(mainMenu, &MainMenu::exportSDDClicked, this, &MainWindow::exportSDDClicked);
+  connect(mainMenu, &MainMenu::importClicked, this, &MainWindow::importClicked);
+  connect(mainMenu, &MainMenu::importgbXMLClicked, this, &MainWindow::importgbXMLClicked);
+  connect(mainMenu, &MainMenu::importSDDClicked, this, &MainWindow::importSDDClicked);
+  connect(mainMenu, &MainMenu::importIFCClicked, this, &MainWindow::importIFCClicked);
+  connect(mainMenu, &MainMenu::loadFileClicked, this, &MainWindow::loadFileClicked);
+  connect(mainMenu, &MainMenu::changeDefaultLibrariesClicked, this, &MainWindow::changeDefaultLibrariesClicked);
+  connect(mainMenu, &MainMenu::loadLibraryClicked, this, &MainWindow::loadLibraryClicked);
+  connect(mainMenu, &MainMenu::saveAsFileClicked, this, &MainWindow::saveAsFileClicked);
+  connect(mainMenu, &MainMenu::saveFileClicked, this, &MainWindow::saveFileClicked);
+  connect(mainMenu, &MainMenu::revertFileClicked, this, &MainWindow::revertFileClicked);
+  connect(mainMenu, &MainMenu::newClicked, this, &MainWindow::newClicked);
+  connect(mainMenu, &MainMenu::exitClicked, this, &MainWindow::exitClicked);
+  connect(mainMenu, &MainMenu::helpClicked, this, &MainWindow::helpClicked);
+  connect(mainMenu, &MainMenu::aboutClicked, this, &MainWindow::aboutClicked);
+  connect(mainMenu, &MainMenu::scanForToolsClicked, this, &MainWindow::scanForToolsClicked);
+  connect(mainMenu, &MainMenu::showRunManagerPreferencesClicked, this, &MainWindow::showRunManagerPreferencesClicked);
+  connect(mainMenu, &MainMenu::showRubyConsoleClicked, this, &MainWindow::showRubyConsoleClicked);
+  connect(mainMenu, &MainMenu::toggleUnitsClicked, this, &MainWindow::toggleUnitsClicked);
+  connect(mainMenu, &MainMenu::changeMyMeasuresDir, this, &MainWindow::changeMyMeasuresDir);
+  connect(mainMenu, &MainMenu::applyMeasureClicked, this, &MainWindow::applyMeasureClicked);
+  connect(mainMenu, &MainMenu::downloadMeasuresClicked, this, &MainWindow::downloadMeasuresClicked);
+  connect(mainMenu, &MainMenu::changeBclLogin, this, &MainWindow::changeBclLogin);
+  connect(mainMenu, &MainMenu::configureProxyClicked, this, &MainWindow::configureProxyClicked);
+  connect(this, &MainWindow::enableRevertToSaved, mainMenu, &MainMenu::enableRevertToSavedAction);
+>>>>>>> develop
 }
 
 QSize MainWindow::sizeHint() const

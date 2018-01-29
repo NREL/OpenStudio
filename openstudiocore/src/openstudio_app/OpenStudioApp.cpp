@@ -1109,6 +1109,7 @@ void OpenStudioApp::connectOSDocumentSignals()
   connect(m_osDocument.get(), &OSDocument::osmDropped, this, &OpenStudioApp::openFromDrag);
   connect(m_osDocument.get(), &OSDocument::loadLibraryClicked, this, &OpenStudioApp::loadLibrary);
   connect(m_osDocument.get(), &OSDocument::loadLibraryClicked, this, &OpenStudioApp::loadLibrary);
+  connect(m_osDocument.get(), &OSDocument::loadLibraryClicked, this, &OpenStudioApp::loadLibrary);
   connect(m_osDocument.get(), &OSDocument::newClicked, this, &OpenStudioApp::newModel);
   connect(m_osDocument.get(), &OSDocument::helpClicked, this, &OpenStudioApp::showHelp);
   connect(m_osDocument.get(), &OSDocument::aboutClicked, this, &OpenStudioApp::showAbout);
