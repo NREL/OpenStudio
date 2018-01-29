@@ -246,12 +246,21 @@ namespace openstudio{
       }
     }
 
+    // DLM: should update value to current schema
+    // Code in FloorspaceJS, importFloorplan.js, importState
+    // Code in FloorspaceJS, export.js, exportData
+
     setLastId(m_value);
   }
 
   FloorplanJS::FloorplanJS(const Json::Value& value)
     : m_value(value),  m_lastId(0)
   {
+    // DLM: should update value to current schema
+    // Code in FloorspaceJS, importFloorplan.js, importState
+    // Code in FloorspaceJS, export.js, exportData
+    // past files for testing: floorspace.js/test/e2e/fixtures/
+
     setLastId(m_value);
   }
 
@@ -941,12 +950,13 @@ namespace openstudio{
     std::vector<ThreeMaterial> materials;
     std::map<std::string, std::string> materialMap;
 
+    // DLM: always add the standard materials
     // add standard materials if we will be rendering
-    if (!openstudioFormat){
+    //if (!openstudioFormat){
       for (const auto& material : makeStandardThreeMaterials()){
         addThreeMaterial(materials, materialMap, material);
       }
-    }
+    //}
     // add model specific materials in loop with makeMaterial
 
     double currentStoryZ = 0;

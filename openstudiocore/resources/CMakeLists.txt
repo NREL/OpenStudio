@@ -47,6 +47,7 @@ set(utilities_resources_src
   utilities/Geometry/floorplan_colors.json
   utilities/Geometry/floorplan_differing_num_vertices.json 
   utilities/Geometry/floorplan-paper.json
+  utilities/Geometry/floorplan_school.json
   utilities/Geometry/floorplan_shading.json
   utilities/Geometry/open_to_below.json
   utilities/Geometry/split_level.json
