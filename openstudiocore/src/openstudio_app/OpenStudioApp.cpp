@@ -438,7 +438,7 @@ void OpenStudioApp::importIdf()
       if (!_idfFile.isValid(StrictnessLevel::Draft)){
 
         QMessageBox messageBox(parent);
-        messageBox.setText("File is not valid to draft strictness.");
+        messageBox.setText("File is not valid to draft strictness.  Check that IDF is of correct version and that all fields are valid against Energy+.idd.");
         std::stringstream ss;
         ss << _idfFile.validityReport(StrictnessLevel::Draft);
         messageBox.setDetailedText(toQString(ss.str()));
