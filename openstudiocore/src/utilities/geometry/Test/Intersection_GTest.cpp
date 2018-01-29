@@ -1401,13 +1401,14 @@ TEST_F(GeometryFixture, simplify)
 
   Point3dVector points2 = simplify(points, false, tol);
 
+  std::cout << points2 << std::endl;
+
   auto area2 = getArea(points2);
   ASSERT_TRUE(area2);
 
   EXPECT_NEAR(*area, *area2, tol*tol);
 
   Point3dVector expectedPoints;
-  expectedPoints.push_back(Point3d(158, 168, 0));
   expectedPoints.push_back(Point3d(200, 168, 0));
   expectedPoints.push_back(Point3d(200, 30, 0));
   expectedPoints.push_back(Point3d(158, 30, 0));
@@ -1416,6 +1417,7 @@ TEST_F(GeometryFixture, simplify)
   expectedPoints.push_back(Point3d(158, 98, 0));
   expectedPoints.push_back(Point3d(158, 128, 0));
   expectedPoints.push_back(Point3d(158, 138, 0));
+  expectedPoints.push_back(Point3d(158, 168, 0));
 
   auto area3 = getArea(expectedPoints);
   ASSERT_TRUE(area3);
@@ -1508,13 +1510,14 @@ TEST_F(GeometryFixture, simplify2)
 
   Point3dVector points2 = simplify(points, false, tol);
 
+  std::cout << points2 << std::endl;
+
   auto area2 = getArea(points2);
   ASSERT_TRUE(area2);
 
   EXPECT_NEAR(*area, *area2, tol*tol);
 
   Point3dVector expectedPoints;
-  expectedPoints.push_back(Point3d(158, 30, 0));
   expectedPoints.push_back(Point3d(200, 30, 0));
   expectedPoints.push_back(Point3d(200, 168, 0));
   expectedPoints.push_back(Point3d(158, 168, 0));
@@ -1523,6 +1526,7 @@ TEST_F(GeometryFixture, simplify2)
   expectedPoints.push_back(Point3d(158, 98, 0));
   expectedPoints.push_back(Point3d(158, 70, 0));
   expectedPoints.push_back(Point3d(158, 40, 0));
+  expectedPoints.push_back(Point3d(158, 30, 0));
 
   auto area3 = getArea(expectedPoints);
   ASSERT_TRUE(area3);
@@ -1573,12 +1577,17 @@ TEST_F(GeometryFixture, simplify3)
 
   Point3dVector points2 = simplify(points, false, tol);
 
+  std::cout << points2 << std::endl;
+
   auto area2 = getArea(points2);
   ASSERT_TRUE(area2);
 
   EXPECT_NEAR(*area, *area2, tol*tol);
 
   Point3dVector expectedPoints;
+  expectedPoints.push_back(Point3d(158, 120, 0));
+  expectedPoints.push_back(Point3d(158, 108, 0));
+  expectedPoints.push_back(Point3d(158, 89, 0));
   expectedPoints.push_back(Point3d(158, 49, 0));
   expectedPoints.push_back(Point3d(158, 21, 0));
   expectedPoints.push_back(Point3d(157, 21, 0));
@@ -1596,9 +1605,6 @@ TEST_F(GeometryFixture, simplify3)
   expectedPoints.push_back(Point3d(114, 120, 0));
   expectedPoints.push_back(Point3d(143, 120, 0));
   expectedPoints.push_back(Point3d(157, 120, 0));
-  expectedPoints.push_back(Point3d(158, 120, 0));
-  expectedPoints.push_back(Point3d(158, 108, 0));
-  expectedPoints.push_back(Point3d(158, 89, 0));
 
   auto area3 = getArea(expectedPoints);
   ASSERT_TRUE(area3);
@@ -1662,4 +1668,70 @@ TEST_F(GeometryFixture, simplify4)
     EXPECT_EQ(points2[i].y(), expectedPoints[i].y());
     EXPECT_EQ(points2[i].z(), expectedPoints[i].z());
   }
+}
+
+
+
+TEST_F(GeometryFixture, simplify5)
+{
+  double tol = 0.01;
+
+  Point3dVector points;
+  points.clear();
+  points.push_back(Point3d(158, 98,  0));
+  points.push_back(Point3d(158, 138, 0));
+  points.push_back(Point3d(158, 40,  0));
+  points.push_back(Point3d(158, 70,  0));
+  points.push_back(Point3d(158, 128, 0));
+  points.push_back(Point3d(158, 168, 0));
+  points.push_back(Point3d(200, 168, 0));
+  points.push_back(Point3d(200, 30,  0));
+  points.push_back(Point3d(158, 30,  0));
+
+  std::cout << points << std::endl << std::endl;
+
+  auto area = getArea(points);
+  ASSERT_TRUE(area);
+
+  Point3dVector points2 = simplify(points, false, tol);
+
+  std::cout << points2 << std::endl << std::endl;
+
+  auto area2 = getArea(points2);
+  ASSERT_TRUE(area2);
+
+  EXPECT_NEAR(*area, *area2, tol*tol);
+
+  Point3dVector expectedPoints;
+  expectedPoints.push_back(Point3d(200, 168, 0));
+  expectedPoints.push_back(Point3d(200, 30, 0));
+  expectedPoints.push_back(Point3d(158, 30, 0));
+  expectedPoints.push_back(Point3d(158, 40, 0));
+  expectedPoints.push_back(Point3d(158, 70, 0));
+  expectedPoints.push_back(Point3d(158, 98, 0));
+  expectedPoints.push_back(Point3d(158, 128, 0));
+  expectedPoints.push_back(Point3d(158, 138, 0));
+  expectedPoints.push_back(Point3d(158, 168, 0));
+
+  auto area3 = getArea(expectedPoints);
+  ASSERT_TRUE(area3);
+
+  EXPECT_NEAR(*area, *area3, tol*tol);
+
+  ASSERT_EQ(points2.size(), expectedPoints.size());
+  for (auto i = 0; i < expectedPoints.size(); ++i){
+    EXPECT_EQ(points2[i].x(), expectedPoints[i].x());
+    EXPECT_EQ(points2[i].y(), expectedPoints[i].y()) << i;
+    EXPECT_EQ(points2[i].z(), expectedPoints[i].z());
+  }
+
+  Point3dVector points4 = simplify(points, true, tol);
+  EXPECT_EQ(4u, points4.size());
+
+  std::cout << points4 << std::endl << std::endl;
+
+  auto area4 = getArea(points4);
+  ASSERT_TRUE(area4);
+
+  EXPECT_NEAR(*area, *area4, tol*tol);
 }

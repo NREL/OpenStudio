@@ -1147,9 +1147,9 @@ namespace openstudio{
 
     boost::optional<BoostPolygon> bp;
     if (reversed){
-      bp = boostPolygonFromVertices(reverse(vertices), allPoints, tol);
+      bp = boostPolygonFromVertices(reverse(reorderULC(vertices)), allPoints, tol);
     } else {
-      bp = boostPolygonFromVertices(vertices, allPoints, tol);
+      bp = boostPolygonFromVertices(reorderULC(vertices), allPoints, tol);
     }
 
     if (!bp){

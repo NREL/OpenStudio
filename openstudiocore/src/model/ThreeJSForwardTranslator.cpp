@@ -451,12 +451,13 @@ namespace openstudio
       std::vector<ThreeMaterial> materials;
       std::map<std::string, std::string> materialMap;
 
-      if (triangulateSurfaces){
+      // DLM: always add the standard materials
+      //if (triangulateSurfaces){
         // add the standard materials for rendering
         for (const auto& material : makeStandardThreeMaterials()){
           addThreeMaterial(materials, materialMap, material);
         }
-      }
+      //}
 
       // add model specific materials
       buildMaterials(model, materials, materialMap);

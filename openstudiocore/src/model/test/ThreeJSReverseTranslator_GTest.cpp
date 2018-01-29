@@ -700,7 +700,6 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Colors) {
 
 }
 
-
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_DifferingNumVertices) {
 
   ThreeJSReverseTranslator rt;
@@ -785,6 +784,121 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_DifferingNumVertices) 
   ASSERT_TRUE(infos[1].floor->adjacentSurface());
   ASSERT_TRUE(infos[1].floor->adjacentSurface()->space());
   EXPECT_EQ("Space 1 - 1", infos[1].floor->adjacentSurface()->space()->nameString());
+}
+
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_School) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan_school.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  openstudio::path outpath = resourcesPath() / toPath("model/floorplan_school.osm");
+  model->save(outpath, true);
+
+  EXPECT_EQ(0, rt.errors().size());
+  EXPECT_EQ(0u, rt.warnings().size());
+
+  for (const auto& error : rt.errors()){
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+
+  for (const auto& warning : rt.warnings()){
+    EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
+  }
+
+  std::vector<Space> spaces = model->getConcreteModelObjects<Space>();
+
+  struct SpaceInfo{
+    std::string name;
+    std::vector<Surface> floors;
+    std::vector<Surface> walls;
+    std::vector<Surface> ceilings;
+    unsigned numExteriorWalls = 0;
+    unsigned numInteriorWalls = 0;
+    double exteriorFloorArea = 0;
+    double exteriorRoofArea = 0;
+    double exteriorWallArea = 0;
+    double interiorFloorArea = 0;
+    double interiorRoofArea = 0;
+    double interiorWallArea = 0;
+  };
+
+  std::vector<SpaceInfo> infos;
+  for (const auto& space : spaces){
+    SpaceInfo info;
+    info.name = space.nameString();
+    for (const auto& surface : space.surfaces()){
+      if (surface.surfaceType() == "Floor"){
+        info.floors.push_back(surface);
+        if (surface.outsideBoundaryCondition() == "Ground"){
+          info.exteriorFloorArea += surface.grossArea();
+        } else if (surface.outsideBoundaryCondition() == "Surface"){
+          info.interiorFloorArea += surface.grossArea();
+        }
+      }else if (surface.surfaceType() == "RoofCeiling"){
+        info.ceilings.push_back(surface);
+        if (surface.outsideBoundaryCondition() == "Outdoors"){
+          info.exteriorRoofArea += surface.grossArea();
+        } else if (surface.outsideBoundaryCondition() == "Surface"){
+          info.interiorRoofArea += surface.grossArea();
+        }
+      }else if (surface.surfaceType() == "Wall"){
+        info.walls.push_back(surface);
+        if (surface.outsideBoundaryCondition() == "Outdoors"){
+          info.numExteriorWalls += 1;
+          info.exteriorWallArea += surface.grossArea();
+        } else if (surface.outsideBoundaryCondition() == "Surface"){
+          info.numInteriorWalls += 1;
+          info.interiorWallArea += surface.grossArea();
+        }
+      }
+    }
+    infos.push_back(info);
+  }
+
+  std::sort(std::begin(infos), std::end(infos), [](SpaceInfo a, SpaceInfo b) {return a.name < b.name; });
+
+  ASSERT_EQ(33u, infos.size());
+
+  auto it = std::find_if(infos.begin(), infos.end(), [](SpaceInfo a) {return a.name == "Space 2 - 1"; });
+  ASSERT_TRUE(it != infos.end());
+  EXPECT_EQ(1u, it->floors.size());
+  EXPECT_NEAR(0.0, it->exteriorFloorArea, 1.0);
+  EXPECT_NEAR(5796.0, it->interiorFloorArea, 1.0);
+  EXPECT_EQ(1u, it->ceilings.size());
+  EXPECT_NEAR(5796.0, it->exteriorRoofArea, 1.0);
+  EXPECT_NEAR(0.0, it->interiorRoofArea, 1.0);
+  EXPECT_EQ(9u, it->walls.size());
+  EXPECT_EQ(2u, it->numExteriorWalls);
+  EXPECT_EQ(7u, it->numInteriorWalls);
+  EXPECT_NEAR(2178.75, it->exteriorWallArea, 1.0);
+  EXPECT_NEAR(2546.25, it->interiorWallArea, 1.0);
+
+  it = std::find_if(infos.begin(), infos.end(), [](SpaceInfo a) {return a.name == "Lobby 113"; });
+  ASSERT_TRUE(it != infos.end());
+  EXPECT_EQ(1u, it->floors.size());
+  EXPECT_NEAR(1860.0, it->exteriorFloorArea, 1.0);
+  EXPECT_NEAR(0.0, it->interiorFloorArea, 1.0);
+  EXPECT_EQ(2u, it->ceilings.size());
+  EXPECT_NEAR(600.0, it->exteriorRoofArea, 1.0);
+  EXPECT_NEAR(1260.0, it->interiorRoofArea, 1.0);
+  EXPECT_EQ(5u, it->walls.size());
+  EXPECT_EQ(1u, it->numExteriorWalls);
+  EXPECT_EQ(4u, it->numInteriorWalls);
+  EXPECT_NEAR(813.75, it->exteriorWallArea, 1.0);
+  EXPECT_NEAR(1601.25, it->interiorWallArea, 1.0);
 }
 
 

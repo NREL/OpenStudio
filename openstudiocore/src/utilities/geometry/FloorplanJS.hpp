@@ -185,6 +185,8 @@ namespace openstudio{
     std::string getFaceId(const Json::Value& value) const;
 
     std::string getNextId();
+
+    // recursively traverses through value and finds the largest id
     void setLastId(const Json::Value& value);
 
     Json::Value* findByHandleString(Json::Value& value, const std::string& key, const std::string& handleString);
