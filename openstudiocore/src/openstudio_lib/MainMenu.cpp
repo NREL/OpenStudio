@@ -121,6 +121,8 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   action = new QAction(tr("&Load Library"), this);
   m_fileMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::loadLibraryClicked);
+  m_fileImportActions.push_back(action);
+  //m_preferencesActions.push_back(action); // DLM: I'm unclear if this should be enabled/disabled with preferences or file imports, right now does not matter
 
   if (!m_isPlugin){
 
