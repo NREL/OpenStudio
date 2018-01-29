@@ -700,6 +700,94 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Colors) {
 
 }
 
+
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_DifferingNumVertices) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan_differing_num_vertices.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  openstudio::path outpath = resourcesPath() / toPath("model/floorplan_differing_num_vertices.osm");
+  model->save(outpath, true);
+
+  EXPECT_EQ(0, rt.errors().size());
+  EXPECT_EQ(0u, rt.warnings().size());
+
+  for (const auto& error : rt.errors()){
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+
+  for (const auto& warning : rt.warnings()){
+    EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
+  }
+
+  boost::optional<Space> space1 = model->getConcreteModelObjectByName<Space>("Space 1 - 1");
+  boost::optional<Space> space2 = model->getConcreteModelObjectByName<Space>("Space 2 - 1");
+  ASSERT_TRUE(space1);
+  ASSERT_TRUE(space2);
+
+  std::vector<Space> spaces = model->getConcreteModelObjects<Space>();
+
+  struct SpaceInfo{
+    std::string name;
+    boost::optional<Surface> floor;
+    boost::optional<Surface> ceiling;
+  };
+
+  std::vector<SpaceInfo> infos;
+  for (const auto& space : spaces){
+    SpaceInfo info;
+    info.name = space.nameString();
+    for (const auto& surface : space.surfaces()){
+      if (surface.surfaceType() == "Floor"){
+        EXPECT_FALSE(info.floor);
+        info.floor = surface;
+      }else if (surface.surfaceType() == "RoofCeiling"){
+        EXPECT_FALSE(info.ceiling);
+        info.ceiling = surface;
+      }
+    }
+    infos.push_back(info);
+  }
+
+  std::sort(std::begin(infos), std::end(infos), [](SpaceInfo a, SpaceInfo b) {return a.name < b.name; });
+
+  ASSERT_EQ(2u, infos.size());
+
+  EXPECT_EQ("Space 1 - 1", infos[0].name);
+  ASSERT_TRUE(infos[0].floor);
+  EXPECT_EQ(6u, infos[0].floor->vertices().size());
+  ASSERT_TRUE(infos[0].ceiling);
+  EXPECT_EQ(6u, infos[0].ceiling->vertices().size());
+  EXPECT_FALSE(infos[0].floor->adjacentSurface());
+  ASSERT_TRUE(infos[0].ceiling->adjacentSurface());
+  ASSERT_TRUE(infos[0].ceiling->adjacentSurface()->space());
+  EXPECT_EQ("Space 2 - 1", infos[0].ceiling->adjacentSurface()->space()->nameString());
+
+  EXPECT_EQ("Space 2 - 1", infos[1].name);
+  ASSERT_TRUE(infos[1].floor);
+  EXPECT_EQ(4u, infos[1].floor->vertices().size());
+  ASSERT_TRUE(infos[1].ceiling);
+  EXPECT_EQ(4u, infos[1].ceiling->vertices().size());
+  EXPECT_FALSE(infos[1].ceiling->adjacentSurface());
+  ASSERT_TRUE(infos[1].floor->adjacentSurface());
+  ASSERT_TRUE(infos[1].floor->adjacentSurface()->space());
+  EXPECT_EQ("Space 1 - 1", infos[1].floor->adjacentSurface()->space()->nameString());
+}
+
+
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_StoryMultipliers) {
 
   ThreeJSReverseTranslator rt;
