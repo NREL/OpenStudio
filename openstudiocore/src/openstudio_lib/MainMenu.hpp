@@ -123,11 +123,23 @@ class MainMenu : public QMenuBar
 
   QAction * m_revertToSavedAction;
 
+  std::vector<QAction *> m_fileImportActions;
+
+  std::vector<QAction *> m_preferencesActions;
+
+  std::vector<QAction *> m_componentsMeasuresActions;
+
   bool m_isIP;
 
   public slots:
 
   void enableRevertToSavedAction(bool enable);
+
+  void enableFileImportActions(bool enable);
+
+  void enablePreferencesActions(bool enable);
+
+  void enableComponentsMeasuresActions(bool enable);
 
   private slots:
 
