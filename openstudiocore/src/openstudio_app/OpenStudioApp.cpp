@@ -778,34 +778,34 @@ void OpenStudioApp::open()
   openFile(fileName);
 }
 
-void OpenStudioApp::loadLibrary()
-{
-  if( this->currentDocument() )
-  {
-    QWidget * parent = this->currentDocument()->mainWindow();
-
-
-    QString fileName = QFileDialog::getOpenFileName( parent,
-                                                    tr("Select Library"),
-                                                    toQString(resourcesPath()),
-                                                    tr("(*.osm)") );
-
-    if( ! (fileName == "") )
-    {
-      osversion::VersionTranslator versionTranslator;
-      versionTranslator.setAllowNewerVersions(false);
-
-      boost::optional<openstudio::model::Model> model = versionTranslator.loadModel(toPath(fileName));
-      if( model ) {
-        this->currentDocument()->setComponentLibrary(*model);
-        versionUpdateMessageBox(versionTranslator, true, fileName, openstudio::path());
-      }else{
-        LOG_FREE(Warn, "OpenStudio", "Could not open file at " << toString(fileName));
-        versionUpdateMessageBox(versionTranslator, false, fileName, openstudio::path());
-      }
-    }
-  }
-}
+//void OpenStudioApp::loadLibrary()
+//{
+//  if( this->currentDocument() )
+//  {
+//    QWidget * parent = this->currentDocument()->mainWindow();
+//
+//
+//    QString fileName = QFileDialog::getOpenFileName( parent,
+//                                                    tr("Select Library"),
+//                                                    toQString(resourcesPath()),
+//                                                    tr("(*.osm)") );
+//
+//    if( ! (fileName == "") )
+//    {
+//      osversion::VersionTranslator versionTranslator;
+//      versionTranslator.setAllowNewerVersions(false);
+//
+//      boost::optional<openstudio::model::Model> model = versionTranslator.loadModel(toPath(fileName));
+//      if( model ) {
+//        this->currentDocument()->setComponentLibrary(*model);
+//        versionUpdateMessageBox(versionTranslator, true, fileName, openstudio::path());
+//      }else{
+//        LOG_FREE(Warn, "OpenStudio", "Could not open file at " << toString(fileName));
+//        versionUpdateMessageBox(versionTranslator, false, fileName, openstudio::path());
+//      }
+//    }
+//  }
+//}
 
 void OpenStudioApp::newModel()
 {
@@ -1091,6 +1091,7 @@ void OpenStudioApp::connectOSDocumentSignals()
   connect(m_osDocument.get(), &OSDocument::loadFileClicked, this, &OpenStudioApp::open);
   connect(m_osDocument.get(), &OSDocument::osmDropped, this, &OpenStudioApp::openFromDrag);
   connect(m_osDocument.get(), &OSDocument::changeDefaultLibrariesClicked, this, &OpenStudioApp::changeDefaultLibraries);
+  connect(m_osDocument.get(), &OSDocument::loadLibraryClicked, this, &OpenStudioApp::loadLibrary);
   connect(m_osDocument.get(), &OSDocument::newClicked, this, &OpenStudioApp::newModel);
   connect(m_osDocument.get(), &OSDocument::helpClicked, this, &OpenStudioApp::showHelp);
   connect(m_osDocument.get(), &OSDocument::aboutClicked, this, &OpenStudioApp::showAbout);
@@ -1158,6 +1159,41 @@ void OpenStudioApp::startMeasureManagerProcess(){
   LOG(Debug, "Command: " << toString(openstudioCLIPath()) << " measure -s " << toString(portString));
 
   m_measureManagerProcess->start(program, arguments);
+}
+
+void OpenStudioApp::loadLibrary() {
+  if ( this->currentDocument() ) {
+    QWidget * parent = this->currentDocument()->mainWindow();
+  
+    QString fileName = QFileDialog::getOpenFileName( parent,
+                                                    tr("Select Library"),
+                                                    toQString(resourcesPath()),
+                                                    tr("(*.osm)") );
+  
+    if( ! (fileName == "") ) {
+      QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+
+      auto paths = libraryPaths();
+
+      auto path = toPath(fileName.toStdString());
+      if( std::find(paths.begin(),paths.end(),path) == paths.end() ) {
+        paths.push_back(path);
+        settings.remove("library");
+        settings.beginWriteArray("library");
+        int i = 0;
+        for( const auto ipath : paths ) {
+          settings.setArrayIndex(i);
+          settings.setValue("path",QString::fromStdString(ipath.string()));
+          ++i;
+        }
+        settings.endArray();
+
+        auto future = QtConcurrent::run(this,&OpenStudioApp::buildCompLibraries);
+        m_changeLibrariesWatcher.setFuture(future);
+        connect(&m_changeLibrariesWatcher, &QFutureWatcher<std::vector<std::string> >::finished, this, &OpenStudioApp::onChangeDefaultLibrariesDone);
+      }
+    }
+  }
 }
 
 void OpenStudioApp::changeDefaultLibraries() {
