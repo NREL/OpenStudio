@@ -102,44 +102,6 @@ MainWindow::MainWindow(bool isPlugin, QWidget *parent) :
 
   setCentralWidget(m_mainSplitter);
 
-<<<<<<< HEAD
-  m_mainMenu = new MainMenu(m_displayIP, m_isPlugin);
-  connect(m_mainMenu, &MainMenu::toggleUnitsClicked, this, &MainWindow::toggleUnits);
-  connect(m_mainMenu, &MainMenu::downloadComponentsClicked, this, &MainWindow::downloadComponentsClicked);
-  connect(m_mainMenu, &MainMenu::openLibDlgClicked, this, &MainWindow::openLibDlgClicked);
-
-  this->setMenuBar(m_mainMenu);
-
-  connect(m_mainMenu, &MainMenu::exportClicked, this, &MainWindow::exportClicked);
-  connect(m_mainMenu, &MainMenu::exportgbXMLClicked, this, &MainWindow::exportgbXMLClicked);
-  connect(m_mainMenu, &MainMenu::exportSDDClicked, this, &MainWindow::exportSDDClicked);
-  connect(m_mainMenu, &MainMenu::importClicked, this, &MainWindow::importClicked);
-  connect(m_mainMenu, &MainMenu::importgbXMLClicked, this, &MainWindow::importgbXMLClicked);
-  connect(m_mainMenu, &MainMenu::importSDDClicked, this, &MainWindow::importSDDClicked);
-  connect(m_mainMenu, &MainMenu::importIFCClicked, this, &MainWindow::importIFCClicked);
-  connect(m_mainMenu, &MainMenu::loadFileClicked, this, &MainWindow::loadFileClicked);
-  connect(m_mainMenu, &MainMenu::changeDefaultLibrariesClicked, this, &MainWindow::changeDefaultLibrariesClicked);
-  connect(m_mainMenu, &MainMenu::saveAsFileClicked, this, &MainWindow::saveAsFileClicked);
-  connect(m_mainMenu, &MainMenu::saveFileClicked, this, &MainWindow::saveFileClicked);
-  connect(m_mainMenu, &MainMenu::revertFileClicked, this, &MainWindow::revertFileClicked);
-  connect(m_mainMenu, &MainMenu::newClicked, this, &MainWindow::newClicked);
-  connect(m_mainMenu, &MainMenu::exitClicked, this, &MainWindow::exitClicked);
-  connect(m_mainMenu, &MainMenu::helpClicked, this, &MainWindow::helpClicked);
-  connect(m_mainMenu, &MainMenu::aboutClicked, this, &MainWindow::aboutClicked);
-  connect(m_mainMenu, &MainMenu::scanForToolsClicked, this, &MainWindow::scanForToolsClicked);
-  connect(m_mainMenu, &MainMenu::showRunManagerPreferencesClicked, this, &MainWindow::showRunManagerPreferencesClicked);
-  connect(m_mainMenu, &MainMenu::showRubyConsoleClicked, this, &MainWindow::showRubyConsoleClicked);
-  connect(m_mainMenu, &MainMenu::toggleUnitsClicked, this, &MainWindow::toggleUnitsClicked);
-  connect(m_mainMenu, &MainMenu::changeMyMeasuresDir, this, &MainWindow::changeMyMeasuresDir);
-  connect(m_mainMenu, &MainMenu::applyMeasureClicked, this, &MainWindow::applyMeasureClicked);
-  connect(m_mainMenu, &MainMenu::downloadMeasuresClicked, this, &MainWindow::downloadMeasuresClicked);
-  connect(m_mainMenu, &MainMenu::changeBclLogin, this, &MainWindow::changeBclLogin);
-  connect(m_mainMenu, &MainMenu::configureProxyClicked, this, &MainWindow::configureProxyClicked);
-  connect(this, &MainWindow::enableRevertToSaved, m_mainMenu, &MainMenu::enableRevertToSavedAction);
-  connect(this, &MainWindow::enableFileImports, m_mainMenu, &MainMenu::enableFileImportActions);
-  connect(this, &MainWindow::enablePreferences, m_mainMenu, &MainMenu::enablePreferencesActions);
-  connect(this, &MainWindow::enableComponentsMeasures, m_mainMenu, &MainMenu::enableComponentsMeasuresActions);
-=======
   auto mainMenu = new MainMenu(m_displayIP, m_isPlugin);
   connect(mainMenu, &MainMenu::toggleUnitsClicked, this, &MainWindow::toggleUnits);
   connect(mainMenu, &MainMenu::downloadComponentsClicked, this, &MainWindow::downloadComponentsClicked);
@@ -174,7 +136,6 @@ MainWindow::MainWindow(bool isPlugin, QWidget *parent) :
   connect(mainMenu, &MainMenu::changeBclLogin, this, &MainWindow::changeBclLogin);
   connect(mainMenu, &MainMenu::configureProxyClicked, this, &MainWindow::configureProxyClicked);
   connect(this, &MainWindow::enableRevertToSaved, mainMenu, &MainMenu::enableRevertToSavedAction);
->>>>>>> develop
 }
 
 QSize MainWindow::sizeHint() const
