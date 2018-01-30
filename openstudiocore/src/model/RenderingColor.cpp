@@ -167,7 +167,7 @@ namespace detail {
     std::stringstream stream;
     stream << "#"
             << std::setfill ('0') << std::setw(6) << std::uppercase
-            << std::hex << renderingRedValue()*256*256 + renderingGreenValue()*256 + renderingBlueValue();
+            << std::hex << renderingRedValue()*65536 + renderingGreenValue()*256 + renderingBlueValue();
 
     std::string result = stream.str();
     OS_ASSERT(result.size() == 7);
