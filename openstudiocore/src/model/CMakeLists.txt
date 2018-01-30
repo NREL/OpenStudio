@@ -43,6 +43,9 @@ set(${target_name}_src
   ModelMerger.cpp
 
   ConcreteModelObjects.hpp
+  AdditionalProperties.hpp
+  AdditionalProperties_Impl.hpp
+  AdditionalProperties.cpp
   AirConditionerVariableRefrigerantFlow.hpp
   AirConditionerVariableRefrigerantFlow_Impl.hpp
   AirConditionerVariableRefrigerantFlow.cpp
@@ -1537,6 +1540,7 @@ if(UNIX OR MINGW)
 endif()
 
 set(${target_name}_test_src
+  test/AdditionalProperties_GTest.cpp
   test/AirConditionerVariableRefrigerantFlow_GTest.cpp
   test/AirGap_GTest.cpp
   test/AirLoopHVACOutdoorAirSystem_GTest.cpp

@@ -60,6 +60,8 @@ class OutputVariable;
 class Meter;
 class Connection;
 
+class AdditionalProperties;
+
 namespace detail {
 
   class Model_Impl;
@@ -211,6 +213,9 @@ namespace detail {
     /// REIMPLEMENT IN ALL CONCRETE MODEL OBJECTS (AND NOT IN ABSTRACT BASE CLASSES).
     virtual IddObjectType iddObjectType() const=0;
 
+    /** Returns this object's additional properties, constructing a new object if necessary. */
+    AdditionalProperties additionalProperties() const;
+    
     //@}
     /** @name Setters */
     //@{

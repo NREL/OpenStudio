@@ -42,7 +42,8 @@
 #include "CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp"
 #include "CoilPerformanceDXCooling.hpp"
 #include "CoilPerformanceDXCooling_Impl.hpp"
-
+#include "AdditionalProperties.hpp"
+#include "AdditionalProperties_Impl.hpp"
 
 #include "ScheduleTypeRegistry.hpp"
 #include "Schedule.hpp"
@@ -1129,6 +1130,34 @@ namespace detail {
   std::vector<ScheduleTypeKey> ModelObject_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
     return std::vector<ScheduleTypeKey>();
   }
+  
+  AdditionalProperties ModelObject_Impl::additionalProperties() const {
+    AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
+    if (candidates.size() > 1) {
+      for (unsigned i = 1, n = candidates.size(); i < n; ++i) {
+        candidates[i].remove();
+      }
+      LOG(Warn,"Removed extraneous ModelObjectAdditionalProperties objects pointing to "
+          << briefDescription() << ".");
+    }
+    if (candidates.size() == 1) { return candidates[0]; }
+    return AdditionalProperties(getObject<ModelObject>());
+  }
+  
+  /*
+  std::vector<ModelObject> ModelObject_Impl::children() const {
+
+    vector<ModelObject> results(castVector<ModelObject>(getObject<ModelObject>().getModelObjectSources<AdditionalProperties>()));
+
+    return results;
+  }
+  
+  std::vector<IddObjectType> ModelObject_Impl::allowableChildTypes() const {
+    IddObjectTypeVector result;
+    result.push_back(AdditionalProperties::iddObjectType());
+    return result;
+  }
+  */
 
 } // detail
 
@@ -1308,6 +1337,10 @@ OptionalParentObject ModelObject::parent() const
 bool ModelObject::setParent(ParentObject& newParent)
 {
   return getImpl<detail::ModelObject_Impl>()->setParent(newParent);
+}
+
+AdditionalProperties ModelObject::additionalProperties() const {
+  return getImpl<detail::ModelObject_Impl>()->additionalProperties();
 }
 
 ModelObject::ModelObject(IddObjectType type, const Model& model, bool fastName)

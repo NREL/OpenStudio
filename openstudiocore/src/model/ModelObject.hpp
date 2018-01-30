@@ -68,6 +68,8 @@ class OutputVariable;
 class OutputMeterMeter;
 class Connection;
 
+class AdditionalProperties;
+
 namespace detail {
   class Model_Impl;
   class ModelObject_Impl;
@@ -271,6 +273,9 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
    */
   IddObjectType iddObjectType() const;
 
+  /** Returns this object's additional properties, constructing a new object if necessary. */
+  AdditionalProperties additionalProperties() const;
+  
   //@}
   /** @name Setters */
   //@{
