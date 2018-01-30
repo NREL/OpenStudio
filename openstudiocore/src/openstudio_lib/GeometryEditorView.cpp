@@ -50,6 +50,12 @@
 #include "../model/ShadingSurfaceGroup_Impl.hpp"
 #include "../model/Site.hpp"
 #include "../model/Site_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
+#include "../model/ShadingSurface.hpp"
+#include "../model/ShadingSurface_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Checksum.hpp"
@@ -250,7 +256,7 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
     }
 
   } else {
-    if ((model.getConcreteModelObjects<model::Space>().size() > 0) || (model.getConcreteModelObjects<model::ShadingSurfaceGroup>().size() > 0) || (model.getConcreteModelObjects<model::BuildingStory>().size() > 0)){
+    if ((model.getConcreteModelObjects<model::Surface>().size() > 0) || (model.getConcreteModelObjects<model::SubSurface>().size() > 0) || (model.getConcreteModelObjects<model::ShadingSurface>().size() > 0)){
       m_newImportGeometry->setEnabled(false);
       m_view->load(QUrl("qrc:///library/geometry_editor_start.html"));
     } else{
