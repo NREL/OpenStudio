@@ -158,6 +158,66 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SurfaceMatch) {
 
 }
 
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Doors) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan_doors.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  model->save(resourcesPath() / toPath("model/floorplan_doors.osm"), true);
+
+  ThreeJSForwardTranslator ft;
+  ft.modelToThreeJS(*model, true);
+
+  ASSERT_EQ(1u, model->getConcreteModelObjects<Space>().size());
+
+  boost::optional<Space> space1 = model->getConcreteModelObjectByName<Space>("Space 1 - 1");
+  ASSERT_TRUE(space1);
+
+  unsigned numDoors = 0;
+  unsigned numGlassDoors = 0;
+  unsigned numOverheadDoors = 0;
+  double doorArea = 0;
+  double glassDoorArea = 0;
+  double overheadDoorArea = 0;
+
+  for (const auto& surface : space1->surfaces()){
+    for (const auto& subSurface : surface.subSurfaces()){
+      if (subSurface.subSurfaceType() == "Door"){
+        doorArea += subSurface.grossArea();
+        numDoors++;
+      }else if (subSurface.subSurfaceType() == "GlassDoor"){
+        glassDoorArea += subSurface.grossArea();
+        numGlassDoors++;
+      } else if (subSurface.subSurfaceType() == "OverheadDoor"){
+        overheadDoorArea += subSurface.grossArea();
+        numOverheadDoors++;
+      }
+    }
+  }
+
+  EXPECT_EQ(3, numDoors);
+  EXPECT_EQ(3, numGlassDoors);
+  EXPECT_EQ(2, numOverheadDoors);
+
+  EXPECT_NEAR(3, doorArea, 0.01);
+  EXPECT_NEAR(3, glassDoorArea, 0.01);
+  EXPECT_NEAR(2, overheadDoorArea, 0.01);
+
+}
+
 
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
 
