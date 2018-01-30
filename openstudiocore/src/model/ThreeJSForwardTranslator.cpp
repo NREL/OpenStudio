@@ -137,18 +137,6 @@ namespace openstudio
 
     }
 
-    std::string getColorString(const RenderingColor& renderingColor)
-    {
-      std::stringstream stream;
-      stream << "#"
-             << std::setfill ('0') << std::setw(2)
-             << std::hex << renderingColor.renderingRedValue() << renderingColor.renderingGreenValue() << renderingColor.renderingBlueValue();
-
-      std::string result = stream.str();
-      OS_ASSERT(result.size() == 7);
-      return result;
-    }
-
     size_t getVertexIndex(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol = 0.001)
     {
       size_t n = allPoints.size();
@@ -545,7 +533,7 @@ namespace openstudio
           // DLM: how to translate this?
         }
         if (buildingStory.renderingColor()){
-          storyMetaData.setColor(getColorString(buildingStory.renderingColor().get()));
+          storyMetaData.setColor(buildingStory.renderingColor()->colorString());
         }
         modelObjectMetadata.push_back(storyMetaData);
 
@@ -565,7 +553,7 @@ namespace openstudio
 
         ThreeModelObjectMetadata unitMetaData(buildingUnit.iddObjectType().valueDescription(), toString(buildingUnit.handle()), buildingUnit.nameString());
         if (buildingUnit.renderingColor()){
-          unitMetaData.setColor(getColorString(buildingUnit.renderingColor().get()));
+          unitMetaData.setColor(buildingUnit.renderingColor()->colorString());
         }
         modelObjectMetadata.push_back(unitMetaData);
 
@@ -576,7 +564,7 @@ namespace openstudio
       for (const auto& thermalZone : thermalZones){
         ThreeModelObjectMetadata zoneMetaData(thermalZone.iddObjectType().valueDescription(), toString(thermalZone.handle()), thermalZone.nameString());
         if (thermalZone.renderingColor()){
-          zoneMetaData.setColor(getColorString(thermalZone.renderingColor().get()));
+          zoneMetaData.setColor(thermalZone.renderingColor()->colorString());
         }
         modelObjectMetadata.push_back(zoneMetaData);
 
@@ -587,7 +575,7 @@ namespace openstudio
       for (const auto& spaceType : spaceTypes){
         ThreeModelObjectMetadata spaceTypeMetaData(spaceType.iddObjectType().valueDescription(), toString(spaceType.handle()), spaceType.nameString());
         if (spaceType.renderingColor()){
-          spaceTypeMetaData.setColor(getColorString(spaceType.renderingColor().get()));
+          spaceTypeMetaData.setColor(spaceType.renderingColor()->colorString());
         }
         modelObjectMetadata.push_back(spaceTypeMetaData);
 

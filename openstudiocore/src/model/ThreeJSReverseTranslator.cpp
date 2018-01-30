@@ -242,19 +242,7 @@ namespace openstudio
 
     boost::optional<RenderingColor> makeRenderingColor(const std::string& color, Model& model)
     {
-      if (color.size() != 7){
-        return boost::none;
-      }
-
-      int r = std::stoi(color.substr(1, 2), 0, 16);
-      int g = std::stoi(color.substr(3, 2), 0, 16);
-      int b = std::stoi(color.substr(5, 2), 0, 16);
-
-      RenderingColor result(model);
-      result.setRenderingRedValue(r);
-      result.setRenderingGreenValue(g);
-      result.setRenderingBlueValue(b);
-      return result;
+      return RenderingColor::fromColorString(color, model);
     }
 
     boost::optional<Model> ThreeJSReverseTranslator::modelFromThreeJS(const ThreeScene& scene)
