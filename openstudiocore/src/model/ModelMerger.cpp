@@ -55,6 +55,8 @@
 #include "Space_Impl.hpp"
 #include "DefaultConstructionSet.hpp"
 #include "DefaultConstructionSet_Impl.hpp"
+#include "DefaultScheduleSet.hpp"
+#include "DefaultScheduleSet_Impl.hpp"
 #include "ShadingSurfaceGroup.hpp"
 #include "InteriorPartitionSurfaceGroup.hpp"
 #include "DaylightingControl.hpp"
@@ -330,9 +332,43 @@ namespace openstudio
 
       currentThermalZone.setName(newThermalZone.nameString());
 
-      // DLM: TODO multiplier
-      // DLM: TODO ceilingHeight
-      // DLM: TODO volume
+      // rendering color
+      boost::optional<RenderingColor> newColor = newThermalZone.renderingColor();
+      if (newColor){
+        boost::optional<RenderingColor> currentColor = currentThermalZone.renderingColor();
+        if (currentColor){
+          currentColor->setRenderingRedValue(newColor->renderingRedValue());
+          currentColor->setRenderingGreenValue(newColor->renderingGreenValue());
+          currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
+          currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
+        } else{
+          boost::optional<RenderingColor> currentColor = RenderingColor::fromColorString(newColor->colorString(), currentThermalZone.model());
+          OS_ASSERT(currentColor);
+          currentThermalZone.setRenderingColor(*currentColor);
+        }
+      }
+
+      // multiplier
+      if (newThermalZone.isMultiplierDefaulted()){
+        currentThermalZone.resetMultiplier();
+      } else{
+        currentThermalZone.setMultiplier(newThermalZone.multiplier());
+      }
+
+      // ceilingHeight
+      if (newThermalZone.isCeilingHeightDefaulted() || newThermalZone.isCeilingHeightAutocalculated()){
+        currentThermalZone.resetCeilingHeight();
+      } else{
+        currentThermalZone.setCeilingHeight(newThermalZone.ceilingHeight());
+      }
+
+      // volume
+      if (newThermalZone.isVolumeDefaulted() || newThermalZone.isVolumeAutocalculated()){
+        currentThermalZone.resetVolume();
+      } else{
+        currentThermalZone.setVolume(newThermalZone.volume());
+      }
+
       // DLM: TODO zoneInsideConvectionAlgorithm
       // DLM: TODO zoneOutsideConvectionAlgorithm
       // DLM: TODO zoneConditioningEquipmentListName ?
@@ -365,13 +401,50 @@ namespace openstudio
         currentSpaceType.resetDefaultConstructionSet();
       }
 
-      // DLM: TODO default schedule set
+      // default schedule set
+      if (boost::optional<DefaultScheduleSet> newDefaultScheduleSet = newSpaceType.defaultScheduleSet()){
+        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultScheduleSet);
+        if (currentObject){
+          DefaultScheduleSet currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
+          currentSpaceType.setDefaultScheduleSet(currentDefaultScheduleSet);
+        } else{
+          currentSpaceType.resetDefaultScheduleSet();
+        }
+      } else{
+        currentSpaceType.resetDefaultScheduleSet();
+      }
 
-      // DLM: TODO rendering color
+      // rendering color
+      boost::optional<RenderingColor> newColor = newSpaceType.renderingColor();
+      if (newColor){
+        boost::optional<RenderingColor> currentColor = currentSpaceType.renderingColor();
+        if (currentColor){
+          currentColor->setRenderingRedValue(newColor->renderingRedValue());
+          currentColor->setRenderingGreenValue(newColor->renderingGreenValue());
+          currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
+          currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
+        } else{
+          boost::optional<RenderingColor> currentColor = RenderingColor::fromColorString(newColor->colorString(), currentSpaceType.model());
+          OS_ASSERT(currentColor);
+          currentSpaceType.setRenderingColor(*currentColor);
+        }
+      }
 
-      // DLM: TODO standardsBuildingType
+      // standardsBuildingType
+      boost::optional<std::string> newStandardsBuildingType = newSpaceType.standardsBuildingType();
+      if (newStandardsBuildingType){
+        currentSpaceType.setStandardsBuildingType(*newStandardsBuildingType);
+      } else {
+        currentSpaceType.resetStandardsBuildingType();
+      }
 
-      // DLM: TODO standardsSpaceType
+      // standardsSpaceType
+      boost::optional<std::string> newStandardsSpaceType = newSpaceType.standardsSpaceType();
+      if (newStandardsSpaceType){
+        currentSpaceType.setStandardsSpaceType(*newStandardsSpaceType);
+      } else {
+        currentSpaceType.resetStandardsSpaceType();
+      }
 
       // bring over child loads
       for (const auto& newChild : newSpaceType.children()){
@@ -390,19 +463,71 @@ namespace openstudio
 
       currentBuildingStory.setName(newBuildingStory.nameString());
 
-      // DLM: TODO nominalZCoordinate() const;
+      // rendering color
+      boost::optional<RenderingColor> newColor = newBuildingStory.renderingColor();
+      if (newColor){
+        boost::optional<RenderingColor> currentColor = currentBuildingStory.renderingColor();
+        if (currentColor){
+          currentColor->setRenderingRedValue(newColor->renderingRedValue());
+          currentColor->setRenderingGreenValue(newColor->renderingGreenValue());
+          currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
+          currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
+        } else{
+          boost::optional<RenderingColor> currentColor = RenderingColor::fromColorString(newColor->colorString(), currentBuildingStory.model());
+          OS_ASSERT(currentColor);
+          currentBuildingStory.setRenderingColor(*currentColor);
+        }
+      }
 
-      // DLM: TODO nominalFloortoFloorHeight() const;
+      // nominalZCoordinate
+      boost::optional<double> newNominalZCoordinate = newBuildingStory.nominalZCoordinate();
+      if (newNominalZCoordinate){
+        currentBuildingStory.setNominalZCoordinate(*newNominalZCoordinate);
+      } else {
+        currentBuildingStory.resetNominalZCoordinate();
+      }
 
-      // DLM: TODO nominalFloortoCeilingHeight() const;
+      // nominalFloortoFloorHeight
+      boost::optional<double> newNominalFloortoFloorHeight = newBuildingStory.nominalFloortoFloorHeight();
+      if (newNominalFloortoFloorHeight){
+        currentBuildingStory.setNominalFloortoFloorHeight(*newNominalFloortoFloorHeight);
+      } else {
+        currentBuildingStory.resetNominalFloortoFloorHeight();
+      }
 
-      // DLM: TODO spaces() const;
+      // nominalFloortoCeilingHeight
+      boost::optional<double> newNominalFloortoCeilingHeight = newBuildingStory.nominalFloortoCeilingHeight();
+      if (newNominalFloortoCeilingHeight){
+        currentBuildingStory.setNominalFloortoCeilingHeight(*newNominalFloortoCeilingHeight);
+      } else {
+        currentBuildingStory.resetNominalFloortoCeilingHeight();
+      }
 
-      // DLM: TODO defaultConstructionSet() const;
+      //default construction set.
+      if (boost::optional<DefaultConstructionSet> newDefaultConstructionSet = newBuildingStory.defaultConstructionSet()){
+        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultConstructionSet);
+        if (currentObject){
+          DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
+          currentBuildingStory.setDefaultConstructionSet(currentDefaultConstructionSet);
+        } else{
+          currentBuildingStory.resetDefaultConstructionSet();
+        }
+      } else{
+        currentBuildingStory.resetDefaultConstructionSet();
+      }
 
-      // DLM: TODO defaultScheduleSet() const;
-
-      // DLM: TODO renderingColor() const;
+      // default schedule set
+      if (boost::optional<DefaultScheduleSet> newDefaultScheduleSet = newBuildingStory.defaultScheduleSet()){
+        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultScheduleSet);
+        if (currentObject){
+          DefaultScheduleSet currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
+          currentBuildingStory.setDefaultScheduleSet(currentDefaultScheduleSet);
+        } else{
+          currentBuildingStory.resetDefaultScheduleSet();
+        }
+      } else{
+        currentBuildingStory.resetDefaultScheduleSet();
+      }
 
     }
 
@@ -416,11 +541,24 @@ namespace openstudio
 
       currentBuildingUnit.setName(newBuildingUnit.nameString());
 
-      // DLM: TODO renderingColor() const;
+      // rendering color
+      boost::optional<RenderingColor> newColor = newBuildingUnit.renderingColor();
+      if (newColor){
+        boost::optional<RenderingColor> currentColor = currentBuildingUnit.renderingColor();
+        if (currentColor){
+          currentColor->setRenderingRedValue(newColor->renderingRedValue());
+          currentColor->setRenderingGreenValue(newColor->renderingGreenValue());
+          currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
+          currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
+        } else{
+          boost::optional<RenderingColor> currentColor = RenderingColor::fromColorString(newColor->colorString(), currentBuildingUnit.model());
+          OS_ASSERT(currentColor);
+          currentBuildingUnit.setRenderingColor(*currentColor);
+        }
+      }
 
-      // DLM: TODO buildingUnitType() const;
-
-      // DLM: TODO spaces() const;
+      // buildingUnitType
+      currentBuildingUnit.setBuildingUnitType(newBuildingUnit.buildingUnitType());
 
       // DLM: TODO featureNames() const;
     }
