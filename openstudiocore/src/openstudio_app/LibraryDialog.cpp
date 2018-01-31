@@ -28,6 +28,7 @@
 
 #include "./LibraryDialog.hpp"
 #include "../utilities/core/Path.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QListWidget>
@@ -41,8 +42,8 @@
 
 namespace openstudio {
 
-LibraryDialog::LibraryDialog(std::vector<openstudio::path> paths, std::vector<openstudio::path> defaultPaths)
-  : QDialog(), m_defaultPaths(defaultPaths) 
+LibraryDialog::LibraryDialog(std::vector<openstudio::path> paths, std::vector<openstudio::path> defaultPaths, const openstudio::path & resourcesPath)
+  : QDialog(), m_defaultPaths(defaultPaths), m_resourcesPath(resourcesPath)
 {
   auto mainLayout = new QVBoxLayout();
   setLayout(mainLayout);
@@ -89,7 +90,7 @@ LibraryDialog::LibraryDialog(std::vector<openstudio::path> paths, std::vector<op
 
 void LibraryDialog::onAdd() {
   auto fileName = QFileDialog::getOpenFileName(nullptr,
-      tr("Select OpenStudio Library"), QDir::homePath(), tr("OpenStudio Files (*.osm)"));
+      tr("Select OpenStudio Library"), toQString(m_resourcesPath), tr("OpenStudio Files (*.osm)"));
 
   if( ! fileName.isNull() ) {
     m_list->addItem(fileName);
