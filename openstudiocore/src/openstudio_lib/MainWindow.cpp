@@ -136,6 +136,9 @@ MainWindow::MainWindow(bool isPlugin, QWidget *parent) :
   connect(mainMenu, &MainMenu::changeBclLogin, this, &MainWindow::changeBclLogin);
   connect(mainMenu, &MainMenu::configureProxyClicked, this, &MainWindow::configureProxyClicked);
   connect(this, &MainWindow::enableRevertToSaved, mainMenu, &MainMenu::enableRevertToSavedAction);
+  connect(this, &MainWindow::enableFileImports, mainMenu, &MainMenu::enableFileImportActions);
+  connect(this, &MainWindow::enablePreferences, mainMenu, &MainMenu::enablePreferencesActions);
+  connect(this, &MainWindow::enableComponentsMeasures, mainMenu, &MainMenu::enableComponentsMeasuresActions);
 }
 
 QSize MainWindow::sizeHint() const
