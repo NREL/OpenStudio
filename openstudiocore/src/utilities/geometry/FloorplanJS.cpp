@@ -96,9 +96,11 @@ namespace openstudio{
     }
     m_data.removeMember("construction_set_id");
 
-    //window_id
+    //windows::window_definition_id
 
-    //daylighting_control_id
+    //daylighting_controls::daylighting_control_definition_id
+
+    //doors::door_definition_id
 
   }
 
@@ -508,9 +510,12 @@ namespace openstudio{
     std::vector<Point3d> windowCenterVertices;
     std::vector<std::string> windowDefinitionIds;
     std::vector<Point3d> daylightingControlVertices;
+    std::vector<Point3d> doorCenterVertices;
+    std::vector<std::string> doorDefinitionIds;
 
     const Json::Value windowDefinitions = m_value.get("window_definitions", Json::arrayValue);
     const Json::Value daylightingControlDefinitions = m_value.get("daylighting_control_definitions", Json::arrayValue);
+    const Json::Value doorDefinitions = m_value.get("door_definitions", Json::arrayValue);
 
     // get all the windows on this story
     std::map<std::string, std::vector<Json::Value> > edgeIdToWindowsMap;
@@ -522,6 +527,18 @@ namespace openstudio{
         edgeIdToWindowsMap[edgeId] = std::vector<Json::Value>();
       }
       edgeIdToWindowsMap[edgeId].push_back(window);
+    }
+
+    // get all the doors on this story
+    std::map<std::string, std::vector<Json::Value> > edgeIdToDoorsMap;
+    for (const auto& door : story.get("doors", Json::arrayValue)){
+      assertKeyAndType(door, "edge_id", Json::stringValue);
+
+      std::string edgeId = door.get("edge_id", "").asString();
+      if (edgeIdToDoorsMap.find(edgeId) == edgeIdToDoorsMap.end()){
+        edgeIdToDoorsMap[edgeId] = std::vector<Json::Value>();
+      }
+      edgeIdToDoorsMap[edgeId].push_back(door);
     }
 
     // get the face
@@ -593,6 +610,34 @@ namespace openstudio{
               }
             }
           }
+
+          // check if there are doors on this edge
+          if (edgeIdToDoorsMap.find(edgeId) != edgeIdToDoorsMap.end()){
+            std::vector<Json::Value> doors = edgeIdToDoorsMap[edgeId];
+            for (const auto& door : doors){
+              assertKeyAndType(door, "door_definition_id", Json::stringValue);
+              std::string doorDefinitionId = door.get("door_definition_id", "").asString();
+
+              std::vector<double> alphas;
+              if (checkKeyAndType(door, "alpha", Json::realValue)){
+                alphas.push_back(door.get("alpha", 0.0).asDouble());
+              } else if (checkKeyAndType(door, "alpha", Json::arrayValue)){
+                Json::Value temp = door.get("alpha", Json::arrayValue);
+                Json::ArrayIndex tempN = temp.size();
+                for (Json::ArrayIndex tempIdx = 0; tempIdx < tempN; ++tempIdx){
+                  alphas.push_back(temp[tempIdx].asDouble());
+                }
+              }
+
+              for (const auto& alpha : alphas){
+                double x = (1.0 - alpha) * vertex1->get("x", 0.0).asDouble() + alpha * vertex2->get("x", 0.0).asDouble();
+                double y = (1.0 - alpha) * vertex1->get("y", 0.0).asDouble() + alpha * vertex2->get("y", 0.0).asDouble();
+
+                doorDefinitionIds.push_back(doorDefinitionId);
+                doorCenterVertices.push_back(Point3d(lengthToMeters*x, lengthToMeters*y, 0.0));
+              }
+            }
+          }
         }
       }
     }
@@ -653,6 +698,7 @@ namespace openstudio{
 
     // create each wall
     std::set<unsigned> mappedWindows;
+    std::set<unsigned> mappedDoors;
     for (unsigned i = 1; i <= numPoints; ++i){
       Point3dVector wallVertices;
       wallVertices.push_back(Point3d(faceVertices[i - 1].x(), faceVertices[i - 1].y(), maxZ));
@@ -671,6 +717,7 @@ namespace openstudio{
       Vector3d crossVector = upVector.cross(edgeVector);
 
       Point3dVectorVector allFinalWindowVertices;
+      std::vector<std::string> allFinalWindowTypes;
       Point3dVectorVector allFinalShadeVertices;
       std::vector<unsigned> allFinalShadeParentSubSurfaceIndices;
 
@@ -692,18 +739,17 @@ namespace openstudio{
                 windowDefinitionMode = windowDefinition->get("window_definition_mode", "").asString();
               }
 
-			        //"name": "Single Window",
-			        //"window_definition_type": "Single Window",
-			        //"wwr": null,
-			        //"sill_height": 3,
-			        //"window_spacing": null,
-			        //"height": 4,
-			        //"width": 2,
-			        //"overhang_projection_factor": 0.5,
-			        //"fin_projection_factor": 0.5,
-			        //"type": "window_definitions"
-
-              // DLM: TODO fins and overhangs
+              // "Fixed","Operable"
+              std::string windowType = "FixedWindow";
+              if (checkKeyAndType(*windowDefinition, "window_type", Json::stringValue)){
+                windowType = windowDefinition->get("window_type", windowType).asString();
+              }
+              if (istringEqual(windowType, "Fixed")){
+                windowType = "FixedWindow";
+              } else if (istringEqual(windowType, "Operable")){
+                windowType = "OperableWindow";
+              }
+              allFinalWindowTypes.push_back(windowType);
 
               if (istringEqual("Single Window", windowDefinitionMode) || istringEqual("Repeating Windows", windowDefinitionMode)){
                 assertKeyAndType(*windowDefinition, "sill_height", Json::realValue);
@@ -821,11 +867,65 @@ namespace openstudio{
         }
       }
 
+      Point3dVectorVector allFinalDoorVertices;
+      std::vector<std::string> allFinalDoorTypes;
+
+      size_t doorN = doorCenterVertices.size();
+      OS_ASSERT(doorN == doorDefinitionIds.size());
+      for (unsigned doorIdx = 0; doorIdx < doorN; ++doorIdx){
+        if (mappedDoors.find(doorIdx) == mappedDoors.end()){
+          if (getDistancePointToLineSegment(doorCenterVertices[doorIdx], testSegment) < tol){
+
+            // get door definition
+
+            const Json::Value* doorDefinition = findById(doorDefinitions, doorDefinitionIds[doorIdx]);
+            if (doorDefinition){
+
+              // "Door","Glass Door","Overhead Door"
+              std::string doorType = "Door";
+              if (checkKeyAndType(*doorDefinition, "door_type", Json::stringValue)){
+                doorType = doorDefinition->get("door_type", doorType).asString();
+              }
+              if (istringEqual(doorType, "Glass Door")){
+                doorType = "GlassDoor";
+              } else if (istringEqual(doorType, "Overhead Door")){
+                doorType = "OverheadDoor";
+              }
+              allFinalDoorTypes.push_back(doorType);
+
+              assertKeyAndType(*doorDefinition, "height", Json::realValue);
+              assertKeyAndType(*doorDefinition, "width", Json::realValue);
+
+              double height = lengthToMeters * doorDefinition->get("height", 0.0).asDouble();
+              double width = lengthToMeters * doorDefinition->get("width", 0.0).asDouble();
+
+              Vector3d widthVector = edgeVector;
+              widthVector.setLength(0.5*width);
+              Point3d door1 = doorCenterVertices[doorIdx] + widthVector;
+              widthVector.setLength(-0.5*width);
+              Point3d doorw2 = doorCenterVertices[doorIdx] + widthVector;
+
+              Point3dVector doorVertices;
+              doorVertices.push_back(Point3d(door1.x(), door1.y(), height));
+              doorVertices.push_back(Point3d(door1.x(), door1.y(), 0.0));
+              doorVertices.push_back(Point3d(doorw2.x(), doorw2.y(), 0.0));
+              doorVertices.push_back(Point3d(doorw2.x(), doorw2.y(), height));
+
+              size_t parentSubSurfaceIndex = allFinalDoorVertices.size();
+              allFinalDoorVertices.push_back(doorVertices);
+
+            }
+
+            mappedDoors.insert(doorIdx);
+          }
+        }
+      }
+
       Point3dVectorVector allFinalWallVertices;
       unsigned finalWallFaceFormat = wallFaceFormat;
       if (openstudioFormat){
         allFinalWallVertices.push_back(wallVertices);
-      } else if (allFinalWindowVertices.empty()){
+      } else if (allFinalWindowVertices.empty() && allFinalDoorVertices.empty()){
         allFinalWallVertices.push_back(wallVertices);
       } else{
         finalWallFaceFormat =  0; // triangle
@@ -840,6 +940,9 @@ namespace openstudio{
         for (const auto& finalWindowVertices : allFinalWindowVertices){
           faceSubVertices.push_back(reverse(tInv*finalWindowVertices));
         }
+        for (const auto& finalDoorVertices : allFinalDoorVertices){
+          faceSubVertices.push_back(reverse(tInv*finalDoorVertices));
+        }
 
         Point3dVectorVector finalFaceVertices = computeTriangulation(faceVertices, faceSubVertices, tol);
         for (const auto& finalFaceVerts : finalFaceVertices) {
@@ -853,8 +956,19 @@ namespace openstudio{
       parentSurfaceName = makeSurface(story, spaceOrShading, "", "", belowFloorPlenum, aboveCeilingPlenum, "Wall", allFinalWallVertices, finalWallFaceFormat, geometries, sceneChildren, 0, false);
 
       std::vector<std::string> parentSubSurfaceNames;
-      for (const auto& finalWindowVertices : allFinalWindowVertices){
-        std::string parentSubSurfaceName = makeSurface(story, spaceOrShading, parentSurfaceName, "", belowFloorPlenum, aboveCeilingPlenum, "FixedWindow", Point3dVectorVector(1,finalWindowVertices), wallFaceFormat, geometries, sceneChildren, 0, false);
+      size_t finalWindowN = allFinalWindowVertices.size();
+      OS_ASSERT(finalWindowN == allFinalWindowTypes.size());
+      for (size_t finalWindowIdx = 0; finalWindowIdx < finalWindowN; ++finalWindowIdx){
+        const auto& finalWindowVertices = allFinalWindowVertices[finalWindowIdx];
+        std::string parentSubSurfaceName = makeSurface(story, spaceOrShading, parentSurfaceName, "", belowFloorPlenum, aboveCeilingPlenum, allFinalWindowTypes[finalWindowIdx], Point3dVectorVector(1,finalWindowVertices), wallFaceFormat, geometries, sceneChildren, 0, false);
+        parentSubSurfaceNames.push_back(parentSubSurfaceName);
+      }
+
+      size_t finalDoorN = allFinalDoorVertices.size();
+      OS_ASSERT(finalDoorN == allFinalDoorTypes.size());
+      for (size_t finalDoorIdx = 0; finalDoorIdx < finalDoorN; ++finalDoorIdx){
+        const auto& finalDoorVertices = allFinalDoorVertices[finalDoorIdx];
+        std::string parentSubSurfaceName = makeSurface(story, spaceOrShading, parentSurfaceName, "", belowFloorPlenum, aboveCeilingPlenum, allFinalDoorTypes[finalDoorIdx], Point3dVectorVector(1,finalDoorVertices), wallFaceFormat, geometries, sceneChildren, 0, false);
         parentSubSurfaceNames.push_back(parentSubSurfaceName);
       }
 
