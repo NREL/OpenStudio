@@ -243,6 +243,7 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
   default_sch_set = nil
   unless is_Thai_library == true
 	default_sch_set = OpenStudio::Model::DefaultScheduleSet.new(model)
+  unless is_Thai_library == true
 	default_sch_set.setName("#{name} Schedule Set")
   else
 	default_sch_set = get_default_sch_from_lib("#{building_type} Schedule Set", model);
