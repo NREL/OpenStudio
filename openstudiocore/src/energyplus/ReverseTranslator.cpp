@@ -90,7 +90,8 @@ boost::optional<model::Model> ReverseTranslator::loadModel(const openstudio::pat
 
     if (!idfFile->isValid(StrictnessLevel::Draft)){
 
-      LOG(Error, "Idf file at path ='" << toString(path) << "' is not valid to draft strictness");
+      LOG(Error, "Idf file at path ='" << toString(path) << "' is not valid to draft strictness.");
+      LOG(Error, "Check that IDF is of correct version and that all fields are valid against Energy+.idd.");
       LOG(Error, idfFile->validityReport(StrictnessLevel::Draft));
       return boost::none;
 
