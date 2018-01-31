@@ -212,10 +212,49 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Doors) {
   EXPECT_EQ(3, numGlassDoors);
   EXPECT_EQ(2, numOverheadDoors);
 
-  EXPECT_NEAR(3, doorArea, 0.01);
-  EXPECT_NEAR(3, glassDoorArea, 0.01);
-  EXPECT_NEAR(2, overheadDoorArea, 0.01);
+  EXPECT_NEAR(convert(3.0*3.0*6.67, "ft^2", "m^2").get(), doorArea, 0.01);
+  EXPECT_NEAR(convert(3.0*6.0*6.67, "ft^2", "m^2").get(), glassDoorArea, 0.01);
+  EXPECT_NEAR(convert(2.0*15.0*8.0, "ft^2", "m^2").get(), overheadDoorArea, 0.01);
 
+  Model model2;
+  ModelMerger merger;
+  std::map<UUID, UUID> handleMapping;
+  merger.mergeModels(model2, *model, handleMapping);
+
+  ASSERT_EQ(1u, model->getConcreteModelObjects<Space>().size());
+
+  space1 = model2.getConcreteModelObjectByName<Space>("Space 1 - 1");
+  ASSERT_TRUE(space1);
+
+  numDoors = 0;
+  numGlassDoors = 0;
+  numOverheadDoors = 0;
+  doorArea = 0;
+  glassDoorArea = 0;
+  overheadDoorArea = 0;
+
+  for (const auto& surface : space1->surfaces()){
+    for (const auto& subSurface : surface.subSurfaces()){
+      if (subSurface.subSurfaceType() == "Door"){
+        doorArea += subSurface.grossArea();
+        numDoors++;
+      }else if (subSurface.subSurfaceType() == "GlassDoor"){
+        glassDoorArea += subSurface.grossArea();
+        numGlassDoors++;
+      } else if (subSurface.subSurfaceType() == "OverheadDoor"){
+        overheadDoorArea += subSurface.grossArea();
+        numOverheadDoors++;
+      }
+    }
+  }
+
+  EXPECT_EQ(3, numDoors);
+  EXPECT_EQ(3, numGlassDoors);
+  EXPECT_EQ(2, numOverheadDoors);
+
+  EXPECT_NEAR(convert(3.0*3.0*6.67, "ft^2", "m^2").get(), doorArea, 0.01);
+  EXPECT_NEAR(convert(3.0*6.0*6.67, "ft^2", "m^2").get(), glassDoorArea, 0.01);
+  EXPECT_NEAR(convert(2.0*15.0*8.0, "ft^2", "m^2").get(), overheadDoorArea, 0.01);
 }
 
 

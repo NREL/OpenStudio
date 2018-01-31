@@ -130,8 +130,8 @@ namespace detail {
 
    if (boost::optional<SurfacePropertyExposedFoundationPerimeter> prop = this->surfacePropertyExposedFoundationPerimeter()) {
      result.push_back(prop.get());
-   }   
-   
+   }
+
    return result;
  }
 
@@ -143,6 +143,21 @@ namespace detail {
     }
 
     return ParentObject_Impl::remove();
+  }
+
+  ModelObject Surface_Impl::clone(Model model) const
+  {
+    ModelObject newParentAsModelObject = ModelObject_Impl::clone(model);
+    ParentObject newParent = newParentAsModelObject.cast<ParentObject>();
+    for (ModelObject child : children())
+    {
+      ModelObject newChild = child.clone(model);
+      newChild.setParent(newParent);
+      if (child.optionalCast<SubSurface>()){
+        newChild.cast<SubSurface>().setSubSurfaceType(child.cast<SubSurface>().subSurfaceType());
+      }
+    }
+    return newParentAsModelObject;
   }
 
   std::vector<IddObjectType> Surface_Impl::allowableChildTypes() const
@@ -1208,7 +1223,7 @@ namespace detail {
       OS_ASSERT(test);
     }else if (this->adjacentFoundation()){
       bool test = this->setOutsideBoundaryCondition("Foundation", driverMethod);
-      OS_ASSERT(test);      
+      OS_ASSERT(test);
     }else if (istringEqual("Floor", this->surfaceType())){
       bool test = this->setOutsideBoundaryCondition("Ground", driverMethod);
       OS_ASSERT(test);
@@ -1842,19 +1857,19 @@ namespace detail {
 
     return result;
   }
-  
+
   bool Surface_Impl::setAdjacentFoundation(const FoundationKiva& kiva) {
     bool result = this->setPointer(OS_SurfaceFields::OutsideBoundaryConditionObject, kiva.handle());
     OS_ASSERT(result);
     result = this->setString(OS_SurfaceFields::OutsideBoundaryCondition, "Foundation");
     OS_ASSERT(result);
-    return result;    
+    return result;
   }
-  
+
   boost::optional<FoundationKiva> Surface_Impl::adjacentFoundation() const {
     return getObject<ModelObject>().getModelObjectTarget<FoundationKiva>(OS_SurfaceFields::OutsideBoundaryConditionObject);
   }
-  
+
   void Surface_Impl::resetAdjacentFoundation() {
     boost::optional<FoundationKiva> adjacentFoundation = this->adjacentFoundation();
     if (adjacentFoundation){
@@ -1863,7 +1878,7 @@ namespace detail {
       this->assignDefaultBoundaryCondition();
       this->assignDefaultSunExposure();
       this->assignDefaultWindExposure();
-    }    
+    }
   }
 
   boost::optional<SurfacePropertyExposedFoundationPerimeter> Surface_Impl::createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double exposedPerimeter) {
@@ -1871,12 +1886,12 @@ namespace detail {
     std::vector<SurfacePropertyExposedFoundationPerimeter> props = thisSurface.getModelObjectSources<SurfacePropertyExposedFoundationPerimeter>(SurfacePropertyExposedFoundationPerimeter::iddObjectType());
     if (!props.empty()) {
       return boost::none;
-    }    
-    
+    }
+
     SurfacePropertyExposedFoundationPerimeter prop(thisSurface, exposedPerimeterCalculationMethod, exposedPerimeter);
     return prop;
   }
-  
+
   boost::optional<SurfacePropertyExposedFoundationPerimeter> Surface_Impl::surfacePropertyExposedFoundationPerimeter() const {
     std::vector<SurfacePropertyExposedFoundationPerimeter> props = getObject<ModelObject>().getModelObjectSources<SurfacePropertyExposedFoundationPerimeter>(SurfacePropertyExposedFoundationPerimeter::iddObjectType());
     if (props.empty()) {
@@ -1895,7 +1910,7 @@ namespace detail {
       prop->remove();
     }
   }
-  
+
 } // detail
 
 Surface::Surface(const std::vector<Point3d>& vertices, const Model& model)

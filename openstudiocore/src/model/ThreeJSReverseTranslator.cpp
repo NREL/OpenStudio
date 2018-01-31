@@ -554,10 +554,21 @@ namespace openstudio
               // ensure we can create a plane before calling Surface ctor that might mess up the model
               Plane plane(face);
 
+              bool test;
+
               Surface surface(face, model);
-              surface.setName(name);
+              test = surface.setName(name);
+              if (!test){
+                LOG(Warn, "Could not set Surface name '" << name << "' for Surface '" << surface.nameString() << "'");
+              }
               surface.setSpace(*space);
+              if (!test){
+                LOG(Warn, "Could not set Space '" << space->nameString() << "' for Surface '" << surface.nameString() << "'");
+              }
               surface.setSurfaceType(surfaceType);
+              if (!test){
+                LOG(Warn, "Could not set SurfaceType '" << surfaceType << "' for Surface '" << surface.nameString() << "'");
+              }
 
               if (airWall){
                 surface.setConstruction(getAirWallConstruction(model));
@@ -599,10 +610,21 @@ namespace openstudio
               // ensure we can create a plane before calling Surface ctor that might mess up the model
               Plane plane(face);
 
+              bool test;
+
               SubSurface subSurface(face, model);
-              subSurface.setName(name);
-              subSurface.setSurface(*surface);
-              subSurface.setSubSurfaceType(surfaceType);
+              test = subSurface.setName(name);
+              if (!test){
+                LOG(Warn, "Could not set SubSurface name '" << name << "' for SubSurface '" << subSurface.nameString() << "'");
+              }
+              test = subSurface.setSurface(*surface);
+              if (!test){
+                LOG(Warn, "Could not set SubSurface to '" << surface->nameString() << "' for SubSurface '" << subSurface.nameString() << "'");
+              }
+              test = subSurface.setSubSurfaceType(surfaceType);
+              if (!test){
+                LOG(Warn, "Could not set SubSurfaceType to '" << surfaceType << "' for SubSurface '" << subSurface.nameString() << "'");
+              }
 
               if (airWall){
                 subSurface.setConstruction(getAirWallConstruction(model));
@@ -676,9 +698,17 @@ namespace openstudio
               // ensure we can create a plane before calling Surface ctor that might mess up the model
               Plane plane(face);
 
+              bool test;
+
               ShadingSurface shadingSurface(face, model);
-              shadingSurface.setName(name);
-              shadingSurface.setShadingSurfaceGroup(*shadingSurfaceGroup);
+              test = shadingSurface.setName(name);
+              if (!test){
+                LOG(Warn, "Could not set ShadingSurface name '" << name << "' for ShadingSurface '" << shadingSurface.nameString() << "'");
+              }
+              test = shadingSurface.setShadingSurfaceGroup(*shadingSurfaceGroup);
+              if (!test){
+                LOG(Warn, "Could not set ShadingSurfaceGroup '" << shadingSurfaceGroup->nameString() << "' for ShadingSurface '" << shadingSurface.nameString() << "'");
+              }
 
             } catch (const std::exception&){
               LOG(Warn, "Could not create shading surface for vertices " << face);
