@@ -53,6 +53,8 @@ class QVBoxLayout;
 
 namespace openstudio {
 
+class EMSInspectorView;
+
 namespace model {
 
 class Loop;
@@ -166,6 +168,7 @@ class GenericInspectorView : public BaseInspectorView
   private:
 
   InspectorGadget * m_inspectorGadget;
+  EMSInspectorView * m_emsInspectorView;
 
   signals:
 
