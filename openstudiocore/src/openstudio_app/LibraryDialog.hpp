@@ -12,7 +12,7 @@ class LibraryDialog: public QDialog
 
  public:
 
-  LibraryDialog(std::vector<openstudio::path> paths,std::vector<openstudio::path> defaultPaths);
+  LibraryDialog(std::vector<openstudio::path> paths,std::vector<openstudio::path> defaultPaths, const openstudio::path & resourcesPath);
 
   virtual ~LibraryDialog() {};
 
@@ -27,6 +27,7 @@ class LibraryDialog: public QDialog
 
   QListWidget * m_list;
   std::vector<openstudio::path> m_defaultPaths;
+  openstudio::path m_resourcesPath;
 };
 
 } // openstudio
