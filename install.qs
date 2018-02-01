@@ -14,6 +14,8 @@ Controller.prototype.ComponentSelectionPageCallback = function () {
 }
 
 Controller.prototype.TargetDirectoryPageCallback = function () {
+  var widget = gui.currentPageWidget();
+  widget.TargetDirectoryLineEdit.setText("c:\\openstudio")
   gui.clickButton(buttons.NextButton);
 }
 
