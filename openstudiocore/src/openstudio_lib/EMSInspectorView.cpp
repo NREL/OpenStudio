@@ -30,6 +30,8 @@
 #include "../model/ModelObject.hpp"
 #include "../model/EnergyManagementSystemActuator.hpp"
 #include "../model/EnergyManagementSystemActuator_Impl.hpp"
+#include "../model/EnergyManagementSystemSensor.hpp"
+#include "../model/EnergyManagementSystemSensor_Impl.hpp"
 #include "../model/ParentObject.hpp"
 #include "../model/ParentObject_Impl.hpp"
 #include "../model/Model.hpp"
@@ -87,9 +89,9 @@ class EMSInspectorActuator : public QWidget {
 
     m_isMatchingActuator = [&](const model::EnergyManagementSystemActuator & actuator) {
       bool result = true;
-      if( actuator.actuatedComponentControlType() != names.controlTypeName() ) {
+      if( actuator.actuatedComponentControlType() != m_names.controlTypeName() ) {
         result = false;
-      } else if( actuator.actuatedComponentType() != names.componentTypeName() ) {
+      } else if( actuator.actuatedComponentType() != m_names.componentTypeName() ) {
         result = false;
       }
       return result;
@@ -112,7 +114,12 @@ class EMSInspectorActuator : public QWidget {
       }
     } else {
       for( auto & actuator : actuators ) {
+        std::cout << "m_names.controlTypeName: " << m_names.controlTypeName() << std::endl;
+        std::cout << "m_names.componentTypeName: " << m_names.componentTypeName() << std::endl;
+        std::cout << "actuator.actuatedComponentControlType: " << actuator.actuatedComponentControlType() << std::endl;
+        std::cout << "actuator.actuatedComponentType: " << actuator.actuatedComponentType() << std::endl;
         if( m_isMatchingActuator(actuator) ) {
+          std::cout << "removing" << std::endl;
           actuator.remove();
         }
       }
@@ -126,7 +133,75 @@ class EMSInspectorActuator : public QWidget {
   model::ModelObject m_modelObject;
 };
 
-EMSInspectorView::EMSInspectorView(QWidget* parent) : QWidget(parent) {
+class EMSInspectorSensor : public QWidget {
+
+  public:
+
+  EMSInspectorSensor(const std::string & name, const model::ModelObject & modelObject) : 
+    QWidget(),
+    m_name(name),
+    m_modelObject(modelObject)
+  {
+    setContentsMargins(0,0,0,0);
+
+    auto layout = new QHBoxLayout();
+    layout->setSpacing(10);
+    layout->setMargin(0);
+    layout->setAlignment(Qt::AlignLeft);
+    setLayout(layout);
+
+    auto cb = new QCheckBox(QString::fromStdString(name));
+    connect(cb, &QCheckBox::toggled, this, &EMSInspectorSensor::onToggled);
+    layout->addWidget(cb);
+
+    auto sensors = modelObject.model().getModelObjects<model::EnergyManagementSystemSensor>();
+
+    m_isMatchingSensor= [&](const model::EnergyManagementSystemSensor & sensor) {
+      bool result = true;
+      if( sensor.keyName() != toString(m_modelObject.handle()) ) {
+        result = false;
+      } else if( sensor.outputVariableOrMeterName() != m_name ) {
+        result = false;
+      }
+      return result;
+    };
+
+    auto it = std::find_if(sensors.begin(),sensors.end(),m_isMatchingSensor);
+    if( it != sensors.end() ) {
+      cb->setChecked(true);
+    }
+  }
+
+  private slots:
+
+  void onToggled(bool checked) {
+    auto sensors = m_modelObject.model().getModelObjects<model::EnergyManagementSystemSensor>();
+    if( checked ) {
+      auto it = std::find_if(sensors.begin(),sensors.end(),m_isMatchingSensor);
+      if( it == sensors.end() ) {
+        model::EnergyManagementSystemSensor sensor(m_modelObject.model(),m_name);
+        sensor.setKeyName(toString(m_modelObject.handle()));
+      }
+    } else {
+      for( auto & sensor : sensors ) {
+        if( m_isMatchingSensor(sensor) ) {
+          sensor.remove();
+        }
+      }
+    }
+  }
+
+  private:
+
+  std::function< bool(const model::EnergyManagementSystemSensor &) > m_isMatchingSensor;
+  std::string m_name;
+  model::ModelObject m_modelObject;
+};
+
+EMSInspectorView::EMSInspectorView(QWidget* parent, EMSInspectorView::Type type) : 
+  QWidget(parent),
+  m_type(type)
+{
   setContentsMargins(0,0,0,0);
   m_layout = new QVBoxLayout();
   m_layout->setSpacing(10);
@@ -145,14 +220,26 @@ void EMSInspectorView::layoutModelObject( const model::ModelObject & modelObject
   }
 
   for( const auto & objecti : modelObjects ) {
-    auto label = new EMSInspectorHeader(QString::fromStdString(objecti.nameString()) + " Acuators");
-    m_layout->addWidget(label);
+    if( m_type == Type::ACTUATOR ) {
+      auto label = new EMSInspectorHeader(QString::fromStdString(objecti.nameString()) + " Acuators");
+      m_layout->addWidget(label);
 
-    const auto sensorNames = objecti.emsActuatorNames();
+      const auto actuatorNames = objecti.emsActuatorNames();
 
-    for ( const auto sensor : sensorNames ) {
-      auto actuatorWidget = new EMSInspectorActuator(sensor, objecti);
-      m_layout->addWidget(actuatorWidget);
+      for ( const auto actuator : actuatorNames ) {
+        auto actuatorWidget = new EMSInspectorActuator(actuator, objecti);
+        m_layout->addWidget(actuatorWidget);
+      }
+    } else if( m_type == Type::SENSOR ) {
+      auto label = new EMSInspectorHeader(QString::fromStdString(objecti.nameString()) + " Sensors");
+      m_layout->addWidget(label);
+
+      const auto sensorNames = objecti.outputVariableNames();
+
+      for ( const auto sensor : sensorNames ) {
+        auto sensorWidget = new EMSInspectorSensor(sensor, objecti);
+        m_layout->addWidget(sensorWidget);
+      }
     }
   }
 }

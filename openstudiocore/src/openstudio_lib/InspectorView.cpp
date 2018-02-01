@@ -827,8 +827,13 @@ GenericInspectorView::GenericInspectorView( QWidget * parent )
                               ":images/properties_icon_on.png",
                               ":images/properties_icon_off.png" );
 
-  m_emsInspectorView = new EMSInspectorView();
-  m_libraryTabWidget->addTab( m_emsInspectorView,
+  m_emsActuatorView = new EMSInspectorView(nullptr, EMSInspectorView::Type::ACTUATOR);
+  m_libraryTabWidget->addTab( m_emsActuatorView,
+                              ":images/controller_icon_on.png",
+                              ":images/controller_icon_off.png" );
+
+  m_emsSensorView = new EMSInspectorView(nullptr, EMSInspectorView::Type::SENSOR);
+  m_libraryTabWidget->addTab( m_emsSensorView,
                               ":images/controller_icon_on.png",
                               ":images/controller_icon_off.png" );
 }
@@ -848,8 +853,8 @@ void GenericInspectorView::layoutModelObject( model::ModelObject & modelObject, 
     m_inspectorGadget->setUnitSystem(InspectorGadget::SI);
   }
   m_inspectorGadget->layoutModelObj(modelObject, force, recursive, locked, hideChildren);
-
-  m_emsInspectorView->layoutModelObject(modelObject);
+  m_emsActuatorView->layoutModelObject(modelObject);
+  m_emsSensorView->layoutModelObject(modelObject);
 }
 
 NewPlenumDialog::NewPlenumDialog(QWidget * parent)

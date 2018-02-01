@@ -168,7 +168,8 @@ class GenericInspectorView : public BaseInspectorView
   private:
 
   InspectorGadget * m_inspectorGadget;
-  EMSInspectorView * m_emsInspectorView;
+  EMSInspectorView * m_emsActuatorView;
+  EMSInspectorView * m_emsSensorView;
 
   signals:
 

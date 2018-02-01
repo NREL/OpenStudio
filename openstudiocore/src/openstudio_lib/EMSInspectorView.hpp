@@ -47,7 +47,9 @@ class EMSInspectorView : public QWidget
 
   public:
 
-  EMSInspectorView(QWidget* parent = nullptr);
+  enum class Type { SENSOR, ACTUATOR };
+
+  EMSInspectorView(QWidget* parent = nullptr, EMSInspectorView::Type type = Type::ACTUATOR);
   virtual ~EMSInspectorView() {}
 
   void layoutModelObject( const model::ModelObject & modelObject );
@@ -55,6 +57,7 @@ class EMSInspectorView : public QWidget
   private:
 
   QVBoxLayout * m_layout;
+  Type m_type;
 };
 
 } // openstudio
