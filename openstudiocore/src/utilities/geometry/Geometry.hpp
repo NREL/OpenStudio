@@ -62,8 +62,11 @@ namespace openstudio{
   /// reorder points to upper-left-corner convention
   UTILITIES_API std::vector<Point3d> reorderULC(const std::vector<Point3d>& points);
 
-  /// removes collinear points, tolerance is for length of cross product after normalizing each line segment
+  /// removes collinear points
   UTILITIES_API std::vector<Point3d> removeCollinear(const std::vector<Point3d>& points, double tol = 0.001);
+
+  /// removes collinear points, tolerance is for length of cross product after normalizing each line segment
+  UTILITIES_API std::vector<Point3d> removeCollinearLegacy(const std::vector<Point3d>& points, double tol = 0.001);
 
   /// return distance between two points
   UTILITIES_API double getDistance(const Point3d& point1, const Point3d& point2);

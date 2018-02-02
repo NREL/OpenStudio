@@ -562,7 +562,7 @@ namespace openstudio{
 
     OS_ASSERT(polygon.inners().empty());
 
-    result = removeCollinear(result);
+    result = removeCollinearLegacy(result);
 
     // don't keep repeated vertices
     if (result.front() == result.back()){
@@ -595,7 +595,7 @@ namespace openstudio{
       result.push_back(resultPoint);
     }
 
-    result = removeCollinear(result);
+    result = removeCollinearLegacy(result);
 
     // don't keep repeated vertices
     if (result.front() == result.back()){
@@ -762,7 +762,7 @@ namespace openstudio{
     };
 
     unionVertices = reorderULC(unionVertices);
-    unionVertices = removeCollinear(unionVertices);
+    unionVertices = removeCollinearLegacy(unionVertices);
 
     return unionVertices;
   }
@@ -1160,7 +1160,8 @@ namespace openstudio{
 
     // this uses the Douglas-Peucker algorithm with a max difference of 0 so no non-collinear points will be removed
     // if we want to allow this algorithm to be called with a non-zero value I suggest naming it "approximate" or something
-    boost::geometry::simplify(*bp, out, 0.0);
+    //boost::geometry::simplify(*bp, out, 0.0);
+    boost::geometry::simplify(*bp, out, tol); // points within tol would already be merged
 
     std::vector<Point3d> tmp = verticesFromBoostPolygon(out, allPoints, tol);
 

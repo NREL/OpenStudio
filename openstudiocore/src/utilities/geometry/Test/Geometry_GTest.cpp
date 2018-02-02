@@ -501,14 +501,14 @@ TEST_F(GeometryFixture, ReorderULC2)
   EXPECT_EQ(points1[2], points2[3]);
 }
 
-TEST_F(GeometryFixture, RemoveCollinear)
+TEST_F(GeometryFixture, RemoveCollinearLegacy)
 {
   Point3dVector points;
   points.push_back(Point3d(0,0,0));
   points.push_back(Point3d(0,0,0));
   points.push_back(Point3d(0,0,0));
 
-  Point3dVector testPoints = removeCollinear(points);
+  Point3dVector testPoints = removeCollinearLegacy(points);
   ASSERT_EQ(1u, testPoints.size());
   EXPECT_TRUE(pointEqual(Point3d(0,0,0), testPoints[0]));
 
@@ -517,7 +517,7 @@ TEST_F(GeometryFixture, RemoveCollinear)
   points.push_back(Point3d(1,0,0));
   points.push_back(Point3d(2,0,0));
 
-  testPoints = removeCollinear(points);
+  testPoints = removeCollinearLegacy(points);
   ASSERT_EQ(2u, testPoints.size());
   EXPECT_TRUE(pointEqual(Point3d(0,0,0), testPoints[0]));
   EXPECT_TRUE(pointEqual(Point3d(2,0,0), testPoints[1]));
@@ -532,7 +532,7 @@ TEST_F(GeometryFixture, RemoveCollinear)
   points.push_back(Point3d(0,2,0));
   points.push_back(Point3d(0,1,0));
 
-  testPoints = removeCollinear(points);
+  testPoints = removeCollinearLegacy(points);
   ASSERT_EQ(4u, testPoints.size());
   EXPECT_TRUE(pointEqual(Point3d(0,0,0), testPoints[0]));
   EXPECT_TRUE(pointEqual(Point3d(2,0,0), testPoints[1]));
@@ -545,7 +545,22 @@ TEST_F(GeometryFixture, RemoveCollinear)
   points.push_back(Point3d(2,2,0));
   points.push_back(Point3d(0,2,0));
 
-  testPoints = removeCollinear(points);
+  testPoints = removeCollinearLegacy(points);
+  ASSERT_EQ(4u, testPoints.size());
+  EXPECT_TRUE(pointEqual(Point3d(0,0,0), testPoints[0]));
+  EXPECT_TRUE(pointEqual(Point3d(2,0,0), testPoints[1]));
+  EXPECT_TRUE(pointEqual(Point3d(2,2,0), testPoints[2]));
+  EXPECT_TRUE(pointEqual(Point3d(0,2,0), testPoints[3]));
+
+  points.clear();
+  points.push_back(Point3d(0,0,0));
+  points.push_back(Point3d(1,0,0));
+  points.push_back(Point3d(0,0,0));
+  points.push_back(Point3d(2,0,0));
+  points.push_back(Point3d(2,2,0));
+  points.push_back(Point3d(0,2,0));
+
+  testPoints = removeCollinearLegacy(points);
   ASSERT_EQ(4u, testPoints.size());
   EXPECT_TRUE(pointEqual(Point3d(0,0,0), testPoints[0]));
   EXPECT_TRUE(pointEqual(Point3d(2,0,0), testPoints[1]));

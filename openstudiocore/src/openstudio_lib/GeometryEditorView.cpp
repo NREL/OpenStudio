@@ -229,6 +229,7 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
       // floorplan loaded correctly
 
       // update with current model content
+      // at this point you may have removed objects in the app, so tell updateFloorplanJS to remove missing objects
       model::FloorplanJSForwardTranslator ft;
       m_floorplan = ft.updateFloorplanJS(*m_floorplan, m_model, true);
 

@@ -2749,13 +2749,13 @@ namespace detail {
       result = floors[0].vertices();
 
       // remove collinear points
-      result = removeCollinear(result);
+      result = removeCollinearLegacy(result);
 
       // reorder the points
       result = reorderULC(result);
 
       // remove additional collinear points that occur after reordering
-      result = removeCollinear(result);
+      result = removeCollinearLegacy(result);
 
     }else{
 
@@ -2797,13 +2797,13 @@ namespace detail {
       result.pop_back();
 
       // remove collinear points
-      result = removeCollinear(result);
+      result = removeCollinearLegacy(result);
 
       // reorder the points
       result = reorderULC(result);
 
       // remove additional collinear points that occur after reordering
-      result = removeCollinear(result);
+      result = removeCollinearLegacy(result);
 
       // if result is now empty just quit
       if (result.size() < 3){
@@ -2824,13 +2824,13 @@ namespace detail {
         }
 
         // remove collinear points
-        innerLoop = removeCollinear(innerLoop);
+        innerLoop = removeCollinearLegacy(innerLoop);
 
         // reorder the points
         innerLoop = reorderULC(innerLoop);
 
         // remove additional collinear points that occur after reordering
-        innerLoop = removeCollinear(innerLoop);
+        innerLoop = removeCollinearLegacy(innerLoop);
 
         // if inner loop is now empty just ignore it
         if (innerLoop.size() < 3){
@@ -2852,13 +2852,13 @@ namespace detail {
     }
 
     // remove collinear points
-    result = removeCollinear(result);
+    result = removeCollinearLegacy(result);
 
     // reorder the points
     result = reorderULC(result);
 
     // remove additional collinear points that occur after reordering
-    result = removeCollinear(result);
+    result = removeCollinearLegacy(result);
 
     // if result is now empty just quit
     if (result.size() < 3){
