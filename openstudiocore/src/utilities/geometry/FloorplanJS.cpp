@@ -646,6 +646,7 @@ namespace openstudio{
 
     // simplify the vertices to remove potential duplicate, colinear points
     double tol = 0.001;
+    //std::vector<Point3d> testFaceVertices(faceVertices);
     faceVertices = simplify(faceVertices, false, tol);
 
     size_t numPoints = faceVertices.size();
@@ -672,6 +673,9 @@ namespace openstudio{
     }else{
       roofCeilingFaceFormat = 0; // triangle
       wallFaceFormat = 1; // quad
+      //std::ostringstream ss;
+      //ss << testFaceVertices;
+      //std::string testStr = ss.str();
       allFinalFaceVertices = computeTriangulation(faceVertices, Point3dVectorVector());
     }
 

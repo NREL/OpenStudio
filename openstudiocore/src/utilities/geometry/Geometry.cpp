@@ -179,6 +179,13 @@ namespace openstudio{
 
   std::vector<Point3d> removeCollinear(const Point3dVector& points, double tol)
   {
+    Transformation t = Transformation::alignFace(points);
+    std::vector<Point3d> result = t*simplify(t.inverse()*points, true, tol);
+    return result;
+  }
+
+  std::vector<Point3d> removeCollinearLegacy(const Point3dVector& points, double tol)
+  {
     size_t N = points.size();
     if (N < 3){
       return points;
@@ -505,6 +512,10 @@ namespace openstudio{
       test = pp.Triangulate_MONO(&polys, &resultPolys);
     }
     if (test == 0){
+      //std::stringstream ss;
+      //ss << "Vertices: " << vertices << std::endl;
+      //for (const auto& hole : holes){ ss << "Hole:" << hole << std::endl; }
+      //std::string testStr = ss.str();
       LOG_FREE(Error, "utilities.geometry.computeTriangulation", "Failed to partition polygon");
       return result;
     }
