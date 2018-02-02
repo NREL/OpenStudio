@@ -184,6 +184,7 @@ namespace openstudio{
     return result;
   }
 
+
   std::vector<Point3d> removeCollinearLegacy(const Point3dVector& points, double tol)
   {
     size_t N = points.size();
@@ -227,6 +228,60 @@ namespace openstudio{
       }
     }
 
+    size_t iBegin = 0;
+    size_t iEnd = result.size();
+
+    bool resizeBegin = true;
+    while (resizeBegin){
+      resizeBegin = false;
+      unsigned N = iEnd - iBegin;
+      if (N > 3){
+        Vector3d a = (result[iBegin] - result[iEnd - 1]);
+        Vector3d b = (result[iBegin + 1] - result[iBegin]);
+        if (a.normalize()){
+          if (b.normalize()){
+            double d = a.dot(b);
+            if (d >= 1.0 - tol){
+              iBegin++;
+              resizeBegin = true;
+            }
+          } else{
+            iBegin++;
+            resizeBegin = true;
+          }
+        } else{
+          iBegin++;
+          resizeBegin = true;
+        }
+      }
+    }
+
+    bool resizeEnd = true;
+    while (resizeEnd){
+      resizeEnd = false;
+      unsigned N = iEnd - iBegin;
+      if (N > 3){
+        Vector3d a = (result[iEnd - 1] - result[iEnd - 2]);
+        Vector3d b = (result[iBegin] - result[iEnd - 1]);
+        if (a.normalize()){
+          if (b.normalize()){
+            double d = a.dot(b);
+            if (d >= 1.0 - tol){
+              iEnd--;
+              resizeEnd = true;
+            }
+          } else{
+            iEnd--;
+            resizeEnd = true;
+          }
+        } else{
+          iEnd--;
+          resizeEnd = true;
+        }
+      }
+    }
+
+    result = std::vector<Point3d>(result.begin() + iBegin, result.begin() + iEnd);
     return result;
   }
 

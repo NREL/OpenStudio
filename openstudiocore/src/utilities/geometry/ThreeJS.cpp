@@ -794,8 +794,8 @@ namespace openstudio{
     m_coincidentWithOutsideObject = value.get("coincidentWithOutsideObject", false).asBool();
     m_sunExposure = value.get("sunExposure", "").asString();
     m_windExposure = value.get("windExposure", "").asString();
-    m_illuminanceSetpoint = value.get("illuminanceSetpoint", "").asDouble();
-    m_airWall = value.get("airWall", "").asDouble();
+    m_illuminanceSetpoint = value.get("illuminanceSetpoint", 0.0).asDouble();
+    m_airWall = value.get("airWall", false).asBool();
     //m_belowFloorPlenum = value.get("belowFloorPlenum", "").asBool();
     //m_aboveCeilingPlenum = value.get("aboveCeilingPlenum", "").asBool();
   }

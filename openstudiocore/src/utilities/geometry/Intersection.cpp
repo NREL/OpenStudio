@@ -1147,7 +1147,7 @@ namespace openstudio{
 
     boost::optional<BoostPolygon> bp;
     if (reversed){
-      bp = boostPolygonFromVertices(reverse(reorderULC(vertices)), allPoints, tol);
+      bp = boostPolygonFromVertices(reorderULC(reverse(vertices)), allPoints, tol);
     } else {
       bp = boostPolygonFromVertices(reorderULC(vertices), allPoints, tol);
     }
@@ -1155,6 +1155,8 @@ namespace openstudio{
     if (!bp){
       return std::vector<Point3d>();
     }
+
+    boost::geometry::remove_spikes(*bp);
 
     BoostPolygon out;
 
@@ -1166,7 +1168,7 @@ namespace openstudio{
     std::vector<Point3d> tmp = verticesFromBoostPolygon(out, allPoints, tol);
 
     if (reversed){
-      tmp = reverse(tmp);
+      tmp = reorderULC(reverse(tmp));
     }
 
     if (removeCollinear){
