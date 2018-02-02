@@ -135,6 +135,11 @@ namespace detail {
     return ParentObject_Impl::remove();
   }
 
+  ModelObject SubSurface_Impl::clone(Model model) const
+  {
+    return ParentObject_Impl::clone(model);
+  }
+
   const std::vector<std::string>& SubSurface_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;

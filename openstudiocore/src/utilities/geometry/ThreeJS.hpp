@@ -1,3 +1,4 @@
+
 /***********************************************************************************************************************
  *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
@@ -37,6 +38,7 @@
 #include "../core/Logger.hpp"
 
 #include <vector>
+#include <map>
 #include <boost/optional.hpp>
 
 namespace Json{
@@ -46,12 +48,37 @@ namespace Json{
 namespace openstudio{
 
   class ThreeScene;
+  class ThreeMaterial;
 
   /// enum for materials
   enum ThreeSide{FrontSide = 0, BackSide = 1, DoubleSide = 2};
 
+  /// identifies ThreeJS faces in OpenStudio format (e.g. unlimited number of vertices)
+  UTILITIES_API unsigned openstudioFaceFormatId();
+
   /// convert RGB to unsigned
   UTILITIES_API unsigned toThreeColor(unsigned r, unsigned g, unsigned b);
+
+  /// convert string to unsigned
+  UTILITIES_API unsigned toThreeColor(const std::string& s);
+
+  /// convert object name to material name
+  UTILITIES_API std::string getObjectThreeMaterialName(const std::string& iddObjectType, const std::string& name);
+
+  /// convert surface type to material name
+  UTILITIES_API std::string getSurfaceTypeThreeMaterialName(const std::string& surfaceType);
+
+  /// Create a ThreeMaterial
+  UTILITIES_API ThreeMaterial makeThreeMaterial(const std::string& name, unsigned color, double opacity, unsigned side, unsigned shininess = 50, const std::string type = "MeshPhongMaterial");
+
+  /// Add a ThreeMaterial to a list of materials and map of material name to material
+  UTILITIES_API void addThreeMaterial(std::vector<ThreeMaterial>& materials, std::map<std::string, std::string>& materialMap, const ThreeMaterial& material);
+
+  /// Get a material id out of material map
+  UTILITIES_API std::string getThreeMaterialId(const std::string& materialName, std::map<std::string, std::string>& materialMap);
+
+  /// Create the standard ThreeMaterials
+  UTILITIES_API std::vector<ThreeMaterial> makeStandardThreeMaterials();
 
   /// format a UUID, to limit dependencies UUIDs must be generated outside of this code
   UTILITIES_API std::string toThreeUUID(const std::string& uuid);
@@ -187,6 +214,10 @@ namespace openstudio{
     std::string spaceName() const;
     std::string spaceHandle() const;
 
+    /// Parent shading name if any
+    std::string shadingName() const;
+    std::string shadingHandle() const;
+
     /// ThermalZone name if any
     std::string thermalZoneName() const;
     std::string thermalZoneHandle() const;
@@ -220,6 +251,7 @@ namespace openstudio{
     std::string sunExposure() const;
     std::string windExposure() const;
     double illuminanceSetpoint() const;
+    bool airWall() const;
     //bool plenum() const;
     //bool belowFloorPlenum() const;
     //bool aboveCeilingPlenum() const;
@@ -237,6 +269,8 @@ namespace openstudio{
     void setSubSurfaceHandle(const std::string& s);
     void setSpaceName(const std::string& s);
     void setSpaceHandle(const std::string& s);
+    void setShadingName(const std::string& s);
+    void setShadingHandle(const std::string& s);
     void setThermalZoneName(const std::string& s);
     void setThermalZoneHandle(const std::string& s);
     void setThermalZoneMaterialName(const std::string& s);
@@ -260,6 +294,7 @@ namespace openstudio{
     void setSunExposure(const std::string& s);
     void setWindExposure(const std::string& s);
     void setIlluminanceSetpoint(double d);
+    void setAirWall(bool b);
     //void setBelowFloorPlenum(bool v);
     //void setAboveCeilingPlenum(bool v);
 
@@ -282,6 +317,8 @@ namespace openstudio{
     std::string m_subSurfaceHandle;
     std::string m_spaceName;
     std::string m_spaceHandle;
+    std::string m_shadingName;
+    std::string m_shadingHandle;
     std::string m_thermalZoneName;
     std::string m_thermalZoneHandle;
     std::string m_thermalZoneMaterialName;
@@ -305,6 +342,7 @@ namespace openstudio{
     std::string m_sunExposure;
     std::string m_windExposure;
     double m_illuminanceSetpoint;
+    bool m_airWall;
     //bool m_belowFloorPlenum;
     //bool m_aboveCeilingPlenum;
   };
@@ -390,7 +428,7 @@ namespace openstudio{
     double m_lookAtR;
   };
 
-  /// ThreeModelObjectMetadata includes metadata about an OpenStudio ModelObject
+  /// ThreeModelObjectMetadata includes metadata about an OpenStudio ModelObject not associated with a ThreeSceneChild in the ThreeJS scene
   class UTILITIES_API ThreeModelObjectMetadata{
   public:
 
@@ -403,6 +441,41 @@ namespace openstudio{
     std::string handle() const;
     std::string name() const;
 
+    // applies to general objects
+    std::string color() const;
+    bool setColor(const std::string& c);
+    void resetColor();
+
+    /// applies to Space
+    bool openToBelow() const;
+    bool setOpenToBelow(bool t);
+    void resetOpenToBelow();
+
+    /// applies to Story or Space
+    boost::optional<unsigned> multiplier() const;
+    bool setMultiplier(unsigned mult);
+    void resetMultiplier();
+
+    /// applies to Story
+    boost::optional<double> nominalZCoordinate() const;
+    bool setNominalZCoordinate(double z);
+    void resetNominalZCoordinate();
+
+    /// applies to Story or Space
+    boost::optional<double> belowFloorPlenumHeight() const;
+    bool setBelowFloorPlenumHeight(double height);
+    void resetBelowFloorPlenumHeight();
+
+    /// applies to Story or Space
+    boost::optional<double> floorToCeilingHeight() const;
+    bool setFloorToCeilingHeight(double height);
+    void resetFloorToCeilingHeight();
+
+    /// applies to Story or Space
+    boost::optional<double> aboveCeilingPlenumHeight() const;
+    bool setAboveCeilingPlenumHeight(double height);
+    void resetAboveCeilingPlenumHeight();
+
   private:
     friend class ThreeSceneMetadata;
 
@@ -412,6 +485,14 @@ namespace openstudio{
     std::string m_iddObjectType;
     std::string m_handle;
     std::string m_name;
+    std::string m_color;
+
+    bool m_openToBelow;
+    boost::optional<unsigned> m_multiplier;
+    boost::optional<double> m_nominalZCoordinate;
+    boost::optional<double> m_belowFloorPlenumHeight;
+    boost::optional<double> m_floorToCeilingHeight;
+    boost::optional<double> m_aboveCeilingPlenumHeight;
   };
 
   /// ThreeSceneMetadata includes metadata about an OpenStudio Model Object

@@ -85,18 +85,22 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   QMenu * importMenu = m_fileMenu->addMenu(tr("&Import"));
 
   action = new QAction(tr("&IDF"), this);
+  m_fileImportActions.push_back(action);
   importMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::importClicked, Qt::QueuedConnection);
 
   action = new QAction(tr("&gbXML"), this);
+  m_fileImportActions.push_back(action);
   importMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::importgbXMLClicked, Qt::QueuedConnection);
 
   action = new QAction(tr("&SDD"), this);
+  m_fileImportActions.push_back(action);
   importMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::importSDDClicked, Qt::QueuedConnection);
 
   action = new QAction(tr("I&FC"), this);
+  m_fileImportActions.push_back(action);
   importMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::importIFCClicked, Qt::QueuedConnection);
 
@@ -117,6 +121,8 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   action = new QAction(tr("&Load Library"), this);
   m_fileMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::loadLibraryClicked);
+  m_fileImportActions.push_back(action);
+  //m_preferencesActions.push_back(action); // DLM: I'm unclear if this should be enabled/disabled with preferences or file imports, right now does not matter
 
   if (!m_isPlugin){
 
@@ -141,20 +147,24 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   QMenu * unitsMenu = m_preferencesMenu->addMenu(tr("&Units"));
 
   m_displaySIUnitsAction = new QAction(tr("Metric (&SI)"),this);
+  m_preferencesActions.push_back(m_displaySIUnitsAction);
   m_displaySIUnitsAction->setCheckable(true);
   unitsMenu->addAction(m_displaySIUnitsAction);
   connect(m_displaySIUnitsAction, &QAction::triggered, this, &MainMenu::displaySIUnitsClicked);
 
   m_displayIPUnitsAction = new QAction(tr("English (&I-P)"),this);
+  m_preferencesActions.push_back(m_displayIPUnitsAction);
   m_displayIPUnitsAction->setCheckable(true);
   unitsMenu->addAction(m_displayIPUnitsAction);
   connect(m_displayIPUnitsAction, &QAction::triggered, this, &MainMenu::displayIPUnitsClicked);
 
   action = new QAction(tr("&Change My Measures Directory"),this);
+  m_preferencesActions.push_back(action);
   m_preferencesMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::changeMyMeasuresDir);
 
   action = new QAction(tr("&Change Default Libraries"), this);
+  m_preferencesActions.push_back(action);
   m_preferencesMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::changeDefaultLibrariesClicked);
 
@@ -171,6 +181,7 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   //connect(action, &QAction::triggered, this, &MainMenu::changeBclLogin);
 
   action = new QAction(tr("&Configure Internet Proxy"),this);
+  m_preferencesActions.push_back(action);
   m_preferencesMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::configureProxyClicked);
 
@@ -186,15 +197,18 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   addMenu(m_measureMenu);
 
   action = new QAction(tr("&Apply Measure Now"),this);
+  m_componentsMeasuresActions.push_back(action);
   action->setShortcut(QKeySequence(QKeySequence(tr("Ctrl+M"))));
   m_measureMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::applyMeasureClicked);
 
   action = new QAction(tr("Find &Measures"),this);
+  m_componentsMeasuresActions.push_back(action);
   m_measureMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::downloadMeasuresClicked);
 
   action = new QAction(tr("Find &Components"),this);
+  m_componentsMeasuresActions.push_back(action);
   m_measureMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::downloadComponentsClicked);
 
@@ -233,6 +247,27 @@ void MainMenu::displayIPUnitsClicked()
 void MainMenu::enableRevertToSavedAction(bool enable)
 {
   m_revertToSavedAction->setEnabled(enable);
+}
+
+void MainMenu::enableFileImportActions(bool enable)
+{
+  for (const auto& action : m_fileImportActions){
+    action->setEnabled(enable);
+  }
+}
+
+void MainMenu::enablePreferencesActions(bool enable)
+{
+  for (const auto& action : m_preferencesActions){
+    action->setEnabled(enable);
+  }
+}
+
+void MainMenu::enableComponentsMeasuresActions(bool enable)
+{
+  for (const auto& action : m_componentsMeasuresActions){
+    action->setEnabled(enable);
+  }
 }
 
 } // openstudio

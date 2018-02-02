@@ -63,6 +63,7 @@
 #include "../utilities/geometry/BoundingBox.hpp"
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/ThreeJS.hpp"
 
 #include <QThread>
 
@@ -73,113 +74,12 @@ namespace openstudio
   namespace model
   {
 
-    unsigned ThreeJSForwardTranslator::openstudioFaceFormatId()
-    {
-      return 1024;
-    }
-
-    ThreeMaterial makeMaterial(const std::string& name, unsigned color, double opacity, unsigned side, unsigned shininess = 50, const std::string type = "MeshPhongMaterial")
-    {
-      bool transparent = false;
-      if (opacity < 1){
-        transparent = true;
-      }
-
-      ThreeMaterial result(toThreeUUID(toString(openstudio::createUUID())), name, type,
-        color, color, toThreeColor(0, 0, 0), color, shininess, opacity, transparent, false, side);
-
-      return result;
-    }
-
-    void addMaterial(std::vector<ThreeMaterial>& materials, std::map<std::string, std::string>& materialMap, const ThreeMaterial& material)
-    {
-      materialMap[material.name()] = material.uuid();
-      materials.push_back(material);
-    }
-
-    std::string getMaterialId(const std::string& materialName, std::map<std::string, std::string>& materialMap)
-    {
-      std::map<std::string, std::string>::const_iterator it = materialMap.find(materialName);
-      if (it != materialMap.end()){
-        return it->second;
-      }
-
-      it = materialMap.find("Undefined");
-      if (it != materialMap.end()){
-        return it->second;
-      }
-      OS_ASSERT(false);
-      return "";
+    std::string getObjectThreeMaterialName(const ModelObject& object){
+      return openstudio::getObjectThreeMaterialName(object.iddObjectType().valueDescription(), object.nameString());
     }
 
     void buildMaterials(Model model, std::vector<ThreeMaterial>& materials, std::map<std::string, std::string>& materialMap)
     {
-      // materials from 'openstudio\openstudiocore\ruby\openstudio\sketchup_plugin\lib\interfaces\MaterialsInterface.rb'
-
-      //addMaterial(materials, materialMap, makeMaterial("Undefined", toThreeColor(255, 255, 255), 1, ThreeSide::DoubleSide, 50, "MeshBasicMaterial"));
-      addMaterial(materials, materialMap, makeMaterial("Undefined", toThreeColor(255, 255, 255), 1, ThreeSide::DoubleSide));
-
-      addMaterial(materials, materialMap, makeMaterial("NormalMaterial", toThreeColor(255, 255, 255), 1, ThreeSide::DoubleSide));
-      //addMaterial(materials, materialMap, makeMaterial("NormalMaterial_Ext", toThreeColor(255, 255, 255), 1, ThreeSide::FrontSide, 50, "MeshBasicMaterial"));
-      addMaterial(materials, materialMap, makeMaterial("NormalMaterial_Ext", toThreeColor(255, 255, 255), 1, ThreeSide::FrontSide));
-      addMaterial(materials, materialMap, makeMaterial("NormalMaterial_Int", toThreeColor(255, 0, 0), 1, ThreeSide::BackSide));
-
-      addMaterial(materials, materialMap, makeMaterial("Floor", toThreeColor(128, 128, 128), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Floor_Ext", toThreeColor(128, 128, 128), 1, ThreeSide::FrontSide));
-      addMaterial(materials, materialMap, makeMaterial("Floor_Int", toThreeColor(191, 191, 191), 1, ThreeSide::BackSide));
-
-      addMaterial(materials, materialMap, makeMaterial("Wall", toThreeColor(204, 178, 102), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Wall_Ext", toThreeColor(204, 178, 102), 1, ThreeSide::FrontSide));
-      addMaterial(materials, materialMap, makeMaterial("Wall_Int", toThreeColor(235, 226, 197), 1, ThreeSide::BackSide));
-
-      addMaterial(materials, materialMap, makeMaterial("RoofCeiling", toThreeColor(153, 76, 76), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("RoofCeiling_Ext", toThreeColor(153, 76, 76), 1, ThreeSide::FrontSide));
-      addMaterial(materials, materialMap, makeMaterial("RoofCeiling_Int", toThreeColor(202, 149, 149), 1, ThreeSide::BackSide));
-
-      addMaterial(materials, materialMap, makeMaterial("Window", toThreeColor(102, 178, 204), 0.6, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Window_Ext", toThreeColor(102, 178, 204), 0.6, ThreeSide::FrontSide));
-      addMaterial(materials, materialMap, makeMaterial("Window_Int", toThreeColor(192, 226, 235), 0.6, ThreeSide::BackSide));
-
-      addMaterial(materials, materialMap, makeMaterial("Door", toThreeColor(153, 133, 76), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Door_Ext", toThreeColor(153, 133, 76), 1, ThreeSide::FrontSide));
-      addMaterial(materials, materialMap, makeMaterial("Door_Int", toThreeColor(202, 188, 149), 1, ThreeSide::BackSide));
-
-      addMaterial(materials, materialMap, makeMaterial("SiteShading", toThreeColor(75, 124, 149), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("SiteShading_Ext", toThreeColor(75, 124, 149), 1, ThreeSide::FrontSide));
-      addMaterial(materials, materialMap, makeMaterial("SiteShading_Int", toThreeColor(187, 209, 220), 1, ThreeSide::BackSide));
-
-      addMaterial(materials, materialMap, makeMaterial("BuildingShading", toThreeColor(113, 76, 153), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("BuildingShading_Ext", toThreeColor(113, 76, 153), 1, ThreeSide::FrontSide));
-      addMaterial(materials, materialMap, makeMaterial("BuildingShading_Int", toThreeColor(216, 203, 229), 1, ThreeSide::BackSide));
-
-      addMaterial(materials, materialMap, makeMaterial("SpaceShading", toThreeColor(76, 110, 178), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("SpaceShading_Ext", toThreeColor(76, 110, 178), 1, ThreeSide::FrontSide));
-      addMaterial(materials, materialMap, makeMaterial("SpaceShading_Int", toThreeColor(183, 197, 224), 1, ThreeSide::BackSide));
-
-      addMaterial(materials, materialMap, makeMaterial("InteriorPartitionSurface", toThreeColor(158, 188, 143), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("InteriorPartitionSurface_Ext", toThreeColor(158, 188, 143), 1, ThreeSide::FrontSide));
-      addMaterial(materials, materialMap, makeMaterial("InteriorPartitionSurface_Int", toThreeColor(213, 226, 207), 1, ThreeSide::BackSide));
-
-      // start textures for boundary conditions
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Surface", toThreeColor(0, 153, 0), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Adiabatic", toThreeColor(255, 0, 0), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Space", toThreeColor(255, 0, 0), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Outdoors", toThreeColor(163, 204, 204), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Outdoors_Sun", toThreeColor(40, 204, 204), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Outdoors_Wind", toThreeColor(9, 159, 162), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Outdoors_SunWind", toThreeColor(68, 119, 161), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Ground", toThreeColor(204, 183, 122), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundfcfactormethod", toThreeColor(153, 122, 30), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundslabpreprocessoraverage", toThreeColor(255, 191, 0), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundslabpreprocessorcore", toThreeColor(255, 182, 50), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundslabpreprocessorperimeter", toThreeColor(255, 178, 101), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundbasementpreprocessoraveragewall", toThreeColor(204, 51, 0), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundbasementpreprocessoraveragefloor", toThreeColor(204, 81, 40), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundbasementpreprocessorupperwall", toThreeColor(204, 112, 81), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Groundbasementpreprocessorlowerwall", toThreeColor(204, 173, 163), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Othersidecoefficients", toThreeColor(63, 63, 63), 1, ThreeSide::DoubleSide));
-      addMaterial(materials, materialMap, makeMaterial("Boundary_Othersideconditionsmodel", toThreeColor(153, 0, 76), 1, ThreeSide::DoubleSide));
-
       // make construction materials
       for (auto& construction : model.getModelObjects<ConstructionBase>()){
         boost::optional<RenderingColor> color = construction.renderingColor();
@@ -187,8 +87,8 @@ namespace openstudio
           color = RenderingColor(model);
           construction.setRenderingColor(*color);
         }
-        std::string name = "Construction_" + construction.nameString();
-        addMaterial(materials, materialMap, makeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
+        std::string name = getObjectThreeMaterialName(construction);
+        addThreeMaterial(materials, materialMap, makeThreeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
       }
 
       // make thermal zone materials
@@ -198,8 +98,8 @@ namespace openstudio
           color = RenderingColor(model);
           thermalZone.setRenderingColor(*color);
         }
-        std::string name = "ThermalZone_" + thermalZone.nameString();
-        addMaterial(materials, materialMap, makeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
+        std::string name = getObjectThreeMaterialName(thermalZone);
+        addThreeMaterial(materials, materialMap, makeThreeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
       }
 
       // make space type materials
@@ -209,8 +109,8 @@ namespace openstudio
           color = RenderingColor(model);
           spaceType.setRenderingColor(*color);
         }
-        std::string name = "SpaceType_" + spaceType.nameString();
-        addMaterial(materials, materialMap, makeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
+        std::string name = getObjectThreeMaterialName(spaceType);
+        addThreeMaterial(materials, materialMap, makeThreeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
       }
 
       // make building story materials
@@ -220,8 +120,8 @@ namespace openstudio
           color = RenderingColor(model);
           buildingStory.setRenderingColor(*color);
         }
-        std::string name = "BuildingStory_" + buildingStory.nameString();
-        addMaterial(materials, materialMap, makeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
+        std::string name = getObjectThreeMaterialName(buildingStory);
+        addThreeMaterial(materials, materialMap, makeThreeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
       }
 
       // make building unit materials
@@ -231,8 +131,8 @@ namespace openstudio
           color = RenderingColor(model);
           buildingUnit.setRenderingColor(*color);
         }
-        std::string name = "BuildingUnit_" + buildingUnit.nameString();
-        addMaterial(materials, materialMap, makeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
+        std::string name = getObjectThreeMaterialName(buildingUnit);
+        addThreeMaterial(materials, materialMap, makeThreeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
       }
 
     }
@@ -266,8 +166,9 @@ namespace openstudio
 
       if (surface)
       {
-        userData.setSurfaceType(surface->surfaceType());
-        userData.setSurfaceTypeMaterialName(surface->surfaceType());
+        std::string surfaceType = surface->surfaceType();
+        userData.setSurfaceType(surfaceType);
+        userData.setSurfaceTypeMaterialName(getSurfaceTypeThreeMaterialName(surfaceType));
         userData.setSunExposure(surface->sunExposure());
         userData.setWindExposure(surface->windExposure());
         userData.setOutsideBoundaryCondition(surface->outsideBoundaryCondition());
@@ -299,8 +200,9 @@ namespace openstudio
         if (shadingSurface->shadingSurfaceGroup()){
           shadingSurfaceType = shadingSurface->shadingSurfaceGroup()->shadingSurfaceType();
         }
-        userData.setSurfaceType(shadingSurfaceType + "Shading");
-        userData.setSurfaceTypeMaterialName(shadingSurfaceType + "Shading");
+        std::string surfaceType = shadingSurfaceType + "Shading";
+        userData.setSurfaceType(surfaceType);
+        userData.setSurfaceTypeMaterialName(getSurfaceTypeThreeMaterialName(surfaceType));
         userData.setSunExposure("SunExposed");
         userData.setWindExposure("WindExposed");
         userData.setOutsideBoundaryCondition("");
@@ -311,8 +213,9 @@ namespace openstudio
 
       if (interiorPartitionSurface)
       {
-        userData.setSurfaceType("InteriorPartitionSurface");
-        userData.setSurfaceTypeMaterialName("InteriorPartitionSurface");
+        std::string surfaceType = "InteriorPartitionSurface";
+        userData.setSurfaceType(surfaceType);
+        userData.setSurfaceTypeMaterialName(getSurfaceTypeThreeMaterialName(surfaceType));
         userData.setSunExposure("NoSun");
         userData.setWindExposure("NoWind");
         userData.setOutsideBoundaryCondition("");
@@ -324,23 +227,8 @@ namespace openstudio
       if (subSurface)
       {
         std::string subSurfaceType = subSurface->subSurfaceType();
-        std::string subSurfaceTypeMaterialName;
-        if (istringEqual(subSurfaceType, "FixedWindow") ||
-            istringEqual(subSurfaceType, "OperableWindow") ||
-            istringEqual(subSurfaceType, "GlassDoor") ||
-            istringEqual(subSurfaceType, "Skylight") ||
-            istringEqual(subSurfaceType, "TubularDaylightDome") ||
-            istringEqual(subSurfaceType, "TubularDaylightDiffuser"))
-        {
-          subSurfaceTypeMaterialName = "Window";
-        } else if (istringEqual(subSurfaceType, "Door") ||
-                  istringEqual(subSurfaceType, "OverheadDoor"))
-        {
-          subSurfaceTypeMaterialName = "Door";
-        }
-
         userData.setSurfaceType(subSurfaceType);
-        userData.setSurfaceTypeMaterialName(subSurfaceTypeMaterialName);
+        userData.setSurfaceTypeMaterialName(getSurfaceTypeThreeMaterialName(subSurfaceType));
 
         boost::optional<Surface> parentSurface = subSurface->surface();
         std::string boundaryMaterialName;
@@ -368,7 +256,7 @@ namespace openstudio
       if (construction)
       {
         userData.setConstructionName(construction->nameString());
-        userData.setConstructionMaterialName("Construction_" + construction->nameString());
+        userData.setConstructionMaterialName(getObjectThreeMaterialName(*construction));
       }
 
       if (space)
@@ -378,25 +266,25 @@ namespace openstudio
         boost::optional<ThermalZone> thermalZone = space->thermalZone();
         if (thermalZone){
           userData.setThermalZoneName(thermalZone->nameString());
-          userData.setThermalZoneMaterialName("ThermalZone_" + thermalZone->nameString());
+          userData.setThermalZoneMaterialName(getObjectThreeMaterialName(*thermalZone));
         }
 
         boost::optional<SpaceType> spaceType = space->spaceType();
         if (spaceType){
           userData.setSpaceTypeName(spaceType->nameString());
-          userData.setSpaceTypeMaterialName("SpaceType_" + spaceType->nameString());
+          userData.setSpaceTypeMaterialName(getObjectThreeMaterialName(*spaceType));
         }
 
         boost::optional<BuildingStory> buildingStory = space->buildingStory();
         if (buildingStory){
           userData.setBuildingStoryName(buildingStory->nameString());
-          userData.setBuildingStoryMaterialName("BuildingStory_" + buildingStory->nameString());
+          userData.setBuildingStoryMaterialName(getObjectThreeMaterialName(*buildingStory));
         }
 
         boost::optional<BuildingUnit> buildingUnit = space->buildingUnit();
         if (buildingUnit){
           userData.setBuildingUnitName(buildingUnit->nameString());
-          userData.setBuildingUnitMaterialName("BuildingUnit_" + buildingUnit->nameString());
+          userData.setBuildingUnitMaterialName(getObjectThreeMaterialName(*buildingUnit));
         }
       }
     }
@@ -457,7 +345,7 @@ namespace openstudio
         if (triangulateSurfaces){
           faceIndices.push_back(0);
         } else{
-          faceIndices.push_back(ThreeJSForwardTranslator::openstudioFaceFormatId());
+          faceIndices.push_back(openstudioFaceFormatId());
         }
 
         Point3dVector::reverse_iterator it = finalVerts.rbegin();
@@ -550,6 +438,16 @@ namespace openstudio
 
       std::vector<ThreeMaterial> materials;
       std::map<std::string, std::string> materialMap;
+
+      // DLM: always add the standard materials
+      //if (triangulateSurfaces){
+        // add the standard materials for rendering
+        for (const auto& material : makeStandardThreeMaterials()){
+          addThreeMaterial(materials, materialMap, material);
+        }
+      //}
+
+      // add model specific materials
       buildMaterials(model, materials, materialMap);
 
       std::vector<ThreeSceneChild> sceneChildren;
@@ -582,7 +480,7 @@ namespace openstudio
 
          std::string thisUUID(toThreeUUID(toString(createUUID())));
          std::string thisName(userDatas[i].name());
-         std::string thisMaterialId = getMaterialId(userDatas[i].surfaceTypeMaterialName(), materialMap);
+         std::string thisMaterialId = getThreeMaterialId(userDatas[i].surfaceTypeMaterialName(), materialMap);
 
          ThreeSceneChild sceneChild(thisUUID, thisName, "Mesh", geometries[i].uuid(), thisMaterialId, userDatas[i]);
            sceneChildren.push_back(sceneChild);
@@ -624,10 +522,26 @@ namespace openstudio
       for (const auto& buildingStory : buildingStories){
         buildingStoryNames.push_back(buildingStory.nameString());
 
-        modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:BuildingStory", toString(buildingStory.handle()), buildingStory.nameString()));
+        ThreeModelObjectMetadata storyMetaData(buildingStory.iddObjectType().valueDescription(), toString(buildingStory.handle()), buildingStory.nameString());
+        if (buildingStory.nominalZCoordinate()){
+          storyMetaData.setNominalZCoordinate(buildingStory.nominalZCoordinate().get());
+        }
+        if (buildingStory.nominalFloortoCeilingHeight()){
+          storyMetaData.setFloorToCeilingHeight(buildingStory.nominalFloortoCeilingHeight().get());
+        }
+        if (buildingStory.nominalFloortoFloorHeight()){
+          // DLM: how to translate this?
+        }
+        if (buildingStory.renderingColor()){
+          storyMetaData.setColor(buildingStory.renderingColor()->colorString());
+        }
+        modelObjectMetadata.push_back(storyMetaData);
 
         for (const auto& space : buildingStory.spaces()){
-          modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:Space", toString(space.handle()), space.nameString()));
+          ThreeModelObjectMetadata spaceMetaData(space.iddObjectType().valueDescription(), toString(space.handle()), space.nameString());
+          // multiplier?
+          // open to below?
+          modelObjectMetadata.push_back(spaceMetaData);
         }
 
         n += 1;
@@ -636,28 +550,42 @@ namespace openstudio
       std::sort(buildingStoryNames.begin(), buildingStoryNames.end(), IstringCompare());
 
       for (const auto& buildingUnit : buildingUnits){
-        modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:BuildingUnit", toString(buildingUnit.handle()), buildingUnit.nameString()));
+
+        ThreeModelObjectMetadata unitMetaData(buildingUnit.iddObjectType().valueDescription(), toString(buildingUnit.handle()), buildingUnit.nameString());
+        if (buildingUnit.renderingColor()){
+          unitMetaData.setColor(buildingUnit.renderingColor()->colorString());
+        }
+        modelObjectMetadata.push_back(unitMetaData);
 
         n += 1;
         updatePercentage(100.0*n / N);
       }
 
       for (const auto& thermalZone : thermalZones){
-        modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:ThermalZone", toString(thermalZone.handle()), thermalZone.nameString()));
+        ThreeModelObjectMetadata zoneMetaData(thermalZone.iddObjectType().valueDescription(), toString(thermalZone.handle()), thermalZone.nameString());
+        if (thermalZone.renderingColor()){
+          zoneMetaData.setColor(thermalZone.renderingColor()->colorString());
+        }
+        modelObjectMetadata.push_back(zoneMetaData);
 
         n += 1;
         updatePercentage(100.0*n / N);
       }
 
       for (const auto& spaceType : spaceTypes){
-        modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:SpaceType", toString(spaceType.handle()), spaceType.nameString()));
+        ThreeModelObjectMetadata spaceTypeMetaData(spaceType.iddObjectType().valueDescription(), toString(spaceType.handle()), spaceType.nameString());
+        if (spaceType.renderingColor()){
+          spaceTypeMetaData.setColor(spaceType.renderingColor()->colorString());
+        }
+        modelObjectMetadata.push_back(spaceTypeMetaData);
 
         n += 1;
         updatePercentage(100.0*n / N);
       }
 
       for (const auto& defaultConstructionSet : defaultConstructionSets){
-        modelObjectMetadata.push_back(ThreeModelObjectMetadata("OS:DefaultConstructionSet", toString(defaultConstructionSet.handle()), defaultConstructionSet.nameString()));
+        ThreeModelObjectMetadata setMetaData(defaultConstructionSet.iddObjectType().valueDescription(), toString(defaultConstructionSet.handle()), defaultConstructionSet.nameString());
+        modelObjectMetadata.push_back(setMetaData);
 
         n += 1;
         updatePercentage(100.0*n / N);

@@ -50,6 +50,12 @@
 #include "../model/ShadingSurfaceGroup_Impl.hpp"
 #include "../model/Site.hpp"
 #include "../model/Site_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
+#include "../model/ShadingSurface.hpp"
+#include "../model/ShadingSurface_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Checksum.hpp"
@@ -223,6 +229,7 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
       // floorplan loaded correctly
 
       // update with current model content
+      // at this point you may have removed objects in the app, so tell updateFloorplanJS to remove missing objects
       model::FloorplanJSForwardTranslator ft;
       m_floorplan = ft.updateFloorplanJS(*m_floorplan, m_model, true);
 
@@ -250,7 +257,7 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
     }
 
   } else {
-    if ((model.getConcreteModelObjects<model::Space>().size() > 0) || (model.getConcreteModelObjects<model::ShadingSurfaceGroup>().size() > 0) || (model.getConcreteModelObjects<model::BuildingStory>().size() > 0)){
+    if ((model.getConcreteModelObjects<model::Surface>().size() > 0) || (model.getConcreteModelObjects<model::SubSurface>().size() > 0) || (model.getConcreteModelObjects<model::ShadingSurface>().size() > 0)){
       m_newImportGeometry->setEnabled(false);
       m_view->load(QUrl("qrc:///library/geometry_editor_start.html"));
     } else{
@@ -632,7 +639,6 @@ void EditorWebView::mergeExport()
   // make sure handles get updated in floorplan and the exported string
   model::FloorplanJSForwardTranslator ft;
   m_floorplan = ft.updateFloorplanJS(*m_floorplan, m_model, false);
-  m_export = QString::fromStdString(m_floorplan->toJSON());
 
   errorsAndWarnings.clear();
   for (const auto& error : ft.errors()){
@@ -644,6 +650,25 @@ void EditorWebView::mergeExport()
   if (!errorsAndWarnings.isEmpty()){
     QMessageBox::warning(this, "Updating Floorplan", errorsAndWarnings);
   }
+
+  OS_ASSERT(!m_javascriptRunning);
+  m_javascriptRunning = true;
+
+  // import updated floorplan back into editor
+  OS_ASSERT(m_floorplan);
+  std::string json = m_floorplan->toJSON(false);
+
+  QString javascript = QString("window.api.openFloorplan(JSON.stringify(") + QString::fromStdString(json) + QString("));");
+  //QString javascript = QString("window.api.importLibrary(JSON.stringify(") + QString::fromStdString(json) + QString("));");
+  m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
+  while (m_javascriptRunning){
+    OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
+  }
+
+  //m_export = QString::fromStdString(m_floorplan->toJSON());
+
+  // DLM: call doExport again just to be sure we get the freshest content
+  doExport();
 
   // save the exported floorplan
   saveExport();
