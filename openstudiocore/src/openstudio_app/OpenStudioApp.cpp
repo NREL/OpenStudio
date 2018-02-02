@@ -1200,7 +1200,8 @@ void OpenStudioApp::changeDefaultLibraries() {
   auto defaultPaths = defaultLibraryPaths();
   auto paths = libraryPaths();
 
-  LibraryDialog dialog(paths, defaultPaths);
+  auto resources = resourcesPath(); 
+  LibraryDialog dialog(paths, defaultPaths, resources);
   auto code = dialog.exec();
   auto newPaths = dialog.paths();
 
