@@ -28787,3 +28787,1174 @@ OS:Schedule:Day,
   0,                                      !- Minute 1
   40;                                     !- Value Until Time 1
 
+!---- Thai Schedule set 15/12/17 ----
+
+OS:DefaultScheduleSet,
+  {16094490-0bfc-4b17-8b9b-ab7a83b6c09b}, !- Handle
+  Thai Exhibition hall/Gymnasium Schedule Set, !- Name
+  ,                                       !- Hours of Operation Schedule Name
+  {9aff14fa-e167-4923-8156-e4cdc66acfa3}, !- Number of People Schedule Name
+  {2bba53da-8f61-4e0d-9d19-82e5f80a0dc8}, !- People Activity Level Schedule Name
+  {f057563c-8186-40ae-834a-b3ddd6ec5d64}, !- Lighting Schedule Name
+  {56149c8f-685d-41b6-9327-e92fc6f840cf}, !- Electric Equipment Schedule Name
+  ,                                       !- Gas Equipment Schedule Name
+  ,                                       !- Hot Water Equipment Schedule Name
+  ,                                       !- Infiltration Schedule Name
+  ,                                       !- Steam Equipment Schedule Name
+  {49de9421-ad8e-43ee-b390-8c67d758e731}; !- Other Equipment Schedule Name
+
+OS:Schedule:Ruleset,
+  {2bba53da-8f61-4e0d-9d19-82e5f80a0dc8}, !- Handle
+  Thai Exhibition hall/Gymnasium Activity Schedule Ruleset, !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  {a4cec613-3968-4b93-a584-aeeac2ec63c4}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {a4cec613-3968-4b93-a584-aeeac2ec63c4}, !- Handle
+  Schedule Day 62,                        !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  120.000007629395;                       !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {f057563c-8186-40ae-834a-b3ddd6ec5d64}, !- Handle
+  Thai Exhibition hall/Gymnasium Light Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {f09e5d1b-35ae-4fc4-9bce-c949f13ef9dc}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {f09e5d1b-35ae-4fc4-9bce-c949f13ef9dc}, !- Handle
+  Schedule Day 58,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {56149c8f-685d-41b6-9327-e92fc6f840cf}, !- Handle
+  Thai Exhibition hall/Gymnasium Electronic Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {f56501e8-4943-4389-bc76-672df1cf9e5a}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {f56501e8-4943-4389-bc76-672df1cf9e5a}, !- Handle
+  Schedule Day 60,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {49de9421-ad8e-43ee-b390-8c67d758e731}, !- Handle
+  Thai Exhibition hall/Gymnasium Other Equipment Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {26d3a40c-647c-4e95-8055-9624ec2939a3}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {26d3a40c-647c-4e95-8055-9624ec2939a3}, !- Handle
+  Schedule Day 64,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:ScheduleTypeLimits,
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Handle
+  ActivityLevel,                          !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Continuous,                             !- Numeric Type
+  ActivityLevel;                          !- Unit Type
+
+OS:ScheduleTypeLimits,
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Handle
+  Fractional,                             !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
+  Continuous;                             !- Numeric Type
+
+OS:DefaultScheduleSet,
+  {28212a6d-a395-407c-8540-665827df4abb}, !- Handle
+  Thai Condominium Schedule Set,          !- Name
+  ,                                       !- Hours of Operation Schedule Name
+  {dddb53fb-c6cc-4f41-9a7c-db870137cf6f}, !- Number of People Schedule Name
+  {2d99e6ca-2b0d-4d81-897c-b23e8ceb4ece}, !- People Activity Level Schedule Name
+  {baf3db63-4145-46a9-868a-f48dbf9d1ed4}, !- Lighting Schedule Name
+  {e42ce4c2-5767-45a2-9b4e-e344fc73db70}, !- Electric Equipment Schedule Name
+  ,                                       !- Gas Equipment Schedule Name
+  ,                                       !- Hot Water Equipment Schedule Name
+  ,                                       !- Infiltration Schedule Name
+  ,                                       !- Steam Equipment Schedule Name
+  {8f3d3cd9-2c00-4b93-b1b0-0b7713093d1c}; !- Other Equipment Schedule Name
+
+OS:Schedule:Ruleset,
+  {2d99e6ca-2b0d-4d81-897c-b23e8ceb4ece}, !- Handle
+  Thai Condominium Activity Schedule Ruleset, !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  {258cb1f3-19d6-4763-a394-207dfd100b5c}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {258cb1f3-19d6-4763-a394-207dfd100b5c}, !- Handle
+  Schedule Day 79,                        !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  120.000007629395;                       !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {baf3db63-4145-46a9-868a-f48dbf9d1ed4}, !- Handle
+  Thai Condominium Light Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {6fced918-3b1c-42e0-8f12-076c83a9b067}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {6fced918-3b1c-42e0-8f12-076c83a9b067}, !- Handle
+  Schedule Day 77,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {e42ce4c2-5767-45a2-9b4e-e344fc73db70}, !- Handle
+  Thai Condominium Electronic Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {2507f017-9d39-415d-b3fe-81ef1a6ad736}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {2507f017-9d39-415d-b3fe-81ef1a6ad736}, !- Handle
+  Schedule Day 76,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {8f3d3cd9-2c00-4b93-b1b0-0b7713093d1c}, !- Handle
+  Thai Condominium Other Equipment Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {90452ef3-ccc3-4f9c-b5eb-f514f5063a50}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {90452ef3-ccc3-4f9c-b5eb-f514f5063a50}, !- Handle
+  Schedule Day 78,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:DefaultScheduleSet,
+  {ea462fab-85d6-4406-ad42-c7519708e204}, !- Handle
+  Thai Department Store Schedule Set,     !- Name
+  ,                                       !- Hours of Operation Schedule Name
+  {28ae66bf-6182-44d3-80e2-acf3135b6f83}, !- Number of People Schedule Name
+  {5ec39e8c-dc33-4697-8561-036f9faaedb2}, !- People Activity Level Schedule Name
+  {96cc2cbb-e51d-436e-bb5e-df02c996216c}, !- Lighting Schedule Name
+  {b915875f-dac9-4141-acdc-070fd82379c2}, !- Electric Equipment Schedule Name
+  ,                                       !- Gas Equipment Schedule Name
+  ,                                       !- Hot Water Equipment Schedule Name
+  ,                                       !- Infiltration Schedule Name
+  ,                                       !- Steam Equipment Schedule Name
+  {cbee905c-2c72-4c44-98d3-85517504af65}; !- Other Equipment Schedule Name
+
+OS:Schedule:Ruleset,
+  {5ec39e8c-dc33-4697-8561-036f9faaedb2}, !- Handle
+  Thai Department Store Activity Schedule Ruleset, !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  {c521c590-1cbd-4d43-93d2-d9221f0510cd}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {c521c590-1cbd-4d43-93d2-d9221f0510cd}, !- Handle
+  Schedule Day 48,                        !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  120.000007629395;                       !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {96cc2cbb-e51d-436e-bb5e-df02c996216c}, !- Handle
+  Thai Department Store Light Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {f3357784-f67d-4354-ad70-6cfb8f47c068}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {f3357784-f67d-4354-ad70-6cfb8f47c068}, !- Handle
+  Schedule Day 42,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {b915875f-dac9-4141-acdc-070fd82379c2}, !- Handle
+  Thai Department Store Electronic Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {5f9ade6a-92eb-4be9-b236-993e7e6acf55}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {5f9ade6a-92eb-4be9-b236-993e7e6acf55}, !- Handle
+  Schedule Day 44,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {cbee905c-2c72-4c44-98d3-85517504af65}, !- Handle
+  Thai Department Store Other Equipment Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {3af06dc6-3d74-44aa-a53a-d06f965eb246}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {3af06dc6-3d74-44aa-a53a-d06f965eb246}, !- Handle
+  Schedule Day 46,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Rule,
+  {56e17354-4b58-436b-9046-e78daa35e0fd}, !- Handle
+  Department Store Other Equipment Schedule Rule, !- Name
+  {cbee905c-2c72-4c44-98d3-85517504af65}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {fbf52a7f-34e0-43bc-9859-7d303a6a5237}, !- Day Schedule Name
+  Yes,                                    !- Apply Sunday
+  Yes,                                    !- Apply Monday
+  Yes,                                    !- Apply Tuesday
+  Yes,                                    !- Apply Wednesday
+  Yes,                                    !- Apply Thursday
+  Yes,                                    !- Apply Friday
+  Yes;                                    !- Apply Saturday
+
+OS:Schedule:Day,
+  {fbf52a7f-34e0-43bc-9859-7d303a6a5237}, !- Handle
+  Schedule Day 47,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:DefaultScheduleSet,
+  {15071e52-4b1b-42a8-a1b8-fd8e7084fdcd}, !- Handle
+  Thai Education Institution Schedule Set, !- Name
+  ,                                       !- Hours of Operation Schedule Name
+  {ceb3f551-1cf1-4c14-891d-b592eab63f36}, !- Number of People Schedule Name
+  {4b7367b4-6d99-4902-9f12-31eec58c34f4}, !- People Activity Level Schedule Name
+  {0779c44e-dedb-42c1-9709-d6a012d77ca8}, !- Lighting Schedule Name
+  {b33ebe98-529a-46cd-ac99-0dac71e137bd}, !- Electric Equipment Schedule Name
+  ,                                       !- Gas Equipment Schedule Name
+  ,                                       !- Hot Water Equipment Schedule Name
+  ,                                       !- Infiltration Schedule Name
+  ,                                       !- Steam Equipment Schedule Name
+  {4e74b20f-2932-4da6-9e76-3b2f92ebb839}; !- Other Equipment Schedule Name
+
+OS:Schedule:Ruleset,
+  {4b7367b4-6d99-4902-9f12-31eec58c34f4}, !- Handle
+  Thai Education Facility Activity Schedule Ruleset, !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  {9bc99618-31c5-48b4-a1c6-462cc4811d69}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {9bc99618-31c5-48b4-a1c6-462cc4811d69}, !- Handle
+  Schedule Day 28,                        !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  120;                                    !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {0779c44e-dedb-42c1-9709-d6a012d77ca8}, !- Handle
+  Thai Education Facility Light Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {48eee8cc-27ac-437e-a82c-98430d4ec8b4}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {48eee8cc-27ac-437e-a82c-98430d4ec8b4}, !- Handle
+  Schedule Day 22,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Rule,
+  {c80d2f69-9f95-48a0-a71e-8c14d8632fd4}, !- Handle
+  Educational Instituion Light Schedule Rule, !- Name
+  {0779c44e-dedb-42c1-9709-d6a012d77ca8}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {9e99c4ff-8fd6-4e98-8f13-45d0268b027b}, !- Day Schedule Name
+  ,                                       !- Apply Sunday
+  Yes,                                    !- Apply Monday
+  Yes,                                    !- Apply Tuesday
+  Yes,                                    !- Apply Wednesday
+  Yes,                                    !- Apply Thursday
+  Yes;                                    !- Apply Friday
+
+OS:Schedule:Day,
+  {9e99c4ff-8fd6-4e98-8f13-45d0268b027b}, !- Handle
+  Schedule Day 23,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0.00415528379380703,                    !- Value Until Time 1
+  17,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {b33ebe98-529a-46cd-ac99-0dac71e137bd}, !- Handle
+  Thai Education Facility Electronic Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {2c1e53e3-ac3e-4067-aedd-9f407e32a73b}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {2c1e53e3-ac3e-4067-aedd-9f407e32a73b}, !- Handle
+  Schedule Day 24,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Rule,
+  {3cf2c33b-9e33-47ff-878f-08f87913dc8c}, !- Handle
+  Educational Instituion Electronic Schedule Rule, !- Name
+  {b33ebe98-529a-46cd-ac99-0dac71e137bd}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {5fa6c2a2-a197-4808-8fc7-f8b868e4e3d1}, !- Day Schedule Name
+  ,                                       !- Apply Sunday
+  Yes,                                    !- Apply Monday
+  Yes,                                    !- Apply Tuesday
+  Yes,                                    !- Apply Wednesday
+  Yes,                                    !- Apply Thursday
+  Yes;                                    !- Apply Friday
+
+OS:Schedule:Day,
+  {5fa6c2a2-a197-4808-8fc7-f8b868e4e3d1}, !- Handle
+  Schedule Day 25,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0.00415528379380703,                    !- Value Until Time 1
+  17,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {4e74b20f-2932-4da6-9e76-3b2f92ebb839}, !- Handle
+  Thai Education Facility Other Equipment Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {3cc2e03d-a83b-4a34-8b0f-b42c1aa33fca}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {3cc2e03d-a83b-4a34-8b0f-b42c1aa33fca}, !- Handle
+  Schedule Day 26,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Rule,
+  {8edb6492-5d4d-447e-824e-cbeb0950c04c}, !- Handle
+  Educational Instituion Other Equipment Schedule Rule, !- Name
+  {4e74b20f-2932-4da6-9e76-3b2f92ebb839}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {bd3b6c33-af1b-46c9-a6c1-4e2cdea3c642}, !- Day Schedule Name
+  ,                                       !- Apply Sunday
+  Yes,                                    !- Apply Monday
+  Yes,                                    !- Apply Tuesday
+  Yes,                                    !- Apply Wednesday
+  Yes,                                    !- Apply Thursday
+  Yes;                                    !- Apply Friday
+
+OS:Schedule:Day,
+  {bd3b6c33-af1b-46c9-a6c1-4e2cdea3c642}, !- Handle
+  Schedule Day 27,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0.00415528379380703,                    !- Value Until Time 1
+  17,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:DefaultScheduleSet,
+  {dc4012c7-539a-42a0-b543-77ead10878a3}, !- Handle
+  Thai Hotel Schedule Set,                !- Name
+  ,                                       !- Hours of Operation Schedule Name
+  {c4fd8c4d-67cc-4a45-a95e-0a8481b8126f}, !- Number of People Schedule Name
+  {de16637e-2450-4725-88ff-8d73badd23d5}, !- People Activity Level Schedule Name
+  {ed694459-734f-4ff9-9d5f-cbf9fb79f51c}, !- Lighting Schedule Name
+  {2870577e-81d2-432e-b7af-2c33bea2935e}, !- Electric Equipment Schedule Name
+  ,                                       !- Gas Equipment Schedule Name
+  ,                                       !- Hot Water Equipment Schedule Name
+  ,                                       !- Infiltration Schedule Name
+  ,                                       !- Steam Equipment Schedule Name
+  {04ce43d5-08a7-4a04-ac06-05f21a9f7d9a}; !- Other Equipment Schedule Name
+
+OS:Schedule:Ruleset,
+  {de16637e-2450-4725-88ff-8d73badd23d5}, !- Handle
+  Thai Hotel Activity Schedule Ruleset,   !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  {afaa8570-9fc9-40cc-b49e-9f02d4c67f6b}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {afaa8570-9fc9-40cc-b49e-9f02d4c67f6b}, !- Handle
+  Schedule Day 69,                        !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  120.000007629395;                       !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {ed694459-734f-4ff9-9d5f-cbf9fb79f51c}, !- Handle
+  Thai Hotel Light Schedule Ruleset,      !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {0750a99f-3ec1-4f3c-bc0c-0a9ab88092ce}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {0750a99f-3ec1-4f3c-bc0c-0a9ab88092ce}, !- Handle
+  Schedule Day 66,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {2870577e-81d2-432e-b7af-2c33bea2935e}, !- Handle
+  Thai Hotel Electronic Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {6f9a4546-1cc5-4c40-a372-4718a63a6521}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {6f9a4546-1cc5-4c40-a372-4718a63a6521}, !- Handle
+  Schedule Day 67,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {04ce43d5-08a7-4a04-ac06-05f21a9f7d9a}, !- Handle
+  Thai Hotel Other Equipment Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {d4efdc07-baa1-4174-bf79-2491a159436e}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {d4efdc07-baa1-4174-bf79-2491a159436e}, !- Handle
+  Schedule Day 68,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:DefaultScheduleSet,
+  {c65d34fd-4dda-43c9-9447-136c1d1a7be1}, !- Handle
+  Thai Hospital Schedule Set,             !- Name
+  ,                                       !- Hours of Operation Schedule Name
+  {00fc8a7f-dfd3-49d9-9d73-e0324723ecb4}, !- Number of People Schedule Name
+  {fbec9cde-7545-4431-acfa-1621a19365c6}, !- People Activity Level Schedule Name
+  {8a29472d-584e-4ff1-98dd-5b4461add042}, !- Lighting Schedule Name
+  {1340530f-6a2c-45aa-be13-4a17b4f867f1}, !- Electric Equipment Schedule Name
+  ,                                       !- Gas Equipment Schedule Name
+  ,                                       !- Hot Water Equipment Schedule Name
+  ,                                       !- Infiltration Schedule Name
+  ,                                       !- Steam Equipment Schedule Name
+  {1763c013-2190-4acb-a3e3-8bde92540829}; !- Other Equipment Schedule Name
+
+OS:Schedule:Ruleset,
+  {fbec9cde-7545-4431-acfa-1621a19365c6}, !- Handle
+  Thai Hospital Activity Schedule Ruleset, !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  {8a6269f3-2a3d-4e71-84df-2d93e4d2dfcf}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {8a6269f3-2a3d-4e71-84df-2d93e4d2dfcf}, !- Handle
+  Schedule Day 74,                        !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  120.000007629395;                       !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {8a29472d-584e-4ff1-98dd-5b4461add042}, !- Handle
+  Thai Hospital Light Schedule Ruleset,   !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {5b163be9-43a2-4fbc-a7d5-2ac95e2e76f7}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {5b163be9-43a2-4fbc-a7d5-2ac95e2e76f7}, !- Handle
+  Schedule Day 72,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {1340530f-6a2c-45aa-be13-4a17b4f867f1}, !- Handle
+  Thai Hospital Electronic Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {e169a34f-b3ac-4541-b9b1-cc87725e8e5a}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {e169a34f-b3ac-4541-b9b1-cc87725e8e5a}, !- Handle
+  Schedule Day 71,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {1763c013-2190-4acb-a3e3-8bde92540829}, !- Handle
+  Thai Hospital Other Equipment Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {3f9185d6-d30b-4a8f-9d53-5822a4bc500c}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {3f9185d6-d30b-4a8f-9d53-5822a4bc500c}, !- Handle
+  Schedule Day 73,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:DefaultScheduleSet,
+  {4d40ee0b-69a1-4035-85b7-9d852b6e1bf1}, !- Handle
+  Thai Office Schedule Set,               !- Name
+  ,                                       !- Hours of Operation Schedule Name
+  {f7dd89e2-fbca-4f21-a4ac-6ba14991feba}, !- Number of People Schedule Name
+  {c56c694f-890b-4191-ad3d-d23c5859cf8d}, !- People Activity Level Schedule Name
+  {ec562285-ea87-4ef7-b10b-0f4b26253fea}, !- Lighting Schedule Name
+  {3e196e27-c4b5-462c-9a2f-1de0db820cfb}, !- Electric Equipment Schedule Name
+  ,                                       !- Gas Equipment Schedule Name
+  ,                                       !- Hot Water Equipment Schedule Name
+  ,                                       !- Infiltration Schedule Name
+  ,                                       !- Steam Equipment Schedule Name
+  {5249c1bb-ca16-477a-8975-f226238e2342}; !- Other Equipment Schedule Name
+
+OS:Schedule:Ruleset,
+  {c56c694f-890b-4191-ad3d-d23c5859cf8d}, !- Handle
+  Thai Office Activity Schedule Ruleset,  !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  {05054e80-898f-4e88-9b15-65189a5d0a7a}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {05054e80-898f-4e88-9b15-65189a5d0a7a}, !- Handle
+  Schedule Day 36,                        !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  120;                                    !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {ec562285-ea87-4ef7-b10b-0f4b26253fea}, !- Handle
+  Thai Office Light Schedule Ruleset,     !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {d0f6f209-1698-47a1-895d-f992c399a6c9}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {d0f6f209-1698-47a1-895d-f992c399a6c9}, !- Handle
+  Schedule Day 30,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Rule,
+  {988ca329-2059-458e-9b37-fbd4e30f9226}, !- Handle
+  Office Light Schedule Rule,             !- Name
+  {ec562285-ea87-4ef7-b10b-0f4b26253fea}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {72258ec1-8b9e-4c65-bd89-648e3476d4cf}, !- Day Schedule Name
+  ,                                       !- Apply Sunday
+  Yes,                                    !- Apply Monday
+  Yes,                                    !- Apply Tuesday
+  Yes,                                    !- Apply Wednesday
+  Yes,                                    !- Apply Thursday
+  Yes;                                    !- Apply Friday
+
+OS:Schedule:Day,
+  {72258ec1-8b9e-4c65-bd89-648e3476d4cf}, !- Handle
+  Schedule Day 31,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0.00415528379380703,                    !- Value Until Time 1
+  17,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {3e196e27-c4b5-462c-9a2f-1de0db820cfb}, !- Handle
+  Thai Office Electronic Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {3532e5ad-7b12-441b-948a-9595f94c64f3}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {3532e5ad-7b12-441b-948a-9595f94c64f3}, !- Handle
+  Schedule Day 32,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Rule,
+  {d93756f4-6350-4933-b077-50a9feab1ece}, !- Handle
+  Office Electronic Schedule Rule,        !- Name
+  {3e196e27-c4b5-462c-9a2f-1de0db820cfb}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {a3e23ba3-8e8c-4183-a864-8828e15d82ff}, !- Day Schedule Name
+  ,                                       !- Apply Sunday
+  Yes,                                    !- Apply Monday
+  Yes,                                    !- Apply Tuesday
+  Yes,                                    !- Apply Wednesday
+  Yes,                                    !- Apply Thursday
+  Yes;                                    !- Apply Friday
+
+OS:Schedule:Day,
+  {a3e23ba3-8e8c-4183-a864-8828e15d82ff}, !- Handle
+  Schedule Day 33,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0.00415528379380703,                    !- Value Until Time 1
+  17,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {5249c1bb-ca16-477a-8975-f226238e2342}, !- Handle
+  Thai Office Other Equipment Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {9c51b0f2-93ad-41bb-bf7f-6a146c0218c4}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {9c51b0f2-93ad-41bb-bf7f-6a146c0218c4}, !- Handle
+  Schedule Day 34,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Rule,
+  {114e6b80-38cd-42c0-8066-95040d4cda34}, !- Handle
+  Office Other Equipment Schedule Rule,   !- Name
+  {5249c1bb-ca16-477a-8975-f226238e2342}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {6654e26b-796a-4b84-932e-638c32a22415}, !- Day Schedule Name
+  ,                                       !- Apply Sunday
+  Yes,                                    !- Apply Monday
+  Yes,                                    !- Apply Tuesday
+  Yes,                                    !- Apply Wednesday
+  Yes,                                    !- Apply Thursday
+  Yes;                                    !- Apply Friday
+
+OS:Schedule:Day,
+  {6654e26b-796a-4b84-932e-638c32a22415}, !- Handle
+  Schedule Day 35,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0.00415528379380703,                    !- Value Until Time 1
+  17,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:DefaultScheduleSet,
+  {d267e52f-dba5-484c-b7cb-0c5cf0b565ec}, !- Handle
+  Thai Entertainment Complex Schedule Set, !- Name
+  ,                                       !- Hours of Operation Schedule Name
+  {7720d1d0-5fa9-43d0-ba6c-c2e486966aa4}, !- Number of People Schedule Name
+  {f0ae5110-bb1f-4c42-8c2a-747800bb146a}, !- People Activity Level Schedule Name
+  {84e0671a-3ca2-4846-a796-166c704edb29}, !- Lighting Schedule Name
+  {3500b1ce-1ebb-455e-80a3-124ba2807fb7}, !- Electric Equipment Schedule Name
+  ,                                       !- Gas Equipment Schedule Name
+  ,                                       !- Hot Water Equipment Schedule Name
+  ,                                       !- Infiltration Schedule Name
+  ,                                       !- Steam Equipment Schedule Name
+  {bb883b86-91f5-4e4e-868b-6b83eed088fa}; !- Other Equipment Schedule Name
+
+OS:Schedule:Ruleset,
+  {f0ae5110-bb1f-4c42-8c2a-747800bb146a}, !- Handle
+  Thai Entertainment Complex Activity Schedule Ruleset, !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  {17ba469d-9df2-42ac-97fc-42df024d0032}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {17ba469d-9df2-42ac-97fc-42df024d0032}, !- Handle
+  Schedule Day 54,                        !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  120.000007629395;                       !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {84e0671a-3ca2-4846-a796-166c704edb29}, !- Handle
+  Thai Entertainment Complex Light Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {08114381-c044-4ba7-af7a-e1536d3f8e26}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {08114381-c044-4ba7-af7a-e1536d3f8e26}, !- Handle
+  Schedule Day 50,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {3500b1ce-1ebb-455e-80a3-124ba2807fb7}, !- Handle
+  Thai Entertainment Complex Electronic Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {d29711d1-86ff-452e-a1dd-da662d815b1c}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {d29711d1-86ff-452e-a1dd-da662d815b1c}, !- Handle
+  Schedule Day 52,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {bb883b86-91f5-4e4e-868b-6b83eed088fa}, !- Handle
+  Thai Entertainment Complex Other Equipment Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {fef0a008-5361-4ffe-a7a2-3b260ec280f3}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {fef0a008-5361-4ffe-a7a2-3b260ec280f3}, !- Handle
+  Schedule Day 56,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:DefaultScheduleSet,
+  {ec398894-6a34-490f-8f3b-961235db3219}, !- Handle
+  Thai Auditorium/Concert Hall Schedule Set, !- Name
+  ,                                       !- Hours of Operation Schedule Name
+  {d00e0da0-4d55-4010-94dc-ce934d211467}, !- Number of People Schedule Name
+  {f9c2f49f-14dd-45cd-bf93-2a586783fac6}, !- People Activity Level Schedule Name
+  {ab949dd7-ce6b-4901-9aa4-5a311341a6f2}, !- Lighting Schedule Name
+  {7dceb20b-a90f-4345-978a-e908d59449f5}, !- Electric Equipment Schedule Name
+  ,                                       !- Gas Equipment Schedule Name
+  ,                                       !- Hot Water Equipment Schedule Name
+  ,                                       !- Infiltration Schedule Name
+  ,                                       !- Steam Equipment Schedule Name
+  {7e5474c3-1780-4c97-b519-3ace2f7c7e49}; !- Other Equipment Schedule Name
+
+OS:Schedule:Ruleset,
+  {f9c2f49f-14dd-45cd-bf93-2a586783fac6}, !- Handle
+  Thai Auditorium/Concert Hall Activity Schedule Ruleset, !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  {d2996275-b3c8-4a8d-9d35-783298bc8b46}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {d2996275-b3c8-4a8d-9d35-783298bc8b46}, !- Handle
+  Schedule Day 83,                        !- Name
+  {255cfd90-efa1-4854-8910-1ef5d6def5cd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  120.000007629395;                       !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {ab949dd7-ce6b-4901-9aa4-5a311341a6f2}, !- Handle
+  Thai Auditorium/Concert Hall Light Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {5a84e189-0df0-4055-897b-73be589a1b9d}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {5a84e189-0df0-4055-897b-73be589a1b9d}, !- Handle
+  Schedule Day 38,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {7dceb20b-a90f-4345-978a-e908d59449f5}, !- Handle
+  Thai Auditorium/Concert Hall Electronic Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {7328f2ce-0fdb-4e1f-b430-c2cd0f5b1288}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {7328f2ce-0fdb-4e1f-b430-c2cd0f5b1288}, !- Handle
+  Schedule Day 40,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {7e5474c3-1780-4c97-b519-3ace2f7c7e49}, !- Handle
+  Thai Auditorium/Concert Hall Other Equipment Schedule Ruleset, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {1b59fa79-bc4f-4acd-8423-b584d5184339}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {1b59fa79-bc4f-4acd-8423-b584d5184339}, !- Handle
+  Schedule Day 81,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:ScheduleTypeLimits,
+  {d52d9ba4-3a16-41d8-b9fa-8f445c4c6d05}, ! Handle
+  Fraction,                               ! Name
+  0,                                      ! Lower Limit Value
+  1,                                      ! Upper Limit Value
+  CONTINUOUS;                             ! Numeric Type
+
+OS:Schedule:Ruleset,
+  {d00e0da0-4d55-4010-94dc-ce934d211467}, !- Handle
+  Thai Auditorium/Concert Hall Misc Occ,  !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {f753e2ff-8f27-4d74-88da-4fc08304267f}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {f753e2ff-8f27-4d74-88da-4fc08304267f}, !- Handle
+  Schedule Day 84,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {dddb53fb-c6cc-4f41-9a7c-db870137cf6f}, !- Handle
+  Thai Condominium Misc Occ,              !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {da23baa1-15ed-4c42-9678-6425ebb93f66}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {da23baa1-15ed-4c42-9678-6425ebb93f66}, !- Handle
+  Schedule Day 85,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {28ae66bf-6182-44d3-80e2-acf3135b6f83}, !- Handle
+  Thai Department Store Misc Occ,         !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {6800c025-62bb-4b1a-8462-6d2fbe2717cd}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {6800c025-62bb-4b1a-8462-6d2fbe2717cd}, !- Handle
+  Schedule Day 86,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {f7dd89e2-fbca-4f21-a4ac-6ba14991feba}, !- Handle
+  Thai Office Misc Occ,                   !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {815b6e1f-1c31-4ca1-8623-f069ab0c4413}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {815b6e1f-1c31-4ca1-8623-f069ab0c4413}, !- Handle
+  Schedule Day 87,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Day,
+  {c1a66119-79cd-49bb-b9fb-e883d4f69e17}, !- Handle
+  Schedule Day 88,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0.00415528379380703,                    !- Value Until Time 1
+  17,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {c4fd8c4d-67cc-4a45-a95e-0a8481b8126f}, !- Handle
+  Thai Hotel Misc Occ,                    !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {6a496275-fe3b-49d6-baea-2bbdfe4bb612}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {6a496275-fe3b-49d6-baea-2bbdfe4bb612}, !- Handle
+  Schedule Day 89,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {00fc8a7f-dfd3-49d9-9d73-e0324723ecb4}, !- Handle
+  Thai Hospital Misc Occ,                 !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {dfe1ebbb-02d1-49da-9fa5-07edf7c7373c}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {dfe1ebbb-02d1-49da-9fa5-07edf7c7373c}, !- Handle
+  Schedule Day 90,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {9aff14fa-e167-4923-8156-e4cdc66acfa3}, !- Handle
+  Thai Exhibition hall/Gymnasium Misc Occ, !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {8df75155-5d83-46ca-b5eb-7bd78bf3bdcc}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {8df75155-5d83-46ca-b5eb-7bd78bf3bdcc}, !- Handle
+  Schedule Day 91,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {7720d1d0-5fa9-43d0-ba6c-c2e486966aa4}, !- Handle
+  Thai Entertainment Complex Misc Occ,    !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {ff7c7db9-558f-41e6-a0fc-aba2c4f0d0b5}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {ff7c7db9-558f-41e6-a0fc-aba2c4f0d0b5}, !- Handle
+  Schedule Day 92,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {ceb3f551-1cf1-4c14-891d-b592eab63f36}, !- Handle
+  Thai Education Facility Misc Occ,       !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {6dfa498e-7d9f-4ba0-bc46-4290ad4f70ff}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {6dfa498e-7d9f-4ba0-bc46-4290ad4f70ff}, !- Handle
+  Schedule Day 93,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Day,
+  {d75ec534-8534-4bcf-9dee-297d303e0d1a}, !- Handle
+  Schedule Day 94,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  8,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0.00415528379380703,                    !- Value Until Time 1
+  17,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3
+
+OS:Schedule:Ruleset,
+  {f85fd719-b695-4110-a207-7d5cc9a9715e}, !- Handle
+  Thai Department Store Misc Occ ,        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  {f419a671-2da3-4375-993a-e7861476a141}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {f419a671-2da3-4375-993a-e7861476a141}, !- Handle
+  Schedule Day 95,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Schedule:Day,
+  {dfecd701-fd07-4173-b3f7-056393b9f5ac}, !- Handle
+  Schedule Day 96,                        !- Name
+  {3d74b8df-9aeb-485d-a763-66f711740f08}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  9,                                      !- Hour 1
+  0,                                      !- Minute 1
+  0,                                      !- Value Until Time 1
+  21,                                     !- Hour 2
+  0,                                      !- Minute 2
+  1,                                      !- Value Until Time 2
+  24,                                     !- Hour 3
+  0,                                      !- Minute 3
+  0;                                      !- Value Until Time 3

@@ -2,7 +2,7 @@
 
 #define OPENSTUDIO_ABOUTBOX \
 "<h2>OpenStudio Thai Edition</h2> \
-<p>Version: ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH} Release 1 - Build 2</p> \
+<p>Version: ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH} Beta 5 - Support Thai SpaceType Plugin</p> \
 <p>Build Number: ${PROJECT_VERSION_BUILD}</p> \
 <p>Compiler: ${ABOUT_COMPILER}</p> \
 <p>Copyright &copy; 2017 National Renewable Energy Laboratory</p> \

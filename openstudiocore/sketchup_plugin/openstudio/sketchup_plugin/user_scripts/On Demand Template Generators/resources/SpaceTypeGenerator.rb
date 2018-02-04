@@ -180,12 +180,49 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
     return new_sch
   end
   
+  def get_default_sch_from_lib(sch_name, model)
+    #first check model
+    sch = model.getObjectByTypeAndName("OS_DefaultScheduleSet".to_IddObjectType, sch_name)
+    if not sch.empty?
+      # could clone here if you really wanted to
+	  puts "Found Schedule \"#{sch_name}\""
+      return sch.get.to_DefaultScheduleSet.get
+    end
+    
+    #get the correct space type from the library file
+    sch = @schedule_library.getObjectByTypeAndName("OS_DefaultScheduleSet".to_IddObjectType, sch_name)
+    
+    if sch.empty?
+      puts "schedule called '#{sch_name}' not found in master schedule library"
+      exit
+    end
+    #clone the space type from the library model into the space type model
+    clone_of_sch = sch.get.to_DefaultScheduleSet.get.clone(model)
+    new_sch = clone_of_sch.to_DefaultScheduleSet.get
+    return new_sch
+  end
+  
   name = make_name(template, clim, building_type, spc_type)
+  is_Thai_library = false
+  #narongsak: Use a specific space type name providing in json template in order to generate library name.
+  #with tag name : "alias_name"
+  unless @spc_types[template][clim][building_type][spc_type]["alias_name"].nil? 
+    name = @spc_types[template][clim][building_type][spc_type]["alias_name"]
+    is_Thai_library = true
+  end
 
+  puts "name : #{name}"
+  
   #create a new space type and name it
   space_type = OpenStudio::Model::SpaceType.new(model)
   space_type.setName(name)
 
+  #narongsak: Use a spacific space type name providiing on json template
+  #with tag name : "space_name"
+  unless @spc_types[template][clim][building_type][spc_type]["space_name"].nil? 
+    space_type.setName(@spc_types[template][clim][building_type][spc_type]["space_name"])
+  end
+  
   #set the standards building type and space type for this new space type
   space_type.setStandardsBuildingType(building_type)
   space_type.setStandardsSpaceType(spc_type)
@@ -203,13 +240,23 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
   space_type.setRenderingColor(rendering_color)
   
   #create the schedule set for the space type
-  default_sch_set = OpenStudio::Model::DefaultScheduleSet.new(model)
-  default_sch_set.setName("#{name} Schedule Set")
+  default_sch_set = nil
+  unless is_Thai_library == true
+	default_sch_set = OpenStudio::Model::DefaultScheduleSet.new(model)
+	default_sch_set.setName("#{name} Schedule Set")
+  else
+	default_sch_set = get_default_sch_from_lib("#{building_type} Schedule Set", model);
+    default_sch_set.setName("#{building_type} Schedule Set")
+  end
+	
   space_type.setDefaultScheduleSet(default_sch_set)
+  
+  #TODO: narongsak: For default_sch_set, it should be used the same name as on Thai library 
 
   #lighting  
     
     make_lighting = false
+	lighting_name = @spc_types[template][clim][building_type][spc_type]["lighting_name"]
     lighting_per_area = @spc_types[template][clim][building_type][spc_type]["lighting_w_per_area"]
     lighting_per_person = @spc_types[template][clim][building_type][spc_type]["lighting_w_per_person"]
     unless (lighting_per_area == 0 or lighting_per_area.nil?) then make_lighting = true end
@@ -219,9 +266,17 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
     
       #create the lighting definition 
       lights_def = OpenStudio::Model::LightsDefinition.new(model)
-      lights_def.setName("#{name} Lights Definition")
-      unless  lighting_per_area == 0 or lighting_per_area.nil?
-        lights_def.setWattsperSpaceFloorArea(OpenStudio::convert(lighting_per_area,"W/ft^2","W/m^2").get)
+	  unless is_Thai_library == true
+		lights_def.setName("#{name} Lights Definition")
+	  else
+		lights_def.setName("#{lighting_name}-Lights Definition")
+	  end
+	  unless  lighting_per_area == 0 or lighting_per_area.nil?
+        unless is_Thai_library == true
+          lights_def.setWattsperSpaceFloorArea(OpenStudio::convert(lighting_per_area,"W/ft^2","W/m^2").get)
+        else
+          lights_def.setWattsperSpaceFloorArea(OpenStudio::convert(lighting_per_area,"W/m^2","W/m^2").get)
+        end
       end
       unless lighting_per_person == 0 or lighting_per_person.nil?
         lights_def.setWattsperPerson(OpenStudio::convert(lighting_per_person,"W/person","W/person").get)
@@ -229,7 +284,12 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
 
       #create the lighting instance and hook it up to the space type
       lights = OpenStudio::Model::Lights.new(lights_def)
-      lights.setName("#{name} Lights")
+	  unless is_Thai_library == true
+		lights.setName("#{name} Lights")
+	  else
+		lights.setName("#{lighting_name}-Lights")
+	  end
+
       lights.setSpaceType(space_type)  
       
       #get the lighting schedule and set it as the default
@@ -258,10 +318,18 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
       space_type.setDesignSpecificationOutdoorAir(ventilation)
       ventilation.setOutdoorAirMethod("Sum")
       unless ventilation_per_area  == 0 or ventilation_per_area.nil? 
-        ventilation.setOutdoorAirFlowperFloorArea(OpenStudio::convert(ventilation_per_area,"ft^3/min*ft^2","m^3/s*m^2").get)
+        unless is_Thai_library == true
+          ventilation.setOutdoorAirFlowperFloorArea(OpenStudio::convert(ventilation_per_area,"ft^3/min*ft^2","m^3/s*m^2").get)
+        else
+          ventilation.setOutdoorAirFlowperFloorArea(OpenStudio::convert(ventilation_per_area,"m^3/s*m^2","m^3/s*m^2").get)
+        end
       end
       unless ventilation_per_person == 0 or ventilation_per_person.nil?
-        ventilation.setOutdoorAirFlowperPerson(OpenStudio::convert(ventilation_per_person,"ft^3/min*person","m^3/s*person").get)
+        unless is_Thai_library == true
+          ventilation.setOutdoorAirFlowperPerson(OpenStudio::convert(ventilation_per_person,"ft^3/min*person","m^3/s*person").get)
+        else
+          ventilation.setOutdoorAirFlowperPerson(OpenStudio::convert(ventilation_per_person,"m^3/s*person","m^3/s*person").get)
+        end
       end
       unless ventilation_ach == 0 or ventilation_ach.nil?
         ventilation.setOutdoorAirFlowAirChangesperHour(ventilation_ach)
@@ -281,7 +349,11 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
       people_def = OpenStudio::Model::PeopleDefinition.new(model)
       people_def.setName("#{name} People Definition")
       unless  occupancy_per_area == 0 or occupancy_per_area.nil?
-        people_def.setPeopleperSpaceFloorArea(OpenStudio::convert(occupancy_per_area/1000,"people/ft^2","people/m^2").get)
+        unless is_Thai_library == true
+          people_def.setPeopleperSpaceFloorArea(OpenStudio::convert(occupancy_per_area/1000,"people/ft^2","people/m^2").get)
+        else
+          people_def.setPeopleperSpaceFloorArea(OpenStudio::convert(occupancy_per_area,"people/m^2","people/m^2").get)
+        end
       end    
       
       #create the people instance and hook it up to the space type

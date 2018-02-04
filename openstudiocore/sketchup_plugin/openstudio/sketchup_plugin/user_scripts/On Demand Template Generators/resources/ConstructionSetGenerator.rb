@@ -95,19 +95,28 @@ def longest_name
 end
 
 def make_material(material_name, data, model)  
-
+  is_thai_library = false
   material = nil
   material_type = data["material_type"]
-  
+  if ( !data["is_thai_library"].nil? and data["is_thai_library"] == true )
+	is_thai_library = true
+  end
   if material_type == "StandardOpaqueMaterial"
     material = OpenStudio::Model::StandardOpaqueMaterial.new(model)
     material.setName(material_name)
     
     material.setRoughness(data["roughness"].to_s)
-    material.setThickness(OpenStudio::convert(data["thickness"].to_f, "in", "m").get)
-    material.setConductivity(OpenStudio::convert(data["conductivity"].to_f, "Btu*in/hr*ft^2*R", "W/m*K").get)
-    material.setDensity(OpenStudio::convert(data["density"].to_f, "lb/ft^3", "kg/m^3").get)
-    material.setSpecificHeat(OpenStudio::convert(data["specific_heat"].to_f, "Btu/lb*R", "J/kg*K").get)
+	unless is_thai_library == true
+		material.setThickness(OpenStudio::convert(data["thickness"].to_f, "in", "m").get)
+		material.setConductivity(OpenStudio::convert(data["conductivity"].to_f, "Btu*in/hr*ft^2*R", "W/m*K").get)
+		material.setDensity(OpenStudio::convert(data["density"].to_f, "lb/ft^3", "kg/m^3").get)
+		material.setSpecificHeat(OpenStudio::convert(data["specific_heat"].to_f, "Btu/lb*R", "J/kg*K").get)
+	else
+	    material.setThickness(OpenStudio::convert(data["thickness"].to_f, "in", "m").get)
+		material.setConductivity(OpenStudio::convert(data["conductivity"].to_f, "W/m*K", "W/m*K").get)
+		material.setDensity(OpenStudio::convert(data["density"].to_f, "kg/m^3", "kg/m^3").get)
+		material.setSpecificHeat(OpenStudio::convert(data["specific_heat"].to_f, "J/kg*K", "J/kg*K").get)
+	end
     material.setThermalAbsorptance(data["thermal_absorptance"].to_f)
     material.setSolarAbsorptance(data["solar_absorptance"].to_f)
     material.setVisibleAbsorptance(data["visible_absorptance"].to_f)
@@ -115,32 +124,46 @@ def make_material(material_name, data, model)
   elsif material_type == "MasslessOpaqueMaterial" 
     material = OpenStudio::Model::MasslessOpaqueMaterial.new(model)
     material.setName(material_name)
-    
-    material.setConductivity(OpenStudio::convert(data["conductivity"].to_f, "Btu*in/hr*ft^2*R", "W/m*K").get)
-    material.setDensity(OpenStudio::convert(data["density"].to_f, "lb/ft^3", "kg/m^3").get)
-    material.setSpecificHeat(OpenStudio::convert(data["specific_heat"].to_f, "Btu/lb*R", "J/kg*K").get)
-    material.setThermalAbsorptance(data["thermal_absorptance"].to_f)
+    unless is_thai_library == true
+		material.setConductivity(OpenStudio::convert(data["conductivity"].to_f, "Btu*in/hr*ft^2*R", "W/m*K").get)
+		material.setDensity(OpenStudio::convert(data["density"].to_f, "lb/ft^3", "kg/m^3").get)
+		material.setSpecificHeat(OpenStudio::convert(data["specific_heat"].to_f, "Btu/lb*R", "J/kg*K").get)
+    else
+		material.setConductivity(OpenStudio::convert(data["conductivity"].to_f, "W/m*K", "W/m*K").get)
+		material.setDensity(OpenStudio::convert(data["density"].to_f, "kg/m^3", "kg/m^3").get)
+		material.setSpecificHeat(OpenStudio::convert(data["specific_heat"].to_f, "J/kg*K", "J/kg*K").get)
+
+	end
+	material.setThermalAbsorptance(data["thermal_absorptance"].to_f)
     material.setSolarAbsorptance(data["solar_absorptance"].to_f)
     material.setVisibleAbsorptance(data["visible_absorptance"].to_f)
     
   elsif material_type == "AirGap"
     material = OpenStudio::Model::AirGap.new(model)
     material.setName(material_name)
-    
-    material.setThermalResistance(OpenStudio::convert(data["resistance"].to_f, "hr*ft^2*R/Btu*in", "m*K/W").get)
-
+    unless is_thai_library == true
+		material.setThermalResistance(OpenStudio::convert(data["resistance"].to_f, "hr*ft^2*R/Btu*in", "m*K/W").get)
+	else
+		material.setThermalResistance(OpenStudio::convert(data["resistance"].to_f, "m*K/W", "m*K/W").get)
+	end
   elsif material_type == "Gas"
     material = OpenStudio::Model::Gas.new(model)
     material.setName(material_name)
-
-    material.setThickness(OpenStudio::convert(data["thickness"].to_f, "in", "m").get)
+	unless is_thai_library == true
+		material.setThickness(OpenStudio::convert(data["thickness"].to_f, "in", "m").get)
+	else
+		material.setThickness(OpenStudio::convert(data["thickness"].to_f, "m", "m").get)
+	end
     material.setGasType(data["gas_type"].to_s)
     
   elsif material_type == "SimpleGlazing" 
     material = OpenStudio::Model::SimpleGlazing.new(model)
     material.setName(material_name)
-    
-    material.setUFactor(OpenStudio::convert(data["u_factor"].to_f, "Btu/hr*ft^2*R", "W/m^2*K").get)
+    unless is_thai_library == true
+		material.setUFactor(OpenStudio::convert(data["u_factor"].to_f, "Btu/hr*ft^2*R", "W/m^2*K").get)
+	else
+		material.setUFactor(OpenStudio::convert(data["u_factor"].to_f, "W/m^2*K", "W/m^2*K").get)
+	end
     material.setSolarHeatGainCoefficient(data["solar_heat_gain_coefficient"].to_f)
     material.setVisibleTransmittance(data["visible_transmittance"].to_f)
 
@@ -149,7 +172,13 @@ def make_material(material_name, data, model)
     material.setName(material_name)
     
     material.setOpticalDataType(data["optical_data_type"].to_s)
-    material.setThickness(OpenStudio::convert(data["thickness"].to_f, "in", "m").get)
+	unless is_thai_library == true
+		material.setThickness(OpenStudio::convert(data["thickness"].to_f, "in", "m").get)
+		material.setConductivity(OpenStudio::convert(data["conductivity"].to_f, "Btu*in/hr*ft^2*R", "W/m*K").get)
+	else
+		material.setThickness(OpenStudio::convert(data["thickness"].to_f, "m", "m").get)
+		material.setConductivity(OpenStudio::convert(data["conductivity"].to_f, "W/m*K", "W/m*K").get)
+	end
     material.setSolarTransmittanceatNormalIncidence(data["solar_transmittance_at_normal_incidence"].to_f)
     material.setFrontSideSolarReflectanceatNormalIncidence(data["front_side_solar_reflectance_at_normal_incidence"].to_f)
     material.setBackSideSolarReflectanceatNormalIncidence(data["back_side_solar_reflectance_at_normal_incidence"].to_f)
@@ -302,8 +331,11 @@ def generate_construction_set(template, clim, building_type, spc_type, model = n
     exit
   end
   
-  name = make_name(template, clim, building_type, spc_type)
-
+  unless template == "TH-2016"
+	name = make_name(template, clim, building_type, spc_type)
+  else
+	name = "001 Thai Default Constructions"
+  end
   #create a new space type and name it
   construction_set = OpenStudio::Model::DefaultConstructionSet.new(model)
   construction_set.setName(name)
