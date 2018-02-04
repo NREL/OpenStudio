@@ -2,7 +2,7 @@
   "climate_zone_sets": {
     "All Climates": {
       "climate_zones": [
-      "Thai Climate Zones",
+        "Thai Climate Zones",
         "ASHRAE 169-2006-1A",
         "ASHRAE 169-2006-1B",
         "ASHRAE 169-2006-2A",
@@ -537,11 +537,11 @@
     }
   },
   "climate_zones": {
-  "Thai Climate Zones": {
-    "bcl_weather_component_id": null,
+	"Thai Climate Zones": {
+      "bcl_weather_component_id": null,
       "representative_city": null,
       "standard": "TH-2016"
-  },
+	},
     "ASHRAE 169-2006-1A": {
       "bcl_weather_component_id": null,
       "representative_city": null,
@@ -739,7 +739,263 @@
     }
   },
   "construction_sets": {
-    "189.1-2009": {
+    "TH-2016": {
+	  "All Climates": {
+		"Thai Hospital": {
+          "": {
+            "building_shading": null,
+            "exterior_door": "Thai Exterior Door",
+            "exterior_fixed_window": "Thai Exterior Window",
+            "exterior_floor": null,
+            "exterior_glass_door": "Thai Exterior Window",
+            "exterior_operable_window": "Thai Exterior Window",
+            "exterior_overhead_door": "Thai Exterior Door",
+            "exterior_roof": "Thai Exterior Roof",
+            "exterior_skylight": "Thai Exterior Window",
+            "exterior_wall": "01 Thai Brick Wall",
+            "ground_contact_ceiling": null,
+            "ground_contact_floor": null,
+            "ground_contact_wall": null,
+            "interior_ceiling": "10 Thai Interior Ceiling",
+            "interior_door": "Thai Interior Door",
+            "interior_fixed_window": "Thai Interior Window",
+            "interior_floor": "12 Thai Interior Floor",
+            "interior_operable_window": "Thai Interior Window",
+            "interior_partition": null,
+            "interior_wall": "13 Thai Interior Partition",
+            "site_shading": null,
+            "space_shading": null,
+            "tubular_daylight_diffuser": "Thai Exterior Window",
+            "tubular_daylight_dome": "Thai Exterior Window"
+          }
+        },
+		"Thai Education Facility": {
+          "": {
+            "building_shading": null,
+            "exterior_door": "Thai Exterior Door",
+            "exterior_fixed_window": "Thai Exterior Window",
+            "exterior_floor": null,
+            "exterior_glass_door": "Thai Exterior Window",
+            "exterior_operable_window": "Thai Exterior Window",
+            "exterior_overhead_door": "Thai Exterior Door",
+            "exterior_roof": "Thai Exterior Roof",
+            "exterior_skylight": "Thai Exterior Window",
+            "exterior_wall": "01 Thai Brick Wall",
+            "ground_contact_ceiling": null,
+            "ground_contact_floor": null,
+            "ground_contact_wall": null,
+            "interior_ceiling": "10 Thai Interior Ceiling",
+            "interior_door": "Thai Interior Door",
+            "interior_fixed_window": "Thai Interior Window",
+            "interior_floor": "12 Thai Interior Floor",
+            "interior_operable_window": "Thai Interior Window",
+            "interior_partition": null,
+            "interior_wall": "13 Thai Interior Partition",
+            "site_shading": null,
+            "space_shading": null,
+            "tubular_daylight_diffuser": "Thai Exterior Window",
+            "tubular_daylight_dome": "Thai Exterior Window"
+          }
+        },
+		"Thai Office": {
+          "": {
+            "building_shading": null,
+            "exterior_door": "Thai Exterior Door",
+            "exterior_fixed_window": "Thai Exterior Window",
+            "exterior_floor": null,
+            "exterior_glass_door": "Thai Exterior Window",
+            "exterior_operable_window": "Thai Exterior Window",
+            "exterior_overhead_door": "Thai Exterior Door",
+            "exterior_roof": "Thai Exterior Roof",
+            "exterior_skylight": "Thai Exterior Window",
+            "exterior_wall": "01 Thai Brick Wall",
+            "ground_contact_ceiling": null,
+            "ground_contact_floor": null,
+            "ground_contact_wall": null,
+            "interior_ceiling": "10 Thai Interior Ceiling",
+            "interior_door": "Thai Interior Door",
+            "interior_fixed_window": "Thai Interior Window",
+            "interior_floor": "12 Thai Interior Floor",
+            "interior_operable_window": "Thai Interior Window",
+            "interior_partition": null,
+            "interior_wall": "13 Thai Interior Partition",
+            "site_shading": null,
+            "space_shading": null,
+            "tubular_daylight_diffuser": "Thai Exterior Window",
+            "tubular_daylight_dome": "Thai Exterior Window"
+          }
+        },
+		"Thai Condominium": {
+          "": {
+            "building_shading": null,
+            "exterior_door": "Thai Exterior Door",
+            "exterior_fixed_window": "Thai Exterior Window",
+            "exterior_floor": null,
+            "exterior_glass_door": "Thai Exterior Window",
+            "exterior_operable_window": "Thai Exterior Window",
+            "exterior_overhead_door": "Thai Exterior Door",
+            "exterior_roof": "Thai Exterior Roof",
+            "exterior_skylight": "Thai Exterior Window",
+            "exterior_wall": "01 Thai Brick Wall",
+            "ground_contact_ceiling": null,
+            "ground_contact_floor": null,
+            "ground_contact_wall": null,
+            "interior_ceiling": "10 Thai Interior Ceiling",
+            "interior_door": "Thai Interior Door",
+            "interior_fixed_window": "Thai Interior Window",
+            "interior_floor": "12 Thai Interior Floor",
+            "interior_operable_window": "Thai Interior Window",
+            "interior_partition": null,
+            "interior_wall": "13 Thai Interior Partition",
+            "site_shading": null,
+            "space_shading": null,
+            "tubular_daylight_diffuser": "Thai Exterior Window",
+            "tubular_daylight_dome": "Thai Exterior Window"
+          }
+        },
+		"Thai Exhibition hall/Gymnasium": {
+          "": {
+            "building_shading": null,
+            "exterior_door": "Thai Exterior Door",
+            "exterior_fixed_window": "Thai Exterior Window",
+            "exterior_floor": null,
+            "exterior_glass_door": "Thai Exterior Window",
+            "exterior_operable_window": "Thai Exterior Window",
+            "exterior_overhead_door": "Thai Exterior Door",
+            "exterior_roof": "Thai Exterior Roof",
+            "exterior_skylight": "Thai Exterior Window",
+            "exterior_wall": "01 Thai Brick Wall",
+            "ground_contact_ceiling": null,
+            "ground_contact_floor": null,
+            "ground_contact_wall": null,
+            "interior_ceiling": "10 Thai Interior Ceiling",
+            "interior_door": "Thai Interior Door",
+            "interior_fixed_window": "Thai Interior Window",
+            "interior_floor": "12 Thai Interior Floor",
+            "interior_operable_window": "Thai Interior Window",
+            "interior_partition": null,
+            "interior_wall": "13 Thai Interior Partition",
+            "site_shading": null,
+            "space_shading": null,
+            "tubular_daylight_diffuser": "Thai Exterior Window",
+            "tubular_daylight_dome": "Thai Exterior Window"
+          }
+        },
+		"Thai Auditorium/Concert Hall": {
+          "": {
+            "building_shading": null,
+            "exterior_door": "Thai Exterior Door",
+            "exterior_fixed_window": "Thai Exterior Window",
+            "exterior_floor": null,
+            "exterior_glass_door": "Thai Exterior Window",
+            "exterior_operable_window": "Thai Exterior Window",
+            "exterior_overhead_door": "Thai Exterior Door",
+            "exterior_roof": "Thai Exterior Roof",
+            "exterior_skylight": "Thai Exterior Window",
+            "exterior_wall": "01 Thai Brick Wall",
+            "ground_contact_ceiling": null,
+            "ground_contact_floor": null,
+            "ground_contact_wall": null,
+            "interior_ceiling": "10 Thai Interior Ceiling",
+            "interior_door": "Thai Interior Door",
+            "interior_fixed_window": "Thai Interior Window",
+            "interior_floor": "12 Thai Interior Floor",
+            "interior_operable_window": "Thai Interior Window",
+            "interior_partition": null,
+            "interior_wall": "13 Thai Interior Partition",
+            "site_shading": null,
+            "space_shading": null,
+            "tubular_daylight_diffuser": "Thai Exterior Window",
+            "tubular_daylight_dome": "Thai Exterior Window"
+          }
+        },
+		"Thai Hotel": {
+          "": {
+            "building_shading": null,
+            "exterior_door": "Thai Exterior Door",
+            "exterior_fixed_window": "Thai Exterior Window",
+            "exterior_floor": null,
+            "exterior_glass_door": "Thai Exterior Window",
+            "exterior_operable_window": "Thai Exterior Window",
+            "exterior_overhead_door": "Thai Exterior Door",
+            "exterior_roof": "Thai Exterior Roof",
+            "exterior_skylight": "Thai Exterior Window",
+            "exterior_wall": "01 Thai Brick Wall",
+            "ground_contact_ceiling": null,
+            "ground_contact_floor": null,
+            "ground_contact_wall": null,
+            "interior_ceiling": "10 Thai Interior Ceiling",
+            "interior_door": "Thai Interior Door",
+            "interior_fixed_window": "Thai Interior Window",
+            "interior_floor": "12 Thai Interior Floor",
+            "interior_operable_window": "Thai Interior Window",
+            "interior_partition": null,
+            "interior_wall": "13 Thai Interior Partition",
+            "site_shading": null,
+            "space_shading": null,
+            "tubular_daylight_diffuser": "Thai Exterior Window",
+            "tubular_daylight_dome": "Thai Exterior Window"
+          }
+        },
+		"Thai Entertainment Complex": {
+          "": {
+            "building_shading": null,
+            "exterior_door": "Thai Exterior Door",
+            "exterior_fixed_window": "Thai Exterior Window",
+            "exterior_floor": null,
+            "exterior_glass_door": "Thai Exterior Window",
+            "exterior_operable_window": "Thai Exterior Window",
+            "exterior_overhead_door": "Thai Exterior Door",
+            "exterior_roof": "Thai Exterior Roof",
+            "exterior_skylight": "Thai Exterior Window",
+            "exterior_wall": "01 Thai Brick Wall",
+            "ground_contact_ceiling": null,
+            "ground_contact_floor": null,
+            "ground_contact_wall": null,
+            "interior_ceiling": "10 Thai Interior Ceiling",
+            "interior_door": "Thai Interior Door",
+            "interior_fixed_window": "Thai Interior Window",
+            "interior_floor": "12 Thai Interior Floor",
+            "interior_operable_window": "Thai Interior Window",
+            "interior_partition": null,
+            "interior_wall": "13 Thai Interior Partition",
+            "site_shading": null,
+            "space_shading": null,
+            "tubular_daylight_diffuser": "Thai Exterior Window",
+            "tubular_daylight_dome": "Thai Exterior Window"
+          }
+        },
+		"Thai Department Store": {
+          "": {
+            "building_shading": null,
+            "exterior_door": "Thai Exterior Door",
+            "exterior_fixed_window": "Thai Exterior Window",
+            "exterior_floor": null,
+            "exterior_glass_door": "Thai Exterior Window",
+            "exterior_operable_window": "Thai Exterior Window",
+            "exterior_overhead_door": "Thai Exterior Door",
+            "exterior_roof": "Thai Exterior Roof",
+            "exterior_skylight": "Thai Exterior Window",
+            "exterior_wall": "01 Thai Brick Wall",
+            "ground_contact_ceiling": null,
+            "ground_contact_floor": null,
+            "ground_contact_wall": null,
+            "interior_ceiling": "10 Thai Interior Ceiling",
+            "interior_door": "Thai Interior Door",
+            "interior_fixed_window": "Thai Interior Window",
+            "interior_floor": "12 Thai Interior Floor",
+            "interior_operable_window": "Thai Interior Window",
+            "interior_partition": null,
+            "interior_wall": "13 Thai Interior Partition",
+            "site_shading": null,
+            "space_shading": null,
+            "tubular_daylight_diffuser": "Thai Exterior Window",
+            "tubular_daylight_dome": "Thai Exterior Window"
+          }
+        }
+	  }
+	},
+	"189.1-2009": {
       "ClimateZone 1": {
         "FullServiceRestaurant": {
           "": {
@@ -28745,10 +29001,269 @@
         "Clear 3mm"
       ],
       "standards_construction_type": null
+    },
+	"01 Thai Brick Wall": {
+      "climate_zone_set": "ClimateZone 1",
+      "construction_standard": "CEC Title24-2013",
+      "intended_surface_type": "ExteriorWall",
+      "materials": [
+        "141 อิฐมอญฉาบปูนสองหน้า"
+      ],
+      "standards_construction_type": "Mass"
+    },
+	"10 Thai Interior Ceiling": {
+      "climate_zone_set": "All Climates",
+      "construction_standard": null,
+      "intended_surface_type": "InteriorCeiling",
+      "materials": [
+        "163 แผ่นยิปซั่มบอร์ด หนา 9 มม."
+      ],
+      "standards_construction_type": null
+    },
+	"12 Thai Interior Floor": {
+      "climate_zone_set": "All Climates",
+      "construction_standard": null,
+      "intended_surface_type": "InteriorFloor",
+      "materials": [
+        "197 ไลโนเลียม (พรมน้ำมัน) หนา 3 มม.",
+        "037 คอนกรีต หนา 10 ซม."
+      ],
+      "standards_construction_type": null
+    },
+	"13 Thai Interior Partition": {
+      "climate_zone_set": "All Climates",
+      "construction_standard": null,
+      "intended_surface_type": "InteriorPartition",
+      "materials": [
+        "158 แผ่นยิบซัมตราช้างชนิดธรรมดา หนา 12 มม.",
+		"158 แผ่นยิบซัมตราช้างชนิดธรรมดา หนา 12 มม."
+      ],
+      "standards_construction_type": null
+    },
+	"Thai Exterior Door": {
+      "climate_zone_set": "All Climates",
+      "construction_standard": null,
+      "intended_surface_type": "ExteriorDoor",
+      "materials": [
+        "F08 Metal surface",
+        "I02 25mm insulation board"
+      ],
+      "standards_construction_type": null
+    },
+	"Thai Exterior Roof": {
+      "climate_zone_set": "All Climates",
+      "construction_standard": null,
+      "intended_surface_type": "ExteriorRoof",
+      "materials": [
+        "M11 100mm lightweight concrete",
+		"F16 Acoustic tile",
+		"F05 Ceiling air space resistance"
+      ],
+      "standards_construction_type": null
+    },
+	"Thai Exterior Window": {
+      "climate_zone_set": "All Climates",
+      "construction_standard": null,
+      "intended_surface_type": "InteriorWindow",
+      "materials": [
+        "Simple Glazing"
+      ],
+      "standards_construction_type": null
+    },
+	"Thai Interior Door": {
+      "climate_zone_set": "All Climates",
+      "construction_standard": null,
+      "intended_surface_type": "InteriorDoor",
+      "materials": [
+        "G05 25mm wood"
+      ],
+      "standards_construction_type": null
+    },
+	"Thai Interior Window": {
+      "climate_zone_set": "All Climates",
+      "construction_standard": null,
+      "intended_surface_type": "InteriorWindow",
+      "materials": [
+        "Simple Glazing"
+      ],
+      "standards_construction_type": null
     }
   },
   "materials": {
-    "1/2IN Gypsum": {
+    "037 คอนกรีต หนา 10 ซม.": {
+	  "is_Thai_library": true,
+      "back_side_infrared_hemispherical_emissivity": null,
+      "back_side_solar_relectance_at_normal_incidence": null,
+      "back_side_visible_relectance_at_normal_incidence": null,
+      "conductivity": 1.442000,
+      "density": 2400.000000,
+      "dirt_correction_factor_for_solar_and_visible_transmittance": null,
+      "front_side_infrared_hemispherical_emissivity": null,
+      "front_side_solar_reflectance_at_normal_incidence": null,
+      "front_side_visible_reflectance_at_normal_incidence": null,
+      "gas_type": null,
+      "infrared_transmittance_at_normal_incidence": null,
+      "material_type": "StandardOpaqueMaterial",
+      "optical_data_type": null,
+      "resistance": 0.45071215270088166,
+      "roughness": "Smooth",
+      "solar_absorptance": 0.500000,
+      "solar_diffusing": null,
+      "solar_heat_gain_coefficient": null,
+      "solar_transmittance_at_normal_incidence": null,
+      "specific_heat": 920.000000,
+      "thermal_absorptance": 0.9,
+      "thickness": 0.100000,
+      "u_factor": null,
+      "visible_absorptance": 0.700000,
+      "visible_transmittance": null,
+      "visible_transmittance_at_normal_incidence": null
+    },
+    "141 อิฐมอญฉาบปูนสองหน้า": {
+	  "is_Thai_library": true,
+      "back_side_infrared_hemispherical_emissivity": null,
+      "back_side_solar_relectance_at_normal_incidence": null,
+      "back_side_visible_relectance_at_normal_incidence": null,
+      "conductivity": 1.102000,
+      "density": 1700.000000,
+      "dirt_correction_factor_for_solar_and_visible_transmittance": null,
+      "front_side_infrared_hemispherical_emissivity": null,
+      "front_side_solar_reflectance_at_normal_incidence": null,
+      "front_side_visible_reflectance_at_normal_incidence": null,
+      "gas_type": null,
+      "infrared_transmittance_at_normal_incidence": null,
+      "material_type": "StandardOpaqueMaterial",
+      "optical_data_type": null,
+      "resistance": 0.45071215270088166,
+      "roughness": "Smooth",
+      "solar_absorptance": 0.300000,
+      "solar_diffusing": null,
+      "solar_heat_gain_coefficient": null,
+      "solar_transmittance_at_normal_incidence": null,
+      "specific_heat": 790.000000,
+      "thermal_absorptance": 0.9,
+      "thickness": 0.100000,
+      "u_factor": null,
+      "visible_absorptance": 0.500000,
+      "visible_transmittance": null,
+      "visible_transmittance_at_normal_incidence": null
+    },
+	"158 แผ่นยิบซัมตราช้างชนิดธรรมดา หนา 12 มม.": {
+	  "is_Thai_library": true,
+      "back_side_infrared_hemispherical_emissivity": null,
+      "back_side_solar_relectance_at_normal_incidence": null,
+      "back_side_visible_relectance_at_normal_incidence": null,
+      "conductivity": 0.318000,
+      "density": 760.000000,
+      "dirt_correction_factor_for_solar_and_visible_transmittance": null,
+      "front_side_infrared_hemispherical_emissivity": null,
+      "front_side_solar_reflectance_at_normal_incidence": null,
+      "front_side_visible_reflectance_at_normal_incidence": null,
+      "gas_type": null,
+      "infrared_transmittance_at_normal_incidence": null,
+      "material_type": "StandardOpaqueMaterial",
+      "optical_data_type": null,
+      "resistance": 0.45071215270088166,
+      "roughness": "Smooth",
+      "solar_absorptance": 0.300000,
+      "solar_diffusing": null,
+      "solar_heat_gain_coefficient": null,
+      "solar_transmittance_at_normal_incidence": null,
+      "specific_heat": 1090.000000,
+      "thermal_absorptance": 0.900000,
+      "thickness": 0.012000,
+      "u_factor": null,
+      "visible_absorptance": 0.500000,
+      "visible_transmittance": null,
+      "visible_transmittance_at_normal_incidence": null
+    },
+	"163 แผ่นยิปซั่มบอร์ด หนา 9 มม.": {
+	  "is_Thai_library": true,
+      "back_side_infrared_hemispherical_emissivity": null,
+      "back_side_solar_relectance_at_normal_incidence": null,
+      "back_side_visible_relectance_at_normal_incidence": null,
+      "conductivity": 0.191000,
+      "density": 880.000000,
+      "dirt_correction_factor_for_solar_and_visible_transmittance": null,
+      "front_side_infrared_hemispherical_emissivity": null,
+      "front_side_solar_reflectance_at_normal_incidence": null,
+      "front_side_visible_reflectance_at_normal_incidence": null,
+      "gas_type": null,
+      "infrared_transmittance_at_normal_incidence": null,
+      "material_type": "StandardOpaqueMaterial",
+      "optical_data_type": null,
+      "resistance": 0.45071215270088166,
+      "roughness": "Smooth",
+      "solar_absorptance": 0.300000,
+      "solar_diffusing": null,
+      "solar_heat_gain_coefficient": null,
+      "solar_transmittance_at_normal_incidence": null,
+      "specific_heat": 1090.000000,
+      "thermal_absorptance": 0.900000,
+      "thickness": 0.009000,
+      "u_factor": null,
+      "visible_absorptance": 0.500000,
+      "visible_transmittance": null,
+      "visible_transmittance_at_normal_incidence": null
+    },
+	"197 ไลโนเลียม (พรมน้ำมัน) หนา 3 มม.": {
+	  "is_Thai_library": true,
+      "back_side_infrared_hemispherical_emissivity": null,
+      "back_side_solar_relectance_at_normal_incidence": null,
+      "back_side_visible_relectance_at_normal_incidence": null,
+      "conductivity": 0.227000,
+      "density": 1200.000000,
+      "dirt_correction_factor_for_solar_and_visible_transmittance": null,
+      "front_side_infrared_hemispherical_emissivity": null,
+      "front_side_solar_reflectance_at_normal_incidence": null,
+      "front_side_visible_reflectance_at_normal_incidence": null,
+      "gas_type": null,
+      "infrared_transmittance_at_normal_incidence": null,
+      "material_type": "StandardOpaqueMaterial",
+      "optical_data_type": null,
+      "resistance": 0.45071215270088166,
+      "roughness": "Smooth",
+      "solar_absorptance": 0.300000,
+      "solar_diffusing": null,
+      "solar_heat_gain_coefficient": null,
+      "solar_transmittance_at_normal_incidence": null,
+      "specific_heat": 1260.000000,
+      "thermal_absorptance": 0.300000,
+      "thickness": 0.003000,
+      "u_factor": null,
+      "visible_absorptance": 0.700000,
+      "visible_transmittance": null,
+      "visible_transmittance_at_normal_incidence": null
+    },
+	"Simple Glazing": {
+      "back_side_infrared_hemispherical_emissivity": null,
+      "back_side_solar_relectance_at_normal_incidence": null,
+      "back_side_visible_relectance_at_normal_incidence": null,
+      "conductivity": null,
+      "density": null,
+      "dirt_correction_factor_for_solar_and_visible_transmittance": null,
+      "front_side_infrared_hemispherical_emissivity": null,
+      "front_side_solar_reflectance_at_normal_incidence": null,
+      "front_side_visible_reflectance_at_normal_incidence": null,
+      "gas_type": null,
+      "infrared_transmittance_at_normal_incidence": null,
+      "material_type": "SimpleGlazing",
+      "optical_data_type": null,
+      "resistance": null,
+      "roughness": null,
+      "solar_absorptance": null,
+      "solar_diffusing": null,
+      "solar_heat_gain_coefficient": 0.390000,
+      "solar_transmittance_at_normal_incidence": null,
+      "specific_heat": null,
+      "thermal_absorptance": null,
+      "thickness": null,
+      "u_factor": 3.236460,
+      "visible_absorptance": null,
+      "visible_transmittance": 0.600000,
+      "visible_transmittance_at_normal_incidence": null
+    },
+	"1/2IN Gypsum": {
       "back_side_infrared_hemispherical_emissivity": null,
       "back_side_solar_relectance_at_normal_incidence": null,
       "back_side_visible_relectance_at_normal_incidence": null,
@@ -30708,7 +31223,36 @@
       "visible_transmittance": null,
       "visible_transmittance_at_normal_incidence": null
     },
-    "I02 50mm insulation board": {
+    "I02 25mm insulation board": {
+	  "is_Thai_library": true,
+      "back_side_infrared_hemispherical_emissivity": null,
+      "back_side_solar_relectance_at_normal_incidence": null,
+      "back_side_visible_relectance_at_normal_incidence": null,
+      "conductivity": 0.030000,
+      "density": 43.000000,
+      "dirt_correction_factor_for_solar_and_visible_transmittance": null,
+      "front_side_infrared_hemispherical_emissivity": null,
+      "front_side_solar_reflectance_at_normal_incidence": null,
+      "front_side_visible_reflectance_at_normal_incidence": null,
+      "gas_type": null,
+      "infrared_transmittance_at_normal_incidence": null,
+      "material_type": "StandardOpaqueMaterial",
+      "optical_data_type": null,
+      "resistance": 9.615192590952189,
+      "roughness": "MediumRough",
+      "solar_absorptance": 0.700000,
+      "solar_diffusing": null,
+      "solar_heat_gain_coefficient": null,
+      "solar_transmittance_at_normal_incidence": null,
+      "specific_heat": 1210.000000,
+      "thermal_absorptance": 0.9,
+      "thickness": 0.025400,
+      "u_factor": null,
+      "visible_absorptance": 0.700000,
+      "visible_transmittance": null,
+      "visible_transmittance_at_normal_incidence": null
+    },
+	"I02 50mm insulation board": {
       "back_side_infrared_hemispherical_emissivity": null,
       "back_side_solar_relectance_at_normal_incidence": null,
       "back_side_visible_relectance_at_normal_incidence": null,
