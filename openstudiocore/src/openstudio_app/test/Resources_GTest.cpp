@@ -79,7 +79,7 @@ TEST_F(OpenStudioAppFixture, Resources_Templates)
 
 TEST_F(OpenStudioAppFixture, Resources_HVACLibrary)
 {
-  openstudio::path hvacPath = getApplicationSourceDirectory() / openstudio::toPath("src/openstudio_app/Resources/hvaclibrary/hvac_library.osm");
+  openstudio::path hvacPath = getApplicationSourceDirectory() / openstudio::toPath("src/openstudio_app/Resources/default/hvac_library.osm");
 
   ASSERT_TRUE(openstudio::filesystem::exists(hvacPath));
 

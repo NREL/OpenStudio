@@ -117,6 +117,7 @@ MainWindow::MainWindow(bool isPlugin, QWidget *parent) :
   connect(mainMenu, &MainMenu::importSDDClicked, this, &MainWindow::importSDDClicked);
   connect(mainMenu, &MainMenu::importIFCClicked, this, &MainWindow::importIFCClicked);
   connect(mainMenu, &MainMenu::loadFileClicked, this, &MainWindow::loadFileClicked);
+  connect(mainMenu, &MainMenu::changeDefaultLibrariesClicked, this, &MainWindow::changeDefaultLibrariesClicked);
   connect(mainMenu, &MainMenu::loadLibraryClicked, this, &MainWindow::loadLibraryClicked);
   connect(mainMenu, &MainMenu::saveAsFileClicked, this, &MainWindow::saveAsFileClicked);
   connect(mainMenu, &MainMenu::saveFileClicked, this, &MainWindow::saveFileClicked);
@@ -135,6 +136,9 @@ MainWindow::MainWindow(bool isPlugin, QWidget *parent) :
   connect(mainMenu, &MainMenu::changeBclLogin, this, &MainWindow::changeBclLogin);
   connect(mainMenu, &MainMenu::configureProxyClicked, this, &MainWindow::configureProxyClicked);
   connect(this, &MainWindow::enableRevertToSaved, mainMenu, &MainMenu::enableRevertToSavedAction);
+  connect(this, &MainWindow::enableFileImports, mainMenu, &MainMenu::enableFileImportActions);
+  connect(this, &MainWindow::enablePreferences, mainMenu, &MainMenu::enablePreferencesActions);
+  connect(this, &MainWindow::enableComponentsMeasures, mainMenu, &MainMenu::enableComponentsMeasuresActions);
 }
 
 QSize MainWindow::sizeHint() const
@@ -252,6 +256,21 @@ bool MainWindow::displayIP()
 void MainWindow::enableRevertToSavedAction(bool enable)
 {
   emit enableRevertToSaved(enable);
+}
+
+void MainWindow::enableFileImportActions(bool enable)
+{
+  emit enableFileImports(enable);
+}
+
+void MainWindow::enablePreferencesActions(bool enable)
+{
+  emit enablePreferences(enable);
+}
+
+void MainWindow::enableComponentsMeasuresActions(bool enable)
+{
+  emit enableComponentsMeasures(enable);
 }
 
 void MainWindow::readSettings()

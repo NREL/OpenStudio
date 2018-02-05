@@ -30,7 +30,6 @@
 #include "Intersection.hpp"
 #include "Transformation.hpp"
 #include "Point3d.hpp"
-#include "PointLatLon.hpp"
 #include "Vector3d.hpp"
 
 #include "../core/Assert.hpp"
@@ -40,8 +39,6 @@
 #include <polypartition/polypartition.h>
 
 #include <list>
-
-#include <QPolygon>
 
 namespace openstudio{
   /// convert degrees to radians
@@ -72,7 +69,7 @@ namespace openstudio{
   OptionalVector3d getNewallVector(const Point3dVector& points)
   {
     OptionalVector3d result;
-    unsigned N = points.size();
+    size_t N = points.size();
     if (N >= 3){
       Vector3d vec;
       for (unsigned i = 1; i < N-1; ++i){
@@ -107,11 +104,11 @@ namespace openstudio{
       Transformation alignFace = Transformation::alignFace(points);
       Point3dVector surfacePoints = alignFace.inverse()*points;
 
-      unsigned N = surfacePoints.size();
+      size_t N = surfacePoints.size();
       double A = 0;
       double cx = 0;
       double cy = 0;
-      for (unsigned i = 0; i < N; ++i){
+      for (size_t i = 0; i < N; ++i){
         double x1, x2, y1, y2;
         if (i == N-1){
           x1 = surfacePoints[i].x();
@@ -145,7 +142,7 @@ namespace openstudio{
   /// reorder points to upper-left-corner convention
   Point3dVector reorderULC(const Point3dVector& points)
   {
-    unsigned N = points.size();
+    size_t N = points.size();
     if (N < 3){
       return Point3dVector();
     }
@@ -182,7 +179,15 @@ namespace openstudio{
 
   std::vector<Point3d> removeCollinear(const Point3dVector& points, double tol)
   {
-    unsigned N = points.size();
+    Transformation t = Transformation::alignFace(points);
+    std::vector<Point3d> result = t*simplify(t.inverse()*points, true, tol);
+    return result;
+  }
+
+
+  std::vector<Point3d> removeCollinearLegacy(const Point3dVector& points, double tol)
+  {
+    size_t N = points.size();
     if (N < 3){
       return points;
     }
@@ -223,6 +228,60 @@ namespace openstudio{
       }
     }
 
+    size_t iBegin = 0;
+    size_t iEnd = result.size();
+
+    bool resizeBegin = true;
+    while (resizeBegin){
+      resizeBegin = false;
+      unsigned N = iEnd - iBegin;
+      if (N > 3){
+        Vector3d a = (result[iBegin] - result[iEnd - 1]);
+        Vector3d b = (result[iBegin + 1] - result[iBegin]);
+        if (a.normalize()){
+          if (b.normalize()){
+            double d = a.dot(b);
+            if (d >= 1.0 - tol){
+              iBegin++;
+              resizeBegin = true;
+            }
+          } else{
+            iBegin++;
+            resizeBegin = true;
+          }
+        } else{
+          iBegin++;
+          resizeBegin = true;
+        }
+      }
+    }
+
+    bool resizeEnd = true;
+    while (resizeEnd){
+      resizeEnd = false;
+      unsigned N = iEnd - iBegin;
+      if (N > 3){
+        Vector3d a = (result[iEnd - 1] - result[iEnd - 2]);
+        Vector3d b = (result[iBegin] - result[iEnd - 1]);
+        if (a.normalize()){
+          if (b.normalize()){
+            double d = a.dot(b);
+            if (d >= 1.0 - tol){
+              iEnd--;
+              resizeEnd = true;
+            }
+          } else{
+            iEnd--;
+            resizeEnd = true;
+          }
+        } else{
+          iEnd--;
+          resizeEnd = true;
+        }
+      }
+    }
+
+    result = std::vector<Point3d>(result.begin() + iBegin, result.begin() + iEnd);
     return result;
   }
 
@@ -356,19 +415,9 @@ namespace openstudio{
     return acos(working1.dot(working2));
   }
 
-  /// compute distance in meters between two points on the Earth's surface
-  /// lat and lon are specified in degrees
-  double getDistanceLatLon(double lat1, double lon1, double lat2, double lon2)
-  {
-    PointLatLon p1(lat1, lon1);
-    PointLatLon p2(lat2, lon2);
-    return (p1 - p2);
-  }
-
-
   bool circularEqual(const Point3dVector& points1, const Point3dVector& points2, double tol)
   {
-    unsigned N = points1.size();
+    size_t N = points1.size();
     if (N != points2.size()){
       return false;
     }
@@ -380,7 +429,7 @@ namespace openstudio{
     bool result = false;
 
     // look for a common starting point
-    for (unsigned i = 0; i < N; ++i){
+    for (size_t i = 0; i < N; ++i){
       if (getDistance(points1[0], points2[i]) <= tol){
 
         result = true;
@@ -464,8 +513,8 @@ namespace openstudio{
     TPPLPoly outerPoly; // must be counter-clockwise, input vertices are clockwise
     outerPoly.Init(vertices.size());
     outerPoly.SetHole(false);
-    unsigned n = vertices.size();
-    for(unsigned i = 0; i < n; ++i){
+    size_t n = vertices.size();
+    for(size_t i = 0; i < n; ++i){
 
       // should all have zero z coordinate now
       double z = vertices[n-i-1].z();
@@ -518,6 +567,10 @@ namespace openstudio{
       test = pp.Triangulate_MONO(&polys, &resultPolys);
     }
     if (test == 0){
+      //std::stringstream ss;
+      //ss << "Vertices: " << vertices << std::endl;
+      //for (const auto& hole : holes){ ss << "Hole:" << hole << std::endl; }
+      //std::string testStr = ss.str();
       LOG_FREE(Error, "utilities.geometry.computeTriangulation", "Failed to partition polygon");
       return result;
     }
@@ -729,15 +782,14 @@ namespace openstudio{
       return false;
     }
 
-    QPolygonF surfacePolygon;
+    Point3dVector surfacePolygon;
     for (const Point3d& point : faceVertices){
       if (std::abs(point.z()) > 0.001){
         LOG_FREE(Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface point z not on plane, z =" << point.z());
       }
-      surfacePolygon << QPointF(point.x(),point.y());
+      surfacePolygon.push_back(Point3d(point.x(),point.y(), 0.0));
     }
-    // close the polygon
-    surfacePolygon << QPointF(faceVertices[0].x(), faceVertices[0].y());
+    std::reverse(surfacePolygon.begin(), surfacePolygon.end());
 
     if (doViewGlass){
       viewVertices.push_back(Point3d(viewMinX, viewMinY + viewHeight, 0));
@@ -745,19 +797,19 @@ namespace openstudio{
       viewVertices.push_back(Point3d(viewMinX + viewWidth, viewMinY, 0));
       viewVertices.push_back(Point3d(viewMinX + viewWidth, viewMinY + viewHeight, 0));
 
-      QPolygonF windowPolygon;
+      Point3dVector windowPolygon;
       for (const Point3d& point : viewVertices){
         if (std::abs(point.z()) > 0.001){
           LOG_FREE(Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface point z not on plane, z =" << point.z());
         }
-        windowPolygon << QPointF(point.x(),point.y());
+        windowPolygon.push_back(Point3d(point.x(),point.y(), 0.0));
       }
-      // close the polygon
-      windowPolygon << QPointF(viewVertices[0].x(), viewVertices[0].y());
 
       // sub surface must be fully contained by base surface
-      for (const QPointF& point : windowPolygon){
-        if (!surfacePolygon.containsPoint(point, Qt::OddEvenFill)){
+      for (const Point3d& point : windowPolygon){
+        if (!within(point, surfacePolygon, 0.001)){
+          std::cout << "point: " << point << std::endl;
+          std::cout << "surfacePolygon: " << surfacePolygon << std::endl;
           LOG_FREE(Debug, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface does not fully contain SubSurface");
           return false;
         }
@@ -770,19 +822,17 @@ namespace openstudio{
       daylightingVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY, 0));
       daylightingVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY + daylightingHeight, 0));
 
-      QPolygonF windowPolygon;
+      Point3dVector windowPolygon;
       for (const Point3d& point : daylightingVertices){
         if (std::abs(point.z()) > 0.001){
           LOG_FREE(Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface point z not on plane, z =" << point.z());
         }
-        windowPolygon << QPointF(point.x(),point.y());
+        windowPolygon.push_back(Point3d(point.x(),point.y(), 0.0));
       }
-      // close the polygon
-      windowPolygon << QPointF(daylightingVertices[0].x(), daylightingVertices[0].y());
 
       // sub surface must be fully contained by base surface
-      for (const QPointF& point : windowPolygon){
-        if (!surfacePolygon.containsPoint(point, Qt::OddEvenFill)){
+      for (const Point3d& point : windowPolygon){
+        if (!within(point, surfacePolygon, 0.001)){
           LOG_FREE(Debug, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface does not fully contain SubSurface");
           return false;
         }

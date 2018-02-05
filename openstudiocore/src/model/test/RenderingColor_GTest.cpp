@@ -189,3 +189,70 @@ TEST_F(ModelFixture, RenderingColor_Initializer2)
   EXPECT_GE(color.renderingBlueValue(), 0);
   EXPECT_LE(color.renderingBlueValue(), 255);
 }
+
+
+
+TEST_F(ModelFixture, RenderingColor_ColorString) {
+  Model model;
+  boost::optional<RenderingColor> test;
+
+  RenderingColor red(model);
+  red.setRenderingRedValue(255);
+  red.setRenderingGreenValue(0);
+  red.setRenderingBlueValue(0);
+  std::string redString = red.colorString();
+  EXPECT_EQ("#FF0000", redString);
+  test = RenderingColor::fromColorString(redString, model);
+  ASSERT_TRUE(test);
+  EXPECT_EQ(255, test->renderingRedValue());
+  EXPECT_EQ(0, test->renderingGreenValue());
+  EXPECT_EQ(0, test->renderingBlueValue());
+
+  RenderingColor green(model);
+  green.setRenderingRedValue(0);
+  green.setRenderingGreenValue(255);
+  green.setRenderingBlueValue(0);
+  std::string greenString = green.colorString();
+  EXPECT_EQ("#00FF00", greenString);
+  test = RenderingColor::fromColorString(greenString, model);
+  ASSERT_TRUE(test);
+  EXPECT_EQ(0, test->renderingRedValue());
+  EXPECT_EQ(255, test->renderingGreenValue());
+  EXPECT_EQ(0, test->renderingBlueValue());
+
+  RenderingColor blue(model);
+  blue.setRenderingRedValue(0);
+  blue.setRenderingGreenValue(0);
+  blue.setRenderingBlueValue(255);
+  std::string blueString = blue.colorString();
+  EXPECT_EQ("#0000FF", blueString);
+  test = RenderingColor::fromColorString(blueString, model);
+  ASSERT_TRUE(test);
+  EXPECT_EQ(0, test->renderingRedValue());
+  EXPECT_EQ(0, test->renderingGreenValue());
+  EXPECT_EQ(255, test->renderingBlueValue());
+
+  RenderingColor black(model);
+  black.setRenderingRedValue(0);
+  black.setRenderingGreenValue(0);
+  black.setRenderingBlueValue(0);
+  std::string blackString = black.colorString();
+  EXPECT_EQ("#000000", blackString);
+  test = RenderingColor::fromColorString(blackString, model);
+  ASSERT_TRUE(test);
+  EXPECT_EQ(0, test->renderingRedValue());
+  EXPECT_EQ(0, test->renderingGreenValue());
+  EXPECT_EQ(0, test->renderingBlueValue());
+
+  RenderingColor white(model);
+  white.setRenderingRedValue(255);
+  white.setRenderingGreenValue(255);
+  white.setRenderingBlueValue(255);
+  std::string whiteString = white.colorString();
+  EXPECT_EQ("#FFFFFF", whiteString);
+  test = RenderingColor::fromColorString(whiteString, model);
+  ASSERT_TRUE(test);
+  EXPECT_EQ(255, test->renderingRedValue());
+  EXPECT_EQ(255, test->renderingGreenValue());
+  EXPECT_EQ(255, test->renderingBlueValue());
+}

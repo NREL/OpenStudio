@@ -43,6 +43,8 @@ class MainTabView;
 
 class VerticalTabWidget;
 
+class MainMenu;
+
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
@@ -78,6 +80,12 @@ class MainWindow : public QMainWindow
 
   void enableRevertToSavedAction(bool enable);
 
+  void enableFileImportActions(bool enable);
+
+  void enablePreferencesActions(bool enable);
+
+  void enableComponentsMeasuresActions(bool enable);
+
   QString lastPath() const;
 
   VerticalTabWidget * verticalTabWidget() { return m_verticalTabWidget; }
@@ -105,6 +113,8 @@ class MainWindow : public QMainWindow
   void loadFileClicked();
 
   void osmDropped(QString path);
+
+  void changeDefaultLibrariesClicked();
 
   void loadLibraryClicked();
 
@@ -144,6 +154,12 @@ class MainWindow : public QMainWindow
 
   void enableRevertToSaved(bool enable);
 
+  void enableFileImports(bool enable);
+
+  void enablePreferences(bool enable);
+
+  void enableComponentsMeasures(bool enable);
+
   protected:
 
   void closeEvent(QCloseEvent * event) override;
@@ -167,6 +183,8 @@ class MainWindow : public QMainWindow
   VerticalTabWidget * m_verticalTabWidget;
 
   QSplitter * m_mainSplitter;
+
+  MainMenu * m_mainMenu;
 
   bool m_displayIP;
 

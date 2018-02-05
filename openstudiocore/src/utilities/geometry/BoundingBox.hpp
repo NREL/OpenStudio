@@ -34,6 +34,8 @@
 
 #include <boost/optional.hpp>
 
+#include <vector>
+
 namespace openstudio{
 
   // forward declaration

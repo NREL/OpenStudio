@@ -5,6 +5,7 @@ test_fails.txt
 /build/
 /build_debug/
 /build-debug/
+/build-meta/
 /build_release/
 /build-release/
 /build_64/

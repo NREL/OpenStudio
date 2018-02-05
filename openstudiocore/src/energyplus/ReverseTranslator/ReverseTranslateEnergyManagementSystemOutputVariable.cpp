@@ -73,6 +73,9 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemOutputVari
   openstudio::model::EnergyManagementSystemOutputVariable emsOutputVariable(m_model);
   emsOutputVariable.setName(*s);
 
+  // mark this object as translated so we don't recursively translate it below
+  m_workspaceToModelMap.insert(std::make_pair(workspaceObject.handle(), emsOutputVariable));
+
   s = workspaceObject.getString(EnergyManagementSystem_OutputVariableFields::EMSVariableName);
   if (!s) {
     LOG(Error, emsOutputVariable.nameString() + ": EMSVariableName not set");
@@ -91,6 +94,8 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemOutputVari
       }
     }
     //look for name match on other (EMS) objects.
+    // DLM: I am not really sure what this is supposed to do, it was recursively calling translateAndMapWorkspaceObject on the current object.
+    // DLM: Also, it is continually setting the name on emsOutputVariable and not the new modelObject
     for (WorkspaceObject& wsObject : workspace.getObjectsByName(*s)) {
       boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
       if (modelObject) {
