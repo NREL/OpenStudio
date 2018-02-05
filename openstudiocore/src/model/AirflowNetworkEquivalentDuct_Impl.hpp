@@ -76,6 +76,9 @@ namespace detail {
     {
       return getObject<ModelObject>().getModelObjectTarget<T>(OS_AirflowNetworkEquivalentDuctFields::ComponentName);
     }
+    boost::optional<std::string> coilObjectType() const;
+    boost::optional<std::string> heatExchangerObjectType() const;
+    boost::optional<std::string> terminalUnitObjectType() const;
 
     double airPathLength() const;
 

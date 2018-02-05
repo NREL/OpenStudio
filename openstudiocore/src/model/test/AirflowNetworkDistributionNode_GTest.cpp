@@ -30,9 +30,28 @@
 
 #include <model/test/ModelFixture.hpp>
 
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
 #include "../AirflowNetworkDistributionNode.hpp"
 #include "../AirflowNetworkDistributionNode_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
+TEST_F(ModelFixture, AirflowNetwork_DistributionNode)
+{
+  Model model;
+
+  Node node(model);
+
+  AirflowNetworkDistributionNode afnnode(model);
+
+  boost::optional<AirflowNetworkDistributionNode> optafnnode = node.createAirflowNetworkDistributionNode();
+
+  EXPECT_TRUE(optafnnode);
+
+  /*
+  AirLoopHVAC airloop(model);
+  Test other loop-related nodes here...
+  */
+}

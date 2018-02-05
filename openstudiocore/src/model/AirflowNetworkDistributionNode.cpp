@@ -119,8 +119,19 @@ AirflowNetworkDistributionNode::AirflowNetworkDistributionNode(const Model& mode
   OS_ASSERT(ok);
 }
 
+AirflowNetworkDistributionNode::AirflowNetworkDistributionNode(const Model& model)
+  : AirflowNetworkNode(AirflowNetworkDistributionNode::iddObjectType(), model)
+{
+  OS_ASSERT(getImpl<detail::AirflowNetworkDistributionNode_Impl>());
+}
+
 IddObjectType AirflowNetworkDistributionNode::iddObjectType() {
   return IddObjectType(IddObjectType::OS_AirflowNetworkDistributionNode);
+}
+
+boost::optional<Node> AirflowNetworkDistributionNode::node() const
+{
+  return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->component<Node>();
 }
 
 boost::optional<AirLoopHVACZoneMixer> AirflowNetworkDistributionNode::airLoopHVACZoneMixer() const
@@ -141,11 +152,6 @@ boost::optional<AirLoopHVACOutdoorAirSystem> AirflowNetworkDistributionNode::air
 //OAMixerOutdoorAirStreamNode
 //OutdoorAir : NodeList
 //OutdoorAir : Node
-
-boost::optional<Node> AirflowNetworkDistributionNode::node() const
-{
-  return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->component<Node>();
-}
 
 double AirflowNetworkDistributionNode::nodeHeight() const {
   return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->nodeHeight();

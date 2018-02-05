@@ -31,6 +31,8 @@
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
+#include <vector>
+#include <unordered_map>
 
 namespace openstudio {
 
@@ -74,6 +76,10 @@ class MODEL_API AirflowNetworkDuctViewFactors : public ModelObject {
   bool isDuctSurfaceEmittanceDefaulted() const;
 
   boost::optional<double> getViewFactor(const PlanarSurface &surf) const;
+
+  std::vector<std::pair<PlanarSurface, double>> viewFactors() const;
+
+  //std::unordered_map<PlanarSurface, double> viewFactorMap() const;
 
   //@}
   /** @name Setters */

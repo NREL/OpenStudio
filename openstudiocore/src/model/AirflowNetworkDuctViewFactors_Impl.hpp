@@ -83,6 +83,10 @@ namespace detail {
 
     boost::optional<double> getViewFactor(const PlanarSurface &surf) const;
 
+    std::vector<std::pair<PlanarSurface, double>> viewFactors() const;
+
+    //std::unordered_map<PlanarSurface, double> viewFactorMap() const;
+
     //@}
     /** @name Setters */
     //@{

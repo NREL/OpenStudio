@@ -9696,6 +9696,7 @@ OS:AirLoopHVAC:ZoneMixer,
        \reference ZoneMixers
        \reference ReturnPathComponentNames
        \reference ConnectionObject
+       \reference AirflowNetworkNodeComponentNames
   A3, \field Outlet Node Name
        \type object-list
        \required-field
@@ -9720,6 +9721,7 @@ OS:AirLoopHVAC:ZoneSplitter,
        \reference ZoneSplitters
        \reference SupplyPathComponentNames
        \reference ConnectionObject
+       \reference AirflowNetworkNodeComponentNames
   A3, \field Inlet Node Name
        \type object-list
        \required-field
@@ -18931,6 +18933,7 @@ OS:Node,
        \required-field
        \reference ConnectionObject
        \reference Node
+       \reference AirflowNetworkNodeComponentNames
   N1, \field Inlet Port
        \type object-list
        \required-field
@@ -28184,7 +28187,6 @@ OS:AirflowNetworkZone,
       \required-field
   A2, \field Thermal Zone Name
       \required-field
-      \reference AirFlowNetworkMultizoneZones
       \type object-list
       \object-list ThermalZoneNames
       \note Enter the zone name where ventilation control is required.
@@ -28804,7 +28806,7 @@ OS:AirflowNetworkPressureController,
       \object-list ScheduleNames
 
 OS:AirflowNetworkDistributionNode,
-      \min-fields 4
+      \min-fields 3
       \memo This object represents an air distribution node in the AirflowNetwork model.
   A1, \field Handle
       \type handle
@@ -28820,27 +28822,7 @@ OS:AirflowNetworkDistributionNode,
       \note Enter a node name to represent a node already defined in an air loop.
       \note Leave this field blank if the Node or Object Type field below is entered as
       \note AirLoopHVAC:ZoneMixer, AirLoopHVAC:ZoneSplitter, AirLoopHVAC:OutdoorAirSystem, or Other.
-  A4, \field Component Object Type or Node Type
-      \type choice
-      \key AirLoopHVAC:ZoneMixer
-      \key AirLoopHVAC:ZoneSplitter
-      \key AirLoopHVAC:OutdoorAirSystem
-      \key OAMixerOutdoorAirStreamNode
-      \key OutdoorAir:NodeList
-      \key OutdoorAir:Node
-      \key Other
-      \default Other
-      \note Designates Node type for the Node or Component Name defined in the field above.
-      \note AirLoopHVAC:ZoneMixer -- Represents a AirLoopHVAC:ZoneMixer object.
-      \note AirLoopHVAC:ZoneSplitter -- Represents a AirLoopHVAC:ZoneSplitter object.
-      \note AirLoopHVAC:OutdoorAirSystem -- Represents an AirLoopHVAC:OutdoorAirSystem object.
-      \note OAMixerOutdoorAirStreamNode -- Represents an external node used in the OutdoorAir:Mixer
-      \note OutdoorAir:NodeList -- Represents an external node when a heat exchanger is used before
-      \note the OutdoorAir:Mixer
-      \note OutdoorAir:Node -- Represents an external node when a heat exchanger is used before
-      \note the OutdoorAir:Mixer
-      \note Other -- none of the above, the Node name already defined in the previous field is part
-      \note of an air loop.
+      \object-list AirflowNetworkNodeComponentNames
   N1; \field Node Height
       \type real
       \units m
@@ -28990,7 +28972,6 @@ OS:AirflowNetworkFan,
       \required-field
       \type object-list
       \object-list FansCVandOnOffandVAV
-      \reference AirflowNetworkComponentNames
       \note Enter the name of the fan in the primary air loop.
 
 OS:AirflowNetworkEquivalentDuct,
@@ -29002,7 +28983,6 @@ OS:AirflowNetworkEquivalentDuct,
   A2, \field Component Name
       \required-field
       \type object-list
-      \reference AirflowNetworkComponentNames
       \object-list AFNCoilNames
       \object-list AFNHeatExchangerNames
       \object-list AFNTerminalUnitNames

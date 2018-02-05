@@ -36,6 +36,8 @@
 #include "AirflowNetworkLinkage.hpp"
 #include "AirflowNetworkLinkage_Impl.hpp"
 
+#include "Model.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_AirflowNetworkDuctViewFactors_FieldEnums.hxx>
 
@@ -161,16 +163,49 @@ namespace detail {
           if (value) {
             return value;
           } else {
-            LOG(Error, "Could not read surface view factor " << group.groupIndex() << " in " << briefDescription() << ".");
+            LOG(Warn, "Could not read surface view factor " << group.groupIndex() << " in " << briefDescription() << ".");
             return boost::none;
           }
         }
       } else {
-        LOG(Error, "Could not read surface name " << group.groupIndex() << " in " << briefDescription() << ".");
+        LOG(Warn, "Could not read surface name " << group.groupIndex() << " in " << briefDescription() << ".");
       }
     }
     return boost::none;
   }
+
+  std::vector<std::pair<PlanarSurface, double>> AirflowNetworkDuctViewFactors_Impl::viewFactors() const
+  {
+    std::vector<std::pair<PlanarSurface, double>> result;
+    for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
+      OptionalString name = group.getString(0);
+      if (name) {
+        OptionalDouble value = group.getDouble(1);
+        if (value) {
+          boost::optional<PlanarSurface> optsurface = group.getModelObjectTarget<PlanarSurface>(0);
+          if (optsurface) {
+            result.push_back({optsurface.get(), value.get()});
+          } else {
+            LOG(Warn, "Failed to find surface named " << name.get() << " in " << briefDescription() << ".");
+          }
+        } else {
+          LOG(Warn, "Could not read surface view factor " << group.groupIndex() << " in " << briefDescription() << ".");
+        }
+      } else {
+        LOG(Warn, "Could not read surface name " << group.groupIndex() << " in " << briefDescription() << ".");
+      }
+    }
+    return result;
+  }
+
+  //std::unordered_map<PlanarSurface, double> AirflowNetworkDuctViewFactors_Impl::viewFactorMap() const
+  //{
+  //  std::unordered_map<PlanarSurface, double> result;
+  //  for (auto &f : viewFactors()) {
+  //    result[f.first] = f.second;
+  //  }
+  //  return result;
+  //}
 
   bool AirflowNetworkDuctViewFactors_Impl::setViewFactor(const PlanarSurface &surf, double F)
   {
@@ -282,6 +317,16 @@ boost::optional<double> AirflowNetworkDuctViewFactors::getViewFactor(const Plana
 {
   return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->getViewFactor(surf);
 }
+
+std::vector<std::pair<PlanarSurface, double>> AirflowNetworkDuctViewFactors::viewFactors() const
+{
+  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->viewFactors();
+}
+
+//std::unordered_map<PlanarSurface, double> AirflowNetworkDuctViewFactors::viewFactorMap() const
+//{
+//  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->viewFactorMap();
+//}
 
 bool AirflowNetworkDuctViewFactors::setViewFactor(const PlanarSurface &surf, double F)
 {

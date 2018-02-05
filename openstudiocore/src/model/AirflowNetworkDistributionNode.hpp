@@ -61,6 +61,8 @@ class MODEL_API AirflowNetworkDistributionNode : public AirflowNetworkNode {
   /** @name Constructors and Destructors */
   //@{
 
+  AirflowNetworkDistributionNode(const Model& model);
+
   virtual ~AirflowNetworkDistributionNode() {}
 
   //@}
@@ -71,14 +73,13 @@ class MODEL_API AirflowNetworkDistributionNode : public AirflowNetworkNode {
 
   /** @name Getters */
   //@{
-
+  boost::optional<Node> node() const;
   boost::optional<AirLoopHVACZoneMixer> airLoopHVACZoneMixer() const;
   boost::optional<AirLoopHVACZoneSplitter> airLoopHVACZoneSplitter() const;
   boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
   //OAMixerOutdoorAirStreamNode
   //OutdoorAir : NodeList
   //OutdoorAir : Node
-  boost::optional<Node> node() const;
 
   double nodeHeight() const;
 

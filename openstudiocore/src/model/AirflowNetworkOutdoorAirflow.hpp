@@ -71,8 +71,6 @@ class MODEL_API AirflowNetworkOutdoorAirflow : public ModelObject {
 
   /** Sets the AirflowNetworkCrack object associated with this object. */
   bool setCrack(const AirflowNetworkCrack& crack);
-  /** Resets the AirflowNetworkCrack object for this object. */
-  void resetCrack();
 
   //@}
   /** @name Other */
@@ -88,6 +86,8 @@ class MODEL_API AirflowNetworkOutdoorAirflow : public ModelObject {
   explicit AirflowNetworkOutdoorAirflow(std::shared_ptr<detail::AirflowNetworkOutdoorAirflow_Impl> impl);
 
   void resetControllerOutdoorAir();
+  /** Resets the AirflowNetworkCrack object for this object. */
+  void resetCrack();
 
   friend class detail::ControllerOutdoorAir_Impl;
   friend class detail::AirflowNetworkOutdoorAirflow_Impl;

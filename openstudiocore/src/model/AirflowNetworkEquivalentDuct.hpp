@@ -72,6 +72,9 @@ class MODEL_API AirflowNetworkEquivalentDuct : public ModelObject {
   //@{
 
   boost::optional<StraightComponent> straightComponent() const;
+  boost::optional<std::string> coilObjectType() const;
+  boost::optional<std::string> heatExchangerObjectType() const;
+  boost::optional<std::string> terminalUnitObjectType() const;
 
   double airPathLength() const;
 
