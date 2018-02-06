@@ -34,6 +34,8 @@
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "ModelObject.hpp"
+#include "ModelObject_Impl.hpp"
 #include "ModelExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_AdditionalProperties_FieldEnums.hxx>
@@ -72,15 +74,26 @@ namespace detail {
     return result;
   }
 
-  IddObjectType AdditionalProperties_Impl::iddObjectType() const {
+  IddObjectType AdditionalProperties_Impl::iddObjectType() const 
+  {
     return AdditionalProperties::iddObjectType();
+  }
+
+  boost::optional<ParentObject> AdditionalProperties_Impl::parent() const
+  {
+	  return boost::optional<ParentObject>();
+  }
+
+  bool AdditionalProperties_Impl::setParent(ParentObject& newParent)
+  {
+	  return false;
   }
 
   std::vector<std::string> AdditionalProperties_Impl::featureNames() const
   {
     std::set<std::string> nameSet;
     for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
-      boost::optional<std::string> name = group.getString(OS_AdditionalPropertiesExtensibleFields::AdditionalPropertiesFeatureName);
+      boost::optional<std::string> name = group.getString(OS_AdditionalPropertiesExtensibleFields::FeatureName);
       OS_ASSERT(name);
       nameSet.insert(*name);
     }
@@ -92,7 +105,7 @@ namespace detail {
   boost::optional<ModelExtensibleGroup> AdditionalProperties_Impl::getFeatureGroupByName(const std::string &name) const {
 
     for (ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
-      const boost::optional<std::string> featureName(group.getString(OS_AdditionalPropertiesExtensibleFields::AdditionalPropertiesFeatureName));
+      const boost::optional<std::string> featureName(group.getString(OS_AdditionalPropertiesExtensibleFields::FeatureName));
       OS_ASSERT(featureName);
       if (*featureName == name) {
         return group;
@@ -106,7 +119,7 @@ namespace detail {
     boost::optional<std::string> dataType;
     boost::optional<ModelExtensibleGroup> group(getFeatureGroupByName(name));
     if (group) {
-      dataType = group->getString(OS_AdditionalPropertiesExtensibleFields::AdditionalPropertiesFeatureDataType);
+      dataType = group->getString(OS_AdditionalPropertiesExtensibleFields::FeatureDataType);
       OS_ASSERT(dataType);
     } else {
       dataType = boost::none;
@@ -119,10 +132,10 @@ namespace detail {
     boost::optional<std::string> value;
     boost::optional<ModelExtensibleGroup> group(getFeatureGroupByName(name));
     if (group) {
-      boost::optional<std::string> dataType(group->getString(OS_AdditionalPropertiesExtensibleFields::AdditionalPropertiesFeatureDataType));
+      boost::optional<std::string> dataType(group->getString(OS_AdditionalPropertiesExtensibleFields::FeatureDataType));
       OS_ASSERT(dataType);
       if (*dataType == expectedDataType) {
-        value = group->getString(OS_AdditionalPropertiesExtensibleFields::AdditionalPropertiesFeatureValue);
+        value = group->getString(OS_AdditionalPropertiesExtensibleFields::FeatureValue);
       } else {
         value = boost::none;
       }
@@ -209,8 +222,8 @@ namespace detail {
   {
     boost::optional<ModelExtensibleGroup> group(getFeatureGroupByName(name));
     if (group) {
-      const bool dataTypeOK = group->setString(OS_AdditionalPropertiesExtensibleFields::AdditionalPropertiesFeatureDataType, dataType, false);
-      const bool valueOK = group->setString(OS_AdditionalPropertiesExtensibleFields::AdditionalPropertiesFeatureValue, value, false);
+      const bool dataTypeOK = group->setString(OS_AdditionalPropertiesExtensibleFields::FeatureDataType, dataType, false);
+      const bool valueOK = group->setString(OS_AdditionalPropertiesExtensibleFields::FeatureValue, value, false);
       // Since we're doing this checking in the public setters, these should always return true.
       OS_ASSERT(dataTypeOK);
       OS_ASSERT(valueOK);
@@ -262,7 +275,7 @@ namespace detail {
     unsigned n_groups = numExtensibleGroups();
     for (unsigned i=0; i < n_groups; ++i) {
       ModelExtensibleGroup group = getExtensibleGroup(i).cast<ModelExtensibleGroup>();
-      const boost::optional<std::string> featureName(group.getString(OS_AdditionalPropertiesExtensibleFields::AdditionalPropertiesFeatureName));
+      const boost::optional<std::string> featureName(group.getString(OS_AdditionalPropertiesExtensibleFields::FeatureName));
       OS_ASSERT(featureName);
       if (*featureName == name) {
         eraseExtensibleGroup(i);
@@ -274,11 +287,15 @@ namespace detail {
 
 } //detail
 
-AdditionalProperties::AdditionalProperties(const ModelObject &modelObject)
+AdditionalProperties::AdditionalProperties(const ModelObject& modelObject)
   : ModelObject(AdditionalProperties::iddObjectType(), modelObject.model())
 {
   OS_ASSERT(getImpl<detail::AdditionalProperties_Impl>());
-  bool ok = setPointer(OS_AdditionalPropertiesFields::Name, modelObject.model());
+
+  bool ok = true;
+  OS_ASSERT(ok);
+
+  ok = setPointer(OS_AdditionalPropertiesFields::ObjectName, modelObject.handle());
   OS_ASSERT(ok);
 }
 

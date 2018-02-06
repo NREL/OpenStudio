@@ -66,6 +66,12 @@ class MODEL_API AdditionalProperties_Impl : public ModelObject_Impl {
 
   virtual IddObjectType iddObjectType() const override;
 
+  /// return the parent object in the hierarchy
+  virtual boost::optional<ParentObject> parent() const;
+
+  /// set the parent, child may have to call non-const methods on the parent
+  virtual bool setParent(ParentObject& newParent);
+
   /** @name Getters */
   //@{
 

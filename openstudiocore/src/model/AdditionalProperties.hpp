@@ -36,9 +36,11 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+class ModelObject;
 
-    class AdditionalProperties_Impl;
+namespace detail {
+  class ModelObject_Impl;
+  class AdditionalProperties_Impl;
 
 } // detail
 

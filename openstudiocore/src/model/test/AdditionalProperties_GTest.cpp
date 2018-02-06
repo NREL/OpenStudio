@@ -34,12 +34,15 @@
 
 #include "ModelFixture.hpp"
 
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+
 #include "../AdditionalProperties.hpp"
 #include "../AdditionalProperties_Impl.hpp"
-#include "../ModelObject.hpp"
-#include "../ModelObject_Impl.hpp"
 #include "../Construction.hpp"
 #include "../Construction_Impl.hpp"
+#include "../StandardOpaqueMaterial.hpp"
+#include "../StandardOpaqueMaterial_Impl.hpp"
 
 #include "../utilities/geometry/Geometry.hpp"
 #include "../../utilities/units/Quantity.hpp"
@@ -48,89 +51,125 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, AdditionalProperties_Features)
-{
-  Model model;
+TEST_F(ModelFixture, AdditionalProperties_AdditionalProperties) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
+	ASSERT_EXIT(
+	{
+		// create a model to use
+		Model model;
+
+		// create a material object to use
+		StandardOpaqueMaterial material(model);
+
+		exit(0);
+	},
+		::testing::ExitedWithCode(0),
+		""
+		);
+
+	// create a model to use
+	Model model;
+
+	// create a material object to use
+	StandardOpaqueMaterial material(model);
+	EXPECT_EQ(1, model.modelObjects().size());
+
+	// create an additional properties object to use
+	AdditionalProperties props = material.additionalProperties();
+	EXPECT_EQ(2, model.modelObjects().size());
+	EXPECT_EQ(1, model.getModelObjects<AdditionalProperties>().size());
+
+	// return, instead of create, additional properies when it already exists
+	AdditionalProperties props2 = material.additionalProperties();
+	EXPECT_EQ(2, model.modelObjects().size());
+	EXPECT_EQ(1, model.getModelObjects<AdditionalProperties>().size());
+	EXPECT_EQ(props, props2);
+
+}
+
+// test setting and getting
+TEST_F(ModelFixture, AdditionalProperties_Features) {
+
+  Model model;
   Construction construction(model);
-  
-  AdditionalProperties addlProps = construction.additionalProperties();
+  AdditionalProperties props = construction.additionalProperties();
 
   // Test initially setting a string value
-  EXPECT_TRUE(addlProps.setFeature("NumberOfBedrooms", "five"));
-  boost::optional<std::string> dataType = addlProps.getFeatureDataType("NumberOfBedrooms");
+	EXPECT_TRUE(props.setFeature("NumberOfBedrooms", "five"));
+  boost::optional<std::string> dataType = props.getFeatureDataType("NumberOfBedrooms");
   ASSERT_TRUE(dataType);
   EXPECT_EQ(*dataType, "String");
-  boost::optional<std::string> strValue = addlProps.getFeatureAsString("NumberOfBedrooms");
+	boost::optional<std::string> strValue = props.getFeatureAsString("NumberOfBedrooms");
   ASSERT_TRUE(strValue);
   EXPECT_EQ(*strValue, "five");
 
   // Test changing a string value
-  EXPECT_TRUE(addlProps.setFeature("NumberOfBedrooms", "six"));
-  dataType = addlProps.getFeatureDataType("NumberOfBedrooms");
+	EXPECT_TRUE(props.setFeature("NumberOfBedrooms", "six"));
+	dataType = props.getFeatureDataType("NumberOfBedrooms");
   ASSERT_TRUE(dataType);
   EXPECT_EQ(*dataType, "String");
-  strValue = addlProps.getFeatureAsString("NumberOfBedrooms");
+	strValue = props.getFeatureAsString("NumberOfBedrooms");
   ASSERT_TRUE(strValue);
   EXPECT_EQ(*strValue, "six");
 
   // Test setting a boolean value
-  EXPECT_TRUE(addlProps.setFeature("isNicePlace", false));
-  dataType = addlProps.getFeatureDataType("isNicePlace");
+	EXPECT_TRUE(props.setFeature("isNicePlace", false));
+	dataType = props.getFeatureDataType("isNicePlace");
   ASSERT_TRUE(dataType);
   EXPECT_EQ(*dataType, "Boolean");
-  boost::optional<bool> boolValue = addlProps.getFeatureAsBoolean("isNicePlace");
+	boost::optional<bool> boolValue = props.getFeatureAsBoolean("isNicePlace");
   ASSERT_TRUE(boolValue);
   ASSERT_FALSE(*boolValue);
 
   // Test changing a boolean value
-  EXPECT_TRUE(addlProps.setFeature("isNicePlace", true));
-  dataType = addlProps.getFeatureDataType("isNicePlace");
+	EXPECT_TRUE(props.setFeature("isNicePlace", true));
+	dataType = props.getFeatureDataType("isNicePlace");
   ASSERT_TRUE(dataType);
   EXPECT_EQ(*dataType, "Boolean");
-  boolValue = addlProps.getFeatureAsBoolean("isNicePlace");
+	boolValue = props.getFeatureAsBoolean("isNicePlace");
   ASSERT_TRUE(boolValue);
   ASSERT_TRUE(*boolValue);
 
   // Test Feature Name getter
-  const std::vector<std::string> featureNames(addlProps.featureNames());
+	const std::vector<std::string> featureNames(props.featureNames());
   EXPECT_EQ(featureNames.size(), 2);
   EXPECT_EQ(featureNames[0], "NumberOfBedrooms");
   EXPECT_EQ(featureNames[1], "isNicePlace");
 
   // Test setting a double value
-  EXPECT_TRUE(addlProps.setFeature("NumberOfBathrooms", 1.5));
-  dataType = addlProps.getFeatureDataType("NumberOfBathrooms");
+	EXPECT_TRUE(props.setFeature("NumberOfBathrooms", 1.5));
+	dataType = props.getFeatureDataType("NumberOfBathrooms");
   ASSERT_TRUE(dataType);
   EXPECT_EQ(*dataType, "Double");
-  boost::optional<double> dblValue = addlProps.getFeatureAsDouble("NumberOfBathrooms");
+	boost::optional<double> dblValue = props.getFeatureAsDouble("NumberOfBathrooms");
   ASSERT_TRUE(dblValue);
-  boost::optional<int> intValue = addlProps.getFeatureAsInteger("NumberOfBathrooms");
+	boost::optional<int> intValue = props.getFeatureAsInteger("NumberOfBathrooms");
   ASSERT_FALSE(intValue);
   ASSERT_FLOAT_EQ(*dblValue, 1.5);
 
   // Test setting a feature to a value of a different type
-  EXPECT_TRUE(addlProps.setFeature("NumberOfBedrooms", 3));
-  dataType = addlProps.getFeatureDataType("NumberOfBedrooms");
+	EXPECT_TRUE(props.setFeature("NumberOfBedrooms", 3));
+	dataType = props.getFeatureDataType("NumberOfBedrooms");
   ASSERT_TRUE(dataType);
   EXPECT_EQ(*dataType, "Integer");
-  dblValue = addlProps.getFeatureAsDouble("NumberOfBedrooms");
+	dblValue = props.getFeatureAsDouble("NumberOfBedrooms");
   ASSERT_FALSE(dblValue);
-  intValue = addlProps.getFeatureAsInteger("NumberOfBedrooms");
+	intValue = props.getFeatureAsInteger("NumberOfBedrooms");
   ASSERT_TRUE(intValue);
   ASSERT_EQ(*intValue, 3);
 
   // Test resetting a feature
-  EXPECT_TRUE(addlProps.resetFeature("isNicePlace"));
-  dataType = addlProps.getFeatureDataType("isNicePlace");
+	EXPECT_TRUE(props.resetFeature("isNicePlace"));
+	dataType = props.getFeatureDataType("isNicePlace");
   ASSERT_FALSE(dataType);
-  EXPECT_FALSE(addlProps.resetFeature("bogusName"));
+	EXPECT_FALSE(props.resetFeature("bogusName"));
 
   // Test suggested feature names
-  EXPECT_TRUE(addlProps.setFeature("MyUniqueFeature", 5));
+	EXPECT_TRUE(props.setFeature("MyUniqueFeature", 5));
   Construction construction2(model);  
-  AdditionalProperties addlProps2 = construction2.additionalProperties();
-  std::vector<std::string> suggestedFeatures(addlProps2.suggestedFeatures());
+	AdditionalProperties props2 = construction2.additionalProperties();
+	std::vector<std::string> suggestedFeatures(props2.suggestedFeatures());
   ASSERT_EQ(suggestedFeatures.size(), 3);
   ASSERT_NE(std::find(suggestedFeatures.begin(), suggestedFeatures.end(), "NumberOfBedrooms"), suggestedFeatures.end());
   ASSERT_NE(std::find(suggestedFeatures.begin(), suggestedFeatures.end(), "NumberOfBathrooms"), suggestedFeatures.end());
@@ -138,20 +177,35 @@ TEST_F(ModelFixture, AdditionalProperties_Features)
 
 }
 
-TEST_F(ModelFixture, ModelObject_AdditionalProperties)
-{
-
+// check that remove works
+TEST_F(ModelFixture, AdditionalProperties_Remove) {
   Model model;
-
-  Construction construction(model);
-  EXPECT_EQ(0, model.getModelObjects<AdditionalProperties>().size());
-
-  AdditionalProperties tmp = construction.additionalProperties();
-  EXPECT_EQ(1u, model.getModelObjects<AdditionalProperties>().size());
-
-  AdditionalProperties addlProps = construction.additionalProperties();
-  EXPECT_EQ(1u, model.getModelObjects<AdditionalProperties>().size());
-  EXPECT_EQ(toString(addlProps.handle()), toString(tmp.handle()));
-  // EXPECT_EQ(toString(construction.handle()), toString(addlProps.construction().handle()));
-
+	StandardOpaqueMaterial material(model);
+	auto size = model.modelObjects().size();
+	AdditionalProperties props = material.additionalProperties();
+	EXPECT_FALSE(props.remove().empty());
+	EXPECT_EQ(size, model.modelObjects().size());
 }
+
+// test that clone works
+TEST_F(ModelFixture, AdditionalProperties_Clone) {
+	Model model;
+	StandardOpaqueMaterial material(model);
+	AdditionalProperties props = material.additionalProperties();
+	EXPECT_EQ(2, model.modelObjects().size());
+
+	// clone it into the same model
+	StandardOpaqueMaterial materialClone = material.clone(model).cast<StandardOpaqueMaterial>();
+	EXPECT_EQ(4, model.modelObjects().size());	
+}
+
+// check returning model object pointed to
+/*
+TEST_F(ModelFixture, AdditionalProperties_ModelObject) {
+  Model model;
+  StandardOpaqueMaterial material(model);
+  AdditionalProperties props = material.additionalProperties();
+  StandardOpaqueMaterial material2 = props.modelObject();
+  EXPECT_EQ(material, material2)  
+}
+*/

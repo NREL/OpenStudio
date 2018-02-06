@@ -1955,22 +1955,22 @@ OS:AdditionalProperties,
   A1,  \field Handle
        \type handle
        \required-field
-  A2,  \field Name
-       \type alpha
-       \reference AdditionalPropertiesNames
+  A2,  \field Object Name
+       \type object-list
        \required-field
-  A3,  \field Additional Properties Feature Name
+       \object-list AllObjects
+  A3,  \field Feature Name
        \type alpha
        \begin-extensible
        \required-field
-  A4,  \field Additional Properties Feature Data Type
+  A4,  \field Feature Data Type
        \type choice
        \key String
        \key Double
        \key Boolean
        \key Integer
        \required-field
-  A5;  \field Additional Properties Feature Value
+  A5;  \field Feature Value
        \type alpha
        \required-field
 
