@@ -48,7 +48,9 @@ TEST_F(ModelFixture, AirflowNetwork_DistributionNode)
 
   boost::optional<AirflowNetworkDistributionNode> optafnnode = node.createAirflowNetworkDistributionNode();
 
-  EXPECT_TRUE(optafnnode);
+  ASSERT_TRUE(optafnnode);
+  ASSERT_TRUE(optafnnode.get().node());
+  EXPECT_EQ(node, optafnnode.get().node().get());
 
   /*
   AirLoopHVAC airloop(model);
