@@ -63,6 +63,8 @@ class MODEL_API AdditionalProperties : public ModelObject {
   /** @name Getters */
   //@{
 
+	ModelObject modelObject() const;
+
   std::vector<std::string> featureNames() const;
 
   boost::optional<std::string> getFeatureDataType(const std::string& name) const;

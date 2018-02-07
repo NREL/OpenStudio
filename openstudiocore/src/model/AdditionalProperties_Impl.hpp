@@ -35,6 +35,7 @@ namespace openstudio {
 namespace model {
 
 class AdditionalProperties;
+class ModelObject;
 
 namespace detail {
 
@@ -75,6 +76,8 @@ class MODEL_API AdditionalProperties_Impl : public ModelObject_Impl {
   /** @name Getters */
   //@{
 
+	ModelObject modelObject() const;
+
   std::vector<std::string> featureNames() const;
 
   boost::optional<std::string> getFeatureDataType(const std::string& name) const;
@@ -87,7 +90,7 @@ class MODEL_API AdditionalProperties_Impl : public ModelObject_Impl {
 
   boost::optional<bool> getFeatureAsBoolean(const std::string& name) const;
 
-  std::vector<std::string> suggestedFeatures() const;
+  std::vector<std::string> suggestedFeatures() const;	
 
   //@}
 

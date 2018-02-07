@@ -200,12 +200,9 @@ TEST_F(ModelFixture, AdditionalProperties_Clone) {
 }
 
 // check returning model object pointed to
-/*
 TEST_F(ModelFixture, AdditionalProperties_ModelObject) {
   Model model;
   StandardOpaqueMaterial material(model);
   AdditionalProperties props = material.additionalProperties();
-  StandardOpaqueMaterial material2 = props.modelObject();
-  EXPECT_EQ(material, material2)  
+  ModelObject modelObject = props.modelObject();
 }
-*/

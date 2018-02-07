@@ -66,6 +66,13 @@ namespace detail {
     : ModelObject_Impl(other, model, keepHandle)
   {}
 
+	ModelObject AdditionalProperties_Impl::modelObject() const {
+		boost::optional<ModelObject> result = getObject<AdditionalProperties>().getModelObjectTarget<ModelObject>(
+			OS_AdditionalPropertiesFields::ObjectName);
+		OS_ASSERT(result);
+		return *result;
+	}
+
   const std::vector<std::string>& AdditionalProperties_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
@@ -297,6 +304,10 @@ AdditionalProperties::AdditionalProperties(const ModelObject& modelObject)
 
   ok = setPointer(OS_AdditionalPropertiesFields::ObjectName, modelObject.handle());
   OS_ASSERT(ok);
+}
+
+ModelObject AdditionalProperties::modelObject() const {
+	return getImpl<detail::AdditionalProperties_Impl>()->modelObject();
 }
 
 IddObjectType AdditionalProperties::iddObjectType() {
