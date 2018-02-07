@@ -1143,21 +1143,13 @@ namespace detail {
     if (candidates.size() == 1) { return candidates[0]; }
     return AdditionalProperties(getObject<ModelObject>());
   }
-  
-  /*
+
   std::vector<ModelObject> ModelObject_Impl::children() const {
 
     vector<ModelObject> results(castVector<ModelObject>(getObject<ModelObject>().getModelObjectSources<AdditionalProperties>()));
 
     return results;
   }
-  
-  std::vector<IddObjectType> ModelObject_Impl::allowableChildTypes() const {
-    IddObjectTypeVector result;
-    result.push_back(AdditionalProperties::iddObjectType());
-    return result;
-  }
-  */
 
 } // detail
 

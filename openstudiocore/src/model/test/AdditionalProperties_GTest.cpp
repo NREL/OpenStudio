@@ -177,8 +177,28 @@ TEST_F(ModelFixture, AdditionalProperties_Features) {
 
 }
 
-// check that remove works
-TEST_F(ModelFixture, AdditionalProperties_Remove) {
+// check returning model object pointed to
+TEST_F(ModelFixture, AdditionalProperties_ModelObject) {
+	Model model;
+	StandardOpaqueMaterial material(model);
+	AdditionalProperties props = material.additionalProperties();
+	ModelObject modelObject = props.modelObject();
+	StandardOpaqueMaterial material2 = modelObject.cast<StandardOpaqueMaterial>();
+	EXPECT_EQ(material, material2);
+}
+
+// check that parent remove works
+TEST_F(ModelFixture, AdditionalProperties_ParentRemove) {
+	Model model;
+	auto size = model.modelObjects().size();
+	StandardOpaqueMaterial material(model);
+	AdditionalProperties props = material.additionalProperties();
+	EXPECT_FALSE(material.remove().empty());
+	EXPECT_EQ(size, model.modelObjects().size());
+}
+
+// check that child remove works
+TEST_F(ModelFixture, AdditionalProperties_ChildRemove) {
   Model model;
 	StandardOpaqueMaterial material(model);
 	auto size = model.modelObjects().size();
@@ -187,22 +207,22 @@ TEST_F(ModelFixture, AdditionalProperties_Remove) {
 	EXPECT_EQ(size, model.modelObjects().size());
 }
 
-// test that clone works
-TEST_F(ModelFixture, AdditionalProperties_Clone) {
+// test that parent clone works
+TEST_F(ModelFixture, AdditionalProperties_ParentClone) {
 	Model model;
 	StandardOpaqueMaterial material(model);
 	AdditionalProperties props = material.additionalProperties();
 	EXPECT_EQ(2, model.modelObjects().size());
-
-	// clone it into the same model
 	StandardOpaqueMaterial materialClone = material.clone(model).cast<StandardOpaqueMaterial>();
-	EXPECT_EQ(4, model.modelObjects().size());	
+	EXPECT_EQ(4, model.modelObjects().size());
 }
 
-// check returning model object pointed to
-TEST_F(ModelFixture, AdditionalProperties_ModelObject) {
-  Model model;
-  StandardOpaqueMaterial material(model);
-  AdditionalProperties props = material.additionalProperties();
-  ModelObject modelObject = props.modelObject();
+// test that child clone does not work
+TEST_F(ModelFixture, AdditionalProperties_ChildClone) {
+	Model model;
+	StandardOpaqueMaterial material(model);
+	AdditionalProperties props = material.additionalProperties();
+	EXPECT_EQ(2, model.modelObjects().size());
+	AdditionalProperties propsClone = props.clone(model).cast<AdditionalProperties>();
+	EXPECT_EQ(2, model.modelObjects().size());
 }
