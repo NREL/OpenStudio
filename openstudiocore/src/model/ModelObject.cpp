@@ -1026,9 +1026,10 @@ namespace detail {
   {
     std::vector<IdfObject> result;
     std::vector<IdfObject> removedCosts = this->removeLifeCycleCosts();
+    std::vector<IdfObject> removedProperties = this->removeAdditionalProperties();
     result = WorkspaceObject_Impl::remove();
     result.insert(result.end(), removedCosts.begin(), removedCosts.end());
-
+    result.insert(result.end(), removedProperties.begin(), removedProperties.end());
     return result;
   }
 
@@ -1130,7 +1131,7 @@ namespace detail {
   std::vector<ScheduleTypeKey> ModelObject_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
     return std::vector<ScheduleTypeKey>();
   }
-  
+
   AdditionalProperties ModelObject_Impl::additionalProperties() const {
     AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
     if (candidates.size() > 1) {
@@ -1144,11 +1145,16 @@ namespace detail {
     return AdditionalProperties(getObject<ModelObject>());
   }
 
-  std::vector<ModelObject> ModelObject_Impl::children() const {
 
-    vector<ModelObject> results(castVector<ModelObject>(getObject<ModelObject>().getModelObjectSources<AdditionalProperties>()));
-
-    return results;
+  std::vector<IdfObject> ModelObject_Impl::removeAdditionalProperties()
+  {
+    std::vector<IdfObject> removed;
+    AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
+    for (AdditionalProperties& candidate : candidates){
+      std::vector<IdfObject> tmp = candidate.remove();
+      removed.insert(removed.end(), tmp.begin(), tmp.end());
+    }
+    return removed;
   }
 
 } // detail
@@ -1334,6 +1340,12 @@ bool ModelObject::setParent(ParentObject& newParent)
 AdditionalProperties ModelObject::additionalProperties() const {
   return getImpl<detail::ModelObject_Impl>()->additionalProperties();
 }
+
+std::vector<IdfObject> ModelObject::removeAdditionalProperties()
+{
+  return getImpl<detail::ModelObject_Impl>()->removeAdditionalProperties();
+}
+
 
 ModelObject::ModelObject(IddObjectType type, const Model& model, bool fastName)
   : WorkspaceObject(model.getImpl<detail::Model_Impl>()->createObject(IdfObject(type, fastName),false))
