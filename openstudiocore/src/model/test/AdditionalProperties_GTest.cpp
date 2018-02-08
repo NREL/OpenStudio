@@ -46,6 +46,9 @@
 #include "../Lights.hpp"
 #include "../LightsDefinition.hpp"
 
+
+#include <utilities/idd/OS_AdditionalProperties_FieldEnums.hxx>
+
 #include "../utilities/geometry/Geometry.hpp"
 #include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
@@ -181,17 +184,21 @@ TEST_F(ModelFixture, AdditionalProperties_Features) {
 
 // check returning model object pointed to
 TEST_F(ModelFixture, AdditionalProperties_ModelObject) {
-  Model model;
-  StandardOpaqueMaterial material(model);
-  EXPECT_FALSE(material.hasAdditionalProperties());
-  AdditionalProperties props = material.additionalProperties();
-  EXPECT_TRUE(material.hasAdditionalProperties());
+	Model model;
+	StandardOpaqueMaterial material(model);
+  EXPECT_EQ(0, model.getConcreteModelObjects<AdditionalProperties>().size());
+	AdditionalProperties props = material.additionalProperties();
+	EXPECT_EQ(1u, model.getConcreteModelObjects<AdditionalProperties>().size());
+  AdditionalProperties props2 = material.additionalProperties();
+  EXPECT_EQ(1u, model.getConcreteModelObjects<AdditionalProperties>().size());
+  EXPECT_EQ(props.handle(), props2.handle());
+
   ModelObject modelObject = props.modelObject();
-  StandardOpaqueMaterial material2 = modelObject.cast<StandardOpaqueMaterial>();
-  EXPECT_EQ(material, material2);
+	StandardOpaqueMaterial material2 = modelObject.cast<StandardOpaqueMaterial>();
+	EXPECT_EQ(material, material2);
 }
 
-// check that non-parent remove works
+// check that remove works on ParentObject and ModelObject derived classes
 TEST_F(ModelFixture, AdditionalProperties_NonParentRemove) {
   Model model;
   auto size = model.modelObjects().size();
@@ -214,42 +221,156 @@ TEST_F(ModelFixture, AdditionalProperties_NonParentRemove) {
   EXPECT_EQ(size, model.modelObjects().size()) << model;
 }
 
-// check that parent remove works
+// check that remove works on the object
 TEST_F(ModelFixture, AdditionalProperties_ParentRemove) {
-  Model model;
-  auto size = model.modelObjects().size();
-  StandardOpaqueMaterial material(model);
-  AdditionalProperties props = material.additionalProperties();
+	Model model;
+  EXPECT_EQ(0u, model.getConcreteModelObjects<AdditionalProperties>().size());
+	auto size = model.modelObjects().size();
+	StandardOpaqueMaterial material(model);
+	AdditionalProperties props = material.additionalProperties();
+	EXPECT_EQ(1u, model.getConcreteModelObjects<AdditionalProperties>().size());
   EXPECT_EQ(2u, material.remove().size());
-  EXPECT_EQ(size, model.modelObjects().size()) << model;
+	EXPECT_EQ(size, model.modelObjects().size());
+  EXPECT_EQ(0u, model.getConcreteModelObjects<AdditionalProperties>().size());
 }
 
-// check that child remove works
+// check that remove works on the props
 TEST_F(ModelFixture, AdditionalProperties_ChildRemove) {
   Model model;
-  StandardOpaqueMaterial material(model);
-  auto size = model.modelObjects().size();
-  AdditionalProperties props = material.additionalProperties();
+  EXPECT_EQ(0u, model.getConcreteModelObjects<AdditionalProperties>().size());
+	StandardOpaqueMaterial material(model);
+	auto size = model.modelObjects().size();
+	AdditionalProperties props = material.additionalProperties();
+	EXPECT_EQ(1u, model.getConcreteModelObjects<AdditionalProperties>().size());
   EXPECT_FALSE(props.remove().empty());
-  EXPECT_EQ(size, model.modelObjects().size());
+	EXPECT_EQ(size, model.modelObjects().size());
+  EXPECT_EQ(0u, model.getConcreteModelObjects<AdditionalProperties>().size());
 }
 
 // test that parent clone works
 TEST_F(ModelFixture, AdditionalProperties_ParentClone) {
-  Model model;
-  StandardOpaqueMaterial material(model);
-  AdditionalProperties props = material.additionalProperties();
+	Model model;
+  EXPECT_EQ(0u, model.getConcreteModelObjects<AdditionalProperties>().size());
+	StandardOpaqueMaterial material(model);
+	AdditionalProperties props = material.additionalProperties();
+	EXPECT_EQ(1u, model.getConcreteModelObjects<AdditionalProperties>().size());
   EXPECT_EQ(2, model.modelObjects().size());
-  StandardOpaqueMaterial materialClone = material.clone(model).cast<StandardOpaqueMaterial>();
-  EXPECT_EQ(4, model.modelObjects().size());
+	StandardOpaqueMaterial materialClone = material.clone(model).cast<StandardOpaqueMaterial>();
+	EXPECT_EQ(4, model.modelObjects().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<AdditionalProperties>().size());
+  EXPECT_NE(material.additionalProperties().handle(), materialClone.additionalProperties().handle());
+	EXPECT_EQ(4, model.modelObjects().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<AdditionalProperties>().size());
+
+  Model model2;
+  StandardOpaqueMaterial materialClone2 = material.clone(model2).cast<StandardOpaqueMaterial>();
+  EXPECT_EQ(2, model2.modelObjects().size());
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<AdditionalProperties>().size());
+  EXPECT_NE(material.additionalProperties().handle(), materialClone2.additionalProperties().handle());
+	EXPECT_EQ(2, model2.modelObjects().size());
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<AdditionalProperties>().size());
 }
 
 // test that child clone does not work
 TEST_F(ModelFixture, AdditionalProperties_ChildClone) {
+	Model model;
+  EXPECT_EQ(0u, model.getConcreteModelObjects<AdditionalProperties>().size());
+	StandardOpaqueMaterial material(model);
+	AdditionalProperties props = material.additionalProperties();
+  EXPECT_EQ(1u, model.getConcreteModelObjects<AdditionalProperties>().size());
+	EXPECT_EQ(2, model.modelObjects().size());
+
+  EXPECT_EQ(0, props.resources().size());
+
+  // DLM: do we want to allow this clone?
+	AdditionalProperties propsClone = props.clone(model).cast<AdditionalProperties>();
+	EXPECT_EQ(3, model.modelObjects().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<AdditionalProperties>().size());
+  EXPECT_EQ(props.modelObject().handle(), propsClone.modelObject().handle());
+
+  Model model2;
+
+  // DLM: do we want to allow this clone?
+	AdditionalProperties propsClone2 = props.clone(model2).cast<AdditionalProperties>();
+	EXPECT_EQ(1u, model2.modelObjects().size());
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<AdditionalProperties>().size());
+
+  // DLM: no way to clean up this invalid object?
+  EXPECT_TRUE(propsClone2.isEmpty(OS_AdditionalPropertiesFields::ObjectName));
+  EXPECT_THROW(propsClone2.modelObject(), openstudio::Exception);
+
+  // go back to first model
+
+  // calling additionalProperties again will remove one of the props,
+  // no telling which one, so do this test last
+  material.additionalProperties();
+  EXPECT_EQ(1u, model.getConcreteModelObjects<AdditionalProperties>().size());
+}
+
+// check that can't add properties to a properties
+TEST_F(ModelFixture, AdditionalProperties_AdditionalProperties2) {
   Model model;
+  EXPECT_EQ(0u, model.getConcreteModelObjects<AdditionalProperties>().size());
+  auto size = model.modelObjects().size();
   StandardOpaqueMaterial material(model);
   AdditionalProperties props = material.additionalProperties();
-  EXPECT_EQ(2, model.modelObjects().size());
-  AdditionalProperties propsClone = props.clone(model).cast<AdditionalProperties>();
-  EXPECT_EQ(2, model.modelObjects().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<AdditionalProperties>().size());
+  EXPECT_THROW(props.additionalProperties(), openstudio::Exception);
+  EXPECT_EQ(1u, model.getConcreteModelObjects<AdditionalProperties>().size());
+}
+
+
+// test that setters work
+TEST_F(ModelFixture, AdditionalProperties_Setters) {
+  Model model;
+  EXPECT_EQ(0u, model.getConcreteModelObjects<AdditionalProperties>().size());
+  StandardOpaqueMaterial material(model);
+  AdditionalProperties props = material.additionalProperties();
+  EXPECT_EQ(1u, model.getConcreteModelObjects<AdditionalProperties>().size());
+
+  EXPECT_EQ(0, props.featureNames().size());
+  EXPECT_FALSE(props.getFeatureDataType("Feature"));
+
+  EXPECT_TRUE(props.setFeature("Feature", 1.0));
+  ASSERT_EQ(1u, props.featureNames().size());
+  EXPECT_EQ("Feature", props.featureNames()[0]);
+  ASSERT_TRUE(props.getFeatureDataType("Feature"));
+  EXPECT_EQ("Double", props.getFeatureDataType("Feature").get());
+  ASSERT_TRUE(props.getFeatureAsDouble("Feature"));
+  EXPECT_EQ(1.0, props.getFeatureAsDouble("Feature").get());
+
+  EXPECT_TRUE(props.setFeature("Feature", 2.0));
+  ASSERT_EQ(1u, props.featureNames().size());
+  EXPECT_EQ("Feature", props.featureNames()[0]);
+  ASSERT_TRUE(props.getFeatureDataType("Feature"));
+  EXPECT_EQ("Double", props.getFeatureDataType("Feature").get());
+  ASSERT_TRUE(props.getFeatureAsDouble("Feature"));
+  EXPECT_EQ(2.0, props.getFeatureAsDouble("Feature").get());
+
+  EXPECT_TRUE(props.setFeature("Feature2", -2.0));
+  ASSERT_EQ(2u, props.featureNames().size());
+  EXPECT_EQ("Feature", props.featureNames()[0]);
+  EXPECT_EQ("Feature2", props.featureNames()[1]);
+  ASSERT_TRUE(props.getFeatureDataType("Feature2"));
+  EXPECT_EQ("Double", props.getFeatureDataType("Feature2").get());
+  ASSERT_TRUE(props.getFeatureAsDouble("Feature2"));
+  EXPECT_EQ(-2.0, props.getFeatureAsDouble("Feature2").get());
+
+  EXPECT_TRUE(props.setFeature("Feature", "Yay"));
+  ASSERT_EQ(2u, props.featureNames().size());
+  EXPECT_EQ("Feature", props.featureNames()[0]);
+  EXPECT_EQ("Feature2", props.featureNames()[1]);
+  ASSERT_TRUE(props.getFeatureDataType("Feature"));
+  EXPECT_EQ("String", props.getFeatureDataType("Feature").get());
+  ASSERT_TRUE(props.getFeatureAsString("Feature"));
+  EXPECT_EQ("Yay", props.getFeatureAsString("Feature").get());
+
+  EXPECT_TRUE(props.resetFeature("Feature"));
+  ASSERT_EQ(1u, props.featureNames().size());
+  EXPECT_EQ("Feature2", props.featureNames()[0]);
+  ASSERT_TRUE(props.getFeatureDataType("Feature2"));
+  EXPECT_EQ("Double", props.getFeatureDataType("Feature2").get());
+  ASSERT_TRUE(props.getFeatureAsDouble("Feature2"));
+  EXPECT_EQ(-2.0, props.getFeatureAsDouble("Feature2").get());
+
 }

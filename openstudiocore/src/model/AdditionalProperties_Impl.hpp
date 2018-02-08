@@ -73,6 +73,9 @@ class MODEL_API AdditionalProperties_Impl : public ModelObject_Impl {
   /// set the parent, child may have to call non-const methods on the parent
   virtual bool setParent(ParentObject& newParent);
 
+  /** Get the resources directly used by this ModelObject. */
+  virtual std::vector<ResourceObject> resources() const;
+
   /** @name Getters */
   //@{
 
@@ -90,7 +93,7 @@ class MODEL_API AdditionalProperties_Impl : public ModelObject_Impl {
 
   boost::optional<bool> getFeatureAsBoolean(const std::string& name) const;
 
-  std::vector<std::string> suggestedFeatures() const;	
+  std::vector<std::string> suggestedFeatures() const;
 
   //@}
 

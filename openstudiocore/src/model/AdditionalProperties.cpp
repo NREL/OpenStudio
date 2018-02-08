@@ -37,6 +37,7 @@
 #include "ModelObject.hpp"
 #include "ModelObject_Impl.hpp"
 #include "ModelExtensibleGroup.hpp"
+#include "ResourceObject.hpp"
 
 #include <utilities/idd/OS_AdditionalProperties_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -69,6 +70,11 @@ namespace detail {
 	ModelObject AdditionalProperties_Impl::modelObject() const {
 		boost::optional<ModelObject> result = getObject<AdditionalProperties>().getModelObjectTarget<ModelObject>(
 			OS_AdditionalPropertiesFields::ObjectName);
+    if (!result){
+      // DLM: should we remove ourself?  probably worse to do that since user may call other methods and cause a crash
+      //this->remove();
+      LOG_AND_THROW("Cannot retrieve associated ModelObject");
+    }
 		OS_ASSERT(result);
 		return *result;
 	}
@@ -81,19 +87,26 @@ namespace detail {
     return result;
   }
 
-  IddObjectType AdditionalProperties_Impl::iddObjectType() const 
+  IddObjectType AdditionalProperties_Impl::iddObjectType() const
   {
     return AdditionalProperties::iddObjectType();
   }
 
   boost::optional<ParentObject> AdditionalProperties_Impl::parent() const
   {
+    // DLM: should this return the model object?
 	  return boost::optional<ParentObject>();
   }
 
   bool AdditionalProperties_Impl::setParent(ParentObject& newParent)
   {
+    // DLM: should we allow this?
 	  return false;
+  }
+
+  std::vector<ResourceObject> AdditionalProperties_Impl::resources() const
+  {
+    return std::vector<ResourceObject>();
   }
 
   std::vector<std::string> AdditionalProperties_Impl::featureNames() const
@@ -213,6 +226,9 @@ namespace detail {
   std::vector<std::string> AdditionalProperties_Impl::suggestedFeatures() const
   {
     std::set<std::string> availableFeatureNames;
+    // DLM: this should be based on the model object type right?
+    // DLM: should we create a virtual method for all model objects similar to outputVariableNames
+    // DLM: long term, this should pull from a list that can be updated at run time, possibly related to OpenStudio standards
     availableFeatureNames.insert("NumberOfBedrooms");
     availableFeatureNames.insert("NumberOfBathrooms");
     for (const AdditionalProperties& addlProps : this->model().getConcreteModelObjects<AdditionalProperties>()) {
@@ -299,10 +315,12 @@ AdditionalProperties::AdditionalProperties(const ModelObject& modelObject)
 {
   OS_ASSERT(getImpl<detail::AdditionalProperties_Impl>());
 
-  bool ok = true;
-  OS_ASSERT(ok);
+  if (modelObject.optionalCast<AdditionalProperties>()){
+    this->remove();
+    LOG_AND_THROW("Cannot create a AdditionalProperties object for AdditionalProperties object");
+  }
 
-  ok = setPointer(OS_AdditionalPropertiesFields::ObjectName, modelObject.handle());
+  bool ok = setPointer(OS_AdditionalPropertiesFields::ObjectName, modelObject.handle());
   OS_ASSERT(ok);
 }
 

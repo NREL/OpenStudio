@@ -994,6 +994,12 @@ namespace detail {
     std::vector<LifeCycleCost> lifeCycleCosts = this->lifeCycleCosts();
     toAdd.insert(toAdd.end(), lifeCycleCosts.begin(), lifeCycleCosts.end());
 
+    // add additional properties
+    AdditionalPropertiesVector props = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
+    toAdd.insert(toAdd.end(), props.begin(), props.end());
+
+    std::string s = toString(this->handle());
+
     // If same model, non-recursive insert of resources should be sufficient.
     Model m = this->model();
     if (model == m) {
@@ -1001,9 +1007,9 @@ namespace detail {
       WorkspaceObjectVector toInsert = castVector<WorkspaceObject>(resources);
       result = m.addAndInsertObjects(toAdd,toInsert);
       // adding this better have worked
-      OS_ASSERT(result.size() == 1u + lifeCycleCosts.size() + resources.size());
+      OS_ASSERT(result.size() == 1u + lifeCycleCosts.size() + props.size() + resources.size());
       // inserting resources better have worked
-      unsigned i = 1 + lifeCycleCosts.size();
+      unsigned i = 1 + lifeCycleCosts.size() + props.size();
       for (const ResourceObject& resource : resources) {
         OS_ASSERT(result[i] == resource);
         ++i;
@@ -1136,12 +1142,15 @@ namespace detail {
     AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
     if (candidates.size() > 1) {
       for (unsigned i = 1, n = candidates.size(); i < n; ++i) {
+        // DLM: do a merge before removing
         candidates[i].remove();
       }
       LOG(Warn,"Removed extraneous ModelObjectAdditionalProperties objects pointing to "
           << briefDescription() << ".");
     }
-    if (candidates.size() == 1) { return candidates[0]; }
+    if (!candidates.empty()) {
+      return candidates[0];
+    }
     return AdditionalProperties(getObject<ModelObject>());
   }
 
