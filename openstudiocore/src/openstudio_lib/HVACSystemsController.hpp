@@ -122,6 +122,8 @@ class HVACSystemsController : public QObject, public Nano::Observer
 
   void onAddSystemClicked();
 
+  void onCopySystemClicked();
+
   void onRemoveLoopClicked();
 
   void onShowTopologyClicked();

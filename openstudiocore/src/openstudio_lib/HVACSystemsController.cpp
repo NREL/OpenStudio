@@ -145,6 +145,8 @@ HVACSystemsController::HVACSystemsController(bool isIP, const model::Model & mod
 
   connect(m_hvacSystemsView->hvacToolbarView->addButton, &QPushButton::clicked, this, &HVACSystemsController::onAddSystemClicked);
 
+  connect(m_hvacSystemsView->hvacToolbarView->copyButton, &QPushButton::clicked, this, &HVACSystemsController::onCopySystemClicked);
+
   connect(m_hvacSystemsView->hvacToolbarView->deleteButton, &QPushButton::clicked, this, &HVACSystemsController::onRemoveLoopClicked);
 
   connect(m_hvacSystemsView->hvacToolbarView->systemComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &HVACSystemsController::onSystemComboBoxIndexChanged);
@@ -835,6 +837,19 @@ void HVACSystemsController::onSystemComboBoxIndexChanged(int i)
   QString handle = m_hvacSystemsView->hvacToolbarView->systemComboBox->itemData(i).toString();
 
   setCurrentHandle(handle);
+}
+
+void HVACSystemsController::onCopySystemClicked()
+{
+  auto loop = currentLoop();
+  if ( loop ) {
+    auto airloop = loop->optionalCast<model::AirLoopHVAC>();
+
+    if ( airloop ) {
+      auto clone = airloop->clone(loop->model());
+      setCurrentHandle(toQString(clone.handle()));
+    }
+  }
 }
 
 void HVACSystemsController::onRemoveLoopClicked()

@@ -84,6 +84,8 @@ class HVACToolbarView : public QWidget
 
   QPushButton * addButton;
 
+  QPushButton * copyButton;
+
   QPushButton * deleteButton;
 
   QPushButton * topologyViewButton;

@@ -161,11 +161,12 @@ namespace detail {
 
   ModelObject AirLoopHVACOutdoorAirSystem_Impl::clone(Model model) const
   {
-    AirLoopHVACOutdoorAirSystem airLoopHVACOutdoorAirSystem = ModelObject_Impl::clone(model).cast<AirLoopHVACOutdoorAirSystem>();
+    std::cout << "begin clone" << std::endl;
+    auto oaclone = ModelObject_Impl::clone(model).cast<AirLoopHVACOutdoorAirSystem>();
 
     // Clone OA controller
-    ControllerOutdoorAir controllerOutdoorAir = getControllerOutdoorAir().clone(model).cast<ControllerOutdoorAir>();
-    airLoopHVACOutdoorAirSystem.setControllerOutdoorAir(controllerOutdoorAir);
+    auto controllerOutdoorAir = getControllerOutdoorAir().clone(model).cast<ControllerOutdoorAir>();
+    oaclone.setControllerOutdoorAir(controllerOutdoorAir);
 
     //// Clone connected objects
 
@@ -202,13 +203,19 @@ namespace detail {
     //return airLoopHVACOutdoorAirSystem;
     //return ModelObject_Impl::clone(model);
 
+    oaclone.setString(oaclone.mixedAirPort(),""); 
+    oaclone.setString(oaclone.returnAirPort(),""); 
+    oaclone.setString(oaclone.outdoorAirPort(),""); 
+    oaclone.setString(oaclone.reliefAirPort(),""); 
+
     Node oaNode(model);
-    model.connect(oaNode,oaNode.outletPort(),airLoopHVACOutdoorAirSystem,airLoopHVACOutdoorAirSystem.outdoorAirPort());
+    model.connect(oaNode,oaNode.outletPort(),oaclone,oaclone.outdoorAirPort());
 
     Node reliefNode(model);
-    model.connect(airLoopHVACOutdoorAirSystem,airLoopHVACOutdoorAirSystem.reliefAirPort(),reliefNode,reliefNode.inletPort());
+    model.connect(oaclone,oaclone.reliefAirPort(),reliefNode,reliefNode.inletPort());
+    std::cout << "end clone" << std::endl;
 
-    return airLoopHVACOutdoorAirSystem;
+    return oaclone;
   }
 
   std::vector<IdfObject> AirLoopHVACOutdoorAirSystem_Impl::remove()

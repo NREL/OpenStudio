@@ -255,6 +255,10 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   virtual void applySizingValues() override;
 
+  std::vector<HVACComponent> terminals() const;
+
+  void createTopology();
+
   private:
 
   REGISTER_LOGGER("openstudio.model.AirLoopHVAC");
