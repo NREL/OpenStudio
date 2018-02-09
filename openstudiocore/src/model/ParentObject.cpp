@@ -150,20 +150,19 @@ std::vector<IddObjectType> ParentObject::allowableChildTypes() const
   return getImpl<detail::ParentObject_Impl>()->allowableChildTypes();
 }
 
-std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool includeLifeCycleCosts) {
+std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool includeLifeCycleCostsAndAdditionalProperties) {
   std::set<Handle> resultSet;
   std::pair<HandleSet::const_iterator,bool> insertResult;
   std::vector<ModelObject> result;
   resultSet.insert(object.handle());
   result.push_back(object);
 
-  if (includeLifeCycleCosts){
+  if (includeLifeCycleCostsAndAdditionalProperties){
     for (const LifeCycleCost& lifeCycleCost : object.lifeCycleCosts()){
       result.push_back(lifeCycleCost);
     }
-    AdditionalPropertiesVector props = object.getModelObjectSources<AdditionalProperties>();
-    for (const AdditionalProperties& prop : props){
-      result.push_back(prop);
+    if (object.hasAdditionalProperties()){
+      result.push_back(object.additionalProperties());
     }
   }
 
@@ -181,9 +180,12 @@ std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool i
       if (insertResult.second) {
         result.push_back(child);
 
-        if (includeLifeCycleCosts){
+        if (includeLifeCycleCostsAndAdditionalProperties){
           for (const LifeCycleCost& lifeCycleCost : child.lifeCycleCosts()){
             result.push_back(lifeCycleCost);
+          }
+          if (child.hasAdditionalProperties()){
+            result.push_back(child.additionalProperties());
           }
         }
 

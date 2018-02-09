@@ -94,13 +94,13 @@ namespace detail {
 
   boost::optional<ParentObject> AdditionalProperties_Impl::parent() const
   {
-    // DLM: should this return the model object?
+    // DLM: should this return the model object? no because model object is not a parent object.
     return boost::optional<ParentObject>();
   }
 
   bool AdditionalProperties_Impl::setParent(ParentObject& newParent)
   {
-    // DLM: should we allow this?
+    // DLM: should we allow this? no because model object is not a parent object.
     return false;
   }
 
@@ -308,6 +308,40 @@ namespace detail {
     return false;
   }
 
+  void AdditionalProperties_Impl::merge(const AdditionalProperties& other, bool overwrite)
+  {
+    if (other.handle() == this->handle()){
+      return;
+    }
+
+    for (const auto& featureName : other.featureNames()){
+      // check if we already have this key
+      if ((!overwrite) && this->getFeatureDataType(featureName)){
+        continue;
+      }
+
+      boost::optional<std::string> dataType = other.getFeatureDataType(featureName);
+      OS_ASSERT(dataType);
+      if (istringEqual("String", *dataType)){
+        boost::optional<std::string> v = other.getFeatureAsString(featureName);
+        OS_ASSERT(v);
+        this->setFeature(featureName, *v);
+      } else if (istringEqual("Double", *dataType)){
+        boost::optional<double> v = other.getFeatureAsDouble(featureName);
+        OS_ASSERT(v);
+        this->setFeature(featureName, *v);
+      } else if (istringEqual("Boolean", *dataType)){
+        boost::optional<bool> v = other.getFeatureAsBoolean(featureName);
+        OS_ASSERT(v);
+        this->setFeature(featureName, *v);
+      } else if (istringEqual("Integer", *dataType)){
+        boost::optional<int> v = other.getFeatureAsInteger(featureName);
+        OS_ASSERT(v);
+        this->setFeature(featureName, *v);
+      }
+    }
+  }
+
 } //detail
 
 AdditionalProperties::AdditionalProperties(const ModelObject& modelObject)
@@ -396,6 +430,11 @@ bool AdditionalProperties::setFeature(const std::string& name, bool value)
 bool AdditionalProperties::resetFeature(const std::string& name)
 {
   return getImpl<detail::AdditionalProperties_Impl>()->resetFeature(name);
+}
+
+void AdditionalProperties::merge(const AdditionalProperties& other, bool overwrite)
+{
+  getImpl<detail::AdditionalProperties_Impl>()->merge(other, overwrite);
 }
 
 /// @cond

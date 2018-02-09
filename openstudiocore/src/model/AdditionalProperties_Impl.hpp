@@ -114,6 +114,8 @@ class MODEL_API AdditionalProperties_Impl : public ModelObject_Impl {
 
   //@}
 
+  void merge(const AdditionalProperties& other, bool overwrite = false);
+
  protected:
  private:
   REGISTER_LOGGER("openstudio.model.AdditionalProperties")

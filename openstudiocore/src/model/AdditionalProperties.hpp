@@ -63,6 +63,8 @@ class MODEL_API AdditionalProperties : public ModelObject {
 	/** @name Getters */
 	//@{
 
+  /// Returns the ModelObject this AdditionalProperties object refers to.
+  /// This method will throw if the ModelObject cannot be found.
 	ModelObject modelObject() const;
 
 	std::vector<std::string> featureNames() const;
@@ -77,7 +79,7 @@ class MODEL_API AdditionalProperties : public ModelObject {
 
 	boost::optional<bool> getFeatureAsBoolean(const std::string& name) const;
 
-	std::vector<std::string> suggestedFeatures() const;	
+	std::vector<std::string> suggestedFeatures() const;
 
 	//@}
 	/** @name Setters */
@@ -96,6 +98,10 @@ class MODEL_API AdditionalProperties : public ModelObject {
 	bool resetFeature(const std::string& name);
 
 	//@}
+
+  /// Merge another AdditionalProperties object with this one
+  /// If overwrite is true, the keys from other object overwrite keys from this
+  void merge(const AdditionalProperties& other, bool overwrite = false);
 
  protected:
 	/// @cond

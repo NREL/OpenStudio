@@ -1142,11 +1142,11 @@ namespace detail {
     AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
     if (candidates.size() > 1) {
       for (unsigned i = 1, n = candidates.size(); i < n; ++i) {
-        // DLM: do a merge before removing
+        // do a merge before removing
+        candidates[0].merge(candidates[i]);
         candidates[i].remove();
       }
-      LOG(Warn,"Removed extraneous ModelObjectAdditionalProperties objects pointing to "
-          << briefDescription() << ".");
+      LOG(Warn,"Removed extraneous ModelObjectAdditionalProperties objects pointing to " << briefDescription() << ".");
     }
     if (!candidates.empty()) {
       return candidates[0];
@@ -1166,7 +1166,7 @@ namespace detail {
     return removed;
   }
 
-  bool ModelObject_Impl::hasAdditionalProperties() {
+  bool ModelObject_Impl::hasAdditionalProperties() const {
     bool result = false;
     AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
     if (candidates.size() > 0) {
@@ -1359,7 +1359,7 @@ AdditionalProperties ModelObject::additionalProperties() const {
   return getImpl<detail::ModelObject_Impl>()->additionalProperties();
 }
 
-bool ModelObject::hasAdditionalProperties() {
+bool ModelObject::hasAdditionalProperties() const {
   return getImpl<detail::ModelObject_Impl>()->hasAdditionalProperties();
 }
 

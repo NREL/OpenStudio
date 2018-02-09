@@ -273,11 +273,12 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
    */
   IddObjectType iddObjectType() const;
 
-  /** Returns this object's additional properties, constructing a new object if necessary. */
+  /** Returns this object's additional properties, constructing a new object if necessary.
+  *   This method will throw if called on an AddditionalProperties object. */
   AdditionalProperties additionalProperties() const;
 
   /** Returns true if this object has additional properties. */
-  bool hasAdditionalProperties();
+  bool hasAdditionalProperties() const;
 
   /** Removes all additional properties that refer to this object. Returns removed objects. */
   std::vector<IdfObject> removeAdditionalProperties();

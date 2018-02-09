@@ -216,7 +216,7 @@ namespace detail {
     /** Returns this object's additional properties, constructing a new object if necessary. */
     AdditionalProperties additionalProperties() const;
 
-    bool hasAdditionalProperties();
+    bool hasAdditionalProperties() const;
 
     /** Removes all additional properties that refer to this object. Returns removed objects. */
     std::vector<IdfObject> removeAdditionalProperties();
