@@ -154,7 +154,7 @@ namespace detail {
   std::vector<std::string> BuildingUnit_Impl::suggestedFeatures() const
   {
     std::set<std::string> availableFeatureNames;
-    for (const auto& v : this->additionalProperties().suggestedFeatures()){
+    for (const auto& v : this->additionalProperties().suggestedFeatureNames()){
       availableFeatureNames.insert(v);
     }
     availableFeatureNames.insert("NumberOfBedrooms");
@@ -282,6 +282,11 @@ boost::optional<bool> BuildingUnit::getFeatureAsBoolean(const std::string& name)
 }
 
 std::vector<std::string> BuildingUnit::suggestedFeatures() const
+{
+  return getImpl<detail::BuildingUnit_Impl>()->suggestedFeatures();
+}
+
+std::vector<std::string> BuildingUnit::suggestedFeatureNames() const
 {
   return getImpl<detail::BuildingUnit_Impl>()->suggestedFeatures();
 }
