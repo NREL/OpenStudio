@@ -98,9 +98,6 @@ class MODEL_API BuildingUnit : public ModelObject {
   /// \deprecated { This method is deprecated, use additionalProperties instead }
   std::vector<std::string> suggestedFeatures() const;
 
-  /// \deprecated { This method is deprecated, use additionalProperties instead }
-  std::vector<std::string> suggestedFeatureNames() const;
-
   double floorArea() const;
 
   //@}

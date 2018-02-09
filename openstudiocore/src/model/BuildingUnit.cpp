@@ -286,11 +286,6 @@ std::vector<std::string> BuildingUnit::suggestedFeatures() const
   return getImpl<detail::BuildingUnit_Impl>()->suggestedFeatures();
 }
 
-std::vector<std::string> BuildingUnit::suggestedFeatureNames() const
-{
-  return getImpl<detail::BuildingUnit_Impl>()->suggestedFeatures();
-}
-
 double BuildingUnit::floorArea() const
 {
   double totalFloorArea(0.0);
