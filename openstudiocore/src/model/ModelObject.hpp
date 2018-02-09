@@ -278,6 +278,9 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
 
   bool hasAdditionalProperties();
 
+  /** Removes all additional properties that refer to this object. Returns removed objects. */
+  std::vector<IdfObject> removeAdditionalProperties();
+
   //@}
   /** @name Setters */
   //@{

@@ -33,6 +33,8 @@
 #include "Curve_Impl.hpp"
 #include "LifeCycleCost.hpp"
 #include "Component.hpp"
+#include "AdditionalProperties.hpp"
+#include "AdditionalProperties_Impl.hpp"
 
 #include "../utilities/idf/Workspace_Impl.hpp"
 
@@ -158,6 +160,10 @@ std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool i
   if (includeLifeCycleCosts){
     for (const LifeCycleCost& lifeCycleCost : object.lifeCycleCosts()){
       result.push_back(lifeCycleCost);
+    }
+    AdditionalPropertiesVector props = object.getModelObjectSources<AdditionalProperties>();
+    for (const AdditionalProperties& prop : props){
+      result.push_back(prop);
     }
   }
 

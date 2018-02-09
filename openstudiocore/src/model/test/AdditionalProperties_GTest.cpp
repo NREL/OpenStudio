@@ -43,6 +43,8 @@
 #include "../Construction_Impl.hpp"
 #include "../StandardOpaqueMaterial.hpp"
 #include "../StandardOpaqueMaterial_Impl.hpp"
+#include "../Lights.hpp"
+#include "../LightsDefinition.hpp"
 
 #include "../utilities/geometry/Geometry.hpp"
 #include "../../utilities/units/Quantity.hpp"
@@ -189,14 +191,37 @@ TEST_F(ModelFixture, AdditionalProperties_ModelObject) {
   EXPECT_EQ(material, material2);
 }
 
+// check that non-parent remove works
+TEST_F(ModelFixture, AdditionalProperties_NonParentRemove) {
+  Model model;
+  auto size = model.modelObjects().size();
+  LightsDefinition def(model);
+  AdditionalProperties defProps = def.additionalProperties();
+  Lights lights1(def);
+  AdditionalProperties props1 = lights1.additionalProperties();
+  Lights lights2(def);
+  AdditionalProperties props2 = lights2.additionalProperties();
+  EXPECT_EQ(2u, lights2.remove().size());
+  EXPECT_FALSE(defProps.handle().isNull());
+  EXPECT_FALSE(props1.handle().isNull());
+  EXPECT_TRUE(props2.handle().isNull());
+
+  EXPECT_EQ(4u, def.remove().size());
+  EXPECT_TRUE(defProps.handle().isNull());
+  EXPECT_TRUE(props1.handle().isNull());
+  EXPECT_TRUE(props2.handle().isNull());
+
+  EXPECT_EQ(size, model.modelObjects().size()) << model;
+}
+
 // check that parent remove works
 TEST_F(ModelFixture, AdditionalProperties_ParentRemove) {
   Model model;
   auto size = model.modelObjects().size();
   StandardOpaqueMaterial material(model);
   AdditionalProperties props = material.additionalProperties();
-  EXPECT_FALSE(material.remove().empty());
-  EXPECT_EQ(size, model.modelObjects().size());
+  EXPECT_EQ(2u, material.remove().size());
+  EXPECT_EQ(size, model.modelObjects().size()) << model;
 }
 
 // check that child remove works
