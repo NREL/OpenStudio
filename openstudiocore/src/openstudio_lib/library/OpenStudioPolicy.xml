@@ -1479,9 +1479,9 @@
     <rule IddField="Fraction Radiant" Access="LOCKED"/>
     <rule IddField="Sensible Heat Fraction" Access="LOCKED"/>
     <rule IddField="Carbon Dioxide Generation Rate" Access="LOCKED"/>
-    <rule IddField="Enable ASHRAE 55 Comfort Warnings" Access="LOCKED"/>
-    <rule IddField="Mean Radiant Temperature Calculation Type" Access="LOCKED"/>
-    <rule IddField="Thermal Comfort Model Type" Access="LOCKED"/>
+    <rule IddField="Enable ASHRAE 55 Comfort Warnings" Access="FREE"/>
+    <rule IddField="Mean Radiant Temperature Calculation Type" Access="FREE"/>
+    <rule IddField="Thermal Comfort Model Type" Access="FREE"/>
   </POLICY>
   <POLICY IddObjectType="OS_Lights_Definition">
     <rule IddField="Name" Access="LOCKED"/>

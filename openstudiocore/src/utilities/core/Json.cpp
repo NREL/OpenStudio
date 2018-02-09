@@ -83,6 +83,11 @@ bool checkType(const Json::Value& value, const std::string& key, const Json::Val
     if (!value[key].isConvertibleTo(valueType)){
       return false;
     }
+    if (valueType != Json::nullValue){
+      if (value[key].isNull()){
+        return false;
+      }
+    }
   }
   return true;
 }

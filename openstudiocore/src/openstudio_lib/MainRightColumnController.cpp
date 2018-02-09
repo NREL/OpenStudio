@@ -752,7 +752,7 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
   setMyModelView(myModelList);
 
   // Library
-  model::Model lib = doc->combinedComponentLibrary();
+  model::Model lib = doc->componentLibrary();
 
   auto myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader);
   myLibraryList->setItemsDraggable(true);
@@ -858,7 +858,7 @@ void MainRightColumnController::configureForSpacesSubTab(int subTabID)
   setMyModelView(myModelList);
 
   // Library
-  model::Model lib = doc->combinedComponentLibrary();
+  model::Model lib = doc->componentLibrary();
 
   auto myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader,true);
   myLibraryList->setItemsDraggable(true);
@@ -943,7 +943,7 @@ void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
   setMyModelView(myModelList);
 
   // Library
-  model::Model lib = doc->combinedComponentLibrary();
+  model::Model lib = doc->componentLibrary();
 
   auto libraryWidget = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader);
   libraryWidget->setItemsDraggable(true);
@@ -1032,7 +1032,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
 
   // Library
 
-  model::Model lib = doc->hvacComponentLibrary();
+  model::Model lib = doc->componentLibrary();
 
   auto libraryWidget = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader,true);
   libraryWidget->setItemsDraggable(true);

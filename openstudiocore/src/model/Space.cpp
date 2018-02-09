@@ -2238,7 +2238,7 @@ namespace detail {
 
     for (Surface surface : this->surfaces()){
 
-      std::vector<Point3d> vertices = surface.vertices();
+      std::vector<Point3d> vertices = removeCollinear(surface.vertices());
 
       boost::optional<Vector3d> outwardNormal = getOutwardNormal(vertices);
       if (!outwardNormal){
@@ -2247,7 +2247,7 @@ namespace detail {
 
       for (Surface otherSurface : other.surfaces()){
 
-        std::vector<Point3d> otherVertices = transformation*otherSurface.vertices();
+        std::vector<Point3d> otherVertices = removeCollinear(transformation*otherSurface.vertices());
 
         boost::optional<Vector3d> otherOutwardNormal = getOutwardNormal(otherVertices);
         if (!otherOutwardNormal){
@@ -2271,11 +2271,11 @@ namespace detail {
           // once surfaces are matched, check subsurfaces
           for (SubSurface subSurface : surface.subSurfaces()){
 
-            vertices = subSurface.vertices();
+            vertices = removeCollinear(subSurface.vertices());
 
             for (SubSurface otherSubSurface : otherSurface.subSurfaces()){
 
-              otherVertices = transformation*otherSubSurface.vertices();
+              otherVertices = removeCollinear(transformation*otherSubSurface.vertices());
               std::reverse(otherVertices.begin(), otherVertices.end());
 
               if (circularEqual(vertices, otherVertices, tol)){
@@ -2749,13 +2749,13 @@ namespace detail {
       result = floors[0].vertices();
 
       // remove collinear points
-      result = removeCollinear(result);
+      result = removeCollinearLegacy(result);
 
       // reorder the points
       result = reorderULC(result);
 
       // remove additional collinear points that occur after reordering
-      result = removeCollinear(result);
+      result = removeCollinearLegacy(result);
 
     }else{
 
@@ -2797,13 +2797,13 @@ namespace detail {
       result.pop_back();
 
       // remove collinear points
-      result = removeCollinear(result);
+      result = removeCollinearLegacy(result);
 
       // reorder the points
       result = reorderULC(result);
 
       // remove additional collinear points that occur after reordering
-      result = removeCollinear(result);
+      result = removeCollinearLegacy(result);
 
       // if result is now empty just quit
       if (result.size() < 3){
@@ -2824,13 +2824,13 @@ namespace detail {
         }
 
         // remove collinear points
-        innerLoop = removeCollinear(innerLoop);
+        innerLoop = removeCollinearLegacy(innerLoop);
 
         // reorder the points
         innerLoop = reorderULC(innerLoop);
 
         // remove additional collinear points that occur after reordering
-        innerLoop = removeCollinear(innerLoop);
+        innerLoop = removeCollinearLegacy(innerLoop);
 
         // if inner loop is now empty just ignore it
         if (innerLoop.size() < 3){
@@ -2852,13 +2852,13 @@ namespace detail {
     }
 
     // remove collinear points
-    result = removeCollinear(result);
+    result = removeCollinearLegacy(result);
 
     // reorder the points
     result = reorderULC(result);
 
     // remove additional collinear points that occur after reordering
-    result = removeCollinear(result);
+    result = removeCollinearLegacy(result);
 
     // if result is now empty just quit
     if (result.size() < 3){

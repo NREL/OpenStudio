@@ -42,6 +42,10 @@ namespace openstudio
   namespace model
   {
 
+    /** FloorplanJSForwardTranslator updates a FloorspaceJS JSON with content from an OpenStudio Model. This update does not
+    *   convert OpenStudio Model geometry to FloorspaceJS format.  The update is only for non-geometrical data.  For example,
+    *   a Space's name and handle may be updated in the FloorspaceJS JSON but a Space's floorprint will not be updated.
+    */
     MODEL_API class FloorplanJSForwardTranslator
     {
     public:

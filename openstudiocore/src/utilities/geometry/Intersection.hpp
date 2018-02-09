@@ -97,7 +97,7 @@ namespace openstudio{
   UTILITIES_API bool within(const Point3d& point1, const std::vector<Point3d>& polygon2, double tol);
   UTILITIES_API bool within(const std::vector<Point3d>& geometry1, const std::vector<Point3d>& polygon2, double tol);
 
-  /// simplify a list of vertices
+  /// simplify a list of vertices, requires that all vertices are in clockwise order on the z = 0 plane (i.e. in face coordinates)
   UTILITIES_API std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeCollinear, double tol);
 
 } // openstudio

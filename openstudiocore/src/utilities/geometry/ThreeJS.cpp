@@ -29,8 +29,10 @@
 #include "ThreeJS.hpp"
 
 #include "../core/Assert.hpp"
+#include "../core/Compare.hpp"
 #include "../core/Path.hpp"
 #include "../core/Json.hpp"
+#include "../core/UUID.hpp"
 
 #include <jsoncpp/json.h>
 
@@ -39,9 +41,190 @@
 
 namespace openstudio{
 
+  unsigned openstudioFaceFormatId()
+  {
+    return 1024;
+  }
+
   unsigned toThreeColor(unsigned r, unsigned g, unsigned b)
   {
     return 65536 * r + 256 * g + b;
+  }
+
+  unsigned toThreeColor(const std::string& s)
+  {
+    int r = 0;
+    int g = 0;
+    int b = 0;
+    std::string c(s);
+    if (c.size() == 4){
+      c = s.substr(0, 1) + s.substr(1, 1) + s.substr(1, 1) + s.substr(2, 1) + s.substr(2, 1) + s.substr(3, 1) + s.substr(3, 1);
+      OS_ASSERT(c.size() == 7);
+    }
+
+    if (c.size() == 7){
+      r = std::stoi(c.substr(1, 2), 0, 16);
+      g = std::stoi(c.substr(3, 2), 0, 16);
+      b = std::stoi(c.substr(5, 2), 0, 16);
+    }
+
+    return toThreeColor(r, g, b);
+  }
+
+  std::string getObjectThreeMaterialName(const std::string& iddObjectType, const std::string& name)
+  {
+    std::string result;
+    if (istringEqual(iddObjectType, "OS:Construction")){
+      result = "Construction_" + name;
+    }else if (istringEqual(iddObjectType, "OS:ThermalZone")){
+      result = "ThermalZone_" + name;
+    }else if (istringEqual(iddObjectType, "OS:SpaceType")){
+      result = "SpaceType_" + name;
+    }else if (istringEqual(iddObjectType, "OS:BuildingStory")){
+      result = "BuildingStory_" + name;
+    }else if (istringEqual(iddObjectType, "OS:BuildingUnit")){
+      result = "BuildingUnit_" + name;
+    } else{
+      LOG_FREE(Error, "getObjectMaterialName", "Unknown iddObjectType '" << iddObjectType << "'");
+    }
+    return result;
+  }
+
+  std::string getSurfaceTypeThreeMaterialName(const std::string& surfaceType)
+  {
+    if (istringEqual(surfaceType, "FixedWindow") ||
+        istringEqual(surfaceType, "OperableWindow") ||
+        istringEqual(surfaceType, "GlassDoor") ||
+        istringEqual(surfaceType, "Skylight") ||
+        istringEqual(surfaceType, "TubularDaylightDome") ||
+        istringEqual(surfaceType, "TubularDaylightDiffuser"))
+    {
+      return "Window";
+    } else if (istringEqual(surfaceType, "Door") ||
+              istringEqual(surfaceType, "OverheadDoor"))
+    {
+      return "Door";
+    }
+
+    return surfaceType;
+  }
+
+  ThreeMaterial makeThreeMaterial(const std::string& name, unsigned color, double opacity, unsigned side, unsigned shininess, const std::string type)
+  {
+    bool transparent = false;
+    if (opacity < 1){
+      transparent = true;
+    }
+
+    ThreeMaterial result(toThreeUUID(toString(openstudio::createUUID())), name, type,
+      color, color, toThreeColor(0, 0, 0), color, shininess, opacity, transparent, false, side);
+
+    return result;
+  }
+
+  void addThreeMaterial(std::vector<ThreeMaterial>& materials, std::map<std::string, std::string>& materialMap, const ThreeMaterial& material)
+  {
+    materialMap[material.name()] = material.uuid();
+    materials.push_back(material);
+  }
+
+  std::string getThreeMaterialId(const std::string& materialName, std::map<std::string, std::string>& materialMap)
+  {
+    std::map<std::string, std::string>::const_iterator it = materialMap.find(materialName);
+    if (it != materialMap.end()){
+      return it->second;
+    }
+
+    it = materialMap.find("Undefined");
+    if (it != materialMap.end()){
+      return it->second;
+    }
+    OS_ASSERT(false);
+    return "";
+  }
+
+  std::vector<ThreeMaterial> makeStandardThreeMaterials()
+  {
+    std::vector<ThreeMaterial> result;
+
+    // materials from 'openstudio\openstudiocore\ruby\openstudio\sketchup_plugin\lib\interfaces\MaterialsInterface.rb'
+
+    //result.push_back(makeThreeMaterial("Undefined", toThreeColor(255, 255, 255), 1, ThreeSide::DoubleSide, 50, "MeshBasicMaterial"));
+    result.push_back(makeThreeMaterial("Undefined", toThreeColor(255, 255, 255), 1, ThreeSide::DoubleSide));
+
+    result.push_back(makeThreeMaterial("NormalMaterial", toThreeColor(255, 255, 255), 1, ThreeSide::DoubleSide));
+    //result.push_back(makeThreeMaterial("NormalMaterial_Ext", toThreeColor(255, 255, 255), 1, ThreeSide::FrontSide, 50, "MeshBasicMaterial"));
+    result.push_back(makeThreeMaterial("NormalMaterial_Ext", toThreeColor(255, 255, 255), 1, ThreeSide::FrontSide));
+    result.push_back(makeThreeMaterial("NormalMaterial_Int", toThreeColor(255, 0, 0), 1, ThreeSide::BackSide));
+
+    result.push_back(makeThreeMaterial("Floor", toThreeColor(128, 128, 128), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Floor_Ext", toThreeColor(128, 128, 128), 1, ThreeSide::FrontSide));
+    result.push_back(makeThreeMaterial("Floor_Int", toThreeColor(191, 191, 191), 1, ThreeSide::BackSide));
+
+    result.push_back(makeThreeMaterial("Wall", toThreeColor(204, 178, 102), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Wall_Ext", toThreeColor(204, 178, 102), 1, ThreeSide::FrontSide));
+    result.push_back(makeThreeMaterial("Wall_Int", toThreeColor(235, 226, 197), 1, ThreeSide::BackSide));
+
+    result.push_back(makeThreeMaterial("RoofCeiling", toThreeColor(153, 76, 76), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("RoofCeiling_Ext", toThreeColor(153, 76, 76), 1, ThreeSide::FrontSide));
+    result.push_back(makeThreeMaterial("RoofCeiling_Int", toThreeColor(202, 149, 149), 1, ThreeSide::BackSide));
+
+    result.push_back(makeThreeMaterial("Window", toThreeColor(102, 178, 204), 0.6, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Window_Ext", toThreeColor(102, 178, 204), 0.6, ThreeSide::FrontSide));
+    result.push_back(makeThreeMaterial("Window_Int", toThreeColor(192, 226, 235), 0.6, ThreeSide::BackSide));
+
+    result.push_back(makeThreeMaterial("Door", toThreeColor(153, 133, 76), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Door_Ext", toThreeColor(153, 133, 76), 1, ThreeSide::FrontSide));
+    result.push_back(makeThreeMaterial("Door_Int", toThreeColor(202, 188, 149), 1, ThreeSide::BackSide));
+
+    result.push_back(makeThreeMaterial("SiteShading", toThreeColor(75, 124, 149), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("SiteShading_Ext", toThreeColor(75, 124, 149), 1, ThreeSide::FrontSide));
+    result.push_back(makeThreeMaterial("SiteShading_Int", toThreeColor(187, 209, 220), 1, ThreeSide::BackSide));
+
+    result.push_back(makeThreeMaterial("BuildingShading", toThreeColor(113, 76, 153), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("BuildingShading_Ext", toThreeColor(113, 76, 153), 1, ThreeSide::FrontSide));
+    result.push_back(makeThreeMaterial("BuildingShading_Int", toThreeColor(216, 203, 229), 1, ThreeSide::BackSide));
+
+    result.push_back(makeThreeMaterial("SpaceShading", toThreeColor(76, 110, 178), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("SpaceShading_Ext", toThreeColor(76, 110, 178), 1, ThreeSide::FrontSide));
+    result.push_back(makeThreeMaterial("SpaceShading_Int", toThreeColor(183, 197, 224), 1, ThreeSide::BackSide));
+
+    result.push_back(makeThreeMaterial("InteriorPartitionSurface", toThreeColor(158, 188, 143), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("InteriorPartitionSurface_Ext", toThreeColor(158, 188, 143), 1, ThreeSide::FrontSide));
+    result.push_back(makeThreeMaterial("InteriorPartitionSurface_Int", toThreeColor(213, 226, 207), 1, ThreeSide::BackSide));
+
+    // start textures for boundary conditions
+    result.push_back(makeThreeMaterial("Boundary_Surface", toThreeColor(0, 153, 0), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Boundary_Adiabatic", toThreeColor(255, 0, 0), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Boundary_Space", toThreeColor(255, 0, 0), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Boundary_Outdoors", toThreeColor(163, 204, 204), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Boundary_Outdoors_Sun", toThreeColor(40, 204, 204), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Boundary_Outdoors_Wind", toThreeColor(9, 159, 162), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Boundary_Outdoors_SunWind", toThreeColor(68, 119, 161), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Boundary_Ground", toThreeColor(204, 183, 122), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Boundary_Groundfcfactormethod", toThreeColor(153, 122, 30), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Boundary_Groundslabpreprocessoraverage", toThreeColor(255, 191, 0), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Boundary_Groundslabpreprocessorcore", toThreeColor(255, 182, 50), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Boundary_Groundslabpreprocessorperimeter", toThreeColor(255, 178, 101), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Boundary_Groundbasementpreprocessoraveragewall", toThreeColor(204, 51, 0), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Boundary_Groundbasementpreprocessoraveragefloor", toThreeColor(204, 81, 40), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Boundary_Groundbasementpreprocessorupperwall", toThreeColor(204, 112, 81), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Boundary_Groundbasementpreprocessorlowerwall", toThreeColor(204, 173, 163), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Boundary_Othersidecoefficients", toThreeColor(63, 63, 63), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Boundary_Othersideconditionsmodel", toThreeColor(153, 0, 76), 1, ThreeSide::DoubleSide));
+
+    // special rendering materials
+    result.push_back(makeThreeMaterial("SpaceType_Plenum", toThreeColor(192, 192, 192), 0.1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("ThermalZone_Plenum", toThreeColor(192, 192, 192), 0.1, ThreeSide::DoubleSide));
+
+    // special rendering materials, these are components or textures in SketchUp
+    result.push_back(makeThreeMaterial("DaylightingControl", toThreeColor(102, 178, 204), 0.1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("AirWall", toThreeColor(102, 178, 204), 0.1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("SolarCollector", toThreeColor(255, 255, 255), 1, ThreeSide::DoubleSide));
+    result.push_back(makeThreeMaterial("Photovoltaic", toThreeColor(255, 255, 255), 0.1, ThreeSide::DoubleSide));
+
+
+    return result;
   }
 
   std::string toThreeUUID(const std::string& uuid)
@@ -271,19 +454,19 @@ namespace openstudio{
     Json::Value normals = value.get("normals", Json::arrayValue);
     n = normals.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
-      m_normals.push_back(normals[i].asDouble());
+      m_normals.push_back(normals[i].asInt()); // DLM: known type conversion?
     }
 
     Json::Value uvs = value.get("uvs", Json::arrayValue);
     n = uvs.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
-      m_uvs.push_back(uvs[i].asDouble());
+      m_uvs.push_back(uvs[i].asInt()); // DLM: known type conversion?
     }
 
     Json::Value faces = value.get("faces", Json::arrayValue);
     n = faces.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
-      m_faces.push_back(faces[i].asDouble());
+      m_faces.push_back(faces[i].asInt()); // DLM: known type conversion?
     }
 
   }
@@ -524,7 +707,8 @@ namespace openstudio{
 
   ThreeUserData::ThreeUserData()
     : m_coincidentWithOutsideObject(false),
-      m_illuminanceSetpoint(0.0)
+      m_illuminanceSetpoint(0.0),
+      m_airWall(false)
       //m_belowFloorPlenum(false),
       //m_aboveCeilingPlenum(false)
   {}
@@ -544,6 +728,8 @@ namespace openstudio{
     assertType(value, "subSurfaceHandle", Json::stringValue);
     assertType(value, "spaceName", Json::stringValue);
     assertType(value, "spaceHandle", Json::stringValue);
+    assertType(value, "shadingName", Json::stringValue);
+    assertType(value, "shadingHandle", Json::stringValue);
     assertType(value, "thermalZoneName", Json::stringValue);
     assertType(value, "thermalZoneHandle", Json::stringValue);
     assertType(value, "thermalZoneMaterialName", Json::stringValue);
@@ -567,8 +753,9 @@ namespace openstudio{
     assertType(value, "sunExposure", Json::stringValue);
     assertType(value, "windExposure", Json::stringValue);
     assertType(value, "illuminanceSetpoint", Json::realValue);
-    assertType(value, "belowFloorPlenum", Json::booleanValue);
-    assertType(value, "aboveCeilingPlenum", Json::booleanValue);
+    assertType(value, "airWall", Json::booleanValue);
+    //assertType(value, "belowFloorPlenum", Json::booleanValue);
+    //assertType(value, "aboveCeilingPlenum", Json::booleanValue);
 
     m_handle = value.get("handle", "").asString();
     m_name = value.get("name", "").asString();
@@ -583,6 +770,8 @@ namespace openstudio{
     m_subSurfaceHandle = value.get("subSurfaceHandle", "").asString();
     m_spaceName = value.get("spaceName", "").asString();
     m_spaceHandle = value.get("spaceHandle", "").asString();
+    m_shadingName = value.get("shadingName", "").asString();
+    m_shadingHandle = value.get("shadingHandle", "").asString();
     m_thermalZoneName = value.get("thermalZoneName", "").asString();
     m_thermalZoneHandle = value.get("thermalZoneHandle", "").asString();
     m_thermalZoneMaterialName = value.get("thermalZoneMaterialName", "").asString();
@@ -605,7 +794,8 @@ namespace openstudio{
     m_coincidentWithOutsideObject = value.get("coincidentWithOutsideObject", false).asBool();
     m_sunExposure = value.get("sunExposure", "").asString();
     m_windExposure = value.get("windExposure", "").asString();
-    m_illuminanceSetpoint = value.get("illuminanceSetpoint", "").asDouble();
+    m_illuminanceSetpoint = value.get("illuminanceSetpoint", 0.0).asDouble();
+    m_airWall = value.get("airWall", false).asBool();
     //m_belowFloorPlenum = value.get("belowFloorPlenum", "").asBool();
     //m_aboveCeilingPlenum = value.get("aboveCeilingPlenum", "").asBool();
   }
@@ -627,6 +817,8 @@ namespace openstudio{
     result["subSurfaceHandle"] = m_subSurfaceHandle;
     result["spaceName"] = m_spaceName;
     result["spaceHandle"] = m_spaceHandle;
+    result["shadingName"] = m_shadingName;
+    result["shadingHandle"] = m_shadingHandle;
     result["thermalZoneName"] = m_thermalZoneName;
     result["thermalZoneHandle"] = m_thermalZoneHandle;
     result["thermalZoneMaterialName"] = m_thermalZoneMaterialName;
@@ -650,6 +842,7 @@ namespace openstudio{
     result["sunExposure"] = m_sunExposure;
     result["windExposure"] = m_windExposure;
     result["illuminanceSetpoint"] = m_illuminanceSetpoint;
+    result["airWall"] = m_airWall;
     //result["belowFloorPlenum"] = m_belowFloorPlenum;
     //result["aboveCeilingPlenum"] = m_aboveCeilingPlenum;
 
@@ -719,6 +912,16 @@ namespace openstudio{
   std::string ThreeUserData::spaceHandle() const
   {
     return m_spaceHandle;
+  }
+
+  std::string ThreeUserData::shadingName() const
+  {
+    return m_shadingName;
+  }
+
+  std::string ThreeUserData::shadingHandle() const
+  {
+    return m_shadingHandle;
   }
 
   std::string ThreeUserData::thermalZoneName() const
@@ -836,6 +1039,11 @@ namespace openstudio{
     return m_illuminanceSetpoint;
   }
 
+  bool ThreeUserData::airWall() const
+  {
+    return m_airWall;
+  }
+
   //bool ThreeUserData::plenum() const
   //{
   //  return (m_belowFloorPlenum || m_aboveCeilingPlenum);
@@ -914,6 +1122,16 @@ namespace openstudio{
   void ThreeUserData::setSpaceHandle(const std::string& s)
   {
     m_spaceHandle = s;
+  }
+
+  void ThreeUserData::setShadingName(const std::string& s)
+  {
+    m_shadingName = s;
+  }
+
+  void ThreeUserData::setShadingHandle(const std::string& s)
+  {
+    m_shadingHandle = s;
   }
 
   void ThreeUserData::setThermalZoneName(const std::string& s)
@@ -1029,6 +1247,11 @@ namespace openstudio{
   void ThreeUserData::setIlluminanceSetpoint(double d)
   {
     m_illuminanceSetpoint = d;
+  }
+
+  void ThreeUserData::setAirWall(bool b)
+  {
+    m_airWall = b;
   }
 
   //void ThreeUserData::setBelowFloorPlenum(bool v)
@@ -1280,13 +1503,15 @@ namespace openstudio{
   }
 
   ThreeModelObjectMetadata::ThreeModelObjectMetadata(const std::string& iddObjectType, const std::string& handle, const std::string& name)
-    : m_iddObjectType(iddObjectType), m_handle(handle), m_name(name)
+    : m_iddObjectType(iddObjectType), m_handle(handle), m_name(name), m_openToBelow(false)
   {}
 
   ThreeModelObjectMetadata::ThreeModelObjectMetadata()
+    : m_openToBelow(false)
   {}
 
   ThreeModelObjectMetadata::ThreeModelObjectMetadata(const Json::Value& value)
+    : m_openToBelow(false)
   {
     assertKeyAndType(value, "iddObjectType", Json::stringValue);
     assertKeyAndType(value, "handle", Json::stringValue);
@@ -1295,6 +1520,28 @@ namespace openstudio{
     m_iddObjectType = value.get("iddObjectType", "").asString();
     m_handle = value.get("handle", "").asString();
     m_name = value.get("name", "").asString();
+
+    if (checkKeyAndType(value, "color", Json::stringValue)){
+      m_color = value.get("color", 1).asString();
+    }
+    if (checkKeyAndType(value, "open_to_below", Json::booleanValue)){
+      m_openToBelow = value.get("open_to_below", 1).asBool();
+    }
+    if (checkKeyAndType(value, "multiplier", Json::uintValue)){
+      m_multiplier = value.get("multiplier", 1).asUInt();
+    }
+    if (checkKeyAndType(value, "nominal_z_coordinate", Json::realValue)){
+      m_nominalZCoordinate = value.get("nominal_z_coordinate", 0.0).asDouble();
+    }
+    if (checkKeyAndType(value, "below_floor_plenum_height", Json::realValue)){
+      m_belowFloorPlenumHeight = value.get("below_floor_plenum_height", 0.0).asDouble();
+    }
+    if (checkKeyAndType(value, "floor_to_ceiling_height", Json::realValue)){
+      m_floorToCeilingHeight = value.get("floor_to_ceiling_height", 3.0).asDouble();
+    }
+    if (checkKeyAndType(value, "above_ceiling_plenum_height", Json::realValue)){
+      m_aboveCeilingPlenumHeight = value.get("above_ceiling_plenum_height", 0.0).asDouble();
+    }
   }
 
   std::string ThreeModelObjectMetadata::iddObjectType() const
@@ -1319,10 +1566,150 @@ namespace openstudio{
     result["iddObjectType"] = m_iddObjectType;
     result["handle"] = m_handle;
     result["name"] = m_name;
+    result["color"] = m_color;
+    result["open_to_below"] = m_openToBelow;
+    if (m_multiplier){
+      result["multiplier"] = m_multiplier.get();
+    }
+    if (m_nominalZCoordinate){
+      result["nominal_z_coordinate"] = m_nominalZCoordinate.get();
+    }
+    if (m_belowFloorPlenumHeight){
+      result["below_floor_plenum_height"] = m_belowFloorPlenumHeight.get();
+    }
+    if (m_floorToCeilingHeight){
+      result["floor_to_ceiling_height"] = m_floorToCeilingHeight.get();
+    }
+    if (m_aboveCeilingPlenumHeight){
+      result["above_ceiling_plenum_height"] = m_aboveCeilingPlenumHeight.get();
+    }
 
     return result;
   }
 
+  std::string ThreeModelObjectMetadata::color() const
+  {
+    return m_color;
+  }
+
+  bool ThreeModelObjectMetadata::setColor(const std::string& c)
+  {
+    m_color = c;
+    return true;
+  }
+
+  void ThreeModelObjectMetadata::resetColor()
+  {
+    m_color.clear();
+  }
+
+  bool ThreeModelObjectMetadata::openToBelow() const
+  {
+    return m_openToBelow;
+  }
+
+  bool ThreeModelObjectMetadata::setOpenToBelow(bool t)
+  {
+    m_openToBelow = t;
+    return true;
+  }
+
+  void ThreeModelObjectMetadata::resetOpenToBelow()
+  {
+    m_openToBelow = false;
+  }
+
+  boost::optional<unsigned> ThreeModelObjectMetadata::multiplier() const
+  {
+    return m_multiplier;
+  }
+
+  bool ThreeModelObjectMetadata::setMultiplier(unsigned mult)
+  {
+    if (mult > 0){
+      m_multiplier = mult;
+      return true;
+    }
+    return false;
+  }
+
+  void ThreeModelObjectMetadata::resetMultiplier()
+  {
+    m_multiplier.reset();
+  }
+
+  boost::optional<double> ThreeModelObjectMetadata::nominalZCoordinate() const
+  {
+    return m_nominalZCoordinate;
+  }
+
+  bool ThreeModelObjectMetadata::setNominalZCoordinate(double z)
+  {
+    m_nominalZCoordinate = z;
+    return true;
+  }
+
+  void ThreeModelObjectMetadata::resetNominalZCoordinate()
+  {
+    m_nominalZCoordinate.reset();
+  }
+
+  boost::optional<double> ThreeModelObjectMetadata::belowFloorPlenumHeight() const
+  {
+    return m_belowFloorPlenumHeight;
+  }
+
+  bool ThreeModelObjectMetadata::setBelowFloorPlenumHeight(double height)
+  {
+    if (height >= 0){
+      m_belowFloorPlenumHeight = height;
+      return true;
+    }
+    return false;
+  }
+
+  void ThreeModelObjectMetadata::resetBelowFloorPlenumHeight()
+  {
+    m_belowFloorPlenumHeight.reset();
+  }
+
+  boost::optional<double> ThreeModelObjectMetadata::floorToCeilingHeight() const
+  {
+    return m_floorToCeilingHeight;
+  }
+
+  bool ThreeModelObjectMetadata::setFloorToCeilingHeight(double height)
+  {
+    if (height >= 0){
+      m_floorToCeilingHeight = height;
+      return true;
+    }
+    return false;
+  }
+
+  void ThreeModelObjectMetadata::resetFloorToCeilingHeight()
+  {
+    m_floorToCeilingHeight.reset();
+  }
+
+  boost::optional<double> ThreeModelObjectMetadata::aboveCeilingPlenumHeight() const
+  {
+    return m_aboveCeilingPlenumHeight;
+  }
+
+  bool ThreeModelObjectMetadata::setAboveCeilingPlenumHeight(double height)
+  {
+    if (height >= 0){
+      m_aboveCeilingPlenumHeight = height;
+      return true;
+    }
+    return false;
+  }
+
+  void ThreeModelObjectMetadata::resetAboveCeilingPlenumHeight()
+  {
+    m_aboveCeilingPlenumHeight.reset();
+  }
 
   ThreeSceneMetadata::ThreeSceneMetadata(const std::vector<std::string>& buildingStoryNames, const ThreeBoundingBox& boundingBox, const std::vector<ThreeModelObjectMetadata>& modelObjectMetadata)
     : m_version("4.3"), m_type("Object"), m_generator("OpenStudio"), m_buildingStoryNames(buildingStoryNames), m_boundingBox(boundingBox), m_modelObjectMetadata(modelObjectMetadata)
