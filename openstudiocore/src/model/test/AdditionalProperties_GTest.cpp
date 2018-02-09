@@ -172,7 +172,7 @@ TEST_F(ModelFixture, AdditionalProperties_Features) {
 
   // Test suggested feature names
   EXPECT_TRUE(props.setFeature("MyUniqueFeature", 5));
-  Construction construction2(model);  
+  Construction construction2(model);
   AdditionalProperties props2 = construction2.additionalProperties();
   std::vector<std::string> suggestedFeatures(props2.suggestedFeatures());
   ASSERT_EQ(suggestedFeatures.size(), 3);

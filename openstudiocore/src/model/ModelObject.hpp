@@ -276,6 +276,7 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   /** Returns this object's additional properties, constructing a new object if necessary. */
   AdditionalProperties additionalProperties() const;
 
+  /** Returns true if this object has additional properties. */
   bool hasAdditionalProperties();
 
   /** Removes all additional properties that refer to this object. Returns removed objects. */
