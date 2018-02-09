@@ -2,10 +2,11 @@
 !- Supported By : To-Be-One Technology Co, Ltd.
 !- Created Date : 22/05/2015
 !- Modified By  : Narongsak Mala (narongsak.mala@gmail.com)
-!- Modified Date : 27/12/2017
-!- Remark       : This version was provided by K.Nan
+!- Modified Date : 19/02/2017
+!- Remark       : This version was provided by AJ.Mok
 !-----------------------------------------------------------------
 !- Revision         Details
+!- 1.0.8-000        Revise Material names.
 !- 1.0.7-001        Remove duplicate schedule set.
 !- 1.0.7-000        Update Library in order to support sketchup plugin
 !- 1.0.6-002        Add Schedule to SpaceType
@@ -11698,7 +11699,7 @@ OS:Material,
 
 OS:Material,
   {42d9a050-7103-4f56-a301-7e541de8e60f}, !- Handle
-  167 แผ่นไฟเบอร์ชานอ้อย หนา 1 ซม., !- Name
+  166 แผ่นไฟเบอร์ชานอ้อย หนา 1 ซม., !- Name
   Smooth,                                 !- Roughness
   0.01,                                   !- Thickness {m}
   0.052,                                  !- Conductivity {W/m-K}
@@ -11710,7 +11711,7 @@ OS:Material,
 
 OS:Material,
   {a04ff86f-6c94-456b-aace-ee5f550365db}, !- Handle
-  167 แผ่นไม้ก๊อก หนา 0.5 ซม., !- Name
+  168 แผ่นไม้ก๊อก หนา 0.5 ซม., !- Name
   Smooth,                                 !- Roughness
   0.005,                                  !- Thickness {m}
   0.042,                                  !- Conductivity {W/m-K}
@@ -11806,7 +11807,7 @@ OS:Material,
 
 OS:Material,
   {e207c8ab-15ef-4b60-88bd-66ef6041c3d8}, !- Handle
-  165 แผ่นยิปซั่ม หนา 9 มม., !- Name
+  164 แผ่นยิปซั่ม หนา 9 มม., !- Name
   Smooth,                                 !- Roughness
   0.009,                                  !- Thickness {m}
   0.282,                                  !- Conductivity {W/m-K}
@@ -11830,7 +11831,7 @@ OS:Material,
 
 OS:Material,
   {2a3aa085-9b70-4125-bc12-d9de8f5ec584}, !- Handle
-  166 แผ่นอลูคาร์บอน หนา 0.4 มม., !- Name
+  165 แผ่นอลูคาร์บอน หนา 0.4 มม., !- Name
   Smooth,                                 !- Roughness
   0.0004,                                 !- Thickness {m}
   5.54,                                   !- Conductivity {W/m-K}
@@ -11854,7 +11855,7 @@ OS:Material,
 
 OS:Material,
   {34d4428e-1011-436d-97b5-293298e95e7b}, !- Handle
-  126 พลียูรีเทนโฟม หนา 25 มม., !- Name
+     126 โพลียูรีเทนโฟม หนา 25 มม.,                                                                           !- Name
   Smooth,                                 !- Roughness
   0.025,                                  !- Thickness {m}
   0.03,                                   !- Conductivity {W/m-K}
@@ -19124,22 +19125,6 @@ OS:StandardsInformation:Material,
 OS:StandardsInformation:Material,
   {a6a30599-ec37-4beb-9f72-a0b6eb113eb5}, !- Handle
   {2a614ed8-fa53-404f-bed4-f1893e6c32d5}; !- Material Name
-
-OS:Material,
-  {5d29fd10-1f2e-4fc8-bdb0-cccd522e4b09}, !- Handle
-  164 แผ่นยิปซั่มบอร์ด หนา 9 มม., !- Name
-  Smooth,                                 !- Roughness
-  0.009,                                  !- Thickness {m}
-  0.191,                                  !- Conductivity {W/m-K}
-  880,                                    !- Density {kg/m3}
-  1090,                                   !- Specific Heat {J/kg-K}
-  0.9,                                    !- Thermal Absorptance
-  0.3,                                    !- Solar Absorptance
-  0.5;                                    !- Visible Absorptance
-
-OS:StandardsInformation:Material,
-  {11ed6951-644c-428d-b372-41586c38bc91}, !- Handle
-  {5d29fd10-1f2e-4fc8-bdb0-cccd522e4b09}; !- Material Name
 
 OS:Construction,
   {b3915616-ea05-49ed-817e-d5825f6f5aeb}, !- Handle
