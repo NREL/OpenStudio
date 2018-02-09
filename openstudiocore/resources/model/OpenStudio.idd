@@ -2007,7 +2007,6 @@ OS:BuildingStory,
 
 OS:BuildingUnit,
        \min-fields 4
-       \extensible:3
   A1,  \field Handle
        \type handle
        \required-field
@@ -2018,25 +2017,11 @@ OS:BuildingUnit,
   A3,  \field Rendering Color
        \type object-list
        \object-list GroupRenderingNames
-  A4,  \field Building Unit Type
+  A4;  \field Building Unit Type
        \type choice
        \key Residential
        \key NonResidential
        \default Residential
-  A5,  \field Building Unit Feature Name
-       \type alpha
-       \begin-extensible
-       \required-field
-  A6,  \field Building Unit Feature Data Type
-       \type choice
-       \key String
-       \key Double
-       \key Boolean
-       \key Integer
-       \required-field
-  A7;  \field Building Unit Feature Value
-       \type alpha
-       \required-field
 
 OS:DefaultConstructionSet,
        \min-fields 11
