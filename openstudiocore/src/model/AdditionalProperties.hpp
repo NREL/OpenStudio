@@ -1,29 +1,29 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *	OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
- *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
- *  following conditions are met:
+ *	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ *	following conditions are met:
  *
- *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
- *  disclaimer.
+ *	(1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ *	disclaimer.
  *
- *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
- *  following disclaimer in the documentation and/or other materials provided with the distribution.
+ *	(2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ *	following disclaimer in the documentation and/or other materials provided with the distribution.
  *
- *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
- *  products derived from this software without specific prior written permission from the respective party.
+ *	(3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
+ *	products derived from this software without specific prior written permission from the respective party.
  *
- *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
- *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
- *  specific prior written permission from Alliance for Sustainable Energy, LLC.
+ *	(4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
+ *	works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
+ *	specific prior written permission from Alliance for Sustainable Energy, LLC.
  *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
- *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *	DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
+ *	ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *	PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *	AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
 #ifndef MODEL_ADDITIONALPROPERTIES_HPP
@@ -39,84 +39,84 @@ namespace model {
 class ModelObject;
 
 namespace detail {
-  class ModelObject_Impl;
-  class AdditionalProperties_Impl;
+	class ModelObject_Impl;
+	class AdditionalProperties_Impl;
 
 } // detail
 
 class MODEL_API AdditionalProperties : public ModelObject {
  public:
-  /** @name Constructors and Destructors */
-  //@{
+	/** @name Constructors and Destructors */
+	//@{
 
-  virtual ~AdditionalProperties() {}
+	virtual ~AdditionalProperties() {}
 
-  //@}
+	//@}
 
-  /** @name Static Methods */
-  //@{
+	/** @name Static Methods */
+	//@{
 
-  //@}
+	//@}
 
-  static IddObjectType iddObjectType();
+	static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+	/** @name Getters */
+	//@{
 
 	ModelObject modelObject() const;
 
-  std::vector<std::string> featureNames() const;
+	std::vector<std::string> featureNames() const;
 
-  boost::optional<std::string> getFeatureDataType(const std::string& name) const;
+	boost::optional<std::string> getFeatureDataType(const std::string& name) const;
 
-  boost::optional<std::string> getFeatureAsString(const std::string& name) const;
+	boost::optional<std::string> getFeatureAsString(const std::string& name) const;
 
-  boost::optional<double> getFeatureAsDouble(const std::string& name) const;
+	boost::optional<double> getFeatureAsDouble(const std::string& name) const;
 
-  boost::optional<int> getFeatureAsInteger(const std::string& name) const;
+	boost::optional<int> getFeatureAsInteger(const std::string& name) const;
 
-  boost::optional<bool> getFeatureAsBoolean(const std::string& name) const;
+	boost::optional<bool> getFeatureAsBoolean(const std::string& name) const;
 
-  std::vector<std::string> suggestedFeatures() const;	
+	std::vector<std::string> suggestedFeatures() const;	
 
-  //@}
-  /** @name Setters */
-  //@{
+	//@}
+	/** @name Setters */
+	//@{
 
-  bool setFeature(const std::string& name, const std::string& value);
+	bool setFeature(const std::string& name, const std::string& value);
 
-  bool setFeature(const std::string& name, const char* value);
+	bool setFeature(const std::string& name, const char* value);
 
-  bool setFeature(const std::string& name, double value);
+	bool setFeature(const std::string& name, double value);
 
-  bool setFeature(const std::string& name, int value);
+	bool setFeature(const std::string& name, int value);
 
-  bool setFeature(const std::string& name, bool value);
+	bool setFeature(const std::string& name, bool value);
 
-  bool resetFeature(const std::string& name);
+	bool resetFeature(const std::string& name);
 
-  //@}
+	//@}
 
  protected:
-  /// @cond
+	/// @cond
 
-  typedef detail::AdditionalProperties_Impl ImplType;
+	typedef detail::AdditionalProperties_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  friend class detail::AdditionalProperties_Impl;
-  friend class detail::ModelObject_Impl;
+	friend class Model;
+	friend class openstudio::IdfObject;
+	friend class openstudio::detail::IdfObject_Impl;
+	friend class detail::AdditionalProperties_Impl;
+	friend class detail::ModelObject_Impl;
 
-  /** Create new object as child of model object. */
-  explicit AdditionalProperties(const ModelObject& modelObject);
+	/** Create new object as child of model object. */
+	explicit AdditionalProperties(const ModelObject& modelObject);
 
-  explicit AdditionalProperties(std::shared_ptr<detail::AdditionalProperties_Impl> impl);
+	explicit AdditionalProperties(std::shared_ptr<detail::AdditionalProperties_Impl> impl);
 
-  /// @endcond
+	/// @endcond
 
  private:
-  REGISTER_LOGGER("openstudio.model.AdditionalProperties")
+	REGISTER_LOGGER("openstudio.model.AdditionalProperties")
 
 };
 

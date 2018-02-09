@@ -79,7 +79,7 @@ class MODEL_API AdditionalProperties_Impl : public ModelObject_Impl {
   /** @name Getters */
   //@{
 
-	ModelObject modelObject() const;
+  ModelObject modelObject() const;
 
   std::vector<std::string> featureNames() const;
 

@@ -67,17 +67,17 @@ namespace detail {
     : ModelObject_Impl(other, model, keepHandle)
   {}
 
-	ModelObject AdditionalProperties_Impl::modelObject() const {
-		boost::optional<ModelObject> result = getObject<AdditionalProperties>().getModelObjectTarget<ModelObject>(
-			OS_AdditionalPropertiesFields::ObjectName);
+  ModelObject AdditionalProperties_Impl::modelObject() const {
+    boost::optional<ModelObject> result = getObject<AdditionalProperties>().getModelObjectTarget<ModelObject>(
+      OS_AdditionalPropertiesFields::ObjectName);
     if (!result){
       // DLM: should we remove ourself?  probably worse to do that since user may call other methods and cause a crash
       //this->remove();
       LOG_AND_THROW("Cannot retrieve associated ModelObject");
     }
-		OS_ASSERT(result);
-		return *result;
-	}
+    OS_ASSERT(result);
+    return *result;
+  }
 
   const std::vector<std::string>& AdditionalProperties_Impl::outputVariableNames() const
   {
@@ -95,13 +95,13 @@ namespace detail {
   boost::optional<ParentObject> AdditionalProperties_Impl::parent() const
   {
     // DLM: should this return the model object?
-	  return boost::optional<ParentObject>();
+    return boost::optional<ParentObject>();
   }
 
   bool AdditionalProperties_Impl::setParent(ParentObject& newParent)
   {
     // DLM: should we allow this?
-	  return false;
+    return false;
   }
 
   std::vector<ResourceObject> AdditionalProperties_Impl::resources() const
@@ -325,7 +325,7 @@ AdditionalProperties::AdditionalProperties(const ModelObject& modelObject)
 }
 
 ModelObject AdditionalProperties::modelObject() const {
-	return getImpl<detail::AdditionalProperties_Impl>()->modelObject();
+  return getImpl<detail::AdditionalProperties_Impl>()->modelObject();
 }
 
 IddObjectType AdditionalProperties::iddObjectType() {
