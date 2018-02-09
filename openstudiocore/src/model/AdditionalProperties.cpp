@@ -223,14 +223,12 @@ namespace detail {
     return value;
   }
 
-  std::vector<std::string> AdditionalProperties_Impl::suggestedFeatures() const
+  std::vector<std::string> AdditionalProperties_Impl::suggestedFeatureNames() const
   {
     std::set<std::string> availableFeatureNames;
     // DLM: this should be based on the model object type right?
     // DLM: should we create a virtual method for all model objects similar to outputVariableNames
     // DLM: long term, this should pull from a list that can be updated at run time, possibly related to OpenStudio standards
-    availableFeatureNames.insert("NumberOfBedrooms");
-    availableFeatureNames.insert("NumberOfBathrooms");
     for (const AdditionalProperties& addlProps : this->model().getConcreteModelObjects<AdditionalProperties>()) {
       for (const std::string& featureName : addlProps.featureNames()) {
         availableFeatureNames.insert(featureName);
@@ -397,9 +395,9 @@ boost::optional<bool> AdditionalProperties::getFeatureAsBoolean(const std::strin
   return getImpl<detail::AdditionalProperties_Impl>()->getFeatureAsBoolean(name);
 }
 
-std::vector<std::string> AdditionalProperties::suggestedFeatures() const
+std::vector<std::string> AdditionalProperties::suggestedFeatureNames() const
 {
-  return getImpl<detail::AdditionalProperties_Impl>()->suggestedFeatures();
+  return getImpl<detail::AdditionalProperties_Impl>()->suggestedFeatureNames();
 }
 
 bool AdditionalProperties::setFeature(const std::string& name, const std::string& value)

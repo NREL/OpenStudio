@@ -93,7 +93,7 @@ class MODEL_API AdditionalProperties_Impl : public ModelObject_Impl {
 
   boost::optional<bool> getFeatureAsBoolean(const std::string& name) const;
 
-  std::vector<std::string> suggestedFeatures() const;
+  std::vector<std::string> suggestedFeatureNames() const;
 
   //@}
 
