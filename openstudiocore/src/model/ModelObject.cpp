@@ -1130,7 +1130,7 @@ namespace detail {
   std::vector<ScheduleTypeKey> ModelObject_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
     return std::vector<ScheduleTypeKey>();
   }
-  
+
   AdditionalProperties ModelObject_Impl::additionalProperties() const {
     AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
     if (candidates.size() > 1) {
@@ -1149,6 +1149,15 @@ namespace detail {
     vector<ModelObject> results(castVector<ModelObject>(getObject<ModelObject>().getModelObjectSources<AdditionalProperties>()));
 
     return results;
+  }
+
+  bool ModelObject_Impl::hasAdditionalProperties() {
+    bool result = false;
+    AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
+    if (candidates.size() > 0) {
+      result = true;
+    }
+    return result;
   }
 
 } // detail
@@ -1333,6 +1342,10 @@ bool ModelObject::setParent(ParentObject& newParent)
 
 AdditionalProperties ModelObject::additionalProperties() const {
   return getImpl<detail::ModelObject_Impl>()->additionalProperties();
+}
+
+bool ModelObject::hasAdditionalProperties() {
+  return getImpl<detail::ModelObject_Impl>()->hasAdditionalProperties();
 }
 
 ModelObject::ModelObject(IddObjectType type, const Model& model, bool fastName)

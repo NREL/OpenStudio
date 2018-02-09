@@ -54,37 +54,37 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, AdditionalProperties_AdditionalProperties) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-	ASSERT_EXIT(
-	{
-		// create a model to use
-		Model model;
+  ASSERT_EXIT(
+  {
+    // create a model to use
+    Model model;
 
-		// create a material object to use
-		StandardOpaqueMaterial material(model);
+    // create a material object to use
+    StandardOpaqueMaterial material(model);
 
-		exit(0);
-	},
-		::testing::ExitedWithCode(0),
-		""
-		);
+    exit(0);
+  },
+    ::testing::ExitedWithCode(0),
+    ""
+    );
 
-	// create a model to use
-	Model model;
+  // create a model to use
+  Model model;
 
-	// create a material object to use
-	StandardOpaqueMaterial material(model);
-	EXPECT_EQ(1, model.modelObjects().size());
+  // create a material object to use
+  StandardOpaqueMaterial material(model);
+  EXPECT_EQ(1, model.modelObjects().size());
 
-	// create an additional properties object to use
-	AdditionalProperties props = material.additionalProperties();
-	EXPECT_EQ(2, model.modelObjects().size());
-	EXPECT_EQ(1, model.getModelObjects<AdditionalProperties>().size());
+  // create an additional properties object to use
+  AdditionalProperties props = material.additionalProperties();
+  EXPECT_EQ(2, model.modelObjects().size());
+  EXPECT_EQ(1, model.getModelObjects<AdditionalProperties>().size());
 
-	// return, instead of create, additional properies when it already exists
-	AdditionalProperties props2 = material.additionalProperties();
-	EXPECT_EQ(2, model.modelObjects().size());
-	EXPECT_EQ(1, model.getModelObjects<AdditionalProperties>().size());
-	EXPECT_EQ(props, props2);
+  // return, instead of create, additional properies when it already exists
+  AdditionalProperties props2 = material.additionalProperties();
+  EXPECT_EQ(2, model.modelObjects().size());
+  EXPECT_EQ(1, model.getModelObjects<AdditionalProperties>().size());
+  EXPECT_EQ(props, props2);
 
 }
 
@@ -96,80 +96,80 @@ TEST_F(ModelFixture, AdditionalProperties_Features) {
   AdditionalProperties props = construction.additionalProperties();
 
   // Test initially setting a string value
-	EXPECT_TRUE(props.setFeature("NumberOfBedrooms", "five"));
+  EXPECT_TRUE(props.setFeature("NumberOfBedrooms", "five"));
   boost::optional<std::string> dataType = props.getFeatureDataType("NumberOfBedrooms");
   ASSERT_TRUE(dataType);
   EXPECT_EQ(*dataType, "String");
-	boost::optional<std::string> strValue = props.getFeatureAsString("NumberOfBedrooms");
+  boost::optional<std::string> strValue = props.getFeatureAsString("NumberOfBedrooms");
   ASSERT_TRUE(strValue);
   EXPECT_EQ(*strValue, "five");
 
   // Test changing a string value
-	EXPECT_TRUE(props.setFeature("NumberOfBedrooms", "six"));
-	dataType = props.getFeatureDataType("NumberOfBedrooms");
+  EXPECT_TRUE(props.setFeature("NumberOfBedrooms", "six"));
+  dataType = props.getFeatureDataType("NumberOfBedrooms");
   ASSERT_TRUE(dataType);
   EXPECT_EQ(*dataType, "String");
-	strValue = props.getFeatureAsString("NumberOfBedrooms");
+  strValue = props.getFeatureAsString("NumberOfBedrooms");
   ASSERT_TRUE(strValue);
   EXPECT_EQ(*strValue, "six");
 
   // Test setting a boolean value
-	EXPECT_TRUE(props.setFeature("isNicePlace", false));
-	dataType = props.getFeatureDataType("isNicePlace");
+  EXPECT_TRUE(props.setFeature("isNicePlace", false));
+  dataType = props.getFeatureDataType("isNicePlace");
   ASSERT_TRUE(dataType);
   EXPECT_EQ(*dataType, "Boolean");
-	boost::optional<bool> boolValue = props.getFeatureAsBoolean("isNicePlace");
+  boost::optional<bool> boolValue = props.getFeatureAsBoolean("isNicePlace");
   ASSERT_TRUE(boolValue);
   ASSERT_FALSE(*boolValue);
 
   // Test changing a boolean value
-	EXPECT_TRUE(props.setFeature("isNicePlace", true));
-	dataType = props.getFeatureDataType("isNicePlace");
+  EXPECT_TRUE(props.setFeature("isNicePlace", true));
+  dataType = props.getFeatureDataType("isNicePlace");
   ASSERT_TRUE(dataType);
   EXPECT_EQ(*dataType, "Boolean");
-	boolValue = props.getFeatureAsBoolean("isNicePlace");
+  boolValue = props.getFeatureAsBoolean("isNicePlace");
   ASSERT_TRUE(boolValue);
   ASSERT_TRUE(*boolValue);
 
   // Test Feature Name getter
-	const std::vector<std::string> featureNames(props.featureNames());
+  const std::vector<std::string> featureNames(props.featureNames());
   EXPECT_EQ(featureNames.size(), 2);
   EXPECT_EQ(featureNames[0], "NumberOfBedrooms");
   EXPECT_EQ(featureNames[1], "isNicePlace");
 
   // Test setting a double value
-	EXPECT_TRUE(props.setFeature("NumberOfBathrooms", 1.5));
-	dataType = props.getFeatureDataType("NumberOfBathrooms");
+  EXPECT_TRUE(props.setFeature("NumberOfBathrooms", 1.5));
+  dataType = props.getFeatureDataType("NumberOfBathrooms");
   ASSERT_TRUE(dataType);
   EXPECT_EQ(*dataType, "Double");
-	boost::optional<double> dblValue = props.getFeatureAsDouble("NumberOfBathrooms");
+  boost::optional<double> dblValue = props.getFeatureAsDouble("NumberOfBathrooms");
   ASSERT_TRUE(dblValue);
-	boost::optional<int> intValue = props.getFeatureAsInteger("NumberOfBathrooms");
+  boost::optional<int> intValue = props.getFeatureAsInteger("NumberOfBathrooms");
   ASSERT_FALSE(intValue);
   ASSERT_FLOAT_EQ(*dblValue, 1.5);
 
   // Test setting a feature to a value of a different type
-	EXPECT_TRUE(props.setFeature("NumberOfBedrooms", 3));
-	dataType = props.getFeatureDataType("NumberOfBedrooms");
+  EXPECT_TRUE(props.setFeature("NumberOfBedrooms", 3));
+  dataType = props.getFeatureDataType("NumberOfBedrooms");
   ASSERT_TRUE(dataType);
   EXPECT_EQ(*dataType, "Integer");
-	dblValue = props.getFeatureAsDouble("NumberOfBedrooms");
+  dblValue = props.getFeatureAsDouble("NumberOfBedrooms");
   ASSERT_FALSE(dblValue);
-	intValue = props.getFeatureAsInteger("NumberOfBedrooms");
+  intValue = props.getFeatureAsInteger("NumberOfBedrooms");
   ASSERT_TRUE(intValue);
   ASSERT_EQ(*intValue, 3);
 
   // Test resetting a feature
-	EXPECT_TRUE(props.resetFeature("isNicePlace"));
-	dataType = props.getFeatureDataType("isNicePlace");
+  EXPECT_TRUE(props.resetFeature("isNicePlace"));
+  dataType = props.getFeatureDataType("isNicePlace");
   ASSERT_FALSE(dataType);
-	EXPECT_FALSE(props.resetFeature("bogusName"));
+  EXPECT_FALSE(props.resetFeature("bogusName"));
 
   // Test suggested feature names
-	EXPECT_TRUE(props.setFeature("MyUniqueFeature", 5));
+  EXPECT_TRUE(props.setFeature("MyUniqueFeature", 5));
   Construction construction2(model);  
-	AdditionalProperties props2 = construction2.additionalProperties();
-	std::vector<std::string> suggestedFeatures(props2.suggestedFeatures());
+  AdditionalProperties props2 = construction2.additionalProperties();
+  std::vector<std::string> suggestedFeatures(props2.suggestedFeatures());
   ASSERT_EQ(suggestedFeatures.size(), 3);
   ASSERT_NE(std::find(suggestedFeatures.begin(), suggestedFeatures.end(), "NumberOfBedrooms"), suggestedFeatures.end());
   ASSERT_NE(std::find(suggestedFeatures.begin(), suggestedFeatures.end(), "NumberOfBathrooms"), suggestedFeatures.end());
@@ -179,50 +179,52 @@ TEST_F(ModelFixture, AdditionalProperties_Features) {
 
 // check returning model object pointed to
 TEST_F(ModelFixture, AdditionalProperties_ModelObject) {
-	Model model;
-	StandardOpaqueMaterial material(model);
-	AdditionalProperties props = material.additionalProperties();
-	ModelObject modelObject = props.modelObject();
-	StandardOpaqueMaterial material2 = modelObject.cast<StandardOpaqueMaterial>();
-	EXPECT_EQ(material, material2);
+  Model model;
+  StandardOpaqueMaterial material(model);
+  EXPECT_FALSE(material.hasAdditionalProperties());
+  AdditionalProperties props = material.additionalProperties();
+  EXPECT_TRUE(material.hasAdditionalProperties());
+  ModelObject modelObject = props.modelObject();
+  StandardOpaqueMaterial material2 = modelObject.cast<StandardOpaqueMaterial>();
+  EXPECT_EQ(material, material2);
 }
 
 // check that parent remove works
 TEST_F(ModelFixture, AdditionalProperties_ParentRemove) {
-	Model model;
-	auto size = model.modelObjects().size();
-	StandardOpaqueMaterial material(model);
-	AdditionalProperties props = material.additionalProperties();
-	EXPECT_FALSE(material.remove().empty());
-	EXPECT_EQ(size, model.modelObjects().size());
+  Model model;
+  auto size = model.modelObjects().size();
+  StandardOpaqueMaterial material(model);
+  AdditionalProperties props = material.additionalProperties();
+  EXPECT_FALSE(material.remove().empty());
+  EXPECT_EQ(size, model.modelObjects().size());
 }
 
 // check that child remove works
 TEST_F(ModelFixture, AdditionalProperties_ChildRemove) {
   Model model;
-	StandardOpaqueMaterial material(model);
-	auto size = model.modelObjects().size();
-	AdditionalProperties props = material.additionalProperties();
-	EXPECT_FALSE(props.remove().empty());
-	EXPECT_EQ(size, model.modelObjects().size());
+  StandardOpaqueMaterial material(model);
+  auto size = model.modelObjects().size();
+  AdditionalProperties props = material.additionalProperties();
+  EXPECT_FALSE(props.remove().empty());
+  EXPECT_EQ(size, model.modelObjects().size());
 }
 
 // test that parent clone works
 TEST_F(ModelFixture, AdditionalProperties_ParentClone) {
-	Model model;
-	StandardOpaqueMaterial material(model);
-	AdditionalProperties props = material.additionalProperties();
-	EXPECT_EQ(2, model.modelObjects().size());
-	StandardOpaqueMaterial materialClone = material.clone(model).cast<StandardOpaqueMaterial>();
-	EXPECT_EQ(4, model.modelObjects().size());
+  Model model;
+  StandardOpaqueMaterial material(model);
+  AdditionalProperties props = material.additionalProperties();
+  EXPECT_EQ(2, model.modelObjects().size());
+  StandardOpaqueMaterial materialClone = material.clone(model).cast<StandardOpaqueMaterial>();
+  EXPECT_EQ(4, model.modelObjects().size());
 }
 
 // test that child clone does not work
 TEST_F(ModelFixture, AdditionalProperties_ChildClone) {
-	Model model;
-	StandardOpaqueMaterial material(model);
-	AdditionalProperties props = material.additionalProperties();
-	EXPECT_EQ(2, model.modelObjects().size());
-	AdditionalProperties propsClone = props.clone(model).cast<AdditionalProperties>();
-	EXPECT_EQ(2, model.modelObjects().size());
+  Model model;
+  StandardOpaqueMaterial material(model);
+  AdditionalProperties props = material.additionalProperties();
+  EXPECT_EQ(2, model.modelObjects().size());
+  AdditionalProperties propsClone = props.clone(model).cast<AdditionalProperties>();
+  EXPECT_EQ(2, model.modelObjects().size());
 }

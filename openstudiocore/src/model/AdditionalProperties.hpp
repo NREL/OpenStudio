@@ -77,7 +77,7 @@ class MODEL_API AdditionalProperties : public ModelObject {
 
   boost::optional<bool> getFeatureAsBoolean(const std::string& name) const;
 
-  std::vector<std::string> suggestedFeatures() const;
+  std::vector<std::string> suggestedFeatures() const;	
 
   //@}
   /** @name Setters */
