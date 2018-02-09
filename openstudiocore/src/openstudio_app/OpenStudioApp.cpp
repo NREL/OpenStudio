@@ -30,6 +30,7 @@
 #include <openstudio_app/AboutBox.hpp>
 #include "StartupMenu.hpp"
 #include "StartupView.hpp"
+#include "LibraryDialog.hpp"
 #include "../openstudio_lib/MainWindow.hpp"
 #include "../openstudio_lib/OSDocument.hpp"
 
@@ -227,11 +228,10 @@ void OpenStudioApp::onMeasureManagerAndLibraryReady() {
       boost::optional<openstudio::model::Model> model = versionTranslator.loadModel(toPath(fileName));
       if( model ){
 
-        m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(),
-                                                                     hvacComponentLibrary(),
-                                                                     resourcesPath(),
-                                                                     model,
-                                                                     fileName) );
+        m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
+                                                                   resourcesPath(), 
+                                                                   model,
+                                                                   fileName) );
 
         connectOSDocumentSignals();
 
@@ -300,13 +300,12 @@ bool OpenStudioApp::openFile(const QString& fileName, bool restoreTabs)
       processEvents();
 
       m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(),
-                                                                   hvacComponentLibrary(),
-                                                                   resourcesPath(),
-                                                                   model,
-                                                                   fileName,
-                                                                   false,
-                                                                   startTabIndex,
-                                                                   startSubTabIndex) );
+                                                                 resourcesPath(),
+                                                                 model,
+                                                                 fileName,
+                                                                 false,
+                                                                 startTabIndex,
+                                                                 startSubTabIndex) );
 
       connectOSDocumentSignals();
 
@@ -335,20 +334,7 @@ std::vector<std::string> OpenStudioApp::buildCompLibraries()
     parent = this->currentDocument()->mainWindow();
   }
 
-  path p = resourcesPath() / toPath("MinimalTemplate.osm");
-  OS_ASSERT(exists(p));
-  boost::optional<Model> temp = versionTranslator.loadModel(p);
-  if (!temp){
-    LOG_FREE(Error, "OpenStudioApp", "Failed to load MinimalTemplate");
-    for (const auto& error : versionTranslator.errors()){
-      LOG_FREE(Error, "OpenStudioApp", error.logMessage());
-    }
-  }
-  if (!temp){
-    QMessageBox::critical(parent, QString("Failed to load MinimalTemplate"), QString("Failed to load MinimalTemplate, likely due to problem with VersionTranslator."));
-  }
-  OS_ASSERT(temp);
-  m_compLibrary = temp.get();
+  m_compLibrary = model::Model();
 
   for( auto path : libraryPaths() ) {
     try {
@@ -410,7 +396,7 @@ void OpenStudioApp::newFromEmptyTemplateSlot()
 
 void OpenStudioApp::newFromTemplateSlot( NewFromTemplateEnum newFromTemplateEnum )
 {
-  m_osDocument = std::shared_ptr<OSDocument>( new OSDocument( componentLibrary(), hvacComponentLibrary(), resourcesPath() ) );
+  m_osDocument = std::shared_ptr<OSDocument>( new OSDocument( componentLibrary(), resourcesPath() ) );
 
   connectOSDocumentSignals();
 
@@ -478,9 +464,8 @@ void OpenStudioApp::importIdf()
         }
 
         m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(),
-                                                                     hvacComponentLibrary(),
-                                                                     resourcesPath(),
-                                                                     model) );
+                                                                   resourcesPath(),
+                                                                   model) );
         m_osDocument->markAsModified();
         // ETH: parent should change now ...
         //parent = m_osDocument->mainWindow();
@@ -568,7 +553,6 @@ void OpenStudioApp::importIFC()
     }
 
     m_osDocument = std::shared_ptr<OSDocument>(new OSDocument(componentLibrary(),
-      hvacComponentLibrary(),
       resourcesPath(),
       *model));
 
@@ -643,9 +627,8 @@ void OpenStudioApp::import(OpenStudioApp::fileType type)
       }
 
       m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(),
-                                                                   hvacComponentLibrary(),
-                                                                   resourcesPath(),
-                                                                   *model) );
+                                                                 resourcesPath(),
+                                                                 *model) );
       m_osDocument->markAsModified();
       // ETH: parent should change now ...
       //parent = m_osDocument->mainWindow();
@@ -1107,8 +1090,7 @@ void OpenStudioApp::connectOSDocumentSignals()
   connect(m_osDocument.get(), &OSDocument::importIFCClicked, this, &OpenStudioApp::importIFC);
   connect(m_osDocument.get(), &OSDocument::loadFileClicked, this, &OpenStudioApp::open);
   connect(m_osDocument.get(), &OSDocument::osmDropped, this, &OpenStudioApp::openFromDrag);
-  connect(m_osDocument.get(), &OSDocument::loadLibraryClicked, this, &OpenStudioApp::loadLibrary);
-  connect(m_osDocument.get(), &OSDocument::loadLibraryClicked, this, &OpenStudioApp::loadLibrary);
+  connect(m_osDocument.get(), &OSDocument::changeDefaultLibrariesClicked, this, &OpenStudioApp::changeDefaultLibraries);
   connect(m_osDocument.get(), &OSDocument::loadLibraryClicked, this, &OpenStudioApp::loadLibrary);
   connect(m_osDocument.get(), &OSDocument::newClicked, this, &OpenStudioApp::newModel);
   connect(m_osDocument.get(), &OSDocument::helpClicked, this, &OpenStudioApp::showHelp);
