@@ -3842,7 +3842,7 @@ std::string VersionTranslator::update_2_4_0_to_2_4_1(const IdfFile& idf_2_4_0, c
       size_t newIdx = 2;
       for( size_t oldIdx = object.numNonextensibleFields(); oldIdx < object.numFields(); ++oldIdx, ++newIdx ) {
         if( (value = object.getString(oldIdx)) ) {
-          newObject.setString(newIdx,value.get());
+          additionalProperties.setString(newIdx, value.get());
         }
       }
 
