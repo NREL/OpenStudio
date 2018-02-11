@@ -28817,7 +28817,7 @@ OS:AirflowNetworkDistributionNode,
       \reference AirflowNetworkNodeAndZoneNames
       \note Enter a unique name for this object.
   A3, \field Component Name or Node Name
-      \type alpha
+      \type object-list
       \note Designates node names defined in another object. The node name may occur in air branches.
       \note Enter a node name to represent a node already defined in an air loop.
       \note Leave this field blank if the Node or Object Type field below is entered as
