@@ -104,9 +104,9 @@ typedef boost::optional<ParentObject> OptionalParentObject;
 typedef std::vector<ParentObject> ParentObjectVector;
 
 /** Returns object and all other objects accessible by calling children() on encountered
- *  \link ParentObject ParentObjects \endlink. LifeCycleCost objects are not technically children but may be included
- *  by setting the optional second argument to true. \relates ParentObject */
-MODEL_API std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool includeLifeCycleCosts = false);
+ *  \link ParentObject ParentObjects \endlink. LifeCycleCost and AdditionalProperties objects
+ *  are not technically children but may be included by setting the optional second argument to true. \relates ParentObject */
+MODEL_API std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool includeLifeCycleCostsAndAdditionalProperties = false);
 
 /** Returns all objects in getRecursiveChildren(object) that can be cast to type T. */
 template <typename T>

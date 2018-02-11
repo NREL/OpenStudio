@@ -1949,6 +1949,31 @@ OS:WeatherProperty:SkyTemperature,
 
 \group OpenStudio Resources
 
+OS:AdditionalProperties,
+       \min-fields 2
+       \extensible:3
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Object Name
+       \type object-list
+       \required-field
+       \object-list AllObjects
+  A3,  \field Feature Name
+       \type alpha
+       \begin-extensible
+       \required-field
+  A4,  \field Feature Data Type
+       \type choice
+       \key String
+       \key Double
+       \key Boolean
+       \key Integer
+       \required-field
+  A5;  \field Feature Value
+       \type alpha
+       \required-field
+
 OS:BuildingStory,
        \min-fields 7
   A1, \field Handle
@@ -1982,7 +2007,6 @@ OS:BuildingStory,
 
 OS:BuildingUnit,
        \min-fields 4
-       \extensible:3
   A1,  \field Handle
        \type handle
        \required-field
@@ -1993,25 +2017,11 @@ OS:BuildingUnit,
   A3,  \field Rendering Color
        \type object-list
        \object-list GroupRenderingNames
-  A4,  \field Building Unit Type
+  A4;  \field Building Unit Type
        \type choice
        \key Residential
        \key NonResidential
        \default Residential
-  A5,  \field Building Unit Feature Name
-       \type alpha
-       \begin-extensible
-       \required-field
-  A6,  \field Building Unit Feature Data Type
-       \type choice
-       \key String
-       \key Double
-       \key Boolean
-       \key Integer
-       \required-field
-  A7;  \field Building Unit Feature Value
-       \type alpha
-       \required-field
 
 OS:DefaultConstructionSet,
        \min-fields 11

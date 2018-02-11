@@ -42,7 +42,8 @@
 #include "CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp"
 #include "CoilPerformanceDXCooling.hpp"
 #include "CoilPerformanceDXCooling_Impl.hpp"
-
+#include "AdditionalProperties.hpp"
+#include "AdditionalProperties_Impl.hpp"
 
 #include "ScheduleTypeRegistry.hpp"
 #include "Schedule.hpp"
@@ -993,6 +994,12 @@ namespace detail {
     std::vector<LifeCycleCost> lifeCycleCosts = this->lifeCycleCosts();
     toAdd.insert(toAdd.end(), lifeCycleCosts.begin(), lifeCycleCosts.end());
 
+    // add additional properties
+    AdditionalPropertiesVector props = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
+    toAdd.insert(toAdd.end(), props.begin(), props.end());
+
+    std::string s = toString(this->handle());
+
     // If same model, non-recursive insert of resources should be sufficient.
     Model m = this->model();
     if (model == m) {
@@ -1000,9 +1007,9 @@ namespace detail {
       WorkspaceObjectVector toInsert = castVector<WorkspaceObject>(resources);
       result = m.addAndInsertObjects(toAdd,toInsert);
       // adding this better have worked
-      OS_ASSERT(result.size() == 1u + lifeCycleCosts.size() + resources.size());
+      OS_ASSERT(result.size() == 1u + lifeCycleCosts.size() + props.size() + resources.size());
       // inserting resources better have worked
-      unsigned i = 1 + lifeCycleCosts.size();
+      unsigned i = 1 + lifeCycleCosts.size() + props.size();
       for (const ResourceObject& resource : resources) {
         OS_ASSERT(result[i] == resource);
         ++i;
@@ -1025,9 +1032,10 @@ namespace detail {
   {
     std::vector<IdfObject> result;
     std::vector<IdfObject> removedCosts = this->removeLifeCycleCosts();
+    std::vector<IdfObject> removedProperties = this->removeAdditionalProperties();
     result = WorkspaceObject_Impl::remove();
     result.insert(result.end(), removedCosts.begin(), removedCosts.end());
-
+    result.insert(result.end(), removedProperties.begin(), removedProperties.end());
     return result;
   }
 
@@ -1128,6 +1136,43 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> ModelObject_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
     return std::vector<ScheduleTypeKey>();
+  }
+
+  AdditionalProperties ModelObject_Impl::additionalProperties() const {
+    AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
+    if (candidates.size() > 1) {
+      for (unsigned i = 1, n = candidates.size(); i < n; ++i) {
+        // do a merge before removing
+        candidates[0].merge(candidates[i]);
+        candidates[i].remove();
+      }
+      LOG(Warn,"Removed extraneous ModelObjectAdditionalProperties objects pointing to " << briefDescription() << ".");
+    }
+    if (!candidates.empty()) {
+      return candidates[0];
+    }
+    return AdditionalProperties(getObject<ModelObject>());
+  }
+
+
+  std::vector<IdfObject> ModelObject_Impl::removeAdditionalProperties()
+  {
+    std::vector<IdfObject> removed;
+    AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
+    for (AdditionalProperties& candidate : candidates){
+      std::vector<IdfObject> tmp = candidate.remove();
+      removed.insert(removed.end(), tmp.begin(), tmp.end());
+    }
+    return removed;
+  }
+
+  bool ModelObject_Impl::hasAdditionalProperties() const {
+    bool result = false;
+    AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
+    if (candidates.size() > 0) {
+      result = true;
+    }
+    return result;
   }
 
 } // detail
@@ -1308,6 +1353,19 @@ OptionalParentObject ModelObject::parent() const
 bool ModelObject::setParent(ParentObject& newParent)
 {
   return getImpl<detail::ModelObject_Impl>()->setParent(newParent);
+}
+
+AdditionalProperties ModelObject::additionalProperties() const {
+  return getImpl<detail::ModelObject_Impl>()->additionalProperties();
+}
+
+bool ModelObject::hasAdditionalProperties() const {
+  return getImpl<detail::ModelObject_Impl>()->hasAdditionalProperties();
+}
+
+std::vector<IdfObject> ModelObject::removeAdditionalProperties()
+{
+  return getImpl<detail::ModelObject_Impl>()->removeAdditionalProperties();
 }
 
 ModelObject::ModelObject(IddObjectType type, const Model& model, bool fastName)

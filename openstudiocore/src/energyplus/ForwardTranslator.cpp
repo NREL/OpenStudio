@@ -532,6 +532,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
 
   switch(modelObject.iddObject().type().value())
   {
+  case openstudio::IddObjectType::OS_AdditionalProperties :
+    {
+      // no op
+      break;
+    }
   case openstudio::IddObjectType::OS_AirConditioner_VariableRefrigerantFlow :
     {
       model::AirConditionerVariableRefrigerantFlow vrf = modelObject.cast<AirConditionerVariableRefrigerantFlow>();
