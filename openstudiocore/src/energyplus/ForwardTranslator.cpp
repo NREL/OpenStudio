@@ -179,6 +179,10 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   model::Version version = model.getUniqueModelObject<model::Version>();
   translateAndMapModelObject(version);
 
+  // translate Timestep second (this initializes it if need be)
+  model::Timestep timestep = model.getUniqueModelObject<model::Timestep>();
+  translateAndMapModelObject(timestep);
+
   // resolve surface marching conflicts before combining thermal zones or removing spaces
   // as those operations may change search distances
   resolveMatchedSurfaceConstructionConflicts(model);
@@ -2760,7 +2764,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     model::SurfacePropertyExposedFoundationPerimeter obj = modelObject.cast<SurfacePropertyExposedFoundationPerimeter>();
     retVal = translateSurfacePropertyExposedFoundationPerimeter(obj);
     break;
-  }  
+  }
   case openstudio::IddObjectType::OS_SurfaceProperty_OtherSideCoefficients:
   {
     model::SurfacePropertyOtherSideCoefficients obj = modelObject.cast<SurfacePropertyOtherSideCoefficients>();
