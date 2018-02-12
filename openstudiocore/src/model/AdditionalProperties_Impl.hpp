@@ -26,41 +26,40 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef MODEL_BUILDINGUNIT_IMPL_HPP
-#define MODEL_BUILDINGUNIT_IMPL_HPP
+#ifndef MODEL_ADDITIONALPROPERTIES_IMPL_HPP
+#define MODEL_ADDITIONALPROPERTIES_IMPL_HPP
 
 #include "ModelObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-class Space;
-class RenderingColor;
-class BuildingUnit;
+class AdditionalProperties;
+class ModelObject;
 
 namespace detail {
 
-class MODEL_API BuildingUnit_Impl : public ModelObject_Impl {
+class MODEL_API AdditionalProperties_Impl : public ModelObject_Impl {
  public:
 
   /** @name Constructors and Destructors */
   //@{
 
-  BuildingUnit_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+  AdditionalProperties_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  BuildingUnit_Impl(
+  AdditionalProperties_Impl(
           const openstudio::detail::WorkspaceObject_Impl& other,
           Model_Impl* model,
           bool keepHandle
   );
 
-  BuildingUnit_Impl(
-          const BuildingUnit_Impl& other,
+  AdditionalProperties_Impl(
+          const AdditionalProperties_Impl& other,
           Model_Impl* model,
           bool keepHandle
   );
 
-  virtual ~BuildingUnit_Impl() {}
+  virtual ~AdditionalProperties_Impl() {}
 
   //@}
 
@@ -68,14 +67,19 @@ class MODEL_API BuildingUnit_Impl : public ModelObject_Impl {
 
   virtual IddObjectType iddObjectType() const override;
 
+  /// return the parent object in the hierarchy
+  virtual boost::optional<ParentObject> parent() const;
+
+  /// set the parent, child may have to call non-const methods on the parent
+  virtual bool setParent(ParentObject& newParent);
+
+  /** Get the resources directly used by this ModelObject. */
+  virtual std::vector<ResourceObject> resources() const;
+
   /** @name Getters */
   //@{
 
-  boost::optional<RenderingColor> renderingColor() const;
-
-  std::string buildingUnitType() const;
-
-  std::vector<Space> spaces() const;
+  ModelObject modelObject() const;
 
   std::vector<std::string> featureNames() const;
 
@@ -89,20 +93,12 @@ class MODEL_API BuildingUnit_Impl : public ModelObject_Impl {
 
   boost::optional<bool> getFeatureAsBoolean(const std::string& name) const;
 
-  std::vector<std::string> suggestedFeatures() const;
+  std::vector<std::string> suggestedFeatureNames() const;
 
   //@}
 
   /** @name Setters */
   //@{
-
-  bool setRenderingColor(const RenderingColor& renderingColor);
-
-  void resetRenderingColor();
-
-  bool setBuildingUnitType(const std::string& buildingUnitType);
-
-  void resetBuildingUnitType();
 
   bool setFeature(const std::string& name, const std::string& value);
 
@@ -118,9 +114,17 @@ class MODEL_API BuildingUnit_Impl : public ModelObject_Impl {
 
   //@}
 
+  void merge(const AdditionalProperties& other, bool overwrite = false);
+
  protected:
  private:
-  REGISTER_LOGGER("openstudio.model.BuildingUnit")
+  REGISTER_LOGGER("openstudio.model.AdditionalProperties")
+
+  boost::optional<ModelExtensibleGroup> getFeatureGroupByName(const std::string& name) const;
+
+  bool setFeatureGroupDataTypeAndValue(const std::string& name, const std::string& dataType, const std::string& value);
+
+  boost::optional<std::string> getFeatureStringAndCheckForType(const std::string& name, const std::string& expectedDataType) const;
 
 };
 
@@ -128,4 +132,4 @@ class MODEL_API BuildingUnit_Impl : public ModelObject_Impl {
 } // model
 } // openstudio
 
-#endif //MODEL_BUILDINGUNIT_IMPL_HPP
+#endif //MODEL_ADDITIONALPROPERTIES_IMPL_HPP
