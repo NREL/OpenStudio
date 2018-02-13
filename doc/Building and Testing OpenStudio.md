@@ -102,7 +102,7 @@ In a command window:
 
 	make DView
 
-Compress folder DView-install with DView, and upload to S3.
+Compress folder DView-install with DView, and upload to S3 (tar -zcvf DView-osx.tar.gz DView-install).
 
 Windows 64-bit
 --------------
