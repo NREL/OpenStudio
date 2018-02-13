@@ -1,16 +1,22 @@
+GIT
+  remote: git://github.com/NREL/openstudio-standards.git
+  revision: e9d4d1e840a89685955434074ca511670d5cfc56
+  ref: e9d4d1e840a89685955434074ca511670d5cfc56
+  specs:
+    openstudio-standards (0.2.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
-    diff-lcs (1.2.5)
+    diff-lcs (1.3)
     minitest (4.7.5)
-    openstudio-standards (0.1.15)
     openstudio-workflow (1.3.1)
     parallel (1.10.0)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
       rspec-mocks (~> 3.5.0)
-    rspec-core (3.5.3)
+    rspec-core (3.5.4)
       rspec-support (~> 3.5.0)
     rspec-expectations (3.5.0)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -23,13 +29,11 @@ GEM
       minitest (~> 4.7)
 
 PLATFORMS
-  ruby
   x64-mingw32
-  x86-mingw32
 
 DEPENDENCIES
   bundler (= 1.14.4)
-  openstudio-standards (= 0.1.15)
+  openstudio-standards!
   openstudio-workflow (= 1.3.1)
   parallel (= 1.10.0)
   rspec (= 3.5.0)
