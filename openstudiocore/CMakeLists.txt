@@ -9,7 +9,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 
-project(OpenStudio VERSION 2.4.1)
+project(OpenStudio VERSION 2.4.2)
 
 include(ExternalProject)
 include(CPackComponent)
@@ -647,7 +647,7 @@ if( BUILD_DVIEW )
   if(NOT EXISTS ${DVIEW_INSTALL_DIR})
     if( WIN32 )
       set(DVIEW_ZIP_FILENAME "DView-windows.zip")
-      set(DVIEW_ZIP_EXPECTED_MD5 "2964786830bbd28cd3e186b4da001946")
+      set(DVIEW_ZIP_EXPECTED_MD5 "da1e0b0a564126118bfc510606470ee3")
     elseif( APPLE )
       set(DVIEW_ZIP_FILENAME "DView-osx.tar.gz")
       set(DVIEW_ZIP_EXPECTED_MD5 "24d225aa500b344816c4f8239641d5aa")
