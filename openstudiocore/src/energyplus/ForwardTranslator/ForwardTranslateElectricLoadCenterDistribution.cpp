@@ -185,6 +185,20 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
     // Minimum Storage State of Charge Fraction, defaults
     idfObject.setDouble(ElectricLoadCenter_DistributionFields::MinimumStorageStateofChargeFraction, modelObject.minimumStorageStateofChargeFraction());
 
+
+    // Translate any storage converter if there is one, store it into a bool so we can check if present when mandatory
+    bool has_storage_conv = false;
+    // Storage Converter Object Name - This is actually a mandatory field
+    boost::optional<ElectricLoadCenterStorageConverter> elcConv = modelObject.storageConverter();
+    if (elcConv) {
+      // If the buss is compatible, we translate the invert
+      boost::optional<IdfObject> storageConverterIdf = translateAndMapModelObject(*elcConv);
+      if (storageConverterIdf) {
+        has_storage_conv = true;
+        idfObject.setString(ElectricLoadCenter_DistributionFields::StorageConverterObjectName, storageConverterIdf->name().get());
+      }
+    }
+
     /// Further testing based on storageOperationScheme
     if (storageOperationScheme == "TrackMeterDemandStoreExcessOnSite") {
       // Storage Control Track Meter Name, required if operation = TrackMeterDemandStoreExcessOnSite or it'll produce a fatal
@@ -197,14 +211,7 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
 
     } else if (storageOperationScheme == "TrackChargeDischargeSchedules") {
       // Storage Converter Object Name - This is actually a mandatory field
-      boost::optional<ElectricLoadCenterStorageConverter> elcConv = modelObject.storageConverter();
-      if (elcConv) {
-        // If the buss is compatible, we translate the invert
-        boost::optional<IdfObject> storageConverterIdf = translateAndMapModelObject(*elcConv);
-        if (storageConverterIdf) {
-          idfObject.setString(ElectricLoadCenter_DistributionFields::StorageConverterObjectName, storageConverterIdf->name().get());
-        }
-      } else {
+      if( !has_storage_conv ) {
         LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
           << " but you didn't specify the required 'Storage Converter Object Name'");
       }
@@ -242,15 +249,8 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
       }
 
     } else if (storageOperationScheme == "FacilityDemandLeveling") {
-      // Storage Converter Object Name - This is actually a required field
-      boost::optional<ElectricLoadCenterStorageConverter> elcConv = modelObject.storageConverter();
-      if (elcConv) {
-        // If the buss is compatible, we translate the invert
-        boost::optional<IdfObject> storageConverterIdf = translateAndMapModelObject(*elcConv);
-        if (storageConverterIdf) {
-          idfObject.setString(ElectricLoadCenter_DistributionFields::StorageConverterObjectName, storageConverterIdf->name().get());
-        }
-      } else {
+      // Storage Converter Object Name - This is actually a mandatory field
+      if( !has_storage_conv ) {
         LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
           << " but you didn't specify the required 'Storage Converter Object Name'");
       }
