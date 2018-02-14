@@ -19836,14 +19836,14 @@ OS:PlantEquipmentOperation:OutdoorWetBulb,
    A2 ,\field Name
         \required-field
         \reference ControlSchemeList
-   N1 ,\field Dry-Bulb Temperature Range 1 Lower Limit
+   N1 ,\field Wet-Bulb Temperature Range 1 Lower Limit
         \required-field
        \type real
        \units C
        \minimum -70
        \maximum 70
        \begin-extensible
-   N2 ,\field Dry-Bulb Temperature Range 1 Upper Limit
+   N2 ,\field Wet-Bulb Temperature Range 1 Upper Limit
         \required-field
        \type real
        \units C
