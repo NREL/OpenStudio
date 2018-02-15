@@ -331,6 +331,16 @@ namespace detail {
     return true;
   }
 
+  std::vector<EMSActuatorNames> HotWaterEquipment_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "HotWaterEquipment", "District Heating Power Level" } };
+    return actuators;
+  }
+
+  std::vector<std::string> HotWaterEquipment_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Process District Heat Design Level" };
+    return types;
+  }
+
 } // detail
 
 HotWaterEquipment::HotWaterEquipment(const HotWaterEquipmentDefinition& hotWaterEquipmentDefinition)
