@@ -276,6 +276,17 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingCoilName);
   }
 
+  std::vector<EMSActuatorNames> ZoneHVACBaseboardRadiantConvectiveWater_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "ZoneBaseboard:OutdoorTemperatureControlled", "Power Level" } };
+    return actuators;
+  }
+
+  std::vector<std::string> ZoneHVACBaseboardRadiantConvectiveWater_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Simple Zone Baseboard Capacity At Low Temperature",
+      "Simple Zone Baseboard Capacity At High Temperature" };
+    return types;
+
+  }
 } // detail
 
 ZoneHVACBaseboardRadiantConvectiveWater::ZoneHVACBaseboardRadiantConvectiveWater(const Model& model)
