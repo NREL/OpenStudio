@@ -589,6 +589,17 @@ namespace detail {
       thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
     }
   }
+
+  std::vector<EMSActuatorNames> ZoneHVACLowTempRadiantConstFlow_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "Constant Flow Low Temp Radiant", "Water Mass Flow Rate" } };
+    return actuators;
+  }
+
+  std::vector<std::string> ZoneHVACLowTempRadiantConstFlow_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Constant Flow Low Temp Radiant Design Water Mass Flow Rate" };
+    return types;
+  }
+
 } // detail
 
 ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(const Model& model,

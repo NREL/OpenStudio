@@ -526,6 +526,17 @@ namespace detail {
 
   }
 
+  std::vector<EMSActuatorNames> ZoneHVACLowTempRadiantVarFlow_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "Hydronic Low Temp Radiant", "Water Mass Flow Rate" } };
+    return actuators;
+  }
+
+  std::vector<std::string> ZoneHVACLowTempRadiantVarFlow_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Hydronic Low Temp Radiant Design Water Volume Flow Rate for Heating",
+                                    "Hydronic Low Temp Radiant Design Water Volume Flow Rate for Cooling"};
+    return types;
+  }
+
 } // detail
 
 ZoneHVACLowTempRadiantVarFlow::ZoneHVACLowTempRadiantVarFlow(const Model& model,
