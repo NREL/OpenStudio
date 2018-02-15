@@ -161,6 +161,10 @@ namespace detail {
     // TODO: Check return type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
     boost::optional<Curve> exhaustAirTemperatureFunctionofPartLoadRatioCurve() const;
 
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
     /** @name Setters */
     //@{
