@@ -11,6 +11,8 @@ set(${target_name}_SRC
   StartupView.cpp
   StartupMenu.hpp
   StartupMenu.cpp
+  LibraryDialog.hpp
+  LibraryDialog.cpp
 
   ../shared_gui_components/BusyWidget.cpp
   ../shared_gui_components/BusyWidget.hpp
@@ -25,6 +27,7 @@ set(${target_name}_moc
   OpenStudioApp.hpp
   StartupView.hpp
   StartupMenu.hpp
+  LibraryDialog.hpp
 
   ../shared_gui_components/BusyWidget.hpp
   ../shared_gui_components/OSDialog.hpp

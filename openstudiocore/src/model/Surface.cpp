@@ -145,6 +145,21 @@ namespace detail {
     return ParentObject_Impl::remove();
   }
 
+  ModelObject Surface_Impl::clone(Model model) const
+  {
+    ModelObject newParentAsModelObject = ModelObject_Impl::clone(model);
+    ParentObject newParent = newParentAsModelObject.cast<ParentObject>();
+    for (ModelObject child : children())
+    {
+      ModelObject newChild = child.clone(model);
+      newChild.setParent(newParent);
+      if (child.optionalCast<SubSurface>()){
+        newChild.cast<SubSurface>().setSubSurfaceType(child.cast<SubSurface>().subSurfaceType());
+      }
+    }
+    return newParentAsModelObject;
+  }
+
   std::vector<IddObjectType> Surface_Impl::allowableChildTypes() const
   {
     std::vector<IddObjectType> result;
@@ -1913,6 +1928,7 @@ namespace detail {
     std::vector<std::string> types;
     return types;
   }
+  
 } // detail
 
 Surface::Surface(const std::vector<Point3d>& vertices, const Model& model)

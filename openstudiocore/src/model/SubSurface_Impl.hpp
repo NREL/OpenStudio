@@ -50,22 +50,6 @@ namespace detail {
 
   /** SubSurface_Impl is a PlanarSurface_Impl that is the implementation class for SubSurface.*/
   class MODEL_API SubSurface_Impl : public PlanarSurface_Impl {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -97,6 +81,8 @@ namespace detail {
 
     /// remove self and all children objects recursively
     virtual std::vector<IdfObject> remove() override;
+
+    virtual ModelObject clone(Model model) const override;
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
 

@@ -37,9 +37,6 @@ namespace model {
 namespace detail {
 
   class MODEL_API ParentObject_Impl : public ModelObject_Impl {
-
-
-
    public:
 
     // constructor

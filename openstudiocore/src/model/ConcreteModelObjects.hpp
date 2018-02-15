@@ -29,6 +29,7 @@
 #ifndef MODEL_CONCRETEMODELOBJECTS_HPP
 #define MODEL_CONCRETEMODELOBJECTS_HPP
 
+#include "AdditionalProperties.hpp"
 #include "AirConditionerVariableRefrigerantFlow.hpp"
 #include "AirGap.hpp"
 #include "AirLoopHVAC.hpp"
@@ -469,6 +470,7 @@
 #include "ZoneVentilationDesignFlowRate.hpp"
 
 // include all concrete ModelObject Impls too
+#include "AdditionalProperties_Impl.hpp"
 #include "AirConditionerVariableRefrigerantFlow_Impl.hpp"
 #include "AirGap_Impl.hpp"
 #include "AirLoopHVAC_Impl.hpp"

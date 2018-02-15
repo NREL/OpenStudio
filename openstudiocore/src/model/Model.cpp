@@ -206,6 +206,7 @@ if (_className::iddObjectType() == typeToCreate) { \
   result = std::shared_ptr<_className##_Impl>(new _className##_Impl(object,this,keepHandle)); \
 }
 
+    REGISTER_CONSTRUCTOR(AdditionalProperties);
     REGISTER_CONSTRUCTOR(AirConditionerVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(AirGap);
     REGISTER_CONSTRUCTOR(AirLoopHVAC);
@@ -678,6 +679,7 @@ if (_className::iddObjectType() == typeToCreate) { \
   } \
 }
 
+    REGISTER_COPYCONSTRUCTORS(AdditionalProperties);
     REGISTER_COPYCONSTRUCTORS(AirConditionerVariableRefrigerantFlow);
     REGISTER_COPYCONSTRUCTORS(AirGap);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVAC);

@@ -119,7 +119,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.1.1")] = &VersionTranslator::update_2_1_0_to_2_1_1;
   m_updateMethods[VersionString("2.1.2")] = &VersionTranslator::update_2_1_1_to_2_1_2;
   m_updateMethods[VersionString("2.3.1")] = &VersionTranslator::update_2_3_0_to_2_3_1;
-  m_updateMethods[VersionString("2.4.1")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("2.4.1")] = &VersionTranslator::update_2_4_0_to_2_4_1;
+  //m_updateMethods[VersionString("2.4.2")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -3808,6 +3809,52 @@ std::string VersionTranslator::update_2_3_0_to_2_3_1(const IdfFile& idf_2_3_0, c
   return ss.str();
 }
 
+std::string VersionTranslator::update_2_4_0_to_2_4_1(const IdfFile& idf_2_4_0, const IddFileAndFactoryWrapper& idd_2_4_1) {
+  std::stringstream ss;
+
+  ss << idf_2_4_0.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_2_4_1.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  boost::optional<std::string> value;
+
+  for (const IdfObject& object : idf_2_4_0.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:BuildingUnit") {
+      auto iddObject = idd_2_4_1.getObject("OS:BuildingUnit");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+
+      iddObject = idd_2_4_1.getObject("OS:AdditionalProperties");
+      IdfObject additionalProperties(iddObject.get());
+      additionalProperties.setString(0, toString(createUUID()));
+      additionalProperties.setString(1, newObject.getString(0).get()); // point additional properties to new object
+
+      size_t newIdx = 2;
+      for( size_t oldIdx = object.numNonextensibleFields(); oldIdx < object.numFields(); ++oldIdx, ++newIdx ) {
+        if( (value = object.getString(oldIdx)) ) {
+          additionalProperties.setString(newIdx, value.get());
+        }
+      }
+
+      m_new.push_back(additionalProperties);
+      ss << additionalProperties;
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
 
 } // osversion
 } // openstudio

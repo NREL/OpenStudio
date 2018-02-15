@@ -35,6 +35,9 @@
 
 #include <vector>
 
+#include <boost/optional.hpp>
+
+
 namespace openstudio{
 
   /** Euler angles specify an orientation in space, they characterize:

@@ -78,6 +78,8 @@ namespace detail {
 
     virtual std::vector<IdfObject> remove() override;
 
+    virtual ModelObject clone(Model model) const override;
+
     virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
     virtual const std::vector<std::string>& outputVariableNames() const override;

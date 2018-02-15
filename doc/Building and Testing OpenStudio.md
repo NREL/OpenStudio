@@ -507,11 +507,9 @@ In the top level of your docker-openstudio folder, modify `Dockerfile`
 
 - Update OPENSTUDIO_VERSION with current version (X.Y.Z)
 - Update OPENSTUDIO_SHA with current SHA
-- (optional) test that the new Dockerfile works by running `docker build -t test-openstudio .` after starting the docker-machine to make sure that it completes successfully
 
-With Git, commit Dockerfile (Commit Message = Bump OpenStudio version to OS.x.y.z.sha)
+With Git, commit Dockerfile (Commit Message = Bump OpenStudio version to OS.x.y.z.sha), 
 
-Verify master branch built successfully at https://hub.docker.com/r/nrel/openstudio/builds/
+Travis CI will build, test, and deploy the container. If there is an issue, the committer will receive an email with the error.
 
-In a command window:
-- In the top level of your docker-openstudio folder, run `git tag -a X.Y.Z` and annotate with 'X.Y.Z Release'
+There is no need to tag releases anymore.

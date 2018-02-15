@@ -374,6 +374,22 @@ namespace detail {
     return result;
   }
 
+  std::vector<EMSActuatorNames> WeatherFile_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ {"Weather Data", "Outdoor Dry Bulb"},
+                                             {"Weather Data", "Outdoor Dew Point"},
+                                             {"Weather Data", "Outdoor Relative Humidity"},
+                                             {"Weather Data", "Diffuse Solar"},
+                                             {"Weather Data", "Direct Solar"},
+                                             {"Weather Data", "Wind Speed"},
+                                             {"Weather Data", "Wind Direction"}};
+    return actuators;
+  }
+
+  std::vector<std::string> WeatherFile_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
+
 } // detail
 
 IddObjectType WeatherFile::iddObjectType() {

@@ -72,7 +72,6 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   public:
 
   OSDocument( openstudio::model::Model library,
-              openstudio::model::Model hvacLibrary,
               const openstudio::path &resourcesPath,
               openstudio::model::OptionalModel model = boost::none,
               QString filePath = QString(),
@@ -115,15 +114,6 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   // Sets the component library associated with this document.
   void setComponentLibrary(const openstudio::model::Model& model);
-
-  // Returns the hvac component library associated with this document.
-  openstudio::model::Model hvacComponentLibrary() const;
-
-  // Sets the hvac component library associated with this document.
-  void setHVACComponentLibrary(const openstudio::model::Model& model);
-
-  // Returns a compiled component library with hvac components
-  openstudio::model::Model combinedComponentLibrary() const;
 
   // Returns true if OSItemId's source is the model
   bool fromModel(const OSItemId& itemId) const;
@@ -199,6 +189,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   void loadFileClicked();
 
   void osmDropped(QString path);
+
+  void changeDefaultLibrariesClicked();
 
   void loadLibraryClicked();
 
@@ -332,8 +324,6 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   openstudio::model::Model m_compLibrary;
 
   openstudio::model::Model m_hvacCompLibrary;
-
-  openstudio::model::Model m_combinedCompLibrary;
 
   openstudio::path m_resourcesPath;
 
