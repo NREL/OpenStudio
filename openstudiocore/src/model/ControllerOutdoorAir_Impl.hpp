@@ -187,6 +187,10 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
 
   void applySizingValues();
 
+  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+  virtual std::vector<std::string> emsInternalVariableNames() const override;
+
  private:
 
   boost::optional<ControllerMechanicalVentilation> optionalControllerMechanicalVentilation() const;
