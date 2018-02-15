@@ -544,6 +544,16 @@ namespace detail {
 
   }
 
+  std::vector<EMSActuatorNames> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "Variable Refrigerant Flow Terminal Unit", "Part Load Ratio" } };
+    return actuators;
+  }
+
+  std::vector<std::string> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
+
 } // detail
 
 ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model)
