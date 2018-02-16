@@ -37,6 +37,8 @@
 #include "Schedule_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -126,6 +128,10 @@ namespace detail {
       {
         return StraightComponent_Impl::addToNode(node);
       }
+    }
+
+    if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
+      return StraightComponent_Impl::addToNode( node );
     }
 
     return false;

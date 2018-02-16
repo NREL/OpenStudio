@@ -118,11 +118,13 @@ namespace detail{
       {
         return this->setSetpointNode(node);
       }
-      if(OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoop->airLoopHVACOutdoorAirSystem())
-      {
-        return this->setSetpointNode(node);
-      }
     }
+
+    if(OptionalAirLoopHVACOutdoorAirSystem oaSystem = node.airLoopHVACOutdoorAirSystem())
+    {
+      return this->setSetpointNode(node);
+    }
+
     return false;
   }
 

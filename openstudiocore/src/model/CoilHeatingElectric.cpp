@@ -35,6 +35,8 @@
 #include "AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
 #include "AirTerminalSingleDuctVAVReheat.hpp"
 #include "AirTerminalSingleDuctVAVReheat_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
@@ -227,6 +229,15 @@ namespace detail {
           }
           return true;
         }
+      }
+    }
+
+    if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
+      if ( StraightComponent_Impl::addToNode( node ) ) {
+        if ( auto _node = outletModelObject()->optionalCast<Node>() ) {
+          setTemperatureSetpointNode(_node.get());
+        }
+        return true;
       }
     }
 
@@ -511,4 +522,4 @@ CoilHeatingElectric::CoilHeatingElectric(std::shared_ptr<detail::CoilHeatingElec
 
 } // model
 
-} // openstudio
+} // openstudio
