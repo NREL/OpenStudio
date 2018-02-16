@@ -66,7 +66,7 @@ class MODEL_API BoilerSteam : public StraightComponent {
 
   boost::optional<double> maximumOperatingPressure() const;
   OSOptionalQuantity getMaximumOperatingPressure(bool returnIP=false) const;
-  void setMaximumOperatingPressure(double maximumOperatingPressure);
+  bool setMaximumOperatingPressure(double maximumOperatingPressure);
   bool setMaximumOperatingPressure(const Quantity& maximumOperatingPressure);
   void resetMaximumOperatingPressure();
 
@@ -78,14 +78,14 @@ class MODEL_API BoilerSteam : public StraightComponent {
 
   boost::optional<double> designOutletSteamTemperature() const;
   OSOptionalQuantity getDesignOutletSteamTemperature(bool returnIP=false) const;
-  void setDesignOutletSteamTemperature(double designOutletSteamTemperature);
+  bool setDesignOutletSteamTemperature(double designOutletSteamTemperature);
   bool setDesignOutletSteamTemperature(const Quantity& designOutletSteamTemperature);
   void resetDesignOutletSteamTemperature();
 
   boost::optional<double> nominalCapacity() const;
   OSOptionalQuantity getNominalCapacity(bool returnIP=false) const;
   bool isNominalCapacityAutosized() const;
-  void setNominalCapacity(double nominalCapacity);
+  bool setNominalCapacity(double nominalCapacity);
   bool setNominalCapacity(const Quantity& nominalCapacity);
   void resetNominalCapacity();
   void autosizeNominalCapacity();
@@ -110,19 +110,19 @@ class MODEL_API BoilerSteam : public StraightComponent {
 
   boost::optional<double> coefficient1ofFuelUseFunctionofPartLoadRatioCurve() const;
   OSOptionalQuantity getCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(bool returnIP=false) const;
-  void setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(double coefficient1ofFuelUseFunctionofPartLoadRatioCurve);
+  bool setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(double coefficient1ofFuelUseFunctionofPartLoadRatioCurve);
   bool setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(const Quantity& coefficient1ofFuelUseFunctionofPartLoadRatioCurve);
   void resetCoefficient1ofFuelUseFunctionofPartLoadRatioCurve();
 
   boost::optional<double> coefficient2ofFuelUseFunctionofPartLoadRatioCurve() const;
   OSOptionalQuantity getCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(bool returnIP=false) const;
-  void setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(double coefficient2ofFuelUseFunctionofPartLoadRatioCurve);
+  bool setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(double coefficient2ofFuelUseFunctionofPartLoadRatioCurve);
   bool setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(const Quantity& coefficient2ofFuelUseFunctionofPartLoadRatioCurve);
   void resetCoefficient2ofFuelUseFunctionofPartLoadRatioCurve();
 
   boost::optional<double> coefficient3ofFuelUseFunctionofPartLoadRatioCurve() const;
   OSOptionalQuantity getCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(bool returnIP=false) const;
-  void setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(double coefficient3ofFuelUseFunctionofPartLoadRatioCurve);
+  bool setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(double coefficient3ofFuelUseFunctionofPartLoadRatioCurve);
   bool setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(const Quantity& coefficient3ofFuelUseFunctionofPartLoadRatioCurve);
   void resetCoefficient3ofFuelUseFunctionofPartLoadRatioCurve();
 
