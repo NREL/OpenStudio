@@ -53,6 +53,11 @@ if !File.exists?(bundle_exe)
   raise "Required bundle executable not found"
 end
 
+if File.exists?('Gemfile.lock')
+  puts 'Removing Gemfile.lock'
+  FileUtils.rm('Gemfile.lock')
+end
+
 system_call("#{bundle_exe} _#{bundle_version}_ install --without=test --path='#{install_dir}'")
 
 FileUtils.rm_rf("#{install_dir}/ruby/#{ruby_gem_dir}/cache")
