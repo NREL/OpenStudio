@@ -83,10 +83,12 @@ puts "standards_gem_dir = #{standards_gem_dir}"
 puts "workflow_gem_dir = #{workflow_gem_dir}"
 
 # clean up standards gem
-FileUtils.rm_rf("#{standards_gem_dir}/.git")
-FileUtils.rm_rf("#{standards_gem_dir}/measures")
-FileUtils.rm_rf("#{standards_gem_dir}/openstudio-standards/test")
-FileUtils.rm_rf("#{standards_gem_dir}/openstudio-standards/docs")
+FileUtils.rm_rf("#{standards_gem_dir}/.git") # If installed from Github
+FileUtils.rm_rf("#{standards_gem_dir}/.circleci") # If installed from Github
+FileUtils.rm_rf("#{standards_gem_dir}/.vscode") # If installed from Github
+FileUtils.rm_rf("#{standards_gem_dir}/test") # If installed from Github
+FileUtils.rm_rf("#{standards_gem_dir}/docs") # If installed from Github
+# Remove Canadian weather files
 Dir.glob("#{standards_gem_dir}/data/weather/*").each do |f|
   if /CAN_/.match(f)
     FileUtils.rm_f(f)
