@@ -31,8 +31,11 @@
 
 // TODO: Check the following class names against object getters and setters.
 #include "FanConstantVolume.hpp"
+#include "FanConstantVolume_Impl.hpp"
 #include "FanVariableVolume.hpp"
+#include "FanVariableVolume_Impl.hpp"
 #include "FanOnOff.hpp"
+#include "FanOnOff_Impl.hpp"
 #include "StraightComponent.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
@@ -99,6 +102,21 @@ AirflowNetworkFan::AirflowNetworkFan(const Model& model, const Handle &handle)
 IddObjectType AirflowNetworkFan::iddObjectType()
 {
   return IddObjectType(IddObjectType::OS_AirflowNetworkFan);
+}
+
+boost::optional<FanConstantVolume> AirflowNetworkFan::fanConstantVolume() const
+{
+  return getImpl<detail::AirflowNetworkFan_Impl>()->fan<FanConstantVolume>();
+}
+
+boost::optional<FanVariableVolume> AirflowNetworkFan::fanVariableVolume() const
+{
+  return getImpl<detail::AirflowNetworkFan_Impl>()->fan<FanVariableVolume>();
+}
+
+boost::optional<FanOnOff> AirflowNetworkFan::fanOnOff() const
+{
+  return getImpl<detail::AirflowNetworkFan_Impl>()->fan<FanOnOff>();
 }
 
 void AirflowNetworkFan::resetFan()

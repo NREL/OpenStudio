@@ -75,7 +75,10 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    //boost::optional<StraightComponent> fan() const;
+    template <typename T> boost::optional<T> fan() const
+    {
+      return getObject<ModelObject>().getModelObjectTarget<T>(OS_AirflowNetworkFanFields::FanName);
+    }
 
     //@}
     /** @name Setters */

@@ -511,7 +511,7 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateAirflowNetworkConstantPressureDrop( model::AirflowNetworkConstantPressureDrop& modelObject );
 
-  boost::optional<IdfObject> translateAirflowNetworkOutdoorAirFlow( model::AirflowNetworkOutdoorAirflow& modelObject );
+  boost::optional<IdfObject> translateAirflowNetworkOutdoorAirflow( model::AirflowNetworkOutdoorAirflow& modelObject );
 
   boost::optional<IdfObject> translateAirflowNetworkDistributionLinkage( model::AirflowNetworkDistributionLinkage& modelObject );
 

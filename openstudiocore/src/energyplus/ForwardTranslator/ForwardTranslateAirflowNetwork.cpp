@@ -59,6 +59,8 @@
 #include "../../model/AirflowNetworkLeakageRatio_Impl.hpp"
 #include "../../model/AirflowNetworkDuct.hpp"
 #include "../../model/AirflowNetworkDuct_Impl.hpp"
+#include "../../model/AirflowNetworkFan.hpp"
+#include "../../model/AirflowNetworkFan_Impl.hpp"
 #include "../../model/AirflowNetworkEquivalentDuct.hpp"
 #include "../../model/AirflowNetworkEquivalentDuct_Impl.hpp"
 #include "../../model/AirflowNetworkConstantPressureDrop.hpp"
@@ -77,6 +79,13 @@
 #include "../../model/PlanarSurface.hpp"
 #include "../../model/Curve.hpp"
 #include "../../model/StraightComponent.hpp"
+#include "../../model/FanConstantVolume.hpp"
+#include "../../model/FanVariableVolume.hpp"
+#include "../../model/FanOnOff.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/AirloopHVACZoneMixer.hpp"
+#include "../../model/AirLoopHVACZoneSplitter.hpp"
+#include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
 
 #include "../../utilities/core/Assert.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -399,7 +408,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDistributio
 
   idfObject.setString(AirflowNetwork_Distribution_NodeFields::Name, modelObject.name().get());
 
-  /*
   if (modelObject.node()) {
     idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentNameorNodeName, modelObject.node().get().name().get());
   } else if (modelObject.airLoopHVACZoneMixer()) {
@@ -409,7 +417,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDistributio
   } else if (modelObject.airLoopHVACOutdoorAirSystem()) {
     idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentNameorNodeName, modelObject.airLoopHVACOutdoorAirSystem().get().name().get());
   }
-  */
 
   idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentObjectTypeorNodeType, "Other");
   idfObject.setDouble(AirflowNetwork_Distribution_NodeFields::NodeHeight, modelObject.nodeHeight());
@@ -457,13 +464,22 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkFan( Airflo
 {
   IdfObject idfObject(IddObjectType::AirflowNetwork_Distribution_Component_Fan);
 
-  m_idfObjects.push_back(idfObject);
-  /*
-  idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::FanName, modelObject.fanName());
-  if (modelObject.supplyFanObjectType()) {
-    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::SupplyFanObjectType, modelObject.supplyFanObjectType().get());
+  
+  if (modelObject.fanConstantVolume()) {
+    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::FanName, modelObject.fanConstantVolume().get().name().get());
+    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::SupplyFanObjectType, "Fan:ConstantVolume");
+    m_idfObjects.push_back(idfObject);
+  } else if (modelObject.fanVariableVolume()) {
+    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::FanName, modelObject.fanVariableVolume().get().name().get());
+    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::SupplyFanObjectType, "Fan:VariableVolume");
+    m_idfObjects.push_back(idfObject);
+  } else if (modelObject.fanOnOff()) {
+    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::FanName, modelObject.fanOnOff().get().name().get());
+    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::SupplyFanObjectType, "Fan:OnOff");
+    m_idfObjects.push_back(idfObject);
+  } else {
+
   }
-  */
 
   return idfObject;
 }
@@ -521,7 +537,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkConstantPre
   return idfObject;
 }
 
-boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkOutdoorAirFlow( AirflowNetworkOutdoorAirflow& modelObject)
+boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkOutdoorAirflow( AirflowNetworkOutdoorAirflow& modelObject)
 {
   IdfObject idfObject(IddObjectType::AirflowNetwork_Distribution_Component_OutdoorAirFlow);
 
@@ -532,7 +548,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkOutdoorAirF
     idfObject.setDouble(AirflowNetwork_MultiZone_Component_ZoneExhaustFanFields::AirMassFlowCoefficientWhentheZoneExhaustFanisOffatReferenceConditions, modelObject.crack()->airMassFlowCoefficient());
     idfObject.setDouble(AirflowNetwork_MultiZone_Component_ZoneExhaustFanFields::AirMassFlowExponentWhentheZoneExhaustFanisOff, modelObject.crack()->airMassFlowExponent());
     if (modelObject.crack()->referenceCrackConditions()) {
-      //idfObject.setString(AirflowNetwork_MultiZone_Component_ZoneExhaustFanFields::ReferenceCrackConditions, modelObject.crack()->referenceCrackConditions()->name().get());
+      idfObject.setString(AirflowNetwork_MultiZone_Component_ZoneExhaustFanFields::ReferenceCrackConditions, modelObject.crack()->referenceCrackConditions()->name().get());
     }
   } // else warning?
 

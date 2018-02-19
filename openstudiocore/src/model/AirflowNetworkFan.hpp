@@ -36,6 +36,9 @@ namespace openstudio {
 namespace model {
 
 class StraightComponent;
+class FanConstantVolume;
+class FanVariableVolume;
+class FanOnOff;
 
 
 namespace detail {
@@ -63,7 +66,9 @@ class MODEL_API AirflowNetworkFan : public ModelObject
   /** @name Getters */
   //@{
 
-  //boost::optional<StraightComponent> fan() const;
+  boost::optional<FanConstantVolume> fanConstantVolume() const;
+  boost::optional<FanVariableVolume> fanVariableVolume() const;
+  boost::optional<FanOnOff> fanOnOff() const;
 
   //@}
   /** @name Setters */

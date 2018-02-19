@@ -3323,6 +3323,14 @@ void ForwardTranslator::translateAirflowNetwork(const model::Model & model)
       translateAirflowNetworkZone(modelObject);
     }
 
+    // Reference Crack Conditions
+    std::vector<model::AirflowNetworkReferenceCrackConditions> refcracks = model.getConcreteModelObjects<model::AirflowNetworkReferenceCrackConditions>();
+    std::sort(refcracks.begin(), refcracks.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : refcracks) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkReferenceCrackConditions(modelObject);
+    }
+
     // Cracks
     std::vector<model::AirflowNetworkCrack> cracks = model.getConcreteModelObjects<model::AirflowNetworkCrack>();
     std::sort(cracks.begin(), cracks.end(), WorkspaceObjectNameLess());
@@ -3395,12 +3403,20 @@ void ForwardTranslator::translateAirflowNetwork(const model::Model & model)
       translateAirflowNetworkExternalNode(modelObject);
     }
 
-    // Zone Exhaust
+    // Zone Exhaust Fan
     std::vector<model::AirflowNetworkZoneExhaustFan> zefs = model.getConcreteModelObjects<model::AirflowNetworkZoneExhaustFan>();
     std::sort(zefs.begin(), zefs.end(), WorkspaceObjectNameLess());
     for (auto modelObject : zefs) {
       LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
       translateAirflowNetworkZoneExhaustFan(modelObject);
+    }
+
+    // Duct
+    std::vector<model::AirflowNetworkDuct> ducts = model.getConcreteModelObjects<model::AirflowNetworkDuct>();
+    std::sort(ducts.begin(), ducts.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : ducts) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkDuct(modelObject);
     }
 
     // Equivalent Duct
@@ -3409,6 +3425,46 @@ void ForwardTranslator::translateAirflowNetwork(const model::Model & model)
     for (auto modelObject : equivds) {
       LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
       translateAirflowNetworkEquivalentDuct(modelObject);
+    }
+
+    // Leakage Ratio
+    std::vector<model::AirflowNetworkLeakageRatio> lrs = model.getConcreteModelObjects<model::AirflowNetworkLeakageRatio>();
+    std::sort(lrs.begin(), lrs.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : lrs) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkLeakageRatio(modelObject);
+    }
+
+    // Constant Pressure Drops
+    std::vector<model::AirflowNetworkConstantPressureDrop> constps = model.getConcreteModelObjects<model::AirflowNetworkConstantPressureDrop>();
+    std::sort(constps.begin(), constps.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : constps) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkConstantPressureDrop(modelObject);
+    }
+
+    // Outdoor Air Flow
+    std::vector<model::AirflowNetworkOutdoorAirflow> oafs = model.getConcreteModelObjects<model::AirflowNetworkOutdoorAirflow>();
+    std::sort(oafs.begin(), oafs.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : oafs) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkOutdoorAirflow(modelObject);
+    }
+
+    // Duct VFs
+    std::vector<model::AirflowNetworkDuctViewFactors> ductvfs = model.getConcreteModelObjects<model::AirflowNetworkDuctViewFactors>();
+    std::sort(ductvfs.begin(), ductvfs.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : ductvfs) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkDuctViewFactors(modelObject);
+    }
+
+    // Occupant Ventilation Control
+    std::vector<model::AirflowNetworkOccupantVentilationControl> occvcs = model.getConcreteModelObjects<model::AirflowNetworkOccupantVentilationControl>();
+    std::sort(occvcs.begin(), occvcs.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : occvcs) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkOccupantVentilationControl(modelObject);
     }
 
   }
