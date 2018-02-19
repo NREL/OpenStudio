@@ -3,6 +3,7 @@ GEM
   specs:
     diff-lcs (1.3)
     minitest (4.7.5)
+    openstudio-standards (0.2.0.rc1)
     openstudio-workflow (1.3.1)
     parallel (1.10.0)
     rspec (3.5.0)
