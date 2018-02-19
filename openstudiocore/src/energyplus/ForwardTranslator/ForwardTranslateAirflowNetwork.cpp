@@ -478,7 +478,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkFan( Airflo
     idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::SupplyFanObjectType, "Fan:OnOff");
     m_idfObjects.push_back(idfObject);
   } else {
-
+    // Warning or error?
   }
 
   return idfObject;

@@ -3467,6 +3467,90 @@ void ForwardTranslator::translateAirflowNetwork(const model::Model & model)
       translateAirflowNetworkOccupantVentilationControl(modelObject);
     }
 
+  } else {
+
+    int count = 0;
+
+    // Zones
+    std::vector<model::AirflowNetworkZone> zones = model.getConcreteModelObjects<model::AirflowNetworkZone>();
+    count += zones.size();
+
+    // Reference Crack Conditions
+    std::vector<model::AirflowNetworkReferenceCrackConditions> refcracks = model.getConcreteModelObjects<model::AirflowNetworkReferenceCrackConditions>();
+    count += refcracks.size();
+
+    // Cracks
+    std::vector<model::AirflowNetworkCrack> cracks = model.getConcreteModelObjects<model::AirflowNetworkCrack>();
+    count += cracks.size();
+
+    // Effective Leakage Area
+    std::vector<model::AirflowNetworkEffectiveLeakageArea> elas = model.getConcreteModelObjects<model::AirflowNetworkEffectiveLeakageArea>();
+    count += elas.size();
+
+    // Simple Openings
+    std::vector<model::AirflowNetworkSimpleOpening> simples = model.getConcreteModelObjects<model::AirflowNetworkSimpleOpening>();
+    count += simples.size();
+
+    // Detailed Openings
+    std::vector<model::AirflowNetworkDetailedOpening> detaileds = model.getConcreteModelObjects<model::AirflowNetworkDetailedOpening>();
+    count += detaileds.size();
+
+    // Horizontal Openings
+    std::vector<model::AirflowNetworkHorizontalOpening> horzs = model.getConcreteModelObjects<model::AirflowNetworkHorizontalOpening>();
+    count += horzs.size();
+
+    // Surfaces
+    std::vector<model::AirflowNetworkSurface> surfs = model.getConcreteModelObjects<model::AirflowNetworkSurface>();
+    count += surfs.size();
+
+    // Nodes
+    std::vector<model::AirflowNetworkDistributionNode> nodes = model.getConcreteModelObjects<model::AirflowNetworkDistributionNode>();
+    count += nodes.size();
+
+    // Linkages
+    std::vector<model::AirflowNetworkDistributionLinkage> links = model.getConcreteModelObjects<model::AirflowNetworkDistributionLinkage>();
+    count += links.size();
+
+    // External Nodes
+    std::vector<model::AirflowNetworkExternalNode> exts = model.getConcreteModelObjects<model::AirflowNetworkExternalNode>();
+    count += exts.size();
+
+    // Zone Exhaust Fan
+    std::vector<model::AirflowNetworkZoneExhaustFan> zefs = model.getConcreteModelObjects<model::AirflowNetworkZoneExhaustFan>();
+    count += zefs.size();
+
+    // Duct
+    std::vector<model::AirflowNetworkDuct> ducts = model.getConcreteModelObjects<model::AirflowNetworkDuct>();
+    count += ducts.size();
+
+    // Equivalent Duct
+    std::vector<model::AirflowNetworkEquivalentDuct> equivds = model.getConcreteModelObjects<model::AirflowNetworkEquivalentDuct>();
+    count += equivds.size();
+
+    // Leakage Ratio
+    std::vector<model::AirflowNetworkLeakageRatio> lrs = model.getConcreteModelObjects<model::AirflowNetworkLeakageRatio>();
+    count += lrs.size();
+
+    // Constant Pressure Drops
+    std::vector<model::AirflowNetworkConstantPressureDrop> constps = model.getConcreteModelObjects<model::AirflowNetworkConstantPressureDrop>();
+    count += constps.size();
+
+    // Outdoor Air Flow
+    std::vector<model::AirflowNetworkOutdoorAirflow> oafs = model.getConcreteModelObjects<model::AirflowNetworkOutdoorAirflow>();
+    count += oafs.size();
+
+    // Duct VFs
+    std::vector<model::AirflowNetworkDuctViewFactors> ductvfs = model.getConcreteModelObjects<model::AirflowNetworkDuctViewFactors>();
+    count += ductvfs.size();
+
+    // Occupant Ventilation Control
+    std::vector<model::AirflowNetworkOccupantVentilationControl> occvcs = model.getConcreteModelObjects<model::AirflowNetworkOccupantVentilationControl>();
+    count += occvcs.size();
+
+    if (count) {
+      LOG(Warn, "No AirflowNetworkSimulationControl found in model, skipping forward translation of " << count << " AirflowNetwork objects.");
+    }
+
   }
 }
 
