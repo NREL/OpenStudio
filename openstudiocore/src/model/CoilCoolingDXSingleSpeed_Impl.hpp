@@ -42,26 +42,7 @@ namespace detail {
 
   // derive CoilCoolingDXSingleSpeed_Impl from ModelObject_Impl to override virtual methods
   class MODEL_API CoilCoolingDXSingleSpeed_Impl : public StraightComponent_Impl {
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -269,6 +250,9 @@ namespace detail {
     void autosizeRatedAirFlowRate();
 
     bool addToNode(Node & node) override;
+
+    boost::optional<AirflowNetworkEquivalentDuct> createAirflowNetworkEquivalentDuct(double length, double diameter);
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
     //@}
    private:

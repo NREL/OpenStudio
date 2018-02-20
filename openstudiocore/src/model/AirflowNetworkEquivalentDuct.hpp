@@ -50,6 +50,7 @@ namespace detail {
   class CoilCoolingDXMultiSpeed_Impl;
   class CoilCoolingDXTwoStageWithHumidityControlMode_Impl;
   class CoilHeatingDXSingleSpeed_Impl;
+  class CoilCoolingDXSingleSpeed_Impl;
   class AirTerminalSingleDuctConstantVolumeReheat_Impl;
   class AirTerminalSingleDuctVAVReheat_Impl;
   class AirflowNetworkEquivalentDuct_Impl;
@@ -105,7 +106,7 @@ class MODEL_API AirflowNetworkEquivalentDuct : public ModelObject {
 
   friend class detail::AirTerminalSingleDuctConstantVolumeReheat_Impl;
   friend class detail::AirTerminalSingleDuctVAVReheat_Impl;
-  friend class detail::CoilHeatingDXSingleSpeed_Impl;
+  friend class detail::CoilCoolingDXSingleSpeed_Impl;
   friend class detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl;
   friend class detail::CoilCoolingDXMultiSpeed_Impl;
   friend class detail::CoilCoolingWater_Impl;

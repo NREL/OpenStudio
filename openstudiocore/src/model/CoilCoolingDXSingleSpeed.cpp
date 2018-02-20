@@ -61,6 +61,8 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/units/Quantity.hpp"
 #include "../utilities/units/OSOptionalQuantity.hpp"
+#include "AirflowNetworkEquivalentDuct.hpp"
+#include "AirflowNetworkEquivalentDuct_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -899,6 +901,28 @@ namespace detail{
     return false;
   }
 
+  boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXSingleSpeed_Impl::createAirflowNetworkEquivalentDuct(double length, double diameter)
+  {
+    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
+    if (opt) {
+      return boost::none;
+    }
+    return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
+  }
+
+  boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXSingleSpeed_Impl::airflowNetworkEquivalentDuct() const
+  {
+    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    auto count = myAFN.size();
+    if (count == 1) {
+      return myAFN[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFN[0];
+    }
+    return boost::none;
+  }
+
 }// detail
 
 CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(const Model& model)
@@ -1483,6 +1507,16 @@ bool CoilCoolingDXSingleSpeed::setRatedAirFlowRate(const Quantity& ratedAirFlowR
 
 void CoilCoolingDXSingleSpeed::autosizeRatedAirFlowRate() {
   getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizeRatedAirFlowRate();
+}
+
+boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXSingleSpeed::createAirflowNetworkEquivalentDuct(double length, double diameter)
+{
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->createAirflowNetworkEquivalentDuct(length, diameter);
+}
+
+boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXSingleSpeed::airflowNetworkEquivalentDuct() const
+{
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->airflowNetworkEquivalentDuct();
 }
 
 } // model
