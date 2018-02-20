@@ -901,16 +901,7 @@ namespace detail{
     return false;
   }
 
-  boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXSingleSpeed_Impl::createAirflowNetworkEquivalentDuct(double length, double diameter)
-  {
-    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
-    if (opt) {
-      return boost::none;
-    }
-    return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
-  }
-
-  boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXSingleSpeed_Impl::airflowNetworkEquivalentDuct() const
+  AirflowNetworkEquivalentDuct CoilCoolingDXSingleSpeed_Impl::airflowNetworkEquivalentDuct(double length, double diameter)
   {
     std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
     auto count = myAFN.size();
@@ -920,7 +911,20 @@ namespace detail{
       LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
       return myAFN[0];
     }
-    return boost::none;
+    return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
+  }
+
+  bool CoilCoolingDXSingleSpeed_Impl::hasAirflowNetworkEquivalentDuct() const
+  {
+    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    auto count = myAFN.size();
+    if (count == 1) {
+      return true;
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return true;
+    }
+    return false;
   }
 
 }// detail
@@ -1509,14 +1513,14 @@ void CoilCoolingDXSingleSpeed::autosizeRatedAirFlowRate() {
   getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizeRatedAirFlowRate();
 }
 
-boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXSingleSpeed::createAirflowNetworkEquivalentDuct(double length, double diameter)
+AirflowNetworkEquivalentDuct CoilCoolingDXSingleSpeed::airflowNetworkEquivalentDuct(double length, double diameter)
 {
-  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->createAirflowNetworkEquivalentDuct(length, diameter);
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->airflowNetworkEquivalentDuct(length, diameter);
 }
 
-boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXSingleSpeed::airflowNetworkEquivalentDuct() const
+bool CoilCoolingDXSingleSpeed::hasAirflowNetworkEquivalentDuct() const
 {
-  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->airflowNetworkEquivalentDuct();
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->hasAirflowNetworkEquivalentDuct();
 }
 
 } // model

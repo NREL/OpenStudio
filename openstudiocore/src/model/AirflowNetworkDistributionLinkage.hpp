@@ -38,6 +38,8 @@ namespace model {
 
 // TODO: Check the following class names against object getters and setters.
 class AirflowNetworkNode;
+class AirflowNetworkDistributionNode;
+class AirflowNetworkFan;
 class AirflowNetworkComponent;
 class ThermalZone;
 
@@ -53,7 +55,7 @@ class MODEL_API AirflowNetworkDistributionLinkage : public AirflowNetworkLinkage
   /** @name Constructors and Destructors */
   //@{
 
-  explicit AirflowNetworkDistributionLinkage(const Model& model);
+  AirflowNetworkDistributionLinkage(const Model& model, const AirflowNetworkNode &node1, const AirflowNetworkNode &node2, const AirflowNetworkComponent &component);
 
   virtual ~AirflowNetworkDistributionLinkage() {}
 
@@ -73,23 +75,18 @@ class MODEL_API AirflowNetworkDistributionLinkage : public AirflowNetworkLinkage
   // TODO: Check return type. From object lists, some candidates are: AirflowNetworkComponent.
   AirflowNetworkComponent component() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Zone.
   boost::optional<ThermalZone> thermalZone() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkNodeAndZone.
   bool setNode1(const AirflowNetworkNode& airflowNetworkNodeAndZone);
 
-  // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkNodeAndZone.
   bool setNode2(const AirflowNetworkNode& airflowNetworkNodeAndZone);
 
-  // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkComponent.
-  bool setComponent(const AirflowNetworkComponent& airflowNetworkComponent);
+  bool setComponent(const AirflowNetworkComponent &airflowNetworkComponent);
 
-  // TODO: Check argument type. From object lists, some candidates are: Zone.
   bool setThermalZone(const ThermalZone& zone);
 
   void resetThermalZone();

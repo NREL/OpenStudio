@@ -28,12 +28,16 @@
 
 #include "AirflowNetworkDistributionLinkage.hpp"
 #include "AirflowNetworkDistributionLinkage_Impl.hpp"
+#include "AirflowNetworkDistributionNode.hpp"
+#include "AirflowNetworkDistributionNode_Impl.hpp"
 
 // TODO: Check the following class names against object getters and setters.
 #include "AirflowNetworkNode.hpp"
 #include "AirflowNetworkNode_Impl.hpp"
 #include "AirflowNetworkComponent.hpp"
 #include "AirflowNetworkComponent_Impl.hpp"
+#include "AirflowNetworkFan.hpp"
+#include "AirflowNetworkFan_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 
@@ -114,24 +118,6 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_AirflowNetworkDistributionLinkageFields::ThermalZoneName);
   }
 
-  bool AirflowNetworkDistributionLinkage_Impl::setNode1(const AirflowNetworkNode& airflowNetworkNode)
-  {
-    bool result = setPointer(OS_AirflowNetworkDistributionLinkageFields::Node1Name, airflowNetworkNode.handle());
-    return result;
-  }
-
-  bool AirflowNetworkDistributionLinkage_Impl::setNode2(const AirflowNetworkNode& airflowNetworkNode)
-  {
-    bool result = setPointer(OS_AirflowNetworkDistributionLinkageFields::Node2Name, airflowNetworkNode.handle());
-    return result;
-  }
-
-  bool AirflowNetworkDistributionLinkage_Impl::setComponent(const AirflowNetworkComponent& airflowNetworkComponent)
-  {
-    bool result = setPointer(OS_AirflowNetworkDistributionLinkageFields::ComponentName, airflowNetworkComponent.handle());
-    return result;
-  }
-
   bool AirflowNetworkDistributionLinkage_Impl::setThermalZone(const ThermalZone& zone)
   {
     bool result = setPointer(OS_AirflowNetworkDistributionLinkageFields::ThermalZoneName, zone.handle());
@@ -161,8 +147,8 @@ namespace detail {
 
 } // detail
 
-AirflowNetworkDistributionLinkage::AirflowNetworkDistributionLinkage(const Model& model)
-  : AirflowNetworkLinkage(AirflowNetworkDistributionLinkage::iddObjectType(),model)
+AirflowNetworkDistributionLinkage::AirflowNetworkDistributionLinkage(const Model& model, const AirflowNetworkNode &node1,
+  const AirflowNetworkNode &node2, const AirflowNetworkComponent &component) : AirflowNetworkLinkage(AirflowNetworkDistributionLinkage::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkDistributionLinkage_Impl>());
 
@@ -171,11 +157,11 @@ AirflowNetworkDistributionLinkage::AirflowNetworkDistributionLinkage(const Model
   //     OS_AirflowNetworkDistributionLinkageFields::Node2Name
   //     OS_AirflowNetworkDistributionLinkageFields::ComponentName
   bool ok = true;
-  // ok = setNode1();
+  ok = setNode1(node1);
   OS_ASSERT(ok);
-  // ok = setNode2();
+  ok = setNode2(node2);
   OS_ASSERT(ok);
-  // ok = setComponent();
+  ok = setComponent(component);
   OS_ASSERT(ok);
 }
 
@@ -206,17 +192,17 @@ boost::optional<ThermalZone> AirflowNetworkDistributionLinkage::thermalZone() co
 
 bool AirflowNetworkDistributionLinkage::setNode1(const AirflowNetworkNode& airflowNetworkNode)
 {
-  return getImpl<detail::AirflowNetworkDistributionLinkage_Impl>()->setNode1(airflowNetworkNode);
+  return getImpl<detail::AirflowNetworkDistributionLinkage_Impl>()->setNode1<AirflowNetworkNode>(airflowNetworkNode);
 }
 
 bool AirflowNetworkDistributionLinkage::setNode2(const AirflowNetworkNode& airflowNetworkNode)
 {
-  return getImpl<detail::AirflowNetworkDistributionLinkage_Impl>()->setNode2(airflowNetworkNode);
+  return getImpl<detail::AirflowNetworkDistributionLinkage_Impl>()->setNode2<AirflowNetworkNode>(airflowNetworkNode);
 }
 
 bool AirflowNetworkDistributionLinkage::setComponent(const AirflowNetworkComponent& airflowNetworkComponent)
 {
-  return getImpl<detail::AirflowNetworkDistributionLinkage_Impl>()->setComponent(airflowNetworkComponent);
+  return getImpl<detail::AirflowNetworkDistributionLinkage_Impl>()->setComponent<AirflowNetworkComponent>(airflowNetworkComponent);
 }
 
 bool AirflowNetworkDistributionLinkage::setThermalZone(const ThermalZone& zone)

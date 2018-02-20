@@ -251,8 +251,8 @@ namespace detail {
 
     bool addToNode(Node & node) override;
 
-    boost::optional<AirflowNetworkEquivalentDuct> createAirflowNetworkEquivalentDuct(double length, double diameter);
-    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+    AirflowNetworkEquivalentDuct airflowNetworkEquivalentDuct(double length, double diameter);
+    bool hasAirflowNetworkEquivalentDuct() const;
 
     //@}
    private:

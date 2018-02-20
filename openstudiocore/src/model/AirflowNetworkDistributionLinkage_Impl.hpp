@@ -91,14 +91,23 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkNodeAndZone.
-    bool setNode1(const AirflowNetworkNode& airflowNetworkNodeAndZone);
+    template <typename T> bool setNode1(const T& airflowNetworkNode)
+    {
+      bool result = setPointer(OS_AirflowNetworkDistributionLinkageFields::Node1Name, airflowNetworkNode.handle());
+      return result;
+    }
 
-    // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkNodeAndZone.
-    bool setNode2(const AirflowNetworkNode& airflowNetworkNodeAndZone);
+    template <typename T> bool setNode2(const T& airflowNetworkNode)
+    {
+      bool result = setPointer(OS_AirflowNetworkDistributionLinkageFields::Node2Name, airflowNetworkNode.handle());
+      return result;
+    }
 
-    // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkComponent.
-    bool setComponent(const AirflowNetworkComponent& airflowNetworkComponent);
+    template <typename T> bool setComponent(const T& airflowNetworkComponent)
+    {
+      bool result = setPointer(OS_AirflowNetworkDistributionLinkageFields::ComponentName, airflowNetworkComponent.handle());
+      return result;
+    }
 
     // TODO: Check argument type. From object lists, some candidates are: Zone.
     bool setThermalZone(const ThermalZone& zone);
